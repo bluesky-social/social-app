@@ -7,6 +7,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
+import {StyleProp, ViewStyle} from 'react-native'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -20,6 +21,8 @@ export interface ConfirmModal {
   message: string | (() => JSX.Element)
   onPressConfirm: () => void | Promise<void>
   onPressCancel?: () => void | Promise<void>
+  confirmBtnText?: string
+  confirmBtnStyle?: StyleProp<ViewStyle>
 }
 
 export interface EditProfileModal {

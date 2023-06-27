@@ -107,12 +107,14 @@ export const ComposePost = observer(function ComposePost({
 
         shell.openModal({
           name: 'confirm',
-          title: 'Cancel draft',
+          title: 'Discard draft',
           onPressConfirm: onClose,
           onPressCancel: () => {
             store.shell.closeModal()
           },
-          message: "Are you sure you'd like to cancel this draft?",
+          message: "Are you sure you'd like to discard this draft?",
+          confirmBtnText: 'Discard',
+          confirmBtnStyle: {backgroundColor: colors.red4},
         })
       }
     },
@@ -222,13 +224,13 @@ export const ComposePost = observer(function ComposePost({
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={styles.topbar}>
           <TouchableOpacity
-            testID="composerCancelButton"
+            testID="composerDiscardButton"
             onPress={hackfixOnClose}
             onAccessibilityEscape={hackfixOnClose}
             accessibilityRole="button"
-            accessibilityLabel="Cancel"
-            accessibilityHint="Closes post composer">
-            <Text style={[pal.link, s.f18]}>Cancel</Text>
+            accessibilityLabel="Discard"
+            accessibilityHint="Closes post composer and discards post draft">
+            <Text style={[pal.link, s.f18, styles.discard]}>Discard</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -380,6 +382,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
     height: 55,
+  },
+  discard: {
+    color: colors.red3,
   },
   postBtn: {
     borderRadius: 20,
