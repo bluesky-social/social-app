@@ -91,7 +91,7 @@ export function Component({image}: Props) {
             value={altText}
             onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
             accessibilityLabel="Image alt text"
-            accessibilityHint="Sets image alt text for screenreaders"
+            accessibilityHint=""
             accessibilityLabelledBy="imageAltText"
             autoFocus
           />
@@ -117,7 +117,7 @@ export function Component({image}: Props) {
               onPress={onPressCancel}
               accessibilityRole="button"
               accessibilityLabel="Cancel add image alt text"
-              accessibilityHint="Exits adding alt text to image"
+              accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.button]}>
                 <Text type="button-lg" style={[pal.textLight]}>
