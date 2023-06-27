@@ -166,7 +166,7 @@ export const ComposePost = observer(function ComposePost({
 
       if (
         store.preferences.requireAltTextEnabled &&
-        gallery.images.some(image => image.altText.trim() === "")
+        gallery.images.some(image => image.altText.trim() === '')
       ) {
         setError('One or more images is missing alt text')
         return

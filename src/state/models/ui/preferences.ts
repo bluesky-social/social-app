@@ -154,7 +154,7 @@ export class PreferencesModel {
       ) {
         this.homeFeedQuotePostsEnabled = v.homeFeedQuotePostsEnabled
       }
-      // check if requiring alt text is enabled in preferences, then hydtate
+      // check if requiring alt text is enabled in preferences, then hydrate
       if (
         hasProp(v, 'requireAltTextEnabled') &&
         typeof v.requireAltTextEnabled === 'boolean'
