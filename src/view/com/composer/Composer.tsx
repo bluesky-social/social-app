@@ -235,9 +235,9 @@ export const ComposePost = observer(function ComposePost({
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Discard"
+            accessibilityLabel="Cancel"
             accessibilityHint="Closes post composer and discards post draft">
-            <Text style={[pal.link, s.f18, styles.discard]}>Discard</Text>
+            <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -389,9 +389,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
     height: 55,
-  },
-  discard: {
-    color: colors.red3,
   },
   postBtn: {
     borderRadius: 20,
