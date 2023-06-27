@@ -46,7 +46,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href="/support/privacy"
+            href="https://blueskyweb.xyz/support/privacy-policy"
             text="Privacy Policy"
           />
           <Text type="md" style={pal.textLight}>
@@ -55,7 +55,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href="/support/tos"
+            href="https://blueskyweb.xyz/support/tos"
             text="Terms"
           />
         </View>
