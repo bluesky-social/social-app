@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   headerCancelBtn: {
-    width: 60,
     paddingLeft: 10,
   },
 
