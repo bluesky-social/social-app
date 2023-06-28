@@ -1,5 +1,6 @@
 import React, {useState, useMemo} from 'react'
 import {TouchableOpacity, StyleSheet, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {ComAtprotoModerationDefs} from '@atproto/api'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
@@ -13,7 +14,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 
-export const snapPoints = [400]
+export const snapPoints = [500]
 
 export function Component({did}: {did: string}) {
   const store = useStores()
@@ -56,7 +57,9 @@ export function Component({did}: {did: string}) {
   }
 
   return (
-    <View testID="reportAccountModal" style={[styles.container, pal.view]}>
+    <ScrollView
+      testID="reportAccountModal"
+      style={[styles.container, pal.view]}>
       {showDetailsInput ? (
         <InputIssueDetails
           submitReport={onPress}
@@ -74,7 +77,7 @@ export function Component({did}: {did: string}) {
           goToDetails={goToDetails}
         />
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -176,5 +179,6 @@ const styles = StyleSheet.create({
   addDetailsBtn: {
     padding: 14,
     alignSelf: 'center',
+    marginBottom: 40,
   },
 })
