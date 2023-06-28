@@ -37,7 +37,12 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   return await doResize(dataUri, opts)
 }
 
-export async function saveImageModal(_opts: {uri: string}) {
+export async function shareImageModal(_opts: {uri: string}) {
+  // TODO
+  throw new Error('TODO')
+}
+
+export async function saveImageToAlbum(_opts: {uri: string; album: string}) {
   // TODO
   throw new Error('TODO')
 }
