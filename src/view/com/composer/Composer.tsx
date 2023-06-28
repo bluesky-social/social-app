@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -94,6 +95,9 @@ export const ComposePost = observer(function ComposePost({
     if (graphemeLength > 0 || !gallery.isEmpty) {
       if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
         store.shell.closeModal()
+      }
+      if (Keyboard) {
+        Keyboard.dismiss()
       }
       store.shell.openModal({
         name: 'confirm',
