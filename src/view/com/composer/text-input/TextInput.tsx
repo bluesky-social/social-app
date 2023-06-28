@@ -200,6 +200,7 @@ export const TextInput = forwardRef(
           placeholderTextColor={pal.colors.textLight}
           keyboardAppearance={theme.colorScheme}
           autoFocus={true}
+          allowFontScaling
           multiline
           style={[pal.text, styles.textInput, styles.textInputFormatting]}
           {...props}>
