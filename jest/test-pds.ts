@@ -24,7 +24,6 @@ export async function createServer(
   const port = await getPort()
   const port2 = await getPort(port + 1)
   const pdsUrl = `http://localhost:${port}`
-  console.log({port})
   const {pds, plc} = await TestNetworkNoAppView.create({
     pds: {port, publicUrl: pdsUrl, inviteRequired},
     plc: {port: port2},
@@ -189,6 +188,21 @@ class Mocker {
       throw new Error(`Not a user: ${user}`)
     }
     return await agent.like(uri, cid)
+  }
+
+  async createInvite(forAccount: string) {
+    const agent = new BskyAgent({service: this.agent.service})
+    await agent.api.com.atproto.server.createInviteCode(
+      {useCount: 1, forAccount},
+      {
+        headers: {
+          authorization: `Basic ${btoa(
+            `admin:${this.pds.ctx.cfg.adminPassword}`,
+          )}`,
+        },
+        encoding: 'application/json',
+      },
+    )
   }
 
   async labelAccount(label: string, user: string) {
