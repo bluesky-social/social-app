@@ -1,19 +1,8 @@
-import {AddressInfo} from 'net'
-import os from 'os'
 import net from 'net'
 import path from 'path'
 import fs from 'fs'
-import * as crypto from '@atproto/crypto'
-import {PDS, ServerConfig, Database, MemoryBlobStore} from '@atproto/pds'
-import * as plc from '@did-plc/lib'
-import {PlcServer, Database as PlcDatabase} from '@did-plc/server'
+import {TestPds as DevEnvTestPDS, TestNetworkNoAppView} from '@atproto/dev-env'
 import {BskyAgent} from '@atproto/api'
-
-const ADMIN_PASSWORD = 'admin-pass'
-const SECOND = 1000
-const MINUTE = SECOND * 60
-const HOUR = MINUTE * 60
-const DAY = HOUR * 24
 
 export interface TestUser {
   email: string
@@ -32,81 +21,13 @@ export interface TestPDS {
 export async function createServer(
   {inviteRequired}: {inviteRequired: boolean} = {inviteRequired: false},
 ): Promise<TestPDS> {
-  const repoSigningKey = await crypto.Secp256k1Keypair.create()
-  const plcRotationKey = await crypto.Secp256k1Keypair.create()
   const port = await getPort()
-
-  const plcDb = PlcDatabase.mock()
-
-  const plcServer = PlcServer.create({db: plcDb})
-  const plcListener = await plcServer.start()
-  const plcPort = (plcListener.address() as AddressInfo).port
-  const plcUrl = `http://localhost:${plcPort}`
-
-  const recoveryKey = (await crypto.Secp256k1Keypair.create()).did()
-
-  const plcClient = new plc.Client(plcUrl)
-  const serverDid = await plcClient.createDid({
-    signingKey: repoSigningKey.did(),
-    rotationKeys: [recoveryKey, plcRotationKey.did()],
-    handle: 'localhost',
-    pds: `http://localhost:${port}`,
-    signer: plcRotationKey,
-  })
-
-  const blobstoreLoc = path.join(os.tmpdir(), crypto.randomStr(5, 'base32'))
-
-  const cfg = new ServerConfig({
-    debugMode: true,
-    version: '0.0.0',
-    scheme: 'http',
-    hostname: 'localhost',
-    port,
-    serverDid,
-    recoveryKey,
-    adminPassword: ADMIN_PASSWORD,
-    inviteRequired,
-    didPlcUrl: plcUrl,
-    didCacheMaxTTL: DAY,
-    didCacheStaleTTL: HOUR,
-    jwtSecret: 'jwt-secret',
-    availableUserDomains: ['.test'],
-    appUrlPasswordReset: 'app://forgot-password',
-    emailNoReplyAddress: 'noreply@blueskyweb.xyz',
-    publicUrl: `http://localhost:${port}`,
-    imgUriSalt: '9dd04221f5755bce5f55f47464c27e1e',
-    imgUriKey:
-      'f23ecd142835025f42c3db2cf25dd813956c178392760256211f9d315f8ab4d8',
-    dbPostgresUrl: process.env.DB_POSTGRES_URL,
-    blobstoreLocation: `${blobstoreLoc}/blobs`,
-    blobstoreTmp: `${blobstoreLoc}/tmp`,
-    maxSubscriptionBuffer: 200,
-    repoBackfillLimitMs: HOUR,
-    userInviteInterval: 1,
-    labelerDid: 'did:example:labeler',
-    labelerKeywords: {},
-  })
-
-  const db =
-    cfg.dbPostgresUrl !== undefined
-      ? Database.postgres({
-          url: cfg.dbPostgresUrl,
-          schema: cfg.dbPostgresSchema,
-        })
-      : Database.memory()
-  await db.migrateToLatestOrThrow()
-
-  const blobstore = new MemoryBlobStore()
-
-  const pds = PDS.create({
-    db,
-    blobstore,
-    repoSigningKey,
-    plcRotationKey,
-    config: cfg,
-  })
-  await pds.start()
+  const port2 = await getPort(port + 1)
   const pdsUrl = `http://localhost:${port}`
+  const {pds, plc} = await TestNetworkNoAppView.create({
+    pds: {port, publicUrl: pdsUrl, inviteRequired},
+    plc: {port: port2},
+  })
 
   const profilePic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.jpg'),
@@ -116,8 +37,8 @@ export async function createServer(
     pdsUrl,
     mocker: new Mocker(pds, pdsUrl, profilePic),
     async close() {
-      await pds.destroy()
-      await plcServer.destroy()
+      await pds.server.destroy()
+      await plc.server.destroy()
     },
   }
 }
@@ -127,7 +48,7 @@ class Mocker {
   users: Record<string, TestUser> = {}
 
   constructor(
-    public pds: PDS,
+    public pds: DevEnvTestPDS,
     public service: string,
     public profilePic: Uint8Array,
   ) {
@@ -152,7 +73,11 @@ class Mocker {
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
       {
-        headers: {authorization: `Basic ${btoa(`admin:${ADMIN_PASSWORD}`)}`},
+        headers: {
+          authorization: `Basic ${btoa(
+            `admin:${this.pds.ctx.cfg.adminPassword}`,
+          )}`,
+        },
         encoding: 'application/json',
       },
     )
@@ -263,6 +188,21 @@ class Mocker {
       throw new Error(`Not a user: ${user}`)
     }
     return await agent.like(uri, cid)
+  }
+
+  async createInvite(forAccount: string) {
+    const agent = new BskyAgent({service: this.agent.service})
+    await agent.api.com.atproto.server.createInviteCode(
+      {useCount: 1, forAccount},
+      {
+        headers: {
+          authorization: `Basic ${btoa(
+            `admin:${this.pds.ctx.cfg.adminPassword}`,
+          )}`,
+        },
+        encoding: 'application/json',
+      },
+    )
   }
 
   async labelAccount(label: string, user: string) {
@@ -380,8 +320,8 @@ const checkAvailablePort = (port: number) =>
     })
   })
 
-async function getPort() {
-  for (let i = 3000; i < 65000; i++) {
+async function getPort(start = 3000) {
+  for (let i = start; i < 65000; i++) {
     if (await checkAvailablePort(i)) {
       return i
     }
