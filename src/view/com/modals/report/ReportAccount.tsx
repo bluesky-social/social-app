@@ -1,5 +1,6 @@
 import React, {useState, useMemo} from 'react'
-import {ScrollView, TouchableOpacity, StyleSheet, View} from 'react-native'
+import {TouchableOpacity, StyleSheet, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {ComAtprotoModerationDefs} from '@atproto/api'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
