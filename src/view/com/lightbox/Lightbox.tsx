@@ -110,7 +110,7 @@ async function saveImageToAlbumWithToasts(uri: string) {
   try {
     await saveImageToAlbum({uri, album: 'Bluesky'})
     Toast.show('Saved to the "Bluesky" album.')
-  } catch (e) {
+  } catch (e: any) {
     Toast.show(`Failed to save image: ${String(e)}`)
   }
 }
