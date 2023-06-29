@@ -301,6 +301,7 @@ export const FeedItem = observer(function ({
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}
+                  style={s.flex1}
                 />
               </View>
             ) : undefined}

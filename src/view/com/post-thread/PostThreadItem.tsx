@@ -276,6 +276,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   type="post-text-lg"
                   richText={item.richText}
                   lineHeight={1.3}
+                  style={s.flex1}
                 />
               </View>
             ) : undefined}
@@ -411,7 +412,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                     <RichText
                       type="post-text"
                       richText={item.richText}
-                      style={pal.text}
+                      style={{...pal.text, ...s.flex1}}
                       lineHeight={1.3}
                     />
                   </View>
