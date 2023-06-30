@@ -114,7 +114,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     try {
       await item.toggleThreadMute()
       if (item.isThreadMuted) {
-        Toast.show('You will no longer received notifications for this thread')
+        Toast.show('You will no longer receive notifications for this thread')
       } else {
         Toast.show('You will now receive notifications for this thread')
       }
