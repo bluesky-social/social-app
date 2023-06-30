@@ -66,7 +66,9 @@ export const FeedItem = observer(function ({
   const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
   const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
   const needsTranslation = useMemo(
-    () => !isPostInLanguage(item.post, store.preferences.contentLanguages),
+    () =>
+      store.preferences.contentLanguages.length > 0 &&
+      !isPostInLanguage(item.post, store.preferences.contentLanguages),
     [item.post, store.preferences.contentLanguages],
   )
 
