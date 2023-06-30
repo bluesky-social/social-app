@@ -22,6 +22,10 @@ export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
 ): string | undefined {
   let candidates: string[] = []
+  let postText: string = ''
+  if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
+    postText = post.record.text
+  }
 
   if (
     AppBskyFeedPost.isRecord(post.record) &&
@@ -31,31 +35,31 @@ export function getPostLanguage(
     candidates = post.record.langs
   }
 
+  // if there's only one declared language, use that
   if (candidates?.length === 1) {
     return candidates[0]
   }
 
-  if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
-    if (post.record.text.length === 0) {
-      return undefined
-    }
-
-    let langsProbabilityMap = lande(post.record.text)
-
-    if (candidates?.length) {
-      langsProbabilityMap = langsProbabilityMap.filter(
-        ([lang, _probability]: [string, number]) => {
-          return candidates.includes(code3ToCode2(lang))
-        },
-      )
-    }
-
-    if (langsProbabilityMap[0]) {
-      return code3ToCode2(langsProbabilityMap[0][0])
-    }
+  // no text? can't determine
+  if (postText.trim().length === 0) {
+    return undefined
   }
 
-  return undefined
+  // run the language model
+  let langsProbabilityMap = lande(postText)
+
+  // filter down using declared languages
+  if (candidates?.length) {
+    langsProbabilityMap = langsProbabilityMap.filter(
+      ([lang, _probability]: [string, number]) => {
+        return candidates.includes(code3ToCode2(lang))
+      },
+    )
+  }
+
+  if (langsProbabilityMap[0]) {
+    return code3ToCode2(langsProbabilityMap[0][0])
+  }
 }
 
 export function isPostInLanguage(
