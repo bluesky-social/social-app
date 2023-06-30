@@ -61,8 +61,9 @@ export class PostThreadItemModel {
     }
     return this.post.uri
   }
+
   get isThreadMuted() {
-    return this.rootStore.mutedThreads.uris.has(this.rootUri)
+    return this.data.isThreadMuted
   }
 
   get labelInfo(): PostLabelInfo {
