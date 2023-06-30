@@ -116,7 +116,10 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
           </View>
 
           {model.serviceDescription && (
-            <Policies serviceDescription={model.serviceDescription} />
+            <Policies
+              serviceDescription={model.serviceDescription}
+              needsGuardian={!model.isAge18}
+            />
           )}
         </>
       )}
