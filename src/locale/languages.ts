@@ -556,4 +556,6 @@ export const LANGUAGES_MAP_CODE3 = Object.fromEntries(
   LANGUAGES.map(lang => [lang.code3, lang]),
 )
 // some additional manual mappings (not clear if these should be in the "official" mappings)
-LANGUAGES_MAP_CODE3.pes = LANGUAGES.find(lang => lang.code2 === 'fa')
+if (LANGUAGES_MAP_CODE2.fa) {
+  LANGUAGES_MAP_CODE3.pes = LANGUAGES_MAP_CODE2.fa
+}
