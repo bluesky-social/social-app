@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri} from '@atproto/api'
+import {AtUri, AppBskyFeedDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -18,6 +18,7 @@ import {s} from 'lib/styles'
 import {ago, niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
@@ -65,6 +66,15 @@ export const PostThreadItem = observer(function PostThreadItem({
   }, [item.post.uri, item.post.author.handle])
   const repostsTitle = 'Reposts of this post'
 
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const needsTranslation = useMemo(
+    () =>
+      store.preferences.contentLanguages.length > 0 &&
+      !isPostInLanguage(item.post, store.preferences.contentLanguages),
+    [item.post, store.preferences.contentLanguages],
+  )
+
   const onPressReply = React.useCallback(() => {
     store.shell.openComposer({
       replyTo: {
@@ -98,23 +108,15 @@ export const PostThreadItem = observer(function PostThreadItem({
     Toast.show('Copied to clipboard')
   }, [record])
 
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-
   const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(
-      encodeURI(
-        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
-          record?.text || ''
-        }`,
-      ),
-    )
-  }, [record, primaryLanguage])
+    Linking.openURL(translatorUrl)
+  }, [translatorUrl])
 
   const onToggleThreadMute = React.useCallback(async () => {
     try {
       await item.toggleThreadMute()
       if (item.isThreadMuted) {
-        Toast.show('You will no longer received notifications for this thread')
+        Toast.show('You will no longer receive notifications for this thread')
       } else {
         Toast.show('You will now receive notifications for this thread')
       }
@@ -276,6 +278,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   type="post-text-lg"
                   richText={item.richText}
                   lineHeight={1.3}
+                  style={s.flex1}
                 />
               </View>
             ) : undefined}
@@ -283,9 +286,11 @@ export const PostThreadItem = observer(function PostThreadItem({
               <PostEmbeds embed={item.post.embed} style={s.mb10} />
             </ImageHider>
           </ContentHider>
-          <View style={[s.mt2, s.mb10]}>
-            <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
-          </View>
+          <ExpandedPostDetails
+            post={item.post}
+            translatorUrl={translatorUrl}
+            needsTranslation={needsTranslation}
+          />
           {hasEngagement ? (
             <View style={[styles.expandedInfo, pal.border]}>
               {item.post.repostCount ? (
@@ -411,7 +416,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                     <RichText
                       type="post-text"
                       richText={item.richText}
-                      style={pal.text}
+                      style={[pal.text, s.flex1]}
                       lineHeight={1.3}
                     />
                   </View>
@@ -419,6 +424,15 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <ImageHider style={s.mb10} moderation={item.moderation.thread}>
                   <PostEmbeds embed={item.post.embed} style={s.mb10} />
                 </ImageHider>
+                {needsTranslation && (
+                  <View style={[pal.borderDark, styles.translateLink]}>
+                    <Link href={translatorUrl} title="Translate">
+                      <Text type="sm" style={pal.link}>
+                        Translate this post
+                      </Text>
+                    </Link>
+                  </View>
+                )}
               </ContentHider>
               <PostCtrls
                 itemUri={itemUri}
@@ -472,6 +486,31 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   }
 })
+
+function ExpandedPostDetails({
+  post,
+  needsTranslation,
+  translatorUrl,
+}: {
+  post: AppBskyFeedDefs.PostView
+  needsTranslation: boolean
+  translatorUrl: string
+}) {
+  const pal = usePalette('default')
+  return (
+    <View style={[s.flexRow, s.mt2, s.mb10]}>
+      <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
+      {needsTranslation && (
+        <>
+          <Text style={pal.textLight}> • </Text>
+          <Link href={translatorUrl} title="Translate">
+            <Text style={pal.link}>Translate</Text>
+          </Link>
+        </>
+      )}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   outer: {
@@ -539,6 +578,9 @@ const styles = StyleSheet.create({
   postTextLargeContainer: {
     paddingHorizontal: 0,
     paddingBottom: 10,
+  },
+  translateLink: {
+    marginBottom: 6,
   },
   contentHider: {
     marginTop: 4,

@@ -42,6 +42,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import {isColorMode} from 'state/models/ui/shell'
 import Clipboard from '@react-native-clipboard/clipboard'
+import {reset as resetNavigation} from '../../Navigation'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -91,8 +92,7 @@ export const SettingsScreen = withAuthRequired(
         setIsSwitching(true)
         if (await store.session.resumeSession(acct)) {
           setIsSwitching(false)
-          navigation.navigate('HomeTab')
-          navigation.dispatch(StackActions.popToTop())
+          resetNavigation()
           Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
           return
         }

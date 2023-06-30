@@ -5,7 +5,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
 import {useStores} from 'state/index'
 import * as models from 'state/models/ui/shell'
-import {saveImageModal} from 'lib/media/manip'
+import {shareImageModal, saveImageToAlbum} from 'lib/media/manip'
+import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {Button} from '../util/forms/Button'
@@ -54,7 +55,16 @@ export const Lightbox = observer(function Lightbox() {
             <Button
               type="primary-outline"
               style={styles.footerBtn}
-              onPress={() => saveImageModal({uri})}>
+              onPress={() => saveImageToAlbumWithToasts(uri)}>
+              <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
+              <Text type="xl" style={s.white}>
+                Save
+              </Text>
+            </Button>
+            <Button
+              type="primary-outline"
+              style={styles.footerBtn}
+              onPress={() => shareImageModal({uri})}>
               <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
               <Text type="xl" style={s.white}>
                 Share
@@ -96,6 +106,15 @@ export const Lightbox = observer(function Lightbox() {
   }
 })
 
+async function saveImageToAlbumWithToasts(uri: string) {
+  try {
+    await saveImageToAlbum({uri, album: 'Bluesky'})
+    Toast.show('Saved to the "Bluesky" album.')
+  } catch (e: any) {
+    Toast.show(`Failed to save image: ${String(e)}`)
+  }
+}
+
 const styles = StyleSheet.create({
   footer: {
     paddingTop: 16,
@@ -109,6 +128,7 @@ const styles = StyleSheet.create({
   footerBtns: {
     flexDirection: 'row',
     justifyContent: 'center',
+    gap: 8,
   },
   footerBtn: {
     flexDirection: 'row',

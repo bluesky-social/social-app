@@ -31,13 +31,21 @@ export class CreateAccountModel {
     makeAutoObservable(this, {}, {autoBind: true})
   }
 
+  get isAge13() {
+    return getAge(this.birthDate) >= 13
+  }
+
+  get isAge18() {
+    return getAge(this.birthDate) >= 18
+  }
+
   // form state controls
   // =
 
   next() {
     this.error = ''
     if (this.step === 2) {
-      if (getAge(this.birthDate) < 13) {
+      if (!this.isAge13) {
         this.error =
           'Unfortunately, you do not meet the requirements to create an account.'
         return
