@@ -347,6 +347,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   headerDescription: {
+    flex: 1,
     marginTop: 8,
   },
   headerBtns: {

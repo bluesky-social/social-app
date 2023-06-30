@@ -96,7 +96,7 @@ export const ListCard = ({
       {descriptionRichText ? (
         <View style={styles.details}>
           <RichTextCom
-            style={pal.text}
+            style={[pal.text, s.flex1]}
             numberOfLines={20}
             richText={descriptionRichText}
           />

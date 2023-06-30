@@ -30,6 +30,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {getTranslatorLink} from '../../../locale/helpers'
 
 export const Post = observer(function Post({
   uri,
@@ -167,16 +168,11 @@ const PostLoaded = observer(
     }, [record])
 
     const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
 
     const onOpenTranslate = React.useCallback(() => {
-      Linking.openURL(
-        encodeURI(
-          `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
-            record?.text || ''
-          }`,
-        ),
-      )
-    }, [record, primaryLanguage])
+      Linking.openURL(translatorUrl)
+    }, [translatorUrl])
 
     const onToggleThreadMute = React.useCallback(async () => {
       try {
@@ -299,6 +295,7 @@ const PostLoaded = observer(
                     type="post-text"
                     richText={item.richText}
                     lineHeight={1.3}
+                    style={s.flex1}
                   />
                 </View>
               ) : undefined}
