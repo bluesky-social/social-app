@@ -5,6 +5,8 @@ import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 
 const DY_LIMIT = isDesktopWeb ? 30 : 10
+const DY_LIMIT_UP = DY_LIMIT
+const DY_LIMIT_DOWN = 150
 
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
@@ -22,9 +24,6 @@ export function useOnMainScroll(
         const y = event.nativeEvent.contentOffset.y
         const dy = y - (lastY.current || 0)
         lastY.current = y
-
-        const DY_LIMIT_UP = DY_LIMIT * 1.5
-        const DY_LIMIT_DOWN = DY_LIMIT
 
         if (!store.shell.minimalShellMode && dy > DY_LIMIT_DOWN) {
           store.shell.setMinimalShellMode(true)
