@@ -278,13 +278,11 @@ export class PostsFeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest) {
+    if (this.hasNewLatest || this.isLoading) {
       return
     }
-    const res = await this._getFeed({limit: this.pageSize})
-    const tuner = new FeedTuner()
-    const slices = tuner.tune(res.data.feed, this.feedTuners)
-    this.setHasNewLatest(slices[0]?.uri !== this.slices[0]?.uri)
+    const res = await this._getFeed({limit: 1})
+    this.setHasNewLatest(res.data.feed[0]?.post.uri !== this.pollCursor)
   }
 
   /**
