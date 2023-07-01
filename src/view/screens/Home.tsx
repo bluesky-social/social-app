@@ -8,7 +8,6 @@ import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -204,52 +203,46 @@ const FeedPage = observer(
       )
     }, [])
 
-    // fires when screen is activated/deactivated
-    // - set up polls/listeners, update content
-    useFocusEffect(
-      React.useCallback(() => {
-        const softResetSub = store.onScreenSoftReset(onSoftReset)
-        const feedCleanup = feed.registerListeners()
-        const pollInterval = setInterval(doPoll, POLL_FREQ)
-
-        screen('Feed')
-        store.log.debug('HomeScreen: Updating feed')
-        if (feed.hasContent) {
-          feed.update()
-        }
-
-        return () => {
-          clearInterval(pollInterval)
-          softResetSub.remove()
-          feedCleanup()
-        }
-      }, [store, doPoll, onSoftReset, screen, feed]),
-    )
-    // fires when tab is activated/deactivated
-    // - check for latest
-    useTabFocusEffect(
-      'Home',
-      React.useCallback(
-        isInside => {
-          if (!isPageFocused || !isInside) {
-            return
-          }
-          feed.checkForLatest()
-        },
-        [isPageFocused, feed],
-      ),
-    )
     // fires when page within screen is activated/deactivated
     // - check for latest
     React.useEffect(() => {
-      if (isPageFocused && isScreenFocused) {
-        feed.checkForLatest()
+      if (!isPageFocused || !isScreenFocused) {
+        return
       }
-      isWeb && window.addEventListener('resize', listenForResize)
+
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
+      const feedCleanup = feed.registerListeners()
+      const pollInterval = setInterval(doPoll, POLL_FREQ)
+
+      screen('Feed')
+      store.log.debug('HomeScreen: Updating feed')
+      feed.checkForLatest()
+      if (feed.hasContent) {
+        feed.update()
+      }
+
+      if (isWeb) {
+        window.addEventListener('resize', listenForResize)
+      }
+
       return () => {
-        isWeb && window.removeEventListener('resize', listenForResize)
+        clearInterval(pollInterval)
+        softResetSub.remove()
+        feedCleanup()
+        if (isWeb) {
+          isWeb && window.removeEventListener('resize', listenForResize)
+        }
       }
-    }, [isPageFocused, isScreenFocused, feed, listenForResize])
+    }, [
+      store,
+      doPoll,
+      onSoftReset,
+      screen,
+      feed,
+      isPageFocused,
+      isScreenFocused,
+      listenForResize,
+    ])
 
     const onPressCompose = React.useCallback(() => {
       track('HomeScreen:PressCompose')
