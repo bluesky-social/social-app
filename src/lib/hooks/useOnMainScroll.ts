@@ -23,12 +23,12 @@ export function useOnMainScroll(
         const dy = y - (lastY.current || 0)
         lastY.current = y
 
-        if (!store.shell.minimalShellMode && y > 10 && dy > DY_LIMIT) {
+        const DY_LIMIT_UP = DY_LIMIT * 1.5
+        const DY_LIMIT_DOWN = DY_LIMIT
+
+        if (!store.shell.minimalShellMode && dy > DY_LIMIT_DOWN) {
           store.shell.setMinimalShellMode(true)
-        } else if (
-          store.shell.minimalShellMode &&
-          (y <= 10 || dy < DY_LIMIT * -1)
-        ) {
+        } else if (store.shell.minimalShellMode && dy < DY_LIMIT_UP * -1) {
           store.shell.setMinimalShellMode(false)
         }
 
