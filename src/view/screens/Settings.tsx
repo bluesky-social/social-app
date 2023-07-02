@@ -172,6 +172,22 @@ export const SettingsScreen = withAuthRequired(
       })
     }, [store])
 
+    const onPressAppPasswords = React.useCallback(() => {
+      navigation.navigate('AppPasswords')
+    }, [navigation])
+
+    const onPressSystemLog = React.useCallback(() => {
+      navigation.navigate('Log')
+    }, [navigation])
+
+    const onPressStorybook = React.useCallback(() => {
+      navigation.navigate('Debug')
+    }, [navigation])
+
+    const onPressSavedFeeds = React.useCallback(() => {
+      navigation.navigate('SavedFeeds')
+    }, [navigation])
+
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
         <ViewHeader title="Settings" />
@@ -369,10 +385,13 @@ export const SettingsScreen = withAuthRequired(
               Home Feed Preferences
             </Text>
           </TouchableOpacity>
-          <Link
+          <TouchableOpacity
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/app-passwords">
+            onPress={onPressAppPasswords}
+            accessibilityRole="button"
+            accessibilityHint="Open app password settings"
+            accessibilityLabel="Opens the app password settings page">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="lock"
@@ -382,13 +401,13 @@ export const SettingsScreen = withAuthRequired(
             <Text type="lg" style={pal.text}>
               App passwords
             </Text>
-          </Link>
-          <Link
+          </TouchableOpacity>
+          <TouchableOpacity
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="Saved Feeds"
             accessibilityLabel="Opens screen with all saved feeds"
-            href="/settings/saved-feeds">
+            onPress={onPressSavedFeeds}>
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="satellite-dish"
@@ -398,7 +417,7 @@ export const SettingsScreen = withAuthRequired(
             <Text type="lg" style={pal.text}>
               Saved Feeds
             </Text>
-          </Link>
+          </TouchableOpacity>
           <TouchableOpacity
             testID="contentLanguagesBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
@@ -459,14 +478,16 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Developer Tools
           </Text>
-          <Link
+          <TouchableOpacity
             style={[pal.view, styles.linkCardNoIcon]}
-            href="/sys/log"
-            title="System log">
+            onPress={onPressSystemLog}
+            accessibilityRole="button"
+            accessibilityHint="Open system log"
+            accessibilityLabel="Opens the system log page">
             <Text type="lg" style={pal.text}>
               System log
             </Text>
-          </Link>
+          </TouchableOpacity>
           {isDesktopWeb ? (
             <ToggleButton
               type="default-light"
@@ -477,22 +498,26 @@ export const SettingsScreen = withAuthRequired(
           ) : null}
           {__DEV__ ? (
             <>
-              <Link
+              <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
-                href="/sys/debug"
-                title="Debug tools">
+                onPress={onPressStorybook}
+                accessibilityRole="button"
+                accessibilityHint="Open storybook page"
+                accessibilityLabel="Opens the storybook page">
                 <Text type="lg" style={pal.text}>
                   Storybook
                 </Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetPreferences}
-                title="Debug tools">
+                accessibilityRole="button"
+                accessibilityHint="Reset preferences"
+                accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </>
           ) : null}
           <TouchableOpacity
