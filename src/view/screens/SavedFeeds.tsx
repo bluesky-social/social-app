@@ -124,7 +124,7 @@ export const SavedFeeds = withAuthRequired(
           showBorder={!isDesktopWeb}
         />
         <DraggableFlatList
-          containerStyle={[!isDesktopWeb && s.flex1]}
+          containerStyle={[isDesktopWeb ? s.hContentRegion : s.flex1]}
           data={savedFeeds.all}
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}
