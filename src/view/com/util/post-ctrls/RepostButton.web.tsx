@@ -60,7 +60,7 @@ export const RepostButton = ({
         {typeof repostCount !== 'undefined' ? (
           <Text
             testID="repostCount"
-            type={isReposted ? 'md-bold' : 'md-medium'}
+            type={isReposted ? 'md-bold' : 'md'}
             style={styles.repostCount}>
             {repostCount ?? 0}
           </Text>
