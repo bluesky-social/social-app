@@ -156,19 +156,14 @@ export const ComposePost = observer(function ComposePost({
       if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
         return
       }
+      if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
+        return
+      }
 
       setError('')
 
       if (rt.text.trim().length === 0 && gallery.isEmpty) {
         setError('Did you want to say anything?')
-        return
-      }
-
-      if (
-        store.preferences.requireAltTextEnabled &&
-        gallery.images.some(image => image.altText.trim() === '')
-      ) {
-        setError('One or more images is missing alt text')
         return
       }
 
@@ -228,8 +223,14 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const canPost = useMemo(
-    () => graphemeLength <= MAX_GRAPHEME_LENGTH,
-    [graphemeLength],
+    () =>
+      graphemeLength <= MAX_GRAPHEME_LENGTH &&
+      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
+    [
+      graphemeLength,
+      store.preferences.requireAltTextEnabled,
+      gallery.needsAltText,
+    ],
   )
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
@@ -290,6 +291,20 @@ export const ComposePost = observer(function ComposePost({
             <Text style={pal.text}>{processingState}</Text>
           </View>
         ) : undefined}
+        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+          <View style={[styles.reminderLine, pal.viewLight]}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon
+                icon="exclamation"
+                style={{color: colors.red4}}
+                size={10}
+              />
+            </View>
+            <Text style={[pal.text, s.flex1]}>
+              One or more images is missing alt text.
+            </Text>
+          </View>
+        )}
         {error !== '' && (
           <View style={styles.errorLine}>
             <View style={styles.errorIcon}>
@@ -422,6 +437,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     marginVertical: 6,
+  },
+  reminderLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 6,
+    marginHorizontal: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginBottom: 6,
   },
   errorIcon: {
     borderWidth: 1,
