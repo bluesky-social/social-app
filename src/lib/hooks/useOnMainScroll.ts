@@ -4,9 +4,8 @@ import {RootStoreModel} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 
-const DY_LIMIT = isDesktopWeb ? 30 : 10
-const DY_LIMIT_UP = DY_LIMIT
-const DY_LIMIT_DOWN = 150
+const DY_LIMIT_UP = isDesktopWeb ? 30 : 10
+const DY_LIMIT_DOWN = isDesktopWeb ? 150 : 10
 
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
