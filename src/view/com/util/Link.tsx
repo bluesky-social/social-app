@@ -5,12 +5,14 @@ import {
   GestureResponderEvent,
   Platform,
   StyleProp,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
   TextStyle,
   View,
   ViewStyle,
 } from 'react-native'
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler'
 import {
   useLinkProps,
   useNavigation,
