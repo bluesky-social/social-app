@@ -1,3 +1,5 @@
+/// <reference lib="es2021.intl" />
+
 import React, {useMemo, useState, useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
@@ -37,6 +39,7 @@ import {ProfileModeration} from 'lib/labeling/types'
 import {formatCount} from '../util/numeric/format'
 
 const MAX_AUTHORS = 5
+const MAX_INLINE_TEXT_AUTHORS = 3
 
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
@@ -46,6 +49,31 @@ interface Author {
   displayName?: string
   avatar?: string
   moderation: ProfileModeration
+}
+
+const listFormatNodes = (
+  formatter: Intl.ListFormat,
+  nodes: React.ReactNode[],
+  renderLiteral: (text: string, key: string) => React.ReactNode,
+): React.ReactNode[] => {
+  // Intl.ListFormat.formatToParts does not like being given things that
+  // are not strings. So we will pass it a list of numbers that represent
+  // our react nodes and let the formatter do its thing, then map the
+  // result against our original map and replace it with the original node.
+  let idx = 0
+  const nodeByID = new Map<string, React.ReactNode>(
+    nodes.map(n => {
+      return [`listFormatNodes-ph-${idx++}`, n]
+    }),
+  )
+  return formatter.formatToParts(nodeByID.keys()).map((item, idx) => {
+    switch (item.type) {
+      case 'literal':
+        return renderLiteral(item.value, `lit-${idx}`)
+      case 'element':
+        return nodeByID.get(item.value)
+    }
+  })
 }
 
 export const FeedItem = observer(function ({
@@ -207,23 +235,40 @@ export const FeedItem = observer(function ({
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text style={styles.meta}>
-            <TextLink
-              key={authors[0].href}
-              style={[pal.text, s.bold]}
-              href={authors[0].href}
-              text={sanitizeDisplayName(
-                authors[0].displayName || authors[0].handle,
-              )}
-            />
-            {authors.length > 1 ? (
-              <>
-                <Text style={[pal.text]}> and </Text>
-                <Text style={[pal.text, s.bold]}>
-                  {formatCount(authors.length - 1)}{' '}
-                  {pluralize(authors.length - 1, 'other')}
+            {listFormatNodes(
+              new Intl.ListFormat('en', {style: 'long', type: 'conjunction'}),
+              [
+                ...authors
+                  .slice(0, MAX_INLINE_TEXT_AUTHORS)
+                  .map(author => (
+                    <TextLink
+                      key={author.href}
+                      style={[pal.text, s.bold]}
+                      href={author.href}
+                      text={sanitizeDisplayName(
+                        author.displayName || author.handle,
+                      )}
+                    />
+                  )),
+                ...(authors.length - MAX_INLINE_TEXT_AUTHORS > 0
+                  ? [
+                      <Text key={`overflow`} style={[pal.text, s.bold]}>
+                        {formatCount(authors.length - MAX_INLINE_TEXT_AUTHORS)}{' '}
+                        {pluralize(
+                          authors.length - MAX_INLINE_TEXT_AUTHORS,
+                          'other',
+                        )}
+                      </Text>,
+                    ]
+                  : []),
+              ],
+              (text: string, key: string): React.ReactNode => (
+                <Text key={key} style={[pal.text]}>
+                  {text}
                 </Text>
-              </>
-            ) : undefined}
+              ),
+            )}
+
             <Text style={[pal.text]}> {action}</Text>
             <Text style={[pal.textLight]}> {ago(item.indexedAt)}</Text>
           </Text>
