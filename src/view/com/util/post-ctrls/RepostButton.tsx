@@ -52,7 +52,7 @@ export const RepostButton = ({
       accessibilityRole="button"
       accessibilityLabel={`${
         isReposted ? 'Undo repost' : 'Repost'
-      } (${repostCount} ${pluralize(repostCount, 'repost')})`}
+      } (${repostCount} ${pluralize(repostCount || 0, 'repost')})`}
       accessibilityHint="">
       <RepostIcon
         style={

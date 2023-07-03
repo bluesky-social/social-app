@@ -195,7 +195,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityRole="button"
         accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
           opts.likeCount
-        } ${pluralize(opts.likeCount, 'like')})`}
+        } ${pluralize(opts.likeCount || 0, 'like')})`}
         accessibilityHint="">
         {opts.isLiked ? (
           <HeartIconSolid
