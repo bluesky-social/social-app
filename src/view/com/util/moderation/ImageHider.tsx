@@ -2,9 +2,8 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
-import {BlurView} from '../BlurView'
 import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
-import {isAndroid} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
 
 export function ImageHider({
   testID,
@@ -41,48 +40,34 @@ export function ImageHider({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <View testID={testID} style={style}>
-        {children}
-      </View>
       {override ? (
-        <Pressable
-          onPress={onPressHide}
-          style={[styles.hideBtn, pal.view]}
-          accessibilityLabel="Hide image"
-          accessibilityHint="Rehides the image">
-          <Text type="xl-bold" style={pal.link}>
-            Hide
-          </Text>
-        </Pressable>
+        <View testID={testID} style={[style]}>
+          <Pressable
+            onPress={onPressHide}
+            style={[styles.hideBtn, pal.viewLight]}
+            accessibilityLabel="Hide image"
+            accessibilityHint="">
+            <Text type="xl-bold" style={pal.link}>
+              Hide
+            </Text>
+          </Pressable>
+          {children}
+        </View>
       ) : (
-        <>
-          {isAndroid ? (
-            /* android has an issue that breaks the blurview */
-            /* see https://github.com/Kureev/react-native-blur/issues/486 */
-            <View style={[pal.viewLight, styles.overlay, styles.coverView]} />
-          ) : (
-            <BlurView
-              style={[styles.overlay, styles.blurView]}
-              blurType="light"
-              blurAmount={100}
-              reducedTransparencyFallbackColor="white"
-            />
-          )}
-          <View style={[styles.overlay, styles.info]}>
-            <Pressable
-              onPress={onPressShow}
-              style={[styles.showBtn, pal.view]}
-              accessibilityLabel="Show image"
-              accessibilityHint="Shows image hidden based on your moderation settings">
-              <Text type="xl" style={pal.text}>
-                {moderation.reason || 'Content warning'}
-              </Text>
-              <Text type="xl-bold" style={pal.link}>
-                Show
-              </Text>
-            </Pressable>
-          </View>
-        </>
+        <View style={[styles.cover, pal.viewLight]}>
+          <Pressable
+            onPress={onPressShow}
+            style={[styles.showBtn, pal.view]}
+            accessibilityLabel="Show image"
+            accessibilityHint="">
+            <Text type="xl" style={pal.text}>
+              {moderation.reason || 'Content warning'}
+            </Text>
+            <Text type="xl-bold" style={pal.link}>
+              Show
+            </Text>
+          </Pressable>
+        </View>
       )}
     </View>
   )
@@ -93,22 +78,24 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginBottom: 10,
   },
-  overlay: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
+  overrideContainer: {
+    paddingHorizontal: 8,
+    paddingTop: 8,
+    paddingBottom: 2,
+    borderRadius: 12,
+    borderWidth: 1,
   },
-  blurView: {
+  cover: {
     borderRadius: 8,
-  },
-  coverView: {
-    borderRadius: 8,
-  },
-  info: {
     justifyContent: 'center',
     alignItems: 'center',
+    aspectRatio: isDesktopWeb ? 2 : 1.5,
+  },
+  coverOpen: {
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
   },
   showBtn: {
     flexDirection: 'row',
@@ -118,11 +105,11 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   hideBtn: {
-    position: 'absolute',
-    left: 8,
-    bottom: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 10,
     borderRadius: 8,
   },
 })
