@@ -9,13 +9,11 @@ export function ImageHider({
   testID,
   moderation,
   style,
-  containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationBehavior
   style?: StyleProp<ViewStyle>
-  containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
@@ -39,9 +37,9 @@ export function ImageHider({
   }
 
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View testID={testID} style={style}>
       {override ? (
-        <View testID={testID} style={[style]}>
+        <View>
           <Pressable
             onPress={onPressHide}
             style={[styles.hideBtn, pal.viewLight]}
@@ -74,10 +72,6 @@ export function ImageHider({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    marginBottom: 10,
-  },
   overrideContainer: {
     paddingHorizontal: 8,
     paddingTop: 8,
@@ -90,6 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     aspectRatio: isDesktopWeb ? 2 : 1.5,
+    marginBottom: 10,
   },
   coverOpen: {
     borderRadius: 8,
