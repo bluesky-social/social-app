@@ -53,6 +53,7 @@ export class PreferencesModel {
   homeFeedRepliesThreshold: number = 2
   homeFeedRepostsEnabled: boolean = true
   homeFeedQuotePostsEnabled: boolean = true
+  requireAltTextEnabled: boolean = false
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
@@ -72,6 +73,7 @@ export class PreferencesModel {
       homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
       homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
+      requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
 
@@ -151,6 +153,13 @@ export class PreferencesModel {
         typeof v.homeFeedQuotePostsEnabled === 'boolean'
       ) {
         this.homeFeedQuotePostsEnabled = v.homeFeedQuotePostsEnabled
+      }
+      // check if requiring alt text is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'requireAltTextEnabled') &&
+        typeof v.requireAltTextEnabled === 'boolean'
+      ) {
+        this.requireAltTextEnabled = v.requireAltTextEnabled
       }
     }
   }
@@ -466,5 +475,9 @@ export class PreferencesModel {
 
   toggleHomeFeedQuotePostsEnabled() {
     this.homeFeedQuotePostsEnabled = !this.homeFeedQuotePostsEnabled
+  }
+
+  toggleRequireAltTextEnabled() {
+    this.requireAltTextEnabled = !this.requireAltTextEnabled
   }
 }

@@ -23,6 +23,10 @@ export class GalleryModel {
     return this.images.length
   }
 
+  get needsAltText() {
+    return this.images.some(image => image.altText.trim() === '')
+  }
+
   async add(image_: Omit<RNImage, 'size'>) {
     if (this.size >= 4) {
       return

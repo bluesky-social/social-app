@@ -330,6 +330,22 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
 
           <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Accessibility
+          </Text>
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label="Require alt text on images"
+              labelType="lg"
+              isSelected={store.preferences.requireAltTextEnabled}
+              onPress={store.preferences.toggleRequireAltTextEnabled}
+            />
+          </View>
+
+          <View style={styles.spacer20} />
+
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Appearance
           </Text>
@@ -631,6 +647,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 18,
+    marginBottom: 1,
+  },
+  toggleCard: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
     marginBottom: 1,
   },
   avi: {
