@@ -108,13 +108,7 @@ export async function shareImageModal({uri}: {uri: string}) {
   RNFS.unlink(imagePath)
 }
 
-export async function saveImageToAlbum({
-  uri,
-  album,
-}: {
-  uri: string
-  album: string
-}) {
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // download the file to cache
   // NOTE
   // assuming PNG
@@ -126,14 +120,8 @@ export async function saveImageToAlbum({
   let imagePath = downloadResponse.path()
   imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
 
-  // save to the album (creating as needed)
-  const assetRef = await MediaLibrary.createAssetAsync(imagePath)
-  const albumRef = await MediaLibrary.getAlbumAsync(album)
-  if (albumRef) {
-    await MediaLibrary.addAssetsToAlbumAsync(assetRef, albumRef)
-  } else {
-    await MediaLibrary.createAlbumAsync(album, assetRef)
-  }
+  // save
+  await MediaLibrary.createAssetAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {

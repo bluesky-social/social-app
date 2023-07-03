@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
 import {useStores} from 'state/index'
 import * as models from 'state/models/ui/shell'
-import {shareImageModal, saveImageToAlbum} from 'lib/media/manip'
+import {shareImageModal, saveImageToMediaLibrary} from 'lib/media/manip'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
@@ -30,15 +30,15 @@ export const Lightbox = observer(function Lightbox() {
           requestPermission()
         } else {
           Toast.show(
-            'Permission to access camera roll was denied. Please enable it in your settings.',
+            'Permission to access camera roll was denied. Please enable it in your system settings.',
           )
         }
         return
       }
 
       try {
-        await saveImageToAlbum({uri, album: 'Bluesky'})
-        Toast.show('Saved to the "Bluesky" album.')
+        await saveImageToMediaLibrary({uri})
+        Toast.show('Saved to your camera roll.')
       } catch (e: any) {
         Toast.show(`Failed to save image: ${String(e)}`)
       }
