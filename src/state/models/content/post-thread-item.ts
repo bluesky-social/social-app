@@ -51,6 +51,7 @@ export class PostThreadItemModel {
   get uri() {
     return this.post.uri
   }
+
   get parentUri() {
     return this.postRecord?.reply?.parent.uri
   }
