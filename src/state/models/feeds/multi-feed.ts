@@ -1,10 +1,11 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+
 import {AtUri} from '@atproto/api'
-import {bundleAsync} from 'lib/async/bundle'
-import {RootStoreModel} from '../root-store'
 import {CustomFeedModel} from './custom-feed'
 import {PostsFeedModel} from './posts'
 import {PostsFeedSliceModel} from './posts-slice'
+import {RootStoreModel} from '../root-store'
+import {bundleAsync} from 'lib/async/bundle'
 
 const FEED_PAGE_SIZE = 10
 const FEEDS_PAGE_SIZE = 3

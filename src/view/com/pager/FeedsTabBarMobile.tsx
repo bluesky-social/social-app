@@ -1,17 +1,16 @@
-import React, {useMemo} from 'react'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {TabBar} from 'view/com/pager/TabBar'
+import React, {useMemo} from 'react'
+
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
+import {TabBar} from 'view/com/pager/TabBar'
+import {Text} from '../util/text/Text'
+import {observer} from 'mobx-react-lite'
+import {s} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {CogIcon} from 'lib/icons'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const FeedsTabBar = observer(
   (
@@ -40,7 +39,7 @@ export const FeedsTabBar = observer(
     }, [store])
 
     const items = useMemo(
-      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
+      () => ['Home', ...store.me.savedFeeds.pinnedFeedNames],
       [store.me.savedFeeds.pinnedFeedNames],
     )
 
@@ -63,18 +62,9 @@ export const FeedsTabBar = observer(
             </TouchableOpacity>
           </View>
           <Text style={[brandBlue, s.bold, styles.title]}>
-            {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+            {store.session.isSandbox ? 'SANDBOX' : 'Townsquare'}
           </Text>
-          <View style={[pal.view]}>
-            <Link
-              href="/settings/saved-feeds"
-              hitSlop={10}
-              accessibilityRole="button"
-              accessibilityLabel="Edit Saved Feeds"
-              accessibilityHint="Opens screen to edit Saved Feeds">
-              <CogIcon size={21} strokeWidth={2} style={pal.textLight} />
-            </Link>
-          </View>
+          <View style={[pal.view]} />
         </View>
         <TabBar
           key={items.join(',')}

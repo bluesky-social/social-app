@@ -1,8 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+
+import {CustomFeedModel} from '../feeds/custom-feed'
 import {RootStoreModel} from '../root-store'
+import {SOLARPLEX_FEEDS} from 'lib/constants'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {CustomFeedModel} from '../feeds/custom-feed'
 import {track} from 'lib/analytics/analytics'
 
 export class SavedFeedsModel {
@@ -73,7 +75,7 @@ export class SavedFeedsModel {
 
     // collect the feed URIs that havent been synced yet
     const neededFeedUris = []
-    for (const feedUri of this.rootStore.preferences.savedFeeds) {
+    for (const feedUri of SOLARPLEX_FEEDS) {
       if (!(feedUri in newFeedModels)) {
         neededFeedUris.push(feedUri)
       }

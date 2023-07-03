@@ -1,13 +1,14 @@
-import React, {useMemo} from 'react'
 import {Animated, StyleSheet} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {TabBar} from 'view/com/pager/TabBar'
-import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import React, {useMemo} from 'react'
+
 import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
+import {RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {TabBar} from 'view/com/pager/TabBar'
+import {observer} from 'mobx-react-lite'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const FeedsTabBar = observer(
   (
@@ -28,7 +29,7 @@ const FeedsTabBarDesktop = observer(
   ) => {
     const store = useStores()
     const items = useMemo(
-      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
+      () => ['Home', ...store.me.savedFeeds.pinnedFeedNames],
       [store.me.savedFeeds.pinnedFeedNames],
     )
     const pal = usePalette('default')

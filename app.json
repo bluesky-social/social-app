@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Bluesky",
-    "slug": "bluesky",
-    "scheme": "bluesky",
-    "owner": "blueskysocial",
+    "name": "Solarplex",
+    "slug": "Solarplex",
+    "scheme": "Solarplex",
+    "owner": "Solarplex",
     "version": "1.37.0",
     "runtimeVersion": {
       "policy": "appVersion"
@@ -19,7 +19,7 @@
     "ios": {
       "buildNumber": "1",
       "supportsTablet": false,
-      "bundleIdentifier": "xyz.blueskyweb.app",
+      "bundleIdentifier": "xyz.Solarplex.app",
       "config": {
         "usesNonExemptEncryption": false
       },
@@ -48,7 +48,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "xyz.blueskyweb.app",
+      "package": "xyz.Solarplex.app",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -87,7 +87,7 @@
       [
         "expo-updates",
         {
-          "username": "blueskysocial"
+          "username": "Solarplex"
         }
       ]
     ],
@@ -101,7 +101,7 @@
         {
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
-            "organization": "blueskyweb",
+            "organization": "Solarplex",
             "project": "react-native"
           }
         }

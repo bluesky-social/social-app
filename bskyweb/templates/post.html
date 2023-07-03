@@ -2,16 +2,16 @@
 
 {% block head_title %}
 {%- if postView -%}
-  @{{ postView.Author.Handle }} on Bluesky
+  @{{ postView.Author.Handle }} on Solarplex
 {%- else -%}
-  Bluesky
+  Solarplex
 {%- endif -%}
 {% endblock %}
 
 {% block html_head_extra -%}
 {%- if postView -%}
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Bluesky Social">
+  <meta property="og:site_name" content="Solarplex Townsquare">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
   {% endif -%}
@@ -33,7 +33,7 @@
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.CreatedAt }}">
-  <meta name="twitter:site" content="@bluesky">
+  <meta name="twitter:site" content="@solarplex_xyz">
 {% endif -%}
 {%- endblock %}
 

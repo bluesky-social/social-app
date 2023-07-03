@@ -1,21 +1,21 @@
+import {FlatNavigator, RoutesContainer} from '../../Navigation'
 import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
-import {View, StyleSheet, TouchableOpacity} from 'react-native'
-import {useStores} from 'state/index'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {colors, s} from 'lib/styles'
+
+import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
+import {Composer} from './Composer.web'
 import {DesktopLeftNav} from './desktop/LeftNav'
-import {DesktopRightNav} from './desktop/RightNav'
+import {DrawerContent} from './Drawer'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {Lightbox} from '../com/lightbox/Lightbox'
 import {ModalsContainer} from '../com/modals/Modal'
-import {Composer} from './Composer.web'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {s, colors} from 'lib/styles'
-import {RoutesContainer, FlatNavigator} from '../../Navigation'
-import {DrawerContent} from './Drawer'
-import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
-import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {observer} from 'mobx-react-lite'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {useNavigation} from '@react-navigation/native'
+import {useStores} from 'state/index'
+import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 
 const ShellInner = observer(() => {
   const store = useStores()
@@ -39,7 +39,7 @@ const ShellInner = observer(() => {
       {isDesktop && store.session.hasSession && (
         <>
           <DesktopLeftNav />
-          <DesktopRightNav />
+          {/* <DesktopRightNav /> */}
         </>
       )}
       <Composer

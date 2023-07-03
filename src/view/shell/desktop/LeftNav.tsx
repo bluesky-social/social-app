@@ -1,41 +1,33 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
+import {
+  BellIcon,
+  BellIconSolid,
+  ComposeIcon2,
+  HomeIcon,
+  HomeIconSolid,
+} from 'lib/icons'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {colors, s} from 'lib/styles'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {
   useLinkProps,
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+
+import {Link} from 'view/com/util/Link'
+import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import React from 'react'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Link} from 'view/com/util/Link'
+import {observer} from 'mobx-react-lite'
+import {router} from '../../../routes'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {s, colors} from 'lib/styles'
-import {
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  BellIcon,
-  BellIconSolid,
-  UserIcon,
-  UserIconSolid,
-  CogIcon,
-  CogIconSolid,
-  ComposeIcon2,
-  HandIcon,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
-} from 'lib/icons'
-import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
-import {router} from '../../../routes'
 
 const ProfileCard = observer(() => {
   const store = useStores()
@@ -192,38 +184,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Home"
       />
       <NavItem
-        href="/search"
-        icon={
-          <MagnifyingGlassIcon2 strokeWidth={2} size={24} style={pal.text} />
-        }
-        iconFilled={
-          <MagnifyingGlassIcon2Solid
-            strokeWidth={2}
-            size={24}
-            style={pal.text}
-          />
-        }
-        label="Search"
-      />
-      <NavItem
-        href="/feeds"
-        icon={
-          <SatelliteDishIcon
-            strokeWidth={1.75}
-            style={pal.text as FontAwesomeIconStyle}
-            size={24}
-          />
-        }
-        iconFilled={
-          <SatelliteDishIconSolid
-            strokeWidth={1.75}
-            style={pal.text as FontAwesomeIconStyle}
-            size={24}
-          />
-        }
-        label="My Feeds"
-      />
-      <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCountLabel}
         icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
@@ -231,42 +191,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
         }
         label="Notifications"
-      />
-      <NavItem
-        href="/moderation"
-        icon={
-          <HandIcon
-            strokeWidth={5.5}
-            style={pal.text as FontAwesomeIconStyle}
-            size={24}
-          />
-        }
-        iconFilled={
-          <FontAwesomeIcon
-            icon="hand"
-            style={pal.text as FontAwesomeIconStyle}
-            size={20}
-          />
-        }
-        label="Moderation"
-      />
-      {store.session.hasSession && (
-        <NavItem
-          href={`/profile/${store.me.handle}`}
-          icon={<UserIcon strokeWidth={1.75} size={28} style={pal.text} />}
-          iconFilled={
-            <UserIconSolid strokeWidth={1.75} size={28} style={pal.text} />
-          }
-          label="Profile"
-        />
-      )}
-      <NavItem
-        href="/settings"
-        icon={<CogIcon strokeWidth={1.75} size={28} style={pal.text} />}
-        iconFilled={
-          <CogIconSolid strokeWidth={1.5} size={28} style={pal.text} />
-        }
-        label="Settings"
       />
       {store.session.hasSession && <ComposeBtn />}
     </View>

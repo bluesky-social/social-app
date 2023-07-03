@@ -1,26 +1,23 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Animated} from 'react-native'
-import {useNavigationState} from '@react-navigation/native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {styles} from './BottomBarStyles'
-import {clamp} from 'lib/numbers'
 import {
   BellIcon,
   BellIconSolid,
   HomeIcon,
   HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
   UserIcon,
 } from 'lib/icons'
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+
+import {Animated} from 'react-native'
 import {Link} from 'view/com/util/Link'
+import React from 'react'
+import {clamp} from 'lib/numbers'
+import {observer} from 'mobx-react-lite'
+import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useNavigationState} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useStores} from 'state/index'
 
 export const BottomBarWeb = observer(() => {
   const store = useStores()
@@ -45,32 +42,6 @@ export const BottomBarWeb = observer(() => {
               strokeWidth={4}
               size={24}
               style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-            />
-          )
-        }}
-      </NavItem>
-      <NavItem routeName="Search" href="/search">
-        {({isActive}) => {
-          const Icon = isActive
-            ? MagnifyingGlassIcon2Solid
-            : MagnifyingGlassIcon2
-          return (
-            <Icon
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
-            />
-          )
-        }}
-      </NavItem>
-      <NavItem routeName="Feeds" href="/feeds">
-        {({isActive}) => {
-          const Icon = isActive ? SatelliteDishIconSolid : SatelliteDishIcon
-          return (
-            <Icon
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
             />
           )
         }}

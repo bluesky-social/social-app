@@ -1,4 +1,8 @@
-import React, {ComponentProps} from 'react'
+import {BellIcon, BellIconSolid, HomeIcon, HomeIconSolid} from 'lib/icons'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {
   Linking,
   SafeAreaView,
@@ -9,40 +13,24 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {s, colors} from 'lib/styles'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {useStores} from 'state/index'
-import {
-  HomeIcon,
-  HomeIconSolid,
-  BellIcon,
-  BellIconSolid,
-  UserIcon,
-  CogIcon,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  UserIconSolid,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
-  HandIcon,
-} from 'lib/icons'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Text} from 'view/com/util/text/Text'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {pluralize} from 'lib/strings/helpers'
-import {getTabState, TabState} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {isWeb} from 'platform/detection'
+import React, {ComponentProps} from 'react'
+import {StackActions, useNavigation} from '@react-navigation/native'
+import {TabState, getTabState} from 'lib/routes/helpers'
+import {colors, s} from 'lib/styles'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
+
+import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {NavigationProp} from 'lib/routes/types'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {isWeb} from 'platform/detection'
+import {observer} from 'mobx-react-lite'
+import {pluralize} from 'lib/strings/helpers'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {useTheme} from 'lib/ThemeContext'
 
 export const DrawerContent = observer(() => {
   const theme = useTheme()
@@ -50,8 +38,7 @@ export const DrawerContent = observer(() => {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
-    useNavigationTabState()
+  const {isAtHome, isAtNotifications} = useNavigationTabState()
 
   const {notifications} = store.me
 
@@ -83,11 +70,6 @@ export const DrawerContent = observer(() => {
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
 
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
-
   const onPressNotifications = React.useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
@@ -96,23 +78,6 @@ export const DrawerContent = observer(() => {
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
-
-  const onPressMyFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
-
-  const onPressModeration = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Moderation'})
-    navigation.navigate('Moderation')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
-
-  const onPressSettings = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Settings'})
-    navigation.navigate('Settings')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
 
   const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
@@ -162,28 +127,6 @@ export const DrawerContent = observer(() => {
         <ScrollView style={styles.main}>
           <MenuItem
             icon={
-              isAtSearch ? (
-                <MagnifyingGlassIcon2Solid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size={24}
-                  strokeWidth={1.7}
-                />
-              ) : (
-                <MagnifyingGlassIcon2
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size={24}
-                  strokeWidth={1.7}
-                />
-              )
-            }
-            label="Search"
-            accessibilityLabel="Search"
-            accessibilityHint=""
-            bold={isAtSearch}
-            onPress={onPressSearch}
-          />
-          <MenuItem
-            icon={
               isAtHome ? (
                 <HomeIconSolid
                   style={pal.text as StyleProp<ViewStyle>}
@@ -231,69 +174,6 @@ export const DrawerContent = observer(() => {
             bold={isAtNotifications}
             onPress={onPressNotifications}
           />
-          <MenuItem
-            icon={
-              isAtFeeds ? (
-                <SatelliteDishIconSolid
-                  strokeWidth={1.5}
-                  style={pal.text as FontAwesomeIconStyle}
-                  size={24}
-                />
-              ) : (
-                <SatelliteDishIcon
-                  strokeWidth={1.5}
-                  style={pal.text as FontAwesomeIconStyle}
-                  size={24}
-                />
-              )
-            }
-            label="My Feeds"
-            accessibilityLabel="My Feeds"
-            accessibilityHint=""
-            onPress={onPressMyFeeds}
-          />
-          <MenuItem
-            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
-            label="Moderation"
-            accessibilityLabel="Moderation"
-            accessibilityHint=""
-            onPress={onPressModeration}
-          />
-          <MenuItem
-            icon={
-              isAtMyProfile ? (
-                <UserIconSolid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="26"
-                  strokeWidth={1.5}
-                />
-              ) : (
-                <UserIcon
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="26"
-                  strokeWidth={1.5}
-                />
-              )
-            }
-            label="Profile"
-            accessibilityLabel="Profile"
-            accessibilityHint=""
-            onPress={onPressProfile}
-          />
-          <MenuItem
-            icon={
-              <CogIcon
-                style={pal.text as StyleProp<ViewStyle>}
-                size="26"
-                strokeWidth={1.75}
-              />
-            }
-            label="Settings"
-            accessibilityLabel="Settings"
-            accessibilityHint=""
-            onPress={onPressSettings}
-          />
-          <View style={styles.smallSpacer} />
         </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity

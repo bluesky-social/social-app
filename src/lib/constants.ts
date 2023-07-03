@@ -1,5 +1,4 @@
-export const FEEDBACK_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdavFRXTdB6tRobaFrRR2A1gv3b-IBHwQkBmNZTRpoqmcrPrQ/viewform?usp=sf_link'
+export const FEEDBACK_FORM_URL = 'https://tally.so/r/nrD8l2'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
@@ -104,6 +103,10 @@ export const STAGING_LINK_META_PROXY =
   'https://cardyb.staging.bsky.dev/v1/extract?url='
 
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
+
+export const SOLARPLEX_FEEDS = [
+  'at://did:plc:pexkitpwhd455f5s7b7i4ok4/app.bsky.feed.generator/aaab2rwjuijtg',
+]
 
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_LOCAL_DEV(serviceUrl)) {
