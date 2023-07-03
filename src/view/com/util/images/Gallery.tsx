@@ -47,7 +47,9 @@ export const GalleryItem: FC<GalleryItemProps> = ({
       </TouchableOpacity>
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
-          <Text style={styles.alt}>ALT</Text>
+          <Text style={styles.alt} accessible={false}>
+            ALT
+          </Text>
         </View>
       )}
     </View>
