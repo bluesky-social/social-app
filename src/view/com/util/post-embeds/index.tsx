@@ -129,7 +129,9 @@ export function PostEmbeds({
               style={styles.singleImage}>
               {alt === '' ? null : (
                 <View style={styles.altContainer}>
-                  <Text style={styles.alt}>ALT</Text>
+                  <Text style={styles.alt} accessible={false}>
+                    ALT
+                  </Text>
                 </View>
               )}
             </AutoSizedImage>

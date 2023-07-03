@@ -89,7 +89,9 @@ export const Gallery = observer(function ({gallery}: Props) {
                 openAltTextModal(store, image)
               }}
               style={[styles.altTextControl, altTextControlStyle]}>
-              <Text style={styles.altTextControlLabel}>ALT</Text>
+              <Text style={styles.altTextControlLabel} accessible={false}>
+                ALT
+              </Text>
               {image.altText.length > 0 ? (
                 <FontAwesomeIcon
                   icon="check"

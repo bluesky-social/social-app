@@ -109,7 +109,7 @@ export const Lightbox = observer(function Lightbox() {
     const opts = store.shell.activeLightbox as models.ProfileImageLightbox
     return (
       <ImageView
-        images={[{uri: opts.profileView.avatar}]}
+        images={[{uri: opts.profileView.avatar || ''}]}
         imageIndex={0}
         visible
         onRequestClose={onClose}
@@ -120,7 +120,7 @@ export const Lightbox = observer(function Lightbox() {
     const opts = store.shell.activeLightbox as models.ImagesLightbox
     return (
       <ImageView
-        images={opts.images.map(({uri}) => ({uri}))}
+        images={opts.images.map(img => ({...img}))}
         imageIndex={opts.index}
         visible
         onRequestClose={onClose}

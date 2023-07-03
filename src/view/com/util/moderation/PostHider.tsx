@@ -72,8 +72,7 @@ export function PostHider({
       style={style}
       href={href}
       noFeedback
-      accessible={true}
-      accessibilityRole="none"
+      accessible={false}
       {...props}>
       {children}
     </Link>

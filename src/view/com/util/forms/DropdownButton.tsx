@@ -50,6 +50,8 @@ interface DropdownButtonProps {
   openToRight?: boolean
   rightOffset?: number
   bottomOffset?: number
+  accessibilityLabel?: string
+  accessibilityHint?: string
 }
 
 export function DropdownButton({
@@ -63,6 +65,7 @@ export function DropdownButton({
   openToRight = false,
   rightOffset = 0,
   bottomOffset = 0,
+  accessibilityLabel,
 }: PropsWithChildren<DropdownButtonProps>) {
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
@@ -128,8 +131,8 @@ export function DropdownButton({
         hitSlop={HITSLOP}
         ref={ref1}
         accessibilityRole="button"
-        accessibilityLabel={`Opens ${numItems} options`}
-        accessibilityHint={`Opens ${numItems} options`}>
+        accessibilityLabel={accessibilityLabel || `Opens ${numItems} options`}
+        accessibilityHint="">
         {children}
       </TouchableOpacity>
     )
@@ -246,7 +249,9 @@ export function PostDropdownBtn({
       testID={testID}
       style={style}
       items={dropdownItems}
-      menuWidth={isWeb ? 220 : 200}>
+      menuWidth={isWeb ? 220 : 200}
+      accessibilityLabel="Additional post actions"
+      accessibilityHint="">
       {children}
     </DropdownButton>
   )
@@ -335,6 +340,7 @@ const DropdownItems = ({
                 key={index}
                 style={[styles.menuItem]}
                 onPress={() => onPressItem(index)}
+                accessibilityRole="button"
                 accessibilityLabel={item.label}
                 accessibilityHint={`Option ${index + 1} of ${numItems}`}>
                 {item.icon && (

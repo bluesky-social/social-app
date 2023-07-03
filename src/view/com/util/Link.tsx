@@ -88,6 +88,10 @@ export const Link = observer(function Link({
     props.dataSet.noUnderline = 1
   }
 
+  if (title && !props.accessibilityLabel) {
+    props.accessibilityLabel = title
+  }
+
   return (
     <TouchableOpacity
       testID={testID}
@@ -171,6 +175,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   text,
   numberOfLines,
   lineHeight,
+  ...props
 }: {
   testID?: string
   type?: TypographyVariant
@@ -179,6 +184,9 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   text: string | JSX.Element
   numberOfLines?: number
   lineHeight?: number
+  accessible?: boolean
+  accessibilityLabel?: string
+  accessibilityHint?: string
 }) {
   if (isDesktopWeb) {
     return (
@@ -190,6 +198,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
         text={text}
         numberOfLines={numberOfLines}
         lineHeight={lineHeight}
+        {...props}
       />
     )
   }
@@ -199,7 +208,8 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
       type={type}
       style={style}
       numberOfLines={numberOfLines}
-      lineHeight={lineHeight}>
+      lineHeight={lineHeight}
+      {...props}>
       {text}
     </Text>
   )
