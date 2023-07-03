@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
-import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '@atproto/api'
 import {
@@ -158,40 +158,6 @@ export const FeedItem = observer(function ({
     moderation = {behavior: ModerationBehaviorCode.Show}
   }
 
-  const accessibilityActions = useMemo(
-    () => [
-      {
-        name: 'reply',
-        label: 'Reply',
-      },
-      {
-        name: 'repost',
-        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
-      },
-      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
-    ],
-    [item.post.viewer?.like, item.post.viewer?.repost],
-  )
-
-  const onAccessibilityAction = useCallback(
-    (event: AccessibilityActionEvent) => {
-      switch (event.nativeEvent.actionName) {
-        case 'like':
-          onPressToggleLike()
-          break
-        case 'reply':
-          onPressReply()
-          break
-        case 'repost':
-          onPressToggleRepost()
-          break
-        default:
-          break
-      }
-    },
-    [onPressReply, onPressToggleLike, onPressToggleRepost],
-  )
-
   if (!record || deleted) {
     return <View />
   }
@@ -201,9 +167,7 @@ export const FeedItem = observer(function ({
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}
-      accessibilityActions={accessibilityActions}
-      onAccessibilityAction={onAccessibilityAction}>
+      moderation={moderation}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
