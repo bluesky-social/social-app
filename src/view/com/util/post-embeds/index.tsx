@@ -28,6 +28,7 @@ import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
+import {isDesktopWeb} from 'platform/detection'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
-    maxHeight: 500,
+    maxHeight: isDesktopWeb ? 1000 : 500,
   },
   extOuter: {
     borderWidth: 1,
