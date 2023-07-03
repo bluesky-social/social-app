@@ -5,20 +5,46 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
 import {useStores} from 'state/index'
 import * as models from 'state/models/ui/shell'
-import {shareImageModal, saveImageToAlbum} from 'lib/media/manip'
+import {shareImageModal, saveImageToMediaLibrary} from 'lib/media/manip'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {Button} from '../util/forms/Button'
 import {isIOS} from 'platform/detection'
+import * as MediaLibrary from 'expo-media-library'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
   const [isAltExpanded, setAltExpanded] = React.useState(false)
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
 
   const onClose = React.useCallback(() => {
     store.shell.closeLightbox()
   }, [store])
+
+  const saveImageToAlbumWithToasts = React.useCallback(
+    async (uri: string) => {
+      if (!permissionResponse || permissionResponse.granted === false) {
+        Toast.show('Permission to access camera roll is required.')
+        if (permissionResponse?.canAskAgain) {
+          requestPermission()
+        } else {
+          Toast.show(
+            'Permission to access camera roll was denied. Please enable it in your system settings.',
+          )
+        }
+        return
+      }
+
+      try {
+        await saveImageToMediaLibrary({uri})
+        Toast.show('Saved to your camera roll.')
+      } catch (e: any) {
+        Toast.show(`Failed to save image: ${String(e)}`)
+      }
+    },
+    [permissionResponse, requestPermission],
+  )
 
   const LightboxFooter = React.useCallback(
     ({imageIndex}: {imageIndex: number}) => {
@@ -74,7 +100,7 @@ export const Lightbox = observer(function Lightbox() {
         </View>
       )
     },
-    [store.shell.activeLightbox, isAltExpanded, setAltExpanded],
+    [store.shell.activeLightbox, isAltExpanded, saveImageToAlbumWithToasts],
   )
 
   if (!store.shell.activeLightbox) {
@@ -105,15 +131,6 @@ export const Lightbox = observer(function Lightbox() {
     return null
   }
 })
-
-async function saveImageToAlbumWithToasts(uri: string) {
-  try {
-    await saveImageToAlbum({uri, album: 'Bluesky'})
-    Toast.show('Saved to the "Bluesky" album.')
-  } catch (e: any) {
-    Toast.show(`Failed to save image: ${String(e)}`)
-  }
-}
 
 const styles = StyleSheet.create({
   footer: {
