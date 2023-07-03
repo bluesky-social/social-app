@@ -88,6 +88,10 @@ export const Link = observer(function Link({
     props.dataSet.noUnderline = 1
   }
 
+  if (title && !props.accessibilityLabel) {
+    props.accessibilityLabel = title
+  }
+
   return (
     <TouchableOpacity
       testID={testID}
