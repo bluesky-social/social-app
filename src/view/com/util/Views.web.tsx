@@ -72,9 +72,9 @@ export const FlatList = React.forwardRef(function <ItemT>(
     <RNFlatList
       ref={ref}
       contentContainerStyle={[
-        contentContainerStyle,
         pal.border,
         styles.contentContainer,
+        contentContainerStyle,
       ]}
       style={style}
       contentOffset={contentOffset}

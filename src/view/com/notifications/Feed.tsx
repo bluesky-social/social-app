@@ -155,7 +155,7 @@ export const Feed = observer(function Feed({
           onEndReachedThreshold={0.6}
           onScroll={onScroll}
           scrollEventThrottle={100}
-          contentContainerStyle={s.contentContainer}
+          contentContainerStyle={[s.contentContainer, styles.containerStyle]}
         />
       ) : null}
     </View>
@@ -168,4 +168,5 @@ const styles = StyleSheet.create({
   },
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
+  containerStyle: {borderLeftWidth: 0, borderRightWidth: 0},
 })

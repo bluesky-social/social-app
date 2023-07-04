@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
@@ -17,6 +17,9 @@ import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
+import {usePalette} from 'lib/hooks/usePalette'
+import {CenteredView} from 'view/com/util/Views'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -24,6 +27,7 @@ type Props = NativeStackScreenProps<
 >
 export const NotificationsScreen = withAuthRequired(
   observer(({}: Props) => {
+    const pal = usePalette('default')
     const store = useStores()
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
@@ -92,8 +96,14 @@ export const NotificationsScreen = withAuthRequired(
       store.me.notifications.hasNewLatest &&
       !store.me.notifications.isRefreshing
     return (
-      <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title="Notifications" canGoBack={false} />
+      <CenteredView
+        testID="notificationsScreen"
+        style={[
+          s.hContentRegion,
+          pal.border,
+          isDesktopWeb ? styles.desktopContainer : pal.viewLight,
+        ]}>
+        <ViewHeader title="Notifications" showOnDesktop canGoBack={false} />
         <InvitedUsers />
         <Feed
           view={store.me.notifications}
@@ -109,7 +119,14 @@ export const NotificationsScreen = withAuthRequired(
             minimalShellMode={true}
           />
         )}
-      </View>
+      </CenteredView>
     )
   }),
 )
+
+const styles = StyleSheet.create({
+  desktopContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+  },
+})
