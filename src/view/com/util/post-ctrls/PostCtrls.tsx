@@ -19,6 +19,7 @@ import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/DropdownButton'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s, colors} from 'lib/styles'
+import {pluralize} from 'lib/strings/helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
@@ -170,7 +171,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         hitSlop={HITSLOP}
         onPress={opts.onPressReply}
         accessibilityRole="button"
-        accessibilityLabel="Reply"
+        accessibilityLabel={`Reply (${opts.replyCount} ${
+          opts.replyCount === 1 ? 'reply' : 'replies'
+        })`}
         accessibilityHint="reply composer">
         <CommentBottomArrow
           style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
@@ -190,7 +193,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         hitSlop={HITSLOP}
         onPress={onPressToggleLikeWrapper}
         accessibilityRole="button"
-        accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
+        accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
+          opts.likeCount
+        } ${pluralize(opts.likeCount || 0, 'like')})`}
         accessibilityHint="">
         {opts.isLiked ? (
           <HeartIconSolid

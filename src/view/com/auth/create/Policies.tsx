@@ -12,8 +12,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 export const Policies = ({
   serviceDescription,
+  needsGuardian,
 }: {
   serviceDescription: ServiceDescription
+  needsGuardian: boolean
 }) => {
   const pal = usePalette('default')
   if (!serviceDescription) {
@@ -73,6 +75,12 @@ export const Policies = ({
       <Text style={pal.textLight}>
         By creating an account you agree to the {els}.
       </Text>
+      {needsGuardian && (
+        <Text style={[pal.textLight, s.bold]}>
+          If you are not yet an adult according to the laws of your country,
+          your parent or legal guardian must read these Terms on your behalf.
+        </Text>
+      )}
     </View>
   )
 }
@@ -85,8 +93,7 @@ function validWebLink(url?: string): string | undefined {
 
 const styles = StyleSheet.create({
   policies: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    gap: 8,
   },
   errorIcon: {
     borderWidth: 1,

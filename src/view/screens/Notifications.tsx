@@ -15,7 +15,7 @@ import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {s} from 'lib/styles'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<

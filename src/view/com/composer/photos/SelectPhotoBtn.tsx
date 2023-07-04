@@ -5,7 +5,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {isDesktopWeb} from 'platform/detection'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {GalleryModel} from 'state/models/media/gallery'

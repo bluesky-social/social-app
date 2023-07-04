@@ -4,7 +4,9 @@ import {RootStoreModel} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 
-const DY_LIMIT = isDesktopWeb ? 30 : 10
+const DY_LIMIT_UP = isDesktopWeb ? 30 : 10
+const DY_LIMIT_DOWN = isDesktopWeb ? 150 : 10
+const Y_LIMIT = 10
 
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
@@ -23,11 +25,15 @@ export function useOnMainScroll(
         const dy = y - (lastY.current || 0)
         lastY.current = y
 
-        if (!store.shell.minimalShellMode && y > 10 && dy > DY_LIMIT) {
+        if (
+          !store.shell.minimalShellMode &&
+          dy > DY_LIMIT_DOWN &&
+          y > Y_LIMIT
+        ) {
           store.shell.setMinimalShellMode(true)
         } else if (
           store.shell.minimalShellMode &&
-          (y <= 10 || dy < DY_LIMIT * -1)
+          (dy < DY_LIMIT_UP * -1 || y <= Y_LIMIT)
         ) {
           store.shell.setMinimalShellMode(false)
         }

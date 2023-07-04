@@ -14,6 +14,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
   AppBskyFeedDefs,
+  AppBskyGraphDefs,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -25,8 +26,9 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import QuoteEmbed from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {CustomFeedEmbed} from './CustomFeedEmbed'
+import {ListEmbed} from './ListEmbed'
+import {isDesktopWeb} from 'platform/detection'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -125,7 +127,13 @@ export function PostEmbeds({
               onPress={() => openLightbox(0)}
               onPressIn={() => onPressIn(0)}
               style={styles.singleImage}>
-              {alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
+              {alt === '' ? null : (
+                <View style={styles.altContainer}>
+                  <Text style={styles.alt} accessible={false}>
+                    ALT
+                  </Text>
+                </View>
+              )}
             </AutoSizedImage>
           </View>
         )
@@ -142,6 +150,23 @@ export function PostEmbeds({
         </View>
       )
     }
+  }
+
+  // custom feed embed (i.e. generator view)
+  // =
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyFeedDefs.isGeneratorView(embed.record)
+  ) {
+    return <CustomFeedEmbed record={embed.record} />
+  }
+
+  // list embed (e.g. mute lists; i.e. ListView)
+  if (
+    AppBskyEmbedRecord.isView(embed) &&
+    AppBskyGraphDefs.isListView(embed.record)
+  ) {
+    return <ListEmbed item={embed.record} />
   }
 
   // external link embed
@@ -164,32 +189,7 @@ export function PostEmbeds({
     )
   }
 
-  // custom feed embed (i.e. generator view)
-  // =
-  if (
-    AppBskyEmbedRecord.isView(embed) &&
-    AppBskyFeedDefs.isGeneratorView(embed.record)
-  ) {
-    return <CustomFeedEmbed record={embed.record} />
-  }
-
   return <View />
-}
-
-function CustomFeedEmbed({record}: {record: AppBskyFeedDefs.GeneratorView}) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const item = React.useMemo(
-    () => new CustomFeedModel(store, record),
-    [store, record],
-  )
-  return (
-    <CustomFeed
-      item={item}
-      style={[pal.view, pal.border, styles.customFeedOuter]}
-      showLikes
-    />
-  )
 }
 
 const styles = StyleSheet.create({
@@ -201,31 +201,25 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
-    maxHeight: 500,
+    maxHeight: isDesktopWeb ? 1000 : 500,
   },
   extOuter: {
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4,
   },
-  customFeedOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-  alt: {
+  altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
     left: 6,
     bottom: 6,
+  },
+  alt: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 })

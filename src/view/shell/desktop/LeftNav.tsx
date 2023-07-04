@@ -40,7 +40,10 @@ import {router} from '../../../routes'
 const ProfileCard = observer(() => {
   const store = useStores()
   return (
-    <Link href={`/profile/${store.me.handle}`} style={styles.profileCard}>
+    <Link
+      href={`/profile/${store.me.handle}`}
+      style={styles.profileCard}
+      asAnchor>
       <UserAvatar avatar={store.me.avatar} size={64} />
     </Link>
   )

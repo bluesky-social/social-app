@@ -94,6 +94,20 @@ export function isBskyCustomFeedUrl(url: string): boolean {
   return false
 }
 
+export function isBskyListUrl(url: string): boolean {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return /profile\/(?<name>[^/]+)\/lists\/(?<rkey>[^/]+)/i.test(
+        urlp.pathname,
+      )
+    } catch {
+      console.error('Unexpected error in isBskyListUrl()', url)
+    }
+  }
+  return false
+}
+
 export function convertBskyAppUrlIfNeeded(url: string): string {
   if (isBskyAppUrl(url)) {
     try {

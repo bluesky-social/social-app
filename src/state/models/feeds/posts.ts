@@ -9,10 +9,16 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
-import {PostsFeedSliceModel} from './post'
+import {PostsFeedSliceModel} from './posts-slice'
+import {track} from 'lib/analytics/analytics'
 
 const PAGE_SIZE = 30
 let _idCounter = 0
+
+type QueryParams =
+  | GetTimeline.QueryParams
+  | GetAuthorFeed.QueryParams
+  | GetCustomFeed.QueryParams
 
 export class PostsFeedModel {
   // state
@@ -24,7 +30,7 @@ export class PostsFeedModel {
   isBlockedBy = false
   error = ''
   loadMoreError = ''
-  params: GetTimeline.QueryParams | GetAuthorFeed.QueryParams
+  params: QueryParams
   hasMore = true
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
@@ -43,10 +49,7 @@ export class PostsFeedModel {
   constructor(
     public rootStore: RootStoreModel,
     public feedType: 'home' | 'author' | 'custom',
-    params:
-      | GetTimeline.QueryParams
-      | GetAuthorFeed.QueryParams
-      | GetCustomFeed.QueryParams,
+    params: QueryParams,
   ) {
     makeAutoObservable(
       this,
@@ -115,6 +118,12 @@ export class PostsFeedModel {
   }
 
   get feedTuners() {
+    const areRepliesEnabled = this.rootStore.preferences.homeFeedRepliesEnabled
+    const repliesThreshold = this.rootStore.preferences.homeFeedRepliesThreshold
+    const areRepostsEnabled = this.rootStore.preferences.homeFeedRepostsEnabled
+    const areQuotePostsEnabled =
+      this.rootStore.preferences.homeFeedQuotePostsEnabled
+
     if (this.feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
@@ -124,7 +133,25 @@ export class PostsFeedModel {
       ]
     }
     if (this.feedType === 'home') {
-      return [FeedTuner.dedupReposts, FeedTuner.likedRepliesOnly]
+      const feedTuners = []
+
+      if (areRepostsEnabled) {
+        feedTuners.push(FeedTuner.dedupReposts)
+      } else {
+        feedTuners.push(FeedTuner.removeReposts)
+      }
+
+      if (areRepliesEnabled) {
+        feedTuners.push(FeedTuner.likedRepliesOnly({repliesThreshold}))
+      } else {
+        feedTuners.push(FeedTuner.removeReplies)
+      }
+
+      if (!areQuotePostsEnabled) {
+        feedTuners.push(FeedTuner.removeQuotePosts)
+      }
+
+      return feedTuners
     }
     return []
   }
@@ -194,6 +221,9 @@ export class PostsFeedModel {
       }
     } finally {
       this.lock.release()
+      if (this.feedType === 'custom') {
+        track('CustomFeed:LoadMore')
+      }
     }
   })
 
@@ -248,13 +278,11 @@ export class PostsFeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest) {
+    if (this.hasNewLatest || this.isLoading) {
       return
     }
-    const res = await this._getFeed({limit: this.pageSize})
-    const tuner = new FeedTuner()
-    const slices = tuner.tune(res.data.feed, this.feedTuners)
-    this.setHasNewLatest(slices[0]?.uri !== this.slices[0]?.uri)
+    const res = await this._getFeed({limit: 1})
+    this.setHasNewLatest(res.data.feed[0]?.post.uri !== this.pollCursor)
   }
 
   /**
@@ -392,10 +420,7 @@ export class PostsFeedModel {
   }
 
   protected async _getFeed(
-    params:
-      | GetTimeline.QueryParams
-      | GetAuthorFeed.QueryParams
-      | GetCustomFeed.QueryParams,
+    params: QueryParams,
   ): Promise<
     GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response
   > {

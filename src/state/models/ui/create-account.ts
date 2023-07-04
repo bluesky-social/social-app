@@ -7,6 +7,7 @@ import * as EmailValidator from 'email-validator'
 import {createFullHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
 import {getAge} from 'lib/strings/time'
+import {track} from 'lib/analytics/analytics'
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
@@ -30,13 +31,21 @@ export class CreateAccountModel {
     makeAutoObservable(this, {}, {autoBind: true})
   }
 
+  get isAge13() {
+    return getAge(this.birthDate) >= 13
+  }
+
+  get isAge18() {
+    return getAge(this.birthDate) >= 18
+  }
+
   // form state controls
   // =
 
   next() {
     this.error = ''
     if (this.step === 2) {
-      if (getAge(this.birthDate) < 13) {
+      if (!this.isAge13) {
         this.error =
           'Unfortunately, you do not meet the requirements to create an account.'
         return
@@ -117,6 +126,8 @@ export class CreateAccountModel {
       this.setIsProcessing(false)
       this.setError(cleanError(errMsg))
       throw e
+    } finally {
+      track('Create Account')
     }
   }
 

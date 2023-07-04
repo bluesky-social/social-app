@@ -35,13 +35,14 @@ import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import {isColorMode} from 'state/models/ui/shell'
 import Clipboard from '@react-native-clipboard/clipboard'
+import {reset as resetNavigation} from '../../Navigation'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -91,8 +92,7 @@ export const SettingsScreen = withAuthRequired(
         setIsSwitching(true)
         if (await store.session.resumeSession(acct)) {
           setIsSwitching(false)
-          navigation.navigate('HomeTab')
-          navigation.dispatch(StackActions.popToTop())
+          resetNavigation()
           Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
           return
         }
@@ -165,6 +165,28 @@ export const SettingsScreen = withAuthRequired(
       )
       Toast.show('Copied build version to clipboard')
     }, [])
+
+    const openPreferencesModal = React.useCallback(() => {
+      store.shell.openModal({
+        name: 'preferences-home-feed',
+      })
+    }, [store])
+
+    const onPressAppPasswords = React.useCallback(() => {
+      navigation.navigate('AppPasswords')
+    }, [navigation])
+
+    const onPressSystemLog = React.useCallback(() => {
+      navigation.navigate('Log')
+    }, [navigation])
+
+    const onPressStorybook = React.useCallback(() => {
+      navigation.navigate('Debug')
+    }, [navigation])
+
+    const onPressSavedFeeds = React.useCallback(() => {
+      navigation.navigate('SavedFeeds')
+    }, [navigation])
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
@@ -308,6 +330,22 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
 
           <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Accessibility
+          </Text>
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label="Require alt text on images"
+              labelType="lg"
+              isSelected={store.preferences.requireAltTextEnabled}
+              onPress={store.preferences.toggleRequireAltTextEnabled}
+            />
+          </View>
+
+          <View style={styles.spacer20} />
+
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Appearance
           </Text>
@@ -346,10 +384,30 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Advanced
           </Text>
-          <Link
+          <TouchableOpacity
+            testID="preferencesHomeFeedModalButton"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={openPreferencesModal}
+            accessibilityRole="button"
+            accessibilityHint="Open home feed preferences modal"
+            accessibilityLabel="Opens the home feed preferences modal">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="sliders"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Home Feed Preferences
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/app-passwords">
+            onPress={onPressAppPasswords}
+            accessibilityRole="button"
+            accessibilityHint="Open app password settings"
+            accessibilityLabel="Opens the app password settings page">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="lock"
@@ -359,13 +417,13 @@ export const SettingsScreen = withAuthRequired(
             <Text type="lg" style={pal.text}>
               App passwords
             </Text>
-          </Link>
-          <Link
+          </TouchableOpacity>
+          <TouchableOpacity
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="Saved Feeds"
             accessibilityLabel="Opens screen with all saved feeds"
-            href="/settings/saved-feeds">
+            onPress={onPressSavedFeeds}>
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="satellite-dish"
@@ -375,7 +433,7 @@ export const SettingsScreen = withAuthRequired(
             <Text type="lg" style={pal.text}>
               Saved Feeds
             </Text>
-          </Link>
+          </TouchableOpacity>
           <TouchableOpacity
             testID="contentLanguagesBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
@@ -436,14 +494,16 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Developer Tools
           </Text>
-          <Link
+          <TouchableOpacity
             style={[pal.view, styles.linkCardNoIcon]}
-            href="/sys/log"
-            title="System log">
+            onPress={onPressSystemLog}
+            accessibilityRole="button"
+            accessibilityHint="Open system log"
+            accessibilityLabel="Opens the system log page">
             <Text type="lg" style={pal.text}>
               System log
             </Text>
-          </Link>
+          </TouchableOpacity>
           {isDesktopWeb ? (
             <ToggleButton
               type="default-light"
@@ -454,22 +514,26 @@ export const SettingsScreen = withAuthRequired(
           ) : null}
           {__DEV__ ? (
             <>
-              <Link
+              <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
-                href="/sys/debug"
-                title="Debug tools">
+                onPress={onPressStorybook}
+                accessibilityRole="button"
+                accessibilityHint="Open storybook page"
+                accessibilityLabel="Opens the storybook page">
                 <Text type="lg" style={pal.text}>
                   Storybook
                 </Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetPreferences}
-                title="Debug tools">
+                accessibilityRole="button"
+                accessibilityHint="Reset preferences"
+                accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </>
           ) : null}
           <TouchableOpacity
@@ -583,6 +647,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 18,
+    marginBottom: 1,
+  },
+  toggleCard: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
     marginBottom: 1,
   },
   avi: {

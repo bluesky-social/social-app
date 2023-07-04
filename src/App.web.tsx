@@ -3,7 +3,7 @@ import 'lib/sentry' // must be relatively on top
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as view from './view/index'
-import * as analytics from 'lib/analytics'
+import * as analytics from 'lib/analytics/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'

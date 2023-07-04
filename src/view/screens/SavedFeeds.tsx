@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
@@ -100,7 +100,7 @@ export const SavedFeeds = withAuthRequired(
     const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
 
     const onDragEnd = useCallback(
-      async ({data}) => {
+      async ({data}: {data: CustomFeedModel[]}) => {
         try {
           await savedFeeds.reorderPinnedFeeds(data)
         } catch (e) {
@@ -124,7 +124,7 @@ export const SavedFeeds = withAuthRequired(
           showBorder={!isDesktopWeb}
         />
         <DraggableFlatList
-          containerStyle={[!isDesktopWeb && s.flex1]}
+          containerStyle={[isDesktopWeb ? s.hContentRegion : s.flex1]}
           data={savedFeeds.all}
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}

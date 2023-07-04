@@ -1,7 +1,10 @@
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
-import lande from 'lande'
-import {hasProp} from 'lib/type-guards'
-import {LANGUAGES_MAP_CODE2} from '../../locale/languages'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedRecord,
+} from '@atproto/api'
+import {isPostInLanguage} from '../../locale/helpers'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
@@ -156,6 +159,38 @@ export class FeedTuner {
     return slices
   }
 
+  static removeReplies(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = slices.length - 1; i >= 0; i--) {
+      if (slices[i].isReply) {
+        slices.splice(i, 1)
+      }
+    }
+    return slices
+  }
+
+  static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = slices.length - 1; i >= 0; i--) {
+      const reason = slices[i].rootItem.reason
+      if (AppBskyFeedDefs.isReasonRepost(reason)) {
+        slices.splice(i, 1)
+      }
+    }
+    return slices
+  }
+
+  static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = slices.length - 1; i >= 0; i--) {
+      const embed = slices[i].rootItem.post.embed
+      if (
+        AppBskyEmbedRecord.isView(embed) ||
+        AppBskyEmbedRecordWithMedia.isView(embed)
+      ) {
+        slices.splice(i, 1)
+      }
+    }
+    return slices
+  }
+
   static dedupReposts(
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
@@ -178,59 +213,54 @@ export class FeedTuner {
     return slices
   }
 
-  static likedRepliesOnly(
-    tuner: FeedTuner,
-    slices: FeedViewPostsSlice[],
-  ): FeedViewPostsSlice[] {
-    // remove any replies without at least 2 likes
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isFullThread || !slices[i].isReply) {
-        continue
-      }
-
-      const item = slices[i].rootItem
-      const isRepost = Boolean(item.reason)
-      if (!isRepost && (item.post.likeCount || 0) < 2) {
-        slices.splice(i, 1)
-      }
-    }
-    return slices
-  }
-
-  static preferredLangOnly(langsCode2: string[]) {
-    const langsCode3 = langsCode2.map(l => LANGUAGES_MAP_CODE2[l]?.code3 || l)
+  static likedRepliesOnly({repliesThreshold}: {repliesThreshold: number}) {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      if (!langsCode2.length) {
+      // remove any replies without at least repliesThreshold likes
+      for (let i = slices.length - 1; i >= 0; i--) {
+        if (slices[i].isFullThread || !slices[i].isReply) {
+          continue
+        }
+
+        const item = slices[i].rootItem
+        const isRepost = Boolean(item.reason)
+        if (!isRepost && (item.post.likeCount || 0) < repliesThreshold) {
+          slices.splice(i, 1)
+        }
+      }
+      return slices
+    }
+  }
+
+  /**
+   * This function filters a list of FeedViewPostsSlice items based on whether they contain text in a
+   * preferred language.
+   * @param {string[]} preferredLangsCode2 - An array of prefered language codes in ISO 639-1 or ISO 639-2 format.
+   * @returns A function that takes in a `FeedTuner` and an array of `FeedViewPostsSlice` objects and
+   * returns an array of `FeedViewPostsSlice` objects.
+   */
+  static preferredLangOnly(preferredLangsCode2: string[]) {
+    return (
+      tuner: FeedTuner,
+      slices: FeedViewPostsSlice[],
+    ): FeedViewPostsSlice[] => {
+      // early return if no languages have been specified
+      if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
         return slices
       }
+
       for (let i = slices.length - 1; i >= 0; i--) {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
-          if (
-            hasProp(item.post.record, 'text') &&
-            typeof item.post.record.text === 'string'
-          ) {
-            // Treat empty text the same as no text.
-            if (item.post.record.text.length === 0) {
-              hasPreferredLang = true
-              break
-            }
-
-            const res = lande(item.post.record.text)
-
-            if (langsCode3.includes(res[0][0])) {
-              hasPreferredLang = true
-              break
-            }
-          } else {
-            // no text? roll with it
+          if (isPostInLanguage(item.post, preferredLangsCode2)) {
             hasPreferredLang = true
             break
           }
         }
+
+        // if item does not fit preferred language, remove it
         if (!hasPreferredLang) {
           slices.splice(i, 1)
         }

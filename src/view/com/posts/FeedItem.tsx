@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -19,13 +19,15 @@ import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
+import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 
 export const FeedItem = observer(function ({
   item,
@@ -61,6 +63,14 @@ export const FeedItem = observer(function ({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
+  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const needsTranslation = useMemo(
+    () =>
+      store.preferences.contentLanguages.length > 0 &&
+      !isPostInLanguage(item.post, store.preferences.contentLanguages),
+    [item.post, store.preferences.contentLanguages],
+  )
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
@@ -97,17 +107,9 @@ export const FeedItem = observer(function ({
     Toast.show('Copied to clipboard')
   }, [record])
 
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-
   const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(
-      encodeURI(
-        `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
-          record?.text || ''
-        }`,
-      ),
-    )
-  }, [record, primaryLanguage])
+    Linking.openURL(translatorUrl)
+  }, [translatorUrl])
 
   const onToggleThreadMute = React.useCallback(async () => {
     track('FeedItem:ThreadMute')
@@ -156,40 +158,6 @@ export const FeedItem = observer(function ({
     moderation = {behavior: ModerationBehaviorCode.Show}
   }
 
-  const accessibilityActions = useMemo(
-    () => [
-      {
-        name: 'reply',
-        label: 'Reply',
-      },
-      {
-        name: 'repost',
-        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
-      },
-      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
-    ],
-    [item.post.viewer?.like, item.post.viewer?.repost],
-  )
-
-  const onAccessibilityAction = useCallback(
-    event => {
-      switch (event.nativeEvent.actionName) {
-        case 'like':
-          onPressToggleLike()
-          break
-        case 'reply':
-          onPressReply()
-          break
-        case 'repost':
-          onPressToggleRepost()
-          break
-        default:
-          break
-      }
-    },
-    [onPressReply, onPressToggleLike, onPressToggleRepost],
-  )
-
   if (!record || deleted) {
     return <View />
   }
@@ -199,9 +167,7 @@ export const FeedItem = observer(function ({
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}
-      accessibilityActions={accessibilityActions}
-      onAccessibilityAction={onAccessibilityAction}>
+      moderation={moderation}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -245,6 +211,7 @@ export const FeedItem = observer(function ({
           </Text>
         </Link>
       )}
+      <PostSandboxWarning />
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={item.post.author.handle} asAnchor>
@@ -299,12 +266,22 @@ export const FeedItem = observer(function ({
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}
+                  style={s.flex1}
                 />
               </View>
             ) : undefined}
             <ImageHider moderation={item.moderation.list} style={styles.embed}>
               <PostEmbeds embed={item.post.embed} style={styles.embed} />
             </ImageHider>
+            {needsTranslation && (
+              <View style={[pal.borderDark, styles.translateLink]}>
+                <Link href={translatorUrl} title="Translate">
+                  <Text type="sm" style={pal.link}>
+                    Translate this post
+                  </Text>
+                </Link>
+              </View>
+            )}
           </ContentHider>
           <PostCtrls
             style={styles.ctrls}
@@ -398,6 +375,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   embed: {
+    marginBottom: 6,
+  },
+  translateLink: {
     marginBottom: 6,
   },
   ctrls: {

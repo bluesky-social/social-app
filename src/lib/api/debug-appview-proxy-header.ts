@@ -16,6 +16,9 @@ export function useDebugHeaderSetting(agent: BskyAgent): [boolean, () => void] {
   const [enabled, setEnabled] = useState<boolean>(isEnabled())
 
   const toggle = useCallback(() => {
+    if (!isWeb || typeof window === 'undefined') {
+      return
+    }
     if (!enabled) {
       localStorage.setItem('set-header-x-appview-proxy', 'yes')
       agent.api.xrpc.setHeader('x-appview-proxy', 'true')
@@ -31,7 +34,7 @@ export function useDebugHeaderSetting(agent: BskyAgent): [boolean, () => void] {
 }
 
 export function setDebugHeader(agent: BskyAgent, enabled: boolean) {
-  if (!isWeb) {
+  if (!isWeb || typeof window === 'undefined') {
     return
   }
   if (enabled) {
@@ -53,5 +56,8 @@ export function applyDebugHeader(agent: BskyAgent) {
 }
 
 function isEnabled() {
+  if (!isWeb || typeof window === 'undefined') {
+    return false
+  }
   return localStorage.getItem('set-header-x-appview-proxy') === 'yes'
 }

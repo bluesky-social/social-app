@@ -19,7 +19,7 @@ export class FoafsModel {
   isLoading = false
   hasData = false
   sources: string[] = []
-  foafs: Map<string, ProfileViewFollows> = new Map()
+  foafs: Map<string, ProfileViewFollows> = new Map() // FOAF stands for Friend of a Friend
   popular: RefWithInfoAndFollowers[] = []
 
   constructor(public rootStore: RootStoreModel) {

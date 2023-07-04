@@ -23,7 +23,7 @@ import {UserBanner} from '../util/UserBanner'
 import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 
 export const snapPoints = ['fullscreen']

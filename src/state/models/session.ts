@@ -10,6 +10,8 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {networkRetry} from 'lib/async/retry'
 import {z} from 'zod'
 import {RootStoreModel} from './root-store'
+import {IS_PROD} from 'lib/constants'
+import {track} from 'lib/analytics/analytics'
 
 export type ServiceDescription = DescribeServer.OutputSchema
 
@@ -102,6 +104,13 @@ export class SessionModel {
 
   get switchableAccounts() {
     return this.accounts.filter(acct => acct.did !== this.data?.did)
+  }
+
+  get isSandbox() {
+    if (!this.data) {
+      return false
+    }
+    return !IS_PROD(this.data.service)
   }
 
   serialize(): unknown {
@@ -380,6 +389,7 @@ export class SessionModel {
 
     await this.setActiveSession(agent, did)
     this._log('SessionModel:createAccount succeeded')
+    track('Create Account Successfully')
   }
 
   /**

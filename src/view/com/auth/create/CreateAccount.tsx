@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
@@ -56,9 +56,10 @@ export const CreateAccount = observer(
       } else {
         try {
           await model.submit()
-          track('Create Account')
         } catch {
           // dont need to handle here
+        } finally {
+          track('Try Create Account')
         }
       }
     }, [model, track])

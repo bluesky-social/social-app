@@ -3,6 +3,7 @@ import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {CustomFeedModel} from '../feeds/custom-feed'
+import {track} from 'lib/analytics/analytics'
 
 export class SavedFeedsModel {
   // state
@@ -78,17 +79,27 @@ export class SavedFeedsModel {
       }
     }
 
+    // early exit if no feeds need to be fetched
+    if (!neededFeedUris.length || neededFeedUris.length === 0) {
+      return
+    }
+
     // fetch the missing models
-    for (let i = 0; i < neededFeedUris.length; i += 25) {
-      const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
-        feeds: neededFeedUris.slice(i, 25),
-      })
-      for (const feedInfo of res.data.feeds) {
-        newFeedModels[feedInfo.uri] = new CustomFeedModel(
-          this.rootStore,
-          feedInfo,
-        )
+    try {
+      for (let i = 0; i < neededFeedUris.length; i += 25) {
+        const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
+          feeds: neededFeedUris.slice(i, 25),
+        })
+        for (const feedInfo of res.data.feeds) {
+          newFeedModels[feedInfo.uri] = new CustomFeedModel(
+            this.rootStore,
+            feedInfo,
+          )
+        }
       }
+    } catch (error) {
+      console.error('Failed to fetch feed models', error)
+      this.rootStore.log.error('Failed to fetch feed models', error)
     }
 
     // merge into the cache
@@ -133,8 +144,16 @@ export class SavedFeedsModel {
 
   async togglePinnedFeed(feed: CustomFeedModel) {
     if (!this.isPinned(feed)) {
+      track('CustomFeed:Pin', {
+        name: feed.data.displayName,
+        uri: feed.uri,
+      })
       return this.rootStore.preferences.addPinnedFeed(feed.uri)
     } else {
+      track('CustomFeed:Unpin', {
+        name: feed.data.displayName,
+        uri: feed.uri,
+      })
       return this.rootStore.preferences.removePinnedFeed(feed.uri)
     }
   }
@@ -175,6 +194,11 @@ export class SavedFeedsModel {
       this.rootStore.preferences.savedFeeds,
       pinned,
     )
+    track('CustomFeed:Reorder', {
+      name: item.data.displayName,
+      uri: item.uri,
+      index: pinned.indexOf(item.uri),
+    })
   }
 
   // state transitions

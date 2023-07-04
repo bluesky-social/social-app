@@ -155,3 +155,29 @@ export async function getFeedAsEmbed(
     },
   }
 }
+
+export async function getListAsEmbed(
+  store: RootStoreModel,
+  url: string,
+): Promise<apilib.ExternalEmbedDraft> {
+  url = convertBskyAppUrlIfNeeded(url)
+  const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
+  const list = makeRecordUri(user, 'app.bsky.graph.list', rkey)
+  const res = await store.agent.app.bsky.graph.getList({list})
+  return {
+    isLoading: false,
+    uri: list,
+    meta: {
+      url: list,
+      likelyType: LikelyType.AtpData,
+      title: res.data.list.name,
+    },
+    embed: {
+      $type: 'app.bsky.embed.record',
+      record: {
+        uri: res.data.list.uri,
+        cid: res.data.list.cid,
+      },
+    },
+  }
+}

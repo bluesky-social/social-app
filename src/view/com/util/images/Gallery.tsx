@@ -34,7 +34,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         accessibilityRole="button"
-        accessibilityLabel="View image"
+        accessibilityLabel={image.alt || 'Image'}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
@@ -45,23 +45,30 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityIgnoresInvertColors
         />
       </TouchableOpacity>
-      {image.alt === '' ? null : <Text style={styles.alt}>ALT</Text>}
+      {image.alt === '' ? null : (
+        <View style={styles.altContainer}>
+          <Text style={styles.alt} accessible={false}>
+            ALT
+          </Text>
+        </View>
+      )}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  alt: {
+  altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
     left: 6,
     bottom: 6,
+  },
+  alt: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 })

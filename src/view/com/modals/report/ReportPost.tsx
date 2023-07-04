@@ -1,5 +1,6 @@
 import React, {useState, useMemo} from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {ComAtprotoModerationDefs} from '@atproto/api'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
@@ -66,26 +67,28 @@ export function Component({
   }
 
   return (
-    <View testID="reportPostModal" style={[s.flex1, s.pl10, s.pr10, pal.view]}>
-      {showTextInput ? (
-        <InputIssueDetails
-          details={details}
-          setDetails={setDetails}
-          goBack={goBack}
-          submitReport={submitReport}
-          isProcessing={isProcessing}
-        />
-      ) : (
-        <SelectIssue
-          setShowTextInput={setShowTextInput}
-          error={error}
-          issue={issue}
-          setIssue={setIssue}
-          submitReport={submitReport}
-          isProcessing={isProcessing}
-        />
-      )}
-    </View>
+    <ScrollView testID="reportPostModal" style={[s.flex1, pal.view]}>
+      <View style={styles.container}>
+        {showTextInput ? (
+          <InputIssueDetails
+            details={details}
+            setDetails={setDetails}
+            goBack={goBack}
+            submitReport={submitReport}
+            isProcessing={isProcessing}
+          />
+        ) : (
+          <SelectIssue
+            setShowTextInput={setShowTextInput}
+            error={error}
+            issue={issue}
+            setIssue={setIssue}
+            submitReport={submitReport}
+            isProcessing={isProcessing}
+          />
+        )}
+      </View>
+    </ScrollView>
   )
 }
 
@@ -232,6 +235,10 @@ const SelectIssue = ({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 10,
+    paddingBottom: 40,
+  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',

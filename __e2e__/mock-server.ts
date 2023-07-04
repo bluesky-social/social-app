@@ -34,6 +34,9 @@ async function main() {
             displayName: 'Carla',
             description: 'Test user 3',
           }))
+          if (inviteRequired) {
+            await server.mocker.createInvite(server.mocker.users.alice.did)
+          }
         }
         if ('follows' in url.query) {
           console.log('Generating mock follows')

@@ -7,7 +7,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {SplashScreen} from './SplashScreen'
 import {CenteredView} from '../util/Views'
 

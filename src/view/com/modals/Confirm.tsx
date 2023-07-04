@@ -12,6 +12,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
+import type {ConfirmModal} from 'state/models/ui/shell'
 
 export const snapPoints = ['50%']
 
@@ -20,12 +21,9 @@ export function Component({
   message,
   onPressConfirm,
   onPressCancel,
-}: {
-  title: string
-  message: string | (() => JSX.Element)
-  onPressConfirm: () => void | Promise<void>
-  onPressCancel?: () => void | Promise<void>
-}) {
+  confirmBtnText,
+  confirmBtnStyle,
+}: ConfirmModal) {
   const pal = usePalette('default')
   const store = useStores()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -68,11 +66,13 @@ export function Component({
         <TouchableOpacity
           testID="confirmBtn"
           onPress={onPress}
-          style={[styles.btn]}
+          style={[styles.btn, confirmBtnStyle]}
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Confirm</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            {confirmBtnText ?? 'Confirm'}
+          </Text>
         </TouchableOpacity>
       )}
       {onPressCancel === undefined ? null : (

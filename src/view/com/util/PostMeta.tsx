@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
 import {DesktopWebTextLink} from './Link'
-import {ago} from 'lib/strings/time'
+import {ago, niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {UserAvatar} from './UserAvatar'
@@ -57,7 +57,11 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
               text={sanitizeDisplayName(displayName)}
               href={`/profile/${opts.authorHandle}`}
             />
-            <Text type="md" style={pal.textLight} lineHeight={1.2}>
+            <Text
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              accessible={false}>
               &nbsp;&middot;&nbsp;
             </Text>
             <DesktopWebTextLink
@@ -65,6 +69,8 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
               style={[styles.metaItem, pal.textLight]}
               lineHeight={1.2}
               text={ago(opts.timestamp)}
+              accessibilityLabel={niceDate(opts.timestamp)}
+              accessibilityHint=""
               href={opts.postHref}
             />
           </View>
@@ -122,7 +128,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           href={`/profile/${opts.authorHandle}`}
         />
       </View>
-      <Text type="md" style={pal.textLight} lineHeight={1.2}>
+      <Text type="md" style={pal.textLight} lineHeight={1.2} accessible={false}>
         &middot;&nbsp;
       </Text>
       <DesktopWebTextLink
@@ -130,6 +136,8 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
         style={[styles.metaItem, pal.textLight]}
         lineHeight={1.2}
         text={ago(opts.timestamp)}
+        accessibilityLabel={niceDate(opts.timestamp)}
+        accessibilityHint=""
         href={opts.postHref}
       />
     </View>

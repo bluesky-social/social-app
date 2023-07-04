@@ -37,6 +37,7 @@ import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
 import {faEye} from '@fortawesome/free-solid-svg-icons/faEye'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
+import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons/faFloppyDisk'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faHand} from '@fortawesome/free-solid-svg-icons/faHand'
@@ -67,8 +68,9 @@ import {faSatelliteDish} from '@fortawesome/free-solid-svg-icons/faSatelliteDish
 import {faShare} from '@fortawesome/free-solid-svg-icons/faShare'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
-import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
 import {faSignal} from '@fortawesome/free-solid-svg-icons/faSignal'
+import {faSliders} from '@fortawesome/free-solid-svg-icons/faSliders'
+import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
@@ -123,6 +125,7 @@ export function setup() {
     faEye,
     faExclamation,
     farEyeSlash,
+    faFloppyDisk,
     faGear,
     faGlobe,
     faHand,
@@ -153,8 +156,9 @@ export function setup() {
     faShare,
     faShareFromSquare,
     faShield,
-    faSquarePlus,
     faSignal,
+    faSliders,
+    faSquarePlus,
     faUser,
     faUsers,
     faUserCheck,

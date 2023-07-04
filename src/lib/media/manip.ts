@@ -5,6 +5,7 @@ import {Image} from 'react-native-image-crop-picker'
 import * as RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import * as Sharing from 'expo-sharing'
+import * as MediaLibrary from 'expo-media-library'
 import {Dimensions} from './types'
 import {isAndroid, isIOS} from 'platform/detection'
 
@@ -75,7 +76,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   }
 }
 
-export async function saveImageModal({uri}: {uri: string}) {
+export async function shareImageModal({uri}: {uri: string}) {
   if (!(await Sharing.isAvailableAsync())) {
     // TODO might need to give an error to the user in this case -prf
     return
@@ -105,6 +106,22 @@ export async function saveImageModal({uri}: {uri: string}) {
     })
   }
   RNFS.unlink(imagePath)
+}
+
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+  // download the file to cache
+  // NOTE
+  // assuming PNG
+  // we're currently relying on the fact our CDN only serves pngs
+  // -prf
+  const downloadResponse = await RNFetchBlob.config({
+    fileCache: true,
+  }).fetch('GET', uri)
+  let imagePath = downloadResponse.path()
+  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
+
+  // save
+  await MediaLibrary.createAssetAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {

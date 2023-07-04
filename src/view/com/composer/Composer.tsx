@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -13,7 +14,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
@@ -38,6 +39,7 @@ import {isDesktopWeb, isAndroid} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {SelectLangBtn} from './select-language/SelectLangBtn'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -71,10 +73,17 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const insets = useSafeAreaInsets()
+  const viewStyles = useMemo(
+    () => ({
+      paddingBottom: isAndroid ? insets.bottom : 0,
+      paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
+    }),
+    [insets],
+  )
 
   // HACK
   // there's a bug with @mattermost/react-native-paste-input where if the input
-  // is focused during unmount, an exception will throw (seems that a blur method isnt implemented)
+  // is focused during unmount, an exception will throw (seems that a blur method isn't implemented)
   // manually blurring before closing gets around that
   // -prf
   const hackfixOnClose = useCallback(() => {
@@ -82,34 +91,44 @@ export const ComposePost = observer(function ComposePost({
     onClose()
   }, [textInput, onClose])
 
+  const onPressCancel = useCallback(() => {
+    if (graphemeLength > 0 || !gallery.isEmpty) {
+      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
+        store.shell.closeModal()
+      }
+      if (Keyboard) {
+        Keyboard.dismiss()
+      }
+      store.shell.openModal({
+        name: 'confirm',
+        title: 'Discard draft',
+        onPressConfirm: hackfixOnClose,
+        onPressCancel: () => {
+          store.shell.closeModal()
+        },
+        message: "Are you sure you'd like to discard this draft?",
+        confirmBtnText: 'Discard',
+        confirmBtnStyle: {backgroundColor: colors.red4},
+      })
+    } else {
+      hackfixOnClose()
+    }
+  }, [store, hackfixOnClose, graphemeLength, gallery])
+
   // initial setup
   useEffect(() => {
     autocompleteView.setup()
   }, [autocompleteView])
 
+  // listen to escape key on desktop web
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        const {shell} = store
-
-        if (shell.activeModals.some(modal => modal.name === 'confirm')) {
-          store.shell.closeModal()
-        }
-
-        shell.openModal({
-          name: 'confirm',
-          title: 'Cancel draft',
-          onPressConfirm: onClose,
-          onPressCancel: () => {
-            store.shell.closeModal()
-          },
-          message: "Are you sure you'd like to cancel this draft?",
-        })
+        onPressCancel()
       }
     },
-    [store, onClose],
+    [onPressCancel],
   )
-
   useEffect(() => {
     if (isDesktopWeb) {
       window.addEventListener('keydown', onEscape)
@@ -127,14 +146,17 @@ export const ComposePost = observer(function ComposePost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
-      gallery.paste(uri)
+      await gallery.paste(uri)
     },
     [gallery, track],
   )
 
   const onPressPublish = useCallback(
-    async rt => {
-      if (isProcessing || rt.graphemeLength_ > MAX_GRAPHEME_LENGTH) {
+    async (rt: RichText) => {
+      if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
+        return
+      }
+      if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
         return
       }
 
@@ -157,9 +179,7 @@ export const ComposePost = observer(function ComposePost({
           extLink: extLink,
           onStateChange: setProcessingState,
           knownHandles: autocompleteView.knownHandles,
-        })
-        track('Create Post', {
-          imageCount: gallery.size,
+          langs: store.preferences.postLanguages,
         })
       } catch (e: any) {
         if (extLink) {
@@ -172,9 +192,14 @@ export const ComposePost = observer(function ComposePost({
         setError(cleanError(e.message))
         setIsProcessing(false)
         return
+      } finally {
+        track('Create Post', {
+          imageCount: gallery.size,
+        })
+        if (replyTo && replyTo.uri) track('Post:Reply')
       }
       if (!replyTo) {
-        store.me.mainFeed.addPostToTop(createdPost.uri)
+        await store.me.mainFeed.addPostToTop(createdPost.uri)
       }
       onPost?.()
       hackfixOnClose()
@@ -197,15 +222,19 @@ export const ComposePost = observer(function ComposePost({
     ],
   )
 
-  const canPost = graphemeLength <= MAX_GRAPHEME_LENGTH
+  const canPost = useMemo(
+    () =>
+      graphemeLength <= MAX_GRAPHEME_LENGTH &&
+      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
+    [
+      graphemeLength,
+      store.preferences.requireAltTextEnabled,
+      gallery.needsAltText,
+    ],
+  )
+  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : "What's up?"
-
-  const canSelectImages = gallery.size < 4
-  const viewStyles = {
-    paddingBottom: isAndroid ? insets.bottom : 0,
-    paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
-  }
+  const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
 
   return (
     <KeyboardAvoidingView
@@ -215,12 +244,12 @@ export const ComposePost = observer(function ComposePost({
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={styles.topbar}>
           <TouchableOpacity
-            testID="composerCancelButton"
-            onPress={hackfixOnClose}
-            onAccessibilityEscape={hackfixOnClose}
+            testID="composerDiscardButton"
+            onPress={onPressCancel}
+            onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
             accessibilityLabel="Cancel"
-            accessibilityHint="Closes post composer">
+            accessibilityHint="Closes post composer and discards post draft">
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
@@ -262,6 +291,20 @@ export const ComposePost = observer(function ComposePost({
             <Text style={pal.text}>{processingState}</Text>
           </View>
         ) : undefined}
+        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+          <View style={[styles.reminderLine, pal.viewLight]}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon
+                icon="exclamation"
+                style={{color: colors.red4}}
+                size={10}
+              />
+            </View>
+            <Text style={[pal.text, s.flex1]}>
+              One or more images is missing alt text.
+            </Text>
+          </View>
+        )}
         {error !== '' && (
           <View style={styles.errorLine}>
             <View style={styles.errorIcon}>
@@ -352,6 +395,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           ) : null}
           <View style={s.flex1} />
+          <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
       </View>
@@ -393,6 +437,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     marginVertical: 6,
+  },
+  reminderLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 6,
+    marginHorizontal: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginBottom: 6,
   },
   errorIcon: {
     borderWidth: 1,

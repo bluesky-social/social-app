@@ -87,9 +87,9 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
     <CenteredView
       style={[
         styles.container,
-        isDesktopWeb && styles.containerDesktop,
         pal.view,
         pal.border,
+        isDesktopWeb && styles.containerDesktop,
       ]}
       testID="moderationMutelistsScreen">
       <ViewHeader

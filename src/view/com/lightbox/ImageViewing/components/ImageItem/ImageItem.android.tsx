@@ -133,6 +133,8 @@ const ImageItem = ({
         source={imageSrc}
         style={imageStylesWithOpacity}
         onLoad={onLoaded}
+        accessibilityLabel={imageSrc.alt}
+        accessibilityHint=""
       />
       {(!isLoaded || !imageDimensions) && <ImageLoading />}
     </ScrollView>

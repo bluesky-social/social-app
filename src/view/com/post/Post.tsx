@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -12,10 +12,8 @@ import {observer} from 'mobx-react-lite'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {
-  PostThreadModel,
-  PostThreadItemModel,
-} from 'state/models/content/post-thread'
+import {PostThreadModel} from 'state/models/content/post-thread'
+import {PostThreadItemModel} from 'state/models/content/post-thread-item'
 import {Link} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -31,6 +29,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {getTranslatorLink} from '../../../locale/helpers'
 
 export const Post = observer(function Post({
   uri,
@@ -168,24 +167,17 @@ const PostLoaded = observer(
     }, [record])
 
     const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
 
     const onOpenTranslate = React.useCallback(() => {
-      Linking.openURL(
-        encodeURI(
-          `https://translate.google.com/?sl=auto&tl=${primaryLanguage}&text=${
-            record?.text || ''
-          }`,
-        ),
-      )
-    }, [record, primaryLanguage])
+      Linking.openURL(translatorUrl)
+    }, [translatorUrl])
 
     const onToggleThreadMute = React.useCallback(async () => {
       try {
         await item.toggleThreadMute()
         if (item.isThreadMuted) {
-          Toast.show(
-            'You will no longer received notifications for this thread',
-          )
+          Toast.show('You will no longer receive notifications for this thread')
         } else {
           Toast.show('You will now receive notifications for this thread')
         }
@@ -207,47 +199,11 @@ const PostLoaded = observer(
       )
     }, [item, setDeleted, store])
 
-    const accessibilityActions = useMemo(
-      () => [
-        {
-          name: 'reply',
-          label: 'Reply',
-        },
-        {
-          name: 'repost',
-          label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
-        },
-        {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
-      ],
-      [item.post.viewer?.like, item.post.viewer?.repost],
-    )
-
-    const onAccessibilityAction = useCallback(
-      event => {
-        switch (event.nativeEvent.actionName) {
-          case 'like':
-            onPressToggleLike()
-            break
-          case 'reply':
-            onPressReply()
-            break
-          case 'repost':
-            onPressToggleRepost()
-            break
-          default:
-            break
-        }
-      },
-      [onPressReply, onPressToggleLike, onPressToggleRepost],
-    )
-
     return (
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        moderation={item.moderation.list}
-        accessibilityActions={accessibilityActions}
-        onAccessibilityAction={onAccessibilityAction}>
+        moderation={item.moderation.list}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -300,6 +256,7 @@ const PostLoaded = observer(
                     type="post-text"
                     richText={item.richText}
                     lineHeight={1.3}
+                    style={s.flex1}
                   />
                 </View>
               ) : undefined}

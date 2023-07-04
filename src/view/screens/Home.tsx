@@ -8,7 +8,6 @@ import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -19,11 +18,15 @@ import {FAB} from '../com/util/fab/FAB'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from 'lib/analytics'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {isDesktopWeb} from 'platform/detection'
+import {isDesktopWeb, isMobileWebMediaQuery, isWeb} from 'platform/detection'
 
-const HEADER_OFFSET = isDesktopWeb ? 50 : 78
+const HEADER_OFFSET_MOBILE = 78
+const HEADER_OFFSET_DESKTOP = 50
+const HEADER_OFFSET = isDesktopWeb
+  ? HEADER_OFFSET_DESKTOP
+  : HEADER_OFFSET_MOBILE
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -152,6 +155,7 @@ const FeedPage = observer(
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
     const {screen, track} = useAnalytics()
+    const [headerOffset, setHeaderOffset] = React.useState(HEADER_OFFSET)
     const scrollElRef = React.useRef<FlatList>(null)
     const {appState} = useAppState({
       onForeground: () => doPoll(true),
@@ -177,9 +181,9 @@ const FeedPage = observer(
     )
 
     const scrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -HEADER_OFFSET})
+      scrollElRef.current?.scrollToOffset({offset: -headerOffset})
       resetMainScroll()
-    }, [scrollElRef, resetMainScroll])
+    }, [headerOffset, resetMainScroll])
 
     const onSoftReset = React.useCallback(() => {
       if (isPageFocused) {
@@ -188,48 +192,57 @@ const FeedPage = observer(
       }
     }, [isPageFocused, scrollToTop, feed])
 
-    // fires when screen is activated/deactivated
-    // - set up polls/listeners, update content
-    useFocusEffect(
-      React.useCallback(() => {
-        const softResetSub = store.onScreenSoftReset(onSoftReset)
-        const feedCleanup = feed.registerListeners()
-        const pollInterval = setInterval(doPoll, POLL_FREQ)
+    // listens for resize events
+    const listenForResize = React.useCallback(() => {
+      // @ts-ignore we know window exists -prf
+      const isMobileWeb = global.window.matchMedia(
+        isMobileWebMediaQuery,
+      )?.matches
+      setHeaderOffset(
+        isMobileWeb ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP,
+      )
+    }, [])
 
-        screen('Feed')
-        store.log.debug('HomeScreen: Updating feed')
-        if (feed.hasContent) {
-          feed.update()
-        }
-
-        return () => {
-          clearInterval(pollInterval)
-          softResetSub.remove()
-          feedCleanup()
-        }
-      }, [store, doPoll, onSoftReset, screen, feed]),
-    )
-    // fires when tab is activated/deactivated
-    // - check for latest
-    useTabFocusEffect(
-      'Home',
-      React.useCallback(
-        isInside => {
-          if (!isPageFocused || !isInside) {
-            return
-          }
-          feed.checkForLatest()
-        },
-        [isPageFocused, feed],
-      ),
-    )
     // fires when page within screen is activated/deactivated
     // - check for latest
     React.useEffect(() => {
-      if (isPageFocused && isScreenFocused) {
-        feed.checkForLatest()
+      if (!isPageFocused || !isScreenFocused) {
+        return
       }
-    }, [isPageFocused, isScreenFocused, feed])
+
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
+      const feedCleanup = feed.registerListeners()
+      const pollInterval = setInterval(doPoll, POLL_FREQ)
+
+      screen('Feed')
+      store.log.debug('HomeScreen: Updating feed')
+      feed.checkForLatest()
+      if (feed.hasContent) {
+        feed.update()
+      }
+
+      if (isWeb) {
+        window.addEventListener('resize', listenForResize)
+      }
+
+      return () => {
+        clearInterval(pollInterval)
+        softResetSub.remove()
+        feedCleanup()
+        if (isWeb) {
+          isWeb && window.removeEventListener('resize', listenForResize)
+        }
+      }
+    }, [
+      store,
+      doPoll,
+      onSoftReset,
+      screen,
+      feed,
+      isPageFocused,
+      isScreenFocused,
+      listenForResize,
+    ])
 
     const onPressCompose = React.useCallback(() => {
       track('HomeScreen:PressCompose')
@@ -258,7 +271,7 @@ const FeedPage = observer(
           onScroll={onMainScroll}
           scrollEventThrottle={100}
           renderEmptyState={renderEmptyState}
-          headerOffset={HEADER_OFFSET}
+          headerOffset={headerOffset}
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
