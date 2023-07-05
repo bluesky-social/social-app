@@ -1,71 +1,73 @@
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
-import {observer} from 'mobx-react-lite'
+
 import {
-  NavigationContainer,
-  createNavigationContainerRef,
-  CommonActions,
-  StackActions,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native'
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
+  AllNavigatorParams,
+  BottomTabNavigatorParams,
+  FeedsTabNavigatorParams,
+  FlatNavigatorParams,
+  HomeTabNavigatorParams,
+  MyProfileTabNavigatorParams,
+  NotificationsTabNavigatorParams,
+  SearchTabNavigatorParams,
+} from 'lib/routes/types'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
-  HomeTabNavigatorParams,
-  SearchTabNavigatorParams,
-  FeedsTabNavigatorParams,
-  NotificationsTabNavigatorParams,
-  FlatNavigatorParams,
-  AllNavigatorParams,
-  MyProfileTabNavigatorParams,
-  BottomTabNavigatorParams,
-} from 'lib/routes/types'
-import {BottomBar} from './view/shell/bottom-bar/BottomBar'
-import {buildStateObject} from 'lib/routes/helpers'
-import {State, RouteParams} from 'lib/routes/types'
-import {colors} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {router} from './routes'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from './state'
+  CommonActions,
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+  StackActions,
+  createNavigationContainerRef,
+} from '@react-navigation/native'
+import {RouteParams, State} from 'lib/routes/types'
 
-import {HomeScreen} from './view/screens/Home'
-import {SearchScreen} from './view/screens/Search'
-import {FeedsScreen} from './view/screens/Feeds'
-import {NotificationsScreen} from './view/screens/Notifications'
-import {ModerationScreen} from './view/screens/Moderation'
-import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
-import {DiscoverFeedsScreen} from 'view/screens/DiscoverFeeds'
-import {NotFoundScreen} from './view/screens/NotFound'
-import {SettingsScreen} from './view/screens/Settings'
-import {ProfileScreen} from './view/screens/Profile'
-import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
-import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
-import {CustomFeedScreen} from './view/screens/CustomFeed'
-import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
-import {ProfileListScreen} from './view/screens/ProfileList'
-import {PostThreadScreen} from './view/screens/PostThread'
-import {PostLikedByScreen} from './view/screens/PostLikedBy'
-import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
-import {DebugScreen} from './view/screens/Debug'
-import {LogScreen} from './view/screens/Log'
-import {SupportScreen} from './view/screens/Support'
-import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
-import {TermsOfServiceScreen} from './view/screens/TermsOfService'
+import {AppPasswords} from 'view/screens/AppPasswords'
+import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
-import {AppPasswords} from 'view/screens/AppPasswords'
-import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
-import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
-import {SavedFeeds} from 'view/screens/SavedFeeds'
-import {getRoutingInstrumentation} from 'lib/sentry'
-import {bskyTitle} from 'lib/strings/headings'
+import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
+import {CustomFeedScreen} from './view/screens/CustomFeed'
+import {DebugScreen} from './view/screens/Debug'
+import {DiscoverFeedsScreen} from 'view/screens/DiscoverFeeds'
+import {FeedsScreen} from './view/screens/Feeds'
+import {HomeScreen} from './view/screens/Home'
 import {JSX} from 'react/jsx-runtime'
+import {LogScreen} from './view/screens/Log'
+import {LoggedOut} from 'view/com/auth/LoggedOut'
+import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
+import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
+import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
+import {ModerationScreen} from './view/screens/Moderation'
+import {NotFoundScreen} from './view/screens/NotFound'
+import {NotificationsScreen} from './view/screens/Notifications'
+import {PostLikedByScreen} from './view/screens/PostLikedBy'
+import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
+import {PostThreadScreen} from './view/screens/PostThread'
+import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
+import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
+import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {ProfileListScreen} from './view/screens/ProfileList'
+import {ProfileScreen} from './view/screens/Profile'
+import {SavedFeeds} from 'view/screens/SavedFeeds'
+import {SearchScreen} from './view/screens/Search'
+import {SettingsScreen} from './view/screens/Settings'
+import {StyleSheet} from 'react-native'
+import {SupportScreen} from './view/screens/Support'
+import {TermsOfServiceScreen} from './view/screens/TermsOfService'
+import {bskyTitle} from 'lib/strings/headings'
+import {buildStateObject} from 'lib/routes/helpers'
+import {colors} from 'lib/styles'
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import {getRoutingInstrumentation} from 'lib/sentry'
+import {isNative} from 'platform/detection'
+import {observer} from 'mobx-react-lite'
+import {router} from './routes'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from './state'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -115,6 +117,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="DiscoverFeeds"
         component={DiscoverFeedsScreen}
         options={{title: title('Discover Feeds')}}
+      />
+      <Stack.Screen
+        name="SignIn"
+        component={LoggedOut}
+        options={{title: title('Sign In')}}
       />
       <Stack.Screen
         name="Settings"

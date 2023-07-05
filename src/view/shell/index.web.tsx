@@ -36,7 +36,7 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      {isDesktop && store.session.hasSession && (
+      {isDesktop && (
         <>
           <DesktopLeftNav />
           {/* <DesktopRightNav /> */}

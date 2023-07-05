@@ -1,16 +1,17 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
+
 import {DesktopSearch} from './Search'
+import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React from 'react'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {s} from 'lib/styles'
-import {useStores} from 'state/index'
-import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
+import {observer} from 'mobx-react-lite'
+import {pluralize} from 'lib/strings/helpers'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()

@@ -93,6 +93,9 @@ export async function DEFAULT_FEEDS(
   }
 }
 
+export const SOLARPLEX_IDENTIFIER = 'solarplex.bsky.social'
+export const SOLARPLEX_APP_PASS = process.env.APP_PASS
+
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
@@ -105,7 +108,7 @@ export const STAGING_LINK_META_PROXY =
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
 export const SOLARPLEX_FEEDS = [
-  'at://did:plc:pexkitpwhd455f5s7b7i4ok4/app.bsky.feed.generator/aaab2rwjuijtg',
+  'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
 ]
 
 export function LINK_META_PROXY(serviceUrl: string) {

@@ -40,9 +40,9 @@ export class SavedFeedsModel {
   }
 
   get pinned() {
-    return this.rootStore.preferences.pinnedFeeds
-      .map(uri => this._feedModelCache[uri] as CustomFeedModel)
-      .filter(Boolean)
+    return SOLARPLEX_FEEDS.map(
+      uri => this._feedModelCache[uri] as CustomFeedModel,
+    ).filter(Boolean)
   }
 
   get unpinned() {
@@ -57,7 +57,9 @@ export class SavedFeedsModel {
   }
 
   get pinnedFeedNames() {
-    return this.pinned.map(f => f.displayName)
+    const t = Object.values(this._feedModelCache).map(f => f.displayName)
+    console.log(Object.values(this._feedModelCache))
+    return t
   }
 
   // public api

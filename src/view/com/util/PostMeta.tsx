@@ -1,15 +1,16 @@
-import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {Text} from './text/Text'
+
 import {DesktopWebTextLink} from './Link'
-import {ago} from 'lib/strings/time'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
-import {UserAvatar} from './UserAvatar'
-import {observer} from 'mobx-react-lite'
 import {FollowButton} from '../profile/FollowButton'
 import {FollowState} from 'state/models/cache/my-follows'
+import React from 'react'
+import {Text} from './text/Text'
+import {UserAvatar} from './UserAvatar'
+import {ago} from 'lib/strings/time'
+import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 interface PostMetaOpts {
   authorAvatar?: string
@@ -79,11 +80,13 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
         </View>
 
         <View>
-          <FollowButton
-            unfollowedType="default"
-            did={opts.did}
-            onToggleFollow={onToggleFollow}
-          />
+          {!store.session.isDefaultSession && (
+            <FollowButton
+              unfollowedType="default"
+              did={opts.did}
+              onToggleFollow={onToggleFollow}
+            />
+          )}
         </View>
       </View>
     )

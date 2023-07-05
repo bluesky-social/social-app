@@ -1,10 +1,12 @@
-import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
+import {DEFAULT_SERVICE, useStores} from 'state/index'
+import {SOLARPLEX_APP_PASS, SOLARPLEX_IDENTIFIER} from 'lib/constants'
+
 import {CenteredView} from '../util/Views'
-import {LoggedOut} from './LoggedOut'
+// import {LoggedOut} from './LoggedOut'
+import React from 'react'
 import {Text} from '../util/text/Text'
+import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
 
 export const withAuthRequired = <P extends object>(
@@ -15,8 +17,12 @@ export const withAuthRequired = <P extends object>(
     if (store.session.isResumingSession) {
       return <Loading />
     }
-    if (!store.session.hasSession) {
-      return <LoggedOut />
+    if (!store.session.hasAnySession) {
+      store.session.login({
+        service: DEFAULT_SERVICE,
+        identifier: SOLARPLEX_IDENTIFIER,
+        password: SOLARPLEX_APP_PASS ?? '',
+      })
     }
     return <Component {...props} />
   })

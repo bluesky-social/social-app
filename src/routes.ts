@@ -6,6 +6,7 @@ export const router = new Router({
   Feeds: '/feeds',
   DiscoverFeeds: '/search/feeds',
   Notifications: '/notifications',
+  SignIn: '/signin',
   Settings: '/settings',
   Moderation: '/moderation',
   ModerationMuteLists: '/moderation/mute-lists',

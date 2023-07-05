@@ -1,16 +1,17 @@
-import {makeAutoObservable, runInAction} from 'mobx'
 import {
-  BskyAgent,
-  AtpSessionEvent,
   AtpSessionData,
+  AtpSessionEvent,
+  BskyAgent,
   ComAtprotoServerDescribeServer as DescribeServer,
 } from '@atproto/api'
-import normalizeUrl from 'normalize-url'
-import {isObj, hasProp} from 'lib/type-guards'
-import {networkRetry} from 'lib/async/retry'
-import {z} from 'zod'
+import {IS_PROD, SOLARPLEX_IDENTIFIER} from 'lib/constants'
+import {hasProp, isObj} from 'lib/type-guards'
+import {makeAutoObservable, runInAction} from 'mobx'
+
 import {RootStoreModel} from './root-store'
-import {IS_PROD} from 'lib/constants'
+import {networkRetry} from 'lib/async/retry'
+import normalizeUrl from 'normalize-url'
+import {z} from 'zod'
 
 export type ServiceDescription = DescribeServer.OutputSchema
 
@@ -93,7 +94,19 @@ export class SessionModel {
     )
   }
 
+  get isDefaultSession() {
+    return this.currentSession?.handle === SOLARPLEX_IDENTIFIER
+  }
+
   get hasSession() {
+    return (
+      !!this.currentSession &&
+      !!this.rootStore.agent.session &&
+      !this.isDefaultSession
+    )
+  }
+
+  get hasAnySession() {
     return !!this.currentSession && !!this.rootStore.agent.session
   }
 

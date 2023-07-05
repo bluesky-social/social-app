@@ -1,13 +1,16 @@
-import React, {useState, useEffect} from 'react'
 import 'lib/sentry' // must be relatively on top
-import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {RootSiblingParent} from 'react-native-root-siblings'
-import * as view from './view/index'
+
 import * as analytics from 'lib/analytics/analytics'
-import {RootStoreModel, setupState, RootStoreProvider} from './state'
+import * as view from './view/index'
+
+import React, {useEffect, useState} from 'react'
+import {RootStoreModel, RootStoreProvider, setupState} from './state'
+
+import {RootSiblingParent} from 'react-native-root-siblings'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {Shell} from './view/shell/index'
-import {ToastContainer} from './view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
+import {ToastContainer} from './view/com/util/Toast.web'
 import {observer} from 'mobx-react-lite'
 
 const App = observer(() => {

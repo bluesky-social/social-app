@@ -1,4 +1,5 @@
 import {NavigationState, PartialState} from '@react-navigation/native'
+
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -10,6 +11,7 @@ export type CommonNavigatorParams = {
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
   DiscoverFeeds: undefined
+  SignIn: undefined
   Settings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}

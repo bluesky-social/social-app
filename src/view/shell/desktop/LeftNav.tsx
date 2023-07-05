@@ -4,6 +4,8 @@ import {
   ComposeIcon2,
   HomeIcon,
   HomeIconSolid,
+  UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {
@@ -19,6 +21,7 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {Button} from 'view/com/util/forms/Button'
 import {Link} from 'view/com/util/Link'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import React from 'react'
@@ -26,11 +29,13 @@ import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {router} from '../../../routes'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 
 const ProfileCard = observer(() => {
   const store = useStores()
+  console.log(store.agent)
   return (
     <Link
       href={`/profile/${store.me.handle}`}
@@ -45,7 +50,6 @@ function BackBtn() {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
-
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
@@ -170,6 +174,12 @@ function ComposeBtn() {
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores()
   const pal = usePalette('default')
+  const {track} = useAnalytics()
+
+  const onPressSignout = React.useCallback(() => {
+    track('Settings:SignOutButtonClicked')
+    store.session.logout()
+  }, [track, store])
 
   return (
     <View style={[styles.leftNav, pal.view]}>
@@ -183,16 +193,30 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Home"
       />
-      <NavItem
-        href="/notifications"
-        count={store.me.notifications.unreadCountLabel}
-        icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
-        iconFilled={
-          <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
-        }
-        label="Notifications"
-      />
-      {store.session.hasSession && <ComposeBtn />}
+      {store.session.hasSession && (
+        <>
+          <NavItem
+            href="/notifications"
+            count={store.me.notifications.unreadCountLabel}
+            icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
+            iconFilled={
+              <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
+            }
+            label="Notifications"
+          />
+          <Button onPress={() => onPressSignout()} label="Sign out" />
+          <ComposeBtn />
+        </>
+      )}
+      {!store.session.hasSession && (
+        <NavItem
+          href="/signin"
+          count={store.me.notifications.unreadCountLabel}
+          label="Sign in"
+          icon={<UserIcon />}
+          iconFilled={<UserIconSolid />}
+        />
+      )}
     </View>
   )
 })
@@ -268,5 +292,15 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  btn: {
+    borderRadius: 32,
+    paddingVertical: 16,
+    marginBottom: 20,
+    marginHorizontal: 20,
+  },
+  btnLabel: {
+    textAlign: 'center',
+    fontSize: 21,
   },
 })
