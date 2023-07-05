@@ -11,6 +11,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
+import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
@@ -358,10 +359,6 @@ function CustomHandleForm({
     store.agent,
   ])
 
-  const onToggleDNSForm = React.useCallback(() => {
-    setDNSForm(!isDNSForm)
-  }, [setDNSForm, isDNSForm])
-
   // rendering
   // =
   return (
@@ -390,6 +387,24 @@ function CustomHandleForm({
         />
       </View>
       <View style={styles.spacer} />
+
+      <View style={[styles.selectableBtns]}>
+        <SelectableBtn
+          selected={isDNSForm}
+          label="DNS Panel"
+          left
+          onSelect={() => setDNSForm(true)}
+          accessibilityHint="Use the DNS panel"
+        />
+        <SelectableBtn
+          selected={!isDNSForm}
+          label="No DNS Panel"
+          right
+          onSelect={() => setDNSForm(false)}
+          accessibilityHint="Use a file on your server"
+        />
+      </View>
+      <View style={styles.spacer} />
       {isDNSForm ? (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
@@ -401,7 +416,7 @@ function CustomHandleForm({
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                _atproto.{handle}
+                _atproto.
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
@@ -425,16 +440,20 @@ function CustomHandleForm({
       ) : (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Add the following to a text file that can be accessed on
-            <br />
-            <Text type="mono" style={[styles.monoText, pal.text]}>
-              https://{handle}/.well-known/atproto-did
-            </Text>
+            Upload a text file to:
           </Text>
+          <View style={[styles.valueContainer, pal.btn]}>
+            <View style={[styles.dnsValue]}>
+              <Text type="mono" style={[styles.monoText, pal.text]}>
+                https://{handle}/.well-known/atproto-did
+              </Text>
+            </View>
+          </View>
           <View style={styles.spacer} />
-          <View style={[styles.dnsTable, pal.btn]}>
-            <View style={styles.spacer} />
-
+          <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
+            That contains the following:
+          </Text>
+          <View style={[styles.valueContainer, pal.btn]}>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
                 {store.me.did}
@@ -447,7 +466,7 @@ function CustomHandleForm({
       <View style={styles.spacer} />
       <Button type="default" style={[s.p20, s.mb10]} onPress={onPressCopy}>
         <Text type="xl" style={[pal.link, s.textCenter]}>
-          Copy Domain Value
+          Copy {isDNSForm ? 'Domain Value' : 'File Contents'}
         </Text>
       </Button>
       {canSave === true && (
@@ -478,16 +497,6 @@ function CustomHandleForm({
       </Button>
       <View style={styles.spacer} />
       <TouchableOpacity
-        onPress={onToggleDNSForm}
-        accessibilityLabel="Use default provider"
-        accessibilityHint="Use bsky.social as hosting provider">
-        <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
-          {isDNSForm
-            ? "I don't have access to my DNS Panel"
-            : 'I want to use DNS Panel'}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
         onPress={onToggleCustom}
         accessibilityLabel="Use default provider"
         accessibilityHint="Use bsky.social as hosting provider">
@@ -511,6 +520,10 @@ const styles = StyleSheet.create({
   },
   dimmed: {
     opacity: 0.7,
+  },
+
+  selectableBtns: {
+    flexDirection: 'row',
   },
 
   title: {
@@ -552,6 +565,11 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     fontWeight: '400',
     borderRadius: 10,
+  },
+
+  valueContainer: {
+    borderRadius: 4,
+    paddingVertical: 16,
   },
 
   dnsTable: {
