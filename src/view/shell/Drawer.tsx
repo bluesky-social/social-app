@@ -520,8 +520,8 @@ const styles = StyleSheet.create({
 
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingRight: 36,
+    gap: 8,
+    paddingRight: 20,
     paddingTop: 20,
     paddingLeft: 20,
   },
