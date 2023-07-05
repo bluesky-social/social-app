@@ -78,7 +78,6 @@ export const MultiFeed = observer(function Feed({
 
   // rendering
   // =
-
   const renderItem = React.useCallback(
     ({item}: {item: MultiFeedItem}) => {
       if (item.type === 'header') {

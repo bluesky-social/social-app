@@ -14,6 +14,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {useAnalytics} from 'lib/analytics/analytics'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'DiscoverFeeds'>
 export const DiscoverFeedsScreen = withAuthRequired(
@@ -21,12 +22,14 @@ export const DiscoverFeedsScreen = withAuthRequired(
     const store = useStores()
     const pal = usePalette('default')
     const feeds = React.useMemo(() => new FeedsDiscoveryModel(store), [store])
+    const {screen} = useAnalytics()
 
     useFocusEffect(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
         feeds.refresh()
-      }, [store, feeds]),
+        screen('DiscoverFeeds')
+      }, [store, feeds, screen]),
     )
 
     const onRefresh = React.useCallback(() => {
