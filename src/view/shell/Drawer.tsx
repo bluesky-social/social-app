@@ -1,4 +1,11 @@
-import {BellIcon, BellIconSolid, HomeIcon, HomeIconSolid} from 'lib/icons'
+import {
+  BellIcon,
+  BellIconSolid,
+  HomeIcon,
+  HomeIconSolid,
+  UserIcon,
+  UserIconSolid,
+} from 'lib/icons'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -20,6 +27,7 @@ import {colors, s} from 'lib/styles'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
 import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {NavItem} from './desktop/LeftNav'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -94,36 +102,42 @@ export const DrawerContent = observer(() => {
         theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
       ]}>
       <SafeAreaView style={s.flex1}>
-        <View style={styles.main}>
-          <TouchableOpacity
-            testID="profileCardButton"
-            accessibilityLabel="Profile"
-            accessibilityHint="Navigates to your profile"
-            onPress={onPressProfile}>
-            <UserAvatar size={80} avatar={store.me.avatar} />
-            <Text
-              type="title-lg"
-              style={[pal.text, s.bold, styles.profileCardDisplayName]}>
-              {store.me.displayName || store.me.handle}
-            </Text>
-            <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
-              @{store.me.handle}
-            </Text>
-            <Text
-              type="xl"
-              style={[pal.textLight, styles.profileCardFollowers]}>
-              <Text type="xl-medium" style={pal.text}>
-                {formatCountShortOnly(store.me.followersCount ?? 0)}
-              </Text>{' '}
-              {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
-              <Text type="xl-medium" style={pal.text}>
-                {formatCountShortOnly(store.me.followsCount ?? 0)}
-              </Text>{' '}
-              following
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <InviteCodes />
+        {!store.session.isDefaultSession && (
+          <>
+            <View style={styles.main}>
+              <TouchableOpacity
+                testID="profileCardButton"
+                accessibilityLabel="Profile"
+                accessibilityHint="Navigates to your profile"
+                onPress={onPressProfile}>
+                <UserAvatar size={80} avatar={store.me.avatar} />
+                <Text
+                  type="title-lg"
+                  style={[pal.text, s.bold, styles.profileCardDisplayName]}>
+                  {store.me.displayName || store.me.handle}
+                </Text>
+                <Text
+                  type="2xl"
+                  style={[pal.textLight, styles.profileCardHandle]}>
+                  @{store.me.handle}
+                </Text>
+                <Text
+                  type="xl"
+                  style={[pal.textLight, styles.profileCardFollowers]}>
+                  <Text type="xl-medium" style={pal.text}>
+                    {formatCountShortOnly(store.me.followersCount ?? 0)}
+                  </Text>{' '}
+                  {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
+                  <Text type="xl-medium" style={pal.text}>
+                    {formatCountShortOnly(store.me.followsCount ?? 0)}
+                  </Text>{' '}
+                  following
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <InviteCodes />
+          </>
+        )}
         <ScrollView style={styles.main}>
           <MenuItem
             icon={
@@ -147,34 +161,45 @@ export const DrawerContent = observer(() => {
             bold={isAtHome}
             onPress={onPressHome}
           />
-          <MenuItem
-            icon={
-              isAtNotifications ? (
-                <BellIconSolid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
-                  strokeWidth={1.7}
-                />
-              ) : (
-                <BellIcon
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
-                  strokeWidth={1.7}
-                />
-              )
-            }
-            label="Notifications"
-            accessibilityLabel="Notifications"
-            accessibilityHint={
-              notifications.unreadCountLabel === ''
-                ? ''
-                : `${notifications.unreadCountLabel} unread`
-            }
-            count={notifications.unreadCountLabel}
-            bold={isAtNotifications}
-            onPress={onPressNotifications}
-          />
+          {!store.session.isDefaultSession && (
+            <MenuItem
+              icon={
+                isAtNotifications ? (
+                  <BellIconSolid
+                    style={pal.text as StyleProp<ViewStyle>}
+                    size="24"
+                    strokeWidth={1.7}
+                  />
+                ) : (
+                  <BellIcon
+                    style={pal.text as StyleProp<ViewStyle>}
+                    size="24"
+                    strokeWidth={1.7}
+                  />
+                )
+              }
+              label="Notifications"
+              accessibilityLabel="Notifications"
+              accessibilityHint={
+                notifications.unreadCountLabel === ''
+                  ? ''
+                  : `${notifications.unreadCountLabel} unread`
+              }
+              count={notifications.unreadCountLabel}
+              bold={isAtNotifications}
+              onPress={onPressNotifications}
+            />
+          )}
         </ScrollView>
+        {!store.session.hasSession && (
+          <NavItem
+            href="/signin"
+            count={store.me.notifications.unreadCountLabel}
+            label="Sign in"
+            icon={<UserIcon />}
+            iconFilled={<UserIconSolid />}
+          />
+        )}
         <View style={styles.footer}>
           <TouchableOpacity
             accessibilityRole="link"

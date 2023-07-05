@@ -50,7 +50,7 @@ const ShellInner = observer(() => {
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
       />
-      {!isDesktop && <BottomBarWeb />}
+      {!isDesktop && !store.session.isDefaultSession && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (

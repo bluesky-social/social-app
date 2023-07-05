@@ -85,7 +85,7 @@ interface NavItemProps {
   iconFilled: JSX.Element
   label: string
 }
-const NavItem = observer(
+export const NavItem = observer(
   ({count, href, icon, iconFilled, label}: NavItemProps) => {
     const pal = usePalette('default')
     const store = useStores()
