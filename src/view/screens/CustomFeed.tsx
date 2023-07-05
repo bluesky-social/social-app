@@ -1,37 +1,39 @@
-import React, {useMemo, useRef} from 'react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {HeartIcon, HeartIconSolid} from 'lib/icons'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {colors, s} from 'lib/styles'
-import {observer} from 'mobx-react-lite'
+import * as Toast from 'view/com/util/Toast'
+
+import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {FlatList, StyleSheet, View} from 'react-native'
-import {useStores} from 'state/index'
-import {PostsFeedModel} from 'state/models/feeds/posts'
-import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
+import {HeartIcon, HeartIconSolid} from 'lib/icons'
+import React, {useMemo, useRef} from 'react'
+import {colors, s} from 'lib/styles'
+
+import {Button} from 'view/com/util/forms/Button'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {ComposeIcon2} from 'lib/icons'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {FAB} from '../com/util/fab/FAB'
 import {Feed} from 'view/com/posts/Feed'
-import {pluralize} from 'lib/strings/helpers'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Haptics} from 'lib/haptics'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {PostsFeedModel} from 'state/models/feeds/posts'
+import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {Button} from 'view/com/util/forms/Button'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
 import {isDesktopWeb} from 'platform/detection'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {makeRecordUri} from 'lib/strings/url-helpers'
+import {observer} from 'mobx-react-lite'
+import {pluralize} from 'lib/strings/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import {Haptics} from 'lib/haptics'
-import {ComposeIcon2} from 'lib/icons'
-import {FAB} from '../com/util/fab/FAB'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useCustomFeed} from 'lib/hooks/useCustomFeed'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useStores} from 'state/index'
+import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -223,7 +225,7 @@ export const CustomFeedScreen = withAuthRequired(
                   )}
                 </Text>
               )}
-              {isDesktopWeb && (
+              {isDesktopWeb && !store.session.isDefaultSession && (
                 <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
                   <Button
                     type={currentFeed?.isSaved ? 'default' : 'inverted'}
@@ -328,6 +330,7 @@ export const CustomFeedScreen = withAuthRequired(
       rkey,
       isPinned,
       onTogglePinned,
+      store.session.isDefaultSession,
     ])
 
     const renderEmptyState = React.useCallback(() => {
@@ -336,7 +339,9 @@ export const CustomFeedScreen = withAuthRequired(
 
     return (
       <View style={s.hContentRegion}>
-        <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
+        {!store.session.isDefaultSession && (
+          <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
+        )}
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}

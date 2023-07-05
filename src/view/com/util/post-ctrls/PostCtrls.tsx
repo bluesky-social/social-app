@@ -1,3 +1,8 @@
+import {CommentBottomArrow, HeartIcon, HeartIconSolid} from 'lib/icons'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import React, {useCallback} from 'react'
 import {
   StyleProp,
@@ -6,23 +11,21 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {colors, s} from 'lib/styles'
+
+import {Haptics} from 'lib/haptics'
+import {NavigationProp} from 'lib/routes/types'
+import {PostDropdownBtn} from '../forms/DropdownButton'
+import {RepostButton} from './RepostButton'
 // DISABLED see #135
 // import {
 //   TriggerableAnimated,
 //   TriggerableAnimatedRef,
 // } from './anim/TriggerableAnimated'
 import {Text} from '../text/Text'
-import {PostDropdownBtn} from '../forms/DropdownButton'
-import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
-import {s, colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
+import {useNavigation} from '@react-navigation/native'
 import {useStores} from 'state/index'
-import {RepostButton} from './RepostButton'
-import {Haptics} from 'lib/haptics'
+import {useTheme} from 'lib/ThemeContext'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -95,6 +98,8 @@ function ctrlAnimStyle(interp: Animated.Value) {
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores()
   const theme = useTheme()
+  const navigation = useNavigation<NavigationProp>()
+
   const defaultCtrlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
@@ -122,17 +127,20 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     }
   }, [opts, store.shell])
 
-  const onQuote = useCallback(() => {
+  const onQuote = useCallback(async () => {
     store.shell.closeModal()
-    store.shell.openComposer({
-      quote: {
-        uri: opts.itemUri,
-        cid: opts.itemCid,
-        text: opts.text,
-        author: opts.author,
-        indexedAt: opts.indexedAt,
-      },
-    })
+    store.log.debug('onPressReply', store.session.isDefaultSession)
+    store.session.isDefaultSession
+      ? navigation.navigate('SignIn')
+      : store.shell.openComposer({
+          quote: {
+            uri: opts.itemUri,
+            cid: opts.itemCid,
+            text: opts.text,
+            author: opts.author,
+            indexedAt: opts.indexedAt,
+          },
+        })
     Haptics.default()
   }, [
     opts.author,
@@ -141,6 +149,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     opts.itemUri,
     opts.text,
     store.shell,
+    store.log,
+    store.session.isDefaultSession,
+    navigation,
   ])
 
   const onPressToggleLikeWrapper = async () => {

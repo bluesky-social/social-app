@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react'
+import * as EmailValidator from 'email-validator'
+
 import {
   ActivityIndicator,
   Keyboard,
@@ -8,25 +9,29 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {DEFAULT_SERVICE, RootStoreModel, useStores} from 'state/index'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import * as EmailValidator from 'email-validator'
+import React, {useEffect, useRef, useState} from 'react'
+import {colors, s} from 'lib/styles'
+
+import {AccountData} from 'state/models/session'
 import {BskyAgent} from '@atproto/api'
-import {useAnalytics} from 'lib/analytics/analytics'
+import {NavigationProp} from 'lib/routes/types'
+import {SOLARPLEX_IDENTIFIER} from 'lib/constants'
+import {ServiceDescription} from 'state/models/session'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
-import {s, colors} from 'lib/styles'
+import {cleanError} from 'lib/strings/errors'
 import {createFullHandle} from 'lib/strings/handles'
-import {toNiceDomain} from 'lib/strings/url-helpers'
-import {useStores, RootStoreModel, DEFAULT_SERVICE} from 'state/index'
-import {ServiceDescription} from 'state/models/session'
-import {AccountData} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
+import {toNiceDomain} from 'lib/strings/url-helpers'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {cleanError} from 'lib/strings/errors'
 
 enum Forms {
   Login,
@@ -48,7 +53,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   >(undefined)
   const [initialHandle, setInitialHandle] = useState<string>('')
   const [currentForm, setCurrentForm] = useState<Forms>(
-    store.session.hasAccounts ? Forms.ChooseAccount : Forms.Login,
+    store.session.hasAccounts && !store.session.isDefaultSession
+      ? Forms.ChooseAccount
+      : Forms.Login,
   )
 
   const onSelectAccount = (account?: AccountData) => {
@@ -190,36 +197,43 @@ const ChooseAccountForm = ({
         style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}>
         Sign in as...
       </Text>
-      {store.session.accounts.map(account => (
-        <TouchableOpacity
-          testID={`chooseAccountBtn-${account.handle}`}
-          key={account.did}
-          style={[pal.view, pal.border, styles.account]}
-          onPress={() => onTryAccount(account)}
-          accessibilityRole="button"
-          accessibilityLabel={`Sign in as ${account.handle}`}
-          accessibilityHint="Double tap to sign in">
-          <View
-            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-            <View style={s.p10}>
-              <UserAvatar avatar={account.aviUrl} size={30} />
-            </View>
-            <Text style={styles.accountText}>
-              <Text type="lg-bold" style={pal.text}>
-                {account.displayName || account.handle}{' '}
-              </Text>
-              <Text type="lg" style={[pal.textLight]}>
-                {account.handle}
-              </Text>
-            </Text>
-            <FontAwesomeIcon
-              icon="angle-right"
-              size={16}
-              style={[pal.text, s.mr10]}
-            />
-          </View>
-        </TouchableOpacity>
-      ))}
+      {store.session.accounts.map(
+        account =>
+          account.handle !== SOLARPLEX_IDENTIFIER && (
+            <TouchableOpacity
+              testID={`chooseAccountBtn-${account.handle}`}
+              key={account.did}
+              style={[pal.view, pal.border, styles.account]}
+              onPress={() => onTryAccount(account)}
+              accessibilityRole="button"
+              accessibilityLabel={`Sign in as ${account.handle}`}
+              accessibilityHint="Double tap to sign in">
+              <View
+                style={[
+                  pal.borderDark,
+                  styles.groupContent,
+                  styles.noTopBorder,
+                ]}>
+                <View style={s.p10}>
+                  <UserAvatar avatar={account.aviUrl} size={30} />
+                </View>
+                <Text style={styles.accountText}>
+                  <Text type="lg-bold" style={pal.text}>
+                    {account.displayName || account.handle}{' '}
+                  </Text>
+                  <Text type="lg" style={[pal.textLight]}>
+                    {account.handle}
+                  </Text>
+                </Text>
+                <FontAwesomeIcon
+                  icon="angle-right"
+                  size={16}
+                  style={[pal.text, s.mr10]}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+      )}
       <TouchableOpacity
         testID="chooseNewAccountBtn"
         style={[pal.view, pal.border, styles.account, styles.accountLast]}
@@ -279,6 +293,7 @@ const LoginForm = ({
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const theme = useTheme()
+  const navigation = useNavigation<NavigationProp>()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
@@ -321,6 +336,7 @@ const LoginForm = ({
           )
         }
       }
+      // store.session.removeAccount(SOLARPLEX_IDENTIFIER)
 
       await store.session.login({
         service: serviceUrl,
@@ -342,6 +358,7 @@ const LoginForm = ({
       }
     } finally {
       track('Sign In', {resumedSession: false})
+      navigation.navigate('Home')
     }
   }
 

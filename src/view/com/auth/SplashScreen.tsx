@@ -1,14 +1,13 @@
-import React from 'react'
 import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Text} from 'view/com/util/text/Text'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
+
 import {CenteredView} from '../util/Views'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import React from 'react'
+import {Text} from 'view/com/util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export const SplashScreen = ({
   onPressSignin,
-  onPressCreateAccount,
 }: {
   onPressSignin: () => void
   onPressCreateAccount: () => void
@@ -25,7 +24,7 @@ export const SplashScreen = ({
             </Text>
           </View>
           <View testID="signinOrCreateAccount" style={styles.btns}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
@@ -35,7 +34,7 @@ export const SplashScreen = ({
               <Text style={[s.white, styles.btnLabel]}>
                 Create a new account
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               testID="signInButton"
               style={[styles.btn, pal.btn]}

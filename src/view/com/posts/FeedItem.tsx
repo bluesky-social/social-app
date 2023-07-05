@@ -1,33 +1,37 @@
-import React, {useCallback, useMemo, useState} from 'react'
-import {observer} from 'mobx-react-lite'
+import * as Toast from '../util/Toast'
+
 import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri} from '@atproto/api'
+import {DesktopWebTextLink, Link} from '../util/Link'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/post'
+import React, {useCallback, useMemo, useState} from 'react'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+
+import {AtUri} from '@atproto/api'
+import Clipboard from '@react-native-clipboard/clipboard'
+import {ContentHider} from '../util/moderation/ContentHider'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
-import {Link, DesktopWebTextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
+import {NavigationProp} from 'lib/routes/types'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostHider} from '../util/moderation/PostHider'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
-import {RichText} from '../util/text/RichText'
+import {PostMeta} from '../util/PostMeta'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
-import * as Toast from '../util/Toast'
+import {PostsFeedItemModel} from 'state/models/feeds/post'
+import {RichText} from '../util/text/RichText'
+import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import {UserInfoText} from '../util/UserInfoText'
+import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useNavigation} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const FeedItem = observer(function ({
   item,
@@ -46,6 +50,8 @@ export const FeedItem = observer(function ({
   const store = useStores()
   const pal = usePalette('default')
   const {track} = useAnalytics()
+  const navigation = useNavigation<NavigationProp>()
+
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
   const itemUri = item.post.uri
@@ -72,35 +78,42 @@ export const FeedItem = observer(function ({
     [item.post, store.preferences.contentLanguages],
   )
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = React.useCallback(async () => {
     track('FeedItem:PostReply')
-    store.shell.openComposer({
-      replyTo: {
-        uri: item.post.uri,
-        cid: item.post.cid,
-        text: record?.text || '',
-        author: {
-          handle: item.post.author.handle,
-          displayName: item.post.author.displayName,
-          avatar: item.post.author.avatar,
-        },
-      },
-    })
-  }, [item, track, record, store])
+    store.log.debug('onPressReply', store.session.isDefaultSession)
+    store.session.isDefaultSession
+      ? navigation.navigate('SignIn')
+      : store.shell.openComposer({
+          replyTo: {
+            uri: item.post.uri,
+            cid: item.post.cid,
+            text: record?.text || '',
+            author: {
+              handle: item.post.author.handle,
+              displayName: item.post.author.displayName,
+              avatar: item.post.author.avatar,
+            },
+          },
+        })
+  }, [item, track, record, store, navigation])
 
-  const onPressToggleRepost = React.useCallback(() => {
+  const onPressToggleRepost = React.useCallback(async () => {
     track('FeedItem:PostRepost')
-    return item
-      .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [track, item, store])
+    return store.session.isDefaultSession
+      ? await navigation.navigate('SignIn')
+      : item
+          .toggleRepost()
+          .catch(e => store.log.error('Failed to toggle repost', e))
+  }, [track, item, store, navigation])
 
-  const onPressToggleLike = React.useCallback(() => {
+  const onPressToggleLike = React.useCallback(async () => {
     track('FeedItem:PostLike')
-    return item
-      .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
-  }, [track, item, store])
+    return store.session.isDefaultSession
+      ? await navigation.navigate('SignIn')
+      : item
+          .toggleLike()
+          .catch(e => store.log.error('Failed to toggle like', e))
+  }, [track, item, store, navigation])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')

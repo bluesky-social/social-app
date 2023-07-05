@@ -43,7 +43,7 @@ const ShellInner = observer(() => {
         </>
       )}
       <Composer
-        active={store.shell.isComposerActive}
+        active={store.shell.isComposerActive && !store.session.isDefaultSession}
         onClose={() => store.shell.closeComposer()}
         winHeight={0}
         replyTo={store.shell.composerOpts?.replyTo}

@@ -1,41 +1,43 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
+import * as Toast from '../util/Toast'
+
+import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
+import {colors, s} from 'lib/styles'
+import {isDesktopWeb, isNative} from 'platform/detection'
+
 import {BlurView} from '../util/BlurView'
-import {ProfileModel} from 'state/models/content/profile'
-import {useStores} from 'state/index'
-import {ProfileImageLightbox} from 'state/models/ui/shell'
-import {pluralize} from 'lib/strings/helpers'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {s, colors} from 'lib/styles'
-import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
-import * as Toast from '../util/Toast'
+import {FollowState} from 'state/models/cache/my-follows'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {NavigationProp} from 'lib/routes/types'
+import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
+import {ProfileImageLightbox} from 'state/models/ui/shell'
+import {ProfileModel} from 'state/models/content/profile'
+import React from 'react'
+import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
-import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
-import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {NavigationProp} from 'lib/routes/types'
-import {listUriToHref} from 'lib/strings/url-helpers'
-import {isDesktopWeb, isNative} from 'platform/detection'
-import {FollowState} from 'state/models/cache/my-follows'
-import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
+import {listUriToHref} from 'lib/strings/url-helpers'
+import {observer} from 'mobx-react-lite'
+import {pluralize} from 'lib/strings/helpers'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {shareUrl} from 'lib/sharing'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useNavigation} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -249,13 +251,15 @@ const ProfileHeaderLoaded = observer(
           label: 'Share',
           onPress: onPressShare,
         },
-        {
+      ]
+      if (!store.session.isDefaultSession) {
+        items.push({
           testID: 'profileHeaderDropdownListAddRemoveBtn',
           label: 'Add to Lists',
           onPress: onPressAddRemoveLists,
-        },
-      ]
-      if (!isMe) {
+        })
+      }
+      if (!isMe && !store.session.isDefaultSession) {
         items.push({sep: true})
         if (!view.viewer.blocking) {
           items.push({
@@ -291,6 +295,7 @@ const ProfileHeaderLoaded = observer(
       onPressBlockAccount,
       onPressReportAccount,
       onPressAddRemoveLists,
+      store.session.isDefaultSession,
     ])
 
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)

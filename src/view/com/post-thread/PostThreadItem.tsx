@@ -1,35 +1,39 @@
-import React, {useCallback, useMemo} from 'react'
-import {observer} from 'mobx-react-lite'
+import * as Toast from '../util/Toast'
+
 import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri, AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostThreadItemModel} from 'state/models/content/post-thread-item'
+import React, {useCallback, useMemo} from 'react'
+import {ago, niceDate} from 'lib/strings/time'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+
+import Clipboard from '@react-native-clipboard/clipboard'
+import {ContentHider} from '../util/moderation/ContentHider'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {ImageHider} from '../util/moderation/ImageHider'
 import {Link} from '../util/Link'
+import {NavigationProp} from 'lib/routes/types'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostDropdownBtn} from '../util/forms/DropdownButton'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostHider} from '../util/moderation/PostHider'
+import {PostMeta} from '../util/PostMeta'
+import {PostSandboxWarning} from '../util/PostSandboxWarning'
+import {PostThreadItemModel} from 'state/models/content/post-thread-item'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
-import {PostDropdownBtn} from '../util/forms/DropdownButton'
-import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
-import {ago, niceDate} from 'lib/strings/time'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {pluralize} from 'lib/strings/helpers'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {useStores} from 'state/index'
-import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostHider} from '../util/moderation/PostHider'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
-import {PostSandboxWarning} from '../util/PostSandboxWarning'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
+import {observer} from 'mobx-react-lite'
+import {pluralize} from 'lib/strings/helpers'
+import {s} from 'lib/styles'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {useNavigation} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -42,6 +46,8 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
+
   const [deleted, setDeleted] = React.useState(false)
   const record = item.postRecord
   const hasEngagement = item.post.likeCount || item.post.repostCount
@@ -75,33 +81,40 @@ export const PostThreadItem = observer(function PostThreadItem({
     [item.post, store.preferences.contentLanguages],
   )
 
-  const onPressReply = React.useCallback(() => {
-    store.shell.openComposer({
-      replyTo: {
-        uri: item.post.uri,
-        cid: item.post.cid,
-        text: record?.text as string,
-        author: {
-          handle: item.post.author.handle,
-          displayName: item.post.author.displayName,
-          avatar: item.post.author.avatar,
-        },
-      },
-      onPost: onPostReply,
-    })
-  }, [store, item, record, onPostReply])
+  const onPressReply = React.useCallback(async () => {
+    store.log.debug('onPressReply', store.session.isDefaultSession)
+    store.session.isDefaultSession
+      ? navigation.navigate('SignIn')
+      : store.shell.openComposer({
+          replyTo: {
+            uri: item.post.uri,
+            cid: item.post.cid,
+            text: record?.text as string,
+            author: {
+              handle: item.post.author.handle,
+              displayName: item.post.author.displayName,
+              avatar: item.post.author.avatar,
+            },
+          },
+          onPost: onPostReply,
+        })
+  }, [store, item, record, onPostReply, navigation])
 
-  const onPressToggleRepost = React.useCallback(() => {
-    return item
-      .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [item, store])
+  const onPressToggleRepost = React.useCallback(async () => {
+    return store.session.isDefaultSession
+      ? navigation.navigate('SignIn')
+      : item
+          .toggleRepost()
+          .catch(e => store.log.error('Failed to toggle repost', e))
+  }, [item, store, navigation])
 
-  const onPressToggleLike = React.useCallback(() => {
-    return item
-      .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
-  }, [item, store])
+  const onPressToggleLike = React.useCallback(async () => {
+    return store.session.isDefaultSession
+      ? navigation.navigate('SignIn')
+      : item
+          .toggleLike()
+          .catch(e => store.log.error('Failed to toggle like', e))
+  }, [item, store, navigation])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')

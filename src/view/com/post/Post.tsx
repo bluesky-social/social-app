@@ -1,4 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import * as Toast from '../util/Toast'
+
 import {
   AccessibilityActionEvent,
   ActivityIndicator,
@@ -8,29 +9,32 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyFeedPost as FeedPost} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
-import Clipboard from '@react-native-clipboard/clipboard'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import {colors, s} from 'lib/styles'
+
 import {AtUri} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {PostThreadModel} from 'state/models/content/post-thread'
-import {PostThreadItemModel} from 'state/models/content/post-thread-item'
-import {Link} from '../util/Link'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostHider} from '../util/moderation/PostHider'
+import Clipboard from '@react-native-clipboard/clipboard'
 import {ContentHider} from '../util/moderation/ContentHider'
+import {AppBskyFeedPost as FeedPost} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ImageHider} from '../util/moderation/ImageHider'
-import {Text} from '../util/text/Text'
+import {Link} from '../util/Link'
+import {NavigationProp} from 'lib/routes/types'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostHider} from '../util/moderation/PostHider'
+import {PostMeta} from '../util/PostMeta'
+import {PostThreadItemModel} from 'state/models/content/post-thread-item'
+import {PostThreadModel} from 'state/models/content/post-thread'
 import {RichText} from '../util/text/RichText'
-import * as Toast from '../util/Toast'
+import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
+import {UserInfoText} from '../util/UserInfoText'
 import {getTranslatorLink} from '../../../locale/helpers'
+import {observer} from 'mobx-react-lite'
+import {useNavigation} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const Post = observer(function Post({
   uri,
@@ -122,6 +126,7 @@ const PostLoaded = observer(
   }) => {
     const pal = usePalette('default')
     const store = useStores()
+    const navigation = useNavigation<NavigationProp>()
 
     const itemUri = item.post.uri
     const itemCid = item.post.cid
@@ -135,32 +140,39 @@ const PostLoaded = observer(
       const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
       replyAuthorDid = urip.hostname
     }
-    const onPressReply = React.useCallback(() => {
-      store.shell.openComposer({
-        replyTo: {
-          uri: item.post.uri,
-          cid: item.post.cid,
-          text: record.text as string,
-          author: {
-            handle: item.post.author.handle,
-            displayName: item.post.author.displayName,
-            avatar: item.post.author.avatar,
-          },
-        },
-      })
-    }, [store, item, record])
+    const onPressReply = React.useCallback(async () => {
+      store.log.debug('onPressReply', store.session.isDefaultSession)
+      store.session.isDefaultSession
+        ? navigation.navigate('SignIn')
+        : store.shell.openComposer({
+            replyTo: {
+              uri: item.post.uri,
+              cid: item.post.cid,
+              text: record.text as string,
+              author: {
+                handle: item.post.author.handle,
+                displayName: item.post.author.displayName,
+                avatar: item.post.author.avatar,
+              },
+            },
+          })
+    }, [store, item, record, navigation])
 
-    const onPressToggleRepost = React.useCallback(() => {
-      return item
-        .toggleRepost()
-        .catch(e => store.log.error('Failed to toggle repost', e))
-    }, [item, store])
+    const onPressToggleRepost = React.useCallback(async () => {
+      return store.session.isDefaultSession
+        ? navigation.navigate('SignIn')
+        : item
+            .toggleRepost()
+            .catch(e => store.log.error('Failed to toggle repost', e))
+    }, [item, store, navigation])
 
-    const onPressToggleLike = React.useCallback(() => {
-      return item
-        .toggleLike()
-        .catch(e => store.log.error('Failed to toggle like', e))
-    }, [item, store])
+    const onPressToggleLike = React.useCallback(async () => {
+      return store.session.isDefaultSession
+        ? navigation.navigate('SignIn')
+        : item
+            .toggleLike()
+            .catch(e => store.log.error('Failed to toggle like', e))
+    }, [item, store, navigation])
 
     const onCopyPostText = React.useCallback(() => {
       Clipboard.setString(record.text)

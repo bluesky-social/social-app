@@ -1,17 +1,17 @@
-import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+
+import {CenteredView} from '../util/Views'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import React from 'react'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from '../util/Link'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {s, colors} from 'lib/styles'
+import {colors} from 'lib/styles'
+import {isMobileWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {CenteredView} from '../util/Views'
-import {isMobileWeb} from 'platform/detection'
 
 export const SplashScreen = ({
   onPressSignin,
-  onPressCreateAccount,
 }: {
   onPressSignin: () => void
   onPressCreateAccount: () => void
@@ -40,7 +40,7 @@ export const SplashScreen = ({
             See what's next
           </Text>
           <View testID="signinOrCreateAccount" style={styles.btns}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
@@ -49,7 +49,7 @@ export const SplashScreen = ({
               <Text style={[s.white, styles.btnLabel]}>
                 Create a new account
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               testID="signInButton"
               style={[styles.btn, pal.btn]}
