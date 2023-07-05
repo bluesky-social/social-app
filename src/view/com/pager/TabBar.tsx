@@ -109,6 +109,7 @@ const styles = isDesktopWeb
         paddingHorizontal: 10,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
+        justifyContent: 'center'
       },
     })
   : StyleSheet.create({
@@ -129,5 +130,6 @@ const styles = isDesktopWeb
         paddingHorizontal: isMobileWeb ? 8 : 0,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
+        justifyContent: 'center'
       },
     })
