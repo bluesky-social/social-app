@@ -129,7 +129,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onQuote = useCallback(async () => {
     store.shell.closeModal()
-    store.log.debug('onPressReply', store.session.isDefaultSession)
     store.session.isDefaultSession
       ? navigation.navigate('SignIn')
       : store.shell.openComposer({
@@ -149,7 +148,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     opts.itemUri,
     opts.text,
     store.shell,
-    store.log,
     store.session.isDefaultSession,
     navigation,
   ])

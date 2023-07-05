@@ -1,20 +1,22 @@
 import * as React from 'react'
+
 import {StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
+import {
+  getProfileModeration,
+  getProfileViewBasicLabelInfo,
+} from 'lib/labeling/helpers'
+
 import {AppBskyActorDefs} from '@atproto/api'
+import {FollowButton} from './FollowButton'
 import {Link} from '../util/Link'
+import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {FollowButton} from './FollowButton'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {
-  getProfileViewBasicLabelInfo,
-  getProfileModeration,
-} from 'lib/labeling/helpers'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
 
 export const ProfileCard = observer(
   ({
@@ -169,7 +171,9 @@ export const ProfileCardWithFollowBtn = observer(
         noBorder={noBorder}
         followers={followers}
         renderButton={
-          isMe ? undefined : () => <FollowButton did={profile.did} />
+          isMe || store.session.isDefaultSession
+            ? undefined
+            : () => <FollowButton did={profile.did} />
         }
       />
     )

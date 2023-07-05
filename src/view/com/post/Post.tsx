@@ -141,7 +141,6 @@ const PostLoaded = observer(
       replyAuthorDid = urip.hostname
     }
     const onPressReply = React.useCallback(async () => {
-      store.log.debug('onPressReply', store.session.isDefaultSession)
       store.session.isDefaultSession
         ? navigation.navigate('SignIn')
         : store.shell.openComposer({

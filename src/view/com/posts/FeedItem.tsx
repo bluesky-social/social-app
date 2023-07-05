@@ -80,7 +80,6 @@ export const FeedItem = observer(function ({
 
   const onPressReply = React.useCallback(async () => {
     track('FeedItem:PostReply')
-    store.log.debug('onPressReply', store.session.isDefaultSession)
     store.session.isDefaultSession
       ? navigation.navigate('SignIn')
       : store.shell.openComposer({
