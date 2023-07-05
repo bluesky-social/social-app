@@ -143,10 +143,14 @@ export const DrawerContent = observer(() => {
             <UserAvatar size={80} avatar={store.me.avatar} />
             <Text
               type="title-lg"
-              style={[pal.text, s.bold, styles.profileCardDisplayName]}>
+              style={[pal.text, s.bold, styles.profileCardDisplayName]}
+              numberOfLines={1}>
               {store.me.displayName || store.me.handle}
             </Text>
-            <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
+            <Text
+              type="2xl"
+              style={[pal.textLight, styles.profileCardHandle]}
+              numberOfLines={1}>
               @{store.me.handle}
             </Text>
             <Text
