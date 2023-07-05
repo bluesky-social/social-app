@@ -38,8 +38,8 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             type="md"
             style={pal.link}
             href={FEEDBACK_FORM_URL({
-              email: store.session.currentSession.email,
-              handle: store.session.currentSession.handle,
+              email: store.session.currentSession?.email,
+              handle: store.session.currentSession?.handle,
             })}
             text="Send feedback"
           />

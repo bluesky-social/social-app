@@ -118,8 +118,8 @@ export const DrawerContent = observer(() => {
     track('Menu:FeedbackClicked')
     Linking.openURL(
       FEEDBACK_FORM_URL({
-        email: store.session.currentSession.email,
-        handle: store.session.currentSession.handle,
+        email: store.session.currentSession?.email,
+        handle: store.session.currentSession?.handle,
       }),
     )
   }, [track, store.session.currentSession])
