@@ -1,5 +1,3 @@
-import React, {MutableRefObject} from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,22 +6,25 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FlatList} from '../util/Views'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {MultiFeedItem, PostsMultiFeedModel} from 'state/models/feeds/multi-feed'
+import React, {MutableRefObject} from 'react'
+
+import {CogIcon} from 'lib/icons'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {PostsMultiFeedModel, MultiFeedItem} from 'state/models/feeds/multi-feed'
 import {FeedSlice} from './FeedSlice'
-import {Text} from '../util/text/Text'
+import {FlatList} from '../util/Views'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link} from '../util/Link'
-import {UserAvatar} from '../util/UserAvatar'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
+import {isDesktopWeb} from 'platform/detection'
+import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isDesktopWeb} from 'platform/detection'
-import {CogIcon} from 'lib/icons'
 
 export const MultiFeed = observer(function Feed({
   multifeed,
@@ -167,7 +168,7 @@ export const MultiFeed = observer(function Feed({
 
   return (
     <View testID={testID} style={style}>
-      {multifeed.items.length > 0 && (
+      {!multifeed.isLoading && multifeed.items.length > 0 && (
         <FlatList
           testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}

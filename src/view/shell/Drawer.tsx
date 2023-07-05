@@ -26,6 +26,7 @@ import {TabState, getTabState} from 'lib/routes/helpers'
 import {colors, s} from 'lib/styles'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
+import {Button} from 'view/com/util/forms/Button'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {NavItem} from './desktop/LeftNav'
 import {NavigationProp} from 'lib/routes/types'
@@ -91,6 +92,12 @@ export const DrawerContent = observer(() => {
     track('Menu:FeedbackClicked')
     Linking.openURL(FEEDBACK_FORM_URL)
   }, [track])
+
+  const onPressSignout = React.useCallback(() => {
+    track('Settings:SignOutButtonClicked')
+    store.session.logout()
+  }, [track, store])
+
   // rendering
   // =
 
@@ -191,7 +198,7 @@ export const DrawerContent = observer(() => {
             />
           )}
         </ScrollView>
-        {!store.session.hasSession && (
+        {!store.session.hasSession ? (
           <NavItem
             href="/signin"
             count={store.me.notifications.unreadCountLabel}
@@ -199,6 +206,8 @@ export const DrawerContent = observer(() => {
             icon={<UserIcon />}
             iconFilled={<UserIconSolid />}
           />
+        ) : (
+          <Button onPress={() => onPressSignout()} label="Sign out" />
         )}
         <View style={styles.footer}>
           <TouchableOpacity
