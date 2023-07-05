@@ -16,6 +16,7 @@ export function FEEDBACK_FORM_URL({
   }
   return str
 }
+export const HELP_DESK_URL = 'https://blueskyweb.zendesk.com/hc/en-us'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
