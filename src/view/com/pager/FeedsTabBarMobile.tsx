@@ -3,6 +3,7 @@ import React, {useMemo} from 'react'
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {SolarplexLogo} from 'lib/icons'
 import {TabBar} from 'view/com/pager/TabBar'
 import {Text} from '../util/text/Text'
 import {observer} from 'mobx-react-lite'
@@ -62,7 +63,7 @@ export const FeedsTabBar = observer(
             </TouchableOpacity>
           </View>
           <Text style={[brandBlue, s.bold, styles.title]}>
-            {store.session.isSandbox ? 'SANDBOX' : 'Townsquare'}
+            {store.session.isSandbox ? 'SANDBOX' : <SolarplexLogo />}
           </Text>
           <View style={[pal.view]} />
         </View>

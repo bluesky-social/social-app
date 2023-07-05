@@ -1,29 +1,30 @@
-import React from 'react'
 import {FlatList, View} from 'react-native'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
-import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
-import useAppState from 'react-native-appstate-hook'
-import isEqual from 'lodash.isequal'
-import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
-import {PostsFeedModel} from 'state/models/feeds/posts'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {Feed} from '../com/posts/Feed'
-import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
-import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
-import {FeedsTabBar} from '../com/pager/FeedsTabBar'
+import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {FAB} from '../com/util/fab/FAB'
-import {useStores} from 'state/index'
-import {s} from 'lib/styles'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb, isMobileWebMediaQuery, isWeb} from 'platform/detection'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
-const HEADER_OFFSET_MOBILE = 78
-const HEADER_OFFSET_DESKTOP = 50
+import {ComposeIcon2} from 'lib/icons'
+import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
+import {FAB} from '../com/util/fab/FAB'
+import {Feed} from '../com/posts/Feed'
+import {FeedsTabBar} from '../com/pager/FeedsTabBar'
+import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
+import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
+import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
+import {PostsFeedModel} from 'state/models/feeds/posts'
+import React from 'react'
+import isEqual from 'lodash.isequal'
+import {observer} from 'mobx-react-lite'
+import {s} from 'lib/styles'
+import {useAnalytics} from 'lib/analytics/analytics'
+import useAppState from 'react-native-appstate-hook'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {useStores} from 'state/index'
+import {withAuthRequired} from 'view/com/auth/withAuthRequired'
+
+const HEADER_OFFSET_MOBILE = 118
+const HEADER_OFFSET_DESKTOP = 113
 const HEADER_OFFSET = isDesktopWeb
   ? HEADER_OFFSET_DESKTOP
   : HEADER_OFFSET_MOBILE

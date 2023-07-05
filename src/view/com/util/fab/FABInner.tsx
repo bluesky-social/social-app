@@ -1,11 +1,12 @@
-import React, {ComponentProps} from 'react'
-import {observer} from 'mobx-react-lite'
 import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import React, {ComponentProps} from 'react'
+import {colors, gradients} from 'lib/styles'
+
 import LinearGradient from 'react-native-linear-gradient'
-import {gradients} from 'lib/styles'
+import {isMobileWeb} from 'platform/detection'
+import {observer} from 'mobx-react-lite'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
-import {isMobileWeb} from 'platform/detection'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -32,7 +33,7 @@ export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
       <Animated.View
         style={[styles.outer, isMobileWeb && styles.mobileWebOuter, transform]}>
         <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
+          colors={[colors.splx.primary[40], colors.splx.primary[50]]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.inner}>

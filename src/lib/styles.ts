@@ -1,5 +1,6 @@
 import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
+
 import {isMobileWeb} from 'platform/detection'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
@@ -50,6 +51,93 @@ export const colors = {
   green3: '#20bc07',
   green4: '#148203',
   green5: '#082b03',
+
+  splx: {
+    primary: {
+      100: '#100626',
+      90: '#190640',
+      80: '#240959',
+      70: '#260073',
+      60: '#2E008B',
+      50: '#4A279C',
+      40: '#6E59B1',
+      30: '#AD98D7',
+      20: '#F5F2F9',
+      10: '#F5F2F9',
+    },
+    secondary: {
+      100: '#56380B',
+      90: '#8D5A0E',
+      80: '#BF780F',
+      70: '#E39118',
+      60: '#F4A32C',
+      50: '#FFB549',
+      40: '#FFC776',
+      30: '#FFE0B3',
+      20: '#FFECD1',
+      10: '#FFF8ED',
+    },
+    neutral: {
+      50: '#1F1E26',
+      40: '#434249',
+      30: '#85838E',
+      20: '#C4C3CB',
+      10: '#EEEDF0',
+    },
+    lightSurface: {
+      20: '#F2EDF7',
+      10: '#FAF7FE',
+    },
+    darkSurface: {
+      30: '#575559',
+      40: '#313133',
+      50: '#262428',
+    },
+    accent: {
+      green: {
+        50: '#2C4B27',
+        40: '#4A7B43',
+        30: '#84B971',
+        20: '#ABD7A4',
+        10: '#E3F2E1',
+      },
+      cornFlower: {
+        50: '#0C3850',
+        40: '#135981',
+        30: '#549FC9',
+        20: '#8BBEDA',
+        10: '#E4F0F6',
+      },
+      canary: {
+        50: '#A3875C',
+        40: '#C5A068',
+        30: '#F8D55D',
+        20: '#FCEAAE',
+        10: '#FDF5D7',
+      },
+      tangerine: {
+        50: '#953B50',
+        40: '#C85833',
+        30: '#FB7616',
+        20: '#FDBB8A',
+        10: '#FEDDC5',
+      },
+      blossom: {
+        50: '#965751',
+        40: '#CA817A',
+        30: '#FEA39A',
+        20: '#FFD1CC',
+        10: '#FFE8E6',
+      },
+      lavender: {
+        50: '#393DA2',
+        40: '#5659AD',
+        30: '#7173B9',
+        20: '#B8B9DC',
+        10: '#DBDCED',
+      },
+    },
+  },
 
   unreadNotifBg: '#ebf6ff',
   brandBlue: '#0066FF',

@@ -42,6 +42,7 @@ const ShellInner = observer(() => {
           {/* <DesktopRightNav /> */}
         </>
       )}
+
       <Composer
         active={store.shell.isComposerActive && !store.session.isDefaultSession}
         onClose={() => store.shell.closeComposer()}
@@ -53,6 +54,7 @@ const ShellInner = observer(() => {
       {!isDesktop && !store.session.isDefaultSession && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
+
       {!isDesktop && store.shell.isDrawerOpen && (
         <TouchableOpacity
           onPress={() => store.shell.closeDrawer()}

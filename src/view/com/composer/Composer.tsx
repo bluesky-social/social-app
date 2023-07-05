@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {observer} from 'mobx-react-lite'
+import * as Toast from '../util/Toast'
+import * as apilib from 'lib/api/index'
+
 import {
   ActivityIndicator,
   Keyboard,
@@ -10,36 +11,37 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {RichText} from '@atproto/api'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
-import {ExternalEmbed} from './ExternalEmbed'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import {TextInput, TextInputRef} from './text-input/TextInput'
+import {colors, gradients, s} from 'lib/styles'
+import {isAndroid, isDesktopWeb} from 'platform/detection'
+
 import {CharProgress} from './char-progress/CharProgress'
-import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
-import * as apilib from 'lib/api/index'
 import {ComposerOpts} from 'state/models/ui/shell'
-import {s, colors, gradients} from 'lib/styles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {cleanError} from 'lib/strings/errors'
-import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
-import {OpenCameraBtn} from './photos/OpenCameraBtn'
-import {usePalette} from 'lib/hooks/usePalette'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
-import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isDesktopWeb, isAndroid} from 'platform/detection'
-import {GalleryModel} from 'state/models/media/gallery'
+import {ExternalEmbed} from './ExternalEmbed'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Gallery} from './photos/Gallery'
+import {GalleryModel} from 'state/models/media/gallery'
+import LinearGradient from 'react-native-linear-gradient'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
+import {RichText} from '@atproto/api'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
+import {Text} from '../util/text/Text'
+import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {UserAvatar} from '../util/UserAvatar'
+import {cleanError} from 'lib/strings/errors'
+import {observer} from 'mobx-react-lite'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useExternalLinkFetch} from './useExternalLinkFetch'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useStores} from 'state/index'
 
 type Props = ComposerOpts & {
   onClose: () => void

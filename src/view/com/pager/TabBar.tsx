@@ -1,10 +1,19 @@
-import React, {useRef, useMemo, useEffect, useState, useCallback} from 'react'
-import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
-import {Text} from '../util/text/Text'
-import {PressableWithHover} from '../util/PressableWithHover'
-import {usePalette} from 'lib/hooks/usePalette'
+import {
+  Image,
+  LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {isDesktopWeb, isMobileWeb} from 'platform/detection'
+
 import {DraggableScrollView} from './DraggableScrollView'
+import {PressableWithHover} from '../util/PressableWithHover'
+import {Text} from '../util/text/Text'
+import {colors} from 'lib/styles'
+import {solarplexTheme} from 'lib/SolarplexTheme'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export interface TabBarProps {
   testID?: string
@@ -61,6 +70,8 @@ export function TabBar({
     [],
   )
 
+  console.log('WORLD', items)
+
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
@@ -71,19 +82,39 @@ export function TabBar({
         {items.map((item, i) => {
           const selected = i === selectedPage
           return (
-            <PressableWithHover
-              key={item}
-              onLayout={e => onItemLayout(e, i)}
-              style={[styles.item, selected && indicatorStyle]}
-              hoverStyle={pal.viewLight}
-              onPress={() => onPressItem(i)}>
-              <Text
-                type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
-                testID={testID ? `${testID}-${item}` : undefined}
-                style={selected ? pal.text : pal.textLight}>
-                {item}
-              </Text>
-            </PressableWithHover>
+            <>
+              <View style={styles.container}>
+                <PressableWithHover
+                  key={item}
+                  onLayout={e => onItemLayout(e, i)}
+                  style={[styles.item, selected && indicatorStyle]}
+                  hoverStyle={pal.viewLight}
+                  onPress={() => onPressItem(i)}>
+                  {item === 'Solana' && (
+                    <Image
+                      source={require('./sol-logo.png')}
+                      style={styles.imageStyle}
+                      resizeMode="cover"
+                      accessibilityIgnoresInvertColors
+                    />
+                  )}
+                  {item === 'Home' && (
+                    <Image
+                      source={require('./home.png')}
+                      style={styles.imageStyle}
+                      resizeMode="cover"
+                      accessibilityIgnoresInvertColors
+                    />
+                  )}
+                </PressableWithHover>
+                <Text
+                  type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
+                  testID={testID ? `${testID}-${item}` : undefined}
+                  style={selected ? pal.text : pal.textLight}>
+                  {item}
+                </Text>
+              </View>
+            </>
           )
         })}
       </DraggableScrollView>
@@ -93,9 +124,19 @@ export function TabBar({
 
 const styles = isDesktopWeb
   ? StyleSheet.create({
+      imageStyle: {
+        width: 50,
+        height: 50,
+      },
+      container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 5,
+      },
       outer: {
         flexDirection: 'row',
         width: 598,
+        marginBottom: 10,
       },
       contentContainer: {
         columnGap: 8,
@@ -104,14 +145,25 @@ const styles = isDesktopWeb
         backgroundColor: 'transparent',
       },
       item: {
-        paddingTop: 14,
-        paddingBottom: 12,
-        paddingHorizontal: 10,
-        borderBottomWidth: 3,
-        borderBottomColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 75,
+        height: 75,
+        borderRadius: 40,
+        borderWidth: 1,
+        borderColor: colors.splx.neutral[30],
+        color: '#6E59B1',
+        marginHorizontal: 4,
+        marginVertical: 4,
+        backgroundColor: '#F5F2F9',
       },
     })
   : StyleSheet.create({
+      container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 15,
+      },
       outer: {
         flex: 1,
         flexDirection: 'row',
@@ -121,13 +173,24 @@ const styles = isDesktopWeb
         columnGap: isMobileWeb ? 0 : 20,
         marginLeft: isMobileWeb ? 0 : 18,
         paddingRight: isMobileWeb ? 0 : 36,
+        marginBottom: 4,
         backgroundColor: 'transparent',
       },
+      imageStyle: {
+        width: 30,
+        height: 30,
+      },
       item: {
+        justifyContent: 'center',
+        alignItems: 'center',
         paddingTop: 10,
         paddingBottom: 10,
+        borderRadius: 40,
+        width: 50,
+        height: 50,
+        color: '#6E59B1',
+        borderWidth: 1,
+        borderColor: colors.splx.neutral[30],
         paddingHorizontal: isMobileWeb ? 8 : 0,
-        borderBottomWidth: 3,
-        borderBottomColor: 'transparent',
       },
     })

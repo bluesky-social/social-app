@@ -12,11 +12,19 @@ import {Shell} from './view/shell/index'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {ToastContainer} from './view/com/util/Toast.web'
 import {observer} from 'mobx-react-lite'
+import {useFonts} from 'expo-font'
 
 const App = observer(() => {
+  // const [fontsLoaded] = useFonts({
+  //   Manrope: require('../assets/fonts/Manrope.ttf'),
+  // })
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
+
+  // if (!fontsLoaded) {
+  //   return null
+  // }
 
   // init
   useEffect(() => {

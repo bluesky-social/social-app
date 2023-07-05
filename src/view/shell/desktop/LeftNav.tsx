@@ -21,7 +21,7 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
-import {Button} from 'view/com/util/forms/Button'
+import {Banner} from '../Banner'
 import {Link} from 'view/com/util/Link'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import React from 'react'
@@ -146,6 +146,25 @@ export const NavItem = observer(
   },
 )
 
+type SignOutProps = {
+  onPressHandler: () => void
+}
+
+function SignOutBtn({onPressHandler}: SignOutProps) {
+  return (
+    <TouchableOpacity
+      style={[styles.newPostBtn]}
+      onPress={onPressHandler}
+      accessibilityRole="button"
+      accessibilityLabel="Compose post"
+      accessibilityHint="">
+      <Text type="button" style={styles.newPostBtnLabel}>
+        Sign Out
+      </Text>
+    </TouchableOpacity>
+  )
+}
+
 function ComposeBtn() {
   const store = useStores()
   const onPressCompose = () => store.shell.openComposer({})
@@ -183,6 +202,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
 
   return (
     <View style={[styles.leftNav, pal.view]}>
+      <Banner />
       {store.session.hasSession && <ProfileCard />}
       <BackBtn />
       <NavItem
@@ -204,7 +224,8 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             }
             label="Notifications"
           />
-          <Button onPress={() => onPressSignout()} label="Sign out" />
+
+          <SignOutBtn onPressHandler={() => onPressSignout()} />
           <ComposeBtn />
         </>
       )}
@@ -276,14 +297,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 140,
+    width: 150,
     borderRadius: 24,
     paddingVertical: 10,
     paddingHorizontal: 16,
-    backgroundColor: colors.blue3,
+    backgroundColor: colors.splx.primary[50],
     marginLeft: 12,
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 8,
+    marginBottom: 8,
   },
   newPostBtnIconWrapper: {
     marginRight: 8,

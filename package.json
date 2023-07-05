@@ -77,6 +77,7 @@
     "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.1.1",
     "expo-device": "~5.2.1",
+    "expo-font": "~11.1.1",
     "expo-image": "^1.2.3",
     "expo-image-manipulator": "^11.1.1",
     "expo-image-picker": "^14.1.1",
