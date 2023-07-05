@@ -37,7 +37,10 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href={FEEDBACK_FORM_URL}
+            href={FEEDBACK_FORM_URL({
+              email: store.session.currentSession.email,
+              handle: store.session.currentSession.handle,
+            })}
             text="Send feedback"
           />
           <Text type="md" style={pal.textLight}>

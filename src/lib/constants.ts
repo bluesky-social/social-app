@@ -1,5 +1,21 @@
-export const FEEDBACK_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdavFRXTdB6tRobaFrRR2A1gv3b-IBHwQkBmNZTRpoqmcrPrQ/viewform?usp=sf_link'
+const BASE_FEEDBACK_FORM_URL =
+  'https://blueskyweb.zendesk.com/hc/en-us/requests/new'
+export function FEEDBACK_FORM_URL({
+  email,
+  handle,
+}: {
+  email?: string
+  handle?: string
+}): string {
+  let str = BASE_FEEDBACK_FORM_URL
+  if (email) {
+    str += `?tf_anonymous_requester_email=${encodeURIComponent(email)}`
+    if (handle) {
+      str += `&tf_17205412673421=${encodeURIComponent(handle)}`
+    }
+  }
+  return str
+}
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256

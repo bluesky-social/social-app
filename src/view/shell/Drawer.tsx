@@ -116,8 +116,13 @@ export const DrawerContent = observer(() => {
 
   const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
-    Linking.openURL(FEEDBACK_FORM_URL)
-  }, [track])
+    Linking.openURL(
+      FEEDBACK_FORM_URL({
+        email: store.session.currentSession.email,
+        handle: store.session.currentSession.handle,
+      }),
+    )
+  }, [track, store.session.currentSession])
   // rendering
   // =
 
