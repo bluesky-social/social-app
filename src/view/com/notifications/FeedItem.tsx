@@ -65,6 +65,9 @@ export const FeedItem = observer(function ({
     } else if (item.isReply) {
       const urip = new AtUri(item.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
+    } else if (item.isCustomFeedLike) {
+      const urip = new AtUri(item.subjectUri)
+      return `/profile/${urip.host}/feed/${urip.rkey}`
     }
     return ''
   }, [item])
@@ -75,6 +78,8 @@ export const FeedItem = observer(function ({
       return item.author.handle
     } else if (item.isReply) {
       return 'Post'
+    } else if (item.isCustomFeedLike) {
+      return 'Custom Feed'
     }
   }, [item])
 
@@ -160,6 +165,13 @@ export const FeedItem = observer(function ({
     action = 'followed you'
     icon = 'user-plus'
     iconStyle = [s.blue3 as FontAwesomeIconStyle]
+  } else if (item.isCustomFeedLike) {
+    action = `liked your custom feed '${new AtUri(item.subjectUri).rkey}'`
+    icon = 'HeartIconSolid'
+    iconStyle = [
+      s.red3 as FontAwesomeIconStyle,
+      {position: 'relative', top: -4},
+    ]
   } else {
     return null
   }

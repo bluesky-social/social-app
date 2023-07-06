@@ -1,5 +1,5 @@
 import notifee, {EventType} from '@notifee/react-native'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {AppBskyEmbedImages, AtUri} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
 import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
 import {enforceLen} from 'lib/strings/helpers'
@@ -63,6 +63,9 @@ export function displayNotificationFromModel(
   } else if (notification.isFollow) {
     title = 'New follower!'
     body = `${author} has followed you`
+  } else if (notification.isCustomFeedLike) {
+    title = `${author} liked your custom feed`
+    body = `${new AtUri(notification.subjectUri).rkey}`
   } else {
     return
   }
