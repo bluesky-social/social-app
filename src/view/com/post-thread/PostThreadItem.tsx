@@ -178,7 +178,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
           <View style={styles.layoutContent}>
             <View style={[styles.meta, styles.metaExpandedLine1]}>
-              <View style={[s.flexRow, s.alignBaseline]}>
+              <View style={[s.flexRow]}>
                 <Link
                   style={styles.metaItem}
                   href={authorHref}

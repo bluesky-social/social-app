@@ -10,6 +10,7 @@ import {observer} from 'mobx-react-lite'
 import {FollowButton} from '../profile/FollowButton'
 import {FollowState} from 'state/models/cache/my-follows'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {isDesktopWeb} from 'platform/detection'
 
 interface PostMetaOpts {
   authorAvatar?: string
@@ -97,9 +98,9 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 
   // one-liner
   return (
-    <View style={styles.meta}>
+    <View style={styles.metaOneLine}>
       {typeof opts.authorAvatar !== 'undefined' && (
-        <View style={[styles.metaItem, styles.avatar]}>
+        <View style={styles.avatar}>
           <UserAvatar
             avatar={opts.authorAvatar}
             size={16}
@@ -107,7 +108,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           />
         </View>
       )}
-      <View style={[styles.metaItem, styles.maxWidth]}>
+      <View style={styles.maxWidth}>
         <DesktopWebTextLink
           type="lg-bold"
           style={pal.text}
@@ -128,12 +129,18 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           href={`/profile/${opts.authorHandle}`}
         />
       </View>
-      <Text type="md" style={pal.textLight} lineHeight={1.2} accessible={false}>
-        &middot;&nbsp;
-      </Text>
+      {isDesktopWeb && (
+        <Text
+          type="md"
+          style={pal.textLight}
+          lineHeight={1.2}
+          accessible={false}>
+          &middot;
+        </Text>
+      )}
       <DesktopWebTextLink
         type="md"
-        style={[styles.metaItem, pal.textLight]}
+        style={pal.textLight}
         lineHeight={1.2}
         text={ago(opts.timestamp)}
         accessibilityLabel={niceDate(opts.timestamp)}
@@ -145,9 +152,10 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 })
 
 const styles = StyleSheet.create({
-  meta: {
+  metaOneLine: {
     flexDirection: 'row',
     paddingBottom: 2,
+    gap: 4,
   },
   metaTwoLine: {
     flexDirection: 'row',
@@ -162,15 +170,11 @@ const styles = StyleSheet.create({
   },
   metaTwoLineTop: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-  },
-  metaItem: {
-    paddingRight: 5,
   },
   avatar: {
     alignSelf: 'center',
   },
   maxWidth: {
-    maxWidth: '80%',
+    flex: isDesktopWeb ? undefined : 1,
   },
 })
