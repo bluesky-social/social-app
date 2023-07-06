@@ -48,6 +48,7 @@ import {reset as resetNavigation} from '../../Navigation'
 // remove after backend testing finishes
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
+import {STATUS_PAGE_URL} from 'lib/constants'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -189,7 +190,7 @@ export const SettingsScreen = withAuthRequired(
     }, [navigation])
 
     const onPressStatusPage = React.useCallback(() => {
-      Linking.openURL('https://bluesky.statuspage.io/')
+      Linking.openURL(STATUS_PAGE_URL)
     }, [])
 
     return (
