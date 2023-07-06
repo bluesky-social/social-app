@@ -8,11 +8,9 @@ import {
   TextStyle,
   View,
   ViewStyle,
-} from 'react-native'
-import {
   TouchableOpacity,
   TouchableWithoutFeedback,
-} from 'react-native-gesture-handler'
+} from 'react-native'
 import {
   useLinkProps,
   useNavigation,
@@ -24,8 +22,9 @@ import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
-import {isDesktopWeb} from 'platform/detection'
+import {isAndroid, isDesktopWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
+import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -67,6 +66,22 @@ export const Link = observer(function Link({
   )
 
   if (noFeedback) {
+    if (isAndroid) {
+      return (
+        <FixedTouchableHighlight
+          testID={testID}
+          onPress={onPress}
+          // @ts-ignore web only -prf
+          href={asAnchor ? sanitizeUrl(href) : undefined}
+          accessible={accessible}
+          accessibilityRole="link"
+          {...props}>
+          <View style={style}>
+            {children ? children : <Text>{title || 'link'}</Text>}
+          </View>
+        </FixedTouchableHighlight>
+      )
+    }
     return (
       <TouchableWithoutFeedback
         testID={testID}
