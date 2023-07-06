@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {InteractionManager, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
@@ -31,11 +31,15 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
     React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
       const threadCleanup = view.registerListeners()
-      if (!view.hasLoaded && !view.isLoading) {
-        view.setup().catch(err => {
-          store.log.error('Failed to fetch thread', err)
-        })
-      }
+
+      InteractionManager.runAfterInteractions(() => {
+        if (!view.hasLoaded && !view.isLoading) {
+          view.setup().catch(err => {
+            store.log.error('Failed to fetch thread', err)
+          })
+        }
+      })
+
       return () => {
         threadCleanup()
       }
