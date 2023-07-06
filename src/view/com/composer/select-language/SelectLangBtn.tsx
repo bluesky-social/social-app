@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {TouchableOpacity, StyleSheet, Keyboard} from 'react-native'
+import {StyleSheet, Keyboard} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
