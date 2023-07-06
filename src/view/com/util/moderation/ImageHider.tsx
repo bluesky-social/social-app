@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: 'center',
     paddingHorizontal: isDesktopWeb ? 24 : 20,
-    paddingVertical: isDesktopWeb ? 24 : 18,
+    paddingVertical: isDesktopWeb ? 20 : 18,
   },
   flex1: {
     flex: 1,
