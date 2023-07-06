@@ -1,15 +1,15 @@
-import React from 'react'
-import {SafeAreaView} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {Login} from 'view/com/auth/login/Login'
+import {CenteredView} from '../util/Views'
 import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import {Login} from 'view/com/auth/login/Login'
+import React from 'react'
+import {SafeAreaView} from 'react-native'
+import {SplashScreen} from './SplashScreen'
+import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {SplashScreen} from './SplashScreen'
-import {CenteredView} from '../util/Views'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -22,7 +22,7 @@ export const LoggedOut = observer(() => {
   const store = useStores()
   const {screen} = useAnalytics()
   const [screenState, setScreenState] = React.useState<ScreenState>(
-    ScreenState.S_LoginOrCreateAccount,
+    ScreenState.S_Login,
   )
 
   React.useEffect(() => {
