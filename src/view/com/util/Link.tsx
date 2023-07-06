@@ -67,6 +67,8 @@ export const Link = observer(function Link({
 
   if (noFeedback) {
     if (isAndroid) {
+      // workaround for Android not working well with left/right swipe gestures and TouchableWithoutFeedback
+      // https://github.com/callstack/react-native-pager-view/issues/424
       return (
         <FixedTouchableHighlight
           testID={testID}
