@@ -30,6 +30,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
     store.shell.openModal({name: 'post-languages-settings'})
   }, [store])
 
+  const postLanguagesPref = store.preferences.postLanguages
   const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 
@@ -49,7 +50,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       })
     }
 
-    for (const lang of store.preferences.postLanguages) {
+    for (const lang of postLanguagesPref) {
       add(lang)
     }
     for (const lang of deviceLocales) {
@@ -69,7 +70,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         onPress: onPressMore,
       },
     ]
-  }, [store.preferences, store.preferences.postLanguages, onPressMore])
+  }, [store.preferences, postLanguagesPref, onPressMore])
 
   return (
     <DropdownButton
