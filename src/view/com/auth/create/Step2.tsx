@@ -50,7 +50,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             onPress={onPressWaitlist}
             accessibilityRole="button"
             accessibilityLabel="Waitlist"
-            accessibilityHint="Opens Bluesky waitlist form">
+            accessibilityHint="Opens Solarplex Live waitlist form">
             <Text style={pal.link}>Join the waitlist</Text>
           </TouchableWithoutFeedback>{' '}
           to try the beta before it's publicly available.
@@ -69,7 +69,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               editable
               onChange={model.setEmail}
               accessibilityLabel="Email"
-              accessibilityHint="Input email for Bluesky waitlist"
+              accessibilityHint="Input email for Solarplex Live waitlist"
               accessibilityLabelledBy="email"
             />
           </View>

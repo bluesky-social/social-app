@@ -25,6 +25,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {NavigationProp} from 'lib/routes/types'
 import {ServiceDescription} from 'state/models/session'
+import {SolarplexLogo} from 'lib/icons'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
 import {cleanError} from 'lib/strings/errors'
@@ -372,162 +373,170 @@ const LoginForm = ({
 
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
-    <View testID="loginForm">
-      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-        Sign into
-      </Text>
-      <View style={[pal.borderDark, styles.group]}>
-        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <FontAwesomeIcon
-            icon="globe"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TouchableOpacity
-            testID="loginSelectServiceButton"
-            style={styles.textBtn}
-            onPress={onPressSelectService}
-            accessibilityRole="button"
-            accessibilityLabel="Select service"
-            accessibilityHint="Sets server for the Bluesky client">
-            <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
-              {toNiceDomain(serviceUrl)}
-            </Text>
-            <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
-              <FontAwesomeIcon
-                icon="pen"
-                size={12}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </View>
-          </TouchableOpacity>
+    <>
+      {isMobileWeb && (
+        <View style={[s.flex1, s.p20, s.alignCenter]}>
+          <SolarplexLogo />
         </View>
-      </View>
-      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-        Account
-      </Text>
-      <View style={[pal.borderDark, styles.group]}>
-        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <FontAwesomeIcon
-            icon="at"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TextInput
-            testID="loginUsernameInput"
-            style={[pal.text, styles.textInput]}
-            placeholder="Username or email address"
-            placeholderTextColor={pal.colors.textLight}
-            autoCapitalize="none"
-            autoFocus
-            autoCorrect={false}
-            autoComplete="username"
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              passwordInputRef.current?.focus()
-            }}
-            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-            keyboardAppearance={theme.colorScheme}
-            value={identifier}
-            onChangeText={str => setIdentifier((str || '').toLowerCase())}
-            editable={!isProcessing}
-            accessibilityLabel="Username or email address"
-            accessibilityHint="Input the username or email address you used at signup"
-          />
+      )}
+      <View testID="loginForm">
+        <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+          Sign in via Bluesky
+        </Text>
+        <View style={[pal.borderDark, styles.group]}>
+          <View
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            <FontAwesomeIcon
+              icon="globe"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
+            <TouchableOpacity
+              testID="loginSelectServiceButton"
+              style={styles.textBtn}
+              onPress={onPressSelectService}
+              accessibilityRole="button"
+              accessibilityLabel="Select service"
+              accessibilityHint="Sets server for the Bluesky client">
+              <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
+                {toNiceDomain(serviceUrl)}
+              </Text>
+              <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
+                <FontAwesomeIcon
+                  icon="pen"
+                  size={12}
+                  style={pal.textLight as FontAwesomeIconStyle}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={[pal.borderDark, styles.groupContent]}>
-          <FontAwesomeIcon
-            icon="lock"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TextInput
-            testID="loginPasswordInput"
-            ref={passwordInputRef}
-            style={[pal.text, styles.textInput]}
-            placeholder="Password"
-            placeholderTextColor={pal.colors.textLight}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="password"
-            returnKeyType="done"
-            enablesReturnKeyAutomatically={true}
-            keyboardAppearance={theme.colorScheme}
-            secureTextEntry={true}
-            textContentType="password"
-            clearButtonMode="while-editing"
-            value={password}
-            onChangeText={setPassword}
-            onSubmitEditing={onPressNext}
-            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-            editable={!isProcessing}
-            accessibilityLabel="Password"
-            accessibilityHint={
-              identifier === ''
-                ? 'Input your password'
-                : `Input the password tied to ${identifier}`
-            }
-          />
-          <TouchableOpacity
-            testID="forgotPasswordButton"
-            style={styles.textInputInnerBtn}
-            onPress={onPressForgotPassword}
-            accessibilityRole="button"
-            accessibilityLabel="Forgot password"
-            accessibilityHint="Opens password reset form">
-            <Text style={pal.link}>Forgot</Text>
-          </TouchableOpacity>
+        <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+          Account
+        </Text>
+        <View style={[pal.borderDark, styles.group]}>
+          <View
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            <FontAwesomeIcon
+              icon="at"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
+            <TextInput
+              testID="loginUsernameInput"
+              style={[pal.text, styles.textInput]}
+              placeholder="Username or email address"
+              placeholderTextColor={pal.colors.textLight}
+              autoCapitalize="none"
+              autoFocus
+              autoCorrect={false}
+              autoComplete="username"
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                passwordInputRef.current?.focus()
+              }}
+              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+              keyboardAppearance={theme.colorScheme}
+              value={identifier}
+              onChangeText={str => setIdentifier((str || '').toLowerCase())}
+              editable={!isProcessing}
+              accessibilityLabel="Username or email address"
+              accessibilityHint="Input the username or email address you used at signup"
+            />
+          </View>
+          <View style={[pal.borderDark, styles.groupContent]}>
+            <FontAwesomeIcon
+              icon="lock"
+              style={[pal.textLight, styles.groupContentIcon]}
+            />
+            <TextInput
+              testID="loginPasswordInput"
+              ref={passwordInputRef}
+              style={[pal.text, styles.textInput]}
+              placeholder="Password"
+              placeholderTextColor={pal.colors.textLight}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="password"
+              returnKeyType="done"
+              enablesReturnKeyAutomatically={true}
+              keyboardAppearance={theme.colorScheme}
+              secureTextEntry={true}
+              textContentType="password"
+              clearButtonMode="while-editing"
+              value={password}
+              onChangeText={setPassword}
+              onSubmitEditing={onPressNext}
+              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+              editable={!isProcessing}
+              accessibilityLabel="Password"
+              accessibilityHint={
+                identifier === ''
+                  ? 'Input your password'
+                  : `Input the password tied to ${identifier}`
+              }
+            />
+            <TouchableOpacity
+              testID="forgotPasswordButton"
+              style={styles.textInputInnerBtn}
+              onPress={onPressForgotPassword}
+              accessibilityRole="button"
+              accessibilityLabel="Forgot password"
+              accessibilityHint="Opens password reset form">
+              <Text style={pal.link}>Forgot</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      {error ? (
-        <View style={styles.error}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+        {error ? (
+          <View style={styles.error}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
+            </View>
+            <View style={s.flex1}>
+              <Text style={[s.white, s.bold]}>{error}</Text>
+            </View>
           </View>
-          <View style={s.flex1}>
-            <Text style={[s.white, s.bold]}>{error}</Text>
-          </View>
-        </View>
-      ) : undefined}
-      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
-          <Text type="xl" style={[pal.link, s.pl5]}>
-            Back
-          </Text>
-        </TouchableOpacity>
-        <View style={s.flex1} />
-        {!serviceDescription && error ? (
-          <TouchableOpacity
-            testID="loginRetryButton"
-            onPress={onPressRetryConnect}
-            accessibilityRole="button"
-            accessibilityLabel="Retry"
-            accessibilityHint="Retries login">
-            <Text type="xl-bold" style={[pal.link, s.pr5]}>
-              Retry
-            </Text>
-          </TouchableOpacity>
-        ) : !serviceDescription ? (
-          <>
-            <ActivityIndicator />
-            <Text type="xl" style={[pal.textLight, s.pl10]}>
-              Connecting...
-            </Text>
-          </>
-        ) : isProcessing ? (
-          <ActivityIndicator />
-        ) : isReady ? (
-          <TouchableOpacity
-            testID="loginNextButton"
-            onPress={onPressNext}
-            accessibilityRole="button"
-            accessibilityLabel="Go to next"
-            accessibilityHint="Navigates to the next screen">
-            <Text type="xl-bold" style={[pal.link, s.pr5]}>
-              Next
-            </Text>
-          </TouchableOpacity>
         ) : undefined}
-      </View>
-      {/* <View>
+        <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
+          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
+            <Text type="xl" style={[pal.link, s.pl5]}>
+              Back
+            </Text>
+          </TouchableOpacity>
+          <View style={s.flex1} />
+          {!serviceDescription && error ? (
+            <TouchableOpacity
+              testID="loginRetryButton"
+              onPress={onPressRetryConnect}
+              accessibilityRole="button"
+              accessibilityLabel="Retry"
+              accessibilityHint="Retries login">
+              <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                Retry
+              </Text>
+            </TouchableOpacity>
+          ) : !serviceDescription ? (
+            <>
+              <ActivityIndicator />
+              <Text type="xl" style={[pal.textLight, s.pl10]}>
+                Connecting...
+              </Text>
+            </>
+          ) : isProcessing ? (
+            <ActivityIndicator />
+          ) : isReady ? (
+            <TouchableOpacity
+              testID="loginNextButton"
+              onPress={onPressNext}
+              accessibilityRole="button"
+              accessibilityLabel="Go to next"
+              accessibilityHint="Navigates to the next screen">
+              <Text type="xl-bold" style={[pal.link, s.pr5]}>
+                Next
+              </Text>
+            </TouchableOpacity>
+          ) : undefined}
+        </View>
+        {/* <View>
         <br />
         <br />
         <Text type="sm-bold" style={[pal.text, styles.welcome, pal.textLight]}>
@@ -561,26 +570,21 @@ const LoginForm = ({
           </TouchableOpacity>
         </View>
       </View> */}
-      <CenteredView style={[styles.container, pal.view]}>
-        <View
-          testID="noSessionView"
-          style={[
-            styles.containerInner,
-            isMobileWeb && styles.containerInnerMobile,
-            pal.border,
-          ]}>
-          <ErrorBoundary>
-            <Text style={[isMobileWeb ? styles.titleMobile : styles.title]}>
-              Solarplex Live
-            </Text>
-            <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
-              Sign in with your Bluesky credentials.
-            </Text>
-            <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
-              Don't have a Bluesky invitation?
-            </Text>
-            <View testID="signinOrCreateAccount" style={styles.btns}>
-              {/* <TouchableOpacity
+        <CenteredView style={[styles.container, pal.view]}>
+          <View
+            testID="noSessionView"
+            style={[
+              styles.containerInner,
+              isMobileWeb && styles.containerInnerMobile,
+              pal.border,
+            ]}>
+            <ErrorBoundary>
+              <Text
+                style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+                Don't have a Bluesky invitation?
+              </Text>
+              <View testID="signinOrCreateAccount" style={styles.btns}>
+                {/* <TouchableOpacity
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
@@ -590,16 +594,18 @@ const LoginForm = ({
                 Create a new account
               </Text>
             </TouchableOpacity> */}
-              <TouchableOpacity
-                testID="requestInviteButton"
-                style={[styles.btn, pal.btn]}
-                onPress={onPressRequestInvite}
-                // TODO: web accessibility
-                accessibilityRole="button">
-                <Text style={[pal.text, styles.btnLabel]}>Request Invite</Text>
-              </TouchableOpacity>
-            </View>
-            {/* <Text
+                <TouchableOpacity
+                  testID="requestInviteButton"
+                  style={[styles.btn]}
+                  onPress={onPressRequestInvite}
+                  // TODO: web accessibility
+                  accessibilityRole="button">
+                  <Text style={[pal.text, styles.btnLabel]}>
+                    Request Invite
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/* <Text
               type="xl"
               style={[styles.notice, pal.textLight]}
               lineHeight={1.3}>
@@ -614,10 +620,11 @@ const LoginForm = ({
               </TouchableOpacity>{' '}
               to try the beta before it's publicly available.
             </Text> */}
-          </ErrorBoundary>
-        </View>
-      </CenteredView>
-    </View>
+            </ErrorBoundary>
+          </View>
+        </CenteredView>
+      </View>
+    </>
   )
 }
 
@@ -1134,14 +1141,14 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     color: colors.gray5,
-    fontSize: 42,
+    fontSize: 24,
     fontWeight: 'bold',
     paddingBottom: 30,
   },
   subtitleMobile: {
     textAlign: 'center',
     color: colors.gray5,
-    fontSize: 36,
+    fontSize: 18,
     fontWeight: 'bold',
     paddingBottom: 30,
   },
@@ -1156,6 +1163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     minWidth: 220,
+    backgroundColor: colors.purple1,
   },
   btnLabel: {
     textAlign: 'center',
@@ -1164,6 +1172,7 @@ const styles = StyleSheet.create({
   notice: {
     paddingHorizontal: 40,
     textAlign: 'center',
+    fontSize: 16,
   },
   footer: {
     position: 'absolute',

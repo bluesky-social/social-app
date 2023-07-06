@@ -2,16 +2,16 @@
 
 {% block head_title %}
 {%- if profileView -%}
-  @{{ profileView.Handle }} on Bluesky
+  @{{ profileView.Handle }} on Solarplex Live
 {%- else -%}
-  Bluesky
+  Solarplex Live
 {%- endif -%}
 {% endblock %}
 
 {% block html_head_extra -%}
 {%- if profileView -%}
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Bluesky Social">
+  <meta property="og:site_name" content="Solarplex Live">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
   {% endif -%}

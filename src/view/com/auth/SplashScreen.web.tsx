@@ -34,7 +34,7 @@ export const SplashScreen = ({
         ]}>
         <ErrorBoundary>
           <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
-            Bluesky
+            Solarplex Live
           </Text>
           <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
             See what's next
@@ -63,7 +63,7 @@ export const SplashScreen = ({
             type="xl"
             style={[styles.notice, pal.textLight]}
             lineHeight={1.3}>
-            Bluesky will launch soon.{' '}
+            Solarplex Live will launch soon.{' '}
             <TouchableOpacity
               onPress={onPressWaitlist}
               // TODO: web accessibility

@@ -1,13 +1,14 @@
-import {Camera} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
+
+import {Alert} from 'view/com/util/Alert'
+import {Camera} from 'expo-camera'
 import {Linking} from 'react-native'
 import {isWeb} from 'platform/detection'
-import {Alert} from 'view/com/util/Alert'
 
 const openPermissionAlert = (perm: string) => {
   Alert.alert(
     'Permission needed',
-    `Bluesky does not have permission to access your ${perm}.`,
+    `Solarplex Live does not have permission to access your ${perm}.`,
     [
       {
         text: 'Cancel',
