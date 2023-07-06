@@ -1,4 +1,5 @@
-export const FEEDBACK_FORM_URL = 'https://tally.so/r/nrD8l2'
+export const FEEDBACK_FORM_URL =
+  'https://twitter.com/intent/tweet?text=Hey%20@solarplex_xyz%20I%20have%20some%20feedback%20for%20Live%3A'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
