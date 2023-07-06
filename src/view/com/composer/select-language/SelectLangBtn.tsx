@@ -9,6 +9,7 @@ import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
+import {codeToLanguageName} from '../../../../locale/helpers'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
@@ -35,8 +36,10 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       accessibilityLabel="Language selection"
       accessibilityHint="Opens screen or modal to select language of post">
       {store.preferences.postLanguages.length > 0 ? (
-        <Text type="lg-bold" style={pal.link}>
-          {store.preferences.postLanguages.join(', ')}
+        <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
+          {store.preferences.postLanguages
+            .map(lang => codeToLanguageName(lang))
+            .join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon
@@ -52,5 +55,8 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
 const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 15,
+  },
+  label: {
+    maxWidth: 100,
   },
 })

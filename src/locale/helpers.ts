@@ -18,6 +18,11 @@ export function code3ToCode2(lang: string): string {
   return lang
 }
 
+export function codeToLanguageName(lang: string): string {
+  const lang2 = code3ToCode2(lang)
+  return LANGUAGES_MAP_CODE2[lang2]?.name || lang
+}
+
 export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
 ): string | undefined {
