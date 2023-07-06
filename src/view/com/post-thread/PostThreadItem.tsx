@@ -368,7 +368,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 authorHasWarning={!!item.post.author.labels?.length}
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
-                did={item.post.author.did}
               />
               <ContentHider
                 moderation={item.moderation.thread}

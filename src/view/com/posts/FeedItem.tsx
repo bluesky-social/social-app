@@ -229,8 +229,6 @@ export const FeedItem = observer(function ({
             authorHasWarning={!!item.post.author.labels?.length}
             timestamp={item.post.indexedAt}
             postHref={itemHref}
-            did={item.post.author.did}
-            showFollowBtn={showFollowBtn}
           />
           {!isThreadChild && replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
