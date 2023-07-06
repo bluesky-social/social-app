@@ -106,12 +106,12 @@ export function TabBar({
     if (currentFeed.isSaved) {
       store.shell.openModal({
         name: 'confirm',
-        title: 'Remove from my feeds',
-        message: `Remove ${currentFeed.displayName} from my feeds?`,
+        title: 'Remove from my communities?',
+        message: `Remove ${currentFeed.displayName} from my communities?`,
         onPressConfirm: async () => {
           try {
             await store.me.savedFeeds.unsave(currentFeed)
-            Toast.show('Removed from my feeds')
+            Toast.show('Removed from my communities')
           } catch (e) {
             Toast.show('There was an issue contacting your server')
             store.log.error('Failed to unsave feed', {e})
@@ -122,7 +122,7 @@ export function TabBar({
     } else {
       try {
         await store.me.savedFeeds.save(currentFeed)
-        Toast.show('Added to my feeds')
+        Toast.show('Added to my communities')
         await currentFeed.reload()
         setButtonText('Leave')
       } catch (e) {
@@ -336,8 +336,8 @@ const styles = isDesktopWeb
         alignItems: 'center',
         paddingTop: 10,
         paddingBottom: 10,
-        borderRadius: 70,
-        width: 25,
+        borderRadius: 40,
+        width: 40,
         height: 25,
         color: '#6E59B1',
         borderWidth: 1,

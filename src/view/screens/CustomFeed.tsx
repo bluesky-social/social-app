@@ -73,7 +73,7 @@ export const CustomFeedScreen = withAuthRequired(
         Toast.show(
           'There was an an issue updating your feeds, please check your internet connection and try again.',
         )
-        store.log.error('Failed up update feeds', {err})
+        store.log.error('Failed up update communities', {err})
       }
     }, [store, currentFeed])
 
@@ -120,7 +120,7 @@ export const CustomFeedScreen = withAuthRequired(
       let items: DropdownItem[] = [
         {
           testID: 'feedHeaderDropdownRemoveBtn',
-          label: 'Remove from my feeds',
+          label: 'Remove from my communities',
           onPress: onToggleSaved,
         },
         {

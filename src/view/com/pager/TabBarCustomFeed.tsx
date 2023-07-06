@@ -49,12 +49,12 @@ export const TabBarCustomFeed = observer(
       if (item.isSaved) {
         store.shell.openModal({
           name: 'confirm',
-          title: 'Remove from my feeds',
-          message: `Remove ${item.displayName} from my feeds?`,
+          title: 'Remove from my communities',
+          message: `Remove ${item.displayName} from my communities?`,
           onPressConfirm: async () => {
             try {
               await store.me.savedFeeds.unsave(item)
-              Toast.show('Removed from my feeds')
+              Toast.show('Removed from my communities')
             } catch (e) {
               Toast.show('There was an issue contacting your server')
               store.log.error('Failed to unsave feed', {e})
@@ -64,7 +64,7 @@ export const TabBarCustomFeed = observer(
       } else {
         try {
           await store.me.savedFeeds.save(item)
-          Toast.show('Added to my feeds')
+          Toast.show('Added to my communities')
           await item.reload()
         } catch (e) {
           Toast.show('There was an issue contacting your server')
@@ -107,7 +107,9 @@ export const TabBarCustomFeed = observer(
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={
-                      item.isSaved ? 'Remove from my feeds' : 'Add to my feeds'
+                      item.isSaved
+                        ? 'Remove from my communities'
+                        : 'Add to my communities'
                     }
                     accessibilityHint=""
                     onPress={onToggleSaved}
