@@ -4,28 +4,32 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
+  Linking,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
+import {BLUESKY_INTENT_LINK, SOLARPLEX_IDENTIFIER} from 'lib/constants'
 import {DEFAULT_SERVICE, RootStoreModel, useStores} from 'state/index'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import React, {useEffect, useRef, useState} from 'react'
-import {colors, s} from 'lib/styles'
+import {colors, gradients, s} from 'lib/styles'
 
 import {AccountData} from 'state/models/session'
 import {BskyAgent} from '@atproto/api'
+import {CenteredView} from 'view/com/util/Views'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {NavigationProp} from 'lib/routes/types'
-import {SOLARPLEX_IDENTIFIER} from 'lib/constants'
 import {ServiceDescription} from 'state/models/session'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
 import {cleanError} from 'lib/strings/errors'
 import {createFullHandle} from 'lib/strings/handles'
+import {isMobileWeb} from 'platform/detection'
 import {isNetworkError} from 'lib/strings/errors'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -362,6 +366,10 @@ const LoginForm = ({
     }
   }
 
+  const onPressRequestInvite = React.useCallback(() => {
+    Linking.openURL(BLUESKY_INTENT_LINK)
+  }, [])
+
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
     <View testID="loginForm">
@@ -468,6 +476,7 @@ const LoginForm = ({
           </TouchableOpacity>
         </View>
       </View>
+
       {error ? (
         <View style={styles.error}>
           <View style={styles.errorIcon}>
@@ -518,6 +527,96 @@ const LoginForm = ({
           </TouchableOpacity>
         ) : undefined}
       </View>
+      {/* <View>
+        <br />
+        <br />
+        <Text type="sm-bold" style={[pal.text, styles.welcome, pal.textLight]}>
+          Sign in with your Bluesky credentials.
+          <br />
+          <br />
+          <br />
+          Don't have a Bluesky invitation?
+        </Text>
+        <View style={[styles.textBtnFakeInnerBtn]}>
+          <TouchableOpacity
+            accessibilityRole="link"
+            accessibilityLabel="Send feedback"
+            accessibilityHint="Opens Google Forms feedback link"
+            onPress={onPressFeedback}
+            style={[
+              styles.footerBtn,
+              styles.footerBtnFeedback,
+              theme.colorScheme === 'light'
+                ? styles.footerBtnFeedbackLight
+                : styles.footerBtnFeedbackDark,
+            ]}>
+            <FontAwesomeIcon
+              style={pal.link as FontAwesomeIconStyle}
+              size={19}
+              icon={['far', 'message']}
+            />
+            <Text type="2xl-medium" style={[pal.link, s.pl10]}>
+              Request Invite
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View> */}
+      <CenteredView style={[styles.container, pal.view]}>
+        <View
+          testID="noSessionView"
+          style={[
+            styles.containerInner,
+            isMobileWeb && styles.containerInnerMobile,
+            pal.border,
+          ]}>
+          <ErrorBoundary>
+            <Text style={[isMobileWeb ? styles.titleMobile : styles.title]}>
+              Solarplex Live
+            </Text>
+            <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+              Sign in with your Bluesky credentials.
+            </Text>
+            <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+              Don't have a Bluesky invitation?
+            </Text>
+            <View testID="signinOrCreateAccount" style={styles.btns}>
+              {/* <TouchableOpacity
+              testID="createAccountButton"
+              style={[styles.btn, {backgroundColor: colors.blue3}]}
+              onPress={onPressCreateAccount}
+              // TODO: web accessibility
+              accessibilityRole="button">
+              <Text style={[s.white, styles.btnLabel]}>
+                Create a new account
+              </Text>
+            </TouchableOpacity> */}
+              <TouchableOpacity
+                testID="requestInviteButton"
+                style={[styles.btn, pal.btn]}
+                onPress={onPressRequestInvite}
+                // TODO: web accessibility
+                accessibilityRole="button">
+                <Text style={[pal.text, styles.btnLabel]}>Request Invite</Text>
+              </TouchableOpacity>
+            </View>
+            {/* <Text
+              type="xl"
+              style={[styles.notice, pal.textLight]}
+              lineHeight={1.3}>
+              Bluesky will launch soon.{' '}
+              <TouchableOpacity
+                onPress={onPressWaitlist}
+                // TODO: web accessibility
+                accessibilityRole="button">
+                <Text type="xl" style={pal.link}>
+                  Join the waitlist
+                </Text>
+              </TouchableOpacity>{' '}
+              to try the beta before it's publicly available.
+            </Text> */}
+          </ErrorBoundary>
+        </View>
+      </CenteredView>
     </View>
   )
 }
@@ -889,6 +988,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginHorizontal: 20,
   },
+  welcome: {
+    marginBottom: 20,
+    marginHorizontal: 20,
+    fontSize: 24,
+  },
   group: {
     borderWidth: 1,
     borderRadius: 10,
@@ -987,4 +1091,90 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   dimmed: {opacity: 0.5},
+  footerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 25,
+  },
+  footerBtnFeedback: {
+    paddingHorizontal: 24,
+  },
+  footerBtnFeedbackLight: {
+    backgroundColor: '#DDEFFF',
+  },
+  footerBtnFeedbackDark: {
+    backgroundColor: colors.blue6,
+  },
+  container: {
+    height: '100%',
+  },
+  containerInner: {
+    height: '100%',
+    justifyContent: 'center',
+    paddingBottom: '20vh',
+    paddingHorizontal: 20,
+  },
+  containerInnerMobile: {
+    paddingBottom: 50,
+  },
+  title: {
+    textAlign: 'center',
+    color: gradients.purple.start,
+    fontSize: 68,
+    fontWeight: 'bold',
+    paddingBottom: 10,
+  },
+  titleMobile: {
+    textAlign: 'center',
+    color: gradients.purple.start,
+    fontSize: 58,
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    textAlign: 'center',
+    color: colors.gray5,
+    fontSize: 42,
+    fontWeight: 'bold',
+    paddingBottom: 30,
+  },
+  subtitleMobile: {
+    textAlign: 'center',
+    color: colors.gray5,
+    fontSize: 36,
+    fontWeight: 'bold',
+    paddingBottom: 30,
+  },
+  btns: {
+    flexDirection: isMobileWeb ? 'column' : 'row',
+    gap: 20,
+    justifyContent: 'center',
+    paddingBottom: 40,
+  },
+  btn: {
+    borderRadius: 30,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    minWidth: 220,
+  },
+  btnLabel: {
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  notice: {
+    paddingHorizontal: 40,
+    textAlign: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: 20,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+  },
+  footerLink: {
+    marginRight: 20,
+  },
 })

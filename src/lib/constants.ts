@@ -1,6 +1,9 @@
 export const FEEDBACK_FORM_URL =
   'https://twitter.com/intent/tweet?text=Hey%20@solarplex_xyz%20I%20have%20some%20feedback%20for%20Live%3A'
 
+export const BLUESKY_INTENT_LINK =
+  'https://twitter.com/intent/tweet?text=Trying%20out%20@solarplex_xyz%20Live%20for%20Communities%21%20Who%27s%20got%20a%20@bluesky%20invite%3F'
+
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
