@@ -2,31 +2,32 @@
  * The root store is the base of all modeled state.
  */
 
-import {makeAutoObservable} from 'mobx'
-import {BskyAgent} from '@atproto/api'
-import {createContext, useContext} from 'react'
-import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import * as BgScheduler from 'lib/bg-scheduler'
-import {z} from 'zod'
-import {isObj, hasProp} from 'lib/type-guards'
+
+import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
+import {createContext, useContext} from 'react'
+import {hasProp, isObj} from 'lib/type-guards'
+
+import {BskyAgent} from '@atproto/api'
+import {ImageSizesCache} from './cache/image-sizes'
+import {InvitedUsers} from './invited-users'
+import {LinkMetasCache} from './cache/link-metas'
 import {LogModel} from './log'
+import {MeModel} from './me'
+import {MutedThreads} from './muted-threads'
+import {NotificationsFeedItemModel} from './feeds/notifications'
+import {PreferencesModel} from './ui/preferences'
+import {ProfilesCache} from './cache/profiles-view'
 import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
-import {ProfilesCache} from './cache/profiles-view'
-import {LinkMetasCache} from './cache/link-metas'
-import {NotificationsFeedItemModel} from './feeds/notifications'
-import {MeModel} from './me'
-import {InvitedUsers} from './invited-users'
-import {PreferencesModel} from './ui/preferences'
-import {resetToTab} from '../../Navigation'
-import {ImageSizesCache} from './cache/image-sizes'
-import {MutedThreads} from './muted-threads'
-import {reset as resetNavigation} from '../../Navigation'
-
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
 import {applyDebugHeader} from 'lib/api/debug-appview-proxy-header'
+import {makeAutoObservable} from 'mobx'
+import {reset as resetNavigation} from '../../Navigation'
+import {resetToTab} from '../../Navigation'
+import {z} from 'zod'
 
 export const appInfo = z.object({
   build: z.string(),

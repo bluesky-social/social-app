@@ -111,6 +111,11 @@ export const SOLARPLEX_FEEDS = [
   'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
 ]
 
+export const SOLARPLEX_FEED_URI_PATH =
+  'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/'
+
+export const SOLARPLEX_FEED_API = 'https://feed.solarplex.xyz'
+
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_LOCAL_DEV(serviceUrl)) {
     return STAGING_LINK_META_PROXY

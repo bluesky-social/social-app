@@ -1,11 +1,19 @@
+import {SOLARPLEX_FEED_API, SOLARPLEX_FEED_URI_PATH} from 'lib/constants'
 import {makeAutoObservable, runInAction} from 'mobx'
 
 import {CustomFeedModel} from '../feeds/custom-feed'
 import {RootStoreModel} from '../root-store'
-import {SOLARPLEX_FEEDS} from 'lib/constants'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {track} from 'lib/analytics/analytics'
+
+interface SolarplexCommunity {
+  id: string
+  name: string
+  description: string
+  createdAt: string
+  published: boolean
+}
 
 export class SavedFeedsModel {
   // state
@@ -13,6 +21,7 @@ export class SavedFeedsModel {
   isRefreshing = false
   hasLoaded = false
   error = ''
+  feeds: string[] = []
 
   // data
   _feedModelCache: Record<string, CustomFeedModel> = {}
@@ -40,9 +49,9 @@ export class SavedFeedsModel {
   }
 
   get pinned() {
-    return SOLARPLEX_FEEDS.map(
-      uri => this._feedModelCache[uri] as CustomFeedModel,
-    ).filter(Boolean)
+    return this.feeds
+      .map(uri => this._feedModelCache[uri] as CustomFeedModel)
+      .filter(Boolean)
   }
 
   get unpinned() {
@@ -73,9 +82,29 @@ export class SavedFeedsModel {
       newFeedModels = {...this._feedModelCache}
     }
 
+    const solarplexCommunities = await fetch(
+      `${SOLARPLEX_FEED_API}/splx/get_all_communities`,
+      {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Access-Control-Allow-Origin': 'no-cors',
+        },
+      },
+    )
+    const solarplexFeeds = (
+      (await solarplexCommunities.json()).data as SolarplexCommunity[]
+    ).reduce((result, community) => {
+      if (community.published) {
+        result.push(`${SOLARPLEX_FEED_URI_PATH}${community.id}`)
+      }
+      return result
+    }, [] as string[])
+    this.feeds = solarplexFeeds
+    console.log('solarplexFeeds', solarplexFeeds)
     // collect the feed URIs that havent been synced yet
     const neededFeedUris = []
-    for (const feedUri of SOLARPLEX_FEEDS) {
+    for (const feedUri of this.feeds) {
       if (!(feedUri in newFeedModels)) {
         neededFeedUris.push(feedUri)
       }
@@ -126,6 +155,21 @@ export class SavedFeedsModel {
   async save(feed: CustomFeedModel) {
     try {
       await feed.save()
+      const communityURI = feed.data.uri
+      if (this.feeds.includes(communityURI)) {
+        const communityName = communityURI.split('/').pop()
+        await fetch(`${SOLARPLEX_FEED_API}/join_community_by_id`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'Access-Control-Allow-Origin': 'no-cors',
+          },
+          body: JSON.stringify({
+            did: this.rootStore.session.data?.did,
+            cid: communityName,
+          }),
+        })
+      }
       await this.updateCache()
     } catch (e: any) {
       this.rootStore.log.error('Failed to save feed', e)
@@ -137,6 +181,21 @@ export class SavedFeedsModel {
     try {
       if (this.isPinned(feed)) {
         await this.rootStore.preferences.removePinnedFeed(uri)
+      }
+      const communityURI = feed.data.uri
+      if (this.feeds.includes(communityURI)) {
+        const communityName = communityURI.split('/').pop()
+        await fetch(`${SOLARPLEX_FEED_API}/leave_community_by_id`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'Access-Control-Allow-Origin': 'no-cors',
+          },
+          body: JSON.stringify({
+            did: this.rootStore.session.data?.did,
+            cid: communityName,
+          }),
+        })
       }
       await feed.unsave()
     } catch (e: any) {
