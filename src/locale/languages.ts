@@ -455,7 +455,7 @@ export const LANGUAGES: Language[] = [
   {code3: 'som', code2: 'so', name: 'Somali'},
   {code3: 'son', code2: ' ', name: 'Songhai languages'},
   {code3: 'sot', code2: 'st', name: 'Sotho, Southern'},
-  {code3: 'spa', code2: 'es', name: 'Spanish; Castilian'},
+  {code3: 'spa', code2: 'es', name: 'Spanish'},
   {code3: 'sqi', code2: 'sq', name: 'Albanian'},
   {code3: 'srd', code2: 'sc', name: 'Sardinian'},
   {code3: 'srn', code2: ' ', name: 'Sranan Tongo'},
