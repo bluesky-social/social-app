@@ -74,8 +74,11 @@ export const Feed = observer(function Feed({
       }
     } else if (feed.isLoading) {
       feedItems = feedItems.concat([LOADING_ITEM])
+    } else {
+      feed.retryLoadMore()
     }
     return feedItems
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     feed.hasError,
     feed.hasLoaded,
@@ -161,7 +164,6 @@ export const Feed = observer(function Feed({
       ),
     [feed],
   )
-
   return (
     <View testID={testID} style={style}>
       {data.length > 0 && (

@@ -1,18 +1,19 @@
-import React, {useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
-import {s, colors} from 'lib/styles'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {cleanError} from 'lib/strings/errors'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import React, {useState} from 'react'
+import {gradients, s} from 'lib/styles'
+
 import type {ConfirmModal} from 'state/models/ui/shell'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Text} from '../util/text/Text'
+import {cleanError} from 'lib/strings/errors'
+import {isDesktopWeb} from 'platform/detection'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const snapPoints = ['50%']
 
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     padding: 14,
     marginTop: 22,
     marginHorizontal: 44,
-    backgroundColor: colors.blue3,
+    backgroundColor: gradients.purple.start,
   },
   btnCancel: {
     flexDirection: 'row',
