@@ -7,18 +7,16 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {NavigationProp, useNavigation} from '@react-navigation/native'
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
-import {DraggableScrollView} from './DraggableScrollView'
+import {NavigationProp} from 'lib/routes/types'
 import {PressableWithHover} from '../util/PressableWithHover'
-import {TabBarCustomFeed} from './TabBarCustomFeed'
 import {Text} from '../util/text/Text'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {colors} from 'lib/styles'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
+import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 
@@ -35,17 +33,19 @@ export function TabBar({
   testID,
   selectedPage,
   items,
-  indicatorColor,
   onSelect,
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
-  const store = useStores()
-  store.me.savedFeeds
   const [itemXs, setItemXs] = useState<number[]>([])
   const navigation = useNavigation<NavigationProp>()
-  const [isSolana, setIsSolana] = useState<Boolean>(false)
+  const currentFeed = useCustomFeed(
+    'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
+  )
+  const [buttonText, setButtonText] = useState(
+    currentFeed?.isSaved ? 'Leave' : 'Join',
+  )
 
   // const indicatorStyle = useMemo(
   //   () => ({borderBottomColor: indicatorColor || pal.colors.link}),
@@ -53,16 +53,14 @@ export function TabBar({
   // )
 
   console.log('selectedPage', selectedPage)
-  const currentFeed = useCustomFeed(
-    'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
-  )
 
   // scrolls to the selected item when the page changes
   useEffect(() => {
     scrollElRef.current?.scrollTo({
       x: itemXs[selectedPage] || 0,
     })
-  }, [scrollElRef, itemXs, selectedPage])
+    console.log('currentFeed', currentFeed?.isSaved)
+  }, [scrollElRef, itemXs, selectedPage, currentFeed?.isSaved])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -74,17 +72,25 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   )
 
-  const renderItem = React.useCallback(({item}: {item: CustomFeedModel}) => {
-    return (
-      <TabBarCustomFeed
-        key={item.data.uri}
-        item={item}
-        showSaveBtn
-        showDescription
-        showLikes
-      />
-    )
-  }, [])
+  useEffect(() => {
+    if (currentFeed?.isSaved) {
+      setButtonText('Leave')
+    } else {
+      setButtonText('Join')
+    }
+  }, [currentFeed?.isSaved])
+
+  // const renderItem = React.useCallback(({item}: {item: CustomFeedModel}) => {
+  //   return (
+  //     <TabBarCustomFeed
+  //       key={item.data.uri}
+  //       item={item}
+  //       showSaveBtn
+  //       showDescription
+  //       showLikes
+  //     />
+  //   )
+  // }, [])
 
   const store = useStores()
 
@@ -112,11 +118,13 @@ export function TabBar({
           }
         },
       })
+      setButtonText('Join')
     } else {
       try {
         await store.me.savedFeeds.save(currentFeed)
         Toast.show('Added to my feeds')
         await currentFeed.reload()
+        setButtonText('Leave')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
         store.log.error('Failed to save feed', {e})
@@ -165,7 +173,7 @@ export function TabBar({
   //   )
   // }
 
-  console.log('isSolana', isSolana)
+  console.log('isSolana', currentFeed?.isSaved)
 
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
@@ -225,21 +233,20 @@ export function TabBar({
         })}
       </View>
       {selectedPage === 1 ? (
-        currentFeed?.isSaved ? (
+        currentFeed &&
+        // !currentFeed?.isSaved &&
+        !store.session.isDefaultSession ? (
           <TouchableOpacity onPress={onToggleSaved} accessibilityRole="button">
             <Text type="button" style={styles.btn}>
-              Join
+              {buttonText}
             </Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={onToggleSaved} accessibilityRole="button">
-            <Text type="button" style={styles.btn}>
-              Leave
-            </Text>
-          </TouchableOpacity>
+          <></>
         )
-      ) : null}
-      {/* <TabJoinButton /> */}
+      ) : (
+        <></>
+      )}
     </View>
   )
 }
