@@ -282,14 +282,16 @@ const FeedPage = observer(
             minimalShellMode={store.shell.minimalShellMode}
           />
         )}
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel="Compose post"
-          accessibilityHint=""
-        />
+        {!store.session.isDefaultSession && (
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel="Compose post"
+            accessibilityHint=""
+          />
+        )}
       </View>
     )
   },

@@ -13,6 +13,7 @@ import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export interface TabBarProps {
   testID?: string
@@ -33,6 +34,8 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
+  const store = useStores()
+  store.me.savedFeeds
   const [itemXs, setItemXs] = useState<number[]>([])
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
