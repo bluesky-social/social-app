@@ -1,10 +1,11 @@
-import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
+
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
 import {LoadLatestBtn as LoadLatestBtnMobile} from './LoadLatestBtnMobile'
+import React from 'react'
+import {Text} from '../text/Text'
 import {isMobileWeb} from 'platform/detection'
+import {usePalette} from 'lib/hooks/usePalette'
 
 const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
 
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     left: '50vw',
     // @ts-ignore web only -prf
     transform: 'translateX(-50%)',
-    top: 60,
+    top: 90,
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 30,
