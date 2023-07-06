@@ -78,6 +78,8 @@ export const FeedItem = observer(function ({
       return item.author.handle
     } else if (item.isReply) {
       return 'Post'
+    } else if (item.isCustomFeedLike) {
+      return 'Custom Feed'
     }
   }, [item])
 
