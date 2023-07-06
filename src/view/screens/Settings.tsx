@@ -2,7 +2,6 @@ import React from 'react'
 import {
   ActivityIndicator,
   Platform,
-  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -41,7 +40,6 @@ import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
-import {isColorMode} from 'state/models/ui/shell'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
 
