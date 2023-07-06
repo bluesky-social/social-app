@@ -233,16 +233,12 @@ export function TabBar({
         })}
       </View>
       {selectedPage === 1 ? (
-        currentFeed &&
-        // !currentFeed?.isSaved &&
-        !store.session.isDefaultSession ? (
+        currentFeed && (
           <TouchableOpacity onPress={onToggleSaved} accessibilityRole="button">
             <Text type="button" style={styles.btn}>
               {buttonText}
             </Text>
           </TouchableOpacity>
-        ) : (
-          <></>
         )
       ) : (
         <></>
