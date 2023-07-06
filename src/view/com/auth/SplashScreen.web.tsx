@@ -3,6 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {CenteredView} from '../util/Views'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import React from 'react'
+import {SolarplexLogo} from 'lib/icons'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from '../util/Link'
 import {colors} from 'lib/styles'
@@ -33,9 +34,12 @@ export const SplashScreen = ({
           pal.border,
         ]}>
         <ErrorBoundary>
-          <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
-            Solarplex Live
-          </Text>
+          {/* <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
+            Bluesky
+          </Text> */}
+          <View style={styles.logo}>
+            <SolarplexLogo />
+          </View>
           <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
             See what's next
           </Text>
@@ -52,27 +56,24 @@ export const SplashScreen = ({
             </TouchableOpacity> */}
             <TouchableOpacity
               testID="signInButton"
-              style={[styles.btn, pal.btn]}
+              style={[styles.btn]}
               onPress={onPressSignin}
               // TODO: web accessibility
               accessibilityRole="button">
-              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
+              <Text style={[styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
-          <Text
-            type="xl"
-            style={[styles.notice, pal.textLight]}
-            lineHeight={1.3}>
-            Solarplex Live will launch soon.{' '}
-            <TouchableOpacity
+          <Text type="xl" style={[styles.notice]} lineHeight={1.3}>
+            Solarplex Live is powered by Bluesky.{' '}
+            {/* <TouchableOpacity
               onPress={onPressWaitlist}
               // TODO: web accessibility
               accessibilityRole="button">
               <Text type="xl" style={pal.link}>
                 Join the waitlist
               </Text>
-            </TouchableOpacity>{' '}
-            to try the beta before it's publicly available.
+            </TouchableOpacity>{' '} */}
+            and is for the Solana Community
           </Text>
         </ErrorBoundary>
       </View>
@@ -86,18 +87,13 @@ function Footer() {
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
-        href="https://blueskyweb.xyz"
-        text="Business"
+        href="https://www.solarplex.xyz/"
+        text="solarplex"
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
-        href="https://blueskyweb.xyz/blog"
-        text="Blog"
-        style={[styles.footerLink, pal.link]}
-      />
-      <TextLink
-        href="https://blueskyweb.xyz/join"
-        text="Jobs"
+        href="https://twitter.com/viksit"
+        text="contact"
         style={[styles.footerLink, pal.link]}
       />
     </View>
@@ -105,6 +101,10 @@ function Footer() {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     height: '100%',
   },
@@ -151,18 +151,23 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   btn: {
+    backgroundColor: colors.splx.primary[50],
+
     borderRadius: 30,
     paddingHorizontal: 24,
     paddingVertical: 12,
     minWidth: 220,
   },
   btnLabel: {
+    color: colors.splx.neutral[10],
     textAlign: 'center',
     fontSize: 18,
   },
   notice: {
+    fontFamily: 'Manrope',
     paddingHorizontal: 40,
     textAlign: 'center',
+    color: colors.splx.primary[70],
   },
   footer: {
     position: 'absolute',

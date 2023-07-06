@@ -47,6 +47,7 @@ export const CustomFeedScreen = withAuthRequired(
       [rkey, name],
     )
     const scrollElRef = useRef<FlatList>(null)
+    console.log('URI: ', uri)
     const currentFeed = useCustomFeed(uri)
     const algoFeed: PostsFeedModel = useMemo(() => {
       const feed = new PostsFeedModel(store, 'custom', {

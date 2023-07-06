@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import React, {MutableRefObject} from 'react'
 
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {FeedSlice} from './FeedSlice'
 import {FlatList} from '../util/Views'
@@ -15,9 +16,11 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {PostsFeedModel} from 'state/models/feeds/posts'
+import {TabBarCustomFeed} from '../pager/TabBarCustomFeed'
 import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 
@@ -117,6 +120,9 @@ export const Feed = observer(function Feed({
 
   // rendering
   // =
+  const currentFeed = useCustomFeed(
+    'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
+  )
 
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
@@ -142,7 +148,11 @@ export const Feed = observer(function Feed({
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
-      return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
+      return (
+        <>
+          <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
+        </>
+      )
     },
     [
       feed,
@@ -164,39 +174,60 @@ export const Feed = observer(function Feed({
       ),
     [feed],
   )
+
   return (
     <View testID={testID} style={style}>
       {data.length > 0 && (
-        <FlatList
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={data}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
-          ListFooterComponent={FeedFooter}
-          ListHeaderComponent={ListHeaderComponent}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
+        <>
+          {/* {currentFeed && (
+            <FlatList
+              data={data}
+              renderItem={tabrenderItem({
+                item: currentFeed,
+              })}
+              contentContainerStyle={s.contentContainer}
+              style={{paddingTop: headerOffset}}
+              onScroll={onScroll}
+              scrollEventThrottle={scrollEventThrottle}
+              indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+              onEndReached={onEndReached}
+              onEndReachedThreshold={0.6}
+              removeClippedSubviews={true}
+              contentOffset={{x: 0, y: headerOffset * -1}}
+              extraData={extraData}
             />
-          }
-          contentContainerStyle={s.contentContainer}
-          style={{paddingTop: headerOffset}}
-          onScroll={onScroll}
-          scrollEventThrottle={scrollEventThrottle}
-          indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.6}
-          removeClippedSubviews={true}
-          contentOffset={{x: 0, y: headerOffset * -1}}
-          extraData={extraData}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
+          )} */}
+          <FlatList
+            testID={testID ? `${testID}-flatlist` : undefined}
+            ref={scrollElRef}
+            data={data}
+            keyExtractor={item => item._reactKey}
+            renderItem={renderItem}
+            ListFooterComponent={FeedFooter}
+            ListHeaderComponent={ListHeaderComponent}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
+                progressViewOffset={headerOffset}
+              />
+            }
+            contentContainerStyle={s.contentContainer}
+            style={{paddingTop: headerOffset}}
+            onScroll={onScroll}
+            scrollEventThrottle={scrollEventThrottle}
+            indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.6}
+            removeClippedSubviews={true}
+            contentOffset={{x: 0, y: headerOffset * -1}}
+            extraData={extraData}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        </>
       )}
     </View>
   )

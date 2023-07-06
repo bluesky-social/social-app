@@ -9,22 +9,19 @@ import {RootStoreModel, RootStoreProvider, setupState} from './state'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {Shell} from './view/shell/index'
+import {Text} from 'react-native'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {ToastContainer} from './view/com/util/Toast.web'
 import {observer} from 'mobx-react-lite'
 import {useFonts} from 'expo-font'
 
 const App = observer(() => {
-  // const [fontsLoaded] = useFonts({
-  //   Manrope: require('../assets/fonts/Manrope.ttf'),
-  // })
+  const [fontsLoaded] = useFonts({
+    Manrope: require('../assets/fonts/Manrope.ttf'),
+  })
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
-
-  // if (!fontsLoaded) {
-  //   return null
-  // }
 
   // init
   useEffect(() => {
@@ -37,6 +34,10 @@ const App = observer(() => {
 
   // show nothing prior to init
   if (!rootStore) {
+    return null
+  }
+
+  if (!fontsLoaded) {
     return null
   }
 

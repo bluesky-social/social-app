@@ -42,6 +42,10 @@ export const CustomFeed = observer(
     const navigation = useNavigation<NavigationProp>()
 
     const onToggleSaved = React.useCallback(async () => {
+      if (store.session.isDefaultSession) {
+        navigation.navigate('SignIn')
+        return
+      }
       if (item.isSaved) {
         store.shell.openModal({
           name: 'confirm',
@@ -61,12 +65,17 @@ export const CustomFeed = observer(
         try {
           await store.me.savedFeeds.save(item)
           Toast.show('Added to my communities')
+          await item.reload()
         } catch (e) {
           Toast.show('There was an issue contacting your server')
           store.log.error('Failed to save community', {e})
         }
       }
-    }, [store, item])
+    }, [store, item, navigation])
+
+    // store.log.debug('item.displayName', item)
+    console.log('item.displayName', item.displayName)
+    console.log('item.displayName', item.data)
 
     return (
       <TouchableOpacity

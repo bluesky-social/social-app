@@ -284,6 +284,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginTop: 100,
+    zIndex: 100,
   },
 
   navItemWrapper: {

@@ -84,9 +84,11 @@ export const Shell: React.FC = observer(() => {
 const styles = StyleSheet.create({
   bgLight: {
     backgroundColor: colors.white,
+    fontFamily: 'Manrope',
   },
   bgDark: {
     backgroundColor: colors.black, // TODO
+    fontFamily: 'Manrope',
   },
   drawerMask: {
     position: 'absolute',

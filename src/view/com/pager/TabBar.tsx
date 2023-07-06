@@ -1,3 +1,5 @@
+import * as Toast from 'view/com/util/Toast'
+
 import {
   Image,
   LayoutChangeEvent,
@@ -5,13 +7,18 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {isDesktopWeb, isMobileWeb} from 'platform/detection'
 
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {DraggableScrollView} from './DraggableScrollView'
 import {PressableWithHover} from '../util/PressableWithHover'
+import {TabBarCustomFeed} from './TabBarCustomFeed'
 import {Text} from '../util/text/Text'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import {colors} from 'lib/styles'
+import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 
@@ -37,9 +44,17 @@ export function TabBar({
   const store = useStores()
   store.me.savedFeeds
   const [itemXs, setItemXs] = useState<number[]>([])
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
+  const navigation = useNavigation<NavigationProp>()
+  const [isSolana, setIsSolana] = useState<Boolean>(false)
+
+  // const indicatorStyle = useMemo(
+  //   () => ({borderBottomColor: indicatorColor || pal.colors.link}),
+  //   [indicatorColor, pal],
+  // )
+
+  console.log('selectedPage', selectedPage)
+  const currentFeed = useCustomFeed(
+    'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
   )
 
   // scrolls to the selected item when the page changes
@@ -59,6 +74,56 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   )
 
+  const renderItem = React.useCallback(({item}: {item: CustomFeedModel}) => {
+    return (
+      <TabBarCustomFeed
+        key={item.data.uri}
+        item={item}
+        showSaveBtn
+        showDescription
+        showLikes
+      />
+    )
+  }, [])
+
+  const store = useStores()
+
+  const onToggleSaved = React.useCallback(async () => {
+    if (currentFeed === undefined) {
+      return
+    }
+
+    if (store.session.isDefaultSession) {
+      navigation.navigate('SignIn')
+      return
+    }
+    if (currentFeed.isSaved) {
+      store.shell.openModal({
+        name: 'confirm',
+        title: 'Remove from my feeds',
+        message: `Remove ${currentFeed.displayName} from my feeds?`,
+        onPressConfirm: async () => {
+          try {
+            await store.me.savedFeeds.unsave(currentFeed)
+            Toast.show('Removed from my feeds')
+          } catch (e) {
+            Toast.show('There was an issue contacting your server')
+            store.log.error('Failed to unsave feed', {e})
+          }
+        },
+      })
+    } else {
+      try {
+        await store.me.savedFeeds.save(currentFeed)
+        Toast.show('Added to my feeds')
+        await currentFeed.reload()
+      } catch (e) {
+        Toast.show('There was an issue contacting your server')
+        store.log.error('Failed to save feed', {e})
+      }
+    }
+  }, [store, currentFeed, navigation])
+
   // calculates the x position of each item on mount and on layout change
   const onItemLayout = React.useCallback(
     (e: LayoutChangeEvent, index: number) => {
@@ -72,22 +137,58 @@ export function TabBar({
     [],
   )
 
+  const newIndicatorStyle = {
+    borderWidth: 2,
+    borderColor: colors.splx.primary[50],
+  }
+
+  // function TabJoinButton() {
+  //   return (
+  //     <>
+  //       {items.map((item, i) => {
+  //         return (
+  //           <>
+  //             {item === 'Solana' ? (
+  //               <TouchableOpacity
+  //                 key={i}
+  //                 onPress={onToggleSaved}
+  //                 accessibilityRole="button">
+  //                 <Text type="button" style={styles.btn}>
+  //                   Join
+  //                 </Text>
+  //               </TouchableOpacity>
+  //             ) : null}
+  //           </>
+  //         )
+  //       })}
+  //     </>
+  //   )
+  // }
+
+  console.log('isSolana', isSolana)
+
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
-      <DraggableScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}>
+      <View
+        // horizontal={true}
+        // showsHorizontalScrollIndicator={false}
+        // ref={scrollElRef}
+        style={styles.contentContainer}>
         {items.map((item, i) => {
           const selected = i === selectedPage
+          // if (selectedPage === i) {
+          //   console.log('selected', items[i])
+          //   if (items[i] === 'Solana') {
+          //     setIsSolana(true)
+          //   }
+          // }
           return (
             <>
               <View style={styles.container}>
                 <PressableWithHover
                   key={item}
                   onLayout={e => onItemLayout(e, i)}
-                  style={[styles.item, selected && indicatorStyle]}
+                  style={[styles.item, selected && newIndicatorStyle]}
                   hoverStyle={pal.viewLight}
                   onPress={() => onPressItem(i)}>
                   {item === 'Solana' && (
@@ -111,7 +212,9 @@ export function TabBar({
                   type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={{
-                    ...(selected ? pal.text : pal.textLight),
+                    ...(selected
+                      ? {...pal.textLight, textDecorationLine: 'underline'}
+                      : pal.text),
                     fontSize: 14,
                   }}>
                   {item}
@@ -120,13 +223,36 @@ export function TabBar({
             </>
           )
         })}
-      </DraggableScrollView>
+      </View>
+      {selectedPage === 1 ? (
+        currentFeed?.isSaved ? (
+          <TouchableOpacity onPress={onToggleSaved} accessibilityRole="button">
+            <Text type="button" style={styles.btn}>
+              Join
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={onToggleSaved} accessibilityRole="button">
+            <Text type="button" style={styles.btn}>
+              Leave
+            </Text>
+          </TouchableOpacity>
+        )
+      ) : null}
+      {/* <TabJoinButton /> */}
     </View>
   )
 }
 
 const styles = isDesktopWeb
   ? StyleSheet.create({
+      btn: {
+        borderRadius: 10,
+        color: 'white',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        backgroundColor: colors.splx.primary[50],
+      },
       imageStyle: {
         width: 25,
         height: 25,
@@ -138,10 +264,16 @@ const styles = isDesktopWeb
       },
       outer: {
         flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         width: 598,
         marginBottom: 10,
+        paddingRight: 10,
       },
       contentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
         columnGap: 8,
         marginLeft: 14,
         paddingRight: 14,
@@ -162,6 +294,13 @@ const styles = isDesktopWeb
       },
     })
   : StyleSheet.create({
+      btn: {
+        borderRadius: 10,
+        color: 'white',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        backgroundColor: colors.splx.primary[50],
+      },
       container: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -171,9 +310,13 @@ const styles = isDesktopWeb
       outer: {
         flex: 1,
         flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: 'transparent',
+        paddingRight: 10,
       },
       contentContainer: {
+        flexDirection: 'row',
         columnGap: isMobileWeb ? 0 : 20,
         marginLeft: isMobileWeb ? 0 : 18,
         paddingRight: isMobileWeb ? 0 : 36,
@@ -185,11 +328,12 @@ const styles = isDesktopWeb
         height: 15,
       },
       item: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop: 10,
         paddingBottom: 10,
-        borderRadius: 40,
+        borderRadius: 70,
         width: 25,
         height: 25,
         color: '#6E59B1',
