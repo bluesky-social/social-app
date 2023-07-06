@@ -4,6 +4,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
 import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 import {isDesktopWeb} from 'platform/detection'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 
 export function ImageHider({
   testID,
@@ -17,11 +19,8 @@ export function ImageHider({
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const onPressShow = React.useCallback(() => {
-    setOverride(true)
-  }, [setOverride])
-  const onPressHide = React.useCallback(() => {
-    setOverride(false)
+  const onPressToggle = React.useCallback(() => {
+    setOverride(v => !v)
   }, [setOverride])
 
   if (moderation.behavior === ModerationBehaviorCode.Hide) {
@@ -38,73 +37,44 @@ export function ImageHider({
 
   return (
     <View testID={testID} style={style}>
-      {override ? (
-        <View>
-          <Pressable
-            onPress={onPressHide}
-            style={[styles.hideBtn, pal.viewLight]}
-            accessibilityLabel="Hide image"
-            accessibilityHint="">
-            <Text type="xl-bold" style={pal.link}>
-              Hide
-            </Text>
-          </Pressable>
-          {children}
-        </View>
-      ) : (
-        <View style={[styles.cover, pal.viewLight]}>
-          <Pressable
-            onPress={onPressShow}
-            style={[styles.showBtn, pal.view]}
-            accessibilityLabel="Show image"
-            accessibilityHint="">
-            <Text type="xl" style={pal.text}>
-              {moderation.reason || 'Content warning'}
-            </Text>
-            <Text type="xl-bold" style={pal.link}>
-              Show
-            </Text>
-          </Pressable>
-        </View>
-      )}
+      <View style={[styles.cover, pal.viewLight]}>
+        <Pressable
+          onPress={onPressToggle}
+          style={[styles.toggleBtn]}
+          accessibilityLabel="Show image"
+          accessibilityHint="">
+          <FontAwesomeIcon
+            icon={override ? 'eye' : ['far', 'eye-slash']}
+            size={24}
+            style={pal.text as FontAwesomeIconStyle}
+          />
+          <Text type="lg" style={pal.text}>
+            {moderation.reason || 'Content warning'}
+          </Text>
+          <View style={styles.flex1} />
+          <Text type="xl-bold" style={pal.link}>
+            {override ? 'Hide' : 'Show'}
+          </Text>
+        </Pressable>
+      </View>
+      {override && children}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  overrideContainer: {
-    paddingHorizontal: 8,
-    paddingTop: 8,
-    paddingBottom: 2,
-    borderRadius: 12,
-    borderWidth: 1,
-  },
   cover: {
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    aspectRatio: isDesktopWeb ? 2 : 1.5,
-    marginBottom: 10,
+    marginTop: 4,
   },
-  coverOpen: {
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  showBtn: {
+  toggleBtn: {
     flexDirection: 'row',
     gap: 8,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 24,
-  },
-  hideBtn: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
-    paddingVertical: 10,
-    borderRadius: 8,
+    paddingHorizontal: isDesktopWeb ? 24 : 20,
+    paddingVertical: isDesktopWeb ? 24 : 18,
+  },
+  flex1: {
+    flex: 1,
   },
 })
