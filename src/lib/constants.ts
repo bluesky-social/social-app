@@ -1,5 +1,7 @@
-const BASE_FEEDBACK_FORM_URL =
-  'https://blueskyweb.zendesk.com/hc/en-us/requests/new'
+const HELP_DESK_LANG = 'en-us'
+export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
+
+const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new'`
 export function FEEDBACK_FORM_URL({
   email,
   handle,
@@ -16,7 +18,6 @@ export function FEEDBACK_FORM_URL({
   }
   return str
 }
-export const HELP_DESK_URL = 'https://blueskyweb.zendesk.com/hc/en-us'
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
