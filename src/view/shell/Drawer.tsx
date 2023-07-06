@@ -16,7 +16,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {s, colors} from 'lib/styles'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {useStores} from 'state/index'
 import {
   HomeIcon,
@@ -116,8 +116,19 @@ export const DrawerContent = observer(() => {
 
   const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
-    Linking.openURL(FEEDBACK_FORM_URL)
+    Linking.openURL(
+      FEEDBACK_FORM_URL({
+        email: store.session.currentSession?.email,
+        handle: store.session.currentSession?.handle,
+      }),
+    )
+  }, [track, store.session.currentSession])
+
+  const onPressHelp = React.useCallback(() => {
+    track('Menu:HelpClicked')
+    Linking.openURL(HELP_DESK_URL)
   }, [track])
+
   // rendering
   // =
 
@@ -138,10 +149,14 @@ export const DrawerContent = observer(() => {
             <UserAvatar size={80} avatar={store.me.avatar} />
             <Text
               type="title-lg"
-              style={[pal.text, s.bold, styles.profileCardDisplayName]}>
+              style={[pal.text, s.bold, styles.profileCardDisplayName]}
+              numberOfLines={1}>
               {store.me.displayName || store.me.handle}
             </Text>
-            <Text type="2xl" style={[pal.textLight, styles.profileCardHandle]}>
+            <Text
+              type="2xl"
+              style={[pal.textLight, styles.profileCardHandle]}
+              numberOfLines={1}>
               @{store.me.handle}
             </Text>
             <Text
@@ -299,7 +314,7 @@ export const DrawerContent = observer(() => {
           <TouchableOpacity
             accessibilityRole="link"
             accessibilityLabel="Send feedback"
-            accessibilityHint="Opens Google Forms feedback link"
+            accessibilityHint=""
             onPress={onPressFeedback}
             style={[
               styles.footerBtn,
@@ -310,11 +325,21 @@ export const DrawerContent = observer(() => {
             ]}>
             <FontAwesomeIcon
               style={pal.link as FontAwesomeIconStyle}
-              size={19}
+              size={18}
               icon={['far', 'message']}
             />
-            <Text type="2xl-medium" style={[pal.link, s.pl10]}>
+            <Text type="lg-medium" style={[pal.link, s.pl10]}>
               Feedback
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityRole="link"
+            accessibilityLabel="Send feedback"
+            accessibilityHint=""
+            onPress={onPressHelp}
+            style={[styles.footerBtn]}>
+            <Text type="lg-medium" style={[pal.link, s.pl10]}>
+              Help
             </Text>
           </TouchableOpacity>
         </View>
@@ -495,8 +520,8 @@ const styles = StyleSheet.create({
 
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingRight: 30,
+    gap: 8,
+    paddingRight: 20,
     paddingTop: 20,
     paddingLeft: 20,
   },
@@ -507,7 +532,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   footerBtnFeedback: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
   },
   footerBtnFeedbackLight: {
     backgroundColor: '#DDEFFF',

@@ -79,6 +79,7 @@ interface TrackPropertiesMap {
   // MENU events
   'Menu:ItemClicked': {url: string}
   'Menu:FeedbackClicked': {}
+  'Menu:HelpClicked': {}
   // MOBILE SHELL events
   'MobileShell:MyProfileButtonPressed': {}
   'MobileShell:HomeButtonPressed': {}

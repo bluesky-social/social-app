@@ -6,7 +6,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {DesktopSearch} from './Search'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
@@ -37,7 +37,10 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href={FEEDBACK_FORM_URL}
+            href={FEEDBACK_FORM_URL({
+              email: store.session.currentSession?.email,
+              handle: store.session.currentSession?.handle,
+            })}
             text="Send feedback"
           />
           <Text type="md" style={pal.textLight}>
@@ -47,7 +50,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             type="md"
             style={pal.link}
             href="https://blueskyweb.xyz/support/privacy-policy"
-            text="Privacy Policy"
+            text="Privacy"
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -57,6 +60,15 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             style={pal.link}
             href="https://blueskyweb.xyz/support/tos"
             text="Terms"
+          />
+          <Text type="md" style={pal.textLight}>
+            &nbsp;&middot;&nbsp;
+          </Text>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href={HELP_DESK_URL}
+            text="Help"
           />
         </View>
       </View>
