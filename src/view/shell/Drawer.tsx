@@ -26,7 +26,6 @@ import {TabState, getTabState} from 'lib/routes/helpers'
 import {colors, s} from 'lib/styles'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
-import {Button} from 'view/com/util/forms/Button'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {NavItem} from './desktop/LeftNav'
 import {NavigationProp} from 'lib/routes/types'
@@ -197,18 +196,28 @@ export const DrawerContent = observer(() => {
               onPress={onPressNotifications}
             />
           )}
+          {!store.session.hasSession ? (
+            <NavItem
+              href="/signin"
+              count={store.me.notifications.unreadCountLabel}
+              label="Sign in"
+              icon={<UserIcon />}
+              iconFilled={<UserIconSolid />}
+            />
+          ) : (
+            <MenuItem
+              onPress={onPressSignout}
+              icon={
+                <FontAwesomeIcon
+                  size={24}
+                  icon="sign-out"
+                  style={{...pal.text, marginLeft: 4} as FontAwesomeIconStyle}
+                />
+              }
+              label={'Sign Out'}
+            />
+          )}
         </ScrollView>
-        {!store.session.hasSession ? (
-          <NavItem
-            href="/signin"
-            count={store.me.notifications.unreadCountLabel}
-            label="Sign in"
-            icon={<UserIcon />}
-            iconFilled={<UserIconSolid />}
-          />
-        ) : (
-          <Button onPress={() => onPressSignout()} label="Sign out" />
-        )}
         <View style={styles.footer}>
           <TouchableOpacity
             accessibilityRole="link"

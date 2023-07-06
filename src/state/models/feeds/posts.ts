@@ -1,15 +1,16 @@
-import {makeAutoObservable, runInAction} from 'mobx'
+import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {
-  AppBskyFeedGetTimeline as GetTimeline,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
+  AppBskyFeedGetTimeline as GetTimeline,
 } from '@atproto/api'
+import {makeAutoObservable, runInAction} from 'mobx'
+
 import AwaitLock from 'await-lock'
-import {bundleAsync} from 'lib/async/bundle'
-import {RootStoreModel} from '../root-store'
-import {cleanError} from 'lib/strings/errors'
-import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './posts-slice'
+import {RootStoreModel} from '../root-store'
+import {bundleAsync} from 'lib/async/bundle'
+import {cleanError} from 'lib/strings/errors'
 import {track} from 'lib/analytics/analytics'
 
 const PAGE_SIZE = 30
@@ -281,7 +282,7 @@ export class PostsFeedModel {
     if (this.hasNewLatest || this.isLoading) {
       return
     }
-    const res = await this._getFeed({limit: 1})
+    const res = await this._getFeed({limit: PAGE_SIZE})
     this.setHasNewLatest(res.data.feed[0]?.post.uri !== this.pollCursor)
   }
 

@@ -150,18 +150,29 @@ type SignOutProps = {
   onPressHandler: () => void
 }
 
-function SignOutBtn({onPressHandler}: SignOutProps) {
+export function SignOutBtn({onPressHandler}: SignOutProps) {
+  const pal = usePalette('default')
   return (
-    <TouchableOpacity
-      style={[styles.newPostBtn]}
+    <PressableWithHover
+      style={styles.navItemWrapper}
+      // @ts-ignore the function signature differs on web -prf
       onPress={onPressHandler}
-      accessibilityRole="button"
-      accessibilityLabel="Compose post"
+      // @ts-ignore web only -prf
+      dataSet={{noUnderline: 1}}
+      accessibilityRole="tab"
+      accessibilityLabel={'Sign Out'}
       accessibilityHint="">
-      <Text type="button" style={styles.newPostBtnLabel}>
+      <View style={[styles.navItemIconWrapper]}>
+        <FontAwesomeIcon
+          size={24}
+          icon="sign-out"
+          style={{...pal.text, marginLeft: 4} as FontAwesomeIconStyle}
+        />
+      </View>
+      <Text type="title" style={[s.normal, pal.text]}>
         Sign Out
       </Text>
-    </TouchableOpacity>
+    </PressableWithHover>
   )
 }
 
@@ -203,6 +214,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   return (
     <View style={[styles.leftNav, pal.view]}>
       <Banner />
+
       {store.session.hasSession && <ProfileCard />}
       <BackBtn />
       <NavItem
@@ -224,7 +236,14 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             }
             label="Notifications"
           />
-
+          {/* <NavItem
+            count={store.me.notifications.unreadCountLabel}
+            icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
+            iconFilled={
+              <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
+            }
+            label="Sign Out"
+          /> */}
           <SignOutBtn onPressHandler={() => onPressSignout()} />
           <ComposeBtn />
         </>
@@ -264,6 +283,7 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
+    marginTop: 100,
   },
 
   navItemWrapper: {

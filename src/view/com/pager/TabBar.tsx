@@ -12,7 +12,6 @@ import {DraggableScrollView} from './DraggableScrollView'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {colors} from 'lib/styles'
-import {solarplexTheme} from 'lib/SolarplexTheme'
 import {usePalette} from 'lib/hooks/usePalette'
 
 export interface TabBarProps {
@@ -70,8 +69,6 @@ export function TabBar({
     [],
   )
 
-  console.log('WORLD', items)
-
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
@@ -110,7 +107,10 @@ export function TabBar({
                 <Text
                   type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
-                  style={selected ? pal.text : pal.textLight}>
+                  style={{
+                    ...(selected ? pal.text : pal.textLight),
+                    fontSize: 14,
+                  }}>
                   {item}
                 </Text>
               </View>
@@ -125,8 +125,8 @@ export function TabBar({
 const styles = isDesktopWeb
   ? StyleSheet.create({
       imageStyle: {
-        width: 50,
-        height: 50,
+        width: 25,
+        height: 25,
       },
       container: {
         alignItems: 'center',
@@ -147,8 +147,8 @@ const styles = isDesktopWeb
       item: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: 75,
-        height: 75,
+        width: 50,
+        height: 50,
         borderRadius: 40,
         borderWidth: 1,
         borderColor: colors.splx.neutral[30],
@@ -163,6 +163,7 @@ const styles = isDesktopWeb
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 15,
+        marginTop: 8,
       },
       outer: {
         flex: 1,
@@ -177,8 +178,8 @@ const styles = isDesktopWeb
         backgroundColor: 'transparent',
       },
       imageStyle: {
-        width: 30,
-        height: 30,
+        width: 15,
+        height: 15,
       },
       item: {
         justifyContent: 'center',
@@ -186,8 +187,8 @@ const styles = isDesktopWeb
         paddingTop: 10,
         paddingBottom: 10,
         borderRadius: 40,
-        width: 50,
-        height: 50,
+        width: 25,
+        height: 25,
         color: '#6E59B1',
         borderWidth: 1,
         borderColor: colors.splx.neutral[30],

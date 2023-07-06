@@ -28,10 +28,6 @@ const FeedsTabBarDesktop = observer(
     props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
   ) => {
     const store = useStores()
-    console.log(
-      'store.me.savedFeeds.pinnedFeedNames',
-      store.me.savedFeeds.pinnedFeedNames,
-    )
     const items = useMemo(
       () => ['Home', ...store.me.savedFeeds.pinnedFeedNames],
       [store.me.savedFeeds.pinnedFeedNames],

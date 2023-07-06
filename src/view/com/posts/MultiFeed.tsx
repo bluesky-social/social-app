@@ -168,38 +168,40 @@ export const MultiFeed = observer(function Feed({
 
   return (
     <View testID={testID} style={style}>
-      {!multifeed.isLoading && multifeed.items.length > 0 && (
-        <FlatList
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={multifeed.items}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
-          ListFooterComponent={ListFooter}
-          ListHeaderComponent={ListHeader}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
-            />
-          }
-          contentContainerStyle={s.contentContainer}
-          style={[{paddingTop: headerOffset}, pal.view, styles.container]}
-          onScroll={onScroll}
-          scrollEventThrottle={scrollEventThrottle}
-          indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.6}
-          removeClippedSubviews={true}
-          contentOffset={{x: 0, y: headerOffset * -1}}
-          extraData={extraData}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
-      )}
+      {!multifeed.isLoading &&
+        !multifeed.rootStore.session.hasAnySession &&
+        multifeed.items.length > 0 && (
+          <FlatList
+            testID={testID ? `${testID}-flatlist` : undefined}
+            ref={scrollElRef}
+            data={multifeed.items}
+            keyExtractor={item => item._reactKey}
+            renderItem={renderItem}
+            ListFooterComponent={ListFooter}
+            ListHeaderComponent={ListHeader}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
+                progressViewOffset={headerOffset}
+              />
+            }
+            contentContainerStyle={s.contentContainer}
+            style={[{paddingTop: headerOffset}, pal.view, styles.container]}
+            onScroll={onScroll}
+            scrollEventThrottle={scrollEventThrottle}
+            indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.6}
+            removeClippedSubviews={true}
+            contentOffset={{x: 0, y: headerOffset * -1}}
+            extraData={extraData}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        )}
     </View>
   )
 })

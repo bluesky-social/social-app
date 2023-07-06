@@ -23,8 +23,8 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useStores} from 'state/index'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 
-const HEADER_OFFSET_MOBILE = 118
-const HEADER_OFFSET_DESKTOP = 113
+const HEADER_OFFSET_MOBILE = 119
+const HEADER_OFFSET_DESKTOP = 85
 const HEADER_OFFSET = isDesktopWeb
   ? HEADER_OFFSET_DESKTOP
   : HEADER_OFFSET_MOBILE

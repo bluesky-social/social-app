@@ -51,7 +51,6 @@ export const FeedItem = observer(function ({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
-
   const [deleted, setDeleted] = useState(false)
   const record = item.postRecord
   const itemUri = item.post.uri
@@ -207,7 +206,6 @@ export const FeedItem = observer(function ({
   if (!record || deleted) {
     return <View />
   }
-
   return (
     <PostHider
       testID={`feedItem-by-${item.post.author.handle}`}

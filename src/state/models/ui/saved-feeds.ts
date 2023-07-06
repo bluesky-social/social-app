@@ -57,9 +57,7 @@ export class SavedFeedsModel {
   }
 
   get pinnedFeedNames() {
-    const t = Object.values(this._feedModelCache).map(f => f.displayName)
-    console.log(Object.values(this._feedModelCache))
-    return t
+    return Object.values(this._feedModelCache).map(f => f.displayName)
   }
 
   // public api

@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {colors, s} from 'lib/styles'
+import {colors, gradients, s} from 'lib/styles'
 import {isDesktopWeb, isNative} from 'platform/detection'
 
 import {BlurView} from '../util/BlurView'
@@ -576,7 +576,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   primaryBtn: {
-    backgroundColor: colors.blue3,
+    backgroundColor: gradients.purple.start,
     paddingHorizontal: 24,
     paddingVertical: 6,
   },

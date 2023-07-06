@@ -147,6 +147,7 @@ export const gradients = {
   blueLight: {start: '#5A71FA', end: colors.blue3}, // buttons
   blue: {start: '#5E55FB', end: colors.blue3}, // fab
   blueDark: {start: '#5F45E0', end: colors.blue3}, // avis, banner
+  purple: {start: '#4a279c', end: colors.purple4}, // avis, banner
 }
 
 export const s = StyleSheet.create({

@@ -1,13 +1,14 @@
-import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {PostsFeedSliceModel} from 'state/models/feeds/posts-slice'
-import {AtUri} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
+
+import {AtUri} from '@atproto/api'
 import {FeedItem} from './FeedItem'
-import {usePalette} from 'lib/hooks/usePalette'
+import {Link} from '../util/Link'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
+import {PostsFeedSliceModel} from 'state/models/feeds/posts-slice'
+import React from 'react'
+import {Text} from '../util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function FeedSlice({
   slice,
@@ -55,7 +56,6 @@ export function FeedSlice({
       </>
     )
   }
-
   return (
     <>
       {slice.items.map((item, i) => (

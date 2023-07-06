@@ -1,11 +1,12 @@
+import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 import React, {ComponentProps} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
-import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
+import {usePalette} from 'lib/hooks/usePalette'
 
 interface Props extends ComponentProps<typeof Link> {
   // testID?: string

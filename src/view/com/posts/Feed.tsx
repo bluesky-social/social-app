@@ -1,5 +1,3 @@
-import React, {MutableRefObject} from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   RefreshControl,
@@ -8,13 +6,16 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {FlatList} from '../util/Views'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import React, {MutableRefObject} from 'react'
+
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
+import {FlatList} from '../util/Views'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {PostsFeedModel} from 'state/models/feeds/posts'
+import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'

@@ -98,7 +98,7 @@ export const FeedsScreen = withAuthRequired(
         </Link>
       )
     }, [pal])
-
+    store.log.debug('multifeed', multifeed)
     return (
       <View style={[pal.view, styles.container]}>
         <MultiFeed

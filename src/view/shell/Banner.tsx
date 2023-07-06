@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import React from 'react'
 import {SolarplexLogo} from 'lib/icons'
@@ -25,8 +25,8 @@ const bannerStyles = StyleSheet.create({
     width: '100%',
     padding: 20,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   backgroundImage: {
     position: 'absolute',
