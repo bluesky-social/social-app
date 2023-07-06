@@ -42,7 +42,10 @@ export function useOTAUpdate() {
     (event: Updates.UpdateEvent) => {
       store.log.debug('useOTAUpdate: Listening for update...')
       if (event.type === Updates.UpdateEventType.ERROR) {
-        throw new Error(event.message)
+        store.log.error(
+          'useOTAUpdate: Error while listening for update',
+          event.message,
+        )
       } else if (event.type === Updates.UpdateEventType.NO_UPDATE_AVAILABLE) {
         // Handle no update available
         // do nothing

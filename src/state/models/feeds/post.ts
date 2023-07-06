@@ -76,8 +76,8 @@ export class PostsFeedItemModel {
   }
 
   get rootUri(): string {
-    if (typeof this.reply?.root.uri === 'string') {
-      return this.reply.root.uri
+    if (typeof this.postRecord?.reply?.root.uri === 'string') {
+      return this.postRecord?.reply?.root.uri
     }
     return this.post.uri
   }
