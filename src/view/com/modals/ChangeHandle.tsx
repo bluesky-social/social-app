@@ -395,6 +395,7 @@ function CustomHandleForm({
           left
           onSelect={() => setDNSForm(true)}
           accessibilityHint="Use the DNS panel"
+          style={s.flex1}
         />
         <SelectableBtn
           selected={!isDNSForm}
@@ -402,6 +403,7 @@ function CustomHandleForm({
           right
           onSelect={() => setDNSForm(false)}
           accessibilityHint="Use a file on your server"
+          style={s.flex1}
         />
       </View>
       <View style={styles.spacer} />

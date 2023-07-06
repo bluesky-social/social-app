@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet} from 'react-native'
+import {Pressable, ViewStyle, StyleProp, StyleSheet} from 'react-native'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
@@ -11,6 +11,7 @@ interface SelectableBtnProps {
   right?: boolean
   onSelect: () => void
   accessibilityHint?: string
+  style?: StyleProp<ViewStyle>
 }
 
 export function SelectableBtn({
@@ -20,6 +21,7 @@ export function SelectableBtn({
   right,
   onSelect,
   accessibilityHint,
+  style,
 }: SelectableBtnProps) {
   const pal = usePalette('default')
   const palPrimary = usePalette('inverted')
@@ -31,6 +33,7 @@ export function SelectableBtn({
         right && styles.selectableBtnRight,
         pal.border,
         selected ? palPrimary.view : pal.view,
+        style,
       ]}
       onPress={onSelect}
       accessibilityRole="button"
