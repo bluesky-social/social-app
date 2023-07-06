@@ -2,7 +2,6 @@ import React from 'react'
 import {
   ActivityIndicator,
   Platform,
-  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -32,6 +31,7 @@ import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {DropdownButton} from 'view/com/util/forms/DropdownButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
@@ -40,7 +40,6 @@ import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
-import {isColorMode} from 'state/models/ui/shell'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
 
@@ -352,30 +351,24 @@ export const SettingsScreen = withAuthRequired(
           <View>
             <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
               <SelectableBtn
-                current={store.shell.colorMode}
-                value="system"
+                selected={store.shell.colorMode === 'system'}
                 label="System"
                 left
-                onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
-                }
+                onSelect={() => store.shell.setColorMode('system')}
+                accessibilityHint="Set color theme to system setting"
               />
               <SelectableBtn
-                current={store.shell.colorMode}
-                value="light"
+                selected={store.shell.colorMode === 'light'}
                 label="Light"
-                onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
-                }
+                onSelect={() => store.shell.setColorMode('light')}
+                accessibilityHint="Set color theme to light"
               />
               <SelectableBtn
-                current={store.shell.colorMode}
-                value="dark"
+                selected={store.shell.colorMode === 'dark'}
                 label="Dark"
                 right
-                onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
-                }
+                onSelect={() => store.shell.setColorMode('dark')}
+                accessibilityHint="Set color theme to dark"
               />
             </View>
           </View>
@@ -574,45 +567,6 @@ function AccountDropdownBtn({handle}: {handle: string}) {
   )
 }
 
-interface SelectableBtnProps {
-  current: string
-  value: string
-  label: string
-  left?: boolean
-  right?: boolean
-  onChange: (v: string) => void
-}
-
-function SelectableBtn({
-  current,
-  value,
-  label,
-  left,
-  right,
-  onChange,
-}: SelectableBtnProps) {
-  const pal = usePalette('default')
-  const palPrimary = usePalette('inverted')
-  return (
-    <Pressable
-      style={[
-        styles.selectableBtn,
-        left && styles.selectableBtnLeft,
-        right && styles.selectableBtnRight,
-        pal.border,
-        current === value ? palPrimary.view : pal.view,
-      ]}
-      onPress={() => onChange(value)}
-      accessibilityRole="button"
-      accessibilityLabel={value}
-      accessibilityHint={`Set color theme to  ${value}`}>
-      <Text style={current === value ? palPrimary.text : pal.text}>
-        {label}
-      </Text>
-    </Pressable>
-  )
-}
-
 const styles = StyleSheet.create({
   dimmed: {
     opacity: 0.5,
@@ -677,25 +631,6 @@ const styles = StyleSheet.create({
 
   selectableBtns: {
     flexDirection: 'row',
-  },
-  selectableBtn: {
-    flex: isDesktopWeb ? undefined : 1,
-    width: isDesktopWeb ? 100 : undefined,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  selectableBtnLeft: {
-    borderTopLeftRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderLeftWidth: 1,
-  },
-  selectableBtnRight: {
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
   },
 
   btn: {
