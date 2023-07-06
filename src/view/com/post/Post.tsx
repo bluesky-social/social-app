@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useMemo} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -29,7 +29,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getTranslatorLink} from '../../../locale/helpers'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 
 export const Post = observer(function Post({
   uri,
@@ -134,6 +134,16 @@ const PostLoaded = observer(
       const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
       replyAuthorDid = urip.hostname
     }
+
+    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+    const needsTranslation = useMemo(
+      () =>
+        store.preferences.contentLanguages.length > 0 &&
+        !isPostInLanguage(item.post, store.preferences.contentLanguages),
+      [item.post, store.preferences.contentLanguages],
+    )
+
     const onPressReply = React.useCallback(() => {
       store.shell.openComposer({
         replyTo: {
@@ -165,9 +175,6 @@ const PostLoaded = observer(
       Clipboard.setString(record.text)
       Toast.show('Copied to clipboard')
     }, [record])
-
-    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
 
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(translatorUrl)
@@ -263,6 +270,15 @@ const PostLoaded = observer(
               <ImageHider moderation={item.moderation.list} style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
               </ImageHider>
+              {needsTranslation && (
+                <View style={[pal.borderDark, styles.translateLink]}>
+                  <Link href={translatorUrl} title="Translate">
+                    <Text type="sm" style={pal.link}>
+                      Translate this post
+                    </Text>
+                  </Link>
+                </View>
+              )}
             </ContentHider>
             <PostCtrls
               itemUri={itemUri}
@@ -319,6 +335,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+  },
+  translateLink: {
+    marginBottom: 12,
   },
   replyLine: {
     position: 'absolute',
