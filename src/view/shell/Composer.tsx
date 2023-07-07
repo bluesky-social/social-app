@@ -1,10 +1,14 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {GalleryModel} from 'state/models/media/gallery'
+import {RichText} from '@atproto/api'
+import {TextInputRef} from 'view/com/composer/text-input/TextInput'
 
 export const Composer = observer(
   ({
@@ -12,18 +16,20 @@ export const Composer = observer(
     winHeight,
     replyTo,
     onPost,
-    onClose,
     quote,
   }: {
     active: boolean
     winHeight: number
     replyTo?: ComposerOpts['replyTo']
     onPost?: ComposerOpts['onPost']
-    onClose: () => void
     quote?: ComposerOpts['quote']
   }) => {
     const pal = usePalette('default')
     const initInterp = useAnimatedValue(0)
+    const store = useStores()
+    const textInput = useRef<TextInputRef>(null)
+    const [gallery, setGallery] = useState(() => new GalleryModel(store))
+    const [richtext, setRichText] = useState(new RichText({text: ''}))
 
     useEffect(() => {
       if (active) {
@@ -48,6 +54,12 @@ export const Composer = observer(
       ],
     }
 
+    const onClose = () => {
+      setGallery(new GalleryModel(store))
+      setRichText(new RichText({text: ''}))
+      store.shell.closeComposer()
+    }
+
     // rendering
     // =
 
@@ -65,6 +77,10 @@ export const Composer = observer(
           onPost={onPost}
           onClose={onClose}
           quote={quote}
+          gallery={gallery}
+          richtext={richtext}
+          setRichText={setRichText}
+          textInput={textInput}
         />
       </Animated.View>
     )

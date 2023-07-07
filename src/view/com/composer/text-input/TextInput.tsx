@@ -39,7 +39,7 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void

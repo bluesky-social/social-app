@@ -64,7 +64,6 @@ const ShellInner = observer(() => {
       <Lightbox />
       <Composer
         active={store.shell.isComposerActive}
-        onClose={() => store.shell.closeComposer()}
         winHeight={winDim.height}
         replyTo={store.shell.composerOpts?.replyTo}
         onPost={store.shell.composerOpts?.onPost}

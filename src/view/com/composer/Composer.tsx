@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -43,6 +49,10 @@ import {SelectLangBtn} from './select-language/SelectLangBtn'
 
 type Props = ComposerOpts & {
   onClose: () => void
+  gallery: GalleryModel
+  richtext: RichText
+  setRichText: (richText: RichText) => void
+  textInput: RefObject<TextInputRef>
 }
 
 export const ComposePost = observer(function ComposePost({
@@ -50,22 +60,23 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   onClose,
   quote: initQuote,
+  gallery,
+  richtext,
+  setRichText,
+  textInput,
 }: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
-  const textInput = useRef<TextInputRef>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  const [richtext, setRichText] = useState(new RichText({text: ''}))
   const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext])
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const gallery = useMemo(() => new GalleryModel(store), [store])
 
   const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
@@ -81,40 +92,6 @@ export const ComposePost = observer(function ComposePost({
     [insets],
   )
 
-  // HACK
-  // there's a bug with @mattermost/react-native-paste-input where if the input
-  // is focused during unmount, an exception will throw (seems that a blur method isn't implemented)
-  // manually blurring before closing gets around that
-  // -prf
-  const hackfixOnClose = useCallback(() => {
-    textInput.current?.blur()
-    onClose()
-  }, [textInput, onClose])
-
-  const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
-        store.shell.closeModal()
-      }
-      if (Keyboard) {
-        Keyboard.dismiss()
-      }
-      store.shell.openModal({
-        name: 'confirm',
-        title: 'Discard draft',
-        onPressConfirm: hackfixOnClose,
-        onPressCancel: () => {
-          store.shell.closeModal()
-        },
-        message: "Are you sure you'd like to discard this draft?",
-        confirmBtnText: 'Discard',
-        confirmBtnStyle: {backgroundColor: colors.red4},
-      })
-    } else {
-      hackfixOnClose()
-    }
-  }, [store, hackfixOnClose, graphemeLength, gallery])
-
   // initial setup
   useEffect(() => {
     autocompleteView.setup()
@@ -124,10 +101,10 @@ export const ComposePost = observer(function ComposePost({
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onPressCancel()
+        onClose()
       }
     },
-    [onPressCancel],
+    [onClose],
   )
   useEffect(() => {
     if (isDesktopWeb) {
@@ -199,7 +176,7 @@ export const ComposePost = observer(function ComposePost({
         await store.me.mainFeed.addPostToTop(createdPost.uri)
       }
       onPost?.()
-      hackfixOnClose()
+      onClose()
       Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
     },
     [
@@ -209,7 +186,7 @@ export const ComposePost = observer(function ComposePost({
       replyTo,
       autocompleteView.knownHandles,
       extLink,
-      hackfixOnClose,
+      onClose,
       onPost,
       quote,
       setExtLink,
@@ -236,8 +213,8 @@ export const ComposePost = observer(function ComposePost({
         <View style={styles.topbar}>
           <TouchableOpacity
             testID="composerDiscardButton"
-            onPress={onPressCancel}
-            onAccessibilityEscape={onPressCancel}
+            onPress={onClose}
+            onAccessibilityEscape={onClose}
             accessibilityRole="button"
             accessibilityLabel="Cancel"
             accessibilityHint="Closes post composer and discards post draft">
