@@ -48,6 +48,7 @@ interface TrackPropertiesMap {
   'FeedItem:PostDelete': {} // CAN BE SERVER
   'FeedItem:ThreadMute': {} // CAN BE SERVER
   // PROFILE events
+  'Profile:Preview': {}
   'Profile:Follow': {
     username: string
   }

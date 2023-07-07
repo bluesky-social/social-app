@@ -21,7 +21,7 @@ import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -55,7 +55,6 @@ export const FeedItem = observer(function ({
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
   }, [item.post.uri, item.post.author.handle])
   const itemTitle = `Post by ${item.post.author.handle}`
-  const authorHref = `/profile/${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
       return ''
@@ -214,13 +213,13 @@ export const FeedItem = observer(function ({
       <PostSandboxWarning />
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Link href={authorHref} title={item.post.author.handle} asAnchor>
-            <UserAvatar
-              size={52}
-              avatar={item.post.author.avatar}
-              moderation={item.moderation.avatar}
-            />
-          </Link>
+          <PreviewableUserAvatar
+            size={52}
+            did={item.post.author.did}
+            handle={item.post.author.handle}
+            avatar={item.post.author.avatar}
+            moderation={item.moderation.avatar}
+          />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
