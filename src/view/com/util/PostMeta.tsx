@@ -7,7 +7,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isDesktopWeb} from 'platform/detection'
+import {isAndroid, isIOS} from 'platform/detection'
 
 interface PostMetaOpts {
   authorAvatar?: string
@@ -55,7 +55,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           href={`/profile/${opts.authorHandle}`}
         />
       </View>
-      {isDesktopWeb && (
+      {!isAndroid && (
         <Text
           type="md"
           style={pal.textLight}
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   maxWidth: {
-    flex: isDesktopWeb ? undefined : 1,
+    flex: isAndroid ? 1 : undefined,
+    maxWidth: isIOS ? '80%' : undefined,
   },
 })
