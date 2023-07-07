@@ -32,7 +32,7 @@ export const Component = observer(({did}: {did: string}) => {
   }, [navigation, store, model])
 
   return (
-    <View>
+    <View style={pal.view}>
       <View style={styles.headerWrapper}>
         <ProfileHeader view={model} hideBackButton onRefreshAll={() => {}} />
       </View>
