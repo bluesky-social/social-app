@@ -279,6 +279,24 @@ export class ShellUiModel {
     return false
   }
 
+  /**
+   * used to clear out any modals, eg for a navigation
+   */
+  closeAllActiveElements() {
+    if (this.isLightboxActive) {
+      this.closeLightbox()
+    }
+    while (this.isModalActive) {
+      this.closeModal()
+    }
+    if (this.isComposerActive) {
+      this.closeComposer()
+    }
+    if (this.isDrawerOpen) {
+      this.closeDrawer()
+    }
+  }
+
   openDrawer() {
     this.isDrawerOpen = true
   }

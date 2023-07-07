@@ -25,7 +25,7 @@ import {ImageHider} from '../util/moderation/ImageHider'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -127,8 +127,6 @@ const PostLoaded = observer(
     const itemUrip = new AtUri(item.post.uri)
     const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
     const itemTitle = `Post by ${item.post.author.handle}`
-    const authorHref = `/profile/${item.post.author.handle}`
-    const authorTitle = item.post.author.handle
     let replyAuthorDid = ''
     if (record.reply) {
       const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
@@ -214,13 +212,13 @@ const PostLoaded = observer(
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle} asAnchor>
-              <UserAvatar
-                size={52}
-                avatar={item.post.author.avatar}
-                moderation={item.moderation.avatar}
-              />
-            </Link>
+            <PreviewableUserAvatar
+              size={52}
+              did={item.post.author.did}
+              handle={item.post.author.handle}
+              avatar={item.post.author.avatar}
+              moderation={item.moderation.avatar}
+            />
           </View>
           <View style={styles.layoutContent}>
             <PostMeta

@@ -33,6 +33,7 @@ import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
+import {navigate} from '../../../Navigation'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -143,13 +144,15 @@ const ProfileHeaderLoaded = observer(
 
     const onPressFollowers = React.useCallback(() => {
       track('ProfileHeader:FollowersButtonClicked')
-      navigation.push('ProfileFollowers', {name: view.handle})
-    }, [track, navigation, view])
+      navigate('ProfileFollowers', {name: view.handle})
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
 
     const onPressFollows = React.useCallback(() => {
       track('ProfileHeader:FollowsButtonClicked')
-      navigation.push('ProfileFollows', {name: view.handle})
-    }, [track, navigation, view])
+      navigate('ProfileFollows', {name: view.handle})
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
 
     const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
