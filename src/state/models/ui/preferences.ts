@@ -311,6 +311,10 @@ export class PreferencesModel {
     }
   }
 
+  setPostLanguage(code2: string) {
+    this.postLanguages = [code2]
+  }
+
   getReadablePostLanguages() {
     const all = this.postLanguages.map(code2 => {
       const lang = LANGUAGES.find(l => l.code2 === code2)
