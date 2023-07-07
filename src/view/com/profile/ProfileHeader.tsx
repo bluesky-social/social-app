@@ -6,10 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {BlurView} from '../util/BlurView'
 import {ProfileModel} from 'state/models/content/profile'
@@ -102,6 +99,7 @@ export const ProfileHeader = observer(
 const ProfileHeaderLoaded = observer(
   ({view, onRefreshAll, hideBackButton = false}: Props) => {
     const pal = usePalette('default')
+    const palInverted = usePalette('inverted')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
@@ -351,15 +349,15 @@ const ProfileHeaderLoaded = observer(
                   <TouchableOpacity
                     testID="followBtn"
                     onPress={onPressToggleFollow}
-                    style={[styles.btn, styles.primaryBtn]}
+                    style={[styles.btn, styles.mainBtn, palInverted.view]}
                     accessibilityRole="button"
                     accessibilityLabel={`Follow ${view.handle}`}
                     accessibilityHint={`Shows direct posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="plus"
-                      style={[s.white as FontAwesomeIconStyle, s.mr5]}
+                      style={[palInverted.text, s.mr5]}
                     />
-                    <Text type="button" style={[s.white, s.bold]}>
+                    <Text type="button" style={[palInverted.text, s.bold]}>
                       Follow
                     </Text>
                   </TouchableOpacity>
@@ -609,7 +607,6 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    flex: 1,
     marginBottom: 8,
   },
 

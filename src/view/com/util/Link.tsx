@@ -6,6 +6,7 @@ import {
   Platform,
   StyleProp,
   TextStyle,
+  TextProps,
   View,
   ViewStyle,
   TouchableOpacity,
@@ -144,7 +145,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines?: number
   lineHeight?: number
   dataSet?: any
-}) {
+} & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
@@ -186,16 +187,7 @@ export const TextLink = observer(function TextLink({
 /**
  * Only acts as a link on desktop web
  */
-export const DesktopWebTextLink = observer(function DesktopWebTextLink({
-  testID,
-  type = 'md',
-  style,
-  href,
-  text,
-  numberOfLines,
-  lineHeight,
-  ...props
-}: {
+interface DesktopWebTextLinkProps extends TextProps {
   testID?: string
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
@@ -206,7 +198,17 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   accessible?: boolean
   accessibilityLabel?: string
   accessibilityHint?: string
-}) {
+}
+export const DesktopWebTextLink = observer(function DesktopWebTextLink({
+  testID,
+  type = 'md',
+  style,
+  href,
+  text,
+  numberOfLines,
+  lineHeight,
+  ...props
+}: DesktopWebTextLinkProps) {
   if (isDesktopWeb) {
     return (
       <TextLink

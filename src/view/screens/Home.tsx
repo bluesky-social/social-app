@@ -266,7 +266,6 @@ const FeedPage = observer(
           key="default"
           feed={feed}
           scrollElRef={scrollElRef}
-          showPostFollowBtn
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           scrollEventThrottle={100}

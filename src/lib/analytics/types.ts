@@ -129,6 +129,7 @@ interface ScreenPropertiesMap {
   Feed: {}
   Notifications: {}
   Profile: {}
+  'Profile:Preview': {}
   Settings: {}
   AppPasswords: {}
   Moderation: {}

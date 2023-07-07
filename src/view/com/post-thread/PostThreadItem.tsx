@@ -13,7 +13,7 @@ import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
 import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {ago, niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -163,22 +163,17 @@ export const PostThreadItem = observer(function PostThreadItem({
         <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link
-              href={authorHref}
-              title={authorTitle}
-              asAnchor
-              accessibilityLabel={`${item.post.author.handle}'s avatar`}
-              accessibilityHint="">
-              <UserAvatar
-                size={52}
-                avatar={item.post.author.avatar}
-                moderation={item.moderation.avatar}
-              />
-            </Link>
+            <PreviewableUserAvatar
+              size={52}
+              did={item.post.author.did}
+              handle={item.post.author.handle}
+              avatar={item.post.author.avatar}
+              moderation={item.moderation.avatar}
+            />
           </View>
           <View style={styles.layoutContent}>
             <View style={[styles.meta, styles.metaExpandedLine1]}>
-              <View style={[s.flexRow, s.alignBaseline]}>
+              <View style={[s.flexRow]}>
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
@@ -353,13 +348,13 @@ export const PostThreadItem = observer(function PostThreadItem({
           <PostSandboxWarning />
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
-              <Link href={authorHref} title={authorTitle} asAnchor>
-                <UserAvatar
-                  size={52}
-                  avatar={item.post.author.avatar}
-                  moderation={item.moderation.avatar}
-                />
-              </Link>
+              <PreviewableUserAvatar
+                size={52}
+                did={item.post.author.did}
+                handle={item.post.author.handle}
+                avatar={item.post.author.avatar}
+                moderation={item.moderation.avatar}
+              />
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
@@ -368,7 +363,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 authorHasWarning={!!item.post.author.labels?.length}
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
-                did={item.post.author.did}
               />
               <ContentHider
                 moderation={item.moderation.thread}

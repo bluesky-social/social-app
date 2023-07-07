@@ -229,7 +229,6 @@ const PostLoaded = observer(
               authorHasWarning={!!item.post.author.labels?.length}
               timestamp={item.post.indexedAt}
               postHref={itemHref}
-              did={item.post.author.did}
             />
             {replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>

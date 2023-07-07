@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
@@ -12,12 +12,30 @@ import {
 import {useStores} from 'state/index'
 import {colors} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
+import {Link} from './Link'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AvatarModeration} from 'lib/labeling/types'
+import {isDesktopWeb} from 'platform/detection'
 
 type Type = 'user' | 'algo' | 'list'
+
+interface BaseUserAvatarProps {
+  type?: Type
+  size: number
+  avatar?: string | null
+  moderation?: AvatarModeration
+}
+
+interface UserAvatarProps extends BaseUserAvatarProps {
+  onSelectNewAvatar?: (img: RNImage | null) => void
+}
+
+interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
+  did: string
+  handle: string
+}
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
@@ -91,13 +109,7 @@ export function UserAvatar({
   avatar,
   moderation,
   onSelectNewAvatar,
-}: {
-  type?: Type
-  size: number
-  avatar?: string | null
-  moderation?: AvatarModeration
-  onSelectNewAvatar?: (img: RNImage | null) => void
-}) {
+}: UserAvatarProps) {
   const store = useStores()
   const pal = usePalette('default')
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -241,6 +253,32 @@ export function UserAvatar({
       <DefaultAvatar type={type} size={size} />
       {warning}
     </View>
+  )
+}
+
+export function PreviewableUserAvatar(props: PreviewableUserAvatarProps) {
+  const store = useStores()
+
+  if (isDesktopWeb) {
+    return (
+      <Link href={`/profile/${props.handle}`} title={props.handle} asAnchor>
+        <UserAvatar {...props} />
+      </Link>
+    )
+  }
+  return (
+    <Pressable
+      onPress={() =>
+        store.shell.openModal({
+          name: 'profile-preview',
+          did: props.did,
+        })
+      }
+      accessibilityRole="button"
+      accessibilityLabel={props.handle}
+      accessibilityHint="">
+      <UserAvatar {...props} />
+    </Pressable>
   )
 }
 

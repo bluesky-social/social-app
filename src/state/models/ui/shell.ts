@@ -31,6 +31,11 @@ export interface EditProfileModal {
   onUpdate?: () => void
 }
 
+export interface ProfilePreviewModal {
+  name: 'profile-preview'
+  did: string
+}
+
 export interface ServerInputModal {
   name: 'server-input'
   initialService: string
@@ -128,6 +133,7 @@ export type Modal =
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
+  | ProfilePreviewModal
 
   // Curation
   | ContentFilteringSettingsModal
