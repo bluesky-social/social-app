@@ -88,6 +88,6 @@ const styles = StyleSheet.create({
   },
   maxWidth: {
     flex: isAndroid ? 1 : undefined,
-    maxWidth: isIOS ? '80%' : undefined,
+    maxWidth: !isAndroid ? '80%' : undefined,
   },
 })
