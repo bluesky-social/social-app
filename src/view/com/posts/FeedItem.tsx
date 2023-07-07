@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {observer} from 'mobx-react-lite'
-import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri} from '@atproto/api'
 import {
@@ -21,7 +21,7 @@ import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -33,14 +33,12 @@ export const FeedItem = observer(function ({
   item,
   isThreadChild,
   isThreadParent,
-  showFollowBtn,
   ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
-  showFollowBtn?: boolean
   ignoreMuteFor?: string
 }) {
   const store = useStores()
@@ -55,7 +53,6 @@ export const FeedItem = observer(function ({
     return `/profile/${item.post.author.handle}/post/${urip.rkey}`
   }, [item.post.uri, item.post.author.handle])
   const itemTitle = `Post by ${item.post.author.handle}`
-  const authorHref = `/profile/${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
       return ''
@@ -158,40 +155,6 @@ export const FeedItem = observer(function ({
     moderation = {behavior: ModerationBehaviorCode.Show}
   }
 
-  const accessibilityActions = useMemo(
-    () => [
-      {
-        name: 'reply',
-        label: 'Reply',
-      },
-      {
-        name: 'repost',
-        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
-      },
-      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
-    ],
-    [item.post.viewer?.like, item.post.viewer?.repost],
-  )
-
-  const onAccessibilityAction = useCallback(
-    (event: AccessibilityActionEvent) => {
-      switch (event.nativeEvent.actionName) {
-        case 'like':
-          onPressToggleLike()
-          break
-        case 'reply':
-          onPressReply()
-          break
-        case 'repost':
-          onPressToggleRepost()
-          break
-        default:
-          break
-      }
-    },
-    [onPressReply, onPressToggleLike, onPressToggleRepost],
-  )
-
   if (!record || deleted) {
     return <View />
   }
@@ -201,9 +164,7 @@ export const FeedItem = observer(function ({
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}
-      accessibilityActions={accessibilityActions}
-      onAccessibilityAction={onAccessibilityAction}>
+      moderation={moderation}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -250,13 +211,13 @@ export const FeedItem = observer(function ({
       <PostSandboxWarning />
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <Link href={authorHref} title={item.post.author.handle} asAnchor>
-            <UserAvatar
-              size={52}
-              avatar={item.post.author.avatar}
-              moderation={item.moderation.avatar}
-            />
-          </Link>
+          <PreviewableUserAvatar
+            size={52}
+            did={item.post.author.did}
+            handle={item.post.author.handle}
+            avatar={item.post.author.avatar}
+            moderation={item.moderation.avatar}
+          />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
@@ -265,8 +226,6 @@ export const FeedItem = observer(function ({
             authorHasWarning={!!item.post.author.labels?.length}
             timestamp={item.post.indexedAt}
             postHref={itemHref}
-            did={item.post.author.did}
-            showFollowBtn={showFollowBtn}
           />
           {!isThreadChild && replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -393,9 +352,9 @@ const styles = StyleSheet.create({
   layout: {
     flexDirection: 'row',
     marginTop: 1,
+    gap: 10,
   },
   layoutAvi: {
-    width: 70,
     paddingLeft: 8,
   },
   layoutContent: {

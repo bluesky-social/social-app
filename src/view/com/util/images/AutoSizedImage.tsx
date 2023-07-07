@@ -64,15 +64,14 @@ export function AutoSizedImage({
         delayPressIn={DELAY_PRESS_IN}
         style={[styles.container, style]}
         accessible={true}
-        accessibilityLabel="Share image"
-        accessibilityHint="Opens ways of sharing image">
+        accessibilityRole="button"
+        accessibilityLabel={alt || 'Image'}
+        accessibilityHint="Tap to view fully">
         <Image
           style={[styles.image, {aspectRatio}]}
           source={uri}
-          accessible={true} // Must set for `accessibilityLabel` to work
+          accessible={false} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
-          accessibilityLabel={alt}
-          accessibilityHint=""
         />
         {children}
       </TouchableOpacity>

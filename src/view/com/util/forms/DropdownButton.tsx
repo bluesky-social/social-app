@@ -24,6 +24,7 @@ import {shareUrl} from 'lib/sharing'
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
+const ESTIMATED_HEADING_HEIGHT = 60
 
 export interface DropdownItemButton {
   testID?: string
@@ -34,7 +35,14 @@ export interface DropdownItemButton {
 export interface DropdownItemSeparator {
   sep: true
 }
-export type DropdownItem = DropdownItemButton | DropdownItemSeparator
+export interface DropdownItemHeading {
+  heading: true
+  label: string
+}
+export type DropdownItem =
+  | DropdownItemButton
+  | DropdownItemSeparator
+  | DropdownItemHeading
 type MaybeDropdownItem = DropdownItem | false | undefined
 
 export type DropdownButtonType = ButtonType | 'bare'
@@ -48,8 +56,11 @@ interface DropdownButtonProps {
   menuWidth?: number
   children?: React.ReactNode
   openToRight?: boolean
+  openUpwards?: boolean
   rightOffset?: number
   bottomOffset?: number
+  accessibilityLabel?: string
+  accessibilityHint?: string
 }
 
 export function DropdownButton({
@@ -61,8 +72,10 @@ export function DropdownButton({
   menuWidth,
   children,
   openToRight = false,
+  openUpwards = false,
   rightOffset = 0,
   bottomOffset = 0,
+  accessibilityLabel,
 }: PropsWithChildren<DropdownButtonProps>) {
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
@@ -88,13 +101,15 @@ export function DropdownButton({
             estimatedMenuHeight += ESTIMATED_SEP_HEIGHT
           } else if (item && isBtn(item)) {
             estimatedMenuHeight += ESTIMATED_BTN_HEIGHT
+          } else if (item && isHeading(item)) {
+            estimatedMenuHeight += ESTIMATED_HEADING_HEIGHT
           }
         }
         const newX = openToRight
           ? pageX + width + rightOffset
           : pageX + width - menuWidth
         let newY = pageY + height + bottomOffset
-        if (newY + estimatedMenuHeight > winHeight) {
+        if (openUpwards || newY + estimatedMenuHeight > winHeight) {
           newY -= estimatedMenuHeight
         }
         createDropdownMenu(
@@ -128,8 +143,8 @@ export function DropdownButton({
         hitSlop={HITSLOP}
         ref={ref1}
         accessibilityRole="button"
-        accessibilityLabel={`Opens ${numItems} options`}
-        accessibilityHint={`Opens ${numItems} options`}>
+        accessibilityLabel={accessibilityLabel || `Opens ${numItems} options`}
+        accessibilityHint="">
         {children}
       </TouchableOpacity>
     )
@@ -246,7 +261,9 @@ export function PostDropdownBtn({
       testID={testID}
       style={style}
       items={dropdownItems}
-      menuWidth={isWeb ? 220 : 200}>
+      menuWidth={isWeb ? 220 : 200}
+      accessibilityLabel="Additional post actions"
+      accessibilityHint="">
       {children}
     </DropdownButton>
   )
@@ -335,6 +352,7 @@ const DropdownItems = ({
                 key={index}
                 style={[styles.menuItem]}
                 onPress={() => onPressItem(index)}
+                accessibilityRole="button"
                 accessibilityLabel={item.label}
                 accessibilityHint={`Option ${index + 1} of ${numItems}`}>
                 {item.icon && (
@@ -351,6 +369,14 @@ const DropdownItems = ({
             return (
               <View key={index} style={[styles.separator, separatorColor]} />
             )
+          } else if (isHeading(item)) {
+            return (
+              <View style={[styles.heading, pal.border]} key={index}>
+                <Text style={[pal.text, styles.headingLabel]}>
+                  {item.label}
+                </Text>
+              </View>
+            )
           }
           return null
         })}
@@ -362,8 +388,11 @@ const DropdownItems = ({
 function isSep(item: DropdownItem): item is DropdownItemSeparator {
   return 'sep' in item && item.sep
 }
+function isHeading(item: DropdownItem): item is DropdownItemHeading {
+  return 'heading' in item && item.heading
+}
 function isBtn(item: DropdownItem): item is DropdownItemButton {
-  return !isSep(item)
+  return !isSep(item) && !isHeading(item)
 }
 
 const styles = StyleSheet.create({
@@ -397,7 +426,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   icon: {
-    marginLeft: 6,
+    marginLeft: 2,
     marginRight: 8,
   },
   label: {
@@ -406,5 +435,18 @@ const styles = StyleSheet.create({
   separator: {
     borderTopWidth: 1,
     marginVertical: 8,
+  },
+  heading: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingLeft: 15,
+    paddingRight: 20,
+    borderBottomWidth: 1,
+    marginBottom: 6,
+  },
+  headingLabel: {
+    fontSize: 18,
+    fontWeight: '500',
   },
 })

@@ -31,6 +31,11 @@ export interface EditProfileModal {
   onUpdate?: () => void
 }
 
+export interface ProfilePreviewModal {
+  name: 'profile-preview'
+  did: string
+}
+
 export interface ServerInputModal {
   name: 'server-input'
   initialService: string
@@ -128,6 +133,7 @@ export type Modal =
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
+  | ProfilePreviewModal
 
   // Curation
   | ContentFilteringSettingsModal
@@ -271,6 +277,24 @@ export class ShellUiModel {
       return true
     }
     return false
+  }
+
+  /**
+   * used to clear out any modals, eg for a navigation
+   */
+  closeAllActiveElements() {
+    if (this.isLightboxActive) {
+      this.closeLightbox()
+    }
+    while (this.isModalActive) {
+      this.closeModal()
+    }
+    if (this.isComposerActive) {
+      this.closeComposer()
+    }
+    if (this.isDrawerOpen) {
+      this.closeDrawer()
+    }
   }
 
   openDrawer() {

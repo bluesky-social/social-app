@@ -22,6 +22,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
@@ -41,7 +42,7 @@ import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isDesktopWeb, isAndroid} from 'platform/detection'
+import {isDesktopWeb, isAndroid, isIOS} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
@@ -68,6 +69,7 @@ export const ComposePost = observer(function ComposePost({
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
+  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -86,10 +88,11 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingBottom: isAndroid ? insets.bottom : 0,
+      paddingBottom:
+        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
       paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
     }),
-    [insets],
+    [insets, isKeyboardVisible],
   )
 
   // initial setup
@@ -131,6 +134,9 @@ export const ComposePost = observer(function ComposePost({
   const onPressPublish = useCallback(
     async (rt: RichText) => {
       if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
+        return
+      }
+      if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
         return
       }
 
@@ -197,8 +203,14 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const canPost = useMemo(
-    () => graphemeLength <= MAX_GRAPHEME_LENGTH,
-    [graphemeLength],
+    () =>
+      graphemeLength <= MAX_GRAPHEME_LENGTH &&
+      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
+    [
+      graphemeLength,
+      store.preferences.requireAltTextEnabled,
+      gallery.needsAltText,
+    ],
   )
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
@@ -259,6 +271,20 @@ export const ComposePost = observer(function ComposePost({
             <Text style={pal.text}>{processingState}</Text>
           </View>
         ) : undefined}
+        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+          <View style={[styles.reminderLine, pal.viewLight]}>
+            <View style={styles.errorIcon}>
+              <FontAwesomeIcon
+                icon="exclamation"
+                style={{color: colors.red4}}
+                size={10}
+              />
+            </View>
+            <Text style={[pal.text, s.flex1]}>
+              One or more images is missing alt text.
+            </Text>
+          </View>
+        )}
         {error !== '' && (
           <View style={styles.errorLine}>
             <View style={styles.errorIcon}>
@@ -391,6 +417,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     marginVertical: 6,
+  },
+  reminderLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 6,
+    marginHorizontal: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginBottom: 6,
   },
   errorIcon: {
     borderWidth: 1,

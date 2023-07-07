@@ -5,18 +5,21 @@ import {Button, ButtonType} from './Button'
 import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
 import {colors} from 'lib/styles'
+import {TypographyVariant} from 'lib/ThemeContext'
 
 export function ToggleButton({
   type = 'default-light',
   label,
   isSelected,
   style,
+  labelType,
   onPress,
 }: {
   type?: ButtonType
   label: string
   isSelected: boolean
   style?: StyleProp<ViewStyle>
+  labelType?: TypographyVariant
   onPress?: () => void
 }) {
   const theme = useTheme()
@@ -143,7 +146,7 @@ export function ToggleButton({
           />
         </View>
         {label === '' ? null : (
-          <Text type="button" style={[labelStyle, styles.label]}>
+          <Text type={labelType || 'button'} style={[labelStyle, styles.label]}>
             {label}
           </Text>
         )}

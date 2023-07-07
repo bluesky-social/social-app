@@ -5,11 +5,12 @@ import {
   GestureResponderEvent,
   Platform,
   StyleProp,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
   TextStyle,
+  TextProps,
   View,
   ViewStyle,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from 'react-native'
 import {
   useLinkProps,
@@ -22,8 +23,9 @@ import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
-import {isDesktopWeb} from 'platform/detection'
+import {isAndroid, isDesktopWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
+import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -65,6 +67,24 @@ export const Link = observer(function Link({
   )
 
   if (noFeedback) {
+    if (isAndroid) {
+      // workaround for Android not working well with left/right swipe gestures and TouchableWithoutFeedback
+      // https://github.com/callstack/react-native-pager-view/issues/424
+      return (
+        <FixedTouchableHighlight
+          testID={testID}
+          onPress={onPress}
+          // @ts-ignore web only -prf
+          href={asAnchor ? sanitizeUrl(href) : undefined}
+          accessible={accessible}
+          accessibilityRole="link"
+          {...props}>
+          <View style={style}>
+            {children ? children : <Text>{title || 'link'}</Text>}
+          </View>
+        </FixedTouchableHighlight>
+      )
+    }
     return (
       <TouchableWithoutFeedback
         testID={testID}
@@ -86,6 +106,10 @@ export const Link = observer(function Link({
     props.dataSet = props.dataSet || {}
     // @ts-ignore web only -prf
     props.dataSet.noUnderline = 1
+  }
+
+  if (title && !props.accessibilityLabel) {
+    props.accessibilityLabel = title
   }
 
   return (
@@ -121,7 +145,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines?: number
   lineHeight?: number
   dataSet?: any
-}) {
+} & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
@@ -163,6 +187,18 @@ export const TextLink = observer(function TextLink({
 /**
  * Only acts as a link on desktop web
  */
+interface DesktopWebTextLinkProps extends TextProps {
+  testID?: string
+  type?: TypographyVariant
+  style?: StyleProp<TextStyle>
+  href: string
+  text: string | JSX.Element
+  numberOfLines?: number
+  lineHeight?: number
+  accessible?: boolean
+  accessibilityLabel?: string
+  accessibilityHint?: string
+}
 export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   testID,
   type = 'md',
@@ -171,15 +207,8 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   text,
   numberOfLines,
   lineHeight,
-}: {
-  testID?: string
-  type?: TypographyVariant
-  style?: StyleProp<TextStyle>
-  href: string
-  text: string | JSX.Element
-  numberOfLines?: number
-  lineHeight?: number
-}) {
+  ...props
+}: DesktopWebTextLinkProps) {
   if (isDesktopWeb) {
     return (
       <TextLink
@@ -190,6 +219,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
         text={text}
         numberOfLines={numberOfLines}
         lineHeight={lineHeight}
+        {...props}
       />
     )
   }
@@ -199,7 +229,8 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
       type={type}
       style={style}
       numberOfLines={numberOfLines}
-      lineHeight={lineHeight}>
+      lineHeight={lineHeight}
+      {...props}>
       {text}
     </Text>
   )

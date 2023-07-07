@@ -12,6 +12,7 @@ interface TrackPropertiesMap {
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
   'Try Create Account': {}
+  'Create Account Successfully': {}
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
@@ -78,6 +79,7 @@ interface TrackPropertiesMap {
   // MENU events
   'Menu:ItemClicked': {url: string}
   'Menu:FeedbackClicked': {}
+  'Menu:HelpClicked': {}
   // MOBILE SHELL events
   'MobileShell:MyProfileButtonPressed': {}
   'MobileShell:HomeButtonPressed': {}
@@ -127,6 +129,7 @@ interface ScreenPropertiesMap {
   Feed: {}
   Notifications: {}
   Profile: {}
+  'Profile:Preview': {}
   Settings: {}
   AppPasswords: {}
   Moderation: {}

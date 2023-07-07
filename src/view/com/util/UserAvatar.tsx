@@ -16,8 +16,25 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AvatarModeration} from 'lib/labeling/types'
+import {UserPreviewLink} from './UserPreviewLink'
 
 type Type = 'user' | 'algo' | 'list'
+
+interface BaseUserAvatarProps {
+  type?: Type
+  size: number
+  avatar?: string | null
+  moderation?: AvatarModeration
+}
+
+interface UserAvatarProps extends BaseUserAvatarProps {
+  onSelectNewAvatar?: (img: RNImage | null) => void
+}
+
+interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
+  did: string
+  handle: string
+}
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
@@ -91,13 +108,7 @@ export function UserAvatar({
   avatar,
   moderation,
   onSelectNewAvatar,
-}: {
-  type?: Type
-  size: number
-  avatar?: string | null
-  moderation?: AvatarModeration
-  onSelectNewAvatar?: (img: RNImage | null) => void
-}) {
+}: UserAvatarProps) {
   const store = useStores()
   const pal = usePalette('default')
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -241,6 +252,14 @@ export function UserAvatar({
       <DefaultAvatar type={type} size={size} />
       {warning}
     </View>
+  )
+}
+
+export function PreviewableUserAvatar(props: PreviewableUserAvatarProps) {
+  return (
+    <UserPreviewLink did={props.did} handle={props.handle}>
+      <UserAvatar {...props} />
+    </UserPreviewLink>
   )
 }
 

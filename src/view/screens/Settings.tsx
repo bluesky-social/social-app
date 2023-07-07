@@ -1,8 +1,8 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Linking,
   Platform,
-  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -32,6 +32,7 @@ import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
 import {DropdownButton} from 'view/com/util/forms/DropdownButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {AccountData} from 'state/models/session'
@@ -40,7 +41,6 @@ import {NavigationProp} from 'lib/routes/types'
 import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
-import {isColorMode} from 'state/models/ui/shell'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
 
@@ -48,6 +48,7 @@ import {reset as resetNavigation} from '../../Navigation'
 // remove after backend testing finishes
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
+import {STATUS_PAGE_URL} from 'lib/constants'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -171,6 +172,26 @@ export const SettingsScreen = withAuthRequired(
         name: 'preferences-home-feed',
       })
     }, [store])
+
+    const onPressAppPasswords = React.useCallback(() => {
+      navigation.navigate('AppPasswords')
+    }, [navigation])
+
+    const onPressSystemLog = React.useCallback(() => {
+      navigation.navigate('Log')
+    }, [navigation])
+
+    const onPressStorybook = React.useCallback(() => {
+      navigation.navigate('Debug')
+    }, [navigation])
+
+    const onPressSavedFeeds = React.useCallback(() => {
+      navigation.navigate('SavedFeeds')
+    }, [navigation])
+
+    const onPressStatusPage = React.useCallback(() => {
+      Linking.openURL(STATUS_PAGE_URL)
+    }, [])
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
@@ -314,36 +335,46 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
 
           <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Accessibility
+          </Text>
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label="Require alt text on images"
+              labelType="lg"
+              isSelected={store.preferences.requireAltTextEnabled}
+              onPress={store.preferences.toggleRequireAltTextEnabled}
+            />
+          </View>
+
+          <View style={styles.spacer20} />
+
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Appearance
           </Text>
           <View>
             <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
               <SelectableBtn
-                current={store.shell.colorMode}
-                value="system"
+                selected={store.shell.colorMode === 'system'}
                 label="System"
                 left
-                onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
-                }
+                onSelect={() => store.shell.setColorMode('system')}
+                accessibilityHint="Set color theme to system setting"
               />
               <SelectableBtn
-                current={store.shell.colorMode}
-                value="light"
+                selected={store.shell.colorMode === 'light'}
                 label="Light"
-                onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
-                }
+                onSelect={() => store.shell.setColorMode('light')}
+                accessibilityHint="Set color theme to light"
               />
               <SelectableBtn
-                current={store.shell.colorMode}
-                value="dark"
+                selected={store.shell.colorMode === 'dark'}
                 label="Dark"
                 right
-                onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
-                }
+                onSelect={() => store.shell.setColorMode('dark')}
+                accessibilityHint="Set color theme to dark"
               />
             </View>
           </View>
@@ -369,10 +400,13 @@ export const SettingsScreen = withAuthRequired(
               Home Feed Preferences
             </Text>
           </TouchableOpacity>
-          <Link
+          <TouchableOpacity
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            href="/settings/app-passwords">
+            onPress={onPressAppPasswords}
+            accessibilityRole="button"
+            accessibilityHint="Open app password settings"
+            accessibilityLabel="Opens the app password settings page">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="lock"
@@ -382,13 +416,13 @@ export const SettingsScreen = withAuthRequired(
             <Text type="lg" style={pal.text}>
               App passwords
             </Text>
-          </Link>
-          <Link
+          </TouchableOpacity>
+          <TouchableOpacity
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="Saved Feeds"
             accessibilityLabel="Opens screen with all saved feeds"
-            href="/settings/saved-feeds">
+            onPress={onPressSavedFeeds}>
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="satellite-dish"
@@ -398,7 +432,7 @@ export const SettingsScreen = withAuthRequired(
             <Text type="lg" style={pal.text}>
               Saved Feeds
             </Text>
-          </Link>
+          </TouchableOpacity>
           <TouchableOpacity
             testID="contentLanguagesBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
@@ -459,14 +493,16 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             Developer Tools
           </Text>
-          <Link
+          <TouchableOpacity
             style={[pal.view, styles.linkCardNoIcon]}
-            href="/sys/log"
-            title="System log">
+            onPress={onPressSystemLog}
+            accessibilityRole="button"
+            accessibilityHint="Open system log"
+            accessibilityLabel="Opens the system log page">
             <Text type="lg" style={pal.text}>
               System log
             </Text>
-          </Link>
+          </TouchableOpacity>
           {isDesktopWeb ? (
             <ToggleButton
               type="default-light"
@@ -477,31 +513,47 @@ export const SettingsScreen = withAuthRequired(
           ) : null}
           {__DEV__ ? (
             <>
-              <Link
+              <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
-                href="/sys/debug"
-                title="Debug tools">
+                onPress={onPressStorybook}
+                accessibilityRole="button"
+                accessibilityHint="Open storybook page"
+                accessibilityLabel="Opens the storybook page">
                 <Text type="lg" style={pal.text}>
                   Storybook
                 </Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetPreferences}
-                title="Debug tools">
+                accessibilityRole="button"
+                accessibilityHint="Reset preferences"
+                accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </>
           ) : null}
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressBuildInfo}>
-            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+          <View style={[styles.footer]}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={onPressBuildInfo}>
+              <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+                Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+              </Text>
+            </TouchableOpacity>
+            <Text type="sm" style={[pal.textLight]}>
+              &middot; &nbsp;
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={onPressStatusPage}>
+              <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+                Status page
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View style={s.footerSpacer} />
         </ScrollView>
       </View>
@@ -530,45 +582,6 @@ function AccountDropdownBtn({handle}: {handle: string}) {
         />
       </DropdownButton>
     </View>
-  )
-}
-
-interface SelectableBtnProps {
-  current: string
-  value: string
-  label: string
-  left?: boolean
-  right?: boolean
-  onChange: (v: string) => void
-}
-
-function SelectableBtn({
-  current,
-  value,
-  label,
-  left,
-  right,
-  onChange,
-}: SelectableBtnProps) {
-  const pal = usePalette('default')
-  const palPrimary = usePalette('inverted')
-  return (
-    <Pressable
-      style={[
-        styles.selectableBtn,
-        left && styles.selectableBtnLeft,
-        right && styles.selectableBtnRight,
-        pal.border,
-        current === value ? palPrimary.view : pal.view,
-      ]}
-      onPress={() => onChange(value)}
-      accessibilityRole="button"
-      accessibilityLabel={value}
-      accessibilityHint={`Set color theme to  ${value}`}>
-      <Text style={current === value ? palPrimary.text : pal.text}>
-        {label}
-      </Text>
-    </Pressable>
   )
 }
 
@@ -608,6 +621,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginBottom: 1,
   },
+  toggleCard: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    marginBottom: 1,
+  },
   avi: {
     marginRight: 12,
   },
@@ -621,7 +639,6 @@ const styles = StyleSheet.create({
   },
   buildInfo: {
     paddingVertical: 8,
-    paddingHorizontal: 18,
   },
 
   colorModeText: {
@@ -631,25 +648,6 @@ const styles = StyleSheet.create({
 
   selectableBtns: {
     flexDirection: 'row',
-  },
-  selectableBtn: {
-    flex: isDesktopWeb ? undefined : 1,
-    width: isDesktopWeb ? 100 : undefined,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  selectableBtnLeft: {
-    borderTopLeftRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderLeftWidth: 1,
-  },
-  selectableBtnRight: {
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
   },
 
   btn: {
@@ -663,5 +661,11 @@ const styles = StyleSheet.create({
   },
   toggleBtn: {
     paddingHorizontal: 0,
+  },
+  footer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 18,
   },
 })

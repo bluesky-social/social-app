@@ -109,6 +109,8 @@ function LightboxInner({
             accessibilityIgnoresInvertColors
             source={imgs[index]}
             style={styles.image}
+            accessibilityLabel={imgs[index].alt}
+            accessibilityHint=""
           />
           {canGoLeft && (
             <TouchableOpacity

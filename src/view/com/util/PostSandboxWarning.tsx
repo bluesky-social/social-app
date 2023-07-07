@@ -10,7 +10,10 @@ export function PostSandboxWarning() {
   if (store.session.isSandbox) {
     return (
       <View style={styles.container}>
-        <Text type="title-2xl" style={[pal.text, styles.text]}>
+        <Text
+          type="title-2xl"
+          style={[pal.text, styles.text]}
+          accessible={false}>
           SANDBOX
         </Text>
       </View>

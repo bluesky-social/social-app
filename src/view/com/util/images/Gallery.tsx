@@ -34,7 +34,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         accessibilityRole="button"
-        accessibilityLabel="View image"
+        accessibilityLabel={image.alt || 'Image'}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
@@ -47,7 +47,9 @@ export const GalleryItem: FC<GalleryItemProps> = ({
       </TouchableOpacity>
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
-          <Text style={styles.alt}>ALT</Text>
+          <Text style={styles.alt} accessible={false}>
+            ALT
+          </Text>
         </View>
       )}
     </View>

@@ -28,7 +28,6 @@ import {CogIcon} from 'lib/icons'
 export const MultiFeed = observer(function Feed({
   multifeed,
   style,
-  showPostFollowBtn,
   scrollElRef,
   onScroll,
   scrollEventThrottle,
@@ -38,7 +37,6 @@ export const MultiFeed = observer(function Feed({
 }: {
   multifeed: PostsMultiFeedModel
   style?: StyleProp<ViewStyle>
-  showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
@@ -105,9 +103,7 @@ export const MultiFeed = observer(function Feed({
           </View>
         )
       } else if (item.type === 'feed-slice') {
-        return (
-          <FeedSlice slice={item.slice} showFollowBtn={showPostFollowBtn} />
-        )
+        return <FeedSlice slice={item.slice} />
       } else if (item.type === 'feed-loading') {
         return <PostFeedLoadingPlaceholder />
       } else if (item.type === 'feed-error') {
@@ -139,10 +135,10 @@ export const MultiFeed = observer(function Feed({
       }
       return null
     },
-    [showPostFollowBtn, pal],
+    [pal],
   )
 
-  const FeedFooter = React.useCallback(
+  const ListFooter = React.useCallback(
     () =>
       multifeed.isLoading && !isRefreshing ? (
         <View style={styles.loadMore}>
@@ -154,6 +150,17 @@ export const MultiFeed = observer(function Feed({
     [multifeed.isLoading, isRefreshing, pal],
   )
 
+  const ListHeader = React.useCallback(() => {
+    return (
+      <Link style={[styles.footerLink, pal.viewLight]} href="/search/feeds">
+        <FontAwesomeIcon icon="search" size={18} color={pal.colors.text} />
+        <Text type="xl-medium" style={pal.text}>
+          Discover new feeds
+        </Text>
+      </Link>
+    )
+  }, [pal])
+
   return (
     <View testID={testID} style={style}>
       {multifeed.items.length > 0 && (
@@ -163,7 +170,8 @@ export const MultiFeed = observer(function Feed({
           data={multifeed.items}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
-          ListFooterComponent={FeedFooter}
+          ListFooterComponent={ListFooter}
+          ListHeaderComponent={ListHeader}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -237,7 +245,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     marginHorizontal: 8,
-    marginBottom: 8,
+    marginVertical: 8,
     gap: 8,
   },
   loadMore: {

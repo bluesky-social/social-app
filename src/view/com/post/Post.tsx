@@ -1,6 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState, useMemo} from 'react'
 import {
-  AccessibilityActionEvent,
   ActivityIndicator,
   Linking,
   StyleProp,
@@ -26,11 +25,11 @@ import {ImageHider} from '../util/moderation/ImageHider'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getTranslatorLink} from '../../../locale/helpers'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 
 export const Post = observer(function Post({
   uri,
@@ -128,13 +127,21 @@ const PostLoaded = observer(
     const itemUrip = new AtUri(item.post.uri)
     const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
     const itemTitle = `Post by ${item.post.author.handle}`
-    const authorHref = `/profile/${item.post.author.handle}`
-    const authorTitle = item.post.author.handle
     let replyAuthorDid = ''
     if (record.reply) {
       const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
       replyAuthorDid = urip.hostname
     }
+
+    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+    const needsTranslation = useMemo(
+      () =>
+        store.preferences.contentLanguages.length > 0 &&
+        !isPostInLanguage(item.post, store.preferences.contentLanguages),
+      [item.post, store.preferences.contentLanguages],
+    )
+
     const onPressReply = React.useCallback(() => {
       store.shell.openComposer({
         replyTo: {
@@ -167,9 +174,6 @@ const PostLoaded = observer(
       Toast.show('Copied to clipboard')
     }, [record])
 
-    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
-
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(translatorUrl)
     }, [translatorUrl])
@@ -200,57 +204,21 @@ const PostLoaded = observer(
       )
     }, [item, setDeleted, store])
 
-    const accessibilityActions = useMemo(
-      () => [
-        {
-          name: 'reply',
-          label: 'Reply',
-        },
-        {
-          name: 'repost',
-          label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
-        },
-        {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
-      ],
-      [item.post.viewer?.like, item.post.viewer?.repost],
-    )
-
-    const onAccessibilityAction = useCallback(
-      (event: AccessibilityActionEvent) => {
-        switch (event.nativeEvent.actionName) {
-          case 'like':
-            onPressToggleLike()
-            break
-          case 'reply':
-            onPressReply()
-            break
-          case 'repost':
-            onPressToggleRepost()
-            break
-          default:
-            break
-        }
-      },
-      [onPressReply, onPressToggleLike, onPressToggleRepost],
-    )
-
     return (
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        moderation={item.moderation.list}
-        accessibilityActions={accessibilityActions}
-        onAccessibilityAction={onAccessibilityAction}>
+        moderation={item.moderation.list}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle} asAnchor>
-              <UserAvatar
-                size={52}
-                avatar={item.post.author.avatar}
-                moderation={item.moderation.avatar}
-              />
-            </Link>
+            <PreviewableUserAvatar
+              size={52}
+              did={item.post.author.did}
+              handle={item.post.author.handle}
+              avatar={item.post.author.avatar}
+              moderation={item.moderation.avatar}
+            />
           </View>
           <View style={styles.layoutContent}>
             <PostMeta
@@ -259,7 +227,6 @@ const PostLoaded = observer(
               authorHasWarning={!!item.post.author.labels?.length}
               timestamp={item.post.indexedAt}
               postHref={itemHref}
-              did={item.post.author.did}
             />
             {replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -300,6 +267,15 @@ const PostLoaded = observer(
               <ImageHider moderation={item.moderation.list} style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
               </ImageHider>
+              {needsTranslation && (
+                <View style={[pal.borderDark, styles.translateLink]}>
+                  <Link href={translatorUrl} title="Translate">
+                    <Text type="sm" style={pal.link}>
+                      Translate this post
+                    </Text>
+                  </Link>
+                </View>
+              )}
             </ContentHider>
             <PostCtrls
               itemUri={itemUri}
@@ -356,6 +332,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+  },
+  translateLink: {
+    marginBottom: 12,
   },
   replyLine: {
     position: 'absolute',

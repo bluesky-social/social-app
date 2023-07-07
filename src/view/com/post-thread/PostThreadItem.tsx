@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
-import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {AtUri, AppBskyFeedDefs} from '@atproto/api'
 import {
@@ -13,7 +13,7 @@ import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
 import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {ago, niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -138,40 +138,6 @@ export const PostThreadItem = observer(function PostThreadItem({
     )
   }, [item, store])
 
-  const accessibilityActions = useMemo(
-    () => [
-      {
-        name: 'reply',
-        label: 'Reply',
-      },
-      {
-        name: 'repost',
-        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
-      },
-      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
-    ],
-    [item.post.viewer?.like, item.post.viewer?.repost],
-  )
-
-  const onAccessibilityAction = useCallback(
-    (event: AccessibilityActionEvent) => {
-      switch (event.nativeEvent.actionName) {
-        case 'like':
-          onPressToggleLike()
-          break
-        case 'reply':
-          onPressReply()
-          break
-        case 'repost':
-          onPressToggleRepost()
-          break
-        default:
-          break
-      }
-    },
-    [onPressReply, onPressToggleLike, onPressToggleRepost],
-  )
-
   if (!record) {
     return <ErrorMessage message="Invalid or unsupported post record" />
   }
@@ -193,28 +159,21 @@ export const PostThreadItem = observer(function PostThreadItem({
       <PostHider
         testID={`postThreadItem-by-${item.post.author.handle}`}
         style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
-        moderation={item.moderation.thread}
-        accessibilityActions={accessibilityActions}
-        onAccessibilityAction={onAccessibilityAction}>
+        moderation={item.moderation.thread}>
         <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link
-              href={authorHref}
-              title={authorTitle}
-              asAnchor
-              accessibilityLabel={`${item.post.author.handle}'s avatar`}
-              accessibilityHint="">
-              <UserAvatar
-                size={52}
-                avatar={item.post.author.avatar}
-                moderation={item.moderation.avatar}
-              />
-            </Link>
+            <PreviewableUserAvatar
+              size={52}
+              did={item.post.author.did}
+              handle={item.post.author.handle}
+              avatar={item.post.author.avatar}
+              moderation={item.moderation.avatar}
+            />
           </View>
           <View style={styles.layoutContent}>
             <View style={[styles.meta, styles.metaExpandedLine1]}>
-              <View style={[s.flexRow, s.alignBaseline]}>
+              <View style={[s.flexRow]}>
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
@@ -369,9 +328,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             pal.view,
             item._showParentReplyLine && styles.noTopBorder,
           ]}
-          moderation={item.moderation.thread}
-          accessibilityActions={accessibilityActions}
-          onAccessibilityAction={onAccessibilityAction}>
+          moderation={item.moderation.thread}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -391,13 +348,13 @@ export const PostThreadItem = observer(function PostThreadItem({
           <PostSandboxWarning />
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
-              <Link href={authorHref} title={authorTitle} asAnchor>
-                <UserAvatar
-                  size={52}
-                  avatar={item.post.author.avatar}
-                  moderation={item.moderation.avatar}
-                />
-              </Link>
+              <PreviewableUserAvatar
+                size={52}
+                did={item.post.author.did}
+                handle={item.post.author.handle}
+                avatar={item.post.author.avatar}
+                moderation={item.moderation.avatar}
+              />
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
@@ -406,7 +363,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 authorHasWarning={!!item.post.author.labels?.length}
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
-                did={item.post.author.did}
               />
               <ContentHider
                 moderation={item.moderation.thread}

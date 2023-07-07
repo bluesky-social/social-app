@@ -145,7 +145,7 @@ export class NotificationsFeedItemModel {
   }
 
   get isLike() {
-    return this.reason === 'like'
+    return this.reason === 'like' && !this.isCustomFeedLike // the reason property for custom feed likes is also 'like'
   }
 
   get isRepost() {
@@ -166,6 +166,12 @@ export class NotificationsFeedItemModel {
 
   get isFollow() {
     return this.reason === 'follow'
+  }
+
+  get isCustomFeedLike() {
+    return (
+      this.reason === 'like' && this.reasonSubject?.includes('feed.generator')
+    )
   }
 
   get needsAdditionalData() {

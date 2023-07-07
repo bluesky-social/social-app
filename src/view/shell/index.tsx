@@ -61,7 +61,6 @@ const ShellInner = observer(() => {
           </Drawer>
         </ErrorBoundary>
       </View>
-      <Lightbox />
       <Composer
         active={store.shell.isComposerActive}
         winHeight={winDim.height}
@@ -70,6 +69,7 @@ const ShellInner = observer(() => {
         quote={store.shell.composerOpts?.quote}
       />
       <ModalsContainer />
+      <Lightbox />
     </>
   )
 })

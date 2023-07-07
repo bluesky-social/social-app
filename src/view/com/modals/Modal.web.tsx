@@ -8,6 +8,7 @@ import {isMobileWeb} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
+import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './report/ReportPost'
 import * as ReportAccountModal from './report/ReportAccount'
@@ -68,6 +69,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ConfirmModal.Component {...modal} />
   } else if (modal.name === 'edit-profile') {
     element = <EditProfileModal.Component {...modal} />
+  } else if (modal.name === 'profile-preview') {
+    element = <ProfilePreviewModal.Component {...modal} />
   } else if (modal.name === 'server-input') {
     element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report-post') {
