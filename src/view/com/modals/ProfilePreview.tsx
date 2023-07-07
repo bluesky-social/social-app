@@ -19,12 +19,12 @@ export const Component = observer(({did}: {did: string}) => {
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
   const [model] = useState(new ProfileModel(store, {actor: did}))
-  const {track} = useAnalytics()
+  const {screen} = useAnalytics()
 
   useEffect(() => {
-    track('Profile:Preview')
+    screen('Profile:Preview')
     model.setup()
-  }, [model, track])
+  }, [model, screen])
 
   const onPressViewProfile = useCallback(() => {
     navigation.dispatch(StackActions.push('Profile', {name: model.handle}))

@@ -48,7 +48,6 @@ interface TrackPropertiesMap {
   'FeedItem:PostDelete': {} // CAN BE SERVER
   'FeedItem:ThreadMute': {} // CAN BE SERVER
   // PROFILE events
-  'Profile:Preview': {}
   'Profile:Follow': {
     username: string
   }
@@ -130,6 +129,7 @@ interface ScreenPropertiesMap {
   Feed: {}
   Notifications: {}
   Profile: {}
+  'Profile:Preview': {}
   Settings: {}
   AppPasswords: {}
   Moderation: {}
