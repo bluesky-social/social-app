@@ -197,12 +197,19 @@ export const DrawerContent = observer(() => {
             />
           )}
           {!store.session.hasSession ? (
-            <NavItem
-              href="/signin"
-              count={store.me.notifications.unreadCountLabel}
-              label="Sign in"
+            // <NavItem
+            //   href="/signin"
+            //   count={store.me.notifications.unreadCountLabel}
+            //   label="Sign in"
+            //   icon={<UserIcon />}
+            //   iconFilled={<UserIconSolid />}
+            // />
+            <MenuItem
               icon={<UserIcon />}
-              iconFilled={<UserIconSolid />}
+              label="Sign in"
+              accessibilityLabel="Home"
+              accessibilityHint=""
+              onPress={() => navigation.navigate('SignIn')}
             />
           ) : (
             <MenuItem
