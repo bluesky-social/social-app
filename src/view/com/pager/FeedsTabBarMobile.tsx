@@ -30,7 +30,7 @@ export const FeedsTabBar = observer(
       }).start()
     }, [interp, store.shell.minimalShellMode])
     const transform = {
-      transform: [{translateY: Animated.multiply(interp, -100)}],
+      transform: [{translateY: Animated.multiply(interp, -140)}],
     }
 
     const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
