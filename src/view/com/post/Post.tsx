@@ -127,8 +127,6 @@ const PostLoaded = observer(
     const itemUrip = new AtUri(item.post.uri)
     const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
     const itemTitle = `Post by ${item.post.author.handle}`
-    const authorHref = `/profile/${item.post.author.handle}`
-    const authorTitle = item.post.author.handle
     let replyAuthorDid = ''
     if (record.reply) {
       const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)

@@ -7,7 +7,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isAndroid, isIOS} from 'platform/detection'
+import {isAndroid} from 'platform/detection'
 
 interface PostMetaOpts {
   authorAvatar?: string

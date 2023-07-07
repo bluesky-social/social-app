@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
@@ -12,13 +12,11 @@ import {
 import {useStores} from 'state/index'
 import {colors} from 'lib/styles'
 import {DropdownButton} from './forms/DropdownButton'
-import {Link} from './Link'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AvatarModeration} from 'lib/labeling/types'
 import {UserPreviewLink} from './UserPreviewLink'
-import {isDesktopWeb} from 'platform/detection'
 
 type Type = 'user' | 'algo' | 'list'
 
