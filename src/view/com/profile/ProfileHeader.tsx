@@ -6,10 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {BlurView} from '../util/BlurView'
 import {ProfileModel} from 'state/models/content/profile'
