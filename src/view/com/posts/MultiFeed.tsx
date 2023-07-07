@@ -28,7 +28,6 @@ import {CogIcon} from 'lib/icons'
 export const MultiFeed = observer(function Feed({
   multifeed,
   style,
-  showPostFollowBtn,
   scrollElRef,
   onScroll,
   scrollEventThrottle,
@@ -38,7 +37,6 @@ export const MultiFeed = observer(function Feed({
 }: {
   multifeed: PostsMultiFeedModel
   style?: StyleProp<ViewStyle>
-  showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
@@ -105,9 +103,7 @@ export const MultiFeed = observer(function Feed({
           </View>
         )
       } else if (item.type === 'feed-slice') {
-        return (
-          <FeedSlice slice={item.slice} showFollowBtn={showPostFollowBtn} />
-        )
+        return <FeedSlice slice={item.slice} />
       } else if (item.type === 'feed-loading') {
         return <PostFeedLoadingPlaceholder />
       } else if (item.type === 'feed-error') {
@@ -139,7 +135,7 @@ export const MultiFeed = observer(function Feed({
       }
       return null
     },
-    [showPostFollowBtn, pal],
+    [pal],
   )
 
   const ListFooter = React.useCallback(

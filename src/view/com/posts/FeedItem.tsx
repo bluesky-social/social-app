@@ -33,14 +33,12 @@ export const FeedItem = observer(function ({
   item,
   isThreadChild,
   isThreadParent,
-  showFollowBtn,
   ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
-  showFollowBtn?: boolean
   ignoreMuteFor?: string
 }) {
   const store = useStores()
@@ -354,9 +352,9 @@ const styles = StyleSheet.create({
   layout: {
     flexDirection: 'row',
     marginTop: 1,
+    gap: 10,
   },
   layoutAvi: {
-    width: 70,
     paddingLeft: 8,
   },
   layoutContent: {

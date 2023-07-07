@@ -28,7 +28,6 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 export const Feed = observer(function Feed({
   feed,
   style,
-  showPostFollowBtn,
   scrollElRef,
   onPressTryAgain,
   onScroll,
@@ -41,7 +40,6 @@ export const Feed = observer(function Feed({
 }: {
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
-  showPostFollowBtn?: boolean
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
@@ -138,15 +136,9 @@ export const Feed = observer(function Feed({
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
-      return <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
+      return <FeedSlice slice={item} />
     },
-    [
-      feed,
-      onPressTryAgain,
-      onPressRetryLoadMore,
-      showPostFollowBtn,
-      renderEmptyState,
-    ],
+    [feed, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
   )
 
   const FeedFooter = React.useCallback(
