@@ -145,12 +145,14 @@ const ProfileHeaderLoaded = observer(
     const onPressFollowers = React.useCallback(() => {
       track('ProfileHeader:FollowersButtonClicked')
       navigate('ProfileFollowers', {name: view.handle})
-    }, [track, view])
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
 
     const onPressFollows = React.useCallback(() => {
       track('ProfileHeader:FollowsButtonClicked')
       navigate('ProfileFollows', {name: view.handle})
-    }, [track, view])
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
 
     const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
