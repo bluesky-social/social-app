@@ -36,27 +36,29 @@ export const Component = observer(({did}: {did: string}) => {
       <View style={styles.headerWrapper}>
         <ProfileHeader view={model} hideBackButton onRefreshAll={() => {}} />
       </View>
-      <View style={[styles.buttons, pal.border, pal.view]}>
-        <Button
-          type="inverted"
-          style={[styles.button, styles.buttonWide]}
-          onPress={onPressViewProfile}
-          accessibilityLabel="View profile"
-          accessibilityHint="">
-          <Text type="button-lg" style={palInverted.text}>
-            View Profile
-          </Text>
-        </Button>
-        <Button
-          type="default"
-          style={styles.button}
-          onPress={() => store.shell.closeModal()}
-          accessibilityLabel="Close this preview"
-          accessibilityHint="">
-          <Text type="button-lg" style={pal.text}>
-            Close
-          </Text>
-        </Button>
+      <View style={[styles.buttonsContainer, pal.view]}>
+        <View style={styles.buttons}>
+          <Button
+            type="inverted"
+            style={[styles.button, styles.buttonWide]}
+            onPress={onPressViewProfile}
+            accessibilityLabel="View profile"
+            accessibilityHint="">
+            <Text type="button-lg" style={palInverted.text}>
+              View Profile
+            </Text>
+          </Button>
+          <Button
+            type="default"
+            style={styles.button}
+            onPress={() => store.shell.closeModal()}
+            accessibilityLabel="Close this preview"
+            accessibilityHint="">
+            <Text type="button-lg" style={pal.text}>
+              Close
+            </Text>
+          </Button>
+        </View>
       </View>
     </View>
   )
@@ -64,15 +66,16 @@ export const Component = observer(({did}: {did: string}) => {
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    height: 450,
+    height: 440,
+  },
+  buttonsContainer: {
+    height: 120,
   },
   buttons: {
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 14,
-    paddingTop: 12,
-    paddingBottom: 24,
-    borderTopWidth: 1,
+    paddingTop: 16,
   },
   button: {
     flex: 2,
