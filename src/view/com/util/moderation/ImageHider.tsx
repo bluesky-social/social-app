@@ -2,29 +2,25 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
-import {BlurView} from '../BlurView'
 import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
-import {isAndroid} from 'platform/detection'
+import {isDesktopWeb} from 'platform/detection'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 
 export function ImageHider({
   testID,
   moderation,
   style,
-  containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationBehavior
   style?: StyleProp<ViewStyle>
-  containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const onPressShow = React.useCallback(() => {
-    setOverride(true)
-  }, [setOverride])
-  const onPressHide = React.useCallback(() => {
-    setOverride(false)
+  const onPressToggle = React.useCallback(() => {
+    setOverride(v => !v)
   }, [setOverride])
 
   if (moderation.behavior === ModerationBehaviorCode.Hide) {
@@ -40,89 +36,45 @@ export function ImageHider({
   }
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <View testID={testID} style={style}>
-        {children}
-      </View>
-      {override ? (
+    <View testID={testID} style={style}>
+      <View style={[styles.cover, pal.viewLight]}>
         <Pressable
-          onPress={onPressHide}
-          style={[styles.hideBtn, pal.view]}
-          accessibilityLabel="Hide image"
-          accessibilityHint="Rehides the image">
+          onPress={onPressToggle}
+          style={[styles.toggleBtn]}
+          accessibilityLabel="Show image"
+          accessibilityHint="">
+          <FontAwesomeIcon
+            icon={override ? 'eye' : ['far', 'eye-slash']}
+            size={24}
+            style={pal.text as FontAwesomeIconStyle}
+          />
+          <Text type="lg" style={pal.text}>
+            {moderation.reason || 'Content warning'}
+          </Text>
+          <View style={styles.flex1} />
           <Text type="xl-bold" style={pal.link}>
-            Hide
+            {override ? 'Hide' : 'Show'}
           </Text>
         </Pressable>
-      ) : (
-        <>
-          {isAndroid ? (
-            /* android has an issue that breaks the blurview */
-            /* see https://github.com/Kureev/react-native-blur/issues/486 */
-            <View style={[pal.viewLight, styles.overlay, styles.coverView]} />
-          ) : (
-            <BlurView
-              style={[styles.overlay, styles.blurView]}
-              blurType="light"
-              blurAmount={100}
-              reducedTransparencyFallbackColor="white"
-            />
-          )}
-          <View style={[styles.overlay, styles.info]}>
-            <Pressable
-              onPress={onPressShow}
-              style={[styles.showBtn, pal.view]}
-              accessibilityLabel="Show image"
-              accessibilityHint="Shows image hidden based on your moderation settings">
-              <Text type="xl" style={pal.text}>
-                {moderation.reason || 'Content warning'}
-              </Text>
-              <Text type="xl-bold" style={pal.link}>
-                Show
-              </Text>
-            </Pressable>
-          </View>
-        </>
-      )}
+      </View>
+      {override && children}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    marginBottom: 10,
-  },
-  overlay: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-  },
-  blurView: {
+  cover: {
     borderRadius: 8,
+    marginTop: 4,
   },
-  coverView: {
-    borderRadius: 8,
-  },
-  info: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  showBtn: {
+  toggleBtn: {
     flexDirection: 'row',
     gap: 8,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 24,
+    alignItems: 'center',
+    paddingHorizontal: isDesktopWeb ? 24 : 20,
+    paddingVertical: isDesktopWeb ? 20 : 18,
   },
-  hideBtn: {
-    position: 'absolute',
-    left: 8,
-    bottom: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 8,
+  flex1: {
+    flex: 1,
   },
 })
