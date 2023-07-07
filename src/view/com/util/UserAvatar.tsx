@@ -17,6 +17,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AvatarModeration} from 'lib/labeling/types'
+import {UserPreviewLink} from './UserPreviewLink'
 import {isDesktopWeb} from 'platform/detection'
 
 type Type = 'user' | 'algo' | 'list'
@@ -257,28 +258,10 @@ export function UserAvatar({
 }
 
 export function PreviewableUserAvatar(props: PreviewableUserAvatarProps) {
-  const store = useStores()
-
-  if (isDesktopWeb) {
-    return (
-      <Link href={`/profile/${props.handle}`} title={props.handle} asAnchor>
-        <UserAvatar {...props} />
-      </Link>
-    )
-  }
   return (
-    <Pressable
-      onPress={() =>
-        store.shell.openModal({
-          name: 'profile-preview',
-          did: props.did,
-        })
-      }
-      accessibilityRole="button"
-      accessibilityLabel={props.handle}
-      accessibilityHint="">
+    <UserPreviewLink did={props.did} handle={props.handle}>
       <UserAvatar {...props} />
-    </Pressable>
+    </UserPreviewLink>
   )
 }
 

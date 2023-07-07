@@ -22,7 +22,8 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
 import {HeartIconSolid} from 'lib/icons'
 import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
+import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
+import {UserPreviewLink} from '../util/UserPreviewLink'
 import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
@@ -42,6 +43,7 @@ const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
   href: string
+  did: string
   handle: string
   displayName?: string
   avatar?: string
@@ -91,6 +93,7 @@ export const FeedItem = observer(function ({
     return [
       {
         href: `/profile/${item.author.handle}`,
+        did: item.author.did,
         handle: item.author.handle,
         displayName: item.author.displayName,
         avatar: item.author.avatar,
@@ -102,6 +105,7 @@ export const FeedItem = observer(function ({
       ...(item.additional?.map(({author}) => {
         return {
           href: `/profile/${author.handle}`,
+          did: author.did,
           handle: author.handle,
           displayName: author.displayName,
           avatar: author.avatar,
@@ -282,17 +286,13 @@ function CondensedAuthorsList({
   if (authors.length === 1) {
     return (
       <View style={styles.avis}>
-        <Link
-          style={s.mr5}
-          href={authors[0].href}
-          title={`@${authors[0].handle}`}
-          asAnchor>
-          <UserAvatar
-            size={35}
-            avatar={authors[0].avatar}
-            moderation={authors[0].moderation.avatar}
-          />
-        </Link>
+        <PreviewableUserAvatar
+          size={35}
+          did={authors[0].did}
+          handle={authors[0].handle}
+          avatar={authors[0].avatar}
+          moderation={authors[0].moderation.avatar}
+        />
       </View>
     )
   }
@@ -356,12 +356,11 @@ function ExpandedAuthorsList({
         visible ? s.mb10 : undefined,
       ]}>
       {authors.map(author => (
-        <Link
-          key={author.href}
-          href={author.href}
-          title={sanitizeDisplayName(author.displayName || author.handle)}
-          style={styles.expandedAuthor}
-          asAnchor>
+        <UserPreviewLink
+          key={author.did}
+          did={author.did}
+          handle={author.handle}
+          style={styles.expandedAuthor}>
           <View style={styles.expandedAuthorAvi}>
             <UserAvatar
               size={35}
@@ -382,7 +381,7 @@ function ExpandedAuthorsList({
               </Text>
             </Text>
           </View>
-        </Link>
+        </UserPreviewLink>
       ))}
     </Animated.View>
   )
