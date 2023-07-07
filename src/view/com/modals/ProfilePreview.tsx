@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 14,
     paddingTop: 12,
+    paddingBottom: 24,
     borderTopWidth: 1,
   },
   button: {
