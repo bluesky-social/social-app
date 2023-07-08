@@ -297,6 +297,7 @@ const ProfileHeaderLoaded = observer(
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
     const following = formatCount(view.followsCount)
     const followers = formatCount(view.followersCount)
+    const followersYouKnow = formatCount(view.followersCount)
     const pluralizedFollowers = pluralize(view.followersCount, 'follower')
 
     return (
@@ -412,6 +413,27 @@ const ProfileHeaderLoaded = observer(
                     {pluralizedFollowers}
                   </Text>
                 </TouchableOpacity>
+                {view.followersCount > 0 && (
+                  <>
+                    <TouchableOpacity
+                      testID="profileHeaderFollowersYouKnowButton"
+                      style={[s.flexRow, s.mr10]}
+                      onPress={onPressFollowers}
+                      accessibilityRole="button"
+                      accessibilityLabel={`(${followersYouKnow} you know)`}
+                      accessibilityHint={'Opens followers you know list'}>
+                      <Text type="md" style={[pal.textLight]}>
+                        (
+                      </Text>
+                      <Text type="md" style={[s.bold, s.mr2, pal.text]}>
+                        {followersYouKnow}
+                      </Text>
+                      <Text type="md" style={[pal.textLight]}>
+                        you know)
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
                 <TouchableOpacity
                   testID="profileHeaderFollowsButton"
                   style={[s.flexRow, s.mr10]}
