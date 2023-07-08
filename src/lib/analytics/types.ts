@@ -57,6 +57,7 @@ interface TrackPropertiesMap {
   // PROFILE HEADER events
   'ProfileHeader:EditProfileButtonClicked': {}
   'ProfileHeader:FollowersButtonClicked': {}
+  'ProfileHeader:FollowersYouKnowButtonClicked': {}
   'ProfileHeader:FollowsButtonClicked': {}
   'ProfileHeader:ShareButtonClicked': {}
   'ProfileHeader:MuteAccountButtonClicked': {}

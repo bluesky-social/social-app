@@ -148,6 +148,12 @@ const ProfileHeaderLoaded = observer(
       store.shell.closeAllActiveElements() // for when used in the profile preview modal
     }, [track, view, store.shell])
 
+    const onPressFollowersYouKnow = React.useCallback(() => {
+      track('ProfileHeader:FollowersYouKnowButtonClicked')
+      navigate('ProfileFollowersYouKnow', {name: view.handle})
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
+
     const onPressFollows = React.useCallback(() => {
       track('ProfileHeader:FollowsButtonClicked')
       navigate('ProfileFollows', {name: view.handle})
@@ -297,7 +303,7 @@ const ProfileHeaderLoaded = observer(
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
     const following = formatCount(view.followsCount)
     const followers = formatCount(view.followersCount)
-    const followersYouKnow = formatCount(view.followersCount)
+    const followersYouKnow = formatCount(view.followersYouKnowCount)
     const pluralizedFollowers = pluralize(view.followersCount, 'follower')
 
     return (
@@ -418,7 +424,7 @@ const ProfileHeaderLoaded = observer(
                     <TouchableOpacity
                       testID="profileHeaderFollowersYouKnowButton"
                       style={[s.flexRow, s.mr10]}
-                      onPress={onPressFollowers}
+                      onPress={onPressFollowersYouKnow}
                       accessibilityRole="button"
                       accessibilityLabel={`(${followersYouKnow} you know)`}
                       accessibilityHint={'Opens followers you know list'}>

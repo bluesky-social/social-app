@@ -50,6 +50,7 @@ export class ProfileModel {
   avatar?: string = ''
   banner?: string = ''
   followersCount: number = 0
+  followersYouKnowCount: number = 0
   followsCount: number = 0
   postsCount: number = 0
   labels?: ComAtprotoLabelDefs.Label[] = undefined
@@ -269,6 +270,8 @@ export class ProfileModel {
     this.avatar = res.data.avatar
     this.banner = res.data.banner
     this.followersCount = res.data.followersCount || 0
+    // TODO: implement on atproto side
+    this.followersYouKnowCount = res.data.followersCount || 0
     this.followsCount = res.data.followsCount || 0
     this.postsCount = res.data.postsCount || 0
     this.labels = res.data.labels

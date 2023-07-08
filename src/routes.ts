@@ -13,6 +13,7 @@ export const router = new Router({
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
   Profile: '/profile/:name',
   ProfileFollowers: '/profile/:name/followers',
+  ProfileFollowersYouKnow: '/profile/:name/followers-you-know',
   ProfileFollows: '/profile/:name/follows',
   ProfileList: '/profile/:name/lists/:rkey',
   PostThread: '/profile/:name/post/:rkey',

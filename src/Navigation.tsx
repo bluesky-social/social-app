@@ -45,6 +45,7 @@ import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
+import {ProfileFollowersYouKnowScreen} from './view/screens/ProfileFollowersYouKnow'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
 import {CustomFeedScreen} from './view/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
@@ -131,6 +132,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         component={ProfileFollowersScreen}
         options={({route}) => ({
           title: title(`People following @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="ProfileFollowersYouKnow"
+        component={ProfileFollowersYouKnowScreen}
+        options={({route}) => ({
+          title: title(`People following @${route.params.name} that you know`),
         })}
       />
       <Stack.Screen

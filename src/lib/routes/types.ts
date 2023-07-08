@@ -13,6 +13,7 @@ export type CommonNavigatorParams = {
   Settings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
+  ProfileFollowersYouKnow: {name: string}
   ProfileFollows: {name: string}
   ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
