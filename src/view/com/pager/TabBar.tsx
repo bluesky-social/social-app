@@ -52,14 +52,11 @@ export function TabBar({
   //   [indicatorColor, pal],
   // )
 
-  console.log('selectedPage', selectedPage)
-
   // scrolls to the selected item when the page changes
   useEffect(() => {
     scrollElRef.current?.scrollTo({
       x: itemXs[selectedPage] || 0,
     })
-    console.log('currentFeed', currentFeed?.isSaved)
   }, [scrollElRef, itemXs, selectedPage, currentFeed?.isSaved])
 
   const onPressItem = useCallback(
@@ -172,8 +169,6 @@ export function TabBar({
   //     </>
   //   )
   // }
-
-  console.log('isSolana', currentFeed?.isSaved)
 
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>

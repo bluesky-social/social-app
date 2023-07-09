@@ -1,27 +1,28 @@
 import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
-import Svg, {Circle, Rect, Path} from 'react-native-svg'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {HighPriorityImage} from 'view/com/util/images/Image'
+import Svg, {Circle, Path, Rect} from 'react-native-svg'
+import {isAndroid, isWeb} from 'platform/detection'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
-  usePhotoLibraryPermission,
   useCameraPermission,
+  usePhotoLibraryPermission,
 } from 'lib/hooks/usePermissions'
-import {useStores} from 'state/index'
-import {colors} from 'lib/styles'
-import {DropdownButton} from './forms/DropdownButton'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid} from 'platform/detection'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+
 import {AvatarModeration} from 'lib/labeling/types'
+import {DropdownButton} from './forms/DropdownButton'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {HighPriorityImage} from 'view/com/util/images/Image'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 type Type = 'user' | 'algo' | 'list'
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
-function DefaultAvatar({type, size}: {type: Type; size: number}) {
+export function DefaultAvatar({type, size}: {type: Type; size: number}) {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (

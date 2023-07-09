@@ -6,6 +6,7 @@ import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {SolarplexLogo} from 'lib/icons'
 import {TabBar} from 'view/com/pager/TabBar'
 import {Text} from '../util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -55,15 +56,16 @@ export const FeedsTabBar = observer(
               accessibilityLabel="Open navigation"
               accessibilityHint="Access profile and other navigation links"
               hitSlop={10}>
-              <FontAwesomeIcon
+              <UserAvatar avatar={store.me.avatar} size={27} />
+              {/* <FontAwesomeIcon
                 icon="bars"
                 size={18}
                 color={pal.colors.textLight}
-              />
+              /> */}
             </TouchableOpacity>
           </View>
           <Text style={[brandBlue, s.bold, styles.title]}>
-            {store.session.isSandbox ? 'SANDBOX' : <SolarplexLogo />}
+            {/*store.session.isSandbox ? 'SANDBOX' : <SolarplexLogo />*/}
           </Text>
           <View style={[pal.view]} />
         </View>

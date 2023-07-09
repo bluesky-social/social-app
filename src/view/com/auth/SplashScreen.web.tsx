@@ -37,9 +37,7 @@ export const SplashScreen = ({
           {/* <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
             Bluesky
           </Text> */}
-          <View style={styles.logo}>
-            <SolarplexLogo />
-          </View>
+          <View style={styles.logo}>{/*<SolarplexLogo />*/}</View>
           <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
             See what's next
           </Text>

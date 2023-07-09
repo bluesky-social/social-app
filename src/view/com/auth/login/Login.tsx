@@ -376,7 +376,7 @@ const LoginForm = ({
     <>
       {isMobileWeb && (
         <View style={[s.flex1, s.p20, s.alignCenter]}>
-          <SolarplexLogo />
+          {/*<SolarplexLogo />*/}
         </View>
       )}
       <View testID="loginForm">
