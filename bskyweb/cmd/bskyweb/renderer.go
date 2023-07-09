@@ -23,13 +23,9 @@ func NewRendererLoader(prefix string, fs *embed.FS) pongo2.TemplateLoader {
 		fs:     fs,
 	}
 }
-func (l *RendererLoader) Abs(_, name string) string {
-	// TODO: remove this workaround
-	// Figure out why this method is being called
-	// twice on template names resulting in a failure to resolve
-	// the template name.
-	if filepath.HasPrefix(name, l.prefix) {
-		return name
+func (l *RendererLoader) Abs(base, name string) string {
+	if base != "" {
+		return filepath.Join(filepath.Dir(base), name)
 	}
 	return filepath.Join(l.prefix, name)
 }
