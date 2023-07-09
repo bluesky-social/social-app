@@ -1,70 +1,72 @@
-import {RouteParams, Route} from './types'
+import { Route, RouteParams } from "./types";
 
 export class Router {
-  routes: [string, Route][] = []
+  routes: [string, Route][] = [];
   constructor(description: Record<string, string>) {
     for (const [screen, pattern] of Object.entries(description)) {
-      this.routes.push([screen, createRoute(pattern)])
+      this.routes.push([screen, createRoute(pattern)]);
     }
   }
 
   matchName(name: string): Route | undefined {
     for (const [screenName, route] of this.routes) {
       if (screenName === name) {
-        return route
+        return route;
       }
     }
   }
 
   matchPath(path: string): [string, RouteParams] {
-    let name = 'NotFound'
-    let params: RouteParams = {}
+    console.log("PATJ:", path);
+    console.log("this routes", this.routes);
+    let name = "NotFound";
+    let params: RouteParams = {};
     for (const [screenName, route] of this.routes) {
-      const res = route.match(path)
+      const res = route.match(path);
       if (res) {
-        name = screenName
-        params = res.params
-        break
+        name = screenName;
+        params = res.params;
+        break;
       }
     }
-    return [name, params]
+    return [name, params];
   }
 }
 
 function createRoute(pattern: string): Route {
-  const pathParamNames: Set<string> = new Set()
+  const pathParamNames: Set<string> = new Set();
   let matcherReInternal = pattern.replace(/:([\w]+)/g, (_m, name) => {
-    pathParamNames.add(name)
-    return `(?<${name}>[^/]+)`
-  })
-  const matcherRe = new RegExp(`^${matcherReInternal}([?]|$)`, 'i')
+    pathParamNames.add(name);
+    return `(?<${name}>[^/]+)`;
+  });
+  const matcherRe = new RegExp(`^${matcherReInternal}([?]|$)`, "i");
   return {
     match(path: string) {
-      const {pathname, searchParams} = new URL(path, 'http://throwaway.com')
-      const addedParams = Object.fromEntries(searchParams.entries())
+      const { pathname, searchParams } = new URL(path, "http://throwaway.com");
+      const addedParams = Object.fromEntries(searchParams.entries());
 
-      const res = matcherRe.exec(pathname)
+      const res = matcherRe.exec(pathname);
       if (res) {
-        return {params: Object.assign(addedParams, res.groups || {})}
+        return { params: Object.assign(addedParams, res.groups || {}) };
       }
-      return undefined
+      return undefined;
     },
     build(params: Record<string, string>) {
       const str = pattern.replace(
         /:([\w]+)/g,
-        (_m, name) => params[name] || 'undefined',
-      )
+        (_m, name) => params[name] || "undefined",
+      );
 
-      let hasQp = false
-      const qp = new URLSearchParams()
+      let hasQp = false;
+      const qp = new URLSearchParams();
       for (const paramName in params) {
         if (!pathParamNames.has(paramName)) {
-          qp.set(paramName, params[paramName])
-          hasQp = true
+          qp.set(paramName, params[paramName]);
+          hasQp = true;
         }
       }
 
-      return str + (hasQp ? `?${qp.toString()}` : '')
+      return str + (hasQp ? `?${qp.toString()}` : "");
     },
-  }
+  };
 }

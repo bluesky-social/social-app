@@ -1,8 +1,8 @@
-import { FlatList, View } from "react-native";
 import {
+  CommunitiesTabNavigatorParams,
   NativeStackScreenProps,
-  NotificationsTabNavigatorParams,
 } from "lib/routes/types";
+import { FlatList, View } from "react-native";
 
 import { Feed } from "../com/notifications/Feed";
 import { InvitedUsers } from "../com/notifications/InvitedUsers";
@@ -20,10 +20,10 @@ import { useTabFocusEffect } from "lib/hooks/useTabFocusEffect";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
 
 type Props = NativeStackScreenProps<
-  NotificationsTabNavigatorParams,
-  "Notifications"
+  CommunitiesTabNavigatorParams,
+  "Communities"
 >;
-export const NotificationsScreen = withAuthRequired(
+export const CommunitiesScreen = withAuthRequired(
   observer(({}: Props) => {
     const store = useStores();
     const [onMainScroll, isScrolledDown, resetMainScroll] =
@@ -64,7 +64,7 @@ export const NotificationsScreen = withAuthRequired(
       }, [store, screen, onPressLoadLatest]),
     );
     useTabFocusEffect(
-      "Notifications",
+      "Communities",
       React.useCallback(
         (isInside) => {
           // on mobile:
@@ -93,23 +93,23 @@ export const NotificationsScreen = withAuthRequired(
       store.me.notifications.hasNewLatest &&
       !store.me.notifications.isRefreshing;
     return (
-      <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title="Notifications" canGoBack={false} />
-        <InvitedUsers />
-        <Feed
+      <View testID="communitiesScreen" style={s.hContentRegion}>
+        <ViewHeader title="Communities" canGoBack={false} />
+        {/* <InvitedUsers /> */}
+        {/* <Feed
           view={store.me.notifications}
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
-        />
-        {(isScrolledDown || hasNew) && (
+        /> */}
+        {/* {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onPressLoadLatest}
             label="Load new notifications"
             showIndicator={hasNew}
             minimalShellMode={true}
           />
-        )}
+        )} */}
       </View>
     );
   }),

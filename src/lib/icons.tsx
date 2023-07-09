@@ -1,16 +1,24 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Circle, Ellipse, Line, Path, Rect} from 'react-native-svg'
+import * as fa from "@fortawesome/free-solid-svg-icons";
 
-import React from 'react'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from "@fortawesome/react-native-fontawesome";
+import { FontawesomeObject, IconProp } from "@fortawesome/fontawesome-svg-core";
+import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import Svg, { Circle, Ellipse, Line, Path, Rect } from "react-native-svg";
 
-export function SolarplexLogo({style}: {style?: StyleProp<ViewStyle>}) {
+import React from "react";
+
+export function SolarplexLogo({ style }: { style?: StyleProp<ViewStyle> }) {
   return (
     <svg
       width="200"
       height="50"
       viewBox="0 0 637 106"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <ellipse
         cx="42.889"
         cy="53.8916"
@@ -51,49 +59,71 @@ export function SolarplexLogo({style}: {style?: StyleProp<ViewStyle>}) {
         fill="#2E008B"
       />
     </svg>
-  )
+  );
 }
 
 export function GridIcon({
   style,
   solid,
 }: {
-  style?: StyleProp<ViewStyle>
-  solid?: boolean
+  style?: StyleProp<ViewStyle>;
+  solid?: boolean;
 }) {
-  const DIM = 4
-  const ARC = 2
+  const DIM = 4;
+  const ARC = 2;
   return (
     <Svg width="24" height="24" style={style}>
       <Path
         d={`M4,1 h${DIM} a${ARC},${ARC} 0 0 1 ${ARC},${ARC} v${DIM} a${ARC},${ARC} 0 0 1 -${ARC},${ARC} h-${DIM} a${ARC},${ARC} 0 0 1 -${ARC},-${ARC} v-${DIM} a${ARC},${ARC} 0 0 1 ${ARC},-${ARC} z`}
         strokeWidth={2}
         stroke="#000"
-        fill={solid ? '#000' : undefined}
+        fill={solid ? "#000" : undefined}
       />
       <Path
         d={`M16,1 h${DIM} a${ARC},${ARC} 0 0 1 ${ARC},${ARC} v${DIM} a${ARC},${ARC} 0 0 1 -${ARC},${ARC} h-${DIM} a${ARC},${ARC} 0 0 1 -${ARC},-${ARC} v-${DIM} a${ARC},${ARC} 0 0 1 ${ARC},-${ARC} z`}
         strokeWidth={2}
         stroke="#000"
-        fill={solid ? '#000' : undefined}
+        fill={solid ? "#000" : undefined}
       />
       <Path
         d={`M4,13 h${DIM} a${ARC},${ARC} 0 0 1 ${ARC},${ARC} v${DIM} a${ARC},${ARC} 0 0 1 -${ARC},${ARC} h-${DIM} a${ARC},${ARC} 0 0 1 -${ARC},-${ARC} v-${DIM} a${ARC},${ARC} 0 0 1 ${ARC},-${ARC} z`}
         strokeWidth={2}
         stroke="#000"
-        fill={solid ? '#000' : undefined}
+        fill={solid ? "#000" : undefined}
       />
       <Path
         d={`M16,13 h${DIM} a${ARC},${ARC} 0 0 1 ${ARC},${ARC} v${DIM} a${ARC},${ARC} 0 0 1 -${ARC},${ARC} h-${DIM} a${ARC},${ARC} 0 0 1 -${ARC},-${ARC} v-${DIM} a${ARC},${ARC} 0 0 1 ${ARC},-${ARC} z`}
         strokeWidth={2}
         stroke="#000"
-        fill={solid ? '#000' : undefined}
+        fill={solid ? "#000" : undefined}
       />
     </Svg>
-  )
+  );
 }
-export function GridIconSolid({style}: {style?: StyleProp<ViewStyle>}) {
-  return <GridIcon style={style} solid />
+export function GridIconSolid({ style }: { style?: StyleProp<ViewStyle> }) {
+  return <GridIcon style={style} solid />;
+}
+
+// TODO(viksit): add solid icon and shift the bottom bar
+// based on whats selected
+export function CommunitiesIcon({
+  style,
+  size,
+  strokeWidth = 4,
+}: {
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="1.3em"
+      viewBox="0 0 640 512"
+    >
+      <path d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3V245.7zm144.4-49.3C178.7 222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5V416c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V389.2C26.2 371.2 0 332.7 0 288c0-61.9 50.1-112 112-112h32c24 0 46.2 7.5 64.4 20.3zM448 416V394.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 183.5 472 176 496 176h32c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2V416c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32zm8-328a56 56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 304c0 16.2 6 31 16 42.3V261.7c-10 11.3-16 26.1-16 42.3zm144-42.3v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 101.2V448c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V405.2c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112h32c61.9 0 112 50.1 112 112z" />
+    </svg>
+  );
 }
 
 export function HomeIcon({
@@ -101,9 +131,9 @@ export function HomeIcon({
   size,
   strokeWidth = 4,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -112,13 +142,14 @@ export function HomeIcon({
       height={size || 24}
       stroke="currentColor"
       fill="none"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeWidth={strokeWidth}
         d="M 23.951 2 C 23.631 2.011 23.323 2.124 23.072 2.322 L 8.859 13.52 C 7.055 14.941 6 17.114 6 19.41 L 6 38.5 C 6 39.864 7.136 41 8.5 41 L 18.5 41 C 19.864 41 21 39.864 21 38.5 L 21 28.5 C 21 28.205 21.205 28 21.5 28 L 26.5 28 C 26.795 28 27 28.205 27 28.5 L 27 38.5 C 27 39.864 28.136 41 29.5 41 L 39.5 41 C 40.864 41 42 39.864 42 38.5 L 42 19.41 C 42 17.114 40.945 14.941 39.141 13.52 L 24.928 2.322 C 24.65 2.103 24.304 1.989 23.951 2 Z"
       />
     </Svg>
-  )
+  );
 }
 
 export function HomeIconSolid({
@@ -126,9 +157,9 @@ export function HomeIconSolid({
   size,
   strokeWidth = 4,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -136,14 +167,15 @@ export function HomeIconSolid({
       width={size || 24}
       height={size || 24}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         fill="currentColor"
         strokeWidth={strokeWidth}
         d="m 23.951,2 c -0.32,0.011 -0.628,0.124 -0.879,0.322 L 8.859,13.52 C 7.055,14.941 6,17.114 6,19.41 V 38.5 C 6,39.864 7.136,41 8.5,41 h 8 c 1.364,0 2.5,-1.136 2.5,-2.5 v -12 C 19,26.205 19.205,26 19.5,26 h 9 c 0.295,0 0.5,0.205 0.5,0.5 v 12 c 0,1.364 1.136,2.5 2.5,2.5 h 8 C 40.864,41 42,39.864 42,38.5 V 19.41 c 0,-2.296 -1.055,-4.469 -2.859,-5.89 L 24.928,2.322 C 24.65,2.103 24.304,1.989 23.951,2 Z"
       />
     </Svg>
-  )
+  );
 }
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -153,9 +185,9 @@ export function MagnifyingGlassIcon({
   size,
   strokeWidth = 2,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -165,14 +197,15 @@ export function MagnifyingGlassIcon({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
       />
     </Svg>
-  )
+  );
 }
 
 export function MagnifyingGlassIcon2({
@@ -180,9 +213,9 @@ export function MagnifyingGlassIcon2({
   size,
   strokeWidth = 2,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -192,11 +225,12 @@ export function MagnifyingGlassIcon2({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Ellipse cx="12" cy="11" rx="9" ry="9" />
       <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
     </Svg>
-  )
+  );
 }
 
 export function MagnifyingGlassIcon2Solid({
@@ -204,9 +238,9 @@ export function MagnifyingGlassIcon2Solid({
   size,
   strokeWidth = 2,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -216,7 +250,8 @@ export function MagnifyingGlassIcon2Solid({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Ellipse
         cx="12"
         cy="11"
@@ -228,7 +263,7 @@ export function MagnifyingGlassIcon2Solid({
       <Ellipse cx="12" cy="11" rx="9" ry="9" />
       <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
     </Svg>
-  )
+  );
 }
 
 // https://github.com/Remix-Design/RemixIcon/blob/master/License
@@ -237,9 +272,9 @@ export function BellIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -249,22 +284,22 @@ export function BellIcon({
       height={size || 24}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path d="M 11.642 2 H 12.442 A 8.6 8.55 0 0 1 21.042 10.55 V 18.1 A 1 1 0 0 1 20.042 19.1 H 4.042 A 1 1 0 0 1 3.042 18.1 V 10.55 A 8.6 8.55 0 0 1 11.642 2 Z" />
       <Line x1="9" y1="22" x2="15" y2="22" />
     </Svg>
-  )
+  );
 }
 
-// https://github.com/Remix-Design/RemixIcon/blob/master/License
-export function BellIconSolid({
+export function CommunitiesIconSolid({
   style,
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -273,14 +308,44 @@ export function BellIconSolid({
       height={size || 24}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
+      <Path
+        strokeWidth={strokeWidth}
+        d="M201.1 71.9c16.9-5 26.6-22.9 21.5-39.8s-22.9-26.6-39.8-21.5c-21.5 6.4-41.8 15.5-60.6 27C114.3 34 105.4 32 96 32C60.7 32 32 60.7 32 96c0 9.4 2 18.3 5.6 26.3c-11.5 18.7-20.6 39-27 60.6c-5 16.9 4.6 34.8 21.5 39.8s34.8-4.6 39.8-21.5c4.3-14.6 10.4-28.5 17.9-41.4c2 .2 4.1 .3 6.1 .3c35.3 0 64-28.7 64-64c0-2.1-.1-4.1-.3-6.1c12.9-7.5 26.8-13.6 41.4-17.9zm128-61.3c-16.9-5-34.8 4.6-39.8 21.5s4.6 34.8 21.5 39.8c14.6 4.3 28.5 10.4 41.4 17.9c-.2 2-.3 4.1-.3 6.1c0 35.3 28.7 64 64 64c2.1 0 4.1-.1 6.2-.3c7.5 12.9 13.6 26.8 17.9 41.4c5 16.9 22.9 26.6 39.8 21.5s26.6-22.9 21.5-39.8c-6.4-21.5-15.5-41.8-27-60.6c3.6-8 5.6-16.9 5.6-26.3c0-35.3-28.7-64-64-64c-9.4 0-18.3 2-26.3 5.6c-18.7-11.5-39-20.6-60.6-27zM71.9 310.9c-5-16.9-22.9-26.6-39.8-21.5s-26.6 22.9-21.5 39.8c6.4 21.5 15.5 41.8 27 60.6C34 397.7 32 406.6 32 416c0 35.3 28.7 64 64 64c9.4 0 18.3-2 26.3-5.6c18.7 11.5 39 20.6 60.6 27c16.9 5 34.8-4.6 39.8-21.5s-4.6-34.8-21.5-39.8c-14.6-4.3-28.5-10.4-41.4-17.9c.2-2 .3-4.1 .3-6.2c0-35.3-28.7-64-64-64c-2.1 0-4.1 .1-6.2 .3c-7.5-12.9-13.6-26.8-17.9-41.4zm429.4 18.3c5-16.9-4.6-34.8-21.5-39.8s-34.8 4.6-39.8 21.5c-4.3 14.6-10.4 28.5-17.9 41.4c-2-.2-4.1-.3-6.2-.3c-35.3 0-64 28.7-64 64c0 2.1 .1 4.1 .3 6.2c-12.9 7.5-26.8 13.6-41.4 17.9c-16.9 5-26.6 22.9-21.5 39.8s22.9 26.6 39.8 21.5c21.5-6.4 41.8-15.5 60.6-27c8 3.6 16.9 5.6 26.3 5.6c35.3 0 64-28.7 64-64c0-9.4-2-18.3-5.6-26.3c11.5-18.7 20.6-39 27-60.6zM192.8 256.8c0-15.6 5.6-29.9 14.9-41.1L223 231c6.6 6.6 17.8 1.9 17.8-7.4V163.2c0-5.7-4.7-10.4-10.4-10.4H169.9c-9.3 0-13.9 11.2-7.4 17.8l11.2 11.2c-17.9 19.8-28.9 46.2-28.9 75.1c0 43.6 24.9 81.3 61.1 99.8c11.8 6 26.3 1.4 32.3-10.4s1.4-26.3-10.4-32.3c-20.8-10.6-34.9-32.2-34.9-57zm93.1-58.6c20.8 10.6 34.9 32.2 34.9 57c0 15.6-5.6 29.9-14.9 41.1L290.6 281c-6.6-6.6-17.8-1.9-17.8 7.4v60.5c0 5.7 4.7 10.4 10.4 10.4h60.5c9.3 0 13.9-11.2 7.4-17.8l-11.2-11.2c17.9-19.8 28.9-46.2 28.9-75.1c0-43.6-24.9-81.3-61.1-99.8c-11.8-6-26.3-1.4-32.3 10.4s-1.4 26.3 10.4 32.3z"
+        fill="currentColor"
+      />
+      <Line x1="9" y1="22" x2="15" y2="22" />
+    </Svg>
+  );
+}
+
+// https://github.com/Remix-Design/RemixIcon/blob/master/License
+export function BellIconSolid({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
+}) {
+  return (
+    <Svg
+      viewBox="0 0 24 24"
+      width={size || 24}
+      height={size || 24}
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      style={style}
+    >
       <Path
         d="M 11.642 2 H 12.442 A 8.6 8.55 0 0 1 21.042 10.55 V 18.1 A 1 1 0 0 1 20.042 19.1 H 4.042 A 1 1 0 0 1 3.042 18.1 V 10.55 A 8.6 8.55 0 0 1 11.642 2 Z"
         fill="currentColor"
       />
       <Line x1="9" y1="22" x2="15" y2="22" />
     </Svg>
-  )
+  );
 }
 
 export function CogIcon({
@@ -288,9 +353,9 @@ export function CogIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth: number;
 }) {
   return (
     <Svg
@@ -300,7 +365,8 @@ export function CogIcon({
       height={size || 32}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -312,7 +378,7 @@ export function CogIcon({
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
       />
     </Svg>
-  )
+  );
 }
 
 export function CogIconSolid({
@@ -320,9 +386,9 @@ export function CogIconSolid({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth: number;
 }) {
   return (
     <Svg
@@ -332,7 +398,8 @@ export function CogIconSolid({
       height={size || 32}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -340,7 +407,7 @@ export function CogIconSolid({
         fill="currentColor"
       />
     </Svg>
-  )
+  );
 }
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -350,9 +417,9 @@ export function MoonIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -362,14 +429,15 @@ export function MoonIcon({
       height={size || 32}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
       />
     </Svg>
-  )
+  );
 }
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -379,9 +447,9 @@ export function SunIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -391,14 +459,15 @@ export function SunIcon({
       height={size || 32}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         d="M12 3V5.25M18.364 5.63604L16.773 7.22703M21 12H18.75M18.364 18.364L16.773 16.773M12 18.75V21M7.22703 16.773L5.63604 18.364M5.25 12H3M7.22703 7.22703L5.63604 5.63604M15.75 12C15.75 14.0711 14.0711 15.75 12 15.75C9.92893 15.75 8.25 14.0711 8.25 12C8.25 9.92893 9.92893 8.25 12 8.25C14.0711 8.25 15.75 9.92893 15.75 12Z"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </Svg>
-  )
+  );
 }
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -408,9 +477,9 @@ export function UserIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -420,14 +489,15 @@ export function UserIcon({
       height={size || 32}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
       />
     </Svg>
-  )
+  );
 }
 
 export function UserIconSolid({
@@ -435,9 +505,9 @@ export function UserIconSolid({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -447,7 +517,8 @@ export function UserIconSolid({
       height={size || 32}
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -466,7 +537,7 @@ export function UserIconSolid({
         d="M 17.981 18.725 C 23.158 14.12 21.409 5.639 14.833 3.458 C 8.257 1.277 1.786 7.033 3.185 13.818 C 3.576 15.716 4.57 17.437 6.018 18.725 M 17.981 18.725 C 16.335 20.193 14.206 21.003 12 21 C 9.794 21.003 7.664 20.193 6.018 18.725"
       />
     </Svg>
-  )
+  );
 }
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -475,8 +546,8 @@ export function UserGroupIcon({
   style,
   size,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
 }) {
   return (
     <Svg
@@ -486,14 +557,15 @@ export function UserGroupIcon({
       height={size || 32}
       strokeWidth={2}
       stroke="currentColor"
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
       />
     </Svg>
-  )
+  );
 }
 
 export function RepostIcon({
@@ -501,9 +573,9 @@ export function RepostIcon({
   size = 24,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth: number;
 }) {
   return (
     <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
@@ -515,7 +587,7 @@ export function RepostIcon({
         d="M 14.437 18.081 L 5.475 18.095 C 4.7 18.095 4.072 17.467 4.072 16.692 L 4.082 6.65 L 1.22 10.854 M 4.082 6.65 L 7.006 10.854 M 9.859 6.65 L 18.625 6.654 C 19.4 6.654 20.028 7.282 20.028 8.057 L 20.031 18.081 L 17.167 13.646 M 20.031 18.081 L 22.866 13.646"
       />
     </Svg>
-  )
+  );
 }
 
 // Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
@@ -524,9 +596,9 @@ export function HeartIcon({
   size = 24,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth: number;
 }) {
   return (
     <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
@@ -537,7 +609,7 @@ export function HeartIcon({
         d="M 3.859 13.537 L 10.918 20.127 C 11.211 20.4 11.598 20.552 12 20.552 C 12.402 20.552 12.789 20.4 13.082 20.127 L 20.141 13.537 C 21.328 12.431 22 10.88 22 9.259 L 22 9.033 C 22 6.302 20.027 3.974 17.336 3.525 C 15.555 3.228 13.742 3.81 12.469 5.084 L 12 5.552 L 11.531 5.084 C 10.258 3.81 8.445 3.228 6.664 3.525 C 3.973 3.974 2 6.302 2 9.033 L 2 9.259 C 2 10.88 2.672 12.431 3.859 13.537 Z"
       />
     </Svg>
-  )
+  );
 }
 
 // Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
@@ -545,8 +617,8 @@ export function HeartIconSolid({
   style,
   size = 24,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
 }) {
   return (
     <Svg viewBox="0 0 24 24" width={size} height={size} style={style}>
@@ -557,7 +629,7 @@ export function HeartIconSolid({
         d="M 3.859 13.537 L 10.918 20.127 C 11.211 20.4 11.598 20.552 12 20.552 C 12.402 20.552 12.789 20.4 13.082 20.127 L 20.141 13.537 C 21.328 12.431 22 10.88 22 9.259 L 22 9.033 C 22 6.302 20.027 3.974 17.336 3.525 C 15.555 3.228 13.742 3.81 12.469 5.084 L 12 5.552 L 11.531 5.084 C 10.258 3.81 8.445 3.228 6.664 3.525 C 3.973 3.974 2 6.302 2 9.033 L 2 9.259 C 2 10.88 2.672 12.431 3.859 13.537 Z"
       />
     </Svg>
-  )
+  );
 }
 
 export function UpIcon({
@@ -565,16 +637,17 @@ export function UpIcon({
   size,
   strokeWidth = 1.3,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth: number;
 }) {
   return (
     <Svg
       viewBox="0 0 14 14"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeWidth={strokeWidth}
         stroke="currentColor"
@@ -583,22 +656,23 @@ export function UpIcon({
         d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
       />
     </Svg>
-  )
+  );
 }
 
 export function UpIconSolid({
   style,
   size,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
 }) {
   return (
     <Svg
       viewBox="0 0 14 14"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeWidth={1.3}
         stroke="currentColor"
@@ -608,22 +682,23 @@ export function UpIconSolid({
         d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
       />
     </Svg>
-  )
+  );
 }
 
 export function DownIcon({
   style,
   size,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
 }) {
   return (
     <Svg
       viewBox="0 0 14 14"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeWidth={1.3}
         stroke="currentColor"
@@ -632,22 +707,23 @@ export function DownIcon({
         d="M 7 11.5 L 2 6.5 L 4.5 6.5 L 4.5 3 L 9.5 3 L 9.5 6.5 L 12 6.5 L 7 11.5 Z"
       />
     </Svg>
-  )
+  );
 }
 
 export function DownIconSolid({
   style,
   size,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
 }) {
   return (
     <Svg
       viewBox="0 0 14 14"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeWidth={1.3}
         stroke="currentColor"
@@ -657,7 +733,7 @@ export function DownIconSolid({
         d="M 7 11.5 L 2 6.5 L 4.5 6.5 L 4.5 3 L 9.5 3 L 9.5 6.5 L 12 6.5 L 7 11.5 Z"
       />
     </Svg>
-  )
+  );
 }
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -667,18 +743,18 @@ export function CommentBottomArrow({
   size,
   strokeWidth = 1.3,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
-  let color = 'currentColor'
+  let color = "currentColor";
   if (
     style &&
-    typeof style === 'object' &&
-    'color' in style &&
-    typeof style.color === 'string'
+    typeof style === "object" &&
+    "color" in style &&
+    typeof style.color === "string"
   ) {
-    color = style.color
+    color = style.color;
   }
   return (
     <Svg
@@ -688,14 +764,15 @@ export function CommentBottomArrow({
       stroke={color}
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
       />
     </Svg>
-  )
+  );
 }
 
 export function SquareIcon({
@@ -703,9 +780,9 @@ export function SquareIcon({
   size,
   strokeWidth = 1.3,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -715,10 +792,11 @@ export function SquareIcon({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Rect x="6" y="6" width="12" height="12" strokeLinejoin="round" />
     </Svg>
-  )
+  );
 }
 
 export function RectWideIcon({
@@ -726,9 +804,9 @@ export function RectWideIcon({
   size,
   strokeWidth = 1.3,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -738,10 +816,11 @@ export function RectWideIcon({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Rect x="4" y="6" width="16" height="12" strokeLinejoin="round" />
     </Svg>
-  )
+  );
 }
 
 export function RectTallIcon({
@@ -749,9 +828,9 @@ export function RectTallIcon({
   size,
   strokeWidth = 1.3,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -761,10 +840,11 @@ export function RectTallIcon({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Rect x="6" y="4" width="12" height="16" strokeLinejoin="round" />
     </Svg>
-  )
+  );
 }
 
 export function ComposeIcon({
@@ -772,9 +852,9 @@ export function ComposeIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -784,14 +864,15 @@ export function ComposeIcon({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
       />
     </Svg>
-  )
+  );
 }
 
 export function ComposeIcon2({
@@ -799,9 +880,9 @@ export function ComposeIcon2({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -810,7 +891,8 @@ export function ComposeIcon2({
       fill="none"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Path
         d="M 20 9 L 20 16 C 20 18.209 18.209 20 16 20 L 8 20 C 5.791 20 4 18.209 4 16 L 4 8 C 4 5.791 5.791 4 8 4 L 15 4"
         strokeWidth={strokeWidth}
@@ -832,7 +914,7 @@ export function ComposeIcon2({
         strokeWidth={strokeWidth * 1.5}
       />
     </Svg>
-  )
+  );
 }
 
 export function SquarePlusIcon({
@@ -840,9 +922,9 @@ export function SquarePlusIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -851,7 +933,8 @@ export function SquarePlusIcon({
       stroke="currentColor"
       width={size || 24}
       height={size || 24}
-      style={style}>
+      style={style}
+    >
       <Line
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -880,7 +963,7 @@ export function SquarePlusIcon({
         ry="4"
       />
     </Svg>
-  )
+  );
 }
 
 export function InfoCircleIcon({
@@ -888,9 +971,9 @@ export function InfoCircleIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -900,14 +983,15 @@ export function InfoCircleIcon({
       stroke="currentColor"
       width={size}
       height={size}
-      style={style}>
+      style={style}
+    >
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
       />
     </Svg>
-  )
+  );
 }
 
 export function HandIcon({
@@ -915,9 +999,9 @@ export function HandIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -928,12 +1012,13 @@ export function HandIcon({
       strokeWidth={strokeWidth}
       strokeLinecap="round"
       fill="none"
-      style={style}>
+      style={style}
+    >
       <Path d="M33.5 37V11.5C33.5 8.46243 31.0376 6 28 6V6C24.9624 6 22.5 8.46243 22.5 11.5V48V48C22.5 48.5802 21.8139 48.8874 21.3811 48.501L13.2252 41.2189C10.72 38.9821 6.81945 39.4562 4.92296 42.228L4.77978 42.4372C3.17708 44.7796 3.50863 47.9385 5.56275 49.897L16.0965 59.9409C20.9825 64.5996 26.7533 68.231 33.0675 70.6201V70.6201C38.8234 72.798 45.1766 72.798 50.9325 70.6201L51.9256 70.2444C57.4044 68.1713 61.8038 63.9579 64.1113 58.5735V58.5735C65.6874 54.8962 66.5 50.937 66.5 46.9362V22.5C66.5 19.4624 64.0376 17 61 17V17C57.9624 17 55.5 19.4624 55.5 22.5V36.5" />
       <Path d="M55.5 37V11.5C55.5 8.46243 53.0376 6 50 6V6C46.9624 6 44.5 8.46243 44.5 11.5V37" />
       <Path d="M44.5 37V8.5C44.5 5.46243 42.0376 3 39 3V3C35.9624 3 33.5 5.46243 33.5 8.5V37" />
     </Svg>
-  )
+  );
 }
 
 export function SatelliteDishIconSolid({
@@ -941,9 +1026,9 @@ export function SatelliteDishIconSolid({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<ViewStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -952,7 +1037,8 @@ export function SatelliteDishIconSolid({
       viewBox="0 0 22 22"
       style={style}
       fill="none"
-      stroke="none">
+      stroke="none"
+    >
       <Path
         d="M16 19.6622C14.5291 20.513 12.8214 21 11 21C5.47715 21 1 16.5229 1 11C1 9.17858 1.48697 7.47088 2.33782 6.00002C3.18867 4.52915 6 7.66219 6 7.66219L14.5 16.1622C14.5 16.1622 17.4709 18.8113 16 19.6622Z"
         fill="currentColor"
@@ -971,7 +1057,7 @@ export function SatelliteDishIconSolid({
       />
       <Circle cx="10" cy="12" r="2" fill="currentColor" />
     </Svg>
-  )
+  );
 }
 
 export function SatelliteDishIcon({
@@ -979,9 +1065,9 @@ export function SatelliteDishIcon({
   size,
   strokeWidth = 1.5,
 }: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
+  style?: StyleProp<TextStyle>;
+  size?: string | number;
+  strokeWidth?: number;
 }) {
   return (
     <Svg
@@ -991,7 +1077,8 @@ export function SatelliteDishIcon({
       stroke="currentColor"
       width={size}
       height={size}
-      style={style}>
+      style={style}
+    >
       <Path d="M5.25593 8.3303L5.25609 8.33047L5.25616 8.33056L5.25621 8.33061L5.27377 8.35018L5.29289 8.3693L13.7929 16.8693L13.8131 16.8895L13.8338 16.908L13.834 16.9081L13.8342 16.9083L13.8342 16.9083L13.8345 16.9086L13.8381 16.9118L13.8574 16.9294C13.8752 16.9458 13.9026 16.9711 13.9377 17.0043C14.0081 17.0708 14.1088 17.1683 14.2258 17.2881C14.4635 17.5315 14.7526 17.8509 14.9928 18.1812C15.2067 18.4755 15.3299 18.7087 15.3817 18.8634C14.0859 19.5872 12.5926 20 11 20C6.02944 20 2 15.9706 2 11C2 9.4151 2.40883 7.9285 3.12619 6.63699C3.304 6.69748 3.56745 6.84213 3.89275 7.08309C4.24679 7.34534 4.58866 7.65673 4.84827 7.9106C4.97633 8.03583 5.08062 8.14337 5.152 8.21863C5.18763 8.25619 5.21487 8.28551 5.23257 8.30473L5.25178 8.32572L5.25571 8.33006L5.25593 8.3303ZM3.00217 6.60712C3.00217 6.6071 3.00267 6.6071 3.00372 6.60715C3.00271 6.60716 3.00218 6.60714 3.00217 6.60712Z" />
       <Path
         d="M8 1.62961C9.04899 1.22255 10.1847 1 11.3704 1C16.6887 1 21 5.47715 21 11C21 12.0452 20.8456 13.053 20.5592 14"
@@ -1007,5 +1094,5 @@ export function SatelliteDishIcon({
         stroke="none"
       />
     </Svg>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-import {Platform} from 'react-native'
-import type {Theme} from './ThemeContext'
-import {colors} from './styles'
+import { Platform } from "react-native";
+import type { Theme } from "./ThemeContext";
+import { colors } from "./styles";
 
 export const solarplexTheme: Theme = {
-  colorScheme: 'light',
+  colorScheme: "light",
   palette: {
     default: {
       background: colors.white,
@@ -13,17 +13,17 @@ export const solarplexTheme: Theme = {
       textInverted: colors.white,
       link: colors.splx.primary[40],
       border: colors.splx.neutral[10],
-      borderDark: '#e0d9d9',
+      borderDark: "#e0d9d9",
       icon: colors.gray4,
       // non-standard
       textVeryLight: colors.gray4,
       replyLine: colors.gray2,
       replyLineDot: colors.gray3,
-      unreadNotifBg: '#ebf6ff',
+      unreadNotifBg: "#ebf6ff",
       unreadNotifBorder: colors.blue1,
-      postCtrl: '#71768A',
-      brandText: '#0066FF',
-      emptyStateIcon: '#B6B6C9',
+      postCtrl: "#71768A",
+      brandText: "#0066FF",
+      emptyStateIcon: "#B6B6C9",
     },
     primary: {
       background: colors.splx.primary[50],
@@ -82,243 +82,243 @@ export const solarplexTheme: Theme = {
     },
   },
   typography: {
-    '2xl-thin': {
-      fontFamily: 'Manrope',
-      fontSize: 18,
+    "2xl-thin": {
+      fontFamily: "Manrope",
+      fontSize: 16,
       letterSpacing: 0.25,
-      fontWeight: '300',
+      fontWeight: "300",
     },
-    '2xl': {
-      fontFamily: 'Manrope',
-      fontSize: 18,
+    "2xl": {
+      fontFamily: "Manrope",
+      fontSize: 16,
       letterSpacing: 0.25,
-      fontWeight: '400',
+      fontWeight: "400",
     },
-    '2xl-medium': {
-      fontFamily: 'Manrope',
-      fontSize: 18,
+    "2xl-medium": {
+      fontFamily: "Manrope",
+      fontSize: 16,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    '2xl-bold': {
-      fontFamily: 'Manrope',
-      fontSize: 18,
+    "2xl-bold": {
+      fontFamily: "Manrope",
+      fontSize: 16,
       letterSpacing: 0.25,
-      fontWeight: '700',
+      fontWeight: "700",
     },
-    '2xl-heavy': {
-      fontFamily: 'Manrope',
-      fontSize: 18,
+    "2xl-heavy": {
+      fontFamily: "Manrope",
+      fontSize: 16,
       letterSpacing: 0.25,
-      fontWeight: '800',
+      fontWeight: "800",
     },
-    'xl-thin': {
-      fontFamily: 'Manrope',
-      fontSize: 17,
+    "xl-thin": {
+      fontFamily: "Manrope",
+      fontSize: 15,
       letterSpacing: 0.25,
-      fontWeight: '300',
+      fontWeight: "300",
     },
     xl: {
-      fontFamily: 'Manrope',
-      fontSize: 17,
+      fontFamily: "Manrope",
+      fontSize: 15,
       letterSpacing: 0.25,
-      fontWeight: '400',
+      fontWeight: "400",
     },
-    'xl-medium': {
-      fontFamily: 'Manrope',
-      fontSize: 17,
+    "xl-medium": {
+      fontFamily: "Manrope",
+      fontSize: 15,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'xl-bold': {
-      fontFamily: 'Manrope',
-      fontSize: 17,
+    "xl-bold": {
+      fontFamily: "Manrope",
+      fontSize: 15,
       letterSpacing: 0.25,
-      fontWeight: '700',
+      fontWeight: "700",
     },
-    'xl-heavy': {
-      fontFamily: 'Manrope',
-      fontSize: 17,
+    "xl-heavy": {
+      fontFamily: "Manrope",
+      fontSize: 15,
       letterSpacing: 0.25,
-      fontWeight: '800',
+      fontWeight: "800",
     },
-    'lg-thin': {
-      fontFamily: 'Manrope',
-      fontSize: 16,
+    "lg-thin": {
+      fontFamily: "Manrope",
+      fontSize: 14,
       letterSpacing: 0.25,
-      fontWeight: '300',
+      fontWeight: "300",
     },
     lg: {
-      fontFamily: 'Manrope',
-      fontSize: 16,
+      fontFamily: "Manrope",
+      fontSize: 14,
       letterSpacing: 0.25,
-      fontWeight: '400',
+      fontWeight: "400",
     },
-    'lg-medium': {
-      fontFamily: 'Manrope',
-      fontSize: 16,
+    "lg-medium": {
+      fontFamily: "Manrope",
+      fontSize: 14,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'lg-bold': {
-      fontFamily: 'Manrope',
-      fontSize: 16,
+    "lg-bold": {
+      fontFamily: "Manrope",
+      fontSize: 14,
       letterSpacing: 0.25,
-      fontWeight: '700',
+      fontWeight: "700",
     },
-    'lg-heavy': {
-      fontFamily: 'Manrope',
-      fontSize: 16,
+    "lg-heavy": {
+      fontFamily: "Manrope",
+      fontSize: 14,
       letterSpacing: 0.25,
-      fontWeight: '800',
+      fontWeight: "800",
     },
-    'md-thin': {
-      fontFamily: 'Manrope',
-      fontSize: 15,
+    "md-thin": {
+      fontFamily: "Manrope",
+      fontSize: 13,
       letterSpacing: 0.25,
-      fontWeight: '300',
+      fontWeight: "300",
     },
     md: {
-      fontFamily: 'Manrope',
-      fontSize: 15,
+      fontFamily: "Manrope",
+      fontSize: 13,
       letterSpacing: 0.25,
-      fontWeight: '400',
+      fontWeight: "400",
     },
-    'md-medium': {
-      fontFamily: 'Manrope',
-      fontSize: 15,
+    "md-medium": {
+      fontFamily: "Manrope",
+      fontSize: 13,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'md-bold': {
-      fontFamily: 'Manrope',
-      fontSize: 15,
+    "md-bold": {
+      fontFamily: "Manrope",
+      fontSize: 13,
       letterSpacing: 0.25,
-      fontWeight: '700',
+      fontWeight: "700",
     },
-    'md-heavy': {
-      fontFamily: 'Manrope',
-      fontSize: 15,
+    "md-heavy": {
+      fontFamily: "Manrope",
+      fontSize: 13,
       letterSpacing: 0.25,
-      fontWeight: '800',
+      fontWeight: "800",
     },
-    'sm-thin': {
-      fontFamily: 'Manrope',
-      fontSize: 14,
+    "sm-thin": {
+      fontFamily: "Manrope",
+      fontSize: 12,
       letterSpacing: 0.25,
-      fontWeight: '300',
+      fontWeight: "300",
     },
     sm: {
-      fontFamily: 'Manrope',
-      fontSize: 14,
+      fontFamily: "Manrope",
+      fontSize: 12,
       letterSpacing: 0.25,
-      fontWeight: '400',
+      fontWeight: "400",
     },
-    'sm-medium': {
-      fontFamily: 'Manrope',
-      fontSize: 14,
+    "sm-medium": {
+      fontFamily: "Manrope",
+      fontSize: 12,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'sm-bold': {
-      fontFamily: 'Manrope',
-      fontSize: 14,
+    "sm-bold": {
+      fontFamily: "Manrope",
+      fontSize: 12,
       letterSpacing: 0.25,
-      fontWeight: '700',
+      fontWeight: "700",
     },
-    'sm-heavy': {
-      fontFamily: 'Manrope',
-      fontSize: 14,
+    "sm-heavy": {
+      fontFamily: "Manrope",
+      fontSize: 12,
       letterSpacing: 0.25,
-      fontWeight: '800',
+      fontWeight: "800",
     },
-    'xs-thin': {
-      fontFamily: 'Manrope',
-      fontSize: 13,
+    "xs-thin": {
+      fontFamily: "Manrope",
+      fontSize: 11,
       letterSpacing: 0.25,
-      fontWeight: '300',
+      fontWeight: "300",
     },
     xs: {
-      fontSize: 13,
-      fontFamily: 'Manrope',
+      fontSize: 11,
+      fontFamily: "Manrope",
       letterSpacing: 0.25,
-      fontWeight: '400',
+      fontWeight: "400",
     },
-    'xs-medium': {
-      fontFamily: 'Manrope',
-      fontSize: 13,
+    "xs-medium": {
+      fontFamily: "Manrope",
+      fontSize: 11,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'xs-bold': {
-      fontFamily: 'Manrope',
-      fontSize: 13,
+    "xs-bold": {
+      fontFamily: "Manrope",
+      fontSize: 11,
       letterSpacing: 0.25,
-      fontWeight: '700',
+      fontWeight: "700",
     },
-    'xs-heavy': {
-      fontFamily: 'Manrope',
-      fontSize: 13,
+    "xs-heavy": {
+      fontFamily: "Manrope",
+      fontSize: 11,
       letterSpacing: 0.25,
-      fontWeight: '800',
+      fontWeight: "800",
     },
 
-    'title-2xl': {
-      fontFamily: 'Manrope',
-      fontSize: 34,
+    "title-2xl": {
+      fontFamily: "Manrope",
+      fontSize: 32,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'title-xl': {
-      fontFamily: 'Manrope',
-      fontSize: 28,
+    "title-xl": {
+      fontFamily: "Manrope",
+      fontSize: 26,
       letterSpacing: 0.25,
-      fontWeight: '500',
+      fontWeight: "500",
     },
-    'title-lg': {
-      fontFamily: 'Manrope',
-      fontSize: 22,
-      fontWeight: '500',
+    "title-lg": {
+      fontFamily: "Manrope",
+      fontSize: 20,
+      fontWeight: "500",
     },
     title: {
-      fontFamily: 'Manrope',
-      fontWeight: '500',
-      fontSize: 20,
-      letterSpacing: 0.15,
-    },
-    'title-sm': {
-      fontFamily: 'Manrope',
-      fontWeight: 'bold',
-      fontSize: 17,
-      letterSpacing: 0.15,
-    },
-    'post-text': {
-      fontFamily: 'Manrope',
-      fontSize: 16,
-      letterSpacing: 0.2,
-      fontWeight: '400',
-    },
-    'post-text-lg': {
-      fontFamily: 'Manrope',
-      fontSize: 22,
-      letterSpacing: 0.4,
-      fontWeight: '400',
-    },
-    'button-lg': {
-      fontFamily: 'Manrope',
-      fontWeight: '500',
+      fontFamily: "Manrope",
+      fontWeight: "500",
       fontSize: 18,
+      letterSpacing: 0.15,
+    },
+    "title-sm": {
+      fontFamily: "Manrope",
+      fontWeight: "bold",
+      fontSize: 15,
+      letterSpacing: 0.15,
+    },
+    "post-text": {
+      fontFamily: "Manrope",
+      fontSize: 14,
+      letterSpacing: 0.2,
+      fontWeight: "400",
+    },
+    "post-text-lg": {
+      fontFamily: "Manrope",
+      fontSize: 20,
+      letterSpacing: 0.4,
+      fontWeight: "400",
+    },
+    "button-lg": {
+      fontFamily: "Manrope",
+      fontWeight: "500",
+      fontSize: 16,
       letterSpacing: 0.5,
     },
     button: {
-      fontFamily: 'Manrope',
-      fontWeight: '500',
-      fontSize: 14,
+      fontFamily: "Manrope",
+      fontWeight: "500",
+      fontSize: 12,
       letterSpacing: 0.5,
     },
     mono: {
-      fontSize: 14,
-      fontFamily: Platform.OS === 'android' ? 'Manrope' : 'Manrope',
+      fontSize: 12,
+      fontFamily: Platform.OS === "android" ? "Manrope" : "Manrope",
     },
   },
-}
+};

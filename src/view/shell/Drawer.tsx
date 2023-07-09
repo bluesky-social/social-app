@@ -1,3 +1,5 @@
+import * as fa from "@fortawesome/free-solid-svg-icons";
+
 import {
   BellIcon,
   BellIconSolid,
@@ -5,11 +7,11 @@ import {
   HomeIconSolid,
   UserIcon,
   UserIconSolid,
-} from 'lib/icons'
+} from "lib/icons";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+} from "@fortawesome/react-native-fontawesome";
 import {
   Linking,
   SafeAreaView,
@@ -19,83 +21,93 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
-} from 'react-native'
-import React, {ComponentProps} from 'react'
-import {StackActions, useNavigation} from '@react-navigation/native'
-import {TabState, getTabState} from 'lib/routes/helpers'
-import {colors, s} from 'lib/styles'
-import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
+} from "react-native";
+import React, { ComponentProps } from "react";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import { TabState, getTabState } from "lib/routes/helpers";
+import { colors, s } from "lib/styles";
+import {
+  formatCount,
+  formatCountShortOnly,
+} from "view/com/util/numeric/format";
 
-import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {NavItem} from './desktop/LeftNav'
-import {NavigationProp} from 'lib/routes/types'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {isWeb} from 'platform/detection'
-import {observer} from 'mobx-react-lite'
-import {pluralize} from 'lib/strings/helpers'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
-import {useTheme} from 'lib/ThemeContext'
+import { FEEDBACK_FORM_URL } from "lib/constants";
+import { NavItem } from "./desktop/LeftNav";
+import { NavigationProp } from "lib/routes/types";
+import { Text } from "view/com/util/text/Text";
+import { UserAvatar } from "view/com/util/UserAvatar";
+import { isWeb } from "platform/detection";
+import { observer } from "mobx-react-lite";
+import { pluralize } from "lib/strings/helpers";
+import { useAnalytics } from "lib/analytics/analytics";
+import { useNavigationTabState } from "lib/hooks/useNavigationTabState";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
+import { useTheme } from "lib/ThemeContext";
 
 export const DrawerContent = observer(() => {
-  const theme = useTheme()
-  const pal = usePalette('default')
-  const store = useStores()
-  const navigation = useNavigation<NavigationProp>()
-  const {track} = useAnalytics()
-  const {isAtHome, isAtNotifications} = useNavigationTabState()
+  const theme = useTheme();
+  const pal = usePalette("default");
+  const store = useStores();
+  const navigation = useNavigation<NavigationProp>();
+  const { track } = useAnalytics();
+  const { isAtHome, isAtNotifications, isAtMyProfile, isAtCommunities } =
+    useNavigationTabState();
 
-  const {notifications} = store.me
+  const { notifications } = store.me;
 
   // events
   // =
 
   const onPressTab = React.useCallback(
     (tab: string) => {
-      track('Menu:ItemClicked', {url: tab})
-      const state = navigation.getState()
-      store.shell.closeDrawer()
+      track("Menu:ItemClicked", { url: tab });
+      const state = navigation.getState();
+      store.shell.closeDrawer();
       if (isWeb) {
-        // @ts-ignore must be Home, Search, Notifications, or MyProfile
-        navigation.navigate(tab)
+        // @ts-ignore must be Home, Search, Notifications, MyProfile or Communities
+        navigation.navigate(tab);
       } else {
-        const tabState = getTabState(state, tab)
+        const tabState = getTabState(state, tab);
         if (tabState === TabState.InsideAtRoot) {
-          store.emitScreenSoftReset()
+          store.emitScreenSoftReset();
         } else if (tabState === TabState.Inside) {
-          navigation.dispatch(StackActions.popToTop())
+          navigation.dispatch(StackActions.popToTop());
         } else {
-          // @ts-ignore must be Home, Search, Notifications, or MyProfile
-          navigation.navigate(`${tab}Tab`)
+          // @ts-ignore must be Home, Search, Notifications, or MyProfile or Communities
+          navigation.navigate(`${tab}Tab`);
         }
       }
     },
     [store, track, navigation],
-  )
+  );
 
-  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressHome = React.useCallback(() => onPressTab("Home"), [onPressTab]);
 
   const onPressNotifications = React.useCallback(
-    () => onPressTab('Notifications'),
+    () => onPressTab("Notifications"),
     [onPressTab],
-  )
+  );
 
-  const onPressProfile = React.useCallback(() => {
-    onPressTab('MyProfile')
-  }, [onPressTab])
+  const onPressCommunities = React.useCallback(
+    () => onPressTab("Communities"),
+    [onPressTab],
+  );
+
+  const onPressProfile = React.useCallback(
+    () => onPressTab("MyProfile"),
+    [onPressTab],
+  );
 
   const onPressFeedback = React.useCallback(() => {
-    track('Menu:FeedbackClicked')
-    Linking.openURL(FEEDBACK_FORM_URL)
-  }, [track])
+    track("Menu:FeedbackClicked");
+    Linking.openURL(FEEDBACK_FORM_URL);
+  }, [track]);
 
   const onPressSignout = React.useCallback(() => {
-    track('Settings:SignOutButtonClicked')
-    store.session.logout()
-  }, [track, store])
+    track("Settings:SignOutButtonClicked");
+    store.session.logout();
+  }, [track, store]);
 
   // rendering
   // =
@@ -105,8 +117,9 @@ export const DrawerContent = observer(() => {
       testID="drawer"
       style={[
         styles.view,
-        theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
-      ]}>
+        theme.colorScheme === "light" ? pal.view : styles.viewDarkMode,
+      ]}
+    >
       <SafeAreaView style={s.flex1}>
         {!store.session.isDefaultSession && (
           <>
@@ -115,28 +128,32 @@ export const DrawerContent = observer(() => {
                 testID="profileCardButton"
                 accessibilityLabel="Profile"
                 accessibilityHint="Navigates to your profile"
-                onPress={onPressProfile}>
+                onPress={onPressProfile}
+              >
                 <UserAvatar size={80} avatar={store.me.avatar} />
                 <Text
                   type="title-lg"
-                  style={[pal.text, s.bold, styles.profileCardDisplayName]}>
+                  style={[pal.text, s.bold, styles.profileCardDisplayName]}
+                >
                   {store.me.displayName || store.me.handle}
                 </Text>
                 <Text
                   type="2xl"
-                  style={[pal.textLight, styles.profileCardHandle]}>
+                  style={[pal.textLight, styles.profileCardHandle]}
+                >
                   @{store.me.handle}
                 </Text>
                 <Text
                   type="xl"
-                  style={[pal.textLight, styles.profileCardFollowers]}>
+                  style={[pal.textLight, styles.profileCardFollowers]}
+                >
                   <Text type="xl-medium" style={pal.text}>
                     {formatCountShortOnly(store.me.followersCount ?? 0)}
-                  </Text>{' '}
-                  {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
+                  </Text>{" "}
+                  {pluralize(store.me.followersCount || 0, "follower")} &middot;{" "}
                   <Text type="xl-medium" style={pal.text}>
                     {formatCountShortOnly(store.me.followsCount ?? 0)}
-                  </Text>{' '}
+                  </Text>{" "}
                   following
                 </Text>
               </TouchableOpacity>
@@ -167,6 +184,34 @@ export const DrawerContent = observer(() => {
             bold={isAtHome}
             onPress={onPressHome}
           />
+          <MenuItem
+            icon={
+              <UserIcon
+                size={24}
+                strokeWidth={1.7}
+                style={[pal.text as StyleProp<ViewStyle>]}
+              />
+            }
+            label="Profile"
+            accessibilityLabel="Profile"
+            accessibilityHint=""
+            bold={isAtMyProfile}
+            onPress={onPressProfile}
+          />
+          <MenuItem
+            icon={
+              <FontAwesomeIcon
+                size={22}
+                icon={fa.faPeopleGroup}
+                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+              />
+            }
+            label="Communities"
+            accessibilityLabel="Communities"
+            accessibilityHint=""
+            bold={isAtCommunities}
+            onPress={onPressCommunities}
+          />
           {!store.session.isDefaultSession && (
             <MenuItem
               icon={
@@ -187,8 +232,8 @@ export const DrawerContent = observer(() => {
               label="Notifications"
               accessibilityLabel="Notifications"
               accessibilityHint={
-                notifications.unreadCountLabel === ''
-                  ? ''
+                notifications.unreadCountLabel === ""
+                  ? ""
                   : `${notifications.unreadCountLabel} unread`
               }
               count={notifications.unreadCountLabel}
@@ -209,19 +254,19 @@ export const DrawerContent = observer(() => {
               label="Sign in"
               accessibilityLabel="Home"
               accessibilityHint=""
-              onPress={() => navigation.navigate('SignIn')}
+              onPress={() => navigation.navigate("SignIn")}
             />
           ) : (
             <MenuItem
               onPress={onPressSignout}
               icon={
                 <FontAwesomeIcon
-                  size={24}
-                  icon="sign-out"
-                  style={{...pal.text, marginLeft: 4} as FontAwesomeIconStyle}
+                  size={22}
+                  icon={fa.faSignOut}
+                  style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
                 />
               }
-              label={'Sign Out'}
+              label={"Sign Out"}
             />
           )}
         </ScrollView>
@@ -234,14 +279,15 @@ export const DrawerContent = observer(() => {
             style={[
               styles.footerBtn,
               styles.footerBtnFeedback,
-              theme.colorScheme === 'light'
+              theme.colorScheme === "light"
                 ? styles.footerBtnFeedbackLight
                 : styles.footerBtnFeedbackDark,
-            ]}>
+            ]}
+          >
             <FontAwesomeIcon
               style={pal.link as FontAwesomeIconStyle}
               size={19}
-              icon={['far', 'message']}
+              icon={["far", "message"]}
             />
             <Text type="2xl-medium" style={[pal.link, s.pl10]}>
               Feedback
@@ -250,14 +296,14 @@ export const DrawerContent = observer(() => {
         </View>
       </SafeAreaView>
     </View>
-  )
-})
+  );
+});
 
 interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
-  icon: JSX.Element
-  label: string
-  count?: string
-  bold?: boolean
+  icon: JSX.Element;
+  label: string;
+  count?: string;
+  bold?: boolean;
 }
 
 function MenuItem({
@@ -268,7 +314,7 @@ function MenuItem({
   bold,
   onPress,
 }: MenuItemProps) {
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   return (
     <TouchableOpacity
       testID={`menuItemButton-${label}`}
@@ -276,7 +322,8 @@ function MenuItem({
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityLabel={accessibilityLabel}
-      accessibilityHint="">
+      accessibilityHint=""
+    >
       <View style={[styles.menuItemIconWrapper]}>
         {icon}
         {count ? (
@@ -288,7 +335,8 @@ function MenuItem({
                 : count.length > 1
                 ? styles.menuItemCountTens
                 : undefined,
-            ]}>
+            ]}
+          >
             <Text style={styles.menuItemCountLabel} numberOfLines={1}>
               {count}
             </Text>
@@ -296,25 +344,26 @@ function MenuItem({
         ) : undefined}
       </View>
       <Text
-        type={bold ? '2xl-bold' : '2xl'}
+        type={bold ? "2xl-bold" : "2xl"}
         style={[pal.text, s.flex1]}
-        numberOfLines={1}>
+        numberOfLines={1}
+      >
         {label}
       </Text>
     </TouchableOpacity>
-  )
+  );
 }
 
 const InviteCodes = observer(() => {
-  const {track} = useAnalytics()
-  const store = useStores()
-  const pal = usePalette('default')
-  const {invitesAvailable} = store.me
+  const { track } = useAnalytics();
+  const store = useStores();
+  const pal = usePalette("default");
+  const { invitesAvailable } = store.me;
   const onPress = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: '#invite-codes'})
-    store.shell.closeDrawer()
-    store.shell.openModal({name: 'invite-codes'})
-  }, [store, track])
+    track("Menu:ItemClicked", { url: "#invite-codes" });
+    store.shell.closeDrawer();
+    store.shell.openModal({ name: "invite-codes" });
+  }, [store, track]);
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"
@@ -323,10 +372,11 @@ const InviteCodes = observer(() => {
       accessibilityRole="button"
       accessibilityLabel={
         invitesAvailable === 1
-          ? 'Invite codes: 1 available'
+          ? "Invite codes: 1 available"
           : `Invite codes: ${invitesAvailable} available`
       }
-      accessibilityHint="Opens list of invite codes">
+      accessibilityHint="Opens list of invite codes"
+    >
       <FontAwesomeIcon
         icon="ticket"
         style={[
@@ -337,13 +387,14 @@ const InviteCodes = observer(() => {
       />
       <Text
         type="lg-medium"
-        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {formatCount(store.me.invitesAvailable)} invite{' '}
-        {pluralize(store.me.invitesAvailable, 'code')}
+        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}
+      >
+        {formatCount(store.me.invitesAvailable)} invite{" "}
+        {pluralize(store.me.invitesAvailable, "code")}
       </Text>
     </TouchableOpacity>
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
   view: {
@@ -353,7 +404,7 @@ const styles = StyleSheet.create({
     maxWidth: 300,
   },
   viewDarkMode: {
-    backgroundColor: '#1B1919',
+    backgroundColor: "#1B1919",
   },
   main: {
     paddingLeft: 20,
@@ -377,21 +428,22 @@ const styles = StyleSheet.create({
   },
 
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
     paddingRight: 10,
+    fontSize: 12,
   },
   menuItemIconWrapper: {
     width: 24,
     height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 12,
   },
   menuItemCount: {
-    position: 'absolute',
-    width: 'auto',
+    position: "absolute",
+    width: "auto",
     right: -6,
     top: -4,
     backgroundColor: colors.blue3,
@@ -408,31 +460,31 @@ const styles = StyleSheet.create({
   },
   menuItemCountLabel: {
     fontSize: 12,
-    fontWeight: 'bold',
-    fontVariant: ['tabular-nums'],
+    fontWeight: "bold",
+    fontVariant: ["tabular-nums"],
     color: colors.white,
   },
 
   inviteCodes: {
     paddingLeft: 22,
     paddingVertical: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   inviteCodesIcon: {
     marginRight: 6,
   },
 
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingRight: 30,
     paddingTop: 20,
     paddingLeft: 20,
   },
   footerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 10,
     borderRadius: 25,
   },
@@ -440,9 +492,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   footerBtnFeedbackLight: {
-    backgroundColor: '#DDEFFF',
+    backgroundColor: "#DDEFFF",
   },
   footerBtnFeedbackDark: {
     backgroundColor: colors.blue6,
   },
-})
+});
