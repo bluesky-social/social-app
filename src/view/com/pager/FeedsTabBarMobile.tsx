@@ -1,9 +1,10 @@
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Animated, Button, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ComposeIcon2, HeartIcon, SolarplexLogo} from 'lib/icons'
 import React, {useMemo} from 'react'
 
+import { FAB } from '../util/fab/FAB'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {SolarplexLogo} from 'lib/icons'
 import {TabBar} from 'view/com/pager/TabBar'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -44,6 +45,9 @@ export const FeedsTabBar = observer(
       () => ['Home', ...store.me.savedFeeds.pinnedFeedNames],
       [store.me.savedFeeds.pinnedFeedNames],
     )
+    const onPressCompose = React.useCallback(() => {
+      store.shell.openComposer({})
+    }, [store])
 
     return (
       <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
@@ -64,10 +68,25 @@ export const FeedsTabBar = observer(
               /> */}
             </TouchableOpacity>
           </View>
-          <Text style={[brandBlue, s.bold, styles.title]}>
-            {/*store.session.isSandbox ? 'SANDBOX' : <SolarplexLogo />*/}
-          </Text>
-          <View style={[pal.view]} />
+          <View style={[pal.view]}>
+            <TouchableOpacity
+              testID="viewHeaderComposeBtn"
+              onPress={onPressCompose}
+              accessibilityRole="button"
+              accessibilityLabel="Compose post"
+              accessibilityHint="Compose a post"
+              hitSlop={10}>
+              {/* <ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} /> */}
+              {/* <UserAvatar avatar={store.me.avatar} size={27} /> */}
+              Post
+              {/* <FontAwesomeIcon
+                icon="bars"
+                size={18}
+                color={pal.colors.textLight}
+              /> */}
+            </TouchableOpacity>
+          
+          </View>
         </View>
         <TabBar
           key={items.join(',')}

@@ -43,9 +43,9 @@ export function TabBar({
   const currentFeed = useCustomFeed(
     'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
   )
-  const [buttonText, setButtonText] = useState(
-    currentFeed?.isSaved ? 'Leave' : 'Join',
-  )
+  // const [buttonText, setButtonText] = useState(
+  //   currentFeed?.isSaved ? 'Leave' : 'Join',
+  // )
 
   // const indicatorStyle = useMemo(
   //   () => ({borderBottomColor: indicatorColor || pal.colors.link}),
@@ -69,25 +69,15 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   )
 
-  useEffect(() => {
-    if (currentFeed?.isSaved) {
-      setButtonText('Leave')
-    } else {
-      setButtonText('Join')
-    }
-  }, [currentFeed?.isSaved])
+  // useEffect(() => {
+  //   if (currentFeed?.isSaved) {
+  //     setButtonText('Leave')
+  //   } else {
+  //     setButtonText('Join')
+  //   }
+  // }, [currentFeed?.isSaved])
 
-  // const renderItem = React.useCallback(({item}: {item: CustomFeedModel}) => {
-  //   return (
-  //     <TabBarCustomFeed
-  //       key={item.data.uri}
-  //       item={item}
-  //       showSaveBtn
-  //       showDescription
-  //       showLikes
-  //     />
-  //   )
-  // }, [])
+
 
   const store = useStores()
 
@@ -100,6 +90,7 @@ export function TabBar({
       navigation.navigate('SignIn')
       return
     }
+
     if (currentFeed.isSaved) {
       store.shell.openModal({
         name: 'confirm',
@@ -115,13 +106,13 @@ export function TabBar({
           }
         },
       })
-      setButtonText('Join')
+      //setButtonText('Join')
     } else {
       try {
         await store.me.savedFeeds.save(currentFeed)
         Toast.show('Added to my communities')
         await currentFeed.reload()
-        setButtonText('Leave')
+        //setButtonText('Leave')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
         store.log.error('Failed to save feed', {e})
@@ -147,44 +138,15 @@ export function TabBar({
     borderColor: colors.splx.primary[50],
   }
 
-  // function TabJoinButton() {
-  //   return (
-  //     <>
-  //       {items.map((item, i) => {
-  //         return (
-  //           <>
-  //             {item === 'Solana' ? (
-  //               <TouchableOpacity
-  //                 key={i}
-  //                 onPress={onToggleSaved}
-  //                 accessibilityRole="button">
-  //                 <Text type="button" style={styles.btn}>
-  //                   Join
-  //                 </Text>
-  //               </TouchableOpacity>
-  //             ) : null}
-  //           </>
-  //         )
-  //       })}
-  //     </>
-  //   )
-  // }
-
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <View
-        // horizontal={true}
-        // showsHorizontalScrollIndicator={false}
-        // ref={scrollElRef}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        ref={scrollElRef}
         style={styles.contentContainer}>
         {items.map((item, i) => {
           const selected = i === selectedPage
-          // if (selectedPage === i) {
-          //   console.log('selected', items[i])
-          //   if (items[i] === 'Solana') {
-          //     setIsSolana(true)
-          //   }
-          // }
           return (
             <>
               <View style={styles.container}>
@@ -227,7 +189,7 @@ export function TabBar({
           )
         })}
       </View>
-      {selectedPage === 1 ? (
+      {/* {selectedPage === 1 ? (
         currentFeed && (
           <TouchableOpacity onPress={onToggleSaved} accessibilityRole="button">
             <Text type="button" style={styles.btn}>
@@ -237,7 +199,7 @@ export function TabBar({
         )
       ) : (
         <></>
-      )}
+      )} */}
     </View>
   )
 }
