@@ -29,7 +29,7 @@ export const CommunityFeed = observer(
   ({
     item,
     style,
-    showJoinBtn = true,
+    showJoinBtn = false,
     showDescription = true,
   }: {
     item: CommunityFeedModel;
@@ -41,11 +41,11 @@ export const CommunityFeed = observer(
     const pal = usePalette("default");
     const navigation = useNavigation<NavigationProp>();
     const onToggleJoined = React.useCallback(async () => {
-      console.log("join or leave community");
       if (store.session.isDefaultSession) {
         navigation.navigate("SignIn");
         return;
       }
+      console.log("item:", item);
       // TODO(viksit)[F1]: add a store.me.joinedCommunities
       // then check for this
       if (item.isJoined) {
@@ -55,7 +55,7 @@ export const CommunityFeed = observer(
           message: `Remove ${item.displayName} from my communities?`,
           onPressConfirm: async () => {
             try {
-              // await store.me.savedFeeds.unsave(item);
+              await store.me.joinedCommunities.leave(item);
               Toast.show("Removed from my communities");
             } catch (e) {
               Toast.show("There was an issue contacting your server");
@@ -65,7 +65,7 @@ export const CommunityFeed = observer(
         });
       } else {
         try {
-          // await store.me.savedFeeds.save(item);
+          await store.me.joinedCommunities.join(item);
           Toast.show("Added to my communities");
           await item.reload();
         } catch (e) {
@@ -78,8 +78,11 @@ export const CommunityFeed = observer(
     // store.log.debug('item.displayName', item)
     // console.log("item.displayName", item.displayName);
     // console.log("item.displayName", item.data);
+
+    // TODO(viksit)[F1]: get avatar from server not hardcoded here
     const avatar =
       "https://cdn.bsky.social/imgproxy/29tGuFZEOtTYMs9vp-rG2w3aTstYFvWsvienwFDTDgg/rs:fill:1000:1000:1:0/plain/bafkreidfbgdswcssmcjtzo5dmezyyurljn5trlcbfbvnpwl7q3am6yxbdy@jpeg";
+
     return (
       <TouchableOpacity
         accessibilityRole="button"

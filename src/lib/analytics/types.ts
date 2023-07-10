@@ -116,6 +116,9 @@ interface TrackPropertiesMap {
   "MultiFeed:onRefresh": {};
   // MODERATION events
   "Moderation:ContentfilteringButtonClicked": {};
+  // Communities
+  "CommunityFeed:Join": {};
+  "CommunityFeed:Leave": {};
 }
 
 interface ScreenPropertiesMap {

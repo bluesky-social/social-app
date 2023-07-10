@@ -98,7 +98,7 @@ export const CommunitiesScreen = withAuthRequired(
     const renderItem = React.useCallback(
       (item: any) => {
         if (item instanceof CommunityFeedModel) {
-          return <CommunityFeed item={item} />;
+          return <CommunityFeed item={item} showJoinBtn={true} />;
         }
         return <View />;
       },

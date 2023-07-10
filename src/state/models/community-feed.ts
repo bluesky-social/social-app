@@ -11,7 +11,6 @@ export class CommunityFeedModel {
   // data
   _reactKey: string;
   data: SolarplexCommunity;
-  isJoined: false;
 
   constructor(
     public rootStore: RootStoreModel,
@@ -19,7 +18,6 @@ export class CommunityFeedModel {
   ) {
     this._reactKey = view.id;
     this.data = view;
-    this.isJoined = false;
     makeAutoObservable(
       this,
       {
@@ -42,10 +40,8 @@ export class CommunityFeedModel {
     }
     return `Community by Solarplex`;
   }
-  //TODO(viksit)[F1]: add save communities to root model
-  get isSaved() {
-    return true;
-    // return this.rootStore.preferences.savedFeeds.includes(this.uri);
+  get isJoined() {
+    return this.rootStore.preferences.joinedCommunities.includes(this.id);
   }
 
   // public apis
@@ -53,24 +49,24 @@ export class CommunityFeedModel {
 
   async join() {
     console.log("join community");
-    // try {
-    //   await this.rootStore.preferences.addSavedFeed(this.uri);
-    // } catch (error) {
-    //   this.rootStore.log.error("Failed to save feed", error);
-    // } finally {
-    //   track("CustomFeed:Save");
-    // }
+    try {
+      await this.rootStore.preferences.joinCommunity(this.id);
+    } catch (error) {
+      this.rootStore.log.error("Failed to join community", error);
+    } finally {
+      track("CommunityFeed:Join");
+    }
   }
 
   async leave() {
     console.log("leave community");
-    // try {
-    //   await this.rootStore.preferences.removeSavedFeed(this.uri);
-    // } catch (error) {
-    //   this.rootStore.log.error("Failed to unsave feed", error);
-    // } finally {
-    //   track("CustomFeed:Unsave");
-    // }
+    try {
+      await this.rootStore.preferences.leaveCommunity(this.id);
+    } catch (error) {
+      this.rootStore.log.error("Failed to leave community", error);
+    } finally {
+      track("CommunityFeed:Leave");
+    }
   }
 
   async reload() {
