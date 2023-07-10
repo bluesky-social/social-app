@@ -72,11 +72,6 @@ export const FeedsTabBar = observer(
               hitSlop={10}
             >
               <UserAvatar avatar={store.me.avatar} size={27} />
-              {/* <FontAwesomeIcon
-                icon="bars"
-                size={18}
-                color={pal.colors.textLight}
-              /> */}
             </TouchableOpacity>
           </View>
           <View style={[pal.view]}>

@@ -3,7 +3,10 @@ import {
   NativeStackScreenProps,
 } from "lib/routes/types";
 import { FlatList, View } from "react-native";
+import { ViewSelector, ViewSelectorHandle } from "view/com/util/ViewSelector";
 
+import { CommunityFeed } from "view/com/communities/CommunityFeed";
+import { CommunityFeedModel } from "state/models/community-feed";
 import { Feed } from "../com/notifications/Feed";
 import { InvitedUsers } from "../com/notifications/InvitedUsers";
 import { LoadLatestBtn } from "view/com/util/load-latest/LoadLatestBtn";
@@ -30,6 +33,10 @@ export const CommunitiesScreen = withAuthRequired(
       useOnMainScroll(store);
     const scrollElRef = React.useRef<FlatList>(null);
     const { screen } = useAnalytics();
+    const viewSelectorRef = React.useRef<ViewSelectorHandle>(null);
+    const onSoftReset = React.useCallback(() => {
+      viewSelectorRef.current?.scrollToTop();
+    }, []);
 
     // event handlers
     // =
@@ -51,16 +58,18 @@ export const CommunitiesScreen = withAuthRequired(
     // =
     useFocusEffect(
       React.useCallback(() => {
+        console.log("(usefocus)notifications call back 1");
         store.shell.setMinimalShellMode(false);
-        store.log.debug("NotificationsScreen: Updating feed");
+        store.log.debug("CommunitiesScreen: Updating communities");
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest);
         store.me.notifications.update();
-        screen("Notifications");
-
-        return () => {
-          softResetSub.remove();
-          store.me.notifications.markAllRead();
-        };
+        screen("Communities");
+        console.log("store comm:", store.me.mainFeed, store.me.savedFeeds);
+        store.communities.fetch();
+        // return () => {
+        //   softResetSub.remove();
+        //   store.me.notifications.markAllRead();
+        // };
       }, [store, screen, onPressLoadLatest]),
     );
     useTabFocusEffect(
@@ -75,33 +84,53 @@ export const CommunitiesScreen = withAuthRequired(
           // navigation
           if (isInside) {
             if (isWeb) {
-              store.me.notifications.syncQueue();
+              console.log("(web) notifications call back 2");
+              // store.communities.fetch();
             } else {
-              if (store.me.notifications.unreadCount > 0) {
-                store.me.notifications.refresh();
-              } else {
-                store.me.notifications.syncQueue();
-              }
+              console.log("(notweb) notifications call back 3");
+              // store.communities.fetch();
             }
           }
         },
         [store],
       ),
     );
+    const renderItem = React.useCallback(
+      (item: any) => {
+        if (item instanceof CommunityFeedModel) {
+          return <CommunityFeed item={item} />;
+        }
+        return <View />;
+      },
+      [onPressTryAgain, store.session.isDefaultSession],
+    );
 
-    const hasNew =
-      store.me.notifications.hasNewLatest &&
-      !store.me.notifications.isRefreshing;
+    // const hasNew =
+    //   store.me.notifications.hasNewLatest &&
+    //   !store.me.notifications.isRefreshing;
     return (
       <View testID="communitiesScreen" style={s.hContentRegion}>
         <ViewHeader title="Communities" canGoBack={false} />
-        {/* <InvitedUsers /> */}
+        {/*TODO(viksit)[F1]: utilize a view system to make this look decent */}
+        {/* {store.communities.communityFeeds?.map((item, index) => (
+          <CommunityFeed item={item} />
+        ))} */}
+        {store.communities.communityFeeds && (
+          <ViewSelector
+            ref={viewSelectorRef}
+            swipeEnabled={false}
+            sections={[]}
+            items={store.communities.communityFeeds}
+            renderItem={renderItem}
+          />
+        )}
         {/* <Feed
           view={store.me.notifications}
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
         /> */}
+
         {/* {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onPressLoadLatest}

@@ -5,7 +5,6 @@ import {
   BellIconSolid,
   CommunitiesIcon,
   CommunitiesIconSolid,
-  FAGenericIcon,
   HomeIcon,
   HomeIconSolid,
   UserIcon,

@@ -21,6 +21,7 @@ export type CommonNavigatorParams = {
   PostLikedBy: { name: string; rkey: string };
   PostRepostedBy: { name: string; rkey: string };
   CustomFeed: { name: string; rkey: string };
+  CommunityFeed: { name: string; rkey: string };
   CustomFeedLikedBy: { name: string; rkey: string };
   Debug: undefined;
   Log: undefined;

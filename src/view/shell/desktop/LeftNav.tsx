@@ -1,3 +1,5 @@
+import * as fa from "@fortawesome/free-solid-svg-icons";
+
 import {
   BellIcon,
   BellIconSolid,
@@ -6,60 +8,67 @@ import {
   HomeIconSolid,
   UserIcon,
   UserIconSolid,
-} from 'lib/icons'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+} from "lib/icons";
+import { CommonNavigatorParams, NavigationProp } from "lib/routes/types";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {colors, s} from 'lib/styles'
-import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
+} from "@fortawesome/react-native-fontawesome";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
+import { colors, s } from "lib/styles";
+import { getCurrentRoute, isStateAtTabRoot, isTab } from "lib/routes/helpers";
 import {
   useLinkProps,
   useNavigation,
   useNavigationState,
-} from '@react-navigation/native'
+} from "@react-navigation/native";
 
-import {Banner} from '../Banner'
-import {Link} from 'view/com/util/Link'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
-import React from 'react'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {observer} from 'mobx-react-lite'
-import {router} from '../../../routes'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import { Banner } from "../Banner";
+import { Link } from "view/com/util/Link";
+import { PressableWithHover } from "view/com/util/PressableWithHover";
+import React from "react";
+import { Text } from "view/com/util/text/Text";
+import { UserAvatar } from "view/com/util/UserAvatar";
+import { observer } from "mobx-react-lite";
+import { router } from "../../../routes";
+import { useAnalytics } from "lib/analytics/analytics";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
 const ProfileCard = observer(() => {
-  const store = useStores()
-  console.log(store.agent)
+  const store = useStores();
+  console.log(store.agent);
   return (
     <Link
       href={`/profile/${store.me.handle}`}
       style={styles.profileCard}
-      asAnchor>
+      asAnchor
+    >
       <UserAvatar avatar={store.me.avatar} size={64} />
     </Link>
-  )
-})
+  );
+});
 
 function BackBtn() {
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp>()
-  const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
+  const pal = usePalette("default");
+  const navigation = useNavigation<NavigationProp>();
+  const shouldShow = useNavigationState((state) => !isStateAtTabRoot(state));
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
-      navigation.goBack()
+      navigation.goBack();
     } else {
-      navigation.navigate('Home')
+      navigation.navigate("Home");
     }
-  }, [navigation])
+  }, [navigation]);
 
   if (!shouldShow) {
-    return <></>
+    return <></>;
   }
   return (
     <TouchableOpacity
@@ -68,55 +77,56 @@ function BackBtn() {
       style={styles.backBtn}
       accessibilityRole="button"
       accessibilityLabel="Go back"
-      accessibilityHint="">
+      accessibilityHint=""
+    >
       <FontAwesomeIcon
         size={24}
         icon="angle-left"
         style={pal.text as FontAwesomeIconStyle}
       />
     </TouchableOpacity>
-  )
+  );
 }
 
 interface NavItemProps {
-  count?: string
-  href: string
-  icon: JSX.Element
-  iconFilled: JSX.Element
-  label: string
+  count?: string;
+  href: string;
+  icon: JSX.Element;
+  iconFilled: JSX.Element;
+  label: string;
 }
 export const NavItem = observer(
-  ({count, href, icon, iconFilled, label}: NavItemProps) => {
-    const pal = usePalette('default')
-    const store = useStores()
-    const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteInfo = useNavigationState(state => {
+  ({ count, href, icon, iconFilled, label }: NavItemProps) => {
+    const pal = usePalette("default");
+    const store = useStores();
+    const [pathName] = React.useMemo(() => router.matchPath(href), [href]);
+    const currentRouteInfo = useNavigationState((state) => {
       if (!state) {
-        return {name: 'Home'}
+        return { name: "Home" };
       }
-      return getCurrentRoute(state)
-    })
+      return getCurrentRoute(state);
+    });
     let isCurrent =
-      currentRouteInfo.name === 'Profile'
+      currentRouteInfo.name === "Profile"
         ? isTab(currentRouteInfo.name, pathName) &&
-          (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          (currentRouteInfo.params as CommonNavigatorParams["Profile"]).name ===
             store.me.handle
-        : isTab(currentRouteInfo.name, pathName)
-    const {onPress} = useLinkProps({to: href})
+        : isTab(currentRouteInfo.name, pathName);
+    const { onPress } = useLinkProps({ to: href });
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         if (e.ctrlKey || e.metaKey || e.altKey) {
-          return
+          return;
         }
-        e.preventDefault()
+        e.preventDefault();
         if (isCurrent) {
-          store.emitScreenSoftReset()
+          store.emitScreenSoftReset();
         } else {
-          onPress()
+          onPress();
         }
       },
       [onPress, isCurrent, store],
-    )
+    );
 
     return (
       <PressableWithHover
@@ -126,13 +136,14 @@ export const NavItem = observer(
         onPress={onPressWrapped}
         // @ts-ignore web only -prf
         href={href}
-        dataSet={{noUnderline: 1}}
+        dataSet={{ noUnderline: 1 }}
         accessibilityRole="tab"
         accessibilityLabel={label}
-        accessibilityHint="">
+        accessibilityHint=""
+      >
         <View style={[styles.navItemIconWrapper]}>
           {isCurrent ? iconFilled : icon}
-          {typeof count === 'string' && count ? (
+          {typeof count === "string" && count ? (
             <Text type="button" style={styles.navItemCount}>
               {count}
             </Text>
@@ -142,43 +153,44 @@ export const NavItem = observer(
           {label}
         </Text>
       </PressableWithHover>
-    )
+    );
   },
-)
+);
 
 type SignOutProps = {
-  onPressHandler: () => void
-}
+  onPressHandler: () => void;
+};
 
-export function SignOutBtn({onPressHandler}: SignOutProps) {
-  const pal = usePalette('default')
+export function SignOutBtn({ onPressHandler }: SignOutProps) {
+  const pal = usePalette("default");
   return (
     <PressableWithHover
       style={styles.navItemWrapper}
       // @ts-ignore the function signature differs on web -prf
       onPress={onPressHandler}
       // @ts-ignore web only -prf
-      dataSet={{noUnderline: 1}}
+      dataSet={{ noUnderline: 1 }}
       accessibilityRole="tab"
-      accessibilityLabel={'Sign Out'}
-      accessibilityHint="">
+      accessibilityLabel={"Sign Out"}
+      accessibilityHint=""
+    >
       <View style={[styles.navItemIconWrapper]}>
         <FontAwesomeIcon
           size={24}
           icon="sign-out"
-          style={{...pal.text, marginLeft: 4} as FontAwesomeIconStyle}
+          style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
         />
       </View>
       <Text type="title" style={[s.normal, pal.text]}>
         Sign Out
       </Text>
     </PressableWithHover>
-  )
+  );
 }
 
 function ComposeBtn() {
-  const store = useStores()
-  const onPressCompose = () => store.shell.openComposer({})
+  const store = useStores();
+  const onPressCompose = () => store.shell.openComposer({});
 
   return (
     <TouchableOpacity
@@ -186,7 +198,8 @@ function ComposeBtn() {
       onPress={onPressCompose}
       accessibilityRole="button"
       accessibilityLabel="Compose post"
-      accessibilityHint="">
+      accessibilityHint=""
+    >
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2
           size={19}
@@ -198,18 +211,18 @@ function ComposeBtn() {
         New Post
       </Text>
     </TouchableOpacity>
-  )
+  );
 }
 
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
-  const store = useStores()
-  const pal = usePalette('default')
-  const {track} = useAnalytics()
+  const store = useStores();
+  const pal = usePalette("default");
+  const { track } = useAnalytics();
 
   const onPressSignout = React.useCallback(() => {
-    track('Settings:SignOutButtonClicked')
-    store.session.logout()
-  }, [track, store])
+    track("Settings:SignOutButtonClicked");
+    store.session.logout();
+  }, [track, store]);
 
   return (
     <View style={[styles.leftNav, pal.view]}>
@@ -228,6 +241,33 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       {store.session.hasSession && (
         <>
           <NavItem
+            href={`/profile/${store.me.handle}`}
+            icon={<UserIcon size={24} strokeWidth={1.7} style={[pal.text]} />}
+            iconFilled={
+              <UserIconSolid size={24} strokeWidth={1.7} style={[pal.text]} />
+            }
+            label="Profile"
+          />
+          <NavItem
+            href={`/communities`}
+            icon={
+              <FontAwesomeIcon
+                size={22}
+                icon={fa.faPeopleGroup}
+                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+              />
+            }
+            iconFilled={
+              <FontAwesomeIcon
+                size={22}
+                icon={fa.faPeopleGroup}
+                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+              />
+            }
+            label="Communities"
+          />
+
+          <NavItem
             href="/notifications"
             count={store.me.notifications.unreadCountLabel}
             icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
@@ -236,14 +276,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             }
             label="Notifications"
           />
-          {/* <NavItem
-            count={store.me.notifications.unreadCountLabel}
-            icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
-            iconFilled={
-              <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
-            }
-            label="Sign Out"
-          /> */}
           <SignOutBtn onPressHandler={() => onPressSignout()} />
           <ComposeBtn />
         </>
@@ -258,17 +290,17 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         />
       )}
     </View>
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
-    right: 'calc(50vw + 312px)',
+    right: "calc(50vw + 312px)",
     width: 220,
-    maxHeight: 'calc(100vh - 10px)',
-    overflowY: 'auto',
+    maxHeight: "calc(100vh - 10px)",
+    overflowY: "auto",
   },
 
   profileCard: {
@@ -278,7 +310,7 @@ const styles = StyleSheet.create({
   },
 
   backBtn: {
-    position: 'absolute',
+    position: "absolute",
     top: 12,
     right: 12,
     width: 30,
@@ -288,36 +320,36 @@ const styles = StyleSheet.create({
   },
 
   navItemWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 12,
     padding: 12,
     borderRadius: 8,
     gap: 10,
   },
   navItemIconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     width: 28,
     height: 28,
     marginTop: 2,
   },
   navItemCount: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 15,
     backgroundColor: colors.blue3,
     color: colors.white,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingHorizontal: 4,
     borderRadius: 6,
   },
 
   newPostBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     width: 150,
     borderRadius: 24,
     paddingVertical: 10,
@@ -332,8 +364,8 @@ const styles = StyleSheet.create({
   },
   newPostBtnLabel: {
     color: colors.white,
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: "bold",
   },
   btn: {
     borderRadius: 32,
@@ -342,7 +374,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   btnLabel: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 21,
   },
-})
+});

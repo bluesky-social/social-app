@@ -17,8 +17,6 @@ export class Router {
   }
 
   matchPath(path: string): [string, RouteParams] {
-    console.log("PATJ:", path);
-    console.log("this routes", this.routes);
     let name = "NotFound";
     let params: RouteParams = {};
     for (const [screenName, route] of this.routes) {
