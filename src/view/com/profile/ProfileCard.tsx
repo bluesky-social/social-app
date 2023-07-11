@@ -1,22 +1,22 @@
-import * as React from 'react'
+import * as React from "react";
 
-import {StyleSheet, View} from 'react-native'
+import { StyleSheet, View } from "react-native";
 import {
   getProfileModeration,
   getProfileViewBasicLabelInfo,
-} from 'lib/labeling/helpers'
+} from "lib/labeling/helpers";
 
-import {AppBskyActorDefs} from '@atproto/api'
-import {FollowButton} from './FollowButton'
-import {Link} from '../util/Link'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
-import {observer} from 'mobx-react-lite'
-import {s} from 'lib/styles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import { AppBskyActorDefs } from "@atproto/api";
+import { FollowButton } from "./FollowButton";
+import { Link } from "../util/Link";
+import { ModerationBehaviorCode } from "lib/labeling/types";
+import { Text } from "../util/text/Text";
+import { UserAvatar } from "../util/UserAvatar";
+import { observer } from "mobx-react-lite";
+import { s } from "lib/styles";
+import { sanitizeDisplayName } from "lib/strings/display-names";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
 export const ProfileCard = observer(
   ({
@@ -28,29 +28,29 @@ export const ProfileCard = observer(
     overrideModeration,
     renderButton,
   }: {
-    testID?: string
-    profile: AppBskyActorDefs.ProfileViewBasic
-    noBg?: boolean
-    noBorder?: boolean
-    followers?: AppBskyActorDefs.ProfileView[] | undefined
-    overrideModeration?: boolean
+    testID?: string;
+    profile: AppBskyActorDefs.ProfileViewBasic;
+    noBg?: boolean;
+    noBorder?: boolean;
+    followers?: AppBskyActorDefs.ProfileView[] | undefined;
+    overrideModeration?: boolean;
     renderButton?: (
       profile: AppBskyActorDefs.ProfileViewBasic,
-    ) => React.ReactNode
+    ) => React.ReactNode;
   }) => {
-    const store = useStores()
-    const pal = usePalette('default')
+    const store = useStores();
+    const pal = usePalette("default");
 
     const moderation = getProfileModeration(
       store,
       getProfileViewBasicLabelInfo(profile),
-    )
+    );
 
     if (
       moderation.list.behavior === ModerationBehaviorCode.Hide &&
       !overrideModeration
     ) {
-      return null
+      return null;
     }
 
     return (
@@ -65,7 +65,8 @@ export const ProfileCard = observer(
         href={`/profile/${profile.handle}`}
         title={profile.handle}
         asAnchor
-        anchorNoUnderline>
+        anchorNoUnderline
+      >
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <UserAvatar
@@ -79,7 +80,8 @@ export const ProfileCard = observer(
               type="lg"
               style={[s.bold, pal.text]}
               numberOfLines={1}
-              lineHeight={1.2}>
+              lineHeight={1.2}
+            >
               {sanitizeDisplayName(profile.displayName || profile.handle)}
             </Text>
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
@@ -108,24 +110,28 @@ export const ProfileCard = observer(
         ) : undefined}
         <FollowersList followers={followers} />
       </Link>
-    )
+    );
   },
-)
+);
 
 const FollowersList = observer(
-  ({followers}: {followers?: AppBskyActorDefs.ProfileView[] | undefined}) => {
-    const store = useStores()
-    const pal = usePalette('default')
+  ({
+    followers,
+  }: {
+    followers?: AppBskyActorDefs.ProfileView[] | undefined;
+  }) => {
+    const store = useStores();
+    const pal = usePalette("default");
     if (!followers?.length) {
-      return null
+      return null;
     }
 
     const followersWithMods = followers
-      .map(f => ({
+      .map((f) => ({
         f,
         mod: getProfileModeration(store, getProfileViewBasicLabelInfo(f)),
       }))
-      .filter(({mod}) => mod.list.behavior !== ModerationBehaviorCode.Hide)
+      .filter(({ mod }) => mod.list.behavior !== ModerationBehaviorCode.Hide);
 
     return (
       <View style={styles.followedBy}>
@@ -133,11 +139,14 @@ const FollowersList = observer(
           type="sm"
           style={[styles.followsByDesc, pal.textLight]}
           numberOfLines={2}
-          lineHeight={1.2}>
-          Followed by{' '}
-          {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
+          lineHeight={1.2}
+        >
+          Followed by{" "}
+          {followersWithMods
+            .map(({ f }) => f.displayName || f.handle)
+            .join(", ")}
         </Text>
-        {followersWithMods.slice(0, 3).map(({f, mod}) => (
+        {followersWithMods.slice(0, 3).map(({ f, mod }) => (
           <View key={f.did} style={styles.followedByAviContainer}>
             <View style={[styles.followedByAvi, pal.view]}>
               <UserAvatar avatar={f.avatar} size={32} moderation={mod.avatar} />
@@ -145,9 +154,9 @@ const FollowersList = observer(
           </View>
         ))}
       </View>
-    )
+    );
   },
-)
+);
 
 export const ProfileCardWithFollowBtn = observer(
   ({
@@ -156,13 +165,13 @@ export const ProfileCardWithFollowBtn = observer(
     noBorder,
     followers,
   }: {
-    profile: AppBskyActorDefs.ProfileViewBasic
-    noBg?: boolean
-    noBorder?: boolean
-    followers?: AppBskyActorDefs.ProfileView[] | undefined
+    profile: AppBskyActorDefs.ProfileViewBasic;
+    noBg?: boolean;
+    noBorder?: boolean;
+    followers?: AppBskyActorDefs.ProfileView[] | undefined;
   }) => {
-    const store = useStores()
-    const isMe = store.me.handle === profile.handle
+    const store = useStores();
+    const isMe = store.me.handle === profile.handle;
 
     return (
       <ProfileCard
@@ -171,14 +180,14 @@ export const ProfileCardWithFollowBtn = observer(
         noBorder={noBorder}
         followers={followers}
         renderButton={
-          isMe || store.session.isDefaultSession
+          isMe || store.session.isSolarplexSession
             ? undefined
             : () => <FollowButton did={profile.did} />
         }
       />
-    )
+    );
   },
-)
+);
 
 const styles = StyleSheet.create({
   outer: {
@@ -189,8 +198,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   layout: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   layoutAvi: {
     width: 54,
@@ -202,7 +211,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   layoutContent: {
     flex: 1,
@@ -231,8 +240,8 @@ const styles = StyleSheet.create({
   },
 
   followedBy: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingLeft: 54,
     paddingRight: 20,
     marginBottom: 10,
@@ -252,4 +261,4 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingRight: 10,
   },
-})
+});

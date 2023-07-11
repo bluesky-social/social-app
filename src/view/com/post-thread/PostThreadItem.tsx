@@ -1,89 +1,94 @@
-import * as Toast from '../util/Toast'
+import * as Toast from "../util/Toast";
 
-import {AccessibilityActionEvent, Linking, StyleSheet, View} from 'react-native'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {
+  AccessibilityActionEvent,
+  Linking,
+  StyleSheet,
+  View,
+} from "react-native";
+import { AppBskyFeedDefs, AtUri } from "@atproto/api";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import React, {useCallback, useMemo} from 'react'
-import {ago, niceDate} from 'lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+} from "@fortawesome/react-native-fontawesome";
+import React, { useCallback, useMemo } from "react";
+import { ago, niceDate } from "lib/strings/time";
+import { getTranslatorLink, isPostInLanguage } from "../../../locale/helpers";
 
-import Clipboard from '@react-native-clipboard/clipboard'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ImageHider} from '../util/moderation/ImageHider'
-import {Link} from '../util/Link'
-import {NavigationProp} from 'lib/routes/types'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostDropdownBtn} from '../util/forms/DropdownButton'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostHider} from '../util/moderation/PostHider'
-import {PostMeta} from '../util/PostMeta'
-import {PostSandboxWarning} from '../util/PostSandboxWarning'
-import {PostThreadItemModel} from 'state/models/content/post-thread-item'
-import {RichText} from '../util/text/RichText'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
-import {formatCount} from '../util/numeric/format'
-import {observer} from 'mobx-react-lite'
-import {pluralize} from 'lib/strings/helpers'
-import {s} from 'lib/styles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {useNavigation} from '@react-navigation/native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import Clipboard from "@react-native-clipboard/clipboard";
+import { ContentHider } from "../util/moderation/ContentHider";
+import { ErrorMessage } from "../util/error/ErrorMessage";
+import { ImageHider } from "../util/moderation/ImageHider";
+import { Link } from "../util/Link";
+import { NavigationProp } from "lib/routes/types";
+import { PostCtrls } from "../util/post-ctrls/PostCtrls";
+import { PostDropdownBtn } from "../util/forms/DropdownButton";
+import { PostEmbeds } from "../util/post-embeds";
+import { PostHider } from "../util/moderation/PostHider";
+import { PostMeta } from "../util/PostMeta";
+import { PostSandboxWarning } from "../util/PostSandboxWarning";
+import { PostThreadItemModel } from "state/models/content/post-thread-item";
+import { RichText } from "../util/text/RichText";
+import { Text } from "../util/text/Text";
+import { UserAvatar } from "../util/UserAvatar";
+import { formatCount } from "../util/numeric/format";
+import { observer } from "mobx-react-lite";
+import { pluralize } from "lib/strings/helpers";
+import { s } from "lib/styles";
+import { sanitizeDisplayName } from "lib/strings/display-names";
+import { useNavigation } from "@react-navigation/native";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
-const PARENT_REPLY_LINE_LENGTH = 8
+const PARENT_REPLY_LINE_LENGTH = 8;
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
 }: {
-  item: PostThreadItemModel
-  onPostReply: () => void
+  item: PostThreadItemModel;
+  onPostReply: () => void;
 }) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const navigation = useNavigation<NavigationProp>()
+  const pal = usePalette("default");
+  const store = useStores();
+  const navigation = useNavigation<NavigationProp>();
 
-  const [deleted, setDeleted] = React.useState(false)
-  const record = item.postRecord
-  const hasEngagement = item.post.likeCount || item.post.repostCount
+  const [deleted, setDeleted] = React.useState(false);
+  const record = item.postRecord;
+  const hasEngagement = item.post.likeCount || item.post.repostCount;
 
-  const itemUri = item.post.uri
-  const itemCid = item.post.cid
+  const itemUri = item.post.uri;
+  const itemCid = item.post.cid;
   const itemHref = React.useMemo(() => {
-    const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}`
-  }, [item.post.uri, item.post.author.handle])
-  const itemTitle = `Post by ${item.post.author.handle}`
-  const authorHref = `/profile/${item.post.author.handle}`
-  const authorTitle = item.post.author.handle
+    const urip = new AtUri(item.post.uri);
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}`;
+  }, [item.post.uri, item.post.author.handle]);
+  const itemTitle = `Post by ${item.post.author.handle}`;
+  const authorHref = `/profile/${item.post.author.handle}`;
+  const authorTitle = item.post.author.handle;
   const likesHref = React.useMemo(() => {
-    const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}/liked-by`
-  }, [item.post.uri, item.post.author.handle])
-  const likesTitle = 'Likes on this post'
+    const urip = new AtUri(item.post.uri);
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}/liked-by`;
+  }, [item.post.uri, item.post.author.handle]);
+  const likesTitle = "Likes on this post";
   const repostsHref = React.useMemo(() => {
-    const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
-  }, [item.post.uri, item.post.author.handle])
-  const repostsTitle = 'Reposts of this post'
+    const urip = new AtUri(item.post.uri);
+    return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`;
+  }, [item.post.uri, item.post.author.handle]);
+  const repostsTitle = "Reposts of this post";
 
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const primaryLanguage = store.preferences.contentLanguages[0] || "en";
+  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || "");
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
       !isPostInLanguage(item.post, store.preferences.contentLanguages),
     [item.post, store.preferences.contentLanguages],
-  )
+  );
 
   const onPressReply = React.useCallback(async () => {
-    store.session.isDefaultSession
-      ? navigation.navigate('SignIn')
+    store.session.isSolarplexSession
+      ? navigation.navigate("SignIn")
       : store.shell.openComposer({
           replyTo: {
             uri: item.post.uri,
@@ -96,108 +101,108 @@ export const PostThreadItem = observer(function PostThreadItem({
             },
           },
           onPost: onPostReply,
-        })
-  }, [store, item, record, onPostReply, navigation])
+        });
+  }, [store, item, record, onPostReply, navigation]);
 
   const onPressToggleRepost = React.useCallback(async () => {
-    return store.session.isDefaultSession
-      ? navigation.navigate('SignIn')
+    return store.session.isSolarplexSession
+      ? navigation.navigate("SignIn")
       : item
           .toggleRepost()
-          .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [item, store, navigation])
+          .catch((e) => store.log.error("Failed to toggle repost", e));
+  }, [item, store, navigation]);
 
   const onPressToggleLike = React.useCallback(async () => {
-    return store.session.isDefaultSession
-      ? navigation.navigate('SignIn')
+    return store.session.isSolarplexSession
+      ? navigation.navigate("SignIn")
       : item
           .toggleLike()
-          .catch(e => store.log.error('Failed to toggle like', e))
-  }, [item, store, navigation])
+          .catch((e) => store.log.error("Failed to toggle like", e));
+  }, [item, store, navigation]);
 
   const onCopyPostText = React.useCallback(() => {
-    Clipboard.setString(record?.text || '')
-    Toast.show('Copied to clipboard')
-  }, [record])
+    Clipboard.setString(record?.text || "");
+    Toast.show("Copied to clipboard");
+  }, [record]);
 
   const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
+    Linking.openURL(translatorUrl);
+  }, [translatorUrl]);
 
   const onToggleThreadMute = React.useCallback(async () => {
     try {
-      await item.toggleThreadMute()
+      await item.toggleThreadMute();
       if (item.isThreadMuted) {
-        Toast.show('You will no longer receive notifications for this thread')
+        Toast.show("You will no longer receive notifications for this thread");
       } else {
-        Toast.show('You will now receive notifications for this thread')
+        Toast.show("You will now receive notifications for this thread");
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
+      store.log.error("Failed to toggle thread mute", e);
     }
-  }, [item, store])
+  }, [item, store]);
 
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
       () => {
-        setDeleted(true)
-        Toast.show('Post deleted')
+        setDeleted(true);
+        Toast.show("Post deleted");
       },
-      e => {
-        store.log.error('Failed to delete post', e)
-        Toast.show('Failed to delete post, please try again')
+      (e) => {
+        store.log.error("Failed to delete post", e);
+        Toast.show("Failed to delete post, please try again");
       },
-    )
-  }, [item, store])
+    );
+  }, [item, store]);
 
   const accessibilityActions = useMemo(
     () => [
       {
-        name: 'reply',
-        label: 'Reply',
+        name: "reply",
+        label: "Reply",
       },
       {
-        name: 'repost',
-        label: item.post.viewer?.repost ? 'Undo repost' : 'Repost',
+        name: "repost",
+        label: item.post.viewer?.repost ? "Undo repost" : "Repost",
       },
-      {name: 'like', label: item.post.viewer?.like ? 'Unlike' : 'Like'},
+      { name: "like", label: item.post.viewer?.like ? "Unlike" : "Like" },
     ],
     [item.post.viewer?.like, item.post.viewer?.repost],
-  )
+  );
 
   const onAccessibilityAction = useCallback(
     (event: AccessibilityActionEvent) => {
       switch (event.nativeEvent.actionName) {
-        case 'like':
-          onPressToggleLike()
-          break
-        case 'reply':
-          onPressReply()
-          break
-        case 'repost':
-          onPressToggleRepost()
-          break
+        case "like":
+          onPressToggleLike();
+          break;
+        case "reply":
+          onPressReply();
+          break;
+        case "repost":
+          onPressToggleRepost();
+          break;
         default:
-          break
+          break;
       }
     },
     [onPressReply, onPressToggleLike, onPressToggleRepost],
-  )
+  );
 
   if (!record) {
-    return <ErrorMessage message="Invalid or unsupported post record" />
+    return <ErrorMessage message="Invalid or unsupported post record" />;
   }
 
   if (deleted) {
     return (
       <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
         <FontAwesomeIcon
-          icon={['far', 'trash-can']}
+          icon={["far", "trash-can"]}
           style={pal.icon as FontAwesomeIconStyle}
         />
         <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
       </View>
-    )
+    );
   }
 
   if (item._isHighlightedPost) {
@@ -207,7 +212,8 @@ export const PostThreadItem = observer(function PostThreadItem({
         style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
         moderation={item.moderation.thread}
         accessibilityActions={accessibilityActions}
-        onAccessibilityAction={onAccessibilityAction}>
+        onAccessibilityAction={onAccessibilityAction}
+      >
         <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -216,7 +222,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               title={authorTitle}
               asAnchor
               accessibilityLabel={`${item.post.author.handle}'s avatar`}
-              accessibilityHint="">
+              accessibilityHint=""
+            >
               <UserAvatar
                 size={52}
                 avatar={item.post.author.avatar}
@@ -230,12 +237,14 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
-                  title={authorTitle}>
+                  title={authorTitle}
+                >
                   <Text
                     type="xl-bold"
                     style={[pal.text]}
                     numberOfLines={1}
-                    lineHeight={1.2}>
+                    lineHeight={1.2}
+                  >
                     {sanitizeDisplayName(
                       item.post.author.displayName || item.post.author.handle,
                     )}
@@ -258,7 +267,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onToggleThreadMute={onToggleThreadMute}
-                onDeletePost={onDeletePost}>
+                onDeletePost={onDeletePost}
+              >
                 <FontAwesomeIcon
                   icon="ellipsis-h"
                   size={14}
@@ -270,7 +280,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               <Link
                 style={styles.metaItem}
                 href={authorHref}
-                title={authorTitle}>
+                title={authorTitle}
+              >
                 <Text type="md" style={[pal.textLight]} numberOfLines={1}>
                   @{item.post.author.handle}
                 </Text>
@@ -285,7 +296,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={[
                   styles.postTextContainer,
                   styles.postTextLargeContainer,
-                ]}>
+                ]}
+              >
                 <RichText
                   type="post-text-lg"
                   richText={item.richText}
@@ -309,12 +321,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <Link
                   style={styles.expandedInfoItem}
                   href={repostsHref}
-                  title={repostsTitle}>
+                  title={repostsTitle}
+                >
                   <Text testID="repostCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
                       {formatCount(item.post.repostCount)}
-                    </Text>{' '}
-                    {pluralize(item.post.repostCount, 'repost')}
+                    </Text>{" "}
+                    {pluralize(item.post.repostCount, "repost")}
                   </Text>
                 </Link>
               ) : (
@@ -324,12 +337,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <Link
                   style={styles.expandedInfoItem}
                   href={likesHref}
-                  title={likesTitle}>
+                  title={likesTitle}
+                >
                   <Text testID="likeCount" type="lg" style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
                       {formatCount(item.post.likeCount)}
-                    </Text>{' '}
-                    {pluralize(item.post.likeCount, 'like')}
+                    </Text>{" "}
+                    {pluralize(item.post.likeCount, "like")}
                   </Text>
                 </Link>
               ) : (
@@ -368,7 +382,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
       </PostHider>
-    )
+    );
   } else {
     return (
       <>
@@ -383,12 +397,13 @@ export const PostThreadItem = observer(function PostThreadItem({
           ]}
           moderation={item.moderation.thread}
           accessibilityActions={accessibilityActions}
-          onAccessibilityAction={onAccessibilityAction}>
+          onAccessibilityAction={onAccessibilityAction}
+        >
           {item._showParentReplyLine && (
             <View
               style={[
                 styles.parentReplyLine,
-                {borderColor: pal.colors.replyLine},
+                { borderColor: pal.colors.replyLine },
               ]}
             />
           )}
@@ -396,7 +411,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             <View
               style={[
                 styles.childReplyLine,
-                {borderColor: pal.colors.replyLine},
+                { borderColor: pal.colors.replyLine },
               ]}
             />
           )}
@@ -422,7 +437,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
               <ContentHider
                 moderation={item.moderation.thread}
-                containerStyle={styles.contentHider}>
+                containerStyle={styles.contentHider}
+              >
                 {item.richText?.text ? (
                   <View style={styles.postTextContainer}>
                     <RichText
@@ -480,12 +496,13 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderTopColor: pal.colors.border},
+              { borderTopColor: pal.colors.border },
               pal.view,
             ]}
             href={itemHref}
             title={itemTitle}
-            noFeedback>
+            noFeedback
+          >
             <Text style={pal.link}>Continue thread...</Text>
             <FontAwesomeIcon
               icon="angle-right"
@@ -495,20 +512,20 @@ export const PostThreadItem = observer(function PostThreadItem({
           </Link>
         ) : undefined}
       </>
-    )
+    );
   }
-})
+});
 
 function ExpandedPostDetails({
   post,
   needsTranslation,
   translatorUrl,
 }: {
-  post: AppBskyFeedDefs.PostView
-  needsTranslation: boolean
-  translatorUrl: string
+  post: AppBskyFeedDefs.PostView;
+  needsTranslation: boolean;
+  translatorUrl: string;
 }) {
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
@@ -521,7 +538,7 @@ function ExpandedPostDetails({
         </>
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -538,21 +555,21 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   parentReplyLine: {
-    position: 'absolute',
+    position: "absolute",
     left: 44,
     top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
     height: PARENT_REPLY_LINE_LENGTH,
     borderLeftWidth: 2,
   },
   childReplyLine: {
-    position: 'absolute',
+    position: "absolute",
     left: 44,
     top: 65,
     bottom: 0,
     borderLeftWidth: 2,
   },
   layout: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   layoutAvi: {
     paddingLeft: 10,
@@ -567,7 +584,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   meta: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingTop: 2,
     paddingBottom: 2,
   },
@@ -580,9 +597,9 @@ const styles = StyleSheet.create({
     maxWidth: 240,
   },
   postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
     paddingBottom: 8,
     paddingRight: 10,
     minHeight: 36,
@@ -598,7 +615,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   expandedInfo: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
     borderTopWidth: 1,
     borderBottomWidth: 1,
@@ -609,12 +626,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   loadMore: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderTopWidth: 1,
     paddingLeft: 80,
     paddingRight: 20,
     paddingVertical: 10,
     marginBottom: 8,
   },
-})
+});

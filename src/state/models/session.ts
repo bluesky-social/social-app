@@ -3,23 +3,23 @@ import {
   AtpSessionEvent,
   BskyAgent,
   ComAtprotoServerDescribeServer as DescribeServer,
-} from '@atproto/api'
-import {IS_PROD, SOLARPLEX_IDENTIFIER} from 'lib/constants'
-import {hasProp, isObj} from 'lib/type-guards'
-import {makeAutoObservable, runInAction} from 'mobx'
+} from "@atproto/api";
+import { IS_PROD, SOLARPLEX_IDENTIFIER } from "lib/constants";
+import { hasProp, isObj } from "lib/type-guards";
+import { makeAutoObservable, runInAction } from "mobx";
 
-import {RootStoreModel} from './root-store'
-import {networkRetry} from 'lib/async/retry'
-import normalizeUrl from 'normalize-url'
-import {z} from 'zod'
+import { RootStoreModel } from "./root-store";
+import { networkRetry } from "lib/async/retry";
+import normalizeUrl from "normalize-url";
+import { z } from "zod";
 
-export type ServiceDescription = DescribeServer.OutputSchema
+export type ServiceDescription = DescribeServer.OutputSchema;
 
 export const activeSession = z.object({
   service: z.string(),
   did: z.string(),
-})
-export type ActiveSession = z.infer<typeof activeSession>
+});
+export type ActiveSession = z.infer<typeof activeSession>;
 
 export const accountData = z.object({
   service: z.string(),
@@ -30,12 +30,12 @@ export const accountData = z.object({
   email: z.string().optional(),
   displayName: z.string().optional(),
   aviUrl: z.string().optional(),
-})
-export type AccountData = z.infer<typeof accountData>
+});
+export type AccountData = z.infer<typeof accountData>;
 
 interface AdditionalAccountData {
-  displayName?: string
-  aviUrl?: string
+  displayName?: string;
+  aviUrl?: string;
 }
 
 export class SessionModel {
@@ -44,32 +44,32 @@ export class SessionModel {
   // remove when resolved
   // -prf
   _log(message: string, details?: Record<string, any>) {
-    details = details || {}
+    details = details || {};
     details.state = {
       data: this.data,
       accounts: this.accounts.map(
-        a =>
-          `${!!a.accessJwt && !!a.refreshJwt ? '✅' : '❌'} ${a.handle} (${
+        (a) =>
+          `${!!a.accessJwt && !!a.refreshJwt ? "✅" : "❌"} ${a.handle} (${
             a.service
           })`,
       ),
       isResumingSession: this.isResumingSession,
-    }
-    this.rootStore.log.debug(message, details)
+    };
+    this.rootStore.log.debug(message, details);
   }
 
   /**
    * Currently-active session
    */
-  data: ActiveSession | null = null
+  data: ActiveSession | null = null;
   /**
    * A listing of the currently & previous sessions
    */
-  accounts: AccountData[] = []
+  accounts: AccountData[] = [];
   /**
    * Flag to indicate if we're doing our initial-load session resumption
    */
-  isResumingSession = false
+  isResumingSession = false;
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -77,71 +77,71 @@ export class SessionModel {
       serialize: false,
       hydrate: false,
       hasSession: false,
-    })
+    });
   }
 
   get currentSession() {
     if (!this.data) {
-      return undefined
+      return undefined;
     }
-    const {did, service} = this.data
+    const { did, service } = this.data;
     return this.accounts.find(
-      account =>
+      (account) =>
         normalizeUrl(account.service) === normalizeUrl(service) &&
         account.did === did &&
         !!account.accessJwt &&
         !!account.refreshJwt,
-    )
+    );
   }
 
-  get isDefaultSession() {
-    return this.currentSession?.handle === SOLARPLEX_IDENTIFIER
+  get isSolarplexSession() {
+    return this.currentSession?.handle === SOLARPLEX_IDENTIFIER;
   }
 
   get hasSession() {
     return (
       !!this.currentSession &&
       !!this.rootStore.agent.session &&
-      !this.isDefaultSession
-    )
+      !this.isSolarplexSession
+    );
   }
 
   get hasAnySession() {
-    return !!this.currentSession && !!this.rootStore.agent.session
+    return !!this.currentSession && !!this.rootStore.agent.session;
   }
 
   get hasAccounts() {
-    return this.accounts.length >= 1
+    return this.accounts.length >= 1;
   }
 
   get switchableAccounts() {
-    return this.accounts.filter(acct => acct.did !== this.data?.did)
+    return this.accounts.filter((acct) => acct.did !== this.data?.did);
   }
 
   get isSandbox() {
     if (!this.data) {
-      return false
+      return false;
     }
-    return !IS_PROD(this.data.service)
+    return !IS_PROD(this.data.service);
   }
 
   serialize(): unknown {
     return {
       data: this.data,
       accounts: this.accounts,
-    }
+    };
   }
 
   hydrate(v: unknown) {
-    this.accounts = []
+    this.accounts = [];
     if (isObj(v)) {
-      if (hasProp(v, 'data') && activeSession.safeParse(v.data)) {
-        this.data = v.data as ActiveSession
+      if (hasProp(v, "data") && activeSession.safeParse(v.data)) {
+        this.data = v.data as ActiveSession;
       }
-      if (hasProp(v, 'accounts') && Array.isArray(v.accounts)) {
+      if (hasProp(v, "accounts") && Array.isArray(v.accounts)) {
         for (const account of v.accounts) {
           if (accountData.safeParse(account)) {
-            this.accounts.push(account as AccountData)
+            this.accounts.push(account as AccountData);
           }
         }
       }
@@ -149,28 +149,28 @@ export class SessionModel {
   }
 
   clear() {
-    this.data = null
+    this.data = null;
   }
 
   /**
    * Attempts to resume the previous session loaded from storage
    */
   async attemptSessionResumption() {
-    const sess = this.currentSession
+    const sess = this.currentSession;
     if (sess) {
-      this._log('SessionModel:attemptSessionResumption found stored session')
-      this.isResumingSession = true
+      this._log("SessionModel:attemptSessionResumption found stored session");
+      this.isResumingSession = true;
       try {
-        return await this.resumeSession(sess)
+        return await this.resumeSession(sess);
       } finally {
         runInAction(() => {
-          this.isResumingSession = false
-        })
+          this.isResumingSession = false;
+        });
       }
     } else {
       this._log(
-        'SessionModel:attemptSessionResumption has no session to resume',
-      )
+        "SessionModel:attemptSessionResumption has no session to resume",
+      );
     }
   }
 
@@ -178,13 +178,13 @@ export class SessionModel {
    * Sets the active session
    */
   async setActiveSession(agent: BskyAgent, did: string) {
-    this._log('SessionModel:setActiveSession')
-    const hadSession = !!this.data
+    this._log("SessionModel:setActiveSession");
+    const hadSession = !!this.data;
     this.data = {
       service: agent.service.toString(),
       did,
-    }
-    await this.rootStore.handleSessionChange(agent, {hadSession})
+    };
+    await this.rootStore.handleSessionChange(agent, { hadSession });
   }
 
   /**
@@ -197,24 +197,24 @@ export class SessionModel {
     session?: AtpSessionData,
     addedInfo?: AdditionalAccountData,
   ) {
-    this._log('SessionModel:persistSession', {
+    this._log("SessionModel:persistSession", {
       service,
       did,
       event,
       hasSession: !!session,
-    })
+    });
 
     const existingAccount = this.accounts.find(
-      account => account.service === service && account.did === did,
-    )
+      (account) => account.service === service && account.did === did,
+    );
 
     // fall back to any preexisting access tokens
-    let refreshJwt = session?.refreshJwt || existingAccount?.refreshJwt
-    let accessJwt = session?.accessJwt || existingAccount?.accessJwt
-    if (event === 'expired') {
+    let refreshJwt = session?.refreshJwt || existingAccount?.refreshJwt;
+    let accessJwt = session?.accessJwt || existingAccount?.accessJwt;
+    if (event === "expired") {
       // only clear the tokens when they're known to have expired
-      refreshJwt = undefined
-      accessJwt = undefined
+      refreshJwt = undefined;
+      accessJwt = undefined;
     }
 
     const newAccount = {
@@ -223,27 +223,27 @@ export class SessionModel {
       refreshJwt,
       accessJwt,
 
-      handle: session?.handle || existingAccount?.handle || '',
-      email: session?.email || existingAccount?.email || '',
+      handle: session?.handle || existingAccount?.handle || "",
+      email: session?.email || existingAccount?.email || "",
       displayName: addedInfo
         ? addedInfo.displayName
-        : existingAccount?.displayName || '',
-      aviUrl: addedInfo ? addedInfo.aviUrl : existingAccount?.aviUrl || '',
-    }
+        : existingAccount?.displayName || "",
+      aviUrl: addedInfo ? addedInfo.aviUrl : existingAccount?.aviUrl || "",
+    };
     if (!existingAccount) {
-      this.accounts.push(newAccount)
+      this.accounts.push(newAccount);
     } else {
       this.accounts = [
         newAccount,
         ...this.accounts.filter(
-          account => !(account.service === service && account.did === did),
+          (account) => !(account.service === service && account.did === did),
         ),
-      ]
+      ];
     }
 
     // if the session expired, fire an event to let the user know
-    if (event === 'expired') {
-      this.rootStore.handleSessionDrop()
+    if (event === "expired") {
+      this.rootStore.handleSessionDrop();
     }
   }
 
@@ -251,26 +251,26 @@ export class SessionModel {
    * Clears any session tokens from the accounts; used on logout.
    */
   clearSessionTokens() {
-    this._log('SessionModel:clearSessionTokens')
-    this.accounts = this.accounts.map(acct => ({
+    this._log("SessionModel:clearSessionTokens");
+    this.accounts = this.accounts.map((acct) => ({
       service: acct.service,
       handle: acct.handle,
       did: acct.did,
       displayName: acct.displayName,
       aviUrl: acct.aviUrl,
-    }))
+    }));
   }
 
   /**
    * Fetches additional information about an account on load.
    */
   async loadAccountInfo(agent: BskyAgent, did: string) {
-    const res = await agent.getProfile({actor: did}).catch(_e => undefined)
+    const res = await agent.getProfile({ actor: did }).catch((_e) => undefined);
     if (res) {
       return {
         displayName: res.data.displayName,
         aviUrl: res.data.avatar,
-      }
+      };
     }
   }
 
@@ -278,57 +278,57 @@ export class SessionModel {
    * Helper to fetch the accounts config settings from an account.
    */
   async describeService(service: string): Promise<ServiceDescription> {
-    const agent = new BskyAgent({service})
-    const res = await agent.com.atproto.server.describeServer({})
-    return res.data
+    const agent = new BskyAgent({ service });
+    const res = await agent.com.atproto.server.describeServer({});
+    return res.data;
   }
 
   /**
    * Attempt to resume a session that we still have access tokens for.
    */
   async resumeSession(account: AccountData): Promise<boolean> {
-    this._log('SessionModel:resumeSession')
+    this._log("SessionModel:resumeSession");
     if (!(account.accessJwt && account.refreshJwt && account.service)) {
       this._log(
-        'SessionModel:resumeSession aborted due to lack of access tokens',
-      )
-      return false
+        "SessionModel:resumeSession aborted due to lack of access tokens",
+      );
+      return false;
     }
 
     const agent = new BskyAgent({
       service: account.service,
       persistSession: (evt: AtpSessionEvent, sess?: AtpSessionData) => {
-        this.persistSession(account.service, account.did, evt, sess)
+        this.persistSession(account.service, account.did, evt, sess);
       },
-    })
+    });
 
     try {
       await networkRetry(3, () =>
         agent.resumeSession({
-          accessJwt: account.accessJwt || '',
-          refreshJwt: account.refreshJwt || '',
+          accessJwt: account.accessJwt || "",
+          refreshJwt: account.refreshJwt || "",
           did: account.did,
           handle: account.handle,
         }),
-      )
-      const addedInfo = await this.loadAccountInfo(agent, account.did)
+      );
+      const addedInfo = await this.loadAccountInfo(agent, account.did);
       this.persistSession(
         account.service,
         account.did,
-        'create',
+        "create",
         agent.session,
         addedInfo,
-      )
-      this._log('SessionModel:resumeSession succeeded')
+      );
+      this._log("SessionModel:resumeSession succeeded");
     } catch (e: any) {
-      this._log('SessionModel:resumeSession failed', {
+      this._log("SessionModel:resumeSession failed", {
         error: e.toString(),
-      })
-      return false
+      });
+      return false;
     }
 
-    await this.setActiveSession(agent, account.did)
-    return true
+    await this.setActiveSession(agent, account.did);
+    return true;
   }
 
   /**
@@ -339,29 +339,29 @@ export class SessionModel {
     identifier,
     password,
   }: {
-    service: string
-    identifier: string
-    password: string
+    service: string;
+    identifier: string;
+    password: string;
   }) {
-    this._log('SessionModel:login')
-    const agent = new BskyAgent({service})
-    await agent.login({identifier, password})
+    this._log("SessionModel:login");
+    const agent = new BskyAgent({ service });
+    await agent.login({ identifier, password });
     if (!agent.session) {
-      throw new Error('Failed to establish session')
+      throw new Error("Failed to establish session");
     }
 
-    const did = agent.session.did
-    const addedInfo = await this.loadAccountInfo(agent, did)
+    const did = agent.session.did;
+    const addedInfo = await this.loadAccountInfo(agent, did);
 
-    this.persistSession(service, did, 'create', agent.session, addedInfo)
+    this.persistSession(service, did, "create", agent.session, addedInfo);
     agent.setPersistSessionHandler(
       (evt: AtpSessionEvent, sess?: AtpSessionData) => {
-        this.persistSession(service, did, evt, sess)
+        this.persistSession(service, did, evt, sess);
       },
-    )
+    );
 
-    await this.setActiveSession(agent, did)
-    this._log('SessionModel:login succeeded')
+    await this.setActiveSession(agent, did);
+    this._log("SessionModel:login succeeded");
   }
 
   async createAccount({
@@ -371,43 +371,43 @@ export class SessionModel {
     handle,
     inviteCode,
   }: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    inviteCode?: string
+    service: string;
+    email: string;
+    password: string;
+    handle: string;
+    inviteCode?: string;
   }) {
-    this._log('SessionModel:createAccount')
-    const agent = new BskyAgent({service})
+    this._log("SessionModel:createAccount");
+    const agent = new BskyAgent({ service });
     await agent.createAccount({
       handle,
       password,
       email,
       inviteCode,
-    })
+    });
     if (!agent.session) {
-      throw new Error('Failed to establish session')
+      throw new Error("Failed to establish session");
     }
 
-    const did = agent.session.did
-    const addedInfo = await this.loadAccountInfo(agent, did)
+    const did = agent.session.did;
+    const addedInfo = await this.loadAccountInfo(agent, did);
 
-    this.persistSession(service, did, 'create', agent.session, addedInfo)
+    this.persistSession(service, did, "create", agent.session, addedInfo);
     agent.setPersistSessionHandler(
       (evt: AtpSessionEvent, sess?: AtpSessionData) => {
-        this.persistSession(service, did, evt, sess)
+        this.persistSession(service, did, evt, sess);
       },
-    )
+    );
 
-    await this.setActiveSession(agent, did)
-    this._log('SessionModel:createAccount succeeded')
+    await this.setActiveSession(agent, did);
+    this._log("SessionModel:createAccount succeeded");
   }
 
   /**
    * Close all sessions across all accounts.
    */
   async logout() {
-    this._log('SessionModel:logout')
+    this._log("SessionModel:logout");
     // TODO
     // need to evaluate why deleting the session has caused errors at times
     // -prf
@@ -419,48 +419,48 @@ export class SessionModel {
         )
       })
     }*/
-    this.clearSessionTokens()
-    this.rootStore.clearAllSessionState()
+    this.clearSessionTokens();
+    this.rootStore.clearAllSessionState();
   }
 
   /**
    * Removes an account from the list of stored accounts.
    */
   removeAccount(handle: string) {
-    this.accounts = this.accounts.filter(acc => acc.handle !== handle)
+    this.accounts = this.accounts.filter((acc) => acc.handle !== handle);
   }
 
   /**
    * Reloads the session from the server. Useful when account details change, like the handle.
    */
   async reloadFromServer() {
-    const sess = this.currentSession
+    const sess = this.currentSession;
     if (!sess) {
-      return
+      return;
     }
     const res = await this.rootStore.agent
-      .getProfile({actor: sess.did})
-      .catch(_e => undefined)
+      .getProfile({ actor: sess.did })
+      .catch((_e) => undefined);
     if (res?.success) {
       const updated = {
         ...sess,
         handle: res.data.handle,
         displayName: res.data.displayName,
         aviUrl: res.data.avatar,
-      }
+      };
       runInAction(() => {
         this.accounts = [
           updated,
           ...this.accounts.filter(
-            account =>
+            (account) =>
               !(
                 account.service === updated.service &&
                 account.did === updated.did
               ),
           ),
-        ]
-      })
-      await this.rootStore.me.load()
+        ];
+      });
+      await this.rootStore.me.load();
     }
   }
 }

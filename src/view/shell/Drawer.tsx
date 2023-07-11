@@ -63,11 +63,14 @@ export const DrawerContent = observer(() => {
     (tab: string) => {
       track("Menu:ItemClicked", { url: tab });
       const state = navigation.getState();
+      console.log("nav state", state);
       store.shell.closeDrawer();
       if (isWeb) {
+        console.log("nav web");
         // @ts-ignore must be Home, Search, Notifications, MyProfile or Communities
         navigation.navigate(tab);
       } else {
+        console.log("nav non web");
         const tabState = getTabState(state, tab);
         if (tabState === TabState.InsideAtRoot) {
           store.emitScreenSoftReset();
@@ -121,7 +124,7 @@ export const DrawerContent = observer(() => {
       ]}
     >
       <SafeAreaView style={s.flex1}>
-        {!store.session.isDefaultSession && (
+        {!store.session.isSolarplexSession && (
           <>
             <View style={styles.main}>
               <TouchableOpacity
@@ -184,62 +187,66 @@ export const DrawerContent = observer(() => {
             bold={isAtHome}
             onPress={onPressHome}
           />
-          <MenuItem
-            icon={
-              <UserIcon
-                size={24}
-                strokeWidth={1.7}
-                style={[pal.text as StyleProp<ViewStyle>]}
-              />
-            }
-            label="Profile"
-            accessibilityLabel="Profile"
-            accessibilityHint=""
-            bold={isAtMyProfile}
-            onPress={onPressProfile}
-          />
-          <MenuItem
-            icon={
-              <FontAwesomeIcon
-                size={22}
-                icon={fa.faPeopleGroup}
-                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
-              />
-            }
-            label="Communities"
-            accessibilityLabel="Communities"
-            accessibilityHint=""
-            bold={isAtCommunities}
-            onPress={onPressCommunities}
-          />
-          {!store.session.isDefaultSession && (
-            <MenuItem
-              icon={
-                isAtNotifications ? (
-                  <BellIconSolid
-                    style={pal.text as StyleProp<ViewStyle>}
-                    size="24"
+          {!store.session.isSolarplexSession && (
+            <>
+              <MenuItem
+                icon={
+                  <UserIcon
+                    size={24}
                     strokeWidth={1.7}
+                    style={[pal.text as StyleProp<ViewStyle>]}
                   />
-                ) : (
-                  <BellIcon
-                    style={pal.text as StyleProp<ViewStyle>}
-                    size="24"
-                    strokeWidth={1.7}
+                }
+                label="Profile"
+                accessibilityLabel="Profile"
+                accessibilityHint=""
+                bold={isAtMyProfile}
+                onPress={onPressProfile}
+              />
+              <MenuItem
+                icon={
+                  <FontAwesomeIcon
+                    size={22}
+                    icon={fa.faPeopleGroup}
+                    style={
+                      { ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle
+                    }
                   />
-                )
-              }
-              label="Notifications"
-              accessibilityLabel="Notifications"
-              accessibilityHint={
-                notifications.unreadCountLabel === ""
-                  ? ""
-                  : `${notifications.unreadCountLabel} unread`
-              }
-              count={notifications.unreadCountLabel}
-              bold={isAtNotifications}
-              onPress={onPressNotifications}
-            />
+                }
+                label="Communities"
+                accessibilityLabel="Communities"
+                accessibilityHint=""
+                bold={isAtCommunities}
+                onPress={onPressCommunities}
+              />
+              <MenuItem
+                icon={
+                  isAtNotifications ? (
+                    <BellIconSolid
+                      style={pal.text as StyleProp<ViewStyle>}
+                      size="24"
+                      strokeWidth={1.7}
+                    />
+                  ) : (
+                    <BellIcon
+                      style={pal.text as StyleProp<ViewStyle>}
+                      size="24"
+                      strokeWidth={1.7}
+                    />
+                  )
+                }
+                label="Notifications"
+                accessibilityLabel="Notifications"
+                accessibilityHint={
+                  notifications.unreadCountLabel === ""
+                    ? ""
+                    : `${notifications.unreadCountLabel} unread`
+                }
+                count={notifications.unreadCountLabel}
+                bold={isAtNotifications}
+                onPress={onPressNotifications}
+              />
+            </>
           )}
           {!store.session.hasSession ? (
             // <NavItem

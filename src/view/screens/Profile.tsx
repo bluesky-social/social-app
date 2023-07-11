@@ -186,7 +186,7 @@ export const ProfileScreen = withAuthRequired(
             return (
               <CustomFeed
                 item={item}
-                showSaveBtn={!store.session.isDefaultSession}
+                showSaveBtn={!store.session.isSolarplexSession}
                 showLikes
               />
             );
@@ -246,7 +246,7 @@ export const ProfileScreen = withAuthRequired(
         uiState.profile.did,
         uiState.feed.isBlocking,
         uiState.feed.isBlockedBy,
-        store.session.isDefaultSession,
+        store.session.isSolarplexSession,
       ],
     );
 
@@ -281,7 +281,7 @@ export const ProfileScreen = withAuthRequired(
         ) : (
           <CenteredView>{renderHeader()}</CenteredView>
         )}
-        {!store.session.isDefaultSession && (
+        {!store.session.isSolarplexSession && (
           <FAB
             testID="composeFAB"
             onPress={onPressCompose}

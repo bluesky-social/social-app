@@ -1,3 +1,5 @@
+import * as Mobile from "./SearchMobile";
+
 import {
   CommunitiesTabNavigatorParams,
   NativeStackScreenProps,
@@ -27,7 +29,7 @@ type Props = NativeStackScreenProps<
   "Communities"
 >;
 export const CommunitiesScreen = withAuthRequired(
-  observer(({}: Props) => {
+  observer(({ navigation, route }: Props) => {
     const store = useStores();
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store);
@@ -102,7 +104,7 @@ export const CommunitiesScreen = withAuthRequired(
         }
         return <View />;
       },
-      [onPressTryAgain, store.session.isDefaultSession],
+      [onPressTryAgain, store.session.isSolarplexSession],
     );
 
     // const hasNew =
@@ -111,10 +113,6 @@ export const CommunitiesScreen = withAuthRequired(
     return (
       <View testID="communitiesScreen" style={s.hContentRegion}>
         <ViewHeader title="Communities" canGoBack={false} />
-        {/*TODO(viksit)[F1]: utilize a view system to make this look decent */}
-        {/* {store.communities.communityFeeds?.map((item, index) => (
-          <CommunityFeed item={item} />
-        ))} */}
         {store.communities.communityFeeds && (
           <ViewSelector
             ref={viewSelectorRef}

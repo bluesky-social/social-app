@@ -87,26 +87,28 @@ export const FeedsTabBar = observer(
               <UserAvatar avatar={store.me.avatar} size={27} />
             </TouchableOpacity>
           </View>
-          <View style={[pal.view]}>
-            <TouchableOpacity
-              testID="viewHeaderComposeBtn"
-              // style={[styles.btn, styles.primaryBtn]}
-              onPress={onPressCompose}
-              accessibilityRole="button"
-              accessibilityLabel="Compose post"
-              accessibilityHint="Compose a post"
-              hitSlop={10}
-            >
-              <LinearGradient
-                colors={[gradients.purple.start, gradients.purple.end]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.postBtn}
+          {!store.session.isSolarplexSession && (
+            <View style={[pal.view]}>
+              <TouchableOpacity
+                testID="viewHeaderComposeBtn"
+                // style={[styles.btn, styles.primaryBtn]}
+                onPress={onPressCompose}
+                accessibilityRole="button"
+                accessibilityLabel="Compose post"
+                accessibilityHint="Compose a post"
+                hitSlop={10}
               >
-                <Text style={[s.white, s.f16, s.bold]}>{"Post"}</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
+                <LinearGradient
+                  colors={[gradients.purple.start, gradients.purple.end]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.postBtn}
+                >
+                  <Text style={[s.white, s.f16, s.bold]}>{"Post"}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         {/* TODO(viksit)[F1]: Replace this with a stories layout later, for now, populate
            the list of joined communities and power that in the feed */}

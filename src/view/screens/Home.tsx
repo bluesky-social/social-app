@@ -285,7 +285,7 @@ const FeedPage = observer(
             minimalShellMode={store.shell.minimalShellMode}
           />
         )}
-        {/* {!store.session.isDefaultSession && (
+        {/* {!store.session.isSolarplexSession && (
           <FAB
             testID="composeFAB"
             onPress={onPressCompose}

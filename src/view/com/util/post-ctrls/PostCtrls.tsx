@@ -1,63 +1,63 @@
-import {CommentBottomArrow, HeartIcon, HeartIconSolid} from 'lib/icons'
+import { CommentBottomArrow, HeartIcon, HeartIconSolid } from "lib/icons";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import React, {useCallback} from 'react'
+} from "@fortawesome/react-native-fontawesome";
+import React, { useCallback } from "react";
 import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
   ViewStyle,
-} from 'react-native'
-import {colors, s} from 'lib/styles'
+} from "react-native";
+import { colors, s } from "lib/styles";
 
-import {Haptics} from 'lib/haptics'
-import {NavigationProp} from 'lib/routes/types'
-import {PostDropdownBtn} from '../forms/DropdownButton'
-import {RepostButton} from './RepostButton'
+import { Haptics } from "lib/haptics";
+import { NavigationProp } from "lib/routes/types";
+import { PostDropdownBtn } from "../forms/DropdownButton";
+import { RepostButton } from "./RepostButton";
 // DISABLED see #135
 // import {
 //   TriggerableAnimated,
 //   TriggerableAnimatedRef,
 // } from './anim/TriggerableAnimated'
-import {Text} from '../text/Text'
-import {useNavigation} from '@react-navigation/native'
-import {useStores} from 'state/index'
-import {useTheme} from 'lib/ThemeContext'
+import { Text } from "../text/Text";
+import { useNavigation } from "@react-navigation/native";
+import { useStores } from "state/index";
+import { useTheme } from "lib/ThemeContext";
 
 interface PostCtrlsOpts {
-  itemUri: string
-  itemCid: string
-  itemHref: string
-  itemTitle: string
-  isAuthor: boolean
+  itemUri: string;
+  itemCid: string;
+  itemHref: string;
+  itemTitle: string;
+  isAuthor: boolean;
   author: {
-    handle: string
-    displayName: string
-    avatar: string
-  }
-  text: string
-  indexedAt: string
-  big?: boolean
-  style?: StyleProp<ViewStyle>
-  replyCount?: number
-  repostCount?: number
-  likeCount?: number
-  isReposted: boolean
-  isLiked: boolean
-  isThreadMuted: boolean
-  onPressReply: () => void
-  onPressToggleRepost: () => Promise<void>
-  onPressToggleLike: () => Promise<void>
-  onCopyPostText: () => void
-  onOpenTranslate: () => void
-  onToggleThreadMute: () => void
-  onDeletePost: () => void
+    handle: string;
+    displayName: string;
+    avatar: string;
+  };
+  text: string;
+  indexedAt: string;
+  big?: boolean;
+  style?: StyleProp<ViewStyle>;
+  replyCount?: number;
+  repostCount?: number;
+  likeCount?: number;
+  isReposted: boolean;
+  isLiked: boolean;
+  isThreadMuted: boolean;
+  onPressReply: () => void;
+  onPressToggleRepost: () => Promise<void>;
+  onPressToggleLike: () => Promise<void>;
+  onCopyPostText: () => void;
+  onOpenTranslate: () => void;
+  onToggleThreadMute: () => void;
+  onDeletePost: () => void;
 }
 
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP = { top: 5, left: 5, bottom: 5, right: 5 };
 
 // DISABLED see #135
 /*
@@ -96,24 +96,24 @@ function ctrlAnimStyle(interp: Animated.Value) {
 */
 
 export function PostCtrls(opts: PostCtrlsOpts) {
-  const store = useStores()
-  const theme = useTheme()
-  const navigation = useNavigation<NavigationProp>()
+  const store = useStores();
+  const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
 
   const defaultCtrlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
     }),
     [theme],
-  ) as StyleProp<ViewStyle>
+  ) as StyleProp<ViewStyle>;
   // DISABLED see #135
   // const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
   // const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
   const onRepost = useCallback(() => {
-    store.shell.closeModal()
+    store.shell.closeModal();
     if (!opts.isReposted) {
-      Haptics.default()
-      opts.onPressToggleRepost().catch(_e => undefined)
+      Haptics.default();
+      opts.onPressToggleRepost().catch((_e) => undefined);
       // DISABLED see #135
       // repostRef.current?.trigger(
       //   {start: ctrlAnimStart, style: ctrlAnimStyle},
@@ -123,14 +123,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       //   },
       // )
     } else {
-      opts.onPressToggleRepost().catch(_e => undefined)
+      opts.onPressToggleRepost().catch((_e) => undefined);
     }
-  }, [opts, store.shell])
+  }, [opts, store.shell]);
 
   const onQuote = useCallback(async () => {
-    store.shell.closeModal()
-    store.session.isDefaultSession
-      ? navigation.navigate('SignIn')
+    store.shell.closeModal();
+    store.session.isSolarplexSession
+      ? navigation.navigate("SignIn")
       : store.shell.openComposer({
           quote: {
             uri: opts.itemUri,
@@ -139,8 +139,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             author: opts.author,
             indexedAt: opts.indexedAt,
           },
-        })
-    Haptics.default()
+        });
+    Haptics.default();
   }, [
     opts.author,
     opts.indexedAt,
@@ -148,14 +148,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     opts.itemUri,
     opts.text,
     store.shell,
-    store.session.isDefaultSession,
+    store.session.isSolarplexSession,
     navigation,
-  ])
+  ]);
 
   const onPressToggleLikeWrapper = async () => {
     if (!opts.isLiked) {
-      Haptics.default()
-      await opts.onPressToggleLike().catch(_e => undefined)
+      Haptics.default();
+      await opts.onPressToggleLike().catch((_e) => undefined);
       // DISABLED see #135
       // likeRef.current?.trigger(
       //   {start: ctrlAnimStart, style: ctrlAnimStyle},
@@ -166,10 +166,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // )
       // setIsLikedPressed(false)
     } else {
-      await opts.onPressToggleLike().catch(_e => undefined)
+      await opts.onPressToggleLike().catch((_e) => undefined);
       // setIsLikedPressed(false)
     }
-  }
+  };
 
   return (
     <View style={[styles.ctrls, opts.style]}>
@@ -180,13 +180,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         onPress={opts.onPressReply}
         accessibilityRole="button"
         accessibilityLabel="Reply"
-        accessibilityHint="reply composer">
+        accessibilityHint="reply composer"
+      >
         <CommentBottomArrow
           style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
           strokeWidth={3}
           size={opts.big ? 20 : 15}
         />
-        {typeof opts.replyCount !== 'undefined' ? (
+        {typeof opts.replyCount !== "undefined" ? (
           <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
             {opts.replyCount}
           </Text>
@@ -199,8 +200,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         hitSlop={HITSLOP}
         onPress={onPressToggleLikeWrapper}
         accessibilityRole="button"
-        accessibilityLabel={opts.isLiked ? 'Unlike' : 'Like'}
-        accessibilityHint="">
+        accessibilityLabel={opts.isLiked ? "Unlike" : "Like"}
+        accessibilityHint=""
+      >
         {opts.isLiked ? (
           <HeartIconSolid
             style={styles.ctrlIconLiked}
@@ -213,14 +215,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             size={opts.big ? 20 : 16}
           />
         )}
-        {typeof opts.likeCount !== 'undefined' ? (
+        {typeof opts.likeCount !== "undefined" ? (
           <Text
             testID="likeCount"
             style={
               opts.isLiked
                 ? [s.bold, s.red3, s.f15, s.ml5]
                 : [defaultCtrlColor, s.f15, s.ml5]
-            }>
+            }
+          >
             {opts.likeCount}
           </Text>
         ) : undefined}
@@ -239,7 +242,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             onCopyPostText={opts.onCopyPostText}
             onOpenTranslate={opts.onOpenTranslate}
             onToggleThreadMute={opts.onToggleThreadMute}
-            onDeletePost={opts.onDeletePost}>
+            onDeletePost={opts.onDeletePost}
+          >
             <FontAwesomeIcon
               icon="ellipsis-h"
               size={18}
@@ -248,7 +252,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                 s.mr5,
                 {
                   color:
-                    theme.colorScheme === 'light' ? colors.gray4 : colors.gray5,
+                    theme.colorScheme === "light" ? colors.gray4 : colors.gray5,
                 } as FontAwesomeIconStyle,
               ]}
             />
@@ -258,17 +262,17 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       {/* used for adding pad to the right side */}
       <View />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   ctrls: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   ctrl: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 5,
     margin: -5,
   },
@@ -278,4 +282,4 @@ const styles = StyleSheet.create({
   mt1: {
     marginTop: 1,
   },
-})
+});

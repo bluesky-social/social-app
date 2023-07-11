@@ -41,7 +41,7 @@ export const CommunityFeed = observer(
     const pal = usePalette("default");
     const navigation = useNavigation<NavigationProp>();
     const onToggleJoined = React.useCallback(async () => {
-      if (store.session.isDefaultSession) {
+      if (store.session.isSolarplexSession) {
         navigation.navigate("SignIn");
         return;
       }
@@ -115,7 +115,6 @@ export const CommunityFeed = observer(
                 accessibilityLabel={
                   item.isJoined ? "Leave community" : "Join community"
                 }
-                accessibilityHint=""
                 onPress={onToggleJoined}
                 hitSlop={15}
                 style={styles.btn}

@@ -81,29 +81,23 @@ export class SavedFeedsModel {
     if (!clearCache) {
       newFeedModels = { ...this._feedModelCache };
     }
-
-    const solarplexCommunities = await fetch(
-      `${SOLARPLEX_FEED_API}/splx/get_all_communities`,
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "no-cors",
-        },
-      },
-    );
-    const solarplexFeeds = (
-      (await solarplexCommunities.json()).data as SolarplexCommunity[]
-    ).reduce((result, community) => {
-      if (community.published) {
-        result.push(`${SOLARPLEX_FEED_URI_PATH}${community.id}`);
+    // Since we model solarplex communities as saved feeds
+    // we reuse that infrastructure. Simply find communities
+    // that the user has joined, build the feed path
+    // and inject it into the feed model.
+    const joinedCommunities = [];
+    const communityFeeds = [];
+    for (const community of this.rootStore.communities.communities) {
+      if (
+        this.rootStore.me.joinedCommunities.communities.includes(community.id)
+      ) {
+        joinedCommunities.push(community.id);
+        communityFeeds.push(`${SOLARPLEX_FEED_URI_PATH}${community.id}`);
       }
-      return result;
-    }, [] as string[]);
-    this.feeds = solarplexFeeds;
-    console.log("solarplexFeeds", solarplexFeeds);
+    }
+    this.feeds = communityFeeds;
+    console.log("this.feeds", this.feeds);
     // collect the feed URIs that havent been synced yet
-
     const neededFeedUris = [];
     for (const feedUri of this.feeds) {
       if (!(feedUri in newFeedModels)) {

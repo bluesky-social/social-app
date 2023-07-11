@@ -1,4 +1,8 @@
-import { SOLARPLEX_FEED_API, SOLARPLEX_FEED_URI_PATH } from "lib/constants";
+import {
+  SOLARPLEX_DID,
+  SOLARPLEX_FEED_API,
+  SOLARPLEX_FEED_URI_PATH,
+} from "lib/constants";
 import { makeAutoObservable, runInAction } from "mobx";
 
 import { CommunityFeedModel } from "../feeds/community-feed";
@@ -34,10 +38,17 @@ export class JoinedCommunitiesModel {
     if (!clearCache) {
       newCommunityModels = { ...this._communityModelCache };
     }
+    // if not logged in, use solarplex user to fetch homepage.
+    let did;
+    if (this.rootStore.session.isSolarplexSession) {
+      did = SOLARPLEX_DID;
+    } else {
+      did = this.rootStore.me.did;
+    }
 
     // fetch the joined communities
     const response = await fetch(
-      `${SOLARPLEX_FEED_API}/splx/get_communities_for_user/${this.rootStore.me.did}`,
+      `${SOLARPLEX_FEED_API}/splx/get_communities_for_user/${did}`,
       {
         method: "GET",
         headers: {
@@ -56,7 +67,6 @@ export class JoinedCommunitiesModel {
       (id) => !(id in newCommunityModels),
     );
 
-    console.log(">>>: ", neededCommunityIds);
     // fetch the missing models
     for (const id of neededCommunityIds) {
       const community = await this.fetchCommunity(id);

@@ -50,7 +50,6 @@ export const CustomFeedScreen = withAuthRequired(
       [rkey, name],
     );
     const scrollElRef = useRef<FlatList>(null);
-    console.log("URI: ", uri);
     const currentFeed = useCustomFeed(uri);
     const algoFeed: PostsFeedModel = useMemo(() => {
       const feed = new PostsFeedModel(store, "custom", {
@@ -234,7 +233,7 @@ export const CustomFeedScreen = withAuthRequired(
                   )}
                 </Text>
               )}
-              {isDesktopWeb && !store.session.isDefaultSession && (
+              {isDesktopWeb && !store.session.isSolarplexSession && (
                 <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
                   <Button
                     type={currentFeed?.isSaved ? "default" : "inverted"}
@@ -346,7 +345,7 @@ export const CustomFeedScreen = withAuthRequired(
       rkey,
       isPinned,
       onTogglePinned,
-      store.session.isDefaultSession,
+      store.session.isSolarplexSession,
     ]);
 
     const renderEmptyState = React.useCallback(() => {
@@ -355,7 +354,7 @@ export const CustomFeedScreen = withAuthRequired(
 
     return (
       <View style={s.hContentRegion}>
-        {!store.session.isDefaultSession && (
+        {!store.session.isSolarplexSession && (
           <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
         )}
         <Feed

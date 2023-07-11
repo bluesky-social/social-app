@@ -1,4 +1,4 @@
-import * as EmailValidator from 'email-validator'
+import * as EmailValidator from "email-validator";
 
 import {
   ActivityIndicator,
@@ -9,34 +9,34 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native'
-import {BLUESKY_INTENT_LINK, SOLARPLEX_IDENTIFIER} from 'lib/constants'
-import {DEFAULT_SERVICE, RootStoreModel, useStores} from 'state/index'
+} from "react-native";
+import { BLUESKY_INTENT_LINK, SOLARPLEX_IDENTIFIER } from "lib/constants";
+import { DEFAULT_SERVICE, RootStoreModel, useStores } from "state/index";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import React, {useEffect, useRef, useState} from 'react'
-import {colors, gradients, s} from 'lib/styles'
+} from "@fortawesome/react-native-fontawesome";
+import React, { useEffect, useRef, useState } from "react";
+import { colors, gradients, s } from "lib/styles";
 
-import {AccountData} from 'state/models/session'
-import {BskyAgent} from '@atproto/api'
-import {CenteredView} from 'view/com/util/Views'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {NavigationProp} from 'lib/routes/types'
-import {ServiceDescription} from 'state/models/session'
-import {SolarplexLogo} from 'lib/icons'
-import {Text} from '../../util/text/Text'
-import {UserAvatar} from '../../util/UserAvatar'
-import {cleanError} from 'lib/strings/errors'
-import {createFullHandle} from 'lib/strings/handles'
-import {isMobileWeb} from 'platform/detection'
-import {isNetworkError} from 'lib/strings/errors'
-import {toNiceDomain} from 'lib/strings/url-helpers'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useNavigation} from '@react-navigation/native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
+import { AccountData } from "state/models/session";
+import { BskyAgent } from "@atproto/api";
+import { CenteredView } from "view/com/util/Views";
+import { ErrorBoundary } from "view/com/util/ErrorBoundary";
+import { NavigationProp } from "lib/routes/types";
+import { ServiceDescription } from "state/models/session";
+import { SolarplexLogo } from "lib/icons";
+import { Text } from "../../util/text/Text";
+import { UserAvatar } from "../../util/UserAvatar";
+import { cleanError } from "lib/strings/errors";
+import { createFullHandle } from "lib/strings/handles";
+import { isMobileWeb } from "platform/detection";
+import { isNetworkError } from "lib/strings/errors";
+import { toNiceDomain } from "lib/strings/url-helpers";
+import { useAnalytics } from "lib/analytics/analytics";
+import { useNavigation } from "@react-navigation/native";
+import { usePalette } from "lib/hooks/usePalette";
+import { useTheme } from "lib/ThemeContext";
 
 enum Forms {
   Login,
@@ -46,75 +46,76 @@ enum Forms {
   PasswordUpdated,
 }
 
-export const Login = ({onPressBack}: {onPressBack: () => void}) => {
-  const pal = usePalette('default')
-  const store = useStores()
-  const {track} = useAnalytics()
-  const [error, setError] = useState<string>('')
-  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
-  const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
+export const Login = ({ onPressBack }: { onPressBack: () => void }) => {
+  const pal = usePalette("default");
+  const store = useStores();
+  const { track } = useAnalytics();
+  const [error, setError] = useState<string>("");
+  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({});
+  const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE);
   const [serviceDescription, setServiceDescription] = useState<
     ServiceDescription | undefined
-  >(undefined)
-  const [initialHandle, setInitialHandle] = useState<string>('')
+  >(undefined);
+  const [initialHandle, setInitialHandle] = useState<string>("");
   const [currentForm, setCurrentForm] = useState<Forms>(
-    store.session.hasAccounts && !store.session.isDefaultSession
+    store.session.hasAccounts && !store.session.isSolarplexSession
       ? Forms.ChooseAccount
       : Forms.Login,
-  )
+  );
 
   const onSelectAccount = (account?: AccountData) => {
     if (account?.service) {
-      setServiceUrl(account.service)
+      setServiceUrl(account.service);
     }
-    setInitialHandle(account?.handle || '')
-    setCurrentForm(Forms.Login)
-  }
+    setInitialHandle(account?.handle || "");
+    setCurrentForm(Forms.Login);
+  };
 
   const gotoForm = (form: Forms) => () => {
-    setError('')
-    setCurrentForm(form)
-  }
+    setError("");
+    setCurrentForm(form);
+  };
 
   useEffect(() => {
-    let aborted = false
-    setError('')
+    let aborted = false;
+    setError("");
     store.session.describeService(serviceUrl).then(
-      desc => {
+      (desc) => {
         if (aborted) {
-          return
+          return;
         }
-        setServiceDescription(desc)
+        setServiceDescription(desc);
       },
-      err => {
+      (err) => {
         if (aborted) {
-          return
+          return;
         }
         store.log.warn(
           `Failed to fetch service description for ${serviceUrl}`,
           err,
-        )
+        );
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
-        )
+          "Unable to contact your service. Please check your Internet connection.",
+        );
       },
-    )
+    );
     return () => {
-      aborted = true
-    }
-  }, [store.session, store.log, serviceUrl, retryDescribeTrigger])
+      aborted = true;
+    };
+  }, [store.session, store.log, serviceUrl, retryDescribeTrigger]);
 
-  const onPressRetryConnect = () => setRetryDescribeTrigger({})
+  const onPressRetryConnect = () => setRetryDescribeTrigger({});
   const onPressForgotPassword = () => {
-    track('Signin:PressedForgotPassword')
-    setCurrentForm(Forms.ForgotPassword)
-  }
+    track("Signin:PressedForgotPassword");
+    setCurrentForm(Forms.ForgotPassword);
+  };
 
   return (
     <KeyboardAvoidingView
       testID="signIn"
       behavior="padding"
-      style={[pal.view, s.pt10]}>
+      style={[pal.view, s.pt10]}
+    >
       {currentForm === Forms.Login ? (
         <LoginForm
           store={store}
@@ -162,48 +163,49 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         <PasswordUpdatedForm onPressNext={gotoForm(Forms.Login)} />
       ) : undefined}
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const ChooseAccountForm = ({
   store,
   onSelectAccount,
   onPressBack,
 }: {
-  store: RootStoreModel
-  onSelectAccount: (account?: AccountData) => void
-  onPressBack: () => void
+  store: RootStoreModel;
+  onSelectAccount: (account?: AccountData) => void;
+  onPressBack: () => void;
 }) => {
-  const {track, screen} = useAnalytics()
-  const pal = usePalette('default')
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const { track, screen } = useAnalytics();
+  const pal = usePalette("default");
+  const [isProcessing, setIsProcessing] = React.useState(false);
 
   React.useEffect(() => {
-    screen('Choose Account')
-  }, [screen])
+    screen("Choose Account");
+  }, [screen]);
 
   const onTryAccount = async (account: AccountData) => {
     if (account.accessJwt && account.refreshJwt) {
-      setIsProcessing(true)
+      setIsProcessing(true);
       if (await store.session.resumeSession(account)) {
-        track('Sign In', {resumedSession: true})
-        setIsProcessing(false)
-        return
+        track("Sign In", { resumedSession: true });
+        setIsProcessing(false);
+        return;
       }
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-    onSelectAccount(account)
-  }
+    onSelectAccount(account);
+  };
 
   return (
     <View testID="chooseAccountForm">
       <Text
         type="2xl-medium"
-        style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}>
+        style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}
+      >
         Sign in as...
       </Text>
       {store.session.accounts.map(
-        account =>
+        (account) =>
           account.handle !== SOLARPLEX_IDENTIFIER && (
             <TouchableOpacity
               testID={`chooseAccountBtn-${account.handle}`}
@@ -212,19 +214,21 @@ const ChooseAccountForm = ({
               onPress={() => onTryAccount(account)}
               accessibilityRole="button"
               accessibilityLabel={`Sign in as ${account.handle}`}
-              accessibilityHint="Double tap to sign in">
+              accessibilityHint="Double tap to sign in"
+            >
               <View
                 style={[
                   pal.borderDark,
                   styles.groupContent,
                   styles.noTopBorder,
-                ]}>
+                ]}
+              >
                 <View style={s.p10}>
                   <UserAvatar avatar={account.aviUrl} size={30} />
                 </View>
                 <Text style={styles.accountText}>
                   <Text type="lg-bold" style={pal.text}>
-                    {account.displayName || account.handle}{' '}
+                    {account.displayName || account.handle}{" "}
                   </Text>
                   <Text type="lg" style={[pal.textLight]}>
                     {account.handle}
@@ -245,7 +249,8 @@ const ChooseAccountForm = ({
         onPress={() => onSelectAccount(undefined)}
         accessibilityRole="button"
         accessibilityLabel="Login to account that is not listed"
-        accessibilityHint="">
+        accessibilityHint=""
+      >
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <Text style={[styles.accountText, styles.accountTextOther]}>
             <Text type="lg" style={pal.text}>
@@ -269,8 +274,8 @@ const ChooseAccountForm = ({
         {isProcessing && <ActivityIndicator />}
       </View>
     </View>
-  )
-}
+  );
+};
 
 const LoginForm = ({
   store,
@@ -284,61 +289,61 @@ const LoginForm = ({
   onPressBack,
   onPressForgotPassword,
 }: {
-  store: RootStoreModel
-  error: string
-  serviceUrl: string
-  serviceDescription: ServiceDescription | undefined
-  initialHandle: string
-  setError: (v: string) => void
-  setServiceUrl: (v: string) => void
-  onPressRetryConnect: () => void
-  onPressBack: () => void
-  onPressForgotPassword: () => void
+  store: RootStoreModel;
+  error: string;
+  serviceUrl: string;
+  serviceDescription: ServiceDescription | undefined;
+  initialHandle: string;
+  setError: (v: string) => void;
+  setServiceUrl: (v: string) => void;
+  onPressRetryConnect: () => void;
+  onPressBack: () => void;
+  onPressForgotPassword: () => void;
 }) => {
-  const {track} = useAnalytics()
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const navigation = useNavigation<NavigationProp>()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [identifier, setIdentifier] = useState<string>(initialHandle)
-  const [password, setPassword] = useState<string>('')
-  const passwordInputRef = useRef<TextInput>(null)
+  const { track } = useAnalytics();
+  const pal = usePalette("default");
+  const theme = useTheme();
+  const navigation = useNavigation<NavigationProp>();
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [identifier, setIdentifier] = useState<string>(initialHandle);
+  const [password, setPassword] = useState<string>("");
+  const passwordInputRef = useRef<TextInput>(null);
 
   const onPressSelectService = () => {
     store.shell.openModal({
-      name: 'server-input',
+      name: "server-input",
       initialService: serviceUrl,
       onSelect: setServiceUrl,
-    })
-    Keyboard.dismiss()
-    track('Signin:PressedSelectService')
-  }
+    });
+    Keyboard.dismiss();
+    track("Signin:PressedSelectService");
+  };
 
   const onPressNext = async () => {
-    Keyboard.dismiss()
-    setError('')
-    setIsProcessing(true)
+    Keyboard.dismiss();
+    setError("");
+    setIsProcessing(true);
 
     try {
       // try to guess the handle if the user just gave their own username
-      let fullIdent = identifier
+      let fullIdent = identifier;
       if (
-        !identifier.includes('@') && // not an email
-        !identifier.includes('.') && // not a domain
+        !identifier.includes("@") && // not an email
+        !identifier.includes(".") && // not a domain
         serviceDescription &&
         serviceDescription.availableUserDomains.length > 0
       ) {
-        let matched = false
+        let matched = false;
         for (const domain of serviceDescription.availableUserDomains) {
           if (fullIdent.endsWith(domain)) {
-            matched = true
+            matched = true;
           }
         }
         if (!matched) {
           fullIdent = createFullHandle(
             identifier,
             serviceDescription.availableUserDomains[0],
-          )
+          );
         }
       }
       // store.session.removeAccount(SOLARPLEX_IDENTIFIER)
@@ -347,31 +352,31 @@ const LoginForm = ({
         service: serviceUrl,
         identifier: fullIdent,
         password,
-      })
+      });
     } catch (e: any) {
-      const errMsg = e.toString()
-      store.log.warn('Failed to login', e)
-      setIsProcessing(false)
-      if (errMsg.includes('Authentication Required')) {
-        setError('Invalid username or password')
+      const errMsg = e.toString();
+      store.log.warn("Failed to login", e);
+      setIsProcessing(false);
+      if (errMsg.includes("Authentication Required")) {
+        setError("Invalid username or password");
       } else if (isNetworkError(e)) {
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
-        )
+          "Unable to contact your service. Please check your Internet connection.",
+        );
       } else {
-        setError(cleanError(errMsg))
+        setError(cleanError(errMsg));
       }
     } finally {
-      track('Sign In', {resumedSession: false})
-      navigation.navigate('Home')
+      track("Sign In", { resumedSession: false });
+      navigation.navigate("Home");
     }
-  }
+  };
 
   const onPressRequestInvite = React.useCallback(() => {
-    Linking.openURL(BLUESKY_INTENT_LINK)
-  }, [])
+    Linking.openURL(BLUESKY_INTENT_LINK);
+  }, []);
 
-  const isReady = !!serviceDescription && !!identifier && !!password
+  const isReady = !!serviceDescription && !!identifier && !!password;
   return (
     <>
       {isMobileWeb && (
@@ -385,7 +390,8 @@ const LoginForm = ({
         </Text>
         <View style={[pal.borderDark, styles.group]}>
           <View
-            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
+          >
             <FontAwesomeIcon
               icon="globe"
               style={[pal.textLight, styles.groupContentIcon]}
@@ -396,7 +402,8 @@ const LoginForm = ({
               onPress={onPressSelectService}
               accessibilityRole="button"
               accessibilityLabel="Select service"
-              accessibilityHint="Sets server for the Bluesky client">
+              accessibilityHint="Sets server for the Bluesky client"
+            >
               <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
                 {toNiceDomain(serviceUrl)}
               </Text>
@@ -415,7 +422,8 @@ const LoginForm = ({
         </Text>
         <View style={[pal.borderDark, styles.group]}>
           <View
-            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
+          >
             <FontAwesomeIcon
               icon="at"
               style={[pal.textLight, styles.groupContentIcon]}
@@ -431,12 +439,12 @@ const LoginForm = ({
               autoComplete="username"
               returnKeyType="next"
               onSubmitEditing={() => {
-                passwordInputRef.current?.focus()
+                passwordInputRef.current?.focus();
               }}
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               keyboardAppearance={theme.colorScheme}
               value={identifier}
-              onChangeText={str => setIdentifier((str || '').toLowerCase())}
+              onChangeText={(str) => setIdentifier((str || "").toLowerCase())}
               editable={!isProcessing}
               accessibilityLabel="Username or email address"
               accessibilityHint="Input the username or email address you used at signup"
@@ -469,8 +477,8 @@ const LoginForm = ({
               editable={!isProcessing}
               accessibilityLabel="Password"
               accessibilityHint={
-                identifier === ''
-                  ? 'Input your password'
+                identifier === ""
+                  ? "Input your password"
                   : `Input the password tied to ${identifier}`
               }
             />
@@ -480,7 +488,8 @@ const LoginForm = ({
               onPress={onPressForgotPassword}
               accessibilityRole="button"
               accessibilityLabel="Forgot password"
-              accessibilityHint="Opens password reset form">
+              accessibilityHint="Opens password reset form"
+            >
               <Text style={pal.link}>Forgot</Text>
             </TouchableOpacity>
           </View>
@@ -509,7 +518,8 @@ const LoginForm = ({
               onPress={onPressRetryConnect}
               accessibilityRole="button"
               accessibilityLabel="Retry"
-              accessibilityHint="Retries login">
+              accessibilityHint="Retries login"
+            >
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Retry
               </Text>
@@ -529,7 +539,8 @@ const LoginForm = ({
               onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel="Go to next"
-              accessibilityHint="Navigates to the next screen">
+              accessibilityHint="Navigates to the next screen"
+            >
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
               </Text>
@@ -577,10 +588,12 @@ const LoginForm = ({
               styles.containerInner,
               isMobileWeb && styles.containerInnerMobile,
               pal.border,
-            ]}>
+            ]}
+          >
             <ErrorBoundary>
               <Text
-                style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+                style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}
+              >
                 Don't have a Bluesky invitation?
               </Text>
               <View testID="signinOrCreateAccount" style={styles.btns}>
@@ -599,7 +612,8 @@ const LoginForm = ({
                   style={[styles.btn]}
                   onPress={onPressRequestInvite}
                   // TODO: web accessibility
-                  accessibilityRole="button">
+                  accessibilityRole="button"
+                >
                   <Text style={[pal.text, styles.btnLabel]}>
                     Request Invite
                   </Text>
@@ -625,8 +639,8 @@ const LoginForm = ({
         </CenteredView>
       </View>
     </>
-  )
-}
+  );
+};
 
 const ForgotPasswordForm = ({
   store,
@@ -638,58 +652,58 @@ const ForgotPasswordForm = ({
   onPressBack,
   onEmailSent,
 }: {
-  store: RootStoreModel
-  error: string
-  serviceUrl: string
-  serviceDescription: ServiceDescription | undefined
-  setError: (v: string) => void
-  setServiceUrl: (v: string) => void
-  onPressBack: () => void
-  onEmailSent: () => void
+  store: RootStoreModel;
+  error: string;
+  serviceUrl: string;
+  serviceDescription: ServiceDescription | undefined;
+  setError: (v: string) => void;
+  setServiceUrl: (v: string) => void;
+  onPressBack: () => void;
+  onEmailSent: () => void;
 }) => {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>('')
-  const {screen} = useAnalytics()
+  const pal = usePalette("default");
+  const theme = useTheme();
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const { screen } = useAnalytics();
 
   useEffect(() => {
-    screen('Signin:ForgotPassword')
-  }, [screen])
+    screen("Signin:ForgotPassword");
+  }, [screen]);
 
   const onPressSelectService = () => {
     store.shell.openModal({
-      name: 'server-input',
+      name: "server-input",
       initialService: serviceUrl,
       onSelect: setServiceUrl,
-    })
-  }
+    });
+  };
 
   const onPressNext = async () => {
     if (!EmailValidator.validate(email)) {
-      return setError('Your email appears to be invalid.')
+      return setError("Your email appears to be invalid.");
     }
 
-    setError('')
-    setIsProcessing(true)
+    setError("");
+    setIsProcessing(true);
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.requestPasswordReset({email})
-      onEmailSent()
+      const agent = new BskyAgent({ service: serviceUrl });
+      await agent.com.atproto.server.requestPasswordReset({ email });
+      onEmailSent();
     } catch (e: any) {
-      const errMsg = e.toString()
-      store.log.warn('Failed to request password reset', e)
-      setIsProcessing(false)
+      const errMsg = e.toString();
+      store.log.warn("Failed to request password reset", e);
+      setIsProcessing(false);
       if (isNetworkError(e)) {
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
-        )
+          "Unable to contact your service. Please check your Internet connection.",
+        );
       } else {
-        setError(cleanError(errMsg))
+        setError(cleanError(errMsg));
       }
     }
-  }
+  };
 
   return (
     <>
@@ -703,14 +717,16 @@ const ForgotPasswordForm = ({
         </Text>
         <View
           testID="forgotPasswordView"
-          style={[pal.borderDark, pal.view, styles.group]}>
+          style={[pal.borderDark, pal.view, styles.group]}
+        >
           <TouchableOpacity
             testID="forgotPasswordSelectServiceButton"
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
             onPress={onPressSelectService}
             accessibilityRole="button"
             accessibilityLabel="Hosting provider"
-            accessibilityHint="Sets hosting provider for password reset">
+            accessibilityHint="Sets hosting provider for password reset"
+          >
             <FontAwesomeIcon
               icon="globe"
               style={[pal.textLight, styles.groupContentIcon]}
@@ -777,7 +793,8 @@ const ForgotPasswordForm = ({
               onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel="Go to next"
-              accessibilityHint="Navigates to the next screen">
+              accessibilityHint="Navigates to the next screen"
+            >
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
               </Text>
@@ -791,8 +808,8 @@ const ForgotPasswordForm = ({
         </View>
       </View>
     </>
-  )
-}
+  );
+};
 
 const SetNewPasswordForm = ({
   store,
@@ -802,50 +819,50 @@ const SetNewPasswordForm = ({
   onPressBack,
   onPasswordSet,
 }: {
-  store: RootStoreModel
-  error: string
-  serviceUrl: string
-  setError: (v: string) => void
-  onPressBack: () => void
-  onPasswordSet: () => void
+  store: RootStoreModel;
+  error: string;
+  serviceUrl: string;
+  setError: (v: string) => void;
+  onPressBack: () => void;
+  onPasswordSet: () => void;
 }) => {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const {screen} = useAnalytics()
+  const pal = usePalette("default");
+  const theme = useTheme();
+  const { screen } = useAnalytics();
 
   useEffect(() => {
-    screen('Signin:SetNewPasswordForm')
-  }, [screen])
+    screen("Signin:SetNewPasswordForm");
+  }, [screen]);
 
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [resetCode, setResetCode] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [resetCode, setResetCode] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const onPressNext = async () => {
-    setError('')
-    setIsProcessing(true)
+    setError("");
+    setIsProcessing(true);
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      const token = resetCode.replace(/\s/g, '')
+      const agent = new BskyAgent({ service: serviceUrl });
+      const token = resetCode.replace(/\s/g, "");
       await agent.com.atproto.server.resetPassword({
         token,
         password,
-      })
-      onPasswordSet()
+      });
+      onPasswordSet();
     } catch (e: any) {
-      const errMsg = e.toString()
-      store.log.warn('Failed to set new password', e)
-      setIsProcessing(false)
+      const errMsg = e.toString();
+      store.log.warn("Failed to set new password", e);
+      setIsProcessing(false);
       if (isNetworkError(e)) {
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
-        )
+          "Unable to contact your service. Please check your Internet connection.",
+        );
       } else {
-        setError(cleanError(errMsg))
+        setError(cleanError(errMsg));
       }
     }
-  }
+  };
 
   return (
     <>
@@ -859,9 +876,11 @@ const SetNewPasswordForm = ({
         </Text>
         <View
           testID="newPasswordView"
-          style={[pal.view, pal.borderDark, styles.group]}>
+          style={[pal.view, pal.borderDark, styles.group]}
+        >
           <View
-            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
+          >
             <FontAwesomeIcon
               icon="ticket"
               style={[pal.textLight, styles.groupContentIcon]}
@@ -935,7 +954,8 @@ const SetNewPasswordForm = ({
               onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel="Go to next"
-              accessibilityHint="Navigates to the next screen">
+              accessibilityHint="Navigates to the next screen"
+            >
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
               </Text>
@@ -949,17 +969,17 @@ const SetNewPasswordForm = ({
         </View>
       </View>
     </>
-  )
-}
+  );
+};
 
-const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
-  const {screen} = useAnalytics()
+const PasswordUpdatedForm = ({ onPressNext }: { onPressNext: () => void }) => {
+  const { screen } = useAnalytics();
 
   // useEffect(() => {
-  screen('Signin:PasswordUpdatedForm')
+  screen("Signin:PasswordUpdatedForm");
   // }, [screen])
 
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   return (
     <>
       <View>
@@ -975,7 +995,8 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
             onPress={onPressNext}
             accessibilityRole="button"
             accessibilityLabel="Close alert"
-            accessibilityHint="Closes password update alert">
+            accessibilityHint="Closes password update alert"
+          >
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Okay
             </Text>
@@ -983,8 +1004,8 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
         </View>
       </View>
     </>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   screenTitle: {
@@ -1012,8 +1033,8 @@ const styles = StyleSheet.create({
   },
   groupContent: {
     borderTopWidth: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   noTopBorder: {
     borderTopWidth: 0,
@@ -1033,25 +1054,25 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     paddingVertical: 10,
     paddingHorizontal: 12,
     fontSize: 17,
     letterSpacing: 0.25,
-    fontWeight: '400',
+    fontWeight: "400",
     borderRadius: 10,
   },
   textInputInnerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 6,
     paddingHorizontal: 8,
     marginHorizontal: 6,
   },
   textBtn: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   textBtnLabel: {
     flex: 1,
@@ -1059,8 +1080,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   textBtnFakeInnerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 8,
@@ -1068,8 +1089,8 @@ const styles = StyleSheet.create({
   },
   accountText: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
     paddingVertical: 10,
   },
   accountTextOther: {
@@ -1077,8 +1098,8 @@ const styles = StyleSheet.create({
   },
   error: {
     backgroundColor: colors.red4,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: -5,
     marginHorizontal: 20,
     marginBottom: 15,
@@ -1093,14 +1114,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 16,
     height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 5,
   },
-  dimmed: {opacity: 0.5},
+  dimmed: { opacity: 0.5 },
   footerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 10,
     borderRadius: 25,
   },
@@ -1108,54 +1129,54 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   footerBtnFeedbackLight: {
-    backgroundColor: '#DDEFFF',
+    backgroundColor: "#DDEFFF",
   },
   footerBtnFeedbackDark: {
     backgroundColor: colors.blue6,
   },
   container: {
-    height: '100%',
+    height: "100%",
   },
   containerInner: {
-    height: '100%',
-    justifyContent: 'center',
-    paddingBottom: '20vh',
+    height: "100%",
+    justifyContent: "center",
+    paddingBottom: "20vh",
     paddingHorizontal: 20,
   },
   containerInnerMobile: {
     paddingBottom: 50,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     color: gradients.purple.start,
     fontSize: 68,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 10,
   },
   titleMobile: {
-    textAlign: 'center',
+    textAlign: "center",
     color: gradients.purple.start,
     fontSize: 58,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.gray5,
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 30,
   },
   subtitleMobile: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.gray5,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 30,
   },
   btns: {
-    flexDirection: isMobileWeb ? 'column' : 'row',
+    flexDirection: isMobileWeb ? "column" : "row",
     gap: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingBottom: 40,
   },
   btn: {
@@ -1166,24 +1187,24 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purple1,
   },
   btnLabel: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 18,
   },
   notice: {
     paddingHorizontal: 40,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
     padding: 20,
     borderTopWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   footerLink: {
     marginRight: 20,
   },
-})
+});

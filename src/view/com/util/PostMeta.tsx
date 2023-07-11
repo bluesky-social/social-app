@@ -1,43 +1,43 @@
-import {StyleSheet, View} from 'react-native'
+import { StyleSheet, View } from "react-native";
 
-import {DesktopWebTextLink} from './Link'
-import {FollowButton} from '../profile/FollowButton'
-import {FollowState} from 'state/models/cache/my-follows'
-import React from 'react'
-import {Text} from './text/Text'
-import {UserAvatar} from './UserAvatar'
-import {ago} from 'lib/strings/time'
-import {observer} from 'mobx-react-lite'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import { DesktopWebTextLink } from "./Link";
+import { FollowButton } from "../profile/FollowButton";
+import { FollowState } from "state/models/cache/my-follows";
+import React from "react";
+import { Text } from "./text/Text";
+import { UserAvatar } from "./UserAvatar";
+import { ago } from "lib/strings/time";
+import { observer } from "mobx-react-lite";
+import { sanitizeDisplayName } from "lib/strings/display-names";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
 interface PostMetaOpts {
-  authorAvatar?: string
-  authorHandle: string
-  authorDisplayName: string | undefined
-  authorHasWarning: boolean
-  postHref: string
-  timestamp: string
-  did?: string
-  showFollowBtn?: boolean
+  authorAvatar?: string;
+  authorHandle: string;
+  authorDisplayName: string | undefined;
+  authorHasWarning: boolean;
+  postHref: string;
+  timestamp: string;
+  did?: string;
+  showFollowBtn?: boolean;
 }
 
 export const PostMeta = observer(function (opts: PostMetaOpts) {
-  const pal = usePalette('default')
-  const displayName = opts.authorDisplayName || opts.authorHandle
-  const handle = opts.authorHandle
-  const store = useStores()
-  const isMe = opts.did === store.me.did
+  const pal = usePalette("default");
+  const displayName = opts.authorDisplayName || opts.authorHandle;
+  const handle = opts.authorHandle;
+  const store = useStores();
+  const isMe = opts.did === store.me.did;
   const followState =
-    typeof opts.did === 'string'
+    typeof opts.did === "string"
       ? store.me.follows.getFollowState(opts.did)
-      : FollowState.Unknown
+      : FollowState.Unknown;
 
-  const [didFollow, setDidFollow] = React.useState(false)
+  const [didFollow, setDidFollow] = React.useState(false);
   const onToggleFollow = React.useCallback(() => {
-    setDidFollow(true)
-  }, [setDidFollow])
+    setDidFollow(true);
+  }, [setDidFollow]);
 
   if (
     opts.showFollowBtn &&
@@ -80,7 +80,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
         </View>
 
         <View>
-          {!store.session.isDefaultSession && (
+          {!store.session.isSolarplexSession && (
             <FollowButton
               unfollowedType="default"
               did={opts.did}
@@ -89,13 +89,13 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           )}
         </View>
       </View>
-    )
+    );
   }
 
   // one-liner
   return (
     <View style={styles.meta}>
-      {typeof opts.authorAvatar !== 'undefined' && (
+      {typeof opts.authorAvatar !== "undefined" && (
         <View style={[styles.metaItem, styles.avatar]}>
           <UserAvatar
             avatar={opts.authorAvatar}
@@ -117,7 +117,8 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
                 type="md"
                 style={[pal.textLight]}
                 numberOfLines={1}
-                lineHeight={1.2}>
+                lineHeight={1.2}
+              >
                 &nbsp;@{handle}
               </Text>
             </>
@@ -136,19 +137,19 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
         href={opts.postHref}
       />
     </View>
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
   meta: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingBottom: 2,
   },
   metaTwoLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
     paddingBottom: 4,
   },
   metaTwoLineLeft: {
@@ -156,16 +157,16 @@ const styles = StyleSheet.create({
     paddingRight: 40,
   },
   metaTwoLineTop: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
   },
   metaItem: {
     paddingRight: 5,
   },
   avatar: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   maxWidth: {
-    maxWidth: '80%',
+    maxWidth: "80%",
   },
-})
+});
