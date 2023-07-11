@@ -1,7 +1,7 @@
 import { SOLARPLEX_FEED_API, SOLARPLEX_FEED_URI_PATH } from "lib/constants";
 import { makeAutoObservable, runInAction } from "mobx";
 
-import { CommunityFeedModel } from "../community-feed";
+import { CommunityFeedModel } from "../feeds/community-feed";
 import { CustomFeedModel } from "../feeds/custom-feed";
 import { RootStoreModel } from "../root-store";
 import { SolarplexCommunity } from "lib/splx-types";

@@ -3,6 +3,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { AppBskyFeedDefs } from "@atproto/api";
 import { RootStoreModel } from "state/models/root-store";
 import { SolarplexCommunity } from "lib/splx-types";
+import { bundleAsync } from "lib/async/bundle";
 import { sanitizeDisplayName } from "lib/strings/display-names";
 import { track } from "lib/analytics/analytics";
 import { updateDataOptimistically } from "lib/async/revertible";

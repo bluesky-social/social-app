@@ -6,7 +6,7 @@ import { FlatList, View } from "react-native";
 import { ViewSelector, ViewSelectorHandle } from "view/com/util/ViewSelector";
 
 import { CommunityFeed } from "view/com/communities/CommunityFeed";
-import { CommunityFeedModel } from "state/models/community-feed";
+import { CommunityFeedModel } from "state/models/feeds/community-feed";
 import { Feed } from "../com/notifications/Feed";
 import { InvitedUsers } from "../com/notifications/InvitedUsers";
 import { LoadLatestBtn } from "view/com/util/load-latest/LoadLatestBtn";

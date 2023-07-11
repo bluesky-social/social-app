@@ -121,6 +121,7 @@ export class MeModel {
       this.rootStore.emitSessionLoaded();
       await this.fetchInviteCodes();
       await this.fetchAppPasswords();
+      await this.fetchCommunities();
     } else {
       this.clear();
     }
@@ -133,11 +134,15 @@ export class MeModel {
       await this.fetchProfile();
       await this.fetchInviteCodes();
       await this.fetchAppPasswords();
+      await this.fetchCommunities;
     }
     if (Date.now() - this.lastNotifsUpdate > NOTIFS_UPDATE_INTERVAL) {
       this.lastNotifsUpdate = Date.now();
       await this.notifications.syncQueue();
     }
+  }
+  async fetchCommunities() {
+    await this.rootStore.communities.fetch();
   }
 
   async fetchProfile() {

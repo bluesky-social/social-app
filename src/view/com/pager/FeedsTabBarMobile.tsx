@@ -13,6 +13,7 @@ import { FAB } from "../util/fab/FAB";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import LinearGradient from "react-native-linear-gradient";
 import { RenderTabBarFnProps } from "view/com/pager/Pager";
+import { SolarplexCommunity } from "lib/splx-types";
 import { TabBar } from "view/com/pager/TabBar";
 import { Text } from "../util/text/Text";
 import { UserAvatar } from "view/com/util/UserAvatar";
@@ -55,6 +56,18 @@ export const FeedsTabBar = observer(
       () => ["Home", ...store.me.savedFeeds.pinnedFeedNames],
       [store.me.savedFeeds.pinnedFeedNames],
     );
+    // Get the user's joined communities from joinedCommunities.communities
+    // Get the names of that community from this list for display here
+    // For each, we can construct the URL of that feed.
+    const joinedCommunityNames = store.communities.communities
+      .filter((community: any) =>
+        store.me.joinedCommunities.communities.includes(community.id),
+      )
+      .map((community: any) => community.name);
+    const communities = useMemo(
+      () => ["Home", ...joinedCommunityNames],
+      [store.me.joinedCommunities.communities, joinedCommunityNames],
+    );
     const onPressCompose = React.useCallback(() => {
       store.shell.openComposer({});
     }, [store]);
@@ -95,10 +108,12 @@ export const FeedsTabBar = observer(
             </TouchableOpacity>
           </View>
         </View>
+        {/* TODO(viksit)[F1]: Replace this with a stories layout later, for now, populate
+           the list of joined communities and power that in the feed */}
         <TabBar
-          key={items.join(",")}
+          key={communities.join(",")}
           {...props}
-          items={items}
+          items={communities}
           indicatorColor={pal.colors.link}
         />
       </Animated.View>

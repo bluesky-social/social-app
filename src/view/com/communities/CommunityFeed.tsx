@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { AtUri } from "@atproto/api";
-import { CommunityFeedModel } from "state/models/community-feed";
+import { CommunityFeedModel } from "state/models/feeds/community-feed";
 import { CustomFeedModel } from "state/models/feeds/custom-feed";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { NavigationProp } from "lib/routes/types";
