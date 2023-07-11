@@ -40,24 +40,16 @@ export function TabBar({
   const scrollElRef = useRef<ScrollView>(null);
   const [itemXs, setItemXs] = useState<number[]>([]);
   const navigation = useNavigation<NavigationProp>();
-  const currentFeed = useCustomFeed(
-    "at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana",
-  );
-  // const [buttonText, setButtonText] = useState(
-  //   currentFeed?.isSaved ? 'Leave' : 'Join',
-  // )
-
-  // const indicatorStyle = useMemo(
-  //   () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-  //   [indicatorColor, pal],
-  // )
+  // const currentFeed = useCustomFeed(
+  //   "at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana",
+  // );
 
   // scrolls to the selected item when the page changes
   useEffect(() => {
     scrollElRef.current?.scrollTo({
       x: itemXs[selectedPage] || 0,
     });
-  }, [scrollElRef, itemXs, selectedPage, currentFeed?.isSaved]);
+  }, [scrollElRef, itemXs, selectedPage]);
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -69,54 +61,46 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   );
 
-  // useEffect(() => {
-  //   if (currentFeed?.isSaved) {
-  //     setButtonText('Leave')
-  //   } else {
-  //     setButtonText('Join')
-  //   }
-  // }, [currentFeed?.isSaved])
-
   const store = useStores();
 
   const onToggleSaved = React.useCallback(async () => {
-    if (currentFeed === undefined) {
-      return;
-    }
+    // if (currentFeed === undefined) {
+    //   return;
+    // }
 
     if (store.session.isDefaultSession) {
       navigation.navigate("SignIn");
       return;
     }
 
-    if (currentFeed.isSaved) {
-      store.shell.openModal({
-        name: "confirm",
-        title: "Remove from my communities?",
-        message: `Remove ${currentFeed.displayName} from my communities?`,
-        onPressConfirm: async () => {
-          try {
-            await store.me.savedFeeds.unsave(currentFeed);
-            Toast.show("Removed from my communities");
-          } catch (e) {
-            Toast.show("There was an issue contacting your server");
-            store.log.error("Failed to unsave feed", { e });
-          }
-        },
-      });
-      //setButtonText('Join')
-    } else {
-      try {
-        await store.me.savedFeeds.save(currentFeed);
-        Toast.show("Added to my communities");
-        await currentFeed.reload();
-        //setButtonText('Leave')
-      } catch (e) {
-        Toast.show("There was an issue contacting your server");
-        store.log.error("Failed to save feed", { e });
-      }
-    }
-  }, [store, currentFeed, navigation]);
+    //   if (currentFeed.isSaved) {
+    //     store.shell.openModal({
+    //       name: "confirm",
+    //       title: "Remove from my communities?",
+    //       message: `Remove ${currentFeed.displayName} from my communities?`,
+    //       onPressConfirm: async () => {
+    //         try {
+    //           await store.me.savedFeeds.unsave(currentFeed);
+    //           Toast.show("Removed from my communities");
+    //         } catch (e) {
+    //           Toast.show("There was an issue contacting your server");
+    //           store.log.error("Failed to unsave feed", { e });
+    //         }
+    //       },
+    //     });
+    //     //setButtonText('Join')
+    //   } else {
+    //     try {
+    //       await store.me.savedFeeds.save(currentFeed);
+    //       Toast.show("Added to my communities");
+    //       await currentFeed.reload();
+    //       //setButtonText('Leave')
+    //     } catch (e) {
+    //       Toast.show("There was an issue contacting your server");
+    //       store.log.error("Failed to save feed", { e });
+    //     }
+    //   }
+  }, [store, navigation]);
 
   // calculates the x position of each item on mount and on layout change
   const onItemLayout = React.useCallback(
@@ -148,7 +132,15 @@ export function TabBar({
           const selected = i === selectedPage;
           return (
             <>
-              <View style={styles.container}>
+              <TouchableOpacity
+                onPress={onToggleSaved}
+                accessibilityRole="button"
+              >
+                <Text type="button" style={styles.btn}>
+                  {item}
+                </Text>
+              </TouchableOpacity>
+              {/* <View style={styles.container}>
                 <PressableWithHover
                   key={item}
                   onLayout={(e) => onItemLayout(e, i)}
@@ -185,7 +177,7 @@ export function TabBar({
                 >
                   {item}
                 </Text>
-              </View>
+              </View> */}
             </>
           );
         })}
