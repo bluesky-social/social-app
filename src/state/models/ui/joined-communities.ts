@@ -4,6 +4,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { CommunityFeedModel } from "../community-feed";
 import { CustomFeedModel } from "../feeds/custom-feed";
 import { RootStoreModel } from "../root-store";
+import { SolarplexCommunity } from "lib/splx-types";
 import { bundleAsync } from "lib/async/bundle";
 import { cleanError } from "lib/strings/errors";
 import { track } from "lib/analytics/analytics";
@@ -36,7 +37,7 @@ export class JoinedCommunitiesModel {
 
     // fetch the joined communities
     const response = await fetch(
-      `${SOLARPLEX_FEED_API}/splx/get_communites_for_user/${this.rootStore.me.did}`,
+      `${SOLARPLEX_FEED_API}/splx/get_communities_for_user/${this.rootStore.me.did}`,
       {
         method: "GET",
         headers: {
@@ -46,13 +47,16 @@ export class JoinedCommunitiesModel {
       },
     );
     const joinedCommunities = await response.json();
-    this.communities = joinedCommunities;
+    this.communities = joinedCommunities.data.map(
+      (c: SolarplexCommunity) => c.id,
+    );
 
     // collect the community IDs that haven't been synced yet
-    const neededCommunityIds = this.communities.filter(
+    const neededCommunityIds = this.communities?.filter(
       (id) => !(id in newCommunityModels),
     );
 
+    console.log(">>>: ", neededCommunityIds);
     // fetch the missing models
     for (const id of neededCommunityIds) {
       const community = await this.fetchCommunity(id);
@@ -67,7 +71,7 @@ export class JoinedCommunitiesModel {
 
   async fetchCommunity(id: string): Promise<CommunityFeedModel> {
     const response = await fetch(
-      `${SOLARPLEX_FEED_API}/splx/get_community_by_id/${id}`,
+      `${SOLARPLEX_FEED_API}/splx/get_community/${id}`,
       {
         method: "GET",
         headers: {
@@ -92,13 +96,37 @@ export class JoinedCommunitiesModel {
   async join(community: CommunityFeedModel) {
     try {
       await community.join();
+      await fetch(`${SOLARPLEX_FEED_API}/join_community_by_id`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "no-cors",
+        },
+        body: JSON.stringify({
+          did: this.rootStore.session.data?.did,
+          cid: community.id,
+        }),
+      });
+      await this.updateCache();
     } catch (e: any) {
       this.rootStore.log.error("Failed to join community", e);
     }
   }
   async leave(community: CommunityFeedModel) {
     try {
+      await fetch(`${SOLARPLEX_FEED_API}/leave_community_by_id`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "no-cors",
+        },
+        body: JSON.stringify({
+          did: this.rootStore.session.data?.did,
+          cid: community.id,
+        }),
+      });
       await community.leave();
+      await this.updateCache();
     } catch (e: any) {
       this.rootStore.log.error("Failed to leave community", e);
     }
