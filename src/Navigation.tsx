@@ -28,6 +28,7 @@ import { RouteParams, State } from "lib/routes/types";
 import { AppPasswords } from "view/screens/AppPasswords";
 import { BottomBar } from "./view/shell/bottom-bar/BottomBar";
 import { CommunitiesScreen } from "view/screens/Communities";
+import { CommunityFeedScreen } from "view/screens/CommunityFeedScreen";
 import { CommunityGuidelinesScreen } from "./view/screens/CommunityGuidelines";
 import { CopyrightPolicyScreen } from "./view/screens/CopyrightPolicy";
 import { CustomFeedLikedByScreen } from "./view/screens/CustomFeedLikedBy";
@@ -181,6 +182,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="CustomFeed"
         component={CustomFeedScreen}
         options={{ title: title("Feed") }}
+      />
+      <Stack.Screen
+        name="CommunityFeed"
+        component={CommunityFeedScreen}
+        options={{ title: title("Community") }}
       />
       <Stack.Screen
         name="CustomFeedLikedBy"

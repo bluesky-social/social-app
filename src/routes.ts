@@ -23,6 +23,7 @@ export const router = new Router({
   PostRepostedBy: "/profile/:name/post/:rkey/reposted-by",
   CustomFeed: "/profile/:name/feed/:rkey",
   CustomFeedLikedBy: "/profile/:name/feed/:rkey/liked-by",
+  CommunityFeed: "/community/:rkey",
   Debug: "/sys/debug",
   Log: "/sys/log",
   AppPasswords: "/settings/app-passwords",
