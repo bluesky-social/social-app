@@ -22,8 +22,8 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { ParamListBase, StackActions, useNavigation } from "@react-navigation/native";
 import React, { ComponentProps } from "react";
-import { StackActions, useNavigation } from "@react-navigation/native";
 import { TabState, getTabState } from "lib/routes/helpers";
 import { colors, s } from "lib/styles";
 import {
@@ -60,7 +60,7 @@ export const DrawerContent = observer(() => {
   // =
 
   const onPressTab = React.useCallback(
-    (tab: string) => {
+    (tab: string, params?: ParamListBase) => {
       track("Menu:ItemClicked", { url: tab });
       const state = navigation.getState();
       console.log("nav state", state);
@@ -68,7 +68,7 @@ export const DrawerContent = observer(() => {
       if (isWeb) {
         console.log("nav web");
         // @ts-ignore must be Home, Search, Notifications, MyProfile or Communities
-        navigation.navigate(tab);
+        navigation.navigate(tab, params);
       } else {
         console.log("nav non web");
         const tabState = getTabState(state, tab);
@@ -98,7 +98,7 @@ export const DrawerContent = observer(() => {
   );
 
   const onPressProfile = React.useCallback(
-    () => onPressTab("MyProfile"),
+    () => onPressTab("Profile", {name: store.me.did}),
     [onPressTab],
   );
 
