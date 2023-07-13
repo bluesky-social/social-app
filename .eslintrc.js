@@ -9,10 +9,12 @@ module.exports = {
   plugins: ['@typescript-eslint', 'detox'],
   ignorePatterns: [
     '**/__mocks__/*.ts',
-    'src/third-party',
+    'rc/third-party',
     'ios',
     'android',
     'coverage',
+    '*.lock',
+    '.husky',
   ],
   overrides: [
     {

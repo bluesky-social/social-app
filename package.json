@@ -3,6 +3,7 @@
   "version": "1.41.0",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
     "postinstall": "patch-package",
     "prebuild": "expo prebuild",
     "android": "expo run:android",
@@ -176,9 +177,11 @@
     "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-ft-flow": "^2.0.3",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.3",
     "jest": "^29.4.3",
     "jest-expo": "^48.0.2",
     "jest-junit": "^15.0.0",
+    "lint-staged": "^13.2.3",
     "metro-react-native-babel-preset": "^0.73.7",
     "prettier": "^2.8.3",
     "react-native-dotenv": "^3.3.1",
@@ -239,5 +242,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "lint-staged": {
+    "*": "yarn eslint --ext .js,.jsx,.ts,.tsx --fix"
   }
 }
