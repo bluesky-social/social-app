@@ -71,7 +71,7 @@ export const BottomBarWeb = observer(() => {
 
       <NavItem routeName="Communities" href="/communities">
         {({ isActive }) => {
-          const Icon = isActive ? CommunitiesIcon : CommunitiesIcon;
+          const Icon = isActive ? CommunitiesIconSolid : CommunitiesIcon;
           return (
             <Icon
               size={24}
