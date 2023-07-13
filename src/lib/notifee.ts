@@ -7,12 +7,16 @@ import {sanitizeDisplayName} from './strings/display-names'
 import {resetToTab} from '../Navigation'
 
 export function init(store: RootStoreModel) {
+  // Listens to changes in the unread notifications count by listening to the "unread-notifications" event and updates the badge
   store.onUnreadNotifications(count => notifee.setBadgeCount(count))
+  // Listens to "push-notification" events and displays the notification
   store.onPushNotification(displayNotificationFromModel)
+  // Listens to "session-loaded" events and requests notifications permission
   store.onSessionLoaded(() => {
     // request notifications permission once the user has logged in
     notifee.requestPermission()
   })
+  // API used to handle events when the application is in a foreground state.
   notifee.onForegroundEvent(async ({type}: {type: EventType}) => {
     store.log.debug('Notifee foreground event', {type})
     if (type === EventType.PRESS) {
