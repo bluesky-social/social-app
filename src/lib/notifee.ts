@@ -52,7 +52,10 @@ export function displayNotificationFromModel(
   )
   let title: string
   let body: string = ''
-  if (notification.isLike) {
+  if (notification.isCustomFeedLike) {
+    title = `${author} liked your custom feed`
+    body = `${new AtUri(notification.subjectUri).rkey}`
+  } else if (notification.isLike) {
     title = `${author} liked your post`
     body = notification.additionalPost?.thread?.postRecord?.text || ''
   } else if (notification.isRepost) {
@@ -67,9 +70,6 @@ export function displayNotificationFromModel(
   } else if (notification.isFollow) {
     title = 'New follower!'
     body = `${author} has followed you`
-  } else if (notification.isCustomFeedLike) {
-    title = `${author} liked your custom feed`
-    body = `${new AtUri(notification.subjectUri).rkey}`
   } else {
     return
   }
