@@ -16736,6 +16736,11 @@ react-native-progress@bluesky-social/react-native-progress:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-reactions@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-reactions/-/react-native-reactions-0.0.4.tgz#86e43f1a77e99ff7d6d72ef951506df39861931d"
+  integrity sha512-l8jGrYOiO/OYejK6nyc8NIlu1J+yyZUqXfZFRY+ZFry9/fjdkLohnKaYI6guJnXzp0h0vnd/7XV7M3LGCvRJCg==
+
 react-native-reanimated@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.3.0.tgz#80f9d58e28fddf62fe4c1bc792337b8ab57936ab"
