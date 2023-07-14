@@ -8,6 +8,7 @@ import {
   UserIcon,
   UserIconSolid,
 } from "lib/icons";
+import { CommunitiesIcon, CommunitiesIconSolid } from "../../lib/icons";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -53,9 +54,9 @@ export const DrawerContent = observer(() => {
   const { track } = useAnalytics();
   const { isAtHome, isAtNotifications, isAtMyProfile, isAtCommunities } =
     useNavigationTabState();
-
+  const res = useNavigationTabState();
   const { notifications } = store.me;
-
+  console.log("isAtCommunities", res);
   // events
   // =
 
@@ -204,15 +205,7 @@ export const DrawerContent = observer(() => {
                 onPress={onPressProfile}
               />
               <MenuItem
-                icon={
-                  <FontAwesomeIcon
-                    size={22}
-                    icon={fa.faPeopleGroup}
-                    style={
-                      { ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle
-                    }
-                  />
-                }
+                icon={(isAtCommunities ? <CommunitiesIconSolid/> : <CommunitiesIcon/>)}
                 label="Communities"
                 accessibilityLabel="Communities"
                 accessibilityHint=""

@@ -18,7 +18,8 @@ export function useNavigationTabState() {
       !res.isAtSearch &&
       !res.isAtFeeds &&
       !res.isAtNotifications &&
-      !res.isAtMyProfile
+      !res.isAtMyProfile && 
+      !res.isAtCommunities
     ) {
       // HACK for some reason useNavigationState will give us pre-hydration results
       //      and not update after, so we force isAtHome if all came back false

@@ -162,6 +162,7 @@ export class RootStoreModel {
   clearAllSessionState() {
     this.log.debug("RootStoreModel:clearAllSessionState");
     this.session.clear();
+    this.preferences.reset();
     resetToTab("HomeTab");
     this.me.clear();
   }
@@ -175,7 +176,7 @@ export class RootStoreModel {
     }
     try {
       await this.me.updateIfNeeded();
-      await this.preferences.sync();
+      await this.preferences.sync({clearCache: true});
     } catch (e: any) {
       this.log.error("Failed to fetch latest state", e);
     }

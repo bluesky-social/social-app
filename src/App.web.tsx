@@ -18,6 +18,7 @@ import {useFonts} from 'expo-font'
 const App = observer(() => {
   const [fontsLoaded] = useFonts({
     Manrope: require('../assets/fonts/Manrope.ttf'),
+    Chirp: require('../assets/fonts/Chirp-Regular.ttf'),
   })
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,

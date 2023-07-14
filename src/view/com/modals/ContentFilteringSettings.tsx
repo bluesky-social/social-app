@@ -1,18 +1,20 @@
-import React from 'react'
-import {StyleSheet, Pressable, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-import {observer} from 'mobx-react-lite'
-import {ScrollView} from './util'
-import {useStores} from 'state/index'
+import * as Toast from '../util/Toast'
+
+import {Pressable, StyleSheet, View} from 'react-native'
+import {colors, gradients, s} from 'lib/styles'
+import {isDesktopWeb, isIOS} from 'platform/detection'
+
+import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
 import {LabelPreference} from 'state/models/ui/preferences'
-import {s, colors, gradients} from 'lib/styles'
+import LinearGradient from 'react-native-linear-gradient'
+import React from 'react'
+import {ScrollView} from './util'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
 import {ToggleButton} from '../util/forms/ToggleButton'
+import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
-import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
-import {isDesktopWeb, isIOS} from 'platform/detection'
-import * as Toast from '../util/Toast'
+import {useStores} from 'state/index'
 
 export const snapPoints = ['90%']
 
@@ -21,7 +23,7 @@ export const Component = observer(({}: {}) => {
   const pal = usePalette('default')
 
   React.useEffect(() => {
-    store.preferences.sync()
+    store.preferences.sync({clearCache: true})
   }, [store])
 
   const onToggleAdultContent = React.useCallback(async () => {

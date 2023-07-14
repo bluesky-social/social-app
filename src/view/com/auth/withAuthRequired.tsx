@@ -17,13 +17,6 @@ export const withAuthRequired = <P extends object>(
     if (store.session.isResumingSession) {
       return <Loading />
     }
-    if (!store.session.hasAnySession) {
-      store.session.login({
-        service: DEFAULT_SERVICE,
-        identifier: SOLARPLEX_IDENTIFIER,
-        password: SOLARPLEX_APP_PASS ?? '',
-      })
-    }
     return <Component {...props} />
   })
 

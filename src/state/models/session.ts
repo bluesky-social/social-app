@@ -4,10 +4,11 @@ import {
   BskyAgent,
   ComAtprotoServerDescribeServer as DescribeServer,
 } from "@atproto/api";
-import { IS_PROD, SOLARPLEX_IDENTIFIER } from "lib/constants";
+import { IS_PROD, SOLARPLEX_APP_PASS, SOLARPLEX_IDENTIFIER } from "lib/constants";
 import { hasProp, isObj } from "lib/type-guards";
 import { makeAutoObservable, runInAction } from "mobx";
 
+import { DEFAULT_SERVICE } from "..";
 import { RootStoreModel } from "./root-store";
 import { networkRetry } from "lib/async/retry";
 import normalizeUrl from "normalize-url";
@@ -419,8 +420,19 @@ export class SessionModel {
         )
       })
     }*/
-    this.clearSessionTokens();
-    this.rootStore.clearAllSessionState();
+
+    if (!this.isSolarplexSession) {
+      this.clearSessionTokens();
+      this.rootStore.clearAllSessionState();
+    }
+    // const agent = new BskyAgent({ service: DEFAULT_SERVICE });
+    // const session = this.switchableAccounts[0]
+    // await this.setActiveSession(agent, session.did);
+    this.login({
+      service: DEFAULT_SERVICE,
+      identifier: SOLARPLEX_IDENTIFIER,
+      password: SOLARPLEX_APP_PASS ?? '',
+    });
   }
 
   /**
