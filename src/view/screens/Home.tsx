@@ -44,9 +44,7 @@ export const HomeScreen = withAuthRequired(
 
       const feeds = []
       for (const feed of pinned) {
-        const model = new PostsFeedModel(store, 'custom', {
-          feed: feed.uri,
-        })
+        const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
         model.setup()
         feeds.push(model)
       }
