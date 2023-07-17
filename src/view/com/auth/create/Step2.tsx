@@ -51,9 +51,8 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             accessibilityRole="button"
             accessibilityLabel="Waitlist"
             accessibilityHint="Opens Bluesky waitlist form">
-            <Text style={pal.link}>Join the waitlist</Text>
-          </TouchableWithoutFeedback>{' '}
-          to try the beta before it's publicly available.
+            <Text style={pal.link}>Join the waitlist.</Text>
+          </TouchableWithoutFeedback>
         </Text>
       ) : (
         <>

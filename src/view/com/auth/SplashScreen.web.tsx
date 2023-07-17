@@ -5,7 +5,6 @@ import {TextLink} from '../util/Link'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {CenteredView} from '../util/Views'
 import {isMobileWeb} from 'platform/detection'
 
@@ -17,11 +16,6 @@ export const SplashScreen = ({
   onPressCreateAccount: () => void
 }) => {
   const pal = usePalette('default')
-  const store = useStores()
-
-  const onPressWaitlist = React.useCallback(() => {
-    store.shell.openModal({name: 'waitlist'})
-  }, [store])
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
@@ -59,21 +53,6 @@ export const SplashScreen = ({
               <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
-          <Text
-            type="xl"
-            style={[styles.notice, pal.textLight]}
-            lineHeight={1.3}>
-            Bluesky will launch soon.{' '}
-            <TouchableOpacity
-              onPress={onPressWaitlist}
-              // TODO: web accessibility
-              accessibilityRole="button">
-              <Text type="xl" style={pal.link}>
-                Join the waitlist
-              </Text>
-            </TouchableOpacity>{' '}
-            to try the beta before it's publicly available.
-          </Text>
         </ErrorBoundary>
       </View>
       <Footer />

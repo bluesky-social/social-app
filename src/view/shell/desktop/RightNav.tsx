@@ -27,12 +27,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
               SANDBOX. Posts and accounts are not permanent.
             </Text>
           </View>
-        ) : (
-          <Text type="md" style={[pal.textLight, styles.messageLine]}>
-            Welcome to Bluesky! This is a beta application that's still in
-            development.
-          </Text>
-        )}
+        ) : undefined}
         <View style={[s.flexRow]}>
           <TextLink
             type="md"
