@@ -63,12 +63,10 @@ export function Component({}: {}) {
         <Text type="title-xl" style={[styles.title, pal.text]}>
           Join the waitlist
         </Text>
-        <Text type="lg" style={[styles.description, s.bold, pal.text]}>
-          Bluesky uses a invite system to build a healthier community.
-        </Text>
         <Text type="lg" style={[styles.description, pal.text]}>
-          If you don't know anybody with invites, you can sign up for the
-          waitlist and we'll send you an invite when there are seats available.
+          Bluesky uses invites to build a healthier community. If you don't know
+          anybody with an invite, you can sign up for the waitlist and we'll
+          send one soon.
         </Text>
         <TextInput
           style={[styles.textInput, pal.borderDark, pal.text, s.mb10, s.mt10]}
