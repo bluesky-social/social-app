@@ -360,14 +360,24 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         ) : undefined}
       </TouchableOpacity>
       <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
+      <TouchableOpacity
+        testID="reactBtn"
+        style={styles.emojiCtrl}
+        hitSlop={HITSLOP}
+        accessibilityRole="button"
+        accessibilityLabel={opts.isLiked ? "Unlike" : "Like"}
+        accessibilityHint=""
+      >
       <Reaction
         items={ReactionItems}
         onTap={setSelectedEmoji}
-        itemIndex={1}
-        isShowCardInCenter={true}
+        cardStyle={{left: opts.big ? '-500px' : '0'}}
+        isShowCardInCenter={false}
+        showPopupType="onPress"
       >
         <Text>{selectedEmoji ? selectedEmoji?.emoji : "React"}</Text>
       </Reaction>
+      </TouchableOpacity>
       <TouchableOpacity
         testID="likeBtn"
         style={styles.ctrl}
@@ -455,6 +465,12 @@ const styles = StyleSheet.create({
   },
   mt1: {
     marginTop: 1,
+  },
+  emojiCtrl: {
+    flexDirection: "row",
+    // alignItems: "center",
+    padding: 5,
+    margin: -5,
   },
   emojiContainerStyle: {
     backgroundColor: "gray",
