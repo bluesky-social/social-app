@@ -1,6 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {
+  Pressable,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -491,7 +492,7 @@ const ProfileHeaderLoaded = observer(
           </View>
         </View>
         {!isDesktopWeb && !hideBackButton && (
-          <TouchableOpacity
+          <Pressable
             onPress={onPressBack}
             hitSlop={BACK_HITSLOP}
             accessibilityRole="button"
@@ -502,7 +503,7 @@ const ProfileHeaderLoaded = observer(
                 <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
               </BlurView>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         )}
         <TouchableWithoutFeedback
           testID="profileHeaderAviButton"
