@@ -4,6 +4,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
+import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -35,12 +36,15 @@ export const HomeScreen = withAuthRequired(
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
-    const [isInitialized, setIsInitialized] = React.useState(false)
+    const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<string[]>([])
 
     React.useEffect(() => {
-      if (isInitialized) return
-
       const {pinned} = store.me.savedFeeds
+
+      if (isEqual(pinned.map(p => p.uri), requestedCustomFeeds)) {
+        // no changes
+        return
+      }
 
       const feeds = []
       for (const feed of pinned) {
@@ -50,15 +54,15 @@ export const HomeScreen = withAuthRequired(
       }
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
-      setIsInitialized(true)
+      setRequestedCustomFeeds(pinned.map(p => p.uri))
     }, [
       store,
       store.me.savedFeeds.pinned,
       customFeeds,
       setCustomFeeds,
       pagerRef,
-      isInitialized,
-      setIsInitialized,
+      requestedCustomFeeds,
+      setRequestedCustomFeeds,
     ])
 
     useFocusEffect(
