@@ -19,7 +19,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 
-export const snapPoints = ['60%']
+export const snapPoints = ['80%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
