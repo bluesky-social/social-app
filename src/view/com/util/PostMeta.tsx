@@ -66,12 +66,12 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
         </Text>
       )}
       <TimeElapsed timestamp={opts.timestamp}>
-        {({elapsedTime}) => (
+        {({timeElapsed}) => (
           <DesktopWebTextLink
             type="md"
             style={pal.textLight}
             lineHeight={1.2}
-            text={elapsedTime}
+            text={timeElapsed}
             accessibilityLabel={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}

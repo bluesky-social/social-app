@@ -192,7 +192,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <Text type="md" style={[styles.metaItem, pal.textLight]}>
                   &middot;&nbsp;
                   <TimeElapsed timestamp={item.post.indexedAt}>
-                    {({elapsedTime}) => <>{elapsedTime}</>}
+                    {({timeElapsed}) => <>{timeElapsed}</>}
                   </TimeElapsed>
                 </Text>
               </View>

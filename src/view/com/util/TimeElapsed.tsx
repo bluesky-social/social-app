@@ -6,9 +6,9 @@ export function TimeElapsed({
   children,
 }: {
   timestamp: string
-  children: ({elapsedTime}: {elapsedTime: string}) => JSX.Element
+  children: ({timeElapsed}: {timeElapsed: string}) => JSX.Element
 }) {
-  const [elapsedTime, setTimeAgo] = React.useState(ago(timestamp))
+  const [timeElapsed, setTimeAgo] = React.useState(ago(timestamp))
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -18,5 +18,5 @@ export function TimeElapsed({
     return () => clearInterval(interval)
   }, [timestamp, setTimeAgo])
 
-  return children({elapsedTime})
+  return children({timeElapsed})
 }
