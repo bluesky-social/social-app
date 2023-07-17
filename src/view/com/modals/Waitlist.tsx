@@ -19,7 +19,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 
-export const snapPoints = ['80%']
+export const snapPoints = ['60%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
@@ -58,15 +58,17 @@ export function Component({}: {}) {
   }
 
   return (
-    <View
-      style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
+    <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
         <Text type="title-xl" style={[styles.title, pal.text]}>
           Join the waitlist
         </Text>
+        <Text type="lg" style={[styles.description, s.bold, pal.text]}>
+          Bluesky uses a invite system to build a healthier community.
+        </Text>
         <Text type="lg" style={[styles.description, pal.text]}>
-          Bluesky will launch soon. Join the waitlist to try the beta before
-          it's publicly available.
+          If you don't know anybody with invites, you can sign up for the
+          waitlist and we'll send you an invite when there are seats available.
         </Text>
         <TextInput
           style={[styles.textInput, pal.borderDark, pal.text, s.mb10, s.mt10]}

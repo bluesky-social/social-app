@@ -53,7 +53,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             accessibilityHint="Opens Bluesky waitlist form">
             <Text style={pal.link}>Join the waitlist</Text>
           </TouchableWithoutFeedback>{' '}
-          to try the beta before it's publicly available.
+          to receive an invite when seats are available.
         </Text>
       ) : (
         <>
