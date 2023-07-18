@@ -16,6 +16,7 @@ export class FeedsDiscoveryModel {
   feeds: CustomFeedModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
+    const lmao = 'lmao'
     makeAutoObservable(
       this,
       {
