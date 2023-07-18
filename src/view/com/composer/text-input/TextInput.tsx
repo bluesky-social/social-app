@@ -193,7 +193,21 @@ export const TextInput = forwardRef(
         <PasteInput
           testID="composerTextInput"
           ref={textInput}
-          onChangeText={onChangeText}
+          onChangeText={text => {
+            /*
+             * This is a hack to bump the rendering of our styled
+             * `textDecorated` to _after_ whatever processing is happening
+             * within the `PasteInput` library. Without this, the elements in
+             * `textDecorated` are not correctly painted to screen.
+             *
+             * NB: we tried a `0` timeout as well, but only positive values worked.
+             *
+             * @see https://github.com/bluesky-social/social-app/issues/929
+             */
+            setTimeout(() => {
+              onChangeText(text)
+            }, 1)
+          }}
           onPaste={onPaste}
           onSelectionChange={onSelectionChange}
           placeholder={placeholder}
