@@ -64,5 +64,6 @@ const styles = StyleSheet.create({
     borderRadius: isMobileWeb ? 0 : 8,
     marginBottom: '10vh',
     borderWidth: 1,
+    maxHeight: '85%',
   },
 })
