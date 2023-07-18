@@ -128,10 +128,10 @@ const SelectIssue = ({
         label: (
           <View>
             <Text style={pal.text} type="md-bold">
-              Account handle, display name or description contains terms that violate community standards.
+              Name or Description Violates Community Standards
             </Text>
             <Text style={pal.textLight}>
-              Violation; terms used violate community standards
+              Terms used violate community standards
             </Text>
           </View>
         ),
