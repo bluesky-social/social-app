@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 2,
     borderRadius: isMobileWeb ? 0 : 8,
-    marginBottom: '10vh',
+    marginBottom: isMobileWeb ? '61px' : 0,
     borderWidth: 1,
-    maxHeight: '85%',
+    maxHeight: isMobileWeb ? 'calc(100% - 61px)' : 'calc(100% - (40px * 2))',
   },
 })
