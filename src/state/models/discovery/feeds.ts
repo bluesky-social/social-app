@@ -82,6 +82,21 @@ export class FeedsDiscoveryModel {
     this._xIdle()
   })
 
+  search = (query: string) => {
+    this._xLoading()
+    try {
+      const filteredFeeds = this.feeds.filter(f => {
+        const checkName = f.data.displayName.includes(query)
+        const checkDescription = f.data.description?.includes(query)
+        return checkName || checkDescription
+      })
+      this.feeds = filteredFeeds
+    } catch (e: any) {
+      this._xIdle(e)
+    }
+    this._xIdle()
+  }
+
   clear() {
     this.isLoading = false
     this.isRefreshing = false
