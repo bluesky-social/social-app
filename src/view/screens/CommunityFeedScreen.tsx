@@ -385,6 +385,16 @@ export const CommunityFeedScreen = withAuthRequired(
             showIndicator={false}
           />
         ) : null}
+        {!store.session.isSolarplexSession && (
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel="Compose post"
+            accessibilityHint=""
+          />
+        )}
       </View>
     );
   }),
