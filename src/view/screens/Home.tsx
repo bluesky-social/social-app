@@ -36,13 +36,17 @@ export const HomeScreen = withAuthRequired(
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
+    const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
+      string[]
+    >([])
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds
+
       if (
         isEqual(
           pinned.map(p => p.uri),
-          customFeeds.map(f => (f.params as GetCustomFeed.QueryParams).feed),
+          requestedCustomFeeds,
         )
       ) {
         // no changes
@@ -57,12 +61,15 @@ export const HomeScreen = withAuthRequired(
       }
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
+      setRequestedCustomFeeds(pinned.map(p => p.uri))
     }, [
       store,
       store.me.savedFeeds.pinned,
       customFeeds,
       setCustomFeeds,
       pagerRef,
+      requestedCustomFeeds,
+      setRequestedCustomFeeds,
     ])
 
     useFocusEffect(

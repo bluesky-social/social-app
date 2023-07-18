@@ -5,6 +5,7 @@ import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isMobileWeb} from 'platform/detection'
+import {BOTTOM_BAR_HEIGHT} from 'view/shell/bottom-bar/BottomBarStyles'
 
 export const Composer = observer(
   ({
@@ -62,7 +63,10 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 2,
     borderRadius: isMobileWeb ? 0 : 8,
-    marginBottom: '10vh',
+    marginBottom: isMobileWeb ? BOTTOM_BAR_HEIGHT : 0,
     borderWidth: 1,
+    maxHeight: isMobileWeb
+      ? `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`
+      : 'calc(100% - (40px * 2))',
   },
 })
