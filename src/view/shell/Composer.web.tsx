@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
     borderRadius: isMobileWeb ? 0 : 8,
     marginBottom: isMobileWeb ? BOTTOM_BAR_HEIGHT : 0,
     borderWidth: 1,
-    maxHeight: isMobileWeb ? `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` : 'calc(100% - (40px * 2))',
+    maxHeight: isMobileWeb
+      ? `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`
+      : 'calc(100% - (40px * 2))',
   },
 })
