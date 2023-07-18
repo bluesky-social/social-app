@@ -123,6 +123,19 @@ const SelectIssue = ({
           </View>
         ),
       },
+      {
+        key: ComAtprotoModerationDefs.REASONVIOLATION,
+        label: (
+          <View>
+            <Text style={pal.text} type="md-bold">
+              Name or Description Violates Community Standards
+            </Text>
+            <Text style={pal.textLight}>
+              Terms used violate community standards
+            </Text>
+          </View>
+        ),
+      },
     ],
     [pal],
   )
