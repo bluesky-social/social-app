@@ -37,6 +37,7 @@ import { NavItem } from "./desktop/LeftNav";
 import { NavigationProp } from "lib/routes/types";
 import { Text } from "view/com/util/text/Text";
 import { UserAvatar } from "view/com/util/UserAvatar";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { isWeb } from "platform/detection";
 import { observer } from "mobx-react-lite";
 import { pluralize } from "lib/strings/helpers";
@@ -161,6 +162,7 @@ export const DrawerContent = observer(() => {
                   following
                 </Text>
               </TouchableOpacity>
+              <WalletMultiButton style={styles.walletConnect}/>
             </View>
             {/* <InviteCodes /> */}
           </>
@@ -425,6 +427,10 @@ const styles = StyleSheet.create({
   profileCardFollowers: {
     marginTop: 16,
     paddingRight: 10,
+  },
+  walletConnect: {
+    marginTop: 16,
+    paddingRight: 24,
   },
 
   menuItem: {

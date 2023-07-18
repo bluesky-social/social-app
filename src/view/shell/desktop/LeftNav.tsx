@@ -35,6 +35,7 @@ import { PressableWithHover } from "view/com/util/PressableWithHover";
 import React from "react";
 import { Text } from "view/com/util/text/Text";
 import { UserAvatar } from "view/com/util/UserAvatar";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { observer } from "mobx-react-lite";
 import { router } from "../../../routes";
 import { useAnalytics } from "lib/analytics/analytics";
@@ -228,7 +229,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
     <View style={[styles.leftNav, pal.view]}>
       <Banner />
 
-      {store.session.hasSession && <ProfileCard />}
+      {store.session.hasSession && <><ProfileCard /><WalletMultiButton/></>}
       <BackBtn />
       <NavItem
         href="/"

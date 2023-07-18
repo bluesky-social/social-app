@@ -3,8 +3,14 @@ import 'lib/sentry' // must be relatively on top
 import * as analytics from 'lib/analytics/analytics'
 import * as view from './view/index'
 
-import React, {useEffect, useState} from 'react'
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import React, {useEffect, useMemo, useState} from 'react'
 import {RootStoreModel, RootStoreProvider, setupState} from './state'
+import {
+    WalletDisconnectButton,
+    WalletModalProvider,
+    WalletMultiButton
+} from '@solana/wallet-adapter-react-ui';
 
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
@@ -12,8 +18,14 @@ import {Shell} from './view/shell/index'
 import {Text} from 'react-native'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {ToastContainer} from './view/com/util/Toast.web'
+import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { clusterApiUrl } from '@solana/web3.js';
 import {observer} from 'mobx-react-lite'
 import {useFonts} from 'expo-font'
+
+require('@solana/wallet-adapter-react-ui/styles.css');
+
 
 const App = observer(() => {
   const [fontsLoaded] = useFonts({
@@ -23,6 +35,11 @@ const App = observer(() => {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
+    // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
+    const network = WalletAdapterNetwork.Devnet;
+
+    // You can also provide a custom RPC endpoint.
+    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   // init
   useEffect(() => {
@@ -47,10 +64,16 @@ const App = observer(() => {
       <RootSiblingParent>
         <analytics.Provider>
           <RootStoreProvider value={rootStore}>
-            <SafeAreaProvider>
-              <Shell />
-            </SafeAreaProvider>
-            <ToastContainer />
+            <ConnectionProvider endpoint={endpoint}>
+              <WalletProvider wallets={[]} autoConnect>
+                <WalletModalProvider>
+                  <SafeAreaProvider>
+                    <Shell />
+                  </SafeAreaProvider>
+                  <ToastContainer />
+                </WalletModalProvider>
+              </WalletProvider>
+            </ConnectionProvider>
           </RootStoreProvider>
         </analytics.Provider>
       </RootSiblingParent>
