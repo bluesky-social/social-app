@@ -1,8 +1,11 @@
 import {StyleSheet} from 'react-native'
 import {colors} from 'lib/styles'
 
+export const BOTTOM_BAR_HEIGHT = 61
+
 export const styles = StyleSheet.create({
   bottomBar: {
+    height: BOTTOM_BAR_HEIGHT,
     position: 'absolute',
     bottom: 0,
     left: 0,
