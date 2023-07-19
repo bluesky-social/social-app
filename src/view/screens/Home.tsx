@@ -41,11 +41,10 @@ export const HomeScreen = withAuthRequired(
     >([])
 
     React.useEffect(() => {
-      console.log('Show Onboarding', store.shell.showOnboarding)
       if (store.shell.showOnboarding) {
         store.shell.openModal({name: 'onboarding'})
       }
-    }, [store.shell.showOnboarding, store.shell])
+    }, [store.shell, store.shell.showOnboarding])
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds
