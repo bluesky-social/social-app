@@ -32,6 +32,7 @@ const POLL_FREQ = 30e3 // 30sec
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer((_opts: Props) => {
+    const navigation = _opts.navigation
     const store = useStores()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
@@ -39,6 +40,12 @@ export const HomeScreen = withAuthRequired(
     const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
       string[]
     >([])
+
+    React.useEffect(() => {
+      if (store.shell.showOnboarding) {
+        navigation.navigate('Onboarding')
+      }
+    }, [store.shell.showOnboarding, navigation])
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds

@@ -128,6 +128,7 @@ export class CreateAccountModel {
       throw e
     } finally {
       track('Create Account')
+      this.rootStore.shell.setShowOnboarding(true)
     }
   }
 

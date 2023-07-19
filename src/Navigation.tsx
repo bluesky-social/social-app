@@ -66,6 +66,7 @@ import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
+import {Onboarding} from 'view/com/auth/onboarding/Onboarding'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -214,6 +215,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="SavedFeeds"
         component={SavedFeeds}
         options={{title: title('Edit My Feeds')}}
+      />
+      <Stack.Screen
+        name="Onboarding"
+        component={Onboarding}
+        options={{title: title('Onboarding'), presentation: 'modal'}}
       />
     </>
   )
