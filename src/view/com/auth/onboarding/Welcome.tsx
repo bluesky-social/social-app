@@ -23,22 +23,8 @@ export const Welcome = ({next}: {next: () => void}) => {
               Bluesky is a public social network.
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              All posts, likes, and profiles here are public, so even though
-              we're currently invite-only, treat everything here like it's a
-              public blog.
-            </Text>
-          </View>
-        </View>
-        <View style={[styles.row]}>
-          <FontAwesomeIcon icon={'gear'} size={48} color={pal.colors.link} />
-          <View style={[styles.rowText]}>
-            <Text type="lg-bold" style={[pal.text]}>
-              Bluesky gives you more choice.
-            </Text>
-            <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              You get to choose the algorithms that power your timeline. Want
-              cat pics or only posts from your mutuals? That’s what custom feeds
-              are for.
+              Posting is invite-only but anybody can see your posts, likes, and
+              profile.
             </Text>
           </View>
         </View>
@@ -49,8 +35,19 @@ export const Welcome = ({next}: {next: () => void}) => {
               Bluesky is open.
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              You’ll never lose access to your followers and data. You can take
-              them to any app that supports the AT protocol.
+              You'll never lose access to your followers and data.
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.row]}>
+          <FontAwesomeIcon icon={'gear'} size={48} color={pal.colors.link} />
+          <View style={[styles.rowText]}>
+            <Text type="lg-bold" style={[pal.text]}>
+              Bluesky is powerful.
+            </Text>
+            <Text type="lg-thin" style={[pal.text, s.pt2]}>
+              You choose the algorithms that drive your experience with custom
+              feeds.
             </Text>
           </View>
         </View>
