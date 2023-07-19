@@ -9,7 +9,7 @@ import {track} from 'lib/analytics/analytics'
 
 enum OnboardingStep {
   WELCOME = 'WELCOME',
-  // CHOOSE_PREFERENCES = 'CHOOSE_PREFERENCES',
+  // SELECT_INTERESTS = 'SELECT_INTERESTS',
   COMPLETE = 'COMPLETE',
 }
 type OnboardingState = {
@@ -53,7 +53,7 @@ export const Onboarding = ({navigation}: Props) => {
       navigation.goBack()
       rootStore.shell.setShowOnboarding(false)
     }
-  })
+  }, [state.currentStep, navigation, rootStore.shell])
 
   return (
     <View style={[styles.container, pal.view]}>
