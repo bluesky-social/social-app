@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     columnGap: 20,
     alignItems: 'center',
-    marginTop: 20,
+    marginVertical: 20,
   },
   rowText: {
     flex: 1,

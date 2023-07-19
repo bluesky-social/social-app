@@ -2,8 +2,6 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Welcome} from './Welcome'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {HomeTabNavigatorParams} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {track} from 'lib/analytics/analytics'
 
@@ -37,8 +35,7 @@ const reducer = (state: OnboardingState, action: Action): OnboardingState => {
   }
 }
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Onboarding'>
-export const Onboarding = ({navigation}: Props) => {
+export const Onboarding = () => {
   const pal = usePalette('default')
   const rootStore = useStores()
   const [state, dispatch] = React.useReducer(reducer, initialState)
@@ -50,13 +47,13 @@ export const Onboarding = ({navigation}: Props) => {
   React.useEffect(() => {
     if (state.currentStep === OnboardingStep.COMPLETE) {
       // navigate to home
-      navigation.goBack()
+      rootStore.shell.closeModal()
       rootStore.shell.setShowOnboarding(false)
     }
-  }, [state.currentStep, navigation, rootStore.shell])
+  }, [state.currentStep, rootStore.shell])
 
   return (
-    <View style={[styles.container, pal.view]}>
+    <View style={[pal.view, styles.container]}>
       {state.currentStep === OnboardingStep.WELCOME && <Welcome next={next} />}
     </View>
   )
@@ -65,6 +62,6 @@ export const Onboarding = ({navigation}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 })
