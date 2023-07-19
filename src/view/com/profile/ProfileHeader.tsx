@@ -541,6 +541,8 @@ const styles = StyleSheet.create({
     height: 30,
     overflow: 'hidden',
     borderRadius: 15,
+    // @ts-ignore web only
+    cursor: 'pointer',
   },
   backBtn: {
     width: 30,
