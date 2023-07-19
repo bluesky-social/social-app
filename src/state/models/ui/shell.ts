@@ -1,6 +1,6 @@
 import {AppBskyEmbedRecord} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
@@ -347,7 +347,9 @@ export class ShellUiModel {
 
   setupClock() {
     setInterval(() => {
-      this.tickEveryMinute = Date.now()
+      runInAction(() => {
+        this.tickEveryMinute = Date.now()
+      })
     }, 60_000)
   }
 }
