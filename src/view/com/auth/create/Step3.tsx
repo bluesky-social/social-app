@@ -10,6 +10,9 @@ import {createFullHandle} from 'lib/strings/handles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 
+/** STEP 3: Your user handle
+ * @field User handle
+ */
 export const Step3 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
   return (
