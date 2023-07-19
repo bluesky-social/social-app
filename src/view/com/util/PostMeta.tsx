@@ -2,12 +2,13 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
 import {DesktopWebTextLink} from './Link'
-import {ago, niceDate} from 'lib/strings/time'
+import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isAndroid} from 'platform/detection'
+import {TimeElapsed} from './TimeElapsed'
 
 interface PostMetaOpts {
   authorAvatar?: string
@@ -64,15 +65,19 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           &middot;
         </Text>
       )}
-      <DesktopWebTextLink
-        type="md"
-        style={pal.textLight}
-        lineHeight={1.2}
-        text={ago(opts.timestamp)}
-        accessibilityLabel={niceDate(opts.timestamp)}
-        accessibilityHint=""
-        href={opts.postHref}
-      />
+      <TimeElapsed timestamp={opts.timestamp}>
+        {({timeElapsed}) => (
+          <DesktopWebTextLink
+            type="md"
+            style={pal.textLight}
+            lineHeight={1.2}
+            text={timeElapsed}
+            accessibilityLabel={niceDate(opts.timestamp)}
+            accessibilityHint=""
+            href={opts.postHref}
+          />
+        )}
+      </TimeElapsed>
     </View>
   )
 })

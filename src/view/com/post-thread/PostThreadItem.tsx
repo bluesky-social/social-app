@@ -15,7 +15,7 @@ import {PostDropdownBtn} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
-import {ago, niceDate} from 'lib/strings/time'
+import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {pluralize} from 'lib/strings/helpers'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
@@ -30,6 +30,7 @@ import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
+import {TimeElapsed} from 'view/com/util/TimeElapsed'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -189,7 +190,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                   </Text>
                 </Link>
                 <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                  &middot; {ago(item.post.indexedAt)}
+                  &middot;&nbsp;
+                  <TimeElapsed timestamp={item.post.indexedAt}>
+                    {({timeElapsed}) => <>{timeElapsed}</>}
+                  </TimeElapsed>
                 </Text>
               </View>
               <View style={s.flex1} />

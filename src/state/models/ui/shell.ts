@@ -224,6 +224,7 @@ export class ShellUiModel {
   activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
+  tickEveryMinute = Date.now()
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -231,6 +232,8 @@ export class ShellUiModel {
       rootStore: false,
       hydrate: false,
     })
+
+    this.setupClock()
   }
 
   serialize(): unknown {
@@ -340,5 +343,11 @@ export class ShellUiModel {
   closeComposer() {
     this.isComposerActive = false
     this.composerOpts = undefined
+  }
+
+  setupClock() {
+    setInterval(() => {
+      this.tickEveryMinute = Date.now()
+    }, 60_000)
   }
 }
