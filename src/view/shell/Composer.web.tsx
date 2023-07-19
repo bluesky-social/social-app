@@ -5,7 +5,8 @@ import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isMobileWeb} from 'platform/detection'
-import {BOTTOM_BAR_HEIGHT} from 'view/shell/bottom-bar/BottomBarStyles'
+
+const BOTTOM_BAR_HEIGHT = 61
 
 export const Composer = observer(
   ({
