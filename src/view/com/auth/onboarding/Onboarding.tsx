@@ -5,6 +5,7 @@ import {Welcome} from './Welcome'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {HomeTabNavigatorParams} from 'lib/routes/types'
 import {useStores} from 'state/index'
+import {track} from 'lib/analytics/analytics'
 
 enum OnboardingStep {
   WELCOME = 'WELCOME',
@@ -23,8 +24,10 @@ const reducer = (state: OnboardingState, action: Action): OnboardingState => {
     case 'NEXT_STEP':
       switch (state.currentStep) {
         case OnboardingStep.WELCOME:
+          track('Onboarding:Begin')
           return {...state, currentStep: OnboardingStep.COMPLETE}
         case OnboardingStep.COMPLETE:
+          track('Onboarding:Complete')
           return state
         default:
           return state
