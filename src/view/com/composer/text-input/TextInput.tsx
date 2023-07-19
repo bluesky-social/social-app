@@ -79,52 +79,64 @@ export const TextInput = forwardRef(
     }))
 
     const onChangeText = useCallback(
-      async (newText: string) => {
-        const newRt = new RichText({text: newText})
-        newRt.detectFacetsWithoutResolution()
-        setRichText(newRt)
+      (newText: string) => {
+        /*
+         * This is a hack to bump the rendering of our styled
+         * `textDecorated` to _after_ whatever processing is happening
+         * within the `PasteInput` library. Without this, the elements in
+         * `textDecorated` are not correctly painted to screen.
+         *
+         * NB: we tried a `0` timeout as well, but only positive values worked.
+         *
+         * @see https://github.com/bluesky-social/social-app/issues/929
+         */
+        setTimeout(async () => {
+          const newRt = new RichText({text: newText})
+          newRt.detectFacetsWithoutResolution()
+          setRichText(newRt)
 
-        const prefix = getMentionAt(
-          newText,
-          textInputSelection.current?.start || 0,
-        )
-        if (prefix) {
-          autocompleteView.setActive(true)
-          autocompleteView.setPrefix(prefix.value)
-        } else {
-          autocompleteView.setActive(false)
-        }
+          const prefix = getMentionAt(
+            newText,
+            textInputSelection.current?.start || 0,
+          )
+          if (prefix) {
+            autocompleteView.setActive(true)
+            autocompleteView.setPrefix(prefix.value)
+          } else {
+            autocompleteView.setActive(false)
+          }
 
-        const set: Set<string> = new Set()
+          const set: Set<string> = new Set()
 
-        if (newRt.facets) {
-          for (const facet of newRt.facets) {
-            for (const feature of facet.features) {
-              if (AppBskyRichtextFacet.isLink(feature)) {
-                if (isUriImage(feature.uri)) {
-                  const res = await downloadAndResize({
-                    uri: feature.uri,
-                    width: POST_IMG_MAX.width,
-                    height: POST_IMG_MAX.height,
-                    mode: 'contain',
-                    maxSize: POST_IMG_MAX.size,
-                    timeout: 15e3,
-                  })
+          if (newRt.facets) {
+            for (const facet of newRt.facets) {
+              for (const feature of facet.features) {
+                if (AppBskyRichtextFacet.isLink(feature)) {
+                  if (isUriImage(feature.uri)) {
+                    const res = await downloadAndResize({
+                      uri: feature.uri,
+                      width: POST_IMG_MAX.width,
+                      height: POST_IMG_MAX.height,
+                      mode: 'contain',
+                      maxSize: POST_IMG_MAX.size,
+                      timeout: 15e3,
+                    })
 
-                  if (res !== undefined) {
-                    onPhotoPasted(res.path)
+                    if (res !== undefined) {
+                      onPhotoPasted(res.path)
+                    }
+                  } else {
+                    set.add(feature.uri)
                   }
-                } else {
-                  set.add(feature.uri)
                 }
               }
             }
           }
-        }
 
-        if (!isEqual(set, suggestedLinks)) {
-          onSuggestedLinksChanged(set)
-        }
+          if (!isEqual(set, suggestedLinks)) {
+            onSuggestedLinksChanged(set)
+          }
+        }, 1)
       },
       [
         setRichText,
