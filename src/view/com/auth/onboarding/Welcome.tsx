@@ -17,7 +17,7 @@ export const Welcome = ({next}: {next: () => void}) => {
         <View style={styles.spacer} />
 
         <View style={[styles.row]}>
-          <FontAwesomeIcon icon={'globe'} size={48} color={pal.colors.link} />
+          <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
               Bluesky is a public social network.
@@ -29,7 +29,7 @@ export const Welcome = ({next}: {next: () => void}) => {
           </View>
         </View>
         <View style={[styles.row]}>
-          <FontAwesomeIcon icon={'at'} size={48} color={pal.colors.link} />
+          <FontAwesomeIcon icon={'at'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
               Bluesky is open.
@@ -40,7 +40,7 @@ export const Welcome = ({next}: {next: () => void}) => {
           </View>
         </View>
         <View style={[styles.row]}>
-          <FontAwesomeIcon icon={'gear'} size={48} color={pal.colors.link} />
+          <FontAwesomeIcon icon={'gear'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
               Bluesky is powerful.
