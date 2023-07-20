@@ -65,10 +65,10 @@ export class FeedsDiscoveryModel {
   })
 
   loadMore = bundleAsync(async () => {
-    this._xLoading()
     if (!this.hasMore) {
       return
     }
+    this._xLoading()
     try {
       const res =
         await this.rootStore.agent.app.bsky.unspecced.getPopularFeedGenerators({
