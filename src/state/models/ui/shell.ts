@@ -14,9 +14,7 @@ export type ColorMode = 'system' | 'light' | 'dark'
 export function isColorMode(v: unknown): v is ColorMode {
   return v === 'system' || v === 'light' || v === 'dark'
 }
-export function isOnboarding(v: unknown): v is boolean {
-  return typeof v === 'boolean' || v === 'true' || v === 'false'
-}
+
 export interface ConfirmModal {
   name: 'confirm'
   title: string
@@ -258,7 +256,10 @@ export class ShellUiModel {
       if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
         this.colorMode = v.colorMode
       }
-      if (hasProp(v, 'showOnboarding') && isOnboarding(v.showOnboarding)) {
+      if (
+        hasProp(v, 'showOnboarding') &&
+        typeof v.showOnboarding === 'boolean'
+      ) {
         this.showOnboarding = v.showOnboarding
       }
     }
