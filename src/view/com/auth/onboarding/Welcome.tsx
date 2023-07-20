@@ -20,7 +20,7 @@ export const Welcome = ({next}: {next: () => void}) => {
           <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
-              Bluesky is a public.
+              Bluesky is public.
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
               Your posts, likes, and blocks are public. Mutes are private.
