@@ -20,11 +20,10 @@ export const Welcome = ({next}: {next: () => void}) => {
           <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
-              Bluesky is a public social network.
+              Bluesky is a public.
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              Posting is invite-only but anybody can see your posts, likes, and
-              profile.
+              Your posts, likes, and blocks are public. Mutes are private.
             </Text>
           </View>
         </View>
@@ -35,7 +34,7 @@ export const Welcome = ({next}: {next: () => void}) => {
               Bluesky is open.
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              You'll never lose access to your followers and data.
+              Never lose access to your followers and data.
             </Text>
           </View>
         </View>
@@ -43,10 +42,10 @@ export const Welcome = ({next}: {next: () => void}) => {
           <FontAwesomeIcon icon={'gear'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
-              Bluesky is powerful.
+              Bluesky is flexible.
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              You choose the algorithms that drive your experience with custom
+              Choose the algorithms that power your experience with custom
               feeds.
             </Text>
           </View>
