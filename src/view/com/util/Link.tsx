@@ -89,12 +89,11 @@ export const Link = observer(function Link({
       <TouchableWithoutFeedback
         testID={testID}
         onPress={onPress}
-        // @ts-ignore web only -prf
-        href={asAnchor ? sanitizeUrl(href) : undefined}
         accessible={accessible}
         accessibilityRole="link"
         {...props}>
-        <View style={style}>
+        {/* @ts-ignore web only -prf */}
+        <View style={style} href={asAnchor ? sanitizeUrl(href) : undefined}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
       </TouchableWithoutFeedback>

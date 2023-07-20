@@ -182,6 +182,7 @@ export function PostEmbeds({
     return (
       <Link
         asAnchor
+        noFeedback
         style={[styles.extOuter, pal.view, pal.border, style]}
         href={link.uri}>
         <ExternalLinkEmbed link={link} />
