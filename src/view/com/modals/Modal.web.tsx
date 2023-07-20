@@ -8,6 +8,7 @@ import {isMobileWeb} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
+import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './report/ReportPost'
 import * as ReportAccountModal from './report/ReportAccount'
@@ -25,6 +26,7 @@ import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
+import * as OnboardingModal from './OnboardingModal'
 
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
@@ -68,6 +70,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ConfirmModal.Component {...modal} />
   } else if (modal.name === 'edit-profile') {
     element = <EditProfileModal.Component {...modal} />
+  } else if (modal.name === 'profile-preview') {
+    element = <ProfilePreviewModal.Component {...modal} />
   } else if (modal.name === 'server-input') {
     element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report-post') {
@@ -104,6 +108,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <EditImageModal.Component {...modal} />
   } else if (modal.name === 'preferences-home-feed') {
     element = <PreferencesHomeFeed.Component />
+  } else if (modal.name === 'onboarding') {
+    element = <OnboardingModal.Component />
   } else {
     return null
   }

@@ -6,10 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {BlurView} from '../util/BlurView'
 import {ProfileModel} from 'state/models/content/profile'
@@ -36,6 +33,7 @@ import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
+import {navigate} from '../../../Navigation'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -102,6 +100,7 @@ export const ProfileHeader = observer(
 const ProfileHeaderLoaded = observer(
   ({view, onRefreshAll, hideBackButton = false}: Props) => {
     const pal = usePalette('default')
+    const palInverted = usePalette('inverted')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
@@ -145,13 +144,15 @@ const ProfileHeaderLoaded = observer(
 
     const onPressFollowers = React.useCallback(() => {
       track('ProfileHeader:FollowersButtonClicked')
-      navigation.push('ProfileFollowers', {name: view.handle})
-    }, [track, navigation, view])
+      navigate('ProfileFollowers', {name: view.handle})
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
 
     const onPressFollows = React.useCallback(() => {
       track('ProfileHeader:FollowsButtonClicked')
-      navigation.push('ProfileFollows', {name: view.handle})
-    }, [track, navigation, view])
+      navigate('ProfileFollows', {name: view.handle})
+      store.shell.closeAllActiveElements() // for when used in the profile preview modal
+    }, [track, view, store.shell])
 
     const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
@@ -351,15 +352,15 @@ const ProfileHeaderLoaded = observer(
                   <TouchableOpacity
                     testID="followBtn"
                     onPress={onPressToggleFollow}
-                    style={[styles.btn, styles.primaryBtn]}
+                    style={[styles.btn, styles.mainBtn, palInverted.view]}
                     accessibilityRole="button"
                     accessibilityLabel={`Follow ${view.handle}`}
                     accessibilityHint={`Shows direct posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="plus"
-                      style={[s.white as FontAwesomeIconStyle, s.mr5]}
+                      style={[palInverted.text, s.mr5]}
                     />
-                    <Text type="button" style={[s.white, s.bold]}>
+                    <Text type="button" style={[palInverted.text, s.bold]}>
                       Follow
                     </Text>
                   </TouchableOpacity>
@@ -540,6 +541,8 @@ const styles = StyleSheet.create({
     height: 30,
     overflow: 'hidden',
     borderRadius: 15,
+    // @ts-ignore web only
+    cursor: 'pointer',
   },
   backBtn: {
     width: 30,
@@ -609,7 +612,6 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    flex: 1,
     marginBottom: 8,
   },
 

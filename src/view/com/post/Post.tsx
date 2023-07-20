@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useMemo} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -25,11 +25,11 @@ import {ImageHider} from '../util/moderation/ImageHider'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getTranslatorLink} from '../../../locale/helpers'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 
 export const Post = observer(function Post({
   uri,
@@ -127,13 +127,21 @@ const PostLoaded = observer(
     const itemUrip = new AtUri(item.post.uri)
     const itemHref = `/profile/${item.post.author.handle}/post/${itemUrip.rkey}`
     const itemTitle = `Post by ${item.post.author.handle}`
-    const authorHref = `/profile/${item.post.author.handle}`
-    const authorTitle = item.post.author.handle
     let replyAuthorDid = ''
     if (record.reply) {
       const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
       replyAuthorDid = urip.hostname
     }
+
+    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
+    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+    const needsTranslation = useMemo(
+      () =>
+        store.preferences.contentLanguages.length > 0 &&
+        !isPostInLanguage(item.post, store.preferences.contentLanguages),
+      [item.post, store.preferences.contentLanguages],
+    )
+
     const onPressReply = React.useCallback(() => {
       store.shell.openComposer({
         replyTo: {
@@ -165,9 +173,6 @@ const PostLoaded = observer(
       Clipboard.setString(record.text)
       Toast.show('Copied to clipboard')
     }, [record])
-
-    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
 
     const onOpenTranslate = React.useCallback(() => {
       Linking.openURL(translatorUrl)
@@ -207,13 +212,13 @@ const PostLoaded = observer(
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
-            <Link href={authorHref} title={authorTitle} asAnchor>
-              <UserAvatar
-                size={52}
-                avatar={item.post.author.avatar}
-                moderation={item.moderation.avatar}
-              />
-            </Link>
+            <PreviewableUserAvatar
+              size={52}
+              did={item.post.author.did}
+              handle={item.post.author.handle}
+              avatar={item.post.author.avatar}
+              moderation={item.moderation.avatar}
+            />
           </View>
           <View style={styles.layoutContent}>
             <PostMeta
@@ -222,7 +227,6 @@ const PostLoaded = observer(
               authorHasWarning={!!item.post.author.labels?.length}
               timestamp={item.post.indexedAt}
               postHref={itemHref}
-              did={item.post.author.did}
             />
             {replyAuthorDid !== '' && (
               <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -263,6 +267,15 @@ const PostLoaded = observer(
               <ImageHider moderation={item.moderation.list} style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
               </ImageHider>
+              {needsTranslation && (
+                <View style={[pal.borderDark, styles.translateLink]}>
+                  <Link href={translatorUrl} title="Translate">
+                    <Text type="sm" style={pal.link}>
+                      Translate this post
+                    </Text>
+                  </Link>
+                </View>
+              )}
             </ContentHider>
             <PostCtrls
               itemUri={itemUri}
@@ -319,6 +332,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 8,
+  },
+  translateLink: {
+    marginBottom: 12,
   },
   replyLine: {
     position: 'absolute',

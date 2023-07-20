@@ -17,7 +17,7 @@ export function CharProgress({count}: {count: number}) {
   const circleColor = count > DANGER_LENGTH ? '#e60000' : pal.colors.link
   return (
     <>
-      <Text style={[s.mr10, {color: textColor}]}>
+      <Text style={[s.mr10, s.tabularNum, {color: textColor}]}>
         {MAX_GRAPHEME_LENGTH - count}
       </Text>
       <View>

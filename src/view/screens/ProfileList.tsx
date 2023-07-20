@@ -19,6 +19,7 @@ import {isDesktopWeb} from 'platform/detection'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {ListActions} from 'view/com/lists/ListActions'
+import {s} from 'lib/styles'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
@@ -132,6 +133,7 @@ export const ProfileListScreen = withAuthRequired(
           onPressEditList={onPressEditList}
           onPressDeleteList={onPressDeleteList}
           onPressShareList={onPressShareList}
+          style={[s.flex1]}
         />
       </CenteredView>
     )

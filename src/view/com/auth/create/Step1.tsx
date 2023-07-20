@@ -16,6 +16,10 @@ import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
 
+/** STEP 1: Your hosting provider
+ * @field Bluesky (default)
+ * @field Other (staging, local dev, your own PDS, etc.)
+ */
 export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
   const [isDefaultSelected, setIsDefaultSelected] = React.useState(true)

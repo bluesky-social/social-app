@@ -1,22 +1,27 @@
-import React, {useCallback} from 'react'
-import {TouchableOpacity, StyleSheet, Keyboard} from 'react-native'
+import React, {useCallback, useMemo} from 'react'
+import {StyleSheet, Keyboard} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
+import {
+  DropdownButton,
+  DropdownItem,
+  DropdownItemButton,
+} from 'view/com/util/forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
-
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+import {codeToLanguageName} from '../../../../locale/helpers'
+import {deviceLocales} from 'platform/detection'
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
   const store = useStores()
 
-  const onPress = useCallback(async () => {
+  const onPressMore = useCallback(async () => {
     if (isNative) {
       if (Keyboard.isVisible()) {
         Keyboard.dismiss()
@@ -25,18 +30,62 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
     store.shell.openModal({name: 'post-languages-settings'})
   }, [store])
 
+  const postLanguagesPref = store.preferences.postLanguages
+  const items: DropdownItem[] = useMemo(() => {
+    let arr: DropdownItemButton[] = []
+
+    const add = (langCode: string) => {
+      const langName = codeToLanguageName(langCode)
+      if (arr.find((item: DropdownItemButton) => item.label === langName)) {
+        return
+      }
+      arr.push({
+        icon: store.preferences.hasPostLanguage(langCode)
+          ? ['fas', 'circle-check']
+          : ['far', 'circle'],
+        label: langName,
+        onPress() {
+          store.preferences.setPostLanguage(langCode)
+        },
+      })
+    }
+
+    for (const lang of postLanguagesPref) {
+      add(lang)
+    }
+    for (const lang of deviceLocales) {
+      add(lang)
+    }
+    add('en') // english
+    add('ja') // japanese
+    add('pt') // portugese
+    add('de') // german
+
+    return [
+      {heading: true, label: 'Post language'},
+      ...arr.slice(0, 6),
+      {sep: true},
+      {
+        label: 'Other...',
+        onPress: onPressMore,
+      },
+    ]
+  }, [store.preferences, postLanguagesPref, onPressMore])
+
   return (
-    <TouchableOpacity
+    <DropdownButton
+      type="bare"
       testID="selectLangBtn"
-      onPress={onPress}
+      items={items}
+      openUpwards
       style={styles.button}
-      hitSlop={HITSLOP}
-      accessibilityRole="button"
       accessibilityLabel="Language selection"
-      accessibilityHint="Opens screen or modal to select language of post">
+      accessibilityHint="">
       {store.preferences.postLanguages.length > 0 ? (
-        <Text type="lg-bold" style={pal.link}>
-          {store.preferences.postLanguages.join(', ')}
+        <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
+          {store.preferences.postLanguages
+            .map(lang => codeToLanguageName(lang))
+            .join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon
@@ -45,12 +94,15 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
           size={26}
         />
       )}
-    </TouchableOpacity>
+    </DropdownButton>
   )
 })
 
 const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 15,
+  },
+  label: {
+    maxWidth: 100,
   },
 })

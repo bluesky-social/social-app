@@ -9,6 +9,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
+import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './report/ReportPost'
 import * as RepostModal from './Repost'
@@ -26,6 +27,7 @@ import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
+import * as OnboardingModal from './OnboardingModal'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -62,6 +64,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = <EditProfileModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'profile-preview') {
+    snapPoints = ProfilePreviewModal.snapPoints
+    element = <ProfilePreviewModal.Component {...activeModal} />
   } else if (activeModal?.name === 'server-input') {
     snapPoints = ServerInputModal.snapPoints
     element = <ServerInputModal.Component {...activeModal} />
@@ -113,6 +118,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'preferences-home-feed') {
     snapPoints = PreferencesHomeFeed.snapPoints
     element = <PreferencesHomeFeed.Component />
+  } else if (activeModal?.name === 'onboarding') {
+    snapPoints = OnboardingModal.snapPoints
+    element = <OnboardingModal.Component />
   } else {
     return null
   }

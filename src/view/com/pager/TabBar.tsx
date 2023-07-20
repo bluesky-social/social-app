@@ -117,6 +117,7 @@ const styles = isDesktopWeb
         flex: 1,
         flexDirection: 'row',
         backgroundColor: 'transparent',
+        maxWidth: '100%',
       },
       contentContainer: {
         columnGap: isMobileWeb ? 0 : 20,

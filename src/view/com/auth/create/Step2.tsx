@@ -12,6 +12,15 @@ import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {useStores} from 'state/index'
 
+/** STEP 2: Your account
+ * @field Invite code or waitlist
+ * @field Email address
+ * @field Email address
+ * @field Email address
+ * @field Password
+ * @field Birth date
+ * @readonly Terms of service & privacy policy
+ */
 export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
   const store = useStores()
@@ -51,9 +60,8 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             accessibilityRole="button"
             accessibilityLabel="Waitlist"
             accessibilityHint="Opens Bluesky waitlist form">
-            <Text style={pal.link}>Join the waitlist</Text>
-          </TouchableWithoutFeedback>{' '}
-          to try the beta before it's publicly available.
+            <Text style={pal.link}>Join the waitlist.</Text>
+          </TouchableWithoutFeedback>
         </Text>
       ) : (
         <>

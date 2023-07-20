@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Linking,
   Platform,
   StyleSheet,
   TextStyle,
@@ -47,6 +48,7 @@ import {reset as resetNavigation} from '../../Navigation'
 // remove after backend testing finishes
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
+import {STATUS_PAGE_URL} from 'lib/constants'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -186,6 +188,10 @@ export const SettingsScreen = withAuthRequired(
     const onPressSavedFeeds = React.useCallback(() => {
       navigation.navigate('SavedFeeds')
     }, [navigation])
+
+    const onPressStatusPage = React.useCallback(() => {
+      Linking.openURL(STATUS_PAGE_URL)
+    }, [])
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
@@ -529,13 +535,25 @@ export const SettingsScreen = withAuthRequired(
               </TouchableOpacity>
             </>
           ) : null}
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressBuildInfo}>
-            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+          <View style={[styles.footer]}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={onPressBuildInfo}>
+              <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+                Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+              </Text>
+            </TouchableOpacity>
+            <Text type="sm" style={[pal.textLight]}>
+              &middot; &nbsp;
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              accessibilityRole="button"
+              onPress={onPressStatusPage}>
+              <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+                Status page
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View style={s.footerSpacer} />
         </ScrollView>
       </View>
@@ -621,7 +639,6 @@ const styles = StyleSheet.create({
   },
   buildInfo: {
     paddingVertical: 8,
-    paddingHorizontal: 18,
   },
 
   colorModeText: {
@@ -644,5 +661,11 @@ const styles = StyleSheet.create({
   },
   toggleBtn: {
     paddingHorizontal: 0,
+  },
+  footer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 18,
   },
 })

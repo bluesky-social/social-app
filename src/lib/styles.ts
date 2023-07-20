@@ -89,6 +89,9 @@ export const s = StyleSheet.create({
   // text decoration
   underline: {textDecorationLine: 'underline'},
 
+  // font variants
+  tabularNum: {fontVariant: ['tabular-nums']},
+
   // font sizes
   f9: {fontSize: 9},
   f10: {fontSize: 10},

@@ -11,11 +11,9 @@ import {ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function FeedSlice({
   slice,
-  showFollowBtn,
   ignoreMuteFor,
 }: {
   slice: PostsFeedSliceModel
-  showFollowBtn?: boolean
   ignoreMuteFor?: string
 }) {
   if (slice.moderation.list.behavior === ModerationBehaviorCode.Hide) {
@@ -32,7 +30,6 @@ export function FeedSlice({
           item={slice.items[0]}
           isThreadParent={slice.isThreadParentAt(0)}
           isThreadChild={slice.isThreadChildAt(0)}
-          showFollowBtn={showFollowBtn}
           ignoreMuteFor={ignoreMuteFor}
         />
         <FeedItem
@@ -40,7 +37,6 @@ export function FeedSlice({
           item={slice.items[1]}
           isThreadParent={slice.isThreadParentAt(1)}
           isThreadChild={slice.isThreadChildAt(1)}
-          showFollowBtn={showFollowBtn}
           ignoreMuteFor={ignoreMuteFor}
         />
         <ViewFullThread slice={slice} />
@@ -49,7 +45,6 @@ export function FeedSlice({
           item={slice.items[last]}
           isThreadParent={slice.isThreadParentAt(last)}
           isThreadChild={slice.isThreadChildAt(last)}
-          showFollowBtn={showFollowBtn}
           ignoreMuteFor={ignoreMuteFor}
         />
       </>
@@ -64,7 +59,6 @@ export function FeedSlice({
           item={item}
           isThreadParent={slice.isThreadParentAt(i)}
           isThreadChild={slice.isThreadChildAt(i)}
-          showFollowBtn={showFollowBtn}
           ignoreMuteFor={ignoreMuteFor}
         />
       ))}

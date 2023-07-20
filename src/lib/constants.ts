@@ -132,3 +132,5 @@ export function LINK_META_PROXY(serviceUrl: string) {
     return PROD_LINK_META_PROXY
   }
 }
+
+export const STATUS_PAGE_URL = 'https://status.bsky.app/'

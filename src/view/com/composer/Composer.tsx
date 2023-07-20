@@ -16,6 +16,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
@@ -35,7 +36,7 @@ import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isDesktopWeb, isAndroid} from 'platform/detection'
+import {isDesktopWeb, isAndroid, isIOS} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
@@ -55,6 +56,7 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette('default')
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
+  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -75,10 +77,11 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingBottom: isAndroid ? insets.bottom : 0,
+      paddingBottom:
+        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
       paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
     }),
-    [insets],
+    [insets, isKeyboardVisible],
   )
 
   // HACK

@@ -117,6 +117,9 @@ interface TrackPropertiesMap {
   'MultiFeed:onRefresh': {}
   // MODERATION events
   'Moderation:ContentfilteringButtonClicked': {}
+  // ONBOARDING events
+  'Onboarding:Begin': {}
+  'Onboarding:Complete': {}
 }
 
 interface ScreenPropertiesMap {
@@ -129,6 +132,7 @@ interface ScreenPropertiesMap {
   Feed: {}
   Notifications: {}
   Profile: {}
+  'Profile:Preview': {}
   Settings: {}
   AppPasswords: {}
   Moderation: {}

@@ -58,15 +58,15 @@ export function Component({}: {}) {
   }
 
   return (
-    <View
-      style={[styles.container, {backgroundColor: pal.colors.backgroundLight}]}>
+    <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
         <Text type="title-xl" style={[styles.title, pal.text]}>
           Join the waitlist
         </Text>
         <Text type="lg" style={[styles.description, pal.text]}>
-          Bluesky will launch soon. Join the waitlist to try the beta before
-          it's publicly available.
+          Bluesky uses invites to build a healthier community. If you don't know
+          anybody with an invite, you can sign up for the waitlist and we'll
+          send one soon.
         </Text>
         <TextInput
           style={[styles.textInput, pal.borderDark, pal.text, s.mb10, s.mt10]}
