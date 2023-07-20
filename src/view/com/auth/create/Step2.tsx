@@ -12,6 +12,15 @@ import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {useStores} from 'state/index'
 
+/** STEP 2: Your account
+ * @field Invite code or waitlist
+ * @field Email address
+ * @field Email address
+ * @field Email address
+ * @field Password
+ * @field Birth date
+ * @readonly Terms of service & privacy policy
+ */
 export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
   const store = useStores()

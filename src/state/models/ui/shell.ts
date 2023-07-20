@@ -127,6 +127,10 @@ export interface PreferencesHomeFeed {
   name: 'preferences-home-feed'
 }
 
+export interface OnboardingModal {
+  name: 'onboarding'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -157,6 +161,9 @@ export type Modal =
   // Bluesky access
   | WaitlistModal
   | InviteCodesModal
+
+  // Onboarding
+  | OnboardingModal
 
   // Generic
   | ConfirmModal

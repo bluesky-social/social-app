@@ -26,6 +26,7 @@ import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
+import * as OnboardingModal from './OnboardingModal'
 
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
@@ -107,6 +108,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <EditImageModal.Component {...modal} />
   } else if (modal.name === 'preferences-home-feed') {
     element = <PreferencesHomeFeed.Component />
+  } else if (modal.name === 'onboarding') {
+    element = <OnboardingModal.Component />
   } else {
     return null
   }
