@@ -25,6 +25,7 @@ export const ProfileCard = observer(
     followers,
     overrideModeration,
     renderButton,
+    asAnchor = true,
   }: {
     testID?: string
     profile: AppBskyActorDefs.ProfileViewBasic
@@ -35,6 +36,7 @@ export const ProfileCard = observer(
     renderButton?: (
       profile: AppBskyActorDefs.ProfileViewBasic,
     ) => React.ReactNode
+    asAnchor?: boolean
   }) => {
     const store = useStores()
     const pal = usePalette('default')
@@ -62,7 +64,7 @@ export const ProfileCard = observer(
         ]}
         href={`/profile/${profile.handle}`}
         title={profile.handle}
-        asAnchor
+        asAnchor={asAnchor}
         anchorNoUnderline>
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>

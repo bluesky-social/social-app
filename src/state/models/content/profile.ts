@@ -61,6 +61,7 @@ export class ProfileModel {
   constructor(
     public rootStore: RootStoreModel,
     params: GetProfile.QueryParams,
+    withSetup: boolean = false, // withSetup is used when ProfileModel is used directly (not via another model like ProfileUiModel)
   ) {
     makeAutoObservable(
       this,
@@ -71,6 +72,9 @@ export class ProfileModel {
       {autoBind: true},
     )
     this.params = params
+    if (withSetup) {
+      this.setup()
+    }
   }
 
   get hasContent() {
