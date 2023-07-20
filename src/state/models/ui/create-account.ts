@@ -116,6 +116,8 @@ export class CreateAccountModel {
         password: this.password,
         inviteCode: this.inviteCode,
       })
+      track('Create Account')
+      this.rootStore.shell.setShowOnboarding(true)
     } catch (e: any) {
       let errMsg = e.toString()
       if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
@@ -126,9 +128,6 @@ export class CreateAccountModel {
       this.setIsProcessing(false)
       this.setError(cleanError(errMsg))
       throw e
-    } finally {
-      track('Create Account')
-      this.rootStore.shell.setShowOnboarding(true)
     }
   }
 
