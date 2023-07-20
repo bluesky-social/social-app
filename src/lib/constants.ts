@@ -130,3 +130,78 @@ export function LINK_META_PROXY(serviceUrl: string) {
     return PROD_LINK_META_PROXY;
   }
 }
+
+export const DEFAULT_REACTION_EMOJIS = [
+  // {
+  //   id: 0,
+  //   emoji:
+  //     "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/link.png",
+  //   title: "like",
+  // },
+  // {
+  //   id: 1,
+  //   emoji: "🥰",
+  //   title: "love",
+  // },
+  // {
+  //   id: 2,
+  //   emoji: "🤗",
+  //   title: "care",
+  // },
+  // {
+  //   id: 3,
+  //   emoji: "😘",
+  //   title: "kiss",
+  // },
+  {
+    id: 0,
+    emoji: "😂",
+    title: "laugh",
+  },
+  {
+    id: 1,
+    emoji: "😎",
+    title: "cool",
+  },
+  {
+    id: 2,
+    emoji:
+      "🤨",
+    title: "eyebrow-raise",
+  },
+  {
+    id: 3,
+    emoji: "😳",
+    title: "blush",
+  },
+  {
+    id: 4,
+    emoji: "🧟‍♂️",
+    title: "zombie",
+  },
+  {
+    id: 5,
+    emoji: "😍",
+    title: "heart-eyes",
+  },
+  {
+    id: 6,
+    emoji: "🔥",
+    title: "fire",
+  },
+  {
+    id: 7,
+    emoji: "😭",
+    title: "cry",
+  },
+  {
+    id: 8,
+    emoji: "❤️",
+    title: "heart",
+  },
+  {
+    id: 9,
+    emoji: "😀",
+    title: "grin",
+  },
+];

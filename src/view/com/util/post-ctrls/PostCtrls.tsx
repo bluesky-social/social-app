@@ -24,6 +24,7 @@ import { RepostButton } from "./RepostButton";
 //   TriggerableAnimatedRef,
 // } from './anim/TriggerableAnimated'
 import { Text } from "../text/Text";
+import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useStores } from "state/index";
 import { useTheme } from "lib/ThemeContext";
@@ -63,165 +64,6 @@ interface PostCtrlsOpts {
   onToggleThreadMute: () => void;
   onDeletePost: () => void;
 }
-const ReactionItems = [
-  // {
-  //   id: 0,
-  //   emoji:
-  //     "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/link.png",
-  //   title: "like",
-  // },
-  // {
-  //   id: 1,
-  //   emoji: "🥰",
-  //   title: "love",
-  // },
-  // {
-  //   id: 2,
-  //   emoji: "🤗",
-  //   title: "care",
-  // },
-  // {
-  //   id: 3,
-  //   emoji: "😘",
-  //   title: "kiss",
-  // },
-  // {
-  //   id: 4,
-  //   emoji: "😂",
-  //   title: "laugh",
-  // },
-  // {
-  //   id: 5,
-  //   emoji: "😎",
-  //   title: "cool",
-  // },
-  {
-    id: 0,
-    emoji:
-      "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/link.png",
-    title: "link",
-  },
-  {
-    id: 1,
-    emoji: "🥰",
-    title: "love",
-  },
-  {
-    id: 2,
-    emoji: "🤗",
-    title: "care",
-  },
-  {
-    id: 3,
-    emoji: "😘",
-    title: "kiss",
-  },
-  {
-    id: 4,
-    emoji: "😂",
-    title: "laugh",
-  },
-  {
-    id: 5,
-    emoji: "😎",
-    title: "cool",
-  },
-  {
-    id: 6,
-    emoji: "🤔",
-    title: "think",
-  },
-  {
-    id: 7,
-    emoji: "😴",
-    title: "sleep",
-  },
-  {
-    id: 8,
-    emoji: "😲",
-    title: "surprise",
-  },
-  {
-    id: 9,
-    emoji: "😤",
-    title: "angry",
-  },
-  {
-    id: 10,
-    emoji: "🥳",
-    title: "celebrate",
-  },
-  {
-    id: 11,
-    emoji: "🤓",
-    title: "nerd",
-  },
-  {
-    id: 12,
-    emoji: "😭",
-    title: "cry",
-  },
-  {
-    id: 13,
-    emoji: "😇",
-    title: "angel",
-  },
-  {
-    id: 14,
-    emoji: "😷",
-    title: "sick",
-  },
-  {
-    id: 15,
-    emoji: "🤩",
-    title: "star-struck",
-  },
-  {
-    id: 16,
-    emoji: "😋",
-    title: "tasty",
-  },
-  {
-    id: 17,
-    emoji: "😑",
-    title: "meh",
-  },
-  {
-    id: 18,
-    emoji: "🥺",
-    title: "pleading",
-  },
-  {
-    id: 19,
-    emoji: "😈",
-    title: "devil",
-  },
-  {
-    id: 20,
-    emoji: "😜",
-    title: "tease",
-  },
-  {
-    id: 21,
-    emoji: "🙄",
-    title: "eyeroll",
-  },
-  {
-    id: 22,
-    emoji: "🤢",
-    title: "disgust",
-  },
-  {
-    id: 23,
-    emoji: "😳",
-    title: "blush",
-  },
-  {
-    id: 24,
-    emoji: "😵‍💫",
-    title: "dizzy",
-  },
-];
 const HITSLOP = { top: 5, left: 5, bottom: 5, right: 5 };
 
 // DISABLED see #135
@@ -360,24 +202,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         ) : undefined}
       </TouchableOpacity>
       <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
-      <TouchableOpacity
-        testID="reactBtn"
-        style={styles.emojiCtrl}
-        hitSlop={HITSLOP}
-        accessibilityRole="button"
-        accessibilityLabel={opts.isLiked ? "Unlike" : "Like"}
-        accessibilityHint=""
-      >
-      <Reaction
-        items={ReactionItems}
-        onTap={setSelectedEmoji}
-        cardStyle={{left: opts.big ? '-500px' : '0'}}
-        isShowCardInCenter={false}
-        showPopupType="onPress"
-      >
-        <Text>{selectedEmoji ? selectedEmoji?.emoji : "React"}</Text>
-      </Reaction>
-      </TouchableOpacity>
+
       <TouchableOpacity
         testID="likeBtn"
         style={styles.ctrl}
@@ -411,6 +236,24 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             {opts.likeCount}
           </Text>
         ) : undefined}
+      </TouchableOpacity>
+      <TouchableOpacity
+        testID="reactBtn"
+        style={styles.emojiCtrl}
+        hitSlop={HITSLOP}
+        accessibilityRole="button"
+        accessibilityLabel={opts.isLiked ? "Unlike" : "Like"}
+        accessibilityHint=""
+      >
+      <Reaction
+        items={store.me.reactions.default}
+        onTap={setSelectedEmoji}
+        cardStyle={{left: opts.big ? '-500px' : '0'}}
+        isShowCardInCenter={false}
+        showPopupType="onPress"
+      >
+        {selectedEmoji ? <Text>selectedEmoji?.emoji</Text> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
+      </Reaction>
       </TouchableOpacity>
       <View>
         {opts.big ? undefined : (

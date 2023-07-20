@@ -229,7 +229,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
     <View style={[styles.leftNav, pal.view]}>
       <Banner />
 
-      {store.session.hasSession && <><ProfileCard /><WalletMultiButton/></>}
+      {store.session.hasSession && <><ProfileCard /></>}
       <BackBtn />
       <NavItem
         href="/"

@@ -5,6 +5,8 @@ import {
 import { hasProp, isObj } from "lib/type-guards";
 import { makeAutoObservable, runInAction } from "mobx";
 
+import { DEFAULT_REACTION_EMOJIS } from "lib/constants";
+import { EmojiItemProp } from "react-native-reactions/lib/components/ReactionView/types";
 import { JoinedCommunitiesModel } from "./ui/joined-communities";
 import { MyFollowsCache } from "./cache/my-follows";
 import { NotificationsFeedModel } from "./feeds/notifications";
@@ -32,6 +34,7 @@ export class MeModel {
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = [];
   lastProfileStateUpdate = Date.now();
   lastNotifsUpdate = Date.now();
+  reactions: {[reactionSet: string] :  EmojiItemProp[]} = { default: DEFAULT_REACTION_EMOJIS};
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length;

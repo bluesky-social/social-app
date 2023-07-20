@@ -162,7 +162,7 @@ export const DrawerContent = observer(() => {
                   following
                 </Text>
               </TouchableOpacity>
-              <WalletMultiButton style={styles.walletConnect}/>
+              {/* <WalletMultiButton style={styles.walletConnect}/> */}
             </View>
             {/* <InviteCodes /> */}
           </>
