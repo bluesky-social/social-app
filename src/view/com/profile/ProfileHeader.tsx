@@ -13,10 +13,8 @@ import {ProfileModel} from 'state/models/content/profile'
 import {useStores} from 'state/index'
 import {ProfileImageLightbox} from 'state/models/ui/shell'
 import {pluralize} from 'lib/strings/helpers'
-import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {s, colors} from 'lib/styles'
-import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -31,9 +29,9 @@ import {NavigationProp} from 'lib/routes/types'
 import {listUriToHref} from 'lib/strings/url-helpers'
 import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
-import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
 import {navigate} from '../../../Navigation'
+import ProfileHeaderDropdown from './ProfileHeaderDropdown'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -154,63 +152,6 @@ const ProfileHeaderLoaded = observer(
       store.shell.closeAllActiveElements() // for when used in the profile preview modal
     }, [track, view, store.shell])
 
-    const onPressShare = React.useCallback(() => {
-      track('ProfileHeader:ShareButtonClicked')
-      const url = toShareUrl(`/profile/${view.handle}`)
-      shareUrl(url)
-    }, [track, view])
-
-    const onPressAddRemoveLists = React.useCallback(() => {
-      track('ProfileHeader:AddToListsButtonClicked')
-      store.shell.openModal({
-        name: 'list-add-remove-user',
-        subject: view.did,
-        displayName: view.displayName || view.handle,
-      })
-    }, [track, view, store])
-
-    const onPressMuteAccount = React.useCallback(async () => {
-      track('ProfileHeader:MuteAccountButtonClicked')
-      try {
-        await view.muteAccount()
-        Toast.show('Account muted')
-      } catch (e: any) {
-        store.log.error('Failed to mute account', e)
-        Toast.show(`There was an issue! ${e.toString()}`)
-      }
-    }, [track, view, store])
-
-    const onPressUnmuteAccount = React.useCallback(async () => {
-      track('ProfileHeader:UnmuteAccountButtonClicked')
-      try {
-        await view.unmuteAccount()
-        Toast.show('Account unmuted')
-      } catch (e: any) {
-        store.log.error('Failed to unmute account', e)
-        Toast.show(`There was an issue! ${e.toString()}`)
-      }
-    }, [track, view, store])
-
-    const onPressBlockAccount = React.useCallback(async () => {
-      track('ProfileHeader:BlockAccountButtonClicked')
-      store.shell.openModal({
-        name: 'confirm',
-        title: 'Block Account',
-        message:
-          'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
-        onPressConfirm: async () => {
-          try {
-            await view.blockAccount()
-            onRefreshAll()
-            Toast.show('Account blocked')
-          } catch (e: any) {
-            store.log.error('Failed to block account', e)
-            Toast.show(`There was an issue! ${e.toString()}`)
-          }
-        },
-      })
-    }, [track, view, store, onRefreshAll])
-
     const onPressUnblockAccount = React.useCallback(async () => {
       track('ProfileHeader:UnblockAccountButtonClicked')
       store.shell.openModal({
@@ -231,68 +172,10 @@ const ProfileHeaderLoaded = observer(
       })
     }, [track, view, store, onRefreshAll])
 
-    const onPressReportAccount = React.useCallback(() => {
-      track('ProfileHeader:ReportAccountButtonClicked')
-      store.shell.openModal({
-        name: 'report-account',
-        did: view.did,
-      })
-    }, [track, store, view])
-
     const isMe = React.useMemo(
       () => store.me.did === view.did,
       [store.me.did, view.did],
     )
-    const dropdownItems: DropdownItem[] = React.useMemo(() => {
-      let items: DropdownItem[] = [
-        {
-          testID: 'profileHeaderDropdownShareBtn',
-          label: 'Share',
-          onPress: onPressShare,
-        },
-        {
-          testID: 'profileHeaderDropdownListAddRemoveBtn',
-          label: 'Add to Lists',
-          onPress: onPressAddRemoveLists,
-        },
-      ]
-      if (!isMe) {
-        items.push({sep: true})
-        if (!view.viewer.blocking) {
-          items.push({
-            testID: 'profileHeaderDropdownMuteBtn',
-            label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
-            onPress: view.viewer.muted
-              ? onPressUnmuteAccount
-              : onPressMuteAccount,
-          })
-        }
-        items.push({
-          testID: 'profileHeaderDropdownBlockBtn',
-          label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
-          onPress: view.viewer.blocking
-            ? onPressUnblockAccount
-            : onPressBlockAccount,
-        })
-        items.push({
-          testID: 'profileHeaderDropdownReportBtn',
-          label: 'Report Account',
-          onPress: onPressReportAccount,
-        })
-      }
-      return items
-    }, [
-      isMe,
-      view.viewer.muted,
-      view.viewer.blocking,
-      onPressShare,
-      onPressUnmuteAccount,
-      onPressMuteAccount,
-      onPressUnblockAccount,
-      onPressBlockAccount,
-      onPressReportAccount,
-      onPressAddRemoveLists,
-    ])
 
     const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
     const following = formatCount(view.followsCount)
@@ -367,15 +250,7 @@ const ProfileHeaderLoaded = observer(
                 )}
               </>
             ) : null}
-            {dropdownItems?.length ? (
-              <DropdownButton
-                testID="profileHeaderDropdownBtn"
-                type="bare"
-                items={dropdownItems}
-                style={[styles.btn, styles.secondaryBtn, pal.btn]}>
-                <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
-              </DropdownButton>
-            ) : undefined}
+            <ProfileHeaderDropdown view={view} onRefreshAll={onRefreshAll} />
           </View>
           <View>
             <Text
