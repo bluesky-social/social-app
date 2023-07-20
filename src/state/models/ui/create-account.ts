@@ -108,6 +108,13 @@ export class CreateAccountModel {
     }
     this.setError('')
     this.setIsProcessing(true)
+
+    // open the onboarding modal after the session is created
+    const sessionReadySub = this.rootStore.onSessionReady(() => {
+      sessionReadySub.remove()
+      this.rootStore.shell.openModal({name: 'onboarding'})
+    })
+
     try {
       await this.rootStore.session.createAccount({
         service: this.serviceUrl,
@@ -117,8 +124,8 @@ export class CreateAccountModel {
         inviteCode: this.inviteCode,
       })
       track('Create Account')
-      this.rootStore.shell.setShowOnboarding(true)
     } catch (e: any) {
+      sessionReadySub.remove()
       let errMsg = e.toString()
       if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
         errMsg =

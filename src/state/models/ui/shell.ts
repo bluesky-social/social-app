@@ -232,7 +232,6 @@ export class ShellUiModel {
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
   tickEveryMinute = Date.now()
-  showOnboarding = false
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -247,7 +246,6 @@ export class ShellUiModel {
   serialize(): unknown {
     return {
       colorMode: this.colorMode,
-      showOnboarding: this.showOnboarding,
     }
   }
 
@@ -255,12 +253,6 @@ export class ShellUiModel {
     if (isObj(v)) {
       if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
         this.colorMode = v.colorMode
-      }
-      if (
-        hasProp(v, 'showOnboarding') &&
-        typeof v.showOnboarding === 'boolean'
-      ) {
-        this.showOnboarding = v.showOnboarding
       }
     }
   }
@@ -366,9 +358,5 @@ export class ShellUiModel {
         this.tickEveryMinute = Date.now()
       })
     }, 60_000)
-  }
-
-  setShowOnboarding(v: boolean) {
-    this.showOnboarding = v
   }
 }

@@ -48,7 +48,6 @@ export const Onboarding = () => {
     if (state.currentStep === OnboardingStep.COMPLETE) {
       // navigate to home
       rootStore.shell.closeModal()
-      rootStore.shell.setShowOnboarding(false)
     }
   }, [state.currentStep, rootStore.shell])
 
