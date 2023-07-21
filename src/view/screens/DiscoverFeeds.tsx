@@ -85,6 +85,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
           renderItem={renderItem}
           initialNumToRender={10}
           ListEmptyComponent={renderListEmptyComponent}
+          onEndReached={() => feeds.loadMore()}
           extraData={feeds.isLoading}
         />
       </CenteredView>

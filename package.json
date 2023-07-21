@@ -24,7 +24,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "^0.3.13",
+    "@atproto/api": "^0.4.2",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@expo/html-elements": "^0.4.2",
