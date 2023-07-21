@@ -21,7 +21,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
-import ProfileHeaderDropdown from 'view/com/profile/ProfileHeaderDropdown'
+import {ProfileHeaderDropdownObserver} from 'view/com/profile/ProfileHeaderDropdown'
 import {ProfileModel} from 'state/models/content/profile'
 
 type Props = NativeStackScreenProps<
@@ -70,7 +70,7 @@ export const ModerationMutedAccounts = withAuthRequired(
         renderButton={() => {
           return (
             <View hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-              <ProfileHeaderDropdown
+              <ProfileHeaderDropdownObserver
                 view={new ProfileModel(store, {actor: item.handle}, true)}
                 onRefreshAll={async () => {
                   await onRefresh()

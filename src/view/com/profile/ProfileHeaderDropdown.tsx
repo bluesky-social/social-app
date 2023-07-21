@@ -15,7 +15,7 @@ type Props = {
   view: ProfileModel
   onRefreshAll: () => void
 }
-const ProfileHeaderDropdown = observer(({view, onRefreshAll}: Props) => {
+export const ProfileHeaderDropdown = ({view, onRefreshAll}: Props) => {
   const store = useStores()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -173,7 +173,9 @@ const ProfileHeaderDropdown = observer(({view, onRefreshAll}: Props) => {
     )
   }
   return null
-})
+}
+
+export const ProfileHeaderDropdownObserver = observer(ProfileHeaderDropdown)
 
 const styles = StyleSheet.create({
   btn: {
@@ -188,5 +190,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
 })
-
-export default ProfileHeaderDropdown

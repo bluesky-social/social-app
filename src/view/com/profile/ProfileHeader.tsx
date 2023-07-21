@@ -31,7 +31,7 @@ import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {formatCount} from '../util/numeric/format'
 import {navigate} from '../../../Navigation'
-import ProfileHeaderDropdown from './ProfileHeaderDropdown'
+import {ProfileHeaderDropdown} from './ProfileHeaderDropdown'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -59,7 +59,7 @@ export const ProfileHeader = observer(
             ]}>
             <LoadingPlaceholder width={80} height={80} style={styles.br40} />
           </View>
-          <View style={styles.content}>
+          <View style={[styles.content]}>
             <View style={[styles.buttonsLine]}>
               <LoadingPlaceholder width={100} height={31} style={styles.br50} />
             </View>
