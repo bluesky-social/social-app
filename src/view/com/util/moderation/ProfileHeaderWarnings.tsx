@@ -1,20 +1,20 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {ModerationUI} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function ProfileHeaderWarnings({
   moderation,
 }: {
-  moderation: ModerationBehavior
+  moderation: ModerationUI
 }) {
   const palErr = usePalette('error')
-  if (moderation.behavior === ModerationBehaviorCode.Show) {
+  if (!moderation.cause) {
     return null
   }
   return (
@@ -25,7 +25,7 @@ export function ProfileHeaderWarnings({
         size={20}
       />
       <Text style={palErr.text}>
-        This account has been flagged: {moderation.reason}
+        This account has been flagged: {'' /* TODO moderation.reason*/}
       </Text>
     </View>
   )

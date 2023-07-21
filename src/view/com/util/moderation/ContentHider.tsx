@@ -1,9 +1,9 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
-import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 
 export function ContentHider({
   testID,
@@ -13,24 +13,19 @@ export function ContentHider({
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  moderation: ModerationBehavior
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const onPressShow = React.useCallback(() => {
-    setOverride(true)
-  }, [setOverride])
-  const onPressHide = React.useCallback(() => {
-    setOverride(false)
-  }, [setOverride])
+  const onPressToggle = React.useCallback(() => {
+    if (!moderation.noOverride) {
+      setOverride(v => !v)
+    }
+  }, [setOverride, moderation.noOverride])
 
-  if (
-    moderation.behavior === ModerationBehaviorCode.Show ||
-    moderation.behavior === ModerationBehaviorCode.Warn ||
-    moderation.behavior === ModerationBehaviorCode.WarnImages
-  ) {
+  if (!moderation.blur) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -38,14 +33,10 @@ export function ContentHider({
     )
   }
 
-  if (moderation.behavior === ModerationBehaviorCode.Hide) {
-    return null
-  }
-
   return (
     <View style={[styles.container, pal.view, pal.border, containerStyle]}>
       <Pressable
-        onPress={override ? onPressHide : onPressShow}
+        onPress={onPressToggle}
         accessibilityLabel={override ? 'Hide post' : 'Show post'}
         // TODO: The text labelling should be split up so controls have unique roles
         accessibilityHint={
@@ -59,13 +50,15 @@ export function ContentHider({
           override && styles.descriptionOpen,
         ]}>
         <Text type="md" style={pal.textLight}>
-          {moderation.reason || 'Content warning'}
+          {/* TODO moderation.reason ||*/ 'Content warning'}
         </Text>
-        <View style={styles.showBtn}>
-          <Text type="md-medium" style={pal.link}>
-            {override ? 'Hide' : 'Show'}
-          </Text>
-        </View>
+        {!moderation.noOverride && (
+          <View style={styles.showBtn}>
+            <Text type="md-medium" style={pal.link}>
+              {override ? 'Hide' : 'Show'}
+            </Text>
+          </View>
+        )}
       </Pressable>
       {override && (
         <View style={[styles.childrenContainer, pal.border]}>

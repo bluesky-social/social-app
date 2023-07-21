@@ -209,7 +209,7 @@ const PostLoaded = observer(
       <PostHider
         href={itemHref}
         style={[styles.outer, pal.view, pal.border, style]}
-        moderation={item.moderation.list}>
+        moderation={item.moderation.content}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -251,7 +251,7 @@ const PostLoaded = observer(
               </View>
             )}
             <ContentHider
-              moderation={item.moderation.list}
+              moderation={item.moderation.content}
               containerStyle={styles.contentHider}>
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
@@ -264,7 +264,7 @@ const PostLoaded = observer(
                   />
                 </View>
               ) : undefined}
-              <ImageHider moderation={item.moderation.list} style={s.mb10}>
+              <ImageHider moderation={item.moderation.content} style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
               </ImageHider>
               {needsTranslation && (

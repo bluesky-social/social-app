@@ -3,9 +3,9 @@ import {
   AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
   RichText,
+  PostModeration,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {PostsFeedItemModel} from '../feeds/post'
 
 type PostView = AppBskyFeedDefs.PostView
@@ -65,10 +65,6 @@ export class PostThreadItemModel {
 
   get isThreadMuted() {
     return this.data.isThreadMuted
-  }
-
-  get labelInfo(): PostLabelInfo {
-    return this.data.labelInfo
   }
 
   get moderation(): PostModeration {

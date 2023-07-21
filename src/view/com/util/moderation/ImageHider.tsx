@@ -1,8 +1,8 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
+import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
-import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
 import {isDesktopWeb} from 'platform/detection'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
@@ -14,20 +14,18 @@ export function ImageHider({
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  moderation: ModerationBehavior
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
   const onPressToggle = React.useCallback(() => {
-    setOverride(v => !v)
-  }, [setOverride])
+    if (!moderation.noOverride) {
+      setOverride(v => !v)
+    }
+  }, [setOverride, moderation.noOverride])
 
-  if (moderation.behavior === ModerationBehaviorCode.Hide) {
-    return null
-  }
-
-  if (moderation.behavior !== ModerationBehaviorCode.WarnImages) {
+  if (!moderation.blur) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -49,12 +47,14 @@ export function ImageHider({
             style={pal.text as FontAwesomeIconStyle}
           />
           <Text type="lg" style={pal.text}>
-            {moderation.reason || 'Content warning'}
+            {/* TODO moderation.reason ||*/ 'Content warning'}
           </Text>
           <View style={styles.flex1} />
-          <Text type="xl-bold" style={pal.link}>
-            {override ? 'Hide' : 'Show'}
-          </Text>
+          {!moderation.noOverride && (
+            <Text type="xl-bold" style={pal.link}>
+              {override ? 'Hide' : 'Show'}
+            </Text>
+          )}
         </Pressable>
       </View>
       {override && children}

@@ -252,7 +252,7 @@ export const ProfileScreen = withAuthRequired(
         testID="profileView"
         style={styles.container}
         screenDescription="profile"
-        moderation={uiState.profile.moderation.view}>
+        moderation={uiState.profile.moderation.content}>
         {uiState.profile.hasError ? (
           <ErrorScreen
             testID="profileErrorScreen"

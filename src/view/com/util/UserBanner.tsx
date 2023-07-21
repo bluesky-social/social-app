@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {ModerationUI} from '@atproto/api'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -10,7 +11,6 @@ import {
   useCameraPermission,
 } from 'lib/hooks/usePermissions'
 import {usePalette} from 'lib/hooks/usePalette'
-import {AvatarModeration} from 'lib/labeling/types'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
@@ -21,7 +21,7 @@ export function UserBanner({
   onSelectNewBanner,
 }: {
   banner?: string | null
-  moderation?: AvatarModeration
+  moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
 }) {
   const store = useStores()

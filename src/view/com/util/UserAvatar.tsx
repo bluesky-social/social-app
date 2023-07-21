@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HighPriorityImage} from 'view/com/util/images/Image'
+import {ModerationUI} from '@atproto/api'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
@@ -13,7 +14,6 @@ import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AvatarModeration} from 'lib/labeling/types'
 import {UserPreviewLink} from './UserPreviewLink'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 
@@ -23,7 +23,7 @@ interface BaseUserAvatarProps {
   type?: Type
   size: number
   avatar?: string | null
-  moderation?: AvatarModeration
+  moderation?: ModerationUI
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
@@ -213,20 +213,20 @@ export function UserAvatar({
     ],
   )
 
-  const warning = useMemo(() => {
-    if (!moderation?.warn) {
+  const alert = useMemo(() => {
+    if (!moderation?.alert) {
       return null
     }
     return (
-      <View style={[styles.warningIconContainer, pal.view]}>
+      <View style={[styles.alertIconContainer, pal.view]}>
         <FontAwesomeIcon
           icon="exclamation-circle"
-          style={styles.warningIcon}
+          style={styles.alertIcon}
           size={Math.floor(size / 3)}
         />
       </View>
     )
-  }, [moderation?.warn, size, pal])
+  }, [moderation?.alert, size, pal])
 
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
@@ -259,12 +259,12 @@ export function UserAvatar({
         source={{uri: avatar}}
         blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
       />
-      {warning}
+      {alert}
     </View>
   ) : (
     <View style={{width: size, height: size}}>
       <DefaultAvatar type={type} size={size} />
-      {warning}
+      {alert}
     </View>
   )
 }
@@ -289,13 +289,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.gray5,
   },
-  warningIconContainer: {
+  alertIconContainer: {
     position: 'absolute',
     right: 0,
     bottom: 0,
     borderRadius: 100,
   },
-  warningIcon: {
+  alertIcon: {
     color: colors.red3,
   },
 })

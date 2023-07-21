@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -11,11 +11,6 @@ import {useStores} from 'state/index'
 import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {
-  getProfileViewBasicLabelInfo,
-  getProfileModeration,
-} from 'lib/labeling/helpers'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {makeProfileLink} from 'lib/routes/links'
 
 export const ProfileCard = observer(
@@ -41,15 +36,12 @@ export const ProfileCard = observer(
     const store = useStores()
     const pal = usePalette('default')
 
-    const moderation = getProfileModeration(
-      store,
-      getProfileViewBasicLabelInfo(profile),
+    const moderation = moderateProfile(
+      profile,
+      store.preferences.moderationOpts,
     )
 
-    if (
-      moderation.list.behavior === ModerationBehaviorCode.Hide &&
-      !overrideModeration
-    ) {
+    if (moderation.content.filter && !overrideModeration) {
       return null
     }
 
@@ -125,9 +117,9 @@ const FollowersList = observer(
     const followersWithMods = followers
       .map(f => ({
         f,
-        mod: getProfileModeration(store, getProfileViewBasicLabelInfo(f)),
+        mod: moderateProfile(f, store.preferences.moderationOpts),
       }))
-      .filter(({mod}) => mod.list.behavior !== ModerationBehaviorCode.Hide)
+      .filter(({mod}) => !mod.content.filter)
 
     return (
       <View style={styles.followedBy}>

@@ -162,7 +162,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       <PostHider
         testID={`postThreadItem-by-${item.post.author.handle}`}
         style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
-        moderation={item.moderation.thread}>
+        moderation={item.moderation.content}>
         <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -227,7 +227,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <ContentHider moderation={item.moderation.view}>
+          <ContentHider moderation={item.moderation.content}>
             {item.richText?.text ? (
               <View
                 style={[
@@ -242,7 +242,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </View>
             ) : undefined}
-            <ImageHider moderation={item.moderation.view} style={s.mb10}>
+            <ImageHider moderation={item.moderation.embed} style={s.mb10}>
               <PostEmbeds embed={item.post.embed} style={s.mb10} />
             </ImageHider>
           </ContentHider>
@@ -325,7 +325,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             pal.view,
             item._showParentReplyLine && styles.noTopBorder,
           ]}
-          moderation={item.moderation.thread}>
+          moderation={item.moderation.content}>
           {item._showParentReplyLine && (
             <View
               style={[
@@ -361,7 +361,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 postHref={itemHref}
               />
               <ContentHider
-                moderation={item.moderation.thread}
+                moderation={item.moderation.content}
                 containerStyle={styles.contentHider}>
                 {item.richText?.text ? (
                   <View style={styles.postTextContainer}>
@@ -373,7 +373,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                     />
                   </View>
                 ) : undefined}
-                <ImageHider style={s.mb10} moderation={item.moderation.thread}>
+                <ImageHider style={s.mb10} moderation={item.moderation.embed}>
                   <PostEmbeds embed={item.post.embed} style={s.mb10} />
                 </ImageHider>
                 {needsTranslation && (

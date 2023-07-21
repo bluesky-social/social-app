@@ -5,12 +5,12 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
+import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {isDesktopWeb} from 'platform/detection'
-import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
 
 export function ScreenHider({
   testID,
@@ -22,7 +22,7 @@ export function ScreenHider({
 }: React.PropsWithChildren<{
   testID?: string
   screenDescription: string
-  moderation: ModerationBehavior
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -39,7 +39,7 @@ export function ScreenHider({
     }
   }, [navigation])
 
-  if (moderation.behavior !== ModerationBehaviorCode.Hide || override) {
+  if (!moderation.blur || override) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -63,7 +63,7 @@ export function ScreenHider({
       </Text>
       <Text type="2xl" style={[styles.description, pal.textLight]}>
         This {screenDescription} has been flagged:{' '}
-        {moderation.reason || 'Content warning'}
+        {/* TODO moderation.reason ||*/ 'Content warning'}
       </Text>
       {!isDesktopWeb && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>

@@ -8,14 +8,12 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
 import {RichText} from '../util/text/RichText'
@@ -35,13 +33,11 @@ export const FeedItem = observer(function ({
   item,
   isThreadChild,
   isThreadParent,
-  ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
-  ignoreMuteFor?: string
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -147,26 +143,17 @@ export const FeedItem = observer(function ({
     isThreadParent ? styles.outerNoBottom : undefined,
   ]
 
-  // moderation override
-  let moderation = item.moderation.list
-  if (
-    ignoreMuteFor === item.post.author.did &&
-    moderation.isMute &&
-    !moderation.noOverride
-  ) {
-    moderation = {behavior: ModerationBehaviorCode.Show}
-  }
-
   if (!record || deleted) {
     return <View />
   }
 
   return (
-    <PostHider
+    <Link
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}>
+      noFeedback
+      accessible={false}>
       {isThreadChild && (
         <View
           style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
@@ -255,7 +242,7 @@ export const FeedItem = observer(function ({
             </View>
           )}
           <ContentHider
-            moderation={moderation}
+            moderation={item.moderation.content}
             containerStyle={styles.contentHider}>
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>
@@ -267,7 +254,7 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            <ImageHider moderation={item.moderation.list} style={styles.embed}>
+            <ImageHider moderation={item.moderation.embed} style={styles.embed}>
               <PostEmbeds embed={item.post.embed} style={styles.embed} />
             </ImageHider>
             {needsTranslation && (
@@ -306,7 +293,7 @@ export const FeedItem = observer(function ({
           />
         </View>
       </View>
-    </PostHider>
+    </Link>
   )
 })
 

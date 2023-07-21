@@ -3,7 +3,11 @@ import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
-import {ComAtprotoLabelDefs, AppBskyActorDefs} from '@atproto/api'
+import {
+  ComAtprotoLabelDefs,
+  AppBskyActorDefs,
+  ModerationOpts,
+} from '@atproto/api'
 import {LabelValGroup} from 'lib/labeling/types'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {
@@ -406,6 +410,62 @@ export class PreferencesModel {
       res.pref = 'hide'
     }
     return res
+  }
+
+  get moderationOpts(): ModerationOpts {
+    return {
+      userDid: this.rootStore.session.currentSession?.did || '',
+      adultContentEnabled: false,
+      labelerSettings: [
+        {
+          labeler: {
+            did: '',
+            displayName: 'Bluesky Social',
+          },
+          settings: {
+            porn: 'hide',
+            sexual: 'warn',
+            nudity: 'ignore',
+            nsfl: 'hide',
+            corpse: 'warn',
+            gore: 'warn',
+            torture: 'hide',
+            'self-harm': 'hide',
+            'intolerant-race': 'hide',
+            'intolerant-gender': 'hide',
+            'intolerant-sexual-orientation': 'hide',
+            'intolerant-religion': 'hide',
+            intolerant: 'hide',
+            'icon-intolerant': 'hide',
+            trolling: 'hide',
+            harassment: 'hide',
+            bullying: 'hide',
+            threat: 'hide',
+            disgusting: 'hide',
+            upsetting: 'warn',
+            profane: 'ignore',
+            politics: 'hide',
+            troubling: 'hide',
+            negative: 'hide',
+            discourse: 'hide',
+            spoiler: 'warn',
+            spam: 'hide',
+            clickbait: 'hide',
+            shill: 'hide',
+            promotion: 'hide',
+            'account-security': 'hide',
+            'net-abuse': 'hide',
+            impersonation: 'hide',
+            scam: 'hide',
+            misinformation: 'warn',
+            unverified: 'warn',
+            manipulated: 'warn',
+            fringe: 'warn',
+            bullshit: 'warn',
+          },
+        },
+      ],
+    }
   }
 
   async setSavedFeeds(saved: string[], pinned: string[]) {

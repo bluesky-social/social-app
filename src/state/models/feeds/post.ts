@@ -3,20 +3,11 @@ import {
   AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
   RichText,
+  moderatePost,
+  PostModeration,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {updateDataOptimistically} from 'lib/async/revertible'
-import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
-import {
-  getEmbedLabels,
-  getEmbedMuted,
-  getEmbedMutedByList,
-  getEmbedBlocking,
-  getEmbedBlockedBy,
-  filterAccountLabels,
-  filterProfileLabels,
-  getPostModeration,
-} from 'lib/labeling/helpers'
 import {track} from 'lib/analytics/analytics'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
@@ -86,33 +77,8 @@ export class PostsFeedItemModel {
     return this.rootStore.mutedThreads.uris.has(this.rootUri)
   }
 
-  get labelInfo(): PostLabelInfo {
-    return {
-      postLabels: (this.post.labels || []).concat(
-        getEmbedLabels(this.post.embed),
-      ),
-      accountLabels: filterAccountLabels(this.post.author.labels),
-      profileLabels: filterProfileLabels(this.post.author.labels),
-      isMuted:
-        this.post.author.viewer?.muted ||
-        getEmbedMuted(this.post.embed) ||
-        false,
-      mutedByList:
-        this.post.author.viewer?.mutedByList ||
-        getEmbedMutedByList(this.post.embed),
-      isBlocking:
-        !!this.post.author.viewer?.blocking ||
-        getEmbedBlocking(this.post.embed) ||
-        false,
-      isBlockedBy:
-        !!this.post.author.viewer?.blockedBy ||
-        getEmbedBlockedBy(this.post.embed) ||
-        false,
-    }
-  }
-
   get moderation(): PostModeration {
-    return getPostModeration(this.rootStore, this.labelInfo)
+    return moderatePost(this.post, this.rootStore.preferences.moderationOpts)
   }
 
   copy(v: FeedViewPost) {
