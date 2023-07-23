@@ -36,6 +36,7 @@ import { observer } from "mobx-react-lite";
 import { pluralize } from "lib/strings/helpers";
 import { s } from "lib/styles";
 import { sanitizeDisplayName } from "lib/strings/display-names";
+import { track } from "lib/analytics/analytics";
 import { useNavigation } from "@react-navigation/native";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
@@ -119,6 +120,16 @@ export const PostThreadItem = observer(function PostThreadItem({
           .toggleLike()
           .catch((e) => store.log.error("Failed to toggle like", e));
   }, [item, store, navigation]);
+
+  const onPressReaction = React.useCallback(async (reactionId: string) => {
+    track("FeedItem:PostLike");
+    console.log("reactionId", reactionId);
+    return store.session.isSolarplexSession
+      ? await navigation.navigate("SignIn")
+      : item
+          .react(reactionId)
+          .catch((e) => store.log.error("Failed to add reaction", e));
+  }, [track, item, store, navigation]);
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || "");
@@ -374,6 +385,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}
+              onPressReaction={onPressReaction}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
               onToggleThreadMute={onToggleThreadMute}
@@ -482,6 +494,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 isLiked={!!item.post.viewer?.like}
                 isThreadMuted={item.isThreadMuted}
                 onPressReply={onPressReply}
+                onPressReaction={onPressReaction}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}

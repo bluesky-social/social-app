@@ -32,6 +32,7 @@ import { UserAvatar } from "../util/UserAvatar";
 import { UserInfoText } from "../util/UserInfoText";
 import { getTranslatorLink } from "../../../locale/helpers";
 import { observer } from "mobx-react-lite";
+import { track } from "lib/analytics/analytics";
 import { useNavigation } from "@react-navigation/native";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
@@ -174,6 +175,16 @@ const PostLoaded = observer(
             .toggleLike()
             .catch((e) => store.log.error("Failed to toggle like", e));
     }, [item, store, navigation]);
+
+    const onPressReaction = React.useCallback(async (reactionId: string) => {
+      track("FeedItem:PostLike");
+      console.log("reactionId", reactionId);
+      return store.session.isSolarplexSession
+        ? await navigation.navigate("SignIn")
+        : item
+            .react(reactionId)
+            .catch((e) => store.log.error("Failed to add reaction", e));
+    }, [track, item, store, navigation]);
 
     const onCopyPostText = React.useCallback(() => {
       Clipboard.setString(record.text);
@@ -341,6 +352,7 @@ const PostLoaded = observer(
               isReposted={!!item.post.viewer?.repost}
               isLiked={!!item.post.viewer?.like}
               isThreadMuted={item.isThreadMuted}
+              onPressReaction={onPressReaction}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}

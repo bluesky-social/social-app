@@ -174,6 +174,7 @@ export class PreferencesModel {
       // fetch preferences
       let hasSavedFeedsPref = false;
       const res = await this.rootStore.agent.app.bsky.actor.getPreferences({});
+      await this.rootStore.reactions.fetch();
       console.log("fetching prefs from server", res.data.preferences);
       runInAction(() => {
         for (const pref of res.data.preferences) {

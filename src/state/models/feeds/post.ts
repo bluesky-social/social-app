@@ -1,23 +1,25 @@
-import {makeAutoObservable} from 'mobx'
 import {
-  AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
+  AppBskyFeedPost as FeedPost,
   RichText,
 } from '@atproto/api'
-import {RootStoreModel} from '../root-store'
-import {updateDataOptimistically} from 'lib/async/revertible'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {
+  filterAccountLabels,
+  filterProfileLabels,
+  getEmbedBlockedBy,
+  getEmbedBlocking,
   getEmbedLabels,
   getEmbedMuted,
   getEmbedMutedByList,
-  getEmbedBlocking,
-  getEmbedBlockedBy,
-  filterAccountLabels,
-  filterProfileLabels,
   getPostModeration,
 } from 'lib/labeling/helpers'
+
+import {RootStoreModel} from '../root-store'
+import { SOLARPLEX_FEED_API } from 'lib/constants'
+import {makeAutoObservable} from 'mobx'
 import {track} from 'lib/analytics/analytics'
+import {updateDataOptimistically} from 'lib/async/revertible'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
@@ -33,14 +35,17 @@ export class PostsFeedItemModel {
   reply?: FeedViewPost['reply']
   reason?: FeedViewPost['reason']
   richText?: RichText
+  reactions?: string[]
 
   constructor(
     public rootStore: RootStoreModel,
     reactKey: string,
     v: FeedViewPost,
+    reactions?: string[],
   ) {
     this._reactKey = reactKey
     this.post = v.post
+    this.reactions = reactions
     if (FeedPost.isRecord(this.post.record)) {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
@@ -132,6 +137,54 @@ export class PostsFeedItemModel {
     if (this.reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
       return this.reason as ReasonRepost
     }
+  }
+
+  get hasReacted(): boolean {
+    return !!this.rootStore.reactions.reactionMap[this.post.uri][this.rootStore.me.did]
+  }
+
+  get viewerReaction(): string | undefined {
+    return this.rootStore.reactions.reactionMap[this.post.uri] && this.rootStore.reactions.reactionMap[this.post.uri][this.rootStore.me.did]
+  }
+
+  async react(reactionId: string) {
+    this.post.viewer = this.post.viewer || {}
+    try {
+        // unlike
+        const url = this.post.viewer.like
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.post.likeCount = (this.post.likeCount || 0) - 1
+            this.post.viewer!.like = undefined
+          },
+          async () => await fetch(
+            `${SOLARPLEX_FEED_API}/splx/add_reaction_to_post`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "Access-Control-Allow-Origin": "no-cors",
+              },
+              body: JSON.stringify({
+                post_id: this.uri,
+                reaction_id: reactionId,
+                user_id: this.rootStore.me.did,
+            }),
+          }),
+          res => {
+            this.post.viewer = this.post.viewer || {}
+            // this.data.viewer.react = res.uri
+          },
+        )
+        
+      
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle like', error)
+    } finally {
+      track(this.post.viewer.like ? 'Post:Unlike' : 'Post:Like')
+    }
+
   }
 
   async toggleLike() {

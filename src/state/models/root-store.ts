@@ -21,6 +21,7 @@ import { PreferencesModel } from "./ui/preferences";
 import { ProfilesCache } from "./cache/profiles-view";
 import { SessionModel } from "./session";
 import { ShellUiModel } from "./ui/shell";
+import { SplxReactionModel } from "./media/reactions";
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
@@ -52,6 +53,7 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this);
   imageSizes = new ImageSizesCache();
   mutedThreads = new MutedThreads();
+  reactions = new SplxReactionModel();
 
   constructor(agent: BskyAgent) {
     this.agent = agent;
@@ -177,6 +179,8 @@ export class RootStoreModel {
     try {
       await this.me.updateIfNeeded();
       await this.preferences.sync({clearCache: true});
+      // await this.reactions.fetch();
+      // console.log('reactionsMap syncd', JSON.parse(JSON.stringify(this.reactions.reactionMap)))
     } catch (e: any) {
       this.log.error("Failed to fetch latest state", e);
     }
@@ -267,6 +271,7 @@ export class RootStoreModel {
 
   async onBgFetch(taskId: string) {
     this.log.debug(`Background fetch fired for task ${taskId}`);
+    this.reactions.fetch();
     if (this.session.hasSession) {
       const res = await this.agent.countUnreadNotifications();
       const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count;

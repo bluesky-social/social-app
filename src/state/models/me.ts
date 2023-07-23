@@ -34,7 +34,7 @@ export class MeModel {
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = [];
   lastProfileStateUpdate = Date.now();
   lastNotifsUpdate = Date.now();
-  reactions: {[reactionSet: string] :  EmojiItemProp[]} = { default: DEFAULT_REACTION_EMOJIS};
+  reactions: {[reactionSet: string] :  EmojiItemProp[]} = { default: DEFAULT_REACTION_EMOJIS };
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length;
@@ -125,6 +125,7 @@ export class MeModel {
       await this.fetchInviteCodes();
       await this.fetchAppPasswords();
       await this.fetchCommunities();
+      await this.fetchAllReactions();
     } else {
       this.clear();
     }
@@ -137,7 +138,7 @@ export class MeModel {
       await this.fetchProfile();
       await this.fetchInviteCodes();
       await this.fetchAppPasswords();
-      await this.fetchCommunities;
+      await this.fetchCommunities();
     }
     if (Date.now() - this.lastNotifsUpdate > NOTIFS_UPDATE_INTERVAL) {
       this.lastNotifsUpdate = Date.now();
@@ -146,6 +147,10 @@ export class MeModel {
   }
   async fetchCommunities() {
     await this.rootStore.communities.fetch();
+  }
+
+  async fetchAllReactions() {
+    await this.rootStore.reactions.fetch();
   }
 
   async fetchProfile() {

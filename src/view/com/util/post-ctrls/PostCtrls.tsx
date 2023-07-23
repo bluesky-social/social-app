@@ -53,10 +53,13 @@ interface PostCtrlsOpts {
   replyCount?: number;
   repostCount?: number;
   likeCount?: number;
+  reactions?: string[];
+  viewerReaction?: string;
   isReposted: boolean;
   isLiked: boolean;
   isThreadMuted: boolean;
   onPressReply: () => void;
+  onPressReaction: (reactionId:string) => Promise<void>;
   onPressToggleRepost: () => Promise<void>;
   onPressToggleLike: () => Promise<void>;
   onCopyPostText: () => void;
@@ -101,6 +104,10 @@ function ctrlAnimStyle(interp: Animated.Value) {
   }
 }
 */
+
+export interface SolarplexReactionType extends EmojiItemProp {
+  reaction_id: string;
+}
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores();
@@ -177,7 +184,15 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // setIsLikedPressed(false)
     }
   };
-  const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp>();
+  console.log("opts.viewerReaction", opts.viewerReaction);
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp>(store.reactions.reactionTypes[opts.viewerReaction ?? ' ']);
+  console.log("selectedEmoji", selectedEmoji);
+  const onPressReaction = async (emoji: EmojiItemProp | undefined) => {
+    if (!emoji) return;
+    console.log("emoji", emoji);
+    setSelectedEmoji(emoji);
+    await opts.onPressReaction((emoji as SolarplexReactionType).reaction_id).catch((_e) => undefined);
+  };
 
   return (
     <View style={[styles.ctrls, opts.style]}>
@@ -245,15 +260,18 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityLabel={opts.isLiked ? "Unlike" : "Like"}
         accessibilityHint=""
       >
-      <Reaction
-        items={store.me.reactions.default}
-        onTap={setSelectedEmoji}
-        cardStyle={{left: opts.big ? '-500px' : '0'}}
-        isShowCardInCenter={false}
-        showPopupType="onPress"
-      >
-        {selectedEmoji ? <Text>selectedEmoji?.emoji</Text> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
-      </Reaction>
+        {opts.reactions?.map((item) => (
+          <Text key={item}>{store.reactions.reactionTypes[item].emoji}</Text>
+          ))}
+        <Reaction
+          items={store.me.reactions.default}
+          onTap={onPressReaction}
+          cardStyle={{left: opts.big ? '-500px' : '0'}}
+          isShowCardInCenter={false}
+          showPopupType="onPress"
+        >
+          {selectedEmoji ? <Text>{selectedEmoji?.emoji}</Text> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
+        </Reaction>
       </TouchableOpacity>
       <View>
         {opts.big ? undefined : (

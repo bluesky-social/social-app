@@ -1,12 +1,13 @@
-import {makeAutoObservable} from 'mobx'
 import {
-  AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
+  AppBskyFeedPost as FeedPost,
   RichText,
 } from '@atproto/api'
-import {RootStoreModel} from '../root-store'
 import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
+
 import {PostsFeedItemModel} from '../feeds/post'
+import {RootStoreModel} from '../root-store'
+import {makeAutoObservable} from 'mobx'
 
 type PostView = AppBskyFeedDefs.PostView
 
@@ -126,6 +127,10 @@ export class PostThreadItemModel {
 
   async toggleLike() {
     this.data.toggleLike()
+  }
+
+  async react(reaction: string) {
+    this.data.react(reaction)
   }
 
   async toggleRepost() {

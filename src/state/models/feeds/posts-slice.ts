@@ -1,8 +1,8 @@
-import {makeAutoObservable} from 'mobx'
-import {RootStoreModel} from '../root-store'
 import {FeedViewPostsSlice} from 'lib/api/feed-manip'
-import {mergePostModerations} from 'lib/labeling/helpers'
 import {PostsFeedItemModel} from './post'
+import {RootStoreModel} from '../root-store'
+import {makeAutoObservable} from 'mobx'
+import {mergePostModerations} from 'lib/labeling/helpers'
 
 let _idCounter = 0
 
@@ -20,8 +20,9 @@ export class PostsFeedSliceModel {
   ) {
     this._reactKey = reactKey
     for (const item of slice.items) {
+      const reactions = this.rootStore.reactions.reactionMap[item.post.uri] ? Object.values(this.rootStore.reactions.reactionMap[item.post.uri]) : [];
       this.items.push(
-        new PostsFeedItemModel(rootStore, `slice-${_idCounter++}`, item),
+        new PostsFeedItemModel(rootStore, `slice-${_idCounter++}`, item, reactions.length ? reactions : undefined),
       )
     }
     makeAutoObservable(this, {rootStore: false})

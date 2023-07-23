@@ -120,7 +120,8 @@ export const SOLARPLEX_FEEDS = [
 export const SOLARPLEX_FEED_URI_PATH =
   "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/";
 
-export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
+// export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
+export const SOLARPLEX_FEED_API = "http://localhost:3000";
 export const SOLARPLEX_DID = "did:plc:h7o6dzolc2jfhztkrrpa3fys";
 
 export function LINK_META_PROXY(serviceUrl: string) {
@@ -159,50 +160,60 @@ export const DEFAULT_REACTION_EMOJIS = [
     id: 0,
     emoji: "😂",
     title: "laugh",
+    reaction_id: "784f0ff4-0ddb-456f-81c9-a3a4afd1e3cc"
   },
   {
     id: 1,
     emoji: "😎",
     title: "cool",
+    reaction_id: "4aef38b4-5d8e-46ad-a640-7d2b8701b176"
   },
   {
     id: 2,
     emoji: "🤨",
     title: "eyebrow-raise",
+    reaction_id: ""
   },
   {
     id: 3,
     emoji: "😳",
     title: "blush",
+    reaction_id: ""
   },
   {
     id: 4,
     emoji: "🧟‍♂️",
     title: "zombie",
+    reaction_id: ""
   },
   {
     id: 5,
     emoji: "😍",
     title: "heart-eyes",
+    reaction_id: ""
   },
   {
     id: 6,
     emoji: "🔥",
     title: "fire",
+    reaction_id: ""
   },
   {
     id: 7,
     emoji: "😭",
     title: "cry",
+    reaction_id: ""
   },
   {
     id: 8,
     emoji: "❤️",
     title: "heart",
+    reaction_id: ""
   },
   {
     id: 9,
     emoji: "😀",
     title: "grin",
+    reaction_id: ""
   },
 ];

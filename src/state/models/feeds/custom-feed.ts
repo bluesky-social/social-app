@@ -1,9 +1,11 @@
-import {AppBskyFeedDefs} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
+
+import {AppBskyFeedDefs} from '@atproto/api'
 import {RootStoreModel} from 'state/models/root-store'
+import { SOLARPLEX_FEED_API } from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {updateDataOptimistically} from 'lib/async/revertible'
 import {track} from 'lib/analytics/analytics'
+import {updateDataOptimistically} from 'lib/async/revertible'
 
 export class CustomFeedModel {
   // data

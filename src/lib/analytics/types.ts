@@ -96,6 +96,7 @@ interface TrackPropertiesMap {
   "CustomFeed:Save": {};
   "CustomFeed:Unsave": {};
   "CustomFeed:Like": {};
+  "CustomFeed:React": {};
   "CustomFeed:Unlike": {};
   "CustomFeed:Share": {};
   "CustomFeed:Pin": {
