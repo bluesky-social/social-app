@@ -52,6 +52,7 @@ interface PostCtrlsOpts {
 }
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP_DOUBLE = {top: 10, left: 10, bottom: 10, right: 10}
 
 // DISABLED see #135
 /*
@@ -217,7 +218,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      <View>
+      <TouchableOpacity accessibilityRole="button" hitSlop={HITSLOP_DOUBLE}>
+        {/* TouchableOpacity used to make sure hitslop is correct when using PostDropdownBtn -ansh */}
         {opts.big ? undefined : (
           <PostDropdownBtn
             itemUri={opts.itemUri}
@@ -232,7 +234,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             onDeletePost={opts.onDeletePost}
           />
         )}
-      </View>
+      </TouchableOpacity>
       {/* used for adding pad to the right side */}
       <View />
     </View>
