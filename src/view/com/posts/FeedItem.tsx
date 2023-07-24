@@ -27,6 +27,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 
@@ -202,7 +203,8 @@ export const FeedItem = observer(function ({
               lineHeight={1.2}
               numberOfLines={1}
               text={sanitizeDisplayName(
-                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+                item.reasonRepost.by.displayName ||
+                  sanitizeHandle(item.reasonRepost.by.handle),
               )}
               href={makeProfileLink(item.reasonRepost.by)}
             />

@@ -14,6 +14,7 @@ import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from 'view/com/posts/Feed'
 import {pluralize} from 'lib/strings/helpers'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {TextLink} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -217,7 +218,10 @@ export const CustomFeedScreen = withAuthRequired(
                     'you'
                   ) : (
                     <TextLink
-                      text={`@${currentFeed.data.creator.handle}`}
+                      text={sanitizeHandle(
+                        currentFeed.data.creator.handle,
+                        '@',
+                      )}
                       href={makeProfileLink(currentFeed.data.creator)}
                       style={[pal.textLight]}
                     />

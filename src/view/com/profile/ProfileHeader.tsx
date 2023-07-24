@@ -15,11 +15,13 @@ import {ProfileImageLightbox} from 'state/models/ui/shell'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {s, colors} from 'lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
+import {ThemedText} from '../util/text/ThemedText'
 import {TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
@@ -69,7 +71,9 @@ export const ProfileHeader = observer(
             </View>
             <View>
               <Text type="title-2xl" style={[pal.text, styles.title]}>
-                {sanitizeDisplayName(view.displayName || view.handle)}
+                {sanitizeDisplayName(
+                  view.displayName || sanitizeHandle(view.handle),
+                )}
               </Text>
             </View>
           </View>
@@ -106,6 +110,7 @@ const ProfileHeaderLoaded = observer(
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
+    const invalidHandle = isInvalidHandle(view.handle)
 
     const onPressBack = React.useCallback(() => {
       navigation.goBack()
@@ -388,7 +393,9 @@ const ProfileHeaderLoaded = observer(
               testID="profileHeaderDisplayName"
               type="title-2xl"
               style={[pal.text, styles.title]}>
-              {sanitizeDisplayName(view.displayName || view.handle)}
+              {sanitizeDisplayName(
+                view.displayName || sanitizeHandle(view.handle),
+              )}
             </Text>
           </View>
           <View style={styles.handleLine}>
@@ -399,7 +406,16 @@ const ProfileHeaderLoaded = observer(
                 </Text>
               </View>
             ) : undefined}
-            <Text style={[pal.textLight, styles.handle]}>@{view.handle}</Text>
+            <ThemedText
+              type={invalidHandle ? 'xs' : 'md'}
+              fg={invalidHandle ? 'error' : 'light'}
+              border={invalidHandle ? 'error' : undefined}
+              style={[
+                invalidHandle ? styles.invalidHandle : undefined,
+                styles.handle,
+              ]}>
+              {invalidHandle ? '⚠Invalid Handle' : `@${view.handle}`}
+            </ThemedText>
           </View>
           {!blockHide && (
             <>
@@ -606,6 +622,11 @@ const styles = StyleSheet.create({
         // @ts-ignore web only -prf
         wordBreak: 'break-all',
       },
+  invalidHandle: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 4,
+  },
 
   handleLine: {
     flexDirection: 'row',

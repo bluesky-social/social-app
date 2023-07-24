@@ -19,6 +19,7 @@ import {PostThreadModel} from 'state/models/content/post-thread'
 import {s, colors} from 'lib/styles'
 import {ago} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
 import {HeartIconSolid} from 'lib/icons'
 import {Text} from '../util/text/Text'
@@ -378,7 +379,7 @@ function ExpandedAuthorsList({
               {sanitizeDisplayName(author.displayName || author.handle)}
               &nbsp;
               <Text style={[pal.textLight]} lineHeight={1.2}>
-                {author.handle}
+                {sanitizeHandle(author.handle)}
               </Text>
             </Text>
           </View>

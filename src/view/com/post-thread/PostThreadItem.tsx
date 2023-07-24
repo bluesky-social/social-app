@@ -17,6 +17,7 @@ import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {useStores} from 'state/index'
@@ -186,7 +187,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                     numberOfLines={1}
                     lineHeight={1.2}>
                     {sanitizeDisplayName(
-                      item.post.author.displayName || item.post.author.handle,
+                      item.post.author.displayName ||
+                        sanitizeHandle(item.post.author.handle),
                     )}
                   </Text>
                 </Link>
@@ -224,7 +226,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 href={authorHref}
                 title={authorTitle}>
                 <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                  @{item.post.author.handle}
+                  {sanitizeHandle(item.post.author.handle, '@')}
                 </Text>
               </Link>
             </View>

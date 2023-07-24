@@ -10,6 +10,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {
   getProfileViewBasicLabelInfo,
   getProfileModeration,
@@ -79,10 +80,12 @@ export const ProfileCard = observer(
               style={[s.bold, pal.text]}
               numberOfLines={1}
               lineHeight={1.2}>
-              {sanitizeDisplayName(profile.displayName || profile.handle)}
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+              )}
             </Text>
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              @{profile.handle}
+              {sanitizeHandle(profile.handle, '@')}
             </Text>
             {!!profile.viewer?.followedBy && (
               <View style={s.flexRow}>
