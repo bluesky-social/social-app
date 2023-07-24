@@ -5,6 +5,7 @@ import * as DropdownMenu from 'zeego/dropdown-menu'
 import {StyleSheet, View} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+import {usePalette} from 'lib/hooks/usePalette'
 export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuTrigger = DropdownMenu.Trigger
 export const DropdownMenuContent = DropdownMenu.Content
@@ -51,15 +52,41 @@ type Props = {
 }
 
 export function NativeDropdown({items}: Props) {
+  const pal = usePalette('default')
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger style={{}} action="press">
         <View hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
-          <FontAwesomeIcon icon="ellipsis" size={20} />
+          <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.textLight]} />
         </View>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((item, index) => {
+          if (item.label === 'separator') {
+            return (
+              <DropdownMenuSeparator
+                key={item.testId ? item.testId : `${item.label}_${index}`}
+              />
+            )
+          }
+          if (index > 1 && items[index - 1].label === 'separator') {
+            return (
+              <DropdownMenu.Group key={item.testId}>
+                <DropdownMenuItem
+                  key={item.testId ? item.testId : `${item.label}_${index}`}
+                  onSelect={item.onPress}>
+                  <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
+                  {item.icon && (
+                    <DropdownMenuItemIcon
+                      ios={item.icon.ios}
+                      androidIconName={item.icon.android}>
+                      <FontAwesomeIcon icon={item.icon.web} size={20} />
+                    </DropdownMenuItemIcon>
+                  )}
+                </DropdownMenuItem>
+              </DropdownMenu.Group>
+            )
+          }
           return (
             <DropdownMenuItem
               key={item.testId ? item.testId : `${item.label}_${index}`}
