@@ -6,17 +6,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 // DISABLED see #135
 // import {
 //   TriggerableAnimated,
 //   TriggerableAnimatedRef,
 // } from './anim/TriggerableAnimated'
 import {Text} from '../text/Text'
-import {PostDropdownBtn} from '../forms/DropdownButton'
+import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {pluralize} from 'lib/strings/helpers'
@@ -224,8 +220,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <View>
         {opts.big ? undefined : (
           <PostDropdownBtn
-            testID="postDropdownBtn"
-            style={styles.ctrl}
             itemUri={opts.itemUri}
             itemCid={opts.itemCid}
             itemHref={opts.itemHref}
@@ -235,20 +229,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             onCopyPostText={opts.onCopyPostText}
             onOpenTranslate={opts.onOpenTranslate}
             onToggleThreadMute={opts.onToggleThreadMute}
-            onDeletePost={opts.onDeletePost}>
-            <FontAwesomeIcon
-              icon="ellipsis-h"
-              size={18}
-              style={[
-                s.mt2,
-                s.mr5,
-                {
-                  color:
-                    theme.colorScheme === 'light' ? colors.gray4 : colors.gray5,
-                } as FontAwesomeIconStyle,
-              ]}
-            />
-          </PostDropdownBtn>
+            onDeletePost={opts.onDeletePost}
+          />
         )}
       </View>
       {/* used for adding pad to the right side */}

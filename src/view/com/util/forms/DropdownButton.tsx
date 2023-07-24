@@ -14,12 +14,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 import {colors} from 'lib/styles'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
-import {shareUrl} from 'lib/sharing'
 
 const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const ESTIMATED_BTN_HEIGHT = 50
@@ -160,112 +156,6 @@ export function DropdownButton({
         {children}
       </Button>
     </View>
-  )
-}
-
-export function PostDropdownBtn({
-  testID,
-  style,
-  children,
-  itemUri,
-  itemCid,
-  itemHref,
-  isAuthor,
-  isThreadMuted,
-  onCopyPostText,
-  onOpenTranslate,
-  onToggleThreadMute,
-  onDeletePost,
-}: {
-  testID?: string
-  style?: StyleProp<ViewStyle>
-  children?: React.ReactNode
-  itemUri: string
-  itemCid: string
-  itemHref: string
-  itemTitle: string
-  isAuthor: boolean
-  isThreadMuted: boolean
-  onCopyPostText: () => void
-  onOpenTranslate: () => void
-  onToggleThreadMute: () => void
-  onDeletePost: () => void
-}) {
-  const store = useStores()
-
-  const dropdownItems: DropdownItem[] = [
-    {
-      testID: 'postDropdownTranslateBtn',
-      icon: 'language',
-      label: 'Translate...',
-      onPress() {
-        onOpenTranslate()
-      },
-    },
-    {
-      testID: 'postDropdownCopyTextBtn',
-      icon: ['far', 'paste'],
-      label: 'Copy post text',
-      onPress() {
-        onCopyPostText()
-      },
-    },
-    {
-      testID: 'postDropdownShareBtn',
-      icon: 'share',
-      label: 'Share...',
-      onPress() {
-        const url = toShareUrl(itemHref)
-        shareUrl(url)
-      },
-    },
-    {sep: true},
-    {
-      testID: 'postDropdownMuteThreadBtn',
-      icon: 'comment-slash',
-      label: isThreadMuted ? 'Unmute thread' : 'Mute thread',
-      onPress() {
-        onToggleThreadMute()
-      },
-    },
-    {sep: true},
-    !isAuthor && {
-      testID: 'postDropdownReportBtn',
-      icon: 'circle-exclamation',
-      label: 'Report post',
-      onPress() {
-        store.shell.openModal({
-          name: 'report-post',
-          postUri: itemUri,
-          postCid: itemCid,
-        })
-      },
-    },
-    isAuthor && {
-      testID: 'postDropdownDeleteBtn',
-      icon: ['far', 'trash-can'],
-      label: 'Delete post',
-      onPress() {
-        store.shell.openModal({
-          name: 'confirm',
-          title: 'Delete this post?',
-          message: 'Are you sure? This can not be undone.',
-          onPressConfirm: onDeletePost,
-        })
-      },
-    },
-  ].filter(Boolean) as DropdownItem[]
-
-  return (
-    <DropdownButton
-      testID={testID}
-      style={style}
-      items={dropdownItems}
-      menuWidth={isWeb ? 220 : 200}
-      accessibilityLabel="Additional post actions"
-      accessibilityHint="">
-      {children}
-    </DropdownButton>
   )
 }
 
