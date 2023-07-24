@@ -122,11 +122,7 @@ export async function getPostAsQuote(
     cid: threadView.thread.post.cid,
     text: threadView.thread.postRecord?.text || '',
     indexedAt: threadView.thread.post.indexedAt,
-    author: {
-      handle: threadView.thread.post.author.handle,
-      displayName: threadView.thread.post.author.displayName,
-      avatar: threadView.thread.post.author.avatar,
-    },
+    author: threadView.thread.post.author,
   }
 }
 

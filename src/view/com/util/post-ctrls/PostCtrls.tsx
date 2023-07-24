@@ -32,9 +32,10 @@ interface PostCtrlsOpts {
   itemTitle: string
   isAuthor: boolean
   author: {
+    did: string
     handle: string
-    displayName: string
-    avatar: string
+    displayName?: string | undefined
+    avatar?: string | undefined
   }
   text: string
   indexedAt: string

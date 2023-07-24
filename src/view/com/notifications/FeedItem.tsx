@@ -36,6 +36,7 @@ import {
 } from 'lib/labeling/helpers'
 import {ProfileModeration} from 'lib/labeling/types'
 import {formatCount} from '../util/numeric/format'
+import {makeProfileLink} from 'lib/routes/links'
 
 const MAX_AUTHORS = 5
 
@@ -63,7 +64,7 @@ export const FeedItem = observer(function ({
       const urip = new AtUri(item.subjectUri)
       return `/profile/${urip.host}/post/${urip.rkey}`
     } else if (item.isFollow) {
-      return `/profile/${item.author.handle}`
+      return makeProfileLink(item.author)
     } else if (item.isReply) {
       const urip = new AtUri(item.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
@@ -92,7 +93,7 @@ export const FeedItem = observer(function ({
   const authors: Author[] = useMemo(() => {
     return [
       {
-        href: `/profile/${item.author.handle}`,
+        href: makeProfileLink(item.author),
         did: item.author.did,
         handle: item.author.handle,
         displayName: item.author.displayName,
@@ -104,7 +105,7 @@ export const FeedItem = observer(function ({
       },
       ...(item.additional?.map(({author}) => {
         return {
-          href: `/profile/${author.handle}`,
+          href: makeProfileLink(author),
           did: author.did,
           handle: author.handle,
           displayName: author.displayName,

@@ -3,6 +3,7 @@ import {Pressable, StyleProp, ViewStyle} from 'react-native'
 import {useStores} from 'state/index'
 import {Link} from './Link'
 import {isDesktopWeb} from 'platform/detection'
+import {makeProfileLink} from 'lib/routes/links'
 
 interface UserPreviewLinkProps {
   did: string
@@ -17,7 +18,7 @@ export function UserPreviewLink(
   if (isDesktopWeb) {
     return (
       <Link
-        href={`/profile/${props.handle}`}
+        href={makeProfileLink(props)}
         title={props.handle}
         asAnchor
         style={props.style}>

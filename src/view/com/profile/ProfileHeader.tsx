@@ -34,6 +34,8 @@ import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
 import {navigate} from '../../../Navigation'
+import {isInvalidHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -144,19 +146,23 @@ const ProfileHeaderLoaded = observer(
 
     const onPressFollowers = React.useCallback(() => {
       track('ProfileHeader:FollowersButtonClicked')
-      navigate('ProfileFollowers', {name: view.handle})
+      navigate('ProfileFollowers', {
+        name: isInvalidHandle(view.handle) ? view.did : view.handle,
+      })
       store.shell.closeAllActiveElements() // for when used in the profile preview modal
     }, [track, view, store.shell])
 
     const onPressFollows = React.useCallback(() => {
       track('ProfileHeader:FollowsButtonClicked')
-      navigate('ProfileFollows', {name: view.handle})
+      navigate('ProfileFollows', {
+        name: isInvalidHandle(view.handle) ? view.did : view.handle,
+      })
       store.shell.closeAllActiveElements() // for when used in the profile preview modal
     }, [track, view, store.shell])
 
     const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
-      const url = toShareUrl(`/profile/${view.handle}`)
+      const url = toShareUrl(makeProfileLink(view))
       shareUrl(url)
     }, [track, view])
 
@@ -338,7 +344,7 @@ const ProfileHeaderLoaded = observer(
                     style={[styles.btn, styles.mainBtn, pal.btn]}
                     accessibilityRole="button"
                     accessibilityLabel={`Unfollow ${view.handle}`}
-                    accessibilityHint={`Hides direct posts from ${view.handle} in your feed`}>
+                    accessibilityHint={`Hides posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="check"
                       style={[pal.text, s.mr5]}
@@ -355,7 +361,7 @@ const ProfileHeaderLoaded = observer(
                     style={[styles.btn, styles.mainBtn, palInverted.view]}
                     accessibilityRole="button"
                     accessibilityLabel={`Follow ${view.handle}`}
-                    accessibilityHint={`Shows direct posts from ${view.handle} in your feed`}>
+                    accessibilityHint={`Shows posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="plus"
                       style={[palInverted.text, s.mr5]}

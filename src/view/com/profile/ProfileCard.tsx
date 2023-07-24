@@ -15,6 +15,7 @@ import {
   getProfileModeration,
 } from 'lib/labeling/helpers'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
+import {makeProfileLink} from 'lib/routes/links'
 
 export const ProfileCard = observer(
   ({
@@ -60,7 +61,7 @@ export const ProfileCard = observer(
           noBorder && styles.outerNoBorder,
           !noBg && pal.view,
         ]}
-        href={`/profile/${profile.handle}`}
+        href={makeProfileLink(profile)}
         title={profile.handle}
         asAnchor
         anchorNoUnderline>

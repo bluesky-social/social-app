@@ -31,6 +31,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
+import {makeProfileLink} from 'lib/routes/links'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -51,20 +52,20 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemCid = item.post.cid
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}`
-  }, [item.post.uri, item.post.author.handle])
+    return makeProfileLink(item.post.author, 'post', urip.rkey)
+  }, [item.post.uri, item.post.author])
   const itemTitle = `Post by ${item.post.author.handle}`
-  const authorHref = `/profile/${item.post.author.handle}`
+  const authorHref = makeProfileLink(item.post.author)
   const authorTitle = item.post.author.handle
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}/liked-by`
-  }, [item.post.uri, item.post.author.handle])
+    return makeProfileLink(item.post.author, 'post', urip.rkey, 'liked-by')
+  }, [item.post.uri, item.post.author])
   const likesTitle = 'Likes on this post'
   const repostsHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}/reposted-by`
-  }, [item.post.uri, item.post.author.handle])
+    return makeProfileLink(item.post.author, 'post', urip.rkey, 'reposted-by')
+  }, [item.post.uri, item.post.author])
   const repostsTitle = 'Reposts of this post'
 
   const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
@@ -297,11 +298,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               itemCid={itemCid}
               itemHref={itemHref}
               itemTitle={itemTitle}
-              author={{
-                avatar: item.post.author.avatar!,
-                handle: item.post.author.handle,
-                displayName: item.post.author.displayName!,
-              }}
+              author={item.post.author}
               text={item.richText?.text || record.text}
               indexedAt={item.post.indexedAt}
               isAuthor={item.post.author.did === store.me.did}
@@ -362,8 +359,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             </View>
             <View style={styles.layoutContent}>
               <PostMeta
-                authorHandle={item.post.author.handle}
-                authorDisplayName={item.post.author.displayName}
+                author={item.post.author}
                 authorHasWarning={!!item.post.author.labels?.length}
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
@@ -399,11 +395,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
-                author={{
-                  avatar: item.post.author.avatar!,
-                  handle: item.post.author.handle,
-                  displayName: item.post.author.displayName!,
-                }}
+                author={item.post.author}
                 text={item.richText?.text || record.text}
                 indexedAt={item.post.indexedAt}
                 isAuthor={item.post.author.did === store.me.did}

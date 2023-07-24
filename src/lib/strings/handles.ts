@@ -11,3 +11,7 @@ export function createFullHandle(name: string, domain: string): string {
   domain = (domain || '').replace(/^[.]+/, '')
   return `${name}.${domain}`
 }
+
+export function isInvalidHandle(handle: string): boolean {
+  return handle === 'handle.invalid'
+}

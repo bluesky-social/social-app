@@ -32,6 +32,7 @@ import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {makeProfileLink} from 'lib/routes/links'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -217,7 +218,7 @@ export const CustomFeedScreen = withAuthRequired(
                   ) : (
                     <TextLink
                       text={`@${currentFeed.data.creator.handle}`}
-                      href={`/profile/${currentFeed.data.creator.did}`}
+                      href={makeProfileLink(currentFeed.data.creator)}
                       style={[pal.textLight]}
                     />
                   )}

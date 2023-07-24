@@ -9,11 +9,15 @@ import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isAndroid} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
+import {makeProfileLink} from 'lib/routes/links'
 
 interface PostMetaOpts {
-  authorAvatar?: string
-  authorHandle: string
-  authorDisplayName: string | undefined
+  author: {
+    avatar?: string
+    did: string
+    handle: string
+    displayName?: string | undefined
+  }
   authorHasWarning: boolean
   postHref: string
   timestamp: string
@@ -21,15 +25,15 @@ interface PostMetaOpts {
 
 export const PostMeta = observer(function (opts: PostMetaOpts) {
   const pal = usePalette('default')
-  const displayName = opts.authorDisplayName || opts.authorHandle
-  const handle = opts.authorHandle
+  const displayName = opts.author.displayName || opts.author.handle
+  const handle = opts.author.handle
 
   return (
     <View style={styles.metaOneLine}>
-      {typeof opts.authorAvatar !== 'undefined' && (
+      {typeof opts.author.avatar !== 'undefined' && (
         <View style={styles.avatar}>
           <UserAvatar
-            avatar={opts.authorAvatar}
+            avatar={opts.author.avatar}
             size={16}
             // TODO moderation
           />
@@ -53,7 +57,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
               </Text>
             </>
           }
-          href={`/profile/${opts.authorHandle}`}
+          href={makeProfileLink(opts.author)}
         />
       </View>
       {!isAndroid && (
