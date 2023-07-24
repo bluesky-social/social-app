@@ -19,6 +19,7 @@ interface PostMetaOpts {
     handle: string
     displayName?: string | undefined
   }
+  showAvatar?: boolean
   authorHasWarning: boolean
   postHref: string
   timestamp: string
@@ -31,7 +32,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 
   return (
     <View style={styles.metaOneLine}>
-      {typeof opts.author.avatar !== 'undefined' && (
+      {opts.showAvatar && typeof opts.author.avatar !== 'undefined' && (
         <View style={styles.avatar}>
           <UserAvatar
             avatar={opts.author.avatar}

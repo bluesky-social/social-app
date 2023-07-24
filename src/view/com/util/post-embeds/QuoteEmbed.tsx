@@ -41,6 +41,7 @@ export function QuoteEmbed({
       title={itemTitle}>
       <PostMeta
         author={quote.author}
+        showAvatar
         authorHasWarning={false}
         postHref={itemHref}
         timestamp={quote.indexedAt}
