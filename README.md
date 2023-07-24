@@ -1,9 +1,10 @@
 # Solarplex Townsquare
+@solarplex_xyz
 
 
+---
 
-
-# Deprecated
+### Deprecated below
 Welcome friends! This is the codebase for the Bluesky Social app. It serves as a resource to engineers building on the [AT Protocol](https://atproto.com).
 
 - **Web: [bsky.app](https://bsky.app)**
