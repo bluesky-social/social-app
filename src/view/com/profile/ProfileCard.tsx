@@ -161,7 +161,7 @@ export const ProfileCardWithFollowBtn = observer(
     followers?: AppBskyActorDefs.ProfileView[] | undefined
   }) => {
     const store = useStores()
-    const isMe = store.me.handle === profile.handle
+    const isMe = store.me.did === profile.did
 
     return (
       <ProfileCard
