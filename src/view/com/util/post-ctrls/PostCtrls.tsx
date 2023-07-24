@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     margin: -5,
   },
   ctrlIconLiked: {
-    color: colors.red3,
+    color: colors.like,
   },
   mt1: {
     marginTop: 1,

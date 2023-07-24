@@ -160,7 +160,7 @@ export const FeedItem = observer(function ({
     action = 'liked your post'
     icon = 'HeartIconSolid'
     iconStyle = [
-      s.red3 as FontAwesomeIconStyle,
+      s.likeColor as FontAwesomeIconStyle,
       {position: 'relative', top: -4},
     ]
   } else if (item.isRepost) {
