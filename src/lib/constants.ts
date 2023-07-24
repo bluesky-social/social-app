@@ -112,14 +112,14 @@ export const STAGING_LINK_META_PROXY =
 export const PROD_LINK_META_PROXY = "https://cardyb.bsky.app/v1/extract?url=";
 
 export const SOLARPLEX_FEEDS = [
-  "at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana",
+  "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/splx-solana",
 ];
 
 export const SOLARPLEX_FEED_URI_PATH =
-  "at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/";
+  "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/";
 
 export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
-export const SOLARPLEX_DID = "did:plc:innxlxge6b73hlk2yblc4qnd";
+export const SOLARPLEX_DID = "did:plc:h7o6dzolc2jfhztkrrpa3fys";
 
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_LOCAL_DEV(serviceUrl)) {
@@ -165,8 +165,7 @@ export const DEFAULT_REACTION_EMOJIS = [
   },
   {
     id: 2,
-    emoji:
-      "🤨",
+    emoji: "🤨",
     title: "eyebrow-raise",
   },
   {

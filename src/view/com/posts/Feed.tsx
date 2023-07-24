@@ -5,29 +5,29 @@ import {
   StyleSheet,
   View,
   ViewStyle,
-} from 'react-native'
-import React, {MutableRefObject} from 'react'
+} from "react-native";
+import React, { MutableRefObject } from "react";
 
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {FeedSlice} from './FeedSlice'
-import {FlatList} from '../util/Views'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {PostsFeedModel} from 'state/models/feeds/posts'
-import {TabBarCustomFeed} from '../pager/TabBarCustomFeed'
-import {observer} from 'mobx-react-lite'
-import {s} from 'lib/styles'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
+import { CustomFeedModel } from "state/models/feeds/custom-feed";
+import { ErrorMessage } from "../util/error/ErrorMessage";
+import { FeedSlice } from "./FeedSlice";
+import { FlatList } from "../util/Views";
+import { LoadMoreRetryBtn } from "../util/LoadMoreRetryBtn";
+import { OnScrollCb } from "lib/hooks/useOnMainScroll";
+import { PostFeedLoadingPlaceholder } from "../util/LoadingPlaceholder";
+import { PostsFeedModel } from "state/models/feeds/posts";
+import { TabBarCustomFeed } from "../pager/TabBarCustomFeed";
+import { observer } from "mobx-react-lite";
+import { s } from "lib/styles";
+import { useAnalytics } from "lib/analytics/analytics";
+import { useCustomFeed } from "lib/hooks/useCustomFeed";
+import { usePalette } from "lib/hooks/usePalette";
+import { useTheme } from "lib/ThemeContext";
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING_ITEM = { _reactKey: "__loading__" };
+const EMPTY_FEED_ITEM = { _reactKey: "__empty__" };
+const ERROR_ITEM = { _reactKey: "__error__" };
+const LOAD_MORE_ERROR_ITEM = { _reactKey: "__load_more_error__" };
 
 export const Feed = observer(function Feed({
   feed,
@@ -43,44 +43,44 @@ export const Feed = observer(function Feed({
   ListHeaderComponent,
   extraData,
 }: {
-  feed: PostsFeedModel
-  style?: StyleProp<ViewStyle>
-  showPostFollowBtn?: boolean
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressTryAgain?: () => void
-  onScroll?: OnScrollCb
-  scrollEventThrottle?: number
-  renderEmptyState?: () => JSX.Element
-  testID?: string
-  headerOffset?: number
-  ListHeaderComponent?: () => JSX.Element
-  extraData?: any
+  feed: PostsFeedModel;
+  style?: StyleProp<ViewStyle>;
+  showPostFollowBtn?: boolean;
+  scrollElRef?: MutableRefObject<FlatList<any> | null>;
+  onPressTryAgain?: () => void;
+  onScroll?: OnScrollCb;
+  scrollEventThrottle?: number;
+  renderEmptyState?: () => JSX.Element;
+  testID?: string;
+  headerOffset?: number;
+  ListHeaderComponent?: () => JSX.Element;
+  extraData?: any;
 }) {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const {track} = useAnalytics()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const pal = usePalette("default");
+  const theme = useTheme();
+  const { track } = useAnalytics();
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   const data = React.useMemo(() => {
-    let feedItems: any[] = []
+    let feedItems: any[] = [];
     if (feed.hasLoaded) {
       if (feed.hasError) {
-        feedItems = feedItems.concat([ERROR_ITEM])
+        feedItems = feedItems.concat([ERROR_ITEM]);
       }
       if (feed.isEmpty) {
-        feedItems = feedItems.concat([EMPTY_FEED_ITEM])
+        feedItems = feedItems.concat([EMPTY_FEED_ITEM]);
       } else {
-        feedItems = feedItems.concat(feed.slices)
+        feedItems = feedItems.concat(feed.slices);
       }
       if (feed.loadMoreError) {
-        feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
+        feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM]);
       }
     } else if (feed.isLoading) {
-      feedItems = feedItems.concat([LOADING_ITEM])
+      feedItems = feedItems.concat([LOADING_ITEM]);
     } else {
-      feed.retryLoadMore()
+      feed.retryLoadMore();
     }
-    return feedItems
+    return feedItems;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     feed.hasError,
@@ -89,70 +89,70 @@ export const Feed = observer(function Feed({
     feed.isEmpty,
     feed.slices,
     feed.loadMoreError,
-  ])
+  ]);
 
   // events
   // =
 
   const onRefresh = React.useCallback(async () => {
-    track('Feed:onRefresh')
-    setIsRefreshing(true)
+    track("Feed:onRefresh");
+    setIsRefreshing(true);
     try {
-      await feed.refresh()
+      await feed.refresh();
     } catch (err) {
-      feed.rootStore.log.error('Failed to refresh posts feed', err)
+      feed.rootStore.log.error("Failed to refresh posts feed", err);
     }
-    setIsRefreshing(false)
-  }, [feed, track, setIsRefreshing])
+    setIsRefreshing(false);
+  }, [feed, track, setIsRefreshing]);
 
   const onEndReached = React.useCallback(async () => {
-    track('Feed:onEndReached')
+    track("Feed:onEndReached");
     try {
-      await feed.loadMore()
+      await feed.loadMore();
     } catch (err) {
-      feed.rootStore.log.error('Failed to load more posts', err)
+      feed.rootStore.log.error("Failed to load more posts", err);
     }
-  }, [feed, track])
+  }, [feed, track]);
 
   const onPressRetryLoadMore = React.useCallback(() => {
-    feed.retryLoadMore()
-  }, [feed])
+    feed.retryLoadMore();
+  }, [feed]);
 
   // rendering
   // =
   const currentFeed = useCustomFeed(
-    'at://did:plc:innxlxge6b73hlk2yblc4qnd/app.bsky.feed.generator/splx-solana',
-  )
+    "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/splx-solana",
+  );
 
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({ item }: { item: any }) => {
       if (item === EMPTY_FEED_ITEM) {
         if (renderEmptyState) {
-          return renderEmptyState()
+          return renderEmptyState();
         }
-        return <View />
+        return <View />;
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
             message={feed.error}
             onPressTryAgain={onPressTryAgain}
           />
-        )
+        );
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
             label="There was an issue fetching posts. Tap here to try again."
             onPress={onPressRetryLoadMore}
           />
-        )
+        );
       } else if (item === LOADING_ITEM) {
-        return <PostFeedLoadingPlaceholder />
+        return <PostFeedLoadingPlaceholder />;
       }
       return (
         <>
           <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
         </>
-      )
+      );
     },
     [
       feed,
@@ -161,7 +161,7 @@ export const Feed = observer(function Feed({
       showPostFollowBtn,
       renderEmptyState,
     ],
-  )
+  );
 
   const FeedFooter = React.useCallback(
     () =>
@@ -173,7 +173,7 @@ export const Feed = observer(function Feed({
         <View />
       ),
     [feed],
-  )
+  );
 
   return (
     <View testID={testID} style={style}>
@@ -201,7 +201,7 @@ export const Feed = observer(function Feed({
             testID={testID ? `${testID}-flatlist` : undefined}
             ref={scrollElRef}
             data={data}
-            keyExtractor={item => item._reactKey}
+            keyExtractor={(item) => item._reactKey}
             renderItem={renderItem}
             ListFooterComponent={FeedFooter}
             ListHeaderComponent={ListHeaderComponent}
@@ -215,14 +215,14 @@ export const Feed = observer(function Feed({
               />
             }
             contentContainerStyle={s.contentContainer}
-            style={{paddingTop: headerOffset}}
+            style={{ paddingTop: headerOffset }}
             onScroll={onScroll}
             scrollEventThrottle={scrollEventThrottle}
-            indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+            indicatorStyle={theme.colorScheme === "dark" ? "white" : "black"}
             onEndReached={onEndReached}
             onEndReachedThreshold={0.6}
             removeClippedSubviews={true}
-            contentOffset={{x: 0, y: headerOffset * -1}}
+            contentOffset={{ x: 0, y: headerOffset * -1 }}
             extraData={extraData}
             // @ts-ignore our .web version only -prf
             desktopFixedHeight
@@ -230,9 +230,9 @@ export const Feed = observer(function Feed({
         </>
       )}
     </View>
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
-  feedFooter: {paddingTop: 20},
-})
+  feedFooter: { paddingTop: 20 },
+});
