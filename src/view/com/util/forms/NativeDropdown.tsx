@@ -17,10 +17,23 @@ export const DropdownMenuItemTitle = DropdownMenu.create(
   },
   'ItemTitle',
 )
+type IconProps = React.ComponentProps<(typeof DropdownMenu)['ItemIcon']>
+export const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
+  return <DropdownMenu.ItemIcon {...props} />
+}, 'ItemIcon')
+type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
+export const DropdownMenuSeparator = DropdownMenu.create(
+  (props: SeparatorProps) => {
+    return <DropdownMenu.Separator {...props} />
+  },
+  'Separator',
+)
 
-type DropdownItem = {
+export type DropdownItem = {
   label: string
   onPress: () => void
+  testId?: string
+  icon?: string
 }
 type Props = {
   items: DropdownItem[]
@@ -37,7 +50,7 @@ export function NativeDropdown({items}: Props) {
       <DropdownMenuContent>
         {items.map((item, index) => (
           <DropdownMenuItem
-            key={`${item.label}_${index}`}
+            key={item.testId ? item.testId : `${item.label}_${index}`}
             onSelect={item.onPress}>
             <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
           </DropdownMenuItem>
