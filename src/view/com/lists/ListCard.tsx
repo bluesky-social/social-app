@@ -9,6 +9,7 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {makeProfileLink} from 'lib/routes/links'
 
 export const ListCard = ({
   testID,
@@ -57,7 +58,7 @@ export const ListCard = ({
         !noBg && pal.view,
         style,
       ]}
-      href={`/profile/${list.creator.did}/lists/${rkey}`}
+      href={makeProfileLink(list.creator, 'lists', rkey)}
       title={list.name}
       asAnchor
       anchorNoUnderline>
