@@ -1,33 +1,34 @@
-import React, {useState} from 'react'
-import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {ScrollView, TextInput} from './util'
-import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
-import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
+} from "@fortawesome/react-native-fontawesome";
+import { LOCAL_DEV_SERVICE, PROD_SERVICE, STAGING_SERVICE } from "state/index";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, TextInput } from "./util";
+import { colors, s } from "lib/styles";
 
-export const snapPoints = ['80%']
+import { LOGIN_INCLUDE_DEV_SERVERS } from "lib/build-flags";
+import { Text } from "../util/text/Text";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
+import { useTheme } from "lib/ThemeContext";
 
-export function Component({onSelect}: {onSelect: (url: string) => void}) {
-  const theme = useTheme()
-  const pal = usePalette('default')
-  const store = useStores()
-  const [customUrl, setCustomUrl] = useState<string>('')
+export const snapPoints = ["80%"];
+
+export function Component({ onSelect }: { onSelect: (url: string) => void }) {
+  const theme = useTheme();
+  const pal = usePalette("default");
+  const store = useStores();
+  const [customUrl, setCustomUrl] = useState<string>("");
 
   const doSelect = (url: string) => {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = `https://${url}`
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = `https://${url}`;
     }
-    store.shell.closeModal()
-    onSelect(url)
-  }
+    store.shell.closeModal();
+    onSelect(url);
+  };
 
   return (
     <View style={[pal.view, s.flex1]} testID="serverInputModal">
@@ -42,7 +43,8 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 testID="localDevServerButton"
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}
-                accessibilityRole="button">
+                accessibilityRole="button"
+              >
                 <Text style={styles.btnText}>Local dev server</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
@@ -52,7 +54,8 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               <TouchableOpacity
                 style={styles.btn}
                 onPress={() => doSelect(STAGING_SERVICE)}
-                accessibilityRole="button">
+                accessibilityRole="button"
+              >
                 <Text style={styles.btnText}>Staging</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
@@ -65,8 +68,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
             accessibilityRole="button"
-            accessibilityLabel="Select Bluesky Social"
-            accessibilityHint="Sets Bluesky Social as your service provider">
+            accessibilityLabel="Select Solarplex"
+            accessibilityHint="Sets Solarplex as your service provider"
+          >
             <Text style={styles.btnText}>Bluesky.Social</Text>
             <FontAwesomeIcon
               icon="arrow-right"
@@ -80,7 +84,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             <TextInput
               testID="customServerTextInput"
               style={[pal.borderDark, pal.text, styles.textInput]}
-              placeholder="e.g. https://bsky.app"
+              placeholder="e.g. https://solarplex.xyz"
               placeholderTextColor={colors.gray4}
               autoCapitalize="none"
               autoComplete="off"
@@ -98,13 +102,14 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               onPress={() => doSelect(customUrl)}
               accessibilityRole="button"
               accessibilityLabel={`Confirm service. ${
-                customUrl === ''
-                  ? 'Button disabled. Input custom domain to proceed.'
-                  : ''
+                customUrl === ""
+                  ? "Button disabled. Input custom domain to proceed."
+                  : ""
               }`}
               accessibilityHint=""
               // TODO - accessibility: Need to inform state change on failure
-              disabled={customUrl === ''}>
+              disabled={customUrl === ""}
+            >
               <FontAwesomeIcon
                 icon="check"
                 style={[pal.text as FontAwesomeIconStyle, styles.checkIcon]}
@@ -115,7 +120,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
         </View>
       </ScrollView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -126,7 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingHorizontal: 4,
     paddingBottom: 4,
   },
@@ -148,8 +153,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.blue3,
     borderRadius: 6,
     paddingHorizontal: 14,
@@ -159,11 +164,11 @@ const styles = StyleSheet.create({
   btnText: {
     flex: 1,
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: "500",
     color: colors.white,
   },
   checkIcon: {
-    position: 'relative',
+    position: "relative",
     ...Platform.select({
       android: {
         top: 8,
@@ -173,4 +178,4 @@ const styles = StyleSheet.create({
       },
     }),
   },
-})
+});

@@ -26,7 +26,7 @@ export function IS_PROD(url: string) {
   // until open federation, "production" is defined as the main server
   // this definition will not work once federation is enabled!
   // -prf
-  return url.startsWith("https://bsky.social");
+  return url.startsWith("https://live.solarplex.xyz");
 }
 
 export const PROD_TEAM_HANDLES = [
@@ -36,6 +36,8 @@ export const PROD_TEAM_HANDLES = [
   "dholms.xyz",
   "why.bsky.world",
   "iamrosewang.bsky.social",
+  "viksit.live.solarplex.xyz",
+  "zayyan.live.solarplex.xyz",
 ];
 export const STAGING_TEAM_HANDLES = [
   "arcalinea.staging.bsky.dev",
@@ -57,7 +59,8 @@ export function TEAM_HANDLES(serviceUrl: string) {
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:wqzurwm3kmaig6e6hnc2gqwo/app.bsky.feed.generator/${rkey}`;
 export const PROD_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`;
+  `at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/${rkey}`;
+
 export async function DEFAULT_FEEDS(
   serviceUrl: string,
   resolveHandle: (name: string) => Promise<string>,
@@ -84,20 +87,18 @@ export async function DEFAULT_FEEDS(
     // production
     return {
       pinned: [
-        PROD_DEFAULT_FEED("whats-hot"),
-        PROD_DEFAULT_FEED("with-friends"),
+        PROD_DEFAULT_FEED("splx-solana"),
+        PROD_DEFAULT_FEED("splx-solarplex"),
       ],
       saved: [
-        PROD_DEFAULT_FEED("bsky-team"),
-        PROD_DEFAULT_FEED("with-friends"),
-        PROD_DEFAULT_FEED("whats-hot"),
-        PROD_DEFAULT_FEED("hot-classic"),
+        PROD_DEFAULT_FEED("splx-solana"),
+        PROD_DEFAULT_FEED("splx-solarplex"),
       ],
     };
   }
 }
 
-export const SOLARPLEX_IDENTIFIER = "solarplex.bsky.social";
+export const SOLARPLEX_IDENTIFIER = "solarplex.live.solarplex.xyz";
 export const SOLARPLEX_APP_PASS = process.env.APP_PASS;
 
 export const POST_IMG_MAX = {
@@ -106,6 +107,7 @@ export const POST_IMG_MAX = {
   size: 1000000,
 };
 
+// TODO(viksit): what is this?
 export const STAGING_LINK_META_PROXY =
   "https://cardyb.staging.bsky.dev/v1/extract?url=";
 
