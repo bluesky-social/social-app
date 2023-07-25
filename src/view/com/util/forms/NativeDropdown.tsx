@@ -2,7 +2,7 @@ import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -36,7 +36,6 @@ export const DropdownMenuSeparator = DropdownMenu.create(
   },
   'Separator',
 )
-
 export type DropdownItem = {
   label: string | 'separator'
   onPress?: () => void
@@ -50,15 +49,20 @@ export type DropdownItem = {
 type Props = {
   items: DropdownItem[]
 }
+const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
 export function NativeDropdown({items}: Props) {
   const pal = usePalette('default')
   return (
     <DropdownMenuRoot>
-      <DropdownMenuTrigger style={{}} action="press">
-        <View hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
-          <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.textLight]} />
-        </View>
+      <DropdownMenuTrigger action="press">
+        <Pressable accessibilityRole="button" hitSlop={HITSLOP}>
+          <FontAwesomeIcon
+            icon="ellipsis"
+            size={20}
+            style={[pal.textLight, styles.ellipsis]}
+          />
+        </Pressable>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((item, index) => {
@@ -125,5 +129,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(215, 207, 249)',
     height: 1,
     margin: 6,
+  },
+  ellipsis: {
+    padding: 10,
   },
 })

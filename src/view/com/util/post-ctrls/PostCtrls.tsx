@@ -52,7 +52,6 @@ interface PostCtrlsOpts {
 }
 
 const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
-const HITSLOP_DOUBLE = {top: 10, left: 10, bottom: 10, right: 10}
 
 // DISABLED see #135
 /*
@@ -218,23 +217,20 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      <TouchableOpacity accessibilityRole="button" hitSlop={HITSLOP_DOUBLE}>
-        {/* TouchableOpacity used to make sure hitslop is correct when using PostDropdownBtn -ansh */}
-        {opts.big ? undefined : (
-          <PostDropdownBtn
-            itemUri={opts.itemUri}
-            itemCid={opts.itemCid}
-            itemHref={opts.itemHref}
-            itemTitle={opts.itemTitle}
-            isAuthor={opts.isAuthor}
-            isThreadMuted={opts.isThreadMuted}
-            onCopyPostText={opts.onCopyPostText}
-            onOpenTranslate={opts.onOpenTranslate}
-            onToggleThreadMute={opts.onToggleThreadMute}
-            onDeletePost={opts.onDeletePost}
-          />
-        )}
-      </TouchableOpacity>
+      {opts.big ? undefined : (
+        <PostDropdownBtn
+          itemUri={opts.itemUri}
+          itemCid={opts.itemCid}
+          itemHref={opts.itemHref}
+          itemTitle={opts.itemTitle}
+          isAuthor={opts.isAuthor}
+          isThreadMuted={opts.isThreadMuted}
+          onCopyPostText={opts.onCopyPostText}
+          onOpenTranslate={opts.onOpenTranslate}
+          onToggleThreadMute={opts.onToggleThreadMute}
+          onDeletePost={opts.onDeletePost}
+        />
+      )}
       {/* used for adding pad to the right side */}
       <View />
     </View>
