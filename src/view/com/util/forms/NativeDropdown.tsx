@@ -144,19 +144,6 @@ export function NativeDropdown({items, children}: Props) {
   )
 }
 
-export const ExampleDropdown = () => (
-  <NativeDropdown
-    items={[
-      {
-        label: 'Click me!',
-        onPress: () => {
-          console.log('Clicked Dropdown')
-        },
-      },
-    ]}
-  />
-)
-
 const styles = StyleSheet.create({
   separator: {
     height: 1,
