@@ -42,7 +42,7 @@ export function PostDropdownBtn({
         ios: {
           name: 'character.book.closed',
         },
-        android: 'translate',
+        android: 'ic_menu_sort_alphabetically',
         web: 'language',
       },
     },
@@ -56,7 +56,7 @@ export function PostDropdownBtn({
         ios: {
           name: 'doc.on.doc',
         },
-        android: 'content-copy',
+        android: 'ic_menu_edit',
         web: ['far', 'paste'],
       },
     },
@@ -71,7 +71,7 @@ export function PostDropdownBtn({
         ios: {
           name: 'square.and.arrow.up',
         },
-        android: 'share',
+        android: 'ic_menu_share',
         web: 'share',
       },
     },
@@ -88,7 +88,7 @@ export function PostDropdownBtn({
         ios: {
           name: 'speaker.slash',
         },
-        android: 'comment-slash',
+        android: 'ic_lock_silent_mode',
         web: 'comment-slash',
       },
     },
@@ -109,7 +109,7 @@ export function PostDropdownBtn({
         ios: {
           name: 'exclamationmark.triangle',
         },
-        android: 'circle-exclamation',
+        android: 'ic_menu_report_image',
         web: 'circle-exclamation',
       },
     },
@@ -131,7 +131,7 @@ export function PostDropdownBtn({
         ios: {
           name: 'trash',
         },
-        android: 'trash-can',
+        android: 'ic_menu_delete',
         web: ['far', 'trash-can'],
       },
     },
