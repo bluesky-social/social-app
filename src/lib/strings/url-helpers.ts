@@ -39,6 +39,9 @@ export function toNiceDomain(url: string): string {
 export function toShortUrl(url: string): string {
   try {
     const urlp = new URL(url)
+    if (urlp.protocol !== 'http:' && urlp.protocol !== 'https:') {
+      return url
+    }
     const shortened =
       urlp.host +
       (urlp.pathname === '/' ? '' : urlp.pathname) +
