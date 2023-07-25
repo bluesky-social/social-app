@@ -39,7 +39,7 @@ export const DropdownMenuSeparator = DropdownMenu.create(
 export type DropdownItem = {
   label: string | 'separator'
   onPress?: () => void
-  testId?: string
+  testID?: string
   icon?: {
     ios: MenuItemCommonProps['ios']
     android: string
@@ -74,15 +74,15 @@ export function NativeDropdown({items, children}: Props) {
           if (item.label === 'separator') {
             return (
               <DropdownMenuSeparator
-                key={item.testId ? item.testId : `${item.label}_${index}`}
+                key={item.testID ? item.testID : `${item.label}_${index}`}
               />
             )
           }
           if (index > 1 && items[index - 1].label === 'separator') {
             return (
-              <DropdownMenu.Group key={item.testId}>
+              <DropdownMenu.Group key={item.testID}>
                 <DropdownMenuItem
-                  key={item.testId ? item.testId : `${item.label}_${index}`}
+                  key={item.testID ? item.testID : `${item.label}_${index}`}
                   onSelect={item.onPress}>
                   <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
                   {item.icon && (
@@ -98,7 +98,7 @@ export function NativeDropdown({items, children}: Props) {
           }
           return (
             <DropdownMenuItem
-              key={item.testId ? item.testId : `${item.label}_${index}`}
+              key={item.testID ? item.testID : `${item.label}_${index}`}
               onSelect={item.onPress}>
               <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
               {item.icon && (

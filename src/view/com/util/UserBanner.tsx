@@ -33,7 +33,7 @@ export function UserBanner({
     () =>
       [
         !isWeb && {
-          testId: 'changeBannerCameraBtn',
+          testID: 'changeBannerCameraBtn',
           label: 'Camera',
           icon: {
             ios: {
@@ -55,7 +55,7 @@ export function UserBanner({
           },
         },
         {
-          testId: 'changeBannerLibraryBtn',
+          testID: 'changeBannerLibraryBtn',
           label: 'Library',
           icon: {
             ios: {
@@ -81,7 +81,7 @@ export function UserBanner({
           },
         },
         !!banner && {
-          testId: 'changeBannerRemoveBtn',
+          testID: 'changeBannerRemoveBtn',
           label: 'Remove',
           icon: {
             ios: {

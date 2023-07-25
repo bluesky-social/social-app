@@ -37,7 +37,7 @@ export function PostDropdownBtn({
       onPress() {
         onOpenTranslate()
       },
-      testId: 'postDropdownTranslateBtn',
+      testID: 'postDropdownTranslateBtn',
       icon: {
         ios: {
           name: 'character.book.closed',
@@ -51,7 +51,7 @@ export function PostDropdownBtn({
       onPress() {
         onCopyPostText()
       },
-      testId: 'postDropdownCopyTextBtn',
+      testID: 'postDropdownCopyTextBtn',
       icon: {
         ios: {
           name: 'doc.on.doc',
@@ -66,7 +66,7 @@ export function PostDropdownBtn({
         const url = toShareUrl(itemHref)
         shareUrl(url)
       },
-      testId: 'postDropdownShareBtn',
+      testID: 'postDropdownShareBtn',
       icon: {
         ios: {
           name: 'square.and.arrow.up',
@@ -83,7 +83,7 @@ export function PostDropdownBtn({
       onPress() {
         onToggleThreadMute()
       },
-      testId: 'postDropdownMuteThreadBtn',
+      testID: 'postDropdownMuteThreadBtn',
       icon: {
         ios: {
           name: 'speaker.slash',
@@ -104,7 +104,7 @@ export function PostDropdownBtn({
           postCid: itemCid,
         })
       },
-      testId: 'postDropdownReportBtn',
+      testID: 'postDropdownReportBtn',
       icon: {
         ios: {
           name: 'exclamationmark.triangle',
@@ -126,7 +126,7 @@ export function PostDropdownBtn({
           onPressConfirm: onDeletePost,
         })
       },
-      testId: 'postDropdownDeleteBtn',
+      testID: 'postDropdownDeleteBtn',
       icon: {
         ios: {
           name: 'trash',

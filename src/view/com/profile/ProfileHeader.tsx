@@ -246,7 +246,7 @@ const ProfileHeaderLoaded = observer(
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
         {
-          testId: 'profileHeaderDropdownShareBtn',
+          testID: 'profileHeaderDropdownShareBtn',
           label: 'Share',
           onPress: onPressShare,
           icon: {
@@ -258,7 +258,7 @@ const ProfileHeaderLoaded = observer(
           },
         },
         {
-          testId: 'profileHeaderDropdownListAddRemoveBtn',
+          testID: 'profileHeaderDropdownListAddRemoveBtn',
           label: 'Add to Lists',
           onPress: onPressAddRemoveLists,
           icon: {
@@ -274,7 +274,7 @@ const ProfileHeaderLoaded = observer(
         items.push({label: 'separator'})
         if (!view.viewer.blocking) {
           items.push({
-            testId: 'profileHeaderDropdownMuteBtn',
+            testID: 'profileHeaderDropdownMuteBtn',
             label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
             onPress: view.viewer.muted
               ? onPressUnmuteAccount
@@ -289,7 +289,7 @@ const ProfileHeaderLoaded = observer(
           })
         }
         items.push({
-          testId: 'profileHeaderDropdownBlockBtn',
+          testID: 'profileHeaderDropdownBlockBtn',
           label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
           onPress: view.viewer.blocking
             ? onPressUnblockAccount
@@ -303,7 +303,7 @@ const ProfileHeaderLoaded = observer(
           },
         })
         items.push({
-          testId: 'profileHeaderDropdownReportBtn',
+          testID: 'profileHeaderDropdownReportBtn',
           label: 'Report Account',
           onPress: onPressReportAccount,
           icon: {
