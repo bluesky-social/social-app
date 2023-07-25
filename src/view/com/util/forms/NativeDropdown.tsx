@@ -6,17 +6,25 @@ import {Pressable, StyleSheet} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
+import {useTheme} from 'lib/ThemeContext'
 export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuTrigger = DropdownMenu.Trigger
 export const DropdownMenuContent = DropdownMenu.Content
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = DropdownMenu.create((props: ItemProps) => {
-  return <DropdownMenu.Item {...props} />
+  return <DropdownMenu.Item {...props} style={[styles.item]} />
 }, 'Item')
 type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
 export const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
-    return <DropdownMenu.ItemTitle {...props} />
+    const pal = usePalette('default')
+    return (
+      <DropdownMenu.ItemTitle
+        {...props}
+        style={[props.style, pal.text, styles.itemTitle]}
+      />
+    )
   },
   'ItemTitle',
 )
@@ -27,10 +35,18 @@ export const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
 type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
 export const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
+    const pal = usePalette('default')
+    const theme = useTheme()
+    const {borderColor: separatorColor} =
+      theme.colorScheme === 'dark' ? pal.borderDark : pal.border
     return (
       <DropdownMenu.Separator
         {...props}
-        style={[props.style, styles.separator]}
+        style={[
+          props.style,
+          styles.separator,
+          {backgroundColor: separatorColor},
+        ]}
       />
     )
   },
@@ -54,6 +70,10 @@ const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
 export function NativeDropdown({items, children}: Props) {
   const pal = usePalette('default')
+  const theme = useTheme()
+  const dropDownBackgroundColor =
+    theme.colorScheme === 'dark' ? pal.btn : pal.view
+
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger action="press">
@@ -69,7 +89,7 @@ export function NativeDropdown({items, children}: Props) {
           )}
         </Pressable>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent style={[styles.content, dropDownBackgroundColor]}>
         {items.map((item, index) => {
           if (item.label === 'separator') {
             return (
@@ -89,7 +109,11 @@ export function NativeDropdown({items, children}: Props) {
                     <DropdownMenuItemIcon
                       ios={item.icon.ios}
                       androidIconName={item.icon.android}>
-                      <FontAwesomeIcon icon={item.icon.web} size={20} />
+                      <FontAwesomeIcon
+                        icon={item.icon.web}
+                        size={20}
+                        style={[pal.text]}
+                      />
                     </DropdownMenuItemIcon>
                   )}
                 </DropdownMenuItem>
@@ -105,7 +129,11 @@ export function NativeDropdown({items, children}: Props) {
                 <DropdownMenuItemIcon
                   ios={item.icon.ios}
                   androidIconName={item.icon.android}>
-                  <FontAwesomeIcon icon={item.icon.web} size={20} />
+                  <FontAwesomeIcon
+                    icon={item.icon.web}
+                    size={20}
+                    style={[pal.text]}
+                  />
                 </DropdownMenuItemIcon>
               )}
             </DropdownMenuItem>
@@ -131,11 +159,29 @@ export const ExampleDropdown = () => (
 
 const styles = StyleSheet.create({
   separator: {
-    backgroundColor: 'rgb(215, 207, 249)',
     height: 1,
-    margin: 6,
+    marginVertical: 4,
   },
   ellipsis: {
-    padding: 10,
+    padding: isWeb ? 0 : 10,
+  },
+  content: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    marginTop: 6,
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    columnGap: 20,
+    // @ts-ignore -web
+    pointer: 'cursor',
+    paddingVertical: 8,
+  },
+  itemTitle: {
+    fontSize: 18,
   },
 })
