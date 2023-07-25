@@ -6,6 +6,7 @@ import {
   NativeDropdown,
   DropdownItem as NativeDropdownItem,
 } from './NativeDropdown'
+import {Pressable} from 'react-native'
 
 export function PostDropdownBtn({
   itemUri,
@@ -137,5 +138,9 @@ export function PostDropdownBtn({
     },
   ].filter(Boolean) as NativeDropdownItem[]
 
-  return <NativeDropdown items={dropdownItems} />
+  return (
+    <Pressable accessibilityRole="button">
+      <NativeDropdown items={dropdownItems} />
+    </Pressable>
+  )
 }
