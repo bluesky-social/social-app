@@ -140,7 +140,7 @@ export class PostsFeedItemModel {
   }
 
   get hasReacted(): boolean {
-    return !!this.rootStore.reactions.reactionMap[this.post.uri][this.rootStore.me.did]
+    return this.rootStore.reactions.reactionMap[this.post.uri] ? !!this.rootStore.reactions.reactionMap[this.post.uri][this.rootStore.me.did] : false
   }
 
   get viewerReaction(): string | undefined {
@@ -154,10 +154,7 @@ export class PostsFeedItemModel {
         const url = this.post.viewer.like
         await updateDataOptimistically(
           this.post,
-          () => {
-            this.post.likeCount = (this.post.likeCount || 0) - 1
-            this.post.viewer!.like = undefined
-          },
+          () => {},
           async () => await fetch(
             `${SOLARPLEX_FEED_API}/splx/add_reaction_to_post`,
             {
@@ -180,9 +177,9 @@ export class PostsFeedItemModel {
         
       
     } catch (error) {
-      this.rootStore.log.error('Failed to toggle like', error)
+      this.rootStore.log.error('Failed to toggle reaction', error)
     } finally {
-      track(this.post.viewer.like ? 'Post:Unlike' : 'Post:Like')
+      track('Post:Reaction')
     }
 
   }

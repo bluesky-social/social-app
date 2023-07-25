@@ -40,6 +40,7 @@ interface TrackPropertiesMap {
   "Post:ThreadMute": {}; // CAN BE SERVER
   "Post:ThreadUnmute": {}; // CAN BE SERVER
   "Post:Reply": {}; // CAN BE SERVER
+  "Post:Reaction": {}; // CAN BE SERVER
   // FEED ITEM events
   "FeedItem:PostReply": {}; // CAN BE SERVER
   "FeedItem:PostRepost": {}; // CAN BE SERVER

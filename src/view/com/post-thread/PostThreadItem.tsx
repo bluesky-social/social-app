@@ -193,6 +193,9 @@ export const PostThreadItem = observer(function PostThreadItem({
         case "repost":
           onPressToggleRepost();
           break;
+        case "reaction":
+          console.log(">>> reaction");
+          break;
         default:
           break;
       }
@@ -225,7 +228,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         accessibilityActions={accessibilityActions}
         onAccessibilityAction={onAccessibilityAction}
       >
-        <PostSandboxWarning />
+        {/* <PostSandboxWarning /> */}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <Link
@@ -382,6 +385,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               isReposted={!!item.post.viewer?.repost}
               isLiked={!!item.post.viewer?.like}
               isThreadMuted={item.isThreadMuted}
+              reactions={item.data.reactions}
+              viewerReaction={item.data.viewerReaction}
               onPressReply={onPressReply}
               onPressToggleRepost={onPressToggleRepost}
               onPressToggleLike={onPressToggleLike}
@@ -427,7 +432,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ]}
             />
           )}
-          <PostSandboxWarning />
+          {/* <PostSandboxWarning /> */}
           <View style={styles.layout}>
             <View style={styles.layoutAvi}>
               <Link href={authorHref} title={authorTitle} asAnchor>
@@ -493,6 +498,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 isReposted={!!item.post.viewer?.repost}
                 isLiked={!!item.post.viewer?.like}
                 isThreadMuted={item.isThreadMuted}
+                reactions={item.data.reactions}
+                viewerReaction={item.data.viewerReaction}
                 onPressReply={onPressReply}
                 onPressReaction={onPressReaction}
                 onPressToggleRepost={onPressToggleRepost}

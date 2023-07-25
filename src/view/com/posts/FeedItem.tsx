@@ -195,8 +195,9 @@ export const FeedItem = observer(function ({
         label: item.post.viewer?.repost ? "Undo repost" : "Repost",
       },
       { name: "like", label: item.post.viewer?.like ? "Unlike" : "Like" },
+      { name: 'reaction', label: 'Reaction'}
     ],
-    [item.post.viewer?.like, item.post.viewer?.repost],
+    [item.post.viewer?.like, item.post.viewer?.repost, item.hasReacted],
   );
 
   const onAccessibilityAction = useCallback(
@@ -210,6 +211,8 @@ export const FeedItem = observer(function ({
           break;
         case "repost":
           onPressToggleRepost();
+          break;
+        case "reaction":
           break;
         default:
           break;
@@ -278,7 +281,7 @@ export const FeedItem = observer(function ({
           </Text>
         </Link>
       )}
-      <PostSandboxWarning />
+      {/* <PostSandboxWarning /> */}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <Link href={authorHref} title={item.post.author.handle} asAnchor>

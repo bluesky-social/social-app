@@ -46,6 +46,6 @@ export class SplxReactionModel {
         }
 
     }
-      console.log("reaction map", this.reactionMap);
+      // console.log("reaction map", this.reactionMap);
     }
 }

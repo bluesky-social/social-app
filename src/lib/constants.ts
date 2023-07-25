@@ -120,8 +120,8 @@ export const SOLARPLEX_FEEDS = [
 export const SOLARPLEX_FEED_URI_PATH =
   "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/";
 
-// export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
-export const SOLARPLEX_FEED_API = "http://localhost:3000";
+export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
+// export const SOLARPLEX_FEED_API = "http://localhost:3000";
 export const SOLARPLEX_DID = "did:plc:h7o6dzolc2jfhztkrrpa3fys";
 
 export function LINK_META_PROXY(serviceUrl: string) {
@@ -172,48 +172,48 @@ export const DEFAULT_REACTION_EMOJIS = [
     id: 2,
     emoji: "🤨",
     title: "eyebrow-raise",
-    reaction_id: ""
+    reaction_id: "0dc678ff-df89-44b6-9dc1-a0840751ba1f"
   },
   {
     id: 3,
     emoji: "😳",
     title: "blush",
-    reaction_id: ""
+    reaction_id: "0f213c05-4049-42bd-a712-0f17b597cbf5"
   },
   {
     id: 4,
     emoji: "🧟‍♂️",
     title: "zombie",
-    reaction_id: ""
+    reaction_id: "1c351241-b867-44c3-ac0b-06575f448ba0"
   },
   {
     id: 5,
     emoji: "😍",
     title: "heart-eyes",
-    reaction_id: ""
+    reaction_id: "26d4990d-71a0-4559-953e-2270d571de0c"
   },
   {
     id: 6,
     emoji: "🔥",
     title: "fire",
-    reaction_id: ""
+    reaction_id: "8b0738c5-6920-4cad-9f0b-0ae827bc65af"
   },
   {
     id: 7,
     emoji: "😭",
     title: "cry",
-    reaction_id: ""
+    reaction_id: "dcd4a47d-07a4-4013-8c0a-3a23b20965d8"
   },
   {
     id: 8,
     emoji: "❤️",
     title: "heart",
-    reaction_id: ""
+    reaction_id: "5769395c-0ed8-427f-b150-5482f55d2113"
   },
   {
     id: 9,
     emoji: "😀",
     title: "grin",
-    reaction_id: ""
+    reaction_id: "ae8e22bb-db3d-4a22-964b-9184dcc5c68d"
   },
 ];

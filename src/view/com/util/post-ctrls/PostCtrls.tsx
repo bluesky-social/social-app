@@ -25,6 +25,7 @@ import { RepostButton } from "./RepostButton";
 // } from './anim/TriggerableAnimated'
 import { Text } from "../text/Text";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
+import { faSmile as faSmileFilled } from "@fortawesome/free-solid-svg-icons"
 import { useNavigation } from "@react-navigation/native";
 import { useStores } from "state/index";
 import { useTheme } from "lib/ThemeContext";
@@ -184,9 +185,9 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // setIsLikedPressed(false)
     }
   };
-  console.log("opts.viewerReaction", opts.viewerReaction);
+  console.log("opts.reactions", opts.reactions);
   const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp>(store.reactions.reactionTypes[opts.viewerReaction ?? ' ']);
-  console.log("selectedEmoji", selectedEmoji);
+
   const onPressReaction = async (emoji: EmojiItemProp | undefined) => {
     if (!emoji) return;
     console.log("emoji", emoji);
@@ -257,20 +258,33 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         style={styles.emojiCtrl}
         hitSlop={HITSLOP}
         accessibilityRole="button"
-        accessibilityLabel={opts.isLiked ? "Unlike" : "Like"}
+        accessibilityLabel={opts.viewerReaction ? "Reacted" : "React"}
         accessibilityHint=""
       >
-        {opts.reactions?.map((item) => (
-          <Text key={item}>{store.reactions.reactionTypes[item].emoji}</Text>
-          ))}
         <Reaction
           items={store.me.reactions.default}
           onTap={onPressReaction}
           cardStyle={{left: opts.big ? '-500px' : '0'}}
           isShowCardInCenter={false}
           showPopupType="onPress"
+          disabled={!!opts.viewerReaction}
         >
-          {selectedEmoji ? <Text>{selectedEmoji?.emoji}</Text> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
+          <View style={{flexDirection:'row', alignItems: 'center'}}>
+            <View style={styles.emojiSet}>
+              {opts.reactions?.map((item) => (
+                <Text key={item} style={[defaultCtrlColor, s.f15]}>{store.reactions.reactionTypes[item].emoji}</Text>
+              ))}
+            </View>
+            {selectedEmoji ? <FontAwesomeIcon icon={faSmileFilled} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} /> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
+            <Text
+              testID="likeCount"
+              style={
+                [defaultCtrlColor, s.f15, s.ml5]
+              }
+              >
+              {opts.reactions?.length}
+            </Text>
+            </View>
         </Reaction>
       </TouchableOpacity>
       <View>
@@ -329,9 +343,14 @@ const styles = StyleSheet.create({
   },
   emojiCtrl: {
     flexDirection: "row",
-    // alignItems: "center",
+    alignItems: "center",
     padding: 5,
     margin: -5,
+  },
+  emojiSet: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
   },
   emojiContainerStyle: {
     backgroundColor: "gray",

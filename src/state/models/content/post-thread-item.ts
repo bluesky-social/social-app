@@ -41,7 +41,8 @@ export class PostThreadItemModel {
     v: AppBskyFeedDefs.ThreadViewPost,
   ) {
     this._reactKey = `thread-${v.post.uri}`
-    this.data = new PostsFeedItemModel(rootStore, this._reactKey, v)
+    const reactions = this.rootStore.reactions.reactionMap[v.post.uri] ? Object.values(this.rootStore.reactions.reactionMap[v.post.uri]) : [];
+    this.data = new PostsFeedItemModel(rootStore, this._reactKey, v, reactions)
     this.post = this.data.post
     this.postRecord = this.data.postRecord
     this.richText = this.data.richText
