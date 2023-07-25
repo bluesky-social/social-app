@@ -72,7 +72,7 @@ export function NativeDropdown({items, children}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
   const dropDownBackgroundColor =
-    theme.colorScheme === 'dark' ? pal.btn : pal.view
+    theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
 
   return (
     <DropdownMenuRoot>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     columnGap: 20,
     // @ts-ignore -web
-    pointer: 'cursor',
+    cursor: 'pointer',
     paddingVertical: 8,
   },
   itemTitle: {
