@@ -198,8 +198,6 @@ export const PostThreadItem = observer(function PostThreadItem({
               </View>
               <View style={s.flex1} />
               <PostDropdownBtn
-                testID="postDropdownBtn"
-                style={[styles.metaItem, s.mt2, s.px5]}
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
@@ -209,13 +207,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onToggleThreadMute={onToggleThreadMute}
-                onDeletePost={onDeletePost}>
-                <FontAwesomeIcon
-                  icon="ellipsis-h"
-                  size={14}
-                  style={[pal.textLight]}
-                />
-              </PostDropdownBtn>
+                onDeletePost={onDeletePost}
+              />
             </View>
             <View style={styles.meta}>
               <Link
