@@ -48,20 +48,25 @@ export type DropdownItem = {
 }
 type Props = {
   items: DropdownItem[]
+  children?: React.ReactNode
 }
 const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
-export function NativeDropdown({items}: Props) {
+export function NativeDropdown({items, children}: Props) {
   const pal = usePalette('default')
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger action="press">
         <Pressable accessibilityRole="button" hitSlop={HITSLOP}>
-          <FontAwesomeIcon
-            icon="ellipsis"
-            size={20}
-            style={[pal.textLight, styles.ellipsis]}
-          />
+          {children ? (
+            children
+          ) : (
+            <FontAwesomeIcon
+              icon="ellipsis"
+              size={20}
+              style={[pal.textLight, styles.ellipsis]}
+            />
+          )}
         </Pressable>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
