@@ -47,7 +47,7 @@ export function toShortUrl(url: string): string {
     if (shortened.length > 30) {
       return shortened.slice(0, 27) + '...'
     }
-    return shortened
+    return shortened ? shortened : url
   } catch (e) {
     return url
   }
