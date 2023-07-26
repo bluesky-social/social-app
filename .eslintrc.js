@@ -15,6 +15,7 @@ module.exports = {
     'coverage',
     '*.lock',
     '.husky',
+    'patches',
   ],
   overrides: [
     {

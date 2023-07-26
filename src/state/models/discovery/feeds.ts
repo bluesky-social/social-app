@@ -65,10 +65,10 @@ export class FeedsDiscoveryModel {
   })
 
   loadMore = bundleAsync(async () => {
-    this._xLoading()
     if (!this.hasMore) {
       return
     }
+    this._xLoading()
     try {
       const res =
         await this.rootStore.agent.app.bsky.unspecced.getPopularFeedGenerators({
@@ -130,14 +130,8 @@ export class FeedsDiscoveryModel {
   _replaceAll(res: AppBskyUnspeccedGetPopularFeedGenerators.Response) {
     // 1. set feeds data to empty array
     this.feeds = []
-
-    // 2. push data into feeds array
-    for (const f of res.data.feeds) {
-      this.feeds.push(new CustomFeedModel(this.rootStore, f))
-    }
-
-    // 3. set loadMoreCursor
-    this.loadMoreCursor = res.data.cursor
+    // 2. call this._append()
+    this._append(res)
   }
 
   _append(res: AppBskyUnspeccedGetPopularFeedGenerators.Response) {

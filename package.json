@@ -34,7 +34,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@gorhom/bottom-sheet": "^4.4.7",
-    "@mattermost/react-native-paste-input": "^0.6.0",
+    "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.2.0",
     "@notifee/react-native": "^7.4.0",
     "@react-native-async-storage/async-storage": "^1.17.6",

@@ -51,8 +51,7 @@ index 0000000..8c9c699
 +minAndroidGradlePluginVersion=1.0.0
 diff --git a/node_modules/@mattermost/react-native-paste-input/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/@mattermost/react-native-paste-input/android/build/intermediates/compile_r_class_jar/debug/R.jar
 new file mode 100644
-index 0000000..c0106e0
-Binary files /dev/null and b/node_modules/@mattermost/react-native-paste-input/android/build/intermediates/compile_r_class_jar/debug/R.jar differ
+index 0000000..e69de29
 diff --git a/node_modules/@mattermost/react-native-paste-input/android/build/intermediates/compile_symbol_list/debug/R.txt b/node_modules/@mattermost/react-native-paste-input/android/build/intermediates/compile_symbol_list/debug/R.txt
 new file mode 100644
 index 0000000..7c9d30e
