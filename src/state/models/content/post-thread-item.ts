@@ -130,8 +130,8 @@ export class PostThreadItemModel {
     this.data.toggleLike()
   }
 
-  async react(reaction: string) {
-    this.data.react(reaction)
+  async react(reaction: string, remove?: boolean) {
+    this.data.react(reaction, remove)
   }
 
   async toggleRepost() {

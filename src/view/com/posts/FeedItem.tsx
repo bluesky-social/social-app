@@ -118,13 +118,13 @@ export const FeedItem = observer(function ({
           .catch((e) => store.log.error("Failed to toggle like", e));
   }, [track, item, store, navigation]);
 
-  const onPressReaction = React.useCallback(async (reactionId: string) => {
+  const onPressReaction = React.useCallback(async (reactionId: string, remove?: boolean) => {
     track("FeedItem:PostLike");
     console.log("reactionId", reactionId);
     return store.session.isSolarplexSession
       ? await navigation.navigate("SignIn")
       : item
-          .react(reactionId)
+          .react(reactionId, remove)
           .catch((e) => store.log.error("Failed to add reaction", e));
   }, [track, item, store, navigation]);
 

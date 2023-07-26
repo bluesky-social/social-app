@@ -121,13 +121,13 @@ export const PostThreadItem = observer(function PostThreadItem({
           .catch((e) => store.log.error("Failed to toggle like", e));
   }, [item, store, navigation]);
 
-  const onPressReaction = React.useCallback(async (reactionId: string) => {
+  const onPressReaction = React.useCallback(async (reactionId: string, remove?: boolean) => {
     track("FeedItem:PostLike");
     console.log("reactionId", reactionId);
     return store.session.isSolarplexSession
       ? await navigation.navigate("SignIn")
       : item
-          .react(reactionId)
+          .react(reactionId, remove)
           .catch((e) => store.log.error("Failed to add reaction", e));
   }, [track, item, store, navigation]);
 
@@ -331,6 +331,25 @@ export const PostThreadItem = observer(function PostThreadItem({
           />
           {hasEngagement ? (
             <View style={[styles.expandedInfo, pal.border]}>
+              {item.data.reactions ? (
+                <Link
+                  style={styles.expandedInfoItem}
+                  href={likesHref}
+                  title={likesTitle}
+                >
+                  <Text testID="likeCount" type="lg" style={pal.textLight}>
+                    {item.data.reactions?.map((item) => (
+                      <Text key={item} style={[s.f12]}>{store.reactions.reactionTypes[item].emoji}</Text>
+                    ))}
+                    <Text type="xl-bold" style={{marginLeft: 5, ...pal.text}}>
+                      {formatCount(item.data.reactions.length)}
+                    </Text>{" "}
+                    {pluralize(item.data.reactions.length, "react")}
+                  </Text>
+                </Link>
+              ) : (
+                <></>
+              )}
               {item.post.repostCount ? (
                 <Link
                   style={styles.expandedInfoItem}
@@ -363,6 +382,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : (
                 <></>
               )}
+
             </View>
           ) : (
             <></>
@@ -641,9 +661,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: 5,
     marginBottom: 15,
+    // alignItems: "center",
   },
   expandedInfoItem: {
     marginRight: 10,
+    // height: 25,
+    // marginTop:"auto",
   },
   loadMore: {
     flexDirection: "row",

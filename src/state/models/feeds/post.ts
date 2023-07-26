@@ -147,14 +147,58 @@ export class PostsFeedItemModel {
     return this.rootStore.reactions.reactionMap[this.post.uri] && this.rootStore.reactions.reactionMap[this.post.uri][this.rootStore.me.did]
   }
 
-  async react(reactionId: string) {
+  async react(reactionId: string, remove: boolean = false) {
     this.post.viewer = this.post.viewer || {}
+    console.log('remove', remove)
     try {
-        // unlike
-        const url = this.post.viewer.like
         await updateDataOptimistically(
           this.post,
-          () => {},
+          () => {
+            if (remove) {
+              this.reactions?.splice(this.reactions?.indexOf(reactionId), 1)
+              delete this.rootStore.reactions.reactionMap[this.post.uri][this.rootStore.me.did]
+            } else {
+              this.reactions ? this.reactions.push(reactionId) : this.reactions = [reactionId]
+            }
+          },
+          async () => await fetch(
+            remove ? `${SOLARPLEX_FEED_API}/splx/delete_reaction_from_post` : `${SOLARPLEX_FEED_API}/splx/add_reaction_to_post`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "Access-Control-Allow-Origin": "no-cors",
+              },
+              body: JSON.stringify({
+                post_id: this.uri,
+                reaction_id: reactionId,
+                user_id: this.rootStore.me.did,
+            }),
+          }),
+          res => {
+            this.post.viewer = this.post.viewer || {}
+            // this.data.viewer.react = res.uri
+          },
+        )
+        
+      
+    } catch (error) {
+      this.rootStore.log.error('Failed to toggle reaction', error)
+    } finally {
+      track('Post:Reaction')
+    }
+
+  }
+
+  async removeReaction(reactionId: string) {
+    this.post.viewer = this.post.viewer || {}
+    try {
+        await updateDataOptimistically(
+          this.post,
+          () => {
+            this.reactions?.push(reactionId)
+            console.log('this.reactions', this.reactions)
+          },
           async () => await fetch(
             `${SOLARPLEX_FEED_API}/splx/add_reaction_to_post`,
             {
@@ -183,6 +227,7 @@ export class PostsFeedItemModel {
     }
 
   }
+
 
   async toggleLike() {
     this.post.viewer = this.post.viewer || {}

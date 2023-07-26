@@ -60,7 +60,7 @@ interface PostCtrlsOpts {
   isLiked: boolean;
   isThreadMuted: boolean;
   onPressReply: () => void;
-  onPressReaction: (reactionId:string) => Promise<void>;
+  onPressReaction: (reactionId:string, remove?: boolean) => Promise<void>;
   onPressToggleRepost: () => Promise<void>;
   onPressToggleLike: () => Promise<void>;
   onCopyPostText: () => void;
@@ -195,6 +195,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     await opts.onPressReaction((emoji as SolarplexReactionType).reaction_id).catch((_e) => undefined);
   };
 
+  const onRemoveReaction = async () => {
+    await opts.onPressReaction((selectedEmoji as SolarplexReactionType).reaction_id, true).catch((_e) => undefined);
+    setSelectedEmoji(undefined);
+  }
+
   return (
     <View style={[styles.ctrls, opts.style]}>
       <TouchableOpacity
@@ -256,25 +261,26 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <TouchableOpacity
         testID="reactBtn"
         style={styles.emojiCtrl}
-        hitSlop={HITSLOP}
+        hitSlop={{left: 10, right: 10, top: HITSLOP.top, bottom: HITSLOP.bottom}}
         accessibilityRole="button"
         accessibilityLabel={opts.viewerReaction ? "Reacted" : "React"}
         accessibilityHint=""
+        onPress={onRemoveReaction}
       >
         <Reaction
           items={store.me.reactions.default}
           onTap={onPressReaction}
-          cardStyle={{left: opts.big ? '-500px' : '0'}}
+          cardStyle={{left: opts.big ? '100px' : '0', top: opts.big ? '50px' : '30px'}}
           isShowCardInCenter={false}
           showPopupType="onPress"
-          disabled={!!opts.viewerReaction}
+          disabled={!!selectedEmoji}
         >
           <View style={{flexDirection:'row', alignItems: 'center'}}>
-            <View style={styles.emojiSet}>
+            {!opts.big && <View style={styles.emojiSet}>
               {opts.reactions?.map((item) => (
                 <Text key={item} style={[defaultCtrlColor, s.f15]}>{store.reactions.reactionTypes[item].emoji}</Text>
               ))}
-            </View>
+            </View>}
             {selectedEmoji ? <FontAwesomeIcon icon={faSmileFilled} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} /> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
             <Text
               testID="likeCount"
