@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
+  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -581,14 +582,14 @@ function AccountDropdownBtn({handle}: {handle: string}) {
     },
   ]
   return (
-    <View style={s.pl10}>
+    <Pressable accessibilityRole="button" style={s.pl10}>
       <NativeDropdown items={items}>
         <FontAwesomeIcon
           icon="ellipsis-h"
           style={pal.textLight as FontAwesomeIconStyle}
         />
       </NativeDropdown>
-    </View>
+    </Pressable>
   )
 }
 
