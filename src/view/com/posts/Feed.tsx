@@ -121,7 +121,7 @@ export const Feed = observer(function Feed({
   // rendering
   // =
   const currentFeed = useCustomFeed(
-    "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/splx-solana",
+    "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solana",
   );
 
   const renderItem = React.useCallback(

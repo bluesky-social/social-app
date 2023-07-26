@@ -59,7 +59,7 @@ export function TEAM_HANDLES(serviceUrl: string) {
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:wqzurwm3kmaig6e6hnc2gqwo/app.bsky.feed.generator/${rkey}`;
 export const PROD_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/${rkey}`;
+  `at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/${rkey}`;
 
 export async function DEFAULT_FEEDS(
   serviceUrl: string,
@@ -114,15 +114,15 @@ export const STAGING_LINK_META_PROXY =
 export const PROD_LINK_META_PROXY = "https://cardyb.bsky.app/v1/extract?url=";
 
 export const SOLARPLEX_FEEDS = [
-  "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/splx-solana",
+  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solana",
 ];
 
 export const SOLARPLEX_FEED_URI_PATH =
-  "at://did:plc:h7o6dzolc2jfhztkrrpa3fys/app.bsky.feed.generator/";
+  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/";
 
 export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
 // export const SOLARPLEX_FEED_API = "http://localhost:3000";
-export const SOLARPLEX_DID = "did:plc:h7o6dzolc2jfhztkrrpa3fys";
+export const SOLARPLEX_DID = "did:plc:4srpaai54v3d35bigtfbtbd5";
 
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_LOCAL_DEV(serviceUrl)) {

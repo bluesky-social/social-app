@@ -28,12 +28,21 @@ const FeedsTabBarDesktop = observer(
     props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
   ) => {
     const store = useStores()
-    const items = useMemo(
-      () => ['Home', ...store.me.savedFeeds.pinnedFeedNames],
-      [store.me.savedFeeds.pinnedFeedNames],
-    )
+    // Get the user's joined communities from joinedCommunities.communities
+    // Get the names of that community from this list for display here
+    // For each, we can construct the URL of that feed.
+    const joinedCommunityNames = store.communities.communities
+      .filter((community: any) =>
+        store.me.joinedCommunities.communities.includes(community.id),
+      )
+      .map((community: any) => community.name);
+    const communities = useMemo(
+      () => ["Home", ...joinedCommunityNames],
+      [store.me.joinedCommunities.communities, joinedCommunityNames],
+    );
     const pal = usePalette('default')
     const interp = useAnimatedValue(0)
+
 
     React.useEffect(() => {
       Animated.timing(interp, {
@@ -54,9 +63,9 @@ const FeedsTabBarDesktop = observer(
       // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
       <Animated.View style={[pal.view, styles.tabBar, transform]}>
         <TabBar
-          key={items.join(',')}
+          key={communities.join(',')}
           {...props}
-          items={items}
+          items={communities}
           indicatorColor={pal.colors.link}
         />
       </Animated.View>
