@@ -82,15 +82,15 @@ export class FeedsDiscoveryModel {
     this._xIdle()
   })
 
-  search = (query: string) => {
-    this._xLoading()
+  search = async (query: string) => {
+    this._xLoading(false)
     try {
-      const filteredFeeds = this.feeds.filter(f => {
-        const checkName = f.data.displayName.includes(query)
-        const checkDescription = f.data.description?.includes(query)
-        return checkName || checkDescription
-      })
-      this.feeds = filteredFeeds
+      const results =
+        await this.rootStore.agent.app.bsky.unspecced.getPopularFeedGenerators({
+          limit: DEFAULT_LIMIT,
+          query: query,
+        })
+      this._replaceAll(results)
     } catch (e: any) {
       this._xIdle(e)
     }
@@ -108,9 +108,9 @@ export class FeedsDiscoveryModel {
   // state transitions
   // =
 
-  _xLoading() {
+  _xLoading(isRefreshing = true) {
     this.isLoading = true
-    this.isRefreshing = true
+    this.isRefreshing = isRefreshing
     this.error = ''
   }
 
