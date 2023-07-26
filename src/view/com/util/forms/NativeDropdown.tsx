@@ -1,8 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet} from 'react-native'
+import {Pressable, StyleSheet, Platform} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -158,6 +157,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 4,
     marginTop: 6,
+    ...Platform.select({
+      web: {
+        animationDuration: '400ms',
+        animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        willChange: 'transform, opacity',
+        animationKeyframes: {
+          '0%': {opacity: 0, transform: [{scale: 0.5}]},
+          '100%': {opacity: 1, transform: [{scale: 1}]},
+        },
+        boxShadow:
+          '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+        transformOrigin: 'var(--radix-dropdown-menu-content-transform-origin)',
+      },
+    }),
   },
   item: {
     flexDirection: 'row',
