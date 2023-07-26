@@ -12,7 +12,26 @@ export const DropdownMenuTrigger = DropdownMenu.Trigger
 export const DropdownMenuContent = DropdownMenu.Content
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = DropdownMenu.create((props: ItemProps) => {
-  return <DropdownMenu.Item {...props} style={[styles.item]} />
+  const pal = usePalette('default')
+  const theme = useTheme()
+  const [focused, setFocused] = React.useState(false)
+  const {borderColor: backgroundColor} =
+    theme.colorScheme === 'dark' ? pal.borderDark : pal.border
+
+  return (
+    <DropdownMenu.Item
+      {...props}
+      style={[styles.item, focused && {backgroundColor: backgroundColor}]}
+      onFocus={() => {
+        setFocused(true)
+        props.onFocus && props.onFocus()
+      }}
+      onBlur={() => {
+        setFocused(false)
+        props.onBlur && props.onBlur()
+      }}
+    />
+  )
 }, 'Item')
 type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
 export const DropdownMenuItemTitle = DropdownMenu.create(
@@ -88,7 +107,9 @@ export function NativeDropdown({items, children}: Props) {
           )}
         </Pressable>
       </DropdownMenuTrigger>
-      <DropdownMenuContent style={[styles.content, dropDownBackgroundColor]}>
+      <DropdownMenuContent
+        style={[styles.content, dropDownBackgroundColor]}
+        loop>
         {items.map((item, index) => {
           if (item.label === 'separator') {
             return (
@@ -154,8 +175,8 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
-    paddingHorizontal: 16,
     paddingVertical: 4,
+    paddingHorizontal: 4,
     marginTop: 6,
     ...Platform.select({
       web: {
@@ -180,6 +201,8 @@ const styles = StyleSheet.create({
     // @ts-ignore -web
     cursor: 'pointer',
     paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
   },
   itemTitle: {
     fontSize: 18,
