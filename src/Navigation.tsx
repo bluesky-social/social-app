@@ -66,6 +66,7 @@ import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
+import {timeout} from 'lib/async/timeout'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -478,7 +479,8 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   }
 }
 
-function reset() {
+// returns a promise that resolves after the state reset is complete
+function reset(): Promise<void> {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({
@@ -486,6 +488,18 @@ function reset() {
         routes: [{name: isNative ? 'HomeTab' : 'Home'}],
       }),
     )
+    return Promise.race([
+      timeout(1e3),
+      new Promise<void>(resolve => {
+        const handler = () => {
+          resolve()
+          navigationRef.removeListener('state', handler)
+        }
+        navigationRef.addListener('state', handler)
+      }),
+    ])
+  } else {
+    return Promise.resolve()
   }
 }
 

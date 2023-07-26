@@ -135,8 +135,9 @@ export class RootStoreModel {
     /* dont await */ this.preferences.sync()
     await this.me.load()
     if (!hadSession) {
-      resetNavigation()
+      await resetNavigation()
     }
+    this.emitSessionReady()
   }
 
   /**
@@ -193,6 +194,14 @@ export class RootStoreModel {
   }
   emitSessionLoaded() {
     DeviceEventEmitter.emit('session-loaded')
+  }
+
+  // the session has completed all setup; good for post-initialization behaviors like triggering modals
+  onSessionReady(handler: () => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('session-ready', handler)
+  }
+  emitSessionReady() {
+    DeviceEventEmitter.emit('session-ready')
   }
 
   // the session was dropped due to bad/expired refresh tokens

@@ -1,6 +1,6 @@
 import {AppBskyEmbedRecord} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
 import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
@@ -127,6 +127,10 @@ export interface PreferencesHomeFeed {
   name: 'preferences-home-feed'
 }
 
+export interface OnboardingModal {
+  name: 'onboarding'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -157,6 +161,9 @@ export type Modal =
   // Bluesky access
   | WaitlistModal
   | InviteCodesModal
+
+  // Onboarding
+  | OnboardingModal
 
   // Generic
   | ConfirmModal
@@ -224,6 +231,7 @@ export class ShellUiModel {
   activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
+  tickEveryMinute = Date.now()
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -231,6 +239,8 @@ export class ShellUiModel {
       rootStore: false,
       hydrate: false,
     })
+
+    this.setupClock()
   }
 
   serialize(): unknown {
@@ -340,5 +350,13 @@ export class ShellUiModel {
   closeComposer() {
     this.isComposerActive = false
     this.composerOpts = undefined
+  }
+
+  setupClock() {
+    setInterval(() => {
+      runInAction(() => {
+        this.tickEveryMinute = Date.now()
+      })
+    }, 60_000)
   }
 }

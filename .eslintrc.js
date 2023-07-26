@@ -13,6 +13,8 @@ module.exports = {
     'ios',
     'android',
     'coverage',
+    '*.lock',
+    '.husky',
   ],
   overrides: [
     {
