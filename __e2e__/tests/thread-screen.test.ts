@@ -104,7 +104,7 @@ describe('Thread screen', () => {
   it('Can report the root post', async () => {
     const post = by.id('postThreadItem-by-bob.test')
     await element(by.id('postDropdownBtn').withAncestor(post)).atIndex(0).tap()
-    await element(by.id('postDropdownReportBtn')).tap()
+    await element(by.text('Report post')).tap()
     await expect(element(by.id('reportPostModal'))).toBeVisible()
     await element(
       by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
@@ -116,7 +116,7 @@ describe('Thread screen', () => {
   it('Can report a reply post', async () => {
     const post = by.id('postThreadItem-by-carla.test')
     await element(by.id('postDropdownBtn').withAncestor(post)).atIndex(0).tap()
-    await element(by.id('postDropdownReportBtn')).tap()
+    await element(by.text('Report post')).tap()
     await expect(element(by.id('reportPostModal'))).toBeVisible()
     await element(
       by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
