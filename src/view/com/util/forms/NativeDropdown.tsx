@@ -1,7 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform, View} from 'react-native'
+import {Pressable, StyleSheet, Platform} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -24,20 +24,18 @@ export const DropdownMenuItem = DropdownMenu.create(
       theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
     return (
-      <View testID={props.testID}>
-        <DropdownMenu.Item
-          {...props}
-          style={[styles.item, focused && {backgroundColor: backgroundColor}]}
-          onFocus={() => {
-            setFocused(true)
-            props.onFocus && props.onFocus()
-          }}
-          onBlur={() => {
-            setFocused(false)
-            props.onBlur && props.onBlur()
-          }}
-        />
-      </View>
+      <DropdownMenu.Item
+        {...props}
+        style={[styles.item, focused && {backgroundColor: backgroundColor}]}
+        onFocus={() => {
+          setFocused(true)
+          props.onFocus && props.onFocus()
+        }}
+        onBlur={() => {
+          setFocused(false)
+          props.onBlur && props.onBlur()
+        }}
+      />
     )
   },
   'Item',
@@ -142,7 +140,6 @@ export function NativeDropdown({items, children, testID}: Props) {
             return (
               <DropdownMenu.Group key={getKey(item.label, index, item.testID)}>
                 <DropdownMenuItem
-                  testID={item.testID}
                   key={getKey(item.label, index, item.testID)}
                   onSelect={item.onPress}>
                   <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
@@ -164,7 +161,6 @@ export function NativeDropdown({items, children, testID}: Props) {
           }
           return (
             <DropdownMenuItem
-              testID={item.testID}
               key={getKey(item.label, index, item.testID)}
               onSelect={item.onPress}>
               <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
