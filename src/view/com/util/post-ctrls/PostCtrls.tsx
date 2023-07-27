@@ -375,8 +375,12 @@ const styles = StyleSheet.create({
   cardStyleMobile: {
     left: '7rem',
     top: '0px',
+    flexWrap: 'wrap',
+    width: '225px',
   },
   cardStyleMobileBig: {
     left: '-11rem',
+    flexWrap: 'wrap',
+    width: '225px',
   },
 });
