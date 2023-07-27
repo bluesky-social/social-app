@@ -13,40 +13,17 @@ import {makeProfileLink} from 'lib/routes/links'
 export const FeedSlice = observer(
   ({
     slice,
-    ignoreMuteFor,
+    ignoreFilterFor,
   }: {
     slice: PostsFeedSliceModel
-    ignoreMuteFor?: string
+    ignoreFilterFor?: string
   }) => {
     const moderation = slice.moderation
     if (moderation.content.filter) {
-      /*if (
-        moderation.content.cause?.type === 'muted' &&
-        ignoreMuteFor === item.post.author.did &&
-        !moderation.content.noOverride
-      ) {
-        TODO handle override
-      */
-      return null
+      if (!slice.items.find(item => item.post.author.did === ignoreFilterFor)) {
+        return null
+      }
     }
-
-    // moderation override
-    // TODO move out from here
-    /*let moderation = item.moderation
-  if (
-    moderation.content.cause?.type === 'muted' &&
-    ignoreMuteFor === item.post.author.did &&
-    !moderation.content.noOverride
-  ) {
-    moderation = {
-      ...moderation,
-      content: {
-        ...moderation.content,
-        filter: false,
-        blur: false,
-      },
-    }
-  }*/
 
     if (slice.isThread && slice.items.length > 3) {
       const last = slice.items.length - 1

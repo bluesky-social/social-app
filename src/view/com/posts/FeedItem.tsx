@@ -16,6 +16,7 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
+import {PostAlerts} from '../util/moderation/PostAlerts'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
@@ -244,6 +245,10 @@ export const FeedItem = observer(function ({
           <ContentHider
             moderation={item.moderation.content}
             containerStyle={styles.contentHider}>
+            <PostAlerts
+              moderation={item.moderation.content}
+              style={styles.alert}
+            />
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
@@ -344,6 +349,10 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
+  },
+  alert: {
+    marginTop: 6,
+    marginBottom: 6,
   },
   postTextContainer: {
     flexDirection: 'row',

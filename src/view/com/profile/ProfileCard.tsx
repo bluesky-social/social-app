@@ -41,7 +41,7 @@ export const ProfileCard = observer(
       store.preferences.moderationOpts,
     )
 
-    if (moderation.content.filter && !overrideModeration) {
+    if (moderation.account.filter && !overrideModeration) {
       return null
     }
 
@@ -119,7 +119,7 @@ const FollowersList = observer(
         f,
         mod: moderateProfile(f, store.preferences.moderationOpts),
       }))
-      .filter(({mod}) => !mod.content.filter)
+      .filter(({mod}) => !mod.account.filter)
 
     return (
       <View style={styles.followedBy}>

@@ -504,7 +504,8 @@ const ProfileHeaderLoaded = observer(
               ) : undefined}
             </>
           )}
-          <ProfileHeaderWarnings moderation={view.moderation.content} />
+          <ProfileHeaderWarnings moderation={view.moderation.account} />
+          <ProfileHeaderWarnings moderation={view.moderation.profile} />
           <View style={styles.moderationLines}>
             {view.viewer.blocking ? (
               <View

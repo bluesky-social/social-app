@@ -104,7 +104,7 @@ export class NotificationsFeedItemModel {
       this.author,
       this.rootStore.preferences.moderationOpts,
     )
-    return profileMod.content.filter || false
+    return profileMod.account.filter || false
   }
 
   get numUnreadInGroup(): number {

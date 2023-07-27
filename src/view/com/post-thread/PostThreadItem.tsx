@@ -27,6 +27,7 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {ImageHider} from '../util/moderation/ImageHider'
+import {PostAlerts} from '../util/moderation/PostAlerts'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -159,10 +160,9 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (item._isHighlightedPost) {
     return (
-      <PostHider
+      <Link
         testID={`postThreadItem-by-${item.post.author.handle}`}
-        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
-        moderation={item.moderation.content}>
+        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}>
         <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -228,6 +228,10 @@ export const PostThreadItem = observer(function PostThreadItem({
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
           <ContentHider moderation={item.moderation.content}>
+            <PostAlerts
+              moderation={item.moderation.content}
+              style={styles.alert}
+            />
             {item.richText?.text ? (
               <View
                 style={[
@@ -311,7 +315,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             />
           </View>
         </View>
-      </PostHider>
+      </Link>
     )
   } else {
     return (
@@ -360,32 +364,28 @@ export const PostThreadItem = observer(function PostThreadItem({
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
               />
-              <ContentHider
-                moderation={item.moderation.content}
-                containerStyle={styles.contentHider}>
-                {item.richText?.text ? (
-                  <View style={styles.postTextContainer}>
-                    <RichText
-                      type="post-text"
-                      richText={item.richText}
-                      style={[pal.text, s.flex1]}
-                      lineHeight={1.3}
-                    />
-                  </View>
-                ) : undefined}
-                <ImageHider style={s.mb10} moderation={item.moderation.embed}>
-                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
-                </ImageHider>
-                {needsTranslation && (
-                  <View style={[pal.borderDark, styles.translateLink]}>
-                    <Link href={translatorUrl} title="Translate">
-                      <Text type="sm" style={pal.link}>
-                        Translate this post
-                      </Text>
-                    </Link>
-                  </View>
-                )}
-              </ContentHider>
+              {item.richText?.text ? (
+                <View style={styles.postTextContainer}>
+                  <RichText
+                    type="post-text"
+                    richText={item.richText}
+                    style={[pal.text, s.flex1]}
+                    lineHeight={1.3}
+                  />
+                </View>
+              ) : undefined}
+              <ImageHider style={s.mb10} moderation={item.moderation.embed}>
+                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              </ImageHider>
+              {needsTranslation && (
+                <View style={[pal.borderDark, styles.translateLink]}>
+                  <Link href={translatorUrl} title="Translate">
+                    <Text type="sm" style={pal.link}>
+                      Translate this post
+                    </Text>
+                  </Link>
+                </View>
+              )}
               <PostCtrls
                 itemUri={itemUri}
                 itemCid={itemCid}
@@ -514,6 +514,9 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
     maxWidth: 240,
+  },
+  alert: {
+    marginBottom: 6,
   },
   postTextContainer: {
     flexDirection: 'row',
