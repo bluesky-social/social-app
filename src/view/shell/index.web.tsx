@@ -28,7 +28,7 @@ const ShellInner = observer(() => {
     navigator.addListener("state", () => {
       store.shell.closeAnyActiveElement();
     });
-    if (!store.session.hasSession) {
+    if (!store.session.hasSession && !store.session.isResumingSession) {
       store.session.login({
         service: DEFAULT_SERVICE,
         identifier: SOLARPLEX_IDENTIFIER,

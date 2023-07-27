@@ -62,7 +62,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
       <Option
         testID="blueskyServerBtn"
         isSelected={isDefaultSelected}
-        label="Solarplex Live"
+        label="Solarplex"
         help="&nbsp;(default)"
         onPress={onPressDefault}
       />
@@ -108,7 +108,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
       {model.error ? (
         <ErrorMessage message={model.error} style={styles.error} />
       ) : (
-        <HelpTip text="You can change hosting providers at any time." />
+        <HelpTip text="Solarplex will soon federate with other providers. Stay tuned." />
       )}
     </View>
   )

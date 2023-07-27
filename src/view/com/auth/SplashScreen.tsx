@@ -18,7 +18,7 @@ export const SplashScreen = ({
       <SafeAreaView testID="noSessionView" style={styles.container}>
         <ErrorBoundary>
           <View style={styles.hero}>
-            <Text style={[styles.title, pal.link]}>Solarplex Live</Text>
+            <Text style={[styles.title, pal.link]}>Solarplex</Text>
             <Text style={[styles.subtitle, pal.textLight]}>
               See what's next
             </Text>

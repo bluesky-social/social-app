@@ -28,7 +28,7 @@ export function toNiceDomain(url: string): string {
   try {
     const urlp = new URL(url);
     if (`https://${urlp.host}` === PROD_SERVICE) {
-      return "Solarplex Live";
+      return "Solarplex";
     }
     return urlp.host;
   } catch (e) {

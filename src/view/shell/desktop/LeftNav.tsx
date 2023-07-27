@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
-    marginTop: 100,
+    marginTop: 8,
     zIndex: 100,
   },
 

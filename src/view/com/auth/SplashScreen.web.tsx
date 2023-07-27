@@ -62,7 +62,7 @@ export const SplashScreen = ({
             </TouchableOpacity>
           </View>
           <Text type="xl" style={[styles.notice]} lineHeight={1.3}>
-            Solarplex Live is powered by Bluesky.{' '}
+            Solarplex is powered by Atproto.{' '}
             {/* <TouchableOpacity
               onPress={onPressWaitlist}
               // TODO: web accessibility

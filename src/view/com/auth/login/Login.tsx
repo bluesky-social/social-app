@@ -389,7 +389,7 @@ const LoginForm = ({
       )}
       <View testID="loginForm">
         <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-          Sign in via Bluesky
+          Sign in
         </Text>
         <View style={[pal.borderDark, styles.group]}>
           <View
