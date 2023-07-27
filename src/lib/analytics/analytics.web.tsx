@@ -1,33 +1,34 @@
-import React from 'react'
 import {
-  createClient,
   AnalyticsProvider,
+  createClient,
   useAnalytics as useAnalyticsOrig,
-} from '@segment/analytics-react'
-import {RootStoreModel} from 'state/models/root-store'
-import {useStores} from 'state/models/root-store'
-import {sha256} from 'js-sha256'
+} from "@segment/analytics-react";
+
+import React from "react";
+import { RootStoreModel } from "state/models/root-store";
+import { sha256 } from "js-sha256";
+import { useStores } from "state/models/root-store";
 
 const segmentClient = createClient(
   {
-    writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
+    writeKey: "aqLhAgXweRt74dGXU3NVMqW9LVB2dmZ9",
   },
   {
     integrations: {
-      'Segment.io': {
-        apiHost: 'api.evt.bsky.app/v1',
+      "Segment.io": {
+        apiHost: "api.evt.bsky.app/v1",
       },
     },
   },
-)
-export const track = segmentClient?.track?.bind?.(segmentClient)
+);
+export const track = segmentClient?.track?.bind?.(segmentClient);
 
 export function useAnalytics() {
-  const store = useStores()
-  const methods = useAnalyticsOrig()
+  const store = useStores();
+  const methods = useAnalyticsOrig();
   return React.useMemo(() => {
     if (store.session.hasSession) {
-      return methods
+      return methods;
     }
     // dont send analytics pings for anonymous users
     return {
@@ -38,28 +39,28 @@ export function useAnalytics() {
       group: () => {},
       alias: () => {},
       reset: () => {},
-    }
-  }, [store, methods])
+    };
+  }, [store, methods]);
 }
 
 export function init(store: RootStoreModel) {
   store.onSessionLoaded(() => {
-    const sess = store.session.currentSession
+    const sess = store.session.currentSession;
     if (sess) {
       if (sess.email) {
-        store.log.debug('Ping w/hash')
-        const email_hashed = sha256(sess.email)
-        segmentClient.identify(email_hashed, {email_hashed})
+        store.log.debug("Ping w/hash");
+        const email_hashed = sha256(sess.email);
+        segmentClient.identify(email_hashed, { email_hashed });
       } else {
-        store.log.debug('Ping w/o hash')
-        segmentClient.identify()
+        store.log.debug("Ping w/o hash");
+        segmentClient.identify();
       }
     }
-  })
+  });
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({ children }: React.PropsWithChildren<{}>) {
   return (
     <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
-  )
+  );
 }
