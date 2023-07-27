@@ -1,7 +1,13 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform} from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Platform,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -106,6 +112,12 @@ export function NativeDropdown({items, children, testID}: Props) {
   const theme = useTheme()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
+  const defaultCtrlColor = React.useMemo(
+    () => ({
+      color: theme.palette.default.postCtrl,
+    }),
+    [theme],
+  ) as StyleProp<ViewStyle>
 
   return (
     <DropdownMenuRoot>
@@ -113,6 +125,7 @@ export function NativeDropdown({items, children, testID}: Props) {
         <Pressable
           testID={testID}
           accessibilityRole="button"
+          style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
           hitSlop={HITSLOP_10}>
           {children ? (
             children
@@ -120,7 +133,7 @@ export function NativeDropdown({items, children, testID}: Props) {
             <FontAwesomeIcon
               icon="ellipsis"
               size={20}
-              style={[pal.textLight, styles.ellipsis]}
+              style={[defaultCtrlColor, styles.ellipsis]}
             />
           )}
         </Pressable>
