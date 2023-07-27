@@ -26,6 +26,7 @@ import { RepostButton } from "./RepostButton";
 import { Text } from "../text/Text";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import { faSmile as faSmileFilled } from "@fortawesome/free-solid-svg-icons"
+import {isMobileWeb} from 'platform/detection'
 import { useNavigation } from "@react-navigation/native";
 import { useStores } from "state/index";
 import { useTheme } from "lib/ThemeContext";
@@ -275,7 +276,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         <Reaction
           items={store.me.reactions.default}
           onTap={onPressReaction}
-          cardStyle={{left: opts.big ? '100px' : '0', top: opts.big ? '50px' : '30px'}}
+          // cardStyle={{left: isMobileWeb ? '7rem': opts.big ? '0' : '0', top: isMobileWeb ? '0px' : opts.big ? '20px' : '30px'}}
+          cardStyle={isMobileWeb ? opts.big ? styles.cardStyleMobileBig : styles.cardStyleMobile : opts.big ? styles.cardStyleBig : styles.cardStyle}
           isShowCardInCenter={false}
           showPopupType="onPress"
           // disabled={!!selectedEmoji}
@@ -362,5 +364,20 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     width: "100px",
     height: " 100px",
+  },
+  cardStyle: {
+    left: '0',
+    top: '30px',
+  },
+  cardStyleBig: {
+    left: '0',
+    top: '20px',
+  },
+  cardStyleMobile: {
+    left: '7rem',
+    top: '0px',
+  },
+  cardStyleMobileBig: {
+    left: '-11rem',
   },
 });
