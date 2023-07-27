@@ -22,7 +22,7 @@ export class SplxReactionModel {
            acc[emoji.reaction_id] = emoji
               return acc
         }, {}) 
-        console.log('reaction types', this.reactionTypes) 
+        // console.log('reaction types', this.reactionTypes) 
     }
 
     async fetch() {

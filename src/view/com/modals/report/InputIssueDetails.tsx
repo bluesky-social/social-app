@@ -1,13 +1,14 @@
-import React from 'react'
-import {View, TouchableOpacity, StyleSheet} from 'react-native'
-import {TextInput} from '../util'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+
 import {CharProgress} from '../../composer/char-progress/CharProgress'
-import {Text} from '../../util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React from 'react'
 import {SendReportButton} from './SendReportButton'
+import {Text} from '../../util/text/Text'
+import {TextInput} from '../util'
 import {isDesktopWeb} from 'platform/detection'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export function InputIssueDetails({
   details,
@@ -48,7 +49,7 @@ export function InputIssueDetails({
           numberOfLines={3}
           multiline={true}
           textAlignVertical="top"
-          maxLength={300}
+          maxLength={1000}
           style={[styles.detailsInput, pal.text]}
         />
         <View style={styles.detailsInputBottomBar}>

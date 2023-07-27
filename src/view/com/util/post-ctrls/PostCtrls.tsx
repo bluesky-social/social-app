@@ -186,12 +186,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // setIsLikedPressed(false)
     }
   };
-  console.log("opts.reactions", opts.reactions);
   const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp>(store.reactions.reactionTypes[opts.viewerReaction ?? ' ']);
 
   const onPressReaction = async (emoji: EmojiItemProp | undefined) => {
     if (!emoji) return;
-    console.log("emoji", emoji);
+    // console.log("emoji", emoji);
     setSelectedEmoji(emoji);
     await opts.onPressReaction((emoji as SolarplexReactionType).reaction_id).catch((_e) => undefined);
   };

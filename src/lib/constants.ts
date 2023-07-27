@@ -7,7 +7,7 @@ export const BLUESKY_INTENT_LINK =
 export const MAX_DISPLAY_NAME = 64;
 export const MAX_DESCRIPTION = 256;
 
-export const MAX_GRAPHEME_LENGTH = 300;
+export const MAX_GRAPHEME_LENGTH = 1000;
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
@@ -115,6 +115,7 @@ export const PROD_LINK_META_PROXY = "https://cardyb.bsky.app/v1/extract?url=";
 
 export const SOLARPLEX_FEEDS = [
   "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solana",
+  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solarplex",
 ];
 
 export const SOLARPLEX_FEED_URI_PATH =

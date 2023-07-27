@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { AtUri } from "@atproto/api";
+import { Button } from "../util/forms/Button";
 import { CommunityFeedModel } from "state/models/feeds/community-feed";
 import { CustomFeedModel } from "state/models/feeds/custom-feed";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -45,7 +46,7 @@ export const CommunityFeed = observer(
         navigation.navigate("SignIn");
         return;
       }
-      console.log("item:", item);
+      // console.log("item:", item);
       // TODO(viksit)[F1]: add a store.me.joinedCommunities
       // then check for this
       if (item.isJoined) {
@@ -110,29 +111,17 @@ export const CommunityFeed = observer(
           </View>
           {showJoinBtn && (
             <View>
-              <Pressable
-                accessibilityRole="button"
+              <Button
+                // accessibilityRole="button"
+                type={item?.isJoined ? "default" : "inverted"}
                 accessibilityLabel={
                   item.isJoined ? "Leave community" : "Join community"
                 }
                 onPress={onToggleJoined}
-                hitSlop={15}
+                // hitSlop={15}
                 style={styles.btn}
-              >
-                {item.isJoined ? (
-                  <FontAwesomeIcon
-                    icon={["far", "trash-can"]}
-                    size={19}
-                    color={pal.colors.icon}
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon="plus"
-                    size={18}
-                    color={pal.colors.link}
-                  />
-                )}
-              </Pressable>
+                label={item.isJoined ? "Leave" : "Join"}
+              />
             </View>
           )}
         </View>

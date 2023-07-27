@@ -95,9 +95,9 @@ export class SavedFeedsModel {
       }
       communityFeeds.push(`${SOLARPLEX_FEED_URI_PATH}${community.id}`);
     }
-    console.log("joined communities", communityFeeds);
+    // console.log("joined communities", communityFeeds);
     this.feeds = communityFeeds;
-    console.log("this.feeds", this.feeds);
+    // console.log("this.feeds", this.feeds);
     // collect the feed URIs that havent been synced yet
     const neededFeedUris = [];
     for (const feedUri of this.feeds) {

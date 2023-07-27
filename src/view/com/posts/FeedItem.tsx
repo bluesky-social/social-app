@@ -120,7 +120,7 @@ export const FeedItem = observer(function ({
 
   const onPressReaction = React.useCallback(async (reactionId: string, remove?: boolean) => {
     track("FeedItem:PostLike");
-    console.log("reactionId", reactionId);
+    // console.log("reactionId", reactionId);
     return store.session.isSolarplexSession
       ? await navigation.navigate("SignIn")
       : item

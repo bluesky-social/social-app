@@ -17,6 +17,7 @@ import { AppBskyFeedGetFeed as GetCustomFeed } from "@atproto/api";
 import { LoadLatestBtn } from "../com/util/load-latest/LoadLatestBtn";
 import { PostsFeedModel } from "state/models/feeds/posts";
 import React from "react";
+import { SOLARPLEX_FEEDS } from "lib/constants";
 import isEqual from "lodash.isequal";
 import { observer } from "mobx-react-lite";
 import { s } from "lib/styles";
@@ -42,31 +43,31 @@ export const HomeScreen = withAuthRequired(
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([]);
 
     React.useEffect(() => {
-      const { pinned } = store.me.savedFeeds;
-      if (
-        isEqual(
-          pinned.map((p) => p.uri),
-          customFeeds.map((f) => (f.params as GetCustomFeed.QueryParams).feed),
-        )
-      ) {
-        // no changes
-        return;
-      }
+      // const { feeds: pinned } = store.me.savedFeeds;
+      // if (
+      //   isEqual(
+      //     pinned.map((p) => p.uri),
+      //     customFeeds.map((f) => (f.params as GetCustomFeed.QueryParams).feed),
+      //   )
+      // ) {
+      //   // no changes
+      //   return;
+      // }
 
       const feeds = [];
-      for (const feed of pinned) {
-        const model = new PostsFeedModel(store, "custom", { feed: feed.uri });
+      for (const feed of SOLARPLEX_FEEDS) {
+        const model = new PostsFeedModel(store, "custom", { feed: feed });
         model.setup();
         feeds.push(model);
       }
-      pagerRef.current?.setPage(0);
+      // pagerRef.current?.setPage(0);
       setCustomFeeds(feeds);
     }, [
-      store,
-      store.me.savedFeeds.pinned,
-      customFeeds,
-      setCustomFeeds,
-      pagerRef,
+      // store,
+      // store.me.savedFeeds.pinned,
+      // customFeeds,
+      // setCustomFeeds,
+      // pagerRef,
     ]);
 
     useFocusEffect(

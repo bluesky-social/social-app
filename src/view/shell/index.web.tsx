@@ -23,18 +23,18 @@ const ShellInner = observer(() => {
   const { isDesktop } = useWebMediaQueries();
 
   const navigator = useNavigation<NavigationProp>();
-
+  
   useEffect(() => {
     navigator.addListener("state", () => {
       store.shell.closeAnyActiveElement();
     });
-    // if (!store.session.hasSession) {
-    //   store.session.login({
-    //     service: DEFAULT_SERVICE,
-    //     identifier: SOLARPLEX_IDENTIFIER,
-    //     password: SOLARPLEX_APP_PASS ?? '',
-    //   })
-    // }
+    if (!store.session.hasSession) {
+      store.session.login({
+        service: DEFAULT_SERVICE,
+        identifier: SOLARPLEX_IDENTIFIER,
+        password: SOLARPLEX_APP_PASS ?? '',
+      })
+    }
   }, [navigator, store.shell]);
 
   return (

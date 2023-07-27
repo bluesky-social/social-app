@@ -398,7 +398,7 @@ const MyProfileTabNavigator = observer(() => {
  * in a single ("flat") stack.
  */
 const FlatNavigator = observer(() => {
-  console.log("FLAT NAV");
+  // console.log("FLAT NAV");
   const pal = usePalette("default");
   const unreadCountLabel = useStores().me.notifications.unreadCountLabel;
   const title = (page: string) => bskyTitle(page, unreadCountLabel);
@@ -453,7 +453,7 @@ const LINKING = {
   prefixes: ["bsky://", "https://bsky.app"],
 
   getPathFromState(state: State) {
-    console.log("state", state);
+    // console.log("state", state);
     // find the current node in the navigation tree
     let node = state.routes[state.index || 0];
     while (node.state?.routes && typeof node.state?.index === "number") {
@@ -469,7 +469,7 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
-    console.log("get state from path", path);
+    // console.log("get state from path", path);
     const [name, params] = router.matchPath(path);
     if (isNative) {
       if (name === "Search") {
@@ -498,7 +498,7 @@ const LINKING = {
 };
 
 function RoutesContainer({ children }: React.PropsWithChildren<{}>) {
-  console.log("routes container");
+  // console.log("routes container");
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme);
   return (
     <NavigationContainer

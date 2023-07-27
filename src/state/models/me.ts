@@ -111,6 +111,7 @@ export class MeModel {
     const sess = this.rootStore.session;
     this.rootStore.log.debug("MeModel:load", { hasSession: sess.hasSession });
     await this.fetchAllReactions();
+    await this.fetchCommunities();
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || "";
       this.handle = sess.currentSession?.handle || "";
@@ -125,7 +126,6 @@ export class MeModel {
       this.rootStore.emitSessionLoaded();
       await this.fetchInviteCodes();
       await this.fetchAppPasswords();
-      await this.fetchCommunities();
     } else {
       this.clear();
     }
