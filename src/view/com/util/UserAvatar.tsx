@@ -230,7 +230,7 @@ export function UserAvatar({
 
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
-    <NativeDropdown items={dropdownItems}>
+    <NativeDropdown testID="changeAvatarBtn" items={dropdownItems}>
       {avatar ? (
         <HighPriorityImage
           testID="userAvatarImage"

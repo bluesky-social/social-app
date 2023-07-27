@@ -175,7 +175,10 @@ export const CustomFeedScreen = withAuthRequired(
             </Button>
           ) : undefined}
           {currentFeed?.isSaved ? (
-            <NativeDropdown items={dropdownItems} />
+            <NativeDropdown
+              testID="feedHeaderDropdownBtn"
+              items={dropdownItems}
+            />
           ) : (
             <Button
               type="default-light"

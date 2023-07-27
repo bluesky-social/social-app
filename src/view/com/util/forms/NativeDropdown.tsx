@@ -89,6 +89,7 @@ export type DropdownItem = {
 type Props = {
   items: DropdownItem[]
   children?: React.ReactNode
+  testID?: string
 }
 
 /* The `NativeDropdown` function uses native iOS and Android dropdown menus.
@@ -97,7 +98,7 @@ type Props = {
  * @prop {DropdownItem[]} items - An array of dropdown items
  * @prop {React.ReactNode} children - A custom dropdown trigger
  */
-export function NativeDropdown({items, children}: Props) {
+export function NativeDropdown({items, children, testID}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
   const dropDownBackgroundColor =
@@ -106,7 +107,10 @@ export function NativeDropdown({items, children}: Props) {
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger action="press">
-        <Pressable accessibilityRole="button" hitSlop={HITSLOP_10}>
+        <Pressable
+          testID={testID}
+          accessibilityRole="button"
+          hitSlop={HITSLOP_10}>
           {children ? (
             children
           ) : (

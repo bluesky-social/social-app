@@ -402,7 +402,9 @@ const ProfileHeaderLoaded = observer(
               </>
             ) : null}
             {dropdownItems?.length ? (
-              <NativeDropdown items={dropdownItems}>
+              <NativeDropdown
+                testID="profileHeaderDropdownBtn"
+                items={dropdownItems}>
                 <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                   <FontAwesomeIcon
                     icon="ellipsis"
