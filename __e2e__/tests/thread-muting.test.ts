@@ -45,7 +45,7 @@ describe('Thread muting', () => {
     await element(by.id('postDropdownBtn').withAncestor(bobNotifs))
       .atIndex(0)
       .tap()
-    await element(by.id('postDropdownMuteThreadBtn')).tap()
+    await element(by.text('Mute thread')).tap()
     // have to wait for the toast to clear
     await waitFor(element(by.id('viewHeaderDrawerBtn')))
       .toBeVisible()
@@ -93,7 +93,7 @@ describe('Thread muting', () => {
     await element(by.id('postDropdownBtn').withAncestor(alicePosts))
       .atIndex(0)
       .tap()
-    await element(by.id('postDropdownMuteThreadBtn')).tap()
+    await element(by.text('Mute thread')).tap()
 
     // TODO
     // the swipe down to trigger PTR isnt working and I dont want to block on this
