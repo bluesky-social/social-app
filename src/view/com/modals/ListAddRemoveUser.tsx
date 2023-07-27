@@ -20,6 +20,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb, isAndroid} from 'platform/detection'
+import isEqual from 'lodash.isequal'
 
 export const snapPoints = ['fullscreen']
 
@@ -37,6 +38,9 @@ export const Component = observer(
     const pal = usePalette('default')
     const palPrimary = usePalette('primary')
     const palInverted = usePalette('inverted')
+    const [originalSelections, setOriginalSelections] = React.useState<
+      string[]
+    >([])
     const [selected, setSelected] = React.useState<string[]>([])
 
     const listsList: ListsListModel = React.useMemo(
@@ -51,7 +55,9 @@ export const Component = observer(
       listsList.refresh()
       memberships.fetch().then(
         () => {
-          setSelected(memberships.memberships.map(m => m.value.list))
+          const ids = memberships.memberships.map(m => m.value.list)
+          setOriginalSelections(ids)
+          setSelected(ids)
         },
         err => {
           store.log.error('Failed to fetch memberships', {err})
@@ -156,6 +162,10 @@ export const Component = observer(
       )
     }, [onPressNewMuteList])
 
+    // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
+    const canSaveChanges =
+      !listsList.isEmpty && !isEqual(selected, originalSelections)
+
     return (
       <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
         <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
@@ -178,16 +188,18 @@ export const Component = observer(
             onAccessibilityEscape={onPressCancel}
             label="Cancel"
           />
-          <Button
-            testID="saveBtn"
-            type="primary"
-            onPress={onPressSave}
-            style={styles.footerBtn}
-            accessibilityLabel="Save changes"
-            accessibilityHint=""
-            onAccessibilityEscape={onPressSave}
-            label="Save Changes"
-          />
+          {canSaveChanges && (
+            <Button
+              testID="saveBtn"
+              type="primary"
+              onPress={onPressSave}
+              style={styles.footerBtn}
+              accessibilityLabel="Save changes"
+              accessibilityHint=""
+              onAccessibilityEscape={onPressSave}
+              label="Save Changes"
+            />
+          )}
         </View>
       </View>
     )
