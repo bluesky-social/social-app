@@ -17,6 +17,7 @@ import { OnScrollCb } from "lib/hooks/useOnMainScroll";
 import { PostFeedLoadingPlaceholder } from "../util/LoadingPlaceholder";
 import { PostsFeedModel } from "state/models/feeds/posts";
 import { TabBarCustomFeed } from "../pager/TabBarCustomFeed";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 import { observer } from "mobx-react-lite";
 import { s } from "lib/styles";
 import { useAnalytics } from "lib/analytics/analytics";
@@ -150,7 +151,7 @@ export const Feed = observer(function Feed({
       }
       return (
         <>
-          <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} />
+          <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} hideChild={extraData?.length > 1 ? extraData[2] : false} />
         </>
       );
     },

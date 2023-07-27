@@ -269,7 +269,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       >
         {!opts.big && <View style={styles.emojiSet}>
           {opts.reactions?.map((item, index) => index < 4 && (
-            <Text key={item} style={[defaultCtrlColor, s.f15]}>{store.reactions.reactionTypes[item].emoji}</Text>
+            <Text key={item} style={[defaultCtrlColor, s.f15, {marginLeft: index ? -8 : 0, zIndex: -1*index}]}>{store.reactions.reactionTypes[item].emoji}</Text>
           ))}
         </View>}
         <Reaction

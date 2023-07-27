@@ -14,10 +14,12 @@ export function FeedSlice({
   slice,
   showFollowBtn,
   ignoreMuteFor,
+  hideChild
 }: {
   slice: PostsFeedSliceModel
   showFollowBtn?: boolean
   ignoreMuteFor?: string
+  hideChild?: boolean
 }) {
   if (slice.moderation.list.behavior === ModerationBehaviorCode.Hide) {
     if (!ignoreMuteFor && !slice.moderation.list.noOverride) {
@@ -66,6 +68,8 @@ export function FeedSlice({
           isThreadChild={slice.isThreadChildAt(i)}
           showFollowBtn={showFollowBtn}
           ignoreMuteFor={ignoreMuteFor}
+          hideChild={hideChild}
+          showReplyLine={!hideChild}
         />
       ))}
     </>

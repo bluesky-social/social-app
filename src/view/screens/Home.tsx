@@ -126,7 +126,7 @@ export const HomeScreen = withAuthRequired(
           key="1"
           testID="followingFeedPage"
           isPageFocused={selectedPage === 0}
-          feed={store.me.mainFeed}
+          feed={store.session.isSolarplexSession ? customFeeds[0] ?? store.me.mainFeed : store.me.mainFeed}
           renderEmptyState={renderFollowingEmptyState}
         />
         {customFeeds.map((f, index) => {

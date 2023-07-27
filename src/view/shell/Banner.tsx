@@ -1,8 +1,7 @@
-import {StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, View} from 'react-native'
 
 import React from 'react'
-
-// import {SolarplexLogo} from 'lib/icons'
+import {SolarplexLogo} from 'lib/icons'
 
 export const Banner = () => {
   return (
@@ -13,7 +12,7 @@ export const Banner = () => {
         resizeMode="cover"
         accessibilityIgnoresInvertColors
       /> */}
-      {/*<SolarplexLogo />*/}
+      <SolarplexLogo />
     </View>
   )
 }

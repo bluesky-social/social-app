@@ -6,6 +6,7 @@ import {
   ComposeIcon2,
   HomeIcon,
   HomeIconSolid,
+  SolarplexLogo,
   UserIcon,
   UserIconSolid,
 } from "lib/icons";
@@ -228,7 +229,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   return (
     <View style={[styles.leftNav, pal.view]}>
       <Banner />
-
       {store.session.hasSession && <><ProfileCard /></>}
       <BackBtn />
       <NavItem
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
 
   backBtn: {
     position: "absolute",
-    top: 12,
+    top: 48,
     right: 12,
     width: 30,
     height: 30,

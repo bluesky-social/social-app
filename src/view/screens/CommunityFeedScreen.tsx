@@ -131,11 +131,11 @@ export const CommunityFeedScreen = withAuthRequired(
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
-        {
-          testID: "feedHeaderDropdownRemoveBtn",
-          label: "Remove from my communities",
-          onPress: onToggleSaved,
-        },
+        // {
+        //   testID: "feedHeaderDropdownRemoveBtn",
+        //   label: "Remove from my communities",
+        //   onPress: onToggleSaved,
+        // },
         {
           testID: "feedHeaderDropdownShareBtn",
           label: "Share link",
@@ -247,7 +247,7 @@ export const CommunityFeedScreen = withAuthRequired(
               )}
               {isDesktopWeb && !store.session.isSolarplexSession && (
                 <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
-                  <Button
+                  {/* <Button
                     type={currentFeed?.isSaved ? "default" : "inverted"}
                     onPress={onToggleSaved}
                     accessibilityLabel={
@@ -288,7 +288,7 @@ export const CommunityFeedScreen = withAuthRequired(
                     ) : (
                       <HeartIcon strokeWidth={3} size={18} style={pal.icon} />
                     )}
-                  </Button>
+                  </Button> */}
                   <Button
                     type="default"
                     accessibilityLabel="Share this feed"
@@ -376,7 +376,7 @@ export const CommunityFeedScreen = withAuthRequired(
           scrollEventThrottle={100}
           ListHeaderComponent={renderListHeaderComponent}
           renderEmptyState={renderEmptyState}
-          extraData={[uri, isPinned]}
+          extraData={[uri, isPinned, true]}
         />
         {isScrolledDown ? (
           <LoadLatestBtn

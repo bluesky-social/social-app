@@ -5,6 +5,7 @@ import {
   BellIconSolid,
   HomeIcon,
   HomeIconSolid,
+  SolarplexLogo,
   UserIcon,
   UserIconSolid,
 } from "lib/icons";
@@ -32,6 +33,7 @@ import {
   formatCountShortOnly,
 } from "view/com/util/numeric/format";
 
+import { Banner } from "./Banner";
 import { FEEDBACK_FORM_URL } from "lib/constants";
 import { NavItem } from "./desktop/LeftNav";
 import { NavigationProp } from "lib/routes/types";

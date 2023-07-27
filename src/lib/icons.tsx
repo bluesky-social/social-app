@@ -13,8 +13,8 @@ import React from "react";
 export function SolarplexLogo({ style }: { style?: StyleProp<ViewStyle> }) {
   return (
     <svg
-      width="200"
-      height="50"
+      width="150"
+      height="25"
       viewBox="0 0 637 106"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

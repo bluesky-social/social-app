@@ -338,8 +338,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                   title={likesTitle}
                 >
                   <Text testID="likeCount" type="lg" style={pal.textLight}>
-                    {item.data.reactions?.map((item) => (
-                      <Text key={item} style={[s.f12]}>{store.reactions.reactionTypes[item].emoji}</Text>
+                    {item.data.reactions?.map((item, index) => index < 9 && (
+                      <Text key={item} style={[s.f12, {marginLeft: index ? -6 : 0, zIndex: index}]}>{store.reactions.reactionTypes[item].emoji}</Text>
                     ))}
                     <Text type="xl-bold" style={{marginLeft: 5, ...pal.text}}>
                       {formatCount(item.data.reactions.length)}

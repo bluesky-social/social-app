@@ -43,15 +43,22 @@ export const FeedItem = observer(function ({
   isThreadChild,
   isThreadParent,
   showFollowBtn,
+  showReplyLine,
   ignoreMuteFor,
+  hideChild
 }: {
   item: PostsFeedItemModel;
   isThreadChild?: boolean;
   isThreadParent?: boolean;
   showReplyLine?: boolean;
   showFollowBtn?: boolean;
+  hideChild?: boolean;
   ignoreMuteFor?: string;
 }) {
+
+  if (hideChild && item.parentUri) {
+    return null;
+  }
   const store = useStores();
   const pal = usePalette("default");
   const { track } = useAnalytics();
@@ -238,7 +245,7 @@ export const FeedItem = observer(function ({
           style={[styles.topReplyLine, { borderColor: pal.colors.replyLine }]}
         />
       )}
-      {isThreadParent && (
+      {isThreadParent && showReplyLine && (
         <View
           style={[
             styles.bottomReplyLine,
