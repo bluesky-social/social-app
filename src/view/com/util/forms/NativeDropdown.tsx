@@ -1,7 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform} from 'react-native'
+import {Pressable, StyleSheet, Platform, View} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -15,28 +15,33 @@ export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuTrigger = DropdownMenu.Trigger
 export const DropdownMenuContent = DropdownMenu.Content
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
-export const DropdownMenuItem = DropdownMenu.create((props: ItemProps) => {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const [focused, setFocused] = React.useState(false)
-  const {borderColor: backgroundColor} =
-    theme.colorScheme === 'dark' ? pal.borderDark : pal.border
+export const DropdownMenuItem = DropdownMenu.create(
+  (props: ItemProps & {testID?: string}) => {
+    const pal = usePalette('default')
+    const theme = useTheme()
+    const [focused, setFocused] = React.useState(false)
+    const {borderColor: backgroundColor} =
+      theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
-  return (
-    <DropdownMenu.Item
-      {...props}
-      style={[styles.item, focused && {backgroundColor: backgroundColor}]}
-      onFocus={() => {
-        setFocused(true)
-        props.onFocus && props.onFocus()
-      }}
-      onBlur={() => {
-        setFocused(false)
-        props.onBlur && props.onBlur()
-      }}
-    />
-  )
-}, 'Item')
+    return (
+      <View testID={props.testID}>
+        <DropdownMenu.Item
+          {...props}
+          style={[styles.item, focused && {backgroundColor: backgroundColor}]}
+          onFocus={() => {
+            setFocused(true)
+            props.onFocus && props.onFocus()
+          }}
+          onBlur={() => {
+            setFocused(false)
+            props.onBlur && props.onBlur()
+          }}
+        />
+      </View>
+    )
+  },
+  'Item',
+)
 type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
 export const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
@@ -129,15 +134,16 @@ export function NativeDropdown({items, children, testID}: Props) {
           if (item.label === 'separator') {
             return (
               <DropdownMenuSeparator
-                key={item.testID ? item.testID : `${item.label}_${index}`}
+                key={getKey(item.label, index, item.testID)}
               />
             )
           }
           if (index > 1 && items[index - 1].label === 'separator') {
             return (
-              <DropdownMenu.Group key={item.testID}>
+              <DropdownMenu.Group key={getKey(item.label, index, item.testID)}>
                 <DropdownMenuItem
-                  key={item.testID ? item.testID : `${item.label}_${index}`}
+                  testID={item.testID}
+                  key={getKey(item.label, index, item.testID)}
                   onSelect={item.onPress}>
                   <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
                   {item.icon && (
@@ -158,7 +164,8 @@ export function NativeDropdown({items, children, testID}: Props) {
           }
           return (
             <DropdownMenuItem
-              key={item.testID ? item.testID : `${item.label}_${index}`}
+              testID={item.testID}
+              key={getKey(item.label, index, item.testID)}
               onSelect={item.onPress}>
               <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
               {item.icon && (
@@ -178,6 +185,13 @@ export function NativeDropdown({items, children, testID}: Props) {
       </DropdownMenuContent>
     </DropdownMenuRoot>
   )
+}
+
+const getKey = (label: string, index: number, id?: string) => {
+  if (id) {
+    return id
+  }
+  return `${label}_${index}`
 }
 
 const styles = StyleSheet.create({
