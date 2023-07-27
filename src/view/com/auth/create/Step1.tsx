@@ -1,20 +1,20 @@
-import React from 'react'
+import {LOCAL_DEV_SERVICE, PROD_SERVICE, STAGING_SERVICE} from 'state/index'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import debounce from 'lodash.debounce'
-import {Text} from 'view/com/util/text/Text'
-import {StepHeader} from './StepHeader'
-import {CreateAccountModel} from 'state/models/ui/create-account'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {HelpTip} from '../util/HelpTip'
-import {TextInput} from '../util/TextInput'
-import {Button} from 'view/com/util/forms/Button'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 
-import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
+import {Button} from 'view/com/util/forms/Button'
+import {CreateAccountModel} from 'state/models/ui/create-account'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {HelpTip} from '../util/HelpTip'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
+import React from 'react'
+import {StepHeader} from './StepHeader'
+import {Text} from 'view/com/util/text/Text'
+import {TextInput} from '../util/TextInput'
+import debounce from 'lodash.debounce'
+import {observer} from 'mobx-react-lite'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 
 export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
   const pal = usePalette('default')
@@ -62,7 +62,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
       <Option
         testID="blueskyServerBtn"
         isSelected={isDefaultSelected}
-        label="Bluesky"
+        label="Solarplex Live"
         help="&nbsp;(default)"
         onPress={onPressDefault}
       />

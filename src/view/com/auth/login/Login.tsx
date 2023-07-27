@@ -46,7 +46,7 @@ enum Forms {
   PasswordUpdated,
 }
 
-export const Login = ({ onPressBack }: { onPressBack: () => void }) => {
+export const Login = ({ onPressBack, onPressCreateAccount }: { onPressBack: () => void, onPressCreateAccount: () => void }) => {
   const pal = usePalette("default");
   const store = useStores();
   const { track } = useAnalytics();
@@ -128,6 +128,7 @@ export const Login = ({ onPressBack }: { onPressBack: () => void }) => {
           onPressBack={onPressBack}
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={onPressRetryConnect}
+          onPressCreateAccount={onPressCreateAccount}
         />
       ) : undefined}
       {currentForm === Forms.ChooseAccount ? (
@@ -288,6 +289,7 @@ const LoginForm = ({
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
+  onPressCreateAccount,
 }: {
   store: RootStoreModel;
   error: string;
@@ -299,6 +301,7 @@ const LoginForm = ({
   onPressRetryConnect: () => void;
   onPressBack: () => void;
   onPressForgotPassword: () => void;
+  onPressCreateAccount: () => void;
 }) => {
   const { track } = useAnalytics();
   const pal = usePalette("default");
@@ -506,11 +509,11 @@ const LoginForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
+          {/* <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={s.flex1} />
           {!serviceDescription && error ? (
             <TouchableOpacity
@@ -594,10 +597,10 @@ const LoginForm = ({
               <Text
                 style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}
               >
-                Don't have a Bluesky invitation?
+                Don't have an account?
               </Text>
               <View testID="signinOrCreateAccount" style={styles.btns}>
-                {/* <TouchableOpacity
+                <TouchableOpacity
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
@@ -606,8 +609,8 @@ const LoginForm = ({
               <Text style={[s.white, styles.btnLabel]}>
                 Create a new account
               </Text>
-            </TouchableOpacity> */}
-                <TouchableOpacity
+            </TouchableOpacity>
+                {/* <TouchableOpacity
                   testID="requestInviteButton"
                   style={[styles.btn]}
                   onPress={onPressRequestInvite}
@@ -617,7 +620,7 @@ const LoginForm = ({
                   <Text style={[pal.text, styles.btnLabel]}>
                     Request Invite
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               {/* <Text
               type="xl"
