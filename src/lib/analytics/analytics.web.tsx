@@ -14,11 +14,11 @@ const segmentClient = createClient(
     writeKey: "aqLhAgXweRt74dGXU3NVMqW9LVB2dmZ9",
   },
   {
-    integrations: {
-      "Segment.io": {
-        apiHost: "api.evt.bsky.app/v1",
-      },
-    },
+    // integrations: {
+    //   "Segment.io": {
+    //     apiHost: "api.evt.bsky.app/v1",
+    //   },
+    // },
   },
 );
 export const track = segmentClient?.track?.bind?.(segmentClient);
