@@ -9,6 +9,7 @@ import {
 import {Pressable} from 'react-native'
 
 export function PostDropdownBtn({
+  testID,
   itemUri,
   itemCid,
   itemHref,
@@ -19,6 +20,7 @@ export function PostDropdownBtn({
   onToggleThreadMute,
   onDeletePost,
 }: {
+  testID: string
   itemUri: string
   itemCid: string
   itemHref: string
@@ -139,7 +141,7 @@ export function PostDropdownBtn({
   ].filter(Boolean) as NativeDropdownItem[]
 
   return (
-    <Pressable accessibilityRole="button">
+    <Pressable testID={testID} accessibilityRole="button">
       <NativeDropdown items={dropdownItems} />
     </Pressable>
   )

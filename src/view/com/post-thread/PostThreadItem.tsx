@@ -198,6 +198,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               </View>
               <View style={s.flex1} />
               <PostDropdownBtn
+                testID="postDropdownBtn"
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
