@@ -48,10 +48,12 @@ export interface ModerationDetailsModal {
   moderation: ModerationUI
 }
 
+export type ReportableCollection = 'post' | 'list'
 export interface ReportPostModal {
   name: 'report-post'
   postUri: string
   postCid: string
+  collection?: ReportableCollection
 }
 
 export interface ReportAccountModal {

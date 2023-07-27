@@ -12,6 +12,7 @@ import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
+import {ReportableCollection} from 'state/models/ui/shell'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
@@ -20,9 +21,11 @@ export const snapPoints = [575]
 export function Component({
   postUri,
   postCid,
+  collection = 'post',
 }: {
   postUri: string
   postCid: string
+  collection?: ReportableCollection
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -85,6 +88,7 @@ export function Component({
             setIssue={setIssue}
             submitReport={submitReport}
             isProcessing={isProcessing}
+            collection={collection}
           />
         )}
       </View>
@@ -99,6 +103,7 @@ const SelectIssue = ({
   setIssue,
   submitReport,
   isProcessing,
+  collection,
 }: {
   error: string | undefined
   setShowTextInput: (v: boolean) => void
@@ -106,6 +111,7 @@ const SelectIssue = ({
   setIssue: (v: string) => void
   submitReport: () => void
   isProcessing: boolean
+  collection: ReportableCollection
 }) => {
   const pal = usePalette('default')
   const ITEMS: RadioGroupItem[] = useMemo(
@@ -199,9 +205,9 @@ const SelectIssue = ({
 
   return (
     <>
-      <Text style={[pal.text, styles.title]}>Report post</Text>
+      <Text style={[pal.text, styles.title]}>Report {collection}</Text>
       <Text style={[pal.textLight, styles.description]}>
-        What is the issue with this post?
+        What is the issue with this {collection}?
       </Text>
       <RadioGroup
         testID="reportPostRadios"

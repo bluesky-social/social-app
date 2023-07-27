@@ -86,6 +86,16 @@ export const ProfileListScreen = withAuthRequired(
       })
     }, [store, list, navigation])
 
+    const onPressReportList = React.useCallback(() => {
+      store.shell.openModal({
+        name: 'report-post',
+        postUri: list.uri,
+        // TODO: Figure out how to handle the case where list view might be null
+        postCid: list.list?.cid,
+        collection: 'list',
+      })
+    }, [store, list])
+
     const onPressShareList = React.useCallback(() => {
       const url = toShareUrl(`/profile/${name}/lists/${rkey}`)
       shareUrl(url)
@@ -104,6 +114,7 @@ export const ProfileListScreen = withAuthRequired(
           onPressEditList={onPressEditList}
           onToggleSubscribed={onToggleSubscribed}
           onPressShareList={onPressShareList}
+          onPressReportList={onPressReportList}
           reversed={true}
         />
       )
@@ -114,6 +125,7 @@ export const ProfileListScreen = withAuthRequired(
       onPressEditList,
       onPressShareList,
       onToggleSubscribed,
+      onPressReportList,
     ])
 
     return (
@@ -132,6 +144,7 @@ export const ProfileListScreen = withAuthRequired(
           onToggleSubscribed={onToggleSubscribed}
           onPressEditList={onPressEditList}
           onPressDeleteList={onPressDeleteList}
+          onPressReportList={onPressReportList}
           onPressShareList={onPressShareList}
           style={[s.flex1]}
         />
