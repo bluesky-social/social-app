@@ -25,13 +25,13 @@ export const colors = {
   blue6: '#012561',
   blue7: '#001040',
 
-  red1: '#ffe6f2',
-  red2: '#fba2ce',
-  red3: '#ec4899',
-  red4: '#d1106f',
-  red5: '#97074e',
-  red6: '#690436',
-  red7: '#4F0328',
+  red1: '#ffe6eb',
+  red2: '#fba2b2',
+  red3: '#ec4868',
+  red4: '#d11043',
+  red5: '#970721',
+  red6: '#690419',
+  red7: '#4F0314',
 
   pink1: '#f8ccff',
   pink2: '#e966ff',
@@ -53,6 +53,7 @@ export const colors = {
 
   unreadNotifBg: '#ebf6ff',
   brandBlue: '#0066FF',
+  like: '#ec4899',
 }
 
 export const gradients = {
@@ -224,6 +225,7 @@ export const s = StyleSheet.create({
   green5: {color: colors.green5},
 
   brandBlue: {color: colors.brandBlue},
+  likeColor: {color: colors.like},
 })
 
 export function lh(

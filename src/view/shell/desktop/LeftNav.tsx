@@ -36,14 +36,12 @@ import {
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
+import {makeProfileLink} from 'lib/routes/links'
 
 const ProfileCard = observer(() => {
   const store = useStores()
   return (
-    <Link
-      href={`/profile/${store.me.handle}`}
-      style={styles.profileCard}
-      asAnchor>
+    <Link href={makeProfileLink(store.me)} style={styles.profileCard} asAnchor>
       <UserAvatar avatar={store.me.avatar} size={64} />
     </Link>
   )
@@ -252,7 +250,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       />
       {store.session.hasSession && (
         <NavItem
-          href={`/profile/${store.me.handle}`}
+          href={makeProfileLink(store.me)}
           icon={<UserIcon strokeWidth={1.75} size={28} style={pal.text} />}
           iconFilled={
             <UserIconSolid strokeWidth={1.75} size={28} style={pal.text} />

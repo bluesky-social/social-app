@@ -7,13 +7,19 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
+import {makeProfileLink} from 'lib/routes/links'
 
 interface PostMetaOpts {
-  authorAvatar?: string
-  authorHandle: string
-  authorDisplayName: string | undefined
+  author: {
+    avatar?: string
+    did: string
+    handle: string
+    displayName?: string | undefined
+  }
+  showAvatar?: boolean
   authorHasWarning: boolean
   postHref: string
   timestamp: string
@@ -21,15 +27,15 @@ interface PostMetaOpts {
 
 export const PostMeta = observer(function (opts: PostMetaOpts) {
   const pal = usePalette('default')
-  const displayName = opts.authorDisplayName || opts.authorHandle
-  const handle = opts.authorHandle
+  const displayName = opts.author.displayName || opts.author.handle
+  const handle = opts.author.handle
 
   return (
     <View style={styles.metaOneLine}>
-      {typeof opts.authorAvatar !== 'undefined' && (
+      {opts.showAvatar && typeof opts.author.avatar !== 'undefined' && (
         <View style={styles.avatar}>
           <UserAvatar
-            avatar={opts.authorAvatar}
+            avatar={opts.author.avatar}
             size={16}
             // TODO moderation
           />
@@ -43,17 +49,17 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
           lineHeight={1.2}
           text={
             <>
-              {sanitizeDisplayName(displayName)}
+              {sanitizeDisplayName(displayName)}&nbsp;
               <Text
                 type="md"
-                style={[pal.textLight]}
                 numberOfLines={1}
-                lineHeight={1.2}>
-                &nbsp;@{handle}
+                lineHeight={1.2}
+                style={pal.textLight}>
+                {sanitizeHandle(handle, '@')}
               </Text>
             </>
           }
-          href={`/profile/${opts.authorHandle}`}
+          href={makeProfileLink(opts.author)}
         />
       </View>
       {!isAndroid && (
@@ -85,6 +91,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 const styles = StyleSheet.create({
   metaOneLine: {
     flexDirection: 'row',
+    alignItems: 'baseline',
     paddingBottom: 2,
     gap: 4,
   },

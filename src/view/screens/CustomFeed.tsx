@@ -14,6 +14,7 @@ import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from 'view/com/posts/Feed'
 import {pluralize} from 'lib/strings/helpers'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {TextLink} from 'view/com/util/Link'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -32,6 +33,7 @@ import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {makeProfileLink} from 'lib/routes/links'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export const CustomFeedScreen = withAuthRequired(
@@ -216,8 +218,11 @@ export const CustomFeedScreen = withAuthRequired(
                     'you'
                   ) : (
                     <TextLink
-                      text={`@${currentFeed.data.creator.handle}`}
-                      href={`/profile/${currentFeed.data.creator.did}`}
+                      text={sanitizeHandle(
+                        currentFeed.data.creator.handle,
+                        '@',
+                      )}
+                      href={makeProfileLink(currentFeed.data.creator)}
                       style={[pal.textLight]}
                     />
                   )}

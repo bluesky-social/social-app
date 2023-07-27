@@ -43,6 +43,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
+import {makeProfileLink} from 'lib/routes/links'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -229,7 +230,7 @@ export const SettingsScreen = withAuthRequired(
             </View>
           ) : (
             <Link
-              href={`/profile/${store.me.handle}`}
+              href={makeProfileLink(store.me)}
               title="Your profile"
               noFeedback>
               <View style={[pal.view, styles.linkCard]}>
