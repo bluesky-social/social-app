@@ -62,10 +62,10 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderEditProfileButton')).tap()
     await expect(element(by.id('editProfileModal'))).toBeVisible()
     await element(by.id('changeBannerBtn')).tap()
-    await element(by.id('changeBannerLibraryBtn')).tap()
+    await element(by.text('Library')).tap()
     await sleep(3e3)
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.id('changeAvatarLibraryBtn')).tap()
+    await element(by.text('Library')).tap()
     await sleep(3e3)
     await element(by.id('editProfileSaveBtn')).tap()
     await expect(element(by.id('editProfileModal'))).not.toBeVisible()
@@ -79,9 +79,9 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderEditProfileButton')).tap()
     await expect(element(by.id('editProfileModal'))).toBeVisible()
     await element(by.id('changeBannerBtn')).tap()
-    await element(by.id('changeBannerRemoveBtn')).tap()
+    await element(by.text('Remove')).tap()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.id('changeAvatarRemoveBtn')).tap()
+    await element(by.text('Remove')).tap()
     await element(by.id('editProfileSaveBtn')).tap()
     await expect(element(by.id('editProfileModal'))).not.toBeVisible()
     await expect(element(by.id('userBannerFallback'))).toExist()
@@ -109,16 +109,16 @@ describe('Profile screen', () => {
   it('Can mute/unmute another user', async () => {
     await expect(element(by.id('profileHeaderMutedNotice'))).not.toExist()
     await element(by.id('profileHeaderDropdownBtn')).tap()
-    await element(by.id('profileHeaderDropdownMuteBtn')).tap()
+    await element(by.text('Mute Account')).tap()
     await expect(element(by.id('profileHeaderMutedNotice'))).toBeVisible()
     await element(by.id('profileHeaderDropdownBtn')).tap()
-    await element(by.id('profileHeaderDropdownMuteBtn')).tap()
+    await element(by.text('Unmute Account')).tap()
     await expect(element(by.id('profileHeaderMutedNotice'))).not.toExist()
   })
 
   it('Can report another user', async () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
-    await element(by.id('profileHeaderDropdownReportBtn')).tap()
+    await element(by.text('Report Account')).tap()
     await expect(element(by.id('reportAccountModal'))).toBeVisible()
     await element(
       by.id('reportAccountRadios-com.atproto.moderation.defs#reasonSpam'),
@@ -166,7 +166,7 @@ describe('Profile screen', () => {
   it('Can report posts', async () => {
     const posts = by.id('feedItem-by-bob.test')
     await element(by.id('postDropdownBtn').withAncestor(posts)).atIndex(0).tap()
-    await element(by.id('postDropdownReportBtn')).tap()
+    await element(by.text('Report post')).tap()
     await expect(element(by.id('reportPostModal'))).toBeVisible()
     await element(
       by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
