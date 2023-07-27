@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {AppBskyActorDefs} from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {RootStoreModel} from '../root-store'
+import {isInvalidHandle} from 'lib/strings/handles'
 
 export class UserAutocompleteModel {
   // state
@@ -81,7 +82,7 @@ export class UserAutocompleteModel {
       actor: this.rootStore.me.did || '',
     })
     runInAction(() => {
-      this.follows = res.data.follows
+      this.follows = res.data.follows.filter(f => !isInvalidHandle(f.handle))
       for (const f of this.follows) {
         this.knownHandles.add(f.handle)
       }

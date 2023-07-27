@@ -26,6 +26,8 @@ import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {isDesktopWeb} from 'platform/detection'
 import {ListActions} from './ListActions'
+import {makeProfileLink} from 'lib/routes/links'
+import {sanitizeHandle} from 'lib/strings/handles'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const HEADER_ITEM = {_reactKey: '__header__'}
@@ -296,8 +298,8 @@ const ListHeader = observer(
                   'you'
                 ) : (
                   <TextLink
-                    text={`@${list.creator.handle}`}
-                    href={`/profile/${list.creator.did}`}
+                    text={sanitizeHandle(list.creator.handle, '@')}
+                    href={makeProfileLink(list.creator)}
                   />
                 )}
               </Text>

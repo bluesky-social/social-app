@@ -16,6 +16,7 @@ import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb, isAndroid} from 'platform/detection'
@@ -122,7 +123,7 @@ export const Component = observer(
                 by{' '}
                 {list.creator.did === store.me.did
                   ? 'you'
-                  : `@${list.creator.handle}`}
+                  : sanitizeHandle(list.creator.handle, '@')}
               </Text>
             </View>
             <View

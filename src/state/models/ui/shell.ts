@@ -208,6 +208,7 @@ export interface ComposerOptsQuote {
   text: string
   indexedAt: string
   author: {
+    did: string
     handle: string
     displayName?: string
     avatar?: string

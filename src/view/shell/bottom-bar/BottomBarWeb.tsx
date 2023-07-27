@@ -21,6 +21,7 @@ import {
 } from 'lib/icons'
 import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {makeProfileLink} from 'lib/routes/links'
 
 export const BottomBarWeb = observer(() => {
   const store = useStores()
@@ -87,7 +88,7 @@ export const BottomBarWeb = observer(() => {
           )
         }}
       </NavItem>
-      <NavItem routeName="Profile" href={`/profile/${store.me.handle}`}>
+      <NavItem routeName="Profile" href={makeProfileLink(store.me)}>
         {() => (
           <UserIcon
             size={28}

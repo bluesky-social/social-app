@@ -7,6 +7,8 @@ import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from 'state/index'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
 
 export function UserInfoText({
   type = 'md',
@@ -68,11 +70,11 @@ export function UserInfoText({
         style={style}
         lineHeight={1.2}
         numberOfLines={1}
-        href={`/profile/${profile.handle}`}
+        href={makeProfileLink(profile)}
         text={`${prefix || ''}${sanitizeDisplayName(
           typeof profile[attr] === 'string' && profile[attr]
             ? (profile[attr] as string)
-            : profile.handle,
+            : sanitizeHandle(profile.handle),
         )}`}
       />
     )

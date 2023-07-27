@@ -5,6 +5,7 @@ import {RootStoreModel} from '../root-store'
 import {CustomFeedModel} from './custom-feed'
 import {PostsFeedModel} from './posts'
 import {PostsFeedSliceModel} from './posts-slice'
+import {makeProfileLink} from 'lib/routes/links'
 
 const FEED_PAGE_SIZE = 10
 const FEEDS_PAGE_SIZE = 3
@@ -107,7 +108,7 @@ export class PostsMultiFeedModel {
         _reactKey: `__feed_footer_${i}__`,
         type: 'feed-footer',
         title: feedInfo.displayName,
-        uri: `/profile/${feedInfo.data.creator.did}/feed/${urip.rkey}`,
+        uri: makeProfileLink(feedInfo.data.creator, 'feed', urip.rkey),
       })
     }
     if (!this.hasMore) {

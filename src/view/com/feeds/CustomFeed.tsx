@@ -20,6 +20,7 @@ import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
+import {sanitizeHandle} from 'lib/strings/handles'
 
 export const CustomFeed = observer(
   ({
@@ -86,7 +87,7 @@ export const CustomFeed = observer(
               {item.displayName}
             </Text>
             <Text style={[pal.textLight]} numberOfLines={3}>
-              by @{item.data.creator.handle}
+              by {sanitizeHandle(item.data.creator.handle, '@')}
             </Text>
           </View>
           {showSaveBtn && (

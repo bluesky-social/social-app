@@ -2,6 +2,7 @@ import {AppBskyFeedDefs} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {updateDataOptimistically} from 'lib/async/revertible'
 import {track} from 'lib/analytics/analytics'
 
@@ -42,7 +43,7 @@ export class CustomFeedModel {
     if (this.data.displayName) {
       return sanitizeDisplayName(this.data.displayName)
     }
-    return `Feed by @${this.data.creator.handle}`
+    return `Feed by ${sanitizeHandle(this.data.creator.handle, '@')}`
   }
 
   get isSaved() {

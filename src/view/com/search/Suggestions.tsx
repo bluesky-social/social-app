@@ -12,6 +12,7 @@ import {Text} from '../util/text/Text'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {RefWithInfoAndFollowers} from 'state/models/discovery/foafs'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -99,7 +100,7 @@ export const Suggestions = observer(
                 _reactKey: `__${item.did}_heading__`,
                 type: 'heading',
                 title: `Followed by ${sanitizeDisplayName(
-                  item.displayName || item.handle,
+                  item.displayName || sanitizeHandle(item.handle),
                 )}`,
               },
             ])
