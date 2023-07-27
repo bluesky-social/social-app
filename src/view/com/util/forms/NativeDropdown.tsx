@@ -180,7 +180,8 @@ export function NativeDropdown({items, children, testID}: Props) {
               {item.icon && (
                 <DropdownMenuItemIcon
                   ios={item.icon.ios}
-                  androidIconName={item.icon.android}>
+                  // androidIconName={item.icon.android}
+                >
                   <FontAwesomeIcon
                     icon={item.icon.web}
                     size={20}
