@@ -139,7 +139,8 @@ export function NativeDropdown({items, children}: Props) {
                   {item.icon && (
                     <DropdownMenuItemIcon
                       ios={item.icon.ios}
-                      androidIconName={item.icon.android}>
+                      // androidIconName={item.icon.android} TODO: Add custom android icon support, because these ones are based on https://developer.android.com/reference/android/R.drawable.html and they are ugly
+                    >
                       <FontAwesomeIcon
                         icon={item.icon.web}
                         size={20}
