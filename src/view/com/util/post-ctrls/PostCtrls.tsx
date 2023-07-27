@@ -220,6 +220,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </TouchableOpacity>
       {opts.big ? undefined : (
         <PostDropdownBtn
+          testID="postDropdownBtn"
           itemUri={opts.itemUri}
           itemCid={opts.itemCid}
           itemHref={opts.itemHref}
