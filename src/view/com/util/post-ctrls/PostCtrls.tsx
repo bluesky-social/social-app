@@ -268,7 +268,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         onPress={onRemoveReaction}
       >
         {!opts.big && <View style={styles.emojiSet}>
-          {opts.reactions?.map((item) => (
+          {opts.reactions?.map((item, index) => index < 4 && (
             <Text key={item} style={[defaultCtrlColor, s.f15]}>{store.reactions.reactionTypes[item].emoji}</Text>
           ))}
         </View>}

@@ -21,6 +21,7 @@ import { colors, gradients, s } from "lib/styles";
 
 import { AccountData } from "state/models/session";
 import { BskyAgent } from "@atproto/api";
+import { Button } from "view/com/util/forms/Button";
 import { CenteredView } from "view/com/util/Views";
 import { ErrorBoundary } from "view/com/util/ErrorBoundary";
 import { NavigationProp } from "lib/routes/types";
@@ -537,17 +538,14 @@ const LoginForm = ({
           ) : isProcessing ? (
             <ActivityIndicator />
           ) : isReady ? (
-            <TouchableOpacity
+            <Button
               testID="loginNextButton"
               onPress={onPressNext}
-              accessibilityRole="button"
+              // accessibilityRole="button"
               accessibilityLabel="Go to next"
               accessibilityHint="Navigates to the next screen"
-            >
-              <Text type="xl-bold" style={[pal.link, s.pr5]}>
-                Next
-              </Text>
-            </TouchableOpacity>
+              label="Next"
+            />
           ) : undefined}
         </View>
         {/* <View>
@@ -948,7 +946,7 @@ const SetNewPasswordForm = ({
           {isProcessing ? (
             <ActivityIndicator />
           ) : !resetCode || !password ? (
-            <Text type="xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
+            <Text type="2xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
               Next
             </Text>
           ) : (
