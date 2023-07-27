@@ -16,8 +16,8 @@ import {Button, ButtonType} from './Button'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {HITSLOP_10} from 'lib/constants'
 
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
 const ESTIMATED_HEADING_HEIGHT = 60
@@ -136,7 +136,7 @@ export function DropdownButton({
         testID={testID}
         style={style}
         onPress={onPress}
-        hitSlop={HITSLOP}
+        hitSlop={HITSLOP_10}
         ref={ref1}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel || `Opens ${numItems} options`}

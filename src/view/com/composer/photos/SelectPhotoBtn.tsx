@@ -9,8 +9,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {isDesktopWeb} from 'platform/detection'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {GalleryModel} from 'state/models/media/gallery'
-
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
+import {HITSLOP_10} from 'lib/constants'
 
 type Props = {
   gallery: GalleryModel
@@ -36,7 +35,7 @@ export function SelectPhotoBtn({gallery}: Props) {
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
       style={styles.button}
-      hitSlop={HITSLOP}
+      hitSlop={HITSLOP_10}
       accessibilityRole="button"
       accessibilityLabel="Gallery"
       accessibilityHint="Opens device photo gallery">

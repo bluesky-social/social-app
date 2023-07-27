@@ -6,8 +6,9 @@ import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../text/Text'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
+import {createHitslop} from 'lib/constants'
 
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP = createHitslop(5)
 
 interface Props {
   isReposted: boolean

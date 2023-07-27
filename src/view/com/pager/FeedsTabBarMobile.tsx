@@ -12,6 +12,7 @@ import {Text} from '../util/text/Text'
 import {CogIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
+import {HITSLOP_10} from 'lib/constants'
 
 export const FeedsTabBar = observer(
   (
@@ -54,7 +55,7 @@ export const FeedsTabBar = observer(
               accessibilityRole="button"
               accessibilityLabel="Open navigation"
               accessibilityHint="Access profile and other navigation links"
-              hitSlop={10}>
+              hitSlop={HITSLOP_10}>
               <FontAwesomeIcon
                 icon="bars"
                 size={18}
@@ -68,7 +69,7 @@ export const FeedsTabBar = observer(
           <View style={[pal.view]}>
             <Link
               href="/settings/saved-feeds"
-              hitSlop={10}
+              hitSlop={HITSLOP_10}
               accessibilityRole="button"
               accessibilityLabel="Edit Saved Feeds"
               accessibilityHint="Opens screen to edit Saved Feeds">

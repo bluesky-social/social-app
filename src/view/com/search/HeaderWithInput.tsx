@@ -10,8 +10,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
-
-const MENU_HITSLOP = {left: 10, top: 10, right: 30, bottom: 10}
+import {HITSLOP_10} from 'lib/constants'
 
 interface Props {
   isInputFocused: boolean
@@ -52,7 +51,7 @@ export function HeaderWithInput({
       <TouchableOpacity
         testID="viewHeaderBackOrMenuBtn"
         onPress={onPressMenu}
-        hitSlop={MENU_HITSLOP}
+        hitSlop={HITSLOP_10}
         style={styles.headerMenuBtn}
         accessibilityRole="button"
         accessibilityLabel="Menu"

@@ -7,8 +7,7 @@ import {clamp} from 'lodash'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {colors} from 'lib/styles'
-
-const HITSLOP = {left: 20, top: 20, right: 20, bottom: 20}
+import {HITSLOP_20} from 'lib/constants'
 
 export const LoadLatestBtn = observer(
   ({
@@ -35,7 +34,7 @@ export const LoadLatestBtn = observer(
           },
         ]}
         onPress={onPress}
-        hitSlop={HITSLOP}
+        hitSlop={HITSLOP_20}
         accessibilityRole="button"
         accessibilityLabel={label}
         accessibilityHint="">

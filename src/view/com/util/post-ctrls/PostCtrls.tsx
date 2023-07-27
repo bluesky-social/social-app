@@ -20,6 +20,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
+import {createHitslop} from 'lib/constants'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -51,7 +52,7 @@ interface PostCtrlsOpts {
   onDeletePost: () => void
 }
 
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP = createHitslop(5)
 
 // DISABLED see #135
 /*

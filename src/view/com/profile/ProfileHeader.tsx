@@ -34,8 +34,7 @@ import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
 import {navigate} from '../../../Navigation'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
-
-const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
+import {BACK_HITSLOP} from 'lib/constants'
 
 interface Props {
   view: ProfileModel

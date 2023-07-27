@@ -7,6 +7,10 @@ import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useTheme} from 'lib/ThemeContext'
+import {HITSLOP_10} from 'lib/constants'
+
+// Custom Dropdown Menu Components
+// ==
 export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuTrigger = DropdownMenu.Trigger
 export const DropdownMenuContent = DropdownMenu.Content
@@ -70,6 +74,8 @@ export const DropdownMenuSeparator = DropdownMenu.create(
   },
   'Separator',
 )
+
+// Types for Dropdown Menu and Items
 export type DropdownItem = {
   label: string | 'separator'
   onPress?: () => void
@@ -84,7 +90,6 @@ type Props = {
   items: DropdownItem[]
   children?: React.ReactNode
 }
-const HITSLOP = {top: 10, left: 10, bottom: 10, right: 10}
 
 export function NativeDropdown({items, children}: Props) {
   const pal = usePalette('default')
@@ -95,7 +100,7 @@ export function NativeDropdown({items, children}: Props) {
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger action="press">
-        <Pressable accessibilityRole="button" hitSlop={HITSLOP}>
+        <Pressable accessibilityRole="button" hitSlop={HITSLOP_10}>
           {children ? (
             children
           ) : (

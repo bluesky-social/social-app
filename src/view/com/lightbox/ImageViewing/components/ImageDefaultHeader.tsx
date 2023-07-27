@@ -6,6 +6,7 @@
  *
  */
 
+import {createHitslop} from 'lib/constants'
 import React from 'react'
 import {SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
 
@@ -13,7 +14,7 @@ type Props = {
   onRequestClose: () => void
 }
 
-const HIT_SLOP = {top: 16, left: 16, bottom: 16, right: 16}
+const HIT_SLOP = createHitslop(16)
 
 const ImageDefaultHeader = ({onRequestClose}: Props) => (
   <SafeAreaView style={styles.root}>
