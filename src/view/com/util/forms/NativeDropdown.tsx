@@ -91,6 +91,12 @@ type Props = {
   children?: React.ReactNode
 }
 
+/* The `NativeDropdown` function uses native iOS and Android dropdown menus.
+ * It also creates a animated custom dropdown for web that uses
+ * Radix UI primitives under the hood
+ * @prop {DropdownItem[]} items - An array of dropdown items
+ * @prop {React.ReactNode} children - A custom dropdown trigger
+ */
 export function NativeDropdown({items, children}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
