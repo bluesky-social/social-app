@@ -15,6 +15,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
+import debounce from 'lodash.debounce'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'DiscoverFeeds'>
 export const DiscoverFeedsScreen = withAuthRequired(
@@ -26,16 +27,20 @@ export const DiscoverFeedsScreen = withAuthRequired(
     // search stuff
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
+    const debouncedSearchFeeds = React.useMemo(
+      () => debounce(() => feeds.search(query), 200), // debouce for 200 ms
+      [feeds, query],
+    )
     const onChangeQuery = React.useCallback(
       (text: string) => {
         setQuery(text)
         if (text.length > 1) {
-          feeds.search(text)
+          debouncedSearchFeeds()
         } else {
           feeds.refresh()
         }
       },
-      [feeds],
+      [debouncedSearchFeeds, feeds],
     )
     const onPressClearQuery = React.useCallback(() => {
       setQuery('')
