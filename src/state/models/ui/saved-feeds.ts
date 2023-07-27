@@ -92,9 +92,10 @@ export class SavedFeedsModel {
         this.rootStore.me.joinedCommunities.communities.includes(community.id)
       ) {
         joinedCommunities.push(community.id);
-        communityFeeds.push(`${SOLARPLEX_FEED_URI_PATH}${community.id}`);
       }
+      communityFeeds.push(`${SOLARPLEX_FEED_URI_PATH}${community.id}`);
     }
+    console.log("joined communities", communityFeeds);
     this.feeds = communityFeeds;
     console.log("this.feeds", this.feeds);
     // collect the feed URIs that havent been synced yet

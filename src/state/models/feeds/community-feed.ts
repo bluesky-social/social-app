@@ -42,7 +42,7 @@ export class CommunityFeedModel {
     return `Community by Solarplex`;
   }
   get isJoined() {
-    return this.rootStore.preferences.joinedCommunities.includes(this.id);
+    return this.rootStore.me.joinedCommunities.communities.includes(this.id);
   }
 
   // public apis

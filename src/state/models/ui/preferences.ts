@@ -70,7 +70,7 @@ export class PreferencesModel {
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
-      joinedCommunities: this.joinedCommunities,
+      // joinedCommunities: this.joinedCommunities,
       homeFeedRepliesEnabled: this.homeFeedRepliesEnabled,
       homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
@@ -233,11 +233,11 @@ export class PreferencesModel {
           preferences: res.data.preferences,
         });
       }
+      await this.rootStore.me.savedFeeds.updateCache(clearCache);
+      await this.rootStore.me.joinedCommunities.updateCache(clearCache);
     } finally {
       this.lock.release();
     }
-    await this.rootStore.me.savedFeeds.updateCache(clearCache);
-    await this.rootStore.me.joinedCommunities.updateCache(clearCache);
   }
 
   /**

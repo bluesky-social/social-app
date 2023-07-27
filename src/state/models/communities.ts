@@ -16,7 +16,6 @@ export class CommunitiesModel {
   communityFeeds: CommunityFeedModel[] = [];
 
   constructor(public rootStore: RootStoreModel) {
-    console.log("init communities model");
     makeAutoObservable(
       this,
       { rootStore: false, serialize: false, hydrate: false },

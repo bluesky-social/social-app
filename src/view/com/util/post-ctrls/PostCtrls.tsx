@@ -267,21 +267,21 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityHint=""
         onPress={onRemoveReaction}
       >
+        {!opts.big && <View style={styles.emojiSet}>
+          {opts.reactions?.map((item) => (
+            <Text key={item} style={[defaultCtrlColor, s.f15]}>{store.reactions.reactionTypes[item].emoji}</Text>
+          ))}
+        </View>}
         <Reaction
           items={store.me.reactions.default}
           onTap={onPressReaction}
           cardStyle={{left: opts.big ? '100px' : '0', top: opts.big ? '50px' : '30px'}}
           isShowCardInCenter={false}
           showPopupType="onPress"
-          disabled={!!selectedEmoji}
+          // disabled={!!selectedEmoji}
         >
           <View style={{flexDirection:'row', alignItems: 'center'}}>
-            {!opts.big && <View style={styles.emojiSet}>
-              {opts.reactions?.map((item) => (
-                <Text key={item} style={[defaultCtrlColor, s.f15]}>{store.reactions.reactionTypes[item].emoji}</Text>
-              ))}
-            </View>}
-            {selectedEmoji ? <FontAwesomeIcon icon={faSmileFilled} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} /> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
+            {selectedEmoji ? <TouchableOpacity onPress={onRemoveReaction}><FontAwesomeIcon icon={faSmileFilled} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} /></TouchableOpacity> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
             <Text
               testID="likeCount"
               style={

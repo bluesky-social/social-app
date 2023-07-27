@@ -32,9 +32,9 @@ const FeedsTabBarDesktop = observer(
     // Get the names of that community from this list for display here
     // For each, we can construct the URL of that feed.
     const joinedCommunityNames = store.communities.communities
-      .filter((community: any) =>
-        store.me.joinedCommunities.communities.includes(community.id),
-      )
+      // .filter((community: any) =>
+      //   store.me.joinedCommunities.communities.includes(community.id),
+      // )
       .map((community: any) => community.name);
     const communities = useMemo(
       () => ["Home", ...joinedCommunityNames],
