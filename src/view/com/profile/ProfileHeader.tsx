@@ -261,14 +261,15 @@ const ProfileHeaderLoaded = observer(
           label: 'Share',
           onPress: onPressShare,
         },
-        {
-          testID: 'profileHeaderDropdownListAddRemoveBtn',
-          label: 'Add to Lists',
-          onPress: onPressAddRemoveLists,
-        },
       ]
       if (!isMe) {
         items.push({sep: true})
+        // Only add "Add to Lists" on other user's profiles, doesn't make sense to mute my own self!
+        items.push({
+          testID: 'profileHeaderDropdownListAddRemoveBtn',
+          label: 'Add to Lists',
+          onPress: onPressAddRemoveLists,
+        })
         if (!view.viewer.blocking) {
           items.push({
             testID: 'profileHeaderDropdownMuteBtn',
