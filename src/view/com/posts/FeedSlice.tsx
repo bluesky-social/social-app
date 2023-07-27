@@ -8,6 +8,7 @@ import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
+import {makeProfileLink} from 'lib/routes/links'
 
 export function FeedSlice({
   slice,
@@ -70,8 +71,8 @@ function ViewFullThread({slice}: {slice: PostsFeedSliceModel}) {
   const pal = usePalette('default')
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(slice.rootItem.post.uri)
-    return `/profile/${slice.rootItem.post.author.handle}/post/${urip.rkey}`
-  }, [slice.rootItem.post.uri, slice.rootItem.post.author.handle])
+    return makeProfileLink(slice.rootItem.post.author, 'post', urip.rkey)
+  }, [slice.rootItem.post.uri, slice.rootItem.post.author])
 
   return (
     <Link style={[pal.view, styles.viewFullThread]} href={itemHref} noFeedback>

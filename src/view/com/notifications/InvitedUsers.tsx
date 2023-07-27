@@ -16,6 +16,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {makeProfileLink} from 'lib/routes/links'
 
 export const InvitedUsers = observer(() => {
   const store = useStores()
@@ -58,14 +59,14 @@ function InvitedUser({
         />
       </View>
       <View style={s.flex1}>
-        <Link href={`/profile/${profile.handle}`}>
+        <Link href={makeProfileLink(profile)}>
           <UserAvatar avatar={profile.avatar} size={35} />
         </Link>
         <Text style={[styles.desc, pal.text]}>
           <TextLink
             type="md-bold"
             style={pal.text}
-            href={`/profile/${profile.handle}`}
+            href={makeProfileLink(profile)}
             text={sanitizeDisplayName(profile.displayName || profile.handle)}
           />{' '}
           joined using your invite code!

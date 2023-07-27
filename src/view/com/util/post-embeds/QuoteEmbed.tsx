@@ -8,6 +8,7 @@ import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ComposerOptsQuote} from 'state/models/ui/shell'
 import {PostEmbeds} from '.'
+import {makeProfileLink} from 'lib/routes/links'
 
 export function QuoteEmbed({
   quote,
@@ -18,7 +19,7 @@ export function QuoteEmbed({
 }) {
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
-  const itemHref = `/profile/${quote.author.handle}/post/${itemUrip.rkey}`
+  const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
   const isEmpty = React.useMemo(
     () => quote.text.trim().length === 0,
@@ -39,9 +40,8 @@ export function QuoteEmbed({
       href={itemHref}
       title={itemTitle}>
       <PostMeta
-        authorAvatar={quote.author.avatar}
-        authorHandle={quote.author.handle}
-        authorDisplayName={quote.author.displayName}
+        author={quote.author}
+        showAvatar
         authorHasWarning={false}
         postHref={itemHref}
         timestamp={quote.indexedAt}

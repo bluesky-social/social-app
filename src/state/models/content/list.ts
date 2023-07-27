@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AtUri,
   AppBskyGraphGetList as GetList,
@@ -115,6 +115,7 @@ export class ListModel {
     }
     this._xLoading(replace)
     try {
+      await this._resolveUri()
       const res = await this.rootStore.agent.app.bsky.graph.getList({
         list: this.uri,
         limit: PAGE_SIZE,
@@ -146,6 +147,7 @@ export class ListModel {
     if (!this.isOwner) {
       throw new Error('Cannot edit this list')
     }
+    await this._resolveUri()
 
     // get the current record
     const {rkey} = new AtUri(this.uri)
@@ -179,6 +181,7 @@ export class ListModel {
     if (!this.list) {
       return
     }
+    await this._resolveUri()
 
     // fetch all the listitem records that belong to this list
     let cursor
@@ -220,6 +223,7 @@ export class ListModel {
     if (!this.list) {
       return
     }
+    await this._resolveUri()
     await this.rootStore.agent.app.bsky.graph.muteActorList({
       list: this.list.uri,
     })
@@ -231,6 +235,7 @@ export class ListModel {
     if (!this.list) {
       return
     }
+    await this._resolveUri()
     await this.rootStore.agent.app.bsky.graph.unmuteActorList({
       list: this.list.uri,
     })
@@ -272,6 +277,22 @@ export class ListModel {
 
   // helper functions
   // =
+
+  async _resolveUri() {
+    const urip = new AtUri(this.uri)
+    if (!urip.host.startsWith('did:')) {
+      try {
+        urip.host = await apilib.resolveName(this.rootStore, urip.host)
+      } catch (e: any) {
+        runInAction(() => {
+          this.error = e.toString()
+        })
+      }
+    }
+    runInAction(() => {
+      this.uri = urip.toString()
+    })
+  }
 
   _replaceAll(res: GetList.Response) {
     this.items = []

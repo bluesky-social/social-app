@@ -10,11 +10,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {
   getProfileViewBasicLabelInfo,
   getProfileModeration,
 } from 'lib/labeling/helpers'
 import {ModerationBehaviorCode} from 'lib/labeling/types'
+import {makeProfileLink} from 'lib/routes/links'
 
 export const ProfileCard = observer(
   ({
@@ -60,7 +62,7 @@ export const ProfileCard = observer(
           noBorder && styles.outerNoBorder,
           !noBg && pal.view,
         ]}
-        href={`/profile/${profile.handle}`}
+        href={makeProfileLink(profile)}
         title={profile.handle}
         asAnchor
         anchorNoUnderline>
@@ -78,10 +80,12 @@ export const ProfileCard = observer(
               style={[s.bold, pal.text]}
               numberOfLines={1}
               lineHeight={1.2}>
-              {sanitizeDisplayName(profile.displayName || profile.handle)}
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+              )}
             </Text>
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              @{profile.handle}
+              {sanitizeHandle(profile.handle, '@')}
             </Text>
             {!!profile.viewer?.followedBy && (
               <View style={s.flexRow}>
@@ -160,7 +164,7 @@ export const ProfileCardWithFollowBtn = observer(
     followers?: AppBskyActorDefs.ProfileView[] | undefined
   }) => {
     const store = useStores()
-    const isMe = store.me.handle === profile.handle
+    const isMe = store.me.did === profile.did
 
     return (
       <ProfileCard

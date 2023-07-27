@@ -27,7 +27,9 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {makeProfileLink} from 'lib/routes/links'
 
 export const FeedItem = observer(function ({
   item,
@@ -50,8 +52,8 @@ export const FeedItem = observer(function ({
   const itemCid = item.post.cid
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
-    return `/profile/${item.post.author.handle}/post/${urip.rkey}`
-  }, [item.post.uri, item.post.author.handle])
+    return makeProfileLink(item.post.author, 'post', urip.rkey)
+  }, [item.post.uri, item.post.author])
   const itemTitle = `Post by ${item.post.author.handle}`
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -178,7 +180,7 @@ export const FeedItem = observer(function ({
       {item.reasonRepost && (
         <Link
           style={styles.includeReason}
-          href={`/profile/${item.reasonRepost.by.handle}`}
+          href={makeProfileLink(item.reasonRepost.by)}
           title={sanitizeDisplayName(
             item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
           )}>
@@ -201,9 +203,10 @@ export const FeedItem = observer(function ({
               lineHeight={1.2}
               numberOfLines={1}
               text={sanitizeDisplayName(
-                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+                item.reasonRepost.by.displayName ||
+                  sanitizeHandle(item.reasonRepost.by.handle),
               )}
-              href={`/profile/${item.reasonRepost.by.handle}`}
+              href={makeProfileLink(item.reasonRepost.by)}
             />
           </Text>
         </Link>
@@ -221,8 +224,7 @@ export const FeedItem = observer(function ({
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            authorHandle={item.post.author.handle}
-            authorDisplayName={item.post.author.displayName}
+            author={item.post.author}
             authorHasWarning={!!item.post.author.labels?.length}
             timestamp={item.post.indexedAt}
             postHref={itemHref}
@@ -284,11 +286,7 @@ export const FeedItem = observer(function ({
             itemCid={itemCid}
             itemHref={itemHref}
             itemTitle={itemTitle}
-            author={{
-              avatar: item.post.author.avatar!,
-              handle: item.post.author.handle,
-              displayName: item.post.author.displayName!,
-            }}
+            author={item.post.author}
             text={item.richText?.text || record.text}
             indexedAt={item.post.indexedAt}
             isAuthor={item.post.author.did === store.me.did}

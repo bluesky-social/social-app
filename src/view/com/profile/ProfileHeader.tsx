@@ -15,11 +15,13 @@ import {ProfileImageLightbox} from 'state/models/ui/shell'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {s, colors} from 'lib/styles'
 import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
+import {ThemedText} from '../util/text/ThemedText'
 import {TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
@@ -34,6 +36,8 @@ import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
 import {navigate} from '../../../Navigation'
+import {isInvalidHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
 
 const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
@@ -67,7 +71,9 @@ export const ProfileHeader = observer(
             </View>
             <View>
               <Text type="title-2xl" style={[pal.text, styles.title]}>
-                {sanitizeDisplayName(view.displayName || view.handle)}
+                {sanitizeDisplayName(
+                  view.displayName || sanitizeHandle(view.handle),
+                )}
               </Text>
             </View>
           </View>
@@ -104,6 +110,7 @@ const ProfileHeaderLoaded = observer(
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
+    const invalidHandle = isInvalidHandle(view.handle)
 
     const onPressBack = React.useCallback(() => {
       navigation.goBack()
@@ -144,19 +151,23 @@ const ProfileHeaderLoaded = observer(
 
     const onPressFollowers = React.useCallback(() => {
       track('ProfileHeader:FollowersButtonClicked')
-      navigate('ProfileFollowers', {name: view.handle})
+      navigate('ProfileFollowers', {
+        name: isInvalidHandle(view.handle) ? view.did : view.handle,
+      })
       store.shell.closeAllActiveElements() // for when used in the profile preview modal
     }, [track, view, store.shell])
 
     const onPressFollows = React.useCallback(() => {
       track('ProfileHeader:FollowsButtonClicked')
-      navigate('ProfileFollows', {name: view.handle})
+      navigate('ProfileFollows', {
+        name: isInvalidHandle(view.handle) ? view.did : view.handle,
+      })
       store.shell.closeAllActiveElements() // for when used in the profile preview modal
     }, [track, view, store.shell])
 
     const onPressShare = React.useCallback(() => {
       track('ProfileHeader:ShareButtonClicked')
-      const url = toShareUrl(`/profile/${view.handle}`)
+      const url = toShareUrl(makeProfileLink(view))
       shareUrl(url)
     }, [track, view])
 
@@ -338,7 +349,7 @@ const ProfileHeaderLoaded = observer(
                     style={[styles.btn, styles.mainBtn, pal.btn]}
                     accessibilityRole="button"
                     accessibilityLabel={`Unfollow ${view.handle}`}
-                    accessibilityHint={`Hides direct posts from ${view.handle} in your feed`}>
+                    accessibilityHint={`Hides posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="check"
                       style={[pal.text, s.mr5]}
@@ -355,7 +366,7 @@ const ProfileHeaderLoaded = observer(
                     style={[styles.btn, styles.mainBtn, palInverted.view]}
                     accessibilityRole="button"
                     accessibilityLabel={`Follow ${view.handle}`}
-                    accessibilityHint={`Shows direct posts from ${view.handle} in your feed`}>
+                    accessibilityHint={`Shows posts from ${view.handle} in your feed`}>
                     <FontAwesomeIcon
                       icon="plus"
                       style={[palInverted.text, s.mr5]}
@@ -382,7 +393,9 @@ const ProfileHeaderLoaded = observer(
               testID="profileHeaderDisplayName"
               type="title-2xl"
               style={[pal.text, styles.title]}>
-              {sanitizeDisplayName(view.displayName || view.handle)}
+              {sanitizeDisplayName(
+                view.displayName || sanitizeHandle(view.handle),
+              )}
             </Text>
           </View>
           <View style={styles.handleLine}>
@@ -393,7 +406,16 @@ const ProfileHeaderLoaded = observer(
                 </Text>
               </View>
             ) : undefined}
-            <Text style={[pal.textLight, styles.handle]}>@{view.handle}</Text>
+            <ThemedText
+              type={invalidHandle ? 'xs' : 'md'}
+              fg={invalidHandle ? 'error' : 'light'}
+              border={invalidHandle ? 'error' : undefined}
+              style={[
+                invalidHandle ? styles.invalidHandle : undefined,
+                styles.handle,
+              ]}>
+              {invalidHandle ? '⚠Invalid Handle' : `@${view.handle}`}
+            </ThemedText>
           </View>
           {!blockHide && (
             <>
@@ -600,6 +622,11 @@ const styles = StyleSheet.create({
         // @ts-ignore web only -prf
         wordBreak: 'break-all',
       },
+  invalidHandle: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 4,
+  },
 
   handleLine: {
     flexDirection: 'row',
