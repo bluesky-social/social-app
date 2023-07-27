@@ -84,16 +84,6 @@ export const ComposePost = observer(function ComposePost({
     [insets, isKeyboardVisible],
   )
 
-  // HACK
-  // there's a bug with @mattermost/react-native-paste-input where if the input
-  // is focused during unmount, an exception will throw (seems that a blur method isn't implemented)
-  // manually blurring before closing gets around that
-  // -prf
-  const hackfixOnClose = useCallback(() => {
-    textInput.current?.blur()
-    onClose()
-  }, [textInput, onClose])
-
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
       if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
@@ -105,7 +95,7 @@ export const ComposePost = observer(function ComposePost({
       store.shell.openModal({
         name: 'confirm',
         title: 'Discard draft',
-        onPressConfirm: hackfixOnClose,
+        onPressConfirm: onClose,
         onPressCancel: () => {
           store.shell.closeModal()
         },
@@ -114,9 +104,9 @@ export const ComposePost = observer(function ComposePost({
         confirmBtnStyle: {backgroundColor: colors.red4},
       })
     } else {
-      hackfixOnClose()
+      onClose()
     }
-  }, [store, hackfixOnClose, graphemeLength, gallery])
+  }, [store, onClose, graphemeLength, gallery])
 
   // initial setup
   useEffect(() => {
@@ -205,7 +195,7 @@ export const ComposePost = observer(function ComposePost({
         await store.me.mainFeed.addPostToTop(createdPost.uri)
       }
       onPost?.()
-      hackfixOnClose()
+      onClose()
       Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
     },
     [
@@ -215,7 +205,7 @@ export const ComposePost = observer(function ComposePost({
       replyTo,
       autocompleteView.knownHandles,
       extLink,
-      hackfixOnClose,
+      onClose,
       onPost,
       quote,
       setExtLink,

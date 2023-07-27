@@ -62,7 +62,7 @@ export const Component = observer(function ({image, gallery}: Props) {
   const [position, setPosition] = useState<Position | undefined>(
     image.attributes.position,
   )
-  const [altText, setAltText] = useState('')
+  const [altText, setAltText] = useState(image?.altText ?? '')
 
   const onFlipHorizontal = useCallback(() => {
     image.flipHorizontal()
