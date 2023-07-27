@@ -87,7 +87,11 @@ export class ProfileUiModel {
   }
 
   get selectedView() {
-    return this.selectorItems[this.selectedViewIndex]
+    // If, for whatever reason, the selected view index is not available, default back to posts
+    // This can happen when the user was focused on a view but performed an action that caused
+    // the view to disappear (e.g. deleting the last list in their list of lists https://imgflip.com/i/7txu1y)
+    const selected = this.selectorItems[this.selectedViewIndex]
+    return selected || Sections.Posts
   }
 
   get uiItems() {

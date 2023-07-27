@@ -214,6 +214,8 @@ export class ListModel {
         records.map(record => createDel(record.uri)),
       ),
     })
+
+    this.rootStore.emitListDeleted(this.uri)
   }
 
   async subscribe() {
