@@ -1,13 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {
-  Pressable,
-  StyleSheet,
-  Platform,
-  StyleProp,
-  ViewStyle,
-} from 'react-native'
+import {Pressable, StyleSheet, Platform, View} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -18,16 +12,71 @@ import {HITSLOP_10} from 'lib/constants'
 // Custom Dropdown Menu Components
 // ==
 export const DropdownMenuRoot = DropdownMenu.Root
-export const DropdownMenuTrigger = DropdownMenu.Trigger
+// export const DropdownMenuTrigger = DropdownMenu.Trigger
 export const DropdownMenuContent = DropdownMenu.Content
+
+type TriggerProps = Omit<
+  React.ComponentProps<(typeof DropdownMenu)['Trigger']>,
+  'children'
+> &
+  React.PropsWithChildren<{
+    testID?: string
+    accessibilityLabel?: string
+    accessibilityHint?: string
+  }>
+export const DropdownMenuTrigger = DropdownMenu.create(
+  (props: TriggerProps) => {
+    const theme = useTheme()
+    const defaultCtrlColor = theme.palette.default.postCtrl
+    const ref = React.useRef<View>(null)
+
+    // HACK
+    // fire a click event on the keyboard press to trigger the dropdown
+    // -prf
+    const onPress = isWeb
+      ? (evt: any) => {
+          if (evt instanceof KeyboardEvent) {
+            // @ts-ignore web only -prf
+            ref.current?.click()
+          }
+        }
+      : undefined
+
+    return (
+      <Pressable
+        testID={props.testID}
+        accessibilityRole="button"
+        accessibilityLabel={props.accessibilityLabel}
+        accessibilityHint={props.accessibilityHint}
+        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
+        hitSlop={HITSLOP_10}
+        onPress={onPress}>
+        <DropdownMenu.Trigger action="press">
+          <View ref={ref}>
+            {props.children ? (
+              props.children
+            ) : (
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={defaultCtrlColor}
+                style={styles.ellipsis}
+              />
+            )}
+          </View>
+        </DropdownMenu.Trigger>
+      </Pressable>
+    )
+  },
+  'Trigger',
+)
+
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = DropdownMenu.create(
   (props: ItemProps & {testID?: string}) => {
-    const pal = usePalette('default')
     const theme = useTheme()
     const [focused, setFocused] = React.useState(false)
-    const {borderColor: backgroundColor} =
-      theme.colorScheme === 'dark' ? pal.borderDark : pal.border
+    const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
 
     return (
       <DropdownMenu.Item
@@ -46,6 +95,7 @@ export const DropdownMenuItem = DropdownMenu.create(
   },
   'Item',
 )
+
 type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
 export const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
@@ -59,10 +109,12 @@ export const DropdownMenuItemTitle = DropdownMenu.create(
   },
   'ItemTitle',
 )
+
 type IconProps = React.ComponentProps<(typeof DropdownMenu)['ItemIcon']>
 export const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
   return <DropdownMenu.ItemIcon {...props} />
 }, 'ItemIcon')
+
 type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
 export const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
@@ -97,8 +149,9 @@ export type DropdownItem = {
 }
 type Props = {
   items: DropdownItem[]
-  children?: React.ReactNode
   testID?: string
+  accessibilityLabel?: string
+  accessibilityHint?: string
 }
 
 /* The `NativeDropdown` function uses native iOS and Android dropdown menus.
@@ -107,36 +160,26 @@ type Props = {
  * @prop {DropdownItem[]} items - An array of dropdown items
  * @prop {React.ReactNode} children - A custom dropdown trigger
  */
-export function NativeDropdown({items, children, testID}: Props) {
+export function NativeDropdown({
+  items,
+  children,
+  testID,
+  accessibilityLabel,
+  accessibilityHint,
+}: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const theme = useTheme()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
-  const defaultCtrlColor = React.useMemo(
-    () => ({
-      color: theme.palette.default.postCtrl,
-    }),
-    [theme],
-  ) as StyleProp<ViewStyle>
 
   return (
     <DropdownMenuRoot>
-      <DropdownMenuTrigger action="press">
-        <Pressable
-          testID={testID}
-          accessibilityRole="button"
-          style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
-          hitSlop={HITSLOP_10}>
-          {children ? (
-            children
-          ) : (
-            <FontAwesomeIcon
-              icon="ellipsis"
-              size={20}
-              style={[defaultCtrlColor, styles.ellipsis]}
-            />
-          )}
-        </Pressable>
+      <DropdownMenuTrigger
+        action="press"
+        testID={testID}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}>
+        {children}
       </DropdownMenuTrigger>
       <DropdownMenuContent
         style={[styles.content, dropDownBackgroundColor]}
