@@ -9,6 +9,7 @@ import {
 import {RootStoreModel} from '../root-store'
 import {updateDataOptimistically} from 'lib/async/revertible'
 import {track} from 'lib/analytics/analytics'
+import {hackAddDeletedEmbed} from 'lib/api/hack-add-deleted-embed'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
@@ -35,6 +36,7 @@ export class PostsFeedItemModel {
     if (FeedPost.isRecord(this.post.record)) {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
+        hackAddDeletedEmbed(this.post)
         this.postRecord = this.post.record
         this.richText = new RichText(this.postRecord, {cleanNewlines: true})
       } else {
