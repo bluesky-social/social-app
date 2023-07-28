@@ -16,7 +16,10 @@ import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {describeModerationCause} from 'lib/strings/moderation'
+import {
+  describeModerationCause,
+  getProfileModerationCauses,
+} from 'lib/moderation'
 
 export const ProfileCard = observer(
   ({
@@ -111,13 +114,7 @@ function ProfileCardPills({
 }) {
   const pal = usePalette('default')
 
-  const causes = [
-    moderation.decisions.account.cause,
-    ...moderation.decisions.account.additionalCauses,
-    moderation.decisions.profile.cause,
-    ...moderation.decisions.profile.additionalCauses,
-  ].filter(Boolean)
-
+  const causes = getProfileModerationCauses(moderation)
   if (!followedBy && !causes.length) {
     return null
   }

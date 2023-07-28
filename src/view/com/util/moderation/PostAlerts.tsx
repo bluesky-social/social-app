@@ -4,7 +4,7 @@ import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
-import {describeModerationCause} from 'lib/strings/moderation'
+import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
 
 export function PostAlerts({

@@ -4,7 +4,10 @@ import {ProfileModeration} from '@atproto/api'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
-import {describeModerationCause} from 'lib/strings/moderation'
+import {
+  describeModerationCause,
+  getProfileModerationCauses,
+} from 'lib/moderation'
 import {useStores} from 'state/index'
 
 export function ProfileHeaderAlerts({
@@ -17,13 +20,7 @@ export function ProfileHeaderAlerts({
   const store = useStores()
   const pal = usePalette('default')
 
-  const causes = [
-    moderation.decisions.account.cause,
-    ...moderation.decisions.account.additionalCauses,
-    moderation.decisions.profile.cause,
-    ...moderation.decisions.profile.additionalCauses,
-  ].filter(Boolean)
-
+  const causes = getProfileModerationCauses(moderation)
   if (!causes.length) {
     return null
   }

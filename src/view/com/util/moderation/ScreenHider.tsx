@@ -17,7 +17,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {isDesktopWeb} from 'platform/detection'
-import {describeModerationCause} from 'lib/strings/moderation'
+import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
 
 export function ScreenHider({

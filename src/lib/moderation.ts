@@ -1,4 +1,4 @@
-import {ModerationCause} from '@atproto/api'
+import {ModerationCause, ProfileModeration} from '@atproto/api'
 
 export interface ModerationCauseDescription {
   name: string
@@ -42,4 +42,32 @@ export function describeModerationCause(
     }
   }
   return cause.labelDef.strings[context].en
+}
+
+export function getProfileModerationCauses(
+  moderation: ProfileModeration,
+): ModerationCause[] {
+  /*
+  Gather everything on profile and account *except* for blur-media
+  actions on profile; they do not need to be surfaced
+  */
+  const profileCauses = [
+    moderation.decisions.profile.cause,
+    ...moderation.decisions.profile.additionalCauses,
+  ].filter(cause => {
+    if (!cause) {
+      return false
+    }
+    if (cause?.type === 'label') {
+      if (cause.labelDef.onwarn === 'blur-media') {
+        return false
+      }
+    }
+    return true
+  })
+  return [
+    moderation.decisions.account.cause,
+    ...moderation.decisions.account.additionalCauses,
+    ...profileCauses,
+  ].filter(Boolean) as ModerationCause[]
 }

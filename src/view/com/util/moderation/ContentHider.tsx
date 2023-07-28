@@ -4,7 +4,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {InfoCircleIcon} from 'lib/icons'
-import {describeModerationCause} from 'lib/strings/moderation'
+import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 
