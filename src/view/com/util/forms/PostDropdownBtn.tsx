@@ -6,6 +6,7 @@ import {
   NativeDropdown,
   DropdownItem as NativeDropdownItem,
 } from './NativeDropdown'
+import {EventStopper} from '../EventStopper'
 
 export function PostDropdownBtn({
   testID,
@@ -140,11 +141,13 @@ export function PostDropdownBtn({
   ].filter(Boolean) as NativeDropdownItem[]
 
   return (
-    <NativeDropdown
-      testID={testID}
-      items={dropdownItems}
-      accessibilityLabel="More post options"
-      accessibilityHint=""
-    />
+    <EventStopper>
+      <NativeDropdown
+        testID={testID}
+        items={dropdownItems}
+        accessibilityLabel="More post options"
+        accessibilityHint=""
+      />
+    </EventStopper>
   )
 }
