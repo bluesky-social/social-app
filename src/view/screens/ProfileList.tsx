@@ -87,11 +87,11 @@ export const ProfileListScreen = withAuthRequired(
     }, [store, list, navigation])
 
     const onPressReportList = React.useCallback(() => {
+      if (!list.list) return
       store.shell.openModal({
         name: 'report-post',
         postUri: list.uri,
-        // TODO: Figure out how to handle the case where list view might be null
-        postCid: list.list?.cid,
+        postCid: list.list.cid,
         collection: 'list',
       })
     }, [store, list])

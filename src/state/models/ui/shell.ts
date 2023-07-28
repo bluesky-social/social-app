@@ -48,7 +48,7 @@ export interface ModerationDetailsModal {
   moderation: ModerationUI
 }
 
-export type ReportableCollection = 'post' | 'list'
+export type ReportableCollection = 'post' | 'list' | 'feed'
 export interface ReportPostModal {
   name: 'report-post'
   postUri: string

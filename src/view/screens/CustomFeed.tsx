@@ -188,6 +188,17 @@ export const CustomFeedScreenInner = observer(
       track('CustomFeed:Share')
     }, [handleOrDid, rkey, track])
 
+    const onPressReport = React.useCallback(() => {
+      // TODO: may be report button shouldn't show up unless currentFeed is defined
+      if (!currentFeed) return
+      store.shell.openModal({
+        name: 'report-post',
+        postUri: currentFeed.uri,
+        postCid: currentFeed.data.cid,
+        collection: 'feed',
+      })
+    }, [store, currentFeed])
+
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
       resetMainScroll()
@@ -370,6 +381,17 @@ export const CustomFeedScreenInner = observer(
                       color={pal.colors.icon}
                     />
                   </Button>
+                  <Button
+                    type="default"
+                    accessibilityLabel="Report this feed"
+                    accessibilityHint=""
+                    onPress={onPressReport}>
+                    <FontAwesomeIcon
+                      icon="circle-exclamation"
+                      size={18}
+                      color={pal.colors.icon}
+                    />
+                  </Button>
                 </View>
               )}
             </View>
@@ -419,6 +441,7 @@ export const CustomFeedScreenInner = observer(
       onToggleLiked,
       onPressShare,
       handleOrDid,
+      onPressReport,
       rkey,
       isPinned,
       onTogglePinned,
