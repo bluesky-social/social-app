@@ -61,6 +61,7 @@ export function MaybeQuoteEmbed({
       </View>
     )
   }
+  return null
 }
 
 export function QuoteEmbed({
