@@ -432,6 +432,7 @@ const ProfileHeaderLoaded = observer(
               style={[pal.text, styles.title]}>
               {sanitizeDisplayName(
                 view.displayName || sanitizeHandle(view.handle),
+                view.moderation.profile,
               )}
             </Text>
           </View>
@@ -492,7 +493,9 @@ const ProfileHeaderLoaded = observer(
                   </Text>
                 </Text>
               </View>
-              {view.descriptionRichText ? (
+              {view.description &&
+              view.descriptionRichText &&
+              !view.moderation.profile.blur ? (
                 <RichText
                   testID="profileHeaderDescription"
                   style={[styles.description, pal.text]}
