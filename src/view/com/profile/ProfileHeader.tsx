@@ -502,8 +502,7 @@ const ProfileHeaderLoaded = observer(
               ) : undefined}
             </>
           )}
-          <ProfileHeaderAlerts moderation={view.moderation.account} />
-          <ProfileHeaderAlerts moderation={view.moderation.profile} />
+          <ProfileHeaderAlerts moderation={view.moderation} />
         </View>
         {!isDesktopWeb && !hideBackButton && (
           <TouchableWithoutFeedback

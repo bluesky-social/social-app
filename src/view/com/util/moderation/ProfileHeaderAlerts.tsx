@@ -1,6 +1,6 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {ProfileModeration} from '@atproto/api'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
@@ -11,45 +11,58 @@ export function ProfileHeaderAlerts({
   moderation,
   style,
 }: {
-  moderation: ModerationUI
+  moderation: ProfileModeration
   style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
   const pal = usePalette('default')
 
-  if (!moderation.cause) {
-    //} || !moderation.alert) {
+  const causes = [
+    moderation.decisions.account.cause,
+    ...moderation.decisions.account.additionalCauses,
+    moderation.decisions.profile.cause,
+    ...moderation.decisions.profile.additionalCauses,
+  ].filter(Boolean)
+
+  if (!causes.length) {
     return null
   }
 
-  const desc = describeModerationCause(moderation.cause, 'account')
   return (
-    <View style={[styles.container, pal.viewLight, style]}>
-      <InfoCircleIcon style={pal.text} size={24} />
-      <Text type="lg" style={pal.text}>
-        {desc.name}
-      </Text>
-      <Pressable
-        onPress={() => {
-          store.shell.openModal({
-            name: 'moderation-details',
-            context: 'content',
-            moderation,
-          })
-        }}
-        accessibilityRole="button"
-        accessibilityLabel="Learn more about this warning"
-        accessibilityHint=""
-        style={styles.learnMoreBtn}>
-        <Text type="lg" style={pal.link}>
-          Learn More
-        </Text>
-      </Pressable>
+    <View style={styles.grid}>
+      {causes.map(cause => {
+        const desc = describeModerationCause(cause, 'account')
+        return (
+          <Pressable
+            onPress={() => {
+              store.shell.openModal({
+                name: 'moderation-details',
+                context: 'content',
+                moderation: {cause},
+              })
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Learn more about this warning"
+            accessibilityHint=""
+            style={[styles.container, pal.viewLight, style]}>
+            <InfoCircleIcon style={pal.text} size={24} />
+            <Text type="lg" style={pal.text}>
+              {desc.name}
+            </Text>
+            <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
+              Learn More
+            </Text>
+          </Pressable>
+        )
+      })}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  grid: {
+    gap: 4,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
