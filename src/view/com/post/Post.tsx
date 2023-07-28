@@ -20,7 +20,6 @@ import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
@@ -31,6 +30,7 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 export const Post = observer(function Post({
   uri,
@@ -247,9 +247,14 @@ const PostLoaded = observer(
                 </Text>
               </View>
             )}
-            <ContentHider moderation={item.moderation.content}>
+            <ContentHider
+              moderation={item.moderation.content}
+              showIcon={isDesktopWeb}
+              style={styles.contentHider}
+              childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
                 moderation={item.moderation.content}
+                showIcon={isDesktopWeb}
                 style={styles.alert}
               />
               {item.richText?.text ? (
@@ -263,9 +268,12 @@ const PostLoaded = observer(
                   />
                 </View>
               ) : undefined}
-              <ImageHider moderation={item.moderation.embed} style={s.mb10}>
+              <ContentHider
+                moderation={item.moderation.embed}
+                showIcon={isDesktopWeb}
+                style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
-              </ImageHider>
+              </ContentHider>
               {needsTranslation && (
                 <View style={[pal.borderDark, styles.translateLink]}>
                   <Link href={translatorUrl} title="Translate">
@@ -343,6 +351,9 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.gray2,
   },
   contentHider: {
-    marginTop: 4,
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
   },
 })

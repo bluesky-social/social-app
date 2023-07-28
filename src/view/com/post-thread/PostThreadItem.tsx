@@ -26,7 +26,6 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -34,6 +33,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -227,9 +227,14 @@ export const PostThreadItem = observer(function PostThreadItem({
           </View>
         </View>
         <View style={[s.pl10, s.pr10, s.pb10]}>
-          <ContentHider moderation={item.moderation.content}>
+          <ContentHider
+            moderation={item.moderation.content}
+            showIcon
+            style={styles.contentHider}
+            childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
+              showIcon
               style={styles.alert}
             />
             {item.richText?.text ? (
@@ -246,9 +251,14 @@ export const PostThreadItem = observer(function PostThreadItem({
                 />
               </View>
             ) : undefined}
-            <ImageHider moderation={item.moderation.embed} style={s.mb10}>
-              <PostEmbeds embed={item.post.embed} style={s.mb10} />
-            </ImageHider>
+            {item.post.embed && (
+              <ContentHider
+                moderation={item.moderation.embed}
+                showIcon
+                style={s.mb10}>
+                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+              </ContentHider>
+            )}
           </ContentHider>
           <ExpandedPostDetails
             post={item.post}
@@ -364,6 +374,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
               />
+              <PostAlerts
+                moderation={item.moderation.content}
+                showIcon={isDesktopWeb}
+                style={styles.alert}
+              />
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
@@ -374,9 +389,14 @@ export const PostThreadItem = observer(function PostThreadItem({
                   />
                 </View>
               ) : undefined}
-              <ImageHider style={s.mb10} moderation={item.moderation.embed}>
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
-              </ImageHider>
+              {item.post.embed && (
+                <ContentHider
+                  style={s.mb10}
+                  showIcon={isDesktopWeb}
+                  moderation={item.moderation.embed}>
+                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                </ContentHider>
+              )}
               {needsTranslation && (
                 <View style={[pal.borderDark, styles.translateLink]}>
                   <Link href={translatorUrl} title="Translate">
@@ -534,7 +554,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   contentHider: {
-    marginTop: 4,
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
   },
   expandedInfo: {
     flexDirection: 'row',

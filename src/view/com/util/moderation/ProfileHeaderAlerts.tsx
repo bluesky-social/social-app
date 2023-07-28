@@ -7,31 +7,27 @@ import {InfoCircleIcon} from 'lib/icons'
 import {describeModerationCause} from 'lib/strings/moderation'
 import {useStores} from 'state/index'
 
-const HIT_SLOP = {top: 16, left: 40, bottom: 16, right: 16}
-
-export function PostAlerts({
+export function ProfileHeaderAlerts({
   moderation,
-  showIcon,
   style,
 }: {
   moderation: ModerationUI
-  showIcon?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
   const pal = usePalette('default')
 
-  if (!moderation.cause || !moderation.alert) {
+  if (!moderation.cause) {
+    //} || !moderation.alert) {
     return null
   }
 
-  const desc = describeModerationCause(moderation.cause)
+  const desc = describeModerationCause(moderation.cause, 'account')
   return (
     <View style={[styles.container, pal.viewLight, style]}>
-      {showIcon && <InfoCircleIcon style={pal.text} size={24} />}
+      <InfoCircleIcon style={pal.text} size={24} />
       <Text type="lg" style={pal.text}>
-        {desc.name}
-        {showIcon ? ' Warning' : ''}
+        {desc.name} Warning
       </Text>
       <Pressable
         onPress={() => {
@@ -44,8 +40,7 @@ export function PostAlerts({
         accessibilityRole="button"
         accessibilityLabel="Learn more about this warning"
         accessibilityHint=""
-        style={styles.learnMoreBtn}
-        hitSlop={HIT_SLOP}>
+        style={styles.learnMoreBtn}>
         <Text type="lg" style={pal.link}>
           Learn More
         </Text>

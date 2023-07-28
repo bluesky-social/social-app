@@ -15,7 +15,6 @@ import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
@@ -29,6 +28,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 export const FeedItem = observer(function ({
   item,
@@ -244,9 +244,12 @@ export const FeedItem = observer(function ({
           )}
           <ContentHider
             moderation={item.moderation.content}
-            containerStyle={styles.contentHider}>
+            showIcon={isDesktopWeb}
+            style={styles.contentHider}
+            childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
+              showIcon={isDesktopWeb}
               style={styles.alert}
             />
             {item.richText?.text ? (
@@ -259,9 +262,12 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            <ImageHider moderation={item.moderation.embed} style={styles.embed}>
+            <ContentHider
+              moderation={item.moderation.embed}
+              showIcon={isDesktopWeb}
+              style={styles.embed}>
               <PostEmbeds embed={item.post.embed} style={styles.embed} />
-            </ImageHider>
+            </ContentHider>
             {needsTranslation && (
               <View style={[pal.borderDark, styles.translateLink]}>
                 <Link href={translatorUrl} title="Translate">
@@ -361,7 +367,10 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   contentHider: {
-    marginTop: 4,
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
   },
   embed: {
     marginBottom: 6,

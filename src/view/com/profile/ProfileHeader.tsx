@@ -25,7 +25,7 @@ import {TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
-import {ProfileHeaderWarnings} from '../util/moderation/ProfileHeaderWarnings'
+import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
@@ -504,8 +504,8 @@ const ProfileHeaderLoaded = observer(
               ) : undefined}
             </>
           )}
-          <ProfileHeaderWarnings moderation={view.moderation.account} />
-          <ProfileHeaderWarnings moderation={view.moderation.profile} />
+          <ProfileHeaderAlerts moderation={view.moderation.account} />
+          <ProfileHeaderAlerts moderation={view.moderation.profile} />
           <View style={styles.moderationLines}>
             {view.viewer.blocking ? (
               <View

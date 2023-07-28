@@ -1,11 +1,16 @@
 import React, {ComponentProps} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Pressable, View} from 'react-native'
 import {ModerationUI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
+import {describeModerationCause} from 'lib/strings/moderation'
+import {InfoCircleIcon} from 'lib/icons'
+import {useStores} from 'state/index'
+import {isDesktopWeb} from 'platform/detection'
+
+const HIT_SLOP = {top: 16, left: 40, bottom: 16, right: 16}
 
 interface Props extends ComponentProps<typeof Link> {
   // testID?: string
@@ -22,14 +27,9 @@ export function PostHider({
   children,
   ...props
 }: Props) {
+  const store = useStores()
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const onPressToggle = React.useCallback(() => {
-    if (!moderation.noOverride) {
-      setOverride(v => !v)
-    }
-  }, [setOverride, moderation.noOverride])
-  const bg = override ? pal.viewLight : pal.view
 
   if (!moderation.blur) {
     return (
@@ -45,29 +45,51 @@ export function PostHider({
     )
   }
 
+  const desc = describeModerationCause(moderation.cause)
   return (
     <>
-      <View style={[styles.description, bg, pal.border]}>
-        <FontAwesomeIcon
-          icon={['far', 'eye-slash']}
-          style={[styles.icon, pal.text]}
-        />
-        <Text type="md" style={pal.textLight}>
-          {/* TODO moderation.reason ||*/ 'Content warning'}
-        </Text>
+      <View style={[styles.description, pal.viewLight]}>
+        <InfoCircleIcon size={24} style={pal.text} />
+        <Pressable
+          onPress={() => {
+            store.shell.openModal({
+              name: 'moderation-details',
+              context: 'content',
+              moderation,
+            })
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Learn more about this warning"
+          accessibilityHint="">
+          <Text type="lg" style={pal.text}>
+            {desc.name}
+          </Text>
+          <Text type="md" style={pal.textLight}>
+            Learn more
+          </Text>
+        </Pressable>
         {!moderation.noOverride && (
-          <TouchableOpacity
+          <Pressable
             style={styles.showBtn}
-            onPress={onPressToggle}
-            accessibilityRole="button">
-            <Text type="md" style={pal.link}>
-              {override ? 'Hide' : 'Show'} post
+            onPress={() => {
+              if (!moderation.noOverride) {
+                setOverride(v => !v)
+              }
+            }}
+            accessibilityRole="button"
+            accessibilityHint={
+              override ? 'Hide the content' : 'Show the content'
+            }
+            accessibilityLabel=""
+            hitSlop={HIT_SLOP}>
+            <Text type="xl" style={pal.link}>
+              {override ? 'Hide' : 'Show'}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         )}
       </View>
       {override && (
-        <View style={[styles.childrenContainer, pal.border, bg]}>
+        <View style={[styles.childrenContainer, pal.border, pal.viewLight]}>
           <Link
             testID={testID}
             style={addStyle(style, styles.child)}
@@ -84,23 +106,24 @@ export function PostHider({
 const styles = StyleSheet.create({
   description: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: 10,
     paddingVertical: 14,
-    paddingHorizontal: 18,
-    borderTopWidth: 1,
-  },
-  icon: {
-    marginRight: 10,
+    paddingLeft: 18,
+    paddingRight: isDesktopWeb ? 18 : 22,
+    marginTop: 1,
   },
   showBtn: {
     marginLeft: 'auto',
+    alignSelf: 'center',
   },
   childrenContainer: {
-    paddingHorizontal: 6,
+    paddingHorizontal: 4,
     paddingBottom: 6,
   },
   child: {
-    borderWidth: 1,
-    borderRadius: 12,
+    borderWidth: 0,
+    borderTopWidth: 0,
+    borderRadius: 8,
   },
 })

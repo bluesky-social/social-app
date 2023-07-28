@@ -1,29 +1,32 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
+import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
-import {addStyle} from 'lib/styles'
+import {InfoCircleIcon} from 'lib/icons'
+import {describeModerationCause} from 'lib/strings/moderation'
+import {useStores} from 'state/index'
+import {isDesktopWeb} from 'platform/detection'
+
+const HIT_SLOP = {top: 16, left: 40, bottom: 16, right: 16}
 
 export function ContentHider({
   testID,
   moderation,
+  showIcon,
   style,
-  containerStyle,
+  childContainerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationUI
+  showIcon?: boolean
   style?: StyleProp<ViewStyle>
-  containerStyle?: StyleProp<ViewStyle>
+  childContainerStyle?: StyleProp<ViewStyle>
 }>) {
+  const store = useStores()
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const onPressToggle = React.useCallback(() => {
-    if (!moderation.noOverride) {
-      setOverride(v => !v)
-    }
-  }, [setOverride, moderation.noOverride])
 
   if (!moderation.blur) {
     return (
@@ -33,71 +36,67 @@ export function ContentHider({
     )
   }
 
+  const desc = describeModerationCause(moderation.cause)
   return (
-    <View style={[styles.container, pal.view, pal.border, containerStyle]}>
-      <Pressable
-        onPress={onPressToggle}
-        accessibilityLabel={override ? 'Hide post' : 'Show post'}
-        // TODO: The text labelling should be split up so controls have unique roles
-        accessibilityHint={
-          override
-            ? 'Re-hide post'
-            : 'Shows post hidden based on your moderation settings'
-        }
-        style={[
-          styles.description,
-          pal.viewLight,
-          override && styles.descriptionOpen,
-        ]}>
-        <Text type="md" style={pal.textLight}>
-          {/* TODO moderation.reason ||*/ 'Content warning'}
-        </Text>
+    <View testID={testID} style={style}>
+      <View style={[styles.cover, pal.viewLight]}>
+        {showIcon && <InfoCircleIcon size={24} style={pal.text} />}
+        <Pressable
+          onPress={() => {
+            store.shell.openModal({
+              name: 'moderation-details',
+              context: 'content',
+              moderation,
+            })
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Learn more about this warning"
+          accessibilityHint="">
+          <Text type="lg" style={pal.text}>
+            {desc.name}
+          </Text>
+          <Text type="md" style={pal.textLight}>
+            Learn more
+          </Text>
+        </Pressable>
         {!moderation.noOverride && (
-          <View style={styles.showBtn}>
-            <Text type="md-medium" style={pal.link}>
+          <Pressable
+            style={styles.showBtn}
+            onPress={() => {
+              if (!moderation.noOverride) {
+                setOverride(v => !v)
+              }
+            }}
+            accessibilityRole="button"
+            accessibilityHint={
+              override ? 'Hide the content' : 'Show the content'
+            }
+            accessibilityLabel=""
+            hitSlop={HIT_SLOP}>
+            <Text type="xl" style={pal.link}>
               {override ? 'Hide' : 'Show'}
             </Text>
-          </View>
+          </Pressable>
         )}
-      </Pressable>
-      {override && (
-        <View style={[styles.childrenContainer, pal.border]}>
-          <View testID={testID} style={addStyle(style, styles.child)}>
-            {children}
-          </View>
-        </View>
-      )}
+      </View>
+      {override && <View style={childContainerStyle}>{children}</View>}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 10,
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  description: {
+  cover: {
+    borderRadius: 8,
+    marginTop: 4,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: 10,
     paddingVertical: 14,
     paddingLeft: 14,
-    paddingRight: 18,
-    borderRadius: 12,
-  },
-  descriptionOpen: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  icon: {
-    marginRight: 10,
+    paddingRight: isDesktopWeb ? 18 : 22,
   },
   showBtn: {
     marginLeft: 'auto',
+    alignSelf: 'center',
   },
-  childrenContainer: {
-    paddingHorizontal: 12,
-    paddingTop: 8,
-  },
-  child: {},
 })
