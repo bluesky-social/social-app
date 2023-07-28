@@ -1,5 +1,11 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  TouchableWithoutFeedback,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -63,7 +69,7 @@ export function ScreenHider({
           {desc.name}
         </Text>
         .{' '}
-        <Pressable
+        <TouchableWithoutFeedback
           onPress={() => {
             store.shell.openModal({
               name: 'moderation-details',
@@ -77,7 +83,7 @@ export function ScreenHider({
           <Text type="2xl" style={pal.link}>
             Learn More
           </Text>
-        </Pressable>
+        </TouchableWithoutFeedback>
       </Text>
       {!isDesktopWeb && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>
