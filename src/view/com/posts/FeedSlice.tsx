@@ -18,11 +18,8 @@ export const FeedSlice = observer(
     slice: PostsFeedSliceModel
     ignoreFilterFor?: string
   }) => {
-    const moderation = slice.moderation
-    if (moderation.content.filter) {
-      if (!slice.items.find(item => item.post.author.did === ignoreFilterFor)) {
-        return null
-      }
+    if (slice.shouldFilter(ignoreFilterFor)) {
+      return null
     }
 
     if (slice.isThread && slice.items.length > 3) {

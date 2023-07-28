@@ -63,6 +63,13 @@ export class PostsFeedSliceModel {
     return this.items[0].moderation
   }
 
+  shouldFilter(ignoreFilterForDid: string | undefined): boolean {
+    const mods = this.items
+      .filter(item => item.post.author.did !== ignoreFilterForDid)
+      .map(item => item.moderation)
+    return !!mods.find(mod => mod.content.filter)
+  }
+
   containsUri(uri: string) {
     return !!this.items.find(item => item.post.uri === uri)
   }

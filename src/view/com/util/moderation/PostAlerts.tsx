@@ -9,15 +9,20 @@ import {useStores} from 'state/index'
 
 export function PostAlerts({
   moderation,
+  includeMute,
   style,
 }: {
   moderation: ModerationUI
+  includeMute?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
   const pal = usePalette('default')
 
-  if (!moderation.cause || !moderation.alert) {
+  const shouldAlert =
+    !!moderation.cause &&
+    (moderation.alert || (includeMute && moderation.cause?.type === 'muted'))
+  if (!shouldAlert) {
     return null
   }
 
@@ -37,7 +42,7 @@ export function PostAlerts({
       style={[styles.container, pal.viewLight, style]}>
       <InfoCircleIcon style={pal.text} size={18} />
       <Text type="lg" style={pal.text}>
-        {desc.name} Warning
+        {desc.name}
       </Text>
       <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
         Learn More

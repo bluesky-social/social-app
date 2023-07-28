@@ -228,10 +228,12 @@ export const PostThreadItem = observer(function PostThreadItem({
         <View style={[s.pl10, s.pr10, s.pb10]}>
           <ContentHider
             moderation={item.moderation.content}
+            ignoreMute
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
+              includeMute
               style={styles.alert}
             />
             {item.richText?.text ? (

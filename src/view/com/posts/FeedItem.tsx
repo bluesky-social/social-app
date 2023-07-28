@@ -243,6 +243,7 @@ export const FeedItem = observer(function ({
           )}
           <ContentHider
             moderation={item.moderation.content}
+            ignoreMute
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts

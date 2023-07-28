@@ -11,12 +11,14 @@ import {isDesktopWeb} from 'platform/detection'
 export function ContentHider({
   testID,
   moderation,
+  ignoreMute,
   style,
   childContainerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationUI
+  ignoreMute?: boolean
   style?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -24,7 +26,7 @@ export function ContentHider({
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
 
-  if (!moderation.blur) {
+  if (!moderation.blur || (ignoreMute && moderation.cause?.type === 'muted')) {
     return (
       <View testID={testID} style={style}>
         {children}
