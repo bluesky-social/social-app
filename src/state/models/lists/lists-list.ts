@@ -48,8 +48,23 @@ export class ListsListModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  /**
+   * Removes posts from the feed upon deletion.
+   */
+  onListDeleted(uri: string) {
+    this.lists = this.lists.filter(l => l.uri !== uri)
+  }
+
   // public api
   // =
+
+  /**
+   * Register any event listeners. Returns a cleanup function.
+   */
+  registerListeners() {
+    const sub = this.rootStore.onListDeleted(this.onListDeleted.bind(this))
+    return () => sub.remove()
+  }
 
   async refresh() {
     return this.loadMore(true)

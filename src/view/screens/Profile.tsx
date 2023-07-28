@@ -56,6 +56,13 @@ export const ProfileScreen = withAuthRequired(
       setHasSetup(false)
     }, [route.params.name])
 
+    // We don't need this to be reactive, so we can just register the listeners once
+    useEffect(() => {
+      const listCleanup = uiState.lists.registerListeners()
+      return () => listCleanup()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     useFocusEffect(
       React.useCallback(() => {
         const softResetSub = store.onScreenSoftReset(onSoftReset)
@@ -126,6 +133,7 @@ export const ProfileScreen = withAuthRequired(
         />
       )
     }, [uiState, onRefresh, route.params.hideBackButton])
+
     const Footer = React.useMemo(() => {
       return uiState.showLoadingMoreFooter ? LoadingMoreFooter : undefined
     }, [uiState.showLoadingMoreFooter])
