@@ -188,6 +188,14 @@ export class RootStoreModel {
     DeviceEventEmitter.emit('post-deleted', uri)
   }
 
+  // a list was deleted by the local user
+  onListDeleted(handler: (uri: string) => void): EmitterSubscription {
+    return DeviceEventEmitter.addListener('list-deleted', handler)
+  }
+  emitListDeleted(uri: string) {
+    DeviceEventEmitter.emit('list-deleted', uri)
+  }
+
   // the session has started and been fully hydrated
   onSessionLoaded(handler: () => void): EmitterSubscription {
     return DeviceEventEmitter.addListener('session-loaded', handler)

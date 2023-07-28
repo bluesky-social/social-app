@@ -37,7 +37,7 @@ export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
   }, [setIsDefaultSelected, model])
 
   const fetchServiceDescription = React.useMemo(
-    () => debounce(() => model.fetchServiceDescription(), 1e3),
+    () => debounce(() => model.fetchServiceDescription(), 1e3), // debouce for 1 second (1e3 = 1000ms)
     [model],
   )
 
