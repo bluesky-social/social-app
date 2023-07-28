@@ -66,13 +66,12 @@ export function PostHider({
           }}
           accessibilityRole="button"
           accessibilityLabel="Learn more about this warning"
-          accessibilityHint=""
-          style={styles.title}>
+          accessibilityHint="">
           <InfoCircleIcon size={18} style={pal.text} />
-          <Text type="lg" style={pal.text}>
-            {desc.name}
-          </Text>
         </Pressable>
+        <Text type="lg" style={pal.text}>
+          {desc.name}
+        </Text>
         {!moderation.noOverride && (
           <Text type="xl" style={[styles.showBtn, pal.link]}>
             {override ? 'Hide' : 'Show'}
@@ -98,15 +97,11 @@ const styles = StyleSheet.create({
   description: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 4,
     paddingVertical: 14,
     paddingLeft: 18,
     paddingRight: isDesktopWeb ? 18 : 22,
     marginTop: 1,
-  },
-  title: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
   },
   showBtn: {
     marginLeft: 'auto',

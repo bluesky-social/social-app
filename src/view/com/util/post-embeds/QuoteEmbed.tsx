@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   errorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    gap: 4,
     borderRadius: 8,
     marginTop: 8,
     paddingVertical: 14,

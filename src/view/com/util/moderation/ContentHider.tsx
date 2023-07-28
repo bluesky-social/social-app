@@ -57,13 +57,12 @@ export function ContentHider({
           }}
           accessibilityRole="button"
           accessibilityLabel="Learn more about this warning"
-          accessibilityHint=""
-          style={styles.title}>
+          accessibilityHint="">
           <InfoCircleIcon size={18} style={pal.text} />
-          <Text type="lg" style={pal.text}>
-            {desc.name}
-          </Text>
         </Pressable>
+        <Text type="lg" style={pal.text}>
+          {desc.name}
+        </Text>
         {!moderation.noOverride && (
           <View style={styles.showBtn}>
             <Text type="xl" style={pal.link}>
@@ -79,18 +78,14 @@ export function ContentHider({
 
 const styles = StyleSheet.create({
   cover: {
-    borderRadius: 8,
-    marginTop: 4,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 4,
+    borderRadius: 8,
+    marginTop: 4,
     paddingVertical: 14,
     paddingLeft: 14,
     paddingRight: isDesktopWeb ? 18 : 22,
-  },
-  title: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
   },
   showBtn: {
     marginLeft: 'auto',
