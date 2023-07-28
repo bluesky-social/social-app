@@ -10,8 +10,6 @@ import {InfoCircleIcon} from 'lib/icons'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 
-const HIT_SLOP = {top: 16, left: 40, bottom: 16, right: 16}
-
 interface Props extends ComponentProps<typeof Link> {
   // testID?: string
   // href?: string
@@ -48,8 +46,16 @@ export function PostHider({
   const desc = describeModerationCause(moderation.cause)
   return (
     <>
-      <View style={[styles.description, pal.viewLight]}>
-        <InfoCircleIcon size={24} style={pal.text} />
+      <Pressable
+        onPress={() => {
+          if (!moderation.noOverride) {
+            setOverride(v => !v)
+          }
+        }}
+        accessibilityRole="button"
+        accessibilityHint={override ? 'Hide the content' : 'Show the content'}
+        accessibilityLabel=""
+        style={[styles.description, pal.viewLight]}>
         <Pressable
           onPress={() => {
             store.shell.openModal({
@@ -60,34 +66,19 @@ export function PostHider({
           }}
           accessibilityRole="button"
           accessibilityLabel="Learn more about this warning"
-          accessibilityHint="">
+          accessibilityHint=""
+          style={styles.title}>
+          <InfoCircleIcon size={18} style={pal.text} />
           <Text type="lg" style={pal.text}>
             {desc.name}
           </Text>
-          <Text type="md" style={pal.textLight}>
-            Learn more
-          </Text>
         </Pressable>
         {!moderation.noOverride && (
-          <Pressable
-            style={styles.showBtn}
-            onPress={() => {
-              if (!moderation.noOverride) {
-                setOverride(v => !v)
-              }
-            }}
-            accessibilityRole="button"
-            accessibilityHint={
-              override ? 'Hide the content' : 'Show the content'
-            }
-            accessibilityLabel=""
-            hitSlop={HIT_SLOP}>
-            <Text type="xl" style={pal.link}>
-              {override ? 'Hide' : 'Show'}
-            </Text>
-          </Pressable>
+          <Text type="xl" style={[styles.showBtn, pal.link]}>
+            {override ? 'Hide' : 'Show'}
+          </Text>
         )}
-      </View>
+      </Pressable>
       {override && (
         <View style={[styles.childrenContainer, pal.border, pal.viewLight]}>
           <Link
@@ -106,12 +97,16 @@ export function PostHider({
 const styles = StyleSheet.create({
   description: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
+    alignItems: 'center',
     paddingVertical: 14,
     paddingLeft: 18,
     paddingRight: isDesktopWeb ? 18 : 22,
     marginTop: 1,
+  },
+  title: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   showBtn: {
     marginLeft: 'auto',

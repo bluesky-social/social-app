@@ -33,7 +33,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
-import {isDesktopWeb} from 'platform/detection'
 
 const PARENT_REPLY_LINE_LENGTH = 8
 
@@ -229,12 +228,10 @@ export const PostThreadItem = observer(function PostThreadItem({
         <View style={[s.pl10, s.pr10, s.pb10]}>
           <ContentHider
             moderation={item.moderation.content}
-            showIcon
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
-              showIcon
               style={styles.alert}
             />
             {item.richText?.text ? (
@@ -252,10 +249,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               </View>
             ) : undefined}
             {item.post.embed && (
-              <ContentHider
-                moderation={item.moderation.embed}
-                showIcon
-                style={s.mb10}>
+              <ContentHider moderation={item.moderation.embed} style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
               </ContentHider>
             )}
@@ -376,7 +370,6 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
               <PostAlerts
                 moderation={item.moderation.content}
-                showIcon={isDesktopWeb}
                 style={styles.alert}
               />
               {item.richText?.text ? (
@@ -390,10 +383,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               ) : undefined}
               {item.post.embed && (
-                <ContentHider
-                  style={s.mb10}
-                  showIcon={isDesktopWeb}
-                  moderation={item.moderation.embed}>
+                <ContentHider style={s.mb10} moderation={item.moderation.embed}>
                   <PostEmbeds embed={item.post.embed} style={s.mb10} />
                 </ContentHider>
               )}

@@ -30,7 +30,6 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
-import {isDesktopWeb} from 'platform/detection'
 
 export const Post = observer(function Post({
   uri,
@@ -249,12 +248,10 @@ const PostLoaded = observer(
             )}
             <ContentHider
               moderation={item.moderation.content}
-              showIcon={isDesktopWeb}
               style={styles.contentHider}
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
                 moderation={item.moderation.content}
-                showIcon={isDesktopWeb}
                 style={styles.alert}
               />
               {item.richText?.text ? (
@@ -268,10 +265,7 @@ const PostLoaded = observer(
                   />
                 </View>
               ) : undefined}
-              <ContentHider
-                moderation={item.moderation.embed}
-                showIcon={isDesktopWeb}
-                style={s.mb10}>
+              <ContentHider moderation={item.moderation.embed} style={s.mb10}>
                 <PostEmbeds embed={item.post.embed} style={s.mb10} />
               </ContentHider>
               {needsTranslation && (

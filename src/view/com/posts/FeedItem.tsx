@@ -28,7 +28,6 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
-import {isDesktopWeb} from 'platform/detection'
 
 export const FeedItem = observer(function ({
   item,
@@ -244,12 +243,10 @@ export const FeedItem = observer(function ({
           )}
           <ContentHider
             moderation={item.moderation.content}
-            showIcon={isDesktopWeb}
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
-              showIcon={isDesktopWeb}
               style={styles.alert}
             />
             {item.richText?.text ? (
@@ -264,7 +261,6 @@ export const FeedItem = observer(function ({
             ) : undefined}
             <ContentHider
               moderation={item.moderation.embed}
-              showIcon={isDesktopWeb}
               style={styles.embed}>
               <PostEmbeds embed={item.post.embed} style={styles.embed} />
             </ContentHider>

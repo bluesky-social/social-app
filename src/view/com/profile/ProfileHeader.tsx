@@ -21,7 +21,6 @@ import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
 import {ThemedText} from '../util/text/ThemedText'
-import {TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
@@ -29,7 +28,6 @@ import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {listUriToHref} from 'lib/strings/url-helpers'
 import {isDesktopWeb, isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
@@ -506,51 +504,6 @@ const ProfileHeaderLoaded = observer(
           )}
           <ProfileHeaderAlerts moderation={view.moderation.account} />
           <ProfileHeaderAlerts moderation={view.moderation.profile} />
-          <View style={styles.moderationLines}>
-            {view.viewer.blocking ? (
-              <View
-                testID="profileHeaderBlockedNotice"
-                style={[styles.moderationNotice, pal.viewLight]}>
-                <FontAwesomeIcon icon="ban" style={[pal.text]} />
-                <Text type="lg-medium" style={pal.text}>
-                  Account blocked
-                </Text>
-              </View>
-            ) : view.viewer.muted ? (
-              <View
-                testID="profileHeaderMutedNotice"
-                style={[styles.moderationNotice, pal.viewLight]}>
-                <FontAwesomeIcon
-                  icon={['far', 'eye-slash']}
-                  style={[pal.text]}
-                />
-                <Text type="lg-medium" style={pal.text}>
-                  Account muted{' '}
-                  {view.viewer.mutedByList && (
-                    <Text type="lg-medium" style={pal.text}>
-                      by{' '}
-                      <TextLink
-                        type="lg-medium"
-                        style={pal.link}
-                        href={listUriToHref(view.viewer.mutedByList.uri)}
-                        text={view.viewer.mutedByList.name}
-                      />
-                    </Text>
-                  )}
-                </Text>
-              </View>
-            ) : undefined}
-            {view.viewer.blockedBy && (
-              <View
-                testID="profileHeaderBlockedNotice"
-                style={[styles.moderationNotice, pal.viewLight]}>
-                <FontAwesomeIcon icon="ban" style={[pal.text]} />
-                <Text type="lg-medium" style={pal.text}>
-                  This account has blocked you
-                </Text>
-              </View>
-            )}
-          </View>
         </View>
         {!isDesktopWeb && !hideBackButton && (
           <TouchableWithoutFeedback
@@ -692,19 +645,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
-  },
-
-  moderationLines: {
-    gap: 6,
-  },
-
-  moderationNotice: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    gap: 8,
   },
 
   br40: {borderRadius: 40},

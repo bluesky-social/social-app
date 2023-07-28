@@ -27,7 +27,7 @@ export function ProfileHeaderAlerts({
     <View style={[styles.container, pal.viewLight, style]}>
       <InfoCircleIcon style={pal.text} size={24} />
       <Text type="lg" style={pal.text}>
-        {desc.name} Warning
+        {desc.name}
       </Text>
       <Pressable
         onPress={() => {

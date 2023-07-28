@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {Pressable, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -7,15 +7,11 @@ import {InfoCircleIcon} from 'lib/icons'
 import {describeModerationCause} from 'lib/strings/moderation'
 import {useStores} from 'state/index'
 
-const HIT_SLOP = {top: 16, left: 40, bottom: 16, right: 16}
-
 export function PostAlerts({
   moderation,
-  showIcon,
   style,
 }: {
   moderation: ModerationUI
-  showIcon?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
@@ -27,30 +23,26 @@ export function PostAlerts({
 
   const desc = describeModerationCause(moderation.cause)
   return (
-    <View style={[styles.container, pal.viewLight, style]}>
-      {showIcon && <InfoCircleIcon style={pal.text} size={24} />}
+    <Pressable
+      onPress={() => {
+        store.shell.openModal({
+          name: 'moderation-details',
+          context: 'content',
+          moderation,
+        })
+      }}
+      accessibilityRole="button"
+      accessibilityLabel="Learn more about this warning"
+      accessibilityHint=""
+      style={[styles.container, pal.viewLight, style]}>
+      <InfoCircleIcon style={pal.text} size={18} />
       <Text type="lg" style={pal.text}>
-        {desc.name}
-        {showIcon ? ' Warning' : ''}
+        {desc.name} Warning
       </Text>
-      <Pressable
-        onPress={() => {
-          store.shell.openModal({
-            name: 'moderation-details',
-            context: 'content',
-            moderation,
-          })
-        }}
-        accessibilityRole="button"
-        accessibilityLabel="Learn more about this warning"
-        accessibilityHint=""
-        style={styles.learnMoreBtn}
-        hitSlop={HIT_SLOP}>
-        <Text type="lg" style={pal.link}>
-          Learn More
-        </Text>
-      </Pressable>
-    </View>
+      <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
+        Learn More
+      </Text>
+    </Pressable>
   )
 }
 
@@ -58,8 +50,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
     paddingVertical: 12,
+    paddingLeft: 14,
     paddingHorizontal: 16,
     borderRadius: 8,
   },

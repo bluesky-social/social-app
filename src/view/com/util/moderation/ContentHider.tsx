@@ -8,19 +8,15 @@ import {describeModerationCause} from 'lib/strings/moderation'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 
-const HIT_SLOP = {top: 16, left: 40, bottom: 16, right: 16}
-
 export function ContentHider({
   testID,
   moderation,
-  showIcon,
   style,
   childContainerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationUI
-  showIcon?: boolean
   style?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -39,8 +35,16 @@ export function ContentHider({
   const desc = describeModerationCause(moderation.cause)
   return (
     <View testID={testID} style={style}>
-      <View style={[styles.cover, pal.viewLight]}>
-        {showIcon && <InfoCircleIcon size={24} style={pal.text} />}
+      <Pressable
+        onPress={() => {
+          if (!moderation.noOverride) {
+            setOverride(v => !v)
+          }
+        }}
+        accessibilityRole="button"
+        accessibilityHint={override ? 'Hide the content' : 'Show the content'}
+        accessibilityLabel=""
+        style={[styles.cover, pal.viewLight]}>
         <Pressable
           onPress={() => {
             store.shell.openModal({
@@ -51,34 +55,21 @@ export function ContentHider({
           }}
           accessibilityRole="button"
           accessibilityLabel="Learn more about this warning"
-          accessibilityHint="">
+          accessibilityHint=""
+          style={styles.title}>
+          <InfoCircleIcon size={18} style={pal.text} />
           <Text type="lg" style={pal.text}>
             {desc.name}
           </Text>
-          <Text type="md" style={pal.textLight}>
-            Learn more
-          </Text>
         </Pressable>
         {!moderation.noOverride && (
-          <Pressable
-            style={styles.showBtn}
-            onPress={() => {
-              if (!moderation.noOverride) {
-                setOverride(v => !v)
-              }
-            }}
-            accessibilityRole="button"
-            accessibilityHint={
-              override ? 'Hide the content' : 'Show the content'
-            }
-            accessibilityLabel=""
-            hitSlop={HIT_SLOP}>
+          <View style={styles.showBtn}>
             <Text type="xl" style={pal.link}>
               {override ? 'Hide' : 'Show'}
             </Text>
-          </Pressable>
+          </View>
         )}
-      </View>
+      </Pressable>
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>
   )
@@ -89,11 +80,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 4,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
+    alignItems: 'center',
     paddingVertical: 14,
     paddingLeft: 14,
     paddingRight: isDesktopWeb ? 18 : 22,
+  },
+  title: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
   },
   showBtn: {
     marginLeft: 'auto',

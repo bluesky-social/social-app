@@ -18,20 +18,20 @@ export function describeModerationCause(
   }
   if (cause.type === 'blocking') {
     return {
-      name: 'Blocking',
+      name: 'Blocked User',
       description: 'You have blocked this user. You cannot view their content.',
     }
   }
   if (cause.type === 'blocked-by') {
     return {
-      name: 'Blocked',
+      name: 'Blocked by Author',
       description: 'This user has blocked you. You cannot view their content.',
     }
   }
   if (cause.type === 'muted') {
     if (cause.source.type === 'user') {
       return {
-        name: 'Muted',
+        name: 'Muted User',
         description: 'You have muted this user',
       }
     } else {
