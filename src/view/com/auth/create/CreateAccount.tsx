@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -7,17 +6,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {Text} from '../../util/text/Text'
-import {s} from 'lib/styles'
-import {useStores} from 'state/index'
-import {CreateAccountModel} from 'state/models/ui/create-account'
-import {usePalette} from 'lib/hooks/usePalette'
 
+import {CreateAccountModel} from 'state/models/ui/create-account'
+import { NavigationProp } from 'lib/routes/types'
+import React from 'react'
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
+import {Text} from '../../util/text/Text'
+import {observer} from 'mobx-react-lite'
+import {s} from 'lib/styles'
+import {useAnalytics} from 'lib/analytics/analytics'
+import { useNavigation } from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const CreateAccount = observer(
   ({onPressBack}: {onPressBack: () => void}) => {
@@ -25,6 +27,7 @@ export const CreateAccount = observer(
     const pal = usePalette('default')
     const store = useStores()
     const model = React.useMemo(() => new CreateAccountModel(store), [store])
+    const navigation = useNavigation<NavigationProp>();
 
     React.useEffect(() => {
       screen('CreateAccount')
@@ -56,6 +59,7 @@ export const CreateAccount = observer(
       } else {
         try {
           await model.submit()
+          navigation.navigate("Home");
         } catch {
           // dont need to handle here
         } finally {
