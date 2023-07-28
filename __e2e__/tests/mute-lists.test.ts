@@ -2,7 +2,7 @@
 
 import {openApp, login, createServer, sleep} from '../util'
 
-describe('Profile screen', () => {
+describe('Mute lists', () => {
   let service: string
   beforeAll(async () => {
     service = await createServer('?users&follows&labels')
@@ -65,7 +65,7 @@ describe('Profile screen', () => {
     await element(by.id('editListBtn')).tap()
     await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.id('changeAvatarLibraryBtn')).tap()
+    await element(by.text('Library')).tap()
     await sleep(3e3)
     await element(by.id('saveBtn')).tap()
     await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
@@ -81,7 +81,7 @@ describe('Profile screen', () => {
     await element(by.id('editListBtn')).tap()
     await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.id('changeAvatarRemoveBtn')).tap()
+    await element(by.text('Remove')).tap()
     await element(by.id('saveBtn')).tap()
     await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
     await expect(element(by.id('userAvatarFallback'))).toExist()
@@ -125,14 +125,14 @@ describe('Profile screen', () => {
     await expect(element(by.id('profileView'))).toBeVisible()
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
-    await element(by.id('profileHeaderDropdownListAddRemoveBtn')).tap()
+    await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('listAddRemoveUserModal'))).toBeVisible()
     await element(by.id('toggleBtn-Bad Ppl')).tap()
     await element(by.id('saveBtn')).tap()
     await expect(element(by.id('listAddRemoveUserModal'))).not.toBeVisible()
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
-    await element(by.id('profileHeaderDropdownListAddRemoveBtn')).tap()
+    await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('listAddRemoveUserModal'))).toBeVisible()
     await element(by.id('toggleBtn-Bad Ppl')).tap()
     await element(by.id('saveBtn')).tap()
