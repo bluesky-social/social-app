@@ -136,6 +136,7 @@ function ProfileCardPills({
         return (
           <View style={[s.mt5, pal.btn, styles.pill]}>
             <Text type="xs" style={pal.text}>
+              {cause?.type === 'label' ? '⚠' : ''}
               {desc.name}
             </Text>
           </View>
