@@ -101,6 +101,9 @@ async function main() {
             'warn-posts',
             'muted-account',
             'muted-by-list-account',
+            'blocking-account',
+            'blockedby-account',
+            'mutual-block-account',
           ]) {
             await server.mocker.createUser(user)
             await server.mocker.follow('alice', user)
@@ -339,6 +342,85 @@ async function main() {
             'muted-by-list-account',
             'account reply',
             anchorPost,
+          )
+
+          await server.mocker.createPost('blocking-account', 'blocking post')
+          await server.mocker.createQuotePost(
+            'blocking-account',
+            'blocking quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'blocking-account',
+            'blocking reply',
+            anchorPost,
+          )
+          await server.mocker.users.alice.agent.app.bsky.graph.block.create(
+            {
+              repo: server.mocker.users.alice.did,
+            },
+            {
+              subject: server.mocker.users['blocking-account'].did,
+              createdAt: new Date().toISOString(),
+            },
+          )
+
+          await server.mocker.createPost('blockedby-account', 'blockedby post')
+          await server.mocker.createQuotePost(
+            'blockedby-account',
+            'blockedby quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'blockedby-account',
+            'blockedby reply',
+            anchorPost,
+          )
+          await server.mocker.users[
+            'blockedby-account'
+          ].agent.app.bsky.graph.block.create(
+            {
+              repo: server.mocker.users['blockedby-account'].did,
+            },
+            {
+              subject: server.mocker.users.alice.did,
+              createdAt: new Date().toISOString(),
+            },
+          )
+
+          await server.mocker.createPost(
+            'mutual-block-account',
+            'mutual-block post',
+          )
+          await server.mocker.createQuotePost(
+            'mutual-block-account',
+            'mutual-block quote post',
+            anchorPost,
+          )
+          await server.mocker.createReply(
+            'mutual-block-account',
+            'mutual-block reply',
+            anchorPost,
+          )
+          await server.mocker.users.alice.agent.app.bsky.graph.block.create(
+            {
+              repo: server.mocker.users.alice.did,
+            },
+            {
+              subject: server.mocker.users['mutual-block-account'].did,
+              createdAt: new Date().toISOString(),
+            },
+          )
+          await server.mocker.users[
+            'mutual-block-account'
+          ].agent.app.bsky.graph.block.create(
+            {
+              repo: server.mocker.users['mutual-block-account'].did,
+            },
+            {
+              subject: server.mocker.users.alice.did,
+              createdAt: new Date().toISOString(),
+            },
           )
         }
       }
