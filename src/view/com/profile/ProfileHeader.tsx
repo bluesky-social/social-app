@@ -114,7 +114,10 @@ const ProfileHeaderLoaded = observer(
     }, [navigation])
 
     const onPressAvi = React.useCallback(() => {
-      if (view.avatar) {
+      if (
+        view.avatar &&
+        !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
+      ) {
         store.shell.openLightbox(new ProfileImageLightbox(view))
       }
     }, [store, view])
