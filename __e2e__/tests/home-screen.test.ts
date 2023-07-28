@@ -55,7 +55,7 @@ describe('Home screen', () => {
     await element(by.id('postDropdownBtn').withAncestor(carlaPosts))
       .atIndex(0)
       .tap()
-    await element(by.id('postDropdownReportBtn')).tap()
+    await element(by.text('Report post')).tap()
     await expect(element(by.id('reportPostModal'))).toBeVisible()
     await element(
       by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
@@ -84,7 +84,7 @@ describe('Home screen', () => {
     await element(by.id('postDropdownBtn').withAncestor(alicePosts))
       .atIndex(0)
       .tap()
-    await element(by.id('postDropdownDeleteBtn')).tap()
+    await element(by.text('Delete post')).tap()
     await expect(element(by.id('confirmModal'))).toBeVisible()
     await element(by.id('confirmBtn')).tap()
     await expect(

@@ -2,7 +2,6 @@ import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {HighPriorityImage} from 'view/com/util/images/Image'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
@@ -11,12 +10,12 @@ import {
 } from 'lib/hooks/usePermissions'
 import {useStores} from 'state/index'
 import {colors} from 'lib/styles'
-import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AvatarModeration} from 'lib/labeling/types'
 import {UserPreviewLink} from './UserPreviewLink'
+import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 
 type Type = 'user' | 'algo' | 'list'
 
@@ -130,59 +129,81 @@ export function UserAvatar({
   }, [type, size])
 
   const dropdownItems = useMemo(
-    () => [
-      !isWeb && {
-        testID: 'changeAvatarCameraBtn',
-        label: 'Camera',
-        icon: 'camera' as IconProp,
-        onPress: async () => {
-          if (!(await requestCameraAccessIfNeeded())) {
-            return
-          }
+    () =>
+      [
+        !isWeb && {
+          testID: 'changeAvatarCameraBtn',
+          label: 'Camera',
+          icon: {
+            ios: {
+              name: 'camera',
+            },
+            android: 'ic_menu_camera',
+            web: 'camera',
+          },
+          onPress: async () => {
+            if (!(await requestCameraAccessIfNeeded())) {
+              return
+            }
 
-          onSelectNewAvatar?.(
-            await openCamera(store, {
-              width: 1000,
-              height: 1000,
+            onSelectNewAvatar?.(
+              await openCamera(store, {
+                width: 1000,
+                height: 1000,
+                cropperCircleOverlay: true,
+              }),
+            )
+          },
+        },
+        {
+          testID: 'changeAvatarLibraryBtn',
+          label: 'Library',
+          icon: {
+            ios: {
+              name: 'photo.on.rectangle.angled',
+            },
+            android: 'ic_menu_gallery',
+            web: 'gallery',
+          },
+          onPress: async () => {
+            if (!(await requestPhotoAccessIfNeeded())) {
+              return
+            }
+
+            const items = await openPicker({
+              aspect: [1, 1],
+            })
+            const item = items[0]
+
+            const croppedImage = await openCropper(store, {
+              mediaType: 'photo',
               cropperCircleOverlay: true,
-            }),
-          )
-        },
-      },
-      {
-        testID: 'changeAvatarLibraryBtn',
-        label: 'Library',
-        icon: 'image' as IconProp,
-        onPress: async () => {
-          if (!(await requestPhotoAccessIfNeeded())) {
-            return
-          }
+              height: item.height,
+              width: item.width,
+              path: item.path,
+            })
 
-          const items = await openPicker({
-            aspect: [1, 1],
-          })
-          const item = items[0]
-
-          const croppedImage = await openCropper(store, {
-            mediaType: 'photo',
-            cropperCircleOverlay: true,
-            height: item.height,
-            width: item.width,
-            path: item.path,
-          })
-
-          onSelectNewAvatar?.(croppedImage)
+            onSelectNewAvatar?.(croppedImage)
+          },
         },
-      },
-      !!avatar && {
-        testID: 'changeAvatarRemoveBtn',
-        label: 'Remove',
-        icon: ['far', 'trash-can'] as IconProp,
-        onPress: async () => {
-          onSelectNewAvatar?.(null)
+        !!avatar && {
+          label: 'separator',
         },
-      },
-    ],
+        !!avatar && {
+          testID: 'changeAvatarRemoveBtn',
+          label: 'Remove',
+          icon: {
+            ios: {
+              name: 'trash',
+            },
+            android: 'ic_delete',
+            web: 'trash',
+          },
+          onPress: async () => {
+            onSelectNewAvatar?.(null)
+          },
+        },
+      ].filter(Boolean) as DropdownItem[],
     [
       avatar,
       onSelectNewAvatar,
@@ -209,14 +230,7 @@ export function UserAvatar({
 
   // onSelectNewAvatar is only passed as prop on the EditProfile component
   return onSelectNewAvatar ? (
-    <DropdownButton
-      testID="changeAvatarBtn"
-      type="bare"
-      items={dropdownItems}
-      openToRight
-      rightOffset={-10}
-      bottomOffset={-10}
-      menuWidth={170}>
+    <NativeDropdown testID="changeAvatarBtn" items={dropdownItems}>
       {avatar ? (
         <HighPriorityImage
           testID="userAvatarImage"
@@ -234,7 +248,7 @@ export function UserAvatar({
           color={pal.text.color as string}
         />
       </View>
-    </DropdownButton>
+    </NativeDropdown>
   ) : avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>

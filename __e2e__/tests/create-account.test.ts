@@ -25,6 +25,8 @@ describe('Create account', () => {
     await element(by.id('handleInput')).typeText('e2e-test')
     await device.takeScreenshot('4- entered handle')
     await element(by.id('nextBtn')).tap()
+    await expect(element(by.id('welcomeScreen'))).toBeVisible()
+    await element(by.id('continueBtn')).tap()
     await expect(element(by.id('homeScreen'))).toBeVisible()
   })
 })

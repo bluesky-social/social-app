@@ -11,7 +11,7 @@ import {PostThreadItemModel} from 'state/models/content/post-thread-item'
 import {Link} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
-import {PostDropdownBtn} from '../util/forms/DropdownButton'
+import {PostDropdownBtn} from '../util/forms/PostDropdownBtn'
 import * as Toast from '../util/Toast'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
@@ -202,7 +202,6 @@ export const PostThreadItem = observer(function PostThreadItem({
               <View style={s.flex1} />
               <PostDropdownBtn
                 testID="postDropdownBtn"
-                style={[styles.metaItem, s.mt2, s.px5]}
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
@@ -212,13 +211,8 @@ export const PostThreadItem = observer(function PostThreadItem({
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onToggleThreadMute={onToggleThreadMute}
-                onDeletePost={onDeletePost}>
-                <FontAwesomeIcon
-                  icon="ellipsis-h"
-                  size={14}
-                  style={[pal.textLight]}
-                />
-              </PostDropdownBtn>
+                onDeletePost={onDeletePost}
+              />
             </View>
             <View style={styles.meta}>
               <Link

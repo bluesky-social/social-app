@@ -1,3 +1,5 @@
+import {Insets} from 'react-native'
+
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
 
@@ -134,3 +136,15 @@ export function LINK_META_PROXY(serviceUrl: string) {
 }
 
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
+
+// Hitslop constants
+export const createHitslop = (size: number): Insets => ({
+  top: size,
+  left: size,
+  bottom: size,
+  right: size,
+})
+export const HITSLOP_10 = createHitslop(10)
+export const HITSLOP_20 = createHitslop(20)
+export const HITSLOP_30 = createHitslop(30)
+export const BACK_HITSLOP = HITSLOP_30

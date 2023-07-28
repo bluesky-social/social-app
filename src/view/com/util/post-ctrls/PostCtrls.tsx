@@ -6,17 +6,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 // DISABLED see #135
 // import {
 //   TriggerableAnimated,
 //   TriggerableAnimatedRef,
 // } from './anim/TriggerableAnimated'
 import {Text} from '../text/Text'
-import {PostDropdownBtn} from '../forms/DropdownButton'
+import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {pluralize} from 'lib/strings/helpers'
@@ -24,6 +20,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
+import {createHitslop} from 'lib/constants'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -56,7 +53,7 @@ interface PostCtrlsOpts {
   onDeletePost: () => void
 }
 
-const HITSLOP = {top: 5, left: 5, bottom: 5, right: 5}
+const HITSLOP = createHitslop(5)
 
 // DISABLED see #135
 /*
@@ -222,36 +219,21 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      <View>
-        {opts.big ? undefined : (
-          <PostDropdownBtn
-            testID="postDropdownBtn"
-            style={styles.ctrl}
-            itemUri={opts.itemUri}
-            itemCid={opts.itemCid}
-            itemHref={opts.itemHref}
-            itemTitle={opts.itemTitle}
-            isAuthor={opts.isAuthor}
-            isThreadMuted={opts.isThreadMuted}
-            onCopyPostText={opts.onCopyPostText}
-            onOpenTranslate={opts.onOpenTranslate}
-            onToggleThreadMute={opts.onToggleThreadMute}
-            onDeletePost={opts.onDeletePost}>
-            <FontAwesomeIcon
-              icon="ellipsis-h"
-              size={18}
-              style={[
-                s.mt2,
-                s.mr5,
-                {
-                  color:
-                    theme.colorScheme === 'light' ? colors.gray4 : colors.gray5,
-                } as FontAwesomeIconStyle,
-              ]}
-            />
-          </PostDropdownBtn>
-        )}
-      </View>
+      {opts.big ? undefined : (
+        <PostDropdownBtn
+          testID="postDropdownBtn"
+          itemUri={opts.itemUri}
+          itemCid={opts.itemCid}
+          itemHref={opts.itemHref}
+          itemTitle={opts.itemTitle}
+          isAuthor={opts.isAuthor}
+          isThreadMuted={opts.isThreadMuted}
+          onCopyPostText={opts.onCopyPostText}
+          onOpenTranslate={opts.onOpenTranslate}
+          onToggleThreadMute={opts.onToggleThreadMute}
+          onDeletePost={opts.onDeletePost}
+        />
+      )}
       {/* used for adding pad to the right side */}
       <View />
     </View>

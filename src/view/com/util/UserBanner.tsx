@@ -1,7 +1,6 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -10,11 +9,11 @@ import {
   usePhotoLibraryPermission,
   useCameraPermission,
 } from 'lib/hooks/usePermissions'
-import {DropdownButton} from './forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AvatarModeration} from 'lib/labeling/types'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
 
 export function UserBanner({
   banner,
@@ -30,63 +29,84 @@ export function UserBanner({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
-  const dropdownItems = [
-    !isWeb && {
-      testID: 'changeBannerCameraBtn',
-      label: 'Camera',
-      icon: 'camera' as IconProp,
-      onPress: async () => {
-        if (!(await requestCameraAccessIfNeeded())) {
-          return
-        }
-        onSelectNewBanner?.(
-          await openCamera(store, {
-            width: 3000,
-            height: 1000,
-          }),
-        )
-      },
-    },
-    {
-      testID: 'changeBannerLibraryBtn',
-      label: 'Library',
-      icon: 'image' as IconProp,
-      onPress: async () => {
-        if (!(await requestPhotoAccessIfNeeded())) {
-          return
-        }
-        const items = await openPicker()
+  const dropdownItems: DropdownItem[] = useMemo(
+    () =>
+      [
+        !isWeb && {
+          testID: 'changeBannerCameraBtn',
+          label: 'Camera',
+          icon: {
+            ios: {
+              name: 'camera',
+            },
+            android: 'ic_menu_camera',
+            web: 'camera',
+          },
+          onPress: async () => {
+            if (!(await requestCameraAccessIfNeeded())) {
+              return
+            }
+            onSelectNewBanner?.(
+              await openCamera(store, {
+                width: 3000,
+                height: 1000,
+              }),
+            )
+          },
+        },
+        {
+          testID: 'changeBannerLibraryBtn',
+          label: 'Library',
+          icon: {
+            ios: {
+              name: 'photo.on.rectangle.angled',
+            },
+            android: 'ic_menu_gallery',
+            web: 'gallery',
+          },
+          onPress: async () => {
+            if (!(await requestPhotoAccessIfNeeded())) {
+              return
+            }
+            const items = await openPicker()
 
-        onSelectNewBanner?.(
-          await openCropper(store, {
-            mediaType: 'photo',
-            path: items[0].path,
-            width: 3000,
-            height: 1000,
-          }),
-        )
-      },
-    },
-    !!banner && {
-      testID: 'changeBannerRemoveBtn',
-      label: 'Remove',
-      icon: ['far', 'trash-can'] as IconProp,
-      onPress: () => {
-        onSelectNewBanner?.(null)
-      },
-    },
-  ]
+            onSelectNewBanner?.(
+              await openCropper(store, {
+                mediaType: 'photo',
+                path: items[0].path,
+                width: 3000,
+                height: 1000,
+              }),
+            )
+          },
+        },
+        !!banner && {
+          testID: 'changeBannerRemoveBtn',
+          label: 'Remove',
+          icon: {
+            ios: {
+              name: 'trash',
+            },
+            android: 'ic_delete',
+            web: 'trash',
+          },
+          onPress: () => {
+            onSelectNewBanner?.(null)
+          },
+        },
+      ].filter(Boolean) as DropdownItem[],
+    [
+      banner,
+      onSelectNewBanner,
+      requestCameraAccessIfNeeded,
+      requestPhotoAccessIfNeeded,
+      store,
+    ],
+  )
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <DropdownButton
-      testID="changeBannerBtn"
-      type="bare"
-      items={dropdownItems}
-      openToRight
-      rightOffset={-200}
-      bottomOffset={-10}
-      menuWidth={170}>
+    <NativeDropdown testID="changeBannerBtn" items={dropdownItems}>
       {banner ? (
         <Image
           testID="userBannerImage"
@@ -109,7 +129,7 @@ export function UserBanner({
           color={pal.text.color as string}
         />
       </View>
-    </DropdownButton>
+    </NativeDropdown>
   ) : banner &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image

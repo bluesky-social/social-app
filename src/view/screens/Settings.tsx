@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
+  Pressable,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -30,7 +31,6 @@ import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
-import {DropdownButton} from 'view/com/util/forms/DropdownButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -50,6 +50,7 @@ import {makeProfileLink} from 'lib/routes/links'
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
+import {DropdownItem, NativeDropdown} from 'view/com/util/forms/NativeDropdown'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -565,24 +566,31 @@ export const SettingsScreen = withAuthRequired(
 function AccountDropdownBtn({handle}: {handle: string}) {
   const store = useStores()
   const pal = usePalette('default')
-  const items = [
+  const items: DropdownItem[] = [
     {
       label: 'Remove account',
       onPress: () => {
         store.session.removeAccount(handle)
         Toast.show('Account removed from quick access')
       },
+      icon: {
+        ios: {
+          name: 'trash',
+        },
+        android: 'ic_delete',
+        web: 'trash',
+      },
     },
   ]
   return (
-    <View style={s.pl10}>
-      <DropdownButton type="bare" items={items}>
+    <Pressable accessibilityRole="button" style={s.pl10}>
+      <NativeDropdown testID="accountSettingsDropdownBtn" items={items}>
         <FontAwesomeIcon
           icon="ellipsis-h"
           style={pal.textLight as FontAwesomeIconStyle}
         />
-      </DropdownButton>
-    </View>
+      </NativeDropdown>
+    </Pressable>
   )
 }
 

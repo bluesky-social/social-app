@@ -10,10 +10,8 @@ import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
-import {POST_IMG_MAX} from 'lib/constants'
+import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {GalleryModel} from 'state/models/media/gallery'
-
-const HITSLOP = {left: 10, top: 10, right: 10, bottom: 10}
 
 type Props = {
   gallery: GalleryModel
@@ -54,7 +52,7 @@ export function OpenCameraBtn({gallery}: Props) {
       testID="openCameraButton"
       onPress={onPressTakePicture}
       style={styles.button}
-      hitSlop={HITSLOP}
+      hitSlop={HITSLOP_10}
       accessibilityRole="button"
       accessibilityLabel="Camera"
       accessibilityHint="Opens camera on device">

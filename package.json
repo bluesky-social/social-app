@@ -42,6 +42,7 @@
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
     "@react-native-community/datetimepicker": "6.7.3",
+    "@react-native-menu/menu": "^0.8.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native": "^6.1.6",
@@ -120,6 +121,7 @@
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-inappbrowser-reborn": "^3.6.3",
+    "react-native-ios-context-menu": "^1.15.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-pager-view": "6.1.4",
     "react-native-progress": "bluesky-social/react-native-progress",
@@ -139,6 +141,7 @@
     "sentry-expo": "~6.1.0",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
   "devDependencies": {

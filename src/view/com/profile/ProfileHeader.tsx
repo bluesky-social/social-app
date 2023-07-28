@@ -17,7 +17,6 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s, colors} from 'lib/styles'
-import {DropdownButton, DropdownItem} from '../util/forms/DropdownButton'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -36,10 +35,10 @@ import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
 import {navigate} from '../../../Navigation'
+import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
+import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-
-const BACK_HITSLOP = {left: 30, top: 30, right: 30, bottom: 30}
 
 interface Props {
   view: ProfileModel
@@ -260,15 +259,29 @@ const ProfileHeaderLoaded = observer(
           testID: 'profileHeaderDropdownShareBtn',
           label: 'Share',
           onPress: onPressShare,
+          icon: {
+            ios: {
+              name: 'square.and.arrow.up',
+            },
+            android: 'ic_menu_share',
+            web: 'share',
+          },
         },
       ]
       if (!isMe) {
-        items.push({sep: true})
+        items.push({label: 'separator'})
         // Only add "Add to Lists" on other user's profiles, doesn't make sense to mute my own self!
         items.push({
           testID: 'profileHeaderDropdownListAddRemoveBtn',
           label: 'Add to Lists',
           onPress: onPressAddRemoveLists,
+          icon: {
+            ios: {
+              name: 'list.bullet',
+            },
+            android: 'ic_menu_add',
+            web: 'list',
+          },
         })
         if (!view.viewer.blocking) {
           items.push({
@@ -277,6 +290,13 @@ const ProfileHeaderLoaded = observer(
             onPress: view.viewer.muted
               ? onPressUnmuteAccount
               : onPressMuteAccount,
+            icon: {
+              ios: {
+                name: 'speaker.slash',
+              },
+              android: 'ic_lock_silent_mode',
+              web: 'comment-slash',
+            },
           })
         }
         items.push({
@@ -285,11 +305,25 @@ const ProfileHeaderLoaded = observer(
           onPress: view.viewer.blocking
             ? onPressUnblockAccount
             : onPressBlockAccount,
+          icon: {
+            ios: {
+              name: 'person.fill.xmark',
+            },
+            android: 'ic_menu_close_clear_cancel',
+            web: 'user-slash',
+          },
         })
         items.push({
           testID: 'profileHeaderDropdownReportBtn',
           label: 'Report Account',
           onPress: onPressReportAccount,
+          icon: {
+            ios: {
+              name: 'exclamationmark.triangle',
+            },
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
+          },
         })
       }
       return items
@@ -380,13 +414,17 @@ const ProfileHeaderLoaded = observer(
               </>
             ) : null}
             {dropdownItems?.length ? (
-              <DropdownButton
+              <NativeDropdown
                 testID="profileHeaderDropdownBtn"
-                type="bare"
-                items={dropdownItems}
-                style={[styles.btn, styles.secondaryBtn, pal.btn]}>
-                <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
-              </DropdownButton>
+                items={dropdownItems}>
+                <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
+                  <FontAwesomeIcon
+                    icon="ellipsis"
+                    size={20}
+                    style={[pal.text]}
+                  />
+                </View>
+              </NativeDropdown>
             ) : undefined}
           </View>
           <View>

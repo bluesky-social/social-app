@@ -29,10 +29,10 @@ import {Haptics} from 'lib/haptics'
 import {ComposeIcon2} from 'lib/icons'
 import {FAB} from '../com/util/fab/FAB'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {DropdownButton, DropdownItem} from 'view/com/util/forms/DropdownButton'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {makeProfileLink} from 'lib/routes/links'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
@@ -121,11 +121,25 @@ export const CustomFeedScreen = withAuthRequired(
           testID: 'feedHeaderDropdownRemoveBtn',
           label: 'Remove from my feeds',
           onPress: onToggleSaved,
+          icon: {
+            ios: {
+              name: 'trash',
+            },
+            android: 'ic_delete',
+            web: 'trash',
+          },
         },
         {
           testID: 'feedHeaderDropdownShareBtn',
           label: 'Share link',
           onPress: onPressShare,
+          icon: {
+            ios: {
+              name: 'square.and.arrow.up',
+            },
+            android: 'ic_menu_share',
+            web: 'share',
+          },
         },
       ]
       return items
@@ -163,17 +177,10 @@ export const CustomFeedScreen = withAuthRequired(
             </Button>
           ) : undefined}
           {currentFeed?.isSaved ? (
-            <DropdownButton
+            <NativeDropdown
               testID="feedHeaderDropdownBtn"
-              type="default-light"
               items={dropdownItems}
-              menuWidth={250}>
-              <FontAwesomeIcon
-                icon="ellipsis"
-                color={pal.colors.textLight}
-                size={18}
-              />
-            </DropdownButton>
+            />
           ) : (
             <Button
               type="default-light"
