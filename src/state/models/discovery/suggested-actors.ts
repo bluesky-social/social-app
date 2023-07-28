@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
@@ -69,7 +69,12 @@ export class SuggestedActorsModel {
         limit: 25,
         cursor: this.loadMoreCursor,
       })
-      const {actors, cursor} = res.data
+      let {actors, cursor} = res.data
+      actors = actors.filter(
+        actor =>
+          !moderateProfile(actor, this.rootStore.preferences.moderationOpts)
+            .account.filter,
+      )
       this.rootStore.me.follows.hydrateProfiles(actors)
 
       runInAction(() => {
