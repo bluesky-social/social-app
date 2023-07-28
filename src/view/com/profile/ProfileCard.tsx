@@ -73,6 +73,7 @@ export const ProfileCard = observer(
               lineHeight={1.2}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
+                moderation.profile,
               )}
             </Text>
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
