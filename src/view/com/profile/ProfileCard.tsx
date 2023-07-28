@@ -1,7 +1,11 @@
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ProfileModeration,
+} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -12,6 +16,7 @@ import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {describeModerationCause} from 'lib/strings/moderation'
 
 export const ProfileCard = observer(
   ({
@@ -20,7 +25,6 @@ export const ProfileCard = observer(
     noBg,
     noBorder,
     followers,
-    overrideModeration,
     renderButton,
   }: {
     testID?: string
@@ -28,7 +32,6 @@ export const ProfileCard = observer(
     noBg?: boolean
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
-    overrideModeration?: boolean
     renderButton?: (
       profile: AppBskyActorDefs.ProfileViewBasic,
     ) => React.ReactNode
@@ -40,10 +43,6 @@ export const ProfileCard = observer(
       profile,
       store.preferences.moderationOpts,
     )
-
-    if (moderation.account.filter && !overrideModeration) {
-      return null
-    }
 
     return (
       <Link
@@ -79,15 +78,11 @@ export const ProfileCard = observer(
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
               {sanitizeHandle(profile.handle, '@')}
             </Text>
-            {!!profile.viewer?.followedBy && (
-              <View style={s.flexRow}>
-                <View style={[s.mt5, pal.btn, styles.pill]}>
-                  <Text type="xs" style={pal.text}>
-                    Follows You
-                  </Text>
-                </View>
-              </View>
-            )}
+            <ProfileCardPills
+              followedBy={!!profile.viewer?.followedBy}
+              moderation={moderation}
+            />
+            {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
           </View>
           {renderButton ? (
             <View style={styles.layoutButton}>{renderButton(profile)}</View>
@@ -105,6 +100,49 @@ export const ProfileCard = observer(
     )
   },
 )
+
+function ProfileCardPills({
+  followedBy,
+  moderation,
+}: {
+  followedBy: boolean
+  moderation: ProfileModeration
+}) {
+  const pal = usePalette('default')
+
+  const causes = [
+    moderation.decisions.account.cause,
+    ...moderation.decisions.account.additionalCauses,
+    moderation.decisions.profile.cause,
+    ...moderation.decisions.profile.additionalCauses,
+  ].filter(Boolean)
+
+  if (!followedBy && !causes.length) {
+    return null
+  }
+
+  return (
+    <View style={styles.pills}>
+      {followedBy && (
+        <View style={[s.mt5, pal.btn, styles.pill]}>
+          <Text type="xs" style={pal.text}>
+            Follows You
+          </Text>
+        </View>
+      )}
+      {causes.map(cause => {
+        const desc = describeModerationCause(cause, 'account')
+        return (
+          <View style={[s.mt5, pal.btn, styles.pill]}>
+            <Text type="xs" style={pal.text}>
+              {desc.name}
+            </Text>
+          </View>
+        )
+      })}
+    </View>
+  )
+}
 
 const FollowersList = observer(
   ({followers}: {followers?: AppBskyActorDefs.ProfileView[] | undefined}) => {
@@ -209,6 +247,10 @@ const styles = StyleSheet.create({
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
+  },
+  pills: {
+    flexDirection: 'row',
+    gap: 6,
   },
   pill: {
     borderRadius: 4,
