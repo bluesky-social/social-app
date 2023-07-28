@@ -6,7 +6,7 @@ import {
   NativeDropdown,
   DropdownItem as NativeDropdownItem,
 } from './NativeDropdown'
-import {Pressable} from 'react-native'
+import {EventStopper} from '../EventStopper'
 
 export function PostDropdownBtn({
   testID,
@@ -141,8 +141,13 @@ export function PostDropdownBtn({
   ].filter(Boolean) as NativeDropdownItem[]
 
   return (
-    <Pressable testID={testID} accessibilityRole="button">
-      <NativeDropdown items={dropdownItems} />
-    </Pressable>
+    <EventStopper>
+      <NativeDropdown
+        testID={testID}
+        items={dropdownItems}
+        accessibilityLabel="More post options"
+        accessibilityHint=""
+      />
+    </EventStopper>
   )
 }
