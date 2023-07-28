@@ -10,7 +10,7 @@ export const Welcome = ({next}: {next: () => void}) => {
   const pal = usePalette('default')
   return (
     <View style={[styles.container]}>
-      <View>
+      <View testID="welcomeScreen">
         <Text style={[pal.text, styles.title]}>Welcome to </Text>
         <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
 
@@ -52,7 +52,12 @@ export const Welcome = ({next}: {next: () => void}) => {
         </View>
       </View>
 
-      <Button onPress={next} label="Continue" labelStyle={styles.buttonText} />
+      <Button
+        onPress={next}
+        label="Continue"
+        testID="continueBtn"
+        labelStyle={styles.buttonText}
+      />
     </View>
   )
 }
