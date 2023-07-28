@@ -21,6 +21,7 @@ interface Props {
   onPressClearQuery: () => void
   onPressCancelSearch: () => void
   onSubmitQuery: () => void
+  showMenu?: boolean
 }
 export function HeaderWithInput({
   isInputFocused,
@@ -30,6 +31,7 @@ export function HeaderWithInput({
   onPressClearQuery,
   onPressCancelSearch,
   onSubmitQuery,
+  showMenu = true,
 }: Props) {
   const store = useStores()
   const theme = useTheme()
@@ -49,16 +51,18 @@ export function HeaderWithInput({
 
   return (
     <View style={[pal.view, pal.border, styles.header]}>
-      <TouchableOpacity
-        testID="viewHeaderBackOrMenuBtn"
-        onPress={onPressMenu}
-        hitSlop={MENU_HITSLOP}
-        style={styles.headerMenuBtn}
-        accessibilityRole="button"
-        accessibilityLabel="Menu"
-        accessibilityHint="Access navigation links and settings">
-        <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
-      </TouchableOpacity>
+      {showMenu ? (
+        <TouchableOpacity
+          testID="viewHeaderBackOrMenuBtn"
+          onPress={onPressMenu}
+          hitSlop={MENU_HITSLOP}
+          style={styles.headerMenuBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Menu"
+          accessibilityHint="Access navigation links and settings">
+          <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
+        </TouchableOpacity>
+      ) : null}
       <View
         style={[
           {backgroundColor: pal.colors.backgroundLight},
