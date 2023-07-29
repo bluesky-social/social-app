@@ -70,7 +70,9 @@ export class CommunitiesModel {
           .data as SolarplexCommunity[];
         this.communityFeeds = [];
         for (const c of this.communities) {
-          this.communityFeeds.push(new CommunityFeedModel(this.rootStore, c));
+          this.communityFeeds.push(
+            new CommunityFeedModel(this.rootStore, c.id, c),
+          );
         }
       });
     } catch (e) {

@@ -4,4 +4,7 @@ export interface SolarplexCommunity {
   description: string;
   createdAt: string;
   published: boolean;
+  uri: string | undefined;
+  image: string | undefined;
+  banner: string | undefined;
 }

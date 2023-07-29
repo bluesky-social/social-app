@@ -50,10 +50,9 @@ interface Props {
 export const CommunityHeader = observer(
   ({ view, onRefreshAll, hideBackButton = false }: Props) => {
     const pal = usePalette("default");
-
     // loading
     // =
-    if (!view) {
+    if (!view || !view.hasLoaded) {
       return (
         <View style={pal.view}>
           <LoadingPlaceholder width="100%" height={120} />
@@ -119,22 +118,21 @@ const CommunityHeaderLoaded = observer(
       // }
     }, [store, view]);
 
-    const onPressToggleFollow = React.useCallback(() => {
+    const onPressToggleJoin = React.useCallback(async () => {
       // track(
       //   view.viewer.following
       //     ? "CommunityHeader:FollowButtonClicked"
       //     : "CommunityHeader:UnfollowButtonClicked",
       // );
-      // view?.toggleFollowing().then(
-      //   () => {
-      //     Toast.show(
-      //       `${
-      //         view.viewer.following ? "Following" : "No longer following"
-      //       } ${sanitizeDisplayName(view.displayName || view.handle)}`,
-      //     );
-      //   },
-      //   (err) => store.log.error("Failed to toggle follow", err),
-      // );
+      if (view.isJoined) {
+        // leave
+        await store.me.joinedCommunities.leave(view);
+        Toast.show("Removed from my communities");
+      } else {
+        // join
+        await store.me.joinedCommunities.join(view);
+        Toast.show("Added to my communities");
+      }
     }, [track, view, store.log]);
 
     const onPressEditProfile = React.useCallback(() => {
@@ -159,7 +157,7 @@ const CommunityHeaderLoaded = observer(
     const onPressShare = React.useCallback(() => {
       // track("CommunityHeader:ShareButtonClicked");
       // const url = toShareUrl(`/profile/${view.handle}`);
-      shareUrl(url);
+      // shareUrl(url);
     }, [track, view]);
 
     const onPressAddRemoveLists = React.useCallback(() => {
@@ -302,11 +300,49 @@ const CommunityHeaderLoaded = observer(
     // const pluralizedFollowers = pluralize(view.followersCount, "follower");
     console.log("view:", view);
     return (
-      <View style={pal.view}>
-        <UserBanner banner={""} />
-        <View style={styles.content}>
-          <View style={[styles.buttonsLine]}>
-            {/* {!store.session.isSolarplexSession ? (
+      <>
+        {view && view.data && (
+          <View style={pal.view}>
+            <UserBanner banner={view.data.banner} />
+            <View style={styles.content}>
+              <View style={[styles.buttonsLine]}>
+                {view.isJoined === true ? (
+                  <TouchableOpacity
+                    testID="leaveBtn"
+                    onPress={onPressToggleJoin}
+                    style={[styles.btn, styles.mainBtn, pal.btn]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Leave ${view.data.name}`}
+                    accessibilityHint={`Leave ${view.data.name}`}
+                  >
+                    <FontAwesomeIcon
+                      icon="check"
+                      style={[pal.text, s.mr5]}
+                      size={14}
+                    />
+                    <Text type="button" style={pal.text}>
+                      Joined
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    testID="joinBtn"
+                    onPress={onPressToggleJoin}
+                    style={[styles.btn, styles.primaryBtn]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Join ${view.data.name}`}
+                    accessibilityHint={`Joins ${view.data.name}`}
+                  >
+                    <FontAwesomeIcon
+                      icon="plus"
+                      style={[s.white as FontAwesomeIconStyle, s.mr5]}
+                    />
+                    <Text type="button" style={[s.white, s.bold]}>
+                      Join
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                {/* {!store.session.isSolarplexSession ? (
               isMe ? (
                 <TouchableOpacity
                   testID="communityHeaderEditProfileButton"
@@ -375,28 +411,27 @@ const CommunityHeaderLoaded = observer(
                 </>
               ) : null
             ) : null} */}
-            {dropdownItems?.length ? (
-              <DropdownButton
-                testID="communityHeaderDropdownBtn"
-                type="bare"
-                items={dropdownItems}
-                style={[styles.btn, styles.secondaryBtn, pal.btn]}
-              >
-                <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
-              </DropdownButton>
-            ) : undefined}
-          </View>
-          <View>
-            <Text
-              testID="communityHeaderDisplayName"
-              type="title-2xl"
-              style={[pal.text, styles.title]}
-            >
-              {"hello"}
-              {sanitizeDisplayName(view.data.name)}
-            </Text>
-          </View>
-          {/* <View style={styles.handleLine}>
+                {dropdownItems?.length ? (
+                  <DropdownButton
+                    testID="communityHeaderDropdownBtn"
+                    type="bare"
+                    items={dropdownItems}
+                    style={[styles.btn, styles.secondaryBtn, pal.btn]}
+                  >
+                    <FontAwesomeIcon icon="ellipsis" style={[pal.text]} />
+                  </DropdownButton>
+                ) : undefined}
+              </View>
+              <View>
+                <Text
+                  testID="communityHeaderDisplayName"
+                  type="title-2xl"
+                  style={[pal.text, styles.title]}
+                >
+                  {sanitizeDisplayName(view.data?.name)}
+                </Text>
+              </View>
+              {/* <View style={styles.handleLine}>
             {view.viewer.followedBy && !blockHide ? (
               <View style={[styles.pill, pal.btn, s.mr5]}>
                 <Text type="xs" style={[pal.text]}>
@@ -406,9 +441,9 @@ const CommunityHeaderLoaded = observer(
             ) : undefined}
             <Text style={[pal.textLight, styles.handle]}>@{view.handle}</Text>
           </View> */}
-          <>
-            <View style={styles.metricsLine}>
-              {/* <TouchableOpacity
+              <>
+                <View style={styles.metricsLine}>
+                  {/* <TouchableOpacity
                 testID="communityHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
                 onPress={onPressFollowers}
@@ -444,46 +479,50 @@ const CommunityHeaderLoaded = observer(
                   {pluralize(view.postsCount, "post")}
                 </Text>
               </Text> */}
+                </View>
+                {sanitizeDisplayName(view.data?.description)}
+              </>
             </View>
-            {view.data.name}
-          </>
-
-          <View style={styles.moderationLines}></View>
-        </View>
-        {!isDesktopWeb && !hideBackButton && (
-          <TouchableWithoutFeedback
-            onPress={onPressBack}
-            hitSlop={BACK_HITSLOP}
-            accessibilityRole="button"
-            accessibilityLabel="Back"
-            accessibilityHint=""
-          >
-            <View style={styles.backBtnWrapper}>
-              <BlurView style={styles.backBtn} blurType="dark">
-                <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-              </BlurView>
-            </View>
-          </TouchableWithoutFeedback>
-        )}
-        <TouchableWithoutFeedback
-          testID="communityHeaderAviButton"
-          onPress={onPressAvi}
-          accessibilityRole="image"
-          accessibilityLabel={`View ${view.data.name} Community`}
-          accessibilityHint=""
-        >
-          <View
-            style={[
-              pal.view,
-              { borderColor: pal.colors.background },
-              styles.avi,
-            ]}
-          >
-            {/**add image url to type */}
-            <UserAvatar size={80} avatar={view.data.id} />
+            {!isDesktopWeb && !hideBackButton && (
+              <TouchableWithoutFeedback
+                onPress={onPressBack}
+                hitSlop={BACK_HITSLOP}
+                accessibilityRole="button"
+                accessibilityLabel="Back"
+                accessibilityHint=""
+              >
+                <View style={styles.backBtnWrapper}>
+                  <BlurView style={styles.backBtn} blurType="dark">
+                    <FontAwesomeIcon
+                      size={18}
+                      icon="angle-left"
+                      style={s.white}
+                    />
+                  </BlurView>
+                </View>
+              </TouchableWithoutFeedback>
+            )}
+            <TouchableWithoutFeedback
+              testID="communityHeaderAviButton"
+              onPress={onPressAvi}
+              accessibilityRole="image"
+              accessibilityLabel={`View ${view.data.name} Community`}
+              accessibilityHint=""
+            >
+              <View
+                style={[
+                  pal.view,
+                  { borderColor: pal.colors.background },
+                  styles.avi,
+                ]}
+              >
+                {/**add image url to type */}
+                <UserAvatar size={80} avatar={view.data.image} />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableWithoutFeedback>
-      </View>
+        )}
+      </>
     );
   },
 );

@@ -1,4 +1,6 @@
-import React from 'react'
+import * as AppInfo from "lib/app-info";
+import * as Toast from "../com/util/Toast";
+
 import {
   ActivityIndicator,
   Platform,
@@ -8,185 +10,187 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
-} from 'react-native'
+} from "react-native";
 import {
-  useFocusEffect,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+  CommonNavigatorParams,
+  NativeStackScreenProps,
+} from "lib/routes/types";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {observer} from 'mobx-react-lite'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import * as AppInfo from 'lib/app-info'
-import {useStores} from 'state/index'
-import {s, colors} from 'lib/styles'
-import {ScrollView} from '../com/util/Views'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Link} from '../com/util/Link'
-import {Text} from '../com/util/text/Text'
-import * as Toast from '../com/util/Toast'
-import {UserAvatar} from '../com/util/UserAvatar'
-import {DropdownButton} from 'view/com/util/forms/DropdownButton'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useCustomPalette} from 'lib/hooks/useCustomPalette'
-import {AccountData} from 'state/models/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
-import {pluralize} from 'lib/strings/helpers'
-import {formatCount} from 'view/com/util/numeric/format'
-import {isColorMode} from 'state/models/ui/shell'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {reset as resetNavigation} from '../../Navigation'
+} from "@fortawesome/react-native-fontawesome";
+import {
+  StackActions,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
+import { colors, s } from "lib/styles";
 
+import { AccountData } from "state/models/session";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { DropdownButton } from "view/com/util/forms/DropdownButton";
+import { Link } from "../com/util/Link";
+import { NavigationProp } from "lib/routes/types";
+import React from "react";
+import { ScrollView } from "../com/util/Views";
+import { Text } from "../com/util/text/Text";
+import { ToggleButton } from "view/com/util/forms/ToggleButton";
+import { UserAvatar } from "../com/util/UserAvatar";
+import { ViewHeader } from "../com/util/ViewHeader";
+import { formatCount } from "view/com/util/numeric/format";
+import { isColorMode } from "state/models/ui/shell";
+import { isDesktopWeb } from "platform/detection";
+import { observer } from "mobx-react-lite";
+import { pluralize } from "lib/strings/helpers";
+import { reset as resetNavigation } from "../../Navigation";
+import { useAnalytics } from "lib/analytics/analytics";
+import { useCustomPalette } from "lib/hooks/useCustomPalette";
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
-import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
+import { useDebugHeaderSetting } from "lib/api/debug-appview-proxy-header";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
+import { withAuthRequired } from "view/com/auth/withAuthRequired";
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, "Settings">;
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
-    const pal = usePalette('default')
-    const store = useStores()
-    const navigation = useNavigation<NavigationProp>()
-    const {screen, track} = useAnalytics()
-    const [isSwitching, setIsSwitching] = React.useState(false)
+    const pal = usePalette("default");
+    const store = useStores();
+    const navigation = useNavigation<NavigationProp>();
+    const { screen, track } = useAnalytics();
+    const [isSwitching, setIsSwitching] = React.useState(false);
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
       store.agent,
-    )
+    );
 
     const primaryBg = useCustomPalette<ViewStyle>({
-      light: {backgroundColor: colors.blue0},
-      dark: {backgroundColor: colors.blue6},
-    })
+      light: { backgroundColor: colors.blue0 },
+      dark: { backgroundColor: colors.blue6 },
+    });
     const primaryText = useCustomPalette<TextStyle>({
-      light: {color: colors.blue3},
-      dark: {color: colors.blue2},
-    })
+      light: { color: colors.blue3 },
+      dark: { color: colors.blue2 },
+    });
 
     const dangerBg = useCustomPalette<ViewStyle>({
-      light: {backgroundColor: colors.red1},
-      dark: {backgroundColor: colors.red7},
-    })
+      light: { backgroundColor: colors.red1 },
+      dark: { backgroundColor: colors.red7 },
+    });
     const dangerText = useCustomPalette<TextStyle>({
-      light: {color: colors.red4},
-      dark: {color: colors.red2},
-    })
+      light: { color: colors.red4 },
+      dark: { color: colors.red2 },
+    });
 
     useFocusEffect(
       React.useCallback(() => {
-        screen('Settings')
-        store.shell.setMinimalShellMode(false)
+        screen("Settings");
+        store.shell.setMinimalShellMode(false);
       }, [screen, store]),
-    )
+    );
 
     const onPressSwitchAccount = React.useCallback(
       async (acct: AccountData) => {
-        track('Settings:SwitchAccountButtonClicked')
-        setIsSwitching(true)
+        track("Settings:SwitchAccountButtonClicked");
+        setIsSwitching(true);
         if (await store.session.resumeSession(acct)) {
-          setIsSwitching(false)
-          resetNavigation()
-          Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-          return
+          setIsSwitching(false);
+          resetNavigation();
+          Toast.show(`Signed in as ${acct.displayName || acct.handle}`);
+          return;
         }
-        setIsSwitching(false)
-        Toast.show('Sorry! We need you to enter your password.')
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-        store.session.clear()
+        setIsSwitching(false);
+        Toast.show("Sorry! We need you to enter your password.");
+        navigation.navigate("HomeTab");
+        navigation.dispatch(StackActions.popToTop());
+        store.session.clear();
       },
       [track, setIsSwitching, navigation, store],
-    )
+    );
 
     const onPressAddAccount = React.useCallback(() => {
-      track('Settings:AddAccountButtonClicked')
-      navigation.navigate('HomeTab')
-      navigation.dispatch(StackActions.popToTop())
-      store.session.clear()
-    }, [track, navigation, store])
+      track("Settings:AddAccountButtonClicked");
+      navigation.navigate("HomeTab");
+      navigation.dispatch(StackActions.popToTop());
+      store.session.clear();
+    }, [track, navigation, store]);
 
     const onPressChangeHandle = React.useCallback(() => {
-      track('Settings:ChangeHandleButtonClicked')
+      track("Settings:ChangeHandleButtonClicked");
       store.shell.openModal({
-        name: 'change-handle',
+        name: "change-handle",
         onChanged() {
-          setIsSwitching(true)
+          setIsSwitching(true);
           store.session.reloadFromServer().then(
             () => {
-              setIsSwitching(false)
-              Toast.show('Your handle has been updated')
+              setIsSwitching(false);
+              Toast.show("Your handle has been updated");
             },
-            err => {
+            (err) => {
               store.log.error(
-                'Failed to reload from server after handle update',
-                {err},
-              )
-              setIsSwitching(false)
+                "Failed to reload from server after handle update",
+                { err },
+              );
+              setIsSwitching(false);
             },
-          )
+          );
         },
-      })
-    }, [track, store, setIsSwitching])
+      });
+    }, [track, store, setIsSwitching]);
 
     const onPressInviteCodes = React.useCallback(() => {
-      track('Settings:InvitecodesButtonClicked')
-      store.shell.openModal({name: 'invite-codes'})
-    }, [track, store])
+      track("Settings:InvitecodesButtonClicked");
+      store.shell.openModal({ name: "invite-codes" });
+    }, [track, store]);
 
     const onPressContentLanguages = React.useCallback(() => {
-      track('Settings:ContentlanguagesButtonClicked')
-      store.shell.openModal({name: 'content-languages-settings'})
-    }, [track, store])
+      track("Settings:ContentlanguagesButtonClicked");
+      store.shell.openModal({ name: "content-languages-settings" });
+    }, [track, store]);
 
     const onPressSignout = React.useCallback(() => {
-      track('Settings:SignOutButtonClicked')
-      store.session.logout()
-    }, [track, store])
+      track("Settings:SignOutButtonClicked");
+      store.session.logout();
+    }, [track, store]);
 
     const onPressDeleteAccount = React.useCallback(() => {
-      store.shell.openModal({name: 'delete-account'})
-    }, [store])
+      store.shell.openModal({ name: "delete-account" });
+    }, [store]);
 
     const onPressResetPreferences = React.useCallback(async () => {
-      await store.preferences.reset()
-      Toast.show('Preferences reset')
-    }, [store])
+      await store.preferences.reset();
+      Toast.show("Preferences reset");
+    }, [store]);
 
     const onPressBuildInfo = React.useCallback(() => {
       Clipboard.setString(
         `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
-      )
-      Toast.show('Copied build version to clipboard')
-    }, [])
+      );
+      Toast.show("Copied build version to clipboard");
+    }, []);
 
     const openPreferencesModal = React.useCallback(() => {
       store.shell.openModal({
-        name: 'preferences-home-feed',
-      })
-    }, [store])
+        name: "preferences-home-feed",
+      });
+    }, [store]);
 
     const onPressAppPasswords = React.useCallback(() => {
-      navigation.navigate('AppPasswords')
-    }, [navigation])
+      navigation.navigate("AppPasswords");
+    }, [navigation]);
 
     const onPressSystemLog = React.useCallback(() => {
-      navigation.navigate('Log')
-    }, [navigation])
+      navigation.navigate("Log");
+    }, [navigation]);
 
     const onPressStorybook = React.useCallback(() => {
-      navigation.navigate('Debug')
-    }, [navigation])
+      navigation.navigate("Debug");
+    }, [navigation]);
 
     const onPressSavedFeeds = React.useCallback(() => {
-      navigation.navigate('SavedFeeds')
-    }, [navigation])
+      navigation.navigate("SavedFeeds");
+    }, [navigation]);
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
@@ -194,7 +198,8 @@ export const SettingsScreen = withAuthRequired(
         <ScrollView
           style={[s.hContentRegion]}
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
-          scrollIndicatorInsets={{right: 1}}>
+          scrollIndicatorInsets={{ right: 1 }}
+        >
           <View style={styles.spacer20} />
           {store.session.currentSession !== undefined ? (
             <>
@@ -203,7 +208,7 @@ export const SettingsScreen = withAuthRequired(
               </Text>
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
-                  Email:{' '}
+                  Email:{" "}
                   <Text type="lg" style={pal.text}>
                     {store.session.currentSession?.email}
                   </Text>
@@ -226,7 +231,8 @@ export const SettingsScreen = withAuthRequired(
             <Link
               href={`/profile/${store.me.handle}`}
               title="Your profile"
-              noFeedback>
+              noFeedback
+            >
               <View style={[pal.view, styles.linkCard]}>
                 <View style={styles.avi}>
                   <UserAvatar size={40} avatar={store.me.avatar} />
@@ -244,7 +250,8 @@ export const SettingsScreen = withAuthRequired(
                   onPress={isSwitching ? undefined : onPressSignout}
                   accessibilityRole="button"
                   accessibilityLabel="Sign out"
-                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
+                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}
+                >
                   <Text type="lg" style={pal.link}>
                     Sign out
                   </Text>
@@ -252,7 +259,7 @@ export const SettingsScreen = withAuthRequired(
               </View>
             </Link>
           )}
-          {store.session.switchableAccounts.map(account => (
+          {store.session.switchableAccounts.map((account) => (
             <TouchableOpacity
               testID={`switchToAccountBtn-${account.handle}`}
               key={account.did}
@@ -262,7 +269,8 @@ export const SettingsScreen = withAuthRequired(
               }
               accessibilityRole="button"
               accessibilityLabel={`Switch to ${account.handle}`}
-              accessibilityHint="Switches the account you are logged in to">
+              accessibilityHint="Switches the account you are logged in to"
+            >
               <View style={styles.avi}>
                 <UserAvatar size={40} avatar={account.aviUrl} />
               </View>
@@ -283,7 +291,8 @@ export const SettingsScreen = withAuthRequired(
             onPress={isSwitching ? undefined : onPressAddAccount}
             accessibilityRole="button"
             accessibilityLabel="Add account"
-            accessibilityHint="Create a new Bluesky account">
+            accessibilityHint="Create a new Bluesky account"
+          >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="plus"
@@ -306,12 +315,14 @@ export const SettingsScreen = withAuthRequired(
             onPress={isSwitching ? undefined : onPressInviteCodes}
             accessibilityRole="button"
             accessibilityLabel="Invite"
-            accessibilityHint="Opens invite code list">
+            accessibilityHint="Opens invite code list"
+          >
             <View
               style={[
                 styles.iconContainer,
                 store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-              ]}>
+              ]}
+            >
               <FontAwesomeIcon
                 icon="ticket"
                 style={
@@ -323,9 +334,10 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text
               type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {formatCount(store.me.invitesAvailable)} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
+              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}
+            >
+              {formatCount(store.me.invitesAvailable)} invite{" "}
+              {pluralize(store.me.invitesAvailable, "code")} available
             </Text>
           </TouchableOpacity>
 
@@ -341,7 +353,7 @@ export const SettingsScreen = withAuthRequired(
                 label="System"
                 left
                 onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
+                  store.shell.setColorMode(isColorMode(v) ? v : "system")
                 }
               />
               <SelectableBtn
@@ -349,7 +361,7 @@ export const SettingsScreen = withAuthRequired(
                 value="light"
                 label="Light"
                 onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
+                  store.shell.setColorMode(isColorMode(v) ? v : "system")
                 }
               />
               <SelectableBtn
@@ -358,7 +370,7 @@ export const SettingsScreen = withAuthRequired(
                 label="Dark"
                 right
                 onChange={(v: string) =>
-                  store.shell.setColorMode(isColorMode(v) ? v : 'system')
+                  store.shell.setColorMode(isColorMode(v) ? v : "system")
                 }
               />
             </View>
@@ -374,7 +386,8 @@ export const SettingsScreen = withAuthRequired(
             onPress={openPreferencesModal}
             accessibilityRole="button"
             accessibilityHint="Open home feed preferences modal"
-            accessibilityLabel="Opens the home feed preferences modal">
+            accessibilityLabel="Opens the home feed preferences modal"
+          >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="sliders"
@@ -391,7 +404,8 @@ export const SettingsScreen = withAuthRequired(
             onPress={onPressAppPasswords}
             accessibilityRole="button"
             accessibilityHint="Open app password settings"
-            accessibilityLabel="Opens the app password settings page">
+            accessibilityLabel="Opens the app password settings page"
+          >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="lock"
@@ -407,7 +421,8 @@ export const SettingsScreen = withAuthRequired(
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="Saved Feeds"
             accessibilityLabel="Opens screen with all saved feeds"
-            onPress={onPressSavedFeeds}>
+            onPress={onPressSavedFeeds}
+          >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="satellite-dish"
@@ -424,7 +439,8 @@ export const SettingsScreen = withAuthRequired(
             onPress={isSwitching ? undefined : onPressContentLanguages}
             accessibilityRole="button"
             accessibilityHint="Content languages"
-            accessibilityLabel="Opens configurable content language settings">
+            accessibilityLabel="Opens configurable content language settings"
+          >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="language"
@@ -441,16 +457,17 @@ export const SettingsScreen = withAuthRequired(
             onPress={isSwitching ? undefined : onPressChangeHandle}
             accessibilityRole="button"
             accessibilityLabel="Change handle"
-            accessibilityHint="Choose a new Bluesky username or create">
+            accessibilityHint="Choose a new Bluesky username or create"
+          >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="at"
                 style={pal.text as FontAwesomeIconStyle}
               />
             </View>
-            <Text type="lg" style={pal.text} numberOfLines={1}>
+            {/* <Text type="lg" style={pal.text} numberOfLines={1}>
               Change handle
-            </Text>
+            </Text> */}
           </TouchableOpacity>
           <View style={styles.spacer20} />
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
@@ -462,10 +479,11 @@ export const SettingsScreen = withAuthRequired(
             accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Delete account"
-            accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
+            accessibilityHint="Opens modal for account deletion confirmation. Requires email code."
+          >
             <View style={[styles.iconContainer, dangerBg]}>
               <FontAwesomeIcon
-                icon={['far', 'trash-can']}
+                icon={["far", "trash-can"]}
                 style={dangerText as FontAwesomeIconStyle}
                 size={18}
               />
@@ -483,7 +501,8 @@ export const SettingsScreen = withAuthRequired(
             onPress={onPressSystemLog}
             accessibilityRole="button"
             accessibilityHint="Open system log"
-            accessibilityLabel="Opens the system log page">
+            accessibilityLabel="Opens the system log page"
+          >
             <Text type="lg" style={pal.text}>
               System log
             </Text>
@@ -503,7 +522,8 @@ export const SettingsScreen = withAuthRequired(
                 onPress={onPressStorybook}
                 accessibilityRole="button"
                 accessibilityHint="Open storybook page"
-                accessibilityLabel="Opens the storybook page">
+                accessibilityLabel="Opens the storybook page"
+              >
                 <Text type="lg" style={pal.text}>
                   Storybook
                 </Text>
@@ -513,7 +533,8 @@ export const SettingsScreen = withAuthRequired(
                 onPress={onPressResetPreferences}
                 accessibilityRole="button"
                 accessibilityHint="Reset preferences"
-                accessibilityLabel="Resets the preferences state">
+                accessibilityLabel="Resets the preferences state"
+              >
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
                 </Text>
@@ -522,7 +543,8 @@ export const SettingsScreen = withAuthRequired(
           ) : null}
           <TouchableOpacity
             accessibilityRole="button"
-            onPress={onPressBuildInfo}>
+            onPress={onPressBuildInfo}
+          >
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
               Build version {AppInfo.appVersion} {AppInfo.updateChannel}
             </Text>
@@ -530,22 +552,22 @@ export const SettingsScreen = withAuthRequired(
           <View style={s.footerSpacer} />
         </ScrollView>
       </View>
-    )
+    );
   }),
-)
+);
 
-function AccountDropdownBtn({handle}: {handle: string}) {
-  const store = useStores()
-  const pal = usePalette('default')
+function AccountDropdownBtn({ handle }: { handle: string }) {
+  const store = useStores();
+  const pal = usePalette("default");
   const items = [
     {
-      label: 'Remove account',
+      label: "Remove account",
       onPress: () => {
-        store.session.removeAccount(handle)
-        Toast.show('Account removed from quick access')
+        store.session.removeAccount(handle);
+        Toast.show("Account removed from quick access");
       },
     },
-  ]
+  ];
   return (
     <View style={s.pl10}>
       <DropdownButton type="bare" items={items}>
@@ -555,16 +577,16 @@ function AccountDropdownBtn({handle}: {handle: string}) {
         />
       </DropdownButton>
     </View>
-  )
+  );
 }
 
 interface SelectableBtnProps {
-  current: string
-  value: string
-  label: string
-  left?: boolean
-  right?: boolean
-  onChange: (v: string) => void
+  current: string;
+  value: string;
+  label: string;
+  left?: boolean;
+  right?: boolean;
+  onChange: (v: string) => void;
 }
 
 function SelectableBtn({
@@ -575,8 +597,8 @@ function SelectableBtn({
   right,
   onChange,
 }: SelectableBtnProps) {
-  const pal = usePalette('default')
-  const palPrimary = usePalette('inverted')
+  const pal = usePalette("default");
+  const palPrimary = usePalette("inverted");
   return (
     <Pressable
       style={[
@@ -589,12 +611,13 @@ function SelectableBtn({
       onPress={() => onChange(value)}
       accessibilityRole="button"
       accessibilityLabel={value}
-      accessibilityHint={`Set color theme to  ${value}`}>
+      accessibilityHint={`Set color theme to  ${value}`}
+    >
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}
       </Text>
     </Pressable>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -613,22 +636,22 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   profile: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginVertical: 6,
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 10,
   },
   linkCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 18,
     marginBottom: 1,
   },
   linkCardNoIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 20,
     paddingHorizontal: 18,
     marginBottom: 1,
@@ -637,8 +660,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     width: 40,
     height: 40,
     borderRadius: 30,
@@ -655,13 +678,13 @@ const styles = StyleSheet.create({
   },
 
   selectableBtns: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   selectableBtn: {
     flex: isDesktopWeb ? undefined : 1,
     width: isDesktopWeb ? 100 : undefined,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     borderWidth: 1,
     borderLeftWidth: 0,
     paddingHorizontal: 10,
@@ -678,10 +701,10 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
     borderRadius: 32,
     padding: 14,
     backgroundColor: colors.gray1,
@@ -689,4 +712,4 @@ const styles = StyleSheet.create({
   toggleBtn: {
     paddingHorizontal: 0,
   },
-})
+});

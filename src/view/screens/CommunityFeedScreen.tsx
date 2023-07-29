@@ -53,36 +53,12 @@ export const CommunityFeedScreen = withAuthRequired(
     // rkey is community id
     // all community feeds are by solarplex DID for now
     const { rkey, name } = route.params;
-    const [communityData, setCommunityData] = useState(null);
-    const [loading, setLoading] = React.useState(true);
-    const fetchCommunityData = async () => {
-      const response = await fetch(
-        `${SOLARPLEX_FEED_API}/splx/get_community/${rkey}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            "Access-Control-Allow-Origin": "no-cors",
-          },
-        },
-      );
 
-      const data = await response.json();
-
-      // Store the fetched data in state
-      setCommunityData(data);
-      setLoading(false);
-    };
-
-    useEffect(() => {
-      fetchCommunityData();
-    }, []);
-
-    const uiState = React.useMemo(() => {
-      if (communityData) {
-        return new CommunityFeedModel(store, communityData);
-      }
-    }, [route.params.rkey, communityData, store]);
+    const communityFeedModel = useMemo(() => {
+      const model = new CommunityFeedModel(store, rkey);
+      model.init(rkey);
+      return model;
+    }, [store, rkey]);
 
     const uri = useMemo(
       () => makeRecordUri(SOLARPLEX_DID, "app.bsky.feed.generator", rkey),
@@ -231,33 +207,33 @@ export const CommunityFeedScreen = withAuthRequired(
       //uiState,
       store,
     ]);
-
     // TODO(viksit): downstream needs isPinned otherwise it prompts an error
     const isPinned = false;
     return (
       <View style={s.hContentRegion}>
-        {!store.session.isSolarplexSession && uiState && (
-          <>
-            <ViewHeader
-              title=""
-              renderButton={currentFeed && renderHeaderBtns}
-            />
-            <CenteredView>
-              <CommunityHeader
-                view={uiState}
-                onRefreshAll={onRefresh}
-                hideBackButton={true}
-              />
-            </CenteredView>
-          </>
-        )}
+        {!store.session.isSolarplexSession &&
+          communityFeedModel &&
+          communityFeedModel.hasLoaded && (
+            <>
+              {/* <ViewHeader
+                title=""
+                renderButton={currentFeed && renderHeaderBtns}
+              /> */}
+              <CenteredView>
+                <CommunityHeader
+                  view={communityFeedModel}
+                  onRefreshAll={onRefresh}
+                />
+              </CenteredView>
+            </>
+          )}
 
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
           onScroll={onMainScroll}
           scrollEventThrottle={100}
-          ListHeaderComponent={renderListHeaderComponent}
+          //ListHeaderComponent={renderListHeaderComponent}
           renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned, true]}
         />
