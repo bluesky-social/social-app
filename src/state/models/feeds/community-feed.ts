@@ -37,15 +37,7 @@ export class CommunityFeedModel {
     }
   }
 
-  // async init(id: string) {
-  //   console.log(">>>>> init was called");
-  //   if (!this.data) {
-  //     await this.fetchData(id);
-  //   }
-  // }
-
   init = bundleAsync(async (id: string) => {
-    console.log(">>>>> init was called");
     if (!this.data) {
       await this.fetchData(id);
     }
@@ -99,7 +91,6 @@ export class CommunityFeedModel {
   // =
 
   async join() {
-    console.log("join community");
     if (!this.id) {
       console.error("No community ID defined");
       return;
@@ -114,7 +105,6 @@ export class CommunityFeedModel {
   }
 
   async leave() {
-    console.log("leave community");
     if (!this.id) {
       console.error("No community ID defined");
       return;

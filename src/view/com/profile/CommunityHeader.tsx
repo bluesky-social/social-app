@@ -126,10 +126,12 @@ const CommunityHeaderLoaded = observer(
       // );
       if (view.isJoined) {
         // leave
+        track("CommunityHeader:LeaveButtonClicked");
         await store.me.joinedCommunities.leave(view);
         Toast.show("Removed from my communities");
       } else {
         // join
+        track("CommunityHeader:JoinButtonClicked");
         await store.me.joinedCommunities.join(view);
         Toast.show("Added to my communities");
       }
@@ -155,9 +157,9 @@ const CommunityHeaderLoaded = observer(
     }, [track, navigation, view]);
 
     const onPressShare = React.useCallback(() => {
-      // track("CommunityHeader:ShareButtonClicked");
-      // const url = toShareUrl(`/profile/${view.handle}`);
-      // shareUrl(url);
+      track("CommunityHeader:ShareButtonClicked");
+      const url = toShareUrl(`/community/${view.data?.id}`);
+      shareUrl(url);
     }, [track, view]);
 
     const onPressAddRemoveLists = React.useCallback(() => {
@@ -249,11 +251,11 @@ const CommunityHeaderLoaded = observer(
         },
       ];
       if (!store.session.isSolarplexSession) {
-        items.push({
-          testID: "communityHeaderDropdownListAddRemoveBtn",
-          label: "Add to Lists",
-          onPress: onPressAddRemoveLists,
-        });
+        // items.push({
+        //   testID: "communityHeaderDropdownListAddRemoveBtn",
+        //   label: "Add to Lists",
+        //   onPress: onPressAddRemoveLists,
+        // });
       }
       if (!isMe && !store.session.isSolarplexSession) {
         items.push({ sep: true });
@@ -298,7 +300,6 @@ const CommunityHeaderLoaded = observer(
     // const following = formatCount(view.followsCount);
     // const followers = formatCount(view.followersCount);
     // const pluralizedFollowers = pluralize(view.followersCount, "follower");
-    console.log("view:", view);
     return (
       <>
         {view && view.data && (

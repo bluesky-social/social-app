@@ -67,6 +67,11 @@ interface TrackPropertiesMap {
   "ProfileHeader:UnblockAccountButtonClicked": {};
   "ProfileHeader:FollowButtonClicked": {};
   "ProfileHeader:UnfollowButtonClicked": {};
+  // Community header
+  "CommunityHeader:JoinButtonClicked": {};
+  "CommunityHeader:LeaveButtonClicked": {};
+  "CommunityHeader:ShareButtonClicked": {};
+
   "ViewHeader:MenuButtonClicked": {};
   // SETTINGS events
   "Settings:SwitchAccountButtonClicked": {};
@@ -133,6 +138,7 @@ interface ScreenPropertiesMap {
   Feed: {};
   Notifications: {};
   Communities: {};
+  Community: {};
   Profile: {};
   Settings: {};
   AppPasswords: {};

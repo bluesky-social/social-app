@@ -24,7 +24,11 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { ParamListBase, StackActions, useNavigation } from "@react-navigation/native";
+import {
+  ParamListBase,
+  StackActions,
+  useNavigation,
+} from "@react-navigation/native";
 import React, { ComponentProps } from "react";
 import { TabState, getTabState } from "lib/routes/helpers";
 import { colors, s } from "lib/styles";
@@ -59,7 +63,7 @@ export const DrawerContent = observer(() => {
     useNavigationTabState();
   const res = useNavigationTabState();
   const { notifications } = store.me;
-  console.log("isAtCommunities", res);
+  //console.log("isAtCommunities", res);
   // events
   // =
 
@@ -67,14 +71,14 @@ export const DrawerContent = observer(() => {
     (tab: string, params?: ParamListBase) => {
       track("Menu:ItemClicked", { url: tab });
       const state = navigation.getState();
-      console.log("nav state", state);
+      //console.log("nav state", state);
       store.shell.closeDrawer();
       if (isWeb) {
-        console.log("nav web");
+        //console.log("nav web");
         // @ts-ignore must be Home, Search, Notifications, MyProfile or Communities
         navigation.navigate(tab, params);
       } else {
-        console.log("nav non web");
+        //console.log("nav non web");
         const tabState = getTabState(state, tab);
         if (tabState === TabState.InsideAtRoot) {
           store.emitScreenSoftReset();
@@ -102,7 +106,7 @@ export const DrawerContent = observer(() => {
   );
 
   const onPressProfile = React.useCallback(
-    () => onPressTab("Profile", {name: store.me.did}),
+    () => onPressTab("Profile", { name: store.me.did }),
     [onPressTab],
   );
 
@@ -209,7 +213,13 @@ export const DrawerContent = observer(() => {
                 onPress={onPressProfile}
               />
               <MenuItem
-                icon={(isAtCommunities ? <CommunitiesIconSolid/> : <CommunitiesIcon/>)}
+                icon={
+                  isAtCommunities ? (
+                    <CommunitiesIconSolid />
+                  ) : (
+                    <CommunitiesIcon />
+                  )
+                }
                 label="Communities"
                 accessibilityLabel="Communities"
                 accessibilityHint=""

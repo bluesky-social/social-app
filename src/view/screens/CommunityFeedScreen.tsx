@@ -29,6 +29,7 @@ import { Text } from "view/com/util/text/Text";
 import { TextLink } from "view/com/util/Link";
 import { UserAvatar } from "view/com/util/UserAvatar";
 import { ViewHeader } from "view/com/util/ViewHeader";
+import { ViewSelectorHandle } from "view/com/util/ViewSelector";
 import { isDesktopWeb } from "platform/detection";
 import { makeRecordUri } from "lib/strings/url-helpers";
 import { observer } from "mobx-react-lite";
@@ -48,7 +49,12 @@ export const CommunityFeedScreen = withAuthRequired(
   observer(({ route }: Props) => {
     const store = useStores();
     const pal = usePalette("default");
-    const { track } = useAnalytics();
+    const { screen, track } = useAnalytics();
+    // const viewSelectorRef = React.useRef<ViewSelectorHandle>(null);
+    // useEffect(() => {
+    //   screen("Community");
+    // }, [screen]);
+
     // name is community name
     // rkey is community id
     // all community feeds are by solarplex DID for now

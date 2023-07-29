@@ -74,8 +74,8 @@ export const TabBarCustomFeed = observer(
     }, [store, item, navigation]);
 
     // store.log.debug('item.displayName', item)
-    console.log("item.displayName", item.displayName);
-    console.log("item.displayName", item.data);
+    //console.log("item.displayName", item.displayName);
+    //console.log("item.displayName", item.data);
 
     return (
       <View>

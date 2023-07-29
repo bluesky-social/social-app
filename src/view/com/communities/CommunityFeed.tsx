@@ -46,7 +46,6 @@ export const CommunityFeed = observer(
         navigation.navigate("SignIn");
         return;
       }
-      // console.log("item:", item);
       // TODO(viksit)[F1]: add a store.me.joinedCommunities
       // then check for this
       if (item.isJoined) {
@@ -91,7 +90,7 @@ export const CommunityFeed = observer(
         onPress={() => {
           // TODO(viksit)[f1]: create community feed
           navigation.push("CommunityFeed", {
-            name: item.data.name,
+            name: item.data?.name,
             rkey: item.id,
           });
         }}
@@ -99,11 +98,11 @@ export const CommunityFeed = observer(
       >
         <View style={[styles.headerContainer]}>
           <View style={[s.mr10]}>
-            <UserAvatar type="algo" size={36} avatar={avatar} />
+            <UserAvatar type="algo" size={36} avatar={item.data?.image} />
           </View>
           <View style={[styles.headerTextContainer]}>
             <Text style={[pal.text, s.bold]} numberOfLines={3}>
-              {item.data.name}
+              {item.data?.name}
             </Text>
             <Text style={[pal.textLight]} numberOfLines={3}>
               by @Solarplex
@@ -126,7 +125,7 @@ export const CommunityFeed = observer(
           )}
         </View>
 
-        {showDescription && item.data.description ? (
+        {showDescription && item.data?.description ? (
           <Text style={[pal.textLight, styles.description]} numberOfLines={3}>
             {item.data.description}
           </Text>

@@ -1,18 +1,18 @@
-import {makeAutoObservable, runInAction} from 'mobx'
+import { makeAutoObservable, runInAction } from "mobx";
 
-import {AppBskyFeedDefs} from '@atproto/api'
-import {RootStoreModel} from 'state/models/root-store'
-import { SOLARPLEX_FEED_API } from 'lib/constants'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {track} from 'lib/analytics/analytics'
-import {updateDataOptimistically} from 'lib/async/revertible'
+import { AppBskyFeedDefs } from "@atproto/api";
+import { RootStoreModel } from "state/models/root-store";
+import { SOLARPLEX_FEED_API } from "lib/constants";
+import { sanitizeDisplayName } from "lib/strings/display-names";
+import { track } from "lib/analytics/analytics";
+import { updateDataOptimistically } from "lib/async/revertible";
 
 export class CustomFeedModel {
   // data
-  _reactKey: string
-  data: AppBskyFeedDefs.GeneratorView
-  isOnline: boolean
-  isValid: boolean
+  _reactKey: string;
+  data: AppBskyFeedDefs.GeneratorView;
+  isOnline: boolean;
+  isValid: boolean;
 
   constructor(
     public rootStore: RootStoreModel,
@@ -20,39 +20,39 @@ export class CustomFeedModel {
     isOnline?: boolean,
     isValid?: boolean,
   ) {
-    this._reactKey = view.uri
-    this.data = view
-    this.isOnline = isOnline ?? true
-    this.isValid = isValid ?? true
+    this._reactKey = view.uri;
+    this.data = view;
+    this.isOnline = isOnline ?? true;
+    this.isValid = isValid ?? true;
     makeAutoObservable(
       this,
       {
         rootStore: false,
       },
-      {autoBind: true},
-    )
+      { autoBind: true },
+    );
   }
 
   // local actions
   // =
 
   get uri() {
-    return this.data.uri
+    return this.data.uri;
   }
 
   get displayName() {
     if (this.data.displayName) {
-      return sanitizeDisplayName(this.data.displayName)
+      return sanitizeDisplayName(this.data.displayName);
     }
-    return `Feed by @${this.data.creator.handle}`
+    return `Feed by @${this.data.creator.handle}`;
   }
 
   get isSaved() {
-    return this.rootStore.preferences.savedFeeds.includes(this.uri)
+    return this.rootStore.preferences.savedFeeds.includes(this.uri);
   }
 
   get isLiked() {
-    return this.data.viewer?.like
+    return this.data.viewer?.like;
   }
 
   // public apis
@@ -60,21 +60,21 @@ export class CustomFeedModel {
 
   async save() {
     try {
-      await this.rootStore.preferences.addSavedFeed(this.uri)
+      await this.rootStore.preferences.addSavedFeed(this.uri);
     } catch (error) {
-      this.rootStore.log.error('Failed to save feed', error)
+      this.rootStore.log.error("Failed to save feed", error);
     } finally {
-      track('CustomFeed:Save')
+      track("CustomFeed:Save");
     }
   }
 
   async unsave() {
     try {
-      await this.rootStore.preferences.removeSavedFeed(this.uri)
+      await this.rootStore.preferences.removeSavedFeed(this.uri);
     } catch (error) {
-      this.rootStore.log.error('Failed to unsave feed', error)
+      this.rootStore.log.error("Failed to unsave feed", error);
     } finally {
-      track('CustomFeed:Unsave')
+      track("CustomFeed:Unsave");
     }
   }
 
@@ -83,57 +83,57 @@ export class CustomFeedModel {
       await updateDataOptimistically(
         this.data,
         () => {
-          this.data.viewer = this.data.viewer || {}
-          this.data.viewer.like = 'pending'
-          this.data.likeCount = (this.data.likeCount || 0) + 1
+          this.data.viewer = this.data.viewer || {};
+          this.data.viewer.like = "pending";
+          this.data.likeCount = (this.data.likeCount || 0) + 1;
         },
         () => this.rootStore.agent.like(this.data.uri, this.data.cid),
-        res => {
-          this.data.viewer = this.data.viewer || {}
-          this.data.viewer.like = res.uri
+        (res) => {
+          this.data.viewer = this.data.viewer || {};
+          this.data.viewer.like = res.uri;
         },
-      )
+      );
     } catch (e: any) {
-      this.rootStore.log.error('Failed to like feed', e)
+      this.rootStore.log.error("Failed to like feed", e);
     } finally {
-      track('CustomFeed:Like')
+      track("CustomFeed:Like");
     }
   }
 
   async unlike() {
     if (!this.data.viewer?.like) {
-      return
+      return;
     }
     try {
-      const likeUri = this.data.viewer.like
+      const likeUri = this.data.viewer.like;
       await updateDataOptimistically(
         this.data,
         () => {
-          this.data.viewer = this.data.viewer || {}
-          this.data.viewer.like = undefined
-          this.data.likeCount = (this.data.likeCount || 1) - 1
+          this.data.viewer = this.data.viewer || {};
+          this.data.viewer.like = undefined;
+          this.data.likeCount = (this.data.likeCount || 1) - 1;
         },
         () => this.rootStore.agent.deleteLike(likeUri),
-      )
+      );
     } catch (e: any) {
-      this.rootStore.log.error('Failed to unlike feed', e)
+      this.rootStore.log.error("Failed to unlike feed", e);
     } finally {
-      track('CustomFeed:Unlike')
+      track("CustomFeed:Unlike");
     }
   }
 
   async reload() {
     const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerator({
       feed: this.data.uri,
-    })
+    });
     runInAction(() => {
-      this.data = res.data.view
-      this.isOnline = res.data.isOnline
-      this.isValid = res.data.isValid
-    })
+      this.data = res.data.view;
+      this.isOnline = res.data.isOnline;
+      this.isValid = res.data.isValid;
+    });
   }
 
   serialize() {
-    return JSON.stringify(this.data)
+    return JSON.stringify(this.data);
   }
 }

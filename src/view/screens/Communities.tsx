@@ -7,12 +7,14 @@ import {
 import { FlatList, View } from "react-native";
 import { ViewSelector, ViewSelectorHandle } from "view/com/util/ViewSelector";
 
+import { CenteredView } from "view/com/util/Views";
 import { CommunityFeed } from "view/com/communities/CommunityFeed";
 import { CommunityFeedModel } from "state/models/feeds/community-feed";
 import { Feed } from "../com/notifications/Feed";
 import { InvitedUsers } from "../com/notifications/InvitedUsers";
 import { LoadLatestBtn } from "view/com/util/load-latest/LoadLatestBtn";
 import React from "react";
+import { UserBanner } from "view/com/util/UserBanner";
 import { ViewHeader } from "../com/util/ViewHeader";
 import { isWeb } from "platform/detection";
 import { observer } from "mobx-react-lite";
@@ -20,6 +22,7 @@ import { s } from "lib/styles";
 import { useAnalytics } from "lib/analytics/analytics";
 import { useFocusEffect } from "@react-navigation/native";
 import { useOnMainScroll } from "lib/hooks/useOnMainScroll";
+import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { useTabFocusEffect } from "lib/hooks/useTabFocusEffect";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
@@ -31,6 +34,7 @@ type Props = NativeStackScreenProps<
 export const CommunitiesScreen = withAuthRequired(
   observer(({ navigation, route }: Props) => {
     const store = useStores();
+    const pal = usePalette("default");
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store);
     const scrollElRef = React.useRef<FlatList>(null);
@@ -60,13 +64,11 @@ export const CommunitiesScreen = withAuthRequired(
     // =
     useFocusEffect(
       React.useCallback(() => {
-        console.log("(usefocus)notifications call back 1");
         store.shell.setMinimalShellMode(false);
         store.log.debug("CommunitiesScreen: Updating communities");
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest);
         store.me.notifications.update();
         screen("Communities");
-        console.log("store comm:", store.me.mainFeed, store.me.savedFeeds);
         store.communities.fetch();
         // return () => {
         //   softResetSub.remove();
@@ -86,10 +88,10 @@ export const CommunitiesScreen = withAuthRequired(
           // navigation
           if (isInside) {
             if (isWeb) {
-              console.log("(web) notifications call back 2");
+              //console.log("(web) notifications call back 2");
               // store.communities.fetch();
             } else {
-              console.log("(notweb) notifications call back 3");
+              //console.log("(notweb) notifications call back 3");
               // store.communities.fetch();
             }
           }
@@ -111,32 +113,35 @@ export const CommunitiesScreen = withAuthRequired(
     //   store.me.notifications.hasNewLatest &&
     //   !store.me.notifications.isRefreshing;
     return (
-      <View testID="communitiesScreen" style={s.hContentRegion}>
-        <ViewHeader title="Communities" canGoBack={false} />
-        {store.communities.communityFeeds && (
-          <ViewSelector
-            ref={viewSelectorRef}
-            swipeEnabled={false}
-            sections={[]}
-            items={store.communities.communityFeeds}
-            renderItem={renderItem}
-          />
-        )}
-        {/* <Feed
-          view={store.me.notifications}
-          onPressTryAgain={onPressTryAgain}
-          onScroll={onMainScroll}
-          scrollElRef={scrollElRef}
-        /> */}
-
-        {/* {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label="Load new notifications"
-            showIndicator={hasNew}
-            minimalShellMode={true}
-          />
-        )} */}
+      <View style={pal.view}>
+        <View testID="communitiesScreen" style={s.hContentRegion}>
+          <CenteredView>
+            <ViewHeader title="Communities" canGoBack={false} />
+            {store.communities.communityFeeds && (
+              <ViewSelector
+                ref={viewSelectorRef}
+                swipeEnabled={false}
+                sections={[]}
+                items={store.communities.communityFeeds}
+                renderItem={renderItem}
+              />
+            )}
+            {/* <Feed
+            view={store.me.notifications}
+            onPressTryAgain={onPressTryAgain}
+            onScroll={onMainScroll}
+            scrollElRef={scrollElRef}
+          /> */}
+            {/* {(isScrolledDown || hasNew) && (
+            <LoadLatestBtn
+              onPress={onPressLoadLatest}
+              label="Load new notifications"
+              showIndicator={hasNew}
+              minimalShellMode={true}
+            />
+          )} */}
+          </CenteredView>
+        </View>
       </View>
     );
   }),
