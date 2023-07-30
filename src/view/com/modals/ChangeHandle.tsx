@@ -493,7 +493,9 @@ function CustomHandleForm({
           <ActivityIndicator color="white" />
         ) : (
           <Text type="xl-medium" style={[s.white, s.textCenter]}>
-            {canSave ? `Update to ${handle}` : 'Verify DNS Record'}
+            {canSave
+              ? `Update to ${handle}`
+              : `Verify ${isDNSForm ? 'DNS Record' : 'Text File'}`}
           </Text>
         )}
       </Button>
