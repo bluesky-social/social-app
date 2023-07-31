@@ -1,8 +1,27 @@
 # Solarplex Townsquare
 @solarplex_xyz
 
+# Solarplex Deploy
 
----
+1. Build the app
+```
+yarn build-web
+```
+
+2. Deploy the app
+```
+yarn deploy-web
+```
+
+### First time setup
+
+You will encounter a set of questions from vercel. You should be apart of the dispatch organization and link it to the v2 project.
+
+After completing this process, run the following command to ensure the .vercel config gets copied on each build, to prevent answering the questions again.
+
+```
+cp -r web-build/.vercel web/.vercel
+```
 
 ### Deprecated below
 Welcome friends! This is the codebase for the Bluesky Social app. It serves as a resource to engineers building on the [AT Protocol](https://atproto.com).
