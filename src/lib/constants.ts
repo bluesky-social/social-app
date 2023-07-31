@@ -116,6 +116,7 @@ export const PROD_LINK_META_PROXY = "https://cardyb.bsky.app/v1/extract?url=";
 export const SOLARPLEX_FEEDS = [
   "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solana",
   "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solarplex",
+  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/wearesquidz",
 ];
 
 export const SOLARPLEX_FEED_URI_PATH =
