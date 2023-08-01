@@ -5,7 +5,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
-import {displayNotification} from 'lib/notifee'
+import {displayNotification} from 'lib/notifications/notifee'
 import * as Toast from 'view/com/util/Toast'
 
 import {Text} from '../com/util/text/Text'
