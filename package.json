@@ -82,6 +82,7 @@
     "expo-image-picker": "^14.1.1",
     "expo-localization": "~14.1.1",
     "expo-media-library": "~15.2.3",
+    "expo-notifications": "^0.20.1",
     "expo-sharing": "~11.2.2",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
