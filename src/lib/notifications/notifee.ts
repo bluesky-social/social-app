@@ -1,10 +1,10 @@
 import notifee, {EventType} from '@notifee/react-native'
 import {AppBskyEmbedImages, AtUri} from '@atproto/api'
-import {RootStoreModel} from 'state/models/root-store'
-import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
-import {enforceLen} from 'lib/strings/helpers'
-import {sanitizeDisplayName} from './strings/display-names'
-import {resetToTab} from '../Navigation'
+import {RootStoreModel} from '../../state/models/root-store'
+import {NotificationsFeedItemModel} from '../../state/models/feeds/notifications'
+import {enforceLen} from '../strings/helpers'
+import {sanitizeDisplayName} from '../strings/display-names'
+import {resetToTab} from '../../Navigation'
 
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => notifee.setBadgeCount(count))
