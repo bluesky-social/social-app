@@ -18,6 +18,7 @@ import { getTranslatorLink, isPostInLanguage } from "../../../locale/helpers";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { ContentHider } from "../util/moderation/ContentHider";
 import { ErrorMessage } from "../util/error/ErrorMessage";
+import { Image } from "expo-image";
 import { ImageHider } from "../util/moderation/ImageHider";
 import { Link } from "../util/Link";
 import { NavigationProp } from "lib/routes/types";
@@ -121,15 +122,18 @@ export const PostThreadItem = observer(function PostThreadItem({
           .catch((e) => store.log.error("Failed to toggle like", e));
   }, [item, store, navigation]);
 
-  const onPressReaction = React.useCallback(async (reactionId: string, remove?: boolean) => {
-    track("FeedItem:PostLike");
-    // console.log("reactionId", reactionId);
-    return store.session.isSolarplexSession
-      ? await navigation.navigate("SignIn")
-      : item
-          .react(reactionId, remove)
-          .catch((e) => store.log.error("Failed to add reaction", e));
-  }, [track, item, store, navigation]);
+  const onPressReaction = React.useCallback(
+    async (reactionId: string, remove?: boolean) => {
+      track("FeedItem:PostLike");
+      // console.log("reactionId", reactionId);
+      return store.session.isSolarplexSession
+        ? await navigation.navigate("SignIn")
+        : item
+            .react(reactionId, remove)
+            .catch((e) => store.log.error("Failed to add reaction", e));
+    },
+    [track, item, store, navigation],
+  );
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || "");
@@ -330,18 +334,61 @@ export const PostThreadItem = observer(function PostThreadItem({
             needsTranslation={needsTranslation}
           />
           {hasEngagement ? (
-            <View style={[styles.expandedInfo, pal.border]}>
+            <View
+              style={[
+                styles.expandedInfo,
+                pal.border,
+                { alignItems: "center" },
+              ]}
+            >
               {item.data.reactions ? (
                 <Link
                   style={styles.expandedInfoItem}
                   href={likesHref}
                   title={likesTitle}
                 >
-                  <Text testID="likeCount" type="lg" style={pal.textLight}>
-                    {item.data.reactions?.map((item, index) => index < 9 && (
-                      <Text key={item} style={[s.f12, {marginLeft: index ? -6 : 0, zIndex: index}]}>{store.reactions.reactionTypes[item]?.emoji}</Text>
-                    ))}
-                    <Text type="xl-bold" style={{marginLeft: 5, ...pal.text}}>
+                  <Text
+                    testID="likeCount"
+                    type="lg"
+                    style={[
+                      pal.textLight,
+                      {
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      },
+                    ]}
+                  >
+                    {item.data.reactions?.map(
+                      (item, index) =>
+                        index < 9 &&
+                        ((
+                          store.reactions.reactionTypes[item]?.emoji as string
+                        ).includes("ibb") ? (
+                          <Image
+                            style={styles.image}
+                            key={store.reactions.reactionTypes[item]?.emoji}
+                            source={
+                              store.reactions.reactionTypes[item]
+                                ?.emoji as string
+                            }
+                          />
+                        ) : (
+                          <Text
+                            key={item}
+                            style={[
+                              s.f12,
+                              { marginLeft: index ? -6 : 0, zIndex: index },
+                            ]}
+                          >
+                            {store.reactions.reactionTypes[item]?.emoji}
+                          </Text>
+                        )),
+                    )}
+                    <Text
+                      type="xl-bold"
+                      style={{ marginLeft: 4, marginRight: 4, ...pal.text }}
+                    >
                       {formatCount(item.data.reactions.length)}
                     </Text>{" "}
                     {pluralize(item.data.reactions.length, "react")}
@@ -382,7 +429,6 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : (
                 <></>
               )}
-
             </View>
           ) : (
             <></>
@@ -676,5 +722,13 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingVertical: 10,
     marginBottom: 8,
+  },
+  image: {
+    // width: '100%',
+    // height: '100%',
+    resizeMode: "contain",
+    width: 25,
+    height: 25,
+    marginLeft: -15,
   },
 });

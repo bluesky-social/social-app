@@ -189,6 +189,14 @@ export const s = StyleSheet.create({
   f16: {fontSize: 16},
   f17: {fontSize: 17},
   f18: {fontSize: 18},
+  f19: {fontSize: 19},
+  f20: {fontSize: 20},
+  f21: {fontSize: 21},
+  f22: {fontSize: 22},
+  f23: {fontSize: 23},
+  f24: {fontSize: 24},
+  f25: {fontSize: 25},
+  
 
   // line heights
   ['lh13-1']: {lineHeight: 13},

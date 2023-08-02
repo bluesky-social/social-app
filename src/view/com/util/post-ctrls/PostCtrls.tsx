@@ -1,4 +1,5 @@
 import { CommentBottomArrow, HeartIcon, HeartIconSolid } from "lib/icons";
+import { DropdownButton, PostDropdownBtn } from "../forms/DropdownButton";
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -14,9 +15,10 @@ import {
 import { colors, s } from "lib/styles";
 
 import { Haptics } from "lib/haptics";
+import { Image } from "expo-image";
 import { NavigationProp } from "lib/routes/types";
-import { PostDropdownBtn } from "../forms/DropdownButton";
 import { Reaction } from "react-native-reactions";
+import { ReactionDropdownButton } from "../forms/ReactionDropdownButton";
 import { RepostButton } from "./RepostButton";
 // DISABLED see #135
 // import {
@@ -25,9 +27,10 @@ import { RepostButton } from "./RepostButton";
 // } from './anim/TriggerableAnimated'
 import { Text } from "../text/Text";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
-import { faSmile as faSmileFilled } from "@fortawesome/free-solid-svg-icons"
-import {isMobileWeb} from 'platform/detection'
+import { faSmile as faSmileFilled } from "@fortawesome/free-solid-svg-icons";
+import { isMobileWeb } from "platform/detection";
 import { useNavigation } from "@react-navigation/native";
+import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { useTheme } from "lib/ThemeContext";
 
@@ -61,7 +64,7 @@ interface PostCtrlsOpts {
   isLiked: boolean;
   isThreadMuted: boolean;
   onPressReply: () => void;
-  onPressReaction: (reactionId:string, remove?: boolean) => Promise<void>;
+  onPressReaction: (reactionId: string, remove?: boolean) => Promise<void>;
   onPressToggleRepost: () => Promise<void>;
   onPressToggleLike: () => Promise<void>;
   onCopyPostText: () => void;
@@ -114,6 +117,7 @@ export interface SolarplexReactionType extends EmojiItemProp {
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores();
   const theme = useTheme();
+  const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
 
   const defaultCtrlColor = React.useMemo(
@@ -186,19 +190,28 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // setIsLikedPressed(false)
     }
   };
-  const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp>(store.reactions.reactionTypes[opts.viewerReaction ?? ' ']);
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp | undefined>(
+    store.reactions.reactionTypes[opts.viewerReaction ?? " "],
+  );
 
   const onPressReaction = async (emoji: EmojiItemProp | undefined) => {
     if (!emoji) return;
     // console.log("emoji", emoji);
     setSelectedEmoji(emoji);
-    await opts.onPressReaction((emoji as SolarplexReactionType).reaction_id).catch((_e) => undefined);
+    await opts
+      .onPressReaction((emoji as SolarplexReactionType).reaction_id)
+      .catch((_e) => undefined);
   };
 
   const onRemoveReaction = async () => {
-    await opts.onPressReaction((selectedEmoji as SolarplexReactionType).reaction_id, true).catch((_e) => undefined);
+    await opts
+      .onPressReaction(
+        (selectedEmoji as SolarplexReactionType).reaction_id,
+        true,
+      )
+      .catch((_e) => undefined);
     setSelectedEmoji(undefined);
-  }
+  };
 
   return (
     <View style={[styles.ctrls, opts.style]}>
@@ -261,38 +274,111 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <TouchableOpacity
         testID="reactBtn"
         style={styles.emojiCtrl}
-        hitSlop={{left: 10, right: 10, top: HITSLOP.top, bottom: HITSLOP.bottom}}
+        hitSlop={{
+          left: 10,
+          right: 10,
+          top: HITSLOP.top,
+          bottom: HITSLOP.bottom,
+        }}
         accessibilityRole="button"
         accessibilityLabel={opts.viewerReaction ? "Reacted" : "React"}
         accessibilityHint=""
-        onPress={onRemoveReaction}
+        onPress={
+          store.session.isSolarplexSession
+            ? () => navigation.navigate("SignIn")
+            : onRemoveReaction
+        }
       >
-        {!opts.big && <View style={styles.emojiSet}>
-          {opts.reactions?.map((item, index) => index < 4 && (
-            <Text key={item} style={[defaultCtrlColor, s.f15, {marginLeft: index ? -8 : 0, zIndex: -1*index}]}>{store.reactions.reactionTypes[item]?.emoji}</Text>
-          ))}
-        </View>}
-        <Reaction
-          items={store.me.reactions.default}
-          onTap={onPressReaction}
-          // cardStyle={{left: isMobileWeb ? '7rem': opts.big ? '0' : '0', top: isMobileWeb ? '0px' : opts.big ? '20px' : '30px'}}
-          cardStyle={isMobileWeb ? opts.big ? styles.cardStyleMobileBig : styles.cardStyleMobile : opts.big ? styles.cardStyleBig : styles.cardStyle}
-          isShowCardInCenter={false}
-          showPopupType="onPress"
-          // disabled={!!selectedEmoji}
-        >
-          <View style={{flexDirection:'row', alignItems: 'center'}}>
-            {selectedEmoji ? <TouchableOpacity onPress={onRemoveReaction}><FontAwesomeIcon icon={faSmileFilled} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} /></TouchableOpacity> : <FontAwesomeIcon icon={faSmile} size={opts.big ? 22 : 16} color={defaultCtrlColor?.color as string} />}
-            <Text
-              testID="likeCount"
-              style={
-                [defaultCtrlColor, s.f15, s.ml5]
-              }
+        {!opts.big && opts.reactions?.length ? (
+          <View testID="testing" style={styles.emojiSet}>
+            {opts.reactions?.map(
+              (item, index) =>
+                index < 4 &&
+                ((store.reactions.reactionTypes[item].emoji as string).includes(
+                  "ibb",
+                ) ? (
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: store.reactions.reactionTypes[item].emoji as string,
+                    }}
+                  />
+                ) : (
+                  <Text
+                    key={item}
+                    style={[
+                      defaultCtrlColor,
+                      s.f15,
+                      { marginLeft: index ? -8 : 0, zIndex: -1 * index },
+                    ]}
+                  >
+                    {store.reactions.reactionTypes[item]?.emoji}
+                  </Text>
+                ))
+            )}
+          </View>
+        ) : <></>}
+        {store.me.reactions.squid?.length ? (
+          <ReactionDropdownButton
+            testID="communityHeaderDropdownBtn"
+            type="bare"
+            items={store.me.reactions.default as SolarplexReactionType[]}
+            style={[
+              styles.btn,
+              styles.secondaryBtn,
+              {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
+            onPressReaction={onPressReaction}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+
+              {selectedEmoji ? (
+                <TouchableOpacity onPress={onRemoveReaction}>
+                  <FontAwesomeIcon
+                    icon={faSmileFilled}
+                    size={opts.big ? 22 : 16}
+                    color={defaultCtrlColor?.color as string}
+                    />
+                </TouchableOpacity>
+              ) : store.session.isSolarplexSession ? (
+                <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+                  <FontAwesomeIcon
+                    icon={faSmile}
+                    size={opts.big ? 22 : 16}
+                    color={defaultCtrlColor?.color as string}
+                    />
+                </TouchableOpacity>
+              ) : (
+                <FontAwesomeIcon
+                icon={faSmile}
+                size={opts.big ? 22 : 16}
+                color={defaultCtrlColor?.color as string}
+                />
+                )}
+                              <Text
+                testID="likeCount"
+                style={[
+                  defaultCtrlColor,
+                  s.f15,
+                  s.ml5,
+                  {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginRight: '4px'
+                  },
+                ]}
               >
-              {opts.reactions?.length}
-            </Text>
+            {opts.reactions?.length ? opts.reactions.length : <></>}
+                </Text>
             </View>
-        </Reaction>
+          </ReactionDropdownButton>
+
+        ) : undefined}
       </TouchableOpacity>
       <View>
         {opts.big ? undefined : (
@@ -335,6 +421,7 @@ const styles = StyleSheet.create({
   ctrls: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   ctrl: {
     flexDirection: "row",
@@ -365,22 +452,40 @@ const styles = StyleSheet.create({
     height: " 100px",
   },
   cardStyle: {
-    left: '0',
-    top: '30px',
+    left: "0",
+    top: "30px",
   },
   cardStyleBig: {
-    left: '0',
-    top: '20px',
+    left: "0",
+    top: "20px",
   },
   cardStyleMobile: {
-    left: '7rem',
-    top: '0px',
-    flexWrap: 'wrap',
-    width: '225px',
+    left: "7rem",
+    top: "0px",
+    flexWrap: "wrap",
+    width: "225px",
   },
   cardStyleMobileBig: {
-    left: '-11rem',
-    flexWrap: 'wrap',
-    width: '225px',
+    left: "-11rem",
+    flexWrap: "wrap",
+    width: "225px",
+  },
+  image: {
+    // width: '100%',
+    // height: '100%',
+    resizeMode: "contain",
+    width: 20,
+    height: 20,
+    margin: -6,
+  },
+  secondaryBtn: {
+    // paddingHorizontal: 14,
+  },
+  btn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    // paddingVertical: 7,
+    borderRadius: 50,
   },
 });

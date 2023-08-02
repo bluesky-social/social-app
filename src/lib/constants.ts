@@ -219,3 +219,66 @@ export const DEFAULT_REACTION_EMOJIS = [
     reaction_id: "ae8e22bb-db3d-4a22-964b-9184dcc5c68d"
   },
 ];
+
+export const SQUID_REACTION_EMOJIS = [
+  {
+    id: 0,
+    emoji: "https://i.ibb.co/KwjKZzr/blob.png",
+    title: "cool",
+    reaction_id: "21542e72-5c22-47c0-a2b6-1cf4d0a69470",
+  },
+  {
+    id: 1,
+    emoji: "https://i.ibb.co/WnTZN9P/blob.png",
+    title: "eyebrow-raise",
+    reaction_id: "9c1a6723-21eb-4718-8e5a-1b5268120633",
+  },
+  {
+    id: 2,
+    emoji: "https://i.ibb.co/NVjhCtf/blob.png",
+    title: "blush",
+    reaction_id: "9ba9602c-c5ea-4fdc-9786-08aebb17b29f",
+  },
+  {
+    id: 3,
+    emoji: "https://i.ibb.co/FzqjJ6w/blob.png",
+    title: "zombie",
+    reaction_id: "b4e46fc8-3b60-485a-ade1-2433fe85d177",
+  },
+  {
+    id: 4,
+    emoji: "https://i.ibb.co/jJ7ry8y/blob.png",
+    title: "heart-eyes",
+    reaction_id: "812b63bf-730d-4097-a762-e656f6b",
+  },
+  {
+    id: 5,
+    emoji: "https://i.ibb.co/HtCbMQC/blob.png",
+    title: "fire",
+    reaction_id: "86760b8e-e2a5-4e7b-9b33-0a1a715feaa1"
+  },
+  {
+    id: 6,
+    emoji: "https://i.ibb.co/r359Sdw/blob.png",
+    title: "cry",
+    reaction_id: "c5a27756-e45a-461a-84ca-6c53155d1d3c",
+  },
+  {
+    id: 7,
+    emoji: "https://i.ibb.co/SxrRPX9/blob.png",
+    title: "love",
+    reaction_id: "5b325419-d289-4223-b62d-34a82dba848f",
+  },
+  {
+    id: 8,
+    emoji: "https://i.ibb.co/9wjtdSg/blob.png",
+    title: "laugh",
+    reaction_id: "eb3a0414-8ace-4be7-bd7a-aaf4d38d7230"
+  },
+  {
+    id: 9,
+    emoji: "https://i.ibb.co/Gs0nYmC/blob.png",
+    title: "smile",
+    reaction_id: "16e8d232-8e97-4f8d-83d5-ebf6060773c3"
+  }
+]

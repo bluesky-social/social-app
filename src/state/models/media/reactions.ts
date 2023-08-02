@@ -1,4 +1,4 @@
-import { DEFAULT_REACTION_EMOJIS, SOLARPLEX_FEED_API } from "lib/constants";
+import { DEFAULT_REACTION_EMOJIS, SOLARPLEX_FEED_API, SQUID_REACTION_EMOJIS } from "lib/constants";
 
 import { EmojiItemProp } from "react-native-reactions/lib/components/ReactionView/types";
 import { SolarplexReactionType } from "view/com/util/post-ctrls/PostCtrls";
@@ -18,11 +18,18 @@ export class SplxReactionModel {
 
     constructor() {
         this.reactionMap = {}
-        this.reactionTypes = DEFAULT_REACTION_EMOJIS.reduce((acc: { [reactionId: string]: SolarplexReactionType }, emoji) => {
-           acc[emoji.reaction_id] = emoji
-              return acc
+        const emojis = [...DEFAULT_REACTION_EMOJIS, ...SQUID_REACTION_EMOJIS]
+        this.reactionTypes = emojis.reduce((acc: { [reactionId: string]: SolarplexReactionType }, emoji) => {
+          // console.log('emoji', emoji)
+          acc[emoji.reaction_id] = emoji
+          return acc
         }, {}) 
-        // console.log('reaction types', this.reactionTypes) 
+        // this.reactionTypes = SQUID_REACTION_EMOJIS.reduce((acc: { [reactionId: string]: SolarplexReactionType }, emoji) => {
+        //   // console.log('emoji', emoji)
+        //    acc[emoji.reaction_id] = emoji
+        //       return acc
+        // }, {}) 
+        console.log('reaction types', this.reactionTypes) 
     }
 
     async fetch() {

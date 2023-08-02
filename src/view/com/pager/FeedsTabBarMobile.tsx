@@ -86,9 +86,9 @@ export const FeedsTabBar = observer(
             >
               <UserAvatar avatar={store.me.avatar} size={27} />
             </TouchableOpacity>
-            <View style={{width: 150, height: 25, marginLeft: '3rem'}}>
+            {/* <View style={{width: 150, height: 25, marginLeft: '3rem'}}>
               <SolarplexLogo/>
-            </View>
+            </View> */}
           </View>
           {!store.session.isSolarplexSession && (
             <View style={[pal.view]}>
