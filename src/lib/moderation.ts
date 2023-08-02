@@ -51,26 +51,27 @@ export function getProfileModerationCauses(
   moderation: ProfileModeration,
 ): ModerationCause[] {
   /*
-  Gather everything on profile and account *except* for blur-media
-  actions on profile; they do not need to be surfaced
+  Gather everything on profile and account that blurs or alerts
   */
-  const profileCauses = [
+  return [
     moderation.decisions.profile.cause,
     ...moderation.decisions.profile.additionalCauses,
+    moderation.decisions.account.cause,
+    ...moderation.decisions.account.additionalCauses,
   ].filter(cause => {
     if (!cause) {
       return false
     }
     if (cause?.type === 'label') {
-      if (cause.labelDef.onwarn === 'blur-media') {
+      if (
+        cause.labelDef.onwarn === 'blur' ||
+        cause.labelDef.onwarn === 'alert'
+      ) {
+        return true
+      } else {
         return false
       }
     }
     return true
-  })
-  return [
-    moderation.decisions.account.cause,
-    ...moderation.decisions.account.additionalCauses,
-    ...profileCauses,
-  ].filter(Boolean) as ModerationCause[]
+  }) as ModerationCause[]
 }

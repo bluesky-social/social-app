@@ -249,7 +249,9 @@ const styles = StyleSheet.create({
   },
   pills: {
     flexDirection: 'row',
-    gap: 6,
+    flexWrap: 'wrap',
+    columnGap: 6,
+    rowGap: 2,
   },
   pill: {
     borderRadius: 4,
