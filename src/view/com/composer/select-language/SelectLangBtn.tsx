@@ -45,7 +45,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
           : ['far', 'circle'],
         label: langName,
         onPress() {
-          store.preferences.setPostLanguage(langCode)
+          store.preferences.togglePostLanguage(langCode)
         },
       })
     }
