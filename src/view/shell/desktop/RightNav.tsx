@@ -20,6 +20,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
+      {/* search is disabled for non logged in users till we figure out a way to do public posts vs using a solarplex default session */}
       {store.session.hasSession && <DesktopSearch />}
       <View style={styles.message}>
         {/* {store.session.isSandbox ? (
