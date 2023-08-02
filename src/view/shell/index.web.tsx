@@ -8,6 +8,7 @@ import { colors, s } from "lib/styles";
 import { BottomBarWeb } from "./bottom-bar/BottomBarWeb";
 import { Composer } from "./Composer.web";
 import { DesktopLeftNav } from "./desktop/LeftNav";
+import { DesktopRightNav } from "./desktop/RightNav";
 import { DrawerContent } from "./Drawer";
 import { ErrorBoundary } from "../com/util/ErrorBoundary";
 import { Lightbox } from "../com/lightbox/Lightbox";
@@ -23,7 +24,7 @@ const ShellInner = observer(() => {
   const { isDesktop } = useWebMediaQueries();
 
   const navigator = useNavigation<NavigationProp>();
-  
+
   useEffect(() => {
     navigator.addListener("state", () => {
       store.shell.closeAnyActiveElement();
@@ -32,8 +33,8 @@ const ShellInner = observer(() => {
       store.session.login({
         service: DEFAULT_SERVICE,
         identifier: SOLARPLEX_IDENTIFIER,
-        password: SOLARPLEX_APP_PASS ?? '',
-      })
+        password: SOLARPLEX_APP_PASS ?? "",
+      });
     }
   }, [navigator, store.shell]);
 
@@ -47,7 +48,7 @@ const ShellInner = observer(() => {
       {isDesktop && (
         <>
           <DesktopLeftNav />
-          {/* <DesktopRightNav /> */}
+          <DesktopRightNav />
         </>
       )}
 

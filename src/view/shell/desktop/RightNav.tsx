@@ -1,22 +1,22 @@
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-import {DesktopSearch} from './Search'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import React from 'react'
-import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
-import {formatCount} from 'view/com/util/numeric/format'
-import {observer} from 'mobx-react-lite'
-import {pluralize} from 'lib/strings/helpers'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import { DesktopSearch } from "./Search";
+import { FEEDBACK_FORM_URL } from "lib/constants";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React from "react";
+import { Text } from "view/com/util/text/Text";
+import { TextLink } from "view/com/util/Link";
+import { formatCount } from "view/com/util/numeric/format";
+import { observer } from "mobx-react-lite";
+import { pluralize } from "lib/strings/helpers";
+import { s } from "lib/styles";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
-  const store = useStores()
-  const pal = usePalette('default')
-  const palError = usePalette('error')
+  const store = useStores();
+  const pal = usePalette("default");
+  const palError = usePalette("error");
 
   return (
     <View style={[styles.rightNav, pal.view]}>
@@ -47,7 +47,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href="https://blueskyweb.xyz/support/privacy-policy"
+            href="https://usedispatch.notion.site/Solarplex-Privacy-Policy-5e1da26e62d94172942e88e58bf51590"
             text="Privacy Policy"
           />
           <Text type="md" style={pal.textLight}>
@@ -56,25 +56,25 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href="https://blueskyweb.xyz/support/tos"
+            href="https://usedispatch.notion.site/Live-ToS-68b624b3ebe94ee6a726047b8aa60e33"
             text="Terms"
           />
         </View>
       </View>
       <InviteCodes />
     </View>
-  )
-})
+  );
+});
 
 const InviteCodes = observer(() => {
-  const store = useStores()
-  const pal = usePalette('default')
+  const store = useStores();
+  const pal = usePalette("default");
 
-  const {invitesAvailable} = store.me
+  const { invitesAvailable } = store.me;
 
   const onPress = React.useCallback(() => {
-    store.shell.openModal({name: 'invite-codes'})
-  }, [store])
+    store.shell.openModal({ name: "invite-codes" });
+  }, [store]);
   return (
     <TouchableOpacity
       style={[styles.inviteCodes, pal.border]}
@@ -82,10 +82,11 @@ const InviteCodes = observer(() => {
       accessibilityRole="button"
       accessibilityLabel={
         invitesAvailable === 1
-          ? 'Invite codes: 1 available'
+          ? "Invite codes: 1 available"
           : `Invite codes: ${invitesAvailable} available`
       }
-      accessibilityHint="Opens list of invite codes">
+      accessibilityHint="Opens list of invite codes"
+    >
       <FontAwesomeIcon
         icon="ticket"
         style={[
@@ -96,19 +97,20 @@ const InviteCodes = observer(() => {
       />
       <Text
         type="md-medium"
-        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {formatCount(store.me.invitesAvailable)} invite{' '}
-        {pluralize(store.me.invitesAvailable, 'code')} available
+        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}
+      >
+        {formatCount(store.me.invitesAvailable)} invite{" "}
+        {pluralize(store.me.invitesAvailable, "code")} available
       </Text>
     </TouchableOpacity>
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
   rightNav: {
-    position: 'absolute',
+    position: "absolute",
     top: 20,
-    left: 'calc(50vw + 310px)',
+    left: "calc(50vw + 310px)",
     width: 304,
   },
 
@@ -125,10 +127,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   inviteCodesIcon: {
     marginRight: 6,
   },
-})
+});
