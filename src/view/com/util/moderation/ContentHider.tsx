@@ -34,7 +34,7 @@ export function ContentHider({
     )
   }
 
-  const desc = describeModerationCause(moderation.cause)
+  const desc = describeModerationCause(moderation.cause, 'content')
   return (
     <View testID={testID} style={style}>
       <Pressable

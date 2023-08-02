@@ -21,12 +21,13 @@ export function PostAlerts({
 
   const shouldAlert =
     !!moderation.cause &&
-    (moderation.alert || (includeMute && moderation.cause?.type === 'muted'))
+    (moderation.alert ||
+      (includeMute && moderation.blur && moderation.cause?.type === 'muted'))
   if (!shouldAlert) {
     return null
   }
 
-  const desc = describeModerationCause(moderation.cause)
+  const desc = describeModerationCause(moderation.cause, 'content')
   return (
     <Pressable
       onPress={() => {
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingLeft: 14,
     paddingHorizontal: 16,
     borderRadius: 8,

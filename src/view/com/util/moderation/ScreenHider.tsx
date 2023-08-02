@@ -48,7 +48,7 @@ export function ScreenHider({
     )
   }
 
-  const desc = describeModerationCause(moderation.cause)
+  const desc = describeModerationCause(moderation.cause, 'account')
   return (
     <View style={[styles.container, pal.view, containerStyle]}>
       <View style={styles.iconContainer}>

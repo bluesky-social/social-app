@@ -12,7 +12,7 @@ export function sanitizeDisplayName(
   moderation?: ModerationUI,
 ): string {
   if (moderation?.blur) {
-    return `⚠${describeModerationCause(moderation.cause).name}`
+    return `⚠${describeModerationCause(moderation.cause, 'account').name}`
   }
   if (typeof str === 'string') {
     return str.replace(CHECK_MARKS_RE, '').trim()

@@ -7,7 +7,7 @@ export interface ModerationCauseDescription {
 
 export function describeModerationCause(
   cause: ModerationCause | undefined,
-  context: 'account' | 'content' = 'content',
+  context: 'account' | 'content',
 ): ModerationCauseDescription {
   if (!cause) {
     return {
@@ -31,12 +31,15 @@ export function describeModerationCause(
   if (cause.type === 'muted') {
     if (cause.source.type === 'user') {
       return {
-        name: 'Muted User',
+        name: context === 'account' ? 'Muted User' : 'Post by muted user',
         description: 'You have muted this user',
       }
     } else {
       return {
-        name: `Muted by "${cause.source.list.name}"`,
+        name:
+          context === 'account'
+            ? `Muted by "${cause.source.list.name}"`
+            : `Post by muted user ("${cause.source.list.name}")`,
         description: 'You have muted this user',
       }
     }

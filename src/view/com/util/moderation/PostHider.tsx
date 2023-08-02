@@ -43,7 +43,7 @@ export function PostHider({
     )
   }
 
-  const desc = describeModerationCause(moderation.cause)
+  const desc = describeModerationCause(moderation.cause, 'content')
   return (
     <>
       <Pressable
