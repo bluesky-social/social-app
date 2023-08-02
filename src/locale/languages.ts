@@ -112,7 +112,7 @@ export const LANGUAGES: Language[] = [
   {code3: 'cpf', code2: '', name: 'Creoles and pidgins, French-based'},
   {code3: 'cpp', code2: '', name: 'Creoles and pidgins, Portuguese-based'},
   {code3: 'cre', code2: 'cr', name: 'Cree'},
-  {code3: 'crh', code2: '', name: 'Crimean Tatar; Crimean Turkish'},
+  {code3: 'crh', code2: 'ct', name: 'Crimean Tatar; Crimean Turkish'},
   {code3: 'crp', code2: '', name: 'Creoles and pidgins'},
   {code3: 'csb', code2: '', name: 'Kashubian'},
   {code3: 'cus', code2: '', name: 'Cushitic languages'},
