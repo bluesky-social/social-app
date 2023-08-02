@@ -34,17 +34,41 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {makeProfileLink} from 'lib/routes/links'
+import {resolveName} from 'lib/api'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
-export const CustomFeedScreen = withAuthRequired(
-  observer(({route}: Props) => {
+
+export const CustomFeedScreen = observer((props: Props) => {
+  const store = useStores()
+  const {name: handleOrDid} = props.route.params
+  const [feedOwnerDid, setFeedOwnerDid] = React.useState<string | undefined>()
+
+  React.useEffect(() => {
+    /*
+     * We must resolve the DID of the feed owner before we can fetch the feed.
+     */
+    async function fetchDid() {
+      const did = await resolveName(store, handleOrDid)
+      setFeedOwnerDid(did)
+    }
+
+    fetchDid()
+  }, [store, handleOrDid, setFeedOwnerDid])
+
+  return feedOwnerDid ? (
+    <CustomFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
+  ) : null
+})
+
+export const CustomFeedScreenInner = withAuthRequired(
+  observer(({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
     const store = useStores()
     const pal = usePalette('default')
     const {track} = useAnalytics()
-    const {rkey, name} = route.params
+    const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
-      () => makeRecordUri(name, 'app.bsky.feed.generator', rkey),
-      [rkey, name],
+      () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
+      [rkey, feedOwnerDid],
     )
     const scrollElRef = useRef<FlatList>(null)
     const currentFeed = useCustomFeed(uri)
@@ -101,10 +125,10 @@ export const CustomFeedScreen = withAuthRequired(
     }, [store, currentFeed])
 
     const onPressShare = React.useCallback(() => {
-      const url = toShareUrl(`/profile/${name}/feed/${rkey}`)
+      const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)
       shareUrl(url)
       track('CustomFeed:Share')
-    }, [name, rkey, track])
+    }, [handleOrDid, rkey, track])
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
@@ -310,7 +334,7 @@ export const CustomFeedScreen = withAuthRequired(
                 <TextLink
                   type="md-medium"
                   style={pal.textLight}
-                  href={`/profile/${name}/feed/${rkey}/liked-by`}
+                  href={`/profile/${handleOrDid}/feed/${rkey}/liked-by`}
                   text={`Liked by ${currentFeed.data.likeCount} ${pluralize(
                     currentFeed?.data.likeCount || 0,
                     'user',
@@ -336,7 +360,7 @@ export const CustomFeedScreen = withAuthRequired(
       onToggleSaved,
       onToggleLiked,
       onPressShare,
-      name,
+      handleOrDid,
       rkey,
       isPinned,
       onTogglePinned,
