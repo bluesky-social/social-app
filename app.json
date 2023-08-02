@@ -49,6 +49,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "xyz.blueskyweb.app",
       "intentFilters": [
         {
