@@ -151,6 +151,8 @@ func serve(cctx *cli.Context) error {
 		return http.FS(fsys)
 	}())
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
+	e.GET("/ips-v4", echo.WrapHandler(staticHandler))
+	e.GET("/ips-v6", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
 	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
 	e.GET("/security.txt", func(c echo.Context) error {
