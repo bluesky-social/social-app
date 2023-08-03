@@ -103,7 +103,12 @@ export class ProfileModel {
   // =
 
   async setup() {
-    await this._load()
+    const precache = await this.rootStore.profiles.cache.get(this.params.actor)
+    if (precache) {
+      await this._loadWithCache(precache)
+    } else {
+      await this._load()
+    }
   }
 
   async refresh() {
@@ -252,7 +257,7 @@ export class ProfileModel {
     this._xLoading(isRefreshing)
     try {
       const res = await this.rootStore.agent.getProfile(this.params)
-      this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
+      this.rootStore.profiles.overwrite(this.params.actor, res)
       if (res.data.handle) {
         this.rootStore.handleResolutions.cache.set(
           res.data.handle,
@@ -262,6 +267,23 @@ export class ProfileModel {
       this._replaceAll(res)
       await this._createRichText()
       this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
+    }
+  }
+
+  async _loadWithCache(precache: GetProfile.Response) {
+    // use cached value
+    this._replaceAll(precache)
+    await this._createRichText()
+    this._xIdle()
+
+    // fetch latest
+    try {
+      const res = await this.rootStore.agent.getProfile(this.params)
+      this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
+      this._replaceAll(res)
+      await this._createRichText()
     } catch (e: any) {
       this._xIdle(e)
     }
