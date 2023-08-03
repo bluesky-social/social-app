@@ -54,7 +54,7 @@ export class LabelPreferencesModel {
 export class PreferencesModel {
   adultContentEnabled = !isIOS
   contentLanguages: string[] = deviceLocales || []
-  postLanguage: string = deviceLocales ? deviceLocales.join(',') : 'en'
+  postLanguage: string = deviceLocales[0] || 'en'
   postLanguageHistory: string[] = DEFAULT_LANG_CODES
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
@@ -109,20 +109,8 @@ export class PreferencesModel {
       if (hasProp(v, 'postLanguage') && typeof v.postLanguage === 'string') {
         this.postLanguage = v.postLanguage
       } else {
-        /*
-         * Check if the OLD `postLanguages` in preferences exist, set new field
-         * to old value if exists, otherwise use deviceLocales
-         */
-        if (
-          hasProp(v, 'postLanguages') &&
-          Array.isArray(v.postLanguages) &&
-          typeof v.postLanguages.every(item => typeof item === 'string')
-        ) {
-          this.postLanguage = v.postLanguages.filter(Boolean).join(',')
-        } else {
-          // default to the device languages
-          this.postLanguage = deviceLocales ? deviceLocales.join(',') : 'en'
-        }
+        // default to the device languages
+        this.postLanguage = deviceLocales[0] || 'en'
       }
       if (
         hasProp(v, 'postLanguageHistory') &&
@@ -354,7 +342,7 @@ export class PreferencesModel {
       // sort alphabetically for deterministic comparison in context menu
       this.postLanguage = this.postLanguages
         .concat([code2])
-        .sort((a, b) => (a > b ? 1 : -1))
+        .sort((a, b) => a.localeCompare(b))
         .join(',')
     }
   }
@@ -368,8 +356,15 @@ export class PreferencesModel {
    * which is then used to populate the language selector menu.
    */
   savePostLanguageToHistory() {
+    // filter out duplicate `this.postLanguage` if exists, and prepend
+    // value to start of array
     this.postLanguageHistory = [this.postLanguage]
-      .concat(this.postLanguageHistory)
+      .concat(
+        this.postLanguageHistory.filter(
+          commaSeparatedLangCodes =>
+            commaSeparatedLangCodes !== this.postLanguage,
+        ),
+      )
       .slice(0, 6)
   }
 

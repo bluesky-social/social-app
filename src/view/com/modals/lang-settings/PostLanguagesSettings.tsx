@@ -68,6 +68,7 @@ export const Component = observer(() => {
 
           return (
             <ToggleButton
+              key={lang.code2}
               label={lang.name}
               isSelected={isSelected}
               onPress={() => (isDisabled ? undefined : onPress(lang.code2))}
