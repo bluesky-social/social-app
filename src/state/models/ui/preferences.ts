@@ -372,7 +372,7 @@ export class PreferencesModel {
   }
 
   getReadablePostLanguages() {
-    const all = this.postLanguages.filter(Boolean).map(code2 => {
+    const all = this.postLanguages.map(code2 => {
       const lang = LANGUAGES.find(l => l.code2 === code2)
       return lang ? lang.name : code2
     })
