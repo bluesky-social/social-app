@@ -33,7 +33,9 @@ const LABEL_GROUPS = [
   'impersonation',
 ]
 const VISIBILITY_VALUES = ['show', 'warn', 'hide']
-const DEFAULT_LANG_CODES = ['en', 'ja', 'pt', 'de']
+const DEFAULT_LANG_CODES = (deviceLocales || [])
+  .concat(['en', 'ja', 'pt', 'de'])
+  .slice(0, 6)
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
