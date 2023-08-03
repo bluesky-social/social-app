@@ -7,7 +7,7 @@ import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {useStores} from 'state/index'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
@@ -39,6 +39,7 @@ import {resolveName} from 'lib/api'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 
 export const CustomFeedScreen = observer((props: Props) => {
+  const pal = usePalette('default')
   const store = useStores()
   const {name: handleOrDid} = props.route.params
   const [feedOwnerDid, setFeedOwnerDid] = React.useState<string | undefined>()
@@ -57,7 +58,11 @@ export const CustomFeedScreen = observer((props: Props) => {
 
   return feedOwnerDid ? (
     <CustomFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
-  ) : null
+  ) : (
+    <View style={[styles.loading, pal.view]}>
+      <ActivityIndicator size="large" />
+    </View>
+  )
 })
 
 export const CustomFeedScreenInner = withAuthRequired(
@@ -453,5 +458,11 @@ const styles = StyleSheet.create({
   top2: {
     position: 'relative',
     top: 2,
+  },
+  loading: {
+    height: '100%',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingBottom: 100,
   },
 })
