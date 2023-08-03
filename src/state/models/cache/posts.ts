@@ -18,4 +18,14 @@ export class PostsCache {
       )
     }
   }
+
+  fromFeedItem(feedItem: AppBskyFeedDefs.FeedViewPost) {
+    this.set(feedItem.post.uri, feedItem.post)
+    if (
+      feedItem.reply?.parent &&
+      AppBskyFeedDefs.isPostView(feedItem.reply?.parent)
+    ) {
+      this.set(feedItem.reply.parent.uri, feedItem.reply.parent)
+    }
+  }
 }
