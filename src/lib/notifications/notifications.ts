@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications'
 import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
+import {devicePlatform} from 'platform/detection'
 // import {NotificationsFeedItemModel} from '../../state/models/feeds/notifications'
 // import {sanitizeDisplayName} from '../strings/display-names'
 // import {AppBskyEmbedImages, AtUri} from '@atproto/api'
@@ -14,11 +15,18 @@ export function init(store: RootStoreModel) {
     console.log('Push token: ', token) // TODO: delete this
   })
   Notifications.addPushTokenListener(async ({data: token, type}) => {
-    store.log.debug('Push token changed', {token, type})
+    store.log.debug('Notifications: Push token changed', {token, type})
     console.log('New push token: ', token, type) // TODO: delete this
     if (token) {
-      // TODO: set push token and send it to the server
-      // store.session.setPushToken(token)
+      try {
+        await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
+          platform: devicePlatform,
+          token: token.data,
+        })
+      } catch (error) {
+        console.warn('Failed to set push token', error)
+        store.log.error('Notifications: Failed to set push token', error)
+      }
     }
   })
   store.onSessionLoaded(async () => {
