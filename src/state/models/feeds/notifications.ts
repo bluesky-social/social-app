@@ -503,7 +503,9 @@ export class NotificationsFeedModel {
       const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
         uris: [addedUri],
       })
-      notif.setAdditionalData(postsRes.data.posts[0])
+      const post = postsRes.data.posts[0]
+      notif.setAdditionalData(post)
+      this.rootStore.posts.set(post.uri, post)
     }
     const filtered = this._filterNotifications([notif])
     return filtered[0]
@@ -611,6 +613,7 @@ export class NotificationsFeedModel {
         ),
       )
       for (const post of postsChunks.flat()) {
+        this.rootStore.posts.set(post.uri, post)
         const models = addedPostMap.get(post.uri)
         if (models?.length) {
           for (const model of models) {
