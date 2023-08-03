@@ -12,6 +12,8 @@ import {PostThreadItemModel} from './post-thread-item'
 export class PostThreadModel {
   // state
   isLoading = false
+  isLoadingFromCache = false
+  isFromCache = false
   isRefreshing = false
   hasLoaded = false
   error = ''
@@ -177,6 +179,8 @@ export class PostThreadModel {
 
   async _loadPrecached(precache: AppBskyFeedDefs.PostView) {
     // start with the cached version
+    this.isLoadingFromCache = true
+    this.isFromCache = true
     this._replaceAll({
       success: true,
       headers: {},
@@ -197,6 +201,10 @@ export class PostThreadModel {
     } catch (e: any) {
       console.log(e)
       this._xIdle(e)
+    } finally {
+      runInAction(() => {
+        this.isLoadingFromCache = false
+      })
     }
   }
 
