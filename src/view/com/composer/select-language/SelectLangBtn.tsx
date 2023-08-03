@@ -29,12 +29,8 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
     store.shell.openModal({name: 'post-languages-settings'})
   }, [store])
 
-  /**
-   * Sanitized array of 2-character language codes
-   */
-  const splitLangCodes = store.preferences.postLanguage
-    .split(',')
-    .filter(Boolean)
+  const postLanguagesPref = store.preferences.postLanguages
+  const postLanguagePref = store.preferences.postLanguage
   const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 
@@ -54,7 +50,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       arr.push({
         icon:
           langCodes.every(code => store.preferences.hasPostLanguage(code)) &&
-          langCodes.length === splitLangCodes.length
+          langCodes.length === postLanguagesPref.length
             ? ['fas', 'circle-check']
             : ['far', 'circle'],
         label: langName,
@@ -64,12 +60,12 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       })
     }
 
-    if (splitLangCodes.length) {
+    if (postLanguagesPref.length) {
       /*
        * Re-join here after sanitization bc postLanguageHistory is an array of
        * comma-separated strings too
        */
-      add(splitLangCodes.join(','))
+      add(postLanguagePref)
     }
 
     // comma-separted strings of lang codes that have been used in the past
@@ -86,7 +82,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         onPress: onPressMore,
       },
     ]
-  }, [store.preferences, onPressMore, splitLangCodes])
+  }, [store.preferences, onPressMore, postLanguagePref, postLanguagesPref])
 
   return (
     <DropdownButton
@@ -97,9 +93,9 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       style={styles.button}
       accessibilityLabel="Language selection"
       accessibilityHint="">
-      {splitLangCodes.length > 0 ? (
+      {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
-          {splitLangCodes.map(lang => codeToLanguageName(lang)).join(', ')}
+          {postLanguagesPref.map(lang => codeToLanguageName(lang)).join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon
