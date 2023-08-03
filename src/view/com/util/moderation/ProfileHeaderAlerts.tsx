@@ -31,6 +31,8 @@ export function ProfileHeaderAlerts({
         const desc = describeModerationCause(cause, 'account')
         return (
           <Pressable
+            testID="profileHeaderAlert"
+            key={desc.name}
             onPress={() => {
               store.shell.openModal({
                 name: 'moderation-details',
