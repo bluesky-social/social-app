@@ -20,6 +20,5 @@ export function hackAddDeletedEmbed(post: AppBskyFeedDefs.PostView) {
         uri: (record.embed.record as ComAtprotoRepoStrongRef.Main).uri,
       },
     }
-    console.log(post.embed)
   }
 }
