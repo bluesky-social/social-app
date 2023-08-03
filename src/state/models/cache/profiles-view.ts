@@ -45,8 +45,6 @@ export class ProfilesCache {
   }
 
   overwrite(did: string, res: GetProfile.Response) {
-    if (this.cache.has(did)) {
-      this.cache.set(did, res)
-    }
+    this.cache.set(did, res)
   }
 }

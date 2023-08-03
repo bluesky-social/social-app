@@ -257,7 +257,7 @@ export class ProfileModel {
     this._xLoading(isRefreshing)
     try {
       const res = await this.rootStore.agent.getProfile(this.params)
-      this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
+      this.rootStore.profiles.overwrite(this.params.actor, res)
       if (res.data.handle) {
         this.rootStore.handleResolutions.cache.set(
           res.data.handle,
