@@ -12,6 +12,8 @@ import {PostThreadItemModel} from './post-thread-item'
 export class PostThreadModel {
   // state
   isLoading = false
+  isLoadingFromCache = false
+  isFromCache = false
   isRefreshing = false
   hasLoaded = false
   error = ''
@@ -20,7 +22,7 @@ export class PostThreadModel {
   params: GetPostThread.QueryParams
 
   // data
-  thread?: PostThreadItemModel
+  thread?: PostThreadItemModel | null = null
   isBlocked = false
 
   constructor(
@@ -52,7 +54,7 @@ export class PostThreadModel {
   }
 
   get hasContent() {
-    return typeof this.thread !== 'undefined'
+    return !!this.thread
   }
 
   get hasError() {
@@ -82,10 +84,16 @@ export class PostThreadModel {
     if (!this.resolvedUri) {
       await this._resolveUri()
     }
+
     if (this.hasContent) {
       await this.update()
     } else {
-      await this._load()
+      const precache = this.rootStore.posts.cache.get(this.resolvedUri)
+      if (precache) {
+        await this._loadPrecached(precache)
+      } else {
+        await this._load()
+      }
     }
   }
 
@@ -167,6 +175,37 @@ export class PostThreadModel {
     runInAction(() => {
       this.resolvedUri = urip.toString()
     })
+  }
+
+  async _loadPrecached(precache: AppBskyFeedDefs.PostView) {
+    // start with the cached version
+    this.isLoadingFromCache = true
+    this.isFromCache = true
+    this._replaceAll({
+      success: true,
+      headers: {},
+      data: {
+        thread: {
+          post: precache,
+        },
+      },
+    })
+    this._xIdle()
+
+    // then update in the background
+    try {
+      const res = await this.rootStore.agent.getPostThread(
+        Object.assign({}, this.params, {uri: this.resolvedUri}),
+      )
+      this._replaceAll(res)
+    } catch (e: any) {
+      console.log(e)
+      this._xIdle(e)
+    } finally {
+      runInAction(() => {
+        this.isLoadingFromCache = false
+      })
+    }
   }
 
   async _load(isRefreshing = false) {

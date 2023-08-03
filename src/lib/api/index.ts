@@ -29,10 +29,24 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
   if (didOrHandle.startsWith('did:')) {
     return didOrHandle
   }
-  const res = await store.agent.resolveHandle({
-    handle: didOrHandle,
-  })
-  return res.data.did
+
+  // we run the resolution always to ensure freshness
+  const promise = store.agent
+    .resolveHandle({
+      handle: didOrHandle,
+    })
+    .then(res => {
+      store.handleResolutions.cache.set(didOrHandle, res.data.did)
+      return res.data.did
+    })
+
+  // but we can return immediately if it's cached
+  const cached = store.handleResolutions.cache.get(didOrHandle)
+  if (cached) {
+    return cached
+  }
+
+  return promise
 }
 
 export async function uploadBlob(

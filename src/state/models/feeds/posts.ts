@@ -374,6 +374,9 @@ export class PostsFeedModel {
     this.rootStore.me.follows.hydrateProfiles(
       res.data.feed.map(item => item.post.author),
     )
+    for (const item of res.data.feed) {
+      this.rootStore.posts.fromFeedItem(item)
+    }
 
     const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
@@ -405,6 +408,7 @@ export class PostsFeedModel {
     res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
   ) {
     for (const item of res.data.feed) {
+      this.rootStore.posts.fromFeedItem(item)
       const existingSlice = this.slices.find(slice =>
         slice.containsUri(item.post.uri),
       )

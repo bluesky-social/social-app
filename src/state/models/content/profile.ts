@@ -253,6 +253,12 @@ export class ProfileModel {
     try {
       const res = await this.rootStore.agent.getProfile(this.params)
       this.rootStore.profiles.overwrite(this.params.actor, res) // cache invalidation
+      if (res.data.handle) {
+        this.rootStore.handleResolutions.cache.set(
+          res.data.handle,
+          res.data.did,
+        )
+      }
       this._replaceAll(res)
       await this._createRichText()
       this._xIdle()
