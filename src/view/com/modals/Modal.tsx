@@ -6,6 +6,8 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
+import {navigate} from '../../../Navigation'
+import once from 'lodash.once'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -35,8 +37,24 @@ export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
+
+  const activeModal =
+    store.shell.activeModals[store.shell.activeModals.length - 1]
+
+  const navigateOnce = once(navigate)
+
+  const onBottomSheetAnimate = (fromIndex: number, toIndex: number) => {
+    if (activeModal?.name === 'profile-preview' && toIndex === 1) {
+      // begin loading the profile screen behind the scenes
+      navigateOnce('Profile', {name: activeModal.did})
+    }
+  }
   const onBottomSheetChange = (snapPoint: number) => {
     if (snapPoint === -1) {
+      store.shell.closeModal()
+    } else if (activeModal?.name === 'profile-preview' && snapPoint === 1) {
+      // ensure we navigate to Profile and close the modal
+      navigateOnce('Profile', {name: activeModal.did})
       store.shell.closeModal()
     }
   }
@@ -44,9 +62,6 @@ export const ModalsContainer = observer(function ModalsContainer() {
     bottomSheetRef.current?.close()
     store.shell.closeModal()
   }
-
-  const activeModal =
-    store.shell.activeModals[store.shell.activeModals.length - 1]
 
   useEffect(() => {
     if (store.shell.isModalActive) {
@@ -146,6 +161,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       }
       handleIndicatorStyle={{backgroundColor: pal.text.color}}
       handleStyle={[styles.handle, pal.view]}
+      onAnimate={onBottomSheetAnimate}
       onChange={onBottomSheetChange}>
       {element}
     </BottomSheet>

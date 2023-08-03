@@ -1,63 +1,50 @@
-import React, {useState, useEffect, useCallback} from 'react'
-import {StyleSheet, View} from 'react-native'
+import React, {useState, useEffect} from 'react'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useNavigation, StackActions} from '@react-navigation/native'
-import {Text} from '../util/text/Text'
+import {ThemedText} from '../util/text/ThemedText'
 import {useStores} from 'state/index'
 import {ProfileModel} from 'state/models/content/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ProfileHeader} from '../profile/ProfileHeader'
-import {Button} from '../util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
+import {InfoCircleIcon} from 'lib/icons'
+import {useNavigationState} from '@react-navigation/native'
 
-export const snapPoints = [560]
+export const snapPoints = [520, '100%']
 
 export const Component = observer(({did}: {did: string}) => {
   const store = useStores()
   const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
-  const navigation = useNavigation<NavigationProp>()
   const [model] = useState(new ProfileModel(store, {actor: did}))
   const {screen} = useAnalytics()
+
+  // track the navigator state to detect if a page-load occurred
+  const navState = useNavigationState(s => s)
+  const [initNavState] = useState(navState)
+  const isLoading = initNavState !== navState
 
   useEffect(() => {
     screen('Profile:Preview')
     model.setup()
   }, [model, screen])
 
-  const onPressViewProfile = useCallback(() => {
-    navigation.dispatch(StackActions.push('Profile', {name: model.handle}))
-    store.shell.closeModal()
-  }, [navigation, store, model])
-
   return (
     <View style={pal.view}>
       <View style={styles.headerWrapper}>
         <ProfileHeader view={model} hideBackButton onRefreshAll={() => {}} />
       </View>
-      <View style={[styles.buttonsContainer, pal.view]}>
-        <View style={styles.buttons}>
-          <Button
-            type="inverted"
-            style={[styles.button, styles.buttonWide]}
-            onPress={onPressViewProfile}
-            accessibilityLabel="View profile"
-            accessibilityHint="">
-            <Text type="button-lg" style={palInverted.text}>
-              View Profile
-            </Text>
-          </Button>
-          <Button
-            type="default"
-            style={styles.button}
-            onPress={() => store.shell.closeModal()}
-            accessibilityLabel="Close this preview"
-            accessibilityHint="">
-            <Text type="button-lg" style={pal.text}>
-              Close
-            </Text>
-          </Button>
+      <View style={[styles.hintWrapper, pal.view]}>
+        <View style={styles.hint}>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <>
+              <InfoCircleIcon size={21} style={pal.textLight} />
+              <ThemedText type="xl" fg="light">
+                Swipe up to see more
+              </ThemedText>
+            </>
+          )}
         </View>
       </View>
     </View>
@@ -68,22 +55,14 @@ const styles = StyleSheet.create({
   headerWrapper: {
     height: 440,
   },
-  buttonsContainer: {
-    height: 120,
+  hintWrapper: {
+    height: 80,
   },
-  buttons: {
-    flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 14,
-    paddingTop: 16,
-  },
-  button: {
-    flex: 2,
+  hint: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingVertical: 12,
-  },
-  buttonWide: {
-    flex: 3,
+    gap: 8,
+    paddingHorizontal: 14,
+    borderRadius: 6,
   },
 })
