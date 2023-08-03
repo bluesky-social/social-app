@@ -1,13 +1,14 @@
 import React, {useMemo, useRef} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {useStores} from 'state/index'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
@@ -34,17 +35,98 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {makeProfileLink} from 'lib/routes/links'
+import {resolveName} from 'lib/api'
+import {CenteredView} from 'view/com/util/Views'
+import {NavigationProp} from 'lib/routes/types'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
+
 export const CustomFeedScreen = withAuthRequired(
-  observer(({route}: Props) => {
+  observer((props: Props) => {
+    const pal = usePalette('default')
+    const store = useStores()
+    const navigation = useNavigation<NavigationProp>()
+
+    const {name: handleOrDid} = props.route.params
+
+    const [feedOwnerDid, setFeedOwnerDid] = React.useState<string | undefined>()
+    const [error, setError] = React.useState<string | undefined>()
+
+    const onPressBack = React.useCallback(() => {
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Home')
+      }
+    }, [navigation])
+
+    React.useEffect(() => {
+      /*
+       * We must resolve the DID of the feed owner before we can fetch the feed.
+       */
+      async function fetchDid() {
+        try {
+          const did = await resolveName(store, handleOrDid)
+          setFeedOwnerDid(did)
+        } catch (e) {
+          setError(
+            `We're sorry, but we were unable to resolve this feed. If this persists, please contact the feed creator, @${handleOrDid}.`,
+          )
+        }
+      }
+
+      fetchDid()
+    }, [store, handleOrDid, setFeedOwnerDid])
+
+    if (error) {
+      return (
+        <CenteredView>
+          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+            <Text type="title-lg" style={[pal.text, s.mb10]}>
+              Could not load feed
+            </Text>
+            <Text type="md" style={[pal.text, s.mb20]}>
+              {error}
+            </Text>
+
+            <View style={{flexDirection: 'row'}}>
+              <Button
+                type="default"
+                accessibilityLabel="Go Back"
+                accessibilityHint="Return to previous page"
+                onPress={onPressBack}
+                style={{flexShrink: 1}}>
+                <Text type="button" style={pal.text}>
+                  Go Back
+                </Text>
+              </Button>
+            </View>
+          </View>
+        </CenteredView>
+      )
+    }
+
+    return feedOwnerDid ? (
+      <CustomFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
+    ) : (
+      <CenteredView>
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
+      </CenteredView>
+    )
+  }),
+)
+
+export const CustomFeedScreenInner = observer(
+  ({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
     const store = useStores()
     const pal = usePalette('default')
     const {track} = useAnalytics()
-    const {rkey, name} = route.params
+    const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
-      () => makeRecordUri(name, 'app.bsky.feed.generator', rkey),
-      [rkey, name],
+      () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
+      [rkey, feedOwnerDid],
     )
     const scrollElRef = useRef<FlatList>(null)
     const currentFeed = useCustomFeed(uri)
@@ -101,10 +183,10 @@ export const CustomFeedScreen = withAuthRequired(
     }, [store, currentFeed])
 
     const onPressShare = React.useCallback(() => {
-      const url = toShareUrl(`/profile/${name}/feed/${rkey}`)
+      const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)
       shareUrl(url)
       track('CustomFeed:Share')
-    }, [name, rkey, track])
+    }, [handleOrDid, rkey, track])
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
@@ -310,7 +392,7 @@ export const CustomFeedScreen = withAuthRequired(
                 <TextLink
                   type="md-medium"
                   style={pal.textLight}
-                  href={`/profile/${name}/feed/${rkey}/liked-by`}
+                  href={`/profile/${handleOrDid}/feed/${rkey}/liked-by`}
                   text={`Liked by ${currentFeed.data.likeCount} ${pluralize(
                     currentFeed?.data.likeCount || 0,
                     'user',
@@ -336,7 +418,7 @@ export const CustomFeedScreen = withAuthRequired(
       onToggleSaved,
       onToggleLiked,
       onPressShare,
-      name,
+      handleOrDid,
       rkey,
       isPinned,
       onTogglePinned,
@@ -375,7 +457,7 @@ export const CustomFeedScreen = withAuthRequired(
         />
       </View>
     )
-  }),
+  },
 )
 
 const styles = StyleSheet.create({
@@ -429,5 +511,11 @@ const styles = StyleSheet.create({
   top2: {
     position: 'relative',
     top: 2,
+  },
+  notFoundContainer: {
+    margin: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 6,
   },
 })
