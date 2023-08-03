@@ -1,6 +1,7 @@
 import React, {useMemo, useRef} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -35,38 +36,90 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {makeProfileLink} from 'lib/routes/links'
 import {resolveName} from 'lib/api'
+import {CenteredView} from 'view/com/util/Views'
+import {NavigationProp} from 'lib/routes/types'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 
-export const CustomFeedScreen = observer((props: Props) => {
-  const pal = usePalette('default')
-  const store = useStores()
-  const {name: handleOrDid} = props.route.params
-  const [feedOwnerDid, setFeedOwnerDid] = React.useState<string | undefined>()
+export const CustomFeedScreen = withAuthRequired(
+  observer((props: Props) => {
+    const pal = usePalette('default')
+    const store = useStores()
+    const navigation = useNavigation<NavigationProp>()
 
-  React.useEffect(() => {
-    /*
-     * We must resolve the DID of the feed owner before we can fetch the feed.
-     */
-    async function fetchDid() {
-      const did = await resolveName(store, handleOrDid)
-      setFeedOwnerDid(did)
+    const {name: handleOrDid} = props.route.params
+
+    const [feedOwnerDid, setFeedOwnerDid] = React.useState<string | undefined>()
+    const [error, setError] = React.useState<string | undefined>()
+
+    const onPressBack = React.useCallback(() => {
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Home')
+      }
+    }, [navigation])
+
+    React.useEffect(() => {
+      /*
+       * We must resolve the DID of the feed owner before we can fetch the feed.
+       */
+      async function fetchDid() {
+        try {
+          const did = await resolveName(store, handleOrDid)
+          setFeedOwnerDid(did)
+        } catch (e) {
+          setError(
+            `We're sorry, but we were unable to resolve this feed. If this persists, please contact the feed creator, @${handleOrDid}.`,
+          )
+        }
+      }
+
+      fetchDid()
+    }, [store, handleOrDid, setFeedOwnerDid])
+
+    if (error) {
+      return (
+        <CenteredView>
+          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+            <Text type="title-lg" style={[pal.text, s.mb10]}>
+              Could not load feed
+            </Text>
+            <Text type="md" style={[pal.text, s.mb20]}>
+              {error}
+            </Text>
+
+            <View style={{flexDirection: 'row'}}>
+              <Button
+                type="default"
+                accessibilityLabel="Go Back"
+                accessibilityHint="Return to previous page"
+                onPress={onPressBack}
+                style={{flexShrink: 1}}>
+                <Text type="button" style={pal.text}>
+                  Go Back
+                </Text>
+              </Button>
+            </View>
+          </View>
+        </CenteredView>
+      )
     }
 
-    fetchDid()
-  }, [store, handleOrDid, setFeedOwnerDid])
+    return feedOwnerDid ? (
+      <CustomFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
+    ) : (
+      <CenteredView>
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
+      </CenteredView>
+    )
+  }),
+)
 
-  return feedOwnerDid ? (
-    <CustomFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
-  ) : (
-    <View style={[styles.loading, pal.view]}>
-      <ActivityIndicator size="large" />
-    </View>
-  )
-})
-
-export const CustomFeedScreenInner = withAuthRequired(
-  observer(({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
+export const CustomFeedScreenInner = observer(
+  ({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
     const store = useStores()
     const pal = usePalette('default')
     const {track} = useAnalytics()
@@ -404,7 +457,7 @@ export const CustomFeedScreenInner = withAuthRequired(
         />
       </View>
     )
-  }),
+  },
 )
 
 const styles = StyleSheet.create({
@@ -459,10 +512,10 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: 2,
   },
-  loading: {
-    height: '100%',
-    alignContent: 'center',
-    justifyContent: 'center',
-    paddingBottom: 100,
+  notFoundContainer: {
+    margin: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 6,
   },
 })
