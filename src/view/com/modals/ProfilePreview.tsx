@@ -10,6 +10,7 @@ import {ProfileHeader} from '../profile/ProfileHeader'
 import {InfoCircleIcon} from 'lib/icons'
 import {useNavigationState} from '@react-navigation/native'
 import {isIOS} from 'platform/detection'
+import {s} from 'lib/styles'
 
 export const snapPoints = [520, '100%']
 
@@ -30,7 +31,7 @@ export const Component = observer(({did}: {did: string}) => {
   }, [model, screen])
 
   return (
-    <View style={pal.view}>
+    <View style={[pal.view, s.flex1]}>
       <View
         style={[
           styles.headerWrapper,
