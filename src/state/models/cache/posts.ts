@@ -1,6 +1,11 @@
 import {LRUMap} from 'lru_map'
 import {RootStoreModel} from '../root-store'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedPost,
+} from '@atproto/api'
 
 type PostView = AppBskyFeedDefs.PostView
 
@@ -27,5 +32,39 @@ export class PostsCache {
     ) {
       this.set(feedItem.reply.parent.uri, feedItem.reply.parent)
     }
+    const embed = feedItem.post.embed
+    if (
+      AppBskyEmbedRecord.isView(embed) &&
+      AppBskyEmbedRecord.isViewRecord(embed.record) &&
+      AppBskyFeedPost.isRecord(embed.record.value) &&
+      AppBskyFeedPost.validateRecord(embed.record.value).success
+    ) {
+      this.set(embed.record.uri, embedViewToPostView(embed.record))
+    }
+    if (
+      AppBskyEmbedRecordWithMedia.isView(embed) &&
+      AppBskyEmbedRecord.isViewRecord(embed.record?.record) &&
+      AppBskyFeedPost.isRecord(embed.record.record.value) &&
+      AppBskyFeedPost.validateRecord(embed.record.record.value).success
+    ) {
+      this.set(
+        embed.record.record.uri,
+        embedViewToPostView(embed.record.record),
+      )
+    }
+  }
+}
+
+function embedViewToPostView(
+  embedView: AppBskyEmbedRecord.ViewRecord,
+): PostView {
+  return {
+    $type: 'app.bsky.feed.post#view',
+    uri: embedView.uri,
+    cid: embedView.cid,
+    author: embedView.author,
+    record: embedView.value,
+    indexedAt: embedView.indexedAt,
+    labels: embedView.labels,
   }
 }
