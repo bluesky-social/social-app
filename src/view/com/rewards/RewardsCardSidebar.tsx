@@ -22,7 +22,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
 
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
-
+  const shouldClaimDaily = store.rewards.shouldClaimDaily(userId);
   const dailyPogress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
 
@@ -94,7 +94,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
           </View>
         </View>
         <View style={styles.claimBtn}>
-          <ClaimBtn onClick={onClaimHandler} />
+          {shouldClaimDaily && <ClaimBtn onClick={onClaimHandler} />}
         </View>
       </View>
     </View>

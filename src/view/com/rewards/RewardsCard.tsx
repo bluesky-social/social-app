@@ -87,7 +87,6 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
   const dailyReward = store.rewards.dailyReward(userId);
   const isClaimDailyBusy =
     !!dailyReward || !shouldClaimDaily || isClaimingDaily;
-
   const dailyPogress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
 
@@ -104,7 +103,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
       setDiceComponent(true);
     }
   };
-
+  console.log("dailyReward", dailyReward);
   const DiceRoll = () => {
     const pal = usePalette("default");
     return (
@@ -138,7 +137,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
 
   return (
     <View style={[styles.outer, s.h100pct]}>
-      {showDiceComponent ? (
+      {shouldShowDiceCompnent ? (
         <DiceRoll />
       ) : (
         <View style={styles.dailyContainer}>
