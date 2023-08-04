@@ -19,6 +19,7 @@ import { MutedThreads } from "./muted-threads";
 import { NotificationsFeedItemModel } from "./feeds/notifications";
 import { PreferencesModel } from "./ui/preferences";
 import { ProfilesCache } from "./cache/profiles-view";
+import { RewardsModel } from "state/rewards";
 import { SessionModel } from "./session";
 import { ShellUiModel } from "./ui/shell";
 import { SplxReactionModel } from "./media/reactions";
@@ -53,7 +54,8 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this);
   imageSizes = new ImageSizesCache();
   mutedThreads = new MutedThreads();
-  reactions = new SplxReactionModel();
+  reactions = new SplxReactionModel(this);
+  rewards = new RewardsModel(this);
 
   constructor(agent: BskyAgent) {
     this.agent = agent;
@@ -178,7 +180,7 @@ export class RootStoreModel {
     }
     try {
       await this.me.updateIfNeeded();
-      await this.preferences.sync({clearCache: true});
+      await this.preferences.sync({ clearCache: true });
       // await this.reactions.fetch();
       // console.log('reactionsMap syncd', JSON.parse(JSON.stringify(this.reactions.reactionMap)))
     } catch (e: any) {

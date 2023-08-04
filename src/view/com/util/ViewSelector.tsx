@@ -1,40 +1,41 @@
-import React, {useEffect, useState} from 'react'
-import {Pressable, RefreshControl, StyleSheet, View} from 'react-native'
-import {FlatList} from './Views'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {Text} from './text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {clamp} from 'lib/numbers'
-import {s, colors} from 'lib/styles'
-import {isAndroid} from 'platform/detection'
+import { Pressable, RefreshControl, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { colors, s } from "lib/styles";
 
-const HEADER_ITEM = {_reactKey: '__header__'}
-const SELECTOR_ITEM = {_reactKey: '__selector__'}
-const STICKY_HEADER_INDICES = [1]
+import { FlatList } from "./Views";
+import { OnScrollCb } from "lib/hooks/useOnMainScroll";
+import { Text } from "./text/Text";
+import { clamp } from "lib/numbers";
+import { isAndroid } from "platform/detection";
+import { useColorSchemeStyle } from "lib/hooks/useColorSchemeStyle";
+import { usePalette } from "lib/hooks/usePalette";
+
+const HEADER_ITEM = { _reactKey: "__header__" };
+const SELECTOR_ITEM = { _reactKey: "__selector__" };
+const STICKY_HEADER_INDICES = [1];
 
 export type ViewSelectorHandle = {
-  scrollToTop: () => void
-}
+  scrollToTop: () => void;
+};
 
 export const ViewSelector = React.forwardRef<
   ViewSelectorHandle,
   {
-    sections: string[]
-    items: any[]
-    refreshing?: boolean
-    swipeEnabled?: boolean
-    renderHeader?: () => JSX.Element
-    renderItem: (item: any) => JSX.Element
+    sections: string[];
+    items: any[];
+    refreshing?: boolean;
+    swipeEnabled?: boolean;
+    renderHeader?: () => JSX.Element;
+    renderItem: (item: any) => JSX.Element;
     ListFooterComponent?:
       | React.ComponentType<any>
       | React.ReactElement
       | null
-      | undefined
-    onSelectView?: (viewIndex: number) => void
-    onScroll?: OnScrollCb
-    onRefresh?: () => void
-    onEndReached?: (info: {distanceFromEnd: number}) => void
+      | undefined;
+    onSelectView?: (viewIndex: number) => void;
+    onScroll?: OnScrollCb;
+    onRefresh?: () => void;
+    onEndReached?: (info: { distanceFromEnd: number }) => void;
   }
 >(
   (
@@ -52,39 +53,39 @@ export const ViewSelector = React.forwardRef<
     },
     ref,
   ) => {
-    const pal = usePalette('default')
-    const [selectedIndex, setSelectedIndex] = useState<number>(0)
-    const flatListRef = React.useRef<FlatList>(null)
+    const pal = usePalette("default");
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
+    const flatListRef = React.useRef<FlatList>(null);
 
     // events
     // =
 
-    const keyExtractor = React.useCallback((item: any) => item._reactKey, [])
+    const keyExtractor = React.useCallback((item: any) => item._reactKey, []);
 
     const onPressSelection = React.useCallback(
       (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
       [setSelectedIndex, sections],
-    )
+    );
     useEffect(() => {
-      onSelectView?.(selectedIndex)
-    }, [selectedIndex, onSelectView])
+      onSelectView?.(selectedIndex);
+    }, [selectedIndex, onSelectView]);
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: () => {
-        flatListRef.current?.scrollToOffset({offset: 0})
+        flatListRef.current?.scrollToOffset({ offset: 0 });
       },
-    }))
+    }));
 
     // rendering
     // =
 
     const renderItemInternal = React.useCallback(
-      ({item}: {item: any}) => {
+      ({ item }: { item: any }) => {
         if (item === HEADER_ITEM) {
           if (renderHeader) {
-            return renderHeader()
+            return renderHeader();
           }
-          return <View />
+          return <View />;
         } else if (item === SELECTOR_ITEM) {
           return (
             <Selector
@@ -92,18 +93,18 @@ export const ViewSelector = React.forwardRef<
               selectedIndex={selectedIndex}
               onSelect={onPressSelection}
             />
-          )
+          );
         } else {
-          return renderItem(item)
+          return renderItem(item);
         }
       },
       [sections, selectedIndex, onPressSelection, renderHeader, renderItem],
-    )
+    );
 
     const data = React.useMemo(
       () => [HEADER_ITEM, SELECTOR_ITEM, ...items],
       [items],
-    )
+    );
     return (
       <FlatList
         ref={flatListRef}
@@ -125,35 +126,35 @@ export const ViewSelector = React.forwardRef<
         onEndReachedThreshold={0.6}
         contentContainerStyle={s.contentContainer}
         removeClippedSubviews={true}
-        scrollIndicatorInsets={{right: 1}} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/bluesky-social/social-app/pull/464
+        scrollIndicatorInsets={{ right: 1 }} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/bluesky-social/social-app/pull/464
       />
-    )
+    );
   },
-)
+);
 
 export function Selector({
   selectedIndex,
   items,
   onSelect,
 }: {
-  selectedIndex: number
-  items: string[]
-  onSelect?: (index: number) => void
+  selectedIndex: number;
+  items: string[];
+  onSelect?: (index: number) => void;
 }) {
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   const borderColor = useColorSchemeStyle(
-    {borderColor: colors.black},
-    {borderColor: colors.white},
-  )
+    { borderColor: colors.splx.primary[40] },
+    { borderColor: colors.white },
+  );
 
   const onPressItem = (index: number) => {
-    onSelect?.(index)
-  }
+    onSelect?.(index);
+  };
 
   return (
     <View style={[pal.view, styles.outer]}>
       {items.map((item, i) => {
-        const selected = i === selectedIndex
+        const selected = i === selectedIndex;
         return (
           <Pressable
             testID={`selector-${i}`}
@@ -169,26 +170,28 @@ export function Selector({
                 styles.item,
                 selected && styles.itemSelected,
                 borderColor,
-              ]}>
+              ]}
+            >
               <Text
                 style={
                   selected
                     ? [styles.labelSelected, pal.text]
                     : [styles.label, pal.textLight]
-                }>
+                }
+              >
                 {item}
               </Text>
             </View>
           </Pressable>
-        )
+        );
       })}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   outer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 14,
   },
   item: {
@@ -201,14 +204,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
   },
   label: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   labelSelected: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   underline: {
-    position: 'absolute',
+    position: "absolute",
     height: 4,
     bottom: 0,
   },
-})
+});

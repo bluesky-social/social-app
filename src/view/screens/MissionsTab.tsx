@@ -1,0 +1,323 @@
+import { FlatList, Image, StyleSheet, View } from "react-native";
+import { colors, s } from "lib/styles";
+
+import { CenteredView } from "view/com/util/Views.web";
+import { ClaimBtn } from "view/com/rewards/ClaimBtn";
+import { CommonNavigatorParams } from "lib/routes/types";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import React from "react";
+import { ScrollView } from "../com/util/Views";
+import { Text } from "view/com/util/text/Text";
+import { UserAvatar } from "view/com/util/UserAvatar";
+import { isDesktopWeb } from "platform/detection";
+import { observer } from "mobx-react-lite";
+import { usePalette } from "lib/hooks/usePalette";
+import { withAuthRequired } from "view/com/auth/withAuthRequired";
+
+const solarplexreactionsList = [
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/1.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Sad",
+    src: require("../../../assets/reactions/2.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/3.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/4.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/5.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/6.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/7.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/8.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/9.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/10.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/11.png"),
+    isClaimed: true,
+  },
+];
+
+const squidzReactionsList = [
+  {
+    name: "Blush",
+    src: require("../../../assets/reactions/blush.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Cry",
+    src: require("../../../assets/reactions/cry.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Laugh cry",
+    src: require("../../../assets/reactions/laugh-cry.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Fire",
+    src: require("../../../assets/reactions/fire.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Glasses",
+    src: require("../../../assets/reactions/glasses.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Smile",
+    src: require("../../../assets/reactions/smile.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Love",
+    src: require("../../../assets/reactions/love.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Hehe-zombie",
+    src: require("../../../assets/reactions/hehe-zombie.png"),
+    isClaimed: true,
+  },
+  {
+    name: "Cant-even",
+    src: require("../../../assets/reactions/cant-even.png"),
+    isClaimed: true,
+  },
+  {
+    name: "heart-eyes",
+    src: require("../../../assets/reactions/heart-eyes.png"),
+    isClaimed: true,
+  },
+  {
+    name: "eyebrow-raised",
+    src: require("../../../assets/reactions/eyebrow-raised.png"),
+    isClaimed: true,
+  },
+];
+
+export const GrayedImage = ({ image }: { image: any }) => {
+  return (
+    <View>
+      <Image
+        source={image}
+        style={{ tintColor: "gray", width: 100, height: 100 }}
+      />
+      <Image
+        source={image}
+        style={{
+          position: "absolute",
+          opacity: 0,
+          width: 100,
+          height: 100,
+        }}
+      />
+    </View>
+  );
+};
+
+const DisplayReactions = () => {
+  const pal = usePalette("default");
+  return (
+    <View>
+      <View style={styles.HeaderRow}>
+        <View style={styles.horizontalView}>
+          <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
+
+          <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
+            @plexi.live.solarplex.xyz
+          </Text>
+        </View>
+        <View>
+          <Text type="sm-bold" style={[pal.text, styles.reaction]}>
+            1/11 Reactions
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.reactionList}>
+        <FlatList
+          data={solarplexreactionsList}
+          numColumns={4}
+          key={4}
+          renderItem={({ item }) => {
+            if (item.isClaimed) {
+              return (
+                <View style={styles.solarplexReactionContainer}>
+                  <Image
+                    source={item.src}
+                    style={styles.solarplexReactionImage}
+                  />
+                </View>
+              );
+            } else {
+              return <GrayedImage image={item.src} />;
+            }
+          }}
+        />
+      </View>
+    </View>
+  );
+};
+
+type Props = NativeStackScreenProps<CommonNavigatorParams, "MissionsTab">;
+export const MissionsTab = withAuthRequired(
+  observer(() => {
+    const pal = usePalette("default");
+    return (
+      <CenteredView style={styles.container}>
+        <ScrollView
+          style={[s.hContentRegion]}
+          contentContainerStyle={!isDesktopWeb && pal.viewLight}
+          scrollIndicatorInsets={{ right: 1 }}
+        >
+          <View style={styles.HeaderRow}>
+            <View style={styles.horizontalView}>
+              <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
+
+              <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
+                @squids.live.solarplex.xyz
+              </Text>
+            </View>
+            <View>
+              <Text type="sm-bold" style={[pal.text, styles.reaction]}>
+                1/11 Reactions
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.reactionList}>
+            <FlatList
+              data={squidzReactionsList}
+              numColumns={4}
+              key={4}
+              renderItem={({ item }) => {
+                if (item.isClaimed) {
+                  return (
+                    <Image source={item.src} style={styles.reactionImage} />
+                  );
+                } else {
+                  return <GrayedImage image={item.src} />;
+                }
+              }}
+            />
+          </View>
+          <DisplayReactions />
+        </ScrollView>
+      </CenteredView>
+    );
+  }),
+);
+
+const styles = StyleSheet.create({
+  container: {
+    // backgroundColor: colors.gray1,
+    padding: 2,
+  },
+  RollBtn: {
+    width: 200,
+    paddingVertical: 4,
+  },
+  DiceRollImage: {
+    width: 200,
+    height: 150,
+    borderRadius: 12,
+  },
+  DiceRowCol: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: colors.gray1,
+    borderWidth: 1,
+
+    borderRadius: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  DiceRollText: {
+    paddingVertical: 6,
+  },
+  ImgView: {
+    width: 150,
+    height: 150,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  HeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  horizontalView: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  HeaderItemVStack: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textPadding: {
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  reactionImage: {
+    width: 100,
+    height: 100,
+  },
+  solarplexReactionContainer: {
+    paddingHorizontal: 15,
+  },
+  solarplexReactionImage: {
+    width: 75,
+    height: 75,
+  },
+  reactionList: {
+    width: "full",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  reaction: {
+    backgroundColor: colors.gray2,
+    borderRadius: 32,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+});

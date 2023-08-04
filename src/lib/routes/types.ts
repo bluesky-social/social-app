@@ -32,6 +32,10 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined;
   AppPasswords: undefined;
   SavedFeeds: undefined;
+  Rewards: undefined;
+  MissionsTab: undefined;
+  RewardsTab: undefined;
+  Wallets: undefined;
 };
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -41,10 +45,17 @@ export type BottomTabNavigatorParams = CommonNavigatorParams & {
   NotificationsTab: undefined;
   MyProfileTab: undefined;
   CommunitiesTab: undefined;
+  Rewards: undefined;
 };
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined;
+};
+
+export type RewardsTabNavigatorParams = CommonNavigatorParams & {
+  Rewards: undefined;
+  RewardsTab: undefined;
+  MissionsTab: undefined;
 };
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
@@ -89,6 +100,9 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Communities: undefined;
   // for bottom bar
   CommunitiesTab: undefined;
+  Rewards: undefined;
+  RewardsTab: undefined;
+  WalletsTab: undefined;
 };
 
 // NOTE

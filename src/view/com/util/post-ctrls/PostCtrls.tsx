@@ -120,6 +120,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
 
+  console.log("reactionspratik", opts.reactions);
+  console.log("opts.reactions?.length", opts.reactions?.length);
+  console.log("store.reactions.reactionTypes", store.reactions.reactionTypes);
+
   const defaultCtrlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
@@ -289,18 +293,17 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             : onRemoveReaction
         }
       >
-        {!opts.big && opts.reactions?.length ? (
+        {!opts.big && opts.reactions?.length !== undefined ? (
           <View testID="testing" style={styles.emojiSet}>
-            {opts.reactions?.map(
-              (item, index) =>
-                index < 4 &&
-                ((store.reactions.reactionTypes[item].emoji as string).includes(
+            {opts.reactions?.map((item, index) =>
+              index < 4 && store.reactions.reactionTypes[item] ? (
+                (store.reactions.reactionTypes[item]?.emoji as string).includes(
                   "ibb",
                 ) ? (
                   <Image
                     style={styles.image}
                     source={{
-                      uri: store.reactions.reactionTypes[item].emoji as string,
+                      uri: store.reactions.reactionTypes[item]?.emoji as string,
                     }}
                   />
                 ) : (
@@ -314,15 +317,18 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                   >
                     {store.reactions.reactionTypes[item]?.emoji}
                   </Text>
-                ))
+                )
+              ) : null,
             )}
           </View>
-        ) : <></>}
-        {store.me.reactions.squid?.length ? (
+        ) : (
+          <></>
+        )}
+        {store.reactions.reactionSets.default.length ? (
           <ReactionDropdownButton
             testID="communityHeaderDropdownBtn"
             type="bare"
-            items={store.me.reactions.default as SolarplexReactionType[]}
+            items={store.reactions.reactionSets.default as SolarplexReactionType[]}
             style={[
               styles.btn,
               styles.secondaryBtn,
@@ -335,14 +341,13 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             onPressReaction={onPressReaction}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-
               {selectedEmoji ? (
                 <TouchableOpacity onPress={onRemoveReaction}>
                   <FontAwesomeIcon
                     icon={faSmileFilled}
                     size={opts.big ? 22 : 16}
                     color={defaultCtrlColor?.color as string}
-                    />
+                  />
                 </TouchableOpacity>
               ) : store.session.isSolarplexSession ? (
                 <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
@@ -350,16 +355,16 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                     icon={faSmile}
                     size={opts.big ? 22 : 16}
                     color={defaultCtrlColor?.color as string}
-                    />
+                  />
                 </TouchableOpacity>
               ) : (
                 <FontAwesomeIcon
-                icon={faSmile}
-                size={opts.big ? 22 : 16}
-                color={defaultCtrlColor?.color as string}
+                  icon={faSmile}
+                  size={opts.big ? 22 : 16}
+                  color={defaultCtrlColor?.color as string}
                 />
-                )}
-                              <Text
+              )}
+              <Text
                 testID="likeCount"
                 style={[
                   defaultCtrlColor,
@@ -369,15 +374,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginRight: '4px'
+                    marginRight: "4px",
                   },
                 ]}
               >
-            {opts.reactions?.length ? opts.reactions.length : <></>}
-                </Text>
+                {opts.reactions?.length ? opts.reactions.length : <></>}
+              </Text>
             </View>
           </ReactionDropdownButton>
-
         ) : undefined}
       </TouchableOpacity>
       <View>

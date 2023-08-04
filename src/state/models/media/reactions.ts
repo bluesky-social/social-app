@@ -1,7 +1,9 @@
-import { DEFAULT_REACTION_EMOJIS, SOLARPLEX_FEED_API, SQUID_REACTION_EMOJIS } from "lib/constants";
+import { DEFAULT_REACTION_EMOJIS, GENESIS_REACTIONS, SOLARPLEX_FEED_API, SQUID_REACTION_EMOJIS } from "lib/constants";
 
 import { EmojiItemProp } from "react-native-reactions/lib/components/ReactionView/types";
+import { RootStoreModel } from "../root-store";
 import { SolarplexReactionType } from "view/com/util/post-ctrls/PostCtrls";
+import { makeAutoObservable } from "mobx";
 
 export interface Reaction {
     post_id: string;
@@ -15,20 +17,21 @@ export class SplxReactionModel {
     reactionMap: { [postId: string]: { [userId: string]: string} } = {}
     // map of reaction ids to reaction types across collections
     reactionTypes: { [reactionId: string]: SolarplexReactionType } = {}
+    reactionSets: {[reactionSet: string] :  EmojiItemProp[]} = { default: DEFAULT_REACTION_EMOJIS, squid: SQUID_REACTION_EMOJIS };
+    reactionsSet = this.reactionSets.default;
 
-    constructor() {
+    constructor(public rootStore: RootStoreModel) {
+      makeAutoObservable(
+        this,
+        {rootStore: false, serialize: false, hydrate: false},
+        {autoBind: true},
+      )
         this.reactionMap = {}
-        const emojis = [...DEFAULT_REACTION_EMOJIS, ...SQUID_REACTION_EMOJIS]
+        const emojis = [...DEFAULT_REACTION_EMOJIS, ...SQUID_REACTION_EMOJIS, ...GENESIS_REACTIONS]
         this.reactionTypes = emojis.reduce((acc: { [reactionId: string]: SolarplexReactionType }, emoji) => {
-          // console.log('emoji', emoji)
           acc[emoji.reaction_id] = emoji
           return acc
         }, {}) 
-        // this.reactionTypes = SQUID_REACTION_EMOJIS.reduce((acc: { [reactionId: string]: SolarplexReactionType }, emoji) => {
-        //   // console.log('emoji', emoji)
-        //    acc[emoji.reaction_id] = emoji
-        //       return acc
-        // }, {}) 
         console.log('reaction types', this.reactionTypes) 
     }
 
@@ -54,5 +57,12 @@ export class SplxReactionModel {
 
     }
       // console.log("reaction map", this.reactionMap);
+    }
+
+    async update() {
+      if (this.rootStore.me.nft.assets.length) {
+        this.reactionSets['genesis'] = GENESIS_REACTIONS
+      }
+      console.log('reactions_', this.reactionSets)
     }
 }

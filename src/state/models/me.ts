@@ -2,13 +2,14 @@ import {
   ComAtprotoServerDefs,
   ComAtprotoServerListAppPasswords,
 } from "@atproto/api";
-import { DEFAULT_REACTION_EMOJIS, SQUID_REACTION_EMOJIS } from "lib/constants";
+import { DEFAULT_REACTION_EMOJIS, SOLARPLEX_FEED_API, SQUID_REACTION_EMOJIS } from "lib/constants";
 import { hasProp, isObj } from "lib/type-guards";
 import { makeAutoObservable, runInAction } from "mobx";
 
 import { EmojiItemProp } from "react-native-reactions/lib/components/ReactionView/types";
 import { JoinedCommunitiesModel } from "./ui/joined-communities";
 import { MyFollowsCache } from "./cache/my-follows";
+import { NftModel } from "./content/nft";
 import { NotificationsFeedModel } from "./feeds/notifications";
 import { PostsFeedModel } from "./feeds/posts";
 import { RootStoreModel } from "./root-store";
@@ -23,6 +24,7 @@ export class MeModel {
   displayName: string = "";
   description: string = "";
   avatar: string = "";
+  splxWallet: string | undefined;
   followsCount: number | undefined;
   followersCount: number | undefined;
   mainFeed: PostsFeedModel;
@@ -34,7 +36,7 @@ export class MeModel {
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = [];
   lastProfileStateUpdate = Date.now();
   lastNotifsUpdate = Date.now();
-  reactions: {[reactionSet: string] :  EmojiItemProp[]} = { default: DEFAULT_REACTION_EMOJIS, squid: SQUID_REACTION_EMOJIS };
+  nft: NftModel;
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length;
@@ -53,6 +55,7 @@ export class MeModel {
     this.follows = new MyFollowsCache(this.rootStore);
     this.savedFeeds = new SavedFeedsModel(this.rootStore);
     this.joinedCommunities = new JoinedCommunitiesModel(this.rootStore);
+    this.nft = new NftModel(this.rootStore);
   }
 
   clear() {
@@ -67,6 +70,7 @@ export class MeModel {
     this.avatar = "";
     this.invites = [];
     this.appPasswords = [];
+    this.splxWallet = undefined;
   }
 
   serialize(): unknown {
@@ -116,6 +120,8 @@ export class MeModel {
       this.did = sess.currentSession?.did || "";
       this.handle = sess.currentSession?.handle || "";
       await this.fetchProfile();
+      await this.fetchUser();
+      await this.nft.fetchNfts(this.splxWallet ?? "");
       this.mainFeed.clear();
       /* dont await */ this.mainFeed.setup().catch((e) => {
         this.rootStore.log.error("Failed to setup main feed model", e);
@@ -151,6 +157,21 @@ export class MeModel {
 
   async fetchAllReactions() {
     await this.rootStore.reactions.fetch();
+  }
+
+  async fetchUser() {
+    const user = await fetch(
+      `${SOLARPLEX_FEED_API}/splx/get_user/${this.did}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const body = await user.json();
+    console.log('wallet', body.user[0]?.wallet);
+    this.splxWallet = body.user[0]?.wallet;
   }
 
   async fetchProfile() {
@@ -247,6 +268,26 @@ export class MeModel {
       } catch (e) {
         this.rootStore.log.error("Failed to delete app password", e);
       }
+    }
+  }
+
+  async connectWallet(wallet: string) {
+    try {
+      fetch(`${SOLARPLEX_FEED_API}/splx/add_wallet_to_user`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          did: this.did,
+          wallet: wallet,
+        }),
+      })
+      this.splxWallet = wallet;
+    } catch (e: any) {
+      this.splxWallet = undefined;
+      this.rootStore.log.error("Failed to connect wallet", e);
     }
   }
 }

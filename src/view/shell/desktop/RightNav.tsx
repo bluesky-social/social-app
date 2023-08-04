@@ -4,12 +4,14 @@ import { DesktopSearch } from "./Search";
 import { FEEDBACK_FORM_URL } from "lib/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
+import { RewardsCardSidebar } from "view/com/rewards/RewardsCardSidebar";
 import { Text } from "view/com/util/text/Text";
 import { TextLink } from "view/com/util/Link";
 import { formatCount } from "view/com/util/numeric/format";
 import { observer } from "mobx-react-lite";
 import { pluralize } from "lib/strings/helpers";
 import { s } from "lib/styles";
+import { useNavigationTabState } from "lib/hooks/useNavigationTabState.web";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 
@@ -17,11 +19,12 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores();
   const pal = usePalette("default");
   const palError = usePalette("error");
+  const { isAtRewards } = useNavigationTabState();
+  const did = store.session?.currentSession?.did ?? "";
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      {/* search is disabled for non logged in users till we figure out a way to do public posts vs using a solarplex default session */}
-      {store.session.hasSession && <DesktopSearch />}
+      {/* {store.session.hasSession && <DesktopSearch />} */}
       <View style={styles.message}>
         {/* {store.session.isSandbox ? (
           <View style={[palError.view, styles.messageLine, s.p10]}>
@@ -35,12 +38,14 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             development.
           </Text>
         )} */}
-        <View style={[s.flexRow]}>
+
+        {isAtRewards ? null : <RewardsCardSidebar userId={did} />}
+        <View style={[s.flexRow, { paddingHorizontal: 6 }]}>
           <TextLink
             type="md"
             style={pal.link}
-            href={FEEDBACK_FORM_URL}
-            text="Send feedback"
+            href={"https://tally.so/r/nrD8l2"}
+            text="feedback"
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -48,17 +53,26 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           <TextLink
             type="md"
             style={pal.link}
-            href="https://usedispatch.notion.site/Solarplex-Privacy-Policy-5e1da26e62d94172942e88e58bf51590"
-            text="Privacy Policy"
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://usedispatch.notion.site/Live-ToS-68b624b3ebe94ee6a726047b8aa60e33"
+            href="https://usedispatch.notion.site/Terms-d0b533a2a7f04c0eaea58440dbea5896?pvs=4"
             text="Terms"
+          />
+          <Text type="md" style={pal.textLight}>
+            &nbsp;&middot;&nbsp;
+          </Text>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="https://t.co/SLPiY47mjg"
+            text="help"
+          />
+          <Text type="md" style={pal.textLight}>
+            &nbsp;&middot;&nbsp;
+          </Text>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="https://usedispatch.notion.site/Privacy-0c34aa8d5fd34b52b4c742380addc03e?pvs=4"
+            text="privacy"
           />
         </View>
       </View>
@@ -116,6 +130,8 @@ const styles = StyleSheet.create({
   },
 
   message: {
+    flexDirection: "column",
+    alignItems: "center",
     marginTop: 20,
     paddingHorizontal: 10,
   },

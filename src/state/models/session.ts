@@ -4,7 +4,12 @@ import {
   BskyAgent,
   ComAtprotoServerDescribeServer as DescribeServer,
 } from "@atproto/api";
-import { IS_PROD, SOLARPLEX_APP_PASS, SOLARPLEX_FEED_API, SOLARPLEX_IDENTIFIER } from "lib/constants";
+import {
+  IS_PROD,
+  SOLARPLEX_APP_PASS,
+  SOLARPLEX_FEED_API,
+  SOLARPLEX_IDENTIFIER,
+} from "lib/constants";
 import { hasProp, isObj } from "lib/type-guards";
 import { makeAutoObservable, runInAction } from "mobx";
 
@@ -79,6 +84,8 @@ export class SessionModel {
       hydrate: false,
       hasSession: false,
     });
+
+    console.log("data", this.data);
   }
 
   get currentSession() {
@@ -353,19 +360,19 @@ export class SessionModel {
 
     const did = agent.session.did;
     const addedInfo = await this.loadAccountInfo(agent, did);
-    await fetch(`${SOLARPLEX_FEED_API}/splx/create_user`, 
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "no-cors",
-        },
-        body: JSON.stringify({
-          "did": did,
-          "handle": agent.session.handle,
-          "image": addedInfo?.aviUrl,
-          "email": agent.session.email,
-      })});
+    await fetch(`${SOLARPLEX_FEED_API}/splx/create_user`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "no-cors",
+      },
+      body: JSON.stringify({
+        did: did,
+        handle: agent.session.handle,
+        image: addedInfo?.aviUrl,
+        email: agent.session.email,
+      }),
+    });
 
     this.persistSession(service, did, "create", agent.session, addedInfo);
     agent.setPersistSessionHandler(
@@ -405,19 +412,19 @@ export class SessionModel {
 
     const did = agent.session.did;
     const addedInfo = await this.loadAccountInfo(agent, did);
-    await fetch(`${SOLARPLEX_FEED_API}/splx/create_user`, 
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "no-cors",
-        },
-        body: JSON.stringify({
-          "did": did,
-          "handle": agent.session.handle,
-          "image": addedInfo?.aviUrl,
-          "email": agent.session.email,
-      })});
+    await fetch(`${SOLARPLEX_FEED_API}/splx/create_user`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "no-cors",
+      },
+      body: JSON.stringify({
+        did: did,
+        handle: agent.session.handle,
+        image: addedInfo?.aviUrl,
+        email: agent.session.email,
+      }),
+    });
     this.persistSession(service, did, "create", agent.session, addedInfo);
     agent.setPersistSessionHandler(
       (evt: AtpSessionEvent, sess?: AtpSessionData) => {
@@ -456,7 +463,7 @@ export class SessionModel {
     this.login({
       service: DEFAULT_SERVICE,
       identifier: SOLARPLEX_IDENTIFIER,
-      password: SOLARPLEX_APP_PASS ?? '',
+      password: SOLARPLEX_APP_PASS ?? "",
     });
   }
 

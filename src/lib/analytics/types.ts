@@ -146,4 +146,5 @@ interface ScreenPropertiesMap {
   BlockedAccounts: {};
   MutedAccounts: {};
   SavedFeeds: {};
+  Rewards: {};
 }
