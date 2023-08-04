@@ -4,8 +4,11 @@ import { colors, s } from "lib/styles";
 import { CenteredView } from "view/com/util/Views.web";
 import { ClaimBtn } from "view/com/rewards/ClaimBtn";
 import { CommonNavigatorParams } from "lib/routes/types";
+import { Link } from "view/com/util/Link";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RadioButton } from "view/com/util/forms/RadioButton";
 import React from "react";
+import { ReactionCollections } from "state/models/media/reactions";
 import { ScrollView } from "../com/util/Views";
 import { Text } from "view/com/util/text/Text";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -155,9 +158,24 @@ export const GrayedImage = ({ image }: { image: any }) => {
 const DisplayReactions = observer(() => {
   const pal = usePalette("default");
   const store = useStores();
+
+  const onPressReactionPack = (reactionPack: ReactionCollections) => {
+    if (reactionPack === store.reactions.curReactionsSet) {
+      store.reactions.selectReactionSet("default");
+      return;
+    }
+    store.reactions.earnedReactions[reactionPack]?.length
+      ? store.reactions.selectReactionSet(reactionPack)
+      : {};
+  };
   return (
-    <View style={store.reactions.curReactionsSet === 'genesis' && pal.viewLight}>
-      <TouchableOpacity onPress={() => store.reactions.selectReactionSet('genesis')}>
+    <View
+      style={[
+        pal.view,
+        !store.reactions.earnedReactions["genesis"]?.length && { opacity: 0.2 },
+      ]}
+    >
+      <TouchableOpacity onPress={() => onPressReactionPack("genesis")}>
         <View style={styles.HeaderRow}>
           <View style={styles.horizontalView}>
             <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
@@ -173,8 +191,12 @@ const DisplayReactions = observer(() => {
             </Text>
           </View>
         </View>
-
         <View style={styles.reactionList}>
+        <RadioButton
+            label={""}
+            isSelected={store.reactions.curReactionsSet === "genesis"}
+            onPress={() => {}}
+          />
           <FlatList
             data={solarplexreactionsList}
             numColumns={4}
@@ -194,6 +216,7 @@ const DisplayReactions = observer(() => {
               }
             }}
           />
+
         </View>
       </TouchableOpacity>
     </View>
@@ -204,6 +227,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, "MissionsTab">;
 export const MissionsTab = withAuthRequired(
   observer(() => {
     const pal = usePalette("default");
+    const store = useStores();
     return (
       <CenteredView style={styles.container}>
         <ScrollView
@@ -242,6 +266,15 @@ export const MissionsTab = withAuthRequired(
               }}
             />
           </View> */}
+          {!store.reactions.earnedReactions["genesis"]?.length && (
+            <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
+              {" "}
+              Request Genesis NFTs from{" "}
+              <Link href="/profile/viksit.live.solarplex.xyz">
+                @viksit.live.solarplex.xyz
+              </Link>{" "}
+            </Text>
+          )}
           <DisplayReactions />
         </ScrollView>
       </CenteredView>
@@ -269,7 +302,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: colors.gray1,
     borderWidth: 1,
-
     borderRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -316,7 +348,7 @@ const styles = StyleSheet.create({
   },
   reactionList: {
     width: "full",
-    flexDirection: "column",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },

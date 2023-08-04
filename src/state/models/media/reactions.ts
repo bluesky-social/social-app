@@ -20,6 +20,8 @@ export interface SolarplexReaction extends EmojiItemProp {
   reaction_id: string;
 }
 
+export type ReactionCollections = 'default' | 'squid' | 'genesis';
+
 export class SplxReactionModel {
   // map of posts to reactions
   // postId maps to userId maps to reactionId
@@ -34,7 +36,7 @@ export class SplxReactionModel {
   earnedReactions: { [reactionSet: string]: SolarplexReaction[] } = {
     default: DEFAULT_REACTION_EMOJIS,
   };
-  curReactionsSet: "genesis" | "default" | "squids" = "default";
+  curReactionsSet: ReactionCollections = "default";
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -109,10 +111,12 @@ export class SplxReactionModel {
     if (this.rootStore.me.nft.assets.length) {
       this.earnedReactions["genesis"] = reactions;
     }
-    console.log("reactions_", this.reactionSets);
   }
-  async selectReactionSet(reactionSet: "genesis" | "default" | "squids") {
-    this.curReactionsSet = reactionSet;
-    // console.log('reactionsSet', this.reactionsSet)
+  async selectReactionSet(reactionSet: ReactionCollections) {
+    if (this.reactionSets[reactionSet] && this.reactionSets[reactionSet].length) {
+      this.curReactionsSet = reactionSet;
+    }
+        console.log('reactionsSet', this.curReactionsSet)
+
   }
 }
