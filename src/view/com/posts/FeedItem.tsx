@@ -32,10 +32,12 @@ import {makeProfileLink} from 'lib/routes/links'
 export const FeedItem = observer(function ({
   item,
   isThreadChild,
+  isThreadLastChild,
   isThreadParent,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
+  isThreadLastChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
 }) {
@@ -134,13 +136,17 @@ export const FeedItem = observer(function ({
     )
   }, [track, item, setDeleted, store])
 
-  const isSmallTop = isThreadChild
   const outerStyles = [
     styles.outer,
     pal.view,
-    {borderColor: pal.colors.border},
-    isSmallTop ? styles.outerSmallTop : undefined,
-    isThreadParent ? styles.outerNoBottom : undefined,
+    {
+      borderColor: pal.colors.border,
+      paddingBottom:
+        isThreadLastChild || (!isThreadChild && !isThreadParent)
+          ? 12
+          : undefined,
+    },
+    isThreadChild ? styles.outerSmallTop : undefined,
   ]
 
   if (!record || deleted) {
@@ -154,51 +160,62 @@ export const FeedItem = observer(function ({
       href={itemHref}
       noFeedback
       accessible={false}>
-      {isThreadChild && (
-        <View
-          style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
-        />
-      )}
-      {isThreadParent && (
-        <View
-          style={[styles.bottomReplyLine, {borderColor: pal.colors.replyLine}]}
-        />
-      )}
-      {item.reasonRepost && (
-        <Link
-          style={styles.includeReason}
-          href={makeProfileLink(item.reasonRepost.by)}
-          title={sanitizeDisplayName(
-            item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
-          )}>
-          <FontAwesomeIcon
-            icon="retweet"
-            style={[
-              styles.includeReasonIcon,
-              {color: pal.colors.textLight} as FontAwesomeIconStyle,
-            ]}
-          />
-          <Text
-            type="sm-bold"
-            style={pal.textLight}
-            lineHeight={1.2}
-            numberOfLines={1}>
-            Reposted by{' '}
-            <DesktopWebTextLink
-              type="sm-bold"
-              style={pal.textLight}
-              lineHeight={1.2}
-              numberOfLines={1}
-              text={sanitizeDisplayName(
-                item.reasonRepost.by.displayName ||
-                  sanitizeHandle(item.reasonRepost.by.handle),
-              )}
-              href={makeProfileLink(item.reasonRepost.by)}
-            />
-          </Text>
-        </Link>
-      )}
       <PostSandboxWarning />
+
+      <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
+        <View style={{width: 52}}>
+          {isThreadChild && (
+            <View
+              style={[
+                styles.replyLine,
+                {
+                  flexGrow: 1,
+                  backgroundColor: pal.colors.replyLine,
+                  marginBottom: 4,
+                },
+              ]}
+            />
+          )}
+        </View>
+
+        <View style={{paddingTop: 12}}>
+          {item.reasonRepost && (
+            <Link
+              style={styles.includeReason}
+              href={makeProfileLink(item.reasonRepost.by)}
+              title={sanitizeDisplayName(
+                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+              )}>
+              <FontAwesomeIcon
+                icon="retweet"
+                style={[
+                  styles.includeReasonIcon,
+                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
+                ]}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                Reposted by{' '}
+                <DesktopWebTextLink
+                  type="sm-bold"
+                  style={pal.textLight}
+                  lineHeight={1.2}
+                  numberOfLines={1}
+                  text={sanitizeDisplayName(
+                    item.reasonRepost.by.displayName ||
+                      sanitizeHandle(item.reasonRepost.by.handle),
+                  )}
+                  href={makeProfileLink(item.reasonRepost.by)}
+                />
+              </Text>
+            </Link>
+          )}
+        </View>
+      </View>
+
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
@@ -208,6 +225,18 @@ export const FeedItem = observer(function ({
             avatar={item.post.author.avatar}
             moderation={item.moderation.avatar}
           />
+          {isThreadParent && (
+            <View
+              style={[
+                styles.replyLine,
+                {
+                  flexGrow: 1,
+                  backgroundColor: pal.colors.replyLine,
+                  marginTop: 4,
+                },
+              ]}
+            />
+          )}
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
@@ -308,36 +337,22 @@ export const FeedItem = observer(function ({
 const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
-    padding: 10,
+    paddingLeft: 10,
     paddingRight: 15,
-    paddingBottom: 8,
   },
   outerSmallTop: {
     borderTopWidth: 0,
   },
-  outerNoBottom: {
-    paddingBottom: 2,
-  },
-  topReplyLine: {
-    position: 'absolute',
-    left: 42,
-    top: 0,
-    height: 6,
-    borderLeftWidth: 2,
-  },
-  bottomReplyLine: {
-    position: 'absolute',
-    left: 42,
-    top: 72,
-    bottom: 0,
-    borderLeftWidth: 2,
+  replyLine: {
+    width: 2,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   includeReason: {
     flexDirection: 'row',
-    paddingLeft: 50,
-    paddingRight: 20,
     marginTop: 2,
-    marginBottom: 2,
+    marginBottom: 4,
+    marginLeft: -20,
   },
   includeReasonIcon: {
     marginRight: 4,
