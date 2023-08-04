@@ -252,7 +252,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             ) : undefined}
             {item.post.embed && (
               <ContentHider moderation={item.moderation.embed} style={s.mb10}>
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                <PostEmbeds embed={item.post.embed} />
               </ContentHider>
             )}
           </ContentHider>
@@ -386,7 +386,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               ) : undefined}
               {item.post.embed && (
                 <ContentHider style={s.mb10} moderation={item.moderation.embed}>
-                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
+                  <PostEmbeds embed={item.post.embed} />
                 </ContentHider>
               )}
               {needsTranslation && (
