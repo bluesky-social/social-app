@@ -398,7 +398,7 @@ const DropdownItems = ({
 };
 
 function isSep(item: DropdownItem): item is DropdownItem {
-  return "sep" in item && item.sep;
+  return "sep" in item && item.sep as boolean;
 }
 function isBtn(item: DropdownItem): item is DropdownItem {
   return !isSep(item);

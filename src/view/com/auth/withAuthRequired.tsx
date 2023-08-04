@@ -17,13 +17,13 @@ export const withAuthRequired = <P extends object>(
     // either a user is resuming a session from earlier
     // or there is no session, in which case we'll wait for either
     // a default solarplex one or the logged in user's own
-    if (store.session.isResumingSession || !store.session.hasAnySession) {
+    if (store.session.isResumingSession || !store.session.hasAnySession || !store.session.hasAnySession) {
       return <Loading />;
     }
     return <Component {...props} />;
   });
 
-function Loading() {
+export function Loading() {
   const pal = usePalette("default");
 
   const [isTakingTooLong, setIsTakingTooLong] = React.useState(false);

@@ -28,7 +28,7 @@ import { useStores } from "state/index";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
 
 const HEADER_OFFSET_MOBILE = 75;
-const HEADER_OFFSET_DESKTOP = 85;
+const HEADER_OFFSET_DESKTOP = 49;
 const HEADER_OFFSET = isDesktopWeb
   ? HEADER_OFFSET_DESKTOP
   : HEADER_OFFSET_MOBILE;
@@ -42,33 +42,36 @@ export const HomeScreen = withAuthRequired(
     const [selectedPage, setSelectedPage] = React.useState(0);
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([]);
 
-    React.useEffect(() => {
-      // const { feeds: pinned } = store.me.savedFeeds;
-      // if (
-      //   isEqual(
-      //     pinned.map((p) => p.uri),
-      //     customFeeds.map((f) => (f.params as GetCustomFeed.QueryParams).feed),
-      //   )
-      // ) {
-      //   // no changes
-      //   return;
-      // }
+    React.useEffect(
+      () => {
+        // const { feeds: pinned } = store.me.savedFeeds;
+        // if (
+        //   isEqual(
+        //     pinned.map((p) => p.uri),
+        //     customFeeds.map((f) => (f.params as GetCustomFeed.QueryParams).feed),
+        //   )
+        // ) {
+        //   // no changes
+        //   return;
+        // }
 
-      const feeds = [];
-      for (const feed of SOLARPLEX_FEEDS) {
-        const model = new PostsFeedModel(store, "custom", { feed: feed });
-        model.setup();
-        feeds.push(model);
-      }
-      // pagerRef.current?.setPage(0);
-      setCustomFeeds(feeds);
-    }, [
-      // store,
-      // store.me.savedFeeds.pinned,
-      // customFeeds,
-      // setCustomFeeds,
-      // pagerRef,
-    ]);
+        const feeds = [];
+        for (const feed of SOLARPLEX_FEEDS) {
+          const model = new PostsFeedModel(store, "custom", { feed: feed });
+          model.setup();
+          feeds.push(model);
+        }
+        // pagerRef.current?.setPage(0);
+        setCustomFeeds(feeds);
+      },
+      [
+        // store,
+        // store.me.savedFeeds.pinned,
+        // customFeeds,
+        // setCustomFeeds,
+        // pagerRef,
+      ],
+    );
 
     useFocusEffect(
       React.useCallback(() => {
@@ -126,7 +129,11 @@ export const HomeScreen = withAuthRequired(
           key="1"
           testID="followingFeedPage"
           isPageFocused={selectedPage === 0}
-          feed={store.session.isSolarplexSession ? customFeeds[0] ?? store.me.mainFeed : store.me.mainFeed}
+          feed={
+            store.session.isSolarplexSession
+              ? customFeeds[0] ?? store.me.mainFeed
+              : store.me.mainFeed
+          }
           renderEmptyState={renderFollowingEmptyState}
         />
         {customFeeds.map((f, index) => {

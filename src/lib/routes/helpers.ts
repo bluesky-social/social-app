@@ -23,7 +23,9 @@ export function isStateAtTabRoot(state: State | undefined) {
     isTab(currentRoute.name, "Feeds") ||
     isTab(currentRoute.name, "Notifications") ||
     isTab(currentRoute.name, "MyProfile") ||
-    isTab(currentRoute.name, "Communities")
+    isTab(currentRoute.name, "Communities") ||
+    isTab(currentRoute.name, "Rewards") || 
+    isTab(currentRoute.name, "Wallets")
   );
 }
 

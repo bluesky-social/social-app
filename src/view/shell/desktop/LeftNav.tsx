@@ -4,6 +4,8 @@ import {
   BellIcon,
   BellIconSolid,
   ComposeIcon2,
+  GiftIcon,
+  GiftIconFilled,
   HomeIcon,
   HomeIconSolid,
   SolarplexLogo,
@@ -114,6 +116,8 @@ export const NavItem = observer(
           (currentRouteInfo.params as CommonNavigatorParams["Profile"]).name ===
             store.me.handle
         : isTab(currentRouteInfo.name, pathName);
+    console.log("isCurrent", isCurrent);
+    console.log("href", href);
     const { onPress } = useLinkProps({ to: href });
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -221,6 +225,8 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const pal = usePalette("default");
   const { track } = useAnalytics();
 
+  console.log("store.session.hasSession", store.session.data);
+
   const onPressSignout = React.useCallback(() => {
     track("Settings:SignOutButtonClicked");
     store.session.logout();
@@ -229,7 +235,11 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   return (
     <View style={[styles.leftNav, pal.view]}>
       <Banner />
-      {store.session.hasSession && <><ProfileCard /></>}
+      {store.session.hasSession && (
+        <>
+          <ProfileCard />
+        </>
+      )}
       <BackBtn />
       <NavItem
         href="/"
@@ -238,6 +248,12 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <HomeIconSolid strokeWidth={4} size={24} style={pal.text} />
         }
         label="Home"
+      />
+      <NavItem
+        href={`/rewards`}
+        icon={<GiftIcon />}
+        iconFilled={<GiftIconFilled />}
+        label="Rewards"
       />
       {store.session.hasSession && (
         <>
@@ -267,7 +283,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             }
             label="Communities"
           />
-
           <NavItem
             href="/notifications"
             count={store.me.notifications.unreadCountLabel}
@@ -276,6 +291,12 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
               <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
             }
             label="Notifications"
+          />
+          <NavItem
+            href="/wallets"
+            icon={<FontAwesomeIcon size={24} icon={fa.faWallet} style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle} />}
+            iconFilled={<FontAwesomeIcon size={24} icon={fa.faWallet} style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle} />}
+            label="Wallets"
           />
           <SignOutBtn onPressHandler={() => onPressSignout()} />
           <ComposeBtn />

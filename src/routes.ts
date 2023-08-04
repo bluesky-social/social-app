@@ -33,4 +33,8 @@ export const router = new Router({
   TermsOfService: "/support/tos",
   CommunityGuidelines: "/support/community-guidelines",
   CopyrightPolicy: "/support/copyright",
+  Rewards: "/rewards",
+  MissionsTab: "/rewards/missionstab",
+  RewardsTab: "/rewards/rewardstab",
+  Wallets: "/wallets",
 });

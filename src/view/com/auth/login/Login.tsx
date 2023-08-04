@@ -47,7 +47,13 @@ enum Forms {
   PasswordUpdated,
 }
 
-export const Login = ({ onPressBack, onPressCreateAccount }: { onPressBack: () => void, onPressCreateAccount: () => void }) => {
+export const Login = ({
+  onPressBack,
+  onPressCreateAccount,
+}: {
+  onPressBack: () => void;
+  onPressCreateAccount: () => void;
+}) => {
   const pal = usePalette("default");
   const store = useStores();
   const { track } = useAnalytics();
@@ -381,6 +387,8 @@ const LoginForm = ({
   }, []);
 
   const isReady = !!serviceDescription && !!identifier && !!password;
+
+  console.log("ISREADY", isReady);
   return (
     <>
       {isMobileWeb && (
@@ -599,15 +607,16 @@ const LoginForm = ({
               </Text>
               <View testID="signinOrCreateAccount" style={styles.btns}>
                 <TouchableOpacity
-              testID="createAccountButton"
-              style={[styles.btn, {backgroundColor: colors.blue3}]}
-              onPress={onPressCreateAccount}
-              // TODO: web accessibility
-              accessibilityRole="button">
-              <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
-              </Text>
-            </TouchableOpacity>
+                  testID="createAccountButton"
+                  style={[styles.btn, { backgroundColor: colors.blue3 }]}
+                  onPress={onPressCreateAccount}
+                  // TODO: web accessibility
+                  accessibilityRole="button"
+                >
+                  <Text style={[s.white, styles.btnLabel]}>
+                    Create a new account
+                  </Text>
+                </TouchableOpacity>
                 {/* <TouchableOpacity
                   testID="requestInviteButton"
                   style={[styles.btn]}

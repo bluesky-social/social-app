@@ -364,10 +364,10 @@ export const PostThreadItem = observer(function PostThreadItem({
                         index < 9 &&
                         ((
                           store.reactions.reactionTypes[item]?.emoji as string
-                        ).includes("ibb") ? (
+                        )?.includes("ibb") ? (
                           <Image
                             style={styles.image}
-                            key={store.reactions.reactionTypes[item]?.emoji}
+                            key={store.reactions.reactionTypes[item]?.id}
                             source={
                               store.reactions.reactionTypes[item]
                                 ?.emoji as string

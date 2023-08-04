@@ -5,6 +5,8 @@ import {
   BellIconSolid,
   CommunitiesIcon,
   CommunitiesIconSolid,
+  GiftIcon,
+  GiftIconFilled,
   HomeIcon,
   HomeIconSolid,
   UserIcon,
@@ -72,6 +74,18 @@ export const BottomBarWeb = observer(() => {
       <NavItem routeName="Communities" href="/communities">
         {({ isActive }) => {
           const Icon = isActive ? CommunitiesIconSolid : CommunitiesIcon;
+          return (
+            <Icon
+              size={24}
+              strokeWidth={1.9}
+              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+            />
+          );
+        }}
+      </NavItem>
+      <NavItem routeName="Rewards" href="/rewards">
+        {({ isActive }) => {
+          const Icon = isActive ? GiftIconFilled : GiftIcon;
           return (
             <Icon
               size={24}

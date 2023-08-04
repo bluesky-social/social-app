@@ -7,11 +7,11 @@ export const BLUESKY_INTENT_LINK =
 export const MAX_DISPLAY_NAME = 64;
 export const MAX_DESCRIPTION = 256;
 
-export const MAX_GRAPHEME_LENGTH = 1000;
+export const MAX_GRAPHEME_LENGTH = 300;
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
-export const MAX_ALT_TEXT = 1000;
+export const MAX_ALT_TEXT = 300;
 
 export function IS_LOCAL_DEV(url: string) {
   return url.includes("localhost");
@@ -122,9 +122,14 @@ export const SOLARPLEX_FEEDS = [
 export const SOLARPLEX_FEED_URI_PATH =
   "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/";
 
-export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
-// export const SOLARPLEX_FEED_API = "http://localhost:3000";
-export const SOLARPLEX_DID = "did:plc:4srpaai54v3d35bigtfbtbd5";
+// export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
+export const SOLARPLEX_FEED_API = "http://localhost:3000";
+export const SOLARPLEX_DID = "did:plc:h7o6dzolc2jfhztkrrpa3fys";
+// export const SOLARPLEX_V1_API = "http://localhost:3001";
+export const SOLARPLEX_V1_API = "https://dev.api.solarplex.xyz";
+export const HELIUS_RPC_API = "https://rpc.helius.xyz/";
+
+export const GENESIS_COLLECTION="7soPY36PaM8Ck1EycPq5WJ3CVHjZK47aneFniK5GNFyQ"
 
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_LOCAL_DEV(serviceUrl)) {
@@ -255,7 +260,7 @@ export const SQUID_REACTION_EMOJIS = [
     id: 5,
     emoji: "https://i.ibb.co/HtCbMQC/blob.png",
     title: "fire",
-    reaction_id: "86760b8e-e2a5-4e7b-9b33-0a1a715feaa1"
+    reaction_id: "86760b8e-e2a5-4e7b-9b33-0a1a715feaa1",
   },
   {
     id: 6,
@@ -273,12 +278,30 @@ export const SQUID_REACTION_EMOJIS = [
     id: 8,
     emoji: "https://i.ibb.co/9wjtdSg/blob.png",
     title: "laugh",
-    reaction_id: "eb3a0414-8ace-4be7-bd7a-aaf4d38d7230"
+    reaction_id: "eb3a0414-8ace-4be7-bd7a-aaf4d38d7230",
   },
   {
     id: 9,
     emoji: "https://i.ibb.co/Gs0nYmC/blob.png",
     title: "smile",
-    reaction_id: "16e8d232-8e97-4f8d-83d5-ebf6060773c3"
-  }
+    reaction_id: "16e8d232-8e97-4f8d-83d5-ebf6060773c3",
+  },
+];
+
+
+export const GENESIS_REACTIONS = [
+  {
+    id: 0,
+    emoji: "https://updg8.com/imgdata/BGHudU3HUQu9kmALkhMP2Rahmk7o389sqnC15cY6wiJP",
+    title: "Wink",
+    reaction_id: 'test1'
+    // reaction_id: "21542e72-5c22-47c0-a2b6-1cf4d0a69470",
+  },
+  {
+    id: 1,
+    emoji: "https://updg8.com/imgdata/G7gfWhBLqWFSBrmmkRreBQXjN8G7pdtPPb5TZbt4G16B",
+    title: "Raare",
+    reaction_id: 'test'
+    // reaction_id: "9c1a6723-21eb-4718-8e5a-1b5268120633",
+  },
 ]

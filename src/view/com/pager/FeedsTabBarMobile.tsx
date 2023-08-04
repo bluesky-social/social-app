@@ -75,7 +75,7 @@ export const FeedsTabBar = observer(
     return (
       <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
         <View style={[pal.view, styles.topBar]}>
-          <View style={[pal.view, {flexDirection: 'row'}]}>
+          <View style={[pal.view, { flexDirection: "row" }]}>
             <TouchableOpacity
               testID="viewHeaderDrawerBtn"
               onPress={onPressAvi}
@@ -86,9 +86,9 @@ export const FeedsTabBar = observer(
             >
               <UserAvatar avatar={store.me.avatar} size={27} />
             </TouchableOpacity>
-            {/* <View style={{width: 150, height: 25, marginLeft: '3rem'}}>
-              <SolarplexLogo/>
-            </View> */}
+            <View style={{ width: 150, height: 25, marginLeft: "3rem" }}>
+              <SolarplexLogo />
+            </View>
           </View>
           {!store.session.isSolarplexSession && (
             <View style={[pal.view]}>

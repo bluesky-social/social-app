@@ -3,6 +3,8 @@ import * as fa from "@fortawesome/free-solid-svg-icons";
 import {
   BellIcon,
   BellIconSolid,
+  GiftIcon,
+  GiftIconFilled,
   HomeIcon,
   HomeIconSolid,
   SolarplexLogo,
@@ -59,8 +61,14 @@ export const DrawerContent = observer(() => {
   const store = useStores();
   const navigation = useNavigation<NavigationProp>();
   const { track } = useAnalytics();
-  const { isAtHome, isAtNotifications, isAtMyProfile, isAtCommunities } =
-    useNavigationTabState();
+  const {
+    isAtHome,
+    isAtNotifications,
+    isAtMyProfile,
+    isAtCommunities, 
+    isAtWallets,
+    isAtRewards,
+  } = useNavigationTabState();
   const res = useNavigationTabState();
   const { notifications } = store.me;
   //console.log("isAtCommunities", res);
@@ -105,6 +113,11 @@ export const DrawerContent = observer(() => {
     [onPressTab],
   );
 
+  const onPressRewards = React.useCallback(
+    () => onPressTab("Rewards"),
+    [onPressTab],
+  );
+
   const onPressProfile = React.useCallback(
     () => onPressTab("Profile", { name: store.me.did }),
     [onPressTab],
@@ -119,6 +132,10 @@ export const DrawerContent = observer(() => {
     track("Settings:SignOutButtonClicked");
     store.session.logout();
   }, [track, store]);
+  
+  const onPressWallet = React.useCallback(() => {
+    navigation.navigate("Wallets");
+  }, [onPressTab]);
 
   // rendering
   // =
@@ -168,7 +185,6 @@ export const DrawerContent = observer(() => {
                   following
                 </Text>
               </TouchableOpacity>
-              {/* <WalletMultiButton style={styles.walletConnect}/> */}
             </View>
             {/* <InviteCodes /> */}
           </>
@@ -227,6 +243,14 @@ export const DrawerContent = observer(() => {
                 onPress={onPressCommunities}
               />
               <MenuItem
+                icon={isAtRewards ? <GiftIconFilled /> : <GiftIcon />}
+                label="Rewards"
+                accessibilityLabel="Rewards"
+                accessibilityHint=""
+                bold={isAtRewards}
+                onPress={onPressRewards}
+              />
+              <MenuItem
                 icon={
                   isAtNotifications ? (
                     <BellIconSolid
@@ -252,6 +276,24 @@ export const DrawerContent = observer(() => {
                 count={notifications.unreadCountLabel}
                 bold={isAtNotifications}
                 onPress={onPressNotifications}
+              />
+              <MenuItem
+              icon = {isAtWallets ?
+                <FontAwesomeIcon
+                  size={22}
+                  icon={fa.faWallet}
+                  style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+                /> :
+                <FontAwesomeIcon
+                  size={22}
+                  icon={fa.faWallet}
+                  style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+                />}
+                label="Wallet"  
+                accessibilityLabel="Wallet"
+                accessibilityHint="user wallets"
+                bold={isAtWallets}
+                onPress={onPressWallet}
               />
             </>
           )}
