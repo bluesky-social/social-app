@@ -1,5 +1,6 @@
 import { FlatList, Image, StyleSheet, View } from "react-native";
 import { colors, s } from "lib/styles";
+import { isDesktopWeb, isMobileWeb } from "platform/detection";
 
 import { CenteredView } from "view/com/util/Views.web";
 import { ClaimBtn } from "view/com/rewards/ClaimBtn";
@@ -13,7 +14,6 @@ import { ScrollView } from "../com/util/Views";
 import { Text } from "view/com/util/text/Text";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { UserAvatar } from "view/com/util/UserAvatar";
-import { isDesktopWeb } from "platform/detection";
 import { observer } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
@@ -199,7 +199,7 @@ const DisplayReactions = observer(() => {
           />
           <FlatList
             data={solarplexreactionsList}
-            numColumns={4}
+            numColumns={isMobileWeb ? 3 : 4}
             key={4}
             renderItem={({ item }) => {
               if (item.isClaimed) {
