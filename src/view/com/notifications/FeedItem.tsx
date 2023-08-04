@@ -171,7 +171,7 @@ export const FeedItem = observer(function ({
     action = `liked your custom feed '${new AtUri(item.subjectUri).rkey}'`
     icon = 'HeartIconSolid'
     iconStyle = [
-      s.red3 as FontAwesomeIconStyle,
+      s.likeColor as FontAwesomeIconStyle,
       {position: 'relative', top: -4},
     ]
   } else {

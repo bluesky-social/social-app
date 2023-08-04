@@ -265,9 +265,11 @@ const PostLoaded = observer(
                   />
                 </View>
               ) : undefined}
-              <ContentHider moderation={item.moderation.embed} style={s.mb10}>
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
-              </ContentHider>
+              {item.post.embed ? (
+                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                  <PostEmbeds embed={item.post.embed} />
+                </ContentHider>
+              ) : null}
               {needsTranslation && (
                 <View style={[pal.borderDark, styles.translateLink]}>
                   <Link href={translatorUrl} title="Translate">

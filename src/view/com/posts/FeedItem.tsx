@@ -289,11 +289,13 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            <ContentHider
-              moderation={item.moderation.embed}
-              style={styles.embed}>
-              <PostEmbeds embed={item.post.embed} style={styles.embed} />
-            </ContentHider>
+            {item.post.embed ? (
+              <ContentHider
+                moderation={item.moderation.embed}
+                style={styles.embed}>
+                <PostEmbeds embed={item.post.embed} />
+              </ContentHider>
+            ) : null}
             {needsTranslation && (
               <View style={[pal.borderDark, styles.translateLink]}>
                 <Link href={translatorUrl} title="Translate">
