@@ -85,7 +85,6 @@ export class SessionModel {
       hasSession: false,
     });
 
-    console.log("data", this.data);
   }
 
   get currentSession() {

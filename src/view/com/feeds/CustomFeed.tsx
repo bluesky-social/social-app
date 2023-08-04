@@ -73,9 +73,6 @@ export const CustomFeed = observer(
       }
     }, [store, item, navigation]);
 
-    // store.log.debug('item.displayName', item)
-    console.log("item.displayName", item.displayName);
-    console.log("item.displayName", item.data);
 
     return (
       <TouchableOpacity

@@ -388,7 +388,6 @@ const LoginForm = ({
 
   const isReady = !!serviceDescription && !!identifier && !!password;
 
-  console.log("ISREADY", isReady);
   return (
     <>
       {isMobileWeb && (

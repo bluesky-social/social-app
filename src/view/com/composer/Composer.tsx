@@ -76,7 +76,6 @@ export const ComposePost = observer(function ComposePost({
       : new RichText({ text: "" }),
   );
 
-  console.log("RICHTEXT", richtext);
 
   const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext]);
   const [quote, setQuote] = useState<ComposerOpts["quote"] | undefined>(
@@ -139,7 +138,6 @@ export const ComposePost = observer(function ComposePost({
   useEffect(() => {
     autocompleteView.setup();
     if (isThisSharing === true) {
-      console.log("SHARING");
       setRichText(new RichText({ text: "You are sharing a post" }));
     }
   }, [autocompleteView]);

@@ -57,18 +57,15 @@ export class SplxReactionModel {
       },
       {},
     );
-    console.log("reaction types", this.reactionTypes);
   }
 
   serialize() {
-    console.log("serializing reactions");
     return {
       curReactionsSet: this.curReactionsSet,
     };
   }
 
   hydrate(v: unknown) {
-    console.log("hydrating reactions");
     if (isObj(v)) {
       let curReactionsSet;
       if (
@@ -104,7 +101,6 @@ export class SplxReactionModel {
           reaction.reaction_id;
       }
     }
-    // console.log("reaction map", this.reactionMap);
   }
 
   async update(reactions: SolarplexReaction[]) {
@@ -116,7 +112,5 @@ export class SplxReactionModel {
     if (this.reactionSets[reactionSet] && this.reactionSets[reactionSet].length) {
       this.curReactionsSet = reactionSet;
     }
-        console.log('reactionsSet', this.curReactionsSet)
-
   }
 }

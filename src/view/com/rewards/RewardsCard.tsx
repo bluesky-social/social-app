@@ -25,7 +25,6 @@ type RewardClaimedProps = {
 const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
   const pal = usePalette("default");
   const store = useStores();
-  console.log("rewardsImg", rewardsImg);
   const onPressCompose = React.useCallback(() => {
     store.shell.openComposer({
       isSharing: true,
@@ -33,7 +32,6 @@ const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
   }, [store]);
 
   const opts = store.shell.composerOpts;
-  console.log("opts", opts);
   return (
     <View style={styles.DiceRowCol}>
       <Text type="lg-thin">🎉Congrats!🎉</Text>
@@ -102,7 +100,6 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
       setDiceComponent(true);
     }
   };
-  console.log("dailyReward", dailyReward);
   const DiceRoll = () => {
     const pal = usePalette("default");
     return (

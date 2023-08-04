@@ -185,8 +185,6 @@ export class RootStoreModel {
     try {
       await this.me.updateIfNeeded();
       await this.preferences.sync({ clearCache: true });
-      // await this.reactions.fetch();
-      // console.log('reactionsMap syncd', JSON.parse(JSON.stringify(this.reactions.reactionMap)))
     } catch (e: any) {
       this.log.error("Failed to fetch latest state", e);
     }

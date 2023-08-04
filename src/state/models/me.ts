@@ -170,7 +170,6 @@ export class MeModel {
       }
     );
     const body = await user.json();
-    console.log('wallet', body.user[0]?.wallet);
     this.splxWallet = body.user[0]?.wallet;
   }
 

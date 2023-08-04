@@ -174,7 +174,6 @@ export class RewardsModel {
           );
         }
         const json = (await response.json()) as MissionResponse;
-        console.log("JSON", json);
         this.users[userId] = json;
       });
     } catch (err) {

@@ -156,7 +156,6 @@ export class PostsFeedItemModel {
 
   async react(reactionId: string, remove: boolean = false) {
     this.post.viewer = this.post.viewer || {};
-    console.log("remove", remove);
     try {
       await updateDataOptimistically(
         this.post,
@@ -209,7 +208,6 @@ export class PostsFeedItemModel {
         this.post,
         () => {
           this.reactions?.push(reactionId);
-          console.log("this.reactions", this.reactions);
         },
         async () =>
           await fetch(`${SOLARPLEX_FEED_API}/splx/add_reaction_to_post`, {

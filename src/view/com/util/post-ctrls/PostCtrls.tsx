@@ -117,9 +117,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
 
-  console.log("reactionspratik", opts.reactions);
-  console.log("opts.reactions?.length", opts.reactions?.length);
-  console.log("store.reactions.reactionTypes", store.reactions.reactionTypes);
 
   const defaultCtrlColor = React.useMemo(
     () => ({

@@ -48,7 +48,6 @@ import { useStores } from "state/index";
 
 const ProfileCard = observer(() => {
   const store = useStores();
-  console.log(store.agent);
   return (
     <Link
       href={`/profile/${store.me.handle}`}
@@ -117,8 +116,6 @@ export const NavItem = observer(
           (currentRouteInfo.params as CommonNavigatorParams["Profile"]).name ===
             store.me.handle
         : isTab(currentRouteInfo.name, pathName);
-    console.log("isCurrent", isCurrent);
-    console.log("href", href);
     const { onPress } = useLinkProps({ to: href });
     const onPressWrapped = React.useCallback(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -225,8 +222,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores();
   const pal = usePalette("default");
   const { track } = useAnalytics();
-
-  console.log("store.session.hasSession", store.session.data);
 
   const onPressSignout = React.useCallback(() => {
     track("Settings:SignOutButtonClicked");

@@ -110,7 +110,6 @@ export function Component({
       setError("");
     }
     try {
-      console.log("SEEPRA1");
       await profileView.updateProfile(
         {
           displayName,
@@ -119,12 +118,10 @@ export function Component({
         newUserAvatar,
         newUserBanner,
       );
-      console.log("SEEPRA2");
       Toast.show("Profile updated");
       onUpdate?.();
       store.shell.closeModal();
     } catch (e: any) {
-      console.log("MAINERR", e);
       if (isNetworkError(e)) {
         setError(
           "Failed to save your profile. Check your internet connection and try again.",
@@ -148,7 +145,6 @@ export function Component({
     newUserBanner,
   ]);
 
-  console.log("EERR", error);
 
   return (
     <KeyboardAvoidingView behavior="height">

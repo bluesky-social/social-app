@@ -52,7 +52,6 @@ export class CommunitiesModel {
   }
 
   async fetch() {
-    console.log("fetching communities from server", this.rootStore);
     // fetch communities and put it into this model
     try {
       const solarplexCommunities = await fetch(

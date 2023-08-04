@@ -317,7 +317,6 @@ export class ShellUiModel {
     this.rootStore.emitNavigation();
     this.isComposerActive = true;
     this.composerOpts = opts;
-    console.log("opts", opts);
     this.isSharing = opts.isSharing;
   }
 

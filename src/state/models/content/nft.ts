@@ -19,10 +19,6 @@ export class NftModel {
 
   async fetchNfts(wallet: string) {
     try {
-      // const helius = new Helius(process.env.HELIUS_API_KEY ?? '', 'mainnet-beta');
-      // console.log('assets_1', helius);
-      // const assets = await helius.rpc.searchAssets({ ownerAddress: wallet, compressed: true, page: 1 } );
-      // console.log('assets', assets);
       const res = await fetch(
         `${HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
         {
@@ -45,7 +41,6 @@ export class NftModel {
       );
       const nftsResponse = await res.json();
       this.assets = nftsResponse.result.items;
-      //   console.log('nftsResponse', nftsResponse)
 
       // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
       const reactionsMap = this.rootStore.reactions.reactionSets.genesis.reduce(
@@ -58,7 +53,6 @@ export class NftModel {
 
       const reactions = this.assets.reduce((acc, item: any) => {
         // acc.push(item.reactions);
-        // console.log('item', item.content.metadata.attributes)
         const attribute = item.content.metadata.attributes[0].value;
         reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
         return acc;

@@ -98,7 +98,6 @@ const RewardsTab = createNativeStackNavigator<RewardsTabNavigatorParams>();
  */
 function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
   const title = (page: string) => bskyTitle(page, unreadCountLabel);
-  console.log("commonscreens", title, Stack);
   return (
     <>
       <Stack.Screen
