@@ -63,6 +63,7 @@ export const PostThread = observer(function PostThread({
 }) {
   const pal = usePalette('default')
   const ref = useRef<FlatList>(null)
+  const hasScrolledIntoView = useRef<boolean>(false)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const posts = React.useMemo(() => {
@@ -102,14 +103,36 @@ export const PostThread = observer(function PostThread({
   }, [view, setIsRefreshing])
 
   const onContentSizeChange = React.useCallback(() => {
+    // only run once
+    if (hasScrolledIntoView.current) {
+      return
+    }
+
+    // wait for loading to finish
+    if (
+      !view.hasContent ||
+      (view.isFromCache && view.isLoadingFromCache) ||
+      view.isLoading
+    ) {
+      return
+    }
+
     const index = posts.findIndex(post => post._isHighlightedPost)
     if (index !== -1) {
       ref.current?.scrollToIndex({
         index,
         animated: false,
+        viewPosition: 0,
       })
+      hasScrolledIntoView.current = true
     }
-  }, [posts, ref])
+  }, [
+    posts,
+    view.hasContent,
+    view.isFromCache,
+    view.isLoadingFromCache,
+    view.isLoading,
+  ])
   const onScrollToIndexFailed = React.useCallback(
     (info: {
       index: number
@@ -279,7 +302,9 @@ export const PostThread = observer(function PostThread({
       data={posts}
       initialNumToRender={posts.length}
       maintainVisibleContentPosition={
-        view.isFromCache ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+        isIOS && view.isFromCache
+          ? MAINTAIN_VISIBLE_CONTENT_POSITION
+          : undefined
       }
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
@@ -292,7 +317,7 @@ export const PostThread = observer(function PostThread({
         />
       }
       onContentSizeChange={
-        !isIOS || !view.isFromCache ? onContentSizeChange : undefined
+        isIOS && view.isFromCache ? undefined : onContentSizeChange
       }
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}
