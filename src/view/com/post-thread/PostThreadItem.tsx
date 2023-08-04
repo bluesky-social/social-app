@@ -161,7 +161,9 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <Link
         testID={`postThreadItem-by-${item.post.author.handle}`}
-        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}>
+        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+        noFeedback
+        accessible={false}>
         <PostSandboxWarning />
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
