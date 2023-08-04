@@ -20,6 +20,7 @@ import { NavigationProp } from "lib/routes/types";
 import { Reaction } from "react-native-reactions";
 import { ReactionDropdownButton } from "../forms/ReactionDropdownButton";
 import { RepostButton } from "./RepostButton";
+import { SolarplexReaction } from "state/models/media/reactions";
 // DISABLED see #135
 // import {
 //   TriggerableAnimated,
@@ -110,9 +111,7 @@ function ctrlAnimStyle(interp: Animated.Value) {
 }
 */
 
-export interface SolarplexReactionType extends EmojiItemProp {
-  reaction_id: string;
-}
+
 
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores();
@@ -203,14 +202,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     // console.log("emoji", emoji);
     setSelectedEmoji(emoji);
     await opts
-      .onPressReaction((emoji as SolarplexReactionType).reaction_id)
+      .onPressReaction((emoji as SolarplexReaction).reaction_id)
       .catch((_e) => undefined);
   };
 
   const onRemoveReaction = async () => {
     await opts
       .onPressReaction(
-        (selectedEmoji as SolarplexReactionType).reaction_id,
+        (selectedEmoji as SolarplexReaction).reaction_id,
         true,
       )
       .catch((_e) => undefined);
@@ -298,7 +297,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             {opts.reactions?.map((item, index) =>
               index < 4 && store.reactions.reactionTypes[item] ? (
                 (store.reactions.reactionTypes[item]?.emoji as string).includes(
-                  "ibb",
+                  "http",
                 ) ? (
                   <Image
                     style={styles.image}
@@ -322,11 +321,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             )}
           </View>
         ) : <></>}
-        {store.reactions.reactionsSet.length ? (
+        {store.reactions.earnedReactions[store.reactions.curReactionsSet]?.length ? (
           <ReactionDropdownButton
             testID="communityHeaderDropdownBtn"
             type="bare"
-            items={store.reactions.reactionsSet as SolarplexReactionType[]}
+            items={store.reactions.earnedReactions[store.reactions.curReactionsSet] as SolarplexReaction[]}
             style={[
               styles.btn,
               styles.secondaryBtn,

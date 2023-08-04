@@ -141,6 +141,8 @@ export function LINK_META_PROXY(serviceUrl: string) {
   }
 }
 
+
+// TODO(zfaizal2): eventually move this to an API call
 export const DEFAULT_REACTION_EMOJIS = [
   // {
   //   id: 0,
@@ -292,16 +294,70 @@ export const SQUID_REACTION_EMOJIS = [
 export const GENESIS_REACTIONS = [
   {
     id: 0,
-    emoji: "https://updg8.com/imgdata/BGHudU3HUQu9kmALkhMP2Rahmk7o389sqnC15cY6wiJP",
+    emoji: "https://i.ibb.co/51G4n88/blob.png",
     title: "Wink",
-    reaction_id: 'test1'
+    reaction_id: 'ff09346e-a4f8-4670-8044-5c62b4f72398'
     // reaction_id: "21542e72-5c22-47c0-a2b6-1cf4d0a69470",
   },
   {
     id: 1,
-    emoji: "https://updg8.com/imgdata/G7gfWhBLqWFSBrmmkRreBQXjN8G7pdtPPb5TZbt4G16B",
+    emoji: "https://i.ibb.co/Bqw4mk2/blob.png",
     title: "Raare",
-    reaction_id: 'test'
+    reaction_id: '04076842-8299-45cc-9e95-0d6c601463e6'
     // reaction_id: "9c1a6723-21eb-4718-8e5a-1b5268120633",
+  },
+  {
+    id: 2,
+    emoji: "https://i.ibb.co/hMWqHm3/blob.png",
+    title: "Happy",
+    reaction_id: '565b4bdd-df1b-4f22-9204-375f2575ed59'
+  },
+  {
+    id: 3,
+    emoji: "https://i.ibb.co/dfchfDb/blob.png",
+    title: "Frown",
+    reaction_id: 'test'
+  },
+  {
+    id: 4,
+    emoji: "https://i.ibb.co/dpQhwjc/blob.png",
+    title: "Blush",
+    reaction_id: 'f1fd45d6-7fd8-41b0-a80a-2b0601b05b19' 
+  }, 
+  {
+    id: 5,
+    emoji: "https://i.ibb.co/1vg3dMB/blob.png",
+    title: "Sad",
+    reaction_id: '77d1f411-a704-4a5e-b0c5-0274e91d3fd4'
+  },
+  {
+    id: 6,
+    emoji: "https://i.ibb.co/VgwgKgk/blob.png",
+    title: "Crying-Laughing",
+    reaction_id: '9f40c618-551f-47c6-b66c-a7070726bf83'
+  },
+  {
+    id: 7,
+    emoji: "https://i.ibb.co/P9G9Hy0/blob.png",
+    title: "Sunglasses",
+    reaction_id: '06815558-1e25-40bc-8a57-127ca991d69d'
+  },
+  {
+    id: 8,
+    emoji: "https://i.ibb.co/LRX0s6Y/blob.png",
+    title: "Heart-Eyes",
+    reaction_id: '8ae3ecaa-3a5d-43ab-8705-041f4aacede0'
+  },
+  {
+    id: 9,
+    emoji: "https://i.ibb.co/qD5mwJk/blob.png",
+    title: "Love",
+    reaction_id: 'f9c88519-feec-48de-a65f-639dd12b30f1'
+  },
+  {
+    id: 10,
+    emoji: "https://i.ibb.co/0yRy3sB/blob.png",
+    title: "Dead",
+    reaction_id: 'bcad7ddd-8d1f-4b9a-86f5-4bc90ca2292a'
   },
 ]

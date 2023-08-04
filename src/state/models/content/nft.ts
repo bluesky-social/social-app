@@ -1,6 +1,8 @@
 import { GENESIS_COLLECTION, HELIUS_RPC_API } from "lib/constants";
 
+import { Helius } from "helius-sdk";
 import { RootStoreModel } from "../root-store";
+import { SolarplexReaction } from "../media/reactions";
 import cluster from "cluster";
 import { makeAutoObservable } from "mobx";
 
@@ -41,14 +43,25 @@ export class NftModel {
       },
     );
     const nftsResponse = await res.json();
-    this.assets = nftsResponse.result?.items;
-    this.rootStore.reactions.update();
+    this.assets = nftsResponse.result.items;
     //   console.log('nftsResponse', nftsResponse)
 
-    //   const reactions = (this.assets).reduce((acc, item: any) => {
-    //     // acc.push(item.reactions);
-    //     console.log('item', item.content.metadata.attributes)
-    //     return acc
-    //     }, {});
+    // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
+    const reactionsMap = this.rootStore.reactions.reactionSets.genesis.reduce(
+      (acc: { [title: string]: SolarplexReaction }, item: any) => {
+        acc[item.title] = item;
+        return acc;
+      },
+      {},
+    );
+
+    const reactions = this.assets.reduce((acc, item: any) => {
+      // acc.push(item.reactions);
+      // console.log('item', item.content.metadata.attributes)
+      const attribute = item.content.metadata.attributes[0].value;
+      reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
+      return acc;
+    }, []);
+    this.rootStore.reactions.update(reactions);
   }
 }

@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { Image } from "expo-image";
 import RootSiblings from "react-native-root-siblings";
-import { SolarplexReactionType } from "../post-ctrls/PostCtrls";
+import { SolarplexReaction } from "state/models/media/reactions";
 import { Text } from "../text/Text";
 import { isWeb } from "platform/detection";
 import { shareUrl } from "lib/sharing";
@@ -38,7 +38,7 @@ export interface ReactionDropdownItemButton {
 export interface DropdownItemSeparator {
   sep: true;
 }
-export type DropdownItem = SolarplexReactionType;
+export type DropdownItem = SolarplexReaction;
 type MaybeDropdownItem = DropdownItem | false | undefined;
 
 export type DropdownButtonType = ButtonType | "bare";
@@ -47,7 +47,7 @@ interface DropdownButtonProps {
   testID?: string;
   type?: DropdownButtonType;
   style?: StyleProp<ViewStyle>;
-  items: SolarplexReactionType[];
+  items: SolarplexReaction[];
   label?: string;
   menuWidth?: number;
   children?: React.ReactNode;
@@ -364,7 +364,7 @@ const DropdownItems = ({
                 <Text style={[styles.label, pal.text]}>{item.label}</Text> */}
                 {/* <Image style={styles.image} source={{uri: (item.emoji as string)}}/> */}
                 {(item.emoji as string).includes(
-                  "ibb",
+                  "http",
                 ) ? (
                   <Image
                     style={styles.image}

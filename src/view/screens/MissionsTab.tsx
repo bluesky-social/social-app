@@ -8,10 +8,12 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { ScrollView } from "../com/util/Views";
 import { Text } from "view/com/util/text/Text";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { UserAvatar } from "view/com/util/UserAvatar";
 import { isDesktopWeb } from "platform/detection";
 import { observer } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
 
 const solarplexreactionsList = [
@@ -150,49 +152,53 @@ export const GrayedImage = ({ image }: { image: any }) => {
   );
 };
 
-const DisplayReactions = () => {
+const DisplayReactions = observer(() => {
   const pal = usePalette("default");
+  const store = useStores();
   return (
-    <View>
-      <View style={styles.HeaderRow}>
-        <View style={styles.horizontalView}>
-          <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
+    <View style={store.reactions.curReactionsSet === 'genesis' && pal.viewLight}>
+      <TouchableOpacity onPress={() => store.reactions.selectReactionSet('genesis')}>
+        <View style={styles.HeaderRow}>
+          <View style={styles.horizontalView}>
+            <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
 
-          <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
-            @plexi.live.solarplex.xyz
-          </Text>
+            <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
+              @plexi.live.solarplex.xyz
+            </Text>
+          </View>
+          <View>
+            <Text type="sm-bold" style={[pal.text, styles.reaction]}>
+              {store.reactions.earnedReactions.genesis?.length ?? 0}/11
+              Reactions
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text type="sm-bold" style={[pal.text, styles.reaction]}>
-            1/11 Reactions
-          </Text>
-        </View>
-      </View>
 
-      <View style={styles.reactionList}>
-        <FlatList
-          data={solarplexreactionsList}
-          numColumns={4}
-          key={4}
-          renderItem={({ item }) => {
-            if (item.isClaimed) {
-              return (
-                <View style={styles.solarplexReactionContainer}>
-                  <Image
-                    source={item.src}
-                    style={styles.solarplexReactionImage}
-                  />
-                </View>
-              );
-            } else {
-              return <GrayedImage image={item.src} />;
-            }
-          }}
-        />
-      </View>
+        <View style={styles.reactionList}>
+          <FlatList
+            data={solarplexreactionsList}
+            numColumns={4}
+            key={4}
+            renderItem={({ item }) => {
+              if (item.isClaimed) {
+                return (
+                  <View style={styles.solarplexReactionContainer}>
+                    <Image
+                      source={item.src}
+                      style={styles.solarplexReactionImage}
+                    />
+                  </View>
+                );
+              } else {
+                return <GrayedImage image={item.src} />;
+              }
+            }}
+          />
+        </View>
+      </TouchableOpacity>
     </View>
   );
-};
+});
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, "MissionsTab">;
 export const MissionsTab = withAuthRequired(
@@ -205,7 +211,7 @@ export const MissionsTab = withAuthRequired(
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
           scrollIndicatorInsets={{ right: 1 }}
         >
-          <View style={styles.HeaderRow}>
+          {/* <View style={styles.HeaderRow}>
             <View style={styles.horizontalView}>
               <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
 
@@ -235,7 +241,7 @@ export const MissionsTab = withAuthRequired(
                 }
               }}
             />
-          </View>
+          </View> */}
           <DisplayReactions />
         </ScrollView>
       </CenteredView>

@@ -68,7 +68,6 @@ export interface claimRewardRes {
 export const RewardsCard = observer(({ userId }: { userId: string }) => {
   const store = useStores();
   const { screen } = useAnalytics();
-  const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
   const [showDiceComponent, setDiceComponent] = useState<boolean>(false);
 

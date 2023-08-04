@@ -81,6 +81,7 @@ export class RootStoreModel {
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
       mutedThreads: this.mutedThreads.serialize(),
+      reactions: this.reactions.serialize(),
     };
   }
 
@@ -112,6 +113,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, "mutedThreads")) {
         this.mutedThreads.hydrate(v.mutedThreads);
+      }
+      if (hasProp(v, "reactions")) {
+        this.reactions.hydrate(v.reactions);
       }
     }
   }
