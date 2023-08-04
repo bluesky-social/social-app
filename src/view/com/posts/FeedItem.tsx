@@ -352,6 +352,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 2,
     marginBottom: 4,
+    marginLeft: -20,
   },
   includeReasonIcon: {
     marginRight: 4,
