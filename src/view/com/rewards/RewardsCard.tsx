@@ -137,7 +137,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
 
   return (
     <View style={[styles.outer, s.h100pct]}>
-      {shouldShowDiceCompnent ? (
+      {showDiceComponent ? (
         <DiceRoll />
       ) : (
         <View style={styles.dailyContainer}>

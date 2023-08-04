@@ -1,5 +1,5 @@
-import React, {useState, useCallback} from 'react'
-import * as Toast from '../util/Toast'
+import * as Toast from "../util/Toast";
+
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -8,106 +8,109 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {Text} from '../util/text/Text'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
-import {ProfileModel} from 'state/models/content/profile'
-import {s, colors, gradients} from 'lib/styles'
-import {enforceLen} from 'lib/strings/helpers'
-import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
-import {compressIfNeeded} from 'lib/media/manip'
-import {UserBanner} from '../util/UserBanner'
-import {UserAvatar} from '../util/UserAvatar'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {cleanError, isNetworkError} from 'lib/strings/errors'
+} from "react-native";
+import { MAX_DESCRIPTION, MAX_DISPLAY_NAME } from "lib/constants";
+import React, { useCallback, useState } from "react";
+import { cleanError, isNetworkError } from "lib/strings/errors";
+import { colors, gradients, s } from "lib/styles";
 
-export const snapPoints = ['fullscreen']
+import { ErrorMessage } from "../util/error/ErrorMessage";
+import LinearGradient from "react-native-linear-gradient";
+import { ProfileModel } from "state/models/content/profile";
+import { Image as RNImage } from "react-native-image-crop-picker";
+import { Text } from "../util/text/Text";
+import { UserAvatar } from "../util/UserAvatar";
+import { UserBanner } from "../util/UserBanner";
+import { compressIfNeeded } from "lib/media/manip";
+import { enforceLen } from "lib/strings/helpers";
+import { useAnalytics } from "lib/analytics/analytics";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
+import { useTheme } from "lib/ThemeContext";
+
+export const snapPoints = ["fullscreen"];
 
 export function Component({
   profileView,
   onUpdate,
 }: {
-  profileView: ProfileModel
-  onUpdate?: () => void
+  profileView: ProfileModel;
+  onUpdate?: () => void;
 }) {
-  const store = useStores()
-  const [error, setError] = useState<string>('')
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const {track} = useAnalytics()
+  const store = useStores();
+  const [error, setError] = useState<string>("");
+  const pal = usePalette("default");
+  const theme = useTheme();
+  const { track } = useAnalytics();
 
-  const [isProcessing, setProcessing] = useState<boolean>(false)
+  const [isProcessing, setProcessing] = useState<boolean>(false);
   const [displayName, setDisplayName] = useState<string>(
-    profileView.displayName || '',
-  )
+    profileView.displayName || "",
+  );
   const [description, setDescription] = useState<string>(
-    profileView.description || '',
-  )
+    profileView.description || "",
+  );
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profileView.banner,
-  )
+  );
   const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
     profileView.avatar,
-  )
+  );
   const [newUserBanner, setNewUserBanner] = useState<
     RNImage | undefined | null
-  >()
+  >();
   const [newUserAvatar, setNewUserAvatar] = useState<
     RNImage | undefined | null
-  >()
+  >();
   const onPressCancel = () => {
-    store.shell.closeModal()
-  }
+    store.shell.closeModal();
+  };
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
       if (img === null) {
-        setNewUserAvatar(null)
-        setUserAvatar(null)
-        return
+        setNewUserAvatar(null);
+        setUserAvatar(null);
+        return;
       }
-      track('EditProfile:AvatarSelected')
+      track("EditProfile:AvatarSelected");
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserAvatar(finalImg)
-        setUserAvatar(finalImg.path)
+        const finalImg = await compressIfNeeded(img, 1000000);
+        setNewUserAvatar(finalImg);
+        setUserAvatar(finalImg.path);
       } catch (e: any) {
-        setError(cleanError(e))
+        setError(cleanError(e));
       }
     },
     [track, setNewUserAvatar, setUserAvatar, setError],
-  )
+  );
 
   const onSelectNewBanner = useCallback(
     async (img: RNImage | null) => {
       if (!img) {
-        setNewUserBanner(null)
-        setUserBanner(null)
-        return
+        setNewUserBanner(null);
+        setUserBanner(null);
+        return;
       }
-      track('EditProfile:BannerSelected')
+      track("EditProfile:BannerSelected");
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserBanner(finalImg)
-        setUserBanner(finalImg.path)
+        const finalImg = await compressIfNeeded(img, 1000000);
+        setNewUserBanner(finalImg);
+        setUserBanner(finalImg.path);
       } catch (e: any) {
-        setError(cleanError(e))
+        setError(cleanError(e));
       }
     },
     [track, setNewUserBanner, setUserBanner, setError],
-  )
+  );
 
   const onPressSave = useCallback(async () => {
-    track('EditProfile:Save')
-    setProcessing(true)
+    track("EditProfile:Save");
+    setProcessing(true);
     if (error) {
-      setError('')
+      setError("");
     }
     try {
+      console.log("SEEPRA1");
       await profileView.updateProfile(
         {
           displayName,
@@ -115,20 +118,22 @@ export function Component({
         },
         newUserAvatar,
         newUserBanner,
-      )
-      Toast.show('Profile updated')
-      onUpdate?.()
-      store.shell.closeModal()
+      );
+      console.log("SEEPRA2");
+      Toast.show("Profile updated");
+      onUpdate?.();
+      store.shell.closeModal();
     } catch (e: any) {
+      console.log("MAINERR", e);
       if (isNetworkError(e)) {
         setError(
-          'Failed to save your profile. Check your internet connection and try again.',
-        )
+          "Failed to save your profile. Check your internet connection and try again.",
+        );
       } else {
-        setError(cleanError(e))
+        setError(cleanError(e));
       }
     }
-    setProcessing(false)
+    setProcessing(false);
   }, [
     track,
     setProcessing,
@@ -141,7 +146,9 @@ export function Component({
     description,
     newUserAvatar,
     newUserBanner,
-  ])
+  ]);
+
+  console.log("EERR", error);
 
   return (
     <KeyboardAvoidingView behavior="height">
@@ -152,7 +159,7 @@ export function Component({
             banner={userBanner}
             onSelectNewBanner={onSelectNewBanner}
           />
-          <View style={[styles.avi, {borderColor: pal.colors.background}]}>
+          <View style={[styles.avi, { borderColor: pal.colors.background }]}>
             <UserAvatar
               size={80}
               avatar={userAvatar}
@@ -160,7 +167,7 @@ export function Component({
             />
           </View>
         </View>
-        {error !== '' && (
+        {error !== "" && (
           <View style={styles.errorContainer}>
             <ErrorMessage message={error} />
           </View>
@@ -174,7 +181,7 @@ export function Component({
               placeholder="e.g. Alice Roberts"
               placeholderTextColor={colors.gray4}
               value={displayName}
-              onChangeText={v =>
+              onChangeText={(v) =>
                 setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
               }
               accessible={true}
@@ -192,14 +199,18 @@ export function Component({
               keyboardAppearance={theme.colorScheme}
               multiline
               value={description}
-              onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
+              onChangeText={(v) =>
+                setDescription(enforceLen(v, MAX_DESCRIPTION))
+              }
               accessible={true}
               accessibilityLabel="Description"
               accessibilityHint="Edit your profile description"
             />
           </View>
           {isProcessing ? (
-            <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
+            <View
+              style={[styles.btn, s.mt10, { backgroundColor: colors.gray2 }]}
+            >
               <ActivityIndicator />
             </View>
           ) : (
@@ -209,12 +220,14 @@ export function Component({
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel="Save"
-              accessibilityHint="Saves any changes to your profile">
+              accessibilityHint="Saves any changes to your profile"
+            >
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
-                style={[styles.btn]}>
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={[styles.btn]}
+              >
                 <Text style={[s.white, s.bold]}>Save Changes</Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -226,7 +239,8 @@ export function Component({
             accessibilityRole="button"
             accessibilityLabel="Cancel profile editing"
             accessibilityHint=""
-            onAccessibilityEscape={onPressCancel}>
+            onAccessibilityEscape={onPressCancel}
+          >
             <View style={[styles.btn]}>
               <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
             </View>
@@ -234,18 +248,18 @@ export function Component({
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 24,
     marginBottom: 18,
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingHorizontal: 4,
     paddingBottom: 4,
     marginTop: 20,
@@ -267,19 +281,19 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 16,
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
     borderRadius: 32,
     padding: 10,
     marginBottom: 10,
   },
   avi: {
-    position: 'absolute',
+    position: "absolute",
     top: 80,
     left: 24,
     width: 84,
@@ -291,5 +305,5 @@ const styles = StyleSheet.create({
     marginBottom: 36,
     marginHorizontal: -14,
   },
-  errorContainer: {marginTop: 20},
-})
+  errorContainer: { marginTop: 20 },
+});
