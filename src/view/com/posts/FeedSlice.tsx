@@ -57,6 +57,9 @@ export const FeedSlice = observer(
             item={item}
             isThreadParent={slice.isThreadParentAt(i)}
             isThreadChild={slice.isThreadChildAt(i)}
+            isThreadLastChild={
+              slice.isThreadChildAt(i) && slice.items.length === i + 1
+            }
           />
         ))}
       </>
