@@ -37,7 +37,7 @@ export function FollowingEmptyState() {
       <View style={styles.emptyIconContainer}>
         <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
       </View>
-      <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+      {/* <Text type="xl-medium" style={[s.textCenter, pal.text]}>
         Welcome! Your following feed is empty! Find some accounts to follow to
         fix this.
       </Text>
@@ -54,10 +54,11 @@ export function FollowingEmptyState() {
           style={palInverted.text as FontAwesomeIconStyle}
           size={14}
         />
-      </Button>
+      </Button> */}
 
       <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-        You can also discover new Communities to join.
+        You aren't following anyone right now! Discover new communities to join
+        and find people to follow!
       </Text>
       <Button
         type="inverted"

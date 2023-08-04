@@ -47,7 +47,13 @@ enum Forms {
   PasswordUpdated,
 }
 
-export const Login = ({ onPressBack, onPressCreateAccount }: { onPressBack: () => void, onPressCreateAccount: () => void }) => {
+export const Login = ({
+  onPressBack,
+  onPressCreateAccount,
+}: {
+  onPressBack: () => void;
+  onPressCreateAccount: () => void;
+}) => {
   const pal = usePalette("default");
   const store = useStores();
   const { track } = useAnalytics();
@@ -390,9 +396,9 @@ const LoginForm = ({
       )}
       <View testID="loginForm">
         <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-          Sign in
+          Sign in to Solarplex
         </Text>
-        <View style={[pal.borderDark, styles.group]}>
+        {/* <View style={[pal.borderDark, styles.group]}>
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
           >
@@ -420,10 +426,10 @@ const LoginForm = ({
               </View>
             </TouchableOpacity>
           </View>
-        </View>
-        <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+        </View> */}
+        {/* <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
           Account
-        </Text>
+        </Text> */}
         <View style={[pal.borderDark, styles.group]}>
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
@@ -599,15 +605,16 @@ const LoginForm = ({
               </Text>
               <View testID="signinOrCreateAccount" style={styles.btns}>
                 <TouchableOpacity
-              testID="createAccountButton"
-              style={[styles.btn, {backgroundColor: colors.blue3}]}
-              onPress={onPressCreateAccount}
-              // TODO: web accessibility
-              accessibilityRole="button">
-              <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
-              </Text>
-            </TouchableOpacity>
+                  testID="createAccountButton"
+                  style={[styles.btn, { backgroundColor: colors.blue3 }]}
+                  onPress={onPressCreateAccount}
+                  // TODO: web accessibility
+                  accessibilityRole="button"
+                >
+                  <Text style={[s.white, styles.btnLabel]}>
+                    Create a new account
+                  </Text>
+                </TouchableOpacity>
                 {/* <TouchableOpacity
                   testID="requestInviteButton"
                   style={[styles.btn]}
