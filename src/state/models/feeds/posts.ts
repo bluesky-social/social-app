@@ -8,7 +8,7 @@ import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
-import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
+import {FeedTuner} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
 
@@ -286,27 +286,13 @@ export class PostsFeedModel {
   }
 
   /**
-   * Fetches the given post and adds it to the top
-   * Used by the composer to add their new posts
+   * Updates the UI after the user has created a post
    */
-  async addPostToTop(uri: string) {
+  onPostCreated() {
     if (!this.slices.length) {
       return this.refresh()
-    }
-    try {
-      const res = await this.rootStore.agent.app.bsky.feed.getPosts({
-        uris: [uri],
-      })
-      const toPrepend = new PostsFeedSliceModel(
-        this.rootStore,
-        uri,
-        new FeedViewPostsSlice(res.data.posts.map(post => ({post}))),
-      )
-      runInAction(() => {
-        this.slices = [toPrepend].concat(this.slices)
-      })
-    } catch (e) {
-      this.rootStore.log.error('Failed to load post to prepend', {e})
+    } else {
+      this.setHasNewLatest(true)
     }
   }
 

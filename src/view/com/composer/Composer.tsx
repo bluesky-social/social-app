@@ -163,9 +163,8 @@ export const ComposePost = observer(function ComposePost({
 
       setIsProcessing(true)
 
-      let createdPost
       try {
-        createdPost = await apilib.post(store, {
+        await apilib.post(store, {
           rawText: rt.text,
           replyTo: replyTo?.uri,
           images: gallery.images,
@@ -193,7 +192,7 @@ export const ComposePost = observer(function ComposePost({
         if (replyTo && replyTo.uri) track('Post:Reply')
       }
       if (!replyTo) {
-        await store.me.mainFeed.addPostToTop(createdPost.uri)
+        store.me.mainFeed.onPostCreated()
       }
       onPost?.()
       onClose()
