@@ -6,18 +6,14 @@ import {
   AppBskyActorGetProfile as GetProfile,
   AppBskyActorProfile,
   RichText,
+  moderateProfile,
+  ProfileModeration,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {FollowState} from '../cache/my-follows'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {ProfileLabelInfo, ProfileModeration} from 'lib/labeling/types'
-import {
-  getProfileModeration,
-  filterAccountLabels,
-  filterProfileLabels,
-} from 'lib/labeling/helpers'
 import {track} from 'lib/analytics/analytics'
 
 export class ProfileViewerModel {
@@ -26,7 +22,8 @@ export class ProfileViewerModel {
   following?: string
   followedBy?: string
   blockedBy?: boolean
-  blocking?: string
+  blocking?: string;
+  [key: string]: unknown
 
   constructor() {
     makeAutoObservable(this)
@@ -53,7 +50,8 @@ export class ProfileModel {
   followsCount: number = 0
   postsCount: number = 0
   labels?: ComAtprotoLabelDefs.Label[] = undefined
-  viewer = new ProfileViewerModel()
+  viewer = new ProfileViewerModel();
+  [key: string]: unknown
 
   // added data
   descriptionRichText?: RichText = new RichText({text: ''})
@@ -85,18 +83,8 @@ export class ProfileModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get labelInfo(): ProfileLabelInfo {
-    return {
-      accountLabels: filterAccountLabels(this.labels),
-      profileLabels: filterProfileLabels(this.labels),
-      isMuted: this.viewer?.muted || false,
-      isBlocking: !!this.viewer?.blocking || false,
-      isBlockedBy: !!this.viewer?.blockedBy || false,
-    }
-  }
-
   get moderation(): ProfileModeration {
-    return getProfileModeration(this.rootStore, this.labelInfo)
+    return moderateProfile(this, this.rootStore.preferences.moderationOpts)
   }
 
   // public api

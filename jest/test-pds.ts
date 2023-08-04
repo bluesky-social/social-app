@@ -146,6 +146,7 @@ class Mocker {
     }
     return await agent.post({
       text,
+      langs: ['en'],
       createdAt: new Date().toISOString(),
     })
   }
@@ -162,6 +163,7 @@ class Mocker {
     return await agent.post({
       text,
       embed: {$type: 'app.bsky.embed.record', record: {uri, cid}},
+      langs: ['en'],
       createdAt: new Date().toISOString(),
     })
   }
@@ -178,6 +180,7 @@ class Mocker {
     return await agent.post({
       text,
       reply: {root: {uri, cid}, parent: {uri, cid}},
+      langs: ['en'],
       createdAt: new Date().toISOString(),
     })
   }

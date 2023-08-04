@@ -1,7 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {FeedViewPostsSlice} from 'lib/api/feed-manip'
-import {mergePostModerations} from 'lib/labeling/helpers'
 import {PostsFeedItemModel} from './post'
 
 let _idCounter = 0
@@ -55,7 +54,20 @@ export class PostsFeedSliceModel {
   }
 
   get moderation() {
-    return mergePostModerations(this.items.map(item => item.moderation))
+    // prefer the most stringent item
+    const topItem = this.items.find(item => item.moderation.content.filter)
+    if (topItem) {
+      return topItem.moderation
+    }
+    // otherwise just use the first one
+    return this.items[0].moderation
+  }
+
+  shouldFilter(ignoreFilterForDid: string | undefined): boolean {
+    const mods = this.items
+      .filter(item => item.post.author.did !== ignoreFilterForDid)
+      .map(item => item.moderation)
+    return !!mods.find(mod => mod.content.filter)
   }
 
   containsUri(uri: string) {

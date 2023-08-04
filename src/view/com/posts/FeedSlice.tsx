@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {PostsFeedSliceModel} from 'state/models/feeds/posts-slice'
 import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
@@ -7,65 +8,61 @@ import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {makeProfileLink} from 'lib/routes/links'
 
-export function FeedSlice({
-  slice,
-  ignoreMuteFor,
-}: {
-  slice: PostsFeedSliceModel
-  ignoreMuteFor?: string
-}) {
-  if (slice.moderation.list.behavior === ModerationBehaviorCode.Hide) {
-    if (!ignoreMuteFor && !slice.moderation.list.noOverride) {
+export const FeedSlice = observer(
+  ({
+    slice,
+    ignoreFilterFor,
+  }: {
+    slice: PostsFeedSliceModel
+    ignoreFilterFor?: string
+  }) => {
+    if (slice.shouldFilter(ignoreFilterFor)) {
       return null
     }
-  }
-  if (slice.isThread && slice.items.length > 3) {
-    const last = slice.items.length - 1
+
+    if (slice.isThread && slice.items.length > 3) {
+      const last = slice.items.length - 1
+      return (
+        <>
+          <FeedItem
+            key={slice.items[0]._reactKey}
+            item={slice.items[0]}
+            isThreadParent={slice.isThreadParentAt(0)}
+            isThreadChild={slice.isThreadChildAt(0)}
+          />
+          <FeedItem
+            key={slice.items[1]._reactKey}
+            item={slice.items[1]}
+            isThreadParent={slice.isThreadParentAt(1)}
+            isThreadChild={slice.isThreadChildAt(1)}
+          />
+          <ViewFullThread slice={slice} />
+          <FeedItem
+            key={slice.items[last]._reactKey}
+            item={slice.items[last]}
+            isThreadParent={slice.isThreadParentAt(last)}
+            isThreadChild={slice.isThreadChildAt(last)}
+          />
+        </>
+      )
+    }
+
     return (
       <>
-        <FeedItem
-          key={slice.items[0]._reactKey}
-          item={slice.items[0]}
-          isThreadParent={slice.isThreadParentAt(0)}
-          isThreadChild={slice.isThreadChildAt(0)}
-          ignoreMuteFor={ignoreMuteFor}
-        />
-        <FeedItem
-          key={slice.items[1]._reactKey}
-          item={slice.items[1]}
-          isThreadParent={slice.isThreadParentAt(1)}
-          isThreadChild={slice.isThreadChildAt(1)}
-          ignoreMuteFor={ignoreMuteFor}
-        />
-        <ViewFullThread slice={slice} />
-        <FeedItem
-          key={slice.items[last]._reactKey}
-          item={slice.items[last]}
-          isThreadParent={slice.isThreadParentAt(last)}
-          isThreadChild={slice.isThreadChildAt(last)}
-          ignoreMuteFor={ignoreMuteFor}
-        />
+        {slice.items.map((item, i) => (
+          <FeedItem
+            key={item._reactKey}
+            item={item}
+            isThreadParent={slice.isThreadParentAt(i)}
+            isThreadChild={slice.isThreadChildAt(i)}
+          />
+        ))}
       </>
     )
-  }
-
-  return (
-    <>
-      {slice.items.map((item, i) => (
-        <FeedItem
-          key={item._reactKey}
-          item={item}
-          isThreadParent={slice.isThreadParentAt(i)}
-          isThreadChild={slice.isThreadChildAt(i)}
-          ignoreMuteFor={ignoreMuteFor}
-        />
-      ))}
-    </>
-  )
-}
+  },
+)
 
 function ViewFullThread({slice}: {slice: PostsFeedSliceModel}) {
   const pal = usePalette('default')

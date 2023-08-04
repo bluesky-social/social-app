@@ -8,6 +8,8 @@ import {
   AppBskyFeedLike,
   AppBskyGraphFollow,
   ComAtprotoLabelDefs,
+  moderatePost,
+  moderateProfile,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import chunk from 'lodash.chunk'
@@ -15,16 +17,6 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {PostThreadModel} from '../content/post-thread'
 import {cleanError} from 'lib/strings/errors'
-import {
-  PostLabelInfo,
-  PostModeration,
-  ModerationBehaviorCode,
-} from 'lib/labeling/types'
-import {
-  getPostModeration,
-  filterAccountLabels,
-  filterProfileLabels,
-} from 'lib/labeling/helpers'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -100,27 +92,19 @@ export class NotificationsFeedItemModel {
     }
   }
 
-  get labelInfo(): PostLabelInfo {
-    const addedInfo = this.additionalPost?.thread?.labelInfo
-    return {
-      postLabels: (this.labels || []).concat(addedInfo?.postLabels || []),
-      accountLabels: filterAccountLabels(this.author.labels).concat(
-        addedInfo?.accountLabels || [],
-      ),
-      profileLabels: filterProfileLabels(this.author.labels).concat(
-        addedInfo?.profileLabels || [],
-      ),
-      isMuted: this.author.viewer?.muted || addedInfo?.isMuted || false,
-      mutedByList: this.author.viewer?.mutedByList || addedInfo?.mutedByList,
-      isBlocking:
-        !!this.author.viewer?.blocking || addedInfo?.isBlocking || false,
-      isBlockedBy:
-        !!this.author.viewer?.blockedBy || addedInfo?.isBlockedBy || false,
+  get shouldFilter(): boolean {
+    if (this.additionalPost?.thread) {
+      const postMod = moderatePost(
+        this.additionalPost.thread.data.post,
+        this.rootStore.preferences.moderationOpts,
+      )
+      return postMod.content.filter || false
     }
-  }
-
-  get moderation(): PostModeration {
-    return getPostModeration(this.rootStore, this.labelInfo)
+    const profileMod = moderateProfile(
+      this.author,
+      this.rootStore.preferences.moderationOpts,
+    )
+    return profileMod.account.filter || false
   }
 
   get numUnreadInGroup(): number {
@@ -565,8 +549,7 @@ export class NotificationsFeedModel {
   ): NotificationsFeedItemModel[] {
     return items
       .filter(item => {
-        const hideByLabel =
-          item.moderation.list.behavior === ModerationBehaviorCode.Hide
+        const hideByLabel = item.shouldFilter
         let mutedThread = !!(
           item.reasonSubjectRootUri &&
           this.rootStore.mutedThreads.uris.has(item.reasonSubjectRootUri)

@@ -1,6 +1,11 @@
 import React from 'react'
-import {StyleProp, StyleSheet, ViewStyle} from 'react-native'
-import {AppBskyEmbedImages, AppBskyEmbedRecordWithMedia} from '@atproto/api'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  AppBskyEmbedRecord,
+  AppBskyFeedPost,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
+} from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {PostMeta} from '../PostMeta'
 import {Link} from '../Link'
@@ -9,6 +14,55 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {ComposerOptsQuote} from 'state/models/ui/shell'
 import {PostEmbeds} from '.'
 import {makeProfileLink} from 'lib/routes/links'
+import {InfoCircleIcon} from 'lib/icons'
+
+export function MaybeQuoteEmbed({
+  embed,
+  style,
+}: {
+  embed: AppBskyEmbedRecord.View
+  style?: StyleProp<ViewStyle>
+}) {
+  const pal = usePalette('default')
+  if (
+    AppBskyEmbedRecord.isViewRecord(embed.record) &&
+    AppBskyFeedPost.isRecord(embed.record.value) &&
+    AppBskyFeedPost.validateRecord(embed.record.value).success
+  ) {
+    return (
+      <QuoteEmbed
+        quote={{
+          author: embed.record.author,
+          cid: embed.record.cid,
+          uri: embed.record.uri,
+          indexedAt: embed.record.indexedAt,
+          text: embed.record.value.text,
+          embeds: embed.record.embeds,
+        }}
+        style={style}
+      />
+    )
+  } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
+    return (
+      <View style={[styles.errorContainer, pal.borderDark]}>
+        <InfoCircleIcon size={18} style={pal.text} />
+        <Text type="lg" style={pal.text}>
+          Blocked
+        </Text>
+      </View>
+    )
+  } else if (AppBskyEmbedRecord.isViewNotFound(embed.record)) {
+    return (
+      <View style={[styles.errorContainer, pal.borderDark]}>
+        <InfoCircleIcon size={18} style={pal.text} />
+        <Text type="lg" style={pal.text}>
+          Deleted
+        </Text>
+      </View>
+    )
+  }
+  return null
+}
 
 export function QuoteEmbed({
   quote,
@@ -75,5 +129,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 13,
     paddingRight: 8,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderRadius: 8,
+    marginTop: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    borderWidth: 1,
   },
 })

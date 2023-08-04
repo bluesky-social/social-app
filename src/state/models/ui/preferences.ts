@@ -1,9 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx'
+import {LabelPreference as APILabelPreference} from '@atproto/api'
 import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
-import {ComAtprotoLabelDefs, AppBskyActorDefs} from '@atproto/api'
+import {
+  ComAtprotoLabelDefs,
+  AppBskyActorDefs,
+  ModerationOpts,
+} from '@atproto/api'
 import {LabelValGroup} from 'lib/labeling/types'
 import {getLabelValueGroup} from 'lib/labeling/helpers'
 import {
@@ -16,7 +21,8 @@ import {DEFAULT_FEEDS} from 'lib/constants'
 import {isIOS, deviceLocales} from 'platform/detection'
 import {LANGUAGES} from '../../../locale/languages'
 
-export type LabelPreference = 'show' | 'warn' | 'hide'
+// TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
+export type LabelPreference = APILabelPreference | 'show'
 const LABEL_GROUPS = [
   'nsfw',
   'nudity',
@@ -408,6 +414,43 @@ export class PreferencesModel {
     return res
   }
 
+  get moderationOpts(): ModerationOpts {
+    return {
+      userDid: this.rootStore.session.currentSession?.did || '',
+      adultContentEnabled: this.adultContentEnabled,
+      labelerSettings: [
+        {
+          labeler: {
+            did: '',
+            displayName: 'Bluesky Social',
+          },
+          settings: {
+            // TEMP translate old settings until this UI can be migrated -prf
+            porn: tempfixLabelPref(this.contentLabels.nsfw),
+            sexual: tempfixLabelPref(this.contentLabels.suggestive),
+            nudity: tempfixLabelPref(this.contentLabels.nudity),
+            nsfl: tempfixLabelPref(this.contentLabels.gore),
+            corpse: tempfixLabelPref(this.contentLabels.gore),
+            gore: tempfixLabelPref(this.contentLabels.gore),
+            torture: tempfixLabelPref(this.contentLabels.gore),
+            'self-harm': tempfixLabelPref(this.contentLabels.gore),
+            'intolerant-race': tempfixLabelPref(this.contentLabels.hate),
+            'intolerant-gender': tempfixLabelPref(this.contentLabels.hate),
+            'intolerant-sexual-orientation': tempfixLabelPref(
+              this.contentLabels.hate,
+            ),
+            'intolerant-religion': tempfixLabelPref(this.contentLabels.hate),
+            intolerant: tempfixLabelPref(this.contentLabels.hate),
+            'icon-intolerant': tempfixLabelPref(this.contentLabels.hate),
+            spam: tempfixLabelPref(this.contentLabels.spam),
+            impersonation: tempfixLabelPref(this.contentLabels.impersonation),
+            scam: 'warn',
+          },
+        },
+      ],
+    }
+  }
+
   async setSavedFeeds(saved: string[], pinned: string[]) {
     const oldSaved = this.savedFeeds
     const oldPinned = this.pinnedFeeds
@@ -484,4 +527,12 @@ export class PreferencesModel {
   toggleRequireAltTextEnabled() {
     this.requireAltTextEnabled = !this.requireAltTextEnabled
   }
+}
+
+// TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
+function tempfixLabelPref(pref: LabelPreference): APILabelPreference {
+  if (pref === 'show') {
+    return 'ignore'
+  }
+  return pref
 }

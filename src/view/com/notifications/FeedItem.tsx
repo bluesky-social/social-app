@@ -7,7 +7,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {
+  AppBskyEmbedImages,
+  ProfileModeration,
+  moderateProfile,
+} from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -31,11 +35,6 @@ import {Link, TextLink} from '../util/Link'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {
-  getProfileViewBasicLabelInfo,
-  getProfileModeration,
-} from 'lib/labeling/helpers'
-import {ProfileModeration} from 'lib/labeling/types'
 import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 
@@ -99,9 +98,9 @@ export const FeedItem = observer(function ({
         handle: item.author.handle,
         displayName: item.author.displayName,
         avatar: item.author.avatar,
-        moderation: getProfileModeration(
-          store,
-          getProfileViewBasicLabelInfo(item.author),
+        moderation: moderateProfile(
+          item.author,
+          store.preferences.moderationOpts,
         ),
       },
       ...(item.additional?.map(({author}) => {
@@ -111,10 +110,7 @@ export const FeedItem = observer(function ({
           handle: author.handle,
           displayName: author.displayName,
           avatar: author.avatar,
-          moderation: getProfileModeration(
-            store,
-            getProfileViewBasicLabelInfo(author),
-          ),
+          moderation: moderateProfile(author, store.preferences.moderationOpts),
         }
       }) || []),
     ]

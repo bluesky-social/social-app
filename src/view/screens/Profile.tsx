@@ -232,7 +232,7 @@ export const ProfileScreen = withAuthRequired(
             )
           } else if (item instanceof PostsFeedSliceModel) {
             return (
-              <FeedSlice slice={item} ignoreMuteFor={uiState.profile.did} />
+              <FeedSlice slice={item} ignoreFilterFor={uiState.profile.did} />
             )
           }
         }
@@ -252,7 +252,7 @@ export const ProfileScreen = withAuthRequired(
         testID="profileView"
         style={styles.container}
         screenDescription="profile"
-        moderation={uiState.profile.moderation.view}>
+        moderation={uiState.profile.moderation.account}>
         {uiState.profile.hasError ? (
           <ErrorScreen
             testID="profileErrorScreen"

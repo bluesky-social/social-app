@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetPostThread as GetPostThread,
   AppBskyFeedDefs,
+  PostModeration,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
@@ -231,7 +232,6 @@ export class PostThreadModel {
       return
     }
     pruneReplies(res.data.thread)
-    sortThread(res.data.thread)
     const thread = new PostThreadItemModel(
       this.rootStore,
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
@@ -241,6 +241,7 @@ export class PostThreadModel {
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
+    sortThread(thread)
     this.thread = thread
   }
 }
@@ -262,24 +263,28 @@ function pruneReplies(post: MaybePost) {
   }
 }
 
-function sortThread(post: MaybePost) {
-  if (post.notFound) {
+type MaybeThreadItem =
+  | PostThreadItemModel
+  | AppBskyFeedDefs.NotFoundPost
+  | AppBskyFeedDefs.BlockedPost
+function sortThread(item: MaybeThreadItem) {
+  if ('notFound' in item) {
     return
   }
-  post = post as AppBskyFeedDefs.ThreadViewPost
-  if (post.replies) {
-    post.replies.sort((a: MaybePost, b: MaybePost) => {
-      post = post as AppBskyFeedDefs.ThreadViewPost
-      if (a.notFound) {
+  item = item as PostThreadItemModel
+  if (item.replies) {
+    item.replies.sort((a: MaybeThreadItem, b: MaybeThreadItem) => {
+      if ('notFound' in a && a.notFound) {
         return 1
       }
-      if (b.notFound) {
+      if ('notFound' in b && b.notFound) {
         return -1
       }
-      a = a as AppBskyFeedDefs.ThreadViewPost
-      b = b as AppBskyFeedDefs.ThreadViewPost
-      const aIsByOp = a.post.author.did === post.post.author.did
-      const bIsByOp = b.post.author.did === post.post.author.did
+      item = item as PostThreadItemModel
+      a = a as PostThreadItemModel
+      b = b as PostThreadItemModel
+      const aIsByOp = a.post.author.did === item.post.author.did
+      const bIsByOp = b.post.author.did === item.post.author.did
       if (aIsByOp && bIsByOp) {
         return a.post.indexedAt.localeCompare(b.post.indexedAt) // oldest
       } else if (aIsByOp) {
@@ -287,8 +292,31 @@ function sortThread(post: MaybePost) {
       } else if (bIsByOp) {
         return 1 // op's own reply
       }
+      // put moderated content down at the bottom
+      if (modScore(a.moderation) !== modScore(b.moderation)) {
+        return modScore(a.moderation) - modScore(b.moderation)
+      }
       return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
     })
-    post.replies.forEach(reply => sortThread(reply))
+    item.replies.forEach(reply => sortThread(reply))
   }
+}
+
+function modScore(mod: PostModeration): number {
+  if (mod.content.blur && mod.content.noOverride) {
+    return 5
+  }
+  if (mod.content.blur) {
+    return 4
+  }
+  if (mod.content.alert) {
+    return 3
+  }
+  if (mod.embed.blur && mod.embed.noOverride) {
+    return 2
+  }
+  if (mod.embed.blur) {
+    return 1
+  }
+  return 0
 }

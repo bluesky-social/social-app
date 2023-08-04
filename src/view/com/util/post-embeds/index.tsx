@@ -12,7 +12,6 @@ import {
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedPost,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
 } from '@atproto/api'
@@ -24,7 +23,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
-import QuoteEmbed from './QuoteEmbed'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
@@ -49,25 +48,11 @@ export function PostEmbeds({
 
   // quote post with media
   // =
-  if (
-    AppBskyEmbedRecordWithMedia.isView(embed) &&
-    AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-    AppBskyFeedPost.isRecord(embed.record.record.value) &&
-    AppBskyFeedPost.validateRecord(embed.record.record.value).success
-  ) {
+  if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     return (
       <View style={[styles.stackContainer, style]}>
         <PostEmbeds embed={embed.media} />
-        <QuoteEmbed
-          quote={{
-            author: embed.record.record.author,
-            cid: embed.record.record.cid,
-            uri: embed.record.record.uri,
-            indexedAt: embed.record.record.indexedAt,
-            text: embed.record.record.value.text,
-            embeds: embed.record.record.embeds,
-          }}
-        />
+        <MaybeQuoteEmbed embed={embed.record} />
       </View>
     )
   }
@@ -75,25 +60,7 @@ export function PostEmbeds({
   // quote post
   // =
   if (AppBskyEmbedRecord.isView(embed)) {
-    if (
-      AppBskyEmbedRecord.isViewRecord(embed.record) &&
-      AppBskyFeedPost.isRecord(embed.record.value) &&
-      AppBskyFeedPost.validateRecord(embed.record.value).success
-    ) {
-      return (
-        <QuoteEmbed
-          quote={{
-            author: embed.record.author,
-            cid: embed.record.cid,
-            uri: embed.record.uri,
-            indexedAt: embed.record.indexedAt,
-            text: embed.record.value.text,
-            embeds: embed.record.embeds,
-          }}
-          style={style}
-        />
-      )
-    }
+    return <MaybeQuoteEmbed embed={embed} style={style} />
   }
 
   // image embed

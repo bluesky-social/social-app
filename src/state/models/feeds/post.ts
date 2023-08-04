@@ -3,21 +3,13 @@ import {
   AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
   RichText,
+  moderatePost,
+  PostModeration,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {updateDataOptimistically} from 'lib/async/revertible'
-import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
-import {
-  getEmbedLabels,
-  getEmbedMuted,
-  getEmbedMutedByList,
-  getEmbedBlocking,
-  getEmbedBlockedBy,
-  filterAccountLabels,
-  filterProfileLabels,
-  getPostModeration,
-} from 'lib/labeling/helpers'
 import {track} from 'lib/analytics/analytics'
+import {hackAddDeletedEmbed} from 'lib/api/hack-add-deleted-embed'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type ReasonRepost = AppBskyFeedDefs.ReasonRepost
@@ -44,6 +36,7 @@ export class PostsFeedItemModel {
     if (FeedPost.isRecord(this.post.record)) {
       const valid = FeedPost.validateRecord(this.post.record)
       if (valid.success) {
+        hackAddDeletedEmbed(this.post)
         this.postRecord = this.post.record
         this.richText = new RichText(this.postRecord, {cleanNewlines: true})
       } else {
@@ -86,33 +79,8 @@ export class PostsFeedItemModel {
     return this.rootStore.mutedThreads.uris.has(this.rootUri)
   }
 
-  get labelInfo(): PostLabelInfo {
-    return {
-      postLabels: (this.post.labels || []).concat(
-        getEmbedLabels(this.post.embed),
-      ),
-      accountLabels: filterAccountLabels(this.post.author.labels),
-      profileLabels: filterProfileLabels(this.post.author.labels),
-      isMuted:
-        this.post.author.viewer?.muted ||
-        getEmbedMuted(this.post.embed) ||
-        false,
-      mutedByList:
-        this.post.author.viewer?.mutedByList ||
-        getEmbedMutedByList(this.post.embed),
-      isBlocking:
-        !!this.post.author.viewer?.blocking ||
-        getEmbedBlocking(this.post.embed) ||
-        false,
-      isBlockedBy:
-        !!this.post.author.viewer?.blockedBy ||
-        getEmbedBlockedBy(this.post.embed) ||
-        false,
-    }
-  }
-
   get moderation(): PostModeration {
-    return getPostModeration(this.rootStore, this.labelInfo)
+    return moderatePost(this.post, this.rootStore.preferences.moderationOpts)
   }
 
   copy(v: FeedViewPost) {

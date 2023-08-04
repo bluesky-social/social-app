@@ -30,6 +30,7 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 import * as OnboardingModal from './OnboardingModal'
+import * as ModerationDetailsModal from './ModerationDetails'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -136,6 +137,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'onboarding') {
     snapPoints = OnboardingModal.snapPoints
     element = <OnboardingModal.Component />
+  } else if (activeModal?.name === 'moderation-details') {
+    snapPoints = ModerationDetailsModal.snapPoints
+    element = <ModerationDetailsModal.Component {...activeModal} />
   } else {
     return null
   }
