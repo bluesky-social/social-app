@@ -45,7 +45,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             type="md"
             style={pal.link}
             href={"https://tally.so/r/nrD8l2"}
-            text="feedback"
+            text="Feedback"
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -63,7 +63,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             type="md"
             style={pal.link}
             href="https://t.co/SLPiY47mjg"
-            text="help"
+            text="Help"
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -72,7 +72,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
             type="md"
             style={pal.link}
             href="https://usedispatch.notion.site/Privacy-0c34aa8d5fd34b52b4c742380addc03e?pvs=4"
-            text="privacy"
+            text="Privacy"
           />
         </View>
       </View>
