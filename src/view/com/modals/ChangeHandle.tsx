@@ -1,25 +1,27 @@
-import React, {useState} from 'react'
-import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../util/Toast'
+
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import React, {useState} from 'react'
 import {ScrollView, TextInput} from './util'
-import {Text} from '../util/text/Text'
+import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
+
 import {Button} from '../util/forms/Button'
+import Clipboard from '@react-native-clipboard/clipboard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ServiceDescription} from 'state/models/session'
-import {s} from 'lib/styles'
-import {makeValidHandle, createFullHandle} from 'lib/strings/handles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics/analytics'
+import {Text} from '../util/text/Text'
 import {cleanError} from 'lib/strings/errors'
+import {s} from 'lib/styles'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
+import {useTheme} from 'lib/ThemeContext'
 
 export const snapPoints = ['100%']
 
@@ -449,7 +451,7 @@ function CustomHandleForm({
       <TouchableOpacity
         onPress={onToggleCustom}
         accessibilityLabel="Use default provider"
-        accessibilityHint="Use bsky.social as hosting provider">
+        accessibilityHint="Use v2.solarplex.xyz as hosting provider">
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
           Nevermind, create a handle for me
         </Text>

@@ -111,8 +111,6 @@ function ctrlAnimStyle(interp: Animated.Value) {
 }
 */
 
-
-
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores();
   const theme = useTheme();
@@ -208,10 +206,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onRemoveReaction = async () => {
     await opts
-      .onPressReaction(
-        (selectedEmoji as SolarplexReaction).reaction_id,
-        true,
-      )
+      .onPressReaction((selectedEmoji as SolarplexReaction).reaction_id, true)
       .catch((_e) => undefined);
     setSelectedEmoji(undefined);
   };
@@ -292,40 +287,16 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             : onRemoveReaction
         }
       >
-        {!opts.big && opts.reactions?.length !== undefined ? (
-          <View testID="testing" style={styles.emojiSet}>
-            {opts.reactions?.map((item, index) =>
-              index < 4 && store.reactions.reactionTypes[item] ? (
-                (store.reactions.reactionTypes[item]?.emoji as string).includes(
-                  "http",
-                ) ? (
-                  <Image
-                    style={styles.image}
-                    source={{
-                      uri: store.reactions.reactionTypes[item]?.emoji as string,
-                    }}
-                  />
-                ) : (
-                  <Text
-                    key={item}
-                    style={[
-                      defaultCtrlColor,
-                      s.f15,
-                      { marginLeft: index ? -8 : 0, zIndex: -1 * index },
-                    ]}
-                  >
-                    {store.reactions.reactionTypes[item]?.emoji}
-                  </Text>
-                )
-              ) : null,
-            )}
-          </View>
-        ) : <></>}
-        {store.reactions.earnedReactions[store.reactions.curReactionsSet]?.length ? (
+        {store.reactions.earnedReactions[store.reactions.curReactionsSet]
+          ?.length ? (
           <ReactionDropdownButton
             testID="communityHeaderDropdownBtn"
             type="bare"
-            items={store.reactions.earnedReactions[store.reactions.curReactionsSet] as SolarplexReaction[]}
+            items={
+              store.reactions.earnedReactions[
+                store.reactions.curReactionsSet
+              ] as SolarplexReaction[]
+            }
             style={[
               styles.btn,
               styles.secondaryBtn,
@@ -338,6 +309,38 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             onPressReaction={onPressReaction}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {!opts.big && opts.reactions?.length !== undefined ? (
+                <View testID="testing" style={styles.emojiSet}>
+                  {opts.reactions?.map((item, index) =>
+                    index < 4 && store.reactions.reactionTypes[item] ? (
+                      (
+                        store.reactions.reactionTypes[item]?.emoji as string
+                      ).includes("http") ? (
+                        <Image
+                          style={styles.image}
+                          source={{
+                            uri: store.reactions.reactionTypes[item]
+                              ?.emoji as string,
+                          }}
+                        />
+                      ) : (
+                        <Text
+                          key={item}
+                          style={[
+                            defaultCtrlColor,
+                            s.f15,
+                            { marginLeft: index ? -8 : 0, zIndex: -1 * index },
+                          ]}
+                        >
+                          {store.reactions.reactionTypes[item]?.emoji}
+                        </Text>
+                      )
+                    ) : null,
+                  )}
+                </View>
+              ) : (
+                <></>
+              )}
               {selectedEmoji ? (
                 <TouchableOpacity onPress={onRemoveReaction}>
                   <FontAwesomeIcon

@@ -250,12 +250,6 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Home"
       />
-      <NavItem
-        href={`/rewards`}
-        icon={<GiftIcon />}
-        iconFilled={<GiftIconFilled />}
-        label="Rewards"
-      />
       {store.session.hasSession && (
         <>
           <NavItem
@@ -277,10 +271,16 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
               <FontAwesomeIcon
                 size={22}
                 icon={fa.faPeopleGroup}
-                style={{ ...pal.text} as FontAwesomeIconStyle}
+                style={{ ...pal.text } as FontAwesomeIconStyle}
               />
             }
             label="Communities"
+          />
+          <NavItem
+            href={`/rewards`}
+            icon={<GiftIcon />}
+            iconFilled={<GiftIconFilled />}
+            label="Rewards"
           />
           <NavItem
             href="/notifications"
@@ -293,8 +293,20 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           />
           <NavItem
             href="/wallets"
-            icon={<FontAwesomeIcon size={24} icon={fa.faWallet} style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle} />}
-            iconFilled={<FontAwesomeIcon size={24} icon={fa.faWallet} style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle} />}
+            icon={
+              <FontAwesomeIcon
+                size={24}
+                icon={fa.faWallet}
+                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+              />
+            }
+            iconFilled={
+              <FontAwesomeIcon
+                size={24}
+                icon={fa.faWallet}
+                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+              />
+            }
             label="Wallets"
           />
           <SignOutBtn onPressHandler={() => onPressSignout()} />

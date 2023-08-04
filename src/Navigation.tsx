@@ -502,7 +502,7 @@ const FlatNavigator = observer(() => {
 
 // TODO(viksit): change linking to right domain
 const LINKING = {
-  prefixes: ["bsky://", "https://bsky.app"],
+  prefixes: ["bsky://", "https://v2.solarplex.xyz"],
 
   getPathFromState(state: State) {
     // console.log("state", state);

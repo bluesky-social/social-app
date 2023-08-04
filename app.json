@@ -36,7 +36,7 @@
         "NSPhotoLibraryAddUsageDescription": "Used to save images to your library.",
         "NSPhotoLibraryUsageDescription": "Used for profile pictures, posts, and other kinds of content"
       },
-      "associatedDomains": ["applinks:bsky.app", "applinks:staging.bsky.app"]
+      "associatedDomains": ["applinks:v2.solarplex.xyz", "applinks:v2.solarplex.xyz"]
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
@@ -48,7 +48,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "xyz.Solarplex.app",
+      "package": "v2.solarplex.xyz",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -56,7 +56,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "bsky.app"
+              "host": "v2.solarplex.xyz"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]

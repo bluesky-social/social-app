@@ -55,7 +55,7 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith("https")) {
-    const urlp = new URL("https://bsky.app");
+    const urlp = new URL("https://v2.solarplex.xyz");
     urlp.pathname = url;
     url = urlp.toString();
   }
@@ -63,7 +63,7 @@ export function toShareUrl(url: string): string {
 }
 
 export function isBskyAppUrl(url: string): boolean {
-  return url.startsWith("https://bsky.app/");
+  return url.startsWith("https://v2.solarplex.xyz/");
 }
 
 export function isExternalUrl(url: string): boolean {
