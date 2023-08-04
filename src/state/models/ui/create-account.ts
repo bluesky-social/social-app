@@ -1,18 +1,19 @@
-import {makeAutoObservable} from 'mobx'
+import * as EmailValidator from 'email-validator'
+
+import {ComAtprotoServerCreateAccount} from '@atproto/api'
+import {DEFAULT_SERVICE} from 'state/index'
 import {RootStoreModel} from '../root-store'
 import {ServiceDescription} from '../session'
-import {DEFAULT_SERVICE} from 'state/index'
-import {ComAtprotoServerCreateAccount} from '@atproto/api'
-import * as EmailValidator from 'email-validator'
-import {createFullHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
+import {createFullHandle} from 'lib/strings/handles'
 import {getAge} from 'lib/strings/time'
+import {makeAutoObservable} from 'mobx'
 import {track} from 'lib/analytics/analytics'
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
 export class CreateAccountModel {
-  step: number = 1
+  step: number = 3
   isProcessing = false
   isFetchingServiceDescription = false
   didServiceDescriptionFetchFail = false
@@ -141,11 +142,12 @@ export class CreateAccountModel {
   get canNext() {
     if (this.step === 1) {
       return !!this.serviceDescription
-    } else if (this.step === 2) {
+    } else if (this.step === 3) {
       return (
         (!this.isInviteCodeRequired || this.inviteCode) &&
         !!this.email &&
-        !!this.password
+        !!this.password &&
+        !!this.handle
       )
     }
     return !!this.handle

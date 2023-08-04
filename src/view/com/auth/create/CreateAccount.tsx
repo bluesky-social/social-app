@@ -72,8 +72,8 @@ export const CreateAccount = observer(
       <ScrollView testID="createAccount" style={pal.view}>
         <KeyboardAvoidingView behavior="padding">
           <View style={styles.stepContainer}>
-            {model.step === 1 && <Step1 model={model} />}
-            {model.step === 2 && <Step2 model={model} />}
+            {/* {model.step === 1 && <Step1 model={model} />} */}
+            {model.step === 3 && <Step2 model={model} />}
             {model.step === 3 && <Step3 model={model} />}
           </View>
           <View style={[s.flexRow, s.pl20, s.pr20]}>

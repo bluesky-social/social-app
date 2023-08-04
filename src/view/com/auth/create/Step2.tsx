@@ -1,15 +1,16 @@
-import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
+
 import {CreateAccountModel} from 'state/models/ui/create-account'
-import {Text} from 'view/com/util/text/Text'
 import {DateInput} from 'view/com/util/forms/DateInput'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {Policies} from './Policies'
+import React from 'react'
 import {StepHeader} from './StepHeader'
+import {Text} from 'view/com/util/text/Text'
+import {TextInput} from '../util/TextInput'
+import {observer} from 'mobx-react-lite'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {TextInput} from '../util/TextInput'
-import {Policies} from './Policies'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {useStores} from 'state/index'
 
 export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
@@ -22,7 +23,7 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
 
   return (
     <View>
-      <StepHeader step="2" title="Your account" />
+      <StepHeader step="3" title="Your account" />
 
       {model.isInviteCodeRequired && (
         <View style={s.pb20}>
@@ -114,13 +115,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
               accessibilityLabelledBy="birthDate"
             />
           </View>
-
-          {model.serviceDescription && (
-            <Policies
-              serviceDescription={model.serviceDescription}
-              needsGuardian={!model.isAge18}
-            />
-          )}
         </>
       )}
       {model.error ? (
