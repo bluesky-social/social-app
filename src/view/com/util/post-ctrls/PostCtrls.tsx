@@ -321,14 +321,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               ) : null,
             )}
           </View>
-        ) : (
-          <></>
-        )}
-        {store.reactions.reactionSets.default.length ? (
+        ) : <></>}
+        {store.reactions.reactionsSet.length ? (
           <ReactionDropdownButton
             testID="communityHeaderDropdownBtn"
             type="bare"
-            items={store.reactions.reactionSets.default as SolarplexReactionType[]}
+            items={store.reactions.reactionsSet as SolarplexReactionType[]}
             style={[
               styles.btn,
               styles.secondaryBtn,

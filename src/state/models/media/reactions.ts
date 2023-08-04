@@ -65,4 +65,7 @@ export class SplxReactionModel {
       }
       console.log('reactions_', this.reactionSets)
     }
+    async selectReactionSet(reactionSet: string) {
+      this.reactionsSet = this.reactionSets[reactionSet]
+    }
 }

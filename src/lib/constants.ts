@@ -122,9 +122,9 @@ export const SOLARPLEX_FEEDS = [
 export const SOLARPLEX_FEED_URI_PATH =
   "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/";
 
-// export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
-export const SOLARPLEX_FEED_API = "http://localhost:3000";
-export const SOLARPLEX_DID = "did:plc:h7o6dzolc2jfhztkrrpa3fys";
+export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
+// export const SOLARPLEX_FEED_API = "http://localhost:3000";
+export const SOLARPLEX_DID = "did:plc:4srpaai54v3d35bigtfbtbd5";
 // export const SOLARPLEX_V1_API = "http://localhost:3001";
 export const SOLARPLEX_V1_API = "https://dev.api.solarplex.xyz";
 export const HELIUS_RPC_API = "https://rpc.helius.xyz/";

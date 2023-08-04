@@ -3,6 +3,7 @@ import * as fa from "@fortawesome/free-solid-svg-icons";
 import {
   BellIcon,
   BellIconSolid,
+  CommunitiesIcon,
   ComposeIcon2,
   GiftIcon,
   GiftIconFilled,
@@ -268,17 +269,15 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <NavItem
             href={`/communities`}
             icon={
-              <FontAwesomeIcon
-                size={22}
-                icon={fa.faPeopleGroup}
-                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
-              />
+              <View style={{ width: 21, height: 21 }}>
+                <CommunitiesIcon />
+              </View>
             }
             iconFilled={
               <FontAwesomeIcon
                 size={22}
                 icon={fa.faPeopleGroup}
-                style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
+                style={{ ...pal.text} as FontAwesomeIconStyle}
               />
             }
             label="Communities"
