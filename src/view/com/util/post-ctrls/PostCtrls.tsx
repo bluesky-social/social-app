@@ -193,9 +193,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   );
 
   const onPressReaction = async (emoji: EmojiItemProp | undefined) => {
-    if (!emoji || selectedEmoji) {
+    if (!emoji) {
       onRemoveReaction();
       return;
+    }
+    if (selectedEmoji) {
+      onRemoveReaction();
     }
     // console.log("emoji", emoji);
     setSelectedEmoji(emoji);
