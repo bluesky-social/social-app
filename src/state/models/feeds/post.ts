@@ -28,10 +28,10 @@ export class PostsFeedItemModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    reactKey: string,
+    _reactKey: string,
     v: FeedViewPost,
   ) {
-    this._reactKey = reactKey
+    this._reactKey = _reactKey
     this.post = v.post
     if (FeedPost.isRecord(this.post.record)) {
       const valid = FeedPost.validateRecord(this.post.record)

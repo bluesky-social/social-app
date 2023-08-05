@@ -13,7 +13,6 @@ import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
 
 const PAGE_SIZE = 30
-let _idCounter = 0
 
 type QueryParams =
   | GetTimeline.QueryParams
@@ -368,11 +367,7 @@ export class PostsFeedModel {
 
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
-      const sliceModel = new PostsFeedSliceModel(
-        this.rootStore,
-        `item-${_idCounter++}`,
-        slice,
-      )
+      const sliceModel = new PostsFeedSliceModel(this.rootStore, slice)
       toAppend.push(sliceModel)
     }
     runInAction(() => {

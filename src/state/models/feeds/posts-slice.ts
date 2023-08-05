@@ -3,8 +3,6 @@ import {RootStoreModel} from '../root-store'
 import {FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {PostsFeedItemModel} from './post'
 
-let _idCounter = 0
-
 export class PostsFeedSliceModel {
   // ui state
   _reactKey: string = ''
@@ -12,15 +10,15 @@ export class PostsFeedSliceModel {
   // data
   items: PostsFeedItemModel[] = []
 
-  constructor(
-    public rootStore: RootStoreModel,
-    reactKey: string,
-    slice: FeedViewPostsSlice,
-  ) {
-    this._reactKey = reactKey
-    for (const item of slice.items) {
+  constructor(public rootStore: RootStoreModel, slice: FeedViewPostsSlice) {
+    this._reactKey = `slice-${slice.uri}`
+    for (let i = 0; i < slice.items.length; i++) {
       this.items.push(
-        new PostsFeedItemModel(rootStore, `slice-${_idCounter++}`, item),
+        new PostsFeedItemModel(
+          rootStore,
+          `${this._reactKey} - ${i}`,
+          slice.items[i],
+        ),
       )
     }
     makeAutoObservable(this, {rootStore: false})

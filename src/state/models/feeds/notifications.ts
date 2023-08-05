@@ -23,8 +23,6 @@ const PAGE_SIZE = 30
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
 
-let _idCounter = 0
-
 export const MAX_VISIBLE_NOTIFS = 30
 
 export interface GroupedNotification extends ListNotifications.Notification {
@@ -573,7 +571,7 @@ export class NotificationsFeedModel {
     for (const item of items) {
       const itemModel = new NotificationsFeedItemModel(
         this.rootStore,
-        `item-${_idCounter++}`,
+        `notification-${item.uri}`,
         item,
       )
       const uri = itemModel.additionalDataUri
