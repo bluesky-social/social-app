@@ -9,18 +9,20 @@ type ClaimBtnProps = {
   onClick: () => void;
   text?: string;
   loading?: boolean;
+  shouldClaim?: boolean;
 };
 
 export const ClaimBtn = ({
   onClick,
   text = "Claim Reward",
   loading = false,
+  shouldClaim,
 }: ClaimBtnProps) => {
   return (
     <TouchableOpacity
       disabled={loading}
       onPress={onClick}
-      style={styles.claimBtn}
+      style={[styles.claimBtn, !shouldClaim && {backgroundColor: colors.gray2}]}
     >
       <View style={styles.starIcon}>
         <StarsIcon />

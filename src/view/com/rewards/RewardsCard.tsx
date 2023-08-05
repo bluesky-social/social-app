@@ -211,6 +211,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
                   }
                   loading={!shouldClaimDaily}
                   onClick={onDiceRollHandler}
+                  shouldClaim={shouldClaimDaily}
                 />
               </View>
             </View>

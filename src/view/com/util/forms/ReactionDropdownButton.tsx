@@ -15,17 +15,19 @@ import { EmojiItemProp } from "react-native-reactions/lib/components/ReactionVie
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { Image } from "expo-image";
+import { NavigationProp } from "lib/routes/types";
 import RootSiblings from "react-native-root-siblings";
 import { SolarplexReaction } from "state/models/media/reactions";
 import { Text } from "../text/Text";
 import { isWeb } from "platform/detection";
 import { shareUrl } from "lib/sharing";
 import { toShareUrl } from "lib/strings/url-helpers";
+import { useNavigation } from "@react-navigation/native";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { useTheme } from "lib/ThemeContext";
 
-const HITSLOP = { left: 10, top: 10, right: 10, bottom: 10 };
+const HITSLOP = { left: 20, top: 20, right: 20, bottom: 20 };
 const ESTIMATED_BTN_HEIGHT = 50;
 const ESTIMATED_SEP_HEIGHT = 16;
 
@@ -72,8 +74,14 @@ export function ReactionDropdownButton({
 }: PropsWithChildren<DropdownButtonProps>) {
   const ref1 = useRef<TouchableOpacity>(null);
   const ref2 = useRef<View>(null);
+  const store = useStores();
+  const navigation = useNavigation<NavigationProp>();
 
   const onPress = () => {
+    if (store.session.isSolarplexSession) {
+      navigation.navigate("SignIn");
+      return;
+    }
     const ref = ref1.current || ref2.current;
     ref?.measure(
       (

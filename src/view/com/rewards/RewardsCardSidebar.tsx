@@ -94,7 +94,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
           </View>
         </View>
         <View style={styles.claimBtn}>
-          {shouldClaimDaily && <ClaimBtn onClick={onClaimHandler} />}
+          <ClaimBtn onClick={onClaimHandler} shouldClaim={shouldClaimDaily} />
         </View>
       </View>
     </View>
