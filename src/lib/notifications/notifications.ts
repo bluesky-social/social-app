@@ -9,28 +9,33 @@ import {devicePlatform} from 'platform/detection'
 
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => Notifications.setBadgeCountAsync(count))
-  // store.onPushNotification(displayNotificationFromModel)
+  // store.onPushNotification(d isplayNotificationFromModel)
   // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
-  Notifications.getDevicePushTokenAsync().then(token => {
-    console.log('Push token: ', token) // TODO: delete this
-  })
-  Notifications.addPushTokenListener(async ({data: token, type}) => {
-    store.log.debug('Notifications: Push token changed', {token, type})
-    console.log('New push token: ', token, type) // TODO: delete this
-    if (token) {
-      try {
-        await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
-          platform: devicePlatform,
-          token: token.data,
-        })
-      } catch (error) {
-        console.warn('Failed to set push token', error)
-        store.log.error('Notifications: Failed to set push token', error)
-      }
-    }
-  })
+
   store.onSessionLoaded(async () => {
     // request notifications permission once the user has logged in
+    try {
+      const token = await Notifications.getDevicePushTokenAsync()
+      console.log('Push token: ', token) // TODO: delete this
+    } catch (error) {
+      console.warn('Failed to get push token', error)
+    }
+    Notifications.addPushTokenListener(async ({data: token, type}) => {
+      store.log.debug('Notifications: Push token changed', {token, type})
+      console.log('New push token: ', token, type) // TODO: delete this
+      if (token) {
+        try {
+          await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
+            platform: devicePlatform,
+            token: token,
+          })
+          console.log('SENT PUSH TOKEN')
+        } catch (error) {
+          console.warn('Failed to set push token', error)
+          store.log.error('Notifications: Failed to set push token', error)
+        }
+      }
+    })
     const perms = await Notifications.getPermissionsAsync()
     if (!perms.granted) {
       Notifications.requestPermissionsAsync()
