@@ -17,6 +17,7 @@ import { useAnalytics } from "lib/analytics/analytics";
 import { usePalette } from "lib/hooks/usePalette";
 import { useState } from "react";
 import { useStores } from "state/index";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 type RewardClaimedProps = {
   rewardsImg: string;
@@ -25,6 +26,7 @@ type RewardClaimedProps = {
 const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
   const pal = usePalette("default");
   const store = useStores();
+
   const onPressCompose = React.useCallback(() => {
     store.shell.openComposer({
       isSharing: true,
@@ -86,15 +88,18 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
     !!dailyReward || !shouldClaimDaily || isClaimingDaily;
   const dailyPogress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
-
   const shouldShowDiceCompnent = showDiceComponent || isClaimDailyBusy;
+  const { setVisible } = useWalletModal();
 
   const onClaimHandler = async () => {
+    if (!store.me.splxWallet) {
+      setVisible(true);
+    }
     await store.rewards.claimDailyReward(userId);
   };
 
   const onDiceRollHandler = () => {
-    if (store.session.hasSession) {
+    if (!store.session.hasSession) {
       navigation.navigate("SignIn");
     } else {
       setDiceComponent(true);
@@ -123,6 +128,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
                 loading={isClaimingDaily}
                 text="Roll"
                 onClick={onClaimHandler}
+                shouldClaim={shouldClaimDaily}
               />
             </View>
           </View>

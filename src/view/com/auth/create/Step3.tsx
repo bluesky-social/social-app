@@ -39,9 +39,9 @@ export const Step3 = observer(({ model }: { model: CreateAccountModel }) => {
           </Text>
         </Text>
       </View>
-      {model.error ? (
+      {/* {model.error ? (
         <ErrorMessage message={model.error} style={styles.error} />
-      ) : undefined}
+      ) : undefined} */}
       {model.serviceDescription && (
         <Policies
           serviceDescription={model.serviceDescription}
