@@ -175,7 +175,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
                     <Text type="lg-bold" style={styles.textPadding}>
                       {dailyPogress?.count ?? 0}
                       <Text type="xs-heavy" style={{ color: colors.gray4 }}>
-                        /100
+                        /50
                       </Text>
                     </Text>
                   </View>
