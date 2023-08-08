@@ -74,24 +74,6 @@ export class PostsFeedModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get nonReplyFeed() {
-    if (this.feedType === 'author') {
-      return this.slices.filter(slice => {
-        const params = this.params as GetAuthorFeed.QueryParams
-        const item = slice.rootItem
-        const isRepost =
-          item?.reasonRepost?.by?.handle === params.actor ||
-          item?.reasonRepost?.by?.did === params.actor
-        const allow =
-          !item.postRecord?.reply || // not a reply
-          isRepost // but allow if it's a repost
-        return allow
-      })
-    } else {
-      return this.slices
-    }
-  }
-
   setHasNewLatest(v: boolean) {
     this.hasNewLatest = v
   }
@@ -159,7 +141,10 @@ export class PostsFeedModel {
    * Load for first render
    */
   setup = bundleAsync(async (isRefreshing: boolean = false) => {
-    this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
+    this.rootStore.log.debug('FeedModel:setup', {
+      isRefreshing,
+      params: this.params,
+    })
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
