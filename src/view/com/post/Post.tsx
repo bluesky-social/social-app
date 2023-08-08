@@ -267,7 +267,10 @@ const PostLoaded = observer(
               ) : undefined}
               {item.post.embed ? (
                 <ContentHider moderation={item.moderation.embed} style={s.mb10}>
-                  <PostEmbeds embed={item.post.embed} />
+                  <PostEmbeds
+                    embed={item.post.embed}
+                    moderation={item.moderation.embed}
+                  />
                 </ContentHider>
               ) : null}
               {needsTranslation && (
