@@ -57,9 +57,20 @@ export function PostEmbeds({
     )
   }
 
-  // quote post
-  // =
   if (AppBskyEmbedRecord.isView(embed)) {
+    // custom feed embed (i.e. generator view)
+    // =
+    if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
+      return <CustomFeedEmbed record={embed.record} />
+    }
+
+    // list embed (e.g. mute lists; i.e. ListView)
+    if (AppBskyGraphDefs.isListView(embed.record)) {
+      return <ListEmbed item={embed.record} />
+    }
+
+    // quote post
+    // =
     return <MaybeQuoteEmbed embed={embed} style={style} />
   }
 
@@ -117,23 +128,6 @@ export function PostEmbeds({
         </View>
       )
     }
-  }
-
-  // custom feed embed (i.e. generator view)
-  // =
-  if (
-    AppBskyEmbedRecord.isView(embed) &&
-    AppBskyFeedDefs.isGeneratorView(embed.record)
-  ) {
-    return <CustomFeedEmbed record={embed.record} />
-  }
-
-  // list embed (e.g. mute lists; i.e. ListView)
-  if (
-    AppBskyEmbedRecord.isView(embed) &&
-    AppBskyGraphDefs.isListView(embed.record)
-  ) {
-    return <ListEmbed item={embed.record} />
   }
 
   // external link embed
