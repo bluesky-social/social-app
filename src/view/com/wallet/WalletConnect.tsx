@@ -1,10 +1,13 @@
-import { StyleSheet, View } from "react-native";
+import * as Toast from "../util/Toast";
+
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { Button } from "../util/forms/Button";
 import { Loading } from "../auth/withAuthRequired";
 import { MeModel } from "state/models/me";
 import { Text } from "../util/text/Text";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { colors } from "lib/styles";
 import { observer } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
@@ -15,19 +18,36 @@ export const WalletConnect = observer(({ model }: { model: MeModel }) => {
   const wallet = useWallet();
   const pal = usePalette("default");
 
+  const handleLinkWallet = () => {
+    if (wallet.publicKey) {
+      store.me.connectWallet(wallet.publicKey?.toString());
+      Toast.show("Wallet Connected");
+    }
+  };
+
   return (
     <>
       {!(store.session.isResumingSession || !store.session.hasAnySession) ? (
         <View>
           {!store.me.splxWallet ? (
             wallet.connected ? (
-              <Button
-                label="Link Wallet to Solarplex"
-                onPress={() =>
-                  wallet.publicKey &&
-                  store.me.connectWallet(wallet.publicKey?.toString())
-                }
-              />
+              <>
+                {/* <Button
+                  label="Link Wallet to Solarplex"
+                  onPress={() =>
+                    wallet.publicKey &&
+                    store.me.connectWallet(wallet.publicKey?.toString())
+                  }
+                /> */}
+                <TouchableOpacity
+                  onPress={handleLinkWallet}
+                  style={styles.connectBtn}
+                >
+                  <Text type="lg-medium" style={pal.text}>
+                    Link Wallet to Solarplex
+                  </Text>
+                </TouchableOpacity>
+              </>
             ) : (
               <WalletMultiButton />
             )
@@ -66,5 +86,18 @@ const styles = StyleSheet.create({
   },
   spacer20: {
     height: 20,
+  },
+  connectBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    borderRadius: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    backgroundColor: colors.splx.primary[50],
+
+    marginTop: 4,
+    marginBottom: 4,
   },
 });

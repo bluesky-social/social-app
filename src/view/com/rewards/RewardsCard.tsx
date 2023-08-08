@@ -48,10 +48,11 @@ const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
         accessible={true}
         accessibilityLabel={"reward image"}
         accessibilityHint=""
-        style={styles.DiceRollImage}
+        resizeMode="contain"
+        style={styles.rewardImage}
       />
       <View style={styles.RollBtn}>
-        <ClaimBtn text="Share" onClick={onPressCompose} />
+        <ClaimBtn shouldClaim={true} text="Share" onClick={onPressCompose} />
       </View>
     </View>
   );
@@ -114,7 +115,9 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
       <View>
         {dailyReward ? (
           <RewardClaimed
-            rewardsImg={dailyReward?.image ?? "https://picsum.photos/300/300"}
+            rewardsImg={
+              dailyReward?.image ?? "https://i.ibb.co/RB3bMLt/blob.png"
+            }
           />
         ) : (
           <View style={styles.DiceRowCol}>
@@ -142,7 +145,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
 
   return (
     <View style={[styles.outer, s.h100pct]}>
-      {!showDiceComponent ? (
+      {showDiceComponent ? (
         <DiceRoll />
       ) : (
         <View style={styles.dailyContainer}>
@@ -330,5 +333,9 @@ const styles = StyleSheet.create({
     width: 200,
     height: 150,
     borderRadius: 12,
+  },
+  rewardImage: {
+    width: 250,
+    height: 250,
   },
 });
