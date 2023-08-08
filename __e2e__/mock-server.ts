@@ -144,7 +144,7 @@ async function main() {
           await server.mocker.labelProfile('porn', 'porn-profile')
           await server.mocker.labelPost(
             'porn',
-            await server.mocker.createPost('porn-posts', 'porn post'),
+            await server.mocker.createImagePost('porn-posts', 'porn post'),
           )
           await server.mocker.labelPost(
             'porn',
@@ -167,7 +167,7 @@ async function main() {
           await server.mocker.labelProfile('nudity', 'nudity-profile')
           await server.mocker.labelPost(
             'nudity',
-            await server.mocker.createPost('nudity-posts', 'nudity post'),
+            await server.mocker.createImagePost('nudity-posts', 'nudity post'),
           )
           await server.mocker.labelPost(
             'nudity',
