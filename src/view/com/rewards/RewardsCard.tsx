@@ -30,6 +30,7 @@ const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
   const onPressCompose = React.useCallback(() => {
     store.shell.openComposer({
       isSharing: true,
+      uri: rewardsImg,
     });
   }, [store]);
 
@@ -91,6 +92,8 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
   const shouldShowDiceCompnent = showDiceComponent || isClaimDailyBusy;
   const { setVisible } = useWalletModal();
 
+  console.log("dailyReward", dailyReward);
+
   const onClaimHandler = async () => {
     if (!store.me.splxWallet) {
       setVisible(true);
@@ -139,7 +142,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
 
   return (
     <View style={[styles.outer, s.h100pct]}>
-      {showDiceComponent ? (
+      {!showDiceComponent ? (
         <DiceRoll />
       ) : (
         <View style={styles.dailyContainer}>

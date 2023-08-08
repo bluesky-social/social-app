@@ -36,6 +36,8 @@ export const BottomBarWeb = observer(() => {
   const safeAreaInsets = useSafeAreaInsets();
   const { footerMinimalShellTransform } = useMinimalShellMode();
 
+  // console.log("footerMinimalShellTransform", footerMinimalShellTransform);
+
   return (
     <Animated.View
       style={[

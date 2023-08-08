@@ -60,12 +60,12 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   onClose,
   quote: initQuote,
-  uri,
 }: Props) {
   const { track } = useAnalytics();
   const pal = usePalette("default");
   const store = useStores();
   const isThisSharing = store.shell.isSharing;
+  const uri = store.shell.sharedUri;
   const textInput = useRef<TextInputRef>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingState, setProcessingState] = useState("");
@@ -75,8 +75,6 @@ export const ComposePost = observer(function ComposePost({
       ? new RichText({ text: "Freshly Minted" })
       : new RichText({ text: "" }),
   );
-
-
   const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext]);
   const [quote, setQuote] = useState<ComposerOpts["quote"] | undefined>(
     initQuote,
@@ -137,8 +135,8 @@ export const ComposePost = observer(function ComposePost({
   // initial setup
   useEffect(() => {
     autocompleteView.setup();
-    if (isThisSharing === true) {
-      setRichText(new RichText({ text: "You are sharing a post" }));
+    if (isThisSharing === true && uri) {
+      gallery.paste(uri);
     }
   }, [autocompleteView]);
 

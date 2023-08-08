@@ -210,6 +210,7 @@ export interface ComposerOpts {
   onPost?: () => void;
   quote?: ComposerOptsQuote;
   isSharing?: boolean;
+  uri?: string;
 }
 
 export class ShellUiModel {
@@ -224,6 +225,7 @@ export class ShellUiModel {
   isComposerActive = false;
   composerOpts: ComposerOpts | undefined;
   isSharing = false;
+  sharedUri = "";
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -317,12 +319,14 @@ export class ShellUiModel {
     this.rootStore.emitNavigation();
     this.isComposerActive = true;
     this.composerOpts = opts;
-    this.isSharing = opts.isSharing;
+    this.isSharing = opts.isSharing ?? false;
+    this.sharedUri = opts.uri ?? "";
   }
 
   closeComposer() {
     this.isComposerActive = false;
     this.composerOpts = undefined;
     this.isSharing = false;
+    this.sharedUri = "";
   }
 }

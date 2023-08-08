@@ -14,7 +14,6 @@ export const Composer = observer(
     quote,
     onPost,
     onClose,
-    isSharing,
   }: {
     active: boolean;
     winHeight: number;
@@ -22,7 +21,6 @@ export const Composer = observer(
     quote: ComposerOpts["quote"];
     onPost?: ComposerOpts["onPost"];
     onClose: () => void;
-    isSharing: ComposerOpts["isSharing"];
   }) => {
     const pal = usePalette("default");
 
@@ -41,7 +39,6 @@ export const Composer = observer(
             quote={quote}
             onPost={onPost}
             onClose={onClose}
-            isSharing={isSharing}
           />
         </View>
       </View>
