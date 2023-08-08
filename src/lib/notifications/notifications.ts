@@ -14,15 +14,30 @@ export function init(store: RootStoreModel) {
 
   store.onSessionLoaded(async () => {
     // request notifications permission once the user has logged in
-    try {
-      const token = await Notifications.getDevicePushTokenAsync()
-      console.log('Push token: ', token) // TODO: delete this
-    } catch (error) {
-      console.warn('Failed to get push token', error)
+    const perms = await Notifications.getPermissionsAsync()
+    if (!perms.granted) {
+      await Notifications.requestPermissionsAsync()
     }
+
+    // register the push token with the server
+    const token = await getPushToken()
+    if (token) {
+      try {
+        await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
+          platform: devicePlatform,
+          token: token.data,
+        })
+        store.log.debug(
+          'Notifications: Sent push token' + token.data + token.type,
+        )
+      } catch (error) {
+        store.log.error('Notifications: Failed to set push token', error)
+      }
+    }
+
+    // listens for new changes to the push token
     Notifications.addPushTokenListener(async ({data: token, type}) => {
       store.log.debug('Notifications: Push token changed', {token, type})
-      console.log('New push token: ', token, type) // TODO: delete this
       if (token) {
         try {
           await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
@@ -31,20 +46,15 @@ export function init(store: RootStoreModel) {
           })
           console.log('SENT PUSH TOKEN')
         } catch (error) {
-          console.warn('Failed to set push token', error)
           store.log.error('Notifications: Failed to set push token', error)
         }
       }
     })
-    const perms = await Notifications.getPermissionsAsync()
-    if (!perms.granted) {
-      Notifications.requestPermissionsAsync()
-    }
   })
   // handle notifications that are tapped on, regardless of whether the app is in the foreground or background
   Notifications.addNotificationReceivedListener(event => {
-    console.log('Notification received', event) // TODO: delete this
-    store.log.debug('Notification received', event)
+    console.log('Notifications: Recevied one notification', event) // TODO: delete this
+    store.log.debug('Notifications: received', event)
   })
   const sub = Notifications.addNotificationResponseReceivedListener(event => {
     store.log.debug('Notification received', event)
@@ -59,6 +69,10 @@ export function init(store: RootStoreModel) {
   return () => {
     sub.remove()
   }
+}
+
+export function getPushToken() {
+  return Notifications.getDevicePushTokenAsync()
 }
 
 // export function displayNotification(
