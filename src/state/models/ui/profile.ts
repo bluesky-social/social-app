@@ -6,8 +6,8 @@ import {ActorFeedsModel} from '../lists/actor-feeds'
 import {ListsListModel} from '../lists/lists-list'
 
 export enum Sections {
-  PostsOnly = 'Posts',
-  PostsAndReplies = 'Posts & replies',
+  PostsNoReplies = 'Posts',
+  PostsWithReplies = 'Posts & replies',
   PostsWithMedia = 'Media',
   CustomAlgorithms = 'Feeds',
   Lists = 'Lists',
@@ -47,7 +47,7 @@ export class ProfileUiModel {
     this.feed = new PostsFeedModel(rootStore, 'author', {
       actor: params.user,
       limit: 10,
-      filter: 'posts_only',
+      filter: 'posts_no_replies',
     })
     this.algos = new ActorFeedsModel(rootStore, {actor: params.user})
     this.lists = new ListsListModel(rootStore, params.user)
@@ -55,8 +55,8 @@ export class ProfileUiModel {
 
   get currentView(): PostsFeedModel | ActorFeedsModel | ListsListModel {
     if (
-      this.selectedView === Sections.PostsOnly ||
-      this.selectedView === Sections.PostsAndReplies ||
+      this.selectedView === Sections.PostsNoReplies ||
+      this.selectedView === Sections.PostsWithReplies ||
       this.selectedView === Sections.PostsWithMedia
     ) {
       return this.feed
@@ -80,8 +80,8 @@ export class ProfileUiModel {
 
   get selectorItems() {
     const items = [
-      Sections.PostsOnly,
-      Sections.PostsAndReplies,
+      Sections.PostsNoReplies,
+      Sections.PostsWithReplies,
       Sections.PostsWithMedia,
     ]
     if (this.algos.hasLoaded && !this.algos.isEmpty) {
@@ -97,7 +97,7 @@ export class ProfileUiModel {
     // If, for whatever reason, the selected view index is not available, default back to posts
     // This can happen when the user was focused on a view but performed an action that caused
     // the view to disappear (e.g. deleting the last list in their list of lists https://imgflip.com/i/7txu1y)
-    return this.selectorItems[this.selectedViewIndex] || Sections.PostsOnly
+    return this.selectorItems[this.selectedViewIndex] || Sections.PostsNoReplies
   }
 
   get uiItems() {
@@ -116,8 +116,8 @@ export class ProfileUiModel {
     } else {
       // not loading, no error, show content
       if (
-        this.selectedView === Sections.PostsOnly ||
-        this.selectedView === Sections.PostsAndReplies ||
+        this.selectedView === Sections.PostsNoReplies ||
+        this.selectedView === Sections.PostsWithReplies ||
         this.selectedView === Sections.PostsWithMedia ||
         this.selectedView === Sections.CustomAlgorithms
       ) {
@@ -125,8 +125,8 @@ export class ProfileUiModel {
           if (this.selectedView === Sections.CustomAlgorithms) {
             arr = this.algos.feeds
           } else if (
-            this.selectedView === Sections.PostsOnly ||
-            this.selectedView === Sections.PostsAndReplies ||
+            this.selectedView === Sections.PostsNoReplies ||
+            this.selectedView === Sections.PostsWithReplies ||
             this.selectedView === Sections.PostsWithMedia
           ) {
             arr = this.feed.slices.slice()
@@ -156,8 +156,8 @@ export class ProfileUiModel {
 
   get showLoadingMoreFooter() {
     if (
-      this.selectedView === Sections.PostsOnly ||
-      this.selectedView === Sections.PostsAndReplies ||
+      this.selectedView === Sections.PostsNoReplies ||
+      this.selectedView === Sections.PostsWithReplies ||
       this.selectedView === Sections.PostsWithMedia
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
@@ -173,13 +173,13 @@ export class ProfileUiModel {
   setSelectedViewIndex(index: number) {
     this.selectedViewIndex = index
 
-    if (this.selectedView === Sections.PostsOnly) {
+    if (this.selectedView === Sections.PostsNoReplies) {
       this.feed.setParams({
-        filter: 'posts_only',
+        filter: 'posts_no_replies',
       })
-    } else if (this.selectedView === Sections.PostsAndReplies) {
+    } else if (this.selectedView === Sections.PostsWithReplies) {
       this.feed.setParams({
-        filter: 'posts_and_replies',
+        filter: 'posts_with_replies',
       })
     } else if (this.selectedView === Sections.PostsWithMedia) {
       this.feed.setParams({
