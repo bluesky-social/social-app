@@ -107,7 +107,7 @@ export class PostThreadItemModel {
           const itemModel = new PostThreadItemModel(this.rootStore, item)
           itemModel._depth = this._depth + 1
           itemModel._showParentReplyLine =
-            itemModel.parentUri !== highlightedPostUri && replies.length === 0
+            itemModel.parentUri !== highlightedPostUri
           if (item.replies?.length) {
             itemModel._showChildReplyLine = true
             itemModel.assignTreeModels(item, highlightedPostUri, false, true)
