@@ -1,4 +1,8 @@
-import { GENESIS_COLLECTION, HELIUS_RPC_API } from "lib/constants";
+import {
+  DEVNET_HELIUS_RPC_API,
+  GENESIS_COLLECTION,
+  HELIUS_RPC_API,
+} from "lib/constants";
 
 import { Helius } from "helius-sdk";
 import { RootStoreModel } from "../root-store";
@@ -19,8 +23,9 @@ export class NftModel {
 
   async fetchNfts(wallet: string) {
     try {
+      console.log("IN Fetch", wallet);
       const res = await fetch(
-        `${HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
+        `${DEVNET_HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -40,6 +45,7 @@ export class NftModel {
         },
       );
       const nftsResponse = await res.json();
+      console.log("nftsResponse", nftsResponse);
       this.assets = nftsResponse.result.items;
 
       // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
@@ -51,12 +57,16 @@ export class NftModel {
         {},
       );
 
+      console.log("reactionsMap", reactionsMap["Raare"]);
+
       const reactions = this.assets.reduce((acc, item: any) => {
-        // acc.push(item.reactions);
         const attribute = item.content.metadata.attributes[0].value;
+
         reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
+
         return acc;
       }, []);
+
       if (reactions.length > 0) {
         this.rootStore.reactions.update(reactions);
       }
