@@ -145,10 +145,7 @@ export class PostsFeedModel {
    * Load for first render
    */
   setup = bundleAsync(async (isRefreshing: boolean = false) => {
-    this.rootStore.log.debug('FeedModel:setup', {
-      isRefreshing,
-      params: this.params,
-    })
+    this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }

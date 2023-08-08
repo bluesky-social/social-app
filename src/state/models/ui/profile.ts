@@ -118,18 +118,20 @@ export class ProfileUiModel {
       if (
         this.selectedView === Sections.PostsOnly ||
         this.selectedView === Sections.PostsAndReplies ||
-        this.selectedView === Sections.CustomAlgorithms ||
-        this.selectedView === Sections.PostsWithMedia
+        this.selectedView === Sections.PostsWithMedia ||
+        this.selectedView === Sections.CustomAlgorithms
       ) {
         if (this.feed.hasContent) {
           if (this.selectedView === Sections.CustomAlgorithms) {
             arr = this.algos.feeds
-          } else if (this.selectedView === Sections.PostsOnly) {
-            arr = this.feed.slices.slice()
-          } else if (this.selectedView === Sections.PostsWithMedia) {
+          } else if (
+            this.selectedView === Sections.PostsOnly ||
+            this.selectedView === Sections.PostsAndReplies ||
+            this.selectedView === Sections.PostsWithMedia
+          ) {
             arr = this.feed.slices.slice()
           } else {
-            // posts with replies is default
+            // posts with replies is also default
             arr = this.feed.slices.slice()
           }
           if (!this.feed.hasMore) {
