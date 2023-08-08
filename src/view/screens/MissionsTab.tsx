@@ -5,6 +5,7 @@ import { isDesktopWeb, isMobileWeb } from "platform/detection";
 import { CenteredView } from "view/com/util/Views.web";
 import { ClaimBtn } from "view/com/rewards/ClaimBtn";
 import { CommonNavigatorParams } from "lib/routes/types";
+import { GENESIS_REACTIONS } from "lib/constants";
 import { Link } from "view/com/util/Link";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RadioButton } from "view/com/util/forms/RadioButton";
@@ -139,11 +140,15 @@ export const GrayedImage = ({ image }: { image: any }) => {
   return (
     <View>
       <Image
-        source={image}
+        source={{
+          uri: image,
+        }}
         style={{ tintColor: "gray", width: 100, height: 100 }}
       />
       <Image
-        source={image}
+        source={{
+          uri: image,
+        }}
         style={{
           position: "absolute",
           opacity: 0,
@@ -192,31 +197,54 @@ const DisplayReactions = observer(() => {
           </View>
         </View>
         <View style={styles.reactionList}>
-        <RadioButton
+          <RadioButton
             label={""}
             isSelected={store.reactions.curReactionsSet === "genesis"}
             onPress={() => {}}
           />
           <FlatList
-            data={solarplexreactionsList}
+            data={GENESIS_REACTIONS}
             numColumns={isMobileWeb ? 3 : 4}
             key={4}
             renderItem={({ item }) => {
-              if (item.isClaimed) {
+              if (
+                store.reactions.earnedReactions["genesis"]?.find(
+                  (reaction) => reaction.emoji === item.emoji,
+                )
+              ) {
                 return (
                   <View style={styles.solarplexReactionContainer}>
                     <Image
-                      source={item.src}
+                      source={{
+                        uri: item.emoji,
+                      }}
                       style={styles.solarplexReactionImage}
                     />
                   </View>
                 );
               } else {
-                return <GrayedImage image={item.src} />;
+                return (
+                  <View style={styles.solarplexReactionContainer}>
+                    <GrayedImage image={item.emoji} />
+                  </View>
+                );
               }
+
+              // return (
+              //   <View style={styles.solarplexReactionContainer}>
+              //     <Image
+              //       source={{
+              //         uri: item.emoji,
+              //       }}
+              //       style={styles.solarplexReactionImage}
+              //     />
+              //   </View>
+              // );
+
+              // return <GrayedImage image={item.emoji} />;
+              // }
             }}
           />
-
         </View>
       </TouchableOpacity>
     </View>
@@ -343,8 +371,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   solarplexReactionImage: {
-    width: 75,
-    height: 75,
+    width: 100,
+    height: 100,
   },
   reactionList: {
     width: "full",

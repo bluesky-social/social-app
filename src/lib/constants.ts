@@ -131,7 +131,7 @@ export const HELIUS_RPC_API = "https://rpc.helius.xyz/";
 export const DEVNET_HELIUS_RPC_API = "https://devnet.helius-rpc.com";
 
 export const GENESIS_COLLECTION =
-  "HZ3LkMKWDWDREPqjtBHkQGz3nzckdRBjSh9bTiud5pVU";
+  "7soPY36PaM8Ck1EycPq5WJ3CVHjZK47aneFniK5GNFyQ";
 
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_LOCAL_DEV(serviceUrl)) {

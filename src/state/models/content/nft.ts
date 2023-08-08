@@ -25,7 +25,7 @@ export class NftModel {
     try {
       console.log("IN Fetch", wallet);
       const res = await fetch(
-        `${DEVNET_HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
+        `${HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -57,8 +57,6 @@ export class NftModel {
         {},
       );
 
-      console.log("reactionsMap", reactionsMap["Raare"]);
-
       const reactions = this.assets.reduce((acc, item: any) => {
         const attribute = item.content.metadata.attributes[0].value;
 
@@ -67,6 +65,7 @@ export class NftModel {
         return acc;
       }, []);
 
+      console.log("reactions", reactions);
       if (reactions.length > 0) {
         this.rootStore.reactions.update(reactions);
       }
