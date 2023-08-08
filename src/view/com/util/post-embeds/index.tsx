@@ -14,6 +14,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
+  ModerationUI,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -28,6 +29,7 @@ import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
 import {isDesktopWeb} from 'platform/detection'
+import {isCauseALabelOnUri} from 'lib/moderation'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -38,9 +40,11 @@ type Embed =
 
 export function PostEmbeds({
   embed,
+  moderation,
   style,
 }: {
   embed?: Embed
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -49,10 +53,15 @@ export function PostEmbeds({
   // quote post with media
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+    const isModOnQuote =
+      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+      isCauseALabelOnUri(moderation.cause, embed.record.record.uri)
+    const mediaModeration = isModOnQuote ? {} : moderation
+    const quoteModeration = isModOnQuote ? moderation : {}
     return (
       <View style={[styles.stackContainer, style]}>
-        <PostEmbeds embed={embed.media} />
-        <MaybeQuoteEmbed embed={embed.record} />
+        <PostEmbeds embed={embed.media} moderation={mediaModeration} />
+        <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
       </View>
     )
   }
@@ -71,7 +80,9 @@ export function PostEmbeds({
 
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} />
+    return (
+      <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
+    )
   }
 
   // image embed

@@ -75,3 +75,13 @@ export function getProfileModerationCauses(
     return true
   }) as ModerationCause[]
 }
+
+export function isCauseALabelOnUri(
+  cause: ModerationCause | undefined,
+  uri: string,
+): boolean {
+  if (cause?.type !== 'label') {
+    return false
+  }
+  return cause.label.uri === uri
+}

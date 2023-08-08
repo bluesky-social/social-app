@@ -293,7 +293,10 @@ export const FeedItem = observer(function ({
               <ContentHider
                 moderation={item.moderation.embed}
                 style={styles.embed}>
-                <PostEmbeds embed={item.post.embed} />
+                <PostEmbeds
+                  embed={item.post.embed}
+                  moderation={item.moderation.embed}
+                />
               </ContentHider>
             ) : null}
             {needsTranslation && (

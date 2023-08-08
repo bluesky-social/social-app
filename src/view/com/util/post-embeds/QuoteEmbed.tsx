@@ -5,6 +5,7 @@ import {
   AppBskyFeedPost,
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
+  ModerationUI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {PostMeta} from '../PostMeta'
@@ -13,14 +14,17 @@ import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ComposerOptsQuote} from 'state/models/ui/shell'
 import {PostEmbeds} from '.'
+import {PostAlerts} from '../moderation/PostAlerts'
 import {makeProfileLink} from 'lib/routes/links'
 import {InfoCircleIcon} from 'lib/icons'
 
 export function MaybeQuoteEmbed({
   embed,
+  moderation,
   style,
 }: {
   embed: AppBskyEmbedRecord.View
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -39,6 +43,7 @@ export function MaybeQuoteEmbed({
           text: embed.record.value.text,
           embeds: embed.record.embeds,
         }}
+        moderation={moderation}
         style={style}
       />
     )
@@ -66,9 +71,11 @@ export function MaybeQuoteEmbed({
 
 export function QuoteEmbed({
   quote,
+  moderation,
   style,
 }: {
   quote: ComposerOptsQuote
+  moderation?: ModerationUI
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -100,16 +107,19 @@ export function QuoteEmbed({
         postHref={itemHref}
         timestamp={quote.indexedAt}
       />
+      {moderation ? (
+        <PostAlerts moderation={moderation} style={styles.alert} />
+      ) : null}
       {!isEmpty ? (
         <Text type="post-text" style={pal.text} numberOfLines={6}>
           {quote.text}
         </Text>
       ) : null}
       {AppBskyEmbedImages.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed} />
+        <PostEmbeds embed={imagesEmbed} moderation={{}} />
       )}
       {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed.media} />
+        <PostEmbeds embed={imagesEmbed.media} moderation={{}} />
       )}
     </Link>
   )
@@ -139,5 +149,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 14,
     borderWidth: 1,
+  },
+  alert: {
+    marginBottom: 6,
   },
 })

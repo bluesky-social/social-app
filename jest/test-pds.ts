@@ -29,13 +29,13 @@ export async function createServer(
     plc: {port: port2},
   })
 
-  const profilePic = fs.readFileSync(
+  const pic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.jpg'),
   )
 
   return {
     pdsUrl,
-    mocker: new Mocker(pds, pdsUrl, profilePic),
+    mocker: new Mocker(pds, pdsUrl, pic),
     async close() {
       await pds.server.destroy()
       await plc.server.destroy()
@@ -50,7 +50,7 @@ class Mocker {
   constructor(
     public pds: DevEnvTestPDS,
     public service: string,
-    public profilePic: Uint8Array,
+    public pic: Uint8Array,
   ) {
     this.agent = new BskyAgent({service})
   }
@@ -90,7 +90,7 @@ class Mocker {
       password: 'hunter2',
     })
     await agent.upsertProfile(async () => {
-      const blob = await agent.uploadBlob(this.profilePic, {
+      const blob = await agent.uploadBlob(this.pic, {
         encoding: 'image/jpeg',
       })
       return {
@@ -147,6 +147,25 @@ class Mocker {
     return await agent.post({
       text,
       langs: ['en'],
+      createdAt: new Date().toISOString(),
+    })
+  }
+
+  async createImagePost(user: string, text: string) {
+    const agent = this.users[user]?.agent
+    if (!agent) {
+      throw new Error(`Not a user: ${user}`)
+    }
+    const blob = await agent.uploadBlob(this.pic, {
+      encoding: 'image/jpeg',
+    })
+    return await agent.post({
+      text,
+      langs: ['en'],
+      embed: {
+        $type: 'app.bsky.embed.images',
+        images: [{image: blob.data.blob, alt: ''}],
+      },
       createdAt: new Date().toISOString(),
     })
   }
