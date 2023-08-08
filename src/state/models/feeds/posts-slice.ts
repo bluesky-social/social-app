@@ -11,7 +11,7 @@ export class PostsFeedSliceModel {
   items: PostsFeedItemModel[] = []
 
   constructor(public rootStore: RootStoreModel, slice: FeedViewPostsSlice) {
-    this._reactKey = `slice-${slice.uri}`
+    this._reactKey = slice._reactKey
     for (let i = 0; i < slice.items.length; i++) {
       this.items.push(
         new PostsFeedItemModel(
