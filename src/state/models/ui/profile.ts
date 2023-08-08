@@ -54,26 +54,11 @@ export class ProfileUiModel {
   }
 
   get currentView(): PostsFeedModel | ActorFeedsModel | ListsListModel {
-    if (this.selectedView === Sections.PostsOnly) {
-      this.feed = new PostsFeedModel(this.rootStore, 'author', {
-        actor: this.params.user,
-        limit: 10,
-        filter: 'posts_only',
-      })
-      return this.feed
-    } else if (this.selectedView === Sections.PostsAndReplies) {
-      this.feed = new PostsFeedModel(this.rootStore, 'author', {
-        actor: this.params.user,
-        limit: 10,
-        filter: 'posts_and_replies',
-      })
-      return this.feed
-    } else if (this.selectedView === Sections.PostsWithMedia) {
-      this.feed = new PostsFeedModel(this.rootStore, 'author', {
-        actor: this.params.user,
-        limit: 10,
-        filter: 'posts_with_media',
-      })
+    if (
+      this.selectedView === Sections.PostsOnly ||
+      this.selectedView === Sections.PostsAndReplies ||
+      this.selectedView === Sections.PostsWithMedia
+    ) {
       return this.feed
     } else if (this.selectedView === Sections.Lists) {
       return this.lists
@@ -186,8 +171,22 @@ export class ProfileUiModel {
   setSelectedViewIndex(index: number) {
     this.selectedViewIndex = index
 
+    if (this.selectedView === Sections.PostsOnly) {
+      this.feed.setParams({
+        filter: 'posts_only',
+      })
+    } else if (this.selectedView === Sections.PostsAndReplies) {
+      this.feed.setParams({
+        filter: 'posts_and_replies',
+      })
+    } else if (this.selectedView === Sections.PostsWithMedia) {
+      this.feed.setParams({
+        filter: 'posts_with_media',
+      })
+    }
+
     if (this.currentView instanceof PostsFeedModel) {
-      this.currentView.setup()
+      this.feed.refresh()
     }
   }
 
