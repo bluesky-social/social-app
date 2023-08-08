@@ -43,7 +43,14 @@ export const WalletConnect = observer(({ model }: { model: MeModel }) => {
                   onPress={handleLinkWallet}
                   style={styles.connectBtn}
                 >
-                  <Text type="lg-medium" style={pal.text}>
+                  <Text
+                    type="lg-medium"
+                    style={{
+                      color: colors.white,
+                      fontSize: 12,
+                      fontWeight: "bold",
+                    }}
+                  >
                     Link Wallet to Solarplex
                   </Text>
                 </TouchableOpacity>
