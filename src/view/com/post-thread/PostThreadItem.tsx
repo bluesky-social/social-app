@@ -34,8 +34,6 @@ import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 
-const PARENT_REPLY_LINE_LENGTH = 8
-
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
@@ -528,20 +526,6 @@ const styles = StyleSheet.create({
   },
   noTopBorder: {
     borderTopWidth: 0,
-  },
-  parentReplyLine: {
-    position: 'absolute',
-    left: 44,
-    top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
-    height: PARENT_REPLY_LINE_LENGTH,
-    borderLeftWidth: 2,
-  },
-  childReplyLine: {
-    position: 'absolute',
-    left: 44,
-    top: 65,
-    bottom: 0,
-    borderLeftWidth: 2,
   },
   layout: {
     flexDirection: 'row',
