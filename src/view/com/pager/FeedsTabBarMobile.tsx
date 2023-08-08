@@ -53,7 +53,7 @@ export const FeedsTabBar = observer(
     }, [store]);
 
     const items = useMemo(
-      () => ["Home", ...store.me.savedFeeds.pinnedFeedNames],
+      () => ["Following", ...store.me.savedFeeds.pinnedFeedNames],
       [store.me.savedFeeds.pinnedFeedNames],
     );
     // Get the user's joined communities from joinedCommunities.communities
