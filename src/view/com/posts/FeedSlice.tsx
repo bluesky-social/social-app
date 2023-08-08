@@ -44,6 +44,7 @@ export const FeedSlice = observer(
             item={slice.items[last]}
             isThreadParent={slice.isThreadParentAt(last)}
             isThreadChild={slice.isThreadChildAt(last)}
+            isThreadLastChild
           />
         </>
       )
@@ -75,23 +76,28 @@ function ViewFullThread({slice}: {slice: PostsFeedSliceModel}) {
   }, [slice.rootItem.post.uri, slice.rootItem.post.author])
 
   return (
-    <Link style={[pal.view, styles.viewFullThread]} href={itemHref} noFeedback>
+    <Link
+      style={[pal.view, styles.viewFullThread]}
+      href={itemHref}
+      asAnchor
+      noFeedback>
       <View style={styles.viewFullThreadDots}>
-        <Svg width="4" height="30">
+        <Svg width="4" height="40">
           <Line
             x1="2"
             y1="0"
             x2="2"
-            y2="8"
+            y2="15"
             stroke={pal.colors.replyLine}
             strokeWidth="2"
           />
-          <Circle cx="2" cy="16" r="1.5" fill={pal.colors.replyLineDot} />
           <Circle cx="2" cy="22" r="1.5" fill={pal.colors.replyLineDot} />
           <Circle cx="2" cy="28" r="1.5" fill={pal.colors.replyLineDot} />
+          <Circle cx="2" cy="34" r="1.5" fill={pal.colors.replyLineDot} />
         </Svg>
       </View>
-      <Text type="md" style={pal.link}>
+
+      <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
         View full thread
       </Text>
     </Link>
@@ -100,13 +106,12 @@ function ViewFullThread({slice}: {slice: PostsFeedSliceModel}) {
 
 const styles = StyleSheet.create({
   viewFullThread: {
-    paddingTop: 14,
-    paddingBottom: 6,
-    paddingLeft: 80,
+    flexDirection: 'row',
+    gap: 10,
+    paddingLeft: 18,
   },
   viewFullThreadDots: {
-    position: 'absolute',
-    left: 41,
-    top: 0,
+    width: 52,
+    alignItems: 'center',
   },
 })
