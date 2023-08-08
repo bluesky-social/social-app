@@ -28,7 +28,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
-      () => debounce(query => feeds.search(query), 1e3), // debouce for 1s
+      () => debounce(query => feeds.search(query), 500), // debounce for 500ms
       [feeds],
     )
     const onChangeQuery = React.useCallback(
