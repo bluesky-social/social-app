@@ -116,10 +116,10 @@ export function QuoteEmbed({
         </Text>
       ) : null}
       {AppBskyEmbedImages.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed} />
+        <PostEmbeds embed={imagesEmbed} moderation={{}} />
       )}
       {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed.media} />
+        <PostEmbeds embed={imagesEmbed.media} moderation={{}} />
       )}
     </Link>
   )
