@@ -12,8 +12,6 @@ import {devicePlatform, isIOS} from 'platform/detection'
 
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => Notifications.setBadgeCountAsync(count))
-  // store.onPushNotification(d isplayNotificationFromModel)
-  // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
 
   store.onSessionLoaded(async () => {
     // request notifications permission once the user has logged in
@@ -43,6 +41,7 @@ export function init(store: RootStoreModel) {
     }
 
     // listens for new changes to the push token
+    // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
     Notifications.addPushTokenListener(async ({data: t, type}) => {
       store.log.debug('Notifications: Push token changed', {t, type})
       if (token) {
