@@ -24,7 +24,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      {/* {store.session.hasSession && <DesktopSearch />} */}
+      {store.session.hasSession && <DesktopSearch />}
       <View style={styles.message}>
         {/* {store.session.isSandbox ? (
           <View style={[palError.view, styles.messageLine, s.p10]}>

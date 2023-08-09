@@ -302,7 +302,7 @@ export const GENESIS_REACTIONS = [
   {
     id: 1,
     emoji: "https://i.ibb.co/Bqw4mk2/blob.png",
-    title: "Raare",
+    title: "Raaare",
     reaction_id: "04076842-8299-45cc-9e95-0d6c601463e6",
     // reaction_id: "9c1a6723-21eb-4718-8e5a-1b5268120633",
   },

@@ -184,7 +184,10 @@ const DisplayReactions = observer(() => {
       <TouchableOpacity onPress={() => onPressReactionPack("genesis")}>
         <View style={styles.HeaderRow}>
           <View style={styles.horizontalView}>
-            <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
+            <UserAvatar
+              size={40}
+              avatar={"https://i.ibb.co/NLkvySY/blob.png"}
+            />
 
             <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
               @plexi.live.solarplex.xyz
