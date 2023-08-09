@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -42,6 +42,7 @@ export const Component = observer(
       string[]
     >([])
     const [selected, setSelected] = React.useState<string[]>([])
+    const [membershipsLoaded, setMembershipsLoaded] = React.useState(false)
 
     const listsList: ListsListModel = React.useMemo(
       () => new ListsListModel(store, store.me.did),
@@ -58,12 +59,13 @@ export const Component = observer(
           const ids = memberships.memberships.map(m => m.value.list)
           setOriginalSelections(ids)
           setSelected(ids)
+          setMembershipsLoaded(true)
         },
         err => {
           store.log.error('Failed to fetch memberships', {err})
         },
       )
-    }, [memberships, listsList, store, setSelected])
+    }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
 
     const onPressCancel = useCallback(() => {
       store.shell.closeModal()
@@ -107,11 +109,16 @@ export const Component = observer(
         return (
           <Pressable
             testID={`toggleBtn-${list.name}`}
-            style={[styles.listItem, pal.border]}
+            style={[
+              styles.listItem,
+              pal.border,
+              {opacity: membershipsLoaded ? 1 : 0.5},
+            ]}
             accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
               list.name
             }`}
             accessibilityHint=""
+            disabled={!membershipsLoaded}
             onPress={() => onToggleSelected(list.uri)}>
             <View style={styles.listItemAvi}>
               <UserAvatar size={40} avatar={list.avatar} />
@@ -132,23 +139,33 @@ export const Component = observer(
                   : sanitizeHandle(list.creator.handle, '@')}
               </Text>
             </View>
-            <View
-              style={
-                isSelected
-                  ? [styles.checkbox, palPrimary.border, palPrimary.view]
-                  : [styles.checkbox, pal.borderDark]
-              }>
-              {isSelected && (
-                <FontAwesomeIcon
-                  icon="check"
-                  style={palInverted.text as FontAwesomeIconStyle}
-                />
-              )}
-            </View>
+            {membershipsLoaded && (
+              <View
+                style={
+                  isSelected
+                    ? [styles.checkbox, palPrimary.border, palPrimary.view]
+                    : [styles.checkbox, pal.borderDark]
+                }>
+                {isSelected && (
+                  <FontAwesomeIcon
+                    icon="check"
+                    style={palInverted.text as FontAwesomeIconStyle}
+                  />
+                )}
+              </View>
+            )}
           </Pressable>
         )
       },
-      [pal, palPrimary, palInverted, onToggleSelected, selected, store.me.did],
+      [
+        pal,
+        palPrimary,
+        palInverted,
+        onToggleSelected,
+        selected,
+        store.me.did,
+        membershipsLoaded,
+      ],
     )
 
     const renderEmptyState = React.useCallback(() => {
@@ -200,6 +217,12 @@ export const Component = observer(
               label="Save Changes"
             />
           )}
+
+          {(listsList.isLoading || !membershipsLoaded) && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator />
+            </View>
+          )}
         </View>
       </View>
     )
@@ -221,6 +244,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   btns: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -262,5 +286,12 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     marginRight: 8,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
   },
 })
