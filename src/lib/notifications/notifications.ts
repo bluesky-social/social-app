@@ -23,10 +23,14 @@ export function init(store: RootStoreModel) {
     const token = await getPushToken()
     if (token) {
       try {
-        await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
-          platform: devicePlatform,
-          token: token.data,
-        })
+        await store.agent.api.app.bsky.unspecced.registerPushNotificationEndpoint(
+          {
+            platform: devicePlatform,
+            token: token.data,
+            endpoint: 'app.bsky.unspecced.putNotificationPushToken',
+            appId: 'xyz.blueskyweb.app',
+          },
+        )
         store.log.debug(
           'Notifications: Sent push token' + token.data + token.type,
         )
@@ -40,10 +44,14 @@ export function init(store: RootStoreModel) {
       store.log.debug('Notifications: Push token changed', {token, type})
       if (token) {
         try {
-          await store.agent.api.app.bsky.unspecced.putNotificationPushToken({
-            platform: devicePlatform,
-            token: token,
-          })
+          await store.agent.api.app.bsky.unspecced.registerPushNotificationEndpoint(
+            {
+              platform: devicePlatform,
+              token: token,
+              endpoint: 'xyz.blueskyweb.app',
+              appId: 'xyz.blueskyweb',
+            },
+          )
           console.log('SENT PUSH TOKEN')
         } catch (error) {
           store.log.error('Notifications: Failed to set push token', error)
