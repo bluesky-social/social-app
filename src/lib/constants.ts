@@ -309,7 +309,7 @@ export const GENESIS_REACTIONS = [
   {
     id: 2,
     emoji: "https://i.ibb.co/hMWqHm3/blob.png",
-    title: "Happy",
+    title: "happy",
     reaction_id: "565b4bdd-df1b-4f22-9204-375f2575ed59",
   },
   {
@@ -333,7 +333,7 @@ export const GENESIS_REACTIONS = [
   {
     id: 6,
     emoji: "https://i.ibb.co/VgwgKgk/blob.png",
-    title: "Crying-Laughing",
+    title: "crying-laughing",
     reaction_id: "9f40c618-551f-47c6-b66c-a7070726bf83",
   },
   {

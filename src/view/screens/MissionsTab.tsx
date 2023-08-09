@@ -164,6 +164,7 @@ const DisplayReactions = observer(() => {
   const pal = usePalette("default");
   const store = useStores();
 
+  console.log("PPPP", store.reactions.earnedReactions["genesis"]);
   const onPressReactionPack = (reactionPack: ReactionCollections) => {
     if (reactionPack === store.reactions.curReactionsSet) {
       store.reactions.selectReactionSet("default");

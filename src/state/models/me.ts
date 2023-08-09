@@ -2,7 +2,11 @@ import {
   ComAtprotoServerDefs,
   ComAtprotoServerListAppPasswords,
 } from "@atproto/api";
-import { DEFAULT_REACTION_EMOJIS, SOLARPLEX_FEED_API, SQUID_REACTION_EMOJIS } from "lib/constants";
+import {
+  DEFAULT_REACTION_EMOJIS,
+  SOLARPLEX_FEED_API,
+  SQUID_REACTION_EMOJIS,
+} from "lib/constants";
 import { hasProp, isObj } from "lib/type-guards";
 import { makeAutoObservable, runInAction } from "mobx";
 
@@ -167,10 +171,11 @@ export class MeModel {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     const body = await user.json();
     this.splxWallet = body.user[0]?.wallet;
+    // this.splxWallet = "GtarBGsBP63f1unXgW6DFpR2GDprJ7mN9TPURZQg4qwS";
   }
 
   async fetchProfile() {
@@ -272,17 +277,16 @@ export class MeModel {
 
   async connectWallet(wallet: string) {
     try {
-      fetch(`${SOLARPLEX_FEED_API}/splx/add_wallet_to_user`,
-      {
-        method: 'POST',
+      fetch(`${SOLARPLEX_FEED_API}/splx/add_wallet_to_user`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           did: this.did,
           wallet: wallet,
         }),
-      })
+      });
       this.splxWallet = wallet;
     } catch (e: any) {
       this.splxWallet = undefined;

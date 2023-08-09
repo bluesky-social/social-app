@@ -57,9 +57,11 @@ export class NftModel {
         {},
       );
 
+      console.log("reactionsMap", reactionsMap);
+
       const reactions = this.assets.reduce((acc, item: any) => {
         const attribute = item.content.metadata.attributes[0].value;
-
+        console.log("attribute", attribute);
         reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
 
         return acc;
