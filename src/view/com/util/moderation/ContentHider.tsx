@@ -3,7 +3,7 @@ import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
-import {InfoCircleIcon} from 'lib/icons'
+import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
@@ -58,7 +58,7 @@ export function ContentHider({
           accessibilityRole="button"
           accessibilityLabel="Learn more about this warning"
           accessibilityHint="">
-          <InfoCircleIcon size={18} style={pal.text} />
+          <ShieldExclamation size={18} style={pal.text} />
         </Pressable>
         <Text type="lg" style={pal.text}>
           {desc.name}

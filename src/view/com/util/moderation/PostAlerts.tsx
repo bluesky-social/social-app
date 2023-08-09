@@ -3,7 +3,7 @@ import {Pressable, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {InfoCircleIcon} from 'lib/icons'
+import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
 
@@ -41,7 +41,7 @@ export function PostAlerts({
       accessibilityLabel="Learn more about this warning"
       accessibilityHint=""
       style={[styles.container, pal.viewLight, style]}>
-      <InfoCircleIcon style={pal.text} size={18} />
+      <ShieldExclamation style={pal.text} size={16} />
       <Text type="lg" style={pal.text}>
         {desc.name}
       </Text>
