@@ -15,6 +15,7 @@ import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportPostModal from './report/ReportPost'
 import * as RepostModal from './Repost'
+import * as SelfLabelModal from './SelfLabel'
 import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as AltImageModal from './AltImage'
@@ -104,6 +105,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'repost') {
     snapPoints = RepostModal.snapPoints
     element = <RepostModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'self-label') {
+    snapPoints = SelfLabelModal.snapPoints
+    element = <SelfLabelModal.Component {...activeModal} />
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />

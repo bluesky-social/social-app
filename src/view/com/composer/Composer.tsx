@@ -41,6 +41,7 @@ import {isDesktopWeb, isAndroid, isIOS} from 'platform/detection'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 
 type Props = ComposerOpts & {
@@ -67,6 +68,7 @@ export const ComposePost = observer(function ComposePost({
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
+  const [labels, setLabels] = useState<string[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(store), [store])
 
@@ -246,6 +248,7 @@ export const ComposePost = observer(function ComposePost({
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
+          <LabelsBtn labels={labels} onChange={setLabels} />
           {isProcessing ? (
             <View style={styles.postBtn}>
               <ActivityIndicator />
@@ -407,7 +410,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: isDesktopWeb ? 10 : undefined,
-    paddingBottom: 10,
+    paddingBottom: isDesktopWeb ? 10 : 4,
     paddingHorizontal: 20,
     height: 55,
   },

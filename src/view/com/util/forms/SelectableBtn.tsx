@@ -25,12 +25,14 @@ export function SelectableBtn({
 }: SelectableBtnProps) {
   const pal = usePalette('default')
   const palPrimary = usePalette('inverted')
+  const needsWidthStyles = !style || !('width' in style || 'flex' in style)
   return (
     <Pressable
       style={[
-        styles.selectableBtn,
-        left && styles.selectableBtnLeft,
-        right && styles.selectableBtnRight,
+        styles.btn,
+        needsWidthStyles && styles.btnWidth,
+        left && styles.btnLeft,
+        right && styles.btnRight,
         pal.border,
         selected ? palPrimary.view : pal.view,
         style,
@@ -45,9 +47,7 @@ export function SelectableBtn({
 }
 
 const styles = StyleSheet.create({
-  selectableBtn: {
-    flex: isDesktopWeb ? undefined : 1,
-    width: isDesktopWeb ? 100 : undefined,
+  btn: {
     flexDirection: 'row',
     justifyContent: 'center',
     borderWidth: 1,
@@ -55,12 +55,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
-  selectableBtnLeft: {
+  btnWidth: {
+    flex: isDesktopWeb ? undefined : 1,
+    width: isDesktopWeb ? 100 : undefined,
+  },
+  btnLeft: {
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
     borderLeftWidth: 1,
   },
-  selectableBtnRight: {
+  btnRight: {
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
   },
