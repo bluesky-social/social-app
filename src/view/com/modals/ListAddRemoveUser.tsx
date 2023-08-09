@@ -218,12 +218,11 @@ export const Component = observer(
             />
           )}
 
-          {listsList.isLoading ||
-            (!membershipsLoaded && (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator />
-              </View>
-            ))}
+          {(listsList.isLoading || !membershipsLoaded) && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator />
+            </View>
+          )}
         </View>
       </View>
     )
