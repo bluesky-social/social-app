@@ -5,6 +5,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
 
 interface SelectableBtnProps {
+  testID?: string
   selected: boolean
   label: string
   left?: boolean
@@ -15,6 +16,7 @@ interface SelectableBtnProps {
 }
 
 export function SelectableBtn({
+  testID,
   selected,
   label,
   left,
@@ -28,6 +30,7 @@ export function SelectableBtn({
   const needsWidthStyles = !style || !('width' in style || 'flex' in style)
   return (
     <Pressable
+      testID={testID}
       style={[
         styles.btn,
         needsWidthStyles && styles.btnWidth,

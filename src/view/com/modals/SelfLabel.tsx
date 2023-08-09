@@ -67,26 +67,29 @@ export const Component = observer(function Component({
           </View>
           <View style={s.flexRow}>
             <SelectableBtn
+              testID="sexualLabelBtn"
               selected={selected.includes('sexual')}
               left
               label="Suggestive"
               onSelect={() => toggleAdultContent('sexual')}
-              accessibilityHint="Set color theme to light"
+              accessibilityHint=""
               style={s.flex1}
             />
             <SelectableBtn
+              testID="nudityLabelBtn"
               selected={selected.includes('nudity')}
               label="Nudity"
               onSelect={() => toggleAdultContent('nudity')}
-              accessibilityHint="Set color theme to dark"
+              accessibilityHint=""
               style={s.flex1}
             />
             <SelectableBtn
+              testID="pornLabelBtn"
               selected={selected.includes('porn')}
               label="Porn"
               right
               onSelect={() => toggleAdultContent('porn')}
-              accessibilityHint="Set color theme to dark"
+              accessibilityHint=""
               style={s.flex1}
             />
           </View>
