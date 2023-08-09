@@ -28,14 +28,14 @@ export const DiscoverFeedsScreen = withAuthRequired(
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
-      () => debounce(() => feeds.search(query), 200), // debouce for 200 ms
-      [feeds, query],
+      () => debounce(query => feeds.search(query), 500), // debounce for 500ms
+      [feeds],
     )
     const onChangeQuery = React.useCallback(
       (text: string) => {
         setQuery(text)
         if (text.length > 1) {
-          debouncedSearchFeeds()
+          debouncedSearchFeeds(text)
         } else {
           feeds.refresh()
         }
@@ -52,8 +52,9 @@ export const DiscoverFeedsScreen = withAuthRequired(
       feeds.refresh()
     }, [feeds])
     const onSubmitQuery = React.useCallback(() => {
-      feeds.search(query)
-    }, [feeds, query])
+      debouncedSearchFeeds(query)
+      debouncedSearchFeeds.flush()
+    }, [debouncedSearchFeeds, query])
 
     useFocusEffect(
       React.useCallback(() => {

@@ -125,7 +125,10 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="Profile"
         component={ProfileScreen}
-        options={({route}) => ({title: title(`@${route.params.name}`)})}
+        options={({route}) => ({
+          title: title(`@${route.params.name}`),
+          animation: 'none',
+        })}
       />
       <Stack.Screen
         name="ProfileFollowers"

@@ -1,6 +1,7 @@
 import {
   AppBskyActorDefs,
   AppBskyGraphGetFollows as GetFollows,
+  moderateProfile,
 } from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import sampleSize from 'lodash.samplesize'
@@ -52,6 +53,13 @@ export class FoafsModel {
               cursor,
               limit: 100,
             })
+          res.data.follows = res.data.follows.filter(
+            profile =>
+              !moderateProfile(
+                profile,
+                this.rootStore.preferences.moderationOpts,
+              ).account.filter,
+          )
           this.rootStore.me.follows.hydrateProfiles(res.data.follows)
           if (!res.data.cursor) {
             break

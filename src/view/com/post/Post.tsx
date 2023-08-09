@@ -19,9 +19,8 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
+import {PostAlerts} from '../util/moderation/PostAlerts'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import * as Toast from '../util/Toast'
@@ -206,10 +205,7 @@ const PostLoaded = observer(
     }, [item, setDeleted, store])
 
     return (
-      <PostHider
-        href={itemHref}
-        style={[styles.outer, pal.view, pal.border, style]}
-        moderation={item.moderation.list}>
+      <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
         {showReplyLine && <View style={styles.replyLine} />}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
@@ -251,8 +247,13 @@ const PostLoaded = observer(
               </View>
             )}
             <ContentHider
-              moderation={item.moderation.list}
-              containerStyle={styles.contentHider}>
+              moderation={item.moderation.content}
+              style={styles.contentHider}
+              childContainerStyle={styles.contentHiderChild}>
+              <PostAlerts
+                moderation={item.moderation.content}
+                style={styles.alert}
+              />
               {item.richText?.text ? (
                 <View style={styles.postTextContainer}>
                   <RichText
@@ -264,9 +265,14 @@ const PostLoaded = observer(
                   />
                 </View>
               ) : undefined}
-              <ImageHider moderation={item.moderation.list} style={s.mb10}>
-                <PostEmbeds embed={item.post.embed} style={s.mb10} />
-              </ImageHider>
+              {item.post.embed ? (
+                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                  <PostEmbeds
+                    embed={item.post.embed}
+                    moderation={item.moderation.embed}
+                  />
+                </ContentHider>
+              ) : null}
               {needsTranslation && (
                 <View style={[pal.borderDark, styles.translateLink]}>
                   <Link href={translatorUrl} title="Translate">
@@ -302,7 +308,7 @@ const PostLoaded = observer(
             />
           </View>
         </View>
-      </PostHider>
+      </Link>
     )
   },
 )
@@ -323,6 +329,9 @@ const styles = StyleSheet.create({
   layoutContent: {
     flex: 1,
   },
+  alert: {
+    marginBottom: 6,
+  },
   postTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -341,6 +350,9 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.gray2,
   },
   contentHider: {
-    marginTop: 4,
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
   },
 })

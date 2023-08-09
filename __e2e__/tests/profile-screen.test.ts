@@ -53,7 +53,7 @@ describe('Profile screen', () => {
     await expect(element(by.id('profileHeaderDisplayName'))).toHaveText(
       'alice.test',
     )
-    await expect(element(by.id('profileHeaderDescription'))).toHaveText('')
+    await expect(element(by.id('profileHeaderDescription'))).not.toExist()
   })
 
   it('Set avi and banner via the edit profile modal', async () => {
@@ -107,13 +107,13 @@ describe('Profile screen', () => {
   })
 
   it('Can mute/unmute another user', async () => {
-    await expect(element(by.id('profileHeaderMutedNotice'))).not.toExist()
+    await expect(element(by.id('profileHeaderAlert'))).not.toExist()
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Mute Account')).tap()
-    await expect(element(by.id('profileHeaderMutedNotice'))).toBeVisible()
+    await expect(element(by.id('profileHeaderAlert'))).toBeVisible()
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Unmute Account')).tap()
-    await expect(element(by.id('profileHeaderMutedNotice'))).not.toExist()
+    await expect(element(by.id('profileHeaderAlert'))).not.toExist()
   })
 
   it('Can report another user', async () => {

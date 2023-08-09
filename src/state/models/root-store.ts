@@ -12,7 +12,9 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {LogModel} from './log'
 import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
+import {HandleResolutionsCache} from './cache/handle-resolutions'
 import {ProfilesCache} from './cache/profiles-view'
+import {PostsCache} from './cache/posts'
 import {LinkMetasCache} from './cache/link-metas'
 import {NotificationsFeedItemModel} from './feeds/notifications'
 import {MeModel} from './me'
@@ -45,7 +47,9 @@ export class RootStoreModel {
   preferences = new PreferencesModel(this)
   me = new MeModel(this)
   invitedUsers = new InvitedUsers(this)
+  handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
+  posts = new PostsCache(this)
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
   mutedThreads = new MutedThreads()

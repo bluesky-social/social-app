@@ -26,15 +26,13 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
+import {PostAlerts} from '../util/moderation/PostAlerts'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
-
-const PARENT_REPLY_LINE_LENGTH = 8
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -159,159 +157,192 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   if (item._isHighlightedPost) {
     return (
-      <PostHider
-        testID={`postThreadItem-by-${item.post.author.handle}`}
-        style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
-        moderation={item.moderation.thread}>
-        <PostSandboxWarning />
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <PreviewableUserAvatar
-              size={52}
-              did={item.post.author.did}
-              handle={item.post.author.handle}
-              avatar={item.post.author.avatar}
-              moderation={item.moderation.avatar}
-            />
+      <>
+        {item.rootUri !== item.uri && (
+          <View style={{paddingLeft: 18, flexDirection: 'row', height: 16}}>
+            <View style={{width: 52}}>
+              <View
+                style={[
+                  styles.replyLine,
+                  {
+                    flexGrow: 1,
+                    backgroundColor: pal.colors.replyLine,
+                  },
+                ]}
+              />
+            </View>
           </View>
-          <View style={styles.layoutContent}>
-            <View style={[styles.meta, styles.metaExpandedLine1]}>
-              <View style={[s.flexRow]}>
+        )}
+
+        <Link
+          testID={`postThreadItem-by-${item.post.author.handle}`}
+          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+          noFeedback
+          accessible={false}>
+          <PostSandboxWarning />
+          <View style={styles.layout}>
+            <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
+              <PreviewableUserAvatar
+                size={52}
+                did={item.post.author.did}
+                handle={item.post.author.handle}
+                avatar={item.post.author.avatar}
+                moderation={item.moderation.avatar}
+              />
+            </View>
+            <View style={styles.layoutContent}>
+              <View style={[styles.meta, styles.metaExpandedLine1]}>
+                <View style={[s.flexRow]}>
+                  <Link
+                    style={styles.metaItem}
+                    href={authorHref}
+                    title={authorTitle}>
+                    <Text
+                      type="xl-bold"
+                      style={[pal.text]}
+                      numberOfLines={1}
+                      lineHeight={1.2}>
+                      {sanitizeDisplayName(
+                        item.post.author.displayName ||
+                          sanitizeHandle(item.post.author.handle),
+                      )}
+                    </Text>
+                  </Link>
+                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
+                    &middot;&nbsp;
+                    <TimeElapsed timestamp={item.post.indexedAt}>
+                      {({timeElapsed}) => <>{timeElapsed}</>}
+                    </TimeElapsed>
+                  </Text>
+                </View>
+                <View style={s.flex1} />
+                <PostDropdownBtn
+                  testID="postDropdownBtn"
+                  itemUri={itemUri}
+                  itemCid={itemCid}
+                  itemHref={itemHref}
+                  itemTitle={itemTitle}
+                  isAuthor={item.post.author.did === store.me.did}
+                  isThreadMuted={item.isThreadMuted}
+                  onCopyPostText={onCopyPostText}
+                  onOpenTranslate={onOpenTranslate}
+                  onToggleThreadMute={onToggleThreadMute}
+                  onDeletePost={onDeletePost}
+                />
+              </View>
+              <View style={styles.meta}>
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
                   title={authorTitle}>
-                  <Text
-                    type="xl-bold"
-                    style={[pal.text]}
-                    numberOfLines={1}
-                    lineHeight={1.2}>
-                    {sanitizeDisplayName(
-                      item.post.author.displayName ||
-                        sanitizeHandle(item.post.author.handle),
-                    )}
+                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                    {sanitizeHandle(item.post.author.handle, '@')}
                   </Text>
                 </Link>
-                <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                  &middot;&nbsp;
-                  <TimeElapsed timestamp={item.post.indexedAt}>
-                    {({timeElapsed}) => <>{timeElapsed}</>}
-                  </TimeElapsed>
-                </Text>
               </View>
-              <View style={s.flex1} />
-              <PostDropdownBtn
-                testID="postDropdownBtn"
+            </View>
+          </View>
+          <View style={[s.pl10, s.pr10, s.pb10]}>
+            <ContentHider
+              moderation={item.moderation.content}
+              ignoreMute
+              style={styles.contentHider}
+              childContainerStyle={styles.contentHiderChild}>
+              <PostAlerts
+                moderation={item.moderation.content}
+                includeMute
+                style={styles.alert}
+              />
+              {item.richText?.text ? (
+                <View
+                  style={[
+                    styles.postTextContainer,
+                    styles.postTextLargeContainer,
+                  ]}>
+                  <RichText
+                    type="post-text-lg"
+                    richText={item.richText}
+                    lineHeight={1.3}
+                    style={s.flex1}
+                  />
+                </View>
+              ) : undefined}
+              {item.post.embed && (
+                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                  <PostEmbeds
+                    embed={item.post.embed}
+                    moderation={item.moderation.embed}
+                  />
+                </ContentHider>
+              )}
+            </ContentHider>
+            <ExpandedPostDetails
+              post={item.post}
+              translatorUrl={translatorUrl}
+              needsTranslation={needsTranslation}
+            />
+            {hasEngagement ? (
+              <View style={[styles.expandedInfo, pal.border]}>
+                {item.post.repostCount ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={repostsHref}
+                    title={repostsTitle}>
+                    <Text testID="repostCount" type="lg" style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
+                        {formatCount(item.post.repostCount)}
+                      </Text>{' '}
+                      {pluralize(item.post.repostCount, 'repost')}
+                    </Text>
+                  </Link>
+                ) : (
+                  <></>
+                )}
+                {item.post.likeCount ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={likesHref}
+                    title={likesTitle}>
+                    <Text testID="likeCount" type="lg" style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
+                        {formatCount(item.post.likeCount)}
+                      </Text>{' '}
+                      {pluralize(item.post.likeCount, 'like')}
+                    </Text>
+                  </Link>
+                ) : (
+                  <></>
+                )}
+              </View>
+            ) : (
+              <></>
+            )}
+            <View style={[s.pl10, s.pb5]}>
+              <PostCtrls
+                big
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                author={item.post.author}
+                text={item.richText?.text || record.text}
+                indexedAt={item.post.indexedAt}
                 isAuthor={item.post.author.did === store.me.did}
+                isReposted={!!item.post.viewer?.repost}
+                isLiked={!!item.post.viewer?.like}
                 isThreadMuted={item.isThreadMuted}
+                onPressReply={onPressReply}
+                onPressToggleRepost={onPressToggleRepost}
+                onPressToggleLike={onPressToggleLike}
                 onCopyPostText={onCopyPostText}
                 onOpenTranslate={onOpenTranslate}
                 onToggleThreadMute={onToggleThreadMute}
                 onDeletePost={onDeletePost}
               />
             </View>
-            <View style={styles.meta}>
-              <Link
-                style={styles.metaItem}
-                href={authorHref}
-                title={authorTitle}>
-                <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                  {sanitizeHandle(item.post.author.handle, '@')}
-                </Text>
-              </Link>
-            </View>
           </View>
-        </View>
-        <View style={[s.pl10, s.pr10, s.pb10]}>
-          <ContentHider moderation={item.moderation.view}>
-            {item.richText?.text ? (
-              <View
-                style={[
-                  styles.postTextContainer,
-                  styles.postTextLargeContainer,
-                ]}>
-                <RichText
-                  type="post-text-lg"
-                  richText={item.richText}
-                  lineHeight={1.3}
-                  style={s.flex1}
-                />
-              </View>
-            ) : undefined}
-            <ImageHider moderation={item.moderation.view} style={s.mb10}>
-              <PostEmbeds embed={item.post.embed} style={s.mb10} />
-            </ImageHider>
-          </ContentHider>
-          <ExpandedPostDetails
-            post={item.post}
-            translatorUrl={translatorUrl}
-            needsTranslation={needsTranslation}
-          />
-          {hasEngagement ? (
-            <View style={[styles.expandedInfo, pal.border]}>
-              {item.post.repostCount ? (
-                <Link
-                  style={styles.expandedInfoItem}
-                  href={repostsHref}
-                  title={repostsTitle}>
-                  <Text testID="repostCount" type="lg" style={pal.textLight}>
-                    <Text type="xl-bold" style={pal.text}>
-                      {formatCount(item.post.repostCount)}
-                    </Text>{' '}
-                    {pluralize(item.post.repostCount, 'repost')}
-                  </Text>
-                </Link>
-              ) : (
-                <></>
-              )}
-              {item.post.likeCount ? (
-                <Link
-                  style={styles.expandedInfoItem}
-                  href={likesHref}
-                  title={likesTitle}>
-                  <Text testID="likeCount" type="lg" style={pal.textLight}>
-                    <Text type="xl-bold" style={pal.text}>
-                      {formatCount(item.post.likeCount)}
-                    </Text>{' '}
-                    {pluralize(item.post.likeCount, 'like')}
-                  </Text>
-                </Link>
-              ) : (
-                <></>
-              )}
-            </View>
-          ) : (
-            <></>
-          )}
-          <View style={[s.pl10, s.pb5]}>
-            <PostCtrls
-              big
-              itemUri={itemUri}
-              itemCid={itemCid}
-              itemHref={itemHref}
-              itemTitle={itemTitle}
-              author={item.post.author}
-              text={item.richText?.text || record.text}
-              indexedAt={item.post.indexedAt}
-              isAuthor={item.post.author.did === store.me.did}
-              isReposted={!!item.post.viewer?.repost}
-              isLiked={!!item.post.viewer?.like}
-              isThreadMuted={item.isThreadMuted}
-              onPressReply={onPressReply}
-              onPressToggleRepost={onPressToggleRepost}
-              onPressToggleLike={onPressToggleLike}
-              onCopyPostText={onCopyPostText}
-              onOpenTranslate={onOpenTranslate}
-              onToggleThreadMute={onToggleThreadMute}
-              onDeletePost={onDeletePost}
-            />
-          </View>
-        </View>
-      </PostHider>
+        </Link>
+      </>
     )
   } else {
     return (
@@ -324,26 +355,36 @@ export const PostThreadItem = observer(function PostThreadItem({
             pal.border,
             pal.view,
             item._showParentReplyLine && styles.noTopBorder,
+            !item._showChildReplyLine && {borderBottomWidth: 1},
           ]}
-          moderation={item.moderation.thread}>
-          {item._showParentReplyLine && (
-            <View
-              style={[
-                styles.parentReplyLine,
-                {borderColor: pal.colors.replyLine},
-              ]}
-            />
-          )}
-          {item._showChildReplyLine && (
-            <View
-              style={[
-                styles.childReplyLine,
-                {borderColor: pal.colors.replyLine},
-              ]}
-            />
-          )}
+          moderation={item.moderation.content}>
           <PostSandboxWarning />
-          <View style={styles.layout}>
+
+          <View
+            style={{flexDirection: 'row', gap: 10, paddingLeft: 8, height: 16}}>
+            <View style={{width: 52}}>
+              {item._showParentReplyLine && (
+                <View
+                  style={[
+                    styles.replyLine,
+                    {
+                      flexGrow: 1,
+                      backgroundColor: pal.colors.replyLine,
+                      marginBottom: 4,
+                    },
+                  ]}
+                />
+              )}
+            </View>
+          </View>
+
+          <View
+            style={[
+              styles.layout,
+              {
+                paddingBottom: item._showChildReplyLine ? 0 : 16,
+              },
+            ]}>
             <View style={styles.layoutAvi}>
               <PreviewableUserAvatar
                 size={52}
@@ -352,7 +393,21 @@ export const PostThreadItem = observer(function PostThreadItem({
                 avatar={item.post.author.avatar}
                 moderation={item.moderation.avatar}
               />
+
+              {item._showChildReplyLine && (
+                <View
+                  style={[
+                    styles.replyLine,
+                    {
+                      flexGrow: 1,
+                      backgroundColor: pal.colors.replyLine,
+                      marginTop: 4,
+                    },
+                  ]}
+                />
+              )}
             </View>
+
             <View style={styles.layoutContent}>
               <PostMeta
                 author={item.post.author}
@@ -360,32 +415,37 @@ export const PostThreadItem = observer(function PostThreadItem({
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
               />
-              <ContentHider
-                moderation={item.moderation.thread}
-                containerStyle={styles.contentHider}>
-                {item.richText?.text ? (
-                  <View style={styles.postTextContainer}>
-                    <RichText
-                      type="post-text"
-                      richText={item.richText}
-                      style={[pal.text, s.flex1]}
-                      lineHeight={1.3}
-                    />
-                  </View>
-                ) : undefined}
-                <ImageHider style={s.mb10} moderation={item.moderation.thread}>
-                  <PostEmbeds embed={item.post.embed} style={s.mb10} />
-                </ImageHider>
-                {needsTranslation && (
-                  <View style={[pal.borderDark, styles.translateLink]}>
-                    <Link href={translatorUrl} title="Translate">
-                      <Text type="sm" style={pal.link}>
-                        Translate this post
-                      </Text>
-                    </Link>
-                  </View>
-                )}
-              </ContentHider>
+              <PostAlerts
+                moderation={item.moderation.content}
+                style={styles.alert}
+              />
+              {item.richText?.text ? (
+                <View style={styles.postTextContainer}>
+                  <RichText
+                    type="post-text"
+                    richText={item.richText}
+                    style={[pal.text, s.flex1]}
+                    lineHeight={1.3}
+                  />
+                </View>
+              ) : undefined}
+              {item.post.embed && (
+                <ContentHider style={s.mb10} moderation={item.moderation.embed}>
+                  <PostEmbeds
+                    embed={item.post.embed}
+                    moderation={item.moderation.embed}
+                  />
+                </ContentHider>
+              )}
+              {needsTranslation && (
+                <View style={[pal.borderDark, styles.translateLink]}>
+                  <Link href={translatorUrl} title="Translate">
+                    <Text type="sm" style={pal.link}>
+                      Translate this post
+                    </Text>
+                  </Link>
+                </View>
+              )}
               <PostCtrls
                 itemUri={itemUri}
                 itemCid={itemCid}
@@ -416,7 +476,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderTopColor: pal.colors.border},
+              {borderBottomColor: pal.colors.border},
               pal.view,
             ]}
             href={itemHref}
@@ -466,41 +526,22 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   outerHighlighted: {
-    paddingTop: 2,
-    paddingLeft: 6,
-    paddingRight: 6,
+    paddingTop: 16,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   noTopBorder: {
     borderTopWidth: 0,
   },
-  parentReplyLine: {
-    position: 'absolute',
-    left: 44,
-    top: -1 * PARENT_REPLY_LINE_LENGTH + 6,
-    height: PARENT_REPLY_LINE_LENGTH,
-    borderLeftWidth: 2,
-  },
-  childReplyLine: {
-    position: 'absolute',
-    left: 44,
-    top: 65,
-    bottom: 0,
-    borderLeftWidth: 2,
-  },
   layout: {
     flexDirection: 'row',
+    gap: 10,
+    paddingLeft: 8,
   },
-  layoutAvi: {
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginRight: 10,
-  },
+  layoutAvi: {},
   layoutContent: {
     flex: 1,
     paddingRight: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
   },
   meta: {
     flexDirection: 'row',
@@ -514,6 +555,9 @@ const styles = StyleSheet.create({
   metaItem: {
     paddingRight: 5,
     maxWidth: 240,
+  },
+  alert: {
+    marginBottom: 6,
   },
   postTextContainer: {
     flexDirection: 'row',
@@ -531,7 +575,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   contentHider: {
-    marginTop: 4,
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
   },
   expandedInfo: {
     flexDirection: 'row',
@@ -547,10 +594,14 @@ const styles = StyleSheet.create({
   loadMore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     paddingLeft: 80,
     paddingRight: 20,
-    paddingVertical: 10,
-    marginBottom: 8,
+    paddingVertical: 12,
+  },
+  replyLine: {
+    width: 2,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
 })

@@ -12,9 +12,9 @@ import {
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedPost,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
+  ModerationUI,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -24,11 +24,12 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
-import QuoteEmbed from './QuoteEmbed'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
 import {isDesktopWeb} from 'platform/detection'
+import {isCauseALabelOnUri} from 'lib/moderation'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -39,9 +40,11 @@ type Embed =
 
 export function PostEmbeds({
   embed,
+  moderation,
   style,
 }: {
   embed?: Embed
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -49,51 +52,37 @@ export function PostEmbeds({
 
   // quote post with media
   // =
-  if (
-    AppBskyEmbedRecordWithMedia.isView(embed) &&
-    AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-    AppBskyFeedPost.isRecord(embed.record.record.value) &&
-    AppBskyFeedPost.validateRecord(embed.record.record.value).success
-  ) {
+  if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+    const isModOnQuote =
+      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+      isCauseALabelOnUri(moderation.cause, embed.record.record.uri)
+    const mediaModeration = isModOnQuote ? {} : moderation
+    const quoteModeration = isModOnQuote ? moderation : {}
     return (
       <View style={[styles.stackContainer, style]}>
-        <PostEmbeds embed={embed.media} />
-        <QuoteEmbed
-          quote={{
-            author: embed.record.record.author,
-            cid: embed.record.record.cid,
-            uri: embed.record.record.uri,
-            indexedAt: embed.record.record.indexedAt,
-            text: embed.record.record.value.text,
-            embeds: embed.record.record.embeds,
-          }}
-        />
+        <PostEmbeds embed={embed.media} moderation={mediaModeration} />
+        <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
       </View>
     )
   }
 
-  // quote post
-  // =
   if (AppBskyEmbedRecord.isView(embed)) {
-    if (
-      AppBskyEmbedRecord.isViewRecord(embed.record) &&
-      AppBskyFeedPost.isRecord(embed.record.value) &&
-      AppBskyFeedPost.validateRecord(embed.record.value).success
-    ) {
-      return (
-        <QuoteEmbed
-          quote={{
-            author: embed.record.author,
-            cid: embed.record.cid,
-            uri: embed.record.uri,
-            indexedAt: embed.record.indexedAt,
-            text: embed.record.value.text,
-            embeds: embed.record.embeds,
-          }}
-          style={style}
-        />
-      )
+    // custom feed embed (i.e. generator view)
+    // =
+    if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
+      return <CustomFeedEmbed record={embed.record} />
     }
+
+    // list embed (e.g. mute lists; i.e. ListView)
+    if (AppBskyGraphDefs.isListView(embed.record)) {
+      return <ListEmbed item={embed.record} />
+    }
+
+    // quote post
+    // =
+    return (
+      <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
+    )
   }
 
   // image embed
@@ -150,23 +139,6 @@ export function PostEmbeds({
         </View>
       )
     }
-  }
-
-  // custom feed embed (i.e. generator view)
-  // =
-  if (
-    AppBskyEmbedRecord.isView(embed) &&
-    AppBskyFeedDefs.isGeneratorView(embed.record)
-  ) {
-    return <CustomFeedEmbed record={embed.record} />
-  }
-
-  // list embed (e.g. mute lists; i.e. ListView)
-  if (
-    AppBskyEmbedRecord.isView(embed) &&
-    AppBskyGraphDefs.isListView(embed.record)
-  ) {
-    return <ListEmbed item={embed.record} />
   }
 
   // external link embed

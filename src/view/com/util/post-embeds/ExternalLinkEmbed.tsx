@@ -1,6 +1,6 @@
 import React from 'react'
+import {Image} from 'expo-image'
 import {Text} from '../text/Text'
-import {AutoSizedImage} from '../images/AutoSizedImage'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AppBskyEmbedExternal} from '@atproto/api'
@@ -16,9 +16,14 @@ export const ExternalLinkEmbed = ({
   return (
     <>
       {link.thumb ? (
-        <AutoSizedImage uri={link.thumb} style={styles.extImage}>
+        <View style={styles.extImageContainer}>
+          <Image
+            style={styles.extImage}
+            source={{uri: link.thumb}}
+            accessibilityIgnoresInvertColors
+          />
           {imageChild}
-        </AutoSizedImage>
+        </View>
       ) : undefined}
       <View style={styles.extInner}>
         <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
@@ -47,11 +52,16 @@ const styles = StyleSheet.create({
   extInner: {
     padding: 10,
   },
-  extImage: {
+  extImageContainer: {
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     width: '100%',
-    maxHeight: 200,
+    height: 200,
+    overflow: 'hidden',
+  },
+  extImage: {
+    width: '100%',
+    height: 200,
   },
   extUri: {
     marginTop: 2,

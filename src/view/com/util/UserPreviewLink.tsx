@@ -2,7 +2,7 @@ import React from 'react'
 import {Pressable, StyleProp, ViewStyle} from 'react-native'
 import {useStores} from 'state/index'
 import {Link} from './Link'
-import {isDesktopWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {makeProfileLink} from 'lib/routes/links'
 
 interface UserPreviewLinkProps {
@@ -15,7 +15,7 @@ export function UserPreviewLink(
 ) {
   const store = useStores()
 
-  if (isDesktopWeb) {
+  if (isWeb) {
     return (
       <Link
         href={makeProfileLink(props)}

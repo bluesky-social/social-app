@@ -1,0 +1,101 @@
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+import {ModerationUI} from '@atproto/api'
+import {useStores} from 'state/index'
+import {s} from 'lib/styles'
+import {Text} from '../util/text/Text'
+import {TextLink} from '../util/Link'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isDesktopWeb} from 'platform/detection'
+import {listUriToHref} from 'lib/strings/url-helpers'
+import {Button} from '../util/forms/Button'
+
+export const snapPoints = [300]
+
+export function Component({
+  context,
+  moderation,
+}: {
+  context: 'account' | 'content'
+  moderation: ModerationUI
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+
+  let name
+  let description
+  if (!moderation.cause) {
+    name = 'Content Warning'
+    description =
+      'Moderator has chosen to set a general warning on the content.'
+  } else if (moderation.cause.type === 'blocking') {
+    name = 'Account Blocked'
+    description = 'You have blocked this user. You cannot view their content.'
+  } else if (moderation.cause.type === 'blocked-by') {
+    name = 'Account Blocks You'
+    description = 'This user has blocked you. You cannot view their content.'
+  } else if (moderation.cause.type === 'muted') {
+    if (moderation.cause.source.type === 'user') {
+      name = 'Account Muted'
+      description = 'You have muted this user.'
+    } else {
+      const list = moderation.cause.source.list
+      name = <>Account Muted by List</>
+      description = (
+        <>
+          This user is included the{' '}
+          <TextLink
+            type="2xl"
+            href={listUriToHref(list.uri)}
+            text={list.name}
+            style={pal.link}
+          />{' '}
+          list which you have muted.
+        </>
+      )
+    }
+  } else {
+    name = moderation.cause.labelDef.strings[context].en.name
+    description = moderation.cause.labelDef.strings[context].en.description
+  }
+
+  return (
+    <View testID="moderationDetailsModal" style={[styles.container, pal.view]}>
+      <Text type="title-xl" style={[pal.text, styles.title]}>
+        {name}
+      </Text>
+      <Text type="2xl" style={[pal.text, styles.description]}>
+        {description}
+      </Text>
+      <View style={s.flex1} />
+      <Button
+        type="primary"
+        style={styles.btn}
+        onPress={() => store.shell.closeModal()}>
+        <Text type="button-lg" style={[pal.textLight, s.textCenter, s.white]}>
+          Okay
+        </Text>
+      </Button>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: isDesktopWeb ? 0 : 14,
+  },
+  title: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  description: {
+    textAlign: 'center',
+  },
+  btn: {
+    paddingVertical: 14,
+    marginTop: isDesktopWeb ? 40 : 0,
+    marginBottom: isDesktopWeb ? 0 : 40,
+  },
+})

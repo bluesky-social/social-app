@@ -17,6 +17,12 @@ export class FeedViewPostsSlice {
 
   constructor(public items: FeedViewPost[] = []) {}
 
+  get _reactKey() {
+    return `slice-${this.rootItem.post.uri}-${
+      this.rootItem.reason?.indexedAt || this.rootItem.post.indexedAt
+    }`
+  }
+
   get uri() {
     if (this.isFlattenedReply) {
       return this.items[1].post.uri

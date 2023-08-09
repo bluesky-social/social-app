@@ -1,4 +1,4 @@
-import {AppBskyEmbedRecord} from '@atproto/api'
+import {AppBskyEmbedRecord, ModerationUI} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
@@ -40,6 +40,12 @@ export interface ServerInputModal {
   name: 'server-input'
   initialService: string
   onSelect: (url: string) => void
+}
+
+export interface ModerationDetailsModal {
+  name: 'moderation-details'
+  context: 'account' | 'content'
+  moderation: ModerationUI
 }
 
 export interface ReportPostModal {
@@ -146,6 +152,7 @@ export type Modal =
   | PreferencesHomeFeed
 
   // Moderation
+  | ModerationDetailsModal
   | ReportAccountModal
   | ReportPostModal
   | CreateOrEditMuteListModal

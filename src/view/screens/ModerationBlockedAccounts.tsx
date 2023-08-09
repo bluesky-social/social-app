@@ -66,7 +66,6 @@ export const ModerationBlockedAccounts = withAuthRequired(
         testID={`blockedAccount-${index}`}
         key={item.did}
         profile={item}
-        overrideModeration
       />
     )
     return (

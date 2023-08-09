@@ -1,36 +1,32 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
+import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
-import {addStyle} from 'lib/styles'
-import {ModerationBehavior, ModerationBehaviorCode} from 'lib/labeling/types'
+import {InfoCircleIcon} from 'lib/icons'
+import {describeModerationCause} from 'lib/moderation'
+import {useStores} from 'state/index'
+import {isDesktopWeb} from 'platform/detection'
 
 export function ContentHider({
   testID,
   moderation,
+  ignoreMute,
   style,
-  containerStyle,
+  childContainerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  moderation: ModerationBehavior
+  moderation: ModerationUI
+  ignoreMute?: boolean
   style?: StyleProp<ViewStyle>
-  containerStyle?: StyleProp<ViewStyle>
+  childContainerStyle?: StyleProp<ViewStyle>
 }>) {
+  const store = useStores()
   const pal = usePalette('default')
   const [override, setOverride] = React.useState(false)
-  const onPressShow = React.useCallback(() => {
-    setOverride(true)
-  }, [setOverride])
-  const onPressHide = React.useCallback(() => {
-    setOverride(false)
-  }, [setOverride])
 
-  if (
-    moderation.behavior === ModerationBehaviorCode.Show ||
-    moderation.behavior === ModerationBehaviorCode.Warn ||
-    moderation.behavior === ModerationBehaviorCode.WarnImages
-  ) {
+  if (!moderation.blur || (ignoreMute && moderation.cause?.type === 'muted')) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -38,73 +34,61 @@ export function ContentHider({
     )
   }
 
-  if (moderation.behavior === ModerationBehaviorCode.Hide) {
-    return null
-  }
-
+  const desc = describeModerationCause(moderation.cause, 'content')
   return (
-    <View style={[styles.container, pal.view, pal.border, containerStyle]}>
+    <View testID={testID} style={style}>
       <Pressable
-        onPress={override ? onPressHide : onPressShow}
-        accessibilityLabel={override ? 'Hide post' : 'Show post'}
-        // TODO: The text labelling should be split up so controls have unique roles
-        accessibilityHint={
-          override
-            ? 'Re-hide post'
-            : 'Shows post hidden based on your moderation settings'
-        }
-        style={[
-          styles.description,
-          pal.viewLight,
-          override && styles.descriptionOpen,
-        ]}>
-        <Text type="md" style={pal.textLight}>
-          {moderation.reason || 'Content warning'}
+        onPress={() => {
+          if (!moderation.noOverride) {
+            setOverride(v => !v)
+          }
+        }}
+        accessibilityRole="button"
+        accessibilityHint={override ? 'Hide the content' : 'Show the content'}
+        accessibilityLabel=""
+        style={[styles.cover, pal.viewLight]}>
+        <Pressable
+          onPress={() => {
+            store.shell.openModal({
+              name: 'moderation-details',
+              context: 'content',
+              moderation,
+            })
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Learn more about this warning"
+          accessibilityHint="">
+          <InfoCircleIcon size={18} style={pal.text} />
+        </Pressable>
+        <Text type="lg" style={pal.text}>
+          {desc.name}
         </Text>
-        <View style={styles.showBtn}>
-          <Text type="md-medium" style={pal.link}>
-            {override ? 'Hide' : 'Show'}
-          </Text>
-        </View>
-      </Pressable>
-      {override && (
-        <View style={[styles.childrenContainer, pal.border]}>
-          <View testID={testID} style={addStyle(style, styles.child)}>
-            {children}
+        {!moderation.noOverride && (
+          <View style={styles.showBtn}>
+            <Text type="xl" style={pal.link}>
+              {override ? 'Hide' : 'Show'}
+            </Text>
           </View>
-        </View>
-      )}
+        )}
+      </Pressable>
+      {override && <View style={childContainerStyle}>{children}</View>}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 10,
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  description: {
+  cover: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 4,
+    borderRadius: 8,
+    marginTop: 4,
     paddingVertical: 14,
     paddingLeft: 14,
-    paddingRight: 18,
-    borderRadius: 12,
-  },
-  descriptionOpen: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  icon: {
-    marginRight: 10,
+    paddingRight: isDesktopWeb ? 18 : 22,
   },
   showBtn: {
     marginLeft: 'auto',
+    alignSelf: 'center',
   },
-  childrenContainer: {
-    paddingHorizontal: 12,
-    paddingTop: 8,
-  },
-  child: {},
 })

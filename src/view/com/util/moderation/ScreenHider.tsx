@@ -1,16 +1,24 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  TouchableWithoutFeedback,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
+import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {isDesktopWeb} from 'platform/detection'
-import {ModerationBehaviorCode, ModerationBehavior} from 'lib/labeling/types'
+import {describeModerationCause} from 'lib/moderation'
+import {useStores} from 'state/index'
 
 export function ScreenHider({
   testID,
@@ -22,24 +30,17 @@ export function ScreenHider({
 }: React.PropsWithChildren<{
   testID?: string
   screenDescription: string
-  moderation: ModerationBehavior
+  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
+  const store = useStores()
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (moderation.behavior !== ModerationBehaviorCode.Hide || override) {
+  if (!moderation.blur || override) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -47,6 +48,7 @@ export function ScreenHider({
     )
   }
 
+  const desc = describeModerationCause(moderation.cause, 'account')
   return (
     <View style={[styles.container, pal.view, containerStyle]}>
       <View style={styles.iconContainer}>
@@ -63,11 +65,38 @@ export function ScreenHider({
       </Text>
       <Text type="2xl" style={[styles.description, pal.textLight]}>
         This {screenDescription} has been flagged:{' '}
-        {moderation.reason || 'Content warning'}
+        <Text type="2xl-medium" style={pal.text}>
+          {desc.name}
+        </Text>
+        .{' '}
+        <TouchableWithoutFeedback
+          onPress={() => {
+            store.shell.openModal({
+              name: 'moderation-details',
+              context: 'account',
+              moderation,
+            })
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Learn more about this warning"
+          accessibilityHint="">
+          <Text type="2xl" style={pal.link}>
+            Learn More
+          </Text>
+        </TouchableWithoutFeedback>
       </Text>
       {!isDesktopWeb && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>
-        <Button type="inverted" onPress={onPressBack} style={styles.btn}>
+        <Button
+          type="inverted"
+          onPress={() => {
+            if (navigation.canGoBack()) {
+              navigation.goBack()
+            } else {
+              navigation.navigate('Home')
+            }
+          }}
+          style={styles.btn}>
           <Text type="button-lg" style={pal.textInverted}>
             Go back
           </Text>

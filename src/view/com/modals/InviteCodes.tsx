@@ -53,11 +53,7 @@ export function Component({}: {}) {
         Invite a Friend
       </Text>
       <Text type="lg" style={[styles.description, pal.text]}>
-        Send these invites to your friends so they can create an account. Each
-        code works once!
-      </Text>
-      <Text type="sm" style={[styles.description, pal.textLight]}>
-        (You'll receive one invite code every two weeks.)
+        Each code works once. You'll receive more invite codes periodically.
       </Text>
       <ScrollView style={[styles.scrollContainer, pal.border]}>
         {store.me.invites.map((invite, i) => (
