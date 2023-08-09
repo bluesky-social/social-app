@@ -132,7 +132,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
             <View style={[styles.RollBtn]}>
               <ClaimBtn
                 loading={isClaimingDaily}
-                text="Roll"
+                text={isClaimingDaily ? "Claiming..." : "Roll"}
                 onClick={onClaimHandler}
                 shouldClaim={shouldClaimDaily}
               />

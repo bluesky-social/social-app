@@ -37,7 +37,11 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
   );
 
   const onClaimHandler = async () => {
-    navigation.navigate("Rewards");
+    if (store.session.hasSession) {
+      navigation.navigate("SignIn");
+    } else {
+      navigation.navigate("Rewards");
+    }
   };
 
   return (
@@ -94,7 +98,10 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
           </View>
         </View>
         <View style={styles.claimBtn}>
-          <ClaimBtn onClick={onClaimHandler} shouldClaim={shouldClaimDaily} />
+          <ClaimBtn
+            text={store.session.hasSession ? "Claim Reward" : "Get Started"}
+            onClick={onClaimHandler}
+          />
         </View>
       </View>
     </View>
