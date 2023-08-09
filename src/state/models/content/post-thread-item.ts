@@ -3,9 +3,9 @@ import {
   AppBskyFeedPost as FeedPost,
   AppBskyFeedDefs,
   RichText,
+  PostModeration,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {PostLabelInfo, PostModeration} from 'lib/labeling/types'
 import {PostsFeedItemModel} from '../feeds/post'
 
 type PostView = AppBskyFeedDefs.PostView
@@ -67,10 +67,6 @@ export class PostThreadItemModel {
     return this.data.isThreadMuted
   }
 
-  get labelInfo(): PostLabelInfo {
-    return this.data.labelInfo
-  }
-
   get moderation(): PostModeration {
     return this.data.moderation
   }
@@ -111,7 +107,7 @@ export class PostThreadItemModel {
           const itemModel = new PostThreadItemModel(this.rootStore, item)
           itemModel._depth = this._depth + 1
           itemModel._showParentReplyLine =
-            itemModel.parentUri !== highlightedPostUri && replies.length === 0
+            itemModel.parentUri !== highlightedPostUri
           if (item.replies?.length) {
             itemModel._showChildReplyLine = true
             itemModel.assignTreeModels(item, highlightedPostUri, false, true)

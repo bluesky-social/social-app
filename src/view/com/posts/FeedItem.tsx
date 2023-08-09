@@ -8,16 +8,14 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
-import {ModerationBehaviorCode} from 'lib/labeling/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
-import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
-import {ImageHider} from '../util/moderation/ImageHider'
+import {PostAlerts} from '../util/moderation/PostAlerts'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import * as Toast from '../util/Toast'
@@ -34,14 +32,14 @@ import {makeProfileLink} from 'lib/routes/links'
 export const FeedItem = observer(function ({
   item,
   isThreadChild,
+  isThreadLastChild,
   isThreadParent,
-  ignoreMuteFor,
 }: {
   item: PostsFeedItemModel
   isThreadChild?: boolean
+  isThreadLastChild?: boolean
   isThreadParent?: boolean
   showReplyLine?: boolean
-  ignoreMuteFor?: string
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -138,80 +136,86 @@ export const FeedItem = observer(function ({
     )
   }, [track, item, setDeleted, store])
 
-  const isSmallTop = isThreadChild
   const outerStyles = [
     styles.outer,
     pal.view,
-    {borderColor: pal.colors.border},
-    isSmallTop ? styles.outerSmallTop : undefined,
-    isThreadParent ? styles.outerNoBottom : undefined,
+    {
+      borderColor: pal.colors.border,
+      paddingBottom:
+        isThreadLastChild || (!isThreadChild && !isThreadParent)
+          ? 12
+          : undefined,
+    },
+    isThreadChild ? styles.outerSmallTop : undefined,
   ]
-
-  // moderation override
-  let moderation = item.moderation.list
-  if (
-    ignoreMuteFor === item.post.author.did &&
-    moderation.isMute &&
-    !moderation.noOverride
-  ) {
-    moderation = {behavior: ModerationBehaviorCode.Show}
-  }
 
   if (!record || deleted) {
     return <View />
   }
 
   return (
-    <PostHider
+    <Link
       testID={`feedItem-by-${item.post.author.handle}`}
       style={outerStyles}
       href={itemHref}
-      moderation={moderation}>
-      {isThreadChild && (
-        <View
-          style={[styles.topReplyLine, {borderColor: pal.colors.replyLine}]}
-        />
-      )}
-      {isThreadParent && (
-        <View
-          style={[styles.bottomReplyLine, {borderColor: pal.colors.replyLine}]}
-        />
-      )}
-      {item.reasonRepost && (
-        <Link
-          style={styles.includeReason}
-          href={makeProfileLink(item.reasonRepost.by)}
-          title={sanitizeDisplayName(
-            item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
-          )}>
-          <FontAwesomeIcon
-            icon="retweet"
-            style={[
-              styles.includeReasonIcon,
-              {color: pal.colors.textLight} as FontAwesomeIconStyle,
-            ]}
-          />
-          <Text
-            type="sm-bold"
-            style={pal.textLight}
-            lineHeight={1.2}
-            numberOfLines={1}>
-            Reposted by{' '}
-            <DesktopWebTextLink
-              type="sm-bold"
-              style={pal.textLight}
-              lineHeight={1.2}
-              numberOfLines={1}
-              text={sanitizeDisplayName(
-                item.reasonRepost.by.displayName ||
-                  sanitizeHandle(item.reasonRepost.by.handle),
-              )}
-              href={makeProfileLink(item.reasonRepost.by)}
-            />
-          </Text>
-        </Link>
-      )}
+      noFeedback
+      accessible={false}>
       <PostSandboxWarning />
+
+      <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
+        <View style={{width: 52}}>
+          {isThreadChild && (
+            <View
+              style={[
+                styles.replyLine,
+                {
+                  flexGrow: 1,
+                  backgroundColor: pal.colors.replyLine,
+                  marginBottom: 4,
+                },
+              ]}
+            />
+          )}
+        </View>
+
+        <View style={{paddingTop: 12}}>
+          {item.reasonRepost && (
+            <Link
+              style={styles.includeReason}
+              href={makeProfileLink(item.reasonRepost.by)}
+              title={sanitizeDisplayName(
+                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+              )}>
+              <FontAwesomeIcon
+                icon="retweet"
+                style={[
+                  styles.includeReasonIcon,
+                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
+                ]}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                Reposted by{' '}
+                <DesktopWebTextLink
+                  type="sm-bold"
+                  style={pal.textLight}
+                  lineHeight={1.2}
+                  numberOfLines={1}
+                  text={sanitizeDisplayName(
+                    item.reasonRepost.by.displayName ||
+                      sanitizeHandle(item.reasonRepost.by.handle),
+                  )}
+                  href={makeProfileLink(item.reasonRepost.by)}
+                />
+              </Text>
+            </Link>
+          )}
+        </View>
+      </View>
+
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
@@ -221,6 +225,18 @@ export const FeedItem = observer(function ({
             avatar={item.post.author.avatar}
             moderation={item.moderation.avatar}
           />
+          {isThreadParent && (
+            <View
+              style={[
+                styles.replyLine,
+                {
+                  flexGrow: 1,
+                  backgroundColor: pal.colors.replyLine,
+                  marginTop: 4,
+                },
+              ]}
+            />
+          )}
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
@@ -255,8 +271,14 @@ export const FeedItem = observer(function ({
             </View>
           )}
           <ContentHider
-            moderation={moderation}
-            containerStyle={styles.contentHider}>
+            moderation={item.moderation.content}
+            ignoreMute
+            style={styles.contentHider}
+            childContainerStyle={styles.contentHiderChild}>
+            <PostAlerts
+              moderation={item.moderation.content}
+              style={styles.alert}
+            />
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
@@ -267,9 +289,16 @@ export const FeedItem = observer(function ({
                 />
               </View>
             ) : undefined}
-            <ImageHider moderation={item.moderation.list} style={styles.embed}>
-              <PostEmbeds embed={item.post.embed} style={styles.embed} />
-            </ImageHider>
+            {item.post.embed ? (
+              <ContentHider
+                moderation={item.moderation.embed}
+                style={styles.embed}>
+                <PostEmbeds
+                  embed={item.post.embed}
+                  moderation={item.moderation.embed}
+                />
+              </ContentHider>
+            ) : null}
             {needsTranslation && (
               <View style={[pal.borderDark, styles.translateLink]}>
                 <Link href={translatorUrl} title="Translate">
@@ -306,43 +335,29 @@ export const FeedItem = observer(function ({
           />
         </View>
       </View>
-    </PostHider>
+    </Link>
   )
 })
 
 const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
-    padding: 10,
+    paddingLeft: 10,
     paddingRight: 15,
-    paddingBottom: 8,
   },
   outerSmallTop: {
     borderTopWidth: 0,
   },
-  outerNoBottom: {
-    paddingBottom: 2,
-  },
-  topReplyLine: {
-    position: 'absolute',
-    left: 42,
-    top: 0,
-    height: 6,
-    borderLeftWidth: 2,
-  },
-  bottomReplyLine: {
-    position: 'absolute',
-    left: 42,
-    top: 72,
-    bottom: 0,
-    borderLeftWidth: 2,
+  replyLine: {
+    width: 2,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   includeReason: {
     flexDirection: 'row',
-    paddingLeft: 50,
-    paddingRight: 20,
     marginTop: 2,
-    marginBottom: 2,
+    marginBottom: 4,
+    marginLeft: -20,
   },
   includeReasonIcon: {
     marginRight: 4,
@@ -358,6 +373,10 @@ const styles = StyleSheet.create({
   layoutContent: {
     flex: 1,
   },
+  alert: {
+    marginTop: 6,
+    marginBottom: 6,
+  },
   postTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -365,7 +384,10 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   contentHider: {
-    marginTop: 4,
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
   },
   embed: {
     marginBottom: 6,

@@ -20,25 +20,37 @@ import {ComposePrompt} from '../composer/Prompt'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {isIOS, isDesktopWeb, isMobileWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 
+const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 0}
+
+const PARENT_SPINNER = {
+  _reactKey: '__parent_spinner__',
+  _isHighlightedPost: false,
+}
 const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
 const DELETED = {_reactKey: '__deleted__', _isHighlightedPost: false}
 const BLOCKED = {_reactKey: '__blocked__', _isHighlightedPost: false}
+const CHILD_SPINNER = {
+  _reactKey: '__child_spinner__',
+  _isHighlightedPost: false,
+}
 const BOTTOM_COMPONENT = {
   _reactKey: '__bottom_component__',
   _isHighlightedPost: false,
 }
 type YieldedItem =
   | PostThreadItemModel
+  | typeof PARENT_SPINNER
   | typeof REPLY_PROMPT
   | typeof DELETED
   | typeof BLOCKED
+  | typeof PARENT_SPINNER
 
 export const PostThread = observer(function PostThread({
   uri,
@@ -51,14 +63,24 @@ export const PostThread = observer(function PostThread({
 }) {
   const pal = usePalette('default')
   const ref = useRef<FlatList>(null)
+  const hasScrolledIntoView = useRef<boolean>(false)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const posts = React.useMemo(() => {
     if (view.thread) {
-      return Array.from(flattenThread(view.thread)).concat([BOTTOM_COMPONENT])
+      const arr = Array.from(flattenThread(view.thread))
+      if (view.isLoadingFromCache) {
+        if (view.thread?.postRecord?.reply) {
+          arr.unshift(PARENT_SPINNER)
+        }
+        arr.push(CHILD_SPINNER)
+      } else {
+        arr.push(BOTTOM_COMPONENT)
+      }
+      return arr
     }
     return []
-  }, [view.thread])
+  }, [view.isLoadingFromCache, view.thread])
   useSetTitle(
     view.thread?.postRecord &&
       `${sanitizeDisplayName(
@@ -80,17 +102,37 @@ export const PostThread = observer(function PostThread({
     setIsRefreshing(false)
   }, [view, setIsRefreshing])
 
-  const onLayout = React.useCallback(() => {
+  const onContentSizeChange = React.useCallback(() => {
+    // only run once
+    if (hasScrolledIntoView.current) {
+      return
+    }
+
+    // wait for loading to finish
+    if (
+      !view.hasContent ||
+      (view.isFromCache && view.isLoadingFromCache) ||
+      view.isLoading
+    ) {
+      return
+    }
+
     const index = posts.findIndex(post => post._isHighlightedPost)
     if (index !== -1) {
       ref.current?.scrollToIndex({
         index,
         animated: false,
-        viewOffset: 40,
+        viewPosition: 0,
       })
+      hasScrolledIntoView.current = true
     }
-  }, [posts, ref])
-
+  }, [
+    posts,
+    view.hasContent,
+    view.isFromCache,
+    view.isLoadingFromCache,
+    view.isLoading,
+  ])
   const onScrollToIndexFailed = React.useCallback(
     (info: {
       index: number
@@ -115,7 +157,13 @@ export const PostThread = observer(function PostThread({
 
   const renderItem = React.useCallback(
     ({item}: {item: YieldedItem}) => {
-      if (item === REPLY_PROMPT) {
+      if (item === PARENT_SPINNER) {
+        return (
+          <View style={styles.parentSpinner}>
+            <ActivityIndicator />
+          </View>
+        )
+      } else if (item === REPLY_PROMPT) {
         return <ComposePrompt onPressCompose={onPressReply} />
       } else if (item === DELETED) {
         return (
@@ -149,6 +197,12 @@ export const PostThread = observer(function PostThread({
               isMobileWeb && styles.bottomSpacer,
             ]}
           />
+        )
+      } else if (item === CHILD_SPINNER) {
+        return (
+          <View style={styles.childSpinner}>
+            <ActivityIndicator />
+          </View>
         )
       } else if (item instanceof PostThreadItemModel) {
         return <PostThreadItem item={item} onPostReply={onRefresh} />
@@ -247,6 +301,11 @@ export const PostThread = observer(function PostThread({
       ref={ref}
       data={posts}
       initialNumToRender={posts.length}
+      maintainVisibleContentPosition={
+        isIOS && view.isFromCache
+          ? MAINTAIN_VISIBLE_CONTENT_POSITION
+          : undefined
+      }
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshControl={
@@ -257,10 +316,12 @@ export const PostThread = observer(function PostThread({
           titleColor={pal.colors.text}
         />
       }
-      onLayout={onLayout}
+      onContentSizeChange={
+        isIOS && view.isFromCache ? undefined : onContentSizeChange
+      }
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}
-      contentContainerStyle={s.contentContainerExtra}
+      contentContainerStyle={styles.contentContainerExtra}
     />
   )
 })
@@ -307,10 +368,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 18,
   },
+  parentSpinner: {
+    paddingVertical: 10,
+  },
+  childSpinner: {},
   bottomBorder: {
     borderBottomWidth: 1,
   },
   bottomSpacer: {
-    height: 200,
+    height: 400,
+  },
+  contentContainerExtra: {
+    paddingBottom: 500,
   },
 })

@@ -8,12 +8,11 @@ import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
-import {FeedTuner, FeedViewPostsSlice} from 'lib/api/feed-manip'
+import {FeedTuner} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
 
 const PAGE_SIZE = 30
-let _idCounter = 0
 
 type QueryParams =
   | GetTimeline.QueryParams
@@ -286,27 +285,13 @@ export class PostsFeedModel {
   }
 
   /**
-   * Fetches the given post and adds it to the top
-   * Used by the composer to add their new posts
+   * Updates the UI after the user has created a post
    */
-  async addPostToTop(uri: string) {
+  onPostCreated() {
     if (!this.slices.length) {
       return this.refresh()
-    }
-    try {
-      const res = await this.rootStore.agent.app.bsky.feed.getPosts({
-        uris: [uri],
-      })
-      const toPrepend = new PostsFeedSliceModel(
-        this.rootStore,
-        uri,
-        new FeedViewPostsSlice(res.data.posts.map(post => ({post}))),
-      )
-      runInAction(() => {
-        this.slices = [toPrepend].concat(this.slices)
-      })
-    } catch (e) {
-      this.rootStore.log.error('Failed to load post to prepend', {e})
+    } else {
+      this.setHasNewLatest(true)
     }
   }
 
@@ -374,16 +359,15 @@ export class PostsFeedModel {
     this.rootStore.me.follows.hydrateProfiles(
       res.data.feed.map(item => item.post.author),
     )
+    for (const item of res.data.feed) {
+      this.rootStore.posts.fromFeedItem(item)
+    }
 
     const slices = this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
-      const sliceModel = new PostsFeedSliceModel(
-        this.rootStore,
-        `item-${_idCounter++}`,
-        slice,
-      )
+      const sliceModel = new PostsFeedSliceModel(this.rootStore, slice)
       toAppend.push(sliceModel)
     }
     runInAction(() => {
@@ -405,6 +389,7 @@ export class PostsFeedModel {
     res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
   ) {
     for (const item of res.data.feed) {
+      this.rootStore.posts.fromFeedItem(item)
       const existingSlice = this.slices.find(slice =>
         slice.containsUri(item.post.uri),
       )

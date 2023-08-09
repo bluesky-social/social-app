@@ -27,6 +27,7 @@ import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as OnboardingModal from './OnboardingModal'
+import * as ModerationDetailsModal from './ModerationDetails'
 
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
@@ -110,6 +111,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <PreferencesHomeFeed.Component />
   } else if (modal.name === 'onboarding') {
     element = <OnboardingModal.Component />
+  } else if (modal.name === 'moderation-details') {
+    element = <ModerationDetailsModal.Component {...modal} />
   } else {
     return null
   }
