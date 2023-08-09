@@ -418,34 +418,35 @@ export class PreferencesModel {
     return {
       userDid: this.rootStore.session.currentSession?.did || '',
       adultContentEnabled: this.adultContentEnabled,
-      labelerSettings: [
+      labels: {
+        // TEMP translate old settings until this UI can be migrated -prf
+        porn: tempfixLabelPref(this.contentLabels.nsfw),
+        sexual: tempfixLabelPref(this.contentLabels.suggestive),
+        nudity: tempfixLabelPref(this.contentLabels.nudity),
+        nsfl: tempfixLabelPref(this.contentLabels.gore),
+        corpse: tempfixLabelPref(this.contentLabels.gore),
+        gore: tempfixLabelPref(this.contentLabels.gore),
+        torture: tempfixLabelPref(this.contentLabels.gore),
+        'self-harm': tempfixLabelPref(this.contentLabels.gore),
+        'intolerant-race': tempfixLabelPref(this.contentLabels.hate),
+        'intolerant-gender': tempfixLabelPref(this.contentLabels.hate),
+        'intolerant-sexual-orientation': tempfixLabelPref(
+          this.contentLabels.hate,
+        ),
+        'intolerant-religion': tempfixLabelPref(this.contentLabels.hate),
+        intolerant: tempfixLabelPref(this.contentLabels.hate),
+        'icon-intolerant': tempfixLabelPref(this.contentLabels.hate),
+        spam: tempfixLabelPref(this.contentLabels.spam),
+        impersonation: tempfixLabelPref(this.contentLabels.impersonation),
+        scam: 'warn',
+      },
+      labelers: [
         {
           labeler: {
             did: '',
             displayName: 'Bluesky Social',
           },
-          settings: {
-            // TEMP translate old settings until this UI can be migrated -prf
-            porn: tempfixLabelPref(this.contentLabels.nsfw),
-            sexual: tempfixLabelPref(this.contentLabels.suggestive),
-            nudity: tempfixLabelPref(this.contentLabels.nudity),
-            nsfl: tempfixLabelPref(this.contentLabels.gore),
-            corpse: tempfixLabelPref(this.contentLabels.gore),
-            gore: tempfixLabelPref(this.contentLabels.gore),
-            torture: tempfixLabelPref(this.contentLabels.gore),
-            'self-harm': tempfixLabelPref(this.contentLabels.gore),
-            'intolerant-race': tempfixLabelPref(this.contentLabels.hate),
-            'intolerant-gender': tempfixLabelPref(this.contentLabels.hate),
-            'intolerant-sexual-orientation': tempfixLabelPref(
-              this.contentLabels.hate,
-            ),
-            'intolerant-religion': tempfixLabelPref(this.contentLabels.hate),
-            intolerant: tempfixLabelPref(this.contentLabels.hate),
-            'icon-intolerant': tempfixLabelPref(this.contentLabels.hate),
-            spam: tempfixLabelPref(this.contentLabels.spam),
-            impersonation: tempfixLabelPref(this.contentLabels.impersonation),
-            scam: 'warn',
-          },
+          labels: {},
         },
       ],
     }

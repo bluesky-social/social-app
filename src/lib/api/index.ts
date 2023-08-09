@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyRichtextFacet,
+  ComAtprotoLabelDefs,
   ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
@@ -77,6 +78,7 @@ interface PostOpts {
   }
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
+  labels?: string[]
   knownHandles?: Set<string>
   onStateChange?: (state: string) => void
   langs?: string[]
@@ -234,6 +236,15 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     }
   }
 
+  // set labels
+  let labels: ComAtprotoLabelDefs.SelfLabels | undefined
+  if (opts.labels?.length) {
+    labels = {
+      $type: 'com.atproto.label.defs#selfLabels',
+      values: opts.labels.map(val => ({val})),
+    }
+  }
+
   // add top 3 languages from user preferences if langs is provided
   let langs = opts.langs
   if (opts.langs) {
@@ -248,6 +259,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       reply,
       embed,
       langs,
+      labels,
     })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)

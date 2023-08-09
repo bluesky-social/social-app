@@ -147,75 +147,59 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const onPressPublish = useCallback(
-    async (rt: RichText) => {
-      if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
-        return
-      }
-      if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
-        return
-      }
+  const onPressPublish = async (rt: RichText) => {
+    if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
+      return
+    }
+    if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
+      return
+    }
 
-      setError('')
+    setError('')
 
-      if (rt.text.trim().length === 0 && gallery.isEmpty) {
-        setError('Did you want to say anything?')
-        return
-      }
+    if (rt.text.trim().length === 0 && gallery.isEmpty) {
+      setError('Did you want to say anything?')
+      return
+    }
 
-      setIsProcessing(true)
+    setIsProcessing(true)
 
-      try {
-        await apilib.post(store, {
-          rawText: rt.text,
-          replyTo: replyTo?.uri,
-          images: gallery.images,
-          quote: quote,
-          extLink: extLink,
-          onStateChange: setProcessingState,
-          knownHandles: autocompleteView.knownHandles,
-          langs: store.preferences.postLanguages,
-        })
-      } catch (e: any) {
-        if (extLink) {
-          setExtLink({
-            ...extLink,
-            isLoading: true,
-            localThumb: undefined,
-          } as apilib.ExternalEmbedDraft)
-        }
-        setError(cleanError(e.message))
-        setIsProcessing(false)
-        return
-      } finally {
-        track('Create Post', {
-          imageCount: gallery.size,
-        })
-        if (replyTo && replyTo.uri) track('Post:Reply')
+    try {
+      await apilib.post(store, {
+        rawText: rt.text,
+        replyTo: replyTo?.uri,
+        images: gallery.images,
+        quote,
+        extLink,
+        labels,
+        onStateChange: setProcessingState,
+        knownHandles: autocompleteView.knownHandles,
+        langs: store.preferences.postLanguages,
+      })
+    } catch (e: any) {
+      if (extLink) {
+        setExtLink({
+          ...extLink,
+          isLoading: true,
+          localThumb: undefined,
+        } as apilib.ExternalEmbedDraft)
       }
-      if (!replyTo) {
-        store.me.mainFeed.onPostCreated()
-      }
-      onPost?.()
-      onClose()
-      Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
-    },
-    [
-      isProcessing,
-      setError,
-      setIsProcessing,
-      replyTo,
-      autocompleteView.knownHandles,
-      extLink,
-      onClose,
-      onPost,
-      quote,
-      setExtLink,
-      store,
-      track,
-      gallery,
-    ],
-  )
+      setError(cleanError(e.message))
+      setIsProcessing(false)
+      return
+    } finally {
+      track('Create Post', {
+        imageCount: gallery.size,
+      })
+      if (replyTo && replyTo.uri) track('Post:Reply')
+    }
+    if (!replyTo) {
+      store.me.mainFeed.onPostCreated()
+    }
+    onPost?.()
+    onClose()
+    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
+  }
 
   const canPost = useMemo(
     () =>
