@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -217,6 +217,13 @@ export const Component = observer(
               label="Save Changes"
             />
           )}
+
+          {listsList.isLoading ||
+            (!membershipsLoaded && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator />
+              </View>
+            ))}
         </View>
       </View>
     )
@@ -238,6 +245,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   btns: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -279,5 +287,12 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     marginRight: 8,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
   },
 })
