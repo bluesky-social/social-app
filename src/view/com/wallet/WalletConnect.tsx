@@ -18,10 +18,12 @@ export const WalletConnect = observer(({ model }: { model: MeModel }) => {
   const wallet = useWallet();
   const pal = usePalette("default");
 
-  const handleLinkWallet = () => {
+  const handleLinkWallet = async () => {
     if (wallet.publicKey) {
-      store.me.connectWallet(wallet.publicKey?.toString());
+      await store.me.connectWallet(wallet.publicKey?.toString());
       Toast.show("Wallet Connected");
+    } else {
+      Toast.show("No Wallet Connection Found");
     }
   };
 
