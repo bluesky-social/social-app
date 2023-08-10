@@ -168,6 +168,7 @@ export function Selector({
         overflow: 'hidden',
         marginTop: -SCROLLBAR_OFFSET,
         height,
+        backgroundColor: pal.colors.background,
       }}>
       <ScrollView
         horizontal
