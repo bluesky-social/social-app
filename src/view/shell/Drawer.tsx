@@ -65,7 +65,7 @@ export const DrawerContent = observer(() => {
     isAtHome,
     isAtNotifications,
     isAtMyProfile,
-    isAtCommunities, 
+    isAtCommunities,
     isAtWallets,
     isAtRewards,
   } = useNavigationTabState();
@@ -132,7 +132,7 @@ export const DrawerContent = observer(() => {
     track("Settings:SignOutButtonClicked");
     store.session.logout();
   }, [track, store]);
-  
+
   const onPressWallet = React.useCallback(() => {
     navigation.navigate("Wallets");
   }, [onPressTab]);
@@ -195,13 +195,13 @@ export const DrawerContent = observer(() => {
               isAtHome ? (
                 <HomeIconSolid
                   style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
+                  size="22"
                   strokeWidth={3.25}
                 />
               ) : (
                 <HomeIcon
                   style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
+                  size="22"
                   strokeWidth={3.25}
                 />
               )
@@ -255,13 +255,13 @@ export const DrawerContent = observer(() => {
                   isAtNotifications ? (
                     <BellIconSolid
                       style={pal.text as StyleProp<ViewStyle>}
-                      size="24"
+                      size="20"
                       strokeWidth={1.7}
                     />
                   ) : (
                     <BellIcon
                       style={pal.text as StyleProp<ViewStyle>}
-                      size="24"
+                      size="20"
                       strokeWidth={1.7}
                     />
                   )
@@ -278,18 +278,26 @@ export const DrawerContent = observer(() => {
                 onPress={onPressNotifications}
               />
               <MenuItem
-              icon = {isAtWallets ?
-                <FontAwesomeIcon
-                  size={22}
-                  icon={fa.faWallet}
-                  style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
-                /> :
-                <FontAwesomeIcon
-                  size={22}
-                  icon={fa.faWallet}
-                  style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
-                />}
-                label="Wallet"  
+                icon={
+                  isAtWallets ? (
+                    <FontAwesomeIcon
+                      size={20}
+                      icon={fa.faWallet}
+                      style={
+                        { ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle
+                      }
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      size={20}
+                      icon={fa.faWallet}
+                      style={
+                        { ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle
+                      }
+                    />
+                  )
+                }
+                label="Wallet"
                 accessibilityLabel="Wallet"
                 accessibilityHint="user wallets"
                 bold={isAtWallets}
@@ -317,7 +325,7 @@ export const DrawerContent = observer(() => {
               onPress={onPressSignout}
               icon={
                 <FontAwesomeIcon
-                  size={22}
+                  size={20}
                   icon={fa.faSignOut}
                   style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
                 />

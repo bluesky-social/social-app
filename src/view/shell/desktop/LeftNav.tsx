@@ -180,7 +180,7 @@ export function SignOutBtn({ onPressHandler }: SignOutProps) {
     >
       <View style={[styles.navItemIconWrapper]}>
         <FontAwesomeIcon
-          size={24}
+          size={20}
           icon="sign-out"
           style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
         />
@@ -280,9 +280,9 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <NavItem
             href="/notifications"
             count={store.me.notifications.unreadCountLabel}
-            icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
+            icon={<BellIcon strokeWidth={2} size={22} style={pal.text} />}
             iconFilled={
-              <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
+              <BellIconSolid strokeWidth={1.5} size={22} style={pal.text} />
             }
             label="Notifications"
           />
@@ -290,14 +290,14 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             href="/wallets"
             icon={
               <FontAwesomeIcon
-                size={24}
+                size={20}
                 icon={fa.faWallet}
                 style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
               />
             }
             iconFilled={
               <FontAwesomeIcon
-                size={24}
+                size={20}
                 icon={fa.faWallet}
                 style={{ ...pal.text, marginLeft: 4 } as FontAwesomeIconStyle}
               />

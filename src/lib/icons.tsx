@@ -54,8 +54,8 @@ export function GiftIcon({
   return (
     <Svg
       viewBox="0 0 16 16"
-      width={size || 24}
-      height={size || 24}
+      width={size || 20}
+      height={size || 20}
       strokeWidth={strokeWidth}
       style={style}
       fill="#434248"
@@ -77,8 +77,8 @@ export function GiftIconFilled({
   return (
     <Svg
       viewBox="0 0 16 16"
-      width={size || 24}
-      height={size || 24}
+      width={size || 20}
+      height={size || 20}
       strokeWidth={strokeWidth}
       style={style}
       fill="#434248"

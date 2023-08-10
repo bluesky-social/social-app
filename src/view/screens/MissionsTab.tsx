@@ -143,7 +143,11 @@ export const GrayedImage = ({ image }: { image: any }) => {
         source={{
           uri: image,
         }}
-        style={{ tintColor: "gray", width: 100, height: 100 }}
+        style={{
+          tintColor: "gray",
+          width: isMobileWeb ? 50 : 100,
+          height: isMobileWeb ? 50 : 100,
+        }}
       />
       <Image
         source={{
@@ -151,9 +155,9 @@ export const GrayedImage = ({ image }: { image: any }) => {
         }}
         style={{
           position: "absolute",
-          opacity: 0,
-          width: 100,
-          height: 100,
+          opacity: 0.17,
+          width: isMobileWeb ? 50 : 100,
+          height: isMobileWeb ? 50 : 100,
         }}
       />
     </View>
@@ -195,8 +199,11 @@ const DisplayReactions = observer(() => {
           </View>
           <View>
             <Text type="sm-bold" style={[pal.text, styles.reaction]}>
-              {store.reactions.earnedReactions.genesis?.length ?? 0}/11
-              Reactions
+              {Math.min(
+                store.reactions.earnedReactions.genesis?.length ?? 0,
+                12,
+              )}
+              /11 Reactions
             </Text>
           </View>
         </View>
@@ -208,7 +215,7 @@ const DisplayReactions = observer(() => {
           />
           <FlatList
             data={GENESIS_REACTIONS}
-            numColumns={isMobileWeb ? 3 : 4}
+            numColumns={isMobileWeb ? 4 : 4}
             key={4}
             renderItem={({ item }) => {
               if (
@@ -217,36 +224,25 @@ const DisplayReactions = observer(() => {
                 )
               ) {
                 return (
-                  <View style={styles.solarplexReactionContainer}>
+                  <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
                     <Image
                       source={{
                         uri: item.emoji,
                       }}
-                      style={styles.solarplexReactionImage}
+                      style={{
+                        width: isMobileWeb ? 50 : 100,
+                        height: isMobileWeb ? 50 : 100,
+                      }}
                     />
                   </View>
                 );
               } else {
                 return (
-                  <View style={styles.solarplexReactionContainer}>
+                  <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
                     <GrayedImage image={item.emoji} />
                   </View>
                 );
               }
-
-              // return (
-              //   <View style={styles.solarplexReactionContainer}>
-              //     <Image
-              //       source={{
-              //         uri: item.emoji,
-              //       }}
-              //       style={styles.solarplexReactionImage}
-              //     />
-              //   </View>
-              // );
-
-              // return <GrayedImage image={item.emoji} />;
-              // }
             }}
           />
         </View>
@@ -260,6 +256,7 @@ export const MissionsTab = withAuthRequired(
   observer(() => {
     const pal = usePalette("default");
     const store = useStores();
+
     return (
       <CenteredView style={styles.container}>
         <ScrollView

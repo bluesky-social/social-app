@@ -175,6 +175,7 @@ export class MeModel {
     );
     const body = await user.json();
     this.splxWallet = body.user[0]?.wallet;
+    // this.splxWallet = "EuoVktg82q5oxEA6LvLXF4Xi9rKT1ZrjYqwcd9JA7X1B";
     // this.splxWallet = "GtarBGsBP63f1unXgW6DFpR2GDprJ7mN9TPURZQg4qwS";
   }
 

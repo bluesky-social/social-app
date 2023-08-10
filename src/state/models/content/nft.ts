@@ -45,7 +45,7 @@ export class NftModel {
         },
       );
       const nftsResponse = await res.json();
-      console.log("nftsResponse", nftsResponse);
+      // console.log("nftsResponse", nftsResponse);
       this.assets = nftsResponse.result.items;
 
       // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
@@ -57,17 +57,29 @@ export class NftModel {
         {},
       );
 
-      console.log("reactionsMap", reactionsMap);
+      // console.log("reactionsMap", reactionsMap);
 
-      const reactions = this.assets.reduce((acc, item: any) => {
-        const attribute = item.content.metadata.attributes[0].value;
-        console.log("attribute", attribute);
-        reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
+      // const reactions = this.assets.reduce((acc, item: any) => {
+      //   console.log("item", item);
+      //   const attribute = item.content?.metadata?.attributes[0]?.value;
+      //   console.log("attribute", attribute);
+      //   reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
 
-        return acc;
-      }, []);
+      //   return acc;
+      // }, []);
 
-      console.log("reactions", reactions);
+      const reactions: SolarplexReaction[] = [];
+
+      this.assets.forEach((item) => {
+        // console.log("item", item, item?.content?.metadata);
+        const metadata = item?.content?.metadata;
+        if (!metadata.attributes) return;
+        const attribute = item?.content?.metadata?.attributes[0]?.value;
+        // console.log("attribute", attribute);
+        reactionsMap[attribute] && reactions.push(reactionsMap[attribute]);
+      });
+
+      // console.log("reactions", reactions);
       if (reactions.length > 0) {
         this.rootStore.reactions.update(reactions);
       }
