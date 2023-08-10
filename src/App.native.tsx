@@ -30,7 +30,6 @@ const App = observer(() => {
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
-      // notifee.init(store)
       notifications.init(store)
       SplashScreen.hideAsync()
       Linking.getInitialURL().then((url: string | null) => {
