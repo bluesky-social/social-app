@@ -18,13 +18,13 @@ export function describeModerationCause(
   }
   if (cause.type === 'blocking') {
     return {
-      name: 'Blocked Author',
+      name: 'User Blocked',
       description: 'You have blocked this user. You cannot view their content.',
     }
   }
   if (cause.type === 'blocked-by') {
     return {
-      name: 'Blocked',
+      name: 'User Blocking You',
       description: 'This user has blocked you. You cannot view their content.',
     }
   }
