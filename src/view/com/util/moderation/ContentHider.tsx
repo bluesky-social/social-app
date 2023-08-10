@@ -41,12 +41,23 @@ export function ContentHider({
         onPress={() => {
           if (!moderation.noOverride) {
             setOverride(v => !v)
+          } else {
+            store.shell.openModal({
+              name: 'moderation-details',
+              context: 'content',
+              moderation,
+            })
           }
         }}
         accessibilityRole="button"
         accessibilityHint={override ? 'Hide the content' : 'Show the content'}
         accessibilityLabel=""
-        style={[styles.cover, pal.viewLight]}>
+        style={[
+          styles.cover,
+          moderation.noOverride
+            ? {borderWidth: 1, borderColor: pal.colors.borderDark}
+            : pal.viewLight,
+        ]}>
         <Pressable
           onPress={() => {
             store.shell.openModal({
