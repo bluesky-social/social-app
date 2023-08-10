@@ -2,13 +2,6 @@ import * as Notifications from 'expo-notifications'
 import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
 import {devicePlatform, isIOS} from 'platform/detection'
-// type NotificationReason =
-//   | 'like'
-//   | 'repost'
-//   | 'follow'
-//   | 'mention'
-//   | 'reply'
-//   | 'quote'
 
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => Notifications.setBadgeCountAsync(count))
@@ -69,7 +62,14 @@ export function init(store: RootStoreModel) {
       if (isIOS) {
         payload = event.request.trigger.payload
       } else {
-        // TODO: handle android payload
+        // TODO: handle android payload deeplink
+        // type NotificationReason =
+        //   | 'like'
+        //   | 'repost'
+        //   | 'follow'
+        //   | 'mention'
+        //   | 'reply'
+        //   | 'quote'
         // payload = event.request.trigger.remoteMessage?.data
       }
       if (payload) {
@@ -82,7 +82,6 @@ export function init(store: RootStoreModel) {
 
   const sub = Notifications.addNotificationResponseReceivedListener(
     response => {
-      console.log('NOTIFICATION RESPONSE LISTENER')
       store.log.debug(
         'Notifications: response received',
         response.actionIdentifier,
