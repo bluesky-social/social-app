@@ -192,10 +192,9 @@ export const CustomFeedScreenInner = observer(
       // TODO: may be report button shouldn't show up unless currentFeed is defined
       if (!currentFeed) return
       store.shell.openModal({
-        name: 'report-post',
-        postUri: currentFeed.uri,
-        postCid: currentFeed.data.cid,
-        collection: 'feed',
+        name: 'report',
+        uri: currentFeed.uri,
+        cid: currentFeed.data.cid,
       })
     }, [store, currentFeed])
 
@@ -275,17 +274,35 @@ export const CustomFeedScreenInner = observer(
               items={dropdownItems}
             />
           ) : (
-            <Button
-              type="default-light"
-              onPress={onToggleSaved}
-              accessibilityLabel="Add to my feeds"
-              accessibilityHint=""
-              style={styles.headerAddBtn}>
-              <FontAwesomeIcon icon="plus" color={pal.colors.link} size={19} />
-              <Text type="xl-medium" style={pal.link}>
-                Add to My Feeds
-              </Text>
-            </Button>
+            <>
+              <Button
+                type="default-light"
+                accessibilityLabel="Report this feed"
+                accessibilityHint=""
+                onPress={onPressReport}>
+                <FontAwesomeIcon
+                  size={17}
+                  icon="circle-exclamation"
+                  color={pal.colors.textLight}
+                  style={styles.top1}
+                />
+              </Button>
+              <Button
+                type="default-light"
+                onPress={onToggleSaved}
+                accessibilityLabel="Add to my feeds"
+                accessibilityHint=""
+                style={styles.headerAddBtn}>
+                <FontAwesomeIcon
+                  icon="plus"
+                  color={pal.colors.link}
+                  size={19}
+                />
+                <Text type="xl-medium" style={pal.link}>
+                  Add to My Feeds
+                </Text>
+              </Button>
+            </>
           )}
         </View>
       )
@@ -298,6 +315,7 @@ export const CustomFeedScreenInner = observer(
       onTogglePinned,
       onToggleLiked,
       dropdownItems,
+      onPressReport,
     ])
 
     const renderListHeaderComponent = React.useCallback(() => {

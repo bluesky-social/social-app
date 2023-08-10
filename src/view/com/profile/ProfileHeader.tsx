@@ -245,7 +245,7 @@ const ProfileHeaderLoaded = observer(
     const onPressReportAccount = React.useCallback(() => {
       track('ProfileHeader:ReportAccountButtonClicked')
       store.shell.openModal({
-        name: 'report-account',
+        name: 'report',
         did: view.did,
       })
     }, [track, store, view])

@@ -13,14 +13,13 @@ import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
-import * as ReportPostModal from './report/ReportPost'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
 import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as AltImageModal from './AltImage'
 import * as EditImageModal from './AltImage'
-import * as ReportAccountModal from './report/ReportAccount'
+import * as ReportModal from './report/Modal'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
@@ -87,12 +86,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'server-input') {
     snapPoints = ServerInputModal.snapPoints
     element = <ServerInputModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'report-post') {
-    snapPoints = ReportPostModal.snapPoints
-    element = <ReportPostModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'report-account') {
-    snapPoints = ReportAccountModal.snapPoints
-    element = <ReportAccountModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'report') {
+    snapPoints = ReportModal.snapPoints
+    element = <ReportModal.Component {...activeModal} />
   } else if (activeModal?.name === 'create-or-edit-mute-list') {
     snapPoints = CreateOrEditMuteListModal.snapPoints
     element = <CreateOrEditMuteListModal.Component {...activeModal} />

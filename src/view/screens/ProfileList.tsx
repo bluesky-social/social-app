@@ -89,10 +89,9 @@ export const ProfileListScreen = withAuthRequired(
     const onPressReportList = React.useCallback(() => {
       if (!list.list) return
       store.shell.openModal({
-        name: 'report-post',
-        postUri: list.uri,
-        postCid: list.list.cid,
-        collection: 'list',
+        name: 'report',
+        uri: list.uri,
+        cid: list.list.cid,
       })
     }, [store, list])
 

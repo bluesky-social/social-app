@@ -102,9 +102,9 @@ export function PostDropdownBtn({
       label: 'Report post',
       onPress() {
         store.shell.openModal({
-          name: 'report-post',
-          postUri: itemUri,
-          postCid: itemCid,
+          name: 'report',
+          uri: itemUri,
+          cid: itemCid,
         })
       },
       testID: 'postDropdownReportBtn',
