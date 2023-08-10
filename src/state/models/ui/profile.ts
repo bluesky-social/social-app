@@ -171,24 +171,26 @@ export class ProfileUiModel {
   // =
 
   setSelectedViewIndex(index: number) {
+    // ViewSelector fires onSelectView on mount
+    if (index === this.selectedViewIndex) return
+
     this.selectedViewIndex = index
 
-    if (this.selectedView === Sections.PostsNoReplies) {
-      this.feed.setParams({
-        filter: 'posts_no_replies',
-      })
-    } else if (this.selectedView === Sections.PostsWithReplies) {
-      this.feed.setParams({
-        filter: 'posts_with_replies',
-      })
+    let filter = 'posts_no_replies'
+    if (this.selectedView === Sections.PostsWithReplies) {
+      filter = 'posts_with_replies'
     } else if (this.selectedView === Sections.PostsWithMedia) {
-      this.feed.setParams({
-        filter: 'posts_with_media',
-      })
+      filter = 'posts_with_media'
     }
 
+    this.feed = new PostsFeedModel(this.rootStore, 'author', {
+      actor: this.params.user,
+      limit: 10,
+      filter,
+    })
+
     if (this.currentView instanceof PostsFeedModel) {
-      this.feed.refresh()
+      this.feed.setup()
     }
   }
 

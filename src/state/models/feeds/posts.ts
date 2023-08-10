@@ -74,10 +74,6 @@ export class PostsFeedModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  setParams(params: Partial<QueryParams>) {
-    this.params = Object.assign({}, this.params, params)
-  }
-
   setHasNewLatest(v: boolean) {
     this.hasNewLatest = v
   }
