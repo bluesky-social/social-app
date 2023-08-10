@@ -6,6 +6,7 @@ import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb} from 'platform/detection'
+import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ScrollView} from 'view/com/modals/util'
 
@@ -24,7 +25,7 @@ export const Component = observer(function Component({
   const store = useStores()
   const [selected, setSelected] = useState(labels)
 
-  const toggleAdultContent = (label: string) => {
+  const toggleAdultLabel = (label: string) => {
     const hadLabel = selected.includes(label)
     const stripped = selected.filter(l => !ADULT_CONTENT_LABELS.includes(l))
     const final = !hadLabel ? stripped.concat([label]) : stripped
@@ -32,6 +33,16 @@ export const Component = observer(function Component({
     onChange(final)
   }
 
+  const removeAdultLabel = () => {
+    const final = selected.filter(l => !ADULT_CONTENT_LABELS.includes(l))
+    setSelected(final)
+    onChange(final)
+  }
+
+  const hasAdultSelection =
+    selected.includes('sexual') ||
+    selected.includes('nudity') ||
+    selected.includes('porn')
   return (
     <View testID="selfLabelModal" style={[pal.view, styles.container]}>
       <View style={styles.titleSection}>
@@ -52,18 +63,16 @@ export const Component = observer(function Component({
             <Text type="title" style={pal.text}>
               Adult Content
             </Text>
-
-            <Text type="lg" style={pal.text}>
-              {selected.includes('sexual') ? (
-                <>😏</>
-              ) : selected.includes('nudity') ? (
-                <>🫣</>
-              ) : selected.includes('porn') ? (
-                <>🥵</>
-              ) : (
-                <></>
-              )}
-            </Text>
+            {hasAdultSelection ? (
+              <Button
+                type="default-light"
+                onPress={removeAdultLabel}
+                style={{paddingTop: 0, paddingBottom: 0, paddingRight: 0}}>
+                <Text type="md" style={pal.link}>
+                  Remove
+                </Text>
+              </Button>
+            ) : null}
           </View>
           <View style={s.flexRow}>
             <SelectableBtn
@@ -71,7 +80,7 @@ export const Component = observer(function Component({
               selected={selected.includes('sexual')}
               left
               label="Suggestive"
-              onSelect={() => toggleAdultContent('sexual')}
+              onSelect={() => toggleAdultLabel('sexual')}
               accessibilityHint=""
               style={s.flex1}
             />
@@ -79,7 +88,7 @@ export const Component = observer(function Component({
               testID="nudityLabelBtn"
               selected={selected.includes('nudity')}
               label="Nudity"
-              onSelect={() => toggleAdultContent('nudity')}
+              onSelect={() => toggleAdultLabel('nudity')}
               accessibilityHint=""
               style={s.flex1}
             />
@@ -88,7 +97,7 @@ export const Component = observer(function Component({
               selected={selected.includes('porn')}
               label="Porn"
               right
-              onSelect={() => toggleAdultContent('porn')}
+              onSelect={() => toggleAdultLabel('porn')}
               accessibilityHint=""
               style={s.flex1}
             />
