@@ -18,14 +18,21 @@ export function describeModerationCause(
   }
   if (cause.type === 'blocking') {
     return {
-      name: 'Blocked User',
+      name: 'User Blocked',
       description: 'You have blocked this user. You cannot view their content.',
     }
   }
   if (cause.type === 'blocked-by') {
     return {
-      name: 'Blocking You',
+      name: 'User Blocking You',
       description: 'This user has blocked you. You cannot view their content.',
+    }
+  }
+  if (cause.type === 'block-other') {
+    return {
+      name: 'Content Not Available',
+      description:
+        'This content is not available because one of the users involved has blocked the other.',
     }
   }
   if (cause.type === 'muted') {

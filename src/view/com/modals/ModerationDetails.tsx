@@ -29,11 +29,15 @@ export function Component({
     description =
       'Moderator has chosen to set a general warning on the content.'
   } else if (moderation.cause.type === 'blocking') {
-    name = 'Account Blocked'
+    name = 'User Blocked'
     description = 'You have blocked this user. You cannot view their content.'
   } else if (moderation.cause.type === 'blocked-by') {
-    name = 'Account Blocks You'
+    name = 'User Blocks You'
     description = 'This user has blocked you. You cannot view their content.'
+  } else if (moderation.cause.type === 'block-other') {
+    name = 'Content Not Available'
+    description =
+      'This content is not available because one of the users involved has blocked the other.'
   } else if (moderation.cause.type === 'muted') {
     if (moderation.cause.source.type === 'list') {
       const list = moderation.cause.source.list
