@@ -114,7 +114,7 @@ describe('Mute lists', () => {
 
   it('Shows the mutelist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector-2')).tap()
+    await element(by.id('selector-3')).tap()
     await element(by.id('list-Bad Ppl')).tap()
   })
 
