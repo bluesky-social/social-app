@@ -72,6 +72,8 @@ import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSq
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
 import {faSignal} from '@fortawesome/free-solid-svg-icons/faSignal'
 import {faSliders} from '@fortawesome/free-solid-svg-icons/faSliders'
+import {faSquare} from '@fortawesome/free-regular-svg-icons/faSquare'
+import {faSquareCheck} from '@fortawesome/free-regular-svg-icons/faSquareCheck'
 import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
@@ -162,6 +164,8 @@ export function setup() {
     faShield,
     faSignal,
     faSliders,
+    faSquare,
+    faSquareCheck,
     faSquarePlus,
     faUser,
     faUsers,

@@ -6,7 +6,7 @@ import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
 import {describeModerationCause} from 'lib/moderation'
-import {InfoCircleIcon} from 'lib/icons'
+import {ShieldExclamation} from 'lib/icons'
 import {useStores} from 'state/index'
 import {isDesktopWeb} from 'platform/detection'
 
@@ -67,7 +67,7 @@ export function PostHider({
           accessibilityRole="button"
           accessibilityLabel="Learn more about this warning"
           accessibilityHint="">
-          <InfoCircleIcon size={18} style={pal.text} />
+          <ShieldExclamation size={18} style={pal.text} />
         </Pressable>
         <Text type="lg" style={pal.text}>
           {desc.name}

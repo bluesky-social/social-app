@@ -40,10 +40,10 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.5.4.tgz#81a0dc36d3fcae085092434218740b68ee28f816"
-  integrity sha512-e2M5d+w6PMEzunVWbeX4yD9pMXaP6FakQYOfj4gUz9tL05k94Qv1dcX8IFUHdWEunHijLGU2fU2SNC4jgiuLBA==
+"@atproto/api@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.0.tgz#c4eea08ee4d1be522928cd016d7de8061d86e573"
+  integrity sha512-GkWHoGZfNneHarAYkIPJD1GGgKiI7OwnCtKS+J4AmlVKYijGEzOYgg1fY6rluT6XPT5TlQZiHUWpMlpqAkQIkQ==
   dependencies:
     "@atproto/common-web" "*"
     "@atproto/uri" "*"
@@ -157,10 +157,10 @@
     one-webcrypto "^1.0.3"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.2.2.tgz#930cb63dc751b08fa0a1c69820e27587d7b38252"
-  integrity sha512-94KruFi2C52YHiSmvJKjPp3414KV9ev06Sla4BebJxm1z3/DKGhmPGDEHVke4+KPZOTR3vQ2x1WKuX87mtCp7w==
+"@atproto/dev-env@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.2.3.tgz#17f7574a85f560dbd128dc3dd7620de14ff63483"
+  integrity sha512-7Glr0NVWftXF8kvmVouNWhXX9DzTWpKhytQZkfPaIWf6jVRATgRSfts1QOet1lTx33DczqKBJb9xc0qDt4MqWw==
   dependencies:
     "@atproto/api" "*"
     "@atproto/bsky" "*"

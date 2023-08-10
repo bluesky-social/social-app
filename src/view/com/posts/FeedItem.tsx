@@ -271,6 +271,7 @@ export const FeedItem = observer(function ({
             </View>
           )}
           <ContentHider
+            testID="contentHider-post"
             moderation={item.moderation.content}
             ignoreMute
             style={styles.contentHider}
@@ -291,6 +292,7 @@ export const FeedItem = observer(function ({
             ) : undefined}
             {item.post.embed ? (
               <ContentHider
+                testID="contentHider-embed"
                 moderation={item.moderation.embed}
                 style={styles.embed}>
                 <PostEmbeds

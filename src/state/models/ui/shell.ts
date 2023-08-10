@@ -100,6 +100,12 @@ export interface RepostModal {
   isReposted: boolean
 }
 
+export interface SelfLabelModal {
+  name: 'self-label'
+  labels: string[]
+  onChange: (labels: string[]) => void
+}
+
 export interface ChangeHandleModal {
   name: 'change-handle'
   onChanged: () => void
@@ -164,6 +170,7 @@ export type Modal =
   | EditImageModal
   | ServerInputModal
   | RepostModal
+  | SelfLabelModal
 
   // Bluesky access
   | WaitlistModal

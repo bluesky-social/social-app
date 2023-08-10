@@ -29,17 +29,17 @@ export function describeModerationCause(
     }
   }
   if (cause.type === 'muted') {
-    if (cause.source.type === 'user') {
-      return {
-        name: context === 'account' ? 'Muted User' : 'Post by muted user',
-        description: 'You have muted this user',
-      }
-    } else {
+    if (cause.source.type === 'list') {
       return {
         name:
           context === 'account'
             ? `Muted by "${cause.source.list.name}"`
             : `Post by muted user ("${cause.source.list.name}")`,
+        description: 'You have muted this user',
+      }
+    } else {
+      return {
+        name: context === 'account' ? 'Muted User' : 'Post by muted user',
         description: 'You have muted this user',
       }
     }

@@ -35,10 +35,7 @@ export function Component({
     name = 'Account Blocks You'
     description = 'This user has blocked you. You cannot view their content.'
   } else if (moderation.cause.type === 'muted') {
-    if (moderation.cause.source.type === 'user') {
-      name = 'Account Muted'
-      description = 'You have muted this user.'
-    } else {
+    if (moderation.cause.source.type === 'list') {
       const list = moderation.cause.source.list
       name = <>Account Muted by List</>
       description = (
@@ -53,6 +50,9 @@ export function Component({
           list which you have muted.
         </>
       )
+    } else {
+      name = 'Account Muted'
+      description = 'You have muted this user.'
     }
   } else {
     name = moderation.cause.labelDef.strings[context].en.name
