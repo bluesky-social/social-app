@@ -50,6 +50,7 @@ export function init(store: RootStoreModel) {
       }
     })
   })
+
   // handle notifications that are tapped on, regardless of whether the app is in the foreground or background
   Notifications.addNotificationReceivedListener(event => {
     store.log.debug('Notifications: received', event)
@@ -59,19 +60,10 @@ export function init(store: RootStoreModel) {
         payload = event.request.trigger.payload
       } else {
         // TODO: handle android payload deeplink
-        // type NotificationReason =
-        //   | 'like'
-        //   | 'repost'
-        //   | 'follow'
-        //   | 'mention'
-        //   | 'reply'
-        //   | 'quote'
-        // payload = event.request.trigger.remoteMessage?.data
       }
       if (payload) {
         store.log.debug('Notifications: received payload', payload)
         // TODO: deeplink notif here
-        // const reason = payload.reason as NotificationReason
       }
     }
   })
