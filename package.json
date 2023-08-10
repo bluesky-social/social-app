@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.43.0",
+  "version": "1.44.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
