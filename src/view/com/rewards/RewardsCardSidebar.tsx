@@ -22,9 +22,13 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
 
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
-  const shouldClaimDaily = store.rewards.shouldClaimDaily(userId);
   const dailyPogress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
+
+  const shouldClaimDaily = store.rewards.shouldClaimDaily(userId);
+  const isClaimingDaily = store.rewards.isClaimingDaily(userId);
+  const hasClaimedDaily = store.rewards.hasClaimedDaily(userId);
+  const dailyReward = store.rewards.dailyReward(userId);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,7 +41,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
   );
 
   const onClaimHandler = async () => {
-    if (store.session.hasSession) {
+    if (!store.session.hasSession) {
       navigation.navigate("SignIn");
     } else {
       navigation.navigate("Rewards");
@@ -99,7 +103,12 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
         </View>
         <View style={styles.claimBtn}>
           <ClaimBtn
-            text={store.session.hasSession ? "Claim Reward" : "Get Started"}
+            text={
+              !store.session.hasSession ? "Sign In" : shouldClaimDaily ? "Claim Reward" : isClaimingDaily ? "Claiming..." : hasClaimedDaily ? "Check your wallet!" : dailyPogress ? "Keep Going!" : "Like Or Post Something"
+            }
+            done={hasClaimedDaily}
+            disabled={!shouldClaimDaily || hasClaimedDaily}
+            loading={isClaimingDaily}
             onClick={onClaimHandler}
           />
         </View>

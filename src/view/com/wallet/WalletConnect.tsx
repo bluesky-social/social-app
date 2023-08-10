@@ -13,7 +13,7 @@ import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-export const WalletConnect = observer(({ model }: { model: MeModel }) => {
+export const WalletConnect = observer(function WalletConnect({ model }: { model: MeModel }) {
   const store = useStores();
   const wallet = useWallet();
   const pal = usePalette("default");

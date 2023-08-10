@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
+import { MeModel } from "./models/me";
 import { RootStoreModel } from "./models/root-store";
 import { SOLARPLEX_V1_API } from "lib/constants";
 
@@ -24,6 +25,8 @@ interface Mission {
   shouldClaim: boolean;
   isClaiming: boolean;
   reward?: Reward;
+  missionClaimId?: string;
+  rewardClaimId?: string;
 }
 
 interface User {
@@ -71,9 +74,10 @@ export class RewardsModel {
 
   async claimDailyReward(userId: string) {
     const missionId = this.users[userId]?.daily?.id;
+    const wallet = this.rootStore.me.splxWallet;
     try {
-      if (!missionId) {
-        throw new Error("noMissionId");
+      if (!missionId || !wallet) {
+        throw new Error("noMissionIdOrWallet");
       }
       runInAction(async () => {
         if (!this.inFlight["claims"]) {
@@ -91,9 +95,7 @@ export class RewardsModel {
             body: JSON.stringify({
               mission: {
                 missionId,
-                wallet:
-                  (this.rootStore.me as any).splxWallet ??
-                  "GtarBGsBP63f1unXgW6DFpR2GDprJ7mN9TPURZQg4qwS",
+                wallet,
               },
             }),
           },
@@ -114,7 +116,7 @@ export class RewardsModel {
   }
 
   shouldClaimDaily(userId: string): boolean | undefined {
-    return this.users[userId]?.daily.shouldClaim;
+    return this.users[userId]?.daily.shouldClaim && !this.isClaimingDaily(userId);
   }
 
   isClaimingDaily(userId: string) {
@@ -122,6 +124,10 @@ export class RewardsModel {
       !!this.inFlight["claims"]?.[this.users[userId]?.daily?.id] ||
       !!this.users[userId]?.daily?.isClaiming
     );
+  }
+
+  hasClaimedDaily(userId: string) {
+    return !!(this.users[userId]?.daily?.missionClaimId || this.users[userId]?.daily?.rewardClaimId);
   }
 
   dailyReward(userId: string) {
@@ -148,6 +154,10 @@ export class RewardsModel {
     );
   }
 
+  hasClaimedWeekly(userId: string) {
+    return !!(this.users[userId]?.weekly?.missionClaimId || this.users[userId]?.weekly?.rewardClaimId);
+  }
+
   async fetchMissions(userId: string) {
     try {
       if (userId === "") {
@@ -156,11 +166,11 @@ export class RewardsModel {
       if (this.inFlight["missions"]?.[userId]) {
         return;
       }
-      if (this.scheduled["missions"]?.[userId]) {
-        clearTimeout(this.scheduled["missions"][userId]);
-        delete this.scheduled["missions"][userId];
-      }
       runInAction(async () => {
+        if (this.scheduled["missions"]?.[userId]) {
+          clearTimeout(this.scheduled["missions"][userId]);
+          delete this.scheduled["missions"][userId];
+        }
         if (!this.inFlight["missions"]) {
           this.inFlight["missions"] = {};
         }

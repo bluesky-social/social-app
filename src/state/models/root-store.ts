@@ -152,6 +152,7 @@ export class RootStoreModel {
     if (!hadSession) {
       resetNavigation();
     }
+    this.me.did && await this.rewards.fetchMissions(this.me.did);
   }
 
   /**

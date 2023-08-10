@@ -52,7 +52,7 @@ const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
         style={styles.rewardImage}
       />
       <View style={styles.RollBtn}>
-        <ClaimBtn shouldClaim={true} text="Share" onClick={onPressCompose} />
+        <ClaimBtn text="Share" onClick={onPressCompose} />
       </View>
     </View>
   );
@@ -67,7 +67,7 @@ export interface claimRewardRes {
   };
 }
 
-export const RewardsCard = observer(({ userId }: { userId: string }) => {
+export const RewardsCard = observer(function RewardsCard({ userId }: { userId: string }) {
   const store = useStores();
   const { screen } = useAnalytics();
   const navigation = useNavigation<NavigationProp>();
@@ -85,12 +85,11 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
 
   const shouldClaimDaily = store.rewards.shouldClaimDaily(userId);
   const isClaimingDaily = store.rewards.isClaimingDaily(userId);
+  const hasClaimedDaily = store.rewards.hasClaimedDaily(userId);
   const dailyReward = store.rewards.dailyReward(userId);
-  const isClaimDailyBusy =
-    !!dailyReward || !shouldClaimDaily || isClaimingDaily;
   const dailyPogress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
-  const shouldShowDiceCompnent = showDiceComponent || isClaimDailyBusy;
+  const shouldShowDiceCompnent = showDiceComponent || !dailyReward;
   const { setVisible } = useWalletModal();
 
   console.log("dailyReward", dailyReward);
@@ -98,6 +97,7 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
   const onClaimHandler = async () => {
     if (!store.me.splxWallet) {
       setVisible(true);
+      return;
     }
     await store.rewards.claimDailyReward(userId);
   };
@@ -131,10 +131,11 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
             />
             <View style={[styles.RollBtn]}>
               <ClaimBtn
+                done={hasClaimedDaily}
+                disabled={!shouldClaimDaily || hasClaimedDaily}
                 loading={isClaimingDaily}
-                text={isClaimingDaily ? "Claiming..." : "Roll"}
+                text={isClaimingDaily ? "Claiming..." : hasClaimedDaily ? "Check your wallet!" : "Roll"}
                 onClick={onClaimHandler}
-                shouldClaim={shouldClaimDaily}
               />
             </View>
           </View>
@@ -219,11 +220,12 @@ export const RewardsCard = observer(({ userId }: { userId: string }) => {
               >
                 <ClaimBtn
                   text={
-                    store.session.hasSession ? "Claim Reward" : "Get Started"
+                    !store.session.hasSession ? "Sign In" : shouldClaimDaily ? "Claim Reward" : isClaimingDaily ? "Claiming..." : hasClaimedDaily ? "Check your wallet!" : dailyPogress ? "Keep Going!" : "Like Or Post Something"
                   }
-                  loading={!shouldClaimDaily}
+                  done={hasClaimedDaily}
+                  disabled={!shouldClaimDaily || hasClaimedDaily}
+                  loading={isClaimingDaily}
                   onClick={onDiceRollHandler}
-                  shouldClaim={shouldClaimDaily}
                 />
               </View>
             </View>
