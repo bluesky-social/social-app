@@ -163,6 +163,7 @@ export function Selector({
   return (
     <View
       style={{
+        width: '100%',
         position: 'relative',
         overflow: 'hidden',
         marginTop: -SCROLLBAR_OFFSET,
