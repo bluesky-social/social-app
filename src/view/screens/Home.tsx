@@ -293,7 +293,7 @@ const FeedPage = observer(
             minimalShellMode={store.shell.minimalShellMode}
           />
         )}
-        {/* {!store.session.isSolarplexSession && (
+        {!store.session.isSolarplexSession && (
           <FAB
             testID="composeFAB"
             onPress={onPressCompose}
@@ -302,7 +302,7 @@ const FeedPage = observer(
             accessibilityLabel="Compose post"
             accessibilityHint=""
           />
-        )} */}
+        )}
       </View>
     );
   },

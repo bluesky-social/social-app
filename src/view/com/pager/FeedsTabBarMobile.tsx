@@ -90,7 +90,7 @@ export const FeedsTabBar = observer(
               <SolarplexLogo />
             </View>
           </View>
-          {!store.session.isSolarplexSession && (
+          {/* {!store.session.isSolarplexSession && (
             <View style={[pal.view]}>
               <TouchableOpacity
                 testID="viewHeaderComposeBtn"
@@ -111,7 +111,7 @@ export const FeedsTabBar = observer(
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-          )}
+          )} */}
         </View>
         {/* TODO(viksit)[F1]: Replace this with a stories layout later, for now, populate
            the list of joined communities and power that in the feed */}

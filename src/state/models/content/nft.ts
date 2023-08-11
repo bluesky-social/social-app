@@ -67,17 +67,20 @@ export class NftModel {
       // }, []);
 
       const reactions: SolarplexReaction[] = [];
+      const seenAttributes = new Set();
 
       this.assets.forEach((item) => {
         // console.log("item", item, item?.content?.metadata);
         const metadata = item?.content?.metadata;
         if (!metadata.attributes) return;
         const attribute = item?.content?.metadata?.attributes[0]?.value;
-
-        reactionsMap[attribute] && reactions.push(reactionsMap[attribute]);
+        if (!seenAttributes.has(attribute)) {
+          seenAttributes.add(attribute);
+          reactionsMap[attribute] && reactions.push(reactionsMap[attribute]);
+        }
       });
 
-      // console.log("reactions", reactions);
+      console.log("reactions", reactions);
       if (reactions.length > 0) {
         this.rootStore.reactions.update(reactions);
       }

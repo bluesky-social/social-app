@@ -1,12 +1,12 @@
 import * as Toast from "view/com/util/Toast";
 
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { ClaimBtn } from "./ClaimBtn";
 import { Day } from "./Day";
 import { NavigationProp } from "lib/routes/types";
-import React from "react";
 import { Text } from "../util/text/Text";
 import { colors } from "lib/styles";
 import { isMobileWeb } from "platform/detection";
@@ -17,6 +17,7 @@ import { useAnalytics } from "lib/analytics/analytics";
 import { usePalette } from "lib/hooks/usePalette";
 import { useState } from "react";
 import { useStores } from "state/index";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 type RewardClaimedProps = {
@@ -95,6 +96,7 @@ export const RewardsCard = observer(function RewardsCard({
   const weeklyProgress = store.rewards.weeklyProgress(userId);
   const shouldShowDiceCompnent = showDiceComponent || !dailyReward;
   const { setVisible } = useWalletModal();
+  const wallet = useWallet();
 
   const onClaimHandler = async () => {
     if (!store.me.splxWallet) {
@@ -102,7 +104,18 @@ export const RewardsCard = observer(function RewardsCard({
       return;
     }
     await store.rewards.claimDailyReward(userId);
+
+    store.me.nft.fetchNfts(store.me.splxWallet);
   };
+
+  useEffect(() => {
+    async function setWallet() {
+      if (!store.me.splxWallet && wallet !== undefined && wallet.publicKey) {
+        await store.me.connectWallet(wallet.publicKey?.toString());
+      }
+    }
+    setWallet();
+  }, [wallet]);
 
   const onDiceRollHandler = () => {
     if (!store.session.hasSession) {
