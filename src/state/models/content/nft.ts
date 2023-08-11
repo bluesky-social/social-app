@@ -23,7 +23,7 @@ export class NftModel {
 
   async fetchNfts(wallet: string) {
     try {
-      console.log("IN Fetch", wallet);
+      // console.log("IN Fetch", wallet);
       const res = await fetch(
         `${HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
         {
@@ -45,6 +45,8 @@ export class NftModel {
         },
       );
       const nftsResponse = await res.json();
+
+      // console.log("nftsResponse", nftsResponse);
 
       this.assets = nftsResponse.result.items;
 
@@ -80,7 +82,7 @@ export class NftModel {
         }
       });
 
-      console.log("reactions", reactions);
+      // console.log("reactions", reactions);
       if (reactions.length > 0) {
         this.rootStore.reactions.update(reactions);
       }
