@@ -45,7 +45,7 @@ export class NftModel {
         },
       );
       const nftsResponse = await res.json();
-      // console.log("nftsResponse", nftsResponse);
+
       this.assets = nftsResponse.result.items;
 
       // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
@@ -56,8 +56,6 @@ export class NftModel {
         },
         {},
       );
-
-      // console.log("reactionsMap", reactionsMap);
 
       // const reactions = this.assets.reduce((acc, item: any) => {
       //   console.log("item", item);
@@ -75,7 +73,7 @@ export class NftModel {
         const metadata = item?.content?.metadata;
         if (!metadata.attributes) return;
         const attribute = item?.content?.metadata?.attributes[0]?.value;
-        // console.log("attribute", attribute);
+
         reactionsMap[attribute] && reactions.push(reactionsMap[attribute]);
       });
 

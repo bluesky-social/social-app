@@ -67,7 +67,11 @@ export interface claimRewardRes {
   };
 }
 
-export const RewardsCard = observer(function RewardsCard({ userId }: { userId: string }) {
+export const RewardsCard = observer(function RewardsCard({
+  userId,
+}: {
+  userId: string;
+}) {
   const store = useStores();
   const { screen } = useAnalytics();
   const navigation = useNavigation<NavigationProp>();
@@ -91,8 +95,6 @@ export const RewardsCard = observer(function RewardsCard({ userId }: { userId: s
   const weeklyProgress = store.rewards.weeklyProgress(userId);
   const shouldShowDiceCompnent = showDiceComponent || !dailyReward;
   const { setVisible } = useWalletModal();
-
-  console.log("dailyReward", dailyReward);
 
   const onClaimHandler = async () => {
     if (!store.me.splxWallet) {
@@ -134,7 +136,13 @@ export const RewardsCard = observer(function RewardsCard({ userId }: { userId: s
                 done={hasClaimedDaily}
                 disabled={!shouldClaimDaily || hasClaimedDaily}
                 loading={isClaimingDaily}
-                text={isClaimingDaily ? "Claiming..." : hasClaimedDaily ? "Check your wallet!" : "Roll"}
+                text={
+                  isClaimingDaily
+                    ? "Claiming..."
+                    : hasClaimedDaily
+                    ? "Check your wallet!"
+                    : "Roll"
+                }
                 onClick={onClaimHandler}
               />
             </View>
@@ -220,7 +228,17 @@ export const RewardsCard = observer(function RewardsCard({ userId }: { userId: s
               >
                 <ClaimBtn
                   text={
-                    !store.session.hasSession ? "Sign In" : shouldClaimDaily ? "Claim Reward" : isClaimingDaily ? "Claiming..." : hasClaimedDaily ? "Check your wallet!" : dailyPogress ? "Keep Going!" : "Like Or Post Something"
+                    !store.session.hasSession
+                      ? "Sign In"
+                      : shouldClaimDaily
+                      ? "Claim Reward"
+                      : isClaimingDaily
+                      ? "Claiming..."
+                      : hasClaimedDaily
+                      ? "Check your wallet!"
+                      : dailyPogress
+                      ? "Keep Going!"
+                      : "Like Or Post Something"
                   }
                   done={hasClaimedDaily}
                   disabled={!shouldClaimDaily || hasClaimedDaily}
