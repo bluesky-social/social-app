@@ -189,7 +189,6 @@ export const CustomFeedScreenInner = observer(
     }, [handleOrDid, rkey, track])
 
     const onPressReport = React.useCallback(() => {
-      // TODO: may be report button shouldn't show up unless currentFeed is defined
       if (!currentFeed) return
       store.shell.openModal({
         name: 'report',
