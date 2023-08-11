@@ -12,6 +12,7 @@ env:
 
 jobs:
   bskyweb-container-aws:
+    if: github.repository == 'bluesky-social/social-app'
     runs-on: ubuntu-latest
     permissions:
       contents: read
