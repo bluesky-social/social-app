@@ -5,135 +5,102 @@ import {AtUri, ComAtprotoModerationDefs} from '@atproto/api'
 import {Text} from '../../util/text/Text'
 import {UsePaletteValue, usePalette} from 'lib/hooks/usePalette'
 import {RadioGroup, RadioGroupItem} from 'view/com/util/forms/RadioGroup'
+import {CollectionId} from './types'
+
+type ReasonMap = Record<string, {title: string; description: string}>
+const CommonReasons = {
+  [ComAtprotoModerationDefs.REASONRUDE]: {
+    title: 'Anti-Social Behavior',
+    description: 'Harassment, trolling, or intolerance',
+  },
+  [ComAtprotoModerationDefs.REASONVIOLATION]: {
+    title: 'Illegal and Urgent',
+    description: 'Glaring violations of law or terms of service',
+  },
+  [ComAtprotoModerationDefs.REASONOTHER]: {
+    title: 'Other',
+    description: 'An issue not included in these options',
+  },
+}
+const CollectionToReasonsMap: Record<string, ReasonMap> = {
+  [CollectionId.Post]: {
+    [ComAtprotoModerationDefs.REASONSPAM]: {
+      title: 'Spam',
+      description: 'Excessive mentions or replies',
+    },
+    [ComAtprotoModerationDefs.REASONSEXUAL]: {
+      title: 'Unwanted Sexual Content',
+      description: 'Nudity or pornography not labeled as such',
+    },
+    __copyright__: {
+      title: 'Copyright Violation',
+      description: 'Contains copyrighted material',
+    },
+    ...CommonReasons,
+  },
+  [CollectionId.List]: {
+    ...CommonReasons,
+    [ComAtprotoModerationDefs.REASONVIOLATION]: {
+      title: 'Name or Description Violates Community Standards',
+      description: 'Terms used violate community standards',
+    },
+  },
+}
+const AccountReportReasons = {
+  [ComAtprotoModerationDefs.REASONMISLEADING]: {
+    title: 'Misleading Account',
+    description: 'Impersonation or false claims about identity or affiliation',
+  },
+  [ComAtprotoModerationDefs.REASONSPAM]: {
+    title: 'Frequently Posts Unwanted Content',
+    description: 'Spam; excessive mentions or replies',
+  },
+  [ComAtprotoModerationDefs.REASONVIOLATION]: {
+    title: 'Name or Description Violates Community Standards',
+    description: 'Terms used violate community standards',
+  },
+}
+
+const Option = ({
+  pal,
+  title,
+  description,
+}: {
+  pal: UsePaletteValue
+  description: string
+  title: string
+}) => {
+  return (
+    <View>
+      <Text style={pal.text} type="md-bold">
+        {title}
+      </Text>
+      <Text style={pal.textLight}>{description}</Text>
+    </View>
+  )
+}
 
 // This is mostly just content copy without almost any logic
 // so this may grow over time and it makes sense to split it up into its own file
 // to keep it separate from the actual reporting modal logic
 const useReportRadioOptions = (pal: UsePaletteValue, atUri: AtUri | null) =>
   useMemo(() => {
+    let items: ReasonMap = {...CommonReasons}
     // If no atUri is passed, that means the reporting collection is account
     if (!atUri) {
-      return [
-        {
-          key: ComAtprotoModerationDefs.REASONMISLEADING,
-          label: (
-            <View>
-              <Text style={pal.text} type="md-bold">
-                Misleading Account
-              </Text>
-              <Text style={pal.textLight}>
-                Impersonation or false claims about identity or affiliation
-              </Text>
-            </View>
-          ),
-        },
-        {
-          key: ComAtprotoModerationDefs.REASONSPAM,
-          label: (
-            <View>
-              <Text style={pal.text} type="md-bold">
-                Frequently Posts Unwanted Content
-              </Text>
-              <Text style={pal.textLight}>
-                Spam; excessive mentions or replies
-              </Text>
-            </View>
-          ),
-        },
-        {
-          key: ComAtprotoModerationDefs.REASONVIOLATION,
-          label: (
-            <View>
-              <Text style={pal.text} type="md-bold">
-                Name or Description Violates Community Standards
-              </Text>
-              <Text style={pal.textLight}>
-                Terms used violate community standards
-              </Text>
-            </View>
-          ),
-        },
-      ]
+      items = {...AccountReportReasons}
     }
-    return [
-      {
-        key: ComAtprotoModerationDefs.REASONSPAM,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Spam
-            </Text>
-            <Text style={pal.textLight}>Excessive mentions or replies</Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONSEXUAL,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Unwanted Sexual Content
-            </Text>
-            <Text style={pal.textLight}>
-              Nudity or pornography not labeled as such
-            </Text>
-          </View>
-        ),
-      },
-      {
-        key: '__copyright__',
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Copyright Violation
-            </Text>
-            <Text style={pal.textLight}>Contains copyrighted material</Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONRUDE,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Anti-Social Behavior
-            </Text>
-            <Text style={pal.textLight}>
-              Harassment, trolling, or intolerance
-            </Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONVIOLATION,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Illegal and Urgent
-            </Text>
-            <Text style={pal.textLight}>
-              Glaring violations of law or terms of service
-            </Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONOTHER,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Other
-            </Text>
-            <Text style={pal.textLight}>
-              An issue not included in these options
-            </Text>
-          </View>
-        ),
-      },
-    ]
+
+    if (atUri?.collection && CollectionToReasonsMap[atUri.collection]) {
+      items = {...CollectionToReasonsMap[atUri.collection]}
+    }
+
+    return Object.entries(items).map(([key, {title, description}]) => ({
+      key,
+      label: <Option pal={pal} title={title} description={description} />,
+    }))
   }, [pal, atUri])
 
-//   TODO: More fitting options for reporting list and feedgen
 export const ReportReasonOptions = ({
   atUri,
   selectedIssue,

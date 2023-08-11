@@ -12,19 +12,11 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 import {ReportReasonOptions} from './ReasonOptions'
+import {CollectionId} from './types'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
 export const snapPoints = [575]
-
-// TODO: We should probably get these from @atproto/api which should be exported from @atproto/api/client/lexicons
-// but can't figure out how to import it rn
-export enum CollectionId {
-  FeedGenerator = 'app.bsky.feed.generator',
-  Profile = 'app.bsky.actor.profile',
-  List = 'app.bsky.graph.list',
-  Post = 'app.bsky.feed.post',
-}
 
 const CollectionNames = {
   [CollectionId.FeedGenerator]: 'Feed',

@@ -162,7 +162,7 @@ describe('Mute lists', () => {
     await expect(element(by.id('reportModal'))).toBeVisible()
     await expect(element(by.text('Report List'))).toBeVisible()
     await element(
-      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonRude'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
     await expect(element(by.id('reportModal'))).not.toBeVisible()
