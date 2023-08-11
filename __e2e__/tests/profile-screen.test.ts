@@ -125,12 +125,12 @@ describe('Profile screen', () => {
   it('Can report another user', async () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Report Account')).tap()
-    await expect(element(by.id('reportAccountModal'))).toBeVisible()
+    await expect(element(by.id('reportModal'))).toBeVisible()
     await element(
-      by.id('reportAccountRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportAccountModal'))).not.toBeVisible()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 
   it('Can like posts', async () => {
@@ -173,11 +173,11 @@ describe('Profile screen', () => {
     const posts = by.id('feedItem-by-bob.test')
     await element(by.id('postDropdownBtn').withAncestor(posts)).atIndex(0).tap()
     await element(by.text('Report post')).tap()
-    await expect(element(by.id('reportPostModal'))).toBeVisible()
+    await expect(element(by.id('reportModal'))).toBeVisible()
     await element(
-      by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportPostModal'))).not.toBeVisible()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 })

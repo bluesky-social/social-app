@@ -93,7 +93,6 @@ export function Component(content: ReportComponentProps) {
     setShowDetailsInput(false)
   }
 
-  console.log({issue})
   return (
     <ScrollView testID="reportModal" style={[s.flex1, pal.view]}>
       <View style={styles.container}>
