@@ -132,9 +132,7 @@ function ProfileCardPills({
       {causes.map(cause => {
         const desc = describeModerationCause(cause, 'account')
         return (
-          <View
-            style={[s.mt5, pal.btn, styles.pill]}
-            key={getModerationCauseKey(cause)}>
+          <View style={[s.mt5, pal.btn, styles.pill]} key={cause?.type}>
             <Text type="xs" style={pal.text}>
               {cause?.type === 'label' ? '⚠' : ''}
               {desc.name}

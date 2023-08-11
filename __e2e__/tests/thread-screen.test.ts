@@ -101,7 +101,7 @@ describe('Thread screen', () => {
     ).toHaveText('0')
   })
 
-  it.only('Can report the root post', async () => {
+  it('Can report the root post', async () => {
     const post = by.id('postThreadItem-by-bob.test')
     await element(by.id('postDropdownBtn').withAncestor(post)).atIndex(0).tap()
     await element(by.text('Report post')).tap()
@@ -113,7 +113,7 @@ describe('Thread screen', () => {
     await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 
-  it.only('Can report a reply post', async () => {
+  it('Can report a reply post', async () => {
     const post = by.id('postThreadItem-by-carla.test')
     await element(by.id('postDropdownBtn').withAncestor(post)).atIndex(0).tap()
     await element(by.text('Report post')).tap()
