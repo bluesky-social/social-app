@@ -201,7 +201,7 @@ const DisplayReactions = observer(() => {
             <Text type="sm-bold" style={[pal.text, styles.reaction]}>
               {Math.min(
                 store.reactions.earnedReactions.genesis?.length ?? 0,
-                12,
+                11,
               )}
               /11 Reactions
             </Text>
