@@ -59,6 +59,7 @@ import { ProfileListScreen } from "./view/screens/ProfileList";
 import { ProfileScreen } from "./view/screens/Profile";
 import { RewardsScreen } from "view/screens/Rewards";
 import { RewardsTab as RewardsTabScreen } from "view/screens/RewardsTab";
+import { SOLARPLEX_UI_URL } from "lib/constants";
 import { SavedFeeds } from "view/screens/SavedFeeds";
 import { SearchScreen } from "./view/screens/Search";
 import { SettingsScreen } from "./view/screens/Settings";
@@ -501,7 +502,7 @@ const FlatNavigator = observer(() => {
 
 // TODO(viksit): change linking to right domain
 const LINKING = {
-  prefixes: ["bsky://", "https://v2.solarplex.xyz"],
+  prefixes: ["bsky://", SOLARPLEX_UI_URL],
 
   getPathFromState(state: State) {
     // console.log("state", state);

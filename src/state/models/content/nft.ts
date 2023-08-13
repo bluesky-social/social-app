@@ -1,8 +1,4 @@
-import {
-  DEVNET_HELIUS_RPC_API,
-  GENESIS_COLLECTION,
-  HELIUS_RPC_API,
-} from "lib/constants";
+import { GENESIS_COLLECTION, HELIUS_RPC_API } from "lib/constants";
 
 import { RootStoreModel } from "../root-store";
 import { SolarplexReaction } from "../media/reactions";
@@ -22,7 +18,6 @@ export class NftModel {
 
   async fetchNfts(wallet: string) {
     try {
-      // console.log("IN Fetch", wallet);
       const res = await fetch(
         `${HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
         {
@@ -45,8 +40,6 @@ export class NftModel {
       );
       const nftsResponse = await res.json();
 
-      // console.log("nftsResponse", nftsResponse);
-
       this.assets = nftsResponse.result.items;
 
       // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
@@ -57,15 +50,6 @@ export class NftModel {
         },
         {},
       );
-
-      // const reactions = this.assets.reduce((acc, item: any) => {
-      //   console.log("item", item);
-      //   const attribute = item.content?.metadata?.attributes[0]?.value;
-      //   console.log("attribute", attribute);
-      //   reactionsMap[attribute] && acc.push(reactionsMap[attribute]);
-
-      //   return acc;
-      // }, []);
 
       const reactions: SolarplexReaction[] = [];
       const seenAttributes = new Set();

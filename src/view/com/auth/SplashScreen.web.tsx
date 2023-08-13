@@ -1,28 +1,28 @@
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-import {CenteredView} from '../util/Views'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import React from 'react'
-import {SolarplexLogo} from 'lib/icons'
-import {Text} from 'view/com/util/text/Text'
-import {TextLink} from '../util/Link'
-import {colors} from 'lib/styles'
-import {isMobileWeb} from 'platform/detection'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import { CenteredView } from "../util/Views";
+import { ErrorBoundary } from "view/com/util/ErrorBoundary";
+import React from "react";
+import { SolarplexLogo } from "lib/icons";
+import { Text } from "view/com/util/text/Text";
+import { TextLink } from "../util/Link";
+import { colors } from "lib/styles";
+import { isMobileWeb } from "platform/detection";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
 export const SplashScreen = ({
   onPressSignin,
 }: {
-  onPressSignin: () => void
-  onPressCreateAccount: () => void
+  onPressSignin: () => void;
+  onPressCreateAccount: () => void;
 }) => {
-  const pal = usePalette('default')
-  const store = useStores()
+  const pal = usePalette("default");
+  const store = useStores();
 
   const onPressWaitlist = React.useCallback(() => {
-    store.shell.openModal({name: 'waitlist'})
-  }, [store])
+    store.shell.openModal({ name: "waitlist" });
+  }, [store]);
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
@@ -32,7 +32,8 @@ export const SplashScreen = ({
           styles.containerInner,
           isMobileWeb && styles.containerInnerMobile,
           pal.border,
-        ]}>
+        ]}
+      >
         <ErrorBoundary>
           {/* <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
             Bluesky
@@ -57,12 +58,13 @@ export const SplashScreen = ({
               style={[styles.btn]}
               onPress={onPressSignin}
               // TODO: web accessibility
-              accessibilityRole="button">
+              accessibilityRole="button"
+            >
               <Text style={[styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
           <Text type="xl" style={[styles.notice]} lineHeight={1.3}>
-            Solarplex is powered by Atproto.{' '}
+            Solarplex is powered by Atproto.{" "}
             {/* <TouchableOpacity
               onPress={onPressWaitlist}
               // TODO: web accessibility
@@ -77,11 +79,11 @@ export const SplashScreen = ({
       </View>
       <Footer />
     </CenteredView>
-  )
-}
+  );
+};
 
 function Footer() {
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
@@ -90,62 +92,62 @@ function Footer() {
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
-        href="https://twitter.com/viksit"
+        href="https://twitter.com/solarplex_xyz"
         text="contact"
         style={[styles.footerLink, pal.link]}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   logo: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   container: {
-    height: '100%',
+    height: "100%",
   },
   containerInner: {
-    height: '100%',
-    justifyContent: 'center',
-    paddingBottom: '20vh',
+    height: "100%",
+    justifyContent: "center",
+    paddingBottom: "20vh",
     paddingHorizontal: 20,
   },
   containerInnerMobile: {
     paddingBottom: 50,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.blue3,
     fontSize: 68,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 10,
   },
   titleMobile: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.blue3,
     fontSize: 58,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.gray5,
     fontSize: 52,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 30,
   },
   subtitleMobile: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.gray5,
     fontSize: 42,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 30,
   },
   btns: {
-    flexDirection: isMobileWeb ? 'column' : 'row',
+    flexDirection: isMobileWeb ? "column" : "row",
     gap: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingBottom: 40,
   },
   btn: {
@@ -158,25 +160,25 @@ const styles = StyleSheet.create({
   },
   btnLabel: {
     color: colors.splx.neutral[10],
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 18,
   },
   notice: {
-    fontFamily: 'Manrope',
+    fontFamily: "Manrope",
     paddingHorizontal: 40,
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.splx.primary[70],
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
     padding: 20,
     borderTopWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   footerLink: {
     marginRight: 20,
   },
-})
+});

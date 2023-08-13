@@ -16,6 +16,7 @@ import { LoadMoreRetryBtn } from "../util/LoadMoreRetryBtn";
 import { OnScrollCb } from "lib/hooks/useOnMainScroll";
 import { PostFeedLoadingPlaceholder } from "../util/LoadingPlaceholder";
 import { PostsFeedModel } from "state/models/feeds/posts";
+import { SOLARPLEX_DID } from "lib/constants";
 import { TabBarCustomFeed } from "../pager/TabBarCustomFeed";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import { observer } from "mobx-react-lite";
@@ -122,7 +123,7 @@ export const Feed = observer(function Feed({
   // rendering
   // =
   const currentFeed = useCustomFeed(
-    "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solana",
+    `at://${SOLARPLEX_DID}/app.bsky.feed.generator/splx-solana`,
   );
 
   const renderItem = React.useCallback(
@@ -151,7 +152,11 @@ export const Feed = observer(function Feed({
       }
       return (
         <>
-          <FeedSlice slice={item} showFollowBtn={showPostFollowBtn} hideChild={extraData?.length > 1 ? extraData[2] : false} />
+          <FeedSlice
+            slice={item}
+            showFollowBtn={showPostFollowBtn}
+            hideChild={extraData?.length > 1 ? extraData[2] : false}
+          />
         </>
       );
     },

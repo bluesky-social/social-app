@@ -1,3 +1,4 @@
+// Global constants
 export const FEEDBACK_FORM_URL =
   "https://twitter.com/intent/tweet?text=Hey%20@solarplex_xyz%20I%20have%20some%20feedback%20for%20Live%3A";
 
@@ -8,11 +9,79 @@ export const MAX_DISPLAY_NAME = 64;
 export const MAX_DESCRIPTION = 256;
 
 export const MAX_GRAPHEME_LENGTH = 300;
-
+export const POST_IMG_MAX = {
+  width: 2000,
+  height: 2000,
+  size: 1000000,
+};
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 300;
 
+// Solarplex realm based for environments and testing
+// For now, since we've set up the environment in a way
+// that staging. and live. are staging and prod respectively
+// we'll continue to use those definitions.
+// the realm is useful only for internal solarplex services
+// such as the v1 API for incentives.
+const SOLARPLEX_REALM = process.env.SOLARPLEX_REALM || "dev";
+
+const PROD_CONSTANTS = {
+  SPLX_FEED_DB: "dispatch-services:us-central1:solnews",
+  SPLX_PLC_URL: "https://plc.solarplex.xyz",
+  SPLX_PDS_URL: "https://live.solarplex.xyz",
+  SPLX_USER_HANDLE: "solarplex.live.solarplex.xyz",
+  SPLX_USER_DID: "did:plc:4srpaai54v3d35bigtfbtbd5",
+  SPLX_V1_API: "https://prod.api.solarplex.xyz",
+  HELIUS_RPC_API: "https://rpc.helius.xyz",
+  SPLX_UI_URL: "https://v2.solarplex.xyz",
+  SPLX_FEED_API: "https://feed.solarplex.xyz",
+};
+
+const STAGING_CONSTANTS = {
+  SPLX_FEED_DB: "dispatch-services:us-central1:solnews-staging",
+  SPLX_PLC_URL: "https://staging.plc.solarplex.xyz",
+  SPLX_PDS_URL: "https://staging.live.solarplex.xyz",
+  SPLX_USER_HANDLE: "spx.staging.live.solarplex.xyz",
+  SPLX_USER_DID: "did:plc:aen2rosf555soqeup26zomir",
+  SPLX_V1_API: "https://dev.api.solarplex.xyz",
+  HELIUS_RPC_API: "https://devnet.helius-rpc.com",
+  SPLX_UI_URL: "staging.v2.solarplex.xyz",
+  SPLX_FEED_API: "https://staging.feed.solarplex.xyz",
+};
+
+const LOCALHOST_CONSTANTS = {
+  SPLX_PDS_URL: "http://localhost:2583",
+  SPLX_V1_API: "http://localhost:3001",
+  SPLX_UI_URL: "http://localhost:19006",
+  SPLX_FEED_API: "http://localhost:58194",
+};
+
+export const SOLARPLEX_IDENTIFIER =
+  SOLARPLEX_REALM === "prod"
+    ? PROD_CONSTANTS.SPLX_USER_HANDLE
+    : STAGING_CONSTANTS.SPLX_USER_HANDLE;
+
+export const SOLARPLEX_APP_PASS = process.env.APP_PASS;
+
+let ACTIVE_CONSTANTS;
+ACTIVE_CONSTANTS =
+  SOLARPLEX_REALM == "prod" ? PROD_CONSTANTS : STAGING_CONSTANTS;
+
+export const SOLARPLEX_FEED_API = ACTIVE_CONSTANTS.SPLX_FEED_API;
+//export const SOLARPLEX_FEED_API = SOLARPLEX_FEED_API_LOCAL;
+
+export const SOLARPLEX_DID = ACTIVE_CONSTANTS.SPLX_USER_DID;
+export const SOLARPLEX_V1_API = ACTIVE_CONSTANTS.SPLX_V1_API;
+export const HELIUS_RPC_API = ACTIVE_CONSTANTS.HELIUS_RPC_API;
+export const SOLARPLEX_USER_DID = ACTIVE_CONSTANTS.SPLX_USER_DID;
+export const SOLARPLEX_UI_URL = ACTIVE_CONSTANTS.SPLX_UI_URL;
+export const SOLARPLEX_PDS_URL = ACTIVE_CONSTANTS.SPLX_PDS_URL;
+
+// ("constants:", ACTIVE_CONSTANTS);
+// console.log("did:", SOLARPLEX_DID);
+
+// Bsky variables which we don't touch
 export function IS_LOCAL_DEV(url: string) {
   return url.includes("localhost");
 }
@@ -30,20 +99,10 @@ export function IS_PROD(url: string) {
 }
 
 export const PROD_TEAM_HANDLES = [
-  "jay.bsky.social",
-  "pfrazee.com",
-  "divy.zone",
-  "dholms.xyz",
-  "why.bsky.world",
-  "iamrosewang.bsky.social",
   "viksit.live.solarplex.xyz",
   "zayyan.live.solarplex.xyz",
 ];
-export const STAGING_TEAM_HANDLES = [
-  "arcalinea.staging.bsky.dev",
-  "paul.staging.bsky.dev",
-  "paul2.staging.bsky.dev",
-];
+export const STAGING_TEAM_HANDLES = [];
 export const DEV_TEAM_HANDLES = ["alice.test", "bob.test", "carla.test"];
 
 export function TEAM_HANDLES(serviceUrl: string) {
@@ -57,30 +116,32 @@ export function TEAM_HANDLES(serviceUrl: string) {
 }
 
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:wqzurwm3kmaig6e6hnc2gqwo/app.bsky.feed.generator/${rkey}`;
+  `at://${STAGING_CONSTANTS.SPLX_USER_DID}/app.bsky.feed.generator/${rkey}`;
 export const PROD_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/${rkey}`;
+  `at://${PROD_CONSTANTS.SPLX_USER_DID}/app.bsky.feed.generator/${rkey}`;
 
 export async function DEFAULT_FEEDS(
   serviceUrl: string,
   resolveHandle: (name: string) => Promise<string>,
 ) {
   if (IS_LOCAL_DEV(serviceUrl)) {
+    // uncomment for local dev
     // local dev
-    const aliceDid = await resolveHandle("alice.test");
+    const splxDid = await resolveHandle(SOLARPLEX_USER_DID);
     return {
-      pinned: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
-      saved: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
+      pinned: [`at://${splxDid}/app.bsky.feed.generator/alice-favs`],
+      saved: [`at://${splxDid}/app.bsky.feed.generator/alice-favs`],
     };
-  } else if (IS_STAGING(serviceUrl)) {
+  } else if (IS_STAGING(serviceUrl) || SOLARPLEX_REALM == "dev") {
     // staging
     return {
-      pinned: [STAGING_DEFAULT_FEED("whats-hot")],
+      pinned: [
+        PROD_DEFAULT_FEED("splx-solana"),
+        PROD_DEFAULT_FEED("splx-solarplex"),
+      ],
       saved: [
-        STAGING_DEFAULT_FEED("bsky-team"),
-        STAGING_DEFAULT_FEED("with-friends"),
-        STAGING_DEFAULT_FEED("whats-hot"),
-        STAGING_DEFAULT_FEED("hot-classic"),
+        PROD_DEFAULT_FEED("splx-solana"),
+        PROD_DEFAULT_FEED("splx-solarplex"),
       ],
     };
   } else {
@@ -98,15 +159,6 @@ export async function DEFAULT_FEEDS(
   }
 }
 
-export const SOLARPLEX_IDENTIFIER = "solarplex.live.solarplex.xyz";
-export const SOLARPLEX_APP_PASS = process.env.APP_PASS;
-
-export const POST_IMG_MAX = {
-  width: 2000,
-  height: 2000,
-  size: 1000000,
-};
-
 // TODO(viksit): what is this?
 export const STAGING_LINK_META_PROXY =
   "https://cardyb.staging.bsky.dev/v1/extract?url=";
@@ -114,21 +166,16 @@ export const STAGING_LINK_META_PROXY =
 export const PROD_LINK_META_PROXY = "https://cardyb.bsky.app/v1/extract?url=";
 
 export const SOLARPLEX_FEEDS = [
-  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solana",
-  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/splx-solarplex",
-  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/wearesquidz",
+  `at://${SOLARPLEX_USER_DID}/app.bsky.feed.generator/splx-solana`,
+  `at://${SOLARPLEX_USER_DID}/app.bsky.feed.generator/splx-solarplex`,
+  `at://${SOLARPLEX_USER_DID}/app.bsky.feed.generator/wearesquidz`,
 ];
 
-export const SOLARPLEX_FEED_URI_PATH =
-  "at://did:plc:4srpaai54v3d35bigtfbtbd5/app.bsky.feed.generator/";
+export const SOLARPLEX_FEED_URI_PATH = `at://${SOLARPLEX_USER_DID}/app.bsky.feed.generator/`;
 
-export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
-// export const SOLARPLEX_FEED_API = "http://localhost:3000";
-export const SOLARPLEX_DID = "did:plc:4srpaai54v3d35bigtfbtbd5";
-// export const SOLARPLEX_V1_API = "http://localhost:3001";
-export const SOLARPLEX_V1_API = "https://prod.api.solarplex.xyz";
-export const HELIUS_RPC_API = "https://rpc.helius.xyz/";
-export const DEVNET_HELIUS_RPC_API = "https://devnet.helius-rpc.com";
+// export const SOLARPLEX_FEED_API = "https://feed.solarplex.xyz";
+// export const SOLARPLEX_FEED_API_LOCAL = "http://localhost:58194";
+// // export const SOLARPLEX_V1_API = "http://localhost:3001";
 
 export const GENESIS_COLLECTION =
   "7soPY36PaM8Ck1EycPq5WJ3CVHjZK47aneFniK5GNFyQ";
@@ -142,6 +189,7 @@ export function LINK_META_PROXY(serviceUrl: string) {
     return PROD_LINK_META_PROXY;
   }
 }
+//*** */
 
 // TODO(zfaizal2): eventually move this to an API call
 export const DEFAULT_REACTION_EMOJIS = [

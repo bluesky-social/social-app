@@ -84,7 +84,7 @@ export function Component({ onSelect }: { onSelect: (url: string) => void }) {
             <TextInput
               testID="customServerTextInput"
               style={[pal.borderDark, pal.text, styles.textInput]}
-              placeholder="e.g. https://solarplex.xyz"
+              placeholder="e.g. https://live.solarplex.xyz"
               placeholderTextColor={colors.gray4}
               autoCapitalize="none"
               autoComplete="off"

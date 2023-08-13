@@ -5,13 +5,19 @@ import { AppState, Platform } from "react-native";
 
 import { BskyAgent } from "@atproto/api";
 import { RootStoreModel } from "./models/root-store";
+import { SOLARPLEX_PDS_URL } from "lib/constants";
 import { autorun } from "mobx";
 
+// TODO(viksit): make this support local dev env
+// PDS
 export const LOCAL_DEV_SERVICE =
   Platform.OS === "android" ? "http://10.0.2.2:2583" : "http://localhost:2583";
-export const STAGING_SERVICE = "https://staging.bsky.dev";
+export const STAGING_SERVICE = "https://staging.live.solarplex.xyz";
 export const PROD_SERVICE = "https://live.solarplex.xyz";
-export const DEFAULT_SERVICE = PROD_SERVICE;
+
+export const DEFAULT_SERVICE = SOLARPLEX_PDS_URL;
+// export const DEFAULT_SERVICE = LOCAL_DEV_SERVICE;
+
 const ROOT_STATE_STORAGE_KEY = "root";
 const STATE_FETCH_INTERVAL = 15e3;
 

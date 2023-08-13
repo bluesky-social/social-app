@@ -175,6 +175,8 @@ export class PreferencesModel {
       let hasSavedFeedsPref = false;
       const res = await this.rootStore.agent.app.bsky.actor.getPreferences({});
       await this.rootStore.reactions.fetch();
+      await this.rootStore.me.savedFeeds.updateCache(clearCache);
+      await this.rootStore.me.joinedCommunities.updateCache(clearCache);
       runInAction(() => {
         for (const pref of res.data.preferences) {
           if (
@@ -232,8 +234,6 @@ export class PreferencesModel {
           preferences: res.data.preferences,
         });
       }
-      await this.rootStore.me.savedFeeds.updateCache(clearCache);
-      await this.rootStore.me.joinedCommunities.updateCache(clearCache);
     } finally {
       this.lock.release();
     }

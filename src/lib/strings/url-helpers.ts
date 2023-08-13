@@ -1,5 +1,6 @@
 import { AtUri } from "@atproto/api";
 import { PROD_SERVICE } from "state/index";
+import { SOLARPLEX_UI_URL } from "lib/constants";
 import TLDs from "tlds";
 
 export function isValidDomain(str: string): boolean {
@@ -55,7 +56,7 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith("https")) {
-    const urlp = new URL("https://v2.solarplex.xyz");
+    const urlp = new URL(SOLARPLEX_UI_URL);
     urlp.pathname = url;
     url = urlp.toString();
   }
@@ -63,7 +64,7 @@ export function toShareUrl(url: string): string {
 }
 
 export function isBskyAppUrl(url: string): boolean {
-  return url.startsWith("https://v2.solarplex.xyz/");
+  return url.startsWith(SOLARPLEX_UI_URL);
 }
 
 export function isExternalUrl(url: string): boolean {

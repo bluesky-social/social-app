@@ -42,7 +42,10 @@ export class CommunitiesModel {
           "name" in item &&
           "description" in item &&
           "createdAt" in item &&
-          "published" in item,
+          "published" in item &&
+          "banner" in item &&
+          "uri" in item &&
+          "image" in item,
       );
 
       if (isValidSolarplexCommunityArray) {
@@ -52,6 +55,7 @@ export class CommunitiesModel {
   }
 
   async fetch() {
+    // console.log("in communities, fetc", this, this.rootStore);
     // fetch communities and put it into this model
     try {
       const solarplexCommunities = await fetch(
