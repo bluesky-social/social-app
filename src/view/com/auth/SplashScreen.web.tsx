@@ -6,7 +6,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
-import {isMobileWeb} from 'platform/detection'
+import {shouldUseMobileLayout} from 'platform/detection'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -23,14 +23,18 @@ export const SplashScreen = ({
         testID="noSessionView"
         style={[
           styles.containerInner,
-          isMobileWeb && styles.containerInnerMobile,
+          shouldUseMobileLayout && styles.containerInnerMobile,
           pal.border,
         ]}>
         <ErrorBoundary>
-          <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
+          <Text
+            style={shouldUseMobileLayout ? styles.titleMobile : styles.title}>
             Bluesky
           </Text>
-          <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+          <Text
+            style={
+              shouldUseMobileLayout ? styles.subtitleMobile : styles.subtitle
+            }>
             See what's next
           </Text>
           <View testID="signinOrCreateAccount" style={styles.btns}>
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   btns: {
-    flexDirection: isMobileWeb ? 'column' : 'row',
+    flexDirection: shouldUseMobileLayout ? 'column' : 'row',
     gap: 20,
     justifyContent: 'center',
     paddingBottom: 40,

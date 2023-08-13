@@ -20,14 +20,20 @@ import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {isDesktopWeb, isMobileWebMediaQuery, isWeb} from 'platform/detection'
+import {
+  isMobileWebMediaQuery,
+  isWeb,
+  shouldUseMobileLayout,
+} from 'platform/detection'
 
 const HEADER_OFFSET_MOBILE = 78
 const HEADER_OFFSET_DESKTOP = 50
-const HEADER_OFFSET = isDesktopWeb
-  ? HEADER_OFFSET_DESKTOP
-  : HEADER_OFFSET_MOBILE
+
 const POLL_FREQ = 30e3 // 30sec
+
+function getHeaderOffset(useMobileLayout: boolean) {
+  return useMobileLayout ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP
+}
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
@@ -162,7 +168,9 @@ const FeedPage = observer(
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
     const {screen, track} = useAnalytics()
-    const [headerOffset, setHeaderOffset] = React.useState(HEADER_OFFSET)
+    const [headerOffset, setHeaderOffset] = React.useState(
+      getHeaderOffset(shouldUseMobileLayout),
+    )
     const scrollElRef = React.useRef<FlatList>(null)
     const {appState} = useAppState({
       onForeground: () => doPoll(true),
@@ -201,12 +209,10 @@ const FeedPage = observer(
 
     // listens for resize events
     const listenForResize = React.useCallback(() => {
-      // @ts-ignore we know window exists -prf
-      const isMobileWeb = global.window.matchMedia(
-        isMobileWebMediaQuery,
-      )?.matches
       setHeaderOffset(
-        isMobileWeb ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP,
+        getHeaderOffset(
+          global.window.matchMedia(isMobileWebMediaQuery)?.matches,
+        ),
       )
     }, [])
 

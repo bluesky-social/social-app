@@ -10,7 +10,7 @@ function hasTouchscreen() {
   if ('maxTouchPoints' in navigator) {
     return navigator.maxTouchPoints > 0
   } else if ('msMaxTouchPoints' in navigator) {
-    // @ts-ignore navigator should exist
+    // @ts-ignore msMaxTouchPoints is nonstandard/deprecated but may exist
     return navigator.msMaxTouchPoints > 0
   } else {
     const mQ = matchMedia?.('(pointer:coarse)')
@@ -35,11 +35,10 @@ export const isAndroid = Platform.OS === 'android'
 export const isNative = isIOS || isAndroid
 export const isWeb = !isNative
 export const isMobileWebMediaQuery = 'only screen and (max-width: 1230px)'
-export const isMobileWeb =
-  isWeb &&
-  // @ts-ignore we know window exists -prf
-  global.window.matchMedia(isMobileWebMediaQuery)?.matches &&
-  hasTouchscreen()
+export const shouldUseMobileLayout = window.matchMedia(
+  isMobileWebMediaQuery,
+)?.matches
+export const isMobileWeb = isWeb && hasTouchscreen() && shouldUseMobileLayout
 export const isDesktopWeb = isWeb && !isMobileWeb
 
 export const deviceLocales = dedupArray(

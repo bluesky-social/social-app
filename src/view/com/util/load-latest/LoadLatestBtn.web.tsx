@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {LoadLatestBtn as LoadLatestBtnMobile} from './LoadLatestBtnMobile'
-import {isMobileWeb} from 'platform/detection'
+import {shouldUseMobileLayout} from 'platform/detection'
 import {HITSLOP_20} from 'lib/constants'
 
 export const LoadLatestBtn = ({
@@ -19,7 +19,7 @@ export const LoadLatestBtn = ({
   minimalShellMode?: boolean
 }) => {
   const pal = usePalette('default')
-  if (isMobileWeb) {
+  if (shouldUseMobileLayout) {
     return (
       <LoadLatestBtnMobile
         onPress={onPress}
