@@ -69,11 +69,15 @@ export class RewardsModel {
   }
 
   dailyMissionId(userId: string) {
-    return this.users[userId]?.daily?.id ?? "";
+    return this.users[userId]?.daily?.id ?? '';
+  }
+
+  weeklyMissionId(userId: string) {
+    return this.users[userId]?.weekly?.id ?? '';
   }
 
   async claimDailyReward(userId: string) {
-    const missionId = this.users[userId]?.daily?.id;
+    const missionId = this.dailyMissionId(userId);
     const wallet = this.rootStore.me.splxWallet;
     try {
       if (!missionId || !wallet) {
@@ -94,7 +98,7 @@ export class RewardsModel {
             },
             body: JSON.stringify({
               mission: {
-                missionId,
+                missionId: this.shouldClaimWeekly(userId) ? [missionId, this.weeklyMissionId(userId)] : missionId,
                 wallet,
               },
             }),
@@ -119,6 +123,11 @@ export class RewardsModel {
     return this.users[userId]?.daily.shouldClaim && !this.isClaimingDaily(userId);
   }
 
+  shouldClaimWeekly(userId: string): boolean | undefined {
+    // TODO(Partyman): Change this from isClaimingDaily to weekly when we figure out what that looks like.
+    return this.users[userId]?.weekly.shouldClaim && !this.isClaimingDaily(userId);
+  }
+
   isClaimingDaily(userId: string) {
     return (
       !!this.inFlight["claims"]?.[this.users[userId]?.daily?.id] ||
@@ -132,6 +141,10 @@ export class RewardsModel {
 
   dailyReward(userId: string) {
     return this.users[userId]?.daily?.reward;
+  }
+
+  weeklyReward(userId: string) {
+    return this.users[userId]?.weekly?.reward;
   }
 
   dailyProgress(userId: string) {
