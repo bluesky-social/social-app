@@ -166,14 +166,14 @@ export class RewardsModel {
 
   isClaimingDaily(userId: string) {
     return (
-      !!this.inFlight["claims"]?.[this.users[userId]?.daily?.id] ||
+      !!this.dailyInFlight(userId) ||
       !!this.users[userId]?.daily?.isClaiming
     );
   }
 
   isClaimingWeekly(userId: string) {
     return (
-      !!(this.dailyInFlight(userId) && this.shouldClaimWeekly(userId)) || !!this.weeklyInFlight(userId) || 
+      !!this.weeklyInFlight(userId) || 
       !!this.users[userId]?.weekly?.isClaiming
     );
   }
