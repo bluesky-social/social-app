@@ -15,7 +15,3 @@ export function enforceLen(str: string, len: number, ellipsis = false): string {
   }
   return str
 }
-
-export function trim(str: string): string {
-  return str.trim()
-}
