@@ -76,8 +76,7 @@ export class RewardsModel {
     return this.users[userId]?.weekly?.id ?? '';
   }
 
-  async claimDailyReward(userId: string) {
-    const missionId = this.dailyMissionId(userId);
+  async _claimReward(userId: string, missionId: string) {
     const wallet = this.rootStore.me.splxWallet;
     try {
       if (!missionId || !wallet) {
@@ -85,11 +84,8 @@ export class RewardsModel {
       }
       runInAction(async () => {
         const missionIds: string[] = [];
-        if (this.shouldClaimDaily(userId)) {
-          missionIds.push(this.dailyMissionId(userId));
-        }
-        if (this.shouldClaimWeekly(userId)) {
-          missionIds.push(this.weeklyMissionId(userId));
+        if (missionId) {
+          missionIds.push(missionId);
         }
         if (!missionIds.length) {
           return;
@@ -128,6 +124,20 @@ export class RewardsModel {
       throw err;
     }
   }
+  
+  async claimDailyReward(userId: string) {
+    if (!this.shouldClaimDaily(userId)) {
+      return;
+    }
+    return await this._claimReward(userId, this.dailyMissionId(userId));
+  }
+
+  async claimWeeklyReward(userId: string) {
+    if (!this.shouldClaimWeekly(userId)) {
+      return;
+    }
+    return await this._claimReward(userId, this.weeklyMissionId(userId));
+  }
 
   shouldClaim(userId: string): boolean | undefined {
     return this.shouldClaimDaily(userId) || this.shouldClaimWeekly(userId);
@@ -139,7 +149,7 @@ export class RewardsModel {
 
   shouldClaimWeekly(userId: string): boolean | undefined {
     // TODO(Partyman): Change this from isClaimingDaily to weekly when we figure out what that looks like.
-    return this.users[userId]?.weekly.shouldClaim && !(this.isClaimingDaily(userId) || this.isClaimingWeekly(userId));
+    return this.users[userId]?.weekly.shouldClaim && this.isClaimingWeekly(userId);
   }
 
   dailyInFlight(userId: string) {
