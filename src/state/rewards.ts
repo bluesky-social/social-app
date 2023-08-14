@@ -129,6 +129,10 @@ export class RewardsModel {
     }
   }
 
+  shouldClaim(userId: string): boolean | undefined {
+    return this.shouldClaimDaily(userId) || this.shouldClaimWeekly(userId);
+  }
+
   shouldClaimDaily(userId: string): boolean | undefined {
     return this.users[userId]?.daily.shouldClaim && !this.isClaimingDaily(userId);
   }
