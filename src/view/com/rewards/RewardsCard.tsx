@@ -97,6 +97,7 @@ export const RewardsCard = observer(function RewardsCard({
   const shouldShowDiceCompnent = showDiceComponent || !dailyReward;
   const { setVisible } = useWalletModal();
   const wallet = useWallet();
+  const { track } = useAnalytics();
 
   const onClaimHandler = async () => {
     if (!store.me.splxWallet) {
@@ -104,7 +105,7 @@ export const RewardsCard = observer(function RewardsCard({
       return;
     }
     await store.rewards.claimDailyReward(userId);
-
+    track("Claim:DailyReward");
     store.me.nft.fetchNfts(store.me.splxWallet);
   };
 

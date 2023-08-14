@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import {
   HomeTabNavigatorParams,
   NativeStackScreenProps,
@@ -24,6 +24,7 @@ import { s } from "lib/styles";
 import { useAnalytics } from "lib/analytics/analytics";
 import useAppState from "react-native-appstate-hook";
 import { useOnMainScroll } from "lib/hooks/useOnMainScroll";
+import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
 
@@ -269,10 +270,10 @@ const FeedPage = observer(
       scrollToTop();
       feed.refresh();
     }, [feed, scrollToTop]);
-
+    const pal = usePalette("default");
     const hasNew = feed.hasNewLatest && !feed.isRefreshing;
     return (
-      <View testID={testID} style={s.h100pct}>
+      <View testID={testID} style={[pal.view, styles.container]}>
         <Feed
           testID={testID ? `${testID}-feed` : undefined}
           key="default"
@@ -307,3 +308,9 @@ const FeedPage = observer(
     );
   },
 );
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

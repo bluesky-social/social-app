@@ -4,7 +4,6 @@ import {
   HELIUS_RPC_API,
 } from "lib/constants";
 
-import { Helius } from "helius-sdk";
 import { RootStoreModel } from "../root-store";
 import { SolarplexReaction } from "../media/reactions";
 import cluster from "cluster";
