@@ -135,9 +135,6 @@ export class RewardsModel {
 
   shouldClaimWeekly(userId: string): boolean | undefined {
     // TODO(Partyman): Change this from isClaimingDaily to weekly when we figure out what that looks like.
-<<<<<<< HEAD
-    return this.users[userId]?.weekly.shouldClaim && !this.isClaimingDaily(userId);
-=======
     return this.users[userId]?.weekly.shouldClaim && !(this.isClaimingDaily(userId) || this.isClaimingWeekly(userId));
   }
 
@@ -151,7 +148,6 @@ export class RewardsModel {
 
   isClaiming(userId: string) {
     return this.isClaimingDaily(userId) || this.isClaimingWeekly(userId);
->>>>>>> 44eb24f4 (add weekly reward claim to rewards model)
   }
 
   isClaimingDaily(userId: string) {
