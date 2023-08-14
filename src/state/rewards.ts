@@ -108,11 +108,7 @@ export class RewardsModel {
             },
             body: JSON.stringify({
               mission: {
-<<<<<<< HEAD
-                missionId: this.shouldClaimWeekly(userId) ? [missionId, this.weeklyMissionId(userId)] : missionId,
-=======
                 missionId: missionIds,
->>>>>>> 44eb24f4 (add weekly reward claim to rewards model)
                 wallet,
               },
             }),
