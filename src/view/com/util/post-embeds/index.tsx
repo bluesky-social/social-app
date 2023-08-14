@@ -1,12 +1,6 @@
 import React from 'react'
-import {
-  StyleSheet,
-  StyleProp,
-  View,
-  ViewStyle,
-  Image as RNImage,
-  Text,
-} from 'react-native'
+import {StyleSheet, StyleProp, View, ViewStyle, Text} from 'react-native'
+import {Image} from 'expo-image'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
@@ -97,11 +91,11 @@ export function PostEmbeds({
       }
       const onPressIn = (index: number) => {
         const firstImageToShow = items[index].uri
-        RNImage.prefetch(firstImageToShow)
+        Image.prefetch(firstImageToShow)
         items.forEach(item => {
           if (firstImageToShow !== item.uri) {
             // First image already prefetched above
-            RNImage.prefetch(item.uri)
+            Image.prefetch(item.uri)
           }
         })
       }
