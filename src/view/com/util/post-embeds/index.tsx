@@ -89,15 +89,8 @@ export function PostEmbeds({
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(items, index))
       }
-      const onPressIn = (index: number) => {
-        const firstImageToShow = items[index].uri
-        Image.prefetch(firstImageToShow)
-        items.forEach(item => {
-          if (firstImageToShow !== item.uri) {
-            // First image already prefetched above
-            Image.prefetch(item.uri)
-          }
-        })
+      const onPressIn = (_: number) => {
+        Image.prefetch(items.map(i => i.uri))
       }
 
       if (images.length === 1) {
