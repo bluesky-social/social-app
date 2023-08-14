@@ -355,7 +355,9 @@ const MyProfileTabNavigator = observer(() => {
  */
 const FlatNavigator = observer(() => {
   const pal = usePalette('default')
-  const unreadCountLabel = useStores().me.notifications.unreadCountLabel
+  const store = useStores()
+  const unreadCountLabel = store.me.notifications.unreadCountLabel
+
   const title = (page: string) => bskyTitle(page, unreadCountLabel)
   return (
     <Flat.Navigator
@@ -385,6 +387,15 @@ const FlatNavigator = observer(() => {
         name="Notifications"
         component={NotificationsScreen}
         options={{title: title('Notifications')}}
+      />
+      <Flat.Screen
+        name="MyProfile"
+        // @ts-ignore // TODO: fix this broken type in ProfileScreen
+        component={ProfileScreen}
+        initialParams={{
+          name: store.me.did,
+          hideBackButton: true,
+        }}
       />
       {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
     </Flat.Navigator>

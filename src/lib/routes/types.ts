@@ -64,6 +64,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   Feeds: undefined
   Notifications: undefined
+  MyProfile: undefined
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
