@@ -84,6 +84,16 @@ export class RewardsModel {
         throw new Error("noMissionIdOrWallet");
       }
       runInAction(async () => {
+        const missionIds: string[] = [];
+        if (this.shouldClaimDaily(userId)) {
+          missionIds.push(this.dailyMissionId(userId));
+        }
+        if (this.shouldClaimWeekly(userId)) {
+          missionIds.push(this.weeklyMissionId(userId));
+        }
+        if (!missionIds.length) {
+          return;
+        }
         if (!this.inFlight["claims"]) {
           this.inFlight["claims"] = {};
         }
@@ -98,7 +108,11 @@ export class RewardsModel {
             },
             body: JSON.stringify({
               mission: {
+<<<<<<< HEAD
                 missionId: this.shouldClaimWeekly(userId) ? [missionId, this.weeklyMissionId(userId)] : missionId,
+=======
+                missionId: missionIds,
+>>>>>>> 44eb24f4 (add weekly reward claim to rewards model)
                 wallet,
               },
             }),
@@ -125,7 +139,23 @@ export class RewardsModel {
 
   shouldClaimWeekly(userId: string): boolean | undefined {
     // TODO(Partyman): Change this from isClaimingDaily to weekly when we figure out what that looks like.
+<<<<<<< HEAD
     return this.users[userId]?.weekly.shouldClaim && !this.isClaimingDaily(userId);
+=======
+    return this.users[userId]?.weekly.shouldClaim && !(this.isClaimingDaily(userId) || this.isClaimingWeekly(userId));
+  }
+
+  dailyInFlight(userId: string) {
+    return !!this.inFlight["claims"]?.[this.users[userId]?.daily?.id];
+  }
+
+  weeklyInFlight(userId: string) {
+    return !!this.inFlight["claims"]?.[this.users[userId]?.weekly?.id];
+  }
+
+  isClaiming(userId: string) {
+    return this.isClaimingDaily(userId) || this.isClaimingWeekly(userId);
+>>>>>>> 44eb24f4 (add weekly reward claim to rewards model)
   }
 
   isClaimingDaily(userId: string) {
@@ -135,8 +165,19 @@ export class RewardsModel {
     );
   }
 
+  isClaimingWeekly(userId: string) {
+    return (
+      !!(this.dailyInFlight(userId) && this.shouldClaimWeekly(userId)) || !!this.weeklyInFlight(userId) || 
+      !!this.users[userId]?.weekly?.isClaiming
+    );
+  }
+
   hasClaimedDaily(userId: string) {
     return !!(this.users[userId]?.daily?.missionClaimId || this.users[userId]?.daily?.rewardClaimId);
+  }
+
+  hasClaimedWeekly(userId: string) {
+    return !!(this.users[userId]?.weekly?.missionClaimId || this.users[userId]?.weekly?.rewardClaimId);
   }
 
   dailyReward(userId: string) {
@@ -165,10 +206,6 @@ export class RewardsModel {
         endValue: 7,
       }
     );
-  }
-
-  hasClaimedWeekly(userId: string) {
-    return !!(this.users[userId]?.weekly?.missionClaimId || this.users[userId]?.weekly?.rewardClaimId);
   }
 
   async fetchMissions(userId: string) {
