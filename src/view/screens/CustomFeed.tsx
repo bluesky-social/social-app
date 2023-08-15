@@ -209,15 +209,37 @@ export const CustomFeedScreenInner = observer(
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
         {
-          testID: 'feedHeaderDropdownRemoveBtn',
-          label: 'Remove from my feeds',
+          testID: 'feedHeaderDropdownToggleSavedBtn',
+          label: currentFeed?.isSaved
+            ? 'Remove from my feeds'
+            : 'Add to my feeds',
           onPress: onToggleSaved,
+          icon: currentFeed?.isSaved
+            ? {
+                ios: {
+                  name: 'trash',
+                },
+                android: 'ic_delete',
+                web: 'trash',
+              }
+            : {
+                ios: {
+                  name: 'plus',
+                },
+                android: '',
+                web: 'plus',
+              },
+        },
+        {
+          testID: 'feedHeaderDropdownReportBtn',
+          label: 'Report feed',
+          onPress: onPressReport,
           icon: {
             ios: {
-              name: 'trash',
+              name: 'exclamationmark.triangle',
             },
-            android: 'ic_delete',
-            web: 'trash',
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
           },
         },
         {
@@ -234,7 +256,7 @@ export const CustomFeedScreenInner = observer(
         },
       ]
       return items
-    }, [onToggleSaved, onPressShare])
+    }, [currentFeed?.isSaved, onToggleSaved, onPressReport, onPressShare])
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
@@ -267,42 +289,33 @@ export const CustomFeedScreenInner = observer(
               />
             </Button>
           ) : undefined}
-          {currentFeed?.isSaved ? (
-            <NativeDropdown
-              testID="feedHeaderDropdownBtn"
-              items={dropdownItems}
-            />
-          ) : (
-            <>
-              <Button
-                type="default-light"
-                accessibilityLabel="Report this feed"
-                accessibilityHint=""
-                onPress={onPressReport}>
-                <FontAwesomeIcon
-                  size={17}
-                  icon="circle-exclamation"
-                  color={pal.colors.textLight}
-                  style={styles.top1}
-                />
-              </Button>
-              <Button
-                type="default-light"
-                onPress={onToggleSaved}
-                accessibilityLabel="Add to my feeds"
-                accessibilityHint=""
-                style={styles.headerAddBtn}>
-                <FontAwesomeIcon
-                  icon="plus"
-                  color={pal.colors.link}
-                  size={19}
-                />
-                <Text type="xl-medium" style={pal.link}>
-                  Add to My Feeds
-                </Text>
-              </Button>
-            </>
-          )}
+          {!currentFeed?.isSaved ? (
+            <Button
+              type="default-light"
+              onPress={onToggleSaved}
+              accessibilityLabel="Add to my feeds"
+              accessibilityHint=""
+              style={styles.headerAddBtn}>
+              <FontAwesomeIcon icon="plus" color={pal.colors.link} size={19} />
+              <Text type="xl-medium" style={pal.link}>
+                Add to My Feeds
+              </Text>
+            </Button>
+          ) : null}
+          <NativeDropdown testID="feedHeaderDropdownBtn" items={dropdownItems}>
+            <View
+              style={{
+                paddingLeft: currentFeed?.isSaved ? 12 : 6,
+                paddingRight: 12,
+                paddingVertical: 8,
+              }}>
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={pal.colors.textLight}
+              />
+            </View>
+          </NativeDropdown>
         </View>
       )
     }, [
@@ -314,7 +327,6 @@ export const CustomFeedScreenInner = observer(
       onTogglePinned,
       onToggleLiked,
       dropdownItems,
-      onPressReport,
     ])
 
     const renderListHeaderComponent = React.useCallback(() => {
