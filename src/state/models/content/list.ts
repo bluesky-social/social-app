@@ -306,7 +306,7 @@ export class ListModel {
     this.hasMore = !!this.loadMoreCursor
     this.list = res.data.list
     this.items = this.items.concat(
-      res.data.items.map(item => ({...item, _reactKey: item.subject})),
+      res.data.items.map(item => ({...item, _reactKey: item.subject.did})),
     )
   }
 }

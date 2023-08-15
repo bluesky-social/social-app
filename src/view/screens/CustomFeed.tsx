@@ -188,6 +188,15 @@ export const CustomFeedScreenInner = observer(
       track('CustomFeed:Share')
     }, [handleOrDid, rkey, track])
 
+    const onPressReport = React.useCallback(() => {
+      if (!currentFeed) return
+      store.shell.openModal({
+        name: 'report',
+        uri: currentFeed.uri,
+        cid: currentFeed.data.cid,
+      })
+    }, [store, currentFeed])
+
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
       resetMainScroll()
@@ -200,15 +209,37 @@ export const CustomFeedScreenInner = observer(
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
         {
-          testID: 'feedHeaderDropdownRemoveBtn',
-          label: 'Remove from my feeds',
+          testID: 'feedHeaderDropdownToggleSavedBtn',
+          label: currentFeed?.isSaved
+            ? 'Remove from my feeds'
+            : 'Add to my feeds',
           onPress: onToggleSaved,
+          icon: currentFeed?.isSaved
+            ? {
+                ios: {
+                  name: 'trash',
+                },
+                android: 'ic_delete',
+                web: 'trash',
+              }
+            : {
+                ios: {
+                  name: 'plus',
+                },
+                android: '',
+                web: 'plus',
+              },
+        },
+        {
+          testID: 'feedHeaderDropdownReportBtn',
+          label: 'Report feed',
+          onPress: onPressReport,
           icon: {
             ios: {
-              name: 'trash',
+              name: 'exclamationmark.triangle',
             },
-            android: 'ic_delete',
-            web: 'trash',
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
           },
         },
         {
@@ -225,7 +256,7 @@ export const CustomFeedScreenInner = observer(
         },
       ]
       return items
-    }, [onToggleSaved, onPressShare])
+    }, [currentFeed?.isSaved, onToggleSaved, onPressReport, onPressShare])
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
@@ -258,12 +289,7 @@ export const CustomFeedScreenInner = observer(
               />
             </Button>
           ) : undefined}
-          {currentFeed?.isSaved ? (
-            <NativeDropdown
-              testID="feedHeaderDropdownBtn"
-              items={dropdownItems}
-            />
-          ) : (
+          {!currentFeed?.isSaved ? (
             <Button
               type="default-light"
               onPress={onToggleSaved}
@@ -275,7 +301,21 @@ export const CustomFeedScreenInner = observer(
                 Add to My Feeds
               </Text>
             </Button>
-          )}
+          ) : null}
+          <NativeDropdown testID="feedHeaderDropdownBtn" items={dropdownItems}>
+            <View
+              style={{
+                paddingLeft: currentFeed?.isSaved ? 12 : 6,
+                paddingRight: 12,
+                paddingVertical: 8,
+              }}>
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={pal.colors.textLight}
+              />
+            </View>
+          </NativeDropdown>
         </View>
       )
     }, [
@@ -370,6 +410,17 @@ export const CustomFeedScreenInner = observer(
                       color={pal.colors.icon}
                     />
                   </Button>
+                  <Button
+                    type="default"
+                    accessibilityLabel="Report this feed"
+                    accessibilityHint=""
+                    onPress={onPressReport}>
+                    <FontAwesomeIcon
+                      icon="circle-exclamation"
+                      size={18}
+                      color={pal.colors.icon}
+                    />
+                  </Button>
                 </View>
               )}
             </View>
@@ -419,6 +470,7 @@ export const CustomFeedScreenInner = observer(
       onToggleLiked,
       onPressShare,
       handleOrDid,
+      onPressReport,
       rkey,
       isPinned,
       onTogglePinned,

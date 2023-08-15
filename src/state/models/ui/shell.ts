@@ -48,16 +48,15 @@ export interface ModerationDetailsModal {
   moderation: ModerationUI
 }
 
-export interface ReportPostModal {
-  name: 'report-post'
-  postUri: string
-  postCid: string
-}
-
-export interface ReportAccountModal {
-  name: 'report-account'
-  did: string
-}
+export type ReportModal = {
+  name: 'report'
+} & (
+  | {
+      uri: string
+      cid: string
+    }
+  | {did: string}
+)
 
 export interface CreateOrEditMuteListModal {
   name: 'create-or-edit-mute-list'
@@ -159,8 +158,7 @@ export type Modal =
 
   // Moderation
   | ModerationDetailsModal
-  | ReportAccountModal
-  | ReportPostModal
+  | ReportModal
   | CreateOrEditMuteListModal
   | ListAddRemoveUserModal
 

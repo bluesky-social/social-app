@@ -11,6 +11,7 @@ export const ListActions = ({
   isOwner,
   onPressDeleteList,
   onPressShareList,
+  onPressReportList,
   reversed = false, // Default value of reversed is false
 }: {
   isOwner: boolean
@@ -19,6 +20,7 @@ export const ListActions = ({
   onPressEditList?: () => void
   onPressDeleteList?: () => void
   onPressShareList?: () => void
+  onPressReportList?: () => void
   reversed?: boolean // New optional prop
 }) => {
   const pal = usePalette('default')
@@ -64,6 +66,17 @@ export const ListActions = ({
       onPress={onPressShareList}>
       <FontAwesomeIcon icon={'share'} style={[pal.text]} />
     </Button>,
+    !isOwner && (
+      <Button
+        key="reportListBtn"
+        testID="reportListBtn"
+        type="default"
+        accessibilityLabel="Report list"
+        accessibilityHint=""
+        onPress={onPressReportList}>
+        <FontAwesomeIcon icon={'circle-exclamation'} style={[pal.text]} />
+      </Button>
+    ),
   ]
 
   // If reversed is true, reverse the array to reverse the order of the buttons
