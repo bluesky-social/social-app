@@ -104,7 +104,6 @@ export class MeModel {
     this.rootStore.log.debug('MeModel:load', {hasSession: sess.hasSession})
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
-      this.handle = sess.currentSession?.handle || ''
       await this.fetchProfile()
       this.mainFeed.clear()
       /* dont await */ this.mainFeed.setup().catch(e => {
@@ -144,6 +143,7 @@ export class MeModel {
         this.displayName = profile.data.displayName || ''
         this.description = profile.data.description || ''
         this.avatar = profile.data.avatar || ''
+        this.handle = profile.data.handle || ''
         this.followsCount = profile.data.followsCount
         this.followersCount = profile.data.followersCount
       } else {
