@@ -167,7 +167,10 @@ export function Selector({
         height,
         backgroundColor: pal.colors.background,
       }}>
-      <ScrollView horizontal style={{position: 'absolute'}}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{position: 'absolute'}}>
         <View
           style={[pal.view, styles.outer]}
           onLayout={e => {
