@@ -16,9 +16,11 @@ export const snapPoints = ['50%']
 
 export const Component = observer(function Component({
   labels,
+  hasMedia,
   onChange,
 }: {
   labels: string[]
+  hasMedia: boolean
   onChange: (labels: string[]) => void
 }) {
   const pal = usePalette('default')
@@ -74,46 +76,59 @@ export const Component = observer(function Component({
               </Button>
             ) : null}
           </View>
-          <View style={s.flexRow}>
-            <SelectableBtn
-              testID="sexualLabelBtn"
-              selected={selected.includes('sexual')}
-              left
-              label="Suggestive"
-              onSelect={() => toggleAdultLabel('sexual')}
-              accessibilityHint=""
-              style={s.flex1}
-            />
-            <SelectableBtn
-              testID="nudityLabelBtn"
-              selected={selected.includes('nudity')}
-              label="Nudity"
-              onSelect={() => toggleAdultLabel('nudity')}
-              accessibilityHint=""
-              style={s.flex1}
-            />
-            <SelectableBtn
-              testID="pornLabelBtn"
-              selected={selected.includes('porn')}
-              label="Porn"
-              right
-              onSelect={() => toggleAdultLabel('porn')}
-              accessibilityHint=""
-              style={s.flex1}
-            />
-          </View>
+          {hasMedia ? (
+            <>
+              <View style={s.flexRow}>
+                <SelectableBtn
+                  testID="sexualLabelBtn"
+                  selected={selected.includes('sexual')}
+                  left
+                  label="Suggestive"
+                  onSelect={() => toggleAdultLabel('sexual')}
+                  accessibilityHint=""
+                  style={s.flex1}
+                />
+                <SelectableBtn
+                  testID="nudityLabelBtn"
+                  selected={selected.includes('nudity')}
+                  label="Nudity"
+                  onSelect={() => toggleAdultLabel('nudity')}
+                  accessibilityHint=""
+                  style={s.flex1}
+                />
+                <SelectableBtn
+                  testID="pornLabelBtn"
+                  selected={selected.includes('porn')}
+                  label="Porn"
+                  right
+                  onSelect={() => toggleAdultLabel('porn')}
+                  accessibilityHint=""
+                  style={s.flex1}
+                />
+              </View>
 
-          <Text style={[pal.text, styles.adultExplainer]}>
-            {selected.includes('sexual') ? (
-              <>Pictures meant for adults.</>
-            ) : selected.includes('nudity') ? (
-              <>Artistic or non-erotic nudity.</>
-            ) : selected.includes('porn') ? (
-              <>Sexual activity or erotic nudity.</>
-            ) : (
-              <>If none are selected, suitable for all ages.</>
-            )}
-          </Text>
+              <Text style={[pal.text, styles.adultExplainer]}>
+                {selected.includes('sexual') ? (
+                  <>Pictures meant for adults.</>
+                ) : selected.includes('nudity') ? (
+                  <>Artistic or non-erotic nudity.</>
+                ) : selected.includes('porn') ? (
+                  <>Sexual activity or erotic nudity.</>
+                ) : (
+                  <>If none are selected, suitable for all ages.</>
+                )}
+              </Text>
+            </>
+          ) : (
+            <View>
+              <Text style={[pal.textLight]}>
+                <Text type="md-bold" style={[pal.textLight]}>
+                  Not Applicable
+                </Text>
+                . This warning is only available for posts with media attached.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
