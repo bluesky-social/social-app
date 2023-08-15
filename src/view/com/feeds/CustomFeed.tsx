@@ -72,6 +72,7 @@ export const CustomFeed = observer(
         testID={`feed-${item.displayName}`}
         accessibilityRole="button"
         style={[styles.container, pal.border, style]}
+        delayPressIn={130}
         onPress={() => {
           navigation.push('CustomFeed', {
             name: item.data.creator.did,

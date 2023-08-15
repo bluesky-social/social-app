@@ -11,7 +11,7 @@ import {clamp} from 'lib/numbers'
 import {useStores} from 'state/index'
 import {Dimensions} from 'lib/media/types'
 
-export const DELAY_PRESS_IN = 500
+export const DELAY_PRESS_IN = 130
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 5 // 5/1
 
