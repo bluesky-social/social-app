@@ -17,7 +17,7 @@ export class NftModel {
   }
 
   async fetchNfts(wallet: string) {
-    if (!wallet || process.env.HELIUS_API_KEY) return;
+    if (!wallet) return;
     try {
       const res = await fetch(
         `${HELIUS_RPC_API}/?api-key=${process.env.HELIUS_API_KEY}`,
