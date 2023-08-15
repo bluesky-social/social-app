@@ -19,6 +19,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {
   describeModerationCause,
   getProfileModerationCauses,
+  getModerationCauseKey,
 } from 'lib/moderation'
 
 export const ProfileCard = observer(
@@ -133,7 +134,7 @@ function ProfileCardPills({
         return (
           <View
             style={[s.mt5, pal.btn, styles.pill]}
-            key={moderation.decisions.account.did}>
+            key={getModerationCauseKey(cause)}>
             <Text type="xs" style={pal.text}>
               {cause?.type === 'label' ? '⚠' : ''}
               {desc.name}

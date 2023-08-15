@@ -92,3 +92,16 @@ export function isCauseALabelOnUri(
   }
   return cause.label.uri === uri
 }
+
+export function getModerationCauseKey(cause: ModerationCause): string {
+  const source =
+    cause.source.type === 'labeler'
+      ? cause.source.labeler.did
+      : cause.source.type === 'list'
+      ? cause.source.list.uri
+      : 'user'
+  if (cause.type === 'label') {
+    return `label:${cause.label.val}:${source}`
+  }
+  return `${cause.type}:${source}`
+}
