@@ -137,8 +137,6 @@ export const ViewSelector = React.forwardRef<
   },
 )
 
-const SCROLLBAR_OFFSET = 12
-
 export function Selector({
   selectedIndex,
   items,
@@ -166,15 +164,15 @@ export function Selector({
         width: '100%',
         position: 'relative',
         overflow: 'hidden',
-        marginTop: -SCROLLBAR_OFFSET,
         height,
         backgroundColor: pal.colors.background,
       }}>
       <ScrollView
         horizontal
-        style={{position: 'absolute', bottom: -SCROLLBAR_OFFSET}}>
+        showsHorizontalScrollIndicator={false}
+        style={{position: 'absolute'}}>
         <View
-          style={[pal.view, styles.outer, {paddingBottom: SCROLLBAR_OFFSET}]}
+          style={[pal.view, styles.outer]}
           onLayout={e => {
             const {height} = e.nativeEvent.layout
             setHeight(height || 60)
