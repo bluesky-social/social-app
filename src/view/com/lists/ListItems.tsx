@@ -306,6 +306,7 @@ const ListHeader = observer(
                   <TextLink
                     text={sanitizeHandle(list.creator.handle, '@')}
                     href={makeProfileLink(list.creator)}
+                    style={pal.textLight}
                   />
                 )}
               </Text>
