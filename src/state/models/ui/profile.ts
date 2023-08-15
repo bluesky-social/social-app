@@ -9,6 +9,7 @@ export enum Sections {
   PostsNoReplies = 'Posts',
   PostsWithReplies = 'Posts & replies',
   PostsWithMedia = 'Media',
+  Likes = 'Likes',
   CustomAlgorithms = 'Feeds',
   Lists = 'Lists',
 }
@@ -57,7 +58,8 @@ export class ProfileUiModel {
     if (
       this.selectedView === Sections.PostsNoReplies ||
       this.selectedView === Sections.PostsWithReplies ||
-      this.selectedView === Sections.PostsWithMedia
+      this.selectedView === Sections.PostsWithMedia ||
+      this.selectedView === Sections.Likes
     ) {
       return this.feed
     } else if (this.selectedView === Sections.Lists) {
@@ -83,6 +85,7 @@ export class ProfileUiModel {
       Sections.PostsNoReplies,
       Sections.PostsWithReplies,
       Sections.PostsWithMedia,
+      Sections.Likes,
     ]
     if (this.algos.hasLoaded && !this.algos.isEmpty) {
       items.push(Sections.CustomAlgorithms)
@@ -117,7 +120,8 @@ export class ProfileUiModel {
       if (
         this.selectedView === Sections.PostsNoReplies ||
         this.selectedView === Sections.PostsWithReplies ||
-        this.selectedView === Sections.PostsWithMedia
+        this.selectedView === Sections.PostsWithMedia ||
+        this.selectedView === Sections.Likes
       ) {
         if (this.feed.hasContent) {
           arr = this.feed.slices.slice()
@@ -151,7 +155,8 @@ export class ProfileUiModel {
     if (
       this.selectedView === Sections.PostsNoReplies ||
       this.selectedView === Sections.PostsWithReplies ||
-      this.selectedView === Sections.PostsWithMedia
+      this.selectedView === Sections.PostsWithMedia ||
+      this.selectedView === Sections.Likes
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
     } else if (this.selectedView === Sections.Lists) {
@@ -169,27 +174,45 @@ export class ProfileUiModel {
 
     this.selectedViewIndex = index
 
-    let filter = 'posts_no_replies'
-    if (this.selectedView === Sections.PostsWithReplies) {
-      filter = 'posts_with_replies'
-    } else if (this.selectedView === Sections.PostsWithMedia) {
-      filter = 'posts_with_media'
-    }
+    if (
+      this.selectedView === Sections.PostsNoReplies ||
+      this.selectedView === Sections.PostsWithReplies ||
+      this.selectedView === Sections.PostsWithMedia
+    ) {
+      let filter = 'posts_no_replies'
+      if (this.selectedView === Sections.PostsWithReplies) {
+        filter = 'posts_with_replies'
+      } else if (this.selectedView === Sections.PostsWithMedia) {
+        filter = 'posts_with_media'
+      }
 
-    this.feed = new PostsFeedModel(
-      this.rootStore,
-      'author',
-      {
-        actor: this.params.user,
-        limit: 10,
-        filter,
-      },
-      {
-        isSimpleFeed: ['posts_with_media'].includes(filter),
-      },
-    )
+      this.feed = new PostsFeedModel(
+        this.rootStore,
+        'author',
+        {
+          actor: this.params.user,
+          limit: 10,
+          filter,
+        },
+        {
+          isSimpleFeed: ['posts_with_media'].includes(filter),
+        },
+      )
 
-    if (this.currentView instanceof PostsFeedModel) {
+      this.feed.setup()
+    } else if (this.selectedView === Sections.Likes) {
+      this.feed = new PostsFeedModel(
+        this.rootStore,
+        'likes',
+        {
+          actor: this.params.user,
+          limit: 10,
+        },
+        {
+          isSimpleFeed: true,
+        },
+      )
+
       this.feed.setup()
     }
   }

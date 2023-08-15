@@ -3,6 +3,7 @@ import {
   AppBskyFeedGetTimeline as GetTimeline,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
+  AppBskyFeedGetActorLikes as GetActorLikes,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -57,7 +58,7 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'custom',
+    public feedType: 'home' | 'author' | 'custom' | 'likes',
     params: QueryParams,
     options?: Options,
   ) {
@@ -429,9 +430,13 @@ export class PostsFeedModel {
         res.data.feed = res.data.feed.slice(0, params.limit)
       }
       return res
-    } else {
+    } else if (this.feedType === 'author') {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
+      )
+    } else {
+      return this.rootStore.agent.getActorLikes(
+        params as GetActorLikes.QueryParams,
       )
     }
   }
