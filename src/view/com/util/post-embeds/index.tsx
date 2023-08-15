@@ -1,5 +1,12 @@
 import React from 'react'
-import {StyleSheet, StyleProp, View, ViewStyle, Text} from 'react-native'
+import {
+  StyleSheet,
+  StyleProp,
+  View,
+  ViewStyle,
+  Text,
+  InteractionManager,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {
   AppBskyEmbedImages,
@@ -90,7 +97,9 @@ export function PostEmbeds({
         store.shell.openLightbox(new ImagesLightbox(items, index))
       }
       const onPressIn = (_: number) => {
-        Image.prefetch(items.map(i => i.uri))
+        InteractionManager.runAfterInteractions(() => {
+          Image.prefetch(items.map(i => i.uri))
+        })
       }
 
       if (images.length === 1) {
