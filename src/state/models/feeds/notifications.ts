@@ -241,6 +241,12 @@ export class NotificationsFeedModel {
   loadMoreError = ''
   hasMore = true
   loadMoreCursor?: string
+
+  /**
+   * The last time notifications were seen. Refers to either the
+   * user's machine clock or the value of the `indexedAt` property on their
+   * latest notification, whichever was greater at the time of viewing.
+   */
   lastSync?: Date
 
   // used to linearize async modifications to state
@@ -327,9 +333,6 @@ export class NotificationsFeedModel {
           limit: PAGE_SIZE,
         })
         await this._replaceAll(res)
-        runInAction(() => {
-          this.lastSync = new Date()
-        })
         this._setQueued(undefined)
         this._countUnread()
         this._xIdle()
@@ -523,9 +526,17 @@ export class NotificationsFeedModel {
   // =
 
   async _replaceAll(res: ListNotifications.Response) {
-    if (res.data.notifications[0]) {
-      this.mostRecentNotificationUri = res.data.notifications[0].uri
+    const latest = res.data.notifications[0]
+
+    if (latest) {
+      const now = new Date()
+      const lastIndexed = new Date(latest.indexedAt)
+      const nowOrLastIndexed = now > lastIndexed ? now : lastIndexed
+
+      this.mostRecentNotificationUri = latest.uri
+      this.lastSync = nowOrLastIndexed
     }
+
     return this._appendAll(res, true)
   }
 
