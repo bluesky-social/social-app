@@ -529,16 +529,12 @@ export class NotificationsFeedModel {
     const latest = res.data.notifications[0]
 
     if (latest) {
-      // not in action
-      this.mostRecentNotificationUri = latest.uri
-
       const now = new Date()
       const lastIndexed = new Date(latest.indexedAt)
       const nowOrLastIndexed = now > lastIndexed ? now : lastIndexed
 
-      runInAction(() => {
-        this.lastSync = nowOrLastIndexed
-      })
+      this.mostRecentNotificationUri = latest.uri
+      this.lastSync = nowOrLastIndexed
     }
 
     return this._appendAll(res, true)
