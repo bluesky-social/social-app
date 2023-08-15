@@ -2,7 +2,7 @@ import net from 'net'
 import path from 'path'
 import fs from 'fs'
 import {TestPds as DevEnvTestPDS, TestNetworkNoAppView} from '@atproto/dev-env'
-import {BskyAgent} from '@atproto/api'
+import {AtUri, BskyAgent} from '@atproto/api'
 
 export interface TestUser {
   email: string
@@ -210,6 +210,31 @@ class Mocker {
       throw new Error(`Not a user: ${user}`)
     }
     return await agent.like(uri, cid)
+  }
+
+  async createFeed(user: string) {
+    const agent = this.users[user]?.agent
+    if (!agent) {
+      throw new Error(`Not a user: ${user}`)
+    }
+    const fg1Uri = AtUri.make(
+      this.users[user].did,
+      'app.bsky.feed.generator',
+      'alice-favs',
+    )
+    const avatarRes = await agent.api.com.atproto.repo.uploadBlob(this.pic, {
+      encoding: 'image/png',
+    })
+    return await agent.api.app.bsky.feed.generator.create(
+      {repo: this.users[user].did, rkey: fg1Uri.rkey},
+      {
+        did: 'did:web:fake.com',
+        displayName: 'alices feed',
+        description: 'all my fav stuff',
+        avatar: avatarRes.data.blob,
+        createdAt: new Date().toISOString(),
+      },
+    )
   }
 
   async createInvite(forAccount: string) {
