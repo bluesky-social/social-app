@@ -5,7 +5,7 @@ import {openApp, login, createServer, sleep} from '../util'
 describe('Profile screen', () => {
   let service: string
   beforeAll(async () => {
-    service = await createServer('?users&posts')
+    service = await createServer('?users&posts&feeds')
     await openApp({
       permissions: {notifications: 'YES', medialibrary: 'YES', photos: 'YES'},
     })
@@ -15,6 +15,12 @@ describe('Profile screen', () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
     await login(service, 'alice', 'hunter2')
     await element(by.id('bottomBarProfileBtn')).tap()
+  })
+
+  it('Can see feeds', async () => {
+    await element(by.id('selector-3')).tap()
+    await expect(element(by.id('feed-alices feed'))).toBeVisible()
+    await element(by.id('selector-0')).tap()
   })
 
   it('Open and close edit profile modal', async () => {

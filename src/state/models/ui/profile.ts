@@ -114,30 +114,23 @@ export class ProfileUiModel {
         },
       ])
     } else {
-      // not loading, no error, show content
       if (
         this.selectedView === Sections.PostsNoReplies ||
         this.selectedView === Sections.PostsWithReplies ||
-        this.selectedView === Sections.PostsWithMedia ||
-        this.selectedView === Sections.CustomAlgorithms
+        this.selectedView === Sections.PostsWithMedia
       ) {
         if (this.feed.hasContent) {
-          if (this.selectedView === Sections.CustomAlgorithms) {
-            arr = this.algos.feeds
-          } else if (
-            this.selectedView === Sections.PostsNoReplies ||
-            this.selectedView === Sections.PostsWithReplies ||
-            this.selectedView === Sections.PostsWithMedia
-          ) {
-            arr = this.feed.slices.slice()
-          } else {
-            // posts with replies is also default
-            arr = this.feed.slices.slice()
-          }
+          arr = this.feed.slices.slice()
           if (!this.feed.hasMore) {
             arr = arr.concat([ProfileUiModel.END_ITEM])
           }
         } else if (this.feed.isEmpty) {
+          arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+        }
+      } else if (this.selectedView === Sections.CustomAlgorithms) {
+        if (this.algos.hasContent) {
+          arr = this.algos.feeds
+        } else if (this.algos.isEmpty) {
           arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
         }
       } else if (this.selectedView === Sections.Lists) {
