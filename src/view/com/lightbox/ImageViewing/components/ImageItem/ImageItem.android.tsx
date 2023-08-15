@@ -17,6 +17,7 @@ import {
   NativeSyntheticEvent,
   NativeMethodsMixin,
 } from 'react-native'
+import {Image} from 'expo-image'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
 import usePanResponder from '../../hooks/usePanResponder'
@@ -40,6 +41,8 @@ type Props = {
   swipeToCloseEnabled?: boolean
   doubleTapToZoomEnabled?: boolean
 }
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const ImageItem = ({
   imageSrc,
@@ -128,7 +131,7 @@ const ImageItem = ({
         onScroll,
         onScrollEndDrag,
       })}>
-      <Animated.Image
+      <AnimatedImage
         {...panHandlers}
         source={imageSrc}
         style={imageStylesWithOpacity}
