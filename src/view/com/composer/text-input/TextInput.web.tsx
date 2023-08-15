@@ -96,6 +96,7 @@ export const TextInput = React.forwardRef(
                 onPressPublish(state)
                 return state
               })
+              return true
             }
           },
         },
