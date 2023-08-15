@@ -60,6 +60,7 @@ export const TextInput = React.forwardRef(
           Link.configure({
             protocols: ['http', 'https'],
             autolink: true,
+            linkOnPaste: false,
           }),
           Mention.configure({
             HTMLAttributes: {
