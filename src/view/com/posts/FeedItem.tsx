@@ -143,7 +143,7 @@ export const FeedItem = observer(function ({
       borderColor: pal.colors.border,
       paddingBottom:
         isThreadLastChild || (!isThreadChild && !isThreadParent)
-          ? 12
+          ? 6
           : undefined,
     },
     isThreadChild ? styles.outerSmallTop : undefined,
@@ -274,7 +274,6 @@ export const FeedItem = observer(function ({
             testID="contentHider-post"
             moderation={item.moderation.content}
             ignoreMute
-            style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
@@ -312,7 +311,6 @@ export const FeedItem = observer(function ({
             )}
           </ContentHider>
           <PostCtrls
-            style={styles.ctrls}
             itemUri={itemUri}
             itemCid={itemCid}
             itemHref={itemHref}
@@ -385,9 +383,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 4,
   },
-  contentHider: {
-    marginBottom: 6,
-  },
   contentHiderChild: {
     marginTop: 6,
   },
@@ -396,8 +391,5 @@ const styles = StyleSheet.create({
   },
   translateLink: {
     marginBottom: 6,
-  },
-  ctrls: {
-    marginTop: 4,
   },
 })

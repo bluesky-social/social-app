@@ -6,11 +6,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-// DISABLED see #135
-// import {
-//   TriggerableAnimated,
-//   TriggerableAnimatedRef,
-// } from './anim/TriggerableAnimated'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
@@ -20,7 +15,6 @@ import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
-import {createHitslop} from 'lib/constants'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -53,44 +47,6 @@ interface PostCtrlsOpts {
   onDeletePost: () => void
 }
 
-const HITSLOP = createHitslop(5)
-
-// DISABLED see #135
-/*
-function ctrlAnimStart(interp: Animated.Value) {
-  return Animated.sequence([
-    Animated.timing(interp, {
-      toValue: 1,
-      duration: 250,
-      useNativeDriver: true,
-    }),
-    Animated.delay(50),
-    Animated.timing(interp, {
-      toValue: 0,
-      duration: 20,
-      useNativeDriver: true,
-    }),
-  ])
-}
-
-function ctrlAnimStyle(interp: Animated.Value) {
-  return {
-    transform: [
-      {
-        scale: interp.interpolate({
-          inputRange: [0, 1.0],
-          outputRange: [1.0, 4.0],
-        }),
-      },
-    ],
-    opacity: interp.interpolate({
-      inputRange: [0, 1.0],
-      outputRange: [1.0, 0.0],
-    }),
-  }
-}
-*/
-
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores()
   const theme = useTheme()
@@ -100,22 +56,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     }),
     [theme],
   ) as StyleProp<ViewStyle>
-  // DISABLED see #135
-  // const repostRef = React.useRef<TriggerableAnimatedRef | null>(null)
-  // const likeRef = React.useRef<TriggerableAnimatedRef | null>(null)
   const onRepost = useCallback(() => {
     store.shell.closeModal()
     if (!opts.isReposted) {
       Haptics.default()
       opts.onPressToggleRepost().catch(_e => undefined)
-      // DISABLED see #135
-      // repostRef.current?.trigger(
-      //   {start: ctrlAnimStart, style: ctrlAnimStyle},
-      //   async () => {
-      //     await opts.onPressToggleRepost().catch(_e => undefined)
-      //     setRepostMod(0)
-      //   },
-      // )
     } else {
       opts.onPressToggleRepost().catch(_e => undefined)
     }
@@ -146,18 +91,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     if (!opts.isLiked) {
       Haptics.default()
       await opts.onPressToggleLike().catch(_e => undefined)
-      // DISABLED see #135
-      // likeRef.current?.trigger(
-      //   {start: ctrlAnimStart, style: ctrlAnimStyle},
-      //   async () => {
-      //     await opts.onPressToggleLike().catch(_e => undefined)
-      //     setLikeMod(0)
-      //   },
-      // )
-      // setIsLikedPressed(false)
     } else {
       await opts.onPressToggleLike().catch(_e => undefined)
-      // setIsLikedPressed(false)
     }
   }
 
@@ -165,8 +100,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     <View style={[styles.ctrls, opts.style]}>
       <TouchableOpacity
         testID="replyBtn"
-        style={styles.ctrl}
-        hitSlop={HITSLOP}
+        style={[styles.ctrl, !opts.big && styles.ctrlPad, {paddingLeft: 0}]}
         onPress={opts.onPressReply}
         accessibilityRole="button"
         accessibilityLabel={`Reply (${opts.replyCount} ${
@@ -187,8 +121,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
       <TouchableOpacity
         testID="likeBtn"
-        style={styles.ctrl}
-        hitSlop={HITSLOP}
+        style={[styles.ctrl, !opts.big && styles.ctrlPad]}
         onPress={onPressToggleLikeWrapper}
         accessibilityRole="button"
         accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
@@ -232,6 +165,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
           onOpenTranslate={opts.onOpenTranslate}
           onToggleThreadMute={opts.onToggleThreadMute}
           onDeletePost={opts.onDeletePost}
+          style={styles.ctrlPad}
         />
       )}
       {/* used for adding pad to the right side */}
@@ -248,8 +182,12 @@ const styles = StyleSheet.create({
   ctrl: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 5,
-    margin: -5,
+  },
+  ctrlPad: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   ctrlIconLiked: {
     color: colors.like,

@@ -1,6 +1,9 @@
 import React from 'react'
+import {StyleProp, View, ViewStyle} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useStores} from 'state/index'
+import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
 import {
   NativeDropdown,
@@ -19,6 +22,7 @@ export function PostDropdownBtn({
   onOpenTranslate,
   onToggleThreadMute,
   onDeletePost,
+  style,
 }: {
   testID: string
   itemUri: string
@@ -31,8 +35,11 @@ export function PostDropdownBtn({
   onOpenTranslate: () => void
   onToggleThreadMute: () => void
   onDeletePost: () => void
+  style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
+  const theme = useTheme()
+  const defaultCtrlColor = theme.palette.default.postCtrl
 
   const dropdownItems: NativeDropdownItem[] = [
     {
@@ -146,8 +153,11 @@ export function PostDropdownBtn({
         testID={testID}
         items={dropdownItems}
         accessibilityLabel="More post options"
-        accessibilityHint=""
-      />
+        accessibilityHint="">
+        <View style={style}>
+          <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
+        </View>
+      </NativeDropdown>
     </EventStopper>
   )
 }

@@ -60,7 +60,6 @@ export const DropdownMenuTrigger = DropdownMenu.create(
                 icon="ellipsis"
                 size={20}
                 color={defaultCtrlColor}
-                style={styles.ellipsis}
               />
             )}
           </View>
@@ -251,9 +250,6 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     marginVertical: 4,
-  },
-  ellipsis: {
-    padding: isWeb ? 0 : 10,
   },
   content: {
     backgroundColor: '#f0f0f0',

@@ -215,20 +215,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                     </TimeElapsed>
                   </Text>
                 </View>
-                <View style={s.flex1} />
-                <PostDropdownBtn
-                  testID="postDropdownBtn"
-                  itemUri={itemUri}
-                  itemCid={itemCid}
-                  itemHref={itemHref}
-                  itemTitle={itemTitle}
-                  isAuthor={item.post.author.did === store.me.did}
-                  isThreadMuted={item.isThreadMuted}
-                  onCopyPostText={onCopyPostText}
-                  onOpenTranslate={onOpenTranslate}
-                  onToggleThreadMute={onToggleThreadMute}
-                  onDeletePost={onDeletePost}
-                />
               </View>
               <View style={styles.meta}>
                 <Link
@@ -241,6 +227,21 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </Link>
               </View>
             </View>
+            <View style={s.flex1} />
+            <PostDropdownBtn
+              testID="postDropdownBtn"
+              itemUri={itemUri}
+              itemCid={itemCid}
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              isAuthor={item.post.author.did === store.me.did}
+              isThreadMuted={item.isThreadMuted}
+              onCopyPostText={onCopyPostText}
+              onOpenTranslate={onOpenTranslate}
+              onToggleThreadMute={onToggleThreadMute}
+              onDeletePost={onDeletePost}
+              style={{paddingVertical: 6, paddingHorizontal: 10}}
+            />
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
             <ContentHider
@@ -382,7 +383,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             style={[
               styles.layout,
               {
-                paddingBottom: item._showChildReplyLine ? 0 : 16,
+                paddingBottom: item._showChildReplyLine ? 0 : 8,
               },
             ]}>
             <View style={styles.layoutAvi}>
@@ -430,7 +431,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               ) : undefined}
               {item.post.embed && (
-                <ContentHider style={s.mb10} moderation={item.moderation.embed}>
+                <ContentHider
+                  style={styles.contentHider}
+                  moderation={item.moderation.embed}>
                   <PostEmbeds
                     embed={item.post.embed}
                     moderation={item.moderation.embed}
@@ -565,7 +568,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 8,
     paddingRight: 10,
-    minHeight: 36,
   },
   postTextLargeContainer: {
     paddingHorizontal: 0,
