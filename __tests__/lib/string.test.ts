@@ -296,11 +296,15 @@ describe('toShortUrl', () => {
     'https://bsky.app',
     'https://bsky.app/3jk7x4irgv52r',
     'https://bsky.app/3jk7x4irgv52r2313y182h9',
+    'https://very-long-domain-name.com/foo',
+    'https://very-long-domain-name.com/foo?bar=baz#andsomemore',
   ]
   const outputs = [
     'bsky.app',
     'bsky.app/3jk7x4irgv52r',
-    'bsky.app/3jk7x4irgv52r2313y...',
+    'bsky.app/3jk7x4irgv52…',
+    'very-long-domain-name.com/foo',
+    'very-long-domain-name.com/foo?bar=baz#…',
   ]
 
   it('shortens the url', () => {
