@@ -52,6 +52,8 @@ export class MeModel {
     this.mainFeed.clear()
     this.notifications.clear()
     this.follows.clear()
+    this.rootStore.profiles.cache.clear()
+    this.rootStore.posts.cache.clear()
     this.did = ''
     this.handle = ''
     this.displayName = ''
