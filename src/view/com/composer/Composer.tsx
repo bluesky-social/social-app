@@ -218,6 +218,7 @@ export const ComposePost = observer(function ComposePost({
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
+  const hasMedia = gallery.size > 0 || Boolean(extLink)
 
   return (
     <KeyboardAvoidingView
@@ -236,7 +237,7 @@ export const ComposePost = observer(function ComposePost({
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
-          <LabelsBtn labels={labels} onChange={setLabels} />
+          <LabelsBtn labels={labels} onChange={setLabels} hasMedia={hasMedia} />
           {isProcessing ? (
             <View style={styles.postBtn}>
               <ActivityIndicator />

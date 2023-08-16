@@ -102,6 +102,7 @@ export interface RepostModal {
 export interface SelfLabelModal {
   name: 'self-label'
   labels: string[]
+  hasMedia: boolean
   onChange: (labels: string[]) => void
 }
 
