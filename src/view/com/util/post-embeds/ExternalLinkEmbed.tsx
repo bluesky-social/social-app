@@ -35,14 +35,14 @@ export const ExternalLinkEmbed = ({
           {toNiceDomain(link.uri)}
         </Text>
         <Text
-          type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
+          type="lg-bold"
           numberOfLines={isDesktopWeb ? 2 : 4}
           style={[pal.text]}>
           {link.title || link.uri}
         </Text>
         {link.description ? (
           <Text
-            type={isDesktopWeb ? 'lg' : 'md'}
+            type="md"
             numberOfLines={isDesktopWeb ? 2 : 4}
             style={[pal.text, styles.extDescription]}>
             {link.description}
