@@ -42,15 +42,12 @@ export function toShortUrl(url: string): string {
     if (urlp.protocol !== 'http:' && urlp.protocol !== 'https:') {
       return url
     }
-    const shortened =
-      urlp.host +
-      (urlp.pathname === '/' ? '' : urlp.pathname) +
-      urlp.search +
-      urlp.hash
-    if (shortened.length > 30) {
-      return shortened.slice(0, 27) + '...'
+    const path =
+      (urlp.pathname === '/' ? '' : urlp.pathname) + urlp.search + urlp.hash
+    if (path.length > 15) {
+      return urlp.host + path.slice(0, 13) + '...'
     }
-    return shortened ? shortened : url
+    return urlp.host + path
   } catch (e) {
     return url
   }
