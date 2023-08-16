@@ -18,8 +18,8 @@ export class FeedViewPostsSlice {
   constructor(public items: FeedViewPost[] = []) {}
 
   get _reactKey() {
-    return `slice-${this.rootItem.post.uri}-${
-      this.rootItem.reason?.indexedAt || this.rootItem.post.indexedAt
+    return `slice-${this.items[0].post.uri}-${
+      this.items[0].reason?.indexedAt || this.items[0].post.indexedAt
     }`
   }
 

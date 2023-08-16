@@ -263,7 +263,16 @@ export class PostsFeedModel {
       return
     }
     const res = await this._getFeed({limit: 1})
-    this.setHasNewLatest(res.data.feed[0]?.post.uri !== this.pollCursor)
+    if (res.data.feed[0]) {
+      const slices = this.tuner.tune(res.data.feed, this.feedTuners)
+      if (slices[0]) {
+        const sliceModel = new PostsFeedSliceModel(this.rootStore, slices[0])
+        if (sliceModel.moderation.content.filter) {
+          return
+        }
+        this.setHasNewLatest(sliceModel.uri !== this.pollCursor)
+      }
+    }
   }
 
   /**
