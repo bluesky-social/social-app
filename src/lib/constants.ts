@@ -3,7 +3,7 @@ export const FEEDBACK_FORM_URL =
   "https://twitter.com/intent/tweet?text=Hey%20@solarplex_xyz%20I%20have%20some%20feedback%20for%20Live%3A";
 
 export const BLUESKY_INTENT_LINK =
-  "https://twitter.com/intent/tweet?text=Let%27s%20get%20out%20of%20the%20echo%20chamber%21%20I%27m%20on%20the%20waitlist%20for%20@solarplex_xyz%20Live%21%20I%20need%20an%20invite%2C%20who%27s%20got%20one%3F";
+  "https://twitter.com/intent/tweet?text=Let%27s%20get%20out%20of%20the%20echo%20chamber%21%20I%27m%20on%20the%20waitlist%20for%20@solarplex_xyz%20V2%21%20I%20need%20an%20invite%2C%20who%27s%20got%20one%3F";
 
 export const MAX_DISPLAY_NAME = 64;
 export const MAX_DESCRIPTION = 256;
