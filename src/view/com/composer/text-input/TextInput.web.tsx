@@ -107,6 +107,7 @@ export const TextInput = React.forwardRef(
           const json = editorProp.getJSON()
 
           const newRt = new RichText({text: editorJsonToText(json).trim()})
+          newRt.detectFacetsWithoutResolution()
           setRichText(newRt)
 
           const newSuggestedLinks = new Set(editorJsonToLinks(json))

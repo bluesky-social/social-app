@@ -45,7 +45,7 @@ export function toShortUrl(url: string): string {
     const path =
       (urlp.pathname === '/' ? '' : urlp.pathname) + urlp.search + urlp.hash
     if (path.length > 15) {
-      return urlp.host + path.slice(0, 13) + '…'
+      return urlp.host + path.slice(0, 13) + '...'
     }
     return urlp.host + path
   } catch (e) {
