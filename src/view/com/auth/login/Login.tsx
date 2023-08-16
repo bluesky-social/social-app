@@ -722,7 +722,7 @@ const ForgotPasswordForm = ({
           testID="forgotPasswordView"
           style={[pal.borderDark, pal.view, styles.group]}
         >
-          <TouchableOpacity
+          {/* <TouchableOpacity
             testID="forgotPasswordSelectServiceButton"
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
             onPress={onPressSelectService}
@@ -744,8 +744,8 @@ const ForgotPasswordForm = ({
                 style={pal.text as FontAwesomeIconStyle}
               />
             </View>
-          </TouchableOpacity>
-          <View style={[pal.borderDark, styles.groupContent]}>
+          </TouchableOpacity> */}
+          <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
             <FontAwesomeIcon
               icon="envelope"
               style={[pal.textLight, styles.groupContentIcon]}
