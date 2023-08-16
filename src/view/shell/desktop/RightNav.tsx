@@ -76,7 +76,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           />
         </View>
       </View>
-      {/* <InviteCodes /> */}
+      <InviteCodes />
     </View>
   );
 });

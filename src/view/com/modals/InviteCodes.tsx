@@ -1,18 +1,20 @@
-import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
+import * as Toast from '../util/Toast'
+
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {Text} from '../util/text/Text'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+
 import {Button} from '../util/forms/Button'
-import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
+import Clipboard from '@react-native-clipboard/clipboard'
+import React from 'react'
 import {ScrollView} from './util'
-import {usePalette} from 'lib/hooks/usePalette'
+import {Text} from '../util/text/Text'
 import {isDesktopWeb} from 'platform/detection'
+import {observer} from 'mobx-react-lite'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useStores} from 'state/index'
 
 export const snapPoints = ['70%']
 
@@ -30,7 +32,7 @@ export function Component({}: {}) {
         <View style={[styles.empty, pal.viewLight]}>
           <Text type="lg" style={[pal.text, styles.emptyText]}>
             You don't have any invite codes yet! We'll send you some when you've
-            been on Bluesky for a little longer.
+            been on Solarplex for a little longer.
           </Text>
         </View>
         <View style={styles.flex1} />

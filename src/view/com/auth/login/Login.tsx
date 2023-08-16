@@ -4,13 +4,11 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
-  Linking,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { BLUESKY_INTENT_LINK, SOLARPLEX_IDENTIFIER } from "lib/constants";
 import { DEFAULT_SERVICE, RootStoreModel, useStores } from "state/index";
 import {
   FontAwesomeIcon,
@@ -25,8 +23,8 @@ import { Button } from "view/com/util/forms/Button";
 import { CenteredView } from "view/com/util/Views";
 import { ErrorBoundary } from "view/com/util/ErrorBoundary";
 import { NavigationProp } from "lib/routes/types";
+import { SOLARPLEX_IDENTIFIER } from "lib/constants";
 import { ServiceDescription } from "state/models/session";
-import { SolarplexLogo } from "lib/icons";
 import { Text } from "../../util/text/Text";
 import { UserAvatar } from "../../util/UserAvatar";
 import { cleanError } from "lib/strings/errors";
@@ -381,10 +379,6 @@ const LoginForm = ({
       navigation.navigate("Home");
     }
   };
-
-  const onPressRequestInvite = React.useCallback(() => {
-    Linking.openURL(BLUESKY_INTENT_LINK);
-  }, []);
 
   const isReady = !!serviceDescription && !!identifier && !!password;
 

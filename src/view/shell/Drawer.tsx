@@ -186,7 +186,7 @@ export const DrawerContent = observer(() => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* <InviteCodes /> */}
+            <InviteCodes />
           </>
         )}
         <ScrollView style={styles.main}>
