@@ -1,30 +1,30 @@
-import * as Toast from '../util/Toast'
+import * as Toast from "../util/Toast";
 
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+} from "@fortawesome/react-native-fontawesome";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-import {Button} from '../util/forms/Button'
-import Clipboard from '@react-native-clipboard/clipboard'
-import React from 'react'
-import {ScrollView} from './util'
-import {Text} from '../util/text/Text'
-import {isDesktopWeb} from 'platform/detection'
-import {observer} from 'mobx-react-lite'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import { Button } from "../util/forms/Button";
+import Clipboard from "@react-native-clipboard/clipboard";
+import React from "react";
+import { ScrollView } from "./util";
+import { Text } from "../util/text/Text";
+import { isDesktopWeb } from "platform/detection";
+import { observer } from "mobx-react-lite";
+import { usePalette } from "lib/hooks/usePalette";
+import { useStores } from "state/index";
 
-export const snapPoints = ['70%']
+export const snapPoints = ["70%"];
 
 export function Component({}: {}) {
-  const pal = usePalette('default')
-  const store = useStores()
+  const pal = usePalette("default");
+  const store = useStores();
 
   const onClose = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    store.shell.closeModal();
+  }, [store]);
 
   if (store.me.invites.length === 0) {
     return (
@@ -46,7 +46,7 @@ export function Component({}: {}) {
           />
         </View>
       </View>
-    )
+    );
   }
 
   return (
@@ -59,7 +59,7 @@ export function Component({}: {}) {
         code works once!
       </Text>
       <Text type="sm" style={[styles.description, pal.textLight]}>
-        (You'll receive one invite code every two weeks.)
+        (Ping @viksit on Solarplex to receive more.)
       </Text>
       <ScrollView style={[styles.scrollContainer, pal.border]}>
         {store.me.invites.map((invite, i) => (
@@ -82,20 +82,28 @@ export function Component({}: {}) {
         />
       </View>
     </View>
-  )
+  );
 }
 
 const InviteCode = observer(
-  ({testID, code, used}: {testID: string; code: string; used?: boolean}) => {
-    const pal = usePalette('default')
-    const store = useStores()
-    const {invitesAvailable} = store.me
+  ({
+    testID,
+    code,
+    used,
+  }: {
+    testID: string;
+    code: string;
+    used?: boolean;
+  }) => {
+    const pal = usePalette("default");
+    const store = useStores();
+    const { invitesAvailable } = store.me;
 
     const onPress = React.useCallback(() => {
-      Clipboard.setString(code)
-      Toast.show('Copied to clipboard')
-      store.invitedUsers.setInviteCopied(code)
-    }, [store, code])
+      Clipboard.setString(code);
+      Toast.show("Copied to clipboard");
+      store.invitedUsers.setInviteCopied(code);
+    }, [store, code]);
 
     return (
       <TouchableOpacity
@@ -105,14 +113,16 @@ const InviteCode = observer(
         accessibilityRole="button"
         accessibilityLabel={
           invitesAvailable === 1
-            ? 'Invite codes: 1 available'
+            ? "Invite codes: 1 available"
             : `Invite codes: ${invitesAvailable} available`
         }
-        accessibilityHint="Opens list of invite codes">
+        accessibilityHint="Opens list of invite codes"
+      >
         <Text
           testID={`${testID}-code`}
-          type={used ? 'md' : 'md-bold'}
-          style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
+          type={used ? "md" : "md-bold"}
+          style={used ? [pal.textLight, styles.strikeThrough] : pal.text}
+        >
           {code}
         </Text>
         <View style={styles.flex1} />
@@ -121,14 +131,14 @@ const InviteCode = observer(
         )}
         {!used && (
           <FontAwesomeIcon
-            icon={['far', 'clone']}
+            icon={["far", "clone"]}
             style={pal.text as FontAwesomeIconStyle}
           />
         )}
       </TouchableOpacity>
-    )
+    );
   },
-)
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -136,12 +146,12 @@ const styles = StyleSheet.create({
     paddingBottom: isDesktopWeb ? 0 : 50,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 12,
     marginBottom: 12,
   },
   description: {
-    textAlign: 'center',
+    textAlign: "center",
     paddingHorizontal: 42,
     marginBottom: 14,
   },
@@ -164,12 +174,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   inviteCode: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderBottomWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 14,
@@ -178,18 +188,18 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   strikeThrough: {
-    textDecorationLine: 'line-through',
-    textDecorationStyle: 'solid',
+    textDecorationLine: "line-through",
+    textDecorationStyle: "solid",
   },
 
   btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 32,
     paddingHorizontal: 60,
     paddingVertical: 14,
@@ -197,4 +207,4 @@ const styles = StyleSheet.create({
   btnLabel: {
     fontSize: 18,
   },
-})
+});
