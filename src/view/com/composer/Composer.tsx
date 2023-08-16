@@ -33,6 +33,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {toShortUrl} from 'lib/strings/url-helpers'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -355,20 +356,23 @@ export const ComposePost = observer(function ComposePost({
         </ScrollView>
         {!extLink && suggestedLinks.size > 0 ? (
           <View style={s.mb5}>
-            {Array.from(suggestedLinks).map(url => (
-              <TouchableOpacity
-                key={`suggested-${url}`}
-                testID="addLinkCardBtn"
-                style={[pal.borderDark, styles.addExtLinkBtn]}
-                onPress={() => onPressAddLinkCard(url)}
-                accessibilityRole="button"
-                accessibilityLabel="Add link card"
-                accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
-                <Text style={pal.text}>
-                  Add link card: <Text style={pal.link}>{url}</Text>
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {Array.from(suggestedLinks)
+              .slice(0, 3)
+              .map(url => (
+                <TouchableOpacity
+                  key={`suggested-${url}`}
+                  testID="addLinkCardBtn"
+                  style={[pal.borderDark, styles.addExtLinkBtn]}
+                  onPress={() => onPressAddLinkCard(url)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Add link card"
+                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
+                  <Text style={pal.text}>
+                    Add link card:{' '}
+                    <Text style={pal.link}>{toShortUrl(url)}</Text>
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </View>
         ) : null}
         <View style={[pal.border, styles.bottomBar]}>
