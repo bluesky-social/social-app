@@ -77,7 +77,9 @@ export function init(store: RootStoreModel) {
       if (
         response.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
       ) {
-        store.log.debug('User pressed a notifee, opening notifications')
+        store.log.debug(
+          'User pressed a notification, opening notifications tab',
+        )
         resetToTab('NotificationsTab')
       }
     },
