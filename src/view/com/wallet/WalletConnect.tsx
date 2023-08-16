@@ -13,7 +13,11 @@ import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-export const WalletConnect = observer(function WalletConnect({ model }: { model: MeModel }) {
+export const WalletConnect = observer(function WalletConnect({
+  model,
+}: {
+  model: MeModel;
+}) {
   const store = useStores();
   const wallet = useWallet();
   const pal = usePalette("default");
@@ -34,13 +38,6 @@ export const WalletConnect = observer(function WalletConnect({ model }: { model:
           {!store.me.splxWallet ? (
             wallet.connected ? (
               <>
-                {/* <Button
-                  label="Link Wallet to Solarplex"
-                  onPress={() =>
-                    wallet.publicKey &&
-                    store.me.connectWallet(wallet.publicKey?.toString())
-                  }
-                /> */}
                 <TouchableOpacity
                   onPress={handleLinkWallet}
                   style={styles.connectBtn}

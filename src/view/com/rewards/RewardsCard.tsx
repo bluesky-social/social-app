@@ -22,39 +22,133 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 type RewardClaimedProps = {
   rewardsImg: string;
+  userId: string;
+  isWeekly?: boolean;
 };
 
-const RewardClaimed = ({ rewardsImg }: RewardClaimedProps) => {
+const RewardClaimed = ({
+  rewardsImg,
+  userId,
+  isWeekly = false,
+}: RewardClaimedProps) => {
   const pal = usePalette("default");
   const store = useStores();
+  const hasClaimedWeekly = store.rewards.hasClaimedWeekly(userId);
+  const shouldClaimWeekly = store.rewards.shouldClaimWeekly(userId);
+  const [displayWeekly, setDisplayWeekly] = useState<boolean>(false);
 
   const onPressCompose = React.useCallback(() => {
     store.shell.openComposer({
       isSharing: true,
       uri: rewardsImg,
+      sharingText: isWeekly
+        ? "Just got my reward from my Weekly Streak!"
+        : "Freshly Minted!",
     });
   }, [store]);
 
-  const opts = store.shell.composerOpts;
   return (
-    <View style={styles.DiceRowCol}>
-      <Text type="lg-thin">🎉Congrats!🎉</Text>
-      <Text type="2xl-bold" style={[pal.text, styles.DiceRollText]}>
-        You won a Reward!
-      </Text>
-      <Image
-        source={{
-          uri: rewardsImg,
-        }}
-        accessible={true}
-        accessibilityLabel={"reward image"}
-        accessibilityHint=""
-        resizeMode="contain"
-        style={styles.rewardImage}
-      />
-      <View style={styles.RollBtn}>
-        <ClaimBtn text="Share" onClick={onPressCompose} />
-      </View>
+    <View>
+      {displayWeekly ? (
+        <WeeklyScreen userId={userId} />
+      ) : (
+        <View style={styles.DiceRowCol}>
+          <Text type="lg-thin">🎉Congrats!🎉</Text>
+          <Text type="2xl-bold" style={[pal.text, styles.DiceRollText]}>
+            You won a Reward!
+          </Text>
+          <Image
+            source={{
+              uri: rewardsImg,
+            }}
+            accessible={true}
+            accessibilityLabel={"reward image"}
+            accessibilityHint=""
+            resizeMode="contain"
+            style={styles.rewardImage}
+          />
+          <View style={styles.buttonGroup}>
+            {shouldClaimWeekly && !hasClaimedWeekly ? (
+              <View style={{ paddingHorizontal: 10 }}>
+                <ClaimBtn
+                  text="Claim Weekly Reward"
+                  weekly={true}
+                  onClick={() => setDisplayWeekly(true)}
+                />
+              </View>
+            ) : (
+              <View style={styles.RollBtn}>
+                <ClaimBtn text="Share" onClick={onPressCompose} />
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const WeeklyScreen = ({ userId }: { userId: string }) => {
+  const pal = usePalette("default");
+  const store = useStores();
+  const hasClaimedWeekly = store.rewards.hasClaimedWeekly(userId);
+  const shouldClaimWeekly = store.rewards.shouldClaimWeekly(userId);
+  const isClaimingWeekly = store.rewards.isClaimingWeekly(userId);
+  const weeklyReward = store.rewards.weeklyReward(userId);
+  const { setVisible } = useWalletModal();
+
+  const onClaimWeeklyHandler = async () => {
+    if (!store.me.splxWallet) {
+      setVisible(true);
+      return;
+    }
+    await store.rewards.claimWeeklyReward(userId);
+
+    store.me.nft.fetchNfts(store.me.splxWallet);
+  };
+  return (
+    <View>
+      {weeklyReward ? (
+        <RewardClaimed
+          isWeekly={true}
+          userId={userId}
+          rewardsImg={
+            weeklyReward?.image ?? "https://i.ibb.co/RB3bMLt/blob.png"
+          }
+        />
+      ) : (
+        <View style={styles.DiceRowCol}>
+          <Text type="2xl-bold" style={[pal.text, styles.DiceRollText]}>
+            Claim Your Weekly
+          </Text>
+          <Image
+            source={
+              hasClaimedWeekly
+                ? require("../../../../assets/ChestOpening.gif")
+                : require("../../../../assets/ChestClosed.png")
+            }
+            style={styles.DiceRollImage}
+          />
+          <View style={[styles.RollBtn]}>
+            <ClaimBtn
+              weekly={true}
+              done={hasClaimedWeekly}
+              disabled={!shouldClaimWeekly || hasClaimedWeekly}
+              loading={isClaimingWeekly}
+              text={
+                isClaimingWeekly
+                  ? "Claiming..."
+                  : hasClaimedWeekly
+                  ? "Check your wallet!"
+                  : !store.me.splxWallet
+                  ? "Connect Wallet"
+                  : "Open"
+              }
+              onClick={onClaimWeeklyHandler}
+            />
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -94,12 +188,16 @@ export const RewardsCard = observer(function RewardsCard({
   const dailyReward = store.rewards.dailyReward(userId);
   const dailyPogress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
+  const hasClaimedWeekly = store.rewards.hasClaimedWeekly(userId);
+  const shouldClaimWeekly = store.rewards.shouldClaimWeekly(userId);
+  const [displayWeekly, setDisplayWeekly] = useState<boolean>(false);
+
   const shouldShowDiceCompnent = showDiceComponent || !dailyReward;
   const { setVisible } = useWalletModal();
   const wallet = useWallet();
   const { track } = useAnalytics();
 
-  const onClaimHandler = async () => {
+  const onClaimDailyHandler = async () => {
     if (!store.me.splxWallet) {
       setVisible(true);
       return;
@@ -125,12 +223,14 @@ export const RewardsCard = observer(function RewardsCard({
       setDiceComponent(true);
     }
   };
+
   const DiceRoll = () => {
     const pal = usePalette("default");
     return (
       <View>
         {dailyReward ? (
           <RewardClaimed
+            userId={userId}
             rewardsImg={
               dailyReward?.image ?? "https://i.ibb.co/RB3bMLt/blob.png"
             }
@@ -157,8 +257,15 @@ export const RewardsCard = observer(function RewardsCard({
                     ? "Check your wallet!"
                     : "Roll"
                 }
-                onClick={onClaimHandler}
+                onClick={onClaimDailyHandler}
               />
+            </View>
+            <View style={{ marginVertical: 4 }}>
+              {shouldClaimWeekly && !hasClaimedWeekly && (
+                <Text style={[pal.text]} type="lg-heavy">
+                  You are Eligible to Claim your Weekly Reward.
+                </Text>
+              )}
             </View>
           </View>
         )}
@@ -171,97 +278,118 @@ export const RewardsCard = observer(function RewardsCard({
       {showDiceComponent ? (
         <DiceRoll />
       ) : (
-        <View style={styles.dailyContainer}>
-          <View style={styles.leftgroup}>
-            <View style={styles.imageContainer}>
-              <Image
-                style={styles.fireImage}
-                source={require("../../../../assets/fire.png")}
-              />
-            </View>
-          </View>
-          <View style={[styles.streaks]}>
-            <Text type="2xl-heavy" style={styles.textPadding}>
-              Daily Streaks
-            </Text>
-            <Text
-              type="md-medium"
-              style={[styles.textPadding, { paddingVertical: 8, flex: 1 }]}
-            >
-              Create / engage with community posts to start a streak and win
-              reactions!
-            </Text>
-            <View style={styles.dataContainer}>
-              <View style={styles.horizontalBox}>
-                <View style={styles.streaksContainerBox}>
-                  <Text
-                    type="sm-thin"
-                    style={{ color: colors.gray4, paddingBottom: 4 }}
-                  >
-                    POINTS
-                  </Text>
-                  <View>
-                    <Text type="lg-bold" style={styles.textPadding}>
-                      {dailyPogress?.count ?? 0}
-                      <Text type="xs-heavy" style={{ color: colors.gray4 }}>
-                        /50
-                      </Text>
-                    </Text>
-                  </View>
+        <View>
+          {displayWeekly ? (
+            <WeeklyScreen userId={userId} />
+          ) : (
+            <View style={styles.dailyContainer}>
+              <View style={styles.leftgroup}>
+                <View style={styles.imageContainer}>
+                  <Image
+                    style={styles.fireImage}
+                    source={require("../../../../assets/fire.png")}
+                  />
                 </View>
-                <View style={styles.streaksContainerBox}>
-                  <Text
-                    type="sm-thin"
-                    style={{
-                      color: colors.gray4,
-                      paddingBottom: 4,
-                      textAlign: "center",
-                      textAlignVertical: "bottom",
-                    }}
-                  >
-                    DAYS
-                  </Text>
+              </View>
+              <View style={[styles.streaks]}>
+                <Text type="2xl-heavy" style={styles.textPadding}>
+                  Daily Streaks
+                </Text>
+                <Text
+                  type="md-medium"
+                  style={[styles.textPadding, { paddingVertical: 8, flex: 1 }]}
+                >
+                  Create / engage with community posts to start a streak and win
+                  reactions!
+                </Text>
+                <View style={styles.dataContainer}>
                   <View style={styles.horizontalBox}>
-                    {[1, 2, 3, 4, 5, 6, 7].map((day, idx) => {
-                      return (
-                        <Day
-                          key={idx}
-                          day={day}
-                          isCompleted={day <= (weeklyProgress.count || -1)}
+                    <View style={styles.streaksContainerBox}>
+                      <Text
+                        type="sm-thin"
+                        style={{ color: colors.gray4, paddingBottom: 4 }}
+                      >
+                        POINTS
+                      </Text>
+                      <View>
+                        <Text type="lg-bold" style={styles.textPadding}>
+                          {dailyPogress?.count ?? 0}
+                          <Text type="xs-heavy" style={{ color: colors.gray4 }}>
+                            /50
+                          </Text>
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.streaksContainerBox}>
+                      <Text
+                        type="sm-thin"
+                        style={{
+                          color: colors.gray4,
+                          paddingBottom: 4,
+                          textAlign: "center",
+                          textAlignVertical: "bottom",
+                        }}
+                      >
+                        DAYS
+                      </Text>
+                      <View style={styles.horizontalBox}>
+                        {[1, 2, 3, 4, 5, 6, 7].map((day, idx) => {
+                          return (
+                            <Day
+                              key={idx}
+                              day={day}
+                              isCompleted={day <= (weeklyProgress.count || -1)}
+                            />
+                          );
+                        })}
+                      </View>
+                    </View>
+                  </View>
+                  <View
+                    style={[
+                      styles.claimBtnContainer,
+                      { paddingVertical: isMobileWeb ? 8 : 0 },
+                    ]}
+                  >
+                    <View>
+                      {shouldClaimDaily && !hasClaimedDaily ? (
+                        <ClaimBtn
+                          text={
+                            !store.session.hasSession
+                              ? "Sign In"
+                              : hasClaimedDaily
+                              ? "Check your wallet!"
+                              : shouldClaimDaily
+                              ? "Claim Reward"
+                              : isClaimingDaily
+                              ? "Claiming..."
+                              : dailyPogress
+                              ? "Keep Going!"
+                              : "Like Or Post Something"
+                          }
+                          done={hasClaimedDaily}
+                          disabled={!shouldClaimDaily || hasClaimedDaily}
+                          loading={isClaimingDaily}
+                          onClick={onDiceRollHandler}
                         />
-                      );
-                    })}
+                      ) : shouldClaimWeekly && !hasClaimedWeekly ? (
+                        <ClaimBtn
+                          text="Claim Weekly Reward"
+                          weekly={true}
+                          onClick={() => setDisplayWeekly(true)}
+                        />
+                      ) : (
+                        <ClaimBtn
+                          text="Keep Going!"
+                          onClick={() => navigation.navigate("Home")}
+                        />
+                      )}
+                    </View>
                   </View>
                 </View>
               </View>
-              <View
-                style={[
-                  styles.claimBtnContainer,
-                  { paddingVertical: isMobileWeb ? 8 : 0 },
-                ]}
-              >
-                <ClaimBtn
-                  text={
-                    !store.session.hasSession
-                      ? "Sign In"
-                      : shouldClaimDaily
-                      ? "Claim Reward"
-                      : isClaimingDaily
-                      ? "Claiming..."
-                      : hasClaimedDaily
-                      ? "Check your wallet!"
-                      : dailyPogress
-                      ? "Keep Going!"
-                      : "Like Or Post Something"
-                  }
-                  done={hasClaimedDaily}
-                  disabled={!shouldClaimDaily || hasClaimedDaily}
-                  loading={isClaimingDaily}
-                  onClick={onDiceRollHandler}
-                />
-              </View>
             </View>
-          </View>
+          )}
         </View>
       )}
     </View>
@@ -269,6 +397,11 @@ export const RewardsCard = observer(function RewardsCard({
 });
 
 const styles = StyleSheet.create({
+  buttonGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
   leftgroup: {
     paddingVertical: 10,
   },

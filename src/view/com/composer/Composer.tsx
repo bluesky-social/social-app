@@ -65,6 +65,8 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette("default");
   const store = useStores();
   const isThisSharing = store.shell.isSharing;
+  const sharingText = store.shell.sharingText;
+  console.log("sharingText", sharingText);
   const uri = store.shell.sharedUri;
   const textInput = useRef<TextInputRef>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -72,7 +74,7 @@ export const ComposePost = observer(function ComposePost({
   const [error, setError] = useState("");
   const [richtext, setRichText] = useState(
     isThisSharing
-      ? new RichText({ text: "Freshly Minted" })
+      ? new RichText({ text: sharingText })
       : new RichText({ text: "" }),
   );
   const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext]);

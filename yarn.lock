@@ -7204,6 +7204,13 @@
   dependencies:
     "@types/lodash" "*"
 
+"@types/lodash.merge@^4.6.7":
+  version "4.6.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.merge/-/lodash.merge-4.6.7.tgz#0af6555dd8bc6568ef73e5e0d820a027362946b1"
+  integrity sha512-OwxUJ9E50gw3LnAefSHJPHaBLGEKmQBQ7CZe/xflHkyy/wH2zVyEIAKReHvVrrn7zKdF58p16We9kMfh7v0RRQ==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.omit@^4.5.7":
   version "4.5.7"
   resolved "https://registry.yarnpkg.com/@types/lodash.omit/-/lodash.omit-4.5.7.tgz#2357ed2412b4164344e8ee41f85bb0b2920304ba"

@@ -126,8 +126,9 @@ interface TrackPropertiesMap {
   // Communities
   "CommunityFeed:Join": {};
   "CommunityFeed:Leave": {};
-  "ClaimDaily:Reward": {};
-  "ClaimWeekly:Reward": {};
+  "Claim:DailyReward": {};
+  "Claim:WeeklyReward": {};
+
 }
 
 interface ScreenPropertiesMap {

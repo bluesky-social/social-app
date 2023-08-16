@@ -29,6 +29,8 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
   const isClaimingDaily = store.rewards.isClaimingDaily(userId);
   const hasClaimedDaily = store.rewards.hasClaimedDaily(userId);
   const dailyReward = store.rewards.dailyReward(userId);
+  const hasClaimedWeekly = store.rewards.hasClaimedWeekly(userId);
+  const shouldClaimWeekly = store.rewards.shouldClaimWeekly(userId);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -104,8 +106,21 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
         <View style={styles.claimBtn}>
           <ClaimBtn
             text={
-              !store.session.hasSession ? "Sign In" : shouldClaimDaily ? "Claim Reward" : isClaimingDaily ? "Claiming..." : hasClaimedDaily ? "Check your wallet!" : dailyPogress ? "Keep Going!" : "Like Or Post Something"
+              !store.session.hasSession
+                ? "Sign In"
+                : shouldClaimDaily
+                ? "Claim Reward"
+                : isClaimingDaily
+                ? "Claiming..."
+                : hasClaimedDaily
+                ? "Check your wallet!"
+                : shouldClaimWeekly && !hasClaimedWeekly
+                ? "Claim Weekly Reward"
+                : dailyPogress
+                ? "Keep Going!"
+                : "Like Or Post Something"
             }
+            weekly={shouldClaimWeekly && !hasClaimedWeekly}
             done={hasClaimedDaily}
             disabled={!shouldClaimDaily || hasClaimedDaily}
             loading={isClaimingDaily}

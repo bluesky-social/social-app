@@ -211,6 +211,7 @@ export interface ComposerOpts {
   quote?: ComposerOptsQuote;
   isSharing?: boolean;
   uri?: string;
+  sharingText?: string;
 }
 
 export class ShellUiModel {
@@ -226,6 +227,7 @@ export class ShellUiModel {
   composerOpts: ComposerOpts | undefined;
   isSharing = false;
   sharedUri = "";
+  sharingText = "";
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -321,6 +323,7 @@ export class ShellUiModel {
     this.composerOpts = opts;
     this.isSharing = opts.isSharing ?? false;
     this.sharedUri = opts.uri ?? "";
+    this.sharingText = opts.sharingText ?? "";
   }
 
   closeComposer() {

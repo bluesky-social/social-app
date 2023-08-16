@@ -1,15 +1,15 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
-import { MeModel } from "./models/me";
 import { RootStoreModel } from "./models/root-store";
 import { SOLARPLEX_V1_API } from "lib/constants";
+import merge from 'lodash.merge'
 
 interface Reward {
   image: string;
   name: string;
   description: string;
   attributes: {
-    emote: string;
+    trait: string;
   };
 }
 
@@ -22,6 +22,7 @@ interface MissionProgress {
 interface Mission {
   id: string;
   progress: MissionProgress;
+  claimed: boolean;
   shouldClaim: boolean;
   isClaiming: boolean;
   reward?: Reward;
@@ -69,15 +70,16 @@ export class RewardsModel {
   }
 
   dailyMissionId(userId: string) {
-    return this.users[userId]?.daily?.id ?? '';
+    return this.users[userId]?.daily?.id ?? "";
   }
 
   weeklyMissionId(userId: string) {
-    return this.users[userId]?.weekly?.id ?? '';
+    return this.users[userId]?.weekly?.id ?? "";
   }
 
   async _claimReward(userId: string, missionId: string) {
     const wallet = this.rootStore.me.splxWallet;
+
     try {
       if (!missionId || !wallet) {
         throw new Error("noMissionIdOrWallet");
@@ -93,7 +95,9 @@ export class RewardsModel {
         if (!this.inFlight["claims"]) {
           this.inFlight["claims"] = {};
         }
+        
         this.inFlight["claims"][missionId] = 1;
+
         const response = await fetch(
           `${SOLARPLEX_V1_API}${apiUrls.rewards.postClaimReward(userId)}`,
           {
@@ -110,21 +114,23 @@ export class RewardsModel {
             }),
           },
         );
+
         delete this.inFlight["claims"][missionId];
+
         if (!response.ok) {
           throw new Error(
             `Claim request for ${userId} for mission ${missionId} failed with status: ${response.statusText}`,
           );
         }
         const json = (await response.json()) as MissionResponse;
-        this.users[userId] = json;
+        this.users[userId] = merge(this.users[userId], json);
       });
     } catch (err) {
       console.error(`Error claiming mission ${missionId} for ${userId}`, err);
       throw err;
     }
   }
-  
+
   async claimDailyReward(userId: string) {
     if (!this.shouldClaimDaily(userId)) {
       return;
@@ -144,12 +150,17 @@ export class RewardsModel {
   }
 
   shouldClaimDaily(userId: string): boolean | undefined {
-    return this.users[userId]?.daily.shouldClaim && !this.isClaimingDaily(userId);
+    return (
+      this.users[userId]?.daily.shouldClaim && !this.isClaimingDaily(userId)
+    );
   }
 
   shouldClaimWeekly(userId: string): boolean | undefined {
     // TODO(Partyman): Change this from isClaimingDaily to weekly when we figure out what that looks like.
-    return this.users[userId]?.weekly.shouldClaim && this.isClaimingWeekly(userId);
+
+    return (
+      this.users[userId]?.weekly.shouldClaim && !this.isClaimingWeekly(userId)
+    );
   }
 
   dailyInFlight(userId: string) {
@@ -166,24 +177,28 @@ export class RewardsModel {
 
   isClaimingDaily(userId: string) {
     return (
-      !!this.dailyInFlight(userId) ||
-      !!this.users[userId]?.daily?.isClaiming
+      !!this.dailyInFlight(userId) || !!this.users[userId]?.daily?.isClaiming
     );
   }
 
   isClaimingWeekly(userId: string) {
     return (
-      !!this.weeklyInFlight(userId) || 
-      !!this.users[userId]?.weekly?.isClaiming
+      !!this.weeklyInFlight(userId) || !!this.users[userId]?.weekly?.isClaiming
     );
   }
 
   hasClaimedDaily(userId: string) {
-    return !!(this.users[userId]?.daily?.missionClaimId || this.users[userId]?.daily?.rewardClaimId);
+    return !!(
+      this.users[userId]?.daily?.missionClaimId ||
+      this.users[userId]?.daily?.rewardClaimId
+    );
   }
 
   hasClaimedWeekly(userId: string) {
-    return !!(this.users[userId]?.weekly?.missionClaimId || this.users[userId]?.weekly?.rewardClaimId);
+    return !!(
+      this.users[userId]?.weekly?.missionClaimId ||
+      this.users[userId]?.weekly?.rewardClaimId
+    );
   }
 
   dailyReward(userId: string) {
@@ -240,7 +255,7 @@ export class RewardsModel {
           );
         }
         const json = (await response.json()) as MissionResponse;
-        this.users[userId] = json;
+        this.users[userId] = merge(this.users[userId], json);
       });
     } catch (err) {
       console.error(`Error fetching missions for ${userId}`, err);
