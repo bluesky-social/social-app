@@ -4,6 +4,8 @@ import {Text} from '../text/Text'
 import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {AppBskyEmbedExternal} from '@atproto/api'
+import {isDesktopWeb} from 'platform/detection'
+import {toNiceDomain} from 'lib/strings/url-helpers'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -14,7 +16,7 @@ export const ExternalLinkEmbed = ({
 }) => {
   const pal = usePalette('default')
   return (
-    <>
+    <View style={styles.extContainer}>
       {link.thumb ? (
         <View style={styles.extImageContainer}>
           <Image
@@ -26,39 +28,56 @@ export const ExternalLinkEmbed = ({
         </View>
       ) : undefined}
       <View style={styles.extInner}>
-        <Text type="md-bold" numberOfLines={2} style={[pal.text]}>
-          {link.title || link.uri}
-        </Text>
         <Text
           type="sm"
           numberOfLines={1}
           style={[pal.textLight, styles.extUri]}>
-          {link.uri}
+          {toNiceDomain(link.uri)}
+        </Text>
+        <Text
+          type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
+          numberOfLines={isDesktopWeb ? 2 : 4}
+          style={[pal.text]}>
+          {link.title || link.uri}
         </Text>
         {link.description ? (
           <Text
-            type="sm"
-            numberOfLines={2}
+            type={isDesktopWeb ? 'lg' : 'md'}
+            numberOfLines={isDesktopWeb ? 2 : 4}
             style={[pal.text, styles.extDescription]}>
             {link.description}
           </Text>
         ) : undefined}
       </View>
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  extContainer: {
+    flexDirection: isDesktopWeb ? 'row' : 'column',
+  },
   extInner: {
-    padding: 10,
+    paddingHorizontal: isDesktopWeb ? 14 : 10,
+    paddingTop: 8,
+    paddingBottom: 10,
+    flex: isDesktopWeb ? 1 : undefined,
   },
-  extImageContainer: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    width: '100%',
-    height: 200,
-    overflow: 'hidden',
-  },
+  extImageContainer: isDesktopWeb
+    ? {
+        borderTopLeftRadius: 6,
+        borderBottomLeftRadius: 6,
+        width: 120,
+        aspectRatio: 1,
+        overflow: 'hidden',
+      }
+    : {
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6,
+        width: '100%',
+        height: 200,
+        overflow: 'hidden',
+      },
   extImage: {
     width: '100%',
     height: 200,

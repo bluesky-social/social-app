@@ -30,7 +30,7 @@ export function toNiceDomain(url: string): string {
     if (`https://${urlp.host}` === PROD_SERVICE) {
       return 'Bluesky Social'
     }
-    return urlp.host
+    return urlp.host ? urlp.host : url
   } catch (e) {
     return url
   }
