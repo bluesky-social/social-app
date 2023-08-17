@@ -38,8 +38,12 @@ import {makeProfileLink} from 'lib/routes/links'
 import {resolveName} from 'lib/api'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
+import {OnboardingNavigatorParams} from 'view/com/modals/OnboardingModal'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams | OnboardingNavigatorParams,
+  'CustomFeed'
+>
 
 export const CustomFeedScreen = withAuthRequired(
   observer((props: Props) => {

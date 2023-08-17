@@ -5,11 +5,17 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Button} from 'view/com/util/forms/Button'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {OnboardingNavigatorParams} from 'view/com/modals/OnboardingModal'
 
-export const Welcome = ({next}: {next: () => void}) => {
+type WelcomeScreenProps = NativeStackScreenProps<
+  OnboardingNavigatorParams,
+  'Welcome'
+>
+export const Welcome = ({navigation}: WelcomeScreenProps) => {
   const pal = usePalette('default')
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, pal.view]}>
       <View testID="welcomeScreen">
         <Text style={[pal.text, styles.title]}>Welcome to </Text>
         <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
@@ -53,7 +59,9 @@ export const Welcome = ({next}: {next: () => void}) => {
       </View>
 
       <Button
-        onPress={next}
+        onPress={() => {
+          navigation.push('DiscoverFeeds')
+        }}
         label="Continue"
         testID="continueBtn"
         labelStyle={styles.buttonText}
@@ -66,6 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginVertical: 60,
+    marginHorizontal: 18,
     justifyContent: 'space-between',
   },
   title: {

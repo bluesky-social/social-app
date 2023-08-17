@@ -120,6 +120,7 @@ interface TrackPropertiesMap {
   // ONBOARDING events
   'Onboarding:Begin': {}
   'Onboarding:Complete': {}
+  'Onboarding:DiscoverFeeds': {}
 }
 
 interface ScreenPropertiesMap {

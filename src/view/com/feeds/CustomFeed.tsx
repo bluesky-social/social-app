@@ -73,10 +73,12 @@ export const CustomFeed = observer(
         accessibilityRole="button"
         style={[styles.container, pal.border, style]}
         onPress={() => {
-          navigation.push('CustomFeed', {
-            name: item.data.creator.did,
-            rkey: new AtUri(item.data.uri).rkey,
-          })
+          requestAnimationFrame(() =>
+            navigation.navigate('CustomFeed', {
+              name: item.data.creator.did,
+              rkey: new AtUri(item.data.uri).rkey,
+            }),
+          )
         }}
         key={item.data.uri}>
         <View style={[styles.headerContainer]}>
