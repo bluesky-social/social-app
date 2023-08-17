@@ -61,6 +61,7 @@ const ProfileCard = observer(() => {
 
 function BackBtn() {
   const pal = usePalette("default");
+  const store = useStores();
   const navigation = useNavigation<NavigationProp>();
   const shouldShow = useNavigationState((state) => !isStateAtTabRoot(state));
   const onPressBack = React.useCallback(() => {
@@ -75,20 +76,23 @@ function BackBtn() {
     return <></>;
   }
   return (
-    <TouchableOpacity
-      testID="viewHeaderBackOrMenuBtn"
-      onPress={onPressBack}
-      style={styles.backBtn}
-      accessibilityRole="button"
-      accessibilityLabel="Go back"
-      accessibilityHint=""
-    >
-      <FontAwesomeIcon
-        size={24}
-        icon="angle-left"
-        style={pal.text as FontAwesomeIconStyle}
-      />
-    </TouchableOpacity>
+    store.session.hasSession &&
+    !store.session.isSolarplexSession && (
+      <TouchableOpacity
+        testID="viewHeaderBackOrMenuBtn"
+        onPress={onPressBack}
+        style={styles.backBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+        accessibilityHint=""
+      >
+        <FontAwesomeIcon
+          size={24}
+          icon="angle-left"
+          style={pal.text as FontAwesomeIconStyle}
+        />
+      </TouchableOpacity>
+    )
   );
 }
 
