@@ -601,7 +601,10 @@ const LoginForm = ({
               <View testID="signinOrCreateAccount" style={styles.btns}>
                 <TouchableOpacity
                   testID="createAccountButton"
-                  style={[styles.btn, { backgroundColor: colors.blue3 }]}
+                  style={[
+                    styles.btn,
+                    { backgroundColor: colors.splx.primary[50] },
+                  ]}
                   onPress={onPressCreateAccount}
                   // TODO: web accessibility
                   accessibilityRole="button"
@@ -745,7 +748,9 @@ const ForgotPasswordForm = ({
               />
             </View>
           </TouchableOpacity> */}
-          <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+          <View
+            style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
+          >
             <FontAwesomeIcon
               icon="envelope"
               style={[pal.textLight, styles.groupContentIcon]}

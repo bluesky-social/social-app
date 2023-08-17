@@ -33,9 +33,9 @@ export const Step3 = observer(({ model }: { model: CreateAccountModel }) => {
           accessibilityHint="Input your user handle"
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
-          Your full handle will be{" "}
+          Your handle will be{" "}
           <Text type="lg-bold" style={pal.text}>
-            @{createFullHandle(model.handle, model.userDomain)}
+            @{createFullHandle(model.handle, "")}
           </Text>
         </Text>
       </View>

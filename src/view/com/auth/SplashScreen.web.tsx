@@ -40,7 +40,7 @@ export const SplashScreen = ({
           </Text> */}
           <View style={styles.logo}>{/*<SolarplexLogo />*/}</View>
           <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
-            See what's next
+            Welcome to Solarplex.
           </Text>
           <View testID="signinOrCreateAccount" style={styles.btns}>
             {/* <TouchableOpacity
@@ -64,7 +64,7 @@ export const SplashScreen = ({
             </TouchableOpacity>
           </View>
           <Text type="xl" style={[styles.notice]} lineHeight={1.3}>
-            Solarplex is powered by Atproto.{" "}
+            Help communities better engage their members and have fun!
             {/* <TouchableOpacity
               onPress={onPressWaitlist}
               // TODO: web accessibility
@@ -73,7 +73,6 @@ export const SplashScreen = ({
                 Join the waitlist
               </Text>
             </TouchableOpacity>{' '} */}
-            and is for the Solana Community
           </Text>
         </ErrorBoundary>
       </View>
