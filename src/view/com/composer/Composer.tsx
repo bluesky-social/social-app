@@ -151,7 +151,7 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const onPressPublish = async (rt: RichText) => {
+  const onPressPublish = async () => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
@@ -161,7 +161,7 @@ export const ComposePost = observer(function ComposePost({
 
     setError('')
 
-    if (rt.text.trim().length === 0 && gallery.isEmpty) {
+    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
       setError('Did you want to say anything?')
       return
     }
@@ -170,7 +170,7 @@ export const ComposePost = observer(function ComposePost({
 
     try {
       await apilib.post(store, {
-        rawText: rt.text,
+        rawText: richtext.text,
         replyTo: replyTo?.uri,
         images: gallery.images,
         quote,
@@ -245,9 +245,7 @@ export const ComposePost = observer(function ComposePost({
           ) : canPost ? (
             <TouchableOpacity
               testID="composerPublishBtn"
-              onPress={() => {
-                onPressPublish(richtext)
-              }}
+              onPress={onPressPublish}
               accessibilityRole="button"
               accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
               accessibilityHint={

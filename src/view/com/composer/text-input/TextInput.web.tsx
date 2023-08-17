@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {RichText} from '@atproto/api'
+import EventEmitter from 'eventemitter3'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
 import {Document} from '@tiptap/extension-document'
 import History from '@tiptap/extension-history'
@@ -53,6 +54,22 @@ export const TextInput = React.forwardRef(
       'ProseMirror-dark',
     )
 
+    // we use a memoized emitter to propagate events out of tiptap
+    // without triggering re-runs of the useEditor hook
+    const emitter = React.useMemo(() => new EventEmitter(), [])
+    React.useEffect(() => {
+      emitter.addListener('publish', onPressPublish)
+      return () => {
+        emitter.removeListener('publish', onPressPublish)
+      }
+    }, [emitter, onPressPublish])
+    React.useEffect(() => {
+      emitter.addListener('photo-pasted', onPhotoPasted)
+      return () => {
+        emitter.removeListener('photo-pasted', onPhotoPasted)
+      }
+    }, [emitter, onPhotoPasted])
+
     const editor = useEditor(
       {
         extensions: [
@@ -87,17 +104,13 @@ export const TextInput = React.forwardRef(
               return
             }
 
-            getImageFromUri(items, onPhotoPasted)
+            getImageFromUri(items, (uri: string) => {
+              emitter.emit('photo-pasted', uri)
+            })
           },
           handleKeyDown: (_, event) => {
             if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
-              // Workaround relying on previous state from `setRichText` to
-              // get the updated text content during editor initialization
-              setRichText((state: RichText) => {
-                onPressPublish(state)
-                return state
-              })
-              return true
+              emitter.emit('publish')
             }
           },
         },
@@ -118,7 +131,7 @@ export const TextInput = React.forwardRef(
           }
         },
       },
-      [modeClass],
+      [modeClass, emitter],
     )
 
     React.useImperativeHandle(ref, () => ({
