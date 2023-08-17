@@ -29,8 +29,6 @@ export const WalletConnect = observer(() => {
   const pal = usePalette("default");
   const { setVisible } = useWalletModal();
 
-  console.log("this.splxWallet", store.me.splxWallet);
-
   const handleLinkWallet = async () => {
     if (wallet.publicKey) {
       await store.me.connectWallet(wallet.publicKey?.toString());
@@ -60,14 +58,23 @@ export const WalletConnect = observer(() => {
                   >
                     <View style={[pal.view, styles.linkCard]}>
                       <View style={styles.avi}>
-                        <UserAvatar size={40} avatar={store.me.avatar} />
+                        <View style={[styles.iconContainer, pal.btn]}>
+                          <FontAwesomeIcon
+                            size={20}
+                            icon={fa.faWallet}
+                            style={
+                              {
+                                ...pal.text,
+                                marginLeft: 4,
+                              } as FontAwesomeIconStyle
+                            }
+                          />
+                        </View>
                       </View>
                       <View style={[s.flex1]}>
                         <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                          {store.me.displayName || store.me.handle}
-                        </Text>
-                        <Text type="sm" style={pal.textLight} numberOfLines={1}>
-                          {store.me.handle}
+                          {wallet.publicKey?.toString().slice(0, 5)}...
+                          {wallet.publicKey?.toString().slice(-5)}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -119,16 +126,28 @@ export const WalletConnect = observer(() => {
                 >
                   <View style={[pal.view, styles.linkCard]}>
                     <View style={styles.avi}>
-                      <UserAvatar size={40} avatar={store.me.avatar} />
+                      <View style={[styles.iconContainer, pal.btn]}>
+                        <FontAwesomeIcon
+                          size={20}
+                          icon={fa.faWallet}
+                          style={
+                            {
+                              ...pal.text,
+                              marginLeft: 4,
+                            } as FontAwesomeIconStyle
+                          }
+                        />
+                      </View>
                     </View>
                     <View style={[s.flex1]}>
                       <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                        {store.me.displayName || store.me.handle}
-                      </Text>
-                      <Text type="sm" style={pal.textLight} numberOfLines={1}>
                         {store.me.splxWallet.slice(0, 5)}...
                         {store.me.splxWallet.slice(-5)}
                       </Text>
+                      {/* <Text type="sm" style={pal.textLight} numberOfLines={1}>
+                        {store.me.splxWallet.slice(0, 5)}...
+                        {store.me.splxWallet.slice(-5)}
+                      </Text> */}
                     </View>
                     <TouchableOpacity
                       testID="DisconnectWalletBtn"
@@ -172,7 +191,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 30,
-    marginRight: 12,
   },
   heading: {
     paddingHorizontal: 18,

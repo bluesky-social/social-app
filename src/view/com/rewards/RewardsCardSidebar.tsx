@@ -8,6 +8,7 @@ import { Day } from "./Day";
 import { NavigationProp } from "lib/routes/types";
 import React from "react";
 import { Text } from "../util/text/Text";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { colors } from "lib/styles";
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -45,8 +46,8 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
   const onClaimHandler = async () => {
     if (!store.session.hasSession) {
       navigation.navigate("SignIn");
-    } else if (shouldClaimDaily) {
-      navigation.navigate("Rewards");
+    } else if (shouldClaimDaily || shouldClaimWeekly) {
+      navigation.navigate("Missions");
     } else {
       navigation.navigate("Home");
     }
@@ -108,28 +109,20 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
         <View style={styles.claimBtn}>
           {shouldClaimWeekly ||
             (shouldClaimDaily && (
-              <ClaimBtn
-                text={
-                  !store.session.hasSession
+              <TouchableOpacity
+                style={styles.ClaimCTA}
+                onPress={onClaimHandler}
+              >
+                <Text style={styles.claimTextCTA}>
+                  {!store.session.hasSession
                     ? "Sign In"
                     : shouldClaimDaily
-                    ? "Claim Reward"
-                    : isClaimingDaily
-                    ? "Claiming..."
-                    : hasClaimedDaily
-                    ? "Check your wallet!"
+                    ? "Claim Daily Reward"
                     : shouldClaimWeekly && !hasClaimedWeekly
                     ? "Claim Weekly Reward"
-                    : dailyProgress
-                    ? "Keep Going!"
-                    : "Like Or Post Something"
-                }
-                weekly={shouldClaimWeekly && !hasClaimedWeekly}
-                done={hasClaimedDaily}
-                disabled={!hasClaimedDaily}
-                loading={isClaimingDaily}
-                onClick={onClaimHandler}
-              />
+                    : "Keep Going!"}
+                </Text>
+              </TouchableOpacity>
             ))}
         </View>
       </View>
@@ -138,6 +131,23 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
 });
 
 const styles = StyleSheet.create({
+  ClaimCTA: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    borderRadius: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    backgroundColor: colors.black,
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  claimTextCTA: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
   claimBtn: {
     paddingTop: 10,
   },

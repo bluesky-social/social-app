@@ -24,7 +24,7 @@ export const Step3 = observer(({ model }: { model: CreateAccountModel }) => {
         <TextInput
           testID="handleInput"
           icon="at"
-          placeholder="e.g. alice"
+          placeholder="eg alice (3-12 characters)"
           value={model.handle}
           editable
           onChange={model.setHandle}
@@ -32,11 +32,12 @@ export const Step3 = observer(({ model }: { model: CreateAccountModel }) => {
           accessibilityLabel="User handle"
           accessibilityHint="Input your user handle"
         />
-        <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
-          Make sure your username is between 3 to 12 characters long and only.
-          {/* <Text type="lg-bold" style={pal.text}>
-            @{createFullHandle(model.handle, model.userDomain)}
-          </Text> */}
+
+        <Text type="lg-bold" style={[pal.text, s.pl5, s.pt10]}>
+          <Text type="lg" style={[pal.text]}>
+            Your Handle will be
+          </Text>{" "}
+          @{createFullHandle(model.handle, model.userDomain)}
         </Text>
       </View>
       {/* {model.error ? (
