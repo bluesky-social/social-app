@@ -162,6 +162,10 @@ export const SettingsScreen = withAuthRequired(
       Toast.show('Preferences reset')
     }, [store])
 
+    const onPressOpenOnboardingModal = React.useCallback(async () => {
+      store.shell.openModal({name: 'onboarding'})
+    }, [store])
+
     const onPressBuildInfo = React.useCallback(() => {
       Clipboard.setString(
         `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
@@ -533,6 +537,16 @@ export const SettingsScreen = withAuthRequired(
                 accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[pal.view, styles.linkCardNoIcon]}
+                onPress={onPressOpenOnboardingModal}
+                accessibilityRole="button"
+                accessibilityHint="Open onboarding modal"
+                accessibilityLabel="Opens the onboarding modal">
+                <Text type="lg" style={pal.text}>
+                  Open onboarding modal
                 </Text>
               </TouchableOpacity>
             </>
