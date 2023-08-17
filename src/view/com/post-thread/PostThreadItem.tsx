@@ -67,8 +67,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   }, [item.post.uri, item.post.author])
   const repostsTitle = 'Reposts of this post'
 
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const translatorUrl = getTranslatorLink(record?.text || '')
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
