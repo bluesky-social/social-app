@@ -177,13 +177,13 @@ export class RewardsModel {
 
   isClaimingDaily(userId: string) {
     return (
-      !!this.dailyInFlight(userId) || !!this.users[userId]?.daily?.isClaiming
+      !!this.dailyInFlight(userId) || !!this.users[userId]?.daily?.isClaiming || (!this.hasClaimedDaily(userId) && !!this.dailyReward(userId))
     );
   }
 
   isClaimingWeekly(userId: string) {
     return (
-      !!this.weeklyInFlight(userId) || !!this.users[userId]?.weekly?.isClaiming
+      !!this.weeklyInFlight(userId) || !!this.users[userId]?.weekly?.isClaiming || (!this.hasClaimedWeekly(userId) && !!this.weeklyReward(userId))
     );
   }
 
