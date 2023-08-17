@@ -106,28 +106,31 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
           </View>
         </View>
         <View style={styles.claimBtn}>
-          <ClaimBtn
-            text={
-              !store.session.hasSession
-                ? "Sign In"
-                : shouldClaimDaily
-                ? "Claim Reward"
-                : isClaimingDaily
-                ? "Claiming..."
-                : hasClaimedDaily
-                ? "Check your wallet!"
-                : shouldClaimWeekly && !hasClaimedWeekly
-                ? "Claim Weekly Reward"
-                : dailyProgress
-                ? "Keep Going!"
-                : "Like Or Post Something"
-            }
-            weekly={shouldClaimWeekly && !hasClaimedWeekly}
-            done={hasClaimedDaily}
-            disabled={!hasClaimedDaily}
-            loading={isClaimingDaily}
-            onClick={onClaimHandler}
-          />
+          {shouldClaimWeekly ||
+            (shouldClaimDaily && (
+              <ClaimBtn
+                text={
+                  !store.session.hasSession
+                    ? "Sign In"
+                    : shouldClaimDaily
+                    ? "Claim Reward"
+                    : isClaimingDaily
+                    ? "Claiming..."
+                    : hasClaimedDaily
+                    ? "Check your wallet!"
+                    : shouldClaimWeekly && !hasClaimedWeekly
+                    ? "Claim Weekly Reward"
+                    : dailyProgress
+                    ? "Keep Going!"
+                    : "Like Or Post Something"
+                }
+                weekly={shouldClaimWeekly && !hasClaimedWeekly}
+                done={hasClaimedDaily}
+                disabled={!hasClaimedDaily}
+                loading={isClaimingDaily}
+                onClick={onClaimHandler}
+              />
+            ))}
         </View>
       </View>
     </View>
