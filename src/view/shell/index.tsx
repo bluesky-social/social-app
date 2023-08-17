@@ -18,6 +18,7 @@ import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
+import {OfflineIndicator} from 'view/com/util/OfflineIndicator'
 
 const ShellInner = observer(() => {
   const store = useStores()
@@ -46,6 +47,7 @@ const ShellInner = observer(() => {
     <>
       <View style={containerPadding}>
         <ErrorBoundary>
+          <OfflineIndicator />
           <Drawer
             renderDrawerContent={renderDrawerContent}
             open={store.shell.isDrawerOpen}

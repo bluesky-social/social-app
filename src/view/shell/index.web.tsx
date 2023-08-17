@@ -16,6 +16,7 @@ import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {OfflineIndicator} from 'view/com/util/OfflineIndicator'
 
 const ShellInner = observer(() => {
   const store = useStores()
@@ -32,6 +33,7 @@ const ShellInner = observer(() => {
   return (
     <>
       <View style={s.hContentRegion}>
+        <OfflineIndicator />
         <ErrorBoundary>
           <FlatNavigator />
         </ErrorBoundary>

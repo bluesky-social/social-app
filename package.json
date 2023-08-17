@@ -42,6 +42,7 @@
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
     "@react-native-community/datetimepicker": "6.7.3",
+    "@react-native-community/netinfo": "^9.4.1",
     "@react-native-menu/menu": "^0.8.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",

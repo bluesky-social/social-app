@@ -36,7 +36,10 @@
         "NSPhotoLibraryAddUsageDescription": "Used to save images to your library.",
         "NSPhotoLibraryUsageDescription": "Used for profile pictures, posts, and other kinds of content"
       },
-      "associatedDomains": ["applinks:bsky.app", "applinks:staging.bsky.app"]
+      "associatedDomains": ["applinks:bsky.app", "applinks:staging.bsky.app"],
+      "entitlements": {
+        "com.apple.developer.networking.wifi-info": true
+      }
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
