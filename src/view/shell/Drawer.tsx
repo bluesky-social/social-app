@@ -429,34 +429,37 @@ const InviteCodes = observer(() => {
     store.shell.openModal({ name: "invite-codes" });
   }, [store, track]);
   return (
-    <TouchableOpacity
-      testID="menuItemInviteCodes"
-      style={[styles.inviteCodes]}
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={
-        invitesAvailable === 1
-          ? "Invite codes: 1 available"
-          : `Invite codes: ${invitesAvailable} available`
-      }
-      accessibilityHint="Opens list of invite codes"
-    >
-      <FontAwesomeIcon
-        icon="ticket"
-        style={[
-          styles.inviteCodesIcon,
-          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
-        ]}
-        size={18}
-      />
-      <Text
-        type="lg-medium"
-        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}
+    store.session.hasSession &&
+    !store.session.isSolarplexSession && (
+      <TouchableOpacity
+        testID="menuItemInviteCodes"
+        style={[styles.inviteCodes]}
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={
+          invitesAvailable === 1
+            ? "Invite codes: 1 available"
+            : `Invite codes: ${invitesAvailable} available`
+        }
+        accessibilityHint="Opens list of invite codes"
       >
-        {formatCount(store.me.invitesAvailable)} invite{" "}
-        {pluralize(store.me.invitesAvailable, "code")}
-      </Text>
-    </TouchableOpacity>
+        <FontAwesomeIcon
+          icon="ticket"
+          style={[
+            styles.inviteCodesIcon,
+            store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
+          ]}
+          size={18}
+        />
+        <Text
+          type="lg-medium"
+          style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}
+        >
+          {formatCount(store.me.invitesAvailable)} invite{" "}
+          {pluralize(store.me.invitesAvailable, "code")}
+        </Text>
+      </TouchableOpacity>
+    )
   );
 });
 
