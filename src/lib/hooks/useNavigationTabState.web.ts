@@ -1,4 +1,4 @@
-import { getCurrentRoute } from "lib/routes/helpers";
+import { getCurrentRoute } from "../../lib/routes/helpers";
 import { useNavigationState } from "@react-navigation/native";
 
 export function useNavigationTabState() {
@@ -11,7 +11,8 @@ export function useNavigationTabState() {
       isAtMyProfile: currentRoute === "MyProfile",
       isAtCommunities: currentRoute === "Communities",
       isAtRewards: currentRoute === "Rewards",
-      isAtWallets: currentRoute === 'Wallets',
+      isAtWallets: currentRoute === "Wallets",
+      isAtSignIn: currentRoute === "SignIn",
     };
   });
 }

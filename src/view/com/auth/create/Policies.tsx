@@ -1,32 +1,35 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {TextLink} from '../../util/Link'
-import {Text} from '../../util/text/Text'
-import {s, colors} from 'lib/styles'
-import {ServiceDescription} from 'state/models/session'
-import {usePalette} from 'lib/hooks/usePalette'
+} from "@fortawesome/react-native-fontawesome";
+import { StyleSheet, View } from "react-native";
+import { colors, s } from "lib/styles";
+
+import React from "react";
+import { ServiceDescription } from "state/models/session";
+import { Text } from "../../util/text/Text";
+import { TextLink } from "../../util/Link";
+import { usePalette } from "lib/hooks/usePalette";
 
 export const Policies = ({
   serviceDescription,
   needsGuardian,
 }: {
-  serviceDescription: ServiceDescription
-  needsGuardian: boolean
+  serviceDescription: ServiceDescription;
+  needsGuardian: boolean;
 }) => {
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   if (!serviceDescription) {
-    return <View />
+    return <View />;
   }
-  const tos = validWebLink(serviceDescription.links?.termsOfService)
-  const pp = validWebLink(serviceDescription.links?.privacyPolicy)
+  const tos = validWebLink(serviceDescription.links?.termsOfService);
+  const pp = validWebLink(serviceDescription.links?.privacyPolicy);
   if (!tos && !pp) {
     return (
       <View style={styles.policies}>
-        <View style={[styles.errorIcon, {borderColor: pal.colors.text}, s.mt2]}>
+        <View
+          style={[styles.errorIcon, { borderColor: pal.colors.text }, s.mt2]}
+        >
           <FontAwesomeIcon
             icon="exclamation"
             style={pal.textLight as FontAwesomeIconStyle}
@@ -37,9 +40,9 @@ export const Policies = ({
           This service has not provided terms of service or a privacy policy.
         </Text>
       </View>
-    )
+    );
   }
-  const els = []
+  const els = [];
   if (tos) {
     els.push(
       <TextLink
@@ -48,7 +51,7 @@ export const Policies = ({
         text="Terms of Service"
         style={[pal.link, s.underline]}
       />,
-    )
+    );
   }
   if (pp) {
     els.push(
@@ -58,17 +61,17 @@ export const Policies = ({
         text="Privacy Policy"
         style={[pal.link, s.underline]}
       />,
-    )
+    );
   }
   if (els.length === 2) {
     els.splice(
       1,
       0,
       <Text key="and" style={pal.textLight}>
-        {' '}
-        and{' '}
+        {" "}
+        and{" "}
       </Text>,
-    )
+    );
   }
   return (
     <View style={styles.policies}>
@@ -82,18 +85,19 @@ export const Policies = ({
         </Text>
       )}
     </View>
-  )
-}
+  );
+};
 
 function validWebLink(url?: string): string | undefined {
-  return url && (url.startsWith('http://') || url.startsWith('https://'))
+  return url && (url.startsWith("http://") || url.startsWith("https://"))
     ? url
-    : undefined
+    : undefined;
 }
 
 const styles = StyleSheet.create({
   policies: {
-    gap: 8,
+    flexDirection: "row",
+    alignItems: "center",
   },
   errorIcon: {
     borderWidth: 1,
@@ -101,8 +105,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 16,
     height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 5,
   },
-})
+});

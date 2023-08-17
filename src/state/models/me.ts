@@ -278,9 +278,31 @@ export class MeModel {
     }
   }
 
+  async disconnectWallet() {
+    try {
+      const res = await fetch(
+        `${SOLARPLEX_FEED_API}/splx/remove_wallet_from_user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            did: this.did,
+          }),
+        },
+      );
+
+      this.splxWallet = undefined;
+    } catch (e: any) {
+      this.splxWallet = undefined;
+      this.rootStore.log.error("Failed to disconnect wallet", e);
+    }
+  }
+
   async connectWallet(wallet: string) {
     try {
-      fetch(`${SOLARPLEX_FEED_API}/splx/add_wallet_to_user`, {
+      await fetch(`${SOLARPLEX_FEED_API}/splx/add_wallet_to_user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

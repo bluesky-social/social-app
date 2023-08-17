@@ -53,7 +53,10 @@ export const FeedsTabBar = observer(
     }, [store]);
 
     const items = useMemo(
-      () => ["Following", ...store.me.savedFeeds.pinnedFeedNames],
+      () => [
+        store.session.hasSession ? "Following" : "Home",
+        ...store.me.savedFeeds.pinnedFeedNames,
+      ],
       [store.me.savedFeeds.pinnedFeedNames],
     );
     // Get the user's joined communities from joinedCommunities.communities
@@ -65,7 +68,10 @@ export const FeedsTabBar = observer(
       // )
       .map((community: any) => community.name);
     const communities = useMemo(
-      () => ["Home", ...joinedCommunityNames],
+      () => [
+        store.session.hasSession ? "Following" : "Home",
+        ...joinedCommunityNames,
+      ],
       [store.me.joinedCommunities.communities, joinedCommunityNames],
     );
     const onPressCompose = React.useCallback(() => {

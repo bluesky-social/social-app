@@ -43,7 +43,10 @@ const FeedsTabBarDesktop = observer(
       // )
       .map((community: any) => community.name);
     const communities = useMemo(
-      () => ["Following", ...joinedCommunityNames],
+      () => [
+        store.session.hasSession ? "Following" : "Home",
+        ...joinedCommunityNames,
+      ],
       [store.me.joinedCommunities.communities, joinedCommunityNames],
     );
     const pal = usePalette("default");

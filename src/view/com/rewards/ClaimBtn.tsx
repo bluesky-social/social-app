@@ -69,6 +69,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 4,
   },
+  disabled: {
+    backgroundColor: colors.gray2,
+    color: colors.black,
+  },
   starIcon: {
     marginRight: 8,
   },

@@ -70,9 +70,9 @@ export const CommunityHeader = observer(
               <LoadingPlaceholder width={100} height={31} style={styles.br50} />
             </View>
             <View>
-              <Text type="title-2xl" style={[pal.text, styles.title]}>
+              {/* <Text type="title-2xl" style={[pal.text, styles.title]}>
                 {"Loading"}
-              </Text>
+              </Text> */}
             </View>
           </View>
         </View>

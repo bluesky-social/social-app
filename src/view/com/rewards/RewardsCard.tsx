@@ -203,7 +203,7 @@ export const RewardsCard = observer(function RewardsCard({
       return;
     }
     await store.rewards.claimDailyReward(userId);
-    track("Claim:DailyReward");
+
     store.me.nft.fetchNfts(store.me.splxWallet);
   };
 
@@ -219,8 +219,10 @@ export const RewardsCard = observer(function RewardsCard({
   const onDiceRollHandler = () => {
     if (!store.session.hasSession) {
       navigation.navigate("SignIn");
-    } else {
+    } else if (shouldClaimDaily) {
       setDiceComponent(true);
+    } else {
+      navigation.navigate("Home");
     }
   };
 

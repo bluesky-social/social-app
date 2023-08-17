@@ -22,7 +22,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
 
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
-  const dailyPogress = store.rewards.dailyProgress(userId);
+  const dailyProgress = store.rewards.dailyProgress(userId);
   const weeklyProgress = store.rewards.weeklyProgress(userId);
 
   const shouldClaimDaily = store.rewards.shouldClaimDaily(userId);
@@ -45,8 +45,10 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
   const onClaimHandler = async () => {
     if (!store.session.hasSession) {
       navigation.navigate("SignIn");
-    } else {
+    } else if (shouldClaimDaily) {
       navigation.navigate("Rewards");
+    } else {
+      navigation.navigate("Home");
     }
   };
 
@@ -71,7 +73,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
             </Text>
             <View>
               <Text type="lg-bold" style={styles.textPadding}>
-                {dailyPogress.count ?? 0}
+                {dailyProgress.count ?? 0}
                 <Text type="xs-heavy" style={{ color: colors.gray4 }}>
                   /50
                 </Text>
@@ -116,13 +118,13 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
                 ? "Check your wallet!"
                 : shouldClaimWeekly && !hasClaimedWeekly
                 ? "Claim Weekly Reward"
-                : dailyPogress
+                : dailyProgress
                 ? "Keep Going!"
                 : "Like Or Post Something"
             }
             weekly={shouldClaimWeekly && !hasClaimedWeekly}
             done={hasClaimedDaily}
-            disabled={!shouldClaimDaily || hasClaimedDaily}
+            disabled={!hasClaimedDaily}
             loading={isClaimingDaily}
             onClick={onClaimHandler}
           />

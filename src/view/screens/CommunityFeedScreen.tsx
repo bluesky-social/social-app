@@ -24,6 +24,7 @@ import { Haptics } from "lib/haptics";
 import { LoadLatestBtn } from "view/com/util/load-latest/LoadLatestBtn";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { PostsFeedModel } from "state/models/feeds/posts";
+import { ScreenHider } from "view/com/util/moderation/ScreenHider";
 import { SolarplexCommunity } from "lib/splx-types";
 import { Text } from "view/com/util/text/Text";
 import { TextLink } from "view/com/util/Link";
@@ -217,28 +218,34 @@ export const CommunityFeedScreen = withAuthRequired(
     const isPinned = false;
     return (
       <View style={s.hContentRegion}>
-        {!store.session.isSolarplexSession &&
+        {/* {!store.session.isSolarplexSession &&
           communityFeedModel &&
           communityFeedModel.hasLoaded && (
-            <>
-              {/* <ViewHeader
+            <> */}
+        {/* <ViewHeader
                 title=""
                 renderButton={currentFeed && renderHeaderBtns}
               /> */}
-              <CenteredView>
+        {/* <CenteredView>
                 <CommunityHeader
                   view={communityFeedModel}
                   onRefreshAll={onRefresh}
                 />
-              </CenteredView>
-            </>
-          )}
+              </CenteredView> */}
+        {/* </>
+          )} */}
 
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
           onScroll={onMainScroll}
           scrollEventThrottle={100}
+          ListHeaderComponent={() => (
+            <CommunityHeader
+              view={communityFeedModel}
+              onRefreshAll={onRefresh}
+            />
+          )}
           //ListHeaderComponent={renderListHeaderComponent}
           renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned, true]}

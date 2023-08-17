@@ -367,6 +367,8 @@ const LoginForm = ({
       setIsProcessing(false);
       if (errMsg.includes("Authentication Required")) {
         setError("Invalid username or password");
+      } else if (errMsg.includes("Invalid identifier or password")) {
+        setError("Invalid username or password");
       } else if (isNetworkError(e)) {
         setError(
           "Unable to contact your service. Please check your Internet connection.",
@@ -376,7 +378,9 @@ const LoginForm = ({
       }
     } finally {
       track("Sign In", { resumedSession: false });
-      navigation.navigate("Home");
+      if (store.session.hasSession) {
+        navigation.navigate("Home");
+      }
     }
   };
 

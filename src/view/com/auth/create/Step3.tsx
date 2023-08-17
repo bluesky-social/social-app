@@ -33,10 +33,10 @@ export const Step3 = observer(({ model }: { model: CreateAccountModel }) => {
           accessibilityHint="Input your user handle"
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
-          Your handle will be{" "}
-          <Text type="lg-bold" style={pal.text}>
+          Make sure your username is between 3 to 12 characters long and only.
+          {/* <Text type="lg-bold" style={pal.text}>
             @{createFullHandle(model.handle, model.userDomain)}
-          </Text>
+          </Text> */}
         </Text>
       </View>
       {/* {model.error ? (

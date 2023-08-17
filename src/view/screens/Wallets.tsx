@@ -3,13 +3,15 @@ import {
   NativeStackScreenProps,
 } from "lib/routes/types";
 import React, { useMemo } from "react";
-import { Touchable, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Touchable, TouchableOpacity, View } from "react-native";
 
 import { CenteredView } from "view/com/util/Views";
 import { MeModel } from "state/models/me";
+import { ScrollView } from "view/com/util/Views.web";
 import { Text } from "view/com/util/text/Text";
 import { ViewHeader } from "../com/util/ViewHeader";
 import { WalletConnect } from "view/com/wallet/WalletConnect";
+import { isDesktopWeb } from "platform/detection";
 import { observer } from "mobx-react-lite";
 import { s } from "lib/styles";
 import { useFocusEffect } from "@react-navigation/native";
@@ -23,7 +25,6 @@ export const Wallets = observer((_props: Props) => {
   const store = useStores();
   const pal = usePalette("default");
   const meModel = useMemo(() => new MeModel(store), [store]);
-  const { setVisible } = useWalletModal();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -32,14 +33,29 @@ export const Wallets = observer((_props: Props) => {
   );
 
   return (
-    <View>
+    <View style={[s.hContentRegion]}>
       <ViewHeader title="Wallets" />
-      <CenteredView>
-        <Text type="title-xl" style={[pal.text, s.p20, s.pb5]}>
+      <ScrollView
+        style={[s.hContentRegion]}
+        // contentContainerStyle={!isDesktopWeb && pal.viewLight}
+        scrollIndicatorInsets={{ right: 1 }}
+      >
+        <View style={styles.spacer20} />
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
           Wallets
         </Text>
-        <WalletConnect model={meModel} />
-      </CenteredView>
+        <WalletConnect />
+      </ScrollView>
     </View>
   );
+});
+
+const styles = StyleSheet.create({
+  heading: {
+    paddingHorizontal: 36,
+    paddingBottom: 6,
+  },
+  spacer20: {
+    height: 20,
+  },
 });

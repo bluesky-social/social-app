@@ -1,25 +1,25 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { DesktopSearch } from "./Search";
-import { FEEDBACK_FORM_URL } from "lib/constants";
+import { FEEDBACK_FORM_URL } from "../../../lib/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
-import { RewardsCardSidebar } from "view/com/rewards/RewardsCardSidebar";
-import { Text } from "view/com/util/text/Text";
-import { TextLink } from "view/com/util/Link";
-import { formatCount } from "view/com/util/numeric/format";
+import { RewardsCardSidebar } from "../../../view/com/rewards/RewardsCardSidebar";
+import { Text } from "../../../view/com/util/text/Text";
+import { TextLink } from "../../../view/com/util/Link";
+import { formatCount } from "../../../view/com/util/numeric/format";
 import { observer } from "mobx-react-lite";
-import { pluralize } from "lib/strings/helpers";
-import { s } from "lib/styles";
-import { useNavigationTabState } from "lib/hooks/useNavigationTabState.web";
-import { usePalette } from "lib/hooks/usePalette";
-import { useStores } from "state/index";
+import { pluralize } from "../../../lib/strings/helpers";
+import { s } from "../../../lib/styles";
+import { useNavigationTabState } from "../../../lib/hooks/useNavigationTabState.web";
+import { usePalette } from "../../../lib/hooks/usePalette";
+import { useStores } from "../../../state/index";
 
 export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores();
   const pal = usePalette("default");
   const palError = usePalette("error");
-  const { isAtRewards } = useNavigationTabState();
+  const { isAtRewards, isAtSignIn } = useNavigationTabState();
   const did = store.session?.currentSession?.did ?? "";
 
   return (
@@ -39,7 +39,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
           </Text>
         )} */}
 
-        {isAtRewards ? null : <RewardsCardSidebar userId={did} />}
+        {isAtRewards || isAtSignIn ? null : <RewardsCardSidebar userId={did} />}
         <View style={[s.flexRow, { paddingHorizontal: 6 }]}>
           <TextLink
             type="md"

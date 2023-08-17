@@ -242,7 +242,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <ProfileCard />
         </>
       )}
-      <BackBtn />
+      {/* <BackBtn /> */}
       <NavItem
         href="/"
         icon={<HomeIcon size={24} style={pal.text} />}
