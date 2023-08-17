@@ -75,7 +75,7 @@ export class SplxReactionModel {
         curReactionsSet = v.curReactionsSet;
       }
       if (this.curReactionsSet) {
-        this.curReactionsSet = curReactionsSet;
+        this.curReactionsSet = curReactionsSet as ReactionCollections;
       }
     }
   }

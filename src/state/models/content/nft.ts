@@ -1,9 +1,9 @@
 import { GENESIS_COLLECTION, HELIUS_RPC_API } from "lib/constants";
+import { makeAutoObservable, runInAction } from "mobx";
 
 import { RootStoreModel } from "../root-store";
 import { SolarplexReaction } from "../media/reactions";
 import cluster from "cluster";
-import { makeAutoObservable } from "mobx";
 
 export class NftModel {
   assets: any[] = [];
@@ -16,7 +16,42 @@ export class NftModel {
     );
   }
 
-  async fetchNfts(wallet: string) {
+  setAssets(response: any) {
+    const assets = response.result.items;
+
+    // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
+    const reactionsMap = this.rootStore.reactions.reactionSets.genesis.reduce(
+      (acc: { [title: string]: SolarplexReaction }, item: any) => {
+        acc[item.title] = item;
+        return acc;
+      },
+      {},
+    );
+
+    const reactions: SolarplexReaction[] = [];
+    const seenAttributes = new Set();
+
+    assets.forEach((item: any) => {
+      // console.log("item", item, item?.content?.metadata);
+      const metadata = item?.content?.metadata;
+      if (!metadata.attributes) return;
+      const attribute = item?.content?.metadata?.attributes[0]?.value;
+      if (!seenAttributes.has(attribute)) {
+        seenAttributes.add(attribute);
+        reactionsMap[attribute] && reactions.push(reactionsMap[attribute]);
+      }
+    });
+
+    runInAction(() => {
+      this.assets = assets;
+    });
+
+    if (reactions) {
+      this.rootStore.reactions.update(reactions);
+    }
+  }
+
+  async _fetchNfts(wallet: string) {
     if (!wallet) return;
     try {
       const res = await fetch(
@@ -39,39 +74,14 @@ export class NftModel {
           }),
         },
       );
-      const nftsResponse = await res.json();
-
-      this.assets = nftsResponse.result.items;
-
-      // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
-      const reactionsMap = this.rootStore.reactions.reactionSets.genesis.reduce(
-        (acc: { [title: string]: SolarplexReaction }, item: any) => {
-          acc[item.title] = item;
-          return acc;
-        },
-        {},
-      );
-
-      const reactions: SolarplexReaction[] = [];
-      const seenAttributes = new Set();
-
-      this.assets.forEach((item) => {
-        // console.log("item", item, item?.content?.metadata);
-        const metadata = item?.content?.metadata;
-        if (!metadata.attributes) return;
-        const attribute = item?.content?.metadata?.attributes[0]?.value;
-        if (!seenAttributes.has(attribute)) {
-          seenAttributes.add(attribute);
-          reactionsMap[attribute] && reactions.push(reactionsMap[attribute]);
-        }
-      });
-
-      // console.log("reactions", reactions);
-      if (reactions.length > 0) {
-        this.rootStore.reactions.update(reactions);
-      }
+      return await res.json();
     } catch (e) {
       console.log("error fetching nfts", e);
     }
   }
+
+  fetchNfts(wallet: string) {
+    this._fetchNfts(wallet).then((response) => this.setAssets(response));
+  }
+
 }
