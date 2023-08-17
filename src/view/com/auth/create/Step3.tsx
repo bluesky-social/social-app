@@ -35,7 +35,7 @@ export const Step3 = observer(({ model }: { model: CreateAccountModel }) => {
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
           Your handle will be{" "}
           <Text type="lg-bold" style={pal.text}>
-            @{createFullHandle(model.handle, "")}
+            @{createFullHandle(model.handle, model.userDomain)}
           </Text>
         </Text>
       </View>
