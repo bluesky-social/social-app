@@ -174,11 +174,26 @@ function StartRewardClaimButton({ userId, setDisplayWeekly, setDisplayDaily }: S
   const isClaimingDaily = store.rewards.isClaimingDaily(userId);
   const isClaimingWeekly = store.rewards.isClaimingWeekly(userId);
 
-  let text = 'Next Dailies Start Soon!';
-  let onClick = () => navigation.navigate("Home");
+  let text = 'Dailies Start 12am UTC!';
   let done = false;
   let disabled = false;
   let loading = false;
+
+  function onClick() {
+    if (!store.session.hasSession) {
+      navigation.navigate('SignIn');
+      return;
+    }
+    if (shouldClaimDaily && !isClaimingDaily && !hasClaimedDaily) {
+      setDisplayDaily(true);
+      return;
+    }
+    if (shouldClaimWeekly && !isClaimingWeekly && !hasClaimedWeekly) {
+      setDisplayWeekly(true);
+      return;
+    }
+    navigation.navigate('Home');
+  }
 
   if (shouldClaimDaily || isClaimingDaily || dailyProgress.percent < 1) {
     text = !store.session.hasSession 
@@ -192,7 +207,6 @@ function StartRewardClaimButton({ userId, setDisplayWeekly, setDisplayDaily }: S
       : dailyProgress.percent
       ? "Keep Going!"
       : "Like Or Post Something";
-    onClick = () => store.session.hasSession ? setDisplayDaily(true) : navigation.navigate("SignIn");
     done = hasClaimedDaily;
     disabled = isClaimingDaily || done;
     loading = !!isClaimingDaily;
@@ -206,7 +220,6 @@ function StartRewardClaimButton({ userId, setDisplayWeekly, setDisplayDaily }: S
       : isClaimingWeekly
       ? 'Claiming Weekly...'
       : 'never';
-      onClick = () => store.session.hasSession ? setDisplayWeekly(true) : navigation.navigate("SignIn");
       done = hasClaimedWeekly;
       disabled = isClaimingWeekly || done;
       loading = !!isClaimingWeekly;
@@ -359,8 +372,8 @@ export const RewardsCard = observer(function RewardsCard({ userId } : { userId: 
   const [displayDaily, setDisplayDaily] = useState<boolean>(false);
   const [displayWeekly, setDisplayWeekly] = useState<boolean>(false);
 
-  const shouldDisplayDaily = displayDaily || isClaimingDaily;
-  const shouldDisplayWeekly = hasClaimedDaily && (displayWeekly || isClaimingWeekly);
+  const shouldDisplayDaily = displayDaily;
+  const shouldDisplayWeekly = hasClaimedDaily && displayWeekly;
 
   useFocusEffect(
     React.useCallback(() => {
