@@ -60,8 +60,7 @@ export const FeedItem = observer(function ({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const translatorUrl = getTranslatorLink(record?.text || '')
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
