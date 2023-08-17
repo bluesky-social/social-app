@@ -70,6 +70,7 @@
     "base64-js": "^1.5.1",
     "bcp-47-match": "^2.0.3",
     "email-validator": "^2.0.4",
+    "eventemitter3": "^5.0.1",
     "expo": "~48.0.18",
     "expo-application": "~5.1.1",
     "expo-build-properties": "~0.5.1",
