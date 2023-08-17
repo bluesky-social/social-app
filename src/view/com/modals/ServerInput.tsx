@@ -71,7 +71,7 @@ export function Component({ onSelect }: { onSelect: (url: string) => void }) {
             accessibilityLabel="Select Solarplex"
             accessibilityHint="Sets Solarplex as your service provider"
           >
-            <Text style={styles.btnText}>Bluesky.Social</Text>
+            <Text style={styles.btnText}>Solarplex</Text>
             <FontAwesomeIcon
               icon="arrow-right"
               style={s.white as FontAwesomeIconStyle}
@@ -94,7 +94,7 @@ export function Component({ onSelect }: { onSelect: (url: string) => void }) {
               onChangeText={setCustomUrl}
               accessibilityLabel="Custom domain"
               // TODO: Simplify this wording further to be understandable by everyone
-              accessibilityHint="Use your domain as your Bluesky client service provider"
+              accessibilityHint="Use your domain as your Solarplex client service provider"
             />
             <TouchableOpacity
               testID="customServerSelectBtn"

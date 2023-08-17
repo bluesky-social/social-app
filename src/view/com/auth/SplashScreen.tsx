@@ -1,18 +1,18 @@
-import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 
-import {CenteredView} from '../util/Views'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import React from 'react'
-import {Text} from 'view/com/util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
+import { CenteredView } from "../util/Views";
+import { ErrorBoundary } from "view/com/util/ErrorBoundary";
+import React from "react";
+import { Text } from "view/com/util/text/Text";
+import { usePalette } from "lib/hooks/usePalette";
 
 export const SplashScreen = ({
   onPressSignin,
 }: {
-  onPressSignin: () => void
-  onPressCreateAccount: () => void
+  onPressSignin: () => void;
+  onPressCreateAccount: () => void;
 }) => {
-  const pal = usePalette('default')
+  const pal = usePalette("default");
   return (
     <CenteredView style={[styles.container, pal.view]}>
       <SafeAreaView testID="noSessionView" style={styles.container}>
@@ -41,36 +41,37 @@ export const SplashScreen = ({
               onPress={onPressSignin}
               accessibilityRole="button"
               accessibilityLabel="Sign in"
-              accessibilityHint="Opens flow to sign into your existing Bluesky account">
+              accessibilityHint="Opens flow to sign into your existing Solarplex account"
+            >
               <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </ErrorBoundary>
       </SafeAreaView>
     </CenteredView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: "100%",
   },
   hero: {
     flex: 2,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   btns: {
     paddingBottom: 40,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 68,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 42,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   btn: {
     borderRadius: 32,
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   btnLabel: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 21,
   },
-})
+});

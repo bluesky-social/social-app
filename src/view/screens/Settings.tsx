@@ -250,7 +250,7 @@ export const SettingsScreen = withAuthRequired(
                   onPress={isSwitching ? undefined : onPressSignout}
                   accessibilityRole="button"
                   accessibilityLabel="Sign out"
-                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}
+                  accessibilityHint={`Signs ${store.me.displayName} out of Solarplex`}
                 >
                   <Text type="lg" style={pal.link}>
                     Sign out
@@ -457,7 +457,7 @@ export const SettingsScreen = withAuthRequired(
             onPress={isSwitching ? undefined : onPressChangeHandle}
             accessibilityRole="button"
             accessibilityLabel="Change handle"
-            accessibilityHint="Choose a new Bluesky username or create"
+            accessibilityHint="Choose a new Solarplex username or create"
           >
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon

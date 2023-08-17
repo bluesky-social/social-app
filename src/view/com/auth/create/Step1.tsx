@@ -57,7 +57,7 @@ export const Step1 = observer(({ model }: { model: CreateAccountModel }) => {
     <View>
       <StepHeader step="1" title="Create a Solarplex Account" />
       <Option
-        testID="blueskyServerBtn"
+        testID="SolarplexServerBtn"
         isSelected={isDefaultSelected}
         label="Solarplex"
         help="&nbsp;(default)"
