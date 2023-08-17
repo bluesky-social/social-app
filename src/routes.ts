@@ -34,7 +34,7 @@ export const router = new Router({
   CommunityGuidelines: "/support/community-guidelines",
   CopyrightPolicy: "/support/copyright",
   Rewards: "/rewards",
-  MissionsTab: "/rewards/missionstab",
-  RewardsTab: "/rewards/rewardstab",
+  Missions: "/rewards/missions",
+  Reactions: "/rewards/reactions",
   Wallets: "/wallets",
 });

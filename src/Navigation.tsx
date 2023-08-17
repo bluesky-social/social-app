@@ -247,13 +247,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{ title: title("Edit My Feeds") }}
       />
       <Stack.Screen
-        name="RewardsTab"
-        component={RewardsTabScreen}
+        name="Reactions"
+        component={MissionsTab}
         options={{ title: title("My Rewards") }}
       />
       <Stack.Screen
-        name="MissionsTab"
-        component={MissionsTab}
+        name="Missions"
+        component={RewardsTabScreen}
         options={{ title: title("My Reactions") }}
       />
       {/* <Stack.Screen
@@ -589,12 +589,7 @@ function navigate<K extends keyof AllNavigatorParams>(
 }
 
 function resetToTab(
-  tabName:
-    | "HomeTab"
-    | "SearchTab"
-    | "NotificationsTab"
-    | "CommunitiesTab"
-    | "RewardsTab",
+  tabName: "HomeTab" | "SearchTab" | "NotificationsTab" | "CommunitiesTab",
 ) {
   if (navigationRef.isReady()) {
     navigate(tabName);
@@ -639,8 +634,6 @@ function handleLink(url: string) {
       resetToTab("NotificationsTab");
     } else if (name === "Communities") {
       resetToTab("CommunitiesTab");
-    } else if (name === "Rewards") {
-      resetToTab("RewardsTab");
     } else {
       resetToTab("HomeTab");
       // @ts-ignore matchPath doesnt give us type-checked output -prf

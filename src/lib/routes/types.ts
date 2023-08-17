@@ -33,8 +33,8 @@ export type CommonNavigatorParams = {
   AppPasswords: undefined;
   SavedFeeds: undefined;
   Rewards: undefined;
-  MissionsTab: undefined;
-  RewardsTab: undefined;
+  Missions: undefined;
+  Reactions: undefined;
   Wallets: undefined;
 };
 
@@ -101,7 +101,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   // for bottom bar
   CommunitiesTab: undefined;
   Rewards: undefined;
-  RewardsTab: undefined;
+  Reactions: undefined;
   WalletsTab: undefined;
 };
 

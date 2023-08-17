@@ -1,4 +1,10 @@
-import { CommentBottomArrow, HeartIcon, HeartIconSolid } from "lib/icons";
+import {
+  CommentBottomArrow,
+  HeartIcon,
+  HeartIconSolid,
+  RegularFaceSmileIcon,
+  SolidFaceSmileIcon,
+} from "lib/icons";
 import { DropdownButton, PostDropdownBtn } from "../forms/DropdownButton";
 import {
   FontAwesomeIcon,
@@ -116,7 +122,6 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const theme = useTheme();
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
-
 
   const defaultCtrlColor = React.useMemo(
     () => ({
@@ -346,26 +351,14 @@ export function PostCtrls(opts: PostCtrlsOpts) {
               )}
               {selectedEmoji ? (
                 <TouchableOpacity onPress={onRemoveReaction}>
-                  <FontAwesomeIcon
-                    icon={faSmileFilled}
-                    size={opts.big ? 22 : 16}
-                    color={defaultCtrlColor?.color as string}
-                  />
+                  <SolidFaceSmileIcon />
                 </TouchableOpacity>
               ) : store.session.isSolarplexSession ? (
                 <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
-                  <FontAwesomeIcon
-                    icon={faSmile}
-                    size={opts.big ? 22 : 16}
-                    color={defaultCtrlColor?.color as string}
-                  />
+                  <RegularFaceSmileIcon />
                 </TouchableOpacity>
               ) : (
-                <FontAwesomeIcon
-                  icon={faSmile}
-                  size={opts.big ? 22 : 16}
-                  color={defaultCtrlColor?.color as string}
-                />
+                <RegularFaceSmileIcon />
               )}
               <Text
                 testID="likeCount"

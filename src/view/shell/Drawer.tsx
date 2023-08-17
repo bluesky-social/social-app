@@ -7,7 +7,11 @@ import {
   GiftIconFilled,
   HomeIcon,
   HomeIconSolid,
+  RegularRankingStarIcon,
+  RegularReactionIcon,
   SolarplexLogo,
+  SolidRankingStarIcon,
+  SolidReactionIcon,
   UserIcon,
   UserIconSolid,
 } from "lib/icons";
@@ -68,6 +72,8 @@ export const DrawerContent = observer(() => {
     isAtCommunities,
     isAtWallets,
     isAtRewards,
+    isAtReactions,
+    isAtMissions,
   } = useNavigationTabState();
   const res = useNavigationTabState();
   const { notifications } = store.me;
@@ -115,6 +121,16 @@ export const DrawerContent = observer(() => {
 
   const onPressRewards = React.useCallback(
     () => onPressTab("Rewards"),
+    [onPressTab],
+  );
+
+  const onPressReactions = React.useCallback(
+    () => onPressTab("Reactions"),
+    [onPressTab],
+  );
+
+  const onPressMissions = React.useCallback(
+    () => onPressTab("Missions"),
     [onPressTab],
   );
 
@@ -242,13 +258,41 @@ export const DrawerContent = observer(() => {
                 bold={isAtCommunities}
                 onPress={onPressCommunities}
               />
-              <MenuItem
+              {/* <MenuItem
                 icon={isAtRewards ? <GiftIconFilled /> : <GiftIcon />}
                 label="Rewards"
                 accessibilityLabel="Rewards"
                 accessibilityHint=""
                 bold={isAtRewards}
                 onPress={onPressRewards}
+              /> */}
+              <MenuItem
+                icon={
+                  isAtReactions ? (
+                    <SolidReactionIcon />
+                  ) : (
+                    <RegularReactionIcon />
+                  )
+                }
+                label="Reactions"
+                accessibilityLabel="Reactions"
+                accessibilityHint=""
+                bold={isAtReactions}
+                onPress={onPressReactions}
+              />
+              <MenuItem
+                icon={
+                  isAtMissions ? (
+                    <SolidRankingStarIcon />
+                  ) : (
+                    <RegularRankingStarIcon />
+                  )
+                }
+                label="Missions"
+                accessibilityLabel="Missions"
+                accessibilityHint=""
+                bold={isAtMissions}
+                onPress={onPressMissions}
               />
               <MenuItem
                 icon={

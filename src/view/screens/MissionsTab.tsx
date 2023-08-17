@@ -15,126 +15,11 @@ import { ScrollView } from "../com/util/Views";
 import { Text } from "view/com/util/text/Text";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { UserAvatar } from "view/com/util/UserAvatar";
+import { ViewHeader } from "view/com/util/ViewHeader";
 import { observer } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
-
-const solarplexreactionsList = [
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/1.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Sad",
-    src: require("../../../assets/reactions/2.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/3.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/4.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/5.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/6.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/7.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/8.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/9.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/10.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/11.png"),
-    isClaimed: true,
-  },
-];
-
-const squidzReactionsList = [
-  {
-    name: "Blush",
-    src: require("../../../assets/reactions/blush.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Cry",
-    src: require("../../../assets/reactions/cry.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Laugh cry",
-    src: require("../../../assets/reactions/laugh-cry.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Fire",
-    src: require("../../../assets/reactions/fire.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Glasses",
-    src: require("../../../assets/reactions/glasses.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Smile",
-    src: require("../../../assets/reactions/smile.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Love",
-    src: require("../../../assets/reactions/love.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Hehe-zombie",
-    src: require("../../../assets/reactions/hehe-zombie.png"),
-    isClaimed: true,
-  },
-  {
-    name: "Cant-even",
-    src: require("../../../assets/reactions/cant-even.png"),
-    isClaimed: true,
-  },
-  {
-    name: "heart-eyes",
-    src: require("../../../assets/reactions/heart-eyes.png"),
-    isClaimed: true,
-  },
-  {
-    name: "eyebrow-raised",
-    src: require("../../../assets/reactions/eyebrow-raised.png"),
-    isClaimed: true,
-  },
-];
 
 export const GrayedImage = ({ image }: { image: any }) => {
   return (
@@ -250,7 +135,7 @@ const DisplayReactions = observer(() => {
   );
 });
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, "MissionsTab">;
+type Props = NativeStackScreenProps<CommonNavigatorParams, "Missions">;
 export const MissionsTab = withAuthRequired(
   observer(() => {
     const pal = usePalette("default");
@@ -263,6 +148,7 @@ export const MissionsTab = withAuthRequired(
           contentContainerStyle={!isDesktopWeb && pal.viewLight}
           scrollIndicatorInsets={{ right: 1 }}
         >
+          <ViewHeader title="Reactions" canGoBack={false} />
           {/* <View style={styles.HeaderRow}>
             <View style={styles.horizontalView}>
               <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />

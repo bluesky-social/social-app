@@ -33,7 +33,7 @@ const tabs = [
 ];
 
 // TODO: change the props text over here
-type Props = NativeStackScreenProps<CommonNavigatorParams, "Rewards">;
+type Props = NativeStackScreenProps<CommonNavigatorParams, "Reactions">;
 export const RewardsScreen = withAuthRequired(
   observer(({ route }: Props) => {
     const navigation = useNavigation<NavigationProp>();

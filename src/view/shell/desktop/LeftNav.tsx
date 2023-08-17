@@ -5,11 +5,13 @@ import {
   BellIconSolid,
   CommunitiesIcon,
   ComposeIcon2,
-  GiftIcon,
-  GiftIconFilled,
   HomeIcon,
   HomeIconSolid,
+  RegularRankingStarIcon,
+  RegularReactionIcon,
   SolarplexLogo,
+  SolidRankingStarIcon,
+  SolidReactionIcon,
   UserIcon,
   UserIconSolid,
 } from "lib/icons";
@@ -275,11 +277,18 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             }
             label="Communities"
           />
+
           <NavItem
-            href={`/rewards`}
-            icon={<GiftIcon />}
-            iconFilled={<GiftIconFilled />}
-            label="Rewards"
+            href={`/rewards/missions`}
+            icon={<RegularRankingStarIcon />}
+            iconFilled={<SolidRankingStarIcon />}
+            label="Missions"
+          />
+          <NavItem
+            href={`/rewards/reactions`}
+            icon={<RegularReactionIcon />}
+            iconFilled={<SolidReactionIcon />}
+            label="Reactions"
           />
           <NavItem
             href="/notifications"

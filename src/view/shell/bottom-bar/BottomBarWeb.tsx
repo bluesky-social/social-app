@@ -9,6 +9,10 @@ import {
   GiftIconFilled,
   HomeIcon,
   HomeIconSolid,
+  RegularRankingStarIcon,
+  RegularReactionIcon,
+  SolidRankingStarIcon,
+  SolidReactionIcon,
   UserIcon,
 } from "lib/icons";
 import {
@@ -73,7 +77,7 @@ export const BottomBarWeb = observer(() => {
         }}
       </NavItem>
 
-      <NavItem routeName="Communities" href="/communities">
+      {/* <NavItem routeName="Communities" href="/communities">
         {({ isActive }) => {
           const Icon = isActive ? CommunitiesIconSolid : CommunitiesIcon;
           return (
@@ -84,14 +88,36 @@ export const BottomBarWeb = observer(() => {
             />
           );
         }}
-      </NavItem>
-      <NavItem routeName="Rewards" href="/rewards">
+      </NavItem> */}
+      {/* <NavItem routeName="Rewards" href="/rewards">
         {({ isActive }) => {
           const Icon = isActive ? GiftIconFilled : GiftIcon;
           return (
             <Icon
               size={24}
               strokeWidth={1.9}
+              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+            />
+          );
+        }}
+      </NavItem> */}
+      <NavItem routeName="Missions" href="/rewards/missions">
+        {({ isActive }) => {
+          const Icon = isActive ? SolidRankingStarIcon : RegularRankingStarIcon;
+          return (
+            <Icon
+              size={24}
+              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+            />
+          );
+        }}
+      </NavItem>
+      <NavItem routeName="Reactions" href="/rewards/reactions">
+        {({ isActive }) => {
+          const Icon = isActive ? SolidReactionIcon : RegularReactionIcon;
+          return (
+            <Icon
+              size={24}
               style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
             />
           );

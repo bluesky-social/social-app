@@ -14,6 +14,8 @@ export function useNavigationTabState() {
       isAtMyProfile: getTabState(state, "MyProfile") !== TabState.Outside,
       isAtRewards: getTabState(state, "Rewards") !== TabState.Outside,
       isAtWallets: getTabState(state, "Wallets") !== TabState.Outside,
+      isAtReactions: getTabState(state, "Reactions") !== TabState.Outside,
+      isAtMissions: getTabState(state, "Missions") !== TabState.Outside,
     };
     if (
       !res.isAtHome &&
@@ -23,7 +25,9 @@ export function useNavigationTabState() {
       !res.isAtMyProfile &&
       !res.isAtCommunities &&
       !res.isAtRewards &&
-      !res.isAtWallets
+      !res.isAtWallets &&
+      !res.isAtReactions &&
+      !res.isAtMissions
     ) {
       // HACK for some reason useNavigationState will give us pre-hydration results
       //      and not update after, so we force isAtHome if all came back false
