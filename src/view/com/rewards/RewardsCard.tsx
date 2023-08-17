@@ -359,7 +359,7 @@ export const RewardsCard = observer(function RewardsCard({ userId } : { userId: 
   const [displayDaily, setDisplayDaily] = useState<boolean>(false);
   const [displayWeekly, setDisplayWeekly] = useState<boolean>(false);
 
-  const shouldDisplayDaily = displayDaily || isClaimingDaily || hasClaimedDaily;
+  const shouldDisplayDaily = displayDaily || isClaimingDaily;
   const shouldDisplayWeekly = hasClaimedDaily && (displayWeekly || isClaimingWeekly);
 
   useFocusEffect(
