@@ -23,12 +23,12 @@ export const Component = () => {
         Offline Mode
       </Text>
       <Text style={[pal.text, s.pl20, s.pr20]}>
-        While BlueSky works best when you're connected to the internet, you can
-        still browse around while offline.
+        BlueSky works best when you're connected to the internet, you can still
+        browse around while offline.
       </Text>
       <Text style={[pal.text, s.pl20, s.pr20, s.pt10]}>
-        We will try out best to sync your basic interactions such as likes and
-        follows once you're back online.
+        However, you won't be able to post or interact with posts/users until
+        you're back online.
       </Text>
       <Button
         type="primary"
