@@ -59,7 +59,8 @@ export const extractHtmlMeta = ({
 
   const isYoutubeUrl =
     hostname?.includes('youtube.') || hostname?.includes('youtu.be')
-  const isTwitterUrl = hostname?.includes('twitter.')
+  const isTwitterUrl =
+    hostname?.includes('twitter.') || hostname?.includes('x.com')
   // Workaround for some websites not having a title or description in the meta tags in the initial serve
   if (isYoutubeUrl) {
     res = {...res, ...extractYoutubeMeta(html)}
