@@ -9301,10 +9301,10 @@ detect-port-alt@^1.1.6:
     address "^1.0.1"
     debug "^2.6.0"
 
-detox@^20.1.2:
-  version "20.9.1"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-20.9.1.tgz#78c351c6d5f140d29151ebfe986362276e156d08"
-  integrity sha512-o7x9fHhOoVDZK1069RgefqIxY0B53eAnk7N5/3D8qEa8N0YmvylqzAqeYVtnzHYkveZb1pkcruzKC9jomWTEnw==
+detox@^20.11.3:
+  version "20.11.3"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-20.11.3.tgz#56d5ea869977f5a747e1be0901b279ab953f8b7b"
+  integrity sha512-kdoRAtDLFxXpjt1QlniI+WryMtf7Y8mrZ33Ql8cTR9qoCS/CThi4pweYAQm8yUPqAv1ZtT3eIm3EzRwjEosgLA==
   dependencies:
     ajv "^8.6.3"
     bunyan "^1.8.12"
