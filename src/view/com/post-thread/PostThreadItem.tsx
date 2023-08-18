@@ -33,6 +33,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -226,7 +227,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </Link>
               </View>
             </View>
-            <View style={s.flex1} />
             <PostDropdownBtn
               testID="postDropdownBtn"
               itemUri={itemUri}
@@ -239,7 +239,12 @@ export const PostThreadItem = observer(function PostThreadItem({
               onOpenTranslate={onOpenTranslate}
               onToggleThreadMute={onToggleThreadMute}
               onDeletePost={onDeletePost}
-              style={{paddingVertical: 6, paddingHorizontal: 10}}
+              style={{
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+                marginLeft: 'auto',
+                width: 40,
+              }}
             />
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
@@ -556,7 +561,7 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
-    maxWidth: 240,
+    maxWidth: isDesktopWeb ? 380 : 220,
   },
   alert: {
     marginBottom: 6,
