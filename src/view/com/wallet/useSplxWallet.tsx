@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-
-import { useObserver } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { useStores } from '../../../state';
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
@@ -8,18 +6,33 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 export const useSplxWallet = () => {
   const store = useStores();
   const wallet = useWallet();
-  const waitForWalletConnectIsBusy = useObserver(() => store.wallet.waitForWalletConnectIsBusy());
-  const waitingToConnectWallet = useObserver(() => store.wallet.state.waitingToConnectWallet);
-  const waitingToConnectWalletCanceled = useObserver(() => store.wallet.state.canceledWaitingToConnectWallet);
-  const walletAddressFromWalletConnect = useObserver(() => wallet.publicKey?.toBase58() ?? '');
-  const walletAddressFromModel = useObserver(() => store.wallet.state.walletId);
-  const linkedWallet = useObserver(() => store.wallet.state.connectedWalletId);
+  const waitForWalletConnectIsBusy = store.wallet.waitForWalletConnectIsBusy();
+  const waitingToConnectWallet = store.wallet.state.waitingToConnectWallet;
+  const waitingToConnectWalletCanceled = store.wallet.state.canceledWaitingToConnectWallet;
+  const walletAddressFromWalletConnect = wallet.publicKey?.toBase58() ?? '';
+  const walletAddressFromModel = store.wallet.state.walletId;
+  const linkedWallet = store.wallet.connectedWallet;
+  const linkWalletIsBusy = walletAddressFromWalletConnect && store.wallet.linkWalletIsBusy(walletAddressFromWalletConnect);
+  const unlinkWalletIsBusy = store.wallet.unlinkWalletIsBusy();
+  const connectWalletIsBusy = waitingToConnectWallet || linkWalletIsBusy;
+  const disconnectWalletIsBusy = unlinkWalletIsBusy;
 
   const { setVisible, visible } = useWalletModal();
+
+  function openWalletConnectDialog (b: boolean) {
+    if (b === true) {
+      void store.wallet.waitForWalletConnect();
+    } else if (b === false) {
+      setVisible(false);
+    }
+  }
+
   useEffect(() => {
     if (!visible && waitForWalletConnectIsBusy && !waitingToConnectWallet && !waitingToConnectWalletCanceled) {
+      console.log('setting visible to true');
       setVisible(true);
     } else if (visible && waitForWalletConnectIsBusy && !waitingToConnectWallet && !waitingToConnectWalletCanceled) {
+      console.log('now starting to wait for wallet connect');
       void store.wallet.startWaitForWalletConnect();
     } else if (
       !visible &&
@@ -28,16 +41,19 @@ export const useSplxWallet = () => {
       waitingToConnectWallet &&
       !waitingToConnectWalletCanceled
     ) {
+      console.log('is this in here maybe?')
       store.wallet.cancelWaitForWalletConnect();
     }
   }, [waitForWalletConnectIsBusy, waitingToConnectWallet, visible, waitingToConnectWalletCanceled, wallet.connecting]);
 
   useEffect(() => {
-    if (walletAddressFromWalletConnect !== walletAddressFromModel) {
+    if (walletAddressFromModel !== walletAddressFromWalletConnect) {
       store.wallet.setWalletAddress(walletAddressFromWalletConnect);
+    }
+    if (walletAddressFromWalletConnect !== walletAddressFromModel) {
       void store.wallet.linkWallet(walletAddressFromWalletConnect);
     }
   }, [walletAddressFromWalletConnect])
 
-  return [visible, setVisible, linkedWallet] as [boolean, typeof setVisible, typeof linkedWallet];
+  return [visible, openWalletConnectDialog, linkedWallet, walletAddressFromWalletConnect, connectWalletIsBusy, disconnectWalletIsBusy] as [boolean, typeof openWalletConnectDialog, typeof linkedWallet, typeof walletAddressFromWalletConnect, boolean, boolean];
 };

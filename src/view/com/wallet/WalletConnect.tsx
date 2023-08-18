@@ -6,10 +6,6 @@ import {
   FontAwesomeIconStyle,
 } from "@fortawesome/react-native-fontawesome";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-  WalletMultiButton,
-  useWalletModal,
-} from "@solana/wallet-adapter-react-ui";
 import { colors, s } from "lib/styles";
 
 import { Button } from "../util/forms/Button";
@@ -20,18 +16,17 @@ import { Text } from "../util/text/Text";
 import { UserAvatar } from "../util/UserAvatar";
 import { observer } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
+import { useSplxWallet } from "./useSplxWallet";
 import { useStores } from "state/index";
-import { useWallet } from "@solana/wallet-adapter-react";
 
-export const WalletConnect = observer(() => {
+export const WalletConnect = observer(function WalletConnect() {
   const store = useStores();
-  const wallet = useWallet();
+  const [visible, setVisible, linkedWallet, connectedWallet, connectWalletIsBusy, disconnectWalletIsBusy] = useSplxWallet();
   const pal = usePalette("default");
-  const { setVisible } = useWalletModal();
 
   const handleLinkWallet = async () => {
-    if (wallet.publicKey) {
-      await store.me.connectWallet(wallet.publicKey?.toString());
+    if (connectedWallet) {
+      await store.wallet.linkWallet(connectedWallet);
       Toast.show("Wallet Connected");
     } else {
       Toast.show("No Wallet Connection Found");
@@ -39,7 +34,7 @@ export const WalletConnect = observer(() => {
   };
 
   const disconnectWallet = async () => {
-    await store.me.disconnectWallet();
+    await store.wallet.unlinkWallet();
     Toast.show("Wallet Disconnected");
   };
 
@@ -48,7 +43,7 @@ export const WalletConnect = observer(() => {
       {!(store.session.isResumingSession || !store.session.hasAnySession) ? (
         <View>
           {!store.me.splxWallet ? (
-            wallet.connected ? (
+            connectedWallet ? (
               <>
                 <View style={[styles.infoLine]}>
                   <Link
@@ -73,8 +68,8 @@ export const WalletConnect = observer(() => {
                       </View>
                       <View style={[s.flex1]}>
                         <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                          {wallet.publicKey?.toString().slice(0, 5)}...
-                          {wallet.publicKey?.toString().slice(-5)}
+                          {connectedWallet.slice(0, 5)}...
+                          {connectedWallet.slice(-5)}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -82,10 +77,11 @@ export const WalletConnect = observer(() => {
                         onPress={handleLinkWallet}
                         accessibilityRole="button"
                         accessibilityLabel="Link Wallet"
+                        disabled={connectWalletIsBusy}
                         accessibilityHint={`Signs ${store.me.displayName} out of Solarplex`}
                       >
                         <Text type="lg" style={pal.link}>
-                          Link Wallet
+                          { connectWalletIsBusy ? 'Linking...' : 'Link Wallet' }
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -101,6 +97,7 @@ export const WalletConnect = observer(() => {
                 accessibilityRole="button"
                 accessibilityLabel="Connect  Wallet"
                 accessibilityHint="Wallet Connect Button"
+                disabled={connectWalletIsBusy}
               >
                 <View style={[styles.iconContainer, pal.btn]}>
                   <FontAwesomeIcon
@@ -112,7 +109,7 @@ export const WalletConnect = observer(() => {
                   />
                 </View>
                 <Text type="lg" style={pal.text}>
-                  Connect Wallet
+                  { connectWalletIsBusy ? 'Connecting...' : 'Connect Wallet' }
                 </Text>
               </TouchableOpacity>
             )
@@ -155,9 +152,10 @@ export const WalletConnect = observer(() => {
                       accessibilityRole="button"
                       accessibilityLabel="Disconnect Wallet"
                       accessibilityHint={`Disconnects ${store.me.displayName} out of Solarplex`}
+                      disabled={disconnectWalletIsBusy}
                     >
                       <Text type="lg" style={pal.link}>
-                        Disconnect Wallet
+                        { disconnectWalletIsBusy ? 'Disconnecting...' : 'Disconnect Wallet'}
                       </Text>
                     </TouchableOpacity>
                   </View>

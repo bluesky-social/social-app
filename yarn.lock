@@ -7108,6 +7108,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/globalthis@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/globalthis/-/globalthis-1.0.1.tgz#5310a812c2ef3905b821a1b219ae0e0d12d0e5f1"
+  integrity sha512-gPIOjEAp9ZysUzOYlwuaedjwxRW9QvMhlN5PSWCXYEw894QB/84YgXSsei8yE6D/FstC1QIrHgO7UfQ2A37M0Q==
+
 "@types/graceful-fs@^4.1.2", "@types/graceful-fs@^4.1.3":
   version "4.1.6"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.6.tgz#e14b2576a1c25026b7f02ede1de3b84c3a1efeae"

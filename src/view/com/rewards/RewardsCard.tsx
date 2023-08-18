@@ -109,45 +109,50 @@ function PostRewardClaimedButton({ userId, setDisplayWeekly }: UserRewardProps) 
   );
 }
 
-function RewardClaimButton({ userId, isWeekly }: { userId: string, isWeekly: boolean}) {
+const RewardClaimButton = observer(function RewardClaimButton({ userId, isWeekly }: { userId: string, isWeekly: boolean}) {
   const store = useStores();
-  const [visible, setVisible, linkedWallet] = useSplxWallet();
+  const [visible, setVisible, linkedWallet, walletAddressFromWalletConnect, connectWalletIsBusy, disconnectWalletIsBusy] = useSplxWallet();
   const isDone = isWeekly ? store.rewards.hasClaimedWeekly(userId) : store.rewards.hasClaimedDaily(userId);
   const shouldClaim = isWeekly ? store.rewards.shouldClaimWeekly(userId) : store.rewards.shouldClaimDaily(userId);
   const isClaiming = isWeekly ? store.rewards.isClaimingWeekly(userId) : store.rewards.isClaimingDaily(userId);
   const defalultText = isWeekly ? 'Open' : 'Roll';
-  const text = isClaiming ? "Claiming..." : isDone ? "Check your wallet!" : !linkedWallet ? "Connect Wallet" : defalultText;
-  const canceledConnect = store.wallet.state.canceledWaitingToConnectWallet;
   const [linkingWallet, setLinkingWallet] = useState<boolean>(false);
-
+  const text = isClaiming 
+    ? 'Claiming...'
+    : isDone
+    ? 'Check your wallet!'
+    : linkingWallet
+    ? 'Connecting...'
+    : !linkedWallet
+    ? 'Connect Wallet'
+    : defalultText;
   
-
   const { track } = useAnalytics();
 
   useEffect(() => {
-    console.log('in useEffect', linkedWallet, linkingWallet);
-    async function setWallet() {
-      if (linkedWallet && linkingWallet) {
-        setLinkingWallet(false);
-        void claimHandler();
-      }
+    if (linkedWallet && linkingWallet) {
+      setLinkingWallet(false);
+      void claimHandler();
     }
-    setWallet();
   }, [linkedWallet]);
 
   useEffect(() => {
-    if (canceledConnect && linkingWallet) {
+    if (!connectWalletIsBusy && linkingWallet) {
       setLinkingWallet(false);
     }
-  }, [canceledConnect]);
+  }, [connectWalletIsBusy]);
 
   const claimHandler = async () => {
     if (linkingWallet) {
       return;
     }
     if (!linkedWallet) {
-      setVisible(true);
       setLinkingWallet(true);
+      if (walletAddressFromWalletConnect) {
+        void store.wallet.linkWallet(walletAddressFromWalletConnect);
+      } else {
+        setVisible(true);
+      }
       return;
     }
     if (isWeekly) {
@@ -167,13 +172,13 @@ function RewardClaimButton({ userId, isWeekly }: { userId: string, isWeekly: boo
         weekly={isWeekly}
         done={isDone}
         disabled={!shouldClaim || isDone}
-        loading={isClaiming}
+        loading={linkingWallet || isClaiming}
         text={ text }
         onClick={claimHandler}
       />
     </View>
   )
-}
+})
 
 function StartRewardClaimButton({ userId, setDisplayWeekly, setDisplayDaily }: StartUserRewardProps) {
   const store = useStores();

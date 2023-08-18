@@ -9,11 +9,10 @@ import merge from "lodash.merge";
 import { tryEachAnimationFrame } from '../lib/splx-utils/timers';
 
 export interface ModelWalletState {
-  did: string;
   walletId: string;
   waitingToConnectWallet: boolean;
   canceledWaitingToConnectWallet: boolean;
-  connectedWalletId: string;
+  connectedWallets: { [did: string]: string }
 }
 
 enum ActionStatus {
@@ -43,10 +42,9 @@ interface ActionStatePayload {
 function getInitialState(): ModelWalletState {
   return {
     canceledWaitingToConnectWallet: false,
-    did: '',
     waitingToConnectWallet: false,
     walletId: '',
-    connectedWalletId: '',
+    connectedWallets: {}
   };
 }
 
@@ -91,6 +89,13 @@ export class SplxWallet {
       },
       { autoBind: true },
     );
+  }
+
+  get connectedWallet(): string {
+    if (!this.rootStore.me.did) {
+      return '';
+    }
+    return this.state.connectedWallets[this.rootStore.me.did];
   }
 
   async _feedApiCall(subDir: string, method: string = 'GET', body?: Json) {
@@ -199,16 +204,16 @@ export class SplxWallet {
     return this._execute(async () => {
       await tryEachAnimationFrame(() => {
         return !!this.state.walletId || this.state.canceledWaitingToConnectWallet;
-      })
+      }, 86400 * 1000)
       runInAction(() => {
         this.state.waitingToConnectWallet = false;
         this.state.canceledWaitingToConnectWallet = false;
       })
-    }, 'waitForWalletConnect', ...arguments); 
+    }, 'waitForWalletConnect'); 
   }
 
   waitForWalletConnectIsBusy() {
-    return this._isBusy('waiitForWalletConnect');
+    return this._isBusy('waitForWalletConnect');
   }
 
   startWaitForWalletConnect() {
@@ -219,9 +224,6 @@ export class SplxWallet {
   }
 
   cancelWaitForWalletConnect() {
-    if (!this.waitForWalletConnectIsBusy()) {
-      return;
-    }
     runInAction(() => {
       this.state.waitingToConnectWallet = false;
       this.state.canceledWaitingToConnectWallet = true;
@@ -230,7 +232,7 @@ export class SplxWallet {
 
   setWalletAddress(address: string) {
     runInAction(() => {
-      this.state.walletId = address;
+      this.state.walletId = address ?? '';
     })
   }
 
@@ -242,24 +244,28 @@ export class SplxWallet {
 
   async getConnectedWallet() {
     return this._execute(async () => {
-      const { user } = await this._feedApiCall(`splx/get_user/${this.rootStore.me.did}`);
+      const did = this.rootStore.me.did;
+      const { user } = await this._feedApiCall(`splx/get_user/${did}`);
       runInAction(() => {
-        this.state.connectedWalletId = user?.wallet ?? '';
+        this.state.connectedWallets[did] = user?.wallet ?? '';
       })
       return user?.wallet ?? '';
     }, 'getConnectedWallet', this.rootStore.me.did);
   }
 
+  linkWalletIsBusy(wallet: string) {
+    return this._isBusy('linkWallet', this.rootStore.me.did, wallet);
+  }
+
   async linkWallet(wallet: string) {
     return this._execute(async () => {
-      if (!this.rootStore.session || wallet === this.state.connectedWalletId) {
+      if (!this.rootStore.session || wallet === this.connectedWallet) {
         return;
       }
-      if (this.state.connectedWalletId) {
-        await this.unLinkWallet();
+      if (this.connectedWallet) {
+        await this.unlinkWallet();
       }
       try {
-        console.log('linking wallet!');
         await this._feedApiCall('splx/add_wallet_to_user', 'POST', { did: this.rootStore.me.did, wallet });
         const address = await this.getConnectedWallet();
         runInAction(() => {
@@ -270,19 +276,24 @@ export class SplxWallet {
     }, 'linkWallet', this.rootStore.me.did, wallet);
   }
 
-  async unLinkWallet() {
-    this._execute(async () => {
-      if (!this.state.walletId) {
+  unlinkWalletIsBusy() {
+    return this._isBusy('unlinkWallet', this.rootStore.me.did);
+  }
+
+  async unlinkWallet() {
+    return await this._execute(async () => {
+      if (!this.connectedWallet) {
         return;
       }
       try {
-        this._feedApiCall('splx/remove_wallet_from_user', 'POST', { did: this.rootStore.me.did });
+        const did = this.rootStore.me.did;
+        await this._feedApiCall('splx/remove_wallet_from_user', 'POST', { did });
+        const address = await this.getConnectedWallet();
         runInAction(() => {
-          this.state.walletId = '';
-          this.state.connectedWalletId = '';
+          this.state.connectedWallets[did] = address ?? '';
         });
       } catch(err) {};
-    }, 'unLinkWallet', this.rootStore.me.did, this.state.walletId);
+    }, 'unlinkWallet', this.rootStore.me.did);
   }
 
 }

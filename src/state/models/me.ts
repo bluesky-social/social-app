@@ -2,15 +2,9 @@ import {
   ComAtprotoServerDefs,
   ComAtprotoServerListAppPasswords,
 } from "@atproto/api";
-import {
-  DEFAULT_REACTION_EMOJIS,
-  SOLARPLEX_FEED_API,
-  SQUID_REACTION_EMOJIS,
-} from "lib/constants";
 import { hasProp, isObj } from "lib/type-guards";
 import { makeAutoObservable, runInAction } from "mobx";
 
-import { EmojiItemProp } from "react-native-reactions/lib/components/ReactionView/types";
 import { JoinedCommunitiesModel } from "./ui/joined-communities";
 import { MyFollowsCache } from "./cache/my-follows";
 import { NftModel } from "./content/nft";
@@ -28,7 +22,6 @@ export class MeModel {
   displayName: string = "";
   description: string = "";
   avatar: string = "";
-  splxWallet: string | undefined;
   followsCount: number | undefined;
   followersCount: number | undefined;
   mainFeed: PostsFeedModel;
@@ -44,6 +37,10 @@ export class MeModel {
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length;
+  }
+
+  get splxWallet() {
+    return this.rootStore.wallet.connectedWallet;
   }
 
   constructor(public rootStore: RootStoreModel) {
@@ -74,7 +71,6 @@ export class MeModel {
     this.avatar = "";
     this.invites = [];
     this.appPasswords = [];
-    this.splxWallet = undefined;
   }
 
   serialize(): unknown {
@@ -124,8 +120,10 @@ export class MeModel {
       this.did = sess.currentSession?.did || "";
       this.handle = sess.currentSession?.handle || "";
       await this.fetchProfile();
-      await this.fetchUser();
-      await this.nft.fetchNfts(this.splxWallet ?? "");
+      await this.rootStore.wallet.getConnectedWallet();
+      if (this.rootStore.wallet.connectedWallet) {
+        await this.nft.fetchNfts(this.rootStore.wallet.connectedWallet);
+      }
       this.mainFeed.clear();
       /* dont await */ this.mainFeed.setup().catch((e) => {
         this.rootStore.log.error("Failed to setup main feed model", e);
@@ -161,26 +159,6 @@ export class MeModel {
 
   async fetchAllReactions() {
     await this.rootStore.reactions.fetch();
-  }
-
-  async fetchUser() {
-    const user = await fetch(
-      `${SOLARPLEX_FEED_API}/splx/get_user/${this.did}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    const body = await user.json();
-    runInAction(() => {
-      this.splxWallet = body.user?.wallet;
-    })
-    
-    // this.splxWallet = "FZFqmFt5d8j1V4J44PCVL5DpbknFMYHZWufe24p7Pb7T";
-    // this.splxWallet = "EuoVktg82q5oxEA6LvLXF4Xi9rKT1ZrjYqwcd9JA7X1B";
-    // this.splxWallet = "GtarBGsBP63f1unXgW6DFpR2GDprJ7mN9TPURZQg4qwS";
   }
 
   async fetchProfile() {
@@ -277,48 +255,6 @@ export class MeModel {
       } catch (e) {
         this.rootStore.log.error("Failed to delete app password", e);
       }
-    }
-  }
-
-  async disconnectWallet() {
-    try {
-      const res = await fetch(
-        `${SOLARPLEX_FEED_API}/splx/remove_wallet_from_user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            did: this.did,
-          }),
-        },
-      );
-
-      this.splxWallet = undefined;
-    } catch (e: any) {
-      this.splxWallet = undefined;
-      this.rootStore.log.error("Failed to disconnect wallet", e);
-    }
-  }
-
-  async connectWallet(wallet: string) {
-    try {
-      await fetch(`${SOLARPLEX_FEED_API}/splx/add_wallet_to_user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          did: this.did,
-          wallet: wallet,
-        }),
-      });
-
-      this.splxWallet = wallet;
-    } catch (e: any) {
-      this.splxWallet = undefined;
-      this.rootStore.log.error("Failed to connect wallet", e);
     }
   }
 }

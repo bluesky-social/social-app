@@ -164,6 +164,7 @@
     "@testing-library/react-native": "^11.5.2",
     "@tsconfig/react-native": "^2.0.3",
     "@types/crypto-js": "^4.1.1",
+    "@types/globalthis": "^1.0.1",
     "@types/he": "^1.1.2",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
