@@ -16,7 +16,8 @@ import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
-import {OfflineIndicator} from 'view/com/util/OfflineIndicator'
+import {OfflineIndicator} from 'view/com/offline/Indicator'
+import {isMobileWeb} from 'platform/detection'
 
 const ShellInner = observer(() => {
   const store = useStores()
@@ -37,9 +38,9 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
+      {isDesktop && <OfflineIndicator />}
       {isDesktop && store.session.hasSession && (
         <>
-          <OfflineIndicator />
           <DesktopLeftNav />
           <DesktopRightNav />
         </>
@@ -52,12 +53,8 @@ const ShellInner = observer(() => {
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
       />
-      {!isDesktop && (
-        <>
-          <BottomBarWeb />
-          <OfflineIndicator />
-        </>
-      )}
+      {!isDesktop && <BottomBarWeb />}
+      {isMobileWeb && <OfflineIndicator />}
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (

@@ -18,7 +18,7 @@ import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
-import {OfflineIndicator} from 'view/com/util/OfflineIndicator'
+import {OfflineIndicator} from 'view/com/offline/Indicator'
 
 const ShellInner = observer(() => {
   const store = useStores()

@@ -31,6 +31,7 @@ import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettin
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 import * as OnboardingModal from './OnboardingModal'
 import * as ModerationDetailsModal from './ModerationDetails'
+import * as OfflineDetailsModal from '../offline/DetailsModal'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -140,10 +141,12 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'moderation-details') {
     snapPoints = ModerationDetailsModal.snapPoints
     element = <ModerationDetailsModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'offline-details') {
+    snapPoints = OfflineDetailsModal.snapPoints
+    element = <OfflineDetailsModal.Component />
   } else {
     return null
   }
-
   if (snapPoints[0] === 'fullscreen') {
     return (
       <SafeAreaView style={[styles.fullscreenContainer, pal.view]}>

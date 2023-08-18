@@ -36,6 +36,10 @@ export interface ProfilePreviewModal {
   did: string
 }
 
+export interface OfflineDetailsModal {
+  name: 'offline-details'
+}
+
 export interface ServerInputModal {
   name: 'server-input'
   initialService: string
@@ -180,6 +184,7 @@ export type Modal =
 
   // Generic
   | ConfirmModal
+  | OfflineDetailsModal
 
 interface LightboxModel {}
 
