@@ -51,7 +51,7 @@ export const OfflineIndicator = () => {
     return () => unsubscribe()
   }, [])
 
-  if (!isConnected) return null
+  if (isConnected) return null
 
   if (isNative) {
     return <Indicator />
