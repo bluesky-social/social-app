@@ -57,7 +57,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const [deleted, setDeleted] = React.useState(false);
   const record = item.postRecord;
-  const hasEngagement = item.post.likeCount || item.post.repostCount;
+  const hasEngagement = item.post.likeCount || item.post.repostCount || item.data.reactions?.length;
 
   const itemUri = item.post.uri;
   const itemCid = item.post.cid;
