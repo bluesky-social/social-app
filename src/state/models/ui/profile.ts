@@ -23,6 +23,8 @@ export class ProfileUiModel {
   static END_ITEM = {_reactKey: '__end__'}
   static EMPTY_ITEM = {_reactKey: '__empty__'}
 
+  isAuthenticatedUser = false
+
   // data
   profile: ProfileModel
   feed: PostsFeedModel
@@ -85,8 +87,8 @@ export class ProfileUiModel {
       Sections.PostsNoReplies,
       Sections.PostsWithReplies,
       Sections.PostsWithMedia,
-      Sections.Likes,
-    ]
+      this.isAuthenticatedUser && Sections.Likes,
+    ].filter(Boolean)
     if (this.algos.hasLoaded && !this.algos.isEmpty) {
       items.push(Sections.CustomAlgorithms)
     }
@@ -226,6 +228,8 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    this.isAuthenticatedUser =
+      this.profile.did === this.rootStore.session.currentSession?.did
     this.algos.refresh()
     // HACK: need to use the DID as a param, not the username -prf
     this.lists.source = this.profile.did
