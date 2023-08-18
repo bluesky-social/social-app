@@ -33,13 +33,13 @@ const ShellInner = observer(() => {
   return (
     <>
       <View style={s.hContentRegion}>
-        <OfflineIndicator />
         <ErrorBoundary>
           <FlatNavigator />
         </ErrorBoundary>
       </View>
       {isDesktop && store.session.hasSession && (
         <>
+          <OfflineIndicator />
           <DesktopLeftNav />
           <DesktopRightNav />
         </>
@@ -52,7 +52,12 @@ const ShellInner = observer(() => {
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
       />
-      {!isDesktop && <BottomBarWeb />}
+      {!isDesktop && (
+        <>
+          <BottomBarWeb />
+          <OfflineIndicator />
+        </>
+      )}
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (

@@ -9,8 +9,7 @@ import {
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {s} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import {CenteredView} from './Views.web'
+import {isDesktopWeb, isNative} from 'platform/detection'
 
 const Indicator = () => {
   const pal = usePalette('error')
@@ -19,11 +18,8 @@ const Indicator = () => {
     styles.container,
     s.flexRow,
     s.alignCenter,
+    pal.view,
   ]
-
-  if (!isNative) {
-    containerStyles.push(pal.view)
-  }
 
   return (
     <View style={containerStyles}>
@@ -50,9 +46,9 @@ export const OfflineIndicator = () => {
   }
 
   return (
-    <CenteredView>
+    <View style={isDesktopWeb ? undefined : styles.mobileWrapper}>
       <Indicator />
-    </CenteredView>
+    </View>
   )
 }
 
@@ -61,5 +57,11 @@ const styles = StyleSheet.create({
     width: isNative ? s.window.width : undefined,
     justifyContent: 'center',
     height: 20,
+  },
+  mobileWrapper: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    width: '100%',
   },
 })

@@ -37,6 +37,7 @@ import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {makeProfileLink} from 'lib/routes/links'
+import {OfflineIndicator} from 'view/com/util/OfflineIndicator'
 
 const ProfileCard = observer(() => {
   const store = useStores()
@@ -179,6 +180,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
 
   return (
     <View style={[styles.leftNav, pal.view]}>
+      <OfflineIndicator />
       {store.session.hasSession && <ProfileCard />}
       <BackBtn />
       <NavItem
