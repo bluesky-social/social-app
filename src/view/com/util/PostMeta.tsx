@@ -91,7 +91,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 const styles = StyleSheet.create({
   metaOneLine: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: isAndroid ? 'center' : 'baseline',
     paddingBottom: 2,
     gap: 4,
   },
