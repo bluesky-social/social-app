@@ -118,7 +118,7 @@
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.2.0",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "~2.9.0",
+    "react-native-gesture-handler": "^2.12.1",
     "react-native-get-random-values": "^1.8.0",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
