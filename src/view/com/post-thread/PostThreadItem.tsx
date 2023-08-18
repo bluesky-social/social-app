@@ -33,6 +33,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -560,7 +561,7 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
-    maxWidth: 220,
+    maxWidth: isDesktopWeb ? 380 : 220,
   },
   alert: {
     marginBottom: 6,
