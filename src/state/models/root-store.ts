@@ -23,6 +23,7 @@ import { RewardsModel } from "state/rewards";
 import { SessionModel } from "./session";
 import { ShellUiModel } from "./ui/shell";
 import { SplxReactionModel } from "./media/reactions";
+import { SplxWallet } from '../splx-wallet';
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
@@ -56,6 +57,7 @@ export class RootStoreModel {
   mutedThreads = new MutedThreads();
   reactions = new SplxReactionModel(this);
   rewards = new RewardsModel(this);
+  wallet = new SplxWallet(this);
 
   constructor(agent: BskyAgent) {
     this.agent = agent;

@@ -12,10 +12,9 @@ import { observer } from "mobx-react-lite";
 import { s } from "lib/styles";
 import { useAnalytics } from "lib/analytics/analytics";
 import { usePalette } from "lib/hooks/usePalette";
+import { useSplxWallet } from '../wallet/useSplxWallet';
 import { useState } from "react";
 import { useStores } from "state/index";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 interface RewardClaimedProps {
   rewardsImg: string;
@@ -112,30 +111,43 @@ function PostRewardClaimedButton({ userId, setDisplayWeekly }: UserRewardProps) 
 
 function RewardClaimButton({ userId, isWeekly }: { userId: string, isWeekly: boolean}) {
   const store = useStores();
+  const [visible, setVisible, linkedWallet] = useSplxWallet();
   const isDone = isWeekly ? store.rewards.hasClaimedWeekly(userId) : store.rewards.hasClaimedDaily(userId);
   const shouldClaim = isWeekly ? store.rewards.shouldClaimWeekly(userId) : store.rewards.shouldClaimDaily(userId);
   const isClaiming = isWeekly ? store.rewards.isClaimingWeekly(userId) : store.rewards.isClaimingDaily(userId);
   const defalultText = isWeekly ? 'Open' : 'Roll';
-  const text = isClaiming ? "Claiming..." : isDone ? "Check your wallet!" : !store.me.splxWallet ? "Connect Wallet" : defalultText;
+  const text = isClaiming ? "Claiming..." : isDone ? "Check your wallet!" : !linkedWallet ? "Connect Wallet" : defalultText;
+  const canceledConnect = store.wallet.state.canceledWaitingToConnectWallet;
+  const [linkingWallet, setLinkingWallet] = useState<boolean>(false);
 
-  const { setVisible } = useWalletModal();
-
-  const wallet = useWallet();
+  
 
   const { track } = useAnalytics();
 
   useEffect(() => {
+    console.log('in useEffect', linkedWallet, linkingWallet);
     async function setWallet() {
-      if (!store.me.splxWallet && wallet !== undefined && wallet.publicKey) {
-        await store.me.connectWallet(wallet.publicKey?.toString());
+      if (linkedWallet && linkingWallet) {
+        setLinkingWallet(false);
+        void claimHandler();
       }
     }
     setWallet();
-  }, [wallet]);
+  }, [linkedWallet]);
+
+  useEffect(() => {
+    if (canceledConnect && linkingWallet) {
+      setLinkingWallet(false);
+    }
+  }, [canceledConnect]);
 
   const claimHandler = async () => {
-    if (!store.me.splxWallet) {
+    if (linkingWallet) {
+      return;
+    }
+    if (!linkedWallet) {
       setVisible(true);
+      setLinkingWallet(true);
       return;
     }
     if (isWeekly) {
@@ -146,7 +158,7 @@ function RewardClaimButton({ userId, isWeekly }: { userId: string, isWeekly: boo
       track("Claim:DailyReward");
     }
     // This won't work b/c we need to do this from the store.
-    store.me.nft.fetchNfts(store.me.splxWallet);
+    store.me.nft.fetchNfts(linkedWallet);
   };
 
   return (

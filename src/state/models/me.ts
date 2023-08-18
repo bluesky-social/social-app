@@ -174,8 +174,10 @@ export class MeModel {
       },
     );
     const body = await user.json();
-
-    this.splxWallet = body.user?.wallet;
+    runInAction(() => {
+      this.splxWallet = body.user?.wallet;
+    })
+    
     // this.splxWallet = "FZFqmFt5d8j1V4J44PCVL5DpbknFMYHZWufe24p7Pb7T";
     // this.splxWallet = "EuoVktg82q5oxEA6LvLXF4Xi9rKT1ZrjYqwcd9JA7X1B";
     // this.splxWallet = "GtarBGsBP63f1unXgW6DFpR2GDprJ7mN9TPURZQg4qwS";
