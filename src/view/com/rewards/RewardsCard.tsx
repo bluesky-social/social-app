@@ -390,7 +390,7 @@ export const RewardsCard = observer(function RewardsCard({ userId } : { userId: 
   const [displayWeekly, setDisplayWeekly] = useState<boolean>(false);
 
   const shouldDisplayDaily = displayDaily;
-  const shouldDisplayWeekly = hasClaimedDaily && displayWeekly;
+  const shouldDisplayWeekly = (hasClaimedDaily || isClaimingDaily) && displayWeekly;
 
   useFocusEffect(
     React.useCallback(() => {

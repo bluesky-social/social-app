@@ -107,8 +107,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
           </View>
         </View>
         <View style={styles.claimBtn}>
-          {shouldClaimWeekly ||
-            (shouldClaimDaily && (
+          {(shouldClaimWeekly || shouldClaimDaily) && (
               <TouchableOpacity
                 style={styles.ClaimCTA}
                 onPress={onClaimHandler}
@@ -123,7 +122,7 @@ export const RewardsCardSidebar = observer(({ userId }: { userId: string }) => {
                     : "Keep Going!"}
                 </Text>
               </TouchableOpacity>
-            ))}
+            )}
         </View>
       </View>
     </View>
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     paddingVertical: 8,
     paddingHorizontal: 18,
-    backgroundColor: colors.black,
+    backgroundColor: colors.splx.primary[50],
     marginTop: 4,
     marginBottom: 4,
   },
