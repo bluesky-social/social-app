@@ -70,7 +70,7 @@ function ShareButton({ rewardsImg, isWeekly}: RewardClaimedProps) {
 function RewardClaimedImage({ rewardsImg }: RewardClaimedProps) {
   const pal = usePalette("default");
   return (
-    <View style={styles.DiceRowCol}>
+    <View style={styles.rewardClaimedContainer}>
       <Text type="lg-thin">🎉Congrats!🎉</Text>
       <Text type="2xl-bold" style={[pal.text, styles.DiceRollText]}>
         You won a Reward!
@@ -536,5 +536,10 @@ const styles = StyleSheet.create({
   rewardImage: {
     width: 250,
     height: 250,
+  },
+  rewardClaimedContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
