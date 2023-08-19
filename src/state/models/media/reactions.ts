@@ -104,10 +104,9 @@ export class SplxReactionModel {
   }
 
   async update(reactions: SolarplexReaction[]) {
-    if (this.rootStore.me.nft.assets.length) {
-      this.earnedReactions["genesis"] = reactions;
-    }
+    this.earnedReactions["genesis"] = reactions;
   }
+  
   async selectReactionSet(reactionSet: ReactionCollections) {
     if (this.reactionSets[reactionSet] && this.reactionSets[reactionSet].length) {
       this.curReactionsSet = reactionSet;

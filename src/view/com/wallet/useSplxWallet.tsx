@@ -29,10 +29,8 @@ export const useSplxWallet = () => {
 
   useEffect(() => {
     if (!visible && waitForWalletConnectIsBusy && !waitingToConnectWallet && !waitingToConnectWalletCanceled) {
-      console.log('setting visible to true');
       setVisible(true);
     } else if (visible && waitForWalletConnectIsBusy && !waitingToConnectWallet && !waitingToConnectWalletCanceled) {
-      console.log('now starting to wait for wallet connect');
       void store.wallet.startWaitForWalletConnect();
     } else if (
       !visible &&
@@ -41,7 +39,6 @@ export const useSplxWallet = () => {
       waitingToConnectWallet &&
       !waitingToConnectWalletCanceled
     ) {
-      console.log('is this in here maybe?')
       store.wallet.cancelWaitForWalletConnect();
     }
   }, [waitForWalletConnectIsBusy, waitingToConnectWallet, visible, waitingToConnectWalletCanceled, wallet.connecting]);

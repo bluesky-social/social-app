@@ -8,12 +8,9 @@ import {
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { colors, s } from "lib/styles";
 
-import { Button } from "../util/forms/Button";
 import { Link } from "../util/Link";
 import { Loading } from "../auth/withAuthRequired";
-import { MeModel } from "state/models/me";
 import { Text } from "../util/text/Text";
-import { UserAvatar } from "../util/UserAvatar";
 import { observer } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
 import { useSplxWallet } from "./useSplxWallet";
@@ -23,6 +20,14 @@ export const WalletConnect = observer(function WalletConnect() {
   const store = useStores();
   const [visible, setVisible, linkedWallet, connectedWallet, connectWalletIsBusy, disconnectWalletIsBusy] = useSplxWallet();
   const pal = usePalette("default");
+
+  async function handleConnectWallet() {
+    if (connectedWallet) {
+      await store.wallet.linkWallet(connectedWallet);
+    } else {
+      setVisible(true)
+    }
+  }
 
   const handleLinkWallet = async () => {
     if (connectedWallet) {
@@ -43,7 +48,7 @@ export const WalletConnect = observer(function WalletConnect() {
       {!(store.session.isResumingSession || !store.session.hasAnySession) ? (
         <View>
           {!store.me.splxWallet ? (
-            connectedWallet ? (
+            linkedWallet ? (
               <>
                 <View style={[styles.infoLine]}>
                   <Link
@@ -68,8 +73,8 @@ export const WalletConnect = observer(function WalletConnect() {
                       </View>
                       <View style={[s.flex1]}>
                         <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                          {connectedWallet.slice(0, 5)}...
-                          {connectedWallet.slice(-5)}
+                          {linkedWallet.slice(0, 5)}...
+                          {linkedWallet.slice(-5)}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -93,7 +98,7 @@ export const WalletConnect = observer(function WalletConnect() {
               <TouchableOpacity
                 testID="ConnectWallet"
                 style={[styles.linkCard, pal.view]}
-                onPress={() => setVisible(true)}
+                onPress={handleConnectWallet}
                 accessibilityRole="button"
                 accessibilityLabel="Connect  Wallet"
                 accessibilityHint="Wallet Connect Button"

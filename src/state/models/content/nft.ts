@@ -16,9 +16,7 @@ export class NftModel {
     );
   }
 
-  setAssets(response: any) {
-    const assets = response.result.items;
-
+  setAssets(assets: any) {
     // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
     const reactionsMap = this.rootStore.reactions.reactionSets.genesis.reduce(
       (acc: { [title: string]: SolarplexReaction }, item: any) => {
@@ -46,9 +44,7 @@ export class NftModel {
       this.assets = assets;
     });
 
-    if (reactions) {
-      this.rootStore.reactions.update(reactions);
-    }
+    this.rootStore.reactions.update(reactions);
   }
 
   async _fetchNfts(wallet: string) {
@@ -81,7 +77,7 @@ export class NftModel {
   }
 
   fetchNfts(wallet: string) {
-    this._fetchNfts(wallet).then((response) => this.setAssets(response));
+    this._fetchNfts(wallet).then((response) => this.setAssets(response.result.items));
   }
 
 }

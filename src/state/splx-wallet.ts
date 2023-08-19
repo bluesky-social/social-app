@@ -271,7 +271,7 @@ export class SplxWallet {
         runInAction(() => {
           this.state.walletId = address;
         });
-        
+        this.rootStore.me.nft.fetchNfts(this.rootStore.wallet.connectedWallet);
       } catch(err) {};
     }, 'linkWallet', this.rootStore.me.did, wallet);
   }
@@ -292,6 +292,7 @@ export class SplxWallet {
         runInAction(() => {
           this.state.connectedWallets[did] = address ?? '';
         });
+        this.rootStore.me.nft.setAssets([]);
       } catch(err) {};
     }, 'unlinkWallet', this.rootStore.me.did);
   }

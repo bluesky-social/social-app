@@ -49,7 +49,7 @@ export const GrayedImage = ({ image }: { image: any }) => {
   );
 };
 
-const DisplayReactions = observer(() => {
+const DisplayReactions = observer(function DisplayReactions() {
   const pal = usePalette("default");
   const store = useStores();
 
