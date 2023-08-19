@@ -261,7 +261,7 @@ function RewardClaimed({ userId, setDisplayWeekly }: UserRewardProps) {
   const weeklyReward = store.rewards.weeklyReward(userId);
   const dailyReward = store.rewards.dailyReward(userId);
   return (
-    <View>
+    <View style={styles.DiceRowCol}>
       { weeklyReward ? (
         <RewardClaimedImage userId={ userId } rewardsImg={ weeklyReward.image }></RewardClaimedImage>
       ) : dailyReward ? (
