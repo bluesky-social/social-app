@@ -2,6 +2,12 @@ type BundledFn<Args extends readonly unknown[], Res> = (
   ...args: Args
 ) => Promise<Res>
 
+function _getPromiseKey<Args extends readonly unknown[], Res>(fn: BundledFn<Args, Res>, args: Args) {
+  const name = fn.name || fn.toString();
+  const argsStr = JSON.stringify(args);
+  return `${name}#${argsStr}`;
+}
+
 /**
  * A helper which ensures that multiple calls to an async function
  * only produces one in-flight request at a time.
@@ -9,16 +15,17 @@ type BundledFn<Args extends readonly unknown[], Res> = (
 export function bundleAsync<Args extends readonly unknown[], Res>(
   fn: BundledFn<Args, Res>,
 ): BundledFn<Args, Res> {
-  let promise: Promise<Res> | undefined
+  const promises: { [key: string]: Promise<Res> | undefined } = {};
   return async (...args) => {
-    if (promise) {
-      return promise
+    const key = _getPromiseKey(fn, args);
+    if (promises[key]) {
+      return promises[key] as Promise<Res>;
     }
-    promise = fn(...args)
+    promises[key] = fn(...args)
     try {
-      return await promise
+      return (await promises[key]) as Res
     } finally {
-      promise = undefined
+      delete promises[key];
     }
   }
 }
