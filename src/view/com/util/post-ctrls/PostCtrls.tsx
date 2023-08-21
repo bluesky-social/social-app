@@ -25,6 +25,7 @@ import { Image } from "expo-image";
 import { NavigationProp } from "lib/routes/types";
 import { Reaction } from "react-native-reactions";
 import { ReactionDropdownButton } from "../forms/ReactionDropdownButton";
+import { ReactionList } from "view/com/reactions/ReactionList";
 import { RepostButton } from "./RepostButton";
 import { SolarplexReaction } from "state/models/media/reactions";
 // DISABLED see #135
@@ -37,6 +38,7 @@ import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import { faSmile as faSmileFilled } from "@fortawesome/free-solid-svg-icons";
 import { isMobileWeb } from "platform/detection";
 import { useNavigation } from "@react-navigation/native";
+import { useObserver } from "mobx-react-lite";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { useTheme } from "lib/ThemeContext";
@@ -122,7 +124,10 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const theme = useTheme();
   const pal = usePalette("default");
   const navigation = useNavigation<NavigationProp>();
-
+  const defaultReactions = useObserver(() => store.reactions.curReactionsSet);
+  const reactionSet = useObserver(
+    () => store.reactions.earnedReactions[defaultReactions],
+  );
   const defaultCtrlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
@@ -193,11 +198,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       // setIsLikedPressed(false)
     }
   };
-  const [selectedEmoji, setSelectedEmoji] = useState<EmojiItemProp | undefined>(
-    store.reactions.reactionTypes[opts.viewerReaction ?? " "],
-  );
+  const [selectedEmoji, setSelectedEmoji] = useState<
+    SolarplexReaction | undefined
+  >(store.reactions.reactionTypes[opts.viewerReaction ?? " "]);
 
-  const onPressReaction = async (emoji: EmojiItemProp | undefined) => {
+  const onPressReaction = async (emoji: SolarplexReaction | undefined) => {
     if (!emoji) {
       onRemoveReaction();
       return;
@@ -207,14 +212,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     }
     // console.log("emoji", emoji);
     setSelectedEmoji(emoji);
-    await opts
-      .onPressReaction((emoji as SolarplexReaction).reaction_id)
-      .catch((_e) => undefined);
+    await opts.onPressReaction(emoji.id).catch((_e) => undefined);
   };
 
   const onRemoveReaction = async () => {
     await opts
-      .onPressReaction((selectedEmoji as SolarplexReaction).reaction_id, true)
+      .onPressReaction(selectedEmoji?.id, true)
       .catch((_e) => undefined);
     setSelectedEmoji(undefined);
   };
@@ -319,16 +322,16 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               {!opts.big && opts.reactions?.length !== undefined ? (
                 <View testID="testing" style={styles.emojiSet}>
-                  {opts.reactions?.map((item, index) =>
+                  {/* {opts.reactions?.map((item, index) =>
                     index < 4 && store.reactions.reactionTypes[item] ? (
                       (
-                        store.reactions.reactionTypes[item]?.emoji as string
+                        store.reactions.reactionTypes[item]?.nft_metadata?.image as string
                       ).includes("http") ? (
                         <Image
                           style={styles.image}
                           source={{
                             uri: store.reactions.reactionTypes[item]
-                              ?.emoji as string,
+                              ?.nft_metadata?.image as string,
                           }}
                         />
                       ) : (
@@ -340,11 +343,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
                             { marginLeft: index ? -8 : 0, zIndex: -1 * index },
                           ]}
                         >
-                          {store.reactions.reactionTypes[item]?.emoji}
+                          {store.reactions.reactionTypes[item]?.nft_metadata?.image}
                         </Text>
                       )
                     ) : null,
-                  )}
+                  )} */}
+                  <ReactionList reactions={opts.reactions} />
                 </View>
               ) : (
                 <></>

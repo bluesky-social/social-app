@@ -16,8 +16,16 @@ export interface Reaction {
   reaction_id: string;
 }
 
-export interface SolarplexReaction extends EmojiItemProp {
+export interface SolarplexReaction {
   reaction_id: string;
+  collection_id: string;
+  id: string;
+  nft_metadata: {
+    name: string;
+    symbol: string;
+    image: string;
+  }
+  project_id: string;
 }
 
 export type ReactionCollections = 'default' | 'squid' | 'genesis';
@@ -29,12 +37,12 @@ export class SplxReactionModel {
   // map of reaction ids to reaction types across collections
   reactionTypes: { [reactionId: string]: SolarplexReaction } = {};
   reactionSets: { [reactionSet: string]: SolarplexReaction[] } = {
-    default: DEFAULT_REACTION_EMOJIS,
-    squid: SQUID_REACTION_EMOJIS,
-    genesis: GENESIS_REACTIONS,
+    // default: DEFAULT_REACTION_EMOJIS,
+    // squid: SQUID_REACTION_EMOJIS,
+    // genesis: GENESIS_REACTIONS,
   };
   earnedReactions: { [reactionSet: string]: SolarplexReaction[] } = {
-    default: DEFAULT_REACTION_EMOJIS,
+    // default: DEFAULT_REACTION_EMOJIS,
   };
   curReactionsSet: ReactionCollections = "default";
 
@@ -44,19 +52,19 @@ export class SplxReactionModel {
       { rootStore: false, serialize: false, hydrate: false },
       { autoBind: true },
     );
-    this.reactionMap = {};
-    const emojis = [
-      ...DEFAULT_REACTION_EMOJIS,
-      ...SQUID_REACTION_EMOJIS,
-      ...GENESIS_REACTIONS,
-    ];
-    this.reactionTypes = emojis.reduce(
-      (acc: { [reactionId: string]: SolarplexReaction }, emoji) => {
-        acc[emoji.reaction_id] = emoji;
-        return acc;
-      },
-      {},
-    );
+    // this.reactionMap = {};
+    // const emojis = [
+    //   ...DEFAULT_REACTION_EMOJIS,
+    //   ...SQUID_REACTION_EMOJIS,
+    //   ...GENESIS_REACTIONS,
+    // ];
+    // this.reactionTypes = emojis.reduce(
+    //   (acc: { [reactionId: string]: SolarplexReaction }, emoji) => {
+    //     acc[emoji.reaction_id] = emoji;
+    //     return acc;
+    //   },
+    //   {},
+    // );
   }
 
   serialize() {
@@ -81,6 +89,25 @@ export class SplxReactionModel {
   }
 
   async fetch() {
+    const reactionPacksRequest = await fetch(
+      `${SOLARPLEX_FEED_API}/splx/get_reaction_packs`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "no-cors",
+        },
+      },
+    );
+    const reactionPacks = (await reactionPacksRequest.json()).data;
+    this.reactionSets = reactionPacks;
+    Object.values(reactionPacks).forEach((reactionPack: any) => {
+      reactionPack.forEach((reaction: any) => {
+        this.reactionTypes[reaction.reaction_id] = reaction;
+      });
+    });
+    this.earnedReactions['default'] = reactionPacks["default"]
+
     const allReactions = await fetch(
       `${SOLARPLEX_FEED_API}/splx/get_all_reactions`,
       {

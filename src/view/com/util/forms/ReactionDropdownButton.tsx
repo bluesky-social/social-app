@@ -371,13 +371,13 @@ const DropdownItems = ({
                 )}
                 <Text style={[styles.label, pal.text]}>{item.label}</Text> */}
                 {/* <Image style={styles.image} source={{uri: (item.emoji as string)}}/> */}
-                {(item.emoji as string).includes(
+                {(item?.nft_metadata?.image as string)?.includes(
                   "http",
                 ) ? (
                   <Image
                     style={styles.image}
                     source={{
-                      uri: item.emoji as string,
+                      uri: item?.nft_metadata?.image as string,
                     }}
                   />
                 ) : (
@@ -386,7 +386,7 @@ const DropdownItems = ({
                       { marginLeft: index ? -8 : 0, zIndex: -1 * index },
                     ]}
                   >
-                    {item.emoji}
+                    {item?.nft_metadata?.image as string}
                   </Text>
                 )}
             

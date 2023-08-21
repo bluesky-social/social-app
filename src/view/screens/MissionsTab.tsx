@@ -142,7 +142,7 @@ const DisplayReactions = observer(function DisplayReactions() {
           renderItem={({ item }) => {
             if (
               store.reactions.earnedReactions["genesis"]?.find(
-                (reaction) => reaction.emoji === item.emoji,
+                (reaction) => reaction.reaction_id === item.title,
               )
             ) {
               return (

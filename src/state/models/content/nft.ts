@@ -20,7 +20,7 @@ export class NftModel {
     // turn store.reactions.reactionsSets.genesis with a key of title from each reactoin
     const reactionsMap = this.rootStore.reactions.reactionSets.genesis.reduce(
       (acc: { [title: string]: SolarplexReaction }, item: any) => {
-        acc[item.title] = item;
+        acc[item.reaction_id] = item;
         return acc;
       },
       {},

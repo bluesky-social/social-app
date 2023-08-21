@@ -29,6 +29,7 @@ import { PostHider } from "../util/moderation/PostHider";
 import { PostMeta } from "../util/PostMeta";
 import { PostSandboxWarning } from "../util/PostSandboxWarning";
 import { PostThreadItemModel } from "state/models/content/post-thread-item";
+import { ReactionList } from "../reactions/ReactionList";
 import { RichText } from "../util/text/RichText";
 import { Text } from "../util/text/Text";
 import { UserAvatar } from "../util/UserAvatar";
@@ -57,7 +58,8 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const [deleted, setDeleted] = React.useState(false);
   const record = item.postRecord;
-  const hasEngagement = item.post.likeCount || item.post.repostCount || item.data.reactions?.length;
+  const hasEngagement =
+    item.post.likeCount || item.post.repostCount || item.data.reactions?.length;
 
   const itemUri = item.post.uri;
   const itemCid = item.post.cid;
@@ -222,6 +224,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       </View>
     );
   }
+  console.log("reactions", store.reactions.reactionTypes);
 
   if (item._isHighlightedPost) {
     return (
@@ -359,32 +362,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                       },
                     ]}
                   >
-                    {item.data.reactions?.map(
-                      (item, index) =>
-                        index < 9 &&
-                        ((
-                          store.reactions.reactionTypes[item]?.emoji as string
-                        )?.includes("http") ? (
-                          <Image
-                            style={styles.image}
-                            key={store.reactions.reactionTypes[item]?.id}
-                            source={
-                              store.reactions.reactionTypes[item]
-                                ?.emoji as string
-                            }
-                          />
-                        ) : (
-                          <Text
-                            key={item}
-                            style={[
-                              s.f12,
-                              { marginLeft: index ? -6 : 0, zIndex: index },
-                            ]}
-                          >
-                            {store.reactions.reactionTypes[item]?.emoji}
-                          </Text>
-                        )),
-                    )}
+                    <ReactionList reactions={item.data.reactions}/>
                     <Text
                       type="xl-bold"
                       style={{ marginLeft: 4, marginRight: 4, ...pal.text }}
