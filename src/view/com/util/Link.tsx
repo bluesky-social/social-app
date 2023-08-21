@@ -135,6 +135,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines,
   lineHeight,
   dataSet,
+  title,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -144,10 +145,12 @@ export const TextLink = observer(function TextLink({
   numberOfLines?: number
   lineHeight?: number
   dataSet?: any
+  title?: string
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
+  const anchorRef = React.useRef(null)
 
   props.onPress = React.useCallback(
     (e?: Event) => {
@@ -166,8 +169,14 @@ export const TextLink = observer(function TextLink({
     return {}
   }, [href])
 
+  React.useEffect(() => {
+    // @ts-expect-error web only, shows date on hover -esb
+    anchorRef.current?.setNativeProps?.({title})
+  }, [title])
+
   return (
     <Text
+      ref={anchorRef}
       testID={testID}
       type={type}
       style={style}
@@ -197,6 +206,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessible?: boolean
   accessibilityLabel?: string
   accessibilityHint?: string
+  title?: string
 }
 export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   testID,
