@@ -8,18 +8,19 @@ export type CustomTextProps = TextProps & {
   lineHeight?: number
 }
 
-export const Text = React.forwardRef<any, CustomTextProps>(
-  ({type = 'md', children, lineHeight, style, ...props}, ref) => {
-    const theme = useTheme()
-    const typography = theme.typography[type]
-    const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
-    return (
-      <RNText
-        ref={ref}
-        style={[s.black, typography, lineHeightStyle, style]}
-        {...props}>
-        {children}
-      </RNText>
-    )
-  },
-)
+export function Text({
+  type = 'md',
+  children,
+  lineHeight,
+  style,
+  ...props
+}: React.PropsWithChildren<CustomTextProps>) {
+  const theme = useTheme()
+  const typography = theme.typography[type]
+  const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
+  return (
+    <RNText style={[s.black, typography, lineHeightStyle, style]} {...props}>
+      {children}
+    </RNText>
+  )
+}

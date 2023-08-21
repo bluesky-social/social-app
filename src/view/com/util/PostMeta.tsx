@@ -79,7 +79,6 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
             lineHeight={1.2}
             text={timeElapsed}
             accessibilityLabel={niceDate(opts.timestamp)}
-            title={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}
           />
