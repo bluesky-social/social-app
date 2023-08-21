@@ -103,7 +103,7 @@ export class SplxReactionModel {
     this.reactionSets = reactionPacks;
     Object.values(reactionPacks).forEach((reactionPack: any) => {
       reactionPack.forEach((reaction: any) => {
-        this.reactionTypes[reaction.reaction_id] = reaction;
+        this.reactionTypes[reaction.id] = reaction;
       });
     });
     this.earnedReactions['default'] = reactionPacks["default"]
@@ -131,9 +131,10 @@ export class SplxReactionModel {
   }
 
   async update(reactions: SolarplexReaction[]) {
-    this.earnedReactions["genesis"] = reactions;
+    if (this.rootStore.me.nft.assets.length) {
+      this.earnedReactions["genesis"] = reactions;
+    }
   }
-  
   async selectReactionSet(reactionSet: ReactionCollections) {
     if (this.reactionSets[reactionSet] && this.reactionSets[reactionSet].length) {
       this.curReactionsSet = reactionSet;

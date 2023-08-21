@@ -136,20 +136,21 @@ const DisplayReactions = observer(function DisplayReactions() {
             onPress={() => {}}
           /> */}
         <FlatList
-          data={GENESIS_REACTIONS}
+          data={store.reactions.reactionSets["genesis"]}
           numColumns={isMobileWeb ? 4 : 4}
           key={4}
           renderItem={({ item }) => {
+              console.log('check', store.reactions.earnedReactions["genesis"], item.reaction_id)
             if (
               store.reactions.earnedReactions["genesis"]?.find(
-                (reaction) => reaction.reaction_id === item.title,
+                (reaction) => reaction.reaction_id === item.reaction_id,
               )
             ) {
               return (
                 <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
                   <Image
                     source={{
-                      uri: item.emoji,
+                      uri: item.nft_metadata.image,
                     }}
                     style={{
                       width: isMobileWeb ? 50 : 100,
@@ -161,7 +162,7 @@ const DisplayReactions = observer(function DisplayReactions() {
             } else {
               return (
                 <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
-                  <GrayedImage image={item.emoji} />
+                  <GrayedImage image={item.nft_metadata.image} />
                 </View>
               );
             }

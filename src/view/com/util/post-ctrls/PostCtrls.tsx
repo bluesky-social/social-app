@@ -217,7 +217,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
 
   const onRemoveReaction = async () => {
     await opts
-      .onPressReaction(selectedEmoji?.id, true)
+      .onPressReaction(selectedEmoji?.id ?? '', true)
       .catch((_e) => undefined);
     setSelectedEmoji(undefined);
   };
@@ -298,16 +298,11 @@ export function PostCtrls(opts: PostCtrlsOpts) {
             : onRemoveReaction
         }
       >
-        {store.reactions.earnedReactions[store.reactions.curReactionsSet]
-          ?.length ? (
+        {reactionSet?.length ? (
           <ReactionDropdownButton
             testID="communityHeaderDropdownBtn"
             type="bare"
-            items={
-              store.reactions.earnedReactions[
-                store.reactions.curReactionsSet
-              ] as SolarplexReaction[]
-            }
+            items={reactionSet}
             style={[
               styles.btn,
               styles.secondaryBtn,

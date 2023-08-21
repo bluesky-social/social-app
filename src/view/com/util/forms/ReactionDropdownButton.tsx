@@ -56,7 +56,7 @@ interface DropdownButtonProps {
   openToRight?: boolean;
   rightOffset?: number;
   bottomOffset?: number;
-  onPressReaction: (emoji: EmojiItemProp) => void;
+  onPressReaction: (emoji: SolarplexReaction) => void;
 }
 
 export function ReactionDropdownButton({
@@ -277,7 +277,7 @@ function createDropdownMenu(
   y: number,
   width: number,
   items: DropdownItem[],
-  onPressReaction: (emoji: EmojiItemProp) => void,
+  onPressReaction: (emoji: SolarplexReaction) => void,
 ): RootSiblings {
   const onPressItem = (index: number) => {
     sibling.destroy();
@@ -359,7 +359,7 @@ const DropdownItems = ({
                 key={index}
                 style={[styles.menuItem]}
                 onPress={() => onPressItem(index)}
-                accessibilityLabel={item.title}
+                accessibilityLabel={item.nft_metadata?.name as string}
                 accessibilityHint={`Option ${index + 1} of ${numItems}`}
               >
                 {/* {item.icon && (

@@ -224,7 +224,6 @@ export const PostThreadItem = observer(function PostThreadItem({
       </View>
     );
   }
-  console.log("reactions", store.reactions.reactionTypes);
 
   if (item._isHighlightedPost) {
     return (
