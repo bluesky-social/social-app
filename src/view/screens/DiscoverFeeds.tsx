@@ -28,7 +28,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
-      () => debounce(query => feeds.search(query), 500), // debounce for 500ms
+      () => debounce(q => feeds.search(q), 500), // debounce for 500ms
       [feeds],
     )
     const onChangeQuery = React.useCallback(
@@ -59,7 +59,9 @@ export const DiscoverFeedsScreen = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
-        feeds.refresh()
+        if (!feeds.hasLoaded) {
+          feeds.refresh()
+        }
       }, [store, feeds]),
     )
 
@@ -100,7 +102,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
       <CenteredView style={[styles.container, pal.view]}>
         <View style={[isDesktopWeb && styles.containerDesktop, pal.border]}>
           <ViewHeader title="Discover Feeds" showOnDesktop />
-          <View style={{marginTop: isDesktopWeb ? 4 : 0, marginBottom: 4}}>
+          <View style={{marginTop: isDesktopWeb ? 5 : 0, marginBottom: 4}}>
             <HeaderWithInput
               isInputFocused={isInputFocused}
               query={query}
