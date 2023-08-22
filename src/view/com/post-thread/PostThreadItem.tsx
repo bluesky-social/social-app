@@ -193,7 +193,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
             <View style={styles.layoutContent}>
-              <View style={[styles.meta, styles.metaExpandedLine1]}>
+              <View
+                style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <View style={[s.flexRow]}>
                   <Link
                     style={styles.metaItem}
@@ -210,12 +211,16 @@ export const PostThreadItem = observer(function PostThreadItem({
                       )}
                     </Text>
                   </Link>
-                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                    &middot;&nbsp;
-                    <TimeElapsed timestamp={item.post.indexedAt}>
-                      {({timeElapsed}) => <>{timeElapsed}</>}
-                    </TimeElapsed>
-                  </Text>
+                  <TimeElapsed timestamp={item.post.indexedAt}>
+                    {({timeElapsed}) => (
+                      <Text
+                        type="md"
+                        style={[styles.metaItem, pal.textLight]}
+                        title={niceDate(item.post.indexedAt)}>
+                        &middot;&nbsp;{timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
                 </View>
               </View>
               <View style={styles.meta}>

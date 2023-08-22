@@ -267,13 +267,20 @@ export class ShellUiModel {
   hydrate(v: unknown) {
     if (isObj(v)) {
       if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
-        this.colorMode = v.colorMode
+        this.setColorMode(v.colorMode)
       }
     }
   }
 
   setColorMode(mode: ColorMode) {
     this.colorMode = mode
+
+    if (typeof window !== 'undefined') {
+      const html = window.document.documentElement
+      // remove any other color mode classes
+      html.className = html.className.replace(/colorMode--\w+/g, '')
+      html.classList.add(`colorMode--${mode}`)
+    }
   }
 
   setMinimalShellMode(v: boolean) {
