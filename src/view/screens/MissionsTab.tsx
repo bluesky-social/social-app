@@ -5,7 +5,9 @@ import { isDesktopWeb, isMobileWeb } from "platform/detection";
 import { CenteredView } from "view/com/util/Views.web";
 import { ClaimBtn } from "view/com/rewards/ClaimBtn";
 import { CommonNavigatorParams } from "lib/routes/types";
+import { ErrorMessage } from "view/com/util/error/ErrorMessage";
 import { GENESIS_REACTIONS } from "lib/constants";
+import { HelpTip } from "view/com/auth/util/HelpTip";
 import { Link } from "view/com/util/Link";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RadioButton } from "view/com/util/forms/RadioButton";
@@ -13,13 +15,36 @@ import React from "react";
 import { ReactionCollections } from "state/models/media/reactions";
 import { ScrollView } from "../com/util/Views";
 import { Text } from "view/com/util/text/Text";
+import { ToggleButton } from "view/com/util/forms/ToggleButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { UserAvatar } from "view/com/util/UserAvatar";
 import { ViewHeader } from "view/com/util/ViewHeader";
 import { observer } from "mobx-react-lite";
+import { useColorSchemeStyle } from "lib/hooks/useColorSchemeStyle";
 import { usePalette } from "lib/hooks/usePalette";
 import { useStores } from "state/index";
 import { withAuthRequired } from "view/com/auth/withAuthRequired";
+
+const InfoText = ({ text }: { text: string }) => {
+  const pal = usePalette("error");
+  return (
+    <View style={[pal.view, styles.outer]}>
+      <View>
+        <Image
+          style={{ width: 24, height: 24, marginRight: 8 }}
+          source={require("../../../assets/trophy.png")}
+        />
+      </View>
+      <Text
+        type="sm-medium"
+        style={[{ flex: 1, paddingRight: 10 }, pal.text, { color: "black" }]}
+        numberOfLines={2}
+      >
+        {text}
+      </Text>
+    </View>
+  );
+};
 
 export const GrayedImage = ({ image }: { image: any }) => {
   return (
@@ -62,6 +87,7 @@ const DisplayReactions = observer(function DisplayReactions() {
       ? store.reactions.selectReactionSet(reactionPack)
       : {};
   };
+
   return (
     <View
       style={[
@@ -69,20 +95,24 @@ const DisplayReactions = observer(function DisplayReactions() {
         !store.reactions.earnedReactions["genesis"]?.length && { opacity: 0.2 },
       ]}
     >
-      <TouchableOpacity onPress={() => onPressReactionPack("genesis")}>
-        <View style={styles.HeaderRow}>
-          <View style={styles.horizontalView}>
-            <UserAvatar
-              size={40}
-              avatar={"https://i.ibb.co/NLkvySY/blob.png"}
-            />
+      <View style={s.p10}>
+        <InfoText text="Reaction packs are on chain collectibles that allow you to uniquely express yourself on Solarplex posts. Engage with/create posts to win points and unlock packs!" />
+      </View>
 
+      <View style={styles.HeaderRow}>
+        <View style={styles.horizontalContainer}>
+          <UserAvatar size={25} avatar={"https://i.ibb.co/NLkvySY/blob.png"} />
+
+          <View
+            style={isMobileWeb ? styles.verticalView : styles.horizontalView}
+          >
             <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
-              @plexi.live.solarplex.xyz
+              Solarplex Genesis Reactions
             </Text>
-          </View>
-          <View>
-            <Text type="sm-bold" style={[pal.text, styles.reaction]}>
+            <Text
+              type="sm-heavy"
+              style={[pal.text, styles.textPadding, styles.reaction]}
+            >
               {Math.min(
                 store.reactions.earnedReactions.genesis?.length ?? 0,
                 11,
@@ -91,46 +121,53 @@ const DisplayReactions = observer(function DisplayReactions() {
             </Text>
           </View>
         </View>
-        <View style={styles.reactionList}>
-          <RadioButton
+
+        <ToggleButton
+          type="default-light"
+          isSelected={store.reactions.curReactionsSet === "genesis"}
+          onPress={() => onPressReactionPack("genesis")}
+          label=""
+        />
+      </View>
+      <View style={styles.reactionList}>
+        {/* <RadioButton
             label={""}
             isSelected={store.reactions.curReactionsSet === "genesis"}
             onPress={() => {}}
-          />
-          <FlatList
-            data={GENESIS_REACTIONS}
-            numColumns={isMobileWeb ? 4 : 4}
-            key={4}
-            renderItem={({ item }) => {
-              if (
-                store.reactions.earnedReactions["genesis"]?.find(
-                  (reaction) => reaction.emoji === item.emoji,
-                )
-              ) {
-                return (
-                  <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
-                    <Image
-                      source={{
-                        uri: item.emoji,
-                      }}
-                      style={{
-                        width: isMobileWeb ? 50 : 100,
-                        height: isMobileWeb ? 50 : 100,
-                      }}
-                    />
-                  </View>
-                );
-              } else {
-                return (
-                  <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
-                    <GrayedImage image={item.emoji} />
-                  </View>
-                );
-              }
-            }}
-          />
-        </View>
-      </TouchableOpacity>
+          /> */}
+        <FlatList
+          data={GENESIS_REACTIONS}
+          numColumns={isMobileWeb ? 4 : 4}
+          key={4}
+          renderItem={({ item }) => {
+            if (
+              store.reactions.earnedReactions["genesis"]?.find(
+                (reaction) => reaction.emoji === item.emoji,
+              )
+            ) {
+              return (
+                <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
+                  <Image
+                    source={{
+                      uri: item.emoji,
+                    }}
+                    style={{
+                      width: isMobileWeb ? 50 : 100,
+                      height: isMobileWeb ? 50 : 100,
+                    }}
+                  />
+                </View>
+              );
+            } else {
+              return (
+                <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
+                  <GrayedImage image={item.emoji} />
+                </View>
+              );
+            }
+          }}
+        />
+      </View>
     </View>
   );
 });
@@ -142,14 +179,16 @@ export const MissionsTab = withAuthRequired(
     const store = useStores();
 
     return (
-      <CenteredView style={styles.container}>
-        <ScrollView
-          style={[s.hContentRegion]}
-          contentContainerStyle={!isDesktopWeb && pal.viewLight}
-          scrollIndicatorInsets={{ right: 1 }}
-        >
-          <ViewHeader title="Reactions" canGoBack={false} />
-          {/* <View style={styles.HeaderRow}>
+      <View style={pal.view}>
+        <View testID="communitiesScreen" style={s.hContentRegion}>
+          <CenteredView style={styles.container}>
+            <ScrollView
+              style={[s.hContentRegion]}
+              contentContainerStyle={!isDesktopWeb && pal.viewLight}
+              scrollIndicatorInsets={{ right: 1 }}
+            >
+              <ViewHeader title="Reactions" canGoBack={false} />
+              {/* <View style={styles.HeaderRow}>
             <View style={styles.horizontalView}>
               <UserAvatar size={40} avatar={"https://picsum.photos/300/300"} />
 
@@ -180,23 +219,48 @@ export const MissionsTab = withAuthRequired(
               }}
             />
           </View> */}
-          {!store.reactions.earnedReactions["genesis"]?.length && (
-            <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
-              {" "}
-              Request Genesis NFTs from{" "}
-              <Link href="/profile/viksit.live.solarplex.xyz">
-                @viksit.live.solarplex.xyz
-              </Link>{" "}
-            </Text>
-          )}
-          <DisplayReactions />
-        </ScrollView>
-      </CenteredView>
+              {/* TODO: (Pratik) We should surely work on improving this */}
+              {!store.reactions.earnedReactions["genesis"]?.length && (
+                <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
+                  {" "}
+                  Request Genesis NFTs from{" "}
+                  <Link href="/profile/viksit.live.solarplex.xyz">
+                    @viksit.live.solarplex.xyz
+                  </Link>{" "}
+                </Text>
+              )}
+              <DisplayReactions />
+            </ScrollView>
+          </CenteredView>
+        </View>
+      </View>
     );
   }),
 );
 
 const styles = StyleSheet.create({
+  outer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FEDC9B",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
+  reactionsBox: {
+    backgroundColor: colors.gray1,
+  },
+  horizontalView: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
+  verticalView: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
   container: {
     // backgroundColor: colors.gray1,
     padding: 2,
@@ -236,10 +300,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 12,
     paddingVertical: 8,
+    flexWrap: "wrap",
   },
-  horizontalView: {
+  horizontalContainer: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    // alignItems: "center",
+    justifyContent: "space-between",
   },
   HeaderItemVStack: {
     flexDirection: "column",
@@ -247,7 +313,8 @@ const styles = StyleSheet.create({
   },
   textPadding: {
     paddingHorizontal: 4,
-    paddingVertical: 4,
+    paddingVertical: 2,
+    flexWrap: "wrap",
   },
   reactionImage: {
     width: 100,
@@ -262,14 +329,15 @@ const styles = StyleSheet.create({
   },
   reactionList: {
     width: "full",
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    paddingBottom: 10,
   },
   reaction: {
     backgroundColor: colors.gray2,
     borderRadius: 32,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
 });

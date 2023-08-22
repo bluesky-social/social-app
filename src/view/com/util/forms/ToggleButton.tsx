@@ -1,25 +1,32 @@
-import React from 'react'
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from '../text/Text'
-import {Button, ButtonType} from './Button'
-import {useTheme} from 'lib/ThemeContext'
-import {choose} from 'lib/functions'
-import {colors} from 'lib/styles'
+import { Button, ButtonType } from "./Button";
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
+
+import React from "react";
+import { Text } from "../text/Text";
+import { choose } from "lib/functions";
+import { colors } from "lib/styles";
+import { useTheme } from "lib/ThemeContext";
 
 export function ToggleButton({
-  type = 'default-light',
+  type = "default-light",
   label,
   isSelected,
   style,
   onPress,
 }: {
-  type?: ButtonType
-  label: string
-  isSelected: boolean
-  style?: StyleProp<ViewStyle>
-  onPress?: () => void
+  type?: ButtonType;
+  label: string;
+  isSelected: boolean;
+  style?: StyleProp<ViewStyle>;
+  onPress?: () => void;
 }) {
-  const theme = useTheme()
+  const theme = useTheme();
   const circleStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
     primary: {
       borderColor: theme.palette.primary.text,
@@ -30,25 +37,25 @@ export function ToggleButton({
     inverted: {
       borderColor: theme.palette.inverted.text,
     },
-    'primary-outline': {
+    "primary-outline": {
       borderColor: theme.palette.primary.border,
     },
-    'secondary-outline': {
+    "secondary-outline": {
       borderColor: theme.palette.secondary.border,
     },
-    'primary-light': {
+    "primary-light": {
       borderColor: theme.palette.primary.border,
     },
-    'secondary-light': {
+    "secondary-light": {
       borderColor: theme.palette.secondary.border,
     },
     default: {
       borderColor: theme.palette.default.border,
     },
-    'default-light': {
+    "default-light": {
       borderColor: theme.palette.default.border,
     },
-  })
+  });
   const circleFillStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(
     type,
     {
@@ -64,19 +71,19 @@ export function ToggleButton({
         backgroundColor: theme.palette.inverted.text,
         opacity: isSelected ? 1 : 0.33,
       },
-      'primary-outline': {
+      "primary-outline": {
         backgroundColor: theme.palette.primary.background,
         opacity: isSelected ? 1 : 0.5,
       },
-      'secondary-outline': {
+      "secondary-outline": {
         backgroundColor: theme.palette.secondary.background,
         opacity: isSelected ? 1 : 0.5,
       },
-      'primary-light': {
+      "primary-light": {
         backgroundColor: theme.palette.primary.background,
         opacity: isSelected ? 1 : 0.5,
       },
-      'secondary-light': {
+      "secondary-light": {
         backgroundColor: theme.palette.secondary.background,
         opacity: isSelected ? 1 : 0.5,
       },
@@ -85,51 +92,51 @@ export function ToggleButton({
           ? theme.palette.primary.background
           : colors.gray3,
       },
-      'default-light': {
+      "default-light": {
         backgroundColor: isSelected
           ? theme.palette.primary.background
           : colors.gray3,
       },
     },
-  )
+  );
   const labelStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
     primary: {
       color: theme.palette.primary.text,
-      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.primary.isLowContrast ? "500" : undefined,
     },
     secondary: {
       color: theme.palette.secondary.text,
-      fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.secondary.isLowContrast ? "500" : undefined,
     },
     inverted: {
       color: theme.palette.inverted.text,
-      fontWeight: theme.palette.inverted.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.inverted.isLowContrast ? "500" : undefined,
     },
-    'primary-outline': {
+    "primary-outline": {
       color: theme.palette.primary.textInverted,
-      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.primary.isLowContrast ? "500" : undefined,
     },
-    'secondary-outline': {
+    "secondary-outline": {
       color: theme.palette.secondary.textInverted,
-      fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.secondary.isLowContrast ? "500" : undefined,
     },
-    'primary-light': {
+    "primary-light": {
       color: theme.palette.primary.textInverted,
-      fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.primary.isLowContrast ? "500" : undefined,
     },
-    'secondary-light': {
+    "secondary-light": {
       color: theme.palette.secondary.textInverted,
-      fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.secondary.isLowContrast ? "500" : undefined,
     },
     default: {
       color: theme.palette.default.text,
-      fontWeight: theme.palette.default.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.default.isLowContrast ? "500" : undefined,
     },
-    'default-light': {
+    "default-light": {
       color: theme.palette.default.text,
-      fontWeight: theme.palette.default.isLowContrast ? '500' : undefined,
+      fontWeight: theme.palette.default.isLowContrast ? "500" : undefined,
     },
-  })
+  });
   return (
     <Button type={type} onPress={onPress} style={style}>
       <View style={styles.outer}>
@@ -142,20 +149,20 @@ export function ToggleButton({
             ]}
           />
         </View>
-        {label === '' ? null : (
+        {label === "" ? null : (
           <Text type="button" style={[labelStyle, styles.label]}>
             {label}
           </Text>
         )}
       </View>
     </Button>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   outer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   circle: {
@@ -176,4 +183,4 @@ const styles = StyleSheet.create({
   label: {
     flex: 1,
   },
-})
+});
