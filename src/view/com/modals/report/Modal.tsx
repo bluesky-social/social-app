@@ -1,10 +1,9 @@
 import React, {useState, useMemo} from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {ComAtprotoModerationDefs} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
-import {RadioGroup, RadioGroupItem} from '../../util/forms/RadioGroup'
 import {Text} from '../../util/text/Text'
 import * as Toast from '../../util/Toast'
 import {ErrorMessage} from '../../util/error/ErrorMessage'
@@ -12,25 +11,43 @@ import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
+import {ReportReasonOptions} from './ReasonOptions'
+import {CollectionId} from './types'
 
 const DMCA_LINK = 'https://bsky.app/support/copyright'
 
 export const snapPoints = [575]
 
-export function Component({
-  postUri,
-  postCid,
-}: {
-  postUri: string
-  postCid: string
-}) {
+const CollectionNames = {
+  [CollectionId.FeedGenerator]: 'Feed',
+  [CollectionId.Profile]: 'Profile',
+  [CollectionId.List]: 'List',
+  [CollectionId.Post]: 'Post',
+}
+
+type ReportComponentProps =
+  | {
+      uri: string
+      cid: string
+    }
+  | {
+      did: string
+    }
+
+export function Component(content: ReportComponentProps) {
   const store = useStores()
   const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState(false)
-  const [showTextInput, setShowTextInput] = useState(false)
+  const [showDetailsInput, setShowDetailsInput] = useState(false)
   const [error, setError] = useState<string>()
   const [issue, setIssue] = useState<string>()
   const [details, setDetails] = useState<string>()
+  const isAccountReport = 'did' in content
+  const subjectKey = isAccountReport ? content.did : content.uri
+  const atUri = useMemo(
+    () => (!isAccountReport ? new AtUri(subjectKey) : null),
+    [isAccountReport, subjectKey],
+  )
 
   const submitReport = async () => {
     setError('')
@@ -43,12 +60,14 @@ export function Component({
         Linking.openURL(DMCA_LINK)
         return
       }
+      const $type = !isAccountReport
+        ? 'com.atproto.repo.strongRef'
+        : 'com.atproto.admin.defs#repoRef'
       await store.agent.createModerationReport({
         reasonType: issue,
         subject: {
-          $type: 'com.atproto.repo.strongRef',
-          uri: postUri,
-          cid: postCid,
+          $type,
+          ...content,
         },
         reason: details,
       })
@@ -63,13 +82,13 @@ export function Component({
   }
 
   const goBack = () => {
-    setShowTextInput(false)
+    setShowDetailsInput(false)
   }
 
   return (
-    <ScrollView testID="reportPostModal" style={[s.flex1, pal.view]}>
+    <ScrollView testID="reportModal" style={[s.flex1, pal.view]}>
       <View style={styles.container}>
-        {showTextInput ? (
+        {showDetailsInput ? (
           <InputIssueDetails
             details={details}
             setDetails={setDetails}
@@ -79,12 +98,13 @@ export function Component({
           />
         ) : (
           <SelectIssue
-            setShowTextInput={setShowTextInput}
+            setShowDetailsInput={setShowDetailsInput}
             error={error}
             issue={issue}
             setIssue={setIssue}
             submitReport={submitReport}
             isProcessing={isProcessing}
+            atUri={atUri}
           />
         )}
       </View>
@@ -92,128 +112,59 @@ export function Component({
   )
 }
 
+// If no atUri is passed, that means the reporting collection is account
+const getCollectionNameForReport = (atUri: AtUri | null) => {
+  if (!atUri) return 'Account'
+  // Generic fallback for any collection being reported
+  return CollectionNames[atUri.collection as CollectionId] || 'Content'
+}
+
 const SelectIssue = ({
   error,
-  setShowTextInput,
+  setShowDetailsInput,
   issue,
   setIssue,
   submitReport,
   isProcessing,
+  atUri,
 }: {
   error: string | undefined
-  setShowTextInput: (v: boolean) => void
+  setShowDetailsInput: (v: boolean) => void
   issue: string | undefined
   setIssue: (v: string) => void
   submitReport: () => void
   isProcessing: boolean
+  atUri: AtUri | null
 }) => {
   const pal = usePalette('default')
-  const ITEMS: RadioGroupItem[] = useMemo(
-    () => [
-      {
-        key: ComAtprotoModerationDefs.REASONSPAM,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Spam
-            </Text>
-            <Text style={pal.textLight}>Excessive mentions or replies</Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONSEXUAL,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Unwanted Sexual Content
-            </Text>
-            <Text style={pal.textLight}>
-              Nudity or pornography not labeled as such
-            </Text>
-          </View>
-        ),
-      },
-      {
-        key: '__copyright__',
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Copyright Violation
-            </Text>
-            <Text style={pal.textLight}>Contains copyrighted material</Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONRUDE,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Anti-Social Behavior
-            </Text>
-            <Text style={pal.textLight}>
-              Harassment, trolling, or intolerance
-            </Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONVIOLATION,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Illegal and Urgent
-            </Text>
-            <Text style={pal.textLight}>
-              Glaring violations of law or terms of service
-            </Text>
-          </View>
-        ),
-      },
-      {
-        key: ComAtprotoModerationDefs.REASONOTHER,
-        label: (
-          <View>
-            <Text style={pal.text} type="md-bold">
-              Other
-            </Text>
-            <Text style={pal.textLight}>
-              An issue not included in these options
-            </Text>
-          </View>
-        ),
-      },
-    ],
-    [pal],
-  )
-
+  const collectionName = getCollectionNameForReport(atUri)
   const onSelectIssue = (v: string) => setIssue(v)
   const goToDetails = () => {
     if (issue === '__copyright__') {
       Linking.openURL(DMCA_LINK)
       return
     }
-    setShowTextInput(true)
+    setShowDetailsInput(true)
   }
 
   return (
     <>
-      <Text style={[pal.text, styles.title]}>Report post</Text>
+      <Text style={[pal.text, styles.title]}>Report {collectionName}</Text>
       <Text style={[pal.textLight, styles.description]}>
-        What is the issue with this post?
+        What is the issue with this {collectionName}?
       </Text>
-      <RadioGroup
-        testID="reportPostRadios"
-        items={ITEMS}
-        onSelect={onSelectIssue}
+      <ReportReasonOptions
+        atUri={atUri}
+        selectedIssue={issue}
+        onSelectIssue={onSelectIssue}
       />
       {error ? (
         <View style={s.mt10}>
           <ErrorMessage message={error} />
         </View>
       ) : undefined}
-      {issue ? (
+      {/* If no atUri is present, the report would be for account in which case, we allow sending without specifying a reason */}
+      {issue || !atUri ? (
         <>
           <SendReportButton
             onPress={submitReport}

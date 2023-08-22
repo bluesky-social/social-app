@@ -18,28 +18,35 @@ export function describeModerationCause(
   }
   if (cause.type === 'blocking') {
     return {
-      name: 'Blocked User',
+      name: 'User Blocked',
       description: 'You have blocked this user. You cannot view their content.',
     }
   }
   if (cause.type === 'blocked-by') {
     return {
-      name: 'Blocking You',
+      name: 'User Blocking You',
       description: 'This user has blocked you. You cannot view their content.',
     }
   }
+  if (cause.type === 'block-other') {
+    return {
+      name: 'Content Not Available',
+      description:
+        'This content is not available because one of the users involved has blocked the other.',
+    }
+  }
   if (cause.type === 'muted') {
-    if (cause.source.type === 'user') {
-      return {
-        name: context === 'account' ? 'Muted User' : 'Post by muted user',
-        description: 'You have muted this user',
-      }
-    } else {
+    if (cause.source.type === 'list') {
       return {
         name:
           context === 'account'
             ? `Muted by "${cause.source.list.name}"`
             : `Post by muted user ("${cause.source.list.name}")`,
+        description: 'You have muted this user',
+      }
+    } else {
+      return {
+        name: context === 'account' ? 'Muted User' : 'Post by muted user',
         description: 'You have muted this user',
       }
     }
@@ -84,4 +91,17 @@ export function isCauseALabelOnUri(
     return false
   }
   return cause.label.uri === uri
+}
+
+export function getModerationCauseKey(cause: ModerationCause): string {
+  const source =
+    cause.source.type === 'labeler'
+      ? cause.source.labeler.did
+      : cause.source.type === 'list'
+      ? cause.source.list.uri
+      : 'user'
+  if (cause.type === 'label') {
+    return `label:${cause.label.val}:${source}`
+  }
+  return `${cause.type}:${source}`
 }

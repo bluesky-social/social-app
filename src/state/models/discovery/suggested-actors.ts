@@ -85,8 +85,17 @@ export class SuggestedActorsModel {
         this.hasMore = !!cursor
         this.suggestions = this.suggestions.concat(
           actors.filter(actor => {
-            if (actor.viewer?.following) {
-              return false
+            const viewer = actor.viewer
+            if (viewer) {
+              if (
+                viewer.following ||
+                viewer.muted ||
+                viewer.mutedByList ||
+                viewer.blockedBy ||
+                viewer.blocking
+              ) {
+                return false
+              }
             }
             if (actor.did === this.rootStore.me.did) {
               return false

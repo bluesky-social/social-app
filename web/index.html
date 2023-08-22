@@ -43,6 +43,32 @@
         height: calc(100% + env(safe-area-inset-top));
       }
 
+      /* Color theming */
+      :root {
+        --text: black;
+        --background: white;
+        --backgroundLight: #F3F3F8;
+      }
+      html.colorMode--dark {
+        --text: white;
+        --background: black;
+        --backgroundLight: #26272D;
+      }
+      @media (prefers-color-scheme: light) {
+        html.colorMode--system {
+          --text: black;
+          --background: white;
+          --backgroundLight: #F3F3F8;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        html.colorMode--system {
+          --text: white;
+          --background: black;
+          --backgroundLight: #26272D;
+        }
+      }
+
       body {
         display: flex;
         /* Allows you to scroll below the viewport; default value is visible */
@@ -53,12 +79,6 @@
         -moz-osx-font-smoothing: grayscale;
         -ms-overflow-style: scrollbar;
       }
-      /* Enable for apps that support dark-theme */
-      /*@media (prefers-color-scheme: dark) {
-        body {
-          background-color: black;
-        }
-      }*/
 
       /* Remove default link styling */
       a {
@@ -112,6 +132,44 @@
       }
       .tippy-content .items {
         width: fit-content;
+      }
+
+      /* Tooltips */
+      [data-tooltip] {
+        position: relative;
+        z-index: 10;
+      }
+      [data-tooltip]::after {
+        content: attr(data-tooltip);
+        display: none;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateY(100%) translateY(8px) translateX(-50%);
+        padding: 4px 10px;
+        border-radius: 10px;
+        background: var(--backgroundLight);
+        color: var(--text);
+        text-align: center;
+        white-space: nowrap;
+        font-size: 12px;
+        z-index: 10;
+      }
+      [data-tooltip]::before {
+        content: '';
+        display: none;
+        position: absolute;
+        border-bottom: 6px solid var(--backgroundLight);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        bottom: 0;
+        left: 50%;
+        transform: translateY(100%) translateY(2px) translateX(-50%);
+        z-index: 10;
+      }
+      [data-tooltip]:hover::after,
+      [data-tooltip]:hover::before {
+        display:block;
       }
     </style>
   </head>

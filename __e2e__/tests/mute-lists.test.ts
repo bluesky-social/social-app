@@ -114,7 +114,7 @@ describe('Mute lists', () => {
 
   it('Shows the mutelist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector-2')).tap()
+    await element(by.id('selector-3')).tap()
     await element(by.id('list-Bad Ppl')).tap()
   })
 
@@ -137,5 +137,34 @@ describe('Mute lists', () => {
     await element(by.id('toggleBtn-Bad Ppl')).tap()
     await element(by.id('saveBtn')).tap()
     await expect(element(by.id('listAddRemoveUserModal'))).not.toBeVisible()
+  })
+
+  it('Can report a mute list', async () => {
+    await element(by.id('bottomBarHomeBtn')).tap()
+    // Last test leaves us in the list view so we are going back 1 screen to the lists list screen
+    await element(by.id('viewHeaderDrawerBtn')).tap()
+    // then to the moderation screen
+    await element(by.id('viewHeaderDrawerBtn')).tap()
+    // then to the home screen
+    await element(by.id('viewHeaderDrawerBtn')).tap()
+    // then open the drawer to go to settings
+    await element(by.id('viewHeaderDrawerBtn')).tap()
+    await element(by.id('menuItemButton-Settings')).tap()
+    await element(by.id('signOutBtn')).tap()
+    await expect(element(by.id('signInButton'))).toBeVisible()
+    await login(service, 'bob.test', 'hunter2')
+    await element(by.id('bottomBarSearchBtn')).tap()
+    await element(by.id('searchTextInput')).typeText('alice')
+    await element(by.id('searchAutoCompleteResult-alice.test')).tap()
+    await element(by.id('selector-3')).tap()
+    await element(by.id('list-Bad Ppl')).tap()
+    await element(by.id('reportListBtn')).tap()
+    await expect(element(by.id('reportModal'))).toBeVisible()
+    await expect(element(by.text('Report List'))).toBeVisible()
+    await element(
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonRude'),
+    ).tap()
+    await element(by.id('sendReportBtn')).tap()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 })

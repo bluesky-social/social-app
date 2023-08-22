@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.43.0",
+  "version": "1.46.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -24,7 +24,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "^0.5.4",
+    "@atproto/api": "^0.6.3",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@expo/html-elements": "^0.4.2",
@@ -69,6 +69,7 @@
     "base64-js": "^1.5.1",
     "bcp-47-match": "^2.0.3",
     "email-validator": "^2.0.4",
+    "eventemitter3": "^5.0.1",
     "expo": "~48.0.18",
     "expo-application": "~5.1.1",
     "expo-build-properties": "~0.5.1",
@@ -117,7 +118,7 @@
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.2.0",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "~2.9.0",
+    "react-native-gesture-handler": "^2.12.1",
     "react-native-get-random-values": "^1.8.0",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-crop-picker": "^0.38.1",
@@ -126,7 +127,7 @@
     "react-native-linear-gradient": "^2.6.2",
     "react-native-pager-view": "6.1.4",
     "react-native-progress": "bluesky-social/react-native-progress",
-    "react-native-reanimated": "^3.3.0",
+    "react-native-reanimated": "^3.4.2",
     "react-native-root-siblings": "^4.1.1",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.20.0",
@@ -146,7 +147,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.2.2",
+    "@atproto/dev-env": "^0.2.3",
     "@atproto/pds": "^0.2.0-beta.2",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
@@ -176,7 +177,7 @@
     "babel-loader": "^9.1.2",
     "babel-plugin-module-resolver": "^5.0.0",
     "babel-plugin-react-native-web": "^0.18.12",
-    "detox": "^20.1.2",
+    "detox": "^20.11.3",
     "eslint": "^8.19.0",
     "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-ft-flow": "^2.0.3",

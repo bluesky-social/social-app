@@ -133,8 +133,7 @@ const PostLoaded = observer(
       replyAuthorDid = urip.hostname
     }
 
-    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+    const translatorUrl = getTranslatorLink(record?.text || '')
     const needsTranslation = useMemo(
       () =>
         store.preferences.contentLanguages.length > 0 &&
@@ -266,7 +265,9 @@ const PostLoaded = observer(
                 </View>
               ) : undefined}
               {item.post.embed ? (
-                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                <ContentHider
+                  moderation={item.moderation.embed}
+                  style={styles.contentHider}>
                   <PostEmbeds
                     embed={item.post.embed}
                     moderation={item.moderation.embed}
@@ -315,8 +316,10 @@ const PostLoaded = observer(
 
 const styles = StyleSheet.create({
   outer: {
-    padding: 10,
+    paddingTop: 10,
     paddingRight: 15,
+    paddingBottom: 5,
+    paddingLeft: 10,
     borderTopWidth: 1,
   },
   layout: {
@@ -336,7 +339,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 8,
   },
   translateLink: {
     marginBottom: 12,
@@ -350,7 +352,7 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.gray2,
   },
   contentHider: {
-    marginBottom: 6,
+    marginBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,

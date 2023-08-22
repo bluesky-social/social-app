@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import {Pressable, RefreshControl, StyleSheet, View} from 'react-native'
+import {
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+  ScrollView,
+} from 'react-native'
 import {FlatList} from './Views'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -140,6 +146,8 @@ export function Selector({
   items: string[]
   onSelect?: (index: number) => void
 }) {
+  const [height, setHeight] = useState(0)
+
   const pal = usePalette('default')
   const borderColor = useColorSchemeStyle(
     {borderColor: colors.black},
@@ -151,37 +159,56 @@ export function Selector({
   }
 
   return (
-    <View style={[pal.view, styles.outer]}>
-      {items.map((item, i) => {
-        const selected = i === selectedIndex
-        return (
-          <Pressable
-            testID={`selector-${i}`}
-            key={item}
-            onPress={() => onPressItem(i)}
-            accessibilityLabel={item}
-            accessibilityHint={`Selects ${item}`}
-            // TODO: Modify the component API such that lint fails
-            // at the invocation site as well
-          >
-            <View
-              style={[
-                styles.item,
-                selected && styles.itemSelected,
-                borderColor,
-              ]}>
-              <Text
-                style={
-                  selected
-                    ? [styles.labelSelected, pal.text]
-                    : [styles.label, pal.textLight]
-                }>
-                {item}
-              </Text>
-            </View>
-          </Pressable>
-        )
-      })}
+    <View
+      style={{
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        height,
+        backgroundColor: pal.colors.background,
+      }}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{position: 'absolute'}}>
+        <View
+          style={[pal.view, styles.outer]}
+          onLayout={e => {
+            const {height} = e.nativeEvent.layout
+            setHeight(height || 60)
+          }}>
+          {items.map((item, i) => {
+            const selected = i === selectedIndex
+            return (
+              <Pressable
+                testID={`selector-${i}`}
+                key={item}
+                onPress={() => onPressItem(i)}
+                accessibilityLabel={item}
+                accessibilityHint={`Selects ${item}`}
+                // TODO: Modify the component API such that lint fails
+                // at the invocation site as well
+              >
+                <View
+                  style={[
+                    styles.item,
+                    selected && styles.itemSelected,
+                    borderColor,
+                  ]}>
+                  <Text
+                    style={
+                      selected
+                        ? [styles.labelSelected, pal.text]
+                        : [styles.label, pal.textLight]
+                    }>
+                    {item}
+                  </Text>
+                </View>
+              </Pressable>
+            )
+          })}
+        </View>
+      </ScrollView>
     </View>
   )
 }

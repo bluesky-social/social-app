@@ -120,8 +120,8 @@ export class ImageModel implements Omit<RNImage, 'size'> {
     }
   }
 
-  async setAltText(altText: string) {
-    this.altText = altText
+  setAltText(altText: string) {
+    this.altText = altText.trim()
   }
 
   // Only compress prior to upload

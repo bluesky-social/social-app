@@ -6,8 +6,9 @@ import {ActorFeedsModel} from '../lists/actor-feeds'
 import {ListsListModel} from '../lists/lists-list'
 
 export enum Sections {
-  Posts = 'Posts',
+  PostsNoReplies = 'Posts',
   PostsWithReplies = 'Posts & replies',
+  PostsWithMedia = 'Media',
   CustomAlgorithms = 'Feeds',
   Lists = 'Lists',
 }
@@ -46,6 +47,7 @@ export class ProfileUiModel {
     this.feed = new PostsFeedModel(rootStore, 'author', {
       actor: params.user,
       limit: 10,
+      filter: 'posts_no_replies',
     })
     this.algos = new ActorFeedsModel(rootStore, {actor: params.user})
     this.lists = new ListsListModel(rootStore, params.user)
@@ -53,8 +55,9 @@ export class ProfileUiModel {
 
   get currentView(): PostsFeedModel | ActorFeedsModel | ListsListModel {
     if (
-      this.selectedView === Sections.Posts ||
-      this.selectedView === Sections.PostsWithReplies
+      this.selectedView === Sections.PostsNoReplies ||
+      this.selectedView === Sections.PostsWithReplies ||
+      this.selectedView === Sections.PostsWithMedia
     ) {
       return this.feed
     } else if (this.selectedView === Sections.Lists) {
@@ -76,7 +79,11 @@ export class ProfileUiModel {
   }
 
   get selectorItems() {
-    const items = [Sections.Posts, Sections.PostsWithReplies]
+    const items = [
+      Sections.PostsNoReplies,
+      Sections.PostsWithReplies,
+      Sections.PostsWithMedia,
+    ]
     if (this.algos.hasLoaded && !this.algos.isEmpty) {
       items.push(Sections.CustomAlgorithms)
     }
@@ -90,7 +97,7 @@ export class ProfileUiModel {
     // If, for whatever reason, the selected view index is not available, default back to posts
     // This can happen when the user was focused on a view but performed an action that caused
     // the view to disappear (e.g. deleting the last list in their list of lists https://imgflip.com/i/7txu1y)
-    return this.selectorItems[this.selectedViewIndex] || Sections.Posts
+    return this.selectorItems[this.selectedViewIndex] || Sections.PostsNoReplies
   }
 
   get uiItems() {
@@ -107,24 +114,23 @@ export class ProfileUiModel {
         },
       ])
     } else {
-      // not loading, no error, show content
       if (
-        this.selectedView === Sections.Posts ||
+        this.selectedView === Sections.PostsNoReplies ||
         this.selectedView === Sections.PostsWithReplies ||
-        this.selectedView === Sections.CustomAlgorithms
+        this.selectedView === Sections.PostsWithMedia
       ) {
         if (this.feed.hasContent) {
-          if (this.selectedView === Sections.CustomAlgorithms) {
-            arr = this.algos.feeds
-          } else if (this.selectedView === Sections.Posts) {
-            arr = this.feed.nonReplyFeed
-          } else {
-            arr = this.feed.slices.slice()
-          }
+          arr = this.feed.slices.slice()
           if (!this.feed.hasMore) {
             arr = arr.concat([ProfileUiModel.END_ITEM])
           }
         } else if (this.feed.isEmpty) {
+          arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
+        }
+      } else if (this.selectedView === Sections.CustomAlgorithms) {
+        if (this.algos.hasContent) {
+          arr = this.algos.feeds
+        } else if (this.algos.isEmpty) {
           arr = arr.concat([ProfileUiModel.EMPTY_ITEM])
         }
       } else if (this.selectedView === Sections.Lists) {
@@ -143,8 +149,9 @@ export class ProfileUiModel {
 
   get showLoadingMoreFooter() {
     if (
-      this.selectedView === Sections.Posts ||
-      this.selectedView === Sections.PostsWithReplies
+      this.selectedView === Sections.PostsNoReplies ||
+      this.selectedView === Sections.PostsWithReplies ||
+      this.selectedView === Sections.PostsWithMedia
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
     } else if (this.selectedView === Sections.Lists) {
@@ -157,7 +164,34 @@ export class ProfileUiModel {
   // =
 
   setSelectedViewIndex(index: number) {
+    // ViewSelector fires onSelectView on mount
+    if (index === this.selectedViewIndex) return
+
     this.selectedViewIndex = index
+
+    let filter = 'posts_no_replies'
+    if (this.selectedView === Sections.PostsWithReplies) {
+      filter = 'posts_with_replies'
+    } else if (this.selectedView === Sections.PostsWithMedia) {
+      filter = 'posts_with_media'
+    }
+
+    this.feed = new PostsFeedModel(
+      this.rootStore,
+      'author',
+      {
+        actor: this.params.user,
+        limit: 10,
+        filter,
+      },
+      {
+        isSimpleFeed: ['posts_with_media'].includes(filter),
+      },
+    )
+
+    if (this.currentView instanceof PostsFeedModel) {
+      this.feed.setup()
+    }
   }
 
   async setup() {

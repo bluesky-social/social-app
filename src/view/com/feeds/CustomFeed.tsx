@@ -69,6 +69,7 @@ export const CustomFeed = observer(
 
     return (
       <TouchableOpacity
+        testID={`feed-${item.displayName}`}
         accessibilityRole="button"
         style={[styles.container, pal.border, style]}
         onPress={() => {

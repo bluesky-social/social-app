@@ -1,3 +1,4 @@
+import {RichText} from '@atproto/api'
 import {
   getYoutubeVideoId,
   makeRecordUri,
@@ -8,6 +9,7 @@ import {
 import {pluralize, enforceLen} from '../../src/lib/strings/helpers'
 import {ago} from '../../src/lib/strings/time'
 import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
+import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
 import {makeValidHandle, createFullHandle} from '../../src/lib/strings/handles'
 import {cleanError} from '../../src/lib/strings/errors'
 
@@ -296,11 +298,15 @@ describe('toShortUrl', () => {
     'https://bsky.app',
     'https://bsky.app/3jk7x4irgv52r',
     'https://bsky.app/3jk7x4irgv52r2313y182h9',
+    'https://very-long-domain-name.com/foo',
+    'https://very-long-domain-name.com/foo?bar=baz#andsomemore',
   ]
   const outputs = [
     'bsky.app',
     'bsky.app/3jk7x4irgv52r',
-    'bsky.app/3jk7x4irgv52r2313y...',
+    'bsky.app/3jk7x4irgv52...',
+    'very-long-domain-name.com/foo',
+    'very-long-domain-name.com/foo?bar=baz#...',
   ]
 
   it('shortens the url', () => {
@@ -350,5 +356,55 @@ describe('getYoutubeVideoId', () => {
       ),
     ).toBe('videoId')
     expect(getYoutubeVideoId('https://youtu.be/videoId')).toBe('videoId')
+  })
+})
+
+describe('shortenLinks', () => {
+  const inputs = [
+    'start https://middle.com/foo/bar?baz=bux#hash end',
+    'https://start.com/foo/bar?baz=bux#hash middle end',
+    'start middle https://end.com/foo/bar?baz=bux#hash',
+    'https://newline1.com/very/long/url/here\nhttps://newline2.com/very/long/url/here',
+    'Classic article https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+  ]
+  const outputs = [
+    [
+      'start middle.com/foo/bar?baz=... end',
+      ['https://middle.com/foo/bar?baz=bux#hash'],
+    ],
+    [
+      'start.com/foo/bar?baz=... middle end',
+      ['https://start.com/foo/bar?baz=bux#hash'],
+    ],
+    [
+      'start middle end.com/foo/bar?baz=...',
+      ['https://end.com/foo/bar?baz=bux#hash'],
+    ],
+    [
+      'newline1.com/very/long/ur...\nnewline2.com/very/long/ur...',
+      [
+        'https://newline1.com/very/long/url/here',
+        'https://newline2.com/very/long/url/here',
+      ],
+    ],
+    [
+      'Classic article socket3.wordpress.com/2018/02/03/d...',
+      [
+        'https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/',
+      ],
+    ],
+  ]
+  it('correctly shortens rich text while preserving facet URIs', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i]
+      const inputRT = new RichText({text: input})
+      inputRT.detectFacetsWithoutResolution()
+      const outputRT = shortenLinks(inputRT)
+      expect(outputRT.text).toEqual(outputs[i][0])
+      expect(outputRT.facets?.length).toEqual(outputs[i][1].length)
+      for (let j = 0; j < outputs[i][1].length; j++) {
+        expect(outputRT.facets![j].features[0].uri).toEqual(outputs[i][1][j])
+      }
+    }
   })
 })

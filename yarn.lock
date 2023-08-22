@@ -40,10 +40,10 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.5.4.tgz#81a0dc36d3fcae085092434218740b68ee28f816"
-  integrity sha512-e2M5d+w6PMEzunVWbeX4yD9pMXaP6FakQYOfj4gUz9tL05k94Qv1dcX8IFUHdWEunHijLGU2fU2SNC4jgiuLBA==
+"@atproto/api@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.3.tgz#2d604897df9098d84f3dfb3bffe1d4859513b1ba"
+  integrity sha512-vgwJn6M4wEyMm/oQKSATO3C0iRUZ/u5LTTl3E/MqV1mrWzvWLVhOqlATw7CDhEdzwJciO83ei72re6skhSp+Zg==
   dependencies:
     "@atproto/common-web" "*"
     "@atproto/uri" "*"
@@ -157,10 +157,10 @@
     one-webcrypto "^1.0.3"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.2.2.tgz#930cb63dc751b08fa0a1c69820e27587d7b38252"
-  integrity sha512-94KruFi2C52YHiSmvJKjPp3414KV9ev06Sla4BebJxm1z3/DKGhmPGDEHVke4+KPZOTR3vQ2x1WKuX87mtCp7w==
+"@atproto/dev-env@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.2.3.tgz#17f7574a85f560dbd128dc3dd7620de14ff63483"
+  integrity sha512-7Glr0NVWftXF8kvmVouNWhXX9DzTWpKhytQZkfPaIWf6jVRATgRSfts1QOet1lTx33DczqKBJb9xc0qDt4MqWw==
   dependencies:
     "@atproto/api" "*"
     "@atproto/bsky" "*"
@@ -9316,10 +9316,10 @@ detect-port-alt@^1.1.6:
     address "^1.0.1"
     debug "^2.6.0"
 
-detox@^20.1.2:
-  version "20.9.1"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-20.9.1.tgz#78c351c6d5f140d29151ebfe986362276e156d08"
-  integrity sha512-o7x9fHhOoVDZK1069RgefqIxY0B53eAnk7N5/3D8qEa8N0YmvylqzAqeYVtnzHYkveZb1pkcruzKC9jomWTEnw==
+detox@^20.11.3:
+  version "20.11.3"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-20.11.3.tgz#56d5ea869977f5a747e1be0901b279ab953f8b7b"
+  integrity sha512-kdoRAtDLFxXpjt1QlniI+WryMtf7Y8mrZ33Ql8cTR9qoCS/CThi4pweYAQm8yUPqAv1ZtT3eIm3EzRwjEosgLA==
   dependencies:
     ajv "^8.6.3"
     bunyan "^1.8.12"
@@ -10169,6 +10169,11 @@ eventemitter3@^4.0.0, eventemitter3@^4.0.4:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
+eventemitter3@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
+  integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
 events@3.3.0, events@^3.2.0, events@^3.3.0:
   version "3.3.0"
@@ -17097,10 +17102,10 @@ react-native-fs@^2.20.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@~2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"
-  integrity sha512-a0BcH3Qb1tgVqUutc6d3VuWQkI1AM3+fJx8dkxzZs9t06qA27QgURYFoklpabuWpsUTzuKRpxleykp25E8m7tg==
+react-native-gesture-handler@^2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.12.1.tgz#f11a99fb95169810c6886fad5efa01a17fd81660"
+  integrity sha512-deqh36bw82CFUV9EC4tTo2PP1i9HfCOORGS3Zmv71UYhEZEHkzZv18IZNPB+2Awzj45vLIidZxGYGFxHlDSQ5A==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
@@ -17161,10 +17166,10 @@ react-native-progress@bluesky-social/react-native-progress:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-reanimated@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.3.0.tgz#80f9d58e28fddf62fe4c1bc792337b8ab57936ab"
-  integrity sha512-LzfpPZ1qXBGy5BcUHqw3pBC0qSd22qXS3t8hWSbozXNrBkzMhhOrcILE/nEg/PHpNNp1xvGOW8NwpAMF006roQ==
+react-native-reanimated@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.4.2.tgz#744154fead6d8d31d5bd9ac617d8c84d74a6f697"
+  integrity sha512-FbtG+f1PB005vDTJSv4zAnTK7nNXi+FjFgbAM5gOzIZDajfph2BFMSUstzIsN8T77+OKuugUBmcTqLnQ24EBVg==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"

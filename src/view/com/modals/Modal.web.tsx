@@ -10,12 +10,12 @@ import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
-import * as ReportPostModal from './report/ReportPost'
-import * as ReportAccountModal from './report/ReportAccount'
+import * as ReportModal from './report/Modal'
 import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
+import * as SelfLabelModal from './SelfLabel'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
 import * as EditImageModal from './EditImage'
@@ -75,10 +75,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ProfilePreviewModal.Component {...modal} />
   } else if (modal.name === 'server-input') {
     element = <ServerInputModal.Component {...modal} />
-  } else if (modal.name === 'report-post') {
-    element = <ReportPostModal.Component {...modal} />
-  } else if (modal.name === 'report-account') {
-    element = <ReportAccountModal.Component {...modal} />
+  } else if (modal.name === 'report') {
+    element = <ReportModal.Component {...modal} />
   } else if (modal.name === 'create-or-edit-mute-list') {
     element = <CreateOrEditMuteListModal.Component {...modal} />
   } else if (modal.name === 'list-add-remove-user') {
@@ -89,6 +87,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <DeleteAccountModal.Component />
   } else if (modal.name === 'repost') {
     element = <RepostModal.Component {...modal} />
+  } else if (modal.name === 'self-label') {
+    element = <SelfLabelModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
   } else if (modal.name === 'waitlist') {

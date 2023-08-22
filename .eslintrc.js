@@ -16,6 +16,7 @@ module.exports = {
     '*.lock',
     '.husky',
     'patches',
+    '*.html',
   ],
   overrides: [
     {

@@ -53,6 +53,10 @@ async function main() {
             await server.mocker.users[user].agent.post({text: 'Post'})
           }
         }
+        if ('feeds' in url.query) {
+          console.log('Generating mock feed')
+          await server.mocker.createFeed('alice')
+        }
         if ('thread' in url.query) {
           console.log('Generating mock posts')
           const res = await server.mocker.users.bob.agent.post({

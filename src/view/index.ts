@@ -72,6 +72,8 @@ import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSq
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
 import {faSignal} from '@fortawesome/free-solid-svg-icons/faSignal'
 import {faSliders} from '@fortawesome/free-solid-svg-icons/faSliders'
+import {faSquare} from '@fortawesome/free-regular-svg-icons/faSquare'
+import {faSquareCheck} from '@fortawesome/free-regular-svg-icons/faSquareCheck'
 import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
@@ -87,6 +89,7 @@ import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
 import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
 import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
+import {faList} from '@fortawesome/free-solid-svg-icons/faList'
 
 export function setup() {
   library.add(
@@ -162,6 +165,8 @@ export function setup() {
     faShield,
     faSignal,
     faSliders,
+    faSquare,
+    faSquareCheck,
     faSquarePlus,
     faUser,
     faUsers,
@@ -177,5 +182,6 @@ export function setup() {
     faXmark,
     faPlay,
     faPause,
+    faList,
   )
 }

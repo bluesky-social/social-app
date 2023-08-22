@@ -4,9 +4,10 @@ import {
   StyleProp,
   View,
   ViewStyle,
-  Image as RNImage,
   Text,
+  InteractionManager,
 } from 'react-native'
+import {Image} from 'expo-image'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
@@ -95,14 +96,9 @@ export function PostEmbeds({
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(items, index))
       }
-      const onPressIn = (index: number) => {
-        const firstImageToShow = items[index].uri
-        RNImage.prefetch(firstImageToShow)
-        items.forEach(item => {
-          if (firstImageToShow !== item.uri) {
-            // First image already prefetched above
-            RNImage.prefetch(item.uri)
-          }
+      const onPressIn = (_: number) => {
+        InteractionManager.runAfterInteractions(() => {
+          Image.prefetch(items.map(i => i.uri))
         })
       }
 

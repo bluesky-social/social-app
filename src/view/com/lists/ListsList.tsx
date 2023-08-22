@@ -1,6 +1,5 @@
 import React, {MutableRefObject} from 'react'
 import {
-  ActivityIndicator,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -166,18 +165,6 @@ export const ListsList = observer(
       ],
     )
 
-    const Footer = React.useCallback(
-      () =>
-        listsList.isLoading ? (
-          <View style={styles.feedFooter}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <View />
-        ),
-      [listsList],
-    )
-
     return (
       <View testID={testID} style={style}>
         {data.length > 0 && (
@@ -187,7 +174,6 @@ export const ListsList = observer(
             data={data}
             keyExtractor={item => item._reactKey}
             renderItem={renderItemInner}
-            ListFooterComponent={Footer}
             refreshControl={
               <RefreshControl
                 refreshing={isRefreshing}

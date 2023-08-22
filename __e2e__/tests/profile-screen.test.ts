@@ -5,7 +5,7 @@ import {openApp, login, createServer, sleep} from '../util'
 describe('Profile screen', () => {
   let service: string
   beforeAll(async () => {
-    service = await createServer('?users&posts')
+    service = await createServer('?users&posts&feeds')
     await openApp({
       permissions: {notifications: 'YES', medialibrary: 'YES', photos: 'YES'},
     })
@@ -15,6 +15,12 @@ describe('Profile screen', () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
     await login(service, 'alice', 'hunter2')
     await element(by.id('bottomBarProfileBtn')).tap()
+  })
+
+  it('Can see feeds', async () => {
+    await element(by.id('selector-3')).tap()
+    await expect(element(by.id('feed-alices feed'))).toBeVisible()
+    await element(by.id('selector-0')).tap()
   })
 
   it('Open and close edit profile modal', async () => {
@@ -119,12 +125,12 @@ describe('Profile screen', () => {
   it('Can report another user', async () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Report Account')).tap()
-    await expect(element(by.id('reportAccountModal'))).toBeVisible()
+    await expect(element(by.id('reportModal'))).toBeVisible()
     await element(
-      by.id('reportAccountRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportAccountModal'))).not.toBeVisible()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 
   it('Can like posts', async () => {
@@ -167,11 +173,11 @@ describe('Profile screen', () => {
     const posts = by.id('feedItem-by-bob.test')
     await element(by.id('postDropdownBtn').withAncestor(posts)).atIndex(0).tap()
     await element(by.text('Report post')).tap()
-    await expect(element(by.id('reportPostModal'))).toBeVisible()
+    await expect(element(by.id('reportModal'))).toBeVisible()
     await element(
-      by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportPostModal'))).not.toBeVisible()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 })

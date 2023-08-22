@@ -105,23 +105,23 @@ describe('Thread screen', () => {
     const post = by.id('postThreadItem-by-bob.test')
     await element(by.id('postDropdownBtn').withAncestor(post)).atIndex(0).tap()
     await element(by.text('Report post')).tap()
-    await expect(element(by.id('reportPostModal'))).toBeVisible()
+    await expect(element(by.id('reportModal'))).toBeVisible()
     await element(
-      by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportPostModal'))).not.toBeVisible()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 
   it('Can report a reply post', async () => {
     const post = by.id('postThreadItem-by-carla.test')
     await element(by.id('postDropdownBtn').withAncestor(post)).atIndex(0).tap()
     await element(by.text('Report post')).tap()
-    await expect(element(by.id('reportPostModal'))).toBeVisible()
+    await expect(element(by.id('reportModal'))).toBeVisible()
     await element(
-      by.id('reportPostRadios-com.atproto.moderation.defs#reasonSpam'),
+      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
     ).tap()
     await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportPostModal'))).not.toBeVisible()
+    await expect(element(by.id('reportModal'))).not.toBeVisible()
   })
 })
