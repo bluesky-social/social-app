@@ -38,9 +38,11 @@ import {isDesktopWeb} from 'platform/detection'
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
+  hasPrecedingItem,
 }: {
   item: PostThreadItemModel
   onPostReply: () => void
+  hasPrecedingItem: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -359,8 +361,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             styles.outer,
             pal.border,
             pal.view,
-            item._showParentReplyLine && styles.noTopBorder,
-            !item._showChildReplyLine && {borderBottomWidth: 1},
+            item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
           ]}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
@@ -483,7 +484,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderBottomColor: pal.colors.border},
+              {borderTopColor: pal.colors.border},
               pal.view,
             ]}
             href={itemHref}
@@ -600,7 +601,7 @@ const styles = StyleSheet.create({
   loadMore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
     paddingLeft: 80,
     paddingRight: 20,
     paddingVertical: 12,
