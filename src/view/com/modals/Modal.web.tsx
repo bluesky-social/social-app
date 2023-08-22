@@ -28,7 +28,6 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as OnboardingModal from './OnboardingModal'
 import * as ModerationDetailsModal from './ModerationDetails'
-import * as EmojiPickerModal from './EmojiPickerModal'
 
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
@@ -114,8 +113,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <OnboardingModal.Component />
   } else if (modal.name === 'moderation-details') {
     element = <ModerationDetailsModal.Component {...modal} />
-  } else if (modal.name === 'emoji-picker') {
-    element = <EmojiPickerModal.Component />
   } else {
     return null
   }
