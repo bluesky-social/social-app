@@ -29,6 +29,7 @@ import {faCircleCheck as farCircleCheck} from '@fortawesome/free-regular-svg-ico
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons/faCircleCheck'
 import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons/faCircleExclamation'
 import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
+import {faCircleDot} from '@fortawesome/free-solid-svg-icons/faCircleDot'
 import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
@@ -122,6 +123,7 @@ export function setup() {
     farCircleCheck,
     faCircleExclamation,
     faCircleUser,
+    faCircleDot,
     faClone,
     farClone,
     faComment,

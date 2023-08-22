@@ -51,7 +51,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         icon:
           langCodes.every(code => store.preferences.hasPostLanguage(code)) &&
           langCodes.length === postLanguagesPref.length
-            ? ['fas', 'circle-check']
+            ? ['fas', 'circle-dot']
             : ['far', 'circle'],
         label: langName,
         onPress() {
