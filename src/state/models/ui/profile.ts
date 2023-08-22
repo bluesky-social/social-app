@@ -88,7 +88,7 @@ export class ProfileUiModel {
       Sections.PostsWithReplies,
       Sections.PostsWithMedia,
       this.isAuthenticatedUser && Sections.Likes,
-    ].filter(Boolean)
+    ].filter(Boolean) as string[]
     if (this.algos.hasLoaded && !this.algos.isEmpty) {
       items.push(Sections.CustomAlgorithms)
     }
