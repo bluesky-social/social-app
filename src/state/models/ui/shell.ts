@@ -143,6 +143,10 @@ export interface OnboardingModal {
   name: 'onboarding'
 }
 
+export interface EmojiPickerModal {
+  name: 'emoji-picker'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -170,6 +174,7 @@ export type Modal =
   | ServerInputModal
   | RepostModal
   | SelfLabelModal
+  | EmojiPickerModal
 
   // Bluesky access
   | WaitlistModal
