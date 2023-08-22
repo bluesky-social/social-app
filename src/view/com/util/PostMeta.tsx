@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     alignItems: isAndroid ? 'center' : 'baseline',
     paddingBottom: 2,
     gap: 4,
+    zIndex: 1,
   },
   avatar: {
     alignSelf: 'center',

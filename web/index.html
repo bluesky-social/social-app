@@ -117,14 +117,15 @@
       /* Tooltips */
       [data-tooltip] {
         position: relative;
+        z-index: 10;
       }
       [data-tooltip]::after {
         content: attr(data-tooltip);
         display:none;
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 50%;
-        transform: translateY(-100%) translateY(-8px) translateX(-50%);
+        transform: translateY(100%) translateY(8px) translateX(-50%);
         padding: 4px 10px;
         border-radius:10px;
         background:#333;
@@ -132,17 +133,19 @@
         text-align:center;
         white-space:nowrap;
         font-size: 12px;
+        z-index: 10;
       }
       [data-tooltip]::before {
         content: '';
         display: none;
         position: absolute;
-        border-top: 6px solid #333;
+        border-bottom: 6px solid #333;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        top: 0;
+        bottom: 0;
         left: 50%;
-        transform: translateY(-100%) translateY(-2px) translateX(-50%);
+        transform: translateY(100%) translateY(2px) translateX(-50%);
+        z-index: 10;
       }
       [data-tooltip]:hover::after,
       [data-tooltip]:hover::before {
