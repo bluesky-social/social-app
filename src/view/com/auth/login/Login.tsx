@@ -403,7 +403,7 @@ const LoginForm = ({
             keyboardAppearance={theme.colorScheme}
             value={identifier}
             onChangeText={str =>
-              setIdentifier((str || '').toLowerCase().trimEnd())
+              setIdentifier((str || '').toLowerCase().trim())
             }
             editable={!isProcessing}
             accessibilityLabel="Username or email address"
