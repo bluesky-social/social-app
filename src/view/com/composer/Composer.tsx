@@ -71,7 +71,7 @@ export const ComposePost = observer(function ComposePost({
       text: initMention
         ? insertMentionAt(
             `@${initMention}`,
-            initMention.length,
+            initMention.length + 1,
             `${initMention}`,
           ) // insert mention if passed in
         : '',

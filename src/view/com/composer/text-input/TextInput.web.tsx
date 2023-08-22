@@ -114,7 +114,10 @@ export const TextInput = React.forwardRef(
             }
           },
         },
-        content: richtext.text.toString(),
+        content: textToEditorJson(richtext.text.toString()),
+        onFocus: ({editor: e}) => {
+          e.chain().focus().setTextSelection(richtext.text.length).run() // focus to the end of the text
+        },
         autofocus: true,
         editable: true,
         injectCSS: true,
@@ -164,6 +167,61 @@ function editorJsonToText(json: JSONContent): string {
     text += `@${json.attrs?.id || ''}`
   }
   return text
+}
+
+function textToEditorJson(text: string): JSONContent {
+  if (text === '' || text.length === 0) {
+    return {
+      text: '',
+    }
+  }
+
+  const lines = text.split('\n')
+  const docContent: JSONContent[] = []
+
+  for (const line of lines) {
+    if (line.trim() === '') {
+      continue // skip empty lines
+    }
+
+    const paragraphContent: JSONContent[] = []
+    let position = 0
+
+    while (position < line.length) {
+      if (line[position] === '@') {
+        // Handle mentions
+        let endPosition = position + 1
+        while (endPosition < line.length && /\S/.test(line[endPosition])) {
+          endPosition++
+        }
+        const mentionId = line.substring(position + 1, endPosition)
+        paragraphContent.push({
+          type: 'mention',
+          attrs: {id: mentionId},
+        })
+        position = endPosition
+      } else {
+        // Handle regular text
+        let endPosition = line.indexOf('@', position)
+        if (endPosition === -1) endPosition = line.length
+        paragraphContent.push({
+          type: 'text',
+          text: line.substring(position, endPosition),
+        })
+        position = endPosition
+      }
+    }
+
+    docContent.push({
+      type: 'paragraph',
+      content: paragraphContent,
+    })
+  }
+
+  return {
+    type: 'doc',
+    content: docContent,
+  }
 }
 
 function editorJsonToLinks(json: JSONContent): string[] {
