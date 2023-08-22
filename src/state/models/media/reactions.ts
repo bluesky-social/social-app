@@ -28,7 +28,7 @@ export interface SolarplexReaction {
   project_id: string;
 }
 
-export type ReactionCollections = 'default' | 'squid' | 'genesis';
+// export type ReactionCollections = 'default' | 'squid' | 'genesis';
 
 export class SplxReactionModel {
   // map of posts to reactions
@@ -44,7 +44,7 @@ export class SplxReactionModel {
   earnedReactions: { [reactionSet: string]: SolarplexReaction[] } = {
     // default: DEFAULT_REACTION_EMOJIS,
   };
-  curReactionsSet: ReactionCollections = "default";
+  curReactionsSet: string = "default";
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -82,8 +82,8 @@ export class SplxReactionModel {
       ) {
         curReactionsSet = v.curReactionsSet;
       }
-      if (this.curReactionsSet) {
-        this.curReactionsSet = curReactionsSet as ReactionCollections;
+      if (curReactionsSet) {
+        this.curReactionsSet = curReactionsSet;
       }
     }
   }
@@ -135,7 +135,7 @@ export class SplxReactionModel {
       this.earnedReactions["genesis"] = reactions;
     }
   }
-  async selectReactionSet(reactionSet: ReactionCollections) {
+  async selectReactionSet(reactionSet: string) {
     if (this.reactionSets[reactionSet] && this.reactionSets[reactionSet].length) {
       this.curReactionsSet = reactionSet;
     }

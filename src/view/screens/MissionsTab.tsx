@@ -12,7 +12,6 @@ import { Link } from "view/com/util/Link";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RadioButton } from "view/com/util/forms/RadioButton";
 import React from "react";
-import { ReactionCollections } from "state/models/media/reactions";
 import { ScrollView } from "../com/util/Views";
 import { Text } from "view/com/util/text/Text";
 import { ToggleButton } from "view/com/util/forms/ToggleButton";
@@ -78,7 +77,7 @@ const DisplayReactions = observer(function DisplayReactions() {
   const pal = usePalette("default");
   const store = useStores();
 
-  const onPressReactionPack = (reactionPack: ReactionCollections) => {
+  const onPressReactionPack = (reactionPack: string) => {
     if (reactionPack === store.reactions.curReactionsSet) {
       store.reactions.selectReactionSet("default");
       return;
@@ -89,86 +88,101 @@ const DisplayReactions = observer(function DisplayReactions() {
   };
 
   return (
-    <View
-      style={[
-        pal.view,
-        !store.reactions.earnedReactions["genesis"]?.length && { opacity: 0.2 },
-      ]}
-    >
+    <View>
       <View style={s.p10}>
         <InfoText text="Reaction packs are on chain collectibles that allow you to uniquely express yourself on Solarplex posts. Engage with/create posts to win points and unlock packs!" />
       </View>
+      {Object.keys(store.reactions.reactionSets).map((reactionPack) => (
+        <View
+          style={[
+            pal.view,
+            !store.reactions.earnedReactions[reactionPack]?.length && {
+              opacity: 0.2,
+            },
+          ]}
+        >
+          <View style={styles.HeaderRow}>
+            <View style={styles.horizontalContainer}>
+              <UserAvatar
+                size={25}
+                avatar={"https://i.ibb.co/NLkvySY/blob.png"}
+              />
 
-      <View style={styles.HeaderRow}>
-        <View style={styles.horizontalContainer}>
-          <UserAvatar size={25} avatar={"https://i.ibb.co/NLkvySY/blob.png"} />
+              <View
+                style={
+                  isMobileWeb ? styles.verticalView : styles.horizontalView
+                }
+              >
+                <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
+                  Solarplex {reactionPack} Reactions
+                </Text>
+                <Text
+                  type="sm-heavy"
+                  style={[pal.text, styles.textPadding, styles.reaction]}
+                >
+                  {Math.min(
+                    store.reactions.earnedReactions[reactionPack]?.length ?? 0,
+                    11,
+                  )}
+                  /{store.reactions.reactionSets[reactionPack]?.length} Reactions
+                </Text>
+              </View>
+            </View>
 
-          <View
-            style={isMobileWeb ? styles.verticalView : styles.horizontalView}
-          >
-            <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
-              Solarplex Genesis Reactions
-            </Text>
-            <Text
-              type="sm-heavy"
-              style={[pal.text, styles.textPadding, styles.reaction]}
-            >
-              {Math.min(
-                store.reactions.earnedReactions.genesis?.length ?? 0,
-                11,
-              )}
-              /11 Reactions
-            </Text>
+            <ToggleButton
+              type="default-light"
+              isSelected={store.reactions.curReactionsSet === reactionPack}
+              onPress={() => onPressReactionPack(reactionPack)}
+              label=""
+            />
           </View>
-        </View>
-
-        <ToggleButton
-          type="default-light"
-          isSelected={store.reactions.curReactionsSet === "genesis"}
-          onPress={() => onPressReactionPack("genesis")}
-          label=""
-        />
-      </View>
-      <View style={styles.reactionList}>
-        {/* <RadioButton
+          <View style={styles.reactionList}>
+            {/* <RadioButton
             label={""}
-            isSelected={store.reactions.curReactionsSet === "genesis"}
+            isSelected={store.reactions.curReactionsSet === reactionPack}
             onPress={() => {}}
           /> */}
-        <FlatList
-          data={store.reactions.reactionSets["genesis"]}
-          numColumns={isMobileWeb ? 4 : 4}
-          key={4}
-          renderItem={({ item }) => {
-              console.log('check', store.reactions.earnedReactions["genesis"], item.reaction_id)
-            if (
-              store.reactions.earnedReactions["genesis"]?.find(
-                (reaction) => reaction.reaction_id === item.reaction_id,
-              )
-            ) {
-              return (
-                <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
-                  <Image
-                    source={{
-                      uri: item.nft_metadata.image,
-                    }}
-                    style={{
-                      width: isMobileWeb ? 50 : 100,
-                      height: isMobileWeb ? 50 : 100,
-                    }}
-                  />
-                </View>
-              );
-            } else {
-              return (
-                <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
-                  <GrayedImage image={item.nft_metadata.image} />
-                </View>
-              );
-            }
-          }}
-        />
-      </View>
+
+            <FlatList
+              data={store.reactions.reactionSets[reactionPack]}
+              numColumns={isMobileWeb ? 4 : 4}
+              key={4}
+              renderItem={({ item }) => {
+                console.log(
+                  "check",
+                  store.reactions.earnedReactions[reactionPack],
+                  item.reaction_id,
+                );
+                if (
+                  store.reactions.earnedReactions[reactionPack]?.find(
+                    (reaction) => reaction.reaction_id === item.reaction_id,
+                  )
+                ) {
+                  return (
+                    <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
+                      <Image
+                        source={{
+                          uri: item.nft_metadata.image,
+                        }}
+                        style={{
+                          width: isMobileWeb ? 50 : 100,
+                          height: isMobileWeb ? 50 : 100,
+                        }}
+                      />
+                    </View>
+                  );
+                } else {
+                  return (
+                    <View style={{ paddingHorizontal: isMobileWeb ? 8 : 12 }}>
+                      <GrayedImage image={item.nft_metadata.image} />
+                    </View>
+                  );
+                }
+              }}
+            />
+          </View>
+        </View>
+      ))}
     </View>
   );
 });
@@ -220,8 +234,8 @@ export const MissionsTab = withAuthRequired(
               }}
             />
           </View> */}
-              {/* TODO: (Pratik) We should surely work on improving this */}
-              {!store.reactions.earnedReactions["genesis"]?.length && (
+              {/* TODO: (Pratik) We should surely work on improving this
+              {!store.reactions.earnedReactions[reactionPack]?.length && (
                 <Text type="lg-heavy" style={[pal.text, styles.textPadding]}>
                   {" "}
                   Request Genesis NFTs from{" "}
@@ -229,7 +243,7 @@ export const MissionsTab = withAuthRequired(
                     @viksit.live.solarplex.xyz
                   </Link>{" "}
                 </Text>
-              )}
+              )} */}
               <DisplayReactions />
             </ScrollView>
           </CenteredView>
