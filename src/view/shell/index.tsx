@@ -68,6 +68,7 @@ const ShellInner = observer(() => {
         replyTo={store.shell.composerOpts?.replyTo}
         onPost={store.shell.composerOpts?.onPost}
         quote={store.shell.composerOpts?.quote}
+        mention={store.shell.composerOpts?.mention}
       />
       <ModalsContainer />
       <Lightbox />

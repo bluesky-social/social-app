@@ -232,6 +232,7 @@ export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
   quote?: ComposerOptsQuote
+  mention?: string // handle of user to mention
 }
 
 export class ShellUiModel {

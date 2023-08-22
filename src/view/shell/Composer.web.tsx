@@ -15,6 +15,7 @@ export const Composer = observer(
     quote,
     onPost,
     onClose,
+    mention,
   }: {
     active: boolean
     winHeight: number
@@ -22,6 +23,7 @@ export const Composer = observer(
     quote: ComposerOpts['quote']
     onPost?: ComposerOpts['onPost']
     onClose: () => void
+    mention?: ComposerOpts['mention']
   }) => {
     const pal = usePalette('default')
 
@@ -40,6 +42,7 @@ export const Composer = observer(
             quote={quote}
             onPost={onPost}
             onClose={onClose}
+            mention={mention}
           />
         </View>
       </View>

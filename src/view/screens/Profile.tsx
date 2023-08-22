@@ -92,8 +92,8 @@ export const ProfileScreen = withAuthRequired(
 
     const onPressCompose = React.useCallback(() => {
       track('ProfileScreen:PressCompose')
-      store.shell.openComposer({})
-    }, [store, track])
+      store.shell.openComposer({mention: uiState.profile.handle})
+    }, [store, track, uiState])
     const onSelectView = React.useCallback(
       (index: number) => {
         uiState.setSelectedViewIndex(index)
