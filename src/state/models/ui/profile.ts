@@ -176,11 +176,18 @@ export class ProfileUiModel {
       filter = 'posts_with_media'
     }
 
-    this.feed = new PostsFeedModel(this.rootStore, 'author', {
-      actor: this.params.user,
-      limit: 10,
-      filter,
-    })
+    this.feed = new PostsFeedModel(
+      this.rootStore,
+      'author',
+      {
+        actor: this.params.user,
+        limit: 10,
+        filter,
+      },
+      {
+        isSimpleFeed: ['posts_with_media'].includes(filter),
+      },
+    )
 
     if (this.currentView instanceof PostsFeedModel) {
       this.feed.setup()
