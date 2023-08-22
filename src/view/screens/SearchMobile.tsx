@@ -79,6 +79,8 @@ export const SearchScreen = withAuthRequired(
     }, [setQuery, autocompleteView, store])
 
     const onSubmitQuery = React.useCallback(() => {
+      if (query.length === 0) return
+
       const model = new SearchUIModel(store)
       model.fetch(query)
       setSearchUIModel(model)
