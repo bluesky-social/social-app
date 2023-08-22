@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["__e2e__", "dist"],
+  "include": ["src"]
 }
