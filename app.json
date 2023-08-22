@@ -25,12 +25,7 @@
       },
       "infoPlist": {
         "UIBackgroundModes": [
-          "fetch",
-          "processing",
           "remote-notification"
-        ],
-        "BGTaskSchedulerPermittedIdentifiers": [
-          "com.transistorsoft.fetch"
         ],
         "NSCameraUsageDescription": "Used for profile pictures, posts, and other kinds of content.",
         "NSMicrophoneUsageDescription": "Used for posts and other kinds of content.",
@@ -75,7 +70,6 @@
     },
     "plugins": [
       "expo-localization",
-      "react-native-background-fetch",
       "sentry-expo",
       [
         "expo-build-properties",

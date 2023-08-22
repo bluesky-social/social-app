@@ -114,7 +114,6 @@
     "react-dom": "^18.2.0",
     "react-native": "0.71.8",
     "react-native-appstate-hook": "^1.0.6",
-    "react-native-background-fetch": "^4.1.8",
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.2.0",
     "react-native-fs": "^2.20.0",
