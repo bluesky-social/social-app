@@ -418,7 +418,7 @@ function CustomHandleForm({
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                _atproto.
+                _atproto
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
