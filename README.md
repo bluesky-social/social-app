@@ -23,8 +23,7 @@ After completing this process, run the following command to ensure the .vercel c
 cp -r web-build/.vercel web/.vercel
 ```
 
-### Deprecated [Original Bluesky README code, here for completeness]
-Welcome friends! This is the codebase for the Bluesky Social app. It serves as a resource to engineers building on the [AT Protocol](https://atproto.com).
+
 
 Links:
 
@@ -68,14 +67,8 @@ Please be sure to:
 - Change any support links (feedback, email, terms of service, etc) to your own systems.
 - Replace any analytics or error-collection systems with your own so we don't get super confused.
 
-## Security disclosures
-
-If you discover any security issues, please send an email to security@bsky.app. The email is automatically CCed to the entire team and we'll respond promptly.
 
 ## License (MIT)
 
 See [./LICENSE](./LICENSE) for the full license.
 
-## P.S.
-
-We ❤️ you and all of the ways you support us. Thank you for making Bluesky a great place!
