@@ -11,8 +11,17 @@ import {cleanError} from 'lib/strings/errors'
 import {FeedTuner} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
+import {FeedViewPostsSlice} from 'lib/api/feed-manip'
 
 const PAGE_SIZE = 30
+
+type Options = {
+  /**
+   * Formats the feed in a flat array with no threading of replies, just
+   * top-level posts.
+   */
+  isSimpleFeed?: boolean
+}
 
 type QueryParams =
   | GetTimeline.QueryParams
@@ -35,6 +44,7 @@ export class PostsFeedModel {
   pollCursor: string | undefined
   tuner = new FeedTuner()
   pageSize = PAGE_SIZE
+  options: Options = {}
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
@@ -49,6 +59,7 @@ export class PostsFeedModel {
     public rootStore: RootStoreModel,
     public feedType: 'home' | 'author' | 'custom',
     params: QueryParams,
+    options?: Options,
   ) {
     makeAutoObservable(
       this,
@@ -60,6 +71,7 @@ export class PostsFeedModel {
       {autoBind: true},
     )
     this.params = params
+    this.options = options || {}
   }
 
   get hasContent() {
@@ -354,7 +366,9 @@ export class PostsFeedModel {
       this.rootStore.posts.fromFeedItem(item)
     }
 
-    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
+    const slices = this.options.isSimpleFeed
+      ? res.data.feed.map(item => new FeedViewPostsSlice([item]))
+      : this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
