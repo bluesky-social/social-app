@@ -8,6 +8,7 @@ import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 import {StyleProp, ViewStyle} from 'react-native'
+import {isWeb} from 'platform/detection'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -275,7 +276,7 @@ export class ShellUiModel {
   setColorMode(mode: ColorMode) {
     this.colorMode = mode
 
-    if (typeof window !== 'undefined') {
+    if (isWeb && typeof window !== 'undefined') {
       const html = window.document.documentElement
       // remove any other color mode classes
       html.className = html.className.replace(/colorMode--\w+/g, '')
