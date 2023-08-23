@@ -3,6 +3,8 @@ import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
 import {devicePlatform, isIOS} from 'platform/detection'
 
+// TODO prod did = did:web:api.bsky.app
+
 export function init(store: RootStoreModel) {
   store.onUnreadNotifications(count => Notifications.setBadgeCountAsync(count))
 
@@ -17,15 +19,16 @@ export function init(store: RootStoreModel) {
     const token = await getPushToken()
     if (token) {
       try {
-        await store.agent.api.app.bsky.unspecced.registerPushNotification({
+        await store.agent.api.app.bsky.notification.registerPush({
+          serviceDid: 'did:web:api.staging.bsky.dev',
           platform: devicePlatform,
           token: token.data,
-          endpoint: 'app.bsky.unspecced.registerPushNotification',
           appId: 'xyz.blueskyweb.app',
         })
-        store.log.debug(
-          'Notifications: Sent push token' + token.data + token.type,
-        )
+        store.log.debug('Notifications: Sent push token (init)', {
+          type: token.type,
+          token: token.data,
+        })
       } catch (error) {
         store.log.error('Notifications: Failed to set push token', error)
       }
@@ -35,15 +38,18 @@ export function init(store: RootStoreModel) {
     // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
     Notifications.addPushTokenListener(async ({data: t, type}) => {
       store.log.debug('Notifications: Push token changed', {t, type})
-      if (token) {
+      if (t) {
         try {
-          await store.agent.api.app.bsky.unspecced.registerPushNotification({
+          await store.agent.api.app.bsky.notification.registerPush({
+            serviceDid: 'did:web:api.staging.bsky.dev',
             platform: devicePlatform,
             token: t,
-            endpoint: 'app.bsky.unspecced.registerPushNotification',
-            appId: 'xyz.blueskyweb',
+            appId: 'xyz.blueskyweb.app',
           })
-          store.log.debug('Notifications: Sent push token', t + type)
+          store.log.debug('Notifications: Sent push token (event)', {
+            type,
+            token: t,
+          })
         } catch (error) {
           store.log.error('Notifications: Failed to set push token', error)
         }
