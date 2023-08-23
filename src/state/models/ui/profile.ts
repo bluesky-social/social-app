@@ -9,6 +9,7 @@ export enum Sections {
   PostsNoReplies = 'Posts',
   PostsWithReplies = 'Posts & replies',
   PostsWithMedia = 'Media',
+  Likes = 'Likes',
   CustomAlgorithms = 'Feeds',
   Lists = 'Lists',
 }
@@ -21,6 +22,8 @@ export class ProfileUiModel {
   static LOADING_ITEM = {_reactKey: '__loading__'}
   static END_ITEM = {_reactKey: '__end__'}
   static EMPTY_ITEM = {_reactKey: '__empty__'}
+
+  isAuthenticatedUser = false
 
   // data
   profile: ProfileModel
@@ -57,7 +60,8 @@ export class ProfileUiModel {
     if (
       this.selectedView === Sections.PostsNoReplies ||
       this.selectedView === Sections.PostsWithReplies ||
-      this.selectedView === Sections.PostsWithMedia
+      this.selectedView === Sections.PostsWithMedia ||
+      this.selectedView === Sections.Likes
     ) {
       return this.feed
     } else if (this.selectedView === Sections.Lists) {
@@ -83,7 +87,8 @@ export class ProfileUiModel {
       Sections.PostsNoReplies,
       Sections.PostsWithReplies,
       Sections.PostsWithMedia,
-    ]
+      this.isAuthenticatedUser && Sections.Likes,
+    ].filter(Boolean) as string[]
     if (this.algos.hasLoaded && !this.algos.isEmpty) {
       items.push(Sections.CustomAlgorithms)
     }
@@ -117,7 +122,8 @@ export class ProfileUiModel {
       if (
         this.selectedView === Sections.PostsNoReplies ||
         this.selectedView === Sections.PostsWithReplies ||
-        this.selectedView === Sections.PostsWithMedia
+        this.selectedView === Sections.PostsWithMedia ||
+        this.selectedView === Sections.Likes
       ) {
         if (this.feed.hasContent) {
           arr = this.feed.slices.slice()
@@ -151,7 +157,8 @@ export class ProfileUiModel {
     if (
       this.selectedView === Sections.PostsNoReplies ||
       this.selectedView === Sections.PostsWithReplies ||
-      this.selectedView === Sections.PostsWithMedia
+      this.selectedView === Sections.PostsWithMedia ||
+      this.selectedView === Sections.Likes
     ) {
       return this.feed.hasContent && this.feed.hasMore && this.feed.isLoading
     } else if (this.selectedView === Sections.Lists) {
@@ -169,27 +176,45 @@ export class ProfileUiModel {
 
     this.selectedViewIndex = index
 
-    let filter = 'posts_no_replies'
-    if (this.selectedView === Sections.PostsWithReplies) {
-      filter = 'posts_with_replies'
-    } else if (this.selectedView === Sections.PostsWithMedia) {
-      filter = 'posts_with_media'
-    }
+    if (
+      this.selectedView === Sections.PostsNoReplies ||
+      this.selectedView === Sections.PostsWithReplies ||
+      this.selectedView === Sections.PostsWithMedia
+    ) {
+      let filter = 'posts_no_replies'
+      if (this.selectedView === Sections.PostsWithReplies) {
+        filter = 'posts_with_replies'
+      } else if (this.selectedView === Sections.PostsWithMedia) {
+        filter = 'posts_with_media'
+      }
 
-    this.feed = new PostsFeedModel(
-      this.rootStore,
-      'author',
-      {
-        actor: this.params.user,
-        limit: 10,
-        filter,
-      },
-      {
-        isSimpleFeed: ['posts_with_media'].includes(filter),
-      },
-    )
+      this.feed = new PostsFeedModel(
+        this.rootStore,
+        'author',
+        {
+          actor: this.params.user,
+          limit: 10,
+          filter,
+        },
+        {
+          isSimpleFeed: ['posts_with_media'].includes(filter),
+        },
+      )
 
-    if (this.currentView instanceof PostsFeedModel) {
+      this.feed.setup()
+    } else if (this.selectedView === Sections.Likes) {
+      this.feed = new PostsFeedModel(
+        this.rootStore,
+        'likes',
+        {
+          actor: this.params.user,
+          limit: 10,
+        },
+        {
+          isSimpleFeed: true,
+        },
+      )
+
       this.feed.setup()
     }
   }
@@ -203,6 +228,8 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
+    this.isAuthenticatedUser =
+      this.profile.did === this.rootStore.session.currentSession?.did
     this.algos.refresh()
     // HACK: need to use the DID as a param, not the username -prf
     this.lists.source = this.profile.did

@@ -212,6 +212,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
+    store.preferences.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)

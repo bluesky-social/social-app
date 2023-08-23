@@ -225,10 +225,22 @@ export class NotificationsFeedItemModel {
   }
 
   setAdditionalData(additionalPost: AppBskyFeedDefs.PostView) {
-    this.additionalPost = PostThreadModel.fromPostView(
-      this.rootStore,
-      additionalPost,
-    )
+    if (this.additionalPost) {
+      this.additionalPost._replaceAll({
+        success: true,
+        headers: {},
+        data: {
+          thread: {
+            post: additionalPost,
+          },
+        },
+      })
+    } else {
+      this.additionalPost = PostThreadModel.fromPostView(
+        this.rootStore,
+        additionalPost,
+      )
+    }
   }
 }
 
