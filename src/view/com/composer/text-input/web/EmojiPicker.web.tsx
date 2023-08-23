@@ -1,8 +1,10 @@
 import React from 'react'
 import Picker from '@emoji-mart/react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {textInputWebEmitter} from '../TextInput.web'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {usePalette} from 'lib/hooks/usePalette'
 
 export type Emoji = {
   aliases?: string[]
@@ -16,6 +18,7 @@ export type Emoji = {
 }
 
 export function EmojiPickerButton() {
+  const pal = usePalette('default')
   const [open, setOpen] = React.useState(false)
   const onOpenChange = (o: boolean) => {
     setOpen(o)
@@ -24,7 +27,11 @@ export function EmojiPickerButton() {
   return (
     <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger style={styles.trigger}>
-        <Text style={styles.triggerText}>😀</Text>
+        <FontAwesomeIcon
+          icon={['far', 'face-smile']}
+          color={pal.colors.link}
+          size={22}
+        />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
@@ -67,10 +74,8 @@ const styles = StyleSheet.create({
   trigger: {
     backgroundColor: 'transparent',
     border: 'none',
+    paddingTop: 4,
     paddingHorizontal: 10,
     cursor: 'pointer',
-  },
-  triggerText: {
-    fontSize: 24,
   },
 })
