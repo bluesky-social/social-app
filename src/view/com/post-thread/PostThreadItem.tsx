@@ -38,9 +38,11 @@ import {isDesktopWeb} from 'platform/detection'
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
+  hasPrecedingItem,
 }: {
   item: PostThreadItemModel
   onPostReply: () => void
+  hasPrecedingItem: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -191,7 +193,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
             <View style={styles.layoutContent}>
-              <View style={[styles.meta, styles.metaExpandedLine1]}>
+              <View
+                style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <View style={[s.flexRow]}>
                   <Link
                     style={styles.metaItem}
@@ -208,12 +211,16 @@ export const PostThreadItem = observer(function PostThreadItem({
                       )}
                     </Text>
                   </Link>
-                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                    &middot;&nbsp;
-                    <TimeElapsed timestamp={item.post.indexedAt}>
-                      {({timeElapsed}) => <>{timeElapsed}</>}
-                    </TimeElapsed>
-                  </Text>
+                  <TimeElapsed timestamp={item.post.indexedAt}>
+                    {({timeElapsed}) => (
+                      <Text
+                        type="md"
+                        style={[styles.metaItem, pal.textLight]}
+                        title={niceDate(item.post.indexedAt)}>
+                        &middot;&nbsp;{timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
                 </View>
               </View>
               <View style={styles.meta}>
@@ -359,8 +366,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             styles.outer,
             pal.border,
             pal.view,
-            item._showParentReplyLine && styles.noTopBorder,
-            !item._showChildReplyLine && {borderBottomWidth: 1},
+            item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
           ]}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
@@ -483,7 +489,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderBottomColor: pal.colors.border},
+              {borderTopColor: pal.colors.border},
               pal.view,
             ]}
             href={itemHref}
@@ -600,7 +606,7 @@ const styles = StyleSheet.create({
   loadMore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
     paddingLeft: 80,
     paddingRight: 20,
     paddingVertical: 12,

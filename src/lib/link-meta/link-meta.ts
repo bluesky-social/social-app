@@ -58,6 +58,7 @@ export async function getLinkMeta(
       `${LINK_META_PROXY(
         store.session.currentSession?.service || '',
       )}${encodeURIComponent(url)}`,
+      {signal: controller.signal},
     )
 
     const body = await response.json()

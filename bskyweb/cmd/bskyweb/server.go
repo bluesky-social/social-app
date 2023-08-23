@@ -137,7 +137,6 @@ func serve(cctx *cli.Context) error {
 	//
 	// configure routes
 	//
-
 	// static files
 	staticHandler := http.FileServer(func() http.FileSystem {
 		if debug {
@@ -150,13 +149,28 @@ func serve(cctx *cli.Context) error {
 		}
 		return http.FS(fsys)
 	}())
+
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v4", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v6", echo.WrapHandler(staticHandler))
-	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
 	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
 	e.GET("/security.txt", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
+	})
+	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			path := c.Request().URL.Path
+			maxAge := 1 * (60 * 60) // default is 1 hour
+
+			// Cache javascript and images files for 1 week, which works because
+			// they're always versioned (e.g. /static/js/main.64c14927.js)
+			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") {
+				maxAge = 7 * (60 * 60 * 24) // 1 week
+			}
+
+			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+			return next(c)
+		}
 	})
 
 	// home
