@@ -16,24 +16,34 @@ export type Emoji = {
 }
 
 export function EmojiPickerButton() {
+  const [open, setOpen] = React.useState(false)
+  const onOpenChange = (o: boolean) => {
+    setOpen(o)
+  }
+
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger style={styles.trigger}>
         <Text style={styles.triggerText}>😀</Text>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content>
-          <EmojiPicker />
+          <EmojiPicker
+            close={() => {
+              setOpen(false)
+            }}
+          />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
   )
 }
 
-export function EmojiPicker() {
+export function EmojiPicker({close}: {close: () => void}) {
   const onInsert = (emoji: Emoji) => {
     textInputWebEmitter.emit('emoji-inserted', emoji)
+    close()
   }
   return (
     <View style={styles.mask}>

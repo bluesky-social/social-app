@@ -136,7 +136,7 @@ export const TextInput = React.forwardRef(
 
     const onEmojiInserted = React.useCallback(
       (emoji: Emoji) => {
-        editor?.chain().focus().insertContent(emoji.native).run()
+        editor?.chain().focus('end').insertContent(emoji.native).run()
       },
       [editor],
     )
