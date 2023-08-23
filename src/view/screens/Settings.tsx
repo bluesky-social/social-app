@@ -505,7 +505,7 @@ export const SettingsScreen = withAuthRequired(
               System log
             </Text>
           </TouchableOpacity>
-          {isDesktopWeb ? (
+          {isDesktopWeb || __DEV__ ? (
             <ToggleButton
               type="default-light"
               label="Experiment: Use AppView Proxy"

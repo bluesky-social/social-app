@@ -24,7 +24,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "^0.6.5",
+    "@atproto/api": "^0.6.6",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@expo/html-elements": "^0.4.2",
@@ -36,7 +36,6 @@
     "@gorhom/bottom-sheet": "^4.4.7",
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.2.0",
-    "@notifee/react-native": "^7.4.0",
     "@react-native-async-storage/async-storage": "^1.17.6",
     "@react-native-camera-roll/camera-roll": "^5.2.2",
     "@react-native-clipboard/clipboard": "^1.10.0",
@@ -83,6 +82,7 @@
     "expo-image-picker": "^14.1.1",
     "expo-localization": "~14.1.1",
     "expo-media-library": "~15.2.3",
+    "expo-notifications": "~0.18.1",
     "expo-sharing": "~11.2.2",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
@@ -114,7 +114,6 @@
     "react-dom": "^18.2.0",
     "react-native": "0.71.8",
     "react-native-appstate-hook": "^1.0.6",
-    "react-native-background-fetch": "^4.1.8",
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.2.0",
     "react-native-fs": "^2.20.0",

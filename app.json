@@ -25,11 +25,7 @@
       },
       "infoPlist": {
         "UIBackgroundModes": [
-          "fetch",
-          "processing"
-        ],
-        "BGTaskSchedulerPermittedIdentifiers": [
-          "com.transistorsoft.fetch"
+          "remote-notification"
         ],
         "NSCameraUsageDescription": "Used for profile pictures, posts, and other kinds of content.",
         "NSMicrophoneUsageDescription": "Used for posts and other kinds of content.",
@@ -48,6 +44,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "xyz.blueskyweb.app",
       "intentFilters": [
         {
@@ -73,7 +70,6 @@
     },
     "plugins": [
       "expo-localization",
-      "react-native-background-fetch",
       "sentry-expo",
       [
         "expo-build-properties",

@@ -478,36 +478,6 @@ export class NotificationsFeedModel {
     }
   }
 
-  /**
-   * Used in background fetch to trigger notifications
-   */
-  async getNewMostRecent(): Promise<NotificationsFeedItemModel | undefined> {
-    let old = this.mostRecentNotificationUri
-    const res = await this.rootStore.agent.listNotifications({
-      limit: 1,
-    })
-    if (!res.data.notifications[0] || old === res.data.notifications[0].uri) {
-      return
-    }
-    this.mostRecentNotificationUri = res.data.notifications[0].uri
-    const notif = new NotificationsFeedItemModel(
-      this.rootStore,
-      'mostRecent',
-      res.data.notifications[0],
-    )
-    const addedUri = notif.additionalDataUri
-    if (addedUri) {
-      const postsRes = await this.rootStore.agent.app.bsky.feed.getPosts({
-        uris: [addedUri],
-      })
-      const post = postsRes.data.posts[0]
-      notif.setAdditionalData(post)
-      this.rootStore.posts.set(post.uri, post)
-    }
-    const filtered = this._filterNotifications([notif])
-    return filtered[0]
-  }
-
   // state transitions
   // =
 

@@ -12,7 +12,7 @@ import {s} from 'lib/styles'
 import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from './view/shell'
-import * as notifee from 'lib/notifee'
+import * as notifications from 'lib/notifications/notifications'
 import * as analytics from 'lib/analytics/analytics'
 import * as Toast from './view/com/util/Toast'
 import {handleLink} from './Navigation'
@@ -30,7 +30,7 @@ const App = observer(() => {
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
-      notifee.init(store)
+      notifications.init(store)
       SplashScreen.hideAsync()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {

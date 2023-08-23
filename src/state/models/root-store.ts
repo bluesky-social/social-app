@@ -6,7 +6,6 @@ import {makeAutoObservable} from 'mobx'
 import {BskyAgent} from '@atproto/api'
 import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
-import * as BgScheduler from 'lib/bg-scheduler'
 import {z} from 'zod'
 import {isObj, hasProp} from 'lib/type-guards'
 import {LogModel} from './log'
@@ -16,7 +15,6 @@ import {HandleResolutionsCache} from './cache/handle-resolutions'
 import {ProfilesCache} from './cache/profiles-view'
 import {PostsCache} from './cache/posts'
 import {LinkMetasCache} from './cache/link-metas'
-import {NotificationsFeedItemModel} from './feeds/notifications'
 import {MeModel} from './me'
 import {InvitedUsers} from './invited-users'
 import {PreferencesModel} from './ui/preferences'
@@ -61,7 +59,6 @@ export class RootStoreModel {
       serialize: false,
       hydrate: false,
     })
-    this.initBgFetch()
   }
 
   setAppInfo(info: AppInfo) {
@@ -248,62 +245,6 @@ export class RootStoreModel {
   }
   emitUnreadNotifications(count: number) {
     DeviceEventEmitter.emit('unread-notifications', count)
-  }
-
-  // a notification has been queued for push
-  onPushNotification(
-    handler: (notif: NotificationsFeedItemModel) => void,
-  ): EmitterSubscription {
-    return DeviceEventEmitter.addListener('push-notification', handler)
-  }
-  emitPushNotification(notif: NotificationsFeedItemModel) {
-    DeviceEventEmitter.emit('push-notification', notif)
-  }
-
-  // background fetch
-  // =
-  // - we use this to poll for unread notifications, which is not "ideal" behavior but
-  //   gives us a solution for push-notifications that work against any pds
-
-  initBgFetch() {
-    // NOTE
-    // background fetch runs every 15 minutes *at most* and will get slowed down
-    // based on some heuristics run by iOS, meaning it is not a reliable form of delivery
-    // -prf
-    BgScheduler.configure(
-      this.onBgFetch.bind(this),
-      this.onBgFetchTimeout.bind(this),
-    ).then(status => {
-      this.log.debug(`Background fetch initiated, status: ${status}`)
-    })
-  }
-
-  async onBgFetch(taskId: string) {
-    this.log.debug(`Background fetch fired for task ${taskId}`)
-    if (this.session.hasSession) {
-      const res = await this.agent.countUnreadNotifications()
-      const hasNewNotifs = this.me.notifications.unreadCount !== res.data.count
-      this.emitUnreadNotifications(res.data.count)
-      this.log.debug(
-        `Background fetch received unread count = ${res.data.count}`,
-      )
-      if (hasNewNotifs) {
-        this.log.debug(
-          'Background fetch detected potentially a new notification',
-        )
-        const mostRecent = await this.me.notifications.getNewMostRecent()
-        if (mostRecent) {
-          this.log.debug('Got the notification, triggering a push')
-          this.emitPushNotification(mostRecent)
-        }
-      }
-    }
-    BgScheduler.finish(taskId)
-  }
-
-  onBgFetchTimeout(taskId: string) {
-    this.log.debug(`Background fetch timed out for task ${taskId}`)
-    BgScheduler.finish(taskId)
   }
 }
 
