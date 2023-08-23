@@ -9,4 +9,9 @@ if (!globalThis.Intl?.Segmenter) {
   const script = document.createElement('script')
   script.setAttribute('src', '/static/js/intl-segmenter-polyfill.min.js')
   document.head.appendChild(script)
+
+  // loading emoji mart data
+  const emojiMartScript = document.createElement('script')
+  emojiMartScript.setAttribute('src', '/static/js/emoji-mart-data.js')
+  document.head.appendChild(emojiMartScript)
 }
