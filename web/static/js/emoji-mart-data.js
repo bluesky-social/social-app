@@ -1,4 +1,4 @@
-const response = await fetch('https://cdn.jsdelivr.net/npm/@emoji-mart/data')
+const response = await fetch('/static/emonjis.2023.json')
 
 const emojiMartData = await response.json()
 
