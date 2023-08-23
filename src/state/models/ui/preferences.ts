@@ -33,6 +33,9 @@ const LABEL_GROUPS = [
   'impersonation',
 ]
 const VISIBILITY_VALUES = ['show', 'warn', 'hide']
+const DEFAULT_LANG_CODES = (deviceLocales || [])
+  .concat(['en', 'ja', 'pt', 'de'])
+  .slice(0, 6)
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -51,7 +54,8 @@ export class LabelPreferencesModel {
 export class PreferencesModel {
   adultContentEnabled = !isIOS
   contentLanguages: string[] = deviceLocales || []
-  postLanguages: string[] = deviceLocales || []
+  postLanguage: string = deviceLocales[0] || 'en'
+  postLanguageHistory: string[] = DEFAULT_LANG_CODES
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
@@ -71,7 +75,8 @@ export class PreferencesModel {
   serialize() {
     return {
       contentLanguages: this.contentLanguages,
-      postLanguages: this.postLanguages,
+      postLanguage: this.postLanguage,
+      postLanguageHistory: this.postLanguageHistory,
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
@@ -101,16 +106,23 @@ export class PreferencesModel {
         // default to the device languages
         this.contentLanguages = deviceLocales
       }
-      // check if post languages in preferences exist, otherwise default to device languages
-      if (
-        hasProp(v, 'postLanguages') &&
-        Array.isArray(v.postLanguages) &&
-        typeof v.postLanguages.every(item => typeof item === 'string')
-      ) {
-        this.postLanguages = v.postLanguages
+      if (hasProp(v, 'postLanguage') && typeof v.postLanguage === 'string') {
+        this.postLanguage = v.postLanguage
       } else {
         // default to the device languages
-        this.postLanguages = deviceLocales
+        this.postLanguage = deviceLocales[0] || 'en'
+      }
+      if (
+        hasProp(v, 'postLanguageHistory') &&
+        Array.isArray(v.postLanguageHistory) &&
+        typeof v.postLanguageHistory.every(item => typeof item === 'string')
+      ) {
+        this.postLanguageHistory = v.postLanguageHistory
+          .concat(DEFAULT_LANG_CODES)
+          .slice(0, 6)
+      } else {
+        // default to a starter set
+        this.postLanguageHistory = DEFAULT_LANG_CODES
       }
       // check if content labels in preferences exist, then hydrate
       if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
@@ -279,7 +291,8 @@ export class PreferencesModel {
       runInAction(() => {
         this.contentLabels = new LabelPreferencesModel()
         this.contentLanguages = deviceLocales
-        this.postLanguages = deviceLocales
+        this.postLanguage = deviceLocales ? deviceLocales.join(',') : 'en'
+        this.postLanguageHistory = DEFAULT_LANG_CODES
         this.savedFeeds = []
         this.pinnedFeeds = []
       })
@@ -305,20 +318,54 @@ export class PreferencesModel {
     }
   }
 
+  /**
+   * A getter that splits `this.postLanguage` into an array of strings.
+   *
+   * This was previously the main field on this model, but now we're
+   * concatenating lang codes to make multi-selection a little better.
+   */
+  get postLanguages() {
+    // filter out empty strings if exist
+    return this.postLanguage.split(',').filter(Boolean)
+  }
+
   hasPostLanguage(code2: string) {
     return this.postLanguages.includes(code2)
   }
 
   togglePostLanguage(code2: string) {
     if (this.hasPostLanguage(code2)) {
-      this.postLanguages = this.postLanguages.filter(lang => lang !== code2)
+      this.postLanguage = this.postLanguages
+        .filter(lang => lang !== code2)
+        .join(',')
     } else {
-      this.postLanguages = this.postLanguages.concat([code2])
+      // sort alphabetically for deterministic comparison in context menu
+      this.postLanguage = this.postLanguages
+        .concat([code2])
+        .sort((a, b) => a.localeCompare(b))
+        .join(',')
     }
   }
 
-  setPostLanguage(code2: string) {
-    this.postLanguages = [code2]
+  setPostLanguage(commaSeparatedLangCodes: string) {
+    this.postLanguage = commaSeparatedLangCodes
+  }
+
+  /**
+   * Saves whatever language codes are currently selected into a history array,
+   * which is then used to populate the language selector menu.
+   */
+  savePostLanguageToHistory() {
+    // filter out duplicate `this.postLanguage` if exists, and prepend
+    // value to start of array
+    this.postLanguageHistory = [this.postLanguage]
+      .concat(
+        this.postLanguageHistory.filter(
+          commaSeparatedLangCodes =>
+            commaSeparatedLangCodes !== this.postLanguage,
+        ),
+      )
+      .slice(0, 6)
   }
 
   getReadablePostLanguages() {
