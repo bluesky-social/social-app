@@ -14,7 +14,6 @@ import (
 	"syscall"
 	"time"
 
-	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -38,9 +37,7 @@ type Server struct {
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
-	pdsHost := cctx.String("pds-host")
-	atpHandle := cctx.String("handle")
-	atpPassword := cctx.String("password")
+	appviewHost := cctx.String("appview-host")
 	mailmodoAPIKey := cctx.String("mailmodo-api-key")
 	mailmodoListName := cctx.String("mailmodo-list-name")
 
@@ -50,27 +47,11 @@ func serve(cctx *cli.Context) error {
 	// Mailmodo client.
 	mailmodo := NewMailmodo(mailmodoAPIKey, mailmodoListName)
 
-	// create a new session
-	// TODO: does this work with no auth at all?
+	// create a new session (no auth)
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
-		Host:   pdsHost,
-		Auth: &xrpc.AuthInfo{
-			Handle: atpHandle,
-		},
+		Host:   appviewHost,
 	}
-
-	auth, err := comatproto.ServerCreateSession(context.TODO(), xrpcc, &comatproto.ServerCreateSession_Input{
-		Identifier: xrpcc.Auth.Handle,
-		Password:   atpPassword,
-	})
-	if err != nil {
-		return err
-	}
-	xrpcc.Auth.AccessJwt = auth.AccessJwt
-	xrpcc.Auth.RefreshJwt = auth.RefreshJwt
-	xrpcc.Auth.Did = auth.Did
-	xrpcc.Auth.Handle = auth.Handle
 
 	// httpd
 	var (
