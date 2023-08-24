@@ -3,8 +3,8 @@ import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
 import {devicePlatform, isIOS} from 'platform/detection'
 
-const SERVICE_DID = (serviceUrl: string) =>
-  serviceUrl.includes('staging')
+const SERVICE_DID = (serviceUrl?: string) =>
+  serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
@@ -23,7 +23,7 @@ export function init(store: RootStoreModel) {
     if (token) {
       try {
         await store.agent.api.app.bsky.notification.registerPush({
-          serviceDid: SERVICE_DID(store.session.data.service),
+          serviceDid: SERVICE_DID(store.session.data?.service),
           platform: devicePlatform,
           token: token.data,
           appId: 'xyz.blueskyweb.app',
@@ -44,7 +44,7 @@ export function init(store: RootStoreModel) {
       if (t) {
         try {
           await store.agent.api.app.bsky.notification.registerPush({
-            serviceDid: SERVICE_DID(store.session.data.service),
+            serviceDid: SERVICE_DID(store.session.data?.service),
             platform: devicePlatform,
             token: t,
             appId: 'xyz.blueskyweb.app',
