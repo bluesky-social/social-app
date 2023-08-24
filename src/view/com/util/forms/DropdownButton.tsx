@@ -319,9 +319,12 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 2,
     marginRight: 8,
+    flexShrink: 0,
   },
   label: {
     fontSize: 18,
+    flexShrink: 1,
+    flexGrow: 1,
   },
   separator: {
     borderTopWidth: 1,

@@ -8,6 +8,7 @@ import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 import {StyleProp, ViewStyle} from 'react-native'
+import {isWeb} from 'platform/detection'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -232,6 +233,7 @@ export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
   quote?: ComposerOptsQuote
+  mention?: string // handle of user to mention
 }
 
 export class ShellUiModel {
@@ -266,13 +268,20 @@ export class ShellUiModel {
   hydrate(v: unknown) {
     if (isObj(v)) {
       if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
-        this.colorMode = v.colorMode
+        this.setColorMode(v.colorMode)
       }
     }
   }
 
   setColorMode(mode: ColorMode) {
     this.colorMode = mode
+
+    if (isWeb && typeof window !== 'undefined') {
+      const html = window.document.documentElement
+      // remove any other color mode classes
+      html.className = html.className.replace(/colorMode--\w+/g, '')
+      html.classList.add(`colorMode--${mode}`)
+    }
   }
 
   setMinimalShellMode(v: boolean) {

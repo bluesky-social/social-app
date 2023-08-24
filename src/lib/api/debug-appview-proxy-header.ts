@@ -8,23 +8,30 @@
  * version of the app.
  */
 
-import {useState, useCallback} from 'react'
+import {useState, useCallback, useEffect} from 'react'
 import {BskyAgent} from '@atproto/api'
 import {isWeb} from 'platform/detection'
+import * as Storage from 'lib/storage'
 
 export function useDebugHeaderSetting(agent: BskyAgent): [boolean, () => void] {
-  const [enabled, setEnabled] = useState<boolean>(isEnabled())
+  const [enabled, setEnabled] = useState<boolean>(false)
+
+  useEffect(() => {
+    async function check() {
+      if (await isEnabled()) {
+        setEnabled(true)
+      }
+    }
+    check()
+  }, [])
 
   const toggle = useCallback(() => {
-    if (!isWeb || typeof window === 'undefined') {
-      return
-    }
     if (!enabled) {
-      localStorage.setItem('set-header-x-appview-proxy', 'yes')
+      Storage.saveString('set-header-x-appview-proxy', 'yes')
       agent.api.xrpc.setHeader('x-appview-proxy', 'true')
       setEnabled(true)
     } else {
-      localStorage.removeItem('set-header-x-appview-proxy')
+      Storage.remove('set-header-x-appview-proxy')
       agent.api.xrpc.unsetHeader('x-appview-proxy')
       setEnabled(false)
     }
@@ -34,30 +41,24 @@ export function useDebugHeaderSetting(agent: BskyAgent): [boolean, () => void] {
 }
 
 export function setDebugHeader(agent: BskyAgent, enabled: boolean) {
-  if (!isWeb || typeof window === 'undefined') {
-    return
-  }
   if (enabled) {
-    localStorage.setItem('set-header-x-appview-proxy', 'yes')
+    Storage.saveString('set-header-x-appview-proxy', 'yes')
     agent.api.xrpc.setHeader('x-appview-proxy', 'true')
   } else {
-    localStorage.removeItem('set-header-x-appview-proxy')
+    Storage.remove('set-header-x-appview-proxy')
     agent.api.xrpc.unsetHeader('x-appview-proxy')
   }
 }
 
-export function applyDebugHeader(agent: BskyAgent) {
+export async function applyDebugHeader(agent: BskyAgent) {
   if (!isWeb) {
     return
   }
-  if (isEnabled()) {
+  if (await isEnabled()) {
     agent.api.xrpc.setHeader('x-appview-proxy', 'true')
   }
 }
 
-function isEnabled() {
-  if (!isWeb || typeof window === 'undefined') {
-    return false
-  }
-  return localStorage.getItem('set-header-x-appview-proxy') === 'yes'
+async function isEnabled() {
+  return (await Storage.loadString('set-header-x-appview-proxy')) === 'yes'
 }

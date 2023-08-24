@@ -156,7 +156,7 @@ export const PostThread = observer(function PostThread({
   }, [navigation])
 
   const renderItem = React.useCallback(
-    ({item}: {item: YieldedItem}) => {
+    ({item, index}: {item: YieldedItem; index: number}) => {
       if (item === PARENT_SPINNER) {
         return (
           <View style={styles.parentSpinner}>
@@ -205,11 +205,20 @@ export const PostThread = observer(function PostThread({
           </View>
         )
       } else if (item instanceof PostThreadItemModel) {
-        return <PostThreadItem item={item} onPostReply={onRefresh} />
+        const prev = (
+          index - 1 >= 0 ? posts[index - 1] : undefined
+        ) as PostThreadItemModel
+        return (
+          <PostThreadItem
+            item={item}
+            onPostReply={onRefresh}
+            hasPrecedingItem={prev?._showChildReplyLine}
+          />
+        )
       }
       return <></>
     },
-    [onRefresh, onPressReply, pal],
+    [onRefresh, onPressReply, pal, posts],
   )
 
   // loading

@@ -33,13 +33,16 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
+  hasPrecedingItem,
 }: {
   item: PostThreadItemModel
   onPostReply: () => void
+  hasPrecedingItem: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -67,8 +70,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   }, [item.post.uri, item.post.author])
   const repostsTitle = 'Reposts of this post'
 
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const translatorUrl = getTranslatorLink(record?.text || '')
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
@@ -191,7 +193,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
             <View style={styles.layoutContent}>
-              <View style={[styles.meta, styles.metaExpandedLine1]}>
+              <View
+                style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <View style={[s.flexRow]}>
                   <Link
                     style={styles.metaItem}
@@ -208,12 +211,16 @@ export const PostThreadItem = observer(function PostThreadItem({
                       )}
                     </Text>
                   </Link>
-                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                    &middot;&nbsp;
-                    <TimeElapsed timestamp={item.post.indexedAt}>
-                      {({timeElapsed}) => <>{timeElapsed}</>}
-                    </TimeElapsed>
-                  </Text>
+                  <TimeElapsed timestamp={item.post.indexedAt}>
+                    {({timeElapsed}) => (
+                      <Text
+                        type="md"
+                        style={[styles.metaItem, pal.textLight]}
+                        title={niceDate(item.post.indexedAt)}>
+                        &middot;&nbsp;{timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
                 </View>
               </View>
               <View style={styles.meta}>
@@ -227,7 +234,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </Link>
               </View>
             </View>
-            <View style={s.flex1} />
             <PostDropdownBtn
               testID="postDropdownBtn"
               itemUri={itemUri}
@@ -240,7 +246,12 @@ export const PostThreadItem = observer(function PostThreadItem({
               onOpenTranslate={onOpenTranslate}
               onToggleThreadMute={onToggleThreadMute}
               onDeletePost={onDeletePost}
-              style={{paddingVertical: 6, paddingHorizontal: 10}}
+              style={{
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+                marginLeft: 'auto',
+                width: 40,
+              }}
             />
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
@@ -355,8 +366,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             styles.outer,
             pal.border,
             pal.view,
-            item._showParentReplyLine && styles.noTopBorder,
-            !item._showChildReplyLine && {borderBottomWidth: 1},
+            item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
           ]}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
@@ -479,7 +489,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderBottomColor: pal.colors.border},
+              {borderTopColor: pal.colors.border},
               pal.view,
             ]}
             href={itemHref}
@@ -557,7 +567,7 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
-    maxWidth: 240,
+    maxWidth: isDesktopWeb ? 380 : 220,
   },
   alert: {
     marginBottom: 6,
@@ -596,7 +606,7 @@ const styles = StyleSheet.create({
   loadMore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
     paddingLeft: 80,
     paddingRight: 20,
     paddingVertical: 12,

@@ -348,7 +348,7 @@ export const SettingsScreen = withAuthRequired(
           <View style={[pal.view, styles.toggleCard]}>
             <ToggleButton
               type="default-light"
-              label="Require alt text on images"
+              label="Require alt text before posting"
               labelType="lg"
               isSelected={store.preferences.requireAltTextEnabled}
               onPress={store.preferences.toggleRequireAltTextEnabled}
@@ -509,7 +509,7 @@ export const SettingsScreen = withAuthRequired(
               System log
             </Text>
           </TouchableOpacity>
-          {isDesktopWeb ? (
+          {isDesktopWeb || __DEV__ ? (
             <ToggleButton
               type="default-light"
               label="Experiment: Use AppView Proxy"

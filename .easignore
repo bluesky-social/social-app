@@ -99,4 +99,4 @@ ios/
 .env.*
 
 # Firebase (Android) Google services
-google-services.json
+# INCLUDED: google-services.json

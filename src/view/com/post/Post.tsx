@@ -51,12 +51,15 @@ export const Post = observer(function Post({
 
   useEffect(() => {
     if (initView || view?.params.uri === uri) {
-      return // no change needed? or trigger refresh?
+      if (initView !== view) {
+        setView(initView)
+      }
+      return
     }
     const newView = new PostThreadModel(store, {uri, depth: 0})
     setView(newView)
     newView.setup().catch(err => store.log.error('Failed to fetch post', err))
-  }, [initView, uri, view?.params.uri, store])
+  }, [initView, setView, uri, view, view?.params.uri, store])
 
   // deleted
   // =
@@ -133,8 +136,7 @@ const PostLoaded = observer(
       replyAuthorDid = urip.hostname
     }
 
-    const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-    const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+    const translatorUrl = getTranslatorLink(record?.text || '')
     const needsTranslation = useMemo(
       () =>
         store.preferences.contentLanguages.length > 0 &&

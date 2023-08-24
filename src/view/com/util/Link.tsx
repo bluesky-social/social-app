@@ -135,6 +135,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines,
   lineHeight,
   dataSet,
+  title,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -144,6 +145,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines?: number
   lineHeight?: number
   dataSet?: any
+  title?: string
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
@@ -173,8 +175,8 @@ export const TextLink = observer(function TextLink({
       style={style}
       numberOfLines={numberOfLines}
       lineHeight={lineHeight}
-      // @ts-ignore web only -prf
       dataSet={dataSet}
+      title={title}
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
       {...props}>
@@ -197,6 +199,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessible?: boolean
   accessibilityLabel?: string
   accessibilityHint?: string
+  title?: string
 }
 export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   testID,
@@ -218,6 +221,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
         text={text}
         numberOfLines={numberOfLines}
         lineHeight={lineHeight}
+        title={props.title}
         {...props}
       />
     )
@@ -229,6 +233,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
       style={style}
       numberOfLines={numberOfLines}
       lineHeight={lineHeight}
+      title={props.title}
       {...props}>
       {text}
     </Text>

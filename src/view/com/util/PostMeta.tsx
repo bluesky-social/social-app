@@ -79,6 +79,7 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
             lineHeight={1.2}
             text={timeElapsed}
             accessibilityLabel={niceDate(opts.timestamp)}
+            title={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}
           />
@@ -91,9 +92,10 @@ export const PostMeta = observer(function (opts: PostMetaOpts) {
 const styles = StyleSheet.create({
   metaOneLine: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: isAndroid ? 'center' : 'baseline',
     paddingBottom: 2,
     gap: 4,
+    zIndex: 1,
   },
   avatar: {
     alignSelf: 'center',

@@ -1,17 +1,18 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {observer} from 'mobx-react-lite'
 import {ScrollView} from '../util'
 import {useStores} from 'state/index'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isDesktopWeb, deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
-import {LanguageToggle} from './LanguageToggle'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 
 export const snapPoints = ['100%']
 
-export function Component({}: {}) {
+export const Component = observer(() => {
   const store = useStores()
   const pal = usePalette('default')
   const onPressDone = React.useCallback(() => {
@@ -53,23 +54,38 @@ export function Component({}: {}) {
         Which languages are used in this post?
       </Text>
       <ScrollView style={styles.scrollContainer}>
-        {languages.map(lang => (
-          <LanguageToggle
-            key={lang.code2}
-            code2={lang.code2}
-            langType="postLanguages"
-            name={lang.name}
-            onPress={() => {
-              onPress(lang.code2)
-            }}
-          />
-        ))}
+        {languages.map(lang => {
+          const isSelected = store.preferences.hasPostLanguage(lang.code2)
+
+          // enforce a max of 3 selections for post languages
+          let isDisabled = false
+          if (
+            store.preferences.postLanguage.split(',').length >= 3 &&
+            !isSelected
+          ) {
+            isDisabled = true
+          }
+
+          return (
+            <ToggleButton
+              key={lang.code2}
+              label={lang.name}
+              isSelected={isSelected}
+              onPress={() => (isDisabled ? undefined : onPress(lang.code2))}
+              style={[
+                pal.border,
+                styles.languageToggle,
+                isDisabled && styles.dimmed,
+              ]}
+            />
+          )
+        })}
         <View style={styles.bottomSpacer} />
       </ScrollView>
       <ConfirmLanguagesButton onPress={onPressDone} />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -93,5 +109,14 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: isDesktopWeb ? 0 : 60,
+  },
+  languageToggle: {
+    borderTopWidth: 1,
+    borderRadius: 0,
+    paddingHorizontal: 6,
+    paddingVertical: 12,
+  },
+  dimmed: {
+    opacity: 0.5,
   },
 })

@@ -402,7 +402,9 @@ const LoginForm = ({
             blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
             keyboardAppearance={theme.colorScheme}
             value={identifier}
-            onChangeText={str => setIdentifier((str || '').toLowerCase())}
+            onChangeText={str =>
+              setIdentifier((str || '').toLowerCase().trim())
+            }
             editable={!isProcessing}
             accessibilityLabel="Username or email address"
             accessibilityHint="Input the username or email address you used at signup"
