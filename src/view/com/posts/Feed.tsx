@@ -157,7 +157,7 @@ export const Feed = observer(function Feed({
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={feed.isInitialLoading ? [LOADING_ITEM] : data}
+        data={!feed.hasLoaded ? [LOADING_ITEM] : data}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
