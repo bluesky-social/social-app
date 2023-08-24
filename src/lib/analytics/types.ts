@@ -8,6 +8,8 @@ export type ScreenEvent = (
   properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
 ) => Promise<void>
 interface TrackPropertiesMap {
+  // OS events
+  'OpenApp:FromNotification': {}
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
