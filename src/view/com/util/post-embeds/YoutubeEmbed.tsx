@@ -23,6 +23,7 @@ export const YoutubeEmbed = ({
 
   return (
     <Link
+      asAnchor
       style={[styles.extOuter, pal.view, pal.border, style]}
       href={link.uri}>
       <ExternalLinkEmbed link={link} imageChild={imageChild} />
