@@ -272,7 +272,7 @@ export class PostsFeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest || this.isLoading) {
+    if (!this.hasLoaded || this.hasNewLatest || this.isLoading) {
       return
     }
     const res = await this._getFeed({limit: 1})
