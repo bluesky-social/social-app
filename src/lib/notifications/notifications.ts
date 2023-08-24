@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications'
 import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
 import {devicePlatform, isIOS} from 'platform/detection'
+import {track} from 'lib/analytics/analytics'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -89,6 +90,7 @@ export function init(store: RootStoreModel) {
         store.log.debug(
           'User pressed a notification, opening notifications tab',
         )
+        track('Notificatons:OpenApp')
         resetToTab('NotificationsTab')
       }
     },

@@ -34,22 +34,11 @@ func run(args []string) {
 			Action: serve,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
-					Name:    "pds-host",
-					Usage:   "method, hostname, and port of PDS instance",
-					Value:   "http://localhost:4849",
-					EnvVars: []string{"ATP_PDS_HOST"},
-				},
-				&cli.StringFlag{
-					Name:     "handle",
-					Usage:    "for PDS login",
-					Required: true,
-					EnvVars:  []string{"ATP_AUTH_HANDLE"},
-				},
-				&cli.StringFlag{
-					Name:     "password",
-					Usage:    "for PDS login",
-					Required: true,
-					EnvVars:  []string{"ATP_AUTH_PASSWORD"},
+					Name:  "appview-host",
+					Usage: "method, hostname, and port of PDS instance",
+					Value: "http://localhost:2584",
+					// retain old PDS env var for easy transition
+					EnvVars: []string{"ATP_APPVIEW_HOST", "ATP_PDS_HOST"},
 				},
 				&cli.StringFlag{
 					Name:     "mailmodo-api-key",
