@@ -15,6 +15,11 @@ Sentry.init({
   environment: __DEV__ ? 'development' : 'production', // Set the environment
   enableAutoPerformanceTracking: true, // Enable auto performance tracking
   tracesSampleRate: 0.5, // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring. // TODO: this might be too much in production
+  _experiments: {
+    // The sampling rate for profiling is relative to TracesSampleRate.
+    // In this case, we'll capture profiles for 50% of transactions.
+    profilesSampleRate: 0.5,
+  },
   integrations: isNative
     ? [
         new Sentry.Native.ReactNativeTracing({

@@ -150,7 +150,22 @@ const NavItem = observer(
 
 function ComposeBtn() {
   const store = useStores()
-  const onPressCompose = () => store.shell.openComposer({})
+  const {getState} = useNavigation()
+
+  const getProfileHandle = () => {
+    const {routes} = getState()
+    const currentRoute = routes[routes.length - 1]
+    if (currentRoute.name === 'Profile') {
+      const {name: handle} =
+        currentRoute.params as CommonNavigatorParams['Profile']
+      if (handle === store.me.handle) return undefined
+      return handle
+    }
+    return undefined
+  }
+
+  const onPressCompose = () =>
+    store.shell.openComposer({mention: getProfileHandle()})
 
   return (
     <TouchableOpacity

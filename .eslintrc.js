@@ -16,6 +16,9 @@ module.exports = {
     '*.lock',
     '.husky',
     'patches',
+    'bskyweb',
+    '*.html',
+    'bskyweb',
   ],
   overrides: [
     {

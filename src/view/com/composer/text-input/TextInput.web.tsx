@@ -16,6 +16,7 @@ import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
+import {Emoji} from './web/EmojiPicker.web'
 
 export interface TextInputRef {
   focus: () => void
@@ -33,6 +34,8 @@ interface TextInputProps {
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
+
+export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(
   (
@@ -54,21 +57,18 @@ export const TextInput = React.forwardRef(
       'ProseMirror-dark',
     )
 
-    // we use a memoized emitter to propagate events out of tiptap
-    // without triggering re-runs of the useEditor hook
-    const emitter = React.useMemo(() => new EventEmitter(), [])
     React.useEffect(() => {
-      emitter.addListener('publish', onPressPublish)
+      textInputWebEmitter.addListener('publish', onPressPublish)
       return () => {
-        emitter.removeListener('publish', onPressPublish)
+        textInputWebEmitter.removeListener('publish', onPressPublish)
       }
-    }, [emitter, onPressPublish])
+    }, [onPressPublish])
     React.useEffect(() => {
-      emitter.addListener('photo-pasted', onPhotoPasted)
+      textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
       return () => {
-        emitter.removeListener('photo-pasted', onPhotoPasted)
+        textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
       }
-    }, [emitter, onPhotoPasted])
+    }, [onPhotoPasted])
 
     const editor = useEditor(
       {
@@ -105,16 +105,19 @@ export const TextInput = React.forwardRef(
             }
 
             getImageFromUri(items, (uri: string) => {
-              emitter.emit('photo-pasted', uri)
+              textInputWebEmitter.emit('photo-pasted', uri)
             })
           },
           handleKeyDown: (_, event) => {
             if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
-              emitter.emit('publish')
+              textInputWebEmitter.emit('publish')
             }
           },
         },
-        content: richtext.text.toString(),
+        content: textToEditorJson(richtext.text.toString()),
+        onFocus: ({editor: e}) => {
+          e.chain().focus().setTextSelection(richtext.text.length).run() // focus to the end of the text
+        },
         autofocus: true,
         editable: true,
         injectCSS: true,
@@ -131,8 +134,21 @@ export const TextInput = React.forwardRef(
           }
         },
       },
-      [modeClass, emitter],
+      [modeClass],
     )
+
+    const onEmojiInserted = React.useCallback(
+      (emoji: Emoji) => {
+        editor?.chain().focus('end').insertContent(emoji.native).run()
+      },
+      [editor],
+    )
+    React.useEffect(() => {
+      textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
+      return () => {
+        textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
+      }
+    }, [onEmojiInserted])
 
     React.useImperativeHandle(ref, () => ({
       focus: () => {}, // TODO
@@ -164,6 +180,61 @@ function editorJsonToText(json: JSONContent): string {
     text += `@${json.attrs?.id || ''}`
   }
   return text
+}
+
+function textToEditorJson(text: string): JSONContent {
+  if (text === '' || text.length === 0) {
+    return {
+      text: '',
+    }
+  }
+
+  const lines = text.split('\n')
+  const docContent: JSONContent[] = []
+
+  for (const line of lines) {
+    if (line.trim() === '') {
+      continue // skip empty lines
+    }
+
+    const paragraphContent: JSONContent[] = []
+    let position = 0
+
+    while (position < line.length) {
+      if (line[position] === '@') {
+        // Handle mentions
+        let endPosition = position + 1
+        while (endPosition < line.length && /\S/.test(line[endPosition])) {
+          endPosition++
+        }
+        const mentionId = line.substring(position + 1, endPosition)
+        paragraphContent.push({
+          type: 'mention',
+          attrs: {id: mentionId},
+        })
+        position = endPosition
+      } else {
+        // Handle regular text
+        let endPosition = line.indexOf('@', position)
+        if (endPosition === -1) endPosition = line.length
+        paragraphContent.push({
+          type: 'text',
+          text: line.substring(position, endPosition),
+        })
+        position = endPosition
+      }
+    }
+
+    docContent.push({
+      type: 'paragraph',
+      content: paragraphContent,
+    })
+  }
+
+  return {
+    type: 'doc',
+    content: docContent,
+  }
 }
 
 function editorJsonToLinks(json: JSONContent): string[] {

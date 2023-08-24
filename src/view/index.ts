@@ -29,6 +29,7 @@ import {faCircleCheck as farCircleCheck} from '@fortawesome/free-regular-svg-ico
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons/faCircleCheck'
 import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons/faCircleExclamation'
 import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
+import {faCircleDot} from '@fortawesome/free-solid-svg-icons/faCircleDot'
 import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
@@ -39,6 +40,7 @@ import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
 import {faEye} from '@fortawesome/free-solid-svg-icons/faEye'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
+import {faFaceSmile} from '@fortawesome/free-regular-svg-icons/faFaceSmile'
 import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons/faFloppyDisk'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
@@ -122,6 +124,7 @@ export function setup() {
     farCircleCheck,
     faCircleExclamation,
     faCircleUser,
+    faCircleDot,
     faClone,
     farClone,
     faComment,
@@ -132,6 +135,7 @@ export function setup() {
     faEye,
     faExclamation,
     farEyeSlash,
+    faFaceSmile,
     faFloppyDisk,
     faGear,
     faGlobe,

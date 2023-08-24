@@ -5,9 +5,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
-import {displayNotification} from 'lib/notifee'
 import * as Toast from 'view/com/util/Toast'
-
 import {Text} from '../com/util/text/Text'
 import {ViewSelector} from '../com/util/ViewSelector'
 import {EmptyState} from '../com/util/EmptyState'
@@ -177,10 +175,7 @@ function ErrorView() {
 
 function NotifsView() {
   const triggerPush = () => {
-    displayNotification(
-      'Paul Frazee liked your post',
-      "Hello world! This is a test of the notifications card. The text is long to see how that's handled.",
-    )
+    // TODO: implement local notification for testing
   }
   const triggerToast = () => {
     Toast.show('The task has been completed')

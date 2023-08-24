@@ -418,7 +418,7 @@ function CustomHandleForm({
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                _atproto.
+                _atproto
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
@@ -438,6 +438,12 @@ function CustomHandleForm({
               </Text>
             </View>
           </View>
+          <Text type="md" style={[pal.text, s.pt20, s.pl5]}>
+            This should create a domain record at:{' '}
+          </Text>
+          <Text type="mono" style={[styles.monoText, pal.text, s.pt5, s.pl5]}>
+            _atproto.{handle}
+          </Text>
         </>
       ) : (
         <>

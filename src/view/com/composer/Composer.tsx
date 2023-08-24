@@ -45,6 +45,8 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
+import {insertMentionAt} from 'lib/strings/mention-manip'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -55,6 +57,7 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   onClose,
   quote: initQuote,
+  mention: initMention,
 }: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -64,7 +67,17 @@ export const ComposePost = observer(function ComposePost({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  const [richtext, setRichText] = useState(new RichText({text: ''}))
+  const [richtext, setRichText] = useState(
+    new RichText({
+      text: initMention
+        ? insertMentionAt(
+            `@${initMention}`,
+            initMention.length + 1,
+            `${initMention}`,
+          ) // insert mention if passed in
+        : '',
+    }),
+  )
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
@@ -200,6 +213,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
+    store.preferences.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
@@ -381,6 +395,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
+          {isDesktopWeb ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />

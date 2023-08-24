@@ -15,7 +15,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
 import {codeToLanguageName} from '../../../../locale/helpers'
-import {deviceLocales} from 'platform/detection'
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
@@ -31,35 +30,48 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
   }, [store])
 
   const postLanguagesPref = store.preferences.postLanguages
+  const postLanguagePref = store.preferences.postLanguage
   const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 
-    const add = (langCode: string) => {
-      const langName = codeToLanguageName(langCode)
+    function add(commaSeparatedLangCodes: string) {
+      const langCodes = commaSeparatedLangCodes.split(',')
+      const langName = langCodes
+        .map(code => codeToLanguageName(code))
+        .join(' + ')
+
+      /*
+       * Filter out any duplicates
+       */
       if (arr.find((item: DropdownItemButton) => item.label === langName)) {
         return
       }
+
       arr.push({
-        icon: store.preferences.hasPostLanguage(langCode)
-          ? ['fas', 'circle-check']
-          : ['far', 'circle'],
+        icon:
+          langCodes.every(code => store.preferences.hasPostLanguage(code)) &&
+          langCodes.length === postLanguagesPref.length
+            ? ['fas', 'circle-dot']
+            : ['far', 'circle'],
         label: langName,
         onPress() {
-          store.preferences.setPostLanguage(langCode)
+          store.preferences.setPostLanguage(commaSeparatedLangCodes)
         },
       })
     }
 
-    for (const lang of postLanguagesPref) {
+    if (postLanguagesPref.length) {
+      /*
+       * Re-join here after sanitization bc postLanguageHistory is an array of
+       * comma-separated strings too
+       */
+      add(postLanguagePref)
+    }
+
+    // comma-separted strings of lang codes that have been used in the past
+    for (const lang of store.preferences.postLanguageHistory) {
       add(lang)
     }
-    for (const lang of deviceLocales) {
-      add(lang)
-    }
-    add('en') // english
-    add('ja') // japanese
-    add('pt') // portugese
-    add('de') // german
 
     return [
       {heading: true, label: 'Post language'},
@@ -70,7 +82,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         onPress: onPressMore,
       },
     ]
-  }, [store.preferences, postLanguagesPref, onPressMore])
+  }, [store.preferences, onPressMore, postLanguagePref, postLanguagesPref])
 
   return (
     <DropdownButton
@@ -81,11 +93,9 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       style={styles.button}
       accessibilityLabel="Language selection"
       accessibilityHint="">
-      {store.preferences.postLanguages.length > 0 ? (
+      {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
-          {store.preferences.postLanguages
-            .map(lang => codeToLanguageName(lang))
-            .join(', ')}
+          {postLanguagesPref.map(lang => codeToLanguageName(lang)).join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon
