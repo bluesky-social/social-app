@@ -31,6 +31,7 @@ type QueryParams =
 
 export class PostsFeedModel {
   // state
+  isInitialLoading = true
   isLoading = false
   isRefreshing = false
   hasNewLatest = false
@@ -99,6 +100,7 @@ export class PostsFeedModel {
    */
   clear() {
     this.rootStore.log.debug('FeedModel:clear')
+    this.isInitialLoading = true
     this.isLoading = false
     this.isRefreshing = false
     this.hasNewLatest = false
@@ -322,6 +324,7 @@ export class PostsFeedModel {
   }
 
   _xIdle(error?: any, loadMoreError?: any) {
+    this.isInitialLoading = false
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = true
