@@ -197,17 +197,17 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/copyright", server.WebGeneric)
 
 	// profile endpoints; only first populates info
-	e.GET("/profile/:handle", server.WebProfile)
-	e.GET("/profile/:handle/follows", server.WebGeneric)
-	e.GET("/profile/:handle/followers", server.WebGeneric)
-	e.GET("/profile/:handle/lists/:rkey", server.WebGeneric)
-	e.GET("/profile/:handle/feed/:rkey", server.WebGeneric)
-	e.GET("/profile/:handle/feed/:rkey/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDid", server.WebProfile)
+	e.GET("/profile/:handleOrDid/follows", server.WebGeneric)
+	e.GET("/profile/:handleOrDid/followers", server.WebGeneric)
+	e.GET("/profile/:handleOrDid/lists/:rkey", server.WebGeneric)
+	e.GET("/profile/:handleOrDid/feed/:rkey", server.WebGeneric)
+	e.GET("/profile/:handleOrDid/feed/:rkey/liked-by", server.WebGeneric)
 
 	// post endpoints; only first populates info
-	e.GET("/profile/:handle/post/:rkey", server.WebPost)
-	e.GET("/profile/:handle/post/:rkey/liked-by", server.WebGeneric)
-	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDid/post/:rkey", server.WebPost)
+	e.GET("/profile/:handleOrDid/post/:rkey/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDid/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
 	e.POST("/api/waitlist", server.apiWaitlist)
@@ -281,49 +281,56 @@ func (srv *Server) WebHome(c echo.Context) error {
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
-	data := pongo2.Context{}
-	handle := c.Param("handle")
-	rkey := c.Param("rkey")
-	// sanity check argument
-	if len(handle) > 4 && len(handle) < 128 && len(rkey) > 0 {
-		ctx := c.Request().Context()
-		// requires two fetches: first fetch profile (!)
-		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
-		if err != nil {
-			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
-		} else {
-			did := pv.Did
-			data["did"] = did
+	ctx := c.Request().Context()
 
-			// then fetch the post thread (with extra context)
-			uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
-			pv, err := appbsky.FeedGetPosts(ctx, srv.xrpcc, []string{uri})
-			if err != nil || pv == nil || len(pv.Posts) == 0 {
-				log.Warnf("failed to fetch post: %s\t%v", uri, err)
-			} else {
-				req := c.Request()
-				postView := pv.Posts[0]
-				data["postView"] = postView
-				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-				if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
-					data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
-				}
+	data := pongo2.Context{}
+	handleOrDid := c.Param("handleOrDid")
+	rkey := c.Param("rkey")
+
+	var did string
+	// Determine if the first argument is a handle or a DID.
+	if strings.HasPrefix(handleOrDid, "did:") {
+		did = handleOrDid
+	} else if len(handleOrDid) > 4 && len(handleOrDid) < 128 {
+		// If it's a handle, fetch the DID
+		actorView, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handleOrDid)
+		if err != nil {
+			log.Warnf("failed to fetch handle: %s\t%v", handleOrDid, err)
+		} else {
+			did = actorView.Did
+		}
+	}
+
+	// Sanity check rkey and did
+	if len(rkey) > 0 && len(did) > 0 && len(did) < 2_000 {
+		// fetch the post thread
+		uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+		postView, err := appbsky.FeedGetPosts(ctx, srv.xrpcc, []string{uri})
+		if err != nil || postView == nil || len(postView.Posts) == 0 {
+			log.Warnf("failed to fetch post: %s\t%v", uri, err)
+		} else {
+			req := c.Request()
+			postView := postView.Posts[0]
+			data["postView"] = postView
+			data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+			if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
+				data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
 			}
 		}
-
 	}
+
 	return c.Render(http.StatusOK, "post.html", data)
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {
 	data := pongo2.Context{}
-	handle := c.Param("handle")
-	// sanity check argument
-	if len(handle) > 4 && len(handle) < 128 {
+	handleOrDid := c.Param("handleOrDid")
+
+	if len(handleOrDid) > 4 && len(handleOrDid) < 128 {
 		ctx := c.Request().Context()
-		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
+		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handleOrDid)
 		if err != nil {
-			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
+			log.Warnf("failed to fetch handle for handleOrDid: %s\t%v", handleOrDid, err)
 		} else {
 			req := c.Request()
 			data["profileView"] = pv
