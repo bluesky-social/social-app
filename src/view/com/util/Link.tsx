@@ -9,8 +9,9 @@ import {
   TextProps,
   View,
   ViewStyle,
-  TouchableOpacity,
+  Pressable,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native'
 import {
   useLinkProps,
@@ -112,7 +113,7 @@ export const Link = observer(function Link({
   }
 
   return (
-    <TouchableOpacity
+    <Pressable
       testID={testID}
       style={style}
       onPress={onPress}
@@ -122,7 +123,7 @@ export const Link = observer(function Link({
       href={asAnchor ? sanitizeUrl(href) : undefined}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
-    </TouchableOpacity>
+    </Pressable>
   )
 })
 

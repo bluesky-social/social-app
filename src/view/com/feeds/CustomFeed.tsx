@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-  TouchableOpacity,
-} from 'react-native'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -68,7 +61,7 @@ export const CustomFeed = observer(
     }, [store, item])
 
     return (
-      <TouchableOpacity
+      <Pressable
         testID={`feed-${item.displayName}`}
         accessibilityRole="button"
         style={[styles.container, pal.border, style]}
@@ -132,7 +125,7 @@ export const CustomFeed = observer(
             {pluralize(item.data.likeCount || 0, 'user')}
           </Text>
         ) : null}
-      </TouchableOpacity>
+      </Pressable>
     )
   },
 )
