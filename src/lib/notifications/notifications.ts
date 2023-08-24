@@ -90,7 +90,7 @@ export function init(store: RootStoreModel) {
         store.log.debug(
           'User pressed a notification, opening notifications tab',
         )
-        track('OpenApp:FromNotification')
+        track('Notificatons:OpenApp')
         resetToTab('NotificationsTab')
       }
     },
