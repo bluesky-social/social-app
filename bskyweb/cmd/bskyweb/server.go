@@ -16,7 +16,7 @@ import (
 
 	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
-	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
+	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
 	"github.com/bluesky-social/social-app/bskyweb"
 
@@ -297,12 +297,12 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 			// then fetch the post thread (with extra context)
 			uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
-			tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
-			if err != nil {
+			pv, err := appbsky.FeedGetPosts(ctx, srv.xrpcc, []string{uri})
+			if err != nil || pv == nil || len(pv.Posts) == 0 {
 				log.Warnf("failed to fetch post: %s\t%v", uri, err)
 			} else {
 				req := c.Request()
-				postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+				postView := pv.Posts[0]
 				data["postView"] = postView
 				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 				if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
