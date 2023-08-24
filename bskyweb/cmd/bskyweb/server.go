@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
@@ -29,10 +30,11 @@ import (
 )
 
 type Server struct {
-	echo     *echo.Echo
-	httpd    *http.Server
-	mailmodo *Mailmodo
-	xrpcc    *xrpc.Client
+	echo      *echo.Echo
+	httpd     *http.Server
+	mailmodo  *Mailmodo
+	xrpcc     *xrpc.Client
+	clientMux *sync.RWMutex
 }
 
 func serve(cctx *cli.Context) error {
@@ -43,6 +45,9 @@ func serve(cctx *cli.Context) error {
 	atpPassword := cctx.String("password")
 	mailmodoAPIKey := cctx.String("mailmodo-api-key")
 	mailmodoListName := cctx.String("mailmodo-list-name")
+
+	// Initialize quit channel.
+	quit := make(chan struct{})
 
 	// Echo
 	e := echo.New()
@@ -108,6 +113,36 @@ func serve(cctx *cli.Context) error {
 		ReadTimeout:    httpTimeout,
 		MaxHeaderBytes: httpMaxHeaderBytes,
 	}
+
+	// Start a routine to refresh the auth session every 10 minutes
+	go func() {
+		t := time.NewTicker(10 * time.Minute)
+		defer t.Stop()
+		log.Info("refresh session routine started")
+		for {
+			select {
+			case <-quit:
+				log.Info("refresh session routine exiting")
+				return
+			case <-t.C:
+				ctx := context.Background()
+				server.clientMux.Lock()
+				xrpcc.Auth.AccessJwt = xrpcc.Auth.RefreshJwt
+				refreshedSession, err := comatproto.ServerRefreshSession(ctx, xrpcc)
+				if err != nil {
+					log.Errorf("failed to refresh session: %s", err)
+				}
+
+				xrpcc.Auth = &xrpc.AuthInfo{
+					AccessJwt:  refreshedSession.AccessJwt,
+					RefreshJwt: refreshedSession.RefreshJwt,
+					Did:        refreshedSession.Did,
+					Handle:     refreshedSession.Handle,
+				}
+				server.clientMux.Unlock()
+			}
+		}
+	}()
 
 	e.HideBanner = true
 	// SECURITY: Do not modify without due consideration.
@@ -224,7 +259,6 @@ func serve(cctx *cli.Context) error {
 
 	// Wait for a signal to exit.
 	log.Info("registering OS exit signal handler")
-	quit := make(chan struct{})
 	exitSignals := make(chan os.Signal, 1)
 	signal.Notify(exitSignals, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
@@ -293,7 +327,9 @@ func (srv *Server) WebPost(c echo.Context) error {
 		did = handleOrDid
 	} else if len(handleOrDid) > 4 && len(handleOrDid) < 128 {
 		// If it's a handle, fetch the DID
+		srv.clientMux.RLock()
 		actorView, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handleOrDid)
+		srv.clientMux.RUnlock()
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handleOrDid, err)
 		} else {
@@ -305,7 +341,9 @@ func (srv *Server) WebPost(c echo.Context) error {
 	if len(rkey) > 0 && len(did) > 0 && len(did) < 2_000 {
 		// fetch the post thread
 		uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+		srv.clientMux.RLock()
 		postView, err := appbsky.FeedGetPosts(ctx, srv.xrpcc, []string{uri})
+		srv.clientMux.RUnlock()
 		if err != nil || postView == nil || len(postView.Posts) == 0 {
 			log.Warnf("failed to fetch post: %s\t%v", uri, err)
 		} else {
@@ -328,7 +366,9 @@ func (srv *Server) WebProfile(c echo.Context) error {
 
 	if len(handleOrDid) > 4 && len(handleOrDid) < 128 {
 		ctx := c.Request().Context()
+		srv.clientMux.RLock()
 		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handleOrDid)
+		srv.clientMux.RUnlock()
 		if err != nil {
 			log.Warnf("failed to fetch handle for handleOrDid: %s\t%v", handleOrDid, err)
 		} else {
