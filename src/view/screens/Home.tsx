@@ -56,7 +56,6 @@ export const HomeScreen = withAuthRequired(
       const feeds = []
       for (const feed of pinned) {
         const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
-        model.setup()
         feeds.push(model)
       }
       pagerRef.current?.setPage(0)
@@ -168,6 +167,13 @@ const FeedPage = observer(
       onForeground: () => doPoll(true),
     })
     const isScreenFocused = useIsFocused()
+
+    React.useEffect(() => {
+      // called on first load
+      if (!feed.hasLoaded && isPageFocused) {
+        feed.setup()
+      }
+    }, [isPageFocused, feed])
 
     const doPoll = React.useCallback(
       (knownActive = false) => {

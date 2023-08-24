@@ -69,14 +69,11 @@ export const Feed = observer(function Feed({
       if (feed.loadMoreError) {
         feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
       }
-    } else if (feed.isLoading) {
-      feedItems = feedItems.concat([LOADING_ITEM])
     }
     return feedItems
   }, [
     feed.hasError,
     feed.hasLoaded,
-    feed.isLoading,
     feed.isEmpty,
     feed.slices,
     feed.loadMoreError,
@@ -97,6 +94,8 @@ export const Feed = observer(function Feed({
   }, [feed, track, setIsRefreshing])
 
   const onEndReached = React.useCallback(async () => {
+    if (!feed.hasLoaded) return
+
     track('Feed:onEndReached')
     try {
       await feed.loadMore()
@@ -155,38 +154,36 @@ export const Feed = observer(function Feed({
 
   return (
     <View testID={testID} style={style}>
-      {data.length > 0 && (
-        <FlatList
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={data}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
-          ListFooterComponent={FeedFooter}
-          ListHeaderComponent={ListHeaderComponent}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
-            />
-          }
-          contentContainerStyle={s.contentContainer}
-          style={{paddingTop: headerOffset}}
-          onScroll={onScroll}
-          scrollEventThrottle={scrollEventThrottle}
-          indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.6}
-          removeClippedSubviews={true}
-          contentOffset={{x: 0, y: headerOffset * -1}}
-          extraData={extraData}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
-      )}
+      <FlatList
+        testID={testID ? `${testID}-flatlist` : undefined}
+        ref={scrollElRef}
+        data={!feed.hasLoaded ? [LOADING_ITEM] : data}
+        keyExtractor={item => item._reactKey}
+        renderItem={renderItem}
+        ListFooterComponent={FeedFooter}
+        ListHeaderComponent={ListHeaderComponent}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            tintColor={pal.colors.text}
+            titleColor={pal.colors.text}
+            progressViewOffset={headerOffset}
+          />
+        }
+        contentContainerStyle={s.contentContainer}
+        style={{paddingTop: headerOffset}}
+        onScroll={onScroll}
+        scrollEventThrottle={scrollEventThrottle}
+        indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.6}
+        removeClippedSubviews={true}
+        contentOffset={{x: 0, y: headerOffset * -1}}
+        extraData={extraData}
+        // @ts-ignore our .web version only -prf
+        desktopFixedHeight
+      />
     </View>
   )
 })
