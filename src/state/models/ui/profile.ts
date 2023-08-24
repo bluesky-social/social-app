@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {PostsFeedModel} from '../feeds/posts'
@@ -228,8 +228,10 @@ export class ProfileUiModel {
         .setup()
         .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
     ])
-    this.isAuthenticatedUser =
-      this.profile.did === this.rootStore.session.currentSession?.did
+    runInAction(() => {
+      this.isAuthenticatedUser =
+        this.profile.did === this.rootStore.session.currentSession?.did
+    })
     this.algos.refresh()
     // HACK: need to use the DID as a param, not the username -prf
     this.lists.source = this.profile.did
