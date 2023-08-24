@@ -28,7 +28,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
-      () => debounce(query => feeds.search(query), 500), // debounce for 500ms
+      () => debounce(q => feeds.search(q), 500), // debounce for 500ms
       [feeds],
     )
     const onChangeQuery = React.useCallback(
@@ -59,7 +59,9 @@ export const DiscoverFeedsScreen = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
-        feeds.refresh()
+        if (!feeds.hasLoaded) {
+          feeds.refresh()
+        }
       }, [store, feeds]),
     )
 
@@ -67,23 +69,21 @@ export const DiscoverFeedsScreen = withAuthRequired(
       feeds.refresh()
     }, [feeds])
 
-    const renderListEmptyComponent = React.useCallback(() => {
+    const renderListEmptyComponent = () => {
       return (
-        <View
-          style={[
-            pal.border,
-            !isDesktopWeb && s.flex1,
-            pal.viewLight,
-            styles.empty,
-          ]}>
-          <Text type="lg" style={[pal.text]}>
+        <View style={styles.empty}>
+          <Text type="lg" style={pal.textLight}>
             {feeds.isLoading
-              ? 'Loading...'
+              ? isDesktopWeb
+                ? 'Loading...'
+                : ''
+              : query
+              ? `No results found for "${query}"`
               : `We can't find any feeds for some reason. This is probably an error - try refreshing!`}
           </Text>
         </View>
       )
-    }, [pal, feeds.isLoading])
+    }
 
     const renderItem = React.useCallback(
       ({item}: {item: CustomFeedModel}) => (
@@ -102,16 +102,18 @@ export const DiscoverFeedsScreen = withAuthRequired(
       <CenteredView style={[styles.container, pal.view]}>
         <View style={[isDesktopWeb && styles.containerDesktop, pal.border]}>
           <ViewHeader title="Discover Feeds" showOnDesktop />
-          <HeaderWithInput
-            isInputFocused={isInputFocused}
-            query={query}
-            setIsInputFocused={setIsInputFocused}
-            onChangeQuery={onChangeQuery}
-            onPressClearQuery={onPressClearQuery}
-            onPressCancelSearch={onPressCancelSearch}
-            onSubmitQuery={onSubmitQuery}
-            showMenu={false}
-          />
+          <View style={{marginTop: isDesktopWeb ? 5 : 0, marginBottom: 4}}>
+            <HeaderWithInput
+              isInputFocused={isInputFocused}
+              query={query}
+              setIsInputFocused={setIsInputFocused}
+              onChangeQuery={onChangeQuery}
+              onPressClearQuery={onPressClearQuery}
+              onPressCancelSearch={onPressCancelSearch}
+              onSubmitQuery={onSubmitQuery}
+              showMenu={false}
+            />
+          </View>
         </View>
         <FlatList
           style={[!isDesktopWeb && s.flex1]}
@@ -149,10 +151,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
   },
   empty: {
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    borderRadius: 8,
-    marginHorizontal: 18,
-    marginTop: 10,
+    paddingHorizontal: 16,
+    paddingTop: 10,
   },
 })
