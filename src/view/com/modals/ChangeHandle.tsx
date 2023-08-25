@@ -410,11 +410,11 @@ function CustomHandleForm({
       {isDNSForm ? (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Add the following record to your domain:
+            Add the following DNS record to your domain:
           </Text>
           <View style={[styles.dnsTable, pal.btn]}>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              Domain:
+              Host:
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
