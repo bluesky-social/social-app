@@ -59,9 +59,9 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#000c',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
+    marginTop: 50,
     maxWidth: 600,
     width: '100%',
     paddingVertical: 0,
