@@ -118,10 +118,10 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
-        {/* eslint-disable-next-line */}
+        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
             style={[

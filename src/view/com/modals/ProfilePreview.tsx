@@ -21,7 +21,7 @@ export const Component = observer(({did}: {did: string}) => {
   const {screen} = useAnalytics()
 
   // track the navigator state to detect if a page-load occurred
-  const navState = useNavigationState(s => s)
+  const navState = useNavigationState(state => state)
   const [initNavState] = useState(navState)
   const isLoading = initNavState !== navState
 

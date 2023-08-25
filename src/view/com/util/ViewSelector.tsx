@@ -174,8 +174,8 @@ export function Selector({
         <View
           style={[pal.view, styles.outer]}
           onLayout={e => {
-            const {height} = e.nativeEvent.layout
-            setHeight(height || 60)
+            const {height: layoutHeight} = e.nativeEvent.layout
+            setHeight(layoutHeight || 60)
           }}>
           {items.map((item, i) => {
             const selected = i === selectedIndex
