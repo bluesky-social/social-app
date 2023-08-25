@@ -316,9 +316,9 @@ function CustomHandleForm({
   // events
   // =
   const onPressCopy = React.useCallback(() => {
-    Clipboard.setString(`did=${store.me.did}`)
+    Clipboard.setString(isDNSForm ? `did=${store.me.did}` : store.me.did)
     Toast.show('Copied to clipboard')
-  }, [store.me.did])
+  }, [store.me.did, isDNSForm])
   const onChangeHandle = React.useCallback(
     (v: string) => {
       setHandle(v)
