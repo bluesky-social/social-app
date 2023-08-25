@@ -26,6 +26,7 @@ module.exports = {
       files: ['*.js', '*.mjs', '*.ts', '*.tsx'],
       rules: {
         semi: [2, 'never'],
+        'react-native/no-inline-styles': 0,
       },
     },
   ],
