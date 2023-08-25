@@ -92,7 +92,9 @@ export const ProfileScreen = withAuthRequired(
 
     const onPressCompose = React.useCallback(() => {
       track('ProfileScreen:PressCompose')
-      store.shell.openComposer({mention: uiState.profile.handle})
+      const mention =
+        uiState.profile.handle === store.me.handle ? '' : uiState.profile.handle
+      store.shell.openComposer({mention})
     }, [store, track, uiState])
     const onSelectView = React.useCallback(
       (index: number) => {
