@@ -3,19 +3,22 @@ import {RootStoreModel} from '../root-store'
 import {NavigationProp} from 'lib/routes/types'
 import {hasProp} from 'lib/type-guards'
 
-enum OnboardingStep {
-  WELCOME = 'WELCOME',
-  BROWSE_FEEDS = 'BROWSE_FEEDS',
-  COMPLETE = 'COMPLETE',
-}
+export const OnboardingScreenSteps = {
+  Welcome: 'Welcome',
+  RecommendedFeeds: 'RecommendedFeeds',
+  Complete: 'Complete',
+} as const
 
+type OnboardingStep =
+  (typeof OnboardingScreenSteps)[keyof typeof OnboardingScreenSteps]
+const OnboardingStepsArray = Object.values(OnboardingScreenSteps)
 export class OnboardingModel {
   // state
   step: OnboardingStep
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {rootStore: false})
-    this.step = OnboardingStep.WELCOME
+    this.step = 'Welcome'
   }
 
   serialize() {
@@ -26,26 +29,31 @@ export class OnboardingModel {
 
   hydrate(v: unknown) {
     if (typeof v === 'object' && v !== null) {
-      if (hasProp(v, 'step') && typeof v.step === 'string') {
+      if (
+        hasProp(v, 'step') &&
+        typeof v.step === 'string' &&
+        OnboardingStepsArray.includes(v.step as OnboardingStep)
+      ) {
         this.step = v.step as OnboardingStep
       }
     }
+    // if there is no valid state, we'll just reset
+    this.reset()
   }
 
-  nextStep(navigation?: NavigationProp) {
-    switch (this.step) {
-      case OnboardingStep.WELCOME:
-        this.step = OnboardingStep.COMPLETE
-        break
-      case OnboardingStep.BROWSE_FEEDS:
-        this.step = OnboardingStep.COMPLETE
-        break
-      case OnboardingStep.COMPLETE:
-        if (!navigation) {
-          throw new Error('Navigation prop required to complete onboarding')
-        }
-        this.complete(navigation)
-        break
+  nextScreenName() {
+    console.log('currentScreen', this.step)
+    if (this.step === 'Welcome') {
+      this.step = 'RecommendedFeeds'
+      return this.step
+    } else if (this.step === 'RecommendedFeeds') {
+      this.step = 'Complete'
+      return this.step
+    } else if (this.step === 'Complete') {
+      return 'Home'
+    } else {
+      // if we get here, we're in an invalid state, let's just go Home
+      return 'Home'
     }
   }
 
@@ -54,10 +62,14 @@ export class OnboardingModel {
   }
 
   reset() {
-    this.step = OnboardingStep.WELCOME
+    this.step = 'Welcome'
   }
 
   get isComplete() {
-    return this.step === OnboardingStep.COMPLETE
+    return this.step === 'Complete'
+  }
+
+  get isRemaining() {
+    return !this.isComplete
   }
 }

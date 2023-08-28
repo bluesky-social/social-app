@@ -5,9 +5,23 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Button} from 'view/com/util/forms/Button'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {HomeTabNavigatorParams} from 'lib/routes/types'
+import {useStores} from 'state/index'
+import {observer} from 'mobx-react-lite'
 
-export const Welcome = ({next}: {next: () => void}) => {
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Welcome'>
+export const Welcome = observer(({navigation}: Props) => {
   const pal = usePalette('default')
+  const store = useStores()
+
+  const next = () => {
+    const nextScreenName = store.onboarding.nextScreenName()
+    if (nextScreenName) {
+      navigation.navigate(nextScreenName)
+    }
+  }
+
   return (
     <View style={[styles.container]}>
       <View testID="welcomeScreen">
@@ -60,12 +74,13 @@ export const Welcome = ({next}: {next: () => void}) => {
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginVertical: 60,
+    marginHorizontal: 16,
     justifyContent: 'space-between',
   },
   title: {
