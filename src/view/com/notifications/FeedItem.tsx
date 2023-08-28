@@ -122,7 +122,7 @@ export const FeedItem = observer(function ({
   }
 
   if (item.isReply || item.isMention || item.isQuote) {
-    if (item.additionalPost?.error) {
+    if (!item.additionalPost || item.additionalPost?.error) {
       // hide errors - it doesnt help the user to show them
       return <View />
     }
@@ -134,8 +134,7 @@ export const FeedItem = observer(function ({
         noFeedback
         accessible={false}>
         <Post
-          uri={item.uri}
-          initView={item.additionalPost}
+          view={item.additionalPost}
           style={
             item.isRead
               ? undefined

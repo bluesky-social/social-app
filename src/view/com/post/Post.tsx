@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react'
+import React, {useState, useMemo} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -32,34 +32,18 @@ import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 
 export const Post = observer(function Post({
-  uri,
-  initView,
+  view,
   showReplyLine,
   hideError,
   style,
 }: {
-  uri: string
-  initView?: PostThreadModel
+  view: PostThreadModel
   showReplyLine?: boolean
   hideError?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const store = useStores()
-  const [view, setView] = useState<PostThreadModel | undefined>(initView)
   const [deleted, setDeleted] = useState(false)
-
-  useEffect(() => {
-    if (initView || view?.params.uri === uri) {
-      if (initView !== view) {
-        setView(initView)
-      }
-      return
-    }
-    const newView = new PostThreadModel(store, {uri, depth: 0})
-    setView(newView)
-    newView.setup().catch(err => store.log.error('Failed to fetch post', err))
-  }, [initView, setView, uri, view, view?.params.uri, store])
 
   // deleted
   // =
@@ -69,11 +53,7 @@ export const Post = observer(function Post({
 
   // loading
   // =
-  if (
-    !view ||
-    (!view.hasContent && view.isLoading) ||
-    view.params.uri !== uri
-  ) {
+  if (!view.hasContent && view.isLoading) {
     return (
       <View style={pal.view}>
         <ActivityIndicator />

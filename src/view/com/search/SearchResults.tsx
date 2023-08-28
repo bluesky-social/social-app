@@ -72,12 +72,7 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
   return (
     <ScrollView style={[pal.view]}>
       {model.posts.map(post => (
-        <Post
-          key={post.resolvedUri}
-          uri={post.resolvedUri}
-          initView={post}
-          hideError
-        />
+        <Post key={post.resolvedUri} view={post} hideError />
       ))}
       <View style={s.footerSpacer} />
       <View style={s.footerSpacer} />
