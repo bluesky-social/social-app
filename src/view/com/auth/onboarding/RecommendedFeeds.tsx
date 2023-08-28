@@ -15,7 +15,6 @@ export const RecommendedFeeds = observer(({navigation}: Props) => {
 
   const next = () => {
     const nextScreenName = store.onboarding.nextScreenName()
-    console.log('nextScreenName', store.onboarding.nextScreenName())
     if (nextScreenName) {
       navigation.navigate(nextScreenName)
     }

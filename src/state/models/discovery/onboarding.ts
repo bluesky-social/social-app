@@ -42,7 +42,6 @@ export class OnboardingModel {
   }
 
   nextScreenName() {
-    console.log('currentScreen', this.step)
     if (this.step === 'Welcome') {
       this.step = 'RecommendedFeeds'
       return this.step
