@@ -14,14 +14,18 @@ type OnboardingStep =
 const OnboardingStepsArray = Object.values(OnboardingScreenSteps)
 export class OnboardingModel {
   // state
-  step: OnboardingStep
+  step: OnboardingStep = 'Welcome'
 
   constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {rootStore: false})
-    this.step = 'Welcome'
+    makeAutoObservable(this, {
+      rootStore: false,
+      hydrate: false,
+      serialize: false,
+    })
   }
 
-  serialize() {
+  serialize(): unknown {
+    console.log('serializing onboarding', this.step)
     return {
       step: this.step,
     }
@@ -37,9 +41,10 @@ export class OnboardingModel {
         console.log('hydrating onboarding', v.step)
         this.step = v.step as OnboardingStep
       }
+    } else {
+      // if there is no valid state, we'll just reset
+      this.reset()
     }
-    // if there is no valid state, we'll just reset
-    this.reset()
   }
 
   nextScreenName(currentScreenName?: OnboardingStep) {
