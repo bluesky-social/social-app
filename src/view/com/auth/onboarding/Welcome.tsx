@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -9,14 +9,23 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {HomeTabNavigatorParams} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {observer} from 'mobx-react-lite'
+import {HeaderButtonProps} from '@react-navigation/native-stack/lib/typescript/src/types'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Welcome'>
 export const Welcome = observer(({navigation}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
 
+  // make sure bottom nav is hidden
+  React.useEffect(() => {
+    if (!store.shell.minimalShellMode) {
+      store.shell.setMinimalShellMode(true)
+    }
+  }, [store.shell.minimalShellMode, store])
+
   const next = () => {
-    const nextScreenName = store.onboarding.nextScreenName()
+    const nextScreenName = store.onboarding.nextScreenName('Welcome')
     if (nextScreenName) {
       navigation.navigate(nextScreenName)
     }
@@ -75,6 +84,31 @@ export const Welcome = observer(({navigation}: Props) => {
     </View>
   )
 })
+
+export const WelcomeHeaderRight = (props: HeaderButtonProps) => {
+  const {canGoBack} = props
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp<HomeTabNavigatorParams>>()
+  const store = useStores()
+  return (
+    <Pressable
+      accessibilityRole="button"
+      style={[s.flexRow, s.alignCenter]}
+      onPress={() => {
+        if (canGoBack) {
+          store.onboarding.skip()
+          navigation.goBack()
+        }
+      }}>
+      <Text style={[pal.link]}>Skip</Text>
+      <FontAwesomeIcon
+        icon={'chevron-right'}
+        size={14}
+        color={pal.colors.link}
+      />
+    </Pressable>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

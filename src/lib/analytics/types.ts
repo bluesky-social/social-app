@@ -122,6 +122,7 @@ interface TrackPropertiesMap {
   // ONBOARDING events
   'Onboarding:Begin': {}
   'Onboarding:Complete': {}
+  'Onboarding:Skipped': {}
 }
 
 interface ScreenPropertiesMap {

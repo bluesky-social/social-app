@@ -1,12 +1,12 @@
 import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
-import {NavigationProp} from 'lib/routes/types'
 import {hasProp} from 'lib/type-guards'
+import {track} from 'lib/analytics/analytics'
 
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',
   RecommendedFeeds: 'RecommendedFeeds',
-  Complete: 'Complete',
+  Home: 'Home',
 } as const
 
 type OnboardingStep =
@@ -34,6 +34,7 @@ export class OnboardingModel {
         typeof v.step === 'string' &&
         OnboardingStepsArray.includes(v.step as OnboardingStep)
       ) {
+        console.log('hydrating onboarding', v.step)
         this.step = v.step as OnboardingStep
       }
     }
@@ -41,31 +42,33 @@ export class OnboardingModel {
     this.reset()
   }
 
-  nextScreenName() {
-    if (this.step === 'Welcome') {
+  nextScreenName(currentScreenName?: OnboardingStep) {
+    if (currentScreenName === 'Welcome' || this.step === 'Welcome') {
       this.step = 'RecommendedFeeds'
       return this.step
-    } else if (this.step === 'RecommendedFeeds') {
-      this.step = 'Complete'
+    } else if (
+      this.step === 'RecommendedFeeds' ||
+      currentScreenName === 'RecommendedFeeds'
+    ) {
+      this.step = 'Home'
       return this.step
-    } else if (this.step === 'Complete') {
-      return 'Home'
     } else {
       // if we get here, we're in an invalid state, let's just go Home
       return 'Home'
     }
   }
 
-  complete(navigation: NavigationProp) {
-    navigation.navigate('Home')
-  }
-
   reset() {
     this.step = 'Welcome'
   }
 
+  skip() {
+    track('Onboarding:Skipped')
+    this.step = 'Home'
+  }
+
   get isComplete() {
-    return this.step === 'Complete'
+    return this.step === 'Home'
   }
 
   get isRemaining() {
