@@ -51,15 +51,12 @@ export const Post = observer(function Post({
 
   useEffect(() => {
     if (initView || view?.params.uri === uri) {
-      if (initView !== view) {
-        setView(initView)
-      }
       return
     }
     const newView = new PostThreadModel(store, {uri, depth: 0})
     setView(newView)
     newView.setup().catch(err => store.log.error('Failed to fetch post', err))
-  }, [initView, setView, uri, view, view?.params.uri, store])
+  }, [initView, uri, view?.params.uri, store])
 
   // deleted
   // =
