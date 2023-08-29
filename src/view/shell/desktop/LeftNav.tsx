@@ -14,6 +14,7 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
@@ -40,10 +41,14 @@ import {makeProfileLink} from 'lib/routes/links'
 
 const ProfileCard = observer(() => {
   const store = useStores()
-  return (
+  return store.me.handle ? (
     <Link href={makeProfileLink(store.me)} style={styles.profileCard} asAnchor>
       <UserAvatar avatar={store.me.avatar} size={64} />
     </Link>
+  ) : (
+    <View style={styles.profileCard}>
+      <LoadingPlaceholder width={64} height={64} style={{borderRadius: 64}} />
+    </View>
   )
 })
 
