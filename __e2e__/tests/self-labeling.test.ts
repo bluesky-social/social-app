@@ -20,7 +20,7 @@ describe('Self-labeling', () => {
     await element(by.id('composeFAB')).tap()
     await element(by.id('composerTextInput')).typeText('Post with an image')
     await element(by.id('openGalleryBtn')).tap()
-    await sleep(1e3)
+    await sleep(3e3)
     await element(by.id('labelsBtn')).tap()
     await element(by.id('pornLabelBtn')).tap()
     await element(by.id('confirmBtn')).tap()

@@ -168,6 +168,7 @@ export function Selector({
         backgroundColor: pal.colors.background,
       }}>
       <ScrollView
+        testID="selector"
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{position: 'absolute'}}>

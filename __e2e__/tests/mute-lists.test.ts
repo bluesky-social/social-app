@@ -114,7 +114,8 @@ describe('Mute lists', () => {
 
   it('Shows the mutelist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector-3')).tap()
+    await element(by.id('selector')).swipe('left')
+    await element(by.id('selector-4')).tap()
     await element(by.id('list-Bad Ppl')).tap()
   })
 
@@ -156,6 +157,7 @@ describe('Mute lists', () => {
     await element(by.id('bottomBarSearchBtn')).tap()
     await element(by.id('searchTextInput')).typeText('alice')
     await element(by.id('searchAutoCompleteResult-alice.test')).tap()
+    await element(by.id('selector')).swipe('left')
     await element(by.id('selector-3')).tap()
     await element(by.id('list-Bad Ppl')).tap()
     await element(by.id('reportListBtn')).tap()

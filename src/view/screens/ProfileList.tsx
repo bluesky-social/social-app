@@ -74,7 +74,7 @@ export const ProfileListScreen = withAuthRequired(
       store.shell.openModal({
         name: 'confirm',
         title: 'Delete List',
-        message: 'Are you sure',
+        message: 'Are you sure?',
         async onPressConfirm() {
           await list.delete()
           if (navigation.canGoBack()) {
