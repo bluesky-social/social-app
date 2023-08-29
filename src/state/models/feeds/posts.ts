@@ -277,7 +277,9 @@ export class PostsFeedModel {
     }
     const res = await this._getFeed({limit: 1})
     if (res.data.feed[0]) {
-      const slices = this.tuner.tune(res.data.feed, this.feedTuners)
+      const slices = this.tuner.tune(res.data.feed, this.feedTuners, {
+        dryRun: true,
+      })
       if (slices[0]) {
         const sliceModel = new PostsFeedSliceModel(this.rootStore, slices[0])
         if (sliceModel.moderation.content.filter) {
@@ -374,6 +376,15 @@ export class PostsFeedModel {
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
       const sliceModel = new PostsFeedSliceModel(this.rootStore, slice)
+      const dupTest = (item: PostsFeedSliceModel) =>
+        item._reactKey === sliceModel._reactKey
+      // sanity check
+      // if a duplicate _reactKey passes through, the UI breaks hard
+      if (!replace) {
+        if (this.slices.find(dupTest) || toAppend.find(dupTest)) {
+          continue
+        }
+      }
       toAppend.push(sliceModel)
     }
     runInAction(() => {

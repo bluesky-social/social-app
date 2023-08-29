@@ -105,6 +105,7 @@ export class FeedTuner {
   tune(
     feed: FeedViewPost[],
     tunerFns: FeedTunerFn[] = [],
+    {dryRun}: {dryRun: boolean} = {dryRun: false},
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
 
@@ -156,9 +157,11 @@ export class FeedTuner {
       }
     }
 
-    for (const slice of slices) {
-      for (const item of slice.items) {
-        this.seenUris.add(item.post.uri)
+    if (!dryRun) {
+      for (const slice of slices) {
+        for (const item of slice.items) {
+          this.seenUris.add(item.post.uri)
+        }
       }
     }
 
