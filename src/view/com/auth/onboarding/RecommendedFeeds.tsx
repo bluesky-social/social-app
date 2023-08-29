@@ -3,14 +3,12 @@ import {FlatList, StyleSheet, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Button} from 'view/com/util/forms/Button'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {HomeTabNavigatorParams} from 'lib/routes/types'
-import {useStores} from 'state/index'
 import {observer} from 'mobx-react-lite'
 import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {isDesktopWeb} from 'platform/detection'
 
 const TEMPORARY_RECOMMENDED_FEEDS = [
   {
@@ -119,21 +117,15 @@ const TEMPORARY_RECOMMENDED_FEEDS = [
   },
 ]
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'RecommendedFeeds'>
-export const RecommendedFeeds = observer(({navigation}: Props) => {
+type Props = {
+  next: () => void
+}
+export const RecommendedFeeds = observer(({next}: Props) => {
   const pal = usePalette('default')
-  const store = useStores()
-
-  const next = () => {
-    const nextScreenName = store.onboarding.next('RecommendedFeeds')
-    if (nextScreenName) {
-      navigation.navigate(nextScreenName)
-    }
-  }
 
   return (
     <View style={[styles.container]} testID="recommendedFeedsScreen">
-      <ViewHeader title="Recommended Feeds" canGoBack />
+      <ViewHeader title="Recommended Feeds" canGoBack={true} />
       <Text type="lg-medium" style={[pal.text, styles.header]}>
         Check out some recommended feeds. Click + to add them to your list of
         pinned feeds.
@@ -167,7 +159,19 @@ const Item = ({item}: {item: ItemProps}) => {
   const data = useCustomFeed(uri)
   if (!data) return null
   return (
-    <CustomFeed item={data} key={uri} showDescription showLikes showSaveBtn />
+    <CustomFeed
+      item={data}
+      key={uri}
+      showDescription
+      showLikes
+      showSaveBtn
+      style={[
+        {
+          // @ts-ignore
+          cursor: isDesktopWeb ? 'pointer' : 'auto',
+        },
+      ]}
+    />
   )
 }
 

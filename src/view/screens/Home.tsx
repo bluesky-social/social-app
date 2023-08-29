@@ -21,6 +21,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb, isMobileWebMediaQuery, isWeb} from 'platform/detection'
+import {useOnboarding} from 'lib/hooks/useOnboarding'
 
 const HEADER_OFFSET_MOBILE = 78
 const HEADER_OFFSET_DESKTOP = 50
@@ -31,7 +32,7 @@ const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
-  observer(({navigation}: Props) => {
+  observer(({}: Props) => {
     const store = useStores()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
@@ -39,12 +40,7 @@ export const HomeScreen = withAuthRequired(
     const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
       string[]
     >([])
-
-    React.useEffect(() => {
-      if (store.onboarding.isActive) {
-        navigation.navigate('Welcome')
-      }
-    }, [store.onboarding.isActive, navigation])
+    useOnboarding()
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds

@@ -5,40 +5,45 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Button} from 'view/com/util/forms/Button'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {HomeTabNavigatorParams} from 'lib/routes/types'
-import {useStores} from 'state/index'
 import {observer} from 'mobx-react-lite'
-import {HeaderButtonProps} from '@react-navigation/native-stack/lib/typescript/src/types'
-import {NavigationProp, useNavigation} from '@react-navigation/native'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {isDesktopWeb} from 'platform/detection'
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Welcome'>
-export const Welcome = observer(({navigation}: Props) => {
+type Props = {
+  next: () => void
+  skip: () => void
+}
+
+export const Welcome = observer(({next, skip}: Props) => {
   const pal = usePalette('default')
-  const store = useStores()
-
-  // make sure bottom nav is hidden
-  React.useEffect(() => {
-    if (!store.shell.minimalShellMode) {
-      store.shell.setMinimalShellMode(true)
-    }
-  }, [store.shell.minimalShellMode, store])
-
-  const next = () => {
-    const nextScreenName = store.onboarding.next('Welcome')
-    if (nextScreenName) {
-      navigation.navigate(nextScreenName)
-    }
-  }
 
   return (
-    <View style={[styles.container]}>
-      <View testID="welcomeScreen">
+    <View style={[styles.container]} testID="welcomeOnboarding">
+      <ViewHeader
+        showOnDesktop
+        showBorder={false}
+        showBackButton={false}
+        title=""
+        renderButton={() => {
+          return (
+            <Pressable
+              accessibilityRole="button"
+              style={[s.flexRow, s.alignCenter]}
+              onPress={skip}>
+              <Text style={[pal.link]}>Skip</Text>
+              <FontAwesomeIcon
+                icon={'chevron-right'}
+                size={14}
+                color={pal.colors.link}
+              />
+            </Pressable>
+          )
+        }}
+      />
+      <View>
         <Text style={[pal.text, styles.title]}>Welcome to </Text>
         <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
-
         <View style={styles.spacer} />
-
         <View style={[styles.row]}>
           <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
@@ -85,35 +90,10 @@ export const Welcome = observer(({navigation}: Props) => {
   )
 })
 
-export const WelcomeHeaderRight = (props: HeaderButtonProps) => {
-  const {canGoBack} = props
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp<HomeTabNavigatorParams>>()
-  const store = useStores()
-  return (
-    <Pressable
-      accessibilityRole="button"
-      style={[s.flexRow, s.alignCenter]}
-      onPress={() => {
-        if (canGoBack) {
-          store.onboarding.skip()
-          navigation.goBack()
-        }
-      }}>
-      <Text style={[pal.link]}>Skip</Text>
-      <FontAwesomeIcon
-        icon={'chevron-right'}
-        size={14}
-        color={pal.colors.link}
-      />
-    </Pressable>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 60,
+    marginBottom: isDesktopWeb ? 30 : 60,
     marginHorizontal: 16,
     justifyContent: 'space-between',
   },

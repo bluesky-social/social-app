@@ -67,8 +67,8 @@ import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
-import {Welcome, WelcomeHeaderRight} from 'view/com/auth/onboarding/Welcome'
-import {RecommendedFeeds} from 'view/com/auth/onboarding/RecommendedFeeds'
+import {RecommendedFeedsScreen} from 'view/screens/onboarding/RecommendedFeeds'
+import {WelcomeScreen} from 'view/screens/onboarding/Welcome'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -223,20 +223,16 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="Welcome"
-        component={Welcome}
+        component={WelcomeScreen}
         options={{
           title: title('Welcome'),
           presentation: 'card',
-          headerShown: true,
-          headerTransparent: true,
-          headerTitle: '',
-          headerBackVisible: false,
-          headerRight: props => <WelcomeHeaderRight {...props} />,
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
         name="RecommendedFeeds"
-        component={RecommendedFeeds}
+        component={RecommendedFeedsScreen}
         options={{
           title: title('Recommended Feeds'),
         }}

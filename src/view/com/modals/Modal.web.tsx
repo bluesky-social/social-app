@@ -27,7 +27,7 @@ import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
-
+import * as OnboardingModal from './OnboardingModal'
 import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
 export const ModalsContainer = observer(function ModalsContainer() {
@@ -55,7 +55,11 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image' || modal.name === 'edit-image') {
+    if (
+      modal.name === 'crop-image' ||
+      modal.name === 'edit-image' ||
+      modal.name === 'onboarding'
+    ) {
       return // dont close on mask presses during crop
     }
     store.shell.closeModal()
@@ -110,6 +114,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <PreferencesHomeFeed.Component />
   } else if (modal.name === 'moderation-details') {
     element = <ModerationDetailsModal.Component {...modal} />
+  } else if (modal.name === 'onboarding') {
+    element = <OnboardingModal.Component />
   } else {
     return null
   }
