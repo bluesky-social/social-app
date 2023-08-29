@@ -1,4 +1,5 @@
 import React from 'react'
+import {View} from 'react-native'
 import {SearchUIModel} from 'state/models/ui/search'
 import {FoafsModel} from 'state/models/discovery/foafs'
 import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
@@ -47,7 +48,12 @@ export const SearchScreen = withAuthRequired(
     const {isDesktop} = useWebMediaQueries()
 
     if (searchUIModel) {
-      return <SearchResults model={searchUIModel} />
+      return (
+        // @ts-ignore web only
+        <View style={{height: '100%', overflow: 'auto'}}>
+          <SearchResults model={searchUIModel} />
+        </View>
+      )
     }
 
     if (!isDesktop) {
