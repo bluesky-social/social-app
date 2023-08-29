@@ -324,6 +324,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     borderTopWidth: 1,
+    cursor: 'pointer',
   },
   layout: {
     flexDirection: 'row',

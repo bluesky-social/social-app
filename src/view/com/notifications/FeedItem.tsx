@@ -422,6 +422,7 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     borderTopWidth: 1,
     flexDirection: 'row',
+    cursor: 'pointer',
   },
   layoutIcon: {
     width: 70,
