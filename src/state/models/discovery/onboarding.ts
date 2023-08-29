@@ -49,12 +49,14 @@ export class OnboardingModel {
 
   nextScreenName(currentScreenName?: OnboardingStep) {
     if (currentScreenName === 'Welcome' || this.step === 'Welcome') {
+      track('Onboarding:Begin')
       this.step = 'RecommendedFeeds'
       return this.step
     } else if (
       this.step === 'RecommendedFeeds' ||
       currentScreenName === 'RecommendedFeeds'
     ) {
+      track('Onboarding:Complete')
       this.step = 'Home'
       return this.step
     } else {
