@@ -18,7 +18,7 @@ import {
   ALWAYS_WARN_LABEL_GROUP,
 } from 'lib/labeling/const'
 import {DEFAULT_FEEDS} from 'lib/constants'
-import {isIOS, deviceLocales} from 'platform/detection'
+import {deviceLocales} from 'platform/detection'
 import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
@@ -52,7 +52,7 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
-  adultContentEnabled = !isIOS
+  adultContentEnabled = false
   contentLanguages: string[] = deviceLocales || []
   postLanguage: string = deviceLocales[0] || 'en'
   postLanguageHistory: string[] = DEFAULT_LANG_CODES
