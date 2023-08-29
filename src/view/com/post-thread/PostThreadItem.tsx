@@ -367,6 +367,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             pal.border,
             pal.view,
             item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
+            styles.cursor,
           ]}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
@@ -615,5 +616,9 @@ const styles = StyleSheet.create({
     width: 2,
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  cursor: {
+    // @ts-ignore web only
+    cursor: 'pointer',
   },
 })

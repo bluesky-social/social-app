@@ -343,6 +343,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
+    cursor: 'pointer',
   },
   outerSmallTop: {
     borderTopWidth: 0,

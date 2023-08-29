@@ -259,15 +259,21 @@ function onPressInner(
   e?: Event,
 ) {
   let shouldHandle = false
+  const isLeftClick =
+    // @ts-ignore Web only -prf
+    Platform.OS === 'web' && (e.button == null || e.button === 0)
+  // @ts-ignore Web only -prf
+  const isMiddleClick = Platform.OS === 'web' && e.button === 1
+  const isMetaKey =
+    // @ts-ignore Web only -prf
+    Platform.OS === 'web' && (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
+  const newTab = isMetaKey || isMiddleClick
 
   if (Platform.OS !== 'web' || !e) {
     shouldHandle = e ? !e.defaultPrevented : true
   } else if (
     !e.defaultPrevented && // onPress prevented default
-    // @ts-ignore Web only -prf
-    !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-    // @ts-ignore Web only -prf
-    (e.button == null || e.button === 0) && // ignore everything but left clicks
+    (isLeftClick || isMiddleClick) && // ignore everything but left and middle clicks
     // @ts-ignore Web only -prf
     [undefined, null, '', 'self'].includes(e.currentTarget?.target) // let browser handle "target=_blank" etc.
   ) {
@@ -277,7 +283,7 @@ function onPressInner(
 
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
-    if (href.startsWith('http') || href.startsWith('mailto')) {
+    if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
       Linking.openURL(href)
     } else {
       store.shell.closeModal() // close any active modals
