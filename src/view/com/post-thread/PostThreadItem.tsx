@@ -618,6 +618,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   cursor: {
+    // @ts-ignore web only
     cursor: 'pointer',
   },
 })
