@@ -259,13 +259,14 @@ function onPressInner(
   e?: Event,
 ) {
   let shouldHandle = false
+  // @ts-ignore Web only -prf
+  const isMetaKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey
 
   if (Platform.OS !== 'web' || !e) {
     shouldHandle = e ? !e.defaultPrevented : true
   } else if (
     !e.defaultPrevented && // onPress prevented default
-    // @ts-ignore Web only -prf
-    !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
+    !isMetaKey && // ignore clicks with modifier keys
     // @ts-ignore Web only -prf
     (e.button == null || e.button === 0) && // ignore everything but left clicks
     // @ts-ignore Web only -prf
@@ -285,5 +286,7 @@ function onPressInner(
       // @ts-ignore we're not able to type check on this one -prf
       navigation.dispatch(StackActions.push(...router.matchPath(href)))
     }
+  } else if (isMetaKey && !e?.defaultPrevented) {
+    Linking.openURL(href)
   }
 }
