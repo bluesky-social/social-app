@@ -25,7 +25,7 @@ export const Welcome = observer(({navigation}: Props) => {
   }, [store.shell.minimalShellMode, store])
 
   const next = () => {
-    const nextScreenName = store.onboarding.nextScreenName('Welcome')
+    const nextScreenName = store.onboarding.next('Welcome')
     if (nextScreenName) {
       navigation.navigate(nextScreenName)
     }

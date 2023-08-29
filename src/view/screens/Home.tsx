@@ -41,10 +41,10 @@ export const HomeScreen = withAuthRequired(
     >([])
 
     React.useEffect(() => {
-      if (store.onboarding.isRemaining) {
+      if (store.onboarding.isActive) {
         navigation.navigate('Welcome')
       }
-    }, [store.onboarding.isRemaining, navigation])
+    }, [store.onboarding.isActive, navigation])
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds

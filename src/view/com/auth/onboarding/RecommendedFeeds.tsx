@@ -125,7 +125,7 @@ export const RecommendedFeeds = observer(({navigation}: Props) => {
   const store = useStores()
 
   const next = () => {
-    const nextScreenName = store.onboarding.nextScreenName('RecommendedFeeds')
+    const nextScreenName = store.onboarding.next('RecommendedFeeds')
     if (nextScreenName) {
       navigation.navigate(nextScreenName)
     }

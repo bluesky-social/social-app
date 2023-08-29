@@ -47,7 +47,12 @@ export class OnboardingModel {
     }
   }
 
-  nextScreenName(currentScreenName?: OnboardingStep) {
+  /**
+   * Returns the name of the next screen in the onboarding process based on the current step or screen name provided.
+   * @param {OnboardingStep} [currentScreenName]
+   * @returns name of next screen in the onboarding process
+   */
+  next(currentScreenName?: OnboardingStep) {
     if (currentScreenName === 'Welcome' || this.step === 'Welcome') {
       track('Onboarding:Begin')
       this.step = 'RecommendedFeeds'
@@ -78,7 +83,7 @@ export class OnboardingModel {
     return this.step === 'Home'
   }
 
-  get isRemaining() {
+  get isActive() {
     return !this.isComplete
   }
 }
