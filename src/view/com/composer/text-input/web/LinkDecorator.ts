@@ -19,6 +19,7 @@ import {Plugin, PluginKey} from '@tiptap/pm/state'
 import {findChildren} from '@tiptap/core'
 import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
+import {isValidDomain} from 'lib/strings/url-helpers'
 
 export const LinkDecorator = Mark.create({
   name: 'link-decorator',
@@ -81,8 +82,25 @@ function iterateUris(str: string, cb: (from: number, to: number) => void) {
   const re =
     /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gim
   while ((match = re.exec(str))) {
-    const from = match.index + match[1].length + 1
-    const to = from + match[2].length
+    let uri = match[2]
+    if (!uri.startsWith('http')) {
+      const domain = match.groups?.domain
+      if (!domain || !isValidDomain(domain)) {
+        continue
+      }
+      uri = `https://${uri}`
+    }
+    let from = str.indexOf(match[2], match.index)
+    let to = from + match[2].length + 1
+    // strip ending puncuation
+    if (/[.,;!?]$/.test(uri)) {
+      uri = uri.slice(0, -1)
+      to--
+    }
+    if (/[)]$/.test(uri) && !uri.includes('(')) {
+      uri = uri.slice(0, -1)
+      to--
+    }
     cb(from, to)
   }
 }
