@@ -1,4 +1,5 @@
 import React, {useRef} from 'react'
+import {runInAction} from 'mobx'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -361,7 +362,9 @@ function* flattenThread(
       }
     }
   } else if (!isAscending && !post.parent && post.post.replyCount) {
-    post._hasMore = true
+    runInAction(() => {
+      post._hasMore = true
+    })
   }
 }
 
