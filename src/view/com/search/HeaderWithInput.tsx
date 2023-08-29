@@ -92,7 +92,7 @@ export function HeaderWithInput({
           autoCorrect={false}
           autoCapitalize="none"
         />
-        {isInputFocused ? (
+        {query ? (
           <TouchableOpacity
             onPress={onPressClearQuery}
             accessibilityRole="button"
