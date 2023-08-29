@@ -10,6 +10,7 @@ import {isWeb, isDesktopWeb} from 'platform/detection'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
 
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
@@ -51,10 +52,10 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
   const store = useStores()
 
   return (
-    <View
+    <CenteredView
       testID="preferencesHomeFeedScreen"
       style={[pal.view, styles.container]}>
-      <ViewHeader title="Home Feed Preferences" />
+      <ViewHeader title="Home Feed Preferences" showOnDesktop />
       <View style={styles.titleSection}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
           Fine-tune the content you see on your home screen.
@@ -120,7 +121,9 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
         <TouchableOpacity
           testID="confirmBtn"
           onPress={() => {
-            navigation.goBack()
+            navigation.canGoBack()
+              ? navigation.goBack()
+              : navigation.navigate('Settings')
           }}
           style={[styles.btn]}
           accessibilityRole="button"
@@ -129,17 +132,18 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </CenteredView>
   )
 })
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 90,
+    paddingBottom: isDesktopWeb ? 40 : 90,
   },
   titleSection: {
     paddingBottom: 30,
+    paddingTop: isDesktopWeb ? 20 : 0,
   },
   title: {
     textAlign: 'center',
