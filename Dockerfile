@@ -1,4 +1,4 @@
-FROM golang:1.20-bullseye AS build-env
+FROM golang:1.21-bullseye AS build-env
 
 WORKDIR /usr/src/social-app
 
@@ -13,6 +13,7 @@ ENV GODEBUG="netdns=go"
 ENV GOOS="linux"
 ENV GOARCH="amd64"
 ENV CGO_ENABLED=1
+ENV GOEXPERIMENT="loopvar"
 
 COPY . .
 
