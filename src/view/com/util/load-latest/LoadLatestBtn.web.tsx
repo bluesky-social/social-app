@@ -6,6 +6,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {LoadLatestBtn as LoadLatestBtnMobile} from './LoadLatestBtnMobile'
 import {isMobileWeb} from 'platform/detection'
 import {HITSLOP_20} from 'lib/constants'
+import {colors} from 'lib/styles'
 
 export const LoadLatestBtn = ({
   onPress,
@@ -33,8 +34,6 @@ export const LoadLatestBtn = ({
       {showIndicator && (
         <TouchableOpacity
           style={[
-            pal.view,
-            pal.borderDark,
             styles.loadLatestCentered,
             minimalShellMode && styles.loadLatestCenteredMinimal,
           ]}
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 30,
-    borderWidth: 1,
+    backgroundColor: colors.blue3,
   },
   loadLatestCenteredMinimal: {
     top: 20,
