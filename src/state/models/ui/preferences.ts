@@ -4,15 +4,7 @@ import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
-import {ComAtprotoLabelDefs, ModerationOpts} from '@atproto/api'
-import {LabelValGroup} from 'lib/labeling/types'
-import {getLabelValueGroup} from 'lib/labeling/helpers'
-import {
-  UNKNOWN_LABEL_GROUP,
-  ILLEGAL_LABEL_GROUP,
-  ALWAYS_FILTER_LABEL_GROUP,
-  ALWAYS_WARN_LABEL_GROUP,
-} from 'lib/labeling/const'
+import {ModerationOpts} from '@atproto/api'
 import {DEFAULT_FEEDS} from 'lib/constants'
 import {deviceLocales} from 'platform/detection'
 import {LANGUAGES} from '../../../locale/languages'
@@ -336,48 +328,6 @@ export class PreferencesModel {
   async setAdultContentEnabled(v: boolean) {
     this.adultContentEnabled = v
     await this.rootStore.agent.setAdultContentEnabled(v)
-  }
-
-  getLabelPreference(labels: ComAtprotoLabelDefs.Label[] | undefined): {
-    pref: LabelPreference
-    desc: LabelValGroup
-  } {
-    let res: {pref: LabelPreference; desc: LabelValGroup} = {
-      pref: 'ignore',
-      desc: UNKNOWN_LABEL_GROUP,
-    }
-    if (!labels?.length) {
-      return res
-    }
-    for (const label of labels) {
-      const group = getLabelValueGroup(label.val)
-      if (group.id === 'illegal') {
-        return {pref: 'hide', desc: ILLEGAL_LABEL_GROUP}
-      } else if (group.id === 'always-filter') {
-        return {pref: 'hide', desc: ALWAYS_FILTER_LABEL_GROUP}
-      } else if (group.id === 'always-warn') {
-        res.pref = 'warn'
-        res.desc = ALWAYS_WARN_LABEL_GROUP
-        continue
-      } else if (group.id === 'unknown') {
-        continue
-      }
-      let pref = this.contentLabels[group.id]
-      if (pref === 'hide') {
-        res.pref = 'hide'
-        res.desc = group
-      } else if (
-        pref === 'warn' &&
-        (res.pref === 'show' || res.pref === 'ignore')
-      ) {
-        res.pref = 'warn'
-        res.desc = group
-      }
-    }
-    if (res.desc.isAdultImagery && !this.adultContentEnabled) {
-      res.pref = 'hide'
-    }
-    return res
   }
 
   get moderationOpts(): ModerationOpts {
