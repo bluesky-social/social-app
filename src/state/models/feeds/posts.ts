@@ -376,6 +376,15 @@ export class PostsFeedModel {
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
       const sliceModel = new PostsFeedSliceModel(this.rootStore, slice)
+      const dupTest = (item: PostsFeedSliceModel) =>
+        item._reactKey === sliceModel._reactKey
+      // sanity check
+      // if a duplicate _reactKey passes through, the UI breaks hard
+      if (!replace) {
+        if (this.slices.find(dupTest) || toAppend.find(dupTest)) {
+          continue
+        }
+      }
       toAppend.push(sliceModel)
     }
     runInAction(() => {
