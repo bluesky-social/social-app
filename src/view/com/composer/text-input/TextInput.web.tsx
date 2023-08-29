@@ -1,12 +1,11 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {RichText} from '@atproto/api'
+import {RichText, AppBskyRichtextFacet} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
 import {Document} from '@tiptap/extension-document'
 import History from '@tiptap/extension-history'
 import Hardbreak from '@tiptap/extension-hard-break'
-import {Link} from '@tiptap/extension-link'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
@@ -17,6 +16,7 @@ import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
 import {Emoji} from './web/EmojiPicker.web'
+import {LinkDecorator} from './web/LinkDecorator'
 
 export interface TextInputRef {
   focus: () => void
@@ -74,11 +74,7 @@ export const TextInput = React.forwardRef(
       {
         extensions: [
           Document,
-          Link.configure({
-            protocols: ['http', 'https'],
-            autolink: true,
-            linkOnPaste: false,
-          }),
+          LinkDecorator,
           Mention.configure({
             HTMLAttributes: {
               class: 'mention',
@@ -128,9 +124,20 @@ export const TextInput = React.forwardRef(
           newRt.detectFacetsWithoutResolution()
           setRichText(newRt)
 
-          const newSuggestedLinks = new Set(editorJsonToLinks(json))
-          if (!isEqual(newSuggestedLinks, suggestedLinks)) {
-            onSuggestedLinksChanged(newSuggestedLinks)
+          const set: Set<string> = new Set()
+
+          if (newRt.facets) {
+            for (const facet of newRt.facets) {
+              for (const feature of facet.features) {
+                if (AppBskyRichtextFacet.isLink(feature)) {
+                  set.add(feature.uri)
+                }
+              }
+            }
+          }
+
+          if (!isEqual(set, suggestedLinks)) {
+            onSuggestedLinksChanged(set)
           }
         },
       },
@@ -235,22 +242,6 @@ function textToEditorJson(text: string): JSONContent {
     type: 'doc',
     content: docContent,
   }
-}
-
-function editorJsonToLinks(json: JSONContent): string[] {
-  let links: string[] = []
-  if (json.content?.length) {
-    for (const node of json.content) {
-      links = links.concat(editorJsonToLinks(node))
-    }
-  }
-
-  const link = json.marks?.find(m => m.type === 'link')
-  if (link?.attrs?.href) {
-    links.push(link.attrs.href)
-  }
-
-  return links
 }
 
 const styles = StyleSheet.create({
