@@ -23,6 +23,9 @@ export function EmojiPickerButton() {
   const onOpenChange = (o: boolean) => {
     setOpen(o)
   }
+  const close = () => {
+    setOpen(false)
+  }
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
@@ -35,13 +38,7 @@ export function EmojiPickerButton() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content>
-          <EmojiPicker
-            close={() => {
-              setOpen(false)
-            }}
-          />
-        </DropdownMenu.Content>
+        <EmojiPicker close={close} />
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
   )
@@ -54,12 +51,14 @@ export function EmojiPicker({close}: {close: () => void}) {
   }
   return (
     <View style={styles.mask}>
-      <Picker
-        // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
-        data={window.emojiMartData}
-        onEmojiSelect={onInsert}
-        autoFocus={false}
-      />
+      <View style={styles.picker}>
+        <Picker
+          // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
+          data={window.emojiMartData}
+          onEmojiSelect={onInsert}
+          autoFocus={false}
+        />
+      </View>
     </View>
   )
 }
@@ -77,5 +76,10 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingHorizontal: 10,
     cursor: 'pointer',
+  },
+  picker: {
+    paddingTop: 325,
+    marginHorizontal: 'auto',
+    paddingRight: 50,
   },
 })
