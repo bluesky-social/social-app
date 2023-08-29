@@ -188,7 +188,7 @@ function SelectGroup({current, onChange, group}: SelectGroupProps) {
       />
       <SelectableBtn
         current={current}
-        value="show"
+        value="ignore"
         label="Show"
         right
         onChange={onChange}
