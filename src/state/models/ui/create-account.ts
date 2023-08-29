@@ -109,10 +109,10 @@ export class CreateAccountModel {
     this.setError('')
     this.setIsProcessing(true)
 
-    // open the onboarding modal after the session is created
+    // open the onboarding screens after the session is created
     const sessionReadySub = this.rootStore.onSessionReady(() => {
       sessionReadySub.remove()
-      this.rootStore.shell.openModal({name: 'onboarding'})
+      this.rootStore.onboarding.start()
     })
 
     try {

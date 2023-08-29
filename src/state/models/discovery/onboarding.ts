@@ -14,7 +14,7 @@ type OnboardingStep =
 const OnboardingStepsArray = Object.values(OnboardingScreenSteps)
 export class OnboardingModel {
   // state
-  step: OnboardingStep = 'Welcome'
+  step: OnboardingStep = 'Home'
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -25,7 +25,6 @@ export class OnboardingModel {
   }
 
   serialize(): unknown {
-    console.log('serializing onboarding', this.step)
     return {
       step: this.step,
     }
@@ -38,7 +37,6 @@ export class OnboardingModel {
         typeof v.step === 'string' &&
         OnboardingStepsArray.includes(v.step as OnboardingStep)
       ) {
-        console.log('hydrating onboarding', v.step)
         this.step = v.step as OnboardingStep
       }
     } else {
@@ -53,21 +51,27 @@ export class OnboardingModel {
    * @returns name of next screen in the onboarding process
    */
   next(currentScreenName?: OnboardingStep) {
-    if (currentScreenName === 'Welcome' || this.step === 'Welcome') {
-      track('Onboarding:Begin')
+    currentScreenName = currentScreenName || this.step
+    if (currentScreenName === 'Welcome') {
       this.step = 'RecommendedFeeds'
       return this.step
-    } else if (
-      this.step === 'RecommendedFeeds' ||
-      currentScreenName === 'RecommendedFeeds'
-    ) {
-      track('Onboarding:Complete')
-      this.step = 'Home'
+    } else if (this.step === 'RecommendedFeeds') {
+      this.finish()
       return this.step
     } else {
       // if we get here, we're in an invalid state, let's just go Home
       return 'Home'
     }
+  }
+
+  start() {
+    this.step = 'Welcome'
+    track('Onboarding:Begin')
+  }
+
+  finish() {
+    this.step = 'Home'
+    track('Onboarding:Complete')
   }
 
   reset() {
