@@ -74,7 +74,7 @@
     "expo": "^49.0.8",
     "expo-application": "~5.3.0",
     "expo-build-properties": "~0.8.3",
-    "expo-camera": "~13.4.2",
+    "expo-camera": "13.5.1",
     "expo-constants": "~14.4.2",
     "expo-dev-client": "~2.4.8",
     "expo-device": "~5.4.0",
