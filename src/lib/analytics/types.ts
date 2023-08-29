@@ -123,6 +123,7 @@ interface TrackPropertiesMap {
   'Onboarding:Begin': {}
   'Onboarding:Complete': {}
   'Onboarding:Skipped': {}
+  'Onboarding:Reset': {}
 }
 
 interface ScreenPropertiesMap {

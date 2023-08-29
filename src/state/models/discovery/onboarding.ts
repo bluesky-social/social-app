@@ -14,7 +14,7 @@ type OnboardingStep =
 const OnboardingStepsArray = Object.values(OnboardingScreenSteps)
 export class OnboardingModel {
   // state
-  step: OnboardingStep = 'Home'
+  step: OnboardingStep = 'Home' // default state to skip onboarding, only enabled for new users by calling start()
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -76,11 +76,12 @@ export class OnboardingModel {
 
   reset() {
     this.step = 'Welcome'
+    track('Onboarding:Reset')
   }
 
   skip() {
-    track('Onboarding:Skipped')
     this.step = 'Home'
+    track('Onboarding:Skipped')
   }
 
   get isComplete() {
