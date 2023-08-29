@@ -1,6 +1,6 @@
 import React from 'react'
 import Picker from '@emoji-mart/react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {textInputWebEmitter} from '../TextInput.web'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -50,16 +50,19 @@ export function EmojiPicker({close}: {close: () => void}) {
     close()
   }
   return (
-    <View style={styles.mask}>
-      <View style={styles.picker}>
-        <Picker
-          // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
-          data={window.emojiMartData}
-          onEmojiSelect={onInsert}
-          autoFocus={false}
-        />
+    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
+    <TouchableWithoutFeedback onPress={close} accessibilityViewIsModal>
+      <View style={styles.mask}>
+        <View style={styles.picker}>
+          <Picker
+            // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
+            data={window.emojiMartData}
+            onEmojiSelect={onInsert}
+            autoFocus={false}
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -69,6 +72,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+    width: '100%',
+    height: '100%',
   },
   trigger: {
     backgroundColor: 'transparent',
