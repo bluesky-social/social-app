@@ -13,6 +13,7 @@ Sentry.init({
   enableInExpoDevelopment: false, // if true, Sentry will try to send events/errors in development mode.
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: __DEV__ ? 'development' : 'production', // Set the environment
+  // @ts-ignore exists but not in types, see https://docs.sentry.io/platforms/react-native/configuration/options/#enableAutoPerformanceTracking
   enableAutoPerformanceTracking: true, // Enable auto performance tracking
   tracesSampleRate: 0.5, // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring. // TODO: this might be too much in production
   _experiments: {

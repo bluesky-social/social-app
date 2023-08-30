@@ -295,8 +295,10 @@ const styles = StyleSheet.create({
   leftNav: {
     position: 'absolute',
     top: 10,
+    // @ts-ignore web only
     right: 'calc(50vw + 312px)',
     width: 220,
+    // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
     overflowY: 'auto',
   },

@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
   desktopContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    // @ts-ignore only rendered on web
     minHeight: '100vh',
   },
   empty: {

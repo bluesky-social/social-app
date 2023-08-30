@@ -1,5 +1,11 @@
 import React from 'react'
-import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
+import {
+  StyleSheet,
+  StyleProp,
+  View,
+  ViewStyle,
+  DimensionValue,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HeartIcon} from 'lib/icons'
 import {s} from 'lib/styles'
@@ -11,8 +17,8 @@ export function LoadingPlaceholder({
   height,
   style,
 }: {
-  width: string | number
-  height: string | number
+  width: DimensionValue
+  height: DimensionValue
   style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()

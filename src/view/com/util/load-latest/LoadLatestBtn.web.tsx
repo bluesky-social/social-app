@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
+    // @ts-ignore web only
     left: '50vw',
     // @ts-ignore web only -prf
     transform: 'translateX(-282px)',
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
+    // @ts-ignore web only
     left: '50vw',
     // @ts-ignore web only -prf
     transform: 'translateX(-50%)',
