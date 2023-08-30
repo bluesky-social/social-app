@@ -1,6 +1,5 @@
 import {NavigationState, PartialState} from '@react-navigation/native'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
-import {OnboardingScreenSteps} from 'state/models/discovery/onboarding'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -30,10 +29,6 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
-} & OnboardingScreenParams
-
-export type OnboardingScreenParams = {
-  [K in keyof typeof OnboardingScreenSteps]: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

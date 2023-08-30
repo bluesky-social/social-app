@@ -9,6 +9,7 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {CenteredView} from '../util/Views'
 import {LoggedOut} from './LoggedOut'
+import {Onboarding} from './Onboarding'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
@@ -23,6 +24,9 @@ export const withAuthRequired = <P extends object>(
     }
     if (!store.session.hasSession) {
       return <LoggedOut />
+    }
+    if (store.onboarding.isActive) {
+      return <Onboarding />
     }
     return <Component {...props} />
   })

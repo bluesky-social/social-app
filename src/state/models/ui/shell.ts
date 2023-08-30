@@ -140,10 +140,6 @@ export interface PreferencesHomeFeed {
   name: 'preferences-home-feed'
 }
 
-export interface OnboardingModal {
-  name: 'onboarding'
-}
-
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -178,9 +174,6 @@ export type Modal =
 
   // Generic
   | ConfirmModal
-
-  // Onboarding (only used on web)
-  | OnboardingModal
 
 interface LightboxModel {}
 

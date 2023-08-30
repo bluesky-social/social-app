@@ -21,7 +21,6 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {isDesktopWeb, isMobileWebMediaQuery, isWeb} from 'platform/detection'
-import {useOnboarding} from 'lib/hooks/useOnboarding'
 
 const HEADER_OFFSET_MOBILE = 78
 const HEADER_OFFSET_DESKTOP = 50
@@ -40,7 +39,6 @@ export const HomeScreen = withAuthRequired(
     const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
       string[]
     >([])
-    useOnboarding()
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds
