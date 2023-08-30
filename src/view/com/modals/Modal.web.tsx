@@ -29,8 +29,6 @@ import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettin
 import * as OnboardingModal from './OnboardingModal'
 import * as ModerationDetailsModal from './ModerationDetails'
 
-import * as PreferencesHomeFeed from './PreferencesHomeFeed'
-
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
 
@@ -107,8 +105,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <AltTextImageModal.Component {...modal} />
   } else if (modal.name === 'edit-image') {
     element = <EditImageModal.Component {...modal} />
-  } else if (modal.name === 'preferences-home-feed') {
-    element = <PreferencesHomeFeed.Component />
   } else if (modal.name === 'onboarding') {
     element = <OnboardingModal.Component />
   } else if (modal.name === 'moderation-details') {

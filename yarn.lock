@@ -3497,7 +3497,7 @@
   dependencies:
     semver "7.5.4"
 
-"@miblanchard/react-native-slider@^2.2.0":
+"@miblanchard/react-native-slider@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.3.1.tgz#79e0f1f9b1ce43ef25ee51ee9256c012e5dfa412"
   integrity sha512-J/hZDBWmXq8fJeOnTVHqIUVDHshqMSpJVxJ4WqwuCBKl5Rke9OBYXIdkSlgi75OgtScAr8FKK5KNkDKHUf6JIg==

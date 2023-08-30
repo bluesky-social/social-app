@@ -170,10 +170,8 @@ export const SettingsScreen = withAuthRequired(
     }, [])
 
     const openPreferencesModal = React.useCallback(() => {
-      store.shell.openModal({
-        name: 'preferences-home-feed',
-      })
-    }, [store])
+      navigation.navigate('PreferencesHomeFeed')
+    }, [navigation])
 
     const onPressAppPasswords = React.useCallback(() => {
       navigation.navigate('AppPasswords')
@@ -386,7 +384,7 @@ export const SettingsScreen = withAuthRequired(
             Advanced
           </Text>
           <TouchableOpacity
-            testID="preferencesHomeFeedModalButton"
+            testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openPreferencesModal}
             accessibilityRole="button"

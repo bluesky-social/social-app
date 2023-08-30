@@ -67,6 +67,7 @@ import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
+import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -218,6 +219,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="SavedFeeds"
         component={SavedFeeds}
         options={{title: title('Edit My Feeds')}}
+      />
+      <Stack.Screen
+        name="PreferencesHomeFeed"
+        component={PreferencesHomeFeed}
+        options={{title: title('Home Feed Preferences')}}
       />
     </>
   )

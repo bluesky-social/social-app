@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Slider} from '@miblanchard/react-native-slider'
-import {Text} from '../util/text/Text'
+import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isDesktopWeb} from 'platform/detection'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {ScrollView} from 'view/com/modals/util'
-
-export const snapPoints = ['90%']
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
 
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
@@ -43,18 +43,25 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   )
 }
 
-export const Component = observer(function Component() {
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'PreferencesHomeFeed'
+>
+export const PreferencesHomeFeed = observer(({navigation}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
 
   return (
-    <View
-      testID="preferencesHomeFeedModal"
-      style={[pal.view, styles.container]}>
+    <CenteredView
+      testID="preferencesHomeFeedScreen"
+      style={[
+        pal.view,
+        pal.border,
+        styles.container,
+        isDesktopWeb && styles.desktopContainer,
+      ]}>
+      <ViewHeader title="Home Feed Preferences" showOnDesktop />
       <View style={styles.titleSection}>
-        <Text type="title-lg" style={[pal.text, styles.title]}>
-          Home Feed Preferences
-        </Text>
         <Text type="xl" style={[pal.textLight, styles.description]}>
           Fine-tune the content you see on your home screen.
         </Text>
@@ -119,27 +126,33 @@ export const Component = observer(function Component() {
         <TouchableOpacity
           testID="confirmBtn"
           onPress={() => {
-            store.shell.closeModal()
+            navigation.canGoBack()
+              ? navigation.goBack()
+              : navigation.navigate('Settings')
           }}
-          style={[styles.btn]}
+          style={[styles.btn, isDesktopWeb && styles.btnDesktop]}
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </CenteredView>
   )
 })
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 60,
+    paddingBottom: isDesktopWeb ? 40 : 90,
+  },
+  desktopContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   titleSection: {
-    padding: 20,
     paddingBottom: 30,
+    paddingTop: isDesktopWeb ? 20 : 0,
   },
   title: {
     textAlign: 'center',
@@ -165,9 +178,12 @@ const styles = StyleSheet.create({
     padding: 14,
     backgroundColor: colors.blue3,
   },
+  btnDesktop: {
+    marginHorizontal: 'auto',
+    paddingHorizontal: 80,
+  },
   btnContainer: {
     paddingTop: 20,
-    paddingHorizontal: 20,
     borderTopWidth: isDesktopWeb ? 0 : 1,
   },
   dimmed: {
