@@ -11,6 +11,7 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {SavedFeedsModel} from './ui/saved-feeds'
 
 const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
+const NOTIFS_UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
 export class MeModel {
   did: string = ''
@@ -27,6 +28,7 @@ export class MeModel {
   invites: ComAtprotoServerDefs.InviteCode[] = []
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
   lastProfileStateUpdate = Date.now()
+  lastNotifsUpdate = Date.now()
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length
@@ -127,6 +129,10 @@ export class MeModel {
       await this.fetchProfile()
       await this.fetchInviteCodes()
       await this.fetchAppPasswords()
+    }
+    if (Date.now() - this.lastNotifsUpdate > NOTIFS_UPDATE_INTERVAL) {
+      this.lastNotifsUpdate = Date.now()
+      await this.notifications.syncQueue()
     }
   }
 
