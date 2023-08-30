@@ -1,10 +1,18 @@
 import React from 'react'
 import Picker from '@emoji-mart/react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {textInputWebEmitter} from '../TextInput.web'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
+
+const MAX_WINDOW_HEIGHT = 750 // max height of the window to show the emoji picker below the composer
+const windowHeight = Dimensions.get('window').height
 
 export type Emoji = {
   aliases?: string[]
@@ -83,7 +91,10 @@ const styles = StyleSheet.create({
     cursor: 'pointer',
   },
   picker: {
-    paddingTop: 325,
+    paddingTop:
+      windowHeight < MAX_WINDOW_HEIGHT
+        ? Math.min(windowHeight / 2 - 250, 150)
+        : 325,
     marginHorizontal: 'auto',
     paddingRight: 50,
   },
