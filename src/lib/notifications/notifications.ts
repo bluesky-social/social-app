@@ -91,6 +91,7 @@ export function init(store: RootStoreModel) {
           'User pressed a notification, opening notifications tab',
         )
         track('Notificatons:OpenApp')
+        store.me.notifications.refresh()
         resetToTab('NotificationsTab')
       }
     },
