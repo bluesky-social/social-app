@@ -260,6 +260,7 @@ function TabsNavigator() {
 
 function HomeTabNavigator() {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+
   return (
     <HomeTab.Navigator
       screenOptions={{
