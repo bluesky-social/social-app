@@ -1,18 +1,11 @@
 import React from 'react'
 import Picker from '@emoji-mart/react'
-import {
-  Dimensions,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {textInputWebEmitter} from '../TextInput.web'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-
-const MAX_WINDOW_HEIGHT = 750 // max height of the window to show the emoji picker below the composer
-const windowHeight = Dimensions.get('window').height
+import {useMediaQuery} from 'react-responsive'
 
 export type Emoji = {
   aliases?: string[]
@@ -57,11 +50,22 @@ export function EmojiPicker({close}: {close: () => void}) {
     textInputWebEmitter.emit('emoji-inserted', emoji)
     close()
   }
+  const reducedPadding = useMediaQuery({query: '(max-height: 750px)'})
+  const noPadding = useMediaQuery({query: '(max-height: 550px)'})
+  const noPicker = useMediaQuery({query: '(max-height: 350px)'})
+
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={close} accessibilityViewIsModal>
       <View style={styles.mask}>
-        <View style={styles.picker}>
+        <View
+          style={[
+            styles.picker,
+            {
+              paddingTop: noPadding ? 0 : reducedPadding ? 150 : 325,
+              display: noPicker ? 'none' : 'flex',
+            },
+          ]}>
           <Picker
             // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
             data={window.emojiMartData}
@@ -91,10 +95,6 @@ const styles = StyleSheet.create({
     cursor: 'pointer',
   },
   picker: {
-    paddingTop:
-      windowHeight < MAX_WINDOW_HEIGHT
-        ? Math.min(windowHeight / 2 - 250, 150)
-        : 325,
     marginHorizontal: 'auto',
     paddingRight: 50,
   },
