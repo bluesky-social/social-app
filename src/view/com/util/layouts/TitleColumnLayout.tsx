@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 
 interface Props {
   testID?: string
@@ -19,14 +20,20 @@ export function TitleColumnLayout({
   contentStyle,
 }: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
+  const titleBg = useColorSchemeStyle(pal.viewLight, pal.view)
+  const contentBg = useColorSchemeStyle(pal.view, {
+    backgroundColor: pal.colors.background,
+    borderColor: pal.colors.border,
+    borderLeftWidth: 1,
+  })
 
   const layoutStyles = horizontal ? styles2Column : styles1Column
   return (
     <View testID={testID} style={layoutStyles.container}>
-      <View style={[layoutStyles.title, pal.viewLight, titleStyle]}>
-        {title}
+      <View style={[layoutStyles.title, titleBg, titleStyle]}>{title}</View>
+      <View style={[layoutStyles.content, contentBg, contentStyle]}>
+        {children}
       </View>
-      <View style={[layoutStyles.content, contentStyle]}>{children}</View>
     </View>
   )
 }
