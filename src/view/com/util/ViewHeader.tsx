@@ -100,9 +100,9 @@ export const ViewHeader = observer(function ({
         </View>
         {renderButton ? (
           renderButton()
-        ) : (
+        ) : showBackButton ? (
           <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
-        )}
+        ) : null}
       </Container>
     )
   }

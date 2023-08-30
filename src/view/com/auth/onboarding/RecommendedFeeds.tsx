@@ -19,9 +19,9 @@ export const RecommendedFeeds = observer(({next}: Props) => {
 
   return (
     <View style={[styles.container]} testID="recommendedFeedsScreen">
-      <ViewHeader title="Recommended Feeds" canGoBack={true} />
+      <ViewHeader title="Recommended Feeds" showBackButton={false} />
       <Text type="lg-medium" style={[pal.text, styles.header]}>
-        Check out some recommended feeds. Click + to add them to your list of
+        Check out some recommended feeds. Tap + to add them to your list of
         pinned feeds.
       </Text>
 
@@ -72,14 +72,15 @@ const Item = ({item}: {item: ItemProps}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 16,
     justifyContent: 'space-between',
   },
   header: {
     marginBottom: 16,
+    marginHorizontal: 16,
   },
   button: {
-    marginBottom: 48,
+    marginBottom: 24,
+    marginHorizontal: 16,
     marginTop: 16,
   },
   buttonText: {
