@@ -45,13 +45,13 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@^0.6.6":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.6.tgz#c1bfdb6bc7dee9cdba1901cde0081c2d422d7c29"
-  integrity sha512-j+yNTjllVxuTc4bAegghTopju7MdhczLXWvWIli40uXwCzQ3JjS1mFr/47eETtysib2phWYQvfhtCrqQq6AAig==
+"@atproto/api@^0.6.8":
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.8.tgz#fe77f3ab2e7a815edca1357b0a89a7496be8f764"
+  integrity sha512-WmXpIbO79f85UA8AzvvSqKibojBXN1HT3KEHhUOqXJRW8X1trYijgWIXwhnxhoBQXgiQfzKG7HdORvRjmRSLoQ==
   dependencies:
     "@atproto/common-web" "*"
-    "@atproto/uri" "*"
+    "@atproto/syntax" "*"
     "@atproto/xrpc" "*"
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
@@ -316,6 +316,13 @@
     multiformats "^9.6.4"
     uint8arrays "3.0.0"
     zod "^3.21.4"
+
+"@atproto/syntax@*":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.1.0.tgz#f13b9dad8d13342cc54295ecd702ea13c82c9bf0"
+  integrity sha512-Ktui0qvIXt1o1Px1KKC0eqn69MfRHQ9ok5EwjcxIEPbJ8OY5XqkeyJneFDIWRJZiR6vqPHfjFYRUpTB+jNPfRQ==
+  dependencies:
+    "@atproto/common-web" "*"
 
 "@atproto/uri@*":
   version "0.1.0"
