@@ -41,8 +41,10 @@ export const Welcome = observer(({next, skip}: Props) => {
         }}
       />
       <View>
-        <Text style={[pal.text, styles.title]}>Welcome to </Text>
-        <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
+        <Text style={[pal.text, styles.title]}>
+          Welcome to{' '}
+          <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
+        </Text>
         <View style={styles.spacer} />
         <View style={[styles.row]}>
           <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 48,
+    fontSize: 42,
     fontWeight: '800',
   },
   row: {

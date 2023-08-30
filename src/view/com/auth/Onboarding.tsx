@@ -6,7 +6,6 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {CenteredView} from '../util/Views'
 import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
 
@@ -24,17 +23,15 @@ export const Onboarding = observer(() => {
   const skip = () => store.onboarding.skip()
 
   return (
-    <CenteredView style={[s.hContentRegion, pal.view]}>
-      <SafeAreaView testID="noSessionView" style={s.hContentRegion}>
-        <ErrorBoundary>
-          {store.onboarding.step === 'Welcome' && (
-            <Welcome skip={skip} next={next} />
-          )}
-          {store.onboarding.step === 'RecommendedFeeds' && (
-            <RecommendedFeeds next={next} />
-          )}
-        </ErrorBoundary>
-      </SafeAreaView>
-    </CenteredView>
+    <SafeAreaView testID="onboardingView" style={[s.hContentRegion, pal.view]}>
+      <ErrorBoundary>
+        {store.onboarding.step === 'Welcome' && (
+          <Welcome skip={skip} next={next} />
+        )}
+        {store.onboarding.step === 'RecommendedFeeds' && (
+          <RecommendedFeeds next={next} />
+        )}
+      </ErrorBoundary>
+    </SafeAreaView>
   )
 })
