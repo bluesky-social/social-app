@@ -1,14 +1,11 @@
 import React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
-import {Text} from 'view/com/util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Button} from 'view/com/util/forms/Button'
 import {observer} from 'mobx-react-lite'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
-import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {makeRecordUri} from 'lib/strings/url-helpers'
+import {Text} from 'view/com/util/text/Text'
+import {Button} from 'view/com/util/forms/Button'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {isDesktopWeb} from 'platform/detection'
+import {RecommendedFeedsItem} from './RecommendedFeedsItem'
+import {usePalette} from 'lib/hooks/usePalette'
 import {RECOMMENDED_FEEDS} from 'lib/constants'
 
 type Props = {
@@ -31,7 +28,7 @@ export const RecommendedFeedsMobile = observer(({next}: Props) => {
 
       <FlatList
         data={RECOMMENDED_FEEDS}
-        renderItem={({item}) => <Item item={item} />}
+        renderItem={({item}) => <RecommendedFeedsItem {...item} />}
         keyExtractor={item => item.did + item.rkey}
         style={{flex: 1}}
       />
@@ -47,32 +44,6 @@ export const RecommendedFeedsMobile = observer(({next}: Props) => {
   )
 })
 
-type ItemProps = {
-  did: string
-  rkey: string
-}
-
-const Item = ({item}: {item: ItemProps}) => {
-  const uri = makeRecordUri(item.did, 'app.bsky.feed.generator', item.rkey)
-  const data = useCustomFeed(uri)
-  if (!data) return null
-  return (
-    <CustomFeed
-      item={data}
-      key={uri}
-      showDescription
-      showLikes
-      showSaveBtn
-      style={[
-        {
-          // @ts-ignore
-          cursor: isDesktopWeb ? 'pointer' : 'auto',
-        },
-      ]}
-    />
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -83,7 +54,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   button: {
-    marginBottom: 24,
+    marginBottom: 16,
     marginHorizontal: 16,
     marginTop: 16,
   },

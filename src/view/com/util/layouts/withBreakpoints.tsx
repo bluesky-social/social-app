@@ -1,6 +1,6 @@
 import React from 'react'
-import {useMediaQuery} from 'react-responsive'
 import {isNative} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const withBreakpoints =
   <P extends object>(
@@ -9,8 +9,7 @@ export const withBreakpoints =
     Desktop: React.ComponentType<P>,
   ): React.FC<P> =>
   (props: P) => {
-    const isTabletOrMobile = useMediaQuery({query: '(max-width: 1224px)'})
-    const isMobile = useMediaQuery({query: '(max-width: 800px)'})
+    const {isMobile, isTabletOrMobile} = useWebMediaQueries()
 
     if (isMobile || isNative) {
       return <Mobile {...props} />

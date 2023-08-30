@@ -28,6 +28,7 @@ const ShellInner = observer(() => {
     })
   }, [navigator, store.shell])
 
+  const showBottomBar = !isDesktop && !store.onboarding.isActive
   const showSideNavs =
     isDesktop && store.session.hasSession && !store.onboarding.isActive
   return (
@@ -52,7 +53,7 @@ const ShellInner = observer(() => {
         onPost={store.shell.composerOpts?.onPost}
         mention={store.shell.composerOpts?.mention}
       />
-      {!isDesktop && <BottomBarWeb />}
+      {showBottomBar && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (

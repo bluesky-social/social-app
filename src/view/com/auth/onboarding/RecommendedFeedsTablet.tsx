@@ -12,7 +12,7 @@ import {RECOMMENDED_FEEDS} from 'lib/constants'
 type Props = {
   next: () => void
 }
-export const RecommendedFeedsDesktop = observer(({next}: Props) => {
+export const RecommendedFeedsTablet = observer(({next}: Props) => {
   const pal = usePalette('default')
 
   const title = (
@@ -55,7 +55,6 @@ export const RecommendedFeedsDesktop = observer(({next}: Props) => {
       testID="recommendedFeedsScreen"
       title={title}
       horizontal
-      titleStyle={{minWidth: 470}}
       contentStyle={{paddingHorizontal: 0}}>
       <FlatList
         data={RECOMMENDED_FEEDS}
@@ -74,12 +73,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title1: {
-    fontSize: 36,
+    fontSize: 24,
     fontWeight: '800',
     textAlign: 'right',
   },
   title2: {
-    fontSize: 58,
+    fontSize: 36,
     fontWeight: '800',
     textAlign: 'right',
   },
