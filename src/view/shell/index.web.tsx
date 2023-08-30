@@ -20,7 +20,6 @@ import {NavigationProp} from 'lib/routes/types'
 const ShellInner = observer(() => {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
-
   const navigator = useNavigation<NavigationProp>()
 
   useEffect(() => {
@@ -29,6 +28,9 @@ const ShellInner = observer(() => {
     })
   }, [navigator, store.shell])
 
+  const showBottomBar = !isDesktop && !store.onboarding.isActive
+  const showSideNavs =
+    isDesktop && store.session.hasSession && !store.onboarding.isActive
   return (
     <>
       <View style={s.hContentRegion}>
@@ -36,7 +38,7 @@ const ShellInner = observer(() => {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      {isDesktop && store.session.hasSession && (
+      {showSideNavs && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav />
@@ -51,7 +53,7 @@ const ShellInner = observer(() => {
         onPost={store.shell.composerOpts?.onPost}
         mention={store.shell.composerOpts?.mention}
       />
-      {!isDesktop && <BottomBarWeb />}
+      {showBottomBar && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (

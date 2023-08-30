@@ -67,6 +67,19 @@ export class CustomFeedModel {
     }
   }
 
+  async pin() {
+    try {
+      await this.rootStore.preferences.addPinnedFeed(this.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to pin feed', error)
+    } finally {
+      track('CustomFeed:Pin', {
+        name: this.data.displayName,
+        uri: this.uri,
+      })
+    }
+  }
+
   async unsave() {
     try {
       await this.rootStore.preferences.removeSavedFeed(this.uri)

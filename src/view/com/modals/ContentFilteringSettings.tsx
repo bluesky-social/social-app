@@ -48,15 +48,17 @@ export const Component = observer(({}: {}) => {
       <ScrollView style={styles.scrollContainer}>
         <View style={s.mb10}>
           {isIOS ? (
-            <Text type="md" style={pal.textLight}>
-              Adult content can only be enabled via the Web at{' '}
-              <TextLink
-                style={pal.link}
-                href="https://bsky.app"
-                text="bsky.app"
-              />
-              .
-            </Text>
+            store.preferences.adultContentEnabled ? null : (
+              <Text type="md" style={pal.textLight}>
+                Adult content can only be enabled via the Web at{' '}
+                <TextLink
+                  style={pal.link}
+                  href="https://bsky.app"
+                  text="bsky.app"
+                />
+                .
+              </Text>
+            )
           ) : (
             <ToggleButton
               type="default-light"
@@ -188,7 +190,7 @@ function SelectGroup({current, onChange, group}: SelectGroupProps) {
       />
       <SelectableBtn
         current={current}
-        value="show"
+        value="ignore"
         label="Show"
         right
         onChange={onChange}

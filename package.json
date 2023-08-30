@@ -24,7 +24,7 @@
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
   },
   "dependencies": {
-    "@atproto/api": "^0.6.6",
+    "@atproto/api": "^0.6.8",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
@@ -36,7 +36,7 @@
     "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@gorhom/bottom-sheet": "^4.4.7",
     "@mattermost/react-native-paste-input": "^0.6.4",
-    "@miblanchard/react-native-slider": "^2.2.0",
+    "@miblanchard/react-native-slider": "^2.3.1",
     "@react-native-async-storage/async-storage": "^1.17.6",
     "@react-native-camera-roll/camera-roll": "^5.2.2",
     "@react-native-clipboard/clipboard": "^1.10.0",

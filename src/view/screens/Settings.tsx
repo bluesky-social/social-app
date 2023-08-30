@@ -162,6 +162,11 @@ export const SettingsScreen = withAuthRequired(
       Toast.show('Preferences reset')
     }, [store])
 
+    const onPressResetOnboarding = React.useCallback(async () => {
+      store.onboarding.reset()
+      Toast.show('Onboarding reset')
+    }, [store])
+
     const onPressBuildInfo = React.useCallback(() => {
       Clipboard.setString(
         `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
@@ -170,10 +175,8 @@ export const SettingsScreen = withAuthRequired(
     }, [])
 
     const openPreferencesModal = React.useCallback(() => {
-      store.shell.openModal({
-        name: 'preferences-home-feed',
-      })
-    }, [store])
+      navigation.navigate('PreferencesHomeFeed')
+    }, [navigation])
 
     const onPressAppPasswords = React.useCallback(() => {
       navigation.navigate('AppPasswords')
@@ -386,7 +389,7 @@ export const SettingsScreen = withAuthRequired(
             Advanced
           </Text>
           <TouchableOpacity
-            testID="preferencesHomeFeedModalButton"
+            testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openPreferencesModal}
             accessibilityRole="button"
@@ -533,6 +536,16 @@ export const SettingsScreen = withAuthRequired(
                 accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[pal.view, styles.linkCardNoIcon]}
+                onPress={onPressResetOnboarding}
+                accessibilityRole="button"
+                accessibilityHint="Reset onboarding"
+                accessibilityLabel="Resets the onboarding state">
+                <Text type="lg" style={pal.text}>
+                  Reset onboarding state
                 </Text>
               </TouchableOpacity>
             </>

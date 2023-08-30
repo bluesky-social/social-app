@@ -4,21 +4,9 @@ import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
-import {
-  ComAtprotoLabelDefs,
-  AppBskyActorDefs,
-  ModerationOpts,
-} from '@atproto/api'
-import {LabelValGroup} from 'lib/labeling/types'
-import {getLabelValueGroup} from 'lib/labeling/helpers'
-import {
-  UNKNOWN_LABEL_GROUP,
-  ILLEGAL_LABEL_GROUP,
-  ALWAYS_FILTER_LABEL_GROUP,
-  ALWAYS_WARN_LABEL_GROUP,
-} from 'lib/labeling/const'
+import {ModerationOpts} from '@atproto/api'
 import {DEFAULT_FEEDS} from 'lib/constants'
-import {isIOS, deviceLocales} from 'platform/detection'
+import {deviceLocales} from 'platform/detection'
 import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
@@ -32,7 +20,7 @@ const LABEL_GROUPS = [
   'spam',
   'impersonation',
 ]
-const VISIBILITY_VALUES = ['show', 'warn', 'hide']
+const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
 const DEFAULT_LANG_CODES = (deviceLocales || [])
   .concat(['en', 'ja', 'pt', 'de'])
   .slice(0, 6)
@@ -52,7 +40,7 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
-  adultContentEnabled = !isIOS
+  adultContentEnabled = false
   contentLanguages: string[] = deviceLocales || []
   postLanguage: string = deviceLocales[0] || 'en'
   postLanguageHistory: string[] = DEFAULT_LANG_CODES
@@ -189,43 +177,32 @@ export class PreferencesModel {
     await this.lock.acquireAsync()
     try {
       // fetch preferences
-      let hasSavedFeedsPref = false
-      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
+      const prefs = await this.rootStore.agent.getPreferences()
+
       runInAction(() => {
-        for (const pref of res.data.preferences) {
+        this.adultContentEnabled = prefs.adultContentEnabled
+        for (const label in prefs.contentLabels) {
           if (
-            AppBskyActorDefs.isAdultContentPref(pref) &&
-            AppBskyActorDefs.validateAdultContentPref(pref).success
+            LABEL_GROUPS.includes(label) &&
+            VISIBILITY_VALUES.includes(prefs.contentLabels[label])
           ) {
-            this.adultContentEnabled = pref.enabled
-          } else if (
-            AppBskyActorDefs.isContentLabelPref(pref) &&
-            AppBskyActorDefs.validateAdultContentPref(pref).success
-          ) {
-            if (
-              LABEL_GROUPS.includes(pref.label) &&
-              VISIBILITY_VALUES.includes(pref.visibility)
-            ) {
-              this.contentLabels[pref.label as keyof LabelPreferencesModel] =
-                pref.visibility as LabelPreference
-            }
-          } else if (
-            AppBskyActorDefs.isSavedFeedsPref(pref) &&
-            AppBskyActorDefs.validateSavedFeedsPref(pref).success
-          ) {
-            if (!isEqual(this.savedFeeds, pref.saved)) {
-              this.savedFeeds = pref.saved
-            }
-            if (!isEqual(this.pinnedFeeds, pref.pinned)) {
-              this.pinnedFeeds = pref.pinned
-            }
-            hasSavedFeedsPref = true
+            this.contentLabels[label as keyof LabelPreferencesModel] =
+              prefs.contentLabels[label]
           }
+        }
+        if (prefs.feeds.saved && !isEqual(this.savedFeeds, prefs.feeds.saved)) {
+          this.savedFeeds = prefs.feeds.saved
+        }
+        if (
+          prefs.feeds.pinned &&
+          !isEqual(this.pinnedFeeds, prefs.feeds.pinned)
+        ) {
+          this.pinnedFeeds = prefs.feeds.pinned
         }
       })
 
       // set defaults on missing items
-      if (!hasSavedFeedsPref) {
+      if (typeof prefs.feeds.saved === 'undefined') {
         const {saved, pinned} = await DEFAULT_FEEDS(
           this.rootStore.agent.service.toString(),
           (handle: string) =>
@@ -237,49 +214,13 @@ export class PreferencesModel {
           this.savedFeeds = saved
           this.pinnedFeeds = pinned
         })
-        res.data.preferences.push({
-          $type: 'app.bsky.actor.defs#savedFeedsPref',
-          saved,
-          pinned,
-        })
-        await this.rootStore.agent.app.bsky.actor.putPreferences({
-          preferences: res.data.preferences,
-        })
+        await this.rootStore.agent.setSavedFeeds(saved, pinned)
       }
     } finally {
       this.lock.release()
     }
 
     await this.rootStore.me.savedFeeds.updateCache(clearCache)
-  }
-
-  /**
-   * This function updates the preferences of a user and allows for a callback function to be executed
-   * before the update.
-   * @param cb - cb is a callback function that takes in a single parameter of type
-   * AppBskyActorDefs.Preferences and returns either a boolean or void. This callback function is used to
-   * update the preferences of the user. The function is called with the current preferences as an
-   * argument and if the callback returns false, the preferences are not updated.
-   * @returns void
-   */
-  async update(
-    cb: (
-      prefs: AppBskyActorDefs.Preferences,
-    ) => AppBskyActorDefs.Preferences | false,
-  ) {
-    await this.lock.acquireAsync()
-    try {
-      const res = await this.rootStore.agent.app.bsky.actor.getPreferences({})
-      const newPrefs = cb(res.data.preferences)
-      if (newPrefs === false) {
-        return
-      }
-      await this.rootStore.agent.app.bsky.actor.putPreferences({
-        preferences: newPrefs,
-      })
-    } finally {
-      this.lock.release()
-    }
   }
 
   /**
@@ -381,84 +322,12 @@ export class PreferencesModel {
     value: LabelPreference,
   ) {
     this.contentLabels[key] = value
-
-    await this.update((prefs: AppBskyActorDefs.Preferences) => {
-      const existing = prefs.find(
-        pref =>
-          AppBskyActorDefs.isContentLabelPref(pref) &&
-          AppBskyActorDefs.validateAdultContentPref(pref).success &&
-          pref.label === key,
-      )
-      if (existing) {
-        existing.visibility = value
-      } else {
-        prefs.push({
-          $type: 'app.bsky.actor.defs#contentLabelPref',
-          label: key,
-          visibility: value,
-        })
-      }
-      return prefs
-    })
+    await this.rootStore.agent.setContentLabelPref(key, value)
   }
 
   async setAdultContentEnabled(v: boolean) {
     this.adultContentEnabled = v
-    await this.update((prefs: AppBskyActorDefs.Preferences) => {
-      const existing = prefs.find(
-        pref =>
-          AppBskyActorDefs.isAdultContentPref(pref) &&
-          AppBskyActorDefs.validateAdultContentPref(pref).success,
-      )
-      if (existing) {
-        existing.enabled = v
-      } else {
-        prefs.push({
-          $type: 'app.bsky.actor.defs#adultContentPref',
-          enabled: v,
-        })
-      }
-      return prefs
-    })
-  }
-
-  getLabelPreference(labels: ComAtprotoLabelDefs.Label[] | undefined): {
-    pref: LabelPreference
-    desc: LabelValGroup
-  } {
-    let res: {pref: LabelPreference; desc: LabelValGroup} = {
-      pref: 'show',
-      desc: UNKNOWN_LABEL_GROUP,
-    }
-    if (!labels?.length) {
-      return res
-    }
-    for (const label of labels) {
-      const group = getLabelValueGroup(label.val)
-      if (group.id === 'illegal') {
-        return {pref: 'hide', desc: ILLEGAL_LABEL_GROUP}
-      } else if (group.id === 'always-filter') {
-        return {pref: 'hide', desc: ALWAYS_FILTER_LABEL_GROUP}
-      } else if (group.id === 'always-warn') {
-        res.pref = 'warn'
-        res.desc = ALWAYS_WARN_LABEL_GROUP
-        continue
-      } else if (group.id === 'unknown') {
-        continue
-      }
-      let pref = this.contentLabels[group.id]
-      if (pref === 'hide') {
-        res.pref = 'hide'
-        res.desc = group
-      } else if (pref === 'warn' && res.pref === 'show') {
-        res.pref = 'warn'
-        res.desc = group
-      }
-    }
-    if (res.desc.isAdultImagery && !this.adultContentEnabled) {
-      res.pref = 'hide'
-    }
-    return res
+    await this.rootStore.agent.setAdultContentEnabled(v)
   }
 
   get moderationOpts(): ModerationOpts {
@@ -499,31 +368,20 @@ export class PreferencesModel {
     }
   }
 
-  async setSavedFeeds(saved: string[], pinned: string[]) {
+  async _optimisticUpdateSavedFeeds(
+    saved: string[],
+    pinned: string[],
+    cb: () => Promise<{saved: string[]; pinned: string[]}>,
+  ) {
     const oldSaved = this.savedFeeds
     const oldPinned = this.pinnedFeeds
     this.savedFeeds = saved
     this.pinnedFeeds = pinned
     try {
-      await this.update((prefs: AppBskyActorDefs.Preferences) => {
-        let feedsPref = prefs.find(
-          pref =>
-            AppBskyActorDefs.isSavedFeedsPref(pref) &&
-            AppBskyActorDefs.validateSavedFeedsPref(pref).success,
-        )
-        if (feedsPref) {
-          feedsPref.saved = saved
-          feedsPref.pinned = pinned
-        } else {
-          feedsPref = {
-            $type: 'app.bsky.actor.defs#savedFeedsPref',
-            saved,
-            pinned,
-          }
-        }
-        return prefs
-          .filter(pref => !AppBskyActorDefs.isSavedFeedsPref(pref))
-          .concat([feedsPref])
+      const res = await cb()
+      runInAction(() => {
+        this.savedFeeds = res.saved
+        this.pinnedFeeds = res.pinned
       })
     } catch (e) {
       runInAction(() => {
@@ -534,25 +392,41 @@ export class PreferencesModel {
     }
   }
 
+  async setSavedFeeds(saved: string[], pinned: string[]) {
+    return this._optimisticUpdateSavedFeeds(saved, pinned, () =>
+      this.rootStore.agent.setSavedFeeds(saved, pinned),
+    )
+  }
+
   async addSavedFeed(v: string) {
-    return this.setSavedFeeds([...this.savedFeeds, v], this.pinnedFeeds)
+    return this._optimisticUpdateSavedFeeds(
+      [...this.savedFeeds, v],
+      this.pinnedFeeds,
+      () => this.rootStore.agent.addSavedFeed(v),
+    )
   }
 
   async removeSavedFeed(v: string) {
-    return this.setSavedFeeds(
+    return this._optimisticUpdateSavedFeeds(
       this.savedFeeds.filter(uri => uri !== v),
       this.pinnedFeeds.filter(uri => uri !== v),
+      () => this.rootStore.agent.removeSavedFeed(v),
     )
   }
 
   async addPinnedFeed(v: string) {
-    return this.setSavedFeeds(this.savedFeeds, [...this.pinnedFeeds, v])
+    return this._optimisticUpdateSavedFeeds(
+      this.savedFeeds,
+      [...this.pinnedFeeds, v],
+      () => this.rootStore.agent.addPinnedFeed(v),
+    )
   }
 
   async removePinnedFeed(v: string) {
-    return this.setSavedFeeds(
+    return this._optimisticUpdateSavedFeeds(
       this.savedFeeds,
       this.pinnedFeeds.filter(uri => uri !== v),
+      () => this.rootStore.agent.removePinnedFeed(v),
     )
   }
 
