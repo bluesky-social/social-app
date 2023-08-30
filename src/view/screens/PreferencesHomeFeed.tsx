@@ -54,7 +54,12 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
   return (
     <CenteredView
       testID="preferencesHomeFeedScreen"
-      style={[pal.view, styles.container]}>
+      style={[
+        pal.view,
+        pal.border,
+        styles.container,
+        isDesktopWeb && styles.desktopContainer,
+      ]}>
       <ViewHeader title="Home Feed Preferences" showOnDesktop />
       <View style={styles.titleSection}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
@@ -125,7 +130,7 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
               ? navigation.goBack()
               : navigation.navigate('Settings')
           }}
-          style={[styles.btn]}
+          style={[styles.btn, isDesktopWeb && styles.btnDesktop]}
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
@@ -140,6 +145,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: isDesktopWeb ? 40 : 90,
+  },
+  desktopContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   titleSection: {
     paddingBottom: 30,
@@ -169,9 +178,12 @@ const styles = StyleSheet.create({
     padding: 14,
     backgroundColor: colors.blue3,
   },
+  btnDesktop: {
+    marginHorizontal: 'auto',
+    paddingHorizontal: 80,
+  },
   btnContainer: {
     paddingTop: 20,
-    paddingHorizontal: 20,
     borderTopWidth: isDesktopWeb ? 0 : 1,
   },
   dimmed: {
