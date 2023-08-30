@@ -23,7 +23,7 @@ export const router = new Router({
   Debug: '/sys/debug',
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
-  PreferencesHomeFeed: '/settings/preferences-home-feed',
+  PreferencesHomeFeed: '/settings/home-feed',
   SavedFeeds: '/settings/saved-feeds',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
