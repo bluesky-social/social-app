@@ -5,7 +5,7 @@ import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 
 interface Props {
   testID?: string
-  title: React.Component
+  title: JSX.Element
   horizontal: boolean
   titleStyle?: StyleProp<ViewStyle>
   contentStyle?: StyleProp<ViewStyle>

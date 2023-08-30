@@ -5,19 +5,12 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
 
 export const Onboarding = observer(() => {
   const pal = usePalette('default')
   const store = useStores()
-  const {screen} = useAnalytics()
-
-  React.useEffect(() => {
-    screen('Onboarding')
-    store.shell.setMinimalShellMode(true)
-  }, [store, screen])
 
   const next = () => store.onboarding.next()
   const skip = () => store.onboarding.skip()
