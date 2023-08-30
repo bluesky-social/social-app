@@ -1,4 +1,5 @@
 import React from 'react'
+import {View, StyleSheet} from 'react-native'
 import {SearchUIModel} from 'state/models/ui/search'
 import {FoafsModel} from 'state/models/discovery/foafs'
 import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
@@ -47,13 +48,28 @@ export const SearchScreen = withAuthRequired(
     const {isDesktop} = useWebMediaQueries()
 
     if (searchUIModel) {
-      return <SearchResults model={searchUIModel} />
+      return (
+        <View style={styles.scrollContainer}>
+          <SearchResults model={searchUIModel} />
+        </View>
+      )
     }
 
     if (!isDesktop) {
-      return <Mobile.SearchScreen navigation={navigation} route={route} />
+      return (
+        <View style={styles.scrollContainer}>
+          <Mobile.SearchScreen navigation={navigation} route={route} />
+        </View>
+      )
     }
 
     return <Suggestions foafs={foafs} suggestedActors={suggestedActors} />
   }),
 )
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    height: '100%',
+    overflowY: 'auto',
+  },
+})

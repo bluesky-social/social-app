@@ -29,9 +29,14 @@ export function usePhotoLibraryPermission() {
 
     if (res?.granted) {
       return true
-    } else if (!res || res?.status === 'undetermined' || res?.canAskAgain) {
-      const updatedRes = await requestPermission()
-      return updatedRes?.granted
+    } else if (!res || res.status === 'undetermined' || res?.canAskAgain) {
+      const {canAskAgain, granted, status} = await requestPermission()
+
+      if (!canAskAgain && status === 'undetermined') {
+        openPermissionAlert('photo library')
+      }
+
+      return granted
     } else {
       openPermissionAlert('photo library')
       return false

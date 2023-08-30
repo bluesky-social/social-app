@@ -45,13 +45,13 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@^0.6.6":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.6.tgz#c1bfdb6bc7dee9cdba1901cde0081c2d422d7c29"
-  integrity sha512-j+yNTjllVxuTc4bAegghTopju7MdhczLXWvWIli40uXwCzQ3JjS1mFr/47eETtysib2phWYQvfhtCrqQq6AAig==
+"@atproto/api@^0.6.8":
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.8.tgz#fe77f3ab2e7a815edca1357b0a89a7496be8f764"
+  integrity sha512-WmXpIbO79f85UA8AzvvSqKibojBXN1HT3KEHhUOqXJRW8X1trYijgWIXwhnxhoBQXgiQfzKG7HdORvRjmRSLoQ==
   dependencies:
     "@atproto/common-web" "*"
-    "@atproto/uri" "*"
+    "@atproto/syntax" "*"
     "@atproto/xrpc" "*"
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
@@ -316,6 +316,13 @@
     multiformats "^9.6.4"
     uint8arrays "3.0.0"
     zod "^3.21.4"
+
+"@atproto/syntax@*":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.1.0.tgz#f13b9dad8d13342cc54295ecd702ea13c82c9bf0"
+  integrity sha512-Ktui0qvIXt1o1Px1KKC0eqn69MfRHQ9ok5EwjcxIEPbJ8OY5XqkeyJneFDIWRJZiR6vqPHfjFYRUpTB+jNPfRQ==
+  dependencies:
+    "@atproto/common-web" "*"
 
 "@atproto/uri@*":
   version "0.1.0"
@@ -3501,7 +3508,7 @@
   dependencies:
     semver "7.5.4"
 
-"@miblanchard/react-native-slider@^2.2.0":
+"@miblanchard/react-native-slider@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.3.1.tgz#79e0f1f9b1ce43ef25ee51ee9256c012e5dfa412"
   integrity sha512-J/hZDBWmXq8fJeOnTVHqIUVDHshqMSpJVxJ4WqwuCBKl5Rke9OBYXIdkSlgi75OgtScAr8FKK5KNkDKHUf6JIg==
@@ -16796,7 +16803,7 @@ react-native-fs@^2.20.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@2.12.1:
+react-native-gesture-handler@^2.12.1:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.12.1.tgz#f11a99fb95169810c6886fad5efa01a17fd81660"
   integrity sha512-deqh36bw82CFUV9EC4tTo2PP1i9HfCOORGS3Zmv71UYhEZEHkzZv18IZNPB+2Awzj45vLIidZxGYGFxHlDSQ5A==
