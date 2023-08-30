@@ -12,6 +12,10 @@ export const Onboarding = observer(() => {
   const pal = usePalette('default')
   const store = useStores()
 
+  React.useEffect(() => {
+    store.shell.setMinimalShellMode(true)
+  }, [store])
+
   const next = () => store.onboarding.next()
   const skip = () => store.onboarding.skip()
 
