@@ -17,7 +17,7 @@ import {RECOMMENDED_FEEDS} from 'lib/constants'
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(({next}: Props) => {
+export const RecommendedFeedsDesktop = observer(({next}: Props) => {
   const pal = usePalette('default')
 
   const title = (
