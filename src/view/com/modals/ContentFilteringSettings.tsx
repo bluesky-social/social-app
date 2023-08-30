@@ -48,9 +48,7 @@ export const Component = observer(({}: {}) => {
       <ScrollView style={styles.scrollContainer}>
         <View style={s.mb10}>
           {isIOS ? (
-            store.preferences.adultContentEnabled ? (
-              <></>
-            ) : (
+            store.preferences.adultContentEnabled ? null : (
               <Text type="md" style={pal.textLight}>
                 Adult content can only be enabled via the Web at{' '}
                 <TextLink
