@@ -15,9 +15,9 @@ import {ListsList} from 'view/com/lists/ListsList'
 import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from 'view/com/util/Views'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {isDesktopWeb} from 'platform/detection'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -26,6 +26,7 @@ type Props = NativeStackScreenProps<
 export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const navigation = useNavigation<NavigationProp>()
 
   const mutelists: ListsListModel = React.useMemo(
@@ -89,7 +90,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
         styles.container,
         pal.view,
         pal.border,
-        isDesktopWeb && styles.containerDesktop,
+        isTabletOrDesktop && styles.containerDesktop,
       ]}
       testID="moderationMutelistsScreen">
       <ViewHeader
@@ -99,7 +100,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
       />
       <ListsList
         listsList={mutelists}
-        showAddBtns={isDesktopWeb}
+        showAddBtns={isTabletOrDesktop}
         renderEmptyState={renderEmptyState}
         onPressCreateNew={onPressNewMuteList}
       />
@@ -110,11 +111,12 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 100,
+    paddingBottom: 100,
   },
   containerDesktop: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    paddingBottom: 0,
   },
   createBtn: {
     width: 40,

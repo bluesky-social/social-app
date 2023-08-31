@@ -11,7 +11,7 @@ import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import type {ConfirmModal} from 'state/models/ui/shell'
 
 export const snapPoints = ['50%']
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    paddingBottom: isDesktopWeb ? 0 : 60,
+    paddingBottom: isWeb ? 0 : 60,
   },
   title: {
     textAlign: 'center',

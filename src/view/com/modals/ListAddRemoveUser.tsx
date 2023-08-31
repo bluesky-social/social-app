@@ -19,7 +19,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb, isAndroid} from 'platform/detection'
+import {isWeb, isAndroid} from 'platform/detection'
 import isEqual from 'lodash.isequal'
 
 export const snapPoints = ['fullscreen']
@@ -231,7 +231,7 @@ export const Component = observer(
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: isDesktopWeb ? 0 : 16,
+    paddingHorizontal: isWeb ? 0 : 16,
   },
   title: {
     textAlign: 'center',

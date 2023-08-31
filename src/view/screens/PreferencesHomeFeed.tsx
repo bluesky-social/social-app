@@ -6,7 +6,8 @@ import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isWeb} from 'platform/detection'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -50,6 +51,7 @@ type Props = NativeStackScreenProps<
 export const PreferencesHomeFeed = observer(({navigation}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
   return (
     <CenteredView
@@ -58,10 +60,11 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
         pal.view,
         pal.border,
         styles.container,
-        isDesktopWeb && styles.desktopContainer,
+        isTabletOrDesktop && styles.desktopContainer,
       ]}>
       <ViewHeader title="Home Feed Preferences" showOnDesktop />
-      <View style={styles.titleSection}>
+      <View
+        style={[styles.titleSection, isTabletOrDesktop && {paddingTop: 20}]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
           Fine-tune the content you see on your home screen.
         </Text>
@@ -122,7 +125,12 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
         </View>
       </ScrollView>
 
-      <View style={[styles.btnContainer, pal.borderDark]}>
+      <View
+        style={[
+          styles.btnContainer,
+          !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
+          pal.borderDark,
+        ]}>
         <TouchableOpacity
           testID="confirmBtn"
           onPress={() => {
@@ -130,7 +138,7 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
               ? navigation.goBack()
               : navigation.navigate('Settings')
           }}
-          style={[styles.btn, isDesktopWeb && styles.btnDesktop]}
+          style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
@@ -144,15 +152,15 @@ export const PreferencesHomeFeed = observer(({navigation}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 40 : 90,
+    paddingBottom: 90,
   },
   desktopContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    paddingBottom: 40,
   },
   titleSection: {
     paddingBottom: 30,
-    paddingTop: isDesktopWeb ? 20 : 0,
   },
   title: {
     textAlign: 'center',
@@ -184,7 +192,6 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     paddingTop: 20,
-    borderTopWidth: isDesktopWeb ? 0 : 1,
   },
   dimmed: {
     opacity: 0.3,

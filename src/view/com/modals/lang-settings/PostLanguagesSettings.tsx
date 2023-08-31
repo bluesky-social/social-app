@@ -5,7 +5,8 @@ import {ScrollView} from '../util'
 import {useStores} from 'state/index'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb, deviceLocales} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
@@ -15,6 +16,7 @@ export const snapPoints = ['100%']
 export const Component = observer(() => {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
     store.shell.closeModal()
   }, [store])
@@ -48,7 +50,19 @@ export const Component = observer(() => {
   )
 
   return (
-    <View testID="postLanguagesModal" style={[pal.view, styles.container]}>
+    <View
+      testID="postLanguagesModal"
+      style={[
+        pal.view,
+        styles.container,
+        isMobile
+          ? {
+              paddingTop: 20,
+            }
+          : {
+              maxHeight: '90vh',
+            },
+      ]}>
       <Text style={[pal.text, styles.title]}>Post Languages</Text>
       <Text style={[pal.text, styles.description]}>
         Which languages are used in this post?
@@ -80,7 +94,11 @@ export const Component = observer(() => {
             />
           )
         })}
-        <View style={styles.bottomSpacer} />
+        <View
+          style={{
+            height: isMobile ? 60 : 0,
+          }}
+        />
       </ScrollView>
       <ConfirmLanguagesButton onPress={onPressDone} />
     </View>
@@ -90,7 +108,6 @@ export const Component = observer(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
   },
   title: {
     textAlign: 'center',
@@ -106,9 +123,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 10,
-  },
-  bottomSpacer: {
-    height: isDesktopWeb ? 0 : 60,
   },
   languageToggle: {
     borderTopWidth: 1,

@@ -18,7 +18,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../util/text/Text'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
-import {isDesktopWeb, isAndroid} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 
 export const snapPoints = ['fullscreen']
@@ -35,7 +35,7 @@ export function Component({image}: Props) {
   const windim = useWindowDimensions()
 
   const imageStyles = useMemo<ImageStyle>(() => {
-    const maxWidth = isDesktopWeb ? 450 : windim.width
+    const maxWidth = isWeb ? 450 : windim.width
     if (image.height > image.width) {
       return {
         resizeMode: 'contain',
@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     width: '100%',
-    paddingVertical: isDesktopWeb ? 0 : 18,
+    paddingVertical: isWeb ? 0 : 18,
   },
   scrollContainer: {
     flex: 1,
     height: '100%',
-    paddingHorizontal: isDesktopWeb ? 0 : 12,
+    paddingHorizontal: isWeb ? 0 : 12,
   },
   scrollInner: {
     gap: 12,

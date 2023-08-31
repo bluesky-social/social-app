@@ -10,8 +10,8 @@ import {FeedsDiscoveryModel} from 'state/models/discovery/feeds'
 import {CenteredView, FlatList} from 'view/com/util/Views'
 import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
@@ -23,6 +23,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
     const store = useStores()
     const pal = usePalette('default')
     const feeds = React.useMemo(() => new FeedsDiscoveryModel(store), [store])
+    const {isTabletOrDesktop} = useWebMediaQueries()
 
     // search stuff
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
@@ -74,7 +75,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
         <View style={styles.empty}>
           <Text type="lg" style={pal.textLight}>
             {feeds.isLoading
-              ? isDesktopWeb
+              ? isTabletOrDesktop
                 ? 'Loading...'
                 : ''
               : query
@@ -100,9 +101,10 @@ export const DiscoverFeedsScreen = withAuthRequired(
 
     return (
       <CenteredView style={[styles.container, pal.view]}>
-        <View style={[isDesktopWeb && styles.containerDesktop, pal.border]}>
+        <View
+          style={[isTabletOrDesktop && styles.containerDesktop, pal.border]}>
           <ViewHeader title="Discover Feeds" showOnDesktop />
-          <View style={{marginTop: isDesktopWeb ? 5 : 0, marginBottom: 4}}>
+          <View style={{marginTop: isTabletOrDesktop ? 5 : 0, marginBottom: 4}}>
             <HeaderWithInput
               isInputFocused={isInputFocused}
               query={query}
@@ -116,7 +118,7 @@ export const DiscoverFeedsScreen = withAuthRequired(
           </View>
         </View>
         <FlatList
-          style={[!isDesktopWeb && s.flex1]}
+          style={[!isTabletOrDesktop && s.flex1]}
           data={feeds.feeds}
           keyExtractor={item => item.data.uri}
           contentContainerStyle={styles.contentContainer}

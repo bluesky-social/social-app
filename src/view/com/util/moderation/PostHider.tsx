@@ -2,13 +2,13 @@ import React, {ComponentProps} from 'react'
 import {StyleSheet, Pressable, View} from 'react-native'
 import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
 import {describeModerationCause} from 'lib/moderation'
 import {ShieldExclamation} from 'lib/icons'
 import {useStores} from 'state/index'
-import {isDesktopWeb} from 'platform/detection'
 
 interface Props extends ComponentProps<typeof Link> {
   // testID?: string
@@ -27,6 +27,7 @@ export function PostHider({
 }: Props) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
 
   if (!moderation.blur) {
@@ -55,7 +56,11 @@ export function PostHider({
         accessibilityRole="button"
         accessibilityHint={override ? 'Hide the content' : 'Show the content'}
         accessibilityLabel=""
-        style={[styles.description, pal.viewLight]}>
+        style={[
+          styles.description,
+          {paddingRight: isMobile ? 22 : 18},
+          pal.viewLight,
+        ]}>
         <Pressable
           onPress={() => {
             store.shell.openModal({
@@ -100,7 +105,6 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingVertical: 14,
     paddingLeft: 18,
-    paddingRight: isDesktopWeb ? 18 : 22,
     marginTop: 1,
   },
   showBtn: {

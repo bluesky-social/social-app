@@ -5,9 +5,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CharProgress} from '../../composer/char-progress/CharProgress'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {SendReportButton} from './SendReportButton'
-import {isDesktopWeb} from 'platform/detection'
 
 export function InputIssueDetails({
   details,
@@ -23,9 +23,13 @@ export function InputIssueDetails({
   isProcessing: boolean
 }) {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   return (
-    <View style={[styles.detailsContainer]}>
+    <View
+      style={{
+        marginTop: isMobile ? 12 : 0,
+      }}>
       <TouchableOpacity
         testID="addDetailsBtn"
         style={[s.mb10, styles.backBtn]}
@@ -63,9 +67,6 @@ export function InputIssueDetails({
 }
 
 const styles = StyleSheet.create({
-  detailsContainer: {
-    marginTop: isDesktopWeb ? 0 : 12,
-  },
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
