@@ -400,6 +400,12 @@ export class NotificationsFeedModel {
       const queueModels = await this._fetchItemModels(queue)
       this._setQueued(this._filterNotifications(queueModels))
       this._countUnread()
+
+      // if there are no notifications, we should refresh the list
+      // this will only run for new users who have no notifications
+      if (this.isEmpty) {
+        await this.refresh()
+      }
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:syncQueue failed', {e})
     } finally {
