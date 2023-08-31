@@ -31,7 +31,7 @@ const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
-  observer((_opts: Props) => {
+  observer(({}: Props) => {
     const store = useStores()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)

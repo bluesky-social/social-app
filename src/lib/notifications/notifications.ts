@@ -61,10 +61,13 @@ export function init(store: RootStoreModel) {
     })
   })
 
-  // handle notifications that are tapped on, regardless of whether the app is in the foreground or background
+  // handle notifications that are received, both in the foreground or background
   Notifications.addNotificationReceivedListener(event => {
     store.log.debug('Notifications: received', event)
     if (event.request.trigger.type === 'push') {
+      // refresh notifications in the background
+      store.me.notifications.syncQueue()
+      // handle payload-based deeplinks
       let payload
       if (isIOS) {
         payload = event.request.trigger.payload
@@ -78,6 +81,7 @@ export function init(store: RootStoreModel) {
     }
   })
 
+  // handle notifications that are tapped on
   const sub = Notifications.addNotificationResponseReceivedListener(
     response => {
       store.log.debug(
@@ -91,7 +95,8 @@ export function init(store: RootStoreModel) {
           'User pressed a notification, opening notifications tab',
         )
         track('Notificatons:OpenApp')
-        resetToTab('NotificationsTab')
+        store.me.notifications.refresh() // refresh notifications
+        resetToTab('NotificationsTab') // open notifications tab
       }
     },
   )

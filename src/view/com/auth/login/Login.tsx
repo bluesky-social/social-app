@@ -17,6 +17,7 @@ import {BskyAgent} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
+import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
 import {s, colors} from 'lib/styles'
 import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
@@ -99,52 +100,69 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      testID="signIn"
-      behavior="padding"
-      style={[pal.view, s.pt10]}>
+    <KeyboardAvoidingView testID="signIn" behavior="padding" style={pal.view}>
       {currentForm === Forms.Login ? (
-        <LoginForm
-          store={store}
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          initialHandle={initialHandle}
-          setError={setError}
-          setServiceUrl={setServiceUrl}
-          onPressBack={onPressBack}
-          onPressForgotPassword={onPressForgotPassword}
-          onPressRetryConnect={onPressRetryConnect}
-        />
+        <LoggedOutLayout
+          leadin=""
+          title="Sign in"
+          description="Enter your username and password">
+          <LoginForm
+            store={store}
+            error={error}
+            serviceUrl={serviceUrl}
+            serviceDescription={serviceDescription}
+            initialHandle={initialHandle}
+            setError={setError}
+            setServiceUrl={setServiceUrl}
+            onPressBack={onPressBack}
+            onPressForgotPassword={onPressForgotPassword}
+            onPressRetryConnect={onPressRetryConnect}
+          />
+        </LoggedOutLayout>
       ) : undefined}
       {currentForm === Forms.ChooseAccount ? (
-        <ChooseAccountForm
-          store={store}
-          onSelectAccount={onSelectAccount}
-          onPressBack={onPressBack}
-        />
+        <LoggedOutLayout
+          leadin=""
+          title="Sign in as..."
+          description="Select from an existing account">
+          <ChooseAccountForm
+            store={store}
+            onSelectAccount={onSelectAccount}
+            onPressBack={onPressBack}
+          />
+        </LoggedOutLayout>
       ) : undefined}
       {currentForm === Forms.ForgotPassword ? (
-        <ForgotPasswordForm
-          store={store}
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          setError={setError}
-          setServiceUrl={setServiceUrl}
-          onPressBack={gotoForm(Forms.Login)}
-          onEmailSent={gotoForm(Forms.SetNewPassword)}
-        />
+        <LoggedOutLayout
+          leadin=""
+          title="Forgot Password"
+          description="Let's get your password reset!">
+          <ForgotPasswordForm
+            store={store}
+            error={error}
+            serviceUrl={serviceUrl}
+            serviceDescription={serviceDescription}
+            setError={setError}
+            setServiceUrl={setServiceUrl}
+            onPressBack={gotoForm(Forms.Login)}
+            onEmailSent={gotoForm(Forms.SetNewPassword)}
+          />
+        </LoggedOutLayout>
       ) : undefined}
       {currentForm === Forms.SetNewPassword ? (
-        <SetNewPasswordForm
-          store={store}
-          error={error}
-          serviceUrl={serviceUrl}
-          setError={setError}
-          onPressBack={gotoForm(Forms.ForgotPassword)}
-          onPasswordSet={gotoForm(Forms.PasswordUpdated)}
-        />
+        <LoggedOutLayout
+          leadin=""
+          title="Forgot Password"
+          description="Let's get your password reset!">
+          <SetNewPasswordForm
+            store={store}
+            error={error}
+            serviceUrl={serviceUrl}
+            setError={setError}
+            onPressBack={gotoForm(Forms.ForgotPassword)}
+            onPasswordSet={gotoForm(Forms.PasswordUpdated)}
+          />
+        </LoggedOutLayout>
       ) : undefined}
       {currentForm === Forms.PasswordUpdated ? (
         <PasswordUpdatedForm onPressNext={gotoForm(Forms.Login)} />
@@ -834,9 +852,9 @@ const SetNewPasswordForm = ({
 const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
   const {screen} = useAnalytics()
 
-  // useEffect(() => {
-  screen('Signin:PasswordUpdatedForm')
-  // }, [screen])
+  useEffect(() => {
+    screen('Signin:PasswordUpdatedForm')
+  }, [screen])
 
   const pal = usePalette('default')
   return (
