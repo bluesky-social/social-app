@@ -93,6 +93,7 @@ function validWebLink(url?: string): string | undefined {
 
 const styles = StyleSheet.create({
   policies: {
+    flexDirection: 'row',
     gap: 8,
   },
   errorIcon: {

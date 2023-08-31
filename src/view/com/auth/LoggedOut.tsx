@@ -9,7 +9,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {SplashScreen} from './SplashScreen'
-import {CenteredView} from '../util/Views'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -43,25 +42,23 @@ export const LoggedOut = observer(() => {
   }
 
   return (
-    <CenteredView style={[s.hContentRegion, pal.view]}>
-      <SafeAreaView testID="noSessionView" style={s.hContentRegion}>
-        <ErrorBoundary>
-          {screenState === ScreenState.S_Login ? (
-            <Login
-              onPressBack={() =>
-                setScreenState(ScreenState.S_LoginOrCreateAccount)
-              }
-            />
-          ) : undefined}
-          {screenState === ScreenState.S_CreateAccount ? (
-            <CreateAccount
-              onPressBack={() =>
-                setScreenState(ScreenState.S_LoginOrCreateAccount)
-              }
-            />
-          ) : undefined}
-        </ErrorBoundary>
-      </SafeAreaView>
-    </CenteredView>
+    <SafeAreaView testID="noSessionView" style={[s.hContentRegion, pal.view]}>
+      <ErrorBoundary>
+        {screenState === ScreenState.S_Login ? (
+          <Login
+            onPressBack={() =>
+              setScreenState(ScreenState.S_LoginOrCreateAccount)
+            }
+          />
+        ) : undefined}
+        {screenState === ScreenState.S_CreateAccount ? (
+          <CreateAccount
+            onPressBack={() =>
+              setScreenState(ScreenState.S_LoginOrCreateAccount)
+            }
+          />
+        ) : undefined}
+      </ErrorBoundary>
+    </SafeAreaView>
   )
 })
