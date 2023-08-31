@@ -120,7 +120,7 @@ export class CreateAccountModel {
       })
       track('Create Account')
     } catch (e: any) {
-      this.rootStore.onboarding.skip() // whoops jk
+      this.rootStore.onboarding.skip() // undo starting the onboard
       let errMsg = e.toString()
       if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
         errMsg =
