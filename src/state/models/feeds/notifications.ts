@@ -337,23 +337,24 @@ export class NotificationsFeedModel {
    */
   setup = bundleAsync(async (isRefreshing: boolean = false) => {
     this.rootStore.log.debug('NotificationsModel:refresh', {isRefreshing})
-    await this.lock.acquireAsync()
+    await this.lock.acquireAsync({
+      timeout: 10e3,
+    })
+
     try {
       this._xLoading(isRefreshing)
-      try {
-        const res = await this.rootStore.agent.listNotifications({
-          limit: PAGE_SIZE,
-        })
-        await this._replaceAll(res)
-        this._setQueued(undefined)
-        this._countUnread()
-        this._xIdle()
-      } catch (e: any) {
-        this._xIdle(e)
-      }
-    } finally {
-      this.lock.release()
+      const res = await this.rootStore.agent.listNotifications({
+        limit: PAGE_SIZE,
+      })
+      await this._replaceAll(res)
+      this._setQueued(undefined)
+      this._countUnread()
+      this._xIdle()
+    } catch (e: any) {
+      this._xIdle(e)
     }
+
+    this.lock.release()
   })
 
   /**
@@ -409,9 +410,9 @@ export class NotificationsFeedModel {
       this._countUnread()
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:syncQueue failed', {e})
-    } finally {
-      this.lock.release()
     }
+
+    this.lock.release()
   })
 
   /**
@@ -437,9 +438,8 @@ export class NotificationsFeedModel {
           this.hasMore = false
         })
       }
-    } finally {
-      this.lock.release()
-    }
+    } catch (e) {}
+    this.lock.release()
   })
 
   /**
