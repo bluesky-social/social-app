@@ -123,6 +123,7 @@ function DesktopWebHeader({
     <CenteredView
       style={[
         styles.header,
+        styles.headerFixed,
         styles.desktopHeader,
         pal.border,
         {
@@ -179,6 +180,7 @@ const Container = observer(
         <View
           style={[
             styles.header,
+            styles.headerFixed,
             pal.view,
             pal.border,
             showBorder && styles.border,
@@ -191,9 +193,9 @@ const Container = observer(
       <Animated.View
         style={[
           styles.header,
+          styles.headerFloating,
           pal.view,
           pal.border,
-          styles.headerFloating,
           transform,
           showBorder && styles.border,
         ]}>
@@ -210,6 +212,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     width: '100%',
+  },
+  headerFixed: {
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -218,7 +222,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: '100%',
-    maxWidth: 'none',
   },
   desktopHeader: {
     paddingVertical: 12,
