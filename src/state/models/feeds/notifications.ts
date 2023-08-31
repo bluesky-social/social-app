@@ -392,6 +392,13 @@ export class NotificationsFeedModel {
         queue.push(notif)
       }
 
+      // if there are no notifications, we should refresh the list
+      // this will only run for new users who have no notifications
+      if (this.isEmpty) {
+        await this.refresh()
+        return // break early to avoid double-fetching of data
+      }
+
       // NOTE
       // because filtering depends on the added information we have to fetch
       // the full models here. this is *not* ideal performance and we need
@@ -400,12 +407,6 @@ export class NotificationsFeedModel {
       const queueModels = await this._fetchItemModels(queue)
       this._setQueued(this._filterNotifications(queueModels))
       this._countUnread()
-
-      // if there are no notifications, we should refresh the list
-      // this will only run for new users who have no notifications
-      if (this.isEmpty) {
-        await this.refresh()
-      }
     } catch (e) {
       this.rootStore.log.error('NotificationsModel:syncQueue failed', {e})
     } finally {
