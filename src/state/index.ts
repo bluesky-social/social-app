@@ -11,7 +11,7 @@ export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const PROD_SERVICE = 'https://bsky.social'
 export const DEFAULT_SERVICE = PROD_SERVICE
 const ROOT_STATE_STORAGE_KEY = 'root'
-const STATE_FETCH_INTERVAL = 15e3
+const STATE_FETCH_INTERVAL = 15e3 // 15sec
 
 export async function setupState(serviceUri = DEFAULT_SERVICE) {
   let rootStore: RootStoreModel
