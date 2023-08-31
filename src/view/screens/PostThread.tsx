@@ -68,8 +68,8 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
 
   return (
     <View style={s.hContentRegion}>
-      <ViewHeader title="Post" />
-      <View style={s.hContentRegion}>
+      {isMobile && <ViewHeader title="Post" />}
+      <View style={s.flex1}>
         <PostThreadComponent
           uri={uri}
           view={view}

@@ -35,7 +35,7 @@ export const ViewHeader = observer(function ({
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isDesktop} = useWebMediaQueries()
+  const {isDesktop, isTablet} = useWebMediaQueries()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -85,13 +85,13 @@ export const ViewHeader = observer(function ({
                 icon="angle-left"
                 style={[styles.backIcon, pal.text]}
               />
-            ) : (
+            ) : !isTablet ? (
               <FontAwesomeIcon
                 size={18}
                 icon="bars"
                 style={[styles.backIcon, pal.textLight]}
               />
-            )}
+            ) : null}
           </TouchableOpacity>
         ) : null}
         <View style={styles.titleContainer} pointerEvents="none">
