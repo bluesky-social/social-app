@@ -80,5 +80,7 @@ export function isPostInLanguage(
 }
 
 export function getTranslatorLink(text: string): string {
-  return encodeURI(`https://translate.google.com/?sl=auto&text=${text}`)
+  return `https://translate.google.com/?sl=auto&text=${encodeURIComponent(
+    text,
+  )}`
 }
