@@ -3,8 +3,8 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import type {Modal as ModalIface} from 'state/models/ui/shell'
-import {isMobileWeb} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -47,6 +47,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
 function Modal({modal}: {modal: ModalIface}) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   if (!store.shell.isModalActive) {
     return null
@@ -119,7 +120,7 @@ function Modal({modal}: {modal: ModalIface}) {
           <View
             style={[
               styles.container,
-              isMobileWeb && styles.containerMobile,
+              isMobile && styles.containerMobile,
               pal.view,
               pal.border,
             ]}>

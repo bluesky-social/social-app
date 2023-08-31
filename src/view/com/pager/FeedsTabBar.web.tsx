@@ -13,8 +13,8 @@ export const FeedsTabBar = observer(
   (
     props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
   ) => {
-    const {isDesktop} = useWebMediaQueries()
-    if (!isDesktop) {
+    const {isMobile} = useWebMediaQueries()
+    if (isMobile) {
       return <FeedsTabBarMobile {...props} />
     } else {
       return <FeedsTabBarDesktop {...props} />

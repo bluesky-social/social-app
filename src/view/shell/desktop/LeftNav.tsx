@@ -17,6 +17,7 @@ import {Link} from 'view/com/util/Link'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s, colors} from 'lib/styles'
 import {
   HomeIcon,
@@ -41,18 +42,28 @@ import {makeProfileLink} from 'lib/routes/links'
 
 const ProfileCard = observer(() => {
   const store = useStores()
+  const {isDesktop} = useWebMediaQueries()
+  const size = isDesktop ? 64 : 48
   return store.me.handle ? (
-    <Link href={makeProfileLink(store.me)} style={styles.profileCard} asAnchor>
-      <UserAvatar avatar={store.me.avatar} size={64} />
+    <Link
+      href={makeProfileLink(store.me)}
+      style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
+      asAnchor>
+      <UserAvatar avatar={store.me.avatar} size={size} />
     </Link>
   ) : (
-    <View style={styles.profileCard}>
-      <LoadingPlaceholder width={64} height={64} style={{borderRadius: 64}} />
+    <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
+      <LoadingPlaceholder
+        width={size}
+        height={size}
+        style={{borderRadius: size}}
+      />
     </View>
   )
 })
 
 function BackBtn() {
+  const {isTablet} = useWebMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
@@ -65,7 +76,7 @@ function BackBtn() {
     }
   }, [navigation])
 
-  if (!shouldShow) {
+  if (!shouldShow || isTablet) {
     return <></>
   }
   return (
@@ -96,6 +107,7 @@ const NavItem = observer(
   ({count, href, icon, iconFilled, label}: NavItemProps) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {isDesktop, isTablet} = useWebMediaQueries()
     const [pathName] = React.useMemo(() => router.matchPath(href), [href])
     const currentRouteInfo = useNavigationState(state => {
       if (!state) {
@@ -137,17 +149,28 @@ const NavItem = observer(
         accessibilityRole="tab"
         accessibilityLabel={label}
         accessibilityHint="">
-        <View style={[styles.navItemIconWrapper]}>
+        <View
+          style={[
+            styles.navItemIconWrapper,
+            isTablet && styles.navItemIconWrapperTablet,
+          ]}>
           {isCurrent ? iconFilled : icon}
           {typeof count === 'string' && count ? (
-            <Text type="button" style={styles.navItemCount}>
+            <Text
+              type="button"
+              style={[
+                styles.navItemCount,
+                isTablet && styles.navItemCountTablet,
+              ]}>
               {count}
             </Text>
           ) : null}
         </View>
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
-          {label}
-        </Text>
+        {isDesktop && (
+          <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+            {label}
+          </Text>
+        )}
       </PressableWithHover>
     )
   },
@@ -156,6 +179,7 @@ const NavItem = observer(
 function ComposeBtn() {
   const store = useStores()
   const {getState} = useNavigation()
+  const {isTablet} = useWebMediaQueries()
 
   const getProfileHandle = () => {
     const {routes} = getState()
@@ -172,6 +196,9 @@ function ComposeBtn() {
   const onPressCompose = () =>
     store.shell.openComposer({mention: getProfileHandle()})
 
+  if (isTablet) {
+    return null
+  }
   return (
     <TouchableOpacity
       style={[styles.newPostBtn]}
@@ -196,28 +223,43 @@ function ComposeBtn() {
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores()
   const pal = usePalette('default')
+  const {isDesktop, isTablet} = useWebMediaQueries()
 
   return (
-    <View style={[styles.leftNav, pal.view]}>
+    <View
+      style={[
+        styles.leftNav,
+        isTablet && styles.leftNavTablet,
+        pal.view,
+        pal.border,
+      ]}>
       {store.session.hasSession && <ProfileCard />}
       <BackBtn />
       <NavItem
         href="/"
-        icon={<HomeIcon size={24} style={pal.text} />}
+        icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
         iconFilled={
-          <HomeIconSolid strokeWidth={4} size={24} style={pal.text} />
+          <HomeIconSolid
+            strokeWidth={4}
+            size={isDesktop ? 24 : 28}
+            style={pal.text}
+          />
         }
         label="Home"
       />
       <NavItem
         href="/search"
         icon={
-          <MagnifyingGlassIcon2 strokeWidth={2} size={24} style={pal.text} />
+          <MagnifyingGlassIcon2
+            strokeWidth={2}
+            size={isDesktop ? 24 : 26}
+            style={pal.text}
+          />
         }
         iconFilled={
           <MagnifyingGlassIcon2Solid
             strokeWidth={2}
-            size={24}
+            size={isDesktop ? 24 : 26}
             style={pal.text}
           />
         }
@@ -229,14 +271,14 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <SatelliteDishIcon
             strokeWidth={1.75}
             style={pal.text as FontAwesomeIconStyle}
-            size={24}
+            size={isDesktop ? 24 : 28}
           />
         }
         iconFilled={
           <SatelliteDishIconSolid
             strokeWidth={1.75}
             style={pal.text as FontAwesomeIconStyle}
-            size={24}
+            size={isDesktop ? 24 : 28}
           />
         }
         label="My Feeds"
@@ -244,9 +286,19 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       <NavItem
         href="/notifications"
         count={store.me.notifications.unreadCountLabel}
-        icon={<BellIcon strokeWidth={2} size={24} style={pal.text} />}
+        icon={
+          <BellIcon
+            strokeWidth={2}
+            size={isDesktop ? 24 : 26}
+            style={pal.text}
+          />
+        }
         iconFilled={
-          <BellIconSolid strokeWidth={1.5} size={24} style={pal.text} />
+          <BellIconSolid
+            strokeWidth={1.5}
+            size={isDesktop ? 24 : 26}
+            style={pal.text}
+          />
         }
         label="Notifications"
       />
@@ -256,14 +308,14 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           <HandIcon
             strokeWidth={5.5}
             style={pal.text as FontAwesomeIconStyle}
-            size={24}
+            size={isDesktop ? 24 : 27}
           />
         }
         iconFilled={
           <FontAwesomeIcon
             icon="hand"
             style={pal.text as FontAwesomeIconStyle}
-            size={20}
+            size={isDesktop ? 20 : 26}
           />
         }
         label="Moderation"
@@ -271,18 +323,38 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       {store.session.hasSession && (
         <NavItem
           href={makeProfileLink(store.me)}
-          icon={<UserIcon strokeWidth={1.75} size={28} style={pal.text} />}
+          icon={
+            <UserIcon
+              strokeWidth={1.75}
+              size={isDesktop ? 28 : 30}
+              style={pal.text}
+            />
+          }
           iconFilled={
-            <UserIconSolid strokeWidth={1.75} size={28} style={pal.text} />
+            <UserIconSolid
+              strokeWidth={1.75}
+              size={isDesktop ? 28 : 30}
+              style={pal.text}
+            />
           }
           label="Profile"
         />
       )}
       <NavItem
         href="/settings"
-        icon={<CogIcon strokeWidth={1.75} size={28} style={pal.text} />}
+        icon={
+          <CogIcon
+            strokeWidth={1.75}
+            size={isDesktop ? 28 : 32}
+            style={pal.text}
+          />
+        }
         iconFilled={
-          <CogIconSolid strokeWidth={1.5} size={28} style={pal.text} />
+          <CogIconSolid
+            strokeWidth={1.5}
+            size={isDesktop ? 28 : 32}
+            style={pal.text}
+          />
         }
         label="Settings"
       />
@@ -300,11 +372,23 @@ const styles = StyleSheet.create({
     maxHeight: 'calc(100vh - 10px)',
     overflowY: 'auto',
   },
+  leftNavTablet: {
+    top: 0,
+    left: 0,
+    right: 'auto',
+    borderRightWidth: 1,
+    height: '100%',
+    width: 76,
+    alignItems: 'center',
+  },
 
   profileCard: {
     marginVertical: 10,
     width: 90,
     paddingLeft: 12,
+  },
+  profileCardTablet: {
+    width: 70,
   },
 
   backBtn: {
@@ -330,6 +414,10 @@ const styles = StyleSheet.create({
     height: 28,
     marginTop: 2,
   },
+  navItemIconWrapperTablet: {
+    width: 40,
+    height: 40,
+  },
   navItemCount: {
     position: 'absolute',
     top: 0,
@@ -340,6 +428,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     borderRadius: 6,
+  },
+  navItemCountTablet: {
+    left: 18,
+    fontSize: 14,
   },
 
   newPostBtn: {
@@ -354,10 +446,9 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     marginTop: 20,
     marginBottom: 10,
+    gap: 8,
   },
-  newPostBtnIconWrapper: {
-    marginRight: 8,
-  },
+  newPostBtnIconWrapper: {},
   newPostBtnLabel: {
     color: colors.white,
     fontSize: 16,

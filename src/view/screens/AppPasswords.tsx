@@ -7,7 +7,7 @@ import {Button} from '../com/util/forms/Button'
 import * as Toast from '../com/util/Toast'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -23,6 +23,7 @@ export const AppPasswords = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const {screen} = useAnalytics()
+    const {isTabletOrDesktop} = useWebMediaQueries()
 
     useFocusEffect(
       React.useCallback(() => {
@@ -41,7 +42,7 @@ export const AppPasswords = withAuthRequired(
         <CenteredView
           style={[
             styles.container,
-            isDesktopWeb && styles.containerDesktop,
+            isTabletOrDesktop && styles.containerDesktop,
             pal.view,
             pal.border,
           ]}
@@ -53,11 +54,11 @@ export const AppPasswords = withAuthRequired(
               pressing the button below.
             </Text>
           </View>
-          {!isDesktopWeb && <View style={styles.flex1} />}
+          {!isTabletOrDesktop && <View style={styles.flex1} />}
           <View
             style={[
               styles.btnContainer,
-              isDesktopWeb && styles.btnContainerDesktop,
+              isTabletOrDesktop && styles.btnContainerDesktop,
             ]}>
             <Button
               testID="appPasswordBtn"
@@ -77,7 +78,7 @@ export const AppPasswords = withAuthRequired(
       <CenteredView
         style={[
           styles.container,
-          isDesktopWeb && styles.containerDesktop,
+          isTabletOrDesktop && styles.containerDesktop,
           pal.view,
           pal.border,
         ]}
@@ -87,7 +88,7 @@ export const AppPasswords = withAuthRequired(
           style={[
             styles.scrollContainer,
             pal.border,
-            !isDesktopWeb && styles.flex1,
+            !isTabletOrDesktop && styles.flex1,
           ]}>
           {store.me.appPasswords.map((password, i) => (
             <AppPassword
@@ -97,7 +98,7 @@ export const AppPasswords = withAuthRequired(
               createdAt={password.createdAt}
             />
           ))}
-          {isDesktopWeb && (
+          {isTabletOrDesktop && (
             <View style={[styles.btnContainer, styles.btnContainerDesktop]}>
               <Button
                 testID="appPasswordBtn"
@@ -110,7 +111,7 @@ export const AppPasswords = withAuthRequired(
             </View>
           )}
         </ScrollView>
-        {!isDesktopWeb && (
+        {!isTabletOrDesktop && (
           <View style={styles.btnContainer}>
             <Button
               testID="appPasswordBtn"
@@ -128,6 +129,7 @@ export const AppPasswords = withAuthRequired(
 )
 
 function AppPasswordsHeader() {
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const pal = usePalette('default')
   return (
     <>
@@ -137,7 +139,7 @@ function AppPasswordsHeader() {
         style={[
           styles.description,
           pal.text,
-          isDesktopWeb && styles.descriptionDesktop,
+          isTabletOrDesktop && styles.descriptionDesktop,
         ]}>
         Use app passwords to login to other Bluesky clients without giving full
         access to your account or password.
@@ -207,11 +209,12 @@ function AppPassword({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 100,
+    paddingBottom: 100,
   },
   containerDesktop: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    paddingBottom: 0,
   },
   title: {
     textAlign: 'center',

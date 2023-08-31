@@ -12,22 +12,23 @@ import {NativeStackScreenProps, FeedsTabNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {PostsMultiFeedModel} from 'state/models/feeds/multi-feed'
 import {MultiFeed} from 'view/com/posts/MultiFeed'
-import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTimer} from 'lib/hooks/useTimer'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
 
 const LOAD_NEW_PROMPT_TIME = 60e3 // 60 seconds
-const HEADER_OFFSET = isDesktopWeb ? 0 : 40
+const MOBILE_HEADER_OFFSET = 40
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {isMobile} = useWebMediaQueries()
     const flatListRef = React.useRef<FlatList>(null)
     const multifeed = React.useMemo<PostsMultiFeedModel>(
       () => new PostsMultiFeedModel(store),
@@ -105,14 +106,16 @@ export const FeedsScreen = withAuthRequired(
           multifeed={multifeed}
           onScroll={onMainScroll}
           scrollEventThrottle={100}
-          headerOffset={HEADER_OFFSET}
+          headerOffset={isMobile ? MOBILE_HEADER_OFFSET : undefined}
         />
-        <ViewHeader
-          title="My Feeds"
-          canGoBack={false}
-          hideOnScroll
-          renderButton={renderHeaderBtn}
-        />
+        {isMobile && (
+          <ViewHeader
+            title="My Feeds"
+            canGoBack={false}
+            hideOnScroll
+            renderButton={renderHeaderBtn}
+          />
+        )}
         {isScrolledDown || loadPromptVisible ? (
           <LoadLatestBtn
             onPress={onSoftReset}

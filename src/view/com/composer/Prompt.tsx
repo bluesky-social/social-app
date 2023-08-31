@@ -4,11 +4,12 @@ import {UserAvatar} from '../util/UserAvatar'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isDesktop} = useWebMediaQueries()
   return (
     <TouchableOpacity
       testID="replyPromptBtn"
@@ -22,7 +23,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
         type="xl"
         style={[
           pal.text,
-          isDesktopWeb ? styles.labelDesktopWeb : styles.labelMobile,
+          isDesktop ? styles.labelDesktopWeb : styles.labelMobile,
         ]}>
         Write your reply
       </Text>

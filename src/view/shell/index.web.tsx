@@ -19,7 +19,7 @@ import {NavigationProp} from 'lib/routes/types'
 
 const ShellInner = observer(() => {
   const store = useStores()
-  const {isDesktop} = useWebMediaQueries()
+  const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
 
   useEffect(() => {
@@ -28,9 +28,9 @@ const ShellInner = observer(() => {
     })
   }, [navigator, store.shell])
 
-  const showBottomBar = !isDesktop && !store.onboarding.isActive
+  const showBottomBar = isMobile && !store.onboarding.isActive
   const showSideNavs =
-    isDesktop && store.session.hasSession && !store.onboarding.isActive
+    !isMobile && store.session.hasSession && !store.onboarding.isActive
   return (
     <>
       <View style={s.hContentRegion}>

@@ -7,6 +7,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../util/text/Text'
 import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import ImageEditor, {Position} from 'react-avatar-editor'
 import {TextInput} from './util'
 import {enforceLen} from 'lib/strings/helpers'
@@ -18,7 +19,6 @@ import {Slider} from '@miblanchard/react-native-slider'
 import {MaterialIcons} from '@expo/vector-icons'
 import {observer} from 'mobx-react-lite'
 import {getKeys} from 'lib/type-assertions'
-import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = ['80%']
 
@@ -51,6 +51,7 @@ export const Component = observer(function ({image, gallery}: Props) {
   const theme = useTheme()
   const store = useStores()
   const windowDimensions = useWindowDimensions()
+  const {isMobile} = useWebMediaQueries()
 
   const {
     aspectRatio,
@@ -174,19 +175,28 @@ export const Component = observer(function ({image, gallery}: Props) {
 
   const computedWidth =
     windowDimensions.width > 500 ? 410 : windowDimensions.width - 80
-  const sideLength = isDesktopWeb ? 300 : computedWidth
+  const sideLength = isMobile ? computedWidth : 300
 
   const dimensions = image.getResizedDimensions(aspectRatio, sideLength)
   const imgContainerStyles = {width: sideLength, height: sideLength}
 
   const imgControlStyles = {
     alignItems: 'center' as const,
-    flexDirection: isDesktopWeb ? ('row' as const) : ('column' as const),
-    gap: isDesktopWeb ? 5 : 0,
+    flexDirection: isMobile ? ('column' as const) : ('row' as const),
+    gap: isMobile ? 0 : 5,
   }
 
   return (
-    <View testID="editImageModal" style={[pal.view, styles.container, s.flex1]}>
+    <View
+      testID="editImageModal"
+      style={[
+        pal.view,
+        styles.container,
+        s.flex1,
+        {
+          paddingHorizontal: isMobile ? 16 : undefined,
+        },
+      ]}>
       <Text style={[styles.title, pal.text]}>Edit image</Text>
       <View style={[styles.gap18, s.flexRow]}>
         <View>
@@ -213,7 +223,7 @@ export const Component = observer(function ({image, gallery}: Props) {
           />
         </View>
         <View>
-          {isDesktopWeb ? (
+          {!isMobile ? (
             <Text type="sm-bold" style={pal.text}>
               Ratios
             </Text>
@@ -248,7 +258,7 @@ export const Component = observer(function ({image, gallery}: Props) {
               )
             })}
           </View>
-          {isDesktopWeb ? (
+          {!isMobile ? (
             <Text type="sm-bold" style={[pal.text, styles.subsection]}>
               Transformations
             </Text>
@@ -282,7 +292,14 @@ export const Component = observer(function ({image, gallery}: Props) {
         </Text>
         <TextInput
           testID="altTextImageInput"
-          style={[styles.textArea, pal.border, pal.text]}
+          style={[
+            styles.textArea,
+            pal.border,
+            pal.text,
+            {
+              maxHeight: isMobile ? 50 : undefined,
+            },
+          ]}
           keyboardAppearance={theme.colorScheme}
           multiline
           value={altText}
@@ -317,7 +334,6 @@ export const Component = observer(function ({image, gallery}: Props) {
 const styles = StyleSheet.create({
   container: {
     gap: 18,
-    paddingHorizontal: isDesktopWeb ? undefined : 16,
     height: '100%',
     width: '100%',
   },
@@ -369,7 +385,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     height: 100,
     textAlignVertical: 'top',
-    maxHeight: isDesktopWeb ? undefined : 50,
   },
   bottomSection: {
     borderTopWidth: 1,

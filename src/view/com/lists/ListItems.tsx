@@ -22,9 +22,9 @@ import {TextLink} from '../util/Link'
 import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
-import {isDesktopWeb} from 'platform/detection'
 import {ListActions} from './ListActions'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -283,6 +283,7 @@ const ListHeader = observer(
   }) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {isDesktop} = useWebMediaQueries()
     const descriptionRT = React.useMemo(
       () =>
         list?.description &&
@@ -318,7 +319,7 @@ const ListHeader = observer(
                 richText={descriptionRT}
               />
             )}
-            {isDesktopWeb && (
+            {isDesktop && (
               <ListActions
                 isOwner={isOwner}
                 muted={list.viewer?.muted}
@@ -334,7 +335,8 @@ const ListHeader = observer(
             <UserAvatar type="list" avatar={list.avatar} size={64} />
           </View>
         </View>
-        <View style={[styles.fakeSelector, pal.border]}>
+        <View
+          style={{flexDirection: 'row', paddingHorizontal: isDesktop ? 16 : 6}}>
           <View
             style={[styles.fakeSelectorItem, {borderColor: pal.colors.link}]}>
             <Text type="md-medium" style={[pal.text]}>
@@ -364,10 +366,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     marginTop: 12,
-  },
-  fakeSelector: {
-    flexDirection: 'row',
-    paddingHorizontal: isDesktopWeb ? 16 : 6,
   },
   fakeSelectorItem: {
     paddingHorizontal: 12,

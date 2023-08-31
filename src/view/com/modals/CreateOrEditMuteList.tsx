@@ -22,8 +22,8 @@ import {UserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
-import {isDesktopWeb} from 'platform/detection'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -38,6 +38,7 @@ export function Component({
   list?: ListModel
 }) {
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
@@ -130,7 +131,12 @@ export function Component({
   return (
     <KeyboardAvoidingView behavior="height">
       <ScrollView
-        style={[pal.view, styles.container]}
+        style={[
+          pal.view,
+          {
+            paddingHorizontal: isMobile ? 16 : 0,
+          },
+        ]}
         testID="createOrEditMuteListModal">
         <Text style={[styles.title, pal.text]}>
           {list ? 'Edit Mute List' : 'New Mute List'}
@@ -226,9 +232,6 @@ export function Component({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: isDesktopWeb ? 0 : 16,
-  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
