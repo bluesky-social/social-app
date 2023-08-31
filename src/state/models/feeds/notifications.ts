@@ -405,6 +405,13 @@ export class NotificationsFeedModel {
     } finally {
       this.lock.release()
     }
+
+    // if there are no notifications, we should refresh the list
+    // this will only run for new users who have no notifications
+    // NOTE: needs to be after the lock is released
+    if (this.isEmpty) {
+      this.refresh()
+    }
   })
 
   /**
