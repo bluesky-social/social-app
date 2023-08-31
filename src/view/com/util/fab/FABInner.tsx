@@ -26,9 +26,11 @@ export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
       isInteraction: false,
     }).start()
   }, [interp, store.shell.minimalShellMode])
-  const transform = {
-    transform: [{translateY: Animated.multiply(interp, 60)}],
-  }
+  const transform = isTablet
+    ? undefined
+    : {
+        transform: [{translateY: Animated.multiply(interp, 60)}],
+      }
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
   return (
     <TouchableWithoutFeedback testID={testID} {...props}>

@@ -32,7 +32,7 @@ const ShellInner = observer(() => {
   const showSideNavs =
     !isMobile && store.session.hasSession && !store.onboarding.isActive
   return (
-    <>
+    <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
         <ErrorBoundary>
           <FlatNavigator />
@@ -67,7 +67,7 @@ const ShellInner = observer(() => {
           </View>
         </TouchableOpacity>
       )}
-    </>
+    </View>
   )
 })
 
