@@ -299,7 +299,7 @@ function sortThread(item: MaybeThreadItem) {
       if (a.post.likeCount === b.post.likeCount) {
         return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
       } else {
-        return b.post.likeCount - a.post.likeCount // most likes
+        return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
       }
     })
     item.replies.forEach(reply => sortThread(reply))
