@@ -10,21 +10,40 @@ import {Button} from 'view/com/util/forms/Button'
 import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {RECOMMENDED_FEEDS} from 'lib/constants'
 import {useQuery} from '@tanstack/react-query'
+import {useStores} from 'state/index'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 
 type Props = {
   next: () => void
 }
 export const RecommendedFeeds = observer(({next}: Props) => {
+  const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
   const {data: recommendedFeeds} = useQuery({
+    staleTime: Infinity, // fixed list rn, never refetch
     queryKey: ['onboarding', 'recommended_feeds'],
-    queryFn: () => RECOMMENDED_FEEDS,
+    async queryFn() {
+      try {
+        const {
+          data: {feeds},
+          success,
+        } = await store.agent.app.bsky.feed.getSuggestedFeeds()
+
+        if (!success) return
+
+        return (feeds.length ? feeds : []).map(feed => {
+          return new CustomFeedModel(store, feed)
+        })
+      } catch (e) {
+        return
+      }
+    },
   })
 
-  if (!recommendedFeeds) return null
+  const hasFeeds = recommendedFeeds && !recommendedFeeds.length
 
   const title = (
     <>
@@ -91,12 +110,16 @@ export const RecommendedFeeds = observer(({next}: Props) => {
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          <FlatList
-            data={recommendedFeeds}
-            renderItem={({item}) => <RecommendedFeedsItem {...item} />}
-            keyExtractor={item => item.did + item.rkey}
-            style={{flex: 1}}
-          />
+          {hasFeeds ? (
+            <FlatList
+              data={recommendedFeeds}
+              renderItem={({item}) => <RecommendedFeedsItem item={item} />}
+              keyExtractor={item => item.uri}
+              style={{flex: 1}}
+            />
+          ) : (
+            <ErrorMessage message="Failed to load recommended feeds" />
+          )}
         </TitleColumnLayout>
       </TabletOrDesktop>
       <Mobile>
@@ -111,12 +134,16 @@ export const RecommendedFeeds = observer(({next}: Props) => {
             pinned feeds.
           </Text>
 
-          <FlatList
-            data={recommendedFeeds}
-            renderItem={({item}) => <RecommendedFeedsItem {...item} />}
-            keyExtractor={item => item.did + item.rkey}
-            style={{flex: 1}}
-          />
+          {hasFeeds ? (
+            <FlatList
+              data={recommendedFeeds}
+              renderItem={({item}) => <RecommendedFeedsItem item={item} />}
+              keyExtractor={item => item.uri}
+              style={{flex: 1}}
+            />
+          ) : (
+            <ErrorMessage message="Failed to load recommended feeds" />
+          )}
 
           <Button
             onPress={next}
