@@ -11,6 +11,7 @@ import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
 import {RECOMMENDED_FEEDS} from 'lib/constants'
+import {useQuery} from '@tanstack/react-query'
 
 type Props = {
   next: () => void
@@ -18,6 +19,12 @@ type Props = {
 export const RecommendedFeeds = observer(({next}: Props) => {
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
+  const {data: recommendedFeeds} = useQuery({
+    queryKey: ['onboarding', 'recommended_feeds'],
+    queryFn: () => RECOMMENDED_FEEDS,
+  })
+
+  if (!recommendedFeeds) return null
 
   const title = (
     <>
@@ -85,7 +92,7 @@ export const RecommendedFeeds = observer(({next}: Props) => {
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
           <FlatList
-            data={RECOMMENDED_FEEDS}
+            data={recommendedFeeds}
             renderItem={({item}) => <RecommendedFeedsItem {...item} />}
             keyExtractor={item => item.did + item.rkey}
             style={{flex: 1}}
@@ -105,7 +112,7 @@ export const RecommendedFeeds = observer(({next}: Props) => {
           </Text>
 
           <FlatList
-            data={RECOMMENDED_FEEDS}
+            data={recommendedFeeds}
             renderItem={({item}) => <RecommendedFeedsItem {...item} />}
             keyExtractor={item => item.did + item.rkey}
             style={{flex: 1}}
