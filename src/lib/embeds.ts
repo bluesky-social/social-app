@@ -8,6 +8,9 @@ export function isEmbedByEmbedder(
   embed: AppBskyFeedDefs.PostView['embed'],
   did: string,
 ): boolean {
+  if (!embed) {
+    return false
+  }
   if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
     return embed.record.author.did === did
   }
