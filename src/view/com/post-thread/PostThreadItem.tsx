@@ -59,6 +59,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = makeProfileLink(item.post.author)
   const authorTitle = item.post.author.handle
+  const isAuthorMuted = item.post.author.viewer?.muted
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return makeProfileLink(item.post.author, 'post', urip.rkey, 'liked-by')
@@ -224,6 +225,30 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               </View>
               <View style={styles.meta}>
+                {isAuthorMuted && (
+                  <View
+                    style={[
+                      pal.viewLight,
+                      {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 4,
+                        borderRadius: 6,
+                        paddingHorizontal: 6,
+                        paddingVertical: 2,
+                        marginRight: 4,
+                      },
+                    ]}>
+                    <FontAwesomeIcon
+                      icon={['far', 'eye-slash']}
+                      size={12}
+                      color={pal.colors.textLight}
+                    />
+                    <Text type="sm-medium" style={pal.textLight}>
+                      Muted
+                    </Text>
+                  </View>
+                )}
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
