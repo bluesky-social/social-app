@@ -19,6 +19,7 @@ import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
+import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
@@ -305,7 +306,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               ) : undefined}
               {item.post.embed && (
-                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                <ContentHider
+                  moderation={item.moderation.embed}
+                  ignoreMute={isEmbedByEmbedder(
+                    item.post.embed,
+                    item.post.author.did,
+                  )}
+                  style={s.mb10}>
                   <PostEmbeds
                     embed={item.post.embed}
                     moderation={item.moderation.embed}
