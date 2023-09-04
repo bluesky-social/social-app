@@ -508,7 +508,7 @@ export const CustomFeedScreenInner = observer(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="Compose post"
+          accessibilityLabel="New post"
           accessibilityHint=""
         />
       </View>
