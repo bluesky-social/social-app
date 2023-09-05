@@ -70,7 +70,10 @@ export const FlatList = React.forwardRef(function <ItemT>(
   if (desktopFixedHeight) {
     style = addStyle(style, styles.fixedHeight)
     if (!isMobile) {
-      style = addStyle(style, styles.stableGutters)
+      contentContainerStyle = addStyle(
+        contentContainerStyle,
+        styles.stableGutters,
+      )
     }
   }
   return (
