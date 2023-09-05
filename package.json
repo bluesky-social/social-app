@@ -153,6 +153,7 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@did-plc/server": "^0.0.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@react-native-community/eslint-config": "^3.0.0",
     "@testing-library/jest-native": "^5.4.1",
     "@testing-library/react-native": "^11.5.2",
@@ -192,6 +193,7 @@
     "metro-react-native-babel-preset": "^0.73.7",
     "prettier": "^2.8.3",
     "react-native-dotenv": "^3.3.1",
+    "react-refresh": "^0.14.0",
     "react-scripts": "^5.0.1",
     "react-test-renderer": "18.2.0",
     "ts-node": "^10.9.1",
@@ -199,10 +201,12 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "webpack-hot-middleware": "^2.25.4"
   },
   "resolutions": {
-    "@types/react": "^18"
+    "@types/react": "^18",
+    "react-error-overlay": "6.0.9"
   },
   "jest": {
     "preset": "jest-expo/ios",
