@@ -111,7 +111,7 @@ export const TextInput = React.forwardRef(
           },
         },
         content: textToEditorJson(richtext.text.toString()),
-        autofocus: true,
+        autofocus: 'end',
         editable: true,
         injectCSS: true,
         onUpdate({editor: editorProp}) {
