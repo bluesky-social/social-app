@@ -77,13 +77,12 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     borderWidth: 1,
     // @ts-ignore web only
-    maxHeight: isMobileWeb
-      ? `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`
-      : 'calc(100% - (40px * 2))',
+    maxHeight: 'calc(100% - (40px * 2))',
   },
   containerMobile: {
     borderRadius: 0,
     marginBottom: BOTTOM_BAR_HEIGHT,
+    // @ts-ignore web only
     maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

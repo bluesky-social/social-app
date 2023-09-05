@@ -54,6 +54,7 @@ export function Component({}: {}) {
       style={[
         pal.view,
         styles.container,
+        // @ts-ignore vh is web only
         isMobile
           ? {
               paddingTop: 20,
