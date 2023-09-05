@@ -415,6 +415,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     marginTop: 2,
+    zIndex: 1,
   },
   navItemIconWrapperTablet: {
     width: 40,
