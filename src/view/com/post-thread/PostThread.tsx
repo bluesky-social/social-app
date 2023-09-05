@@ -21,7 +21,7 @@ import {ComposePrompt} from '../composer/Prompt'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isIOS, isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {isIOS, isDesktopWeb, shouldUseMobileLayout} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
@@ -195,7 +195,7 @@ export const PostThread = observer(function PostThread({
             style={[
               styles.bottomBorder,
               pal.border,
-              isMobileWeb && styles.bottomSpacer,
+              shouldUseMobileLayout && styles.bottomSpacer,
             ]}
           />
         )

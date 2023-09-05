@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isMobileWeb} from 'platform/detection'
+import {shouldUseMobileLayout} from 'platform/detection'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -66,10 +66,10 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 0,
     paddingHorizontal: 2,
-    borderRadius: isMobileWeb ? 0 : 8,
-    marginBottom: isMobileWeb ? BOTTOM_BAR_HEIGHT : 0,
+    borderRadius: shouldUseMobileLayout ? 0 : 8,
+    marginBottom: shouldUseMobileLayout ? BOTTOM_BAR_HEIGHT : 0,
     borderWidth: 1,
-    maxHeight: isMobileWeb
+    maxHeight: shouldUseMobileLayout
       ? `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`
       : 'calc(100% - (40px * 2))',
   },

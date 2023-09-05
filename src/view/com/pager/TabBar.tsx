@@ -3,7 +3,7 @@ import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {isNative, shouldUseMobileLayout} from 'platform/detection'
 import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
@@ -78,7 +78,7 @@ export function TabBar({
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <Text
-                type={isDesktopWeb ? 'xl-bold' : 'lg-bold'}
+                type={shouldUseMobileLayout ? 'lg-bold' : 'xl-bold'}
                 testID={testID ? `${testID}-${item}` : undefined}
                 style={selected ? pal.text : pal.textLight}>
                 {item}
@@ -91,8 +91,30 @@ export function TabBar({
   )
 }
 
-const styles = isDesktopWeb
+const styles = shouldUseMobileLayout
   ? StyleSheet.create({
+      outer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'transparent',
+        maxWidth: '100%',
+      },
+      contentContainer: {
+        columnGap: !isNative ? 0 : 20,
+        marginLeft: !isNative ? 0 : 18,
+        paddingRight: !isNative ? 0 : 36,
+        backgroundColor: 'transparent',
+      },
+      item: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingHorizontal: !isNative ? 8 : 0,
+        borderBottomWidth: 3,
+        borderBottomColor: 'transparent',
+        justifyContent: 'center',
+      },
+    })
+  : StyleSheet.create({
       outer: {
         flexDirection: 'row',
         width: 598,
@@ -107,28 +129,6 @@ const styles = isDesktopWeb
         paddingTop: 14,
         paddingBottom: 12,
         paddingHorizontal: 10,
-        borderBottomWidth: 3,
-        borderBottomColor: 'transparent',
-        justifyContent: 'center',
-      },
-    })
-  : StyleSheet.create({
-      outer: {
-        flex: 1,
-        flexDirection: 'row',
-        backgroundColor: 'transparent',
-        maxWidth: '100%',
-      },
-      contentContainer: {
-        columnGap: isMobileWeb ? 0 : 20,
-        marginLeft: isMobileWeb ? 0 : 18,
-        paddingRight: isMobileWeb ? 0 : 36,
-        backgroundColor: 'transparent',
-      },
-      item: {
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingHorizontal: isMobileWeb ? 8 : 0,
         borderBottomWidth: 3,
         borderBottomColor: 'transparent',
         justifyContent: 'center',

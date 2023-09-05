@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
-import {isMobileWeb} from 'platform/detection'
+import {shouldUseMobileLayout} from 'platform/detection'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -30,7 +30,11 @@ export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
   return (
     <TouchableWithoutFeedback testID={testID} {...props}>
       <Animated.View
-        style={[styles.outer, isMobileWeb && styles.mobileWebOuter, transform]}>
+        style={[
+          styles.outer,
+          shouldUseMobileLayout && styles.mobileWebOuter,
+          transform,
+        ]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}

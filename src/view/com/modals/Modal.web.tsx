@@ -4,7 +4,7 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import type {Modal as ModalIface} from 'state/models/ui/shell'
-import {isMobileWeb} from 'platform/detection'
+import {shouldUseMobileLayout} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
@@ -119,7 +119,7 @@ function Modal({modal}: {modal: ModalIface}) {
           <View
             style={[
               styles.container,
-              isMobileWeb && styles.containerMobile,
+              shouldUseMobileLayout && styles.containerMobile,
               pal.view,
               pal.border,
             ]}>
