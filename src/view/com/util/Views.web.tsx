@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    // @ts-ignore web only
     minHeight: '100vh',
   },
   container: {
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   fixedHeight: {
+    // @ts-ignore web only
     height: '100vh',
   },
   stableGutters: {

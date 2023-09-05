@@ -4,7 +4,10 @@
 
 import React, {useState, useEffect} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 
 const DURATION = 3500
 
@@ -32,7 +35,11 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
     <>
       {activeToast && (
         <View style={styles.container}>
-          <FontAwesomeIcon icon="check" size={24} style={styles.icon} />
+          <FontAwesomeIcon
+            icon="check"
+            size={24}
+            style={styles.icon as FontAwesomeIconStyle}
+          />
           <Text style={styles.text}>{activeToast.text}</Text>
         </View>
       )}
@@ -57,6 +64,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 20,
     bottom: 20,
+    // @ts-ignore web only
     width: 'calc(100% - 40px)',
     maxWidth: 350,
     padding: 20,

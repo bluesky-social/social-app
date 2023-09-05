@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   rightNav: {
     position: 'absolute',
     top: 20,
+    // @ts-ignore web only
     left: 'calc(50vw + 310px)',
     width: 304,
   },

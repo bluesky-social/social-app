@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+    // @ts-ignore only rendered on web
     maxWidth: '400px',
   },
   description: {

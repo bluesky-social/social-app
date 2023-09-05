@@ -55,6 +55,7 @@ export const Component = observer(() => {
       style={[
         pal.view,
         styles.container,
+        // @ts-ignore vh is on web only
         isMobile
           ? {
               paddingTop: 20,

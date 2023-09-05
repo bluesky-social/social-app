@@ -1,7 +1,12 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StatusBar} from 'expo-status-bar'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {
+  DimensionValue,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
@@ -25,7 +30,7 @@ const ShellInner = observer(() => {
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
-    () => ({height: '100%', paddingTop: safeAreaInsets.top}),
+    () => ({height: '100%' as DimensionValue, paddingTop: safeAreaInsets.top}),
     [safeAreaInsets],
   )
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])

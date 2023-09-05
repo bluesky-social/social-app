@@ -145,7 +145,9 @@ const styles = StyleSheet.create({
   },
   container: {
     width: 500,
+    // @ts-ignore web only
     maxWidth: '100vw',
+    // @ts-ignore web only
     maxHeight: '100vh',
     paddingVertical: 20,
     paddingHorizontal: 24,

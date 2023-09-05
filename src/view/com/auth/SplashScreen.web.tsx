@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   containerInner: {
     height: '100%',
     justifyContent: 'center',
+    // @ts-ignore web only
     paddingBottom: '20vh',
     paddingHorizontal: 20,
   },
