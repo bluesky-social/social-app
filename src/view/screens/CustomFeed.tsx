@@ -22,7 +22,7 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -122,6 +122,7 @@ export const CustomFeedScreenInner = observer(
   ({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
     const store = useStores()
     const pal = usePalette('default')
+    const {isTabletOrDesktop} = useWebMediaQueries()
     const {track} = useAnalytics()
     const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
@@ -357,7 +358,7 @@ export const CustomFeedScreenInner = observer(
                   )}
                 </Text>
               )}
-              {isDesktopWeb && (
+              {isTabletOrDesktop && (
                 <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
                   <Button
                     type={currentFeed?.isSaved ? 'default' : 'inverted'}
@@ -452,7 +453,14 @@ export const CustomFeedScreenInner = observer(
               ) : null}
             </View>
           </View>
-          <View style={[styles.fakeSelector, pal.border]}>
+          <View
+            style={[
+              styles.fakeSelector,
+              {
+                paddingHorizontal: isTabletOrDesktop ? 16 : 6,
+              },
+              pal.border,
+            ]}>
             <View
               style={[styles.fakeSelectorItem, {borderColor: pal.colors.link}]}>
               <Text type="md-medium" style={[pal.text]}>
@@ -474,6 +482,7 @@ export const CustomFeedScreenInner = observer(
       rkey,
       isPinned,
       onTogglePinned,
+      isTabletOrDesktop,
     ])
 
     const renderEmptyState = React.useCallback(() => {
@@ -486,7 +495,9 @@ export const CustomFeedScreenInner = observer(
 
     return (
       <View style={s.hContentRegion}>
-        <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
+        {!isTabletOrDesktop && (
+          <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
+        )}
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
@@ -495,6 +506,7 @@ export const CustomFeedScreenInner = observer(
           ListHeaderComponent={renderListHeaderComponent}
           renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned]}
+          style={!isTabletOrDesktop ? {flex: 1} : undefined}
         />
         {isScrolledDown ? (
           <LoadLatestBtn
@@ -550,7 +562,6 @@ const styles = StyleSheet.create({
   },
   fakeSelector: {
     flexDirection: 'row',
-    paddingHorizontal: isDesktopWeb ? 16 : 6,
   },
   fakeSelectorItem: {
     paddingHorizontal: 12,

@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isMobileWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -26,6 +26,7 @@ export const Composer = observer(
     mention?: ComposerOpts['mention']
   }) => {
     const pal = usePalette('default')
+    const {isMobile} = useWebMediaQueries()
 
     // rendering
     // =
@@ -36,7 +37,13 @@ export const Composer = observer(
 
     return (
       <View style={styles.mask} aria-modal accessibilityViewIsModal>
-        <View style={[styles.container, pal.view, pal.border]}>
+        <View
+          style={[
+            styles.container,
+            isMobile && styles.containerMobile,
+            pal.view,
+            pal.border,
+          ]}>
           <ComposePost
             replyTo={replyTo}
             quote={quote}
@@ -66,11 +73,14 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 0,
     paddingHorizontal: 2,
-    borderRadius: isMobileWeb ? 0 : 8,
-    marginBottom: isMobileWeb ? BOTTOM_BAR_HEIGHT : 0,
+    borderRadius: 8,
+    marginBottom: 0,
     borderWidth: 1,
-    maxHeight: isMobileWeb
-      ? `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`
-      : 'calc(100% - (40px * 2))',
+    maxHeight: 'calc(100% - (40px * 2))',
+  },
+  containerMobile: {
+    borderRadius: 0,
+    marginBottom: BOTTOM_BAR_HEIGHT,
+    maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

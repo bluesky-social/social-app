@@ -10,7 +10,7 @@ import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -30,6 +30,7 @@ export const ModerationMutedAccounts = withAuthRequired(
   observer(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
     const mutedAccounts = useMemo(() => new MutedAccountsModel(store), [store])
 
@@ -69,7 +70,7 @@ export const ModerationMutedAccounts = withAuthRequired(
       <CenteredView
         style={[
           styles.container,
-          isDesktopWeb && styles.containerDesktop,
+          isTabletOrDesktop && styles.containerDesktop,
           pal.view,
           pal.border,
         ]}
@@ -80,13 +81,13 @@ export const ModerationMutedAccounts = withAuthRequired(
           style={[
             styles.description,
             pal.text,
-            isDesktopWeb && styles.descriptionDesktop,
+            isTabletOrDesktop && styles.descriptionDesktop,
           ]}>
           Muted accounts have their posts removed from your feed and from your
           notifications. Mutes are completely private.
         </Text>
         {!mutedAccounts.hasContent ? (
-          <View style={[pal.border, !isDesktopWeb && styles.flex1]}>
+          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
             <View style={[styles.empty, pal.viewLight]}>
               <Text type="lg" style={[pal.text, styles.emptyText]}>
                 You have not muted any accounts yet. To mute an account, go to
@@ -97,7 +98,7 @@ export const ModerationMutedAccounts = withAuthRequired(
           </View>
         ) : (
           <FlatList
-            style={[!isDesktopWeb && styles.flex1]}
+            style={[!isTabletOrDesktop && styles.flex1]}
             data={mutedAccounts.mutes}
             keyExtractor={item => item.did}
             refreshControl={
@@ -129,11 +130,12 @@ export const ModerationMutedAccounts = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 100,
+    paddingBottom: 100,
   },
   containerDesktop: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    paddingBottom: 0,
   },
   title: {
     textAlign: 'center',

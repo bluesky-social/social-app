@@ -16,7 +16,7 @@ import {Link} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
@@ -24,6 +24,7 @@ export const ModerationScreen = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const {screen, track} = useAnalytics()
+    const {isTabletOrDesktop} = useWebMediaQueries()
 
     useFocusEffect(
       React.useCallback(() => {
@@ -42,7 +43,7 @@ export const ModerationScreen = withAuthRequired(
         style={[
           s.hContentRegion,
           pal.border,
-          isDesktopWeb ? styles.desktopContainer : pal.viewLight,
+          isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
         ]}
         testID="moderationScreen">
         <ViewHeader title="Moderation" showOnDesktop />

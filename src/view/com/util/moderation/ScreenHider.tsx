@@ -13,10 +13,10 @@ import {
 import {useNavigation} from '@react-navigation/native'
 import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
-import {isDesktopWeb} from 'platform/detection'
 import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
 
@@ -39,6 +39,7 @@ export function ScreenHider({
   const palInverted = usePalette('inverted')
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
+  const {isMobile} = useWebMediaQueries()
 
   if (!moderation.blur || override) {
     return (
@@ -85,7 +86,7 @@ export function ScreenHider({
           </Text>
         </TouchableWithoutFeedback>
       </Text>
-      {!isDesktopWeb && <View style={styles.spacer} />}
+      {isMobile && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>
         <Button
           type="inverted"

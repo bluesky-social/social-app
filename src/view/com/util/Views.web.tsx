@@ -24,6 +24,7 @@ import {
 } from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 interface AddedProps {
   desktopFixedHeight?: boolean
@@ -48,6 +49,7 @@ export const FlatList = React.forwardRef(function <ItemT>(
   ref: React.Ref<RNFlatList>,
 ) {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   contentContainerStyle = addStyle(
     contentContainerStyle,
     styles.containerScroll,
@@ -67,6 +69,12 @@ export const FlatList = React.forwardRef(function <ItemT>(
   }
   if (desktopFixedHeight) {
     style = addStyle(style, styles.fixedHeight)
+    if (!isMobile) {
+      contentContainerStyle = addStyle(
+        contentContainerStyle,
+        styles.stableGutters,
+      )
+    }
   }
   return (
     <RNFlatList
@@ -126,6 +134,9 @@ const styles = StyleSheet.create({
   },
   fixedHeight: {
     height: '100vh',
+  },
+  stableGutters: {
+    // @ts-ignore web only -prf
     scrollbarGutter: 'stable both-edges',
   },
 })

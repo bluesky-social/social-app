@@ -7,7 +7,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Button} from 'view/com/util/forms/Button'
 import {observer} from 'mobx-react-lite'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {isDesktopWeb} from 'platform/detection'
 
 type Props = {
   next: () => void
@@ -95,7 +94,7 @@ export const WelcomeMobile = observer(({next, skip}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: isDesktopWeb ? 30 : 60,
+    marginBottom: 60,
     marginHorizontal: 16,
     justifyContent: 'space-between',
   },

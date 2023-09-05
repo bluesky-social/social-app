@@ -13,10 +13,10 @@ import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {resetToTab} from '../../../Navigation'
-import {isDesktopWeb} from 'platform/detection'
 
 export const snapPoints = ['60%']
 
@@ -24,6 +24,7 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [confirmCode, setConfirmCode] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
@@ -78,7 +79,7 @@ export function Component({}: {}) {
               type="title-xl"
               numberOfLines={1}
               style={[
-                isDesktopWeb ? styles.titleDesktop : styles.titleMobile,
+                isMobile ? styles.titleMobile : styles.titleDesktop,
                 pal.text,
                 s.bold,
               ]}>
