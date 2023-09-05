@@ -22,7 +22,7 @@ import {ViewHeader} from '../util/ViewHeader'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isIOS, isDesktopWeb} from 'platform/detection'
+import {isNative, isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
@@ -30,7 +30,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 
-const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 0}
+const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
 const TOP_COMPONENT = {
   _reactKey: '__top_component__',
@@ -311,7 +311,7 @@ export const PostThread = observer(function PostThread({
       data={posts}
       initialNumToRender={posts.length}
       maintainVisibleContentPosition={
-        isIOS && view.isFromCache
+        isNative && view.isFromCache
           ? MAINTAIN_VISIBLE_CONTENT_POSITION
           : undefined
       }
@@ -326,7 +326,7 @@ export const PostThread = observer(function PostThread({
         />
       }
       onContentSizeChange={
-        isIOS && view.isFromCache ? undefined : onContentSizeChange
+        isNative && view.isFromCache ? undefined : onContentSizeChange
       }
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}
