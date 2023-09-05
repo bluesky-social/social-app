@@ -177,7 +177,7 @@ function ComposeBtn() {
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       accessibilityRole="button"
-      accessibilityLabel="Compose post"
+      accessibilityLabel="New post"
       accessibilityHint="">
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2
