@@ -104,19 +104,17 @@ export const DiscoverFeedsScreen = withAuthRequired(
         <View
           style={[isTabletOrDesktop && styles.containerDesktop, pal.border]}>
           <ViewHeader title="Discover Feeds" showOnDesktop />
-          <View style={{marginTop: isTabletOrDesktop ? 5 : 0, marginBottom: 4}}>
-            <HeaderWithInput
-              isInputFocused={isInputFocused}
-              query={query}
-              setIsInputFocused={setIsInputFocused}
-              onChangeQuery={onChangeQuery}
-              onPressClearQuery={onPressClearQuery}
-              onPressCancelSearch={onPressCancelSearch}
-              onSubmitQuery={onSubmitQuery}
-              showMenu={false}
-            />
-          </View>
         </View>
+        <HeaderWithInput
+          isInputFocused={isInputFocused}
+          query={query}
+          setIsInputFocused={setIsInputFocused}
+          onChangeQuery={onChangeQuery}
+          onPressClearQuery={onPressClearQuery}
+          onPressCancelSearch={onPressCancelSearch}
+          onSubmitQuery={onSubmitQuery}
+          showMenu={false}
+        />
         <FlatList
           style={[!isTabletOrDesktop && s.flex1]}
           data={feeds.feeds}
