@@ -4,7 +4,7 @@
     "slug": "bluesky",
     "scheme": "bluesky",
     "owner": "blueskysocial",
-    "version": "1.48.0",
+    "version": "1.49.0",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -39,7 +39,7 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "versionCode": 35,
+      "versionCode": 36,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
