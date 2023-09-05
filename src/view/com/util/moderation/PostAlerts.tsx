@@ -9,7 +9,6 @@ import {useStores} from 'state/index'
 
 export function PostAlerts({
   moderation,
-  includeMute,
   style,
 }: {
   moderation: ModerationUI
@@ -19,10 +18,7 @@ export function PostAlerts({
   const store = useStores()
   const pal = usePalette('default')
 
-  const shouldAlert =
-    !!moderation.cause &&
-    (moderation.alert ||
-      (includeMute && moderation.blur && moderation.cause?.type === 'muted'))
+  const shouldAlert = !!moderation.cause && moderation.alert
   if (!shouldAlert) {
     return null
   }

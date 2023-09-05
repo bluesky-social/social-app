@@ -12,7 +12,7 @@ import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const SHELL_FOOTER_HEIGHT = 44
 
@@ -26,6 +26,7 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
     () => new PostThreadModel(store, {uri}),
     [store, uri],
   )
+  const {isMobile} = useWebMediaQueries()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -67,15 +68,15 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
 
   return (
     <View style={s.hContentRegion}>
-      <ViewHeader title="Post" />
-      <View style={s.hContentRegion}>
+      {isMobile && <ViewHeader title="Post" />}
+      <View style={s.flex1}>
         <PostThreadComponent
           uri={uri}
           view={view}
           onPressReply={onPressReply}
         />
       </View>
-      {!isDesktopWeb && (
+      {isMobile && (
         <View
           style={[
             styles.prompt,

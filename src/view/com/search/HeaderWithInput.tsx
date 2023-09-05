@@ -10,6 +10,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {HITSLOP_10} from 'lib/constants'
 
 interface Props {
@@ -37,6 +38,7 @@ export function HeaderWithInput({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const textInput = React.useRef<TextInput>(null)
+  const {isMobile} = useWebMediaQueries()
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
@@ -49,8 +51,14 @@ export function HeaderWithInput({
   }, [onPressCancelSearch, textInput])
 
   return (
-    <View style={[pal.view, pal.border, styles.header]}>
-      {showMenu ? (
+    <View
+      style={[
+        pal.view,
+        pal.border,
+        styles.header,
+        !isMobile && styles.headerDesktop,
+      ]}>
+      {showMenu && isMobile ? (
         <TouchableOpacity
           testID="viewHeaderBackOrMenuBtn"
           onPress={onPressMenu}
@@ -85,7 +93,7 @@ export function HeaderWithInput({
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
-          autoFocus={true}
+          autoFocus={isMobile}
           accessibilityRole="search"
           accessibilityLabel="Search"
           accessibilityHint=""
@@ -126,6 +134,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
+  },
+  headerDesktop: {
+    borderWidth: 1,
+    borderTopWidth: 0,
+    paddingVertical: 10,
   },
   headerMenuBtn: {
     width: 30,

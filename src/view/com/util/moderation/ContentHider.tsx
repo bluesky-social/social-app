@@ -1,12 +1,12 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
-import {isDesktopWeb} from 'platform/detection'
 
 export function ContentHider({
   testID,
@@ -24,6 +24,7 @@ export function ContentHider({
 }>) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
 
   if (!moderation.blur || (ignoreMute && moderation.cause?.type === 'muted')) {
@@ -54,6 +55,7 @@ export function ContentHider({
         accessibilityLabel=""
         style={[
           styles.cover,
+          {paddingRight: isMobile ? 22 : 18},
           moderation.noOverride
             ? {borderWidth: 1, borderColor: pal.colors.borderDark}
             : pal.viewLight,
@@ -96,7 +98,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     paddingVertical: 14,
     paddingLeft: 14,
-    paddingRight: isDesktopWeb ? 18 : 22,
   },
   showBtn: {
     marginLeft: 'auto',

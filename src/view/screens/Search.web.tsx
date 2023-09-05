@@ -12,6 +12,7 @@ import {
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {useStores} from 'state/index'
+import {CenteredView} from 'view/com/util/Views'
 import * as Mobile from './SearchMobile'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
@@ -57,9 +58,9 @@ export const SearchScreen = withAuthRequired(
 
     if (!isDesktop) {
       return (
-        <View style={styles.scrollContainer}>
+        <CenteredView style={styles.scrollContainer}>
           <Mobile.SearchScreen navigation={navigation} route={route} />
-        </View>
+        </CenteredView>
       )
     }
 

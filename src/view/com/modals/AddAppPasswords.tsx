@@ -5,7 +5,7 @@ import {Button} from '../util/forms/Button'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -205,7 +205,7 @@ export function Component({}: {}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 50,
+    paddingBottom: isNative ? 50 : 0,
     paddingHorizontal: 16,
   },
   textInputWrapper: {

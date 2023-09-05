@@ -5,7 +5,8 @@ import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isWeb} from 'platform/detection'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ScrollView} from 'view/com/modals/util'
@@ -25,6 +26,7 @@ export const Component = observer(function Component({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
   const [selected, setSelected] = useState(labels)
 
   const toggleAdultLabel = (label: string) => {
@@ -54,7 +56,12 @@ export const Component = observer(function Component({
       </View>
 
       <ScrollView>
-        <View style={[styles.section, pal.border, {borderBottomWidth: 1}]}>
+        <View
+          style={[
+            styles.section,
+            pal.border,
+            {borderBottomWidth: 1, paddingHorizontal: isMobile ? 20 : 0},
+          ]}>
           <View
             style={{
               flexDirection: 'row',
@@ -152,11 +159,11 @@ export const Component = observer(function Component({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 40,
+    paddingBottom: isWeb ? 0 : 40,
   },
   titleSection: {
-    paddingTop: isDesktopWeb ? 0 : 4,
-    paddingBottom: isDesktopWeb ? 14 : 10,
+    paddingTop: isWeb ? 0 : 4,
+    paddingBottom: isWeb ? 14 : 10,
   },
   title: {
     textAlign: 'center',
@@ -170,7 +177,6 @@ const styles = StyleSheet.create({
   section: {
     borderTopWidth: 1,
     paddingVertical: 20,
-    paddingHorizontal: isDesktopWeb ? 0 : 20,
   },
   adultExplainer: {
     paddingLeft: 5,

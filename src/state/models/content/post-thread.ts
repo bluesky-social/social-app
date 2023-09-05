@@ -296,7 +296,11 @@ function sortThread(item: MaybeThreadItem) {
       if (modScore(a.moderation) !== modScore(b.moderation)) {
         return modScore(a.moderation) - modScore(b.moderation)
       }
-      return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
+      if (a.post.likeCount === b.post.likeCount) {
+        return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
+      } else {
+        return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
+      }
     })
     item.replies.forEach(reply => sortThread(reply))
   }

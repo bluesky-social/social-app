@@ -4,7 +4,8 @@ import {ScrollView} from '../util'
 import {useStores} from 'state/index'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb, deviceLocales} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {LanguageToggle} from './LanguageToggle'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
@@ -14,6 +15,7 @@ export const snapPoints = ['100%']
 export function Component({}: {}) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
     store.shell.closeModal()
   }, [store])
@@ -47,7 +49,19 @@ export function Component({}: {}) {
   )
 
   return (
-    <View testID="contentLanguagesModal" style={[pal.view, styles.container]}>
+    <View
+      testID="contentLanguagesModal"
+      style={[
+        pal.view,
+        styles.container,
+        isMobile
+          ? {
+              paddingTop: 20,
+            }
+          : {
+              maxHeight: '90vh',
+            },
+      ]}>
       <Text style={[pal.text, styles.title]}>Content Languages</Text>
       <Text style={[pal.text, styles.description]}>
         Which languages would you like to see in your algorithmic feeds?
@@ -67,7 +81,11 @@ export function Component({}: {}) {
             }}
           />
         ))}
-        <View style={styles.bottomSpacer} />
+        <View
+          style={{
+            height: isMobile ? 60 : 0,
+          }}
+        />
       </ScrollView>
       <ConfirmLanguagesButton onPress={onPressDone} />
     </View>
@@ -77,7 +95,6 @@ export function Component({}: {}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
   },
   title: {
     textAlign: 'center',
@@ -93,8 +110,5 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 10,
-  },
-  bottomSpacer: {
-    height: isDesktopWeb ? 0 : 60,
   },
 })

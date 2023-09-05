@@ -2,11 +2,12 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {ModerationUI} from '@atproto/api'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {listUriToHref} from 'lib/strings/url-helpers'
 import {Button} from '../util/forms/Button'
 
@@ -20,6 +21,7 @@ export function Component({
   moderation: ModerationUI
 }) {
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
 
   let name
@@ -64,7 +66,15 @@ export function Component({
   }
 
   return (
-    <View testID="moderationDetailsModal" style={[styles.container, pal.view]}>
+    <View
+      testID="moderationDetailsModal"
+      style={[
+        styles.container,
+        {
+          paddingHorizontal: isMobile ? 14 : 0,
+        },
+        pal.view,
+      ]}>
       <Text type="title-xl" style={[pal.text, styles.title]}>
         {name}
       </Text>
@@ -87,7 +97,6 @@ export function Component({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: isDesktopWeb ? 0 : 14,
   },
   title: {
     textAlign: 'center',
@@ -99,7 +108,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     paddingVertical: 14,
-    marginTop: isDesktopWeb ? 40 : 0,
-    marginBottom: isDesktopWeb ? 0 : 40,
+    marginTop: isWeb ? 40 : 0,
+    marginBottom: isWeb ? 0 : 40,
   },
 })

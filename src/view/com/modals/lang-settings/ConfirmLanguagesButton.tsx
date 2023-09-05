@@ -2,8 +2,8 @@ import React from 'react'
 import {StyleSheet, Text, View, Pressable} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {s, colors, gradients} from 'lib/styles'
-import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const ConfirmLanguagesButton = ({
   onPress,
@@ -13,8 +13,17 @@ export const ConfirmLanguagesButton = ({
   extraText?: string
 }) => {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   return (
-    <View style={[styles.btnContainer, pal.borderDark]}>
+    <View
+      style={[
+        styles.btnContainer,
+        pal.borderDark,
+        isMobile && {
+          paddingBottom: 40,
+          borderTopWidth: 1,
+        },
+      ]}>
       <Pressable
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
@@ -37,8 +46,6 @@ const styles = StyleSheet.create({
   btnContainer: {
     paddingTop: 10,
     paddingHorizontal: 10,
-    paddingBottom: isDesktopWeb ? 0 : 40,
-    borderTopWidth: isDesktopWeb ? 0 : 1,
   },
   btn: {
     flexDirection: 'row',

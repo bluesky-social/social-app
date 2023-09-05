@@ -27,8 +27,9 @@ import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb, isNative} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
@@ -108,6 +109,7 @@ const ProfileHeaderLoaded = observer(
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
     const invalidHandle = isInvalidHandle(view.handle)
+    const {isDesktop} = useWebMediaQueries()
 
     const onPressBack = React.useCallback(() => {
       navigation.goBack()
@@ -510,7 +512,7 @@ const ProfileHeaderLoaded = observer(
           )}
           <ProfileHeaderAlerts moderation={view.moderation} />
         </View>
-        {!isDesktopWeb && !hideBackButton && (
+        {!isDesktop && !hideBackButton && (
           <TouchableWithoutFeedback
             onPress={onPressBack}
             hitSlop={BACK_HITSLOP}

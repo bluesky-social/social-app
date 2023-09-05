@@ -8,9 +8,9 @@ import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -35,6 +35,7 @@ export const ViewHeader = observer(function ({
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
+  const {isDesktop, isTablet} = useWebMediaQueries()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -49,7 +50,7 @@ export const ViewHeader = observer(function ({
     store.shell.openDrawer()
   }, [track, store])
 
-  if (isDesktopWeb) {
+  if (isDesktop) {
     if (showOnDesktop) {
       return (
         <DesktopWebHeader
@@ -84,13 +85,13 @@ export const ViewHeader = observer(function ({
                 icon="angle-left"
                 style={[styles.backIcon, pal.text]}
               />
-            ) : (
+            ) : !isTablet ? (
               <FontAwesomeIcon
                 size={18}
                 icon="bars"
                 style={[styles.backIcon, pal.textLight]}
               />
-            )}
+            ) : null}
           </TouchableOpacity>
         ) : null}
         <View style={styles.titleContainer} pointerEvents="none">
@@ -122,6 +123,7 @@ function DesktopWebHeader({
     <CenteredView
       style={[
         styles.header,
+        styles.headerFixed,
         styles.desktopHeader,
         pal.border,
         {
@@ -178,6 +180,7 @@ const Container = observer(
         <View
           style={[
             styles.header,
+            styles.headerFixed,
             pal.view,
             pal.border,
             showBorder && styles.border,
@@ -190,9 +193,9 @@ const Container = observer(
       <Animated.View
         style={[
           styles.header,
+          styles.headerFloating,
           pal.view,
           pal.border,
-          styles.headerFloating,
           transform,
           showBorder && styles.border,
         ]}>
@@ -208,6 +211,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
+    width: '100%',
+  },
+  headerFixed: {
+    maxWidth: 600,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   headerFloating: {
     position: 'absolute',

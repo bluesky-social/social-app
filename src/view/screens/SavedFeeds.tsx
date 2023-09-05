@@ -14,11 +14,12 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {s, colors} from 'lib/styles'
 import DraggableFlatList, {
   ShadowDecorator,
@@ -37,6 +38,7 @@ export const SavedFeeds = withAuthRequired(
   observer(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
 
     const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
@@ -53,7 +55,7 @@ export const SavedFeeds = withAuthRequired(
         <View
           style={[
             pal.border,
-            !isDesktopWeb && s.flex1,
+            isMobile && s.flex1,
             pal.viewLight,
             styles.empty,
           ]}>
@@ -62,7 +64,7 @@ export const SavedFeeds = withAuthRequired(
           </Text>
         </View>
       )
-    }, [pal])
+    }, [pal, isMobile])
 
     const renderListFooterComponent = useCallback(() => {
       return (
@@ -116,15 +118,11 @@ export const SavedFeeds = withAuthRequired(
         style={[
           s.hContentRegion,
           pal.border,
-          isDesktopWeb && styles.desktopContainer,
+          isTabletOrDesktop && styles.desktopContainer,
         ]}>
-        <ViewHeader
-          title="Edit My Feeds"
-          showOnDesktop
-          showBorder={!isDesktopWeb}
-        />
+        <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
         <DraggableFlatList
-          containerStyle={[isDesktopWeb ? s.hContentRegion : s.flex1]}
+          containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
           data={savedFeeds.all}
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}

@@ -10,7 +10,7 @@ import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -30,6 +30,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
   observer(({}: Props) => {
     const pal = usePalette('default')
     const store = useStores()
+    const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
     const blockedAccounts = useMemo(
       () => new BlockedAccountsModel(store),
@@ -72,7 +73,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
       <CenteredView
         style={[
           styles.container,
-          isDesktopWeb && styles.containerDesktop,
+          isTabletOrDesktop && styles.containerDesktop,
           pal.view,
           pal.border,
         ]}
@@ -83,14 +84,14 @@ export const ModerationBlockedAccounts = withAuthRequired(
           style={[
             styles.description,
             pal.text,
-            isDesktopWeb && styles.descriptionDesktop,
+            isTabletOrDesktop && styles.descriptionDesktop,
           ]}>
           Blocked accounts cannot reply in your threads, mention you, or
           otherwise interact with you. You will not see their content and they
           will be prevented from seeing yours.
         </Text>
         {!blockedAccounts.hasContent ? (
-          <View style={[pal.border, !isDesktopWeb && styles.flex1]}>
+          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
             <View style={[styles.empty, pal.viewLight]}>
               <Text type="lg" style={[pal.text, styles.emptyText]}>
                 You have not blocked any accounts yet. To block an account, go
@@ -101,7 +102,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
           </View>
         ) : (
           <FlatList
-            style={[!isDesktopWeb && styles.flex1]}
+            style={[!isTabletOrDesktop && styles.flex1]}
             data={blockedAccounts.blocks}
             keyExtractor={(item: ActorDefs.ProfileView) => item.did}
             refreshControl={
@@ -133,11 +134,12 @@ export const ModerationBlockedAccounts = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 100,
+    paddingBottom: 100,
   },
   containerDesktop: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    paddingBottom: 0,
   },
   title: {
     textAlign: 'center',

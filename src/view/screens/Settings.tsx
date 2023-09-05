@@ -35,10 +35,10 @@ import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -58,6 +58,7 @@ export const SettingsScreen = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
+    const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
@@ -203,7 +204,7 @@ export const SettingsScreen = withAuthRequired(
         <ViewHeader title="Settings" />
         <ScrollView
           style={[s.hContentRegion]}
-          contentContainerStyle={!isDesktopWeb && pal.viewLight}
+          contentContainerStyle={isMobile && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
           {store.session.currentSession !== undefined ? (
@@ -508,7 +509,7 @@ export const SettingsScreen = withAuthRequired(
               System log
             </Text>
           </TouchableOpacity>
-          {isDesktopWeb || __DEV__ ? (
+          {__DEV__ ? (
             <ToggleButton
               type="default-light"
               label="Experiment: Use AppView Proxy"
