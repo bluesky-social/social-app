@@ -27,6 +27,8 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
     [store, uri],
   )
 
+  const [thread, setThread] = React.useState<PostThreadModel['thread']>(null)
+
   useFocusEffect(
     React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
@@ -34,9 +36,14 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
 
       InteractionManager.runAfterInteractions(() => {
         if (!view.hasLoaded && !view.isLoading) {
-          view.setup().catch(err => {
-            store.log.error('Failed to fetch thread', err)
-          })
+          view
+            .setup()
+            .then(() => {
+              setThread(view.thread)
+            })
+            .catch(err => {
+              store.log.error('Failed to fetch thread', err)
+            })
         }
       })
 
@@ -75,7 +82,7 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
           onPressReply={onPressReply}
         />
       </View>
-      {!isDesktopWeb && (
+      {!isDesktopWeb && thread && (
         <View
           style={[
             styles.prompt,
