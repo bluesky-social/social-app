@@ -111,10 +111,7 @@ export const TextInput = React.forwardRef(
           },
         },
         content: textToEditorJson(richtext.text.toString()),
-        onFocus: ({editor: e}) => {
-          e.chain().focus().setTextSelection(richtext.text.length).run() // focus to the end of the text
-        },
-        autofocus: true,
+        autofocus: 'end',
         editable: true,
         injectCSS: true,
         onUpdate({editor: editorProp}) {
@@ -146,7 +143,7 @@ export const TextInput = React.forwardRef(
 
     const onEmojiInserted = React.useCallback(
       (emoji: Emoji) => {
-        editor?.chain().focus('end').insertContent(emoji.native).run()
+        editor?.chain().focus().insertContent(emoji.native).run()
       },
       [editor],
     )
