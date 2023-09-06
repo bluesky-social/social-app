@@ -69,6 +69,7 @@
       "url": "https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302"
     },
     "plugins": [
+      ["./plugins/withIosCodeSigning", "XX11XX1XXX"],
       "expo-localization",
       "sentry-expo",
       [
