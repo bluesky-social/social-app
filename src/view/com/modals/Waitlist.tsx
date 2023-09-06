@@ -96,7 +96,7 @@ export function Component({}: {}) {
               icon="check"
               style={pal.text as FontAwesomeIconStyle}
             />
-            <Text style={s.ml10}>
+            <Text style={[s.ml10, pal.text]}>
               Your email has been saved! We&apos;ll be in touch soon.
             </Text>
           </View>
