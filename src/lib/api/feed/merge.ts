@@ -1,6 +1,5 @@
 import {AppBskyFeedDefs, AppBskyFeedGetTimeline} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
-import random from 'lodash.random'
 import {RootStoreModel} from 'state/index'
 import {timeout} from 'lib/async/timeout'
 import {bundleAsync} from 'lib/async/bundle'
@@ -15,6 +14,7 @@ export class MergeFeedAPI implements FeedAPI {
   customFeeds: MergeFeedSource_Custom[] = []
   feedCursor = 0
   itemCursor = 0
+  sampleCursor = 0
 
   constructor(public rootStore: RootStoreModel) {}
 
@@ -23,6 +23,7 @@ export class MergeFeedAPI implements FeedAPI {
     this.customFeeds = [] // just empty the array, they will be captured in _fetchNext()
     this.feedCursor = 0
     this.itemCursor = 0
+    this.sampleCursor = 0
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
@@ -85,7 +86,7 @@ export class MergeFeedAPI implements FeedAPI {
 
     // this condition establishes the frequency that custom feeds are woven into follows
     const shouldSample =
-      i >= 25 && candidateFeeds.length >= 2 && (i % 4 === 0 || i % 5 === 0)
+      i >= 15 && candidateFeeds.length >= 2 && (i % 4 === 0 || i % 5 === 0)
 
     if (!canSample && !hasFollows) {
       // no data available
@@ -93,7 +94,7 @@ export class MergeFeedAPI implements FeedAPI {
     }
     if (shouldSample || !hasFollows) {
       // time to sample, or the user isnt following anybody
-      return candidateFeeds[random(0, candidateFeeds.length - 1)].take(1)
+      return candidateFeeds[this.sampleCursor++ % candidateFeeds.length].take(1)
     }
     // not time to sample
     return this.following.take(1)
@@ -176,7 +177,12 @@ class MergeFeedSource_Following extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    return this.rootStore.agent.getTimeline({cursor, limit})
+    const res = await this.rootStore.agent.getTimeline({cursor, limit})
+    // filter out mutes pre-emptively to ensure better mixing
+    res.data.feed = res.data.feed.filter(
+      post => !post.post.author.viewer?.muted,
+    )
+    return res
   }
 }
 
