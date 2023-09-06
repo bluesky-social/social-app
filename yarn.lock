@@ -7071,7 +7071,7 @@ ansi-fragments@^0.2.1:
     slice-ansi "^2.0.0"
     strip-ansi "^5.0.0"
 
-ansi-html-community@0.0.8, ansi-html-community@^0.0.8:
+ansi-html-community@^0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/ansi-html-community/-/ansi-html-community-0.0.8.tgz#69fbc4d6ccbe383f9736934ae34c3f8290f1bf41"
   integrity sha512-1APHAyr3+PCamwNw3bXCPp4HFLONZt/yIH0sZp0/469KWNTEy+qN5jQ3GVX6DMZ1UXAi34yVwtTeaG/HpBuuzw==
@@ -19554,15 +19554,6 @@ webpack-dev-server@^4.11.1, webpack-dev-server@^4.6.0:
     spdy "^4.0.2"
     webpack-dev-middleware "^5.3.1"
     ws "^8.13.0"
-
-webpack-hot-middleware@^2.25.4:
-  version "2.25.4"
-  resolved "https://registry.yarnpkg.com/webpack-hot-middleware/-/webpack-hot-middleware-2.25.4.tgz#d8bc9e9cb664fc3105c8e83d2b9ed436bee4e193"
-  integrity sha512-IRmTspuHM06aZh98OhBJtqLpeWFM8FXJS5UYpKYxCJzyFoyWj1w6VGFfomZU7OPA55dMLrQK0pRT1eQ3PACr4w==
-  dependencies:
-    ansi-html-community "0.0.8"
-    html-entities "^2.1.0"
-    strip-ansi "^6.0.0"
 
 webpack-manifest-plugin@^4.0.2, webpack-manifest-plugin@^4.1.1:
   version "4.1.1"
