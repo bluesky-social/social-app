@@ -257,45 +257,6 @@ export class PostsFeedModel {
   }
 
   /**
-   * Update content in-place
-   */
-  update = bundleAsync(async () => {
-    // TODO
-    /*await this.lock.acquireAsync()
-    try {
-      if (!this.slices.length) {
-        return
-      }
-      this._xLoading()
-      let numToFetch = this.slices.length
-      let cursor
-      try {
-        do {
-          const res: GetTimeline.Response = await this._getFeed({
-            cursor,
-            limit: Math.min(numToFetch, 100),
-          })
-          if (res.data.feed.length === 0) {
-            break // sanity check
-          }
-          this._updateAll(res)
-          numToFetch -= res.data.feed.length
-          cursor = res.data.cursor
-        } while (cursor && numToFetch > 0)
-        this._xIdle()
-      } catch (e: any) {
-        this._xIdle() // don't bubble the error to the user
-        this.rootStore.log.error('FeedView: Failed to update', {
-          params: this.params,
-          e,
-        })
-      }
-    } finally {
-      this.lock.release()
-    }*/
-  })
-
-  /**
    * Check if new posts are available
    */
   async checkForLatest() {
@@ -421,24 +382,5 @@ export class PostsFeedModel {
         }
       }
     })
-  }
-
-  _updateAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
-  ) {
-    for (const item of res.data.feed) {
-      this.rootStore.posts.fromFeedItem(item)
-      const existingSlice = this.slices.find(slice =>
-        slice.containsUri(item.post.uri),
-      )
-      if (existingSlice) {
-        const existingItem = existingSlice.items.find(
-          item2 => item2.post.uri === item.post.uri,
-        )
-        if (existingItem) {
-          existingItem.copyMetrics(item)
-        }
-      }
-    }
   }
 }
