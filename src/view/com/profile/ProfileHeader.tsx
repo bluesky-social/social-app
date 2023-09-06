@@ -470,8 +470,8 @@ const ProfileHeaderLoaded = observer(
                   accessibilityRole="button"
                   accessibilityLabel={`${followers} ${pluralizedFollowers}`}
                   accessibilityHint={'Opens followers list'}>
-                  <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {followers}
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {followers}{' '}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     {pluralizedFollowers}
@@ -484,8 +484,8 @@ const ProfileHeaderLoaded = observer(
                   accessibilityRole="button"
                   accessibilityLabel={`${following} following`}
                   accessibilityHint={'Opens following list'}>
-                  <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {following}
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {following}{' '}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     following
