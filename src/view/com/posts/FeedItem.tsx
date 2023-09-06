@@ -183,35 +183,14 @@ export const FeedItem = observer(function FeedItemImpl({
 
         <View style={{paddingTop: 12}}>
           {source ? (
-            <Link
-              style={styles.includeReason}
+            <DesktopWebTextLink
+              type="sm-bold"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}
+              text={sanitizeDisplayName(source.displayName)}
               href={source.uri}
-              title={sanitizeDisplayName(source.displayName)}>
-              <FontAwesomeIcon
-                icon="arrow-trend-up"
-                size={13}
-                style={{
-                  marginLeft: 3,
-                  marginRight: 4,
-                  marginTop: 2,
-                  color: pal.colors.textLight,
-                }}
-              />
-              <Text
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                <DesktopWebTextLink
-                  type="sm-bold"
-                  style={pal.textLight}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  text={sanitizeDisplayName(source.displayName)}
-                  href={source.uri}
-                />
-              </Text>
-            </Link>
+            />
           ) : item.reasonRepost ? (
             <Link
               style={styles.includeReason}
