@@ -2,6 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {FeedViewPostsSlice} from 'lib/api/feed-manip'
 import {PostsFeedItemModel} from './post'
+import {FeedSourceInfo} from 'lib/api/feed/types'
 
 export class PostsFeedSliceModel {
   // ui state
@@ -9,9 +10,11 @@ export class PostsFeedSliceModel {
 
   // data
   items: PostsFeedItemModel[] = []
+  source: FeedSourceInfo | undefined
 
   constructor(public rootStore: RootStoreModel, slice: FeedViewPostsSlice) {
     this._reactKey = slice._reactKey
+    this.source = slice.source
     for (let i = 0; i < slice.items.length; i++) {
       this.items.push(
         new PostsFeedItemModel(

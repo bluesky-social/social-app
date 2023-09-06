@@ -3,7 +3,8 @@ import shuffle from 'lodash.shuffle'
 import {RootStoreModel} from 'state/index'
 import {timeout} from 'lib/async/timeout'
 import {bundleAsync} from 'lib/async/bundle'
-import {FeedAPI, FeedAPIResponse} from './types'
+import {feedUriToHref} from 'lib/strings/url-helpers'
+import {FeedAPI, FeedAPIResponse, FeedSourceInfo} from './types'
 
 export class MergeFeedAPI implements FeedAPI {
   following: MergeFeedSource_Following
@@ -101,6 +102,7 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
+  sourceInfo: FeedSourceInfo | undefined
   cursor: string | undefined = undefined
   queue: AppBskyFeedDefs.FeedViewPost[] = []
   hasMore = true
@@ -180,6 +182,10 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     public feedDisplayName: string,
   ) {
     super(rootStore)
+    this.sourceInfo = {
+      displayName: feedDisplayName,
+      uri: feedUriToHref(feedUri),
+    }
   }
 
   get displayName() {
@@ -202,12 +208,9 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     if (limit && res.data.feed.length > limit) {
       res.data.feed = res.data.feed.slice(0, limit)
     }
-    // DEBUG
+    // attach source info
     for (const post of res.data.feed) {
-      // @ts-ignore debug
-      post.post.record.text = `[${
-        this.feedDisplayName
-      }] ${post.post.record.text.slice(0, 200)}`
+      post.__source = this.sourceInfo
     }
     return res
   }

@@ -28,6 +28,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
         <FeedItem
           key={slice.items[0]._reactKey}
           item={slice.items[0]}
+          source={slice.source}
           isThreadParent={slice.isThreadParentAt(0)}
           isThreadChild={slice.isThreadChildAt(0)}
         />
@@ -45,6 +46,26 @@ export const FeedSlice = observer(function FeedSliceImpl({
           isThreadChild={slice.isThreadChildAt(last)}
           isThreadLastChild
         />
+      </>
+    )
+  }
+
+  if (slice.isThread && slice.items.length > 3) {
+    const last = slice.items.length - 1
+    return (
+      <>
+        {slice.items.map((item, i) => (
+          <FeedItem
+            key={item._reactKey}
+            item={item}
+            source={i === 0 && slice.source}
+            isThreadParent={slice.isThreadParentAt(i)}
+            isThreadChild={slice.isThreadChildAt(i)}
+            isThreadLastChild={
+              slice.isThreadChildAt(i) && slice.items.length === i + 1
+            }
+          />
+        ))}
       </>
     )
   }

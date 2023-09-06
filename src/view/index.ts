@@ -13,6 +13,7 @@ import {faArrowRightFromBracket} from '@fortawesome/free-solid-svg-icons/faArrow
 import {faArrowUpFromBracket} from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket'
 import {faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons/faArrowUpRightFromSquare'
 import {faArrowRotateLeft} from '@fortawesome/free-solid-svg-icons/faArrowRotateLeft'
+import {faArrowTrendUp} from '@fortawesome/free-solid-svg-icons/faArrowTrendUp'
 import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons/faArrowsRotate'
 import {faAt} from '@fortawesome/free-solid-svg-icons/faAt'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
@@ -24,6 +25,7 @@ import {faBookmark as farBookmark} from '@fortawesome/free-regular-svg-icons/faB
 import {faCalendar as farCalendar} from '@fortawesome/free-regular-svg-icons/faCalendar'
 import {faCamera} from '@fortawesome/free-solid-svg-icons/faCamera'
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck'
+import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight'
 import {faCircle} from '@fortawesome/free-regular-svg-icons/faCircle'
 import {faCircleCheck as farCircleCheck} from '@fortawesome/free-regular-svg-icons/faCircleCheck'
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons/faCircleCheck'
@@ -41,6 +43,7 @@ import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
 import {faEye} from '@fortawesome/free-solid-svg-icons/faEye'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
 import {faFaceSmile} from '@fortawesome/free-regular-svg-icons/faFaceSmile'
+import {faFire} from '@fortawesome/free-solid-svg-icons/faFire'
 import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons/faFloppyDisk'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
@@ -54,15 +57,18 @@ import {faImage} from '@fortawesome/free-solid-svg-icons/faImage'
 import {faInfo} from '@fortawesome/free-solid-svg-icons/faInfo'
 import {faLanguage} from '@fortawesome/free-solid-svg-icons/faLanguage'
 import {faLink} from '@fortawesome/free-solid-svg-icons/faLink'
+import {faList} from '@fortawesome/free-solid-svg-icons/faList'
 import {faListUl} from '@fortawesome/free-solid-svg-icons/faListUl'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faMessage} from '@fortawesome/free-regular-svg-icons/faMessage'
 import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
+import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 import {faPaste} from '@fortawesome/free-regular-svg-icons/faPaste'
 import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
+import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faQuoteLeft} from '@fortawesome/free-solid-svg-icons/faQuoteLeft'
 import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
@@ -77,6 +83,7 @@ import {faSliders} from '@fortawesome/free-solid-svg-icons/faSliders'
 import {faSquare} from '@fortawesome/free-regular-svg-icons/faSquare'
 import {faSquareCheck} from '@fortawesome/free-regular-svg-icons/faSquareCheck'
 import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
+import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
@@ -88,11 +95,6 @@ import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faUsersSlash} from '@fortawesome/free-solid-svg-icons/faUsersSlash'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
-import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
-import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
-import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
-import {faList} from '@fortawesome/free-solid-svg-icons/faList'
-import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight'
 
 export function setup() {
   library.add(
@@ -109,6 +111,7 @@ export function setup() {
     faArrowUpFromBracket,
     faArrowUpRightFromSquare,
     faArrowRotateLeft,
+    faArrowTrendUp,
     faArrowsRotate,
     faAt,
     faBan,
@@ -120,6 +123,7 @@ export function setup() {
     farCalendar,
     faCamera,
     faCheck,
+    faChevronRight,
     faCircle,
     faCircleCheck,
     farCircleCheck,
@@ -137,6 +141,7 @@ export function setup() {
     faExclamation,
     farEyeSlash,
     faFaceSmile,
+    faFire,
     faFloppyDisk,
     faGear,
     faGlobe,
@@ -150,15 +155,18 @@ export function setup() {
     faInfo,
     faLanguage,
     faLink,
+    faList,
     faListUl,
     faLock,
     faMagnifyingGlass,
     faMessage,
     faNoteSticky,
     faPaste,
+    faPause,
     faPen,
     faPenNib,
     faPenToSquare,
+    faPlay,
     faPlus,
     faQuoteLeft,
     faReply,
@@ -180,14 +188,10 @@ export function setup() {
     faUserPlus,
     faUserXmark,
     faUsersSlash,
+    faThumbtack,
     faTicket,
     faTrashCan,
-    faThumbtack,
     faX,
     faXmark,
-    faPlay,
-    faPause,
-    faList,
-    faChevronRight,
   )
 }

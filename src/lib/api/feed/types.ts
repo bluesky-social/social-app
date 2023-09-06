@@ -10,3 +10,8 @@ export interface FeedAPI {
   peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost>
   fetchNext({limit}: {limit: number}): Promise<FeedAPIResponse>
 }
+
+export interface FeedSourceInfo {
+  uri: string
+  displayName: string
+}
