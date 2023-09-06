@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
+  AppBskyFeedDefs,
   AppBskyFeedGetTimeline as GetTimeline,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
@@ -13,6 +14,7 @@ import {FeedTuner} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
 import {FeedViewPostsSlice} from 'lib/api/feed-manip'
+import {timeout} from 'lib/async/timeout'
 
 const PAGE_SIZE = 30
 
@@ -44,13 +46,14 @@ export class PostsFeedModel {
   loadMoreCursor: string | undefined
   pollCursor: string | undefined
   tuner = new FeedTuner()
+  mergeFeed = new MergeFeedManager(this.rootStore)
   pageSize = PAGE_SIZE
   options: Options = {}
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
 
-  // used to track if what's hot is coming up empty
+  // used to track if a feed is coming up empty
   emptyFetches = 0
 
   // data
@@ -161,6 +164,7 @@ export class PostsFeedModel {
     await this.lock.acquireAsync()
     try {
       this.setHasNewLatest(false)
+      this.mergeFeed.reset()
       this.tuner.reset()
       this._xLoading(isRefreshing)
       try {
@@ -428,7 +432,8 @@ export class PostsFeedModel {
   > {
     params = Object.assign({}, this.params, params)
     if (this.feedType === 'home') {
-      return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
+      return this.mergeFeed.getFeed(params.limit)
+      // return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
     } else if (this.feedType === 'custom') {
       const res = await this.rootStore.agent.app.bsky.feed.getFeed(
         params as GetCustomFeed.QueryParams,
@@ -449,6 +454,206 @@ export class PostsFeedModel {
       return this.rootStore.agent.getActorLikes(
         params as GetActorLikes.QueryParams,
       )
+    }
+  }
+}
+
+/*
+- anchor more strongly against follows (show first, show more)
+- reduce frequency of consecutive samples
+- dont start inserting until there are enough
+- add UI element
+*/
+
+import shuffle from 'lodash.shuffle'
+
+class MergeFeedSource {
+  cursor: string | undefined = undefined
+  queue: AppBskyFeedDefs.FeedViewPost[] = []
+  hasMore = true
+
+  constructor(public rootStore: RootStoreModel) {}
+
+  get displayName() {
+    return ''
+  }
+
+  get numReady() {
+    return this.queue.length
+  }
+
+  get needsFetch() {
+    return this.hasMore && this.queue.length === 0
+  }
+
+  reset() {
+    this.cursor = undefined
+    this.queue = []
+    this.hasMore = true
+  }
+
+  take(n: number): AppBskyFeedDefs.FeedViewPost[] {
+    return this.queue.splice(0, n)
+  }
+
+  async fetchNext(n: number) {
+    await Promise.race([this._fetchNextInner(n), timeout(500)])
+  }
+
+  _fetchNextInner = bundleAsync(async (n: number) => {
+    console.log('fetching', this.displayName)
+    try {
+      const res = await this._getFeed({cursor: this.cursor, limit: n})
+      if (res.success) {
+        this.cursor = res.data.cursor
+        if (res.data.feed.length) {
+          this.queue = this.queue.concat(res.data.feed)
+        } else {
+          this.hasMore = false
+        }
+      } else {
+        this.hasMore = false
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  })
+
+  protected _getFeed(
+    _params: QueryParams,
+  ): Promise<GetTimeline.Response | GetCustomFeed.Response> {
+    throw new Error('Must be overridden')
+  }
+}
+
+class MergeFeedSource_Following extends MergeFeedSource {
+  get displayName() {
+    return 'Following'
+  }
+
+  protected async _getFeed(params: QueryParams): Promise<GetTimeline.Response> {
+    return this.rootStore.agent.getTimeline(params)
+  }
+}
+
+class MergeFeedSource_Custom extends MergeFeedSource {
+  constructor(
+    public rootStore: RootStoreModel,
+    public feedUri: string,
+    public feedDisplayName: string,
+  ) {
+    super(rootStore)
+  }
+
+  get displayName() {
+    return this.feedDisplayName
+  }
+
+  protected async _getFeed(
+    params: QueryParams,
+  ): Promise<GetCustomFeed.Response> {
+    const res = await this.rootStore.agent.app.bsky.feed.getFeed({
+      ...(params as GetCustomFeed.QueryParams),
+      feed: this.feedUri,
+    })
+    // NOTE
+    // some custom feeds fail to enforce the pagination limit
+    // so we manually truncate here
+    // -prf
+    if (params.limit && res.data.feed.length > params.limit) {
+      res.data.feed = res.data.feed.slice(0, params.limit)
+    }
+    // DEBUG
+    for (const post of res.data.feed) {
+      // @ts-ignore debug
+      post.post.record.text = `[${
+        this.feedDisplayName
+      }] ${post.post.record.text.slice(0, 200)}`
+    }
+    return res
+  }
+}
+
+class MergeFeedManager {
+  following: MergeFeedSource_Following
+  customFeeds: MergeFeedSource_Custom[] = []
+  feedCursor = 0
+
+  constructor(public rootStore: RootStoreModel) {}
+
+  reset() {
+    this.following = new MergeFeedSource_Following(this.rootStore)
+    this.customFeeds = shuffle(
+      this.rootStore.me.savedFeeds.all.map(
+        feed =>
+          new MergeFeedSource_Custom(
+            this.rootStore,
+            feed.uri,
+            feed.displayName,
+          ),
+      ),
+    )
+    // console.log(this.customFeeds)
+  }
+
+  async getFeed(limit: number): Promise<GetCustomFeed.Response> {
+    const promises = []
+
+    // always keep following topped up
+    if (this.following.numReady < limit) {
+      promises.push(this.following.fetchNext(30))
+    }
+
+    // pick the next feeds to sample from
+    const feeds = this.customFeeds.slice(this.feedCursor, this.feedCursor + 3)
+    this.feedCursor += 3
+    if (this.feedCursor > this.customFeeds.length) {
+      this.feedCursor = 0
+    }
+    console.log(
+      'sampling',
+      feeds.map(f => f.displayName),
+    )
+
+    // top up the feeds
+    for (const feed of feeds) {
+      if (feed.numReady < 5) {
+        promises.push(feed.fetchNext(10))
+      }
+    }
+
+    // give everybody 300ms
+    await Promise.all(promises)
+
+    // assemble a response by sampling from feeds with content
+    let i = 0
+    const candidateFeeds = shuffle([
+      this.following,
+      ...this.customFeeds.filter(f => f.numReady > 0),
+    ])
+    console.log(
+      'candidates',
+      candidateFeeds.map(cf => `${cf.displayName} (${cf.numReady})`),
+    )
+    const posts: AppBskyFeedDefs.FeedViewPost[] = []
+    while (posts.length < limit) {
+      let slice = candidateFeeds[i++ % candidateFeeds.length].take(1)
+      if (slice[0]) {
+        posts.push(slice[0])
+      } else {
+        if (!candidateFeeds.find(f => f.numReady > 0)) {
+          break
+        }
+      }
+    }
+
+    return {
+      success: true,
+      headers: {},
+      data: {
+        cursor: 'fake',
+        feed: posts,
+      },
     }
   }
 }
