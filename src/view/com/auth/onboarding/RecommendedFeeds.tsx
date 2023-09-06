@@ -43,7 +43,7 @@ export const RecommendedFeeds = observer(({next}: Props) => {
     },
   })
 
-  const hasFeeds = recommendedFeeds && !recommendedFeeds.length
+  const hasFeeds = recommendedFeeds && recommendedFeeds.length
 
   const title = (
     <>
