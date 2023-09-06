@@ -29,7 +29,7 @@ export function ContentHider({
 
   if (!moderation.blur || (ignoreMute && moderation.cause?.type === 'muted')) {
     return (
-      <View testID={testID} style={style}>
+      <View testID={testID} style={[styles.outer, style]}>
         {children}
       </View>
     )
@@ -37,7 +37,7 @@ export function ContentHider({
 
   const desc = describeModerationCause(moderation.cause, 'content')
   return (
-    <View testID={testID} style={style}>
+    <View testID={testID} style={[styles.outer, style]}>
       <Pressable
         onPress={() => {
           if (!moderation.noOverride) {
@@ -90,6 +90,9 @@ export function ContentHider({
 }
 
 const styles = StyleSheet.create({
+  outer: {
+    overflow: 'hidden',
+  },
   cover: {
     flexDirection: 'row',
     alignItems: 'center',
