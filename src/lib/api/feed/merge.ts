@@ -80,13 +80,22 @@ export class MergeFeedAPI implements FeedAPI {
   sampleItem() {
     const i = this.itemCursor++
     const candidateFeeds = this.customFeeds.filter(f => f.numReady > 0)
-    if (i >= 5 && candidateFeeds.length >= 2) {
-      if (i % 4 === 0 || i % 5 === 0) {
-        console.log('sampling custom', i)
-        return candidateFeeds[random(0, candidateFeeds.length - 1)].take(1)
-      }
+    const canSample = candidateFeeds.length > 0
+    const hasFollows = this.following.numReady > 0
+
+    // this condition establishes the frequency that custom feeds are woven into follows
+    const shouldSample =
+      i >= 25 && candidateFeeds.length >= 2 && (i % 4 === 0 || i % 5 === 0)
+
+    if (!canSample && !hasFollows) {
+      // no data available
+      return []
     }
-    console.log('sampling following', i)
+    if (shouldSample || !hasFollows) {
+      // time to sample, or the user isnt following anybody
+      return candidateFeeds[random(0, candidateFeeds.length - 1)].take(1)
+    }
+    // not time to sample
     return this.following.take(1)
   }
 
@@ -114,11 +123,6 @@ class MergeFeedSource {
 
   constructor(public rootStore: RootStoreModel) {}
 
-  get displayName() {
-    // TODO remove
-    return ''
-  }
-
   get numReady() {
     return this.queue.length
   }
@@ -142,8 +146,6 @@ class MergeFeedSource {
   }
 
   _fetchNextInner = bundleAsync(async (n: number) => {
-    console.log('fetching', this.displayName)
-
     const res = await this._getFeed(this.cursor, n)
     if (res.success) {
       this.cursor = res.data.cursor
@@ -155,7 +157,6 @@ class MergeFeedSource {
     } else {
       this.hasMore = false
     }
-    console.log('fetched', this.displayName)
   })
 
   protected _getFeed(
@@ -167,10 +168,6 @@ class MergeFeedSource {
 }
 
 class MergeFeedSource_Following extends MergeFeedSource {
-  get displayName() {
-    return 'Following'
-  }
-
   async fetchNext(n: number) {
     return this._fetchNextInner(n)
   }
@@ -197,10 +194,6 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       uri: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
-  }
-
-  get displayName() {
-    return this.feedDisplayName
   }
 
   protected async _getFeed(
