@@ -22,6 +22,7 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
@@ -29,7 +30,6 @@ import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
-import {isDesktopWeb} from 'platform/detection'
 import {isCauseALabelOnUri} from 'lib/moderation'
 
 type Embed =
@@ -50,6 +50,7 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
 
   // quote post with media
   // =
@@ -111,7 +112,10 @@ export function PostEmbeds({
               uri={thumb}
               onPress={() => openLightbox(0)}
               onPressIn={() => onPressIn(0)}
-              style={styles.singleImage}>
+              style={[
+                styles.singleImage,
+                isMobile && styles.singleImageMobile,
+              ]}>
               {alt === '' ? null : (
                 <View style={styles.altContainer}>
                   <Text style={styles.alt} accessible={false}>
@@ -130,7 +134,11 @@ export function PostEmbeds({
             images={embed.images}
             onPress={openLightbox}
             onPressIn={onPressIn}
-            style={embed.images.length === 1 ? styles.singleImage : undefined}
+            style={
+              embed.images.length === 1
+                ? [styles.singleImage, isMobile && styles.singleImageMobile]
+                : undefined
+            }
           />
         </View>
       )
@@ -169,7 +177,10 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
-    maxHeight: isDesktopWeb ? 1000 : 500,
+    maxHeight: 1000,
+  },
+  singleImageMobile: {
+    maxHeight: 500,
   },
   extOuter: {
     borderWidth: 1,

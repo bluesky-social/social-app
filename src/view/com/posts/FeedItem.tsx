@@ -28,6 +28,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {isEmbedByEmbedder} from 'lib/embeds'
 
 export const FeedItem = observer(function ({
   item,
@@ -292,6 +293,10 @@ export const FeedItem = observer(function ({
               <ContentHider
                 testID="contentHider-embed"
                 moderation={item.moderation.embed}
+                ignoreMute={isEmbedByEmbedder(
+                  item.post.embed,
+                  item.post.author.did,
+                )}
                 style={styles.embed}>
                 <PostEmbeds
                   embed={item.post.embed}

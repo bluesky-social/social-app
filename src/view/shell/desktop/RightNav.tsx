@@ -9,6 +9,7 @@ import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 
@@ -16,6 +17,11 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
   const store = useStores()
   const pal = usePalette('default')
   const palError = usePalette('error')
+
+  const {isTablet} = useWebMediaQueries()
+  if (isTablet) {
+    return null
+  }
 
   return (
     <View style={[styles.rightNav, pal.view]}>
@@ -114,6 +120,7 @@ const styles = StyleSheet.create({
   rightNav: {
     position: 'absolute',
     top: 20,
+    // @ts-ignore web only
     left: 'calc(50vw + 310px)',
     width: 304,
   },

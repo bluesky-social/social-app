@@ -3,8 +3,8 @@ import {StyleSheet, TouchableOpacity} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {LoadLatestBtn as LoadLatestBtnMobile} from './LoadLatestBtnMobile'
-import {isMobileWeb} from 'platform/detection'
 import {HITSLOP_20} from 'lib/constants'
 
 export const LoadLatestBtn = ({
@@ -19,7 +19,8 @@ export const LoadLatestBtn = ({
   minimalShellMode?: boolean
 }) => {
   const pal = usePalette('default')
-  if (isMobileWeb) {
+  const {isMobile} = useWebMediaQueries()
+  if (isMobile) {
     return (
       <LoadLatestBtnMobile
         onPress={onPress}
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
+    // @ts-ignore web only
     left: '50vw',
     // @ts-ignore web only -prf
     transform: 'translateX(-282px)',
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
+    // @ts-ignore web only
     left: '50vw',
     // @ts-ignore web only -prf
     transform: 'translateX(-50%)',

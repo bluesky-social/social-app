@@ -60,6 +60,7 @@ export const LoggedOutLayout = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    // @ts-ignore web only
     height: '100vh',
   },
   side: {

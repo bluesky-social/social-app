@@ -3,6 +3,7 @@ import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {AtUri} from '@atproto/api'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../../util/text/Text'
 import * as Toast from '../../util/Toast'
@@ -37,6 +38,7 @@ type ReportComponentProps =
 export function Component(content: ReportComponentProps) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
   const [showDetailsInput, setShowDetailsInput] = useState(false)
   const [error, setError] = useState<string>()
@@ -87,7 +89,13 @@ export function Component(content: ReportComponentProps) {
 
   return (
     <ScrollView testID="reportModal" style={[s.flex1, pal.view]}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          isMobile && {
+            paddingBottom: 40,
+          },
+        ]}>
         {showDetailsInput ? (
           <InputIssueDetails
             details={details}
@@ -153,16 +161,14 @@ const SelectIssue = ({
       <Text style={[pal.textLight, styles.description]}>
         What is the issue with this {collectionName}?
       </Text>
-      <ReportReasonOptions
-        atUri={atUri}
-        selectedIssue={issue}
-        onSelectIssue={onSelectIssue}
-      />
-      {error ? (
-        <View style={s.mt10}>
-          <ErrorMessage message={error} />
-        </View>
-      ) : undefined}
+      <View style={{marginBottom: 10}}>
+        <ReportReasonOptions
+          atUri={atUri}
+          selectedIssue={issue}
+          onSelectIssue={onSelectIssue}
+        />
+      </View>
+      {error ? <ErrorMessage message={error} /> : undefined}
       {/* If no atUri is present, the report would be for account in which case, we allow sending without specifying a reason */}
       {issue || !atUri ? (
         <>
@@ -188,7 +194,6 @@ const SelectIssue = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
-    paddingBottom: 40,
   },
   title: {
     textAlign: 'center',

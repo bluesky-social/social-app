@@ -27,8 +27,9 @@ import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb, isNative} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
@@ -108,6 +109,7 @@ const ProfileHeaderLoaded = observer(
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
     const invalidHandle = isInvalidHandle(view.handle)
+    const {isDesktop} = useWebMediaQueries()
 
     const onPressBack = React.useCallback(() => {
       navigation.goBack()
@@ -468,8 +470,8 @@ const ProfileHeaderLoaded = observer(
                   accessibilityRole="button"
                   accessibilityLabel={`${followers} ${pluralizedFollowers}`}
                   accessibilityHint={'Opens followers list'}>
-                  <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {followers}
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {followers}{' '}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     {pluralizedFollowers}
@@ -482,8 +484,8 @@ const ProfileHeaderLoaded = observer(
                   accessibilityRole="button"
                   accessibilityLabel={`${following} following`}
                   accessibilityHint={'Opens following list'}>
-                  <Text type="md" style={[s.bold, s.mr2, pal.text]}>
-                    {following}
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {following}{' '}
                   </Text>
                   <Text type="md" style={[pal.textLight]}>
                     following
@@ -510,7 +512,7 @@ const ProfileHeaderLoaded = observer(
           )}
           <ProfileHeaderAlerts moderation={view.moderation} />
         </View>
-        {!isDesktopWeb && !hideBackButton && (
+        {!isDesktop && !hideBackButton && (
           <TouchableWithoutFeedback
             onPress={onPressBack}
             hitSlop={BACK_HITSLOP}

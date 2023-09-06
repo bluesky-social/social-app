@@ -7,10 +7,10 @@ import {s, colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb} from 'platform/detection'
 import {openAltTextModal} from 'lib/media/alt-text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 interface Props {
   gallery: GalleryModel
@@ -19,13 +19,14 @@ interface Props {
 export const Gallery = observer(function ({gallery}: Props) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   let side: number
 
   if (gallery.size === 1) {
     side = 250
   } else {
-    side = (isDesktopWeb ? 560 : 350) / gallery.size
+    side = (isMobile ? 350 : 560) / gallery.size
   }
 
   const imageStyle = {
@@ -33,14 +34,14 @@ export const Gallery = observer(function ({gallery}: Props) {
     width: side,
   }
 
-  const isOverflow = !isDesktopWeb && gallery.size > 2
+  const isOverflow = isMobile && gallery.size > 2
 
   const altTextControlStyle = isOverflow
     ? {
         left: 4,
         bottom: 4,
       }
-    : isDesktopWeb && gallery.size < 3
+    : !isMobile && gallery.size < 3
     ? {
         left: 8,
         top: 8,
@@ -60,7 +61,7 @@ export const Gallery = observer(function ({gallery}: Props) {
           right: 4,
           gap: 4,
         }
-      : isDesktopWeb && gallery.size < 3
+      : !isMobile && gallery.size < 3
       ? {
           top: 8,
           right: 8,

@@ -19,6 +19,7 @@ import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
+import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
@@ -59,6 +60,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = makeProfileLink(item.post.author)
   const authorTitle = item.post.author.handle
+  const isAuthorMuted = item.post.author.viewer?.muted
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return makeProfileLink(item.post.author, 'post', urip.rkey, 'liked-by')
@@ -224,6 +226,30 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               </View>
               <View style={styles.meta}>
+                {isAuthorMuted && (
+                  <View
+                    style={[
+                      pal.viewLight,
+                      {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 4,
+                        borderRadius: 6,
+                        paddingHorizontal: 6,
+                        paddingVertical: 2,
+                        marginRight: 4,
+                      },
+                    ]}>
+                    <FontAwesomeIcon
+                      icon={['far', 'eye-slash']}
+                      size={12}
+                      color={pal.colors.textLight}
+                    />
+                    <Text type="sm-medium" style={pal.textLight}>
+                      Muted
+                    </Text>
+                  </View>
+                )}
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
@@ -280,7 +306,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               ) : undefined}
               {item.post.embed && (
-                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                <ContentHider
+                  moderation={item.moderation.embed}
+                  ignoreMute={isEmbedByEmbedder(
+                    item.post.embed,
+                    item.post.author.did,
+                  )}
+                  style={s.mb10}>
                   <PostEmbeds
                     embed={item.post.embed}
                     moderation={item.moderation.embed}

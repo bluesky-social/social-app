@@ -105,7 +105,7 @@ export const RecommendedFeeds = observer(({next}: Props) => {
     <>
       <TabletOrDesktop>
         <TitleColumnLayout
-          testID="recommendedFeedsScreen"
+          testID="recommendedFeedsOnboarding"
           title={title}
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
@@ -123,7 +123,7 @@ export const RecommendedFeeds = observer(({next}: Props) => {
         </TitleColumnLayout>
       </TabletOrDesktop>
       <Mobile>
-        <View style={[mStyles.container]} testID="recommendedFeedsScreen">
+        <View style={[mStyles.container]} testID="recommendedFeedsOnboarding">
           <ViewHeader
             title="Recommended Feeds"
             showBackButton={false}

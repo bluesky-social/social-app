@@ -22,7 +22,7 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CogIcon} from 'lib/icons'
 
 export const MultiFeed = observer(function Feed({
@@ -48,6 +48,7 @@ export const MultiFeed = observer(function Feed({
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const {isMobile} = useWebMediaQueries()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
@@ -80,19 +81,27 @@ export const MultiFeed = observer(function Feed({
   const renderItem = React.useCallback(
     ({item}: {item: MultiFeedItem}) => {
       if (item.type === 'header') {
-        if (isDesktopWeb) {
+        if (!isMobile) {
           return (
-            <View style={[pal.view, pal.border, styles.headerDesktop]}>
-              <Text type="2xl-bold" style={pal.text}>
-                My Feeds
-              </Text>
-              <Link href="/settings/saved-feeds">
-                <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-              </Link>
-            </View>
+            <>
+              <View style={[pal.view, pal.border, styles.headerDesktop]}>
+                <Text type="2xl-bold" style={pal.text}>
+                  My Feeds
+                </Text>
+                <Link href="/settings/saved-feeds">
+                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                </Link>
+              </View>
+              <DiscoverLink />
+            </>
           )
         }
-        return <View style={[styles.header, pal.border]} />
+        return (
+          <>
+            <View style={[styles.header, pal.border]} />
+            <DiscoverLink />
+          </>
+        )
       } else if (item.type === 'feed-header') {
         return (
           <View style={styles.feedHeader}>
@@ -124,18 +133,11 @@ export const MultiFeed = observer(function Feed({
           </Link>
         )
       } else if (item.type === 'footer') {
-        return (
-          <Link style={[styles.footerLink, pal.viewLight]} href="/search/feeds">
-            <FontAwesomeIcon icon="search" size={18} color={pal.colors.text} />
-            <Text type="xl-medium" style={pal.text}>
-              Discover new feeds
-            </Text>
-          </Link>
-        )
+        return <DiscoverLink />
       }
       return null
     },
-    [pal],
+    [pal, isMobile],
   )
 
   const ListFooter = React.useCallback(
@@ -150,17 +152,6 @@ export const MultiFeed = observer(function Feed({
     [multifeed.isLoading, isRefreshing, pal],
   )
 
-  const ListHeader = React.useCallback(() => {
-    return (
-      <Link style={[styles.footerLink, pal.viewLight]} href="/search/feeds">
-        <FontAwesomeIcon icon="search" size={18} color={pal.colors.text} />
-        <Text type="xl-medium" style={pal.text}>
-          Discover new feeds
-        </Text>
-      </Link>
-    )
-  }, [pal])
-
   return (
     <View testID={testID} style={style}>
       {multifeed.items.length > 0 && (
@@ -171,7 +162,6 @@ export const MultiFeed = observer(function Feed({
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={ListFooter}
-          ListHeaderComponent={ListHeader}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -198,6 +188,18 @@ export const MultiFeed = observer(function Feed({
     </View>
   )
 })
+
+function DiscoverLink() {
+  const pal = usePalette('default')
+  return (
+    <Link style={[styles.discoverLink, pal.viewLight]} href="/search/feeds">
+      <FontAwesomeIcon icon="search" size={18} color={pal.colors.text} />
+      <Text type="xl-medium" style={pal.text}>
+        Discover new feeds
+      </Text>
+    </Link>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -237,7 +239,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
   },
-  footerLink: {
+  discoverLink: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

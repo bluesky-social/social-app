@@ -37,9 +37,10 @@ import {toShortUrl} from 'lib/strings/url-helpers'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isDesktopWeb, isAndroid, isIOS} from 'platform/detection'
+import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
+import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
@@ -61,6 +62,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {isDesktop, isMobile} = useWebMediaQueries()
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
@@ -99,9 +101,9 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
+      paddingTop: isAndroid ? insets.top : isMobile ? 15 : 0,
     }),
-    [insets, isKeyboardVisible],
+    [insets, isKeyboardVisible, isMobile],
   )
 
   const onPressCancel = useCallback(() => {
@@ -143,7 +145,7 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
   useEffect(() => {
-    if (isDesktopWeb) {
+    if (isWeb) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
@@ -240,7 +242,7 @@ export const ComposePost = observer(function ComposePost({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
-        <View style={styles.topbar}>
+        <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
           <TouchableOpacity
             testID="composerDiscardButton"
             onPress={onPressCancel}
@@ -334,7 +336,12 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : undefined}
 
-          <View style={[pal.border, styles.textInputLayout]}>
+          <View
+            style={[
+              pal.border,
+              styles.textInputLayout,
+              isNative && styles.textInputLayoutMobile,
+            ]}>
             <UserAvatar avatar={store.me.avatar} size={50} />
             <TextInput
               ref={textInput}
@@ -362,7 +369,7 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={s.mt5}>
+            <View style={[s.mt5, isWeb && s.mb10]}>
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
@@ -395,7 +402,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {isDesktopWeb ? <EmojiPickerButton /> : null}
+          {isDesktop ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -414,10 +421,13 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: isDesktopWeb ? 10 : undefined,
-    paddingBottom: isDesktopWeb ? 10 : 4,
+    paddingBottom: 4,
     paddingHorizontal: 20,
     height: 55,
+  },
+  topbarDesktop: {
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   postBtn: {
     borderRadius: 20,
@@ -465,10 +475,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   textInputLayout: {
-    flex: isDesktopWeb ? undefined : 1,
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingTop: 16,
+  },
+  textInputLayoutMobile: {
+    flex: 1,
   },
   replyToLayout: {
     flexDirection: 'row',

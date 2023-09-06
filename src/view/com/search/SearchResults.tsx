@@ -13,13 +13,14 @@ import {
 } from 'view/com/util/LoadingPlaceholder'
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
-import {isDesktopWeb} from 'platform/detection'
 
 const SECTIONS = ['Posts', 'Users']
 
 export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
@@ -39,10 +40,16 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
 
   return (
     <Pager renderTabBar={renderTabBar} tabBarPosition="top" initialPage={0}>
-      <View style={[styles.results]}>
+      <View
+        style={{
+          paddingTop: isMobile ? 42 : 50,
+        }}>
         <PostResults key="0" model={model} />
       </View>
-      <View style={[styles.results]}>
+      <View
+        style={{
+          paddingTop: isMobile ? 42 : 50,
+        }}>
         <Profiles key="1" model={model} />
       </View>
     </Pager>
@@ -127,8 +134,5 @@ const styles = StyleSheet.create({
   empty: {
     paddingHorizontal: 14,
     paddingVertical: 16,
-  },
-  results: {
-    paddingTop: isDesktopWeb ? 50 : 42,
   },
 })

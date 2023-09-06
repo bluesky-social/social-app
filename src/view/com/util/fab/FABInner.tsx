@@ -5,7 +5,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
-import {isMobileWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isWeb} from 'platform/detection'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -14,6 +15,7 @@ export interface FABProps
 }
 
 export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
+  const {isTablet} = useWebMediaQueries()
   const store = useStores()
   const interp = useAnimatedValue(0)
   React.useEffect(() => {
@@ -24,18 +26,33 @@ export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
       isInteraction: false,
     }).start()
   }, [interp, store.shell.minimalShellMode])
-  const transform = {
-    transform: [{translateY: Animated.multiply(interp, 60)}],
-  }
+  const transform = isTablet
+    ? undefined
+    : {
+        transform: [{translateY: Animated.multiply(interp, 60)}],
+      }
+  const size = isTablet ? styles.sizeLarge : styles.sizeRegular
   return (
     <TouchableWithoutFeedback testID={testID} {...props}>
       <Animated.View
-        style={[styles.outer, isMobileWeb && styles.mobileWebOuter, transform]}>
+        style={[
+          styles.outer,
+          size,
+          isWeb && isTablet
+            ? {
+                right: 50,
+                bottom: 50,
+              }
+            : {
+                bottom: 114,
+              },
+          transform,
+        ]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
-          style={styles.inner}>
+          style={[styles.inner, size]}>
           {icon}
         </LinearGradient>
       </Animated.View>
@@ -44,22 +61,23 @@ export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
 })
 
 const styles = StyleSheet.create({
+  sizeRegular: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  sizeLarge: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+  },
   outer: {
     position: 'absolute',
     zIndex: 1,
     right: 24,
     bottom: 94,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  mobileWebOuter: {
-    bottom: 114,
   },
   inner: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -11,13 +11,15 @@ import {TextLink} from '../util/Link'
 import {ToggleButton} from '../util/forms/ToggleButton'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
-import {isDesktopWeb, isIOS} from 'platform/detection'
+import {isIOS} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '../util/Toast'
 
 export const snapPoints = ['90%']
 
 export const Component = observer(({}: {}) => {
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
 
   React.useEffect(() => {
@@ -88,9 +90,14 @@ export const Component = observer(({}: {}) => {
         <ContentLabelPref group="hate" />
         <ContentLabelPref group="spam" />
         <ContentLabelPref group="impersonation" />
-        <View style={styles.bottomSpacer} />
+        <View style={{height: isMobile ? 60 : 0}} />
       </ScrollView>
-      <View style={[styles.btnContainer, pal.borderDark]}>
+      <View
+        style={[
+          styles.btnContainer,
+          isMobile && styles.btnContainerMobile,
+          pal.borderDark,
+        ]}>
         <Pressable
           testID="sendReportBtn"
           onPress={onPressDone}
@@ -259,14 +266,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
   },
-  bottomSpacer: {
-    height: isDesktopWeb ? 0 : 60,
-  },
   btnContainer: {
     paddingTop: 10,
     paddingHorizontal: 10,
-    paddingBottom: isDesktopWeb ? 0 : 40,
-    borderTopWidth: isDesktopWeb ? 0 : 1,
+  },
+  btnContainerMobile: {
+    paddingBottom: 40,
+    borderTopWidth: 1,
   },
 
   contentLabelPref: {
