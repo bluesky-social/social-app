@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
@@ -22,7 +22,7 @@ export const RecommendedFeeds = observer(({next}: Props) => {
   const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
-  const {data: recommendedFeeds} = useQuery({
+  const {isLoading, data: recommendedFeeds} = useQuery({
     staleTime: Infinity, // fixed list rn, never refetch
     queryKey: ['onboarding', 'recommended_feeds'],
     async queryFn() {
@@ -117,6 +117,10 @@ export const RecommendedFeeds = observer(({next}: Props) => {
               keyExtractor={item => item.uri}
               style={{flex: 1}}
             />
+          ) : isLoading ? (
+            <View>
+              <ActivityIndicator size="large" />
+            </View>
           ) : (
             <ErrorMessage message="Failed to load recommended feeds" />
           )}
