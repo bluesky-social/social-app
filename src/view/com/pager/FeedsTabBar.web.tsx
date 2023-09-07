@@ -12,11 +12,13 @@ import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTablet} = useWebMediaQueries()
   if (isMobile) {
     return <FeedsTabBarMobile {...props} />
-  } else {
+  } else if (isTablet) {
     return <FeedsTabBarDesktop {...props} />
+  } else {
+    return null
   }
 })
 
