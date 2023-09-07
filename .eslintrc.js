@@ -2,12 +2,15 @@ module.exports = {
   root: true,
   extends: [
     '@react-native-community',
+    'plugin:react/recommended',
     'plugin:react-native-a11y/ios',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'detox'],
+  plugins: ['@typescript-eslint', 'detox', 'react'],
   rules: {
+    'react/display-name': 0,
+    'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
   },
   ignorePatterns: [
