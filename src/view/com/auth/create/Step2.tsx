@@ -45,7 +45,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             value={model.inviteCode}
             editable
             onChange={model.setInviteCode}
-            accessibilityRole="button"
             accessibilityLabel="Invite code"
             accessibilityHint="Input invite code to proceed"
           />
@@ -143,7 +142,11 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 10,
   },
-
+  inviteCodeInput: {
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 14,
+  },
   dateInputButton: {
     borderWidth: 1,
     borderRadius: 6,
