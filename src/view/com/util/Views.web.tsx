@@ -78,7 +78,9 @@ export const FlatList = React.forwardRef(function <ItemT>(
       // around this, we set data-stable-gutters which can then be
       // styled in our external CSS.
       // -prf
+      // @ts-ignore web only -prf
       props.dataSet = props.dataSet || {}
+      // @ts-ignore web only -prf
       props.dataSet.stableGutters = '1'
     }
   }
