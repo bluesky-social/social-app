@@ -9,7 +9,6 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'detox', 'react'],
   rules: {
-    'react/display-name': 0,
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
   },
