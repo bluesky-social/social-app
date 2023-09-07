@@ -24,7 +24,7 @@ import {ComposeIcon2} from 'lib/icons'
 
 const HEADER_OFFSET_MOBILE = 78
 const HEADER_OFFSET_TABLET = 50
-const HEADER_OFFSET_DESKTOP = 0
+const HEADER_OFFSET_DESKTOP = 49
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>

@@ -1,12 +1,14 @@
 import React, {useMemo} from 'react'
-import {Animated, StyleSheet} from 'react-native'
+import {Animated, Pressable, StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {Text} from '../util/text/Text'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s} from 'lib/styles'
 import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
@@ -16,13 +18,13 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   if (isMobile) {
     return <FeedsTabBarMobile {...props} />
   } else if (isTablet) {
-    return <FeedsTabBarDesktop {...props} />
+    return <FeedsTabBarTablet {...props} />
   } else {
-    return null
+    return <FeedsTabBarDesktop />
   }
 })
 
-const FeedsTabBarDesktop = observer(function FeedsTabBarDesktopImpl(
+const FeedsTabBarTablet = observer(function FeedsTabBarTabletImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const store = useStores()
@@ -58,6 +60,37 @@ const FeedsTabBarDesktop = observer(function FeedsTabBarDesktopImpl(
         indicatorColor={pal.colors.link}
       />
     </Animated.View>
+  )
+})
+
+const FeedsTabBarDesktop = observer(function FeedsTabBarDesktopImpl() {
+  const store = useStores()
+  const pal = usePalette('default')
+
+  return (
+    <Pressable
+      onPress={() => store.emitScreenSoftReset()}
+      style={[
+        pal.view,
+        pal.border,
+        styles.tabBar,
+        {
+          flexDirection: 'column',
+          alignItems: 'center',
+          paddingVertical: 12,
+          borderBottomWidth: 1,
+        },
+        {
+          // @ts-ignore web only -prf
+          transform: 'translateX(-50%)',
+        },
+      ]}
+      accessibilityLabel="Bluesky"
+      accessibilityHint="">
+      <Text style={[s.blue3, s.bold, {fontSize: 21}]}>
+        {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+      </Text>
+    </Pressable>
   )
 })
 
