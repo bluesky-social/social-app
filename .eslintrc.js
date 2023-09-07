@@ -26,4 +26,7 @@ module.exports = {
     '*.html',
     'bskyweb',
   ],
+  settings: {
+    componentWrapperFunctions: ['observer'],
+  },
 }
