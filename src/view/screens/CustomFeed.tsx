@@ -21,6 +21,7 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import * as Toast from 'view/com/util/Toast'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -338,30 +339,41 @@ export const CustomFeedScreenInner = observer(
         <>
           <View style={[styles.header, pal.border]}>
             <View style={s.flex1}>
-              <Text
-                testID="feedName"
-                type="title-xl"
-                style={[pal.text, s.bold]}>
-                {currentFeed?.displayName}
-              </Text>
-              {currentFeed && (
-                <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                  by{' '}
-                  {currentFeed.data.creator.did === store.me.did ? (
-                    'you'
-                  ) : (
-                    <TextLink
-                      text={sanitizeHandle(
-                        currentFeed.data.creator.handle,
-                        '@',
-                      )}
-                      href={makeProfileLink(currentFeed.data.creator)}
-                      style={[pal.textLight]}
-                    />
-                  )}
-                </Text>
+              {currentFeed ? (
+                <>
+                  <Text
+                    testID="feedName"
+                    type="title-xl"
+                    style={[pal.text, s.bold]}>
+                    {currentFeed?.displayName}
+                  </Text>
+                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                    by{' '}
+                    {currentFeed.data.creator.did === store.me.did ? (
+                      'you'
+                    ) : (
+                      <TextLink
+                        text={sanitizeHandle(
+                          currentFeed.data.creator.handle,
+                          '@',
+                        )}
+                        href={makeProfileLink(currentFeed.data.creator)}
+                        style={[pal.textLight]}
+                      />
+                    )}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <LoadingPlaceholder
+                    width={180}
+                    height={33}
+                    style={{marginBottom: 5}}
+                  />
+                  <LoadingPlaceholder width={100} height={15} />
+                </>
               )}
-              {isTabletOrDesktop && (
+              {isTabletOrDesktop && currentFeed && (
                 <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
                   <Button
                     type={currentFeed?.isSaved ? 'default' : 'inverted'}
@@ -453,7 +465,9 @@ export const CustomFeedScreenInner = observer(
                     'user',
                   )}`}
                 />
-              ) : null}
+              ) : (
+                <LoadingPlaceholder width={180} height={15} />
+              )}
             </View>
           </View>
           <View
