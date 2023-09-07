@@ -73,8 +73,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  tabBarAvi: {
-    marginTop: 1,
-    marginRight: 18,
-  },
 })

@@ -70,10 +70,18 @@ export const FlatList = React.forwardRef(function <ItemT>(
   if (desktopFixedHeight) {
     style = addStyle(style, styles.fixedHeight)
     if (!isMobile) {
-      contentContainerStyle = addStyle(
-        contentContainerStyle,
-        styles.stableGutters,
-      )
+      // NOTE
+      // react native web produces *three* wrapping divs
+      // the first two use the `style` prop and the innermost uses the
+      // `contentContainerStyle`. Unfortunately the stable-gutter style
+      // needs to be applied to only the "middle" of these. To hack
+      // around this, we set data-stable-gutters which can then be
+      // styled in our external CSS.
+      // -prf
+      // @ts-ignore web only -prf
+      props.dataSet = props.dataSet || {}
+      // @ts-ignore web only -prf
+      props.dataSet.stableGutters = '1'
     }
   }
   return (
@@ -136,9 +144,5 @@ const styles = StyleSheet.create({
   fixedHeight: {
     // @ts-ignore web only
     height: '100vh',
-  },
-  stableGutters: {
-    // @ts-ignore web only -prf
-    scrollbarGutter: 'stable both-edges',
   },
 })
