@@ -252,6 +252,6 @@
     ]
   },
   "lint-staged": {
-    "*": "yarn eslint --ext .js,.jsx,.ts,.tsx --fix"
+    "*{.js,.jsx,.ts,.tsx}": "yarn eslint --fix"
   }
 }

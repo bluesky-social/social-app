@@ -7,6 +7,9 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'detox'],
+  rules: {
+    'react-native/no-inline-styles': 0,
+  },
   ignorePatterns: [
     '**/__mocks__/*.ts',
     'src/platform/polyfills.ts',
@@ -20,14 +23,5 @@ module.exports = {
     'bskyweb',
     '*.html',
     'bskyweb',
-  ],
-  overrides: [
-    {
-      files: ['*.js', '*.mjs', '*.ts', '*.tsx'],
-      rules: {
-        semi: [2, 'never'],
-        'react-native/no-inline-styles': 0,
-      },
-    },
   ],
 }
