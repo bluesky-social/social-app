@@ -38,7 +38,7 @@ export function CenteredView({
   return <View style={style} {...props} />
 }
 
-export const FlatList = React.forwardRef(function <ItemT>(
+export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   {
     contentContainerStyle,
     style,
@@ -99,7 +99,7 @@ export const FlatList = React.forwardRef(function <ItemT>(
   )
 })
 
-export const ScrollView = React.forwardRef(function (
+export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
   ref: React.Ref<RNScrollView>,
 ) {

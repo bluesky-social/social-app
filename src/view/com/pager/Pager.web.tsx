@@ -14,51 +14,49 @@ interface Props {
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
 }
-export const Pager = React.forwardRef(
-  (
-    {
-      children,
-      tabBarPosition = 'top',
-      initialPage = 0,
-      renderTabBar,
-      onPageSelected,
-    }: React.PropsWithChildren<Props>,
-    ref,
-  ) => {
-    const [selectedPage, setSelectedPage] = React.useState(initialPage)
+export const Pager = React.forwardRef(function PagerImpl(
+  {
+    children,
+    tabBarPosition = 'top',
+    initialPage = 0,
+    renderTabBar,
+    onPageSelected,
+  }: React.PropsWithChildren<Props>,
+  ref,
+) {
+  const [selectedPage, setSelectedPage] = React.useState(initialPage)
 
-    React.useImperativeHandle(ref, () => ({
-      setPage: (index: number) => setSelectedPage(index),
-    }))
+  React.useImperativeHandle(ref, () => ({
+    setPage: (index: number) => setSelectedPage(index),
+  }))
 
-    const onTabBarSelect = React.useCallback(
-      (index: number) => {
-        setSelectedPage(index)
-        onPageSelected?.(index)
-      },
-      [setSelectedPage, onPageSelected],
-    )
+  const onTabBarSelect = React.useCallback(
+    (index: number) => {
+      setSelectedPage(index)
+      onPageSelected?.(index)
+    },
+    [setSelectedPage, onPageSelected],
+  )
 
-    return (
-      <View>
-        {tabBarPosition === 'top' &&
-          renderTabBar({
-            selectedPage,
-            onSelect: onTabBarSelect,
-          })}
-        {React.Children.map(children, (child, i) => (
-          <View
-            style={selectedPage === i ? undefined : s.hidden}
-            key={`page-${i}`}>
-            {child}
-          </View>
-        ))}
-        {tabBarPosition === 'bottom' &&
-          renderTabBar({
-            selectedPage,
-            onSelect: onTabBarSelect,
-          })}
-      </View>
-    )
-  },
-)
+  return (
+    <View>
+      {tabBarPosition === 'top' &&
+        renderTabBar({
+          selectedPage,
+          onSelect: onTabBarSelect,
+        })}
+      {React.Children.map(children, (child, i) => (
+        <View
+          style={selectedPage === i ? undefined : s.hidden}
+          key={`page-${i}`}>
+          {child}
+        </View>
+      ))}
+      {tabBarPosition === 'bottom' &&
+        renderTabBar({
+          selectedPage,
+          onSelect: onTabBarSelect,
+        })}
+    </View>
+  )
+})
