@@ -50,26 +50,6 @@ export const FeedSlice = observer(function FeedSliceImpl({
     )
   }
 
-  if (slice.isThread && slice.items.length > 3) {
-    const last = slice.items.length - 1
-    return (
-      <>
-        {slice.items.map((item, i) => (
-          <FeedItem
-            key={item._reactKey}
-            item={item}
-            source={i === 0 ? slice.source : undefined}
-            isThreadParent={slice.isThreadParentAt(i)}
-            isThreadChild={slice.isThreadChildAt(i)}
-            isThreadLastChild={
-              slice.isThreadChildAt(i) && slice.items.length === i + 1
-            }
-          />
-        ))}
-      </>
-    )
-  }
-
   return (
     <>
       {slice.items.map((item, i) => (
