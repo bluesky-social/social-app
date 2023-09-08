@@ -21,7 +21,7 @@ import {queryClient} from 'lib/react-query'
 
 SplashScreen.preventAutoHideAsync()
 
-const App = observer(() => {
+const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )

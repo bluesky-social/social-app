@@ -16,7 +16,7 @@ enum ScreenState {
   S_CreateAccount,
 }
 
-export const LoggedOut = observer(() => {
+export const LoggedOut = observer(function LoggedOutImpl() {
   const pal = usePalette('default')
   const store = useStores()
   const {screen} = useAnalytics()

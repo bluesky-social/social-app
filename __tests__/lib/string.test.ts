@@ -175,6 +175,7 @@ describe('ago', () => {
     1671461038,
     '04 Dec 1995 00:12:00 GMT',
     new Date(),
+    new Date().setSeconds(new Date().getSeconds() - 10),
     new Date().setMinutes(new Date().getMinutes() - 10),
     new Date().setHours(new Date().getHours() - 1),
     new Date().setDate(new Date().getDate() - 1),
@@ -183,7 +184,8 @@ describe('ago', () => {
   const outputs = [
     new Date(1671461038).toLocaleDateString(),
     new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
-    '0s',
+    'now',
+    '10s',
     '10m',
     '1h',
     '1d',

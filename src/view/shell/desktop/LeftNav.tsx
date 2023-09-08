@@ -40,7 +40,7 @@ import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {makeProfileLink} from 'lib/routes/links'
 
-const ProfileCard = observer(() => {
+const ProfileCard = observer(function ProfileCardImpl() {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
   const size = isDesktop ? 64 : 48
@@ -103,78 +103,82 @@ interface NavItemProps {
   iconFilled: JSX.Element
   label: string
 }
-const NavItem = observer(
-  ({count, href, icon, iconFilled, label}: NavItemProps) => {
-    const pal = usePalette('default')
-    const store = useStores()
-    const {isDesktop, isTablet} = useWebMediaQueries()
-    const [pathName] = React.useMemo(() => router.matchPath(href), [href])
-    const currentRouteInfo = useNavigationState(state => {
-      if (!state) {
-        return {name: 'Home'}
+const NavItem = observer(function NavItemImpl({
+  count,
+  href,
+  icon,
+  iconFilled,
+  label,
+}: NavItemProps) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const {isDesktop, isTablet} = useWebMediaQueries()
+  const [pathName] = React.useMemo(() => router.matchPath(href), [href])
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  let isCurrent =
+    currentRouteInfo.name === 'Profile'
+      ? isTab(currentRouteInfo.name, pathName) &&
+        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          store.me.handle
+      : isTab(currentRouteInfo.name, pathName)
+  const {onPress} = useLinkProps({to: href})
+  const onPressWrapped = React.useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return
       }
-      return getCurrentRoute(state)
-    })
-    let isCurrent =
-      currentRouteInfo.name === 'Profile'
-        ? isTab(currentRouteInfo.name, pathName) &&
-          (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-            store.me.handle
-        : isTab(currentRouteInfo.name, pathName)
-    const {onPress} = useLinkProps({to: href})
-    const onPressWrapped = React.useCallback(
-      (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        if (e.ctrlKey || e.metaKey || e.altKey) {
-          return
-        }
-        e.preventDefault()
-        if (isCurrent) {
-          store.emitScreenSoftReset()
-        } else {
-          onPress()
-        }
-      },
-      [onPress, isCurrent, store],
-    )
+      e.preventDefault()
+      if (isCurrent) {
+        store.emitScreenSoftReset()
+      } else {
+        onPress()
+      }
+    },
+    [onPress, isCurrent, store],
+  )
 
-    return (
-      <PressableWithHover
-        style={styles.navItemWrapper}
-        hoverStyle={pal.viewLight}
-        // @ts-ignore the function signature differs on web -prf
-        onPress={onPressWrapped}
-        // @ts-ignore web only -prf
-        href={href}
-        dataSet={{noUnderline: 1}}
-        accessibilityRole="tab"
-        accessibilityLabel={label}
-        accessibilityHint="">
-        <View
-          style={[
-            styles.navItemIconWrapper,
-            isTablet && styles.navItemIconWrapperTablet,
-          ]}>
-          {isCurrent ? iconFilled : icon}
-          {typeof count === 'string' && count ? (
-            <Text
-              type="button"
-              style={[
-                styles.navItemCount,
-                isTablet && styles.navItemCountTablet,
-              ]}>
-              {count}
-            </Text>
-          ) : null}
-        </View>
-        {isDesktop && (
-          <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
-            {label}
+  return (
+    <PressableWithHover
+      style={styles.navItemWrapper}
+      hoverStyle={pal.viewLight}
+      // @ts-ignore the function signature differs on web -prf
+      onPress={onPressWrapped}
+      // @ts-ignore web only -prf
+      href={href}
+      dataSet={{noUnderline: 1}}
+      accessibilityRole="tab"
+      accessibilityLabel={label}
+      accessibilityHint="">
+      <View
+        style={[
+          styles.navItemIconWrapper,
+          isTablet && styles.navItemIconWrapperTablet,
+        ]}>
+        {isCurrent ? iconFilled : icon}
+        {typeof count === 'string' && count ? (
+          <Text
+            type="button"
+            style={[
+              styles.navItemCount,
+              isTablet && styles.navItemCountTablet,
+            ]}>
+            {count}
           </Text>
-        )}
-      </PressableWithHover>
-    )
-  },
-)
+        ) : null}
+      </View>
+      {isDesktop && (
+        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+          {label}
+        </Text>
+      )}
+    </PressableWithHover>
+  )
+})
 
 function ComposeBtn() {
   const store = useStores()

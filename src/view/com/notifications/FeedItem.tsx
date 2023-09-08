@@ -52,7 +52,7 @@ interface Author {
   moderation: ProfileModeration
 }
 
-export const FeedItem = observer(function ({
+export const FeedItem = observer(function FeedItemImpl({
   item,
 }: {
   item: NotificationsFeedItemModel

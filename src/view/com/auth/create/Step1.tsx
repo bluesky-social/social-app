@@ -20,7 +20,11 @@ import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
  * @field Bluesky (default)
  * @field Other (staging, local dev, your own PDS, etc.)
  */
-export const Step1 = observer(({model}: {model: CreateAccountModel}) => {
+export const Step1 = observer(function Step1Impl({
+  model,
+}: {
+  model: CreateAccountModel
+}) {
   const pal = usePalette('default')
   const [isDefaultSelected, setIsDefaultSelected] = React.useState(true)
 

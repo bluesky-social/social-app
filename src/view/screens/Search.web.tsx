@@ -18,7 +18,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
-  observer(({navigation, route}: Props) => {
+  observer(function SearchScreenImpl({navigation, route}: Props) {
     const store = useStores()
     const params = route.params || {}
     const foafs = React.useMemo<FoafsModel>(

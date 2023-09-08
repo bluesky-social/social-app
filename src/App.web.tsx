@@ -12,7 +12,7 @@ import {observer} from 'mobx-react-lite'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {queryClient} from 'lib/react-query'
 
-const App = observer(() => {
+const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )

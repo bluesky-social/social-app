@@ -8,7 +8,7 @@ import {useStores} from 'state/index'
 import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
 
-export const Onboarding = observer(() => {
+export const Onboarding = observer(function OnboardingImpl() {
   const pal = usePalette('default')
   const store = useStores()
 

@@ -27,7 +27,7 @@ type Props = NativeStackScreenProps<
   'ModerationMutedAccounts'
 >
 export const ModerationMutedAccounts = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function ModerationMutedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const {isTabletOrDesktop} = useWebMediaQueries()
@@ -112,6 +112,8 @@ export const ModerationMutedAccounts = withAuthRequired(
             onEndReached={onEndReached}
             renderItem={renderItem}
             initialNumToRender={15}
+            // FIXME(dan)
+            // eslint-disable-next-line react/no-unstable-nested-components
             ListFooterComponent={() => (
               <View style={styles.footer}>
                 {mutedAccounts.isLoading && <ActivityIndicator />}

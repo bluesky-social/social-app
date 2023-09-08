@@ -16,7 +16,7 @@ interface Props {
   gallery: GalleryModel
 }
 
-export const Gallery = observer(function ({gallery}: Props) {
+export const Gallery = observer(function GalleryImpl({gallery}: Props) {
   const store = useStores()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()

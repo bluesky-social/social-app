@@ -18,7 +18,9 @@ import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(({next}: Props) => {
+export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
+  next,
+}: Props) {
   const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()

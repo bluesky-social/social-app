@@ -18,7 +18,11 @@ import {s} from 'lib/styles'
 
 const SECTIONS = ['Posts', 'Users']
 
-export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
+export const SearchResults = observer(function SearchResultsImpl({
+  model,
+}: {
+  model: SearchUIModel
+}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
@@ -56,7 +60,11 @@ export const SearchResults = observer(({model}: {model: SearchUIModel}) => {
   )
 })
 
-const PostResults = observer(({model}: {model: SearchUIModel}) => {
+const PostResults = observer(function PostResultsImpl({
+  model,
+}: {
+  model: SearchUIModel
+}) {
   const pal = usePalette('default')
   if (model.isPostsLoading) {
     return (
@@ -88,7 +96,11 @@ const PostResults = observer(({model}: {model: SearchUIModel}) => {
   )
 })
 
-const Profiles = observer(({model}: {model: SearchUIModel}) => {
+const Profiles = observer(function ProfilesImpl({
+  model,
+}: {
+  model: SearchUIModel
+}) {
   const pal = usePalette('default')
   if (model.isProfilesLoading) {
     return (
