@@ -1,4 +1,5 @@
 module.exports = function () {
+  const hasSentryToken = !!process.env.SENTRY_AUTH_TOKEN
   return {
     expo: {
       name: 'Bluesky',
@@ -73,7 +74,7 @@ module.exports = function () {
       },
       plugins: [
         'expo-localization',
-        'sentry-expo',
+        hasSentryToken && 'sentry-expo',
         [
           'expo-build-properties',
           {
@@ -91,7 +92,7 @@ module.exports = function () {
             username: 'blueskysocial',
           },
         ],
-      ],
+      ].filter(Boolean),
       extra: {
         eas: {
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
