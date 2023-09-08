@@ -99,6 +99,8 @@ export class PostsFeedModel {
         rootStore,
         params as GetCustomFeed.QueryParams,
       )
+    } else {
+      this.api = new FollowingFeedAPI(rootStore)
     }
   }
 

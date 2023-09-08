@@ -39,7 +39,7 @@ export const FeedItem = observer(function FeedItemImpl({
   isThreadParent,
 }: {
   item: PostsFeedItemModel
-  source: FeedSourceInfo | undefined
+  source?: FeedSourceInfo
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean

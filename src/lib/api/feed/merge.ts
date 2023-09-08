@@ -16,7 +16,9 @@ export class MergeFeedAPI implements FeedAPI {
   itemCursor = 0
   sampleCursor = 0
 
-  constructor(public rootStore: RootStoreModel) {}
+  constructor(public rootStore: RootStoreModel) {
+    this.following = new MergeFeedSource_Following(this.rootStore)
+  }
 
   reset() {
     this.following = new MergeFeedSource_Following(this.rootStore)
