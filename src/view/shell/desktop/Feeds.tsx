@@ -25,7 +25,6 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
     }
     return getCurrentRoute(state)
   })
-  console.log('hit', route)
 
   return (
     <View style={[styles.container, pal.view, pal.border]}>
