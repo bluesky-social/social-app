@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 15,
     cursor: 'pointer',
+    overflow: 'hidden',
   },
   outerSmallTop: {
     borderTopWidth: 0,
