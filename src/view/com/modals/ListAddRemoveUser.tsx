@@ -24,210 +24,207 @@ import isEqual from 'lodash.isequal'
 
 export const snapPoints = ['fullscreen']
 
-export const Component = observer(
-  ({
-    subject,
-    displayName,
-    onUpdate,
-  }: {
-    subject: string
-    displayName: string
-    onUpdate?: () => void
-  }) => {
-    const store = useStores()
-    const pal = usePalette('default')
-    const palPrimary = usePalette('primary')
-    const palInverted = usePalette('inverted')
-    const [originalSelections, setOriginalSelections] = React.useState<
-      string[]
-    >([])
-    const [selected, setSelected] = React.useState<string[]>([])
-    const [membershipsLoaded, setMembershipsLoaded] = React.useState(false)
+export const Component = observer(function ListAddRemoveUserImpl({
+  subject,
+  displayName,
+  onUpdate,
+}: {
+  subject: string
+  displayName: string
+  onUpdate?: () => void
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const palPrimary = usePalette('primary')
+  const palInverted = usePalette('inverted')
+  const [originalSelections, setOriginalSelections] = React.useState<string[]>(
+    [],
+  )
+  const [selected, setSelected] = React.useState<string[]>([])
+  const [membershipsLoaded, setMembershipsLoaded] = React.useState(false)
 
-    const listsList: ListsListModel = React.useMemo(
-      () => new ListsListModel(store, store.me.did),
-      [store],
+  const listsList: ListsListModel = React.useMemo(
+    () => new ListsListModel(store, store.me.did),
+    [store],
+  )
+  const memberships: ListMembershipModel = React.useMemo(
+    () => new ListMembershipModel(store, subject),
+    [store, subject],
+  )
+  React.useEffect(() => {
+    listsList.refresh()
+    memberships.fetch().then(
+      () => {
+        const ids = memberships.memberships.map(m => m.value.list)
+        setOriginalSelections(ids)
+        setSelected(ids)
+        setMembershipsLoaded(true)
+      },
+      err => {
+        store.log.error('Failed to fetch memberships', {err})
+      },
     )
-    const memberships: ListMembershipModel = React.useMemo(
-      () => new ListMembershipModel(store, subject),
-      [store, subject],
-    )
-    React.useEffect(() => {
-      listsList.refresh()
-      memberships.fetch().then(
-        () => {
-          const ids = memberships.memberships.map(m => m.value.list)
-          setOriginalSelections(ids)
-          setSelected(ids)
-          setMembershipsLoaded(true)
-        },
-        err => {
-          store.log.error('Failed to fetch memberships', {err})
-        },
-      )
-    }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
+  }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
 
-    const onPressCancel = useCallback(() => {
-      store.shell.closeModal()
-    }, [store])
+  const onPressCancel = useCallback(() => {
+    store.shell.closeModal()
+  }, [store])
 
-    const onPressSave = useCallback(async () => {
-      try {
-        await memberships.updateTo(selected)
-      } catch (err) {
-        store.log.error('Failed to update memberships', {err})
-        return
+  const onPressSave = useCallback(async () => {
+    try {
+      await memberships.updateTo(selected)
+    } catch (err) {
+      store.log.error('Failed to update memberships', {err})
+      return
+    }
+    Toast.show('Lists updated')
+    onUpdate?.()
+    store.shell.closeModal()
+  }, [store, selected, memberships, onUpdate])
+
+  const onPressNewMuteList = useCallback(() => {
+    store.shell.openModal({
+      name: 'create-or-edit-mute-list',
+      onSave: (_uri: string) => {
+        listsList.refresh()
+      },
+    })
+  }, [store, listsList])
+
+  const onToggleSelected = useCallback(
+    (uri: string) => {
+      if (selected.includes(uri)) {
+        setSelected(selected.filter(uri2 => uri2 !== uri))
+      } else {
+        setSelected([...selected, uri])
       }
-      Toast.show('Lists updated')
-      onUpdate?.()
-      store.shell.closeModal()
-    }, [store, selected, memberships, onUpdate])
+    },
+    [selected, setSelected],
+  )
 
-    const onPressNewMuteList = useCallback(() => {
-      store.shell.openModal({
-        name: 'create-or-edit-mute-list',
-        onSave: (_uri: string) => {
-          listsList.refresh()
-        },
-      })
-    }, [store, listsList])
-
-    const onToggleSelected = useCallback(
-      (uri: string) => {
-        if (selected.includes(uri)) {
-          setSelected(selected.filter(uri2 => uri2 !== uri))
-        } else {
-          setSelected([...selected, uri])
-        }
-      },
-      [selected, setSelected],
-    )
-
-    const renderItem = useCallback(
-      (list: GraphDefs.ListView) => {
-        const isSelected = selected.includes(list.uri)
-        return (
-          <Pressable
-            testID={`toggleBtn-${list.name}`}
-            style={[
-              styles.listItem,
-              pal.border,
-              {opacity: membershipsLoaded ? 1 : 0.5},
-            ]}
-            accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
-              list.name
-            }`}
-            accessibilityHint=""
-            disabled={!membershipsLoaded}
-            onPress={() => onToggleSelected(list.uri)}>
-            <View style={styles.listItemAvi}>
-              <UserAvatar size={40} avatar={list.avatar} />
-            </View>
-            <View style={styles.listItemContent}>
-              <Text
-                type="lg"
-                style={[s.bold, pal.text]}
-                numberOfLines={1}
-                lineHeight={1.2}>
-                {sanitizeDisplayName(list.name)}
-              </Text>
-              <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'}{' '}
-                by{' '}
-                {list.creator.did === store.me.did
-                  ? 'you'
-                  : sanitizeHandle(list.creator.handle, '@')}
-              </Text>
-            </View>
-            {membershipsLoaded && (
-              <View
-                style={
-                  isSelected
-                    ? [styles.checkbox, palPrimary.border, palPrimary.view]
-                    : [styles.checkbox, pal.borderDark]
-                }>
-                {isSelected && (
-                  <FontAwesomeIcon
-                    icon="check"
-                    style={palInverted.text as FontAwesomeIconStyle}
-                  />
-                )}
-              </View>
-            )}
-          </Pressable>
-        )
-      },
-      [
-        pal,
-        palPrimary,
-        palInverted,
-        onToggleSelected,
-        selected,
-        store.me.did,
-        membershipsLoaded,
-      ],
-    )
-
-    const renderEmptyState = React.useCallback(() => {
+  const renderItem = useCallback(
+    (list: GraphDefs.ListView) => {
+      const isSelected = selected.includes(list.uri)
       return (
-        <EmptyStateWithButton
-          icon="users-slash"
-          message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
-          buttonLabel="New Mute List"
-          onPress={onPressNewMuteList}
-        />
-      )
-    }, [onPressNewMuteList])
-
-    // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
-    const canSaveChanges =
-      !listsList.isEmpty && !isEqual(selected, originalSelections)
-
-    return (
-      <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
-        <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
-        <ListsList
-          listsList={listsList}
-          showAddBtns
-          onPressCreateNew={onPressNewMuteList}
-          renderItem={renderItem}
-          renderEmptyState={renderEmptyState}
-          style={[styles.list, pal.border]}
-        />
-        <View style={[styles.btns, pal.border]}>
-          <Button
-            testID="cancelBtn"
-            type="default"
-            onPress={onPressCancel}
-            style={styles.footerBtn}
-            accessibilityLabel="Cancel"
-            accessibilityHint=""
-            onAccessibilityEscape={onPressCancel}
-            label="Cancel"
-          />
-          {canSaveChanges && (
-            <Button
-              testID="saveBtn"
-              type="primary"
-              onPress={onPressSave}
-              style={styles.footerBtn}
-              accessibilityLabel="Save changes"
-              accessibilityHint=""
-              onAccessibilityEscape={onPressSave}
-              label="Save Changes"
-            />
-          )}
-
-          {(listsList.isLoading || !membershipsLoaded) && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator />
+        <Pressable
+          testID={`toggleBtn-${list.name}`}
+          style={[
+            styles.listItem,
+            pal.border,
+            {opacity: membershipsLoaded ? 1 : 0.5},
+          ]}
+          accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
+            list.name
+          }`}
+          accessibilityHint=""
+          disabled={!membershipsLoaded}
+          onPress={() => onToggleSelected(list.uri)}>
+          <View style={styles.listItemAvi}>
+            <UserAvatar size={40} avatar={list.avatar} />
+          </View>
+          <View style={styles.listItemContent}>
+            <Text
+              type="lg"
+              style={[s.bold, pal.text]}
+              numberOfLines={1}
+              lineHeight={1.2}>
+              {sanitizeDisplayName(list.name)}
+            </Text>
+            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+              {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'} by{' '}
+              {list.creator.did === store.me.did
+                ? 'you'
+                : sanitizeHandle(list.creator.handle, '@')}
+            </Text>
+          </View>
+          {membershipsLoaded && (
+            <View
+              style={
+                isSelected
+                  ? [styles.checkbox, palPrimary.border, palPrimary.view]
+                  : [styles.checkbox, pal.borderDark]
+              }>
+              {isSelected && (
+                <FontAwesomeIcon
+                  icon="check"
+                  style={palInverted.text as FontAwesomeIconStyle}
+                />
+              )}
             </View>
           )}
-        </View>
-      </View>
+        </Pressable>
+      )
+    },
+    [
+      pal,
+      palPrimary,
+      palInverted,
+      onToggleSelected,
+      selected,
+      store.me.did,
+      membershipsLoaded,
+    ],
+  )
+
+  const renderEmptyState = React.useCallback(() => {
+    return (
+      <EmptyStateWithButton
+        icon="users-slash"
+        message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
+        buttonLabel="New Mute List"
+        onPress={onPressNewMuteList}
+      />
     )
-  },
-)
+  }, [onPressNewMuteList])
+
+  // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
+  const canSaveChanges =
+    !listsList.isEmpty && !isEqual(selected, originalSelections)
+
+  return (
+    <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
+      <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
+      <ListsList
+        listsList={listsList}
+        showAddBtns
+        onPressCreateNew={onPressNewMuteList}
+        renderItem={renderItem}
+        renderEmptyState={renderEmptyState}
+        style={[styles.list, pal.border]}
+      />
+      <View style={[styles.btns, pal.border]}>
+        <Button
+          testID="cancelBtn"
+          type="default"
+          onPress={onPressCancel}
+          style={styles.footerBtn}
+          accessibilityLabel="Cancel"
+          accessibilityHint=""
+          onAccessibilityEscape={onPressCancel}
+          label="Cancel"
+        />
+        {canSaveChanges && (
+          <Button
+            testID="saveBtn"
+            type="primary"
+            onPress={onPressSave}
+            style={styles.footerBtn}
+            accessibilityLabel="Save changes"
+            accessibilityHint=""
+            onAccessibilityEscape={onPressSave}
+            label="Save Changes"
+          />
+        )}
+
+        {(listsList.isLoading || !membershipsLoaded) && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator />
+          </View>
+        )}
+      </View>
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

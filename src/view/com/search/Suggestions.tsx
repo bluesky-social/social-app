@@ -38,6 +38,9 @@ interface ProfileView {
 }
 type Item = Heading | RefWrapper | SuggestWrapper | ProfileView
 
+// FIXME(dan): Figure out why the false positives
+/* eslint-disable react/prop-types */
+
 export const Suggestions = observer(
   forwardRef(function SuggestionsImpl(
     {

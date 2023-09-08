@@ -18,7 +18,7 @@ import {s} from 'lib/styles'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {makeProfileLink} from 'lib/routes/links'
 
-export const InvitedUsers = observer(() => {
+export const InvitedUsers = observer(function InvitedUsersImpl() {
   const store = useStores()
   return (
     <CenteredView>

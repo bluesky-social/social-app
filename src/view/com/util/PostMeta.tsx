@@ -25,7 +25,7 @@ interface PostMetaOpts {
   timestamp: string
 }
 
-export const PostMeta = observer(function (opts: PostMetaOpts) {
+export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle

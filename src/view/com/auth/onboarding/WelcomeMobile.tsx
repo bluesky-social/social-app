@@ -13,7 +13,10 @@ type Props = {
   skip: () => void
 }
 
-export const WelcomeMobile = observer(({next, skip}: Props) => {
+export const WelcomeMobile = observer(function WelcomeMobileImpl({
+  next,
+  skip,
+}: Props) {
   const pal = usePalette('default')
 
   return (

@@ -48,7 +48,9 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'PreferencesHomeFeed'
 >
-export const PreferencesHomeFeed = observer(({navigation}: Props) => {
+export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
+  navigation,
+}: Props) {
   const pal = usePalette('default')
   const store = useStores()
   const {isTabletOrDesktop} = useWebMediaQueries()

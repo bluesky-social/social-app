@@ -46,7 +46,10 @@ interface Props {
   gallery: GalleryModel
 }
 
-export const Component = observer(function ({image, gallery}: Props) {
+export const Component = observer(function EditImageImpl({
+  image,
+  gallery,
+}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
   const store = useStores()

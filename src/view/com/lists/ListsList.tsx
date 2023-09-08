@@ -30,173 +30,171 @@ const EMPTY_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export const ListsList = observer(
-  ({
-    listsList,
+export const ListsList = observer(function ListsListImpl({
+  listsList,
+  showAddBtns,
+  style,
+  scrollElRef,
+  onPressTryAgain,
+  onPressCreateNew,
+  renderItem,
+  renderEmptyState,
+  testID,
+  headerOffset = 0,
+}: {
+  listsList: ListsListModel
+  showAddBtns?: boolean
+  style?: StyleProp<ViewStyle>
+  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  onPressCreateNew: () => void
+  onPressTryAgain?: () => void
+  renderItem?: (list: GraphDefs.ListView) => JSX.Element
+  renderEmptyState?: () => JSX.Element
+  testID?: string
+  headerOffset?: number
+}) {
+  const pal = usePalette('default')
+  const {track} = useAnalytics()
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
+
+  const data = React.useMemo(() => {
+    let items: any[] = []
+    if (listsList.hasLoaded) {
+      if (listsList.hasError) {
+        items = items.concat([ERROR_ITEM])
+      }
+      if (listsList.isEmpty) {
+        items = items.concat([EMPTY_ITEM])
+      } else {
+        if (showAddBtns) {
+          items = items.concat([CREATENEW_ITEM])
+        }
+        items = items.concat(listsList.lists)
+      }
+      if (listsList.loadMoreError) {
+        items = items.concat([LOAD_MORE_ERROR_ITEM])
+      }
+    } else if (listsList.isLoading) {
+      items = items.concat([LOADING_ITEM])
+    }
+    return items
+  }, [
+    listsList.hasError,
+    listsList.hasLoaded,
+    listsList.isLoading,
+    listsList.isEmpty,
+    listsList.lists,
+    listsList.loadMoreError,
     showAddBtns,
-    style,
-    scrollElRef,
-    onPressTryAgain,
-    onPressCreateNew,
-    renderItem,
-    renderEmptyState,
-    testID,
-    headerOffset = 0,
-  }: {
-    listsList: ListsListModel
-    showAddBtns?: boolean
-    style?: StyleProp<ViewStyle>
-    scrollElRef?: MutableRefObject<FlatList<any> | null>
-    onPressCreateNew: () => void
-    onPressTryAgain?: () => void
-    renderItem?: (list: GraphDefs.ListView) => JSX.Element
-    renderEmptyState?: () => JSX.Element
-    testID?: string
-    headerOffset?: number
-  }) => {
-    const pal = usePalette('default')
-    const {track} = useAnalytics()
-    const [isRefreshing, setIsRefreshing] = React.useState(false)
+  ])
 
-    const data = React.useMemo(() => {
-      let items: any[] = []
-      if (listsList.hasLoaded) {
-        if (listsList.hasError) {
-          items = items.concat([ERROR_ITEM])
+  // events
+  // =
+
+  const onRefresh = React.useCallback(async () => {
+    track('Lists:onRefresh')
+    setIsRefreshing(true)
+    try {
+      await listsList.refresh()
+    } catch (err) {
+      listsList.rootStore.log.error('Failed to refresh lists', err)
+    }
+    setIsRefreshing(false)
+  }, [listsList, track, setIsRefreshing])
+
+  const onEndReached = React.useCallback(async () => {
+    track('Lists:onEndReached')
+    try {
+      await listsList.loadMore()
+    } catch (err) {
+      listsList.rootStore.log.error('Failed to load more lists', err)
+    }
+  }, [listsList, track])
+
+  const onPressRetryLoadMore = React.useCallback(() => {
+    listsList.retryLoadMore()
+  }, [listsList])
+
+  // rendering
+  // =
+
+  const renderItemInner = React.useCallback(
+    ({item}: {item: any}) => {
+      if (item === EMPTY_ITEM) {
+        if (renderEmptyState) {
+          return renderEmptyState()
         }
-        if (listsList.isEmpty) {
-          items = items.concat([EMPTY_ITEM])
-        } else {
-          if (showAddBtns) {
-            items = items.concat([CREATENEW_ITEM])
-          }
-          items = items.concat(listsList.lists)
-        }
-        if (listsList.loadMoreError) {
-          items = items.concat([LOAD_MORE_ERROR_ITEM])
-        }
-      } else if (listsList.isLoading) {
-        items = items.concat([LOADING_ITEM])
-      }
-      return items
-    }, [
-      listsList.hasError,
-      listsList.hasLoaded,
-      listsList.isLoading,
-      listsList.isEmpty,
-      listsList.lists,
-      listsList.loadMoreError,
-      showAddBtns,
-    ])
-
-    // events
-    // =
-
-    const onRefresh = React.useCallback(async () => {
-      track('Lists:onRefresh')
-      setIsRefreshing(true)
-      try {
-        await listsList.refresh()
-      } catch (err) {
-        listsList.rootStore.log.error('Failed to refresh lists', err)
-      }
-      setIsRefreshing(false)
-    }, [listsList, track, setIsRefreshing])
-
-    const onEndReached = React.useCallback(async () => {
-      track('Lists:onEndReached')
-      try {
-        await listsList.loadMore()
-      } catch (err) {
-        listsList.rootStore.log.error('Failed to load more lists', err)
-      }
-    }, [listsList, track])
-
-    const onPressRetryLoadMore = React.useCallback(() => {
-      listsList.retryLoadMore()
-    }, [listsList])
-
-    // rendering
-    // =
-
-    const renderItemInner = React.useCallback(
-      ({item}: {item: any}) => {
-        if (item === EMPTY_ITEM) {
-          if (renderEmptyState) {
-            return renderEmptyState()
-          }
-          return <View />
-        } else if (item === CREATENEW_ITEM) {
-          return <CreateNewItem onPress={onPressCreateNew} />
-        } else if (item === ERROR_ITEM) {
-          return (
-            <ErrorMessage
-              message={listsList.error}
-              onPressTryAgain={onPressTryAgain}
-            />
-          )
-        } else if (item === LOAD_MORE_ERROR_ITEM) {
-          return (
-            <LoadMoreRetryBtn
-              label="There was an issue fetching your lists. Tap here to try again."
-              onPress={onPressRetryLoadMore}
-            />
-          )
-        } else if (item === LOADING_ITEM) {
-          return <ProfileCardFeedLoadingPlaceholder />
-        }
-        return renderItem ? (
-          renderItem(item)
-        ) : (
-          <ListCard
-            list={item}
-            testID={`list-${item.name}`}
-            style={styles.item}
+        return <View />
+      } else if (item === CREATENEW_ITEM) {
+        return <CreateNewItem onPress={onPressCreateNew} />
+      } else if (item === ERROR_ITEM) {
+        return (
+          <ErrorMessage
+            message={listsList.error}
+            onPressTryAgain={onPressTryAgain}
           />
         )
-      },
-      [
-        listsList,
-        onPressTryAgain,
-        onPressRetryLoadMore,
-        onPressCreateNew,
-        renderItem,
-        renderEmptyState,
-      ],
-    )
-
-    return (
-      <View testID={testID} style={style}>
-        {data.length > 0 && (
-          <FlatList
-            testID={testID ? `${testID}-flatlist` : undefined}
-            ref={scrollElRef}
-            data={data}
-            keyExtractor={item => item._reactKey}
-            renderItem={renderItemInner}
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={onRefresh}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
-                progressViewOffset={headerOffset}
-              />
-            }
-            contentContainerStyle={[s.contentContainer]}
-            style={{paddingTop: headerOffset}}
-            onEndReached={onEndReached}
-            onEndReachedThreshold={0.6}
-            removeClippedSubviews={true}
-            contentOffset={{x: 0, y: headerOffset * -1}}
-            // @ts-ignore our .web version only -prf
-            desktopFixedHeight
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label="There was an issue fetching your lists. Tap here to try again."
+            onPress={onPressRetryLoadMore}
           />
-        )}
-      </View>
-    )
-  },
-)
+        )
+      } else if (item === LOADING_ITEM) {
+        return <ProfileCardFeedLoadingPlaceholder />
+      }
+      return renderItem ? (
+        renderItem(item)
+      ) : (
+        <ListCard
+          list={item}
+          testID={`list-${item.name}`}
+          style={styles.item}
+        />
+      )
+    },
+    [
+      listsList,
+      onPressTryAgain,
+      onPressRetryLoadMore,
+      onPressCreateNew,
+      renderItem,
+      renderEmptyState,
+    ],
+  )
+
+  return (
+    <View testID={testID} style={style}>
+      {data.length > 0 && (
+        <FlatList
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={data}
+          keyExtractor={item => item._reactKey}
+          renderItem={renderItemInner}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
+              tintColor={pal.colors.text}
+              titleColor={pal.colors.text}
+              progressViewOffset={headerOffset}
+            />
+          }
+          contentContainerStyle={[s.contentContainer]}
+          style={{paddingTop: headerOffset}}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.6}
+          removeClippedSubviews={true}
+          contentOffset={{x: 0, y: headerOffset * -1}}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+        />
+      )}
+    </View>
+  )
+})
 
 function CreateNewItem({onPress}: {onPress: () => void}) {
   const pal = usePalette('default')

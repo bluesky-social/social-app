@@ -13,7 +13,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 
-export const DesktopRightNav = observer(function DesktopRightNav() {
+export const DesktopRightNav = observer(function DesktopRightNavImpl() {
   const store = useStores()
   const pal = usePalette('default')
   const palError = usePalette('error')
@@ -78,7 +78,7 @@ export const DesktopRightNav = observer(function DesktopRightNav() {
   )
 })
 
-const InviteCodes = observer(() => {
+const InviteCodes = observer(function InviteCodesImpl() {
   const store = useStores()
   const pal = usePalette('default')
 

@@ -21,7 +21,11 @@ import {useStores} from 'state/index'
  * @field Birth date
  * @readonly Terms of service & privacy policy
  */
-export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
+export const Step2 = observer(function Step2Impl({
+  model,
+}: {
+  model: CreateAccountModel
+}) {
   const pal = usePalette('default')
   const store = useStores()
 

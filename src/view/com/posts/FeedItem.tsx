@@ -30,7 +30,7 @@ import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 
-export const FeedItem = observer(function ({
+export const FeedItem = observer(function FeedItemImpl({
   item,
   isThreadChild,
   isThreadLastChild,

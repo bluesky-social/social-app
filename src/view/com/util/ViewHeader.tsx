@@ -14,7 +14,7 @@ import {NavigationProp} from 'lib/routes/types'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const ViewHeader = observer(function ({
+export const ViewHeader = observer(function ViewHeaderImpl({
   title,
   canGoBack,
   showBackButton = true,
@@ -140,70 +140,68 @@ function DesktopWebHeader({
   )
 }
 
-const Container = observer(
-  ({
-    children,
-    hideOnScroll,
-    showBorder,
-  }: {
-    children: React.ReactNode
-    hideOnScroll: boolean
-    showBorder?: boolean
-  }) => {
-    const store = useStores()
-    const pal = usePalette('default')
-    const interp = useAnimatedValue(0)
+const Container = observer(function ContainerImpl({
+  children,
+  hideOnScroll,
+  showBorder,
+}: {
+  children: React.ReactNode
+  hideOnScroll: boolean
+  showBorder?: boolean
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const interp = useAnimatedValue(0)
 
-    React.useEffect(() => {
-      if (store.shell.minimalShellMode) {
-        Animated.timing(interp, {
-          toValue: 1,
-          duration: 100,
-          useNativeDriver: true,
-          isInteraction: false,
-        }).start()
-      } else {
-        Animated.timing(interp, {
-          toValue: 0,
-          duration: 100,
-          useNativeDriver: true,
-          isInteraction: false,
-        }).start()
-      }
-    }, [interp, store.shell.minimalShellMode])
-    const transform = {
-      transform: [{translateY: Animated.multiply(interp, -100)}],
+  React.useEffect(() => {
+    if (store.shell.minimalShellMode) {
+      Animated.timing(interp, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    } else {
+      Animated.timing(interp, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
     }
+  }, [interp, store.shell.minimalShellMode])
+  const transform = {
+    transform: [{translateY: Animated.multiply(interp, -100)}],
+  }
 
-    if (!hideOnScroll) {
-      return (
-        <View
-          style={[
-            styles.header,
-            styles.headerFixed,
-            pal.view,
-            pal.border,
-            showBorder && styles.border,
-          ]}>
-          {children}
-        </View>
-      )
-    }
+  if (!hideOnScroll) {
     return (
-      <Animated.View
+      <View
         style={[
           styles.header,
-          styles.headerFloating,
+          styles.headerFixed,
           pal.view,
           pal.border,
-          transform,
           showBorder && styles.border,
         ]}>
         {children}
-      </Animated.View>
+      </View>
     )
-  },
-)
+  }
+  return (
+    <Animated.View
+      style={[
+        styles.header,
+        styles.headerFloating,
+        pal.view,
+        pal.border,
+        transform,
+        showBorder && styles.border,
+      ]}>
+      {children}
+    </Animated.View>
+  )
+})
 
 const styles = StyleSheet.create({
   header: {

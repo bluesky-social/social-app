@@ -6,23 +6,21 @@ import {ListCard} from 'view/com/lists/ListCard'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {s} from 'lib/styles'
 
-export const ListEmbed = observer(
-  ({
-    item,
-    style,
-  }: {
-    item: AppBskyGraphDefs.ListView
-    style?: StyleProp<ViewStyle>
-  }) => {
-    const pal = usePalette('default')
+export const ListEmbed = observer(function ListEmbedImpl({
+  item,
+  style,
+}: {
+  item: AppBskyGraphDefs.ListView
+  style?: StyleProp<ViewStyle>
+}) {
+  const pal = usePalette('default')
 
-    return (
-      <View style={[pal.view, pal.border, s.border1, styles.container]}>
-        <ListCard list={item} style={[style, styles.card]} />
-      </View>
-    )
-  },
-)
+  return (
+    <View style={[pal.view, pal.border, s.border1, styles.container]}>
+      <ListCard list={item} style={[style, styles.card]} />
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

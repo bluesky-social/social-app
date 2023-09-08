@@ -15,7 +15,9 @@ import {RECOMMENDED_FEEDS} from 'lib/constants'
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(({next}: Props) => {
+export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
+  next,
+}: Props) {
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
 

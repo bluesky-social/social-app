@@ -13,7 +13,11 @@ import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 /** STEP 3: Your user handle
  * @field User handle
  */
-export const Step3 = observer(({model}: {model: CreateAccountModel}) => {
+export const Step3 = observer(function Step3Impl({
+  model,
+}: {
+  model: CreateAccountModel
+}) {
   const pal = usePalette('default')
   return (
     <View>

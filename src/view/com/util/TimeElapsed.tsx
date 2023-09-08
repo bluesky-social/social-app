@@ -3,6 +3,9 @@ import {observer} from 'mobx-react-lite'
 import {ago} from 'lib/strings/time'
 import {useStores} from 'state/index'
 
+// FIXME(dan): Figure out why the false positives
+/* eslint-disable react/prop-types */
+
 export const TimeElapsed = observer(function TimeElapsed({
   timestamp,
   children,

@@ -10,7 +10,7 @@ import {ToastContainer} from './view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {observer} from 'mobx-react-lite'
 
-const App = observer(() => {
+const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )

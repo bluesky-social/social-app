@@ -8,7 +8,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-export const PostRepostedBy = observer(function PostRepostedBy({
+export const PostRepostedBy = observer(function PostRepostedByImpl({
   uri,
 }: {
   uri: string
@@ -75,6 +75,8 @@ export const PostRepostedBy = observer(function PostRepostedBy({
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}
+      // FIXME(dan)
+      // eslint-disable-next-line react/no-unstable-nested-components
       ListFooterComponent={() => (
         <View style={styles.footer}>
           {view.isLoading && <ActivityIndicator />}

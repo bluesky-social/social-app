@@ -24,7 +24,7 @@ type Props = NativeStackScreenProps<
   'Notifications'
 >
 export const NotificationsScreen = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function NotificationsScreenImpl({}: Props) {
     const store = useStores()
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
