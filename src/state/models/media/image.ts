@@ -32,7 +32,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   // Web manipulation
   prev?: RNImage
   attributes: ImageManipulationAttributes = {
-    aspectRatio: '1:1',
+    aspectRatio: 'None',
     scale: 1,
     flipHorizontal: false,
     flipVertical: false,
