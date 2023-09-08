@@ -13,12 +13,6 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
   const store = useStores()
   const pal = usePalette('default')
 
-  // NOTE
-  // we use this to trigger re-renders on nav changes
-  // the links establish if they're current by looking at the window.location
-  // -prf
-  // useNavigationState(state => state || {})
-
   const route = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
