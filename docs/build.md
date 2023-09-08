@@ -8,12 +8,12 @@
   - brew tap wix/brew
   - brew install applesimutils
 - After initial setup:
-  - `npx expo prebuild` -> you will also need to run this anytime `app.json` or `package.json` changes
+  - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
 - Start the dev servers
   - `git clone git@github.com:bluesky-social/atproto.git`
   - `cd atproto`
-  - `yarn`
-  - `cd packages/dev-env && yarn start`
+  - `pnpm i`
+  - `cd packages/dev-env && pnpm start`
 - Run the dev app
   - iOS: `yarn ios`
   - Android: `yarn android`
