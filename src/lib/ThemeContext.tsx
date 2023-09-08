@@ -1,5 +1,10 @@
 import React, {ReactNode, createContext, useContext, useMemo} from 'react'
-import {TextStyle, useColorScheme, ViewStyle} from 'react-native'
+import {
+  TextStyle,
+  useColorScheme,
+  ViewStyle,
+  ColorSchemeName,
+} from 'react-native'
 import {darkTheme, defaultTheme} from './themes'
 
 export type ColorScheme = 'light' | 'dark'
@@ -91,13 +96,31 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
 }) => {
   const colorSchemeFromRN = useColorScheme()
+  const [nativeColorScheme, setNativeColorScheme] =
+    React.useState<ColorSchemeName>(colorSchemeFromRN)
+  const nativeColorSchemeChangeTimeout = React.useRef<NodeJS.Timeout | null>(
+    null,
+  )
 
-  // if theme is 'system', use the device's configured color scheme
-  let colorScheme = theme === 'system' ? colorSchemeFromRN : theme
+  React.useEffect(() => {
+    if (nativeColorSchemeChangeTimeout.current)
+      clearTimeout(nativeColorSchemeChangeTimeout.current)
+    nativeColorSchemeChangeTimeout.current = setTimeout(
+      () => setNativeColorScheme(colorSchemeFromRN),
+      1000,
+    )
+  }, [colorSchemeFromRN])
 
   const value = useMemo(
-    () => (colorScheme === 'dark' ? darkTheme : defaultTheme),
-    [colorScheme],
+    () =>
+      theme === 'system'
+        ? nativeColorScheme === 'dark'
+          ? darkTheme
+          : defaultTheme
+        : theme === 'dark'
+        ? darkTheme
+        : defaultTheme,
+    [theme, nativeColorScheme],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
