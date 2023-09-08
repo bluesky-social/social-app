@@ -116,6 +116,8 @@ export const ModerationBlockedAccounts = withAuthRequired(
             onEndReached={onEndReached}
             renderItem={renderItem}
             initialNumToRender={15}
+            // FIXME(dan)
+            // eslint-disable-next-line react/no-unstable-nested-components
             ListFooterComponent={() => (
               <View style={styles.footer}>
                 {blockedAccounts.isLoading && <ActivityIndicator />}

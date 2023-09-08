@@ -68,6 +68,8 @@ export const PostLikedBy = observer(function PostLikedByImpl({
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}
+      // FIXME(dan)
+      // eslint-disable-next-line react/no-unstable-nested-components
       ListFooterComponent={() => (
         <View style={styles.footer}>
           {view.isLoading && <ActivityIndicator />}

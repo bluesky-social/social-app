@@ -75,6 +75,8 @@ export const ProfileFollows = observer(function ProfileFollows({
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}
+      // FIXME(dan)
+      // eslint-disable-next-line react/no-unstable-nested-components
       ListFooterComponent={() => (
         <View style={styles.footer}>
           {view.isLoading && <ActivityIndicator />}
