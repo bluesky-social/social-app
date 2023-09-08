@@ -14,79 +14,77 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 
-export const FeedsTabBar = observer(
-  (
-    props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
-  ) => {
-    const store = useStores()
-    const pal = usePalette('default')
-    const interp = useAnimatedValue(0)
+export const FeedsTabBar = observer(function FeedsTabBarImpl(
+  props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
+) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const interp = useAnimatedValue(0)
 
-    React.useEffect(() => {
-      Animated.timing(interp, {
-        toValue: store.shell.minimalShellMode ? 1 : 0,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    }, [interp, store.shell.minimalShellMode])
-    const transform = {
-      transform: [{translateY: Animated.multiply(interp, -100)}],
-    }
+  React.useEffect(() => {
+    Animated.timing(interp, {
+      toValue: store.shell.minimalShellMode ? 1 : 0,
+      duration: 100,
+      useNativeDriver: true,
+      isInteraction: false,
+    }).start()
+  }, [interp, store.shell.minimalShellMode])
+  const transform = {
+    transform: [{translateY: Animated.multiply(interp, -100)}],
+  }
 
-    const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
+  const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
 
-    const onPressAvi = React.useCallback(() => {
-      store.shell.openDrawer()
-    }, [store])
+  const onPressAvi = React.useCallback(() => {
+    store.shell.openDrawer()
+  }, [store])
 
-    const items = useMemo(
-      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
-      [store.me.savedFeeds.pinnedFeedNames],
-    )
+  const items = useMemo(
+    () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
+    [store.me.savedFeeds.pinnedFeedNames],
+  )
 
-    return (
-      <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
-        <View style={[pal.view, styles.topBar]}>
-          <View style={[pal.view]}>
-            <TouchableOpacity
-              testID="viewHeaderDrawerBtn"
-              onPress={onPressAvi}
-              accessibilityRole="button"
-              accessibilityLabel="Open navigation"
-              accessibilityHint="Access profile and other navigation links"
-              hitSlop={HITSLOP_10}>
-              <FontAwesomeIcon
-                icon="bars"
-                size={18}
-                color={pal.colors.textLight}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={[brandBlue, s.bold, styles.title]}>
-            {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
-          </Text>
-          <View style={[pal.view]}>
-            <Link
-              href="/settings/saved-feeds"
-              hitSlop={HITSLOP_10}
-              accessibilityRole="button"
-              accessibilityLabel="Edit Saved Feeds"
-              accessibilityHint="Opens screen to edit Saved Feeds">
-              <CogIcon size={21} strokeWidth={2} style={pal.textLight} />
-            </Link>
-          </View>
+  return (
+    <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
+      <View style={[pal.view, styles.topBar]}>
+        <View style={[pal.view]}>
+          <TouchableOpacity
+            testID="viewHeaderDrawerBtn"
+            onPress={onPressAvi}
+            accessibilityRole="button"
+            accessibilityLabel="Open navigation"
+            accessibilityHint="Access profile and other navigation links"
+            hitSlop={HITSLOP_10}>
+            <FontAwesomeIcon
+              icon="bars"
+              size={18}
+              color={pal.colors.textLight}
+            />
+          </TouchableOpacity>
         </View>
-        <TabBar
-          key={items.join(',')}
-          {...props}
-          items={items}
-          indicatorColor={pal.colors.link}
-        />
-      </Animated.View>
-    )
-  },
-)
+        <Text style={[brandBlue, s.bold, styles.title]}>
+          {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+        </Text>
+        <View style={[pal.view]}>
+          <Link
+            href="/settings/saved-feeds"
+            hitSlop={HITSLOP_10}
+            accessibilityRole="button"
+            accessibilityLabel="Edit Saved Feeds"
+            accessibilityHint="Opens screen to edit Saved Feeds">
+            <CogIcon size={21} strokeWidth={2} style={pal.textLight} />
+          </Link>
+        </View>
+      </View>
+      <TabBar
+        key={items.join(',')}
+        {...props}
+        items={items}
+        indicatorColor={pal.colors.link}
+      />
+    </Animated.View>
+  )
+})
 
 const styles = StyleSheet.create({
   tabBar: {

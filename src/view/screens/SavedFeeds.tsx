@@ -35,7 +35,7 @@ import {Link, TextLink} from 'view/com/util/Link'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
 export const SavedFeeds = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function SavedFeedsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
@@ -151,96 +151,98 @@ export const SavedFeeds = withAuthRequired(
   }),
 )
 
-const ListItem = observer(
-  ({item, drag}: {item: CustomFeedModel; drag: () => void}) => {
-    const pal = usePalette('default')
-    const store = useStores()
-    const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
-    const isPinned = savedFeeds.isPinned(item)
+const ListItem = observer(function ListItemImpl({
+  item,
+  drag,
+}: {
+  item: CustomFeedModel
+  drag: () => void
+}) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
+  const isPinned = savedFeeds.isPinned(item)
 
-    const onTogglePinned = useCallback(() => {
-      Haptics.default()
-      savedFeeds.togglePinnedFeed(item).catch(e => {
+  const onTogglePinned = useCallback(() => {
+    Haptics.default()
+    savedFeeds.togglePinnedFeed(item).catch(e => {
+      Toast.show('There was an issue contacting the server')
+      store.log.error('Failed to toggle pinned feed', {e})
+    })
+  }, [savedFeeds, item, store])
+  const onPressUp = useCallback(
+    () =>
+      savedFeeds.movePinnedFeed(item, 'up').catch(e => {
         Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to toggle pinned feed', {e})
-      })
-    }, [savedFeeds, item, store])
-    const onPressUp = useCallback(
-      () =>
-        savedFeeds.movePinnedFeed(item, 'up').catch(e => {
-          Toast.show('There was an issue contacting the server')
-          store.log.error('Failed to set pinned feed order', {e})
-        }),
-      [store, savedFeeds, item],
-    )
-    const onPressDown = useCallback(
-      () =>
-        savedFeeds.movePinnedFeed(item, 'down').catch(e => {
-          Toast.show('There was an issue contacting the server')
-          store.log.error('Failed to set pinned feed order', {e})
-        }),
-      [store, savedFeeds, item],
-    )
+        store.log.error('Failed to set pinned feed order', {e})
+      }),
+    [store, savedFeeds, item],
+  )
+  const onPressDown = useCallback(
+    () =>
+      savedFeeds.movePinnedFeed(item, 'down').catch(e => {
+        Toast.show('There was an issue contacting the server')
+        store.log.error('Failed to set pinned feed order', {e})
+      }),
+    [store, savedFeeds, item],
+  )
 
-    return (
-      <ScaleDecorator>
-        <ShadowDecorator>
-          <Pressable
-            accessibilityRole="button"
-            onLongPress={isPinned ? drag : undefined}
-            delayLongPress={200}
-            style={[styles.itemContainer, pal.border]}>
-            {isPinned && isWeb ? (
-              <View style={styles.webArrowButtonsContainer}>
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  onPress={onPressUp}>
-                  <FontAwesomeIcon
-                    icon="arrow-up"
-                    size={12}
-                    style={[pal.text, styles.webArrowUpButton]}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  onPress={onPressDown}>
-                  <FontAwesomeIcon
-                    icon="arrow-down"
-                    size={12}
-                    style={[pal.text]}
-                  />
-                </TouchableOpacity>
-              </View>
-            ) : isPinned ? (
-              <FontAwesomeIcon
-                icon="bars"
-                size={20}
-                color={pal.colors.text}
-                style={s.ml20}
-              />
-            ) : null}
-            <CustomFeed
-              key={item.data.uri}
-              item={item}
-              showSaveBtn
-              style={styles.noBorder}
+  return (
+    <ScaleDecorator>
+      <ShadowDecorator>
+        <Pressable
+          accessibilityRole="button"
+          onLongPress={isPinned ? drag : undefined}
+          delayLongPress={200}
+          style={[styles.itemContainer, pal.border]}>
+          {isPinned && isWeb ? (
+            <View style={styles.webArrowButtonsContainer}>
+              <TouchableOpacity accessibilityRole="button" onPress={onPressUp}>
+                <FontAwesomeIcon
+                  icon="arrow-up"
+                  size={12}
+                  style={[pal.text, styles.webArrowUpButton]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                accessibilityRole="button"
+                onPress={onPressDown}>
+                <FontAwesomeIcon
+                  icon="arrow-down"
+                  size={12}
+                  style={[pal.text]}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : isPinned ? (
+            <FontAwesomeIcon
+              icon="bars"
+              size={20}
+              color={pal.colors.text}
+              style={s.ml20}
             />
-            <TouchableOpacity
-              accessibilityRole="button"
-              hitSlop={10}
-              onPress={onTogglePinned}>
-              <FontAwesomeIcon
-                icon="thumb-tack"
-                size={20}
-                color={isPinned ? colors.blue3 : pal.colors.icon}
-              />
-            </TouchableOpacity>
-          </Pressable>
-        </ShadowDecorator>
-      </ScaleDecorator>
-    )
-  },
-)
+          ) : null}
+          <CustomFeed
+            key={item.data.uri}
+            item={item}
+            showSaveBtn
+            style={styles.noBorder}
+          />
+          <TouchableOpacity
+            accessibilityRole="button"
+            hitSlop={10}
+            onPress={onTogglePinned}>
+            <FontAwesomeIcon
+              icon="thumb-tack"
+              size={20}
+              color={isPinned ? colors.blue3 : pal.colors.icon}
+            />
+          </TouchableOpacity>
+        </Pressable>
+      </ShadowDecorator>
+    </ScaleDecorator>
+  )
+})
 
 const styles = StyleSheet.create({
   desktopContainer: {

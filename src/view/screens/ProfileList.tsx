@@ -23,7 +23,7 @@ import {s} from 'lib/styles'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
-  observer(({route}: Props) => {
+  observer(function ProfileListScreenImpl({route}: Props) {
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {isTabletOrDesktop} = useWebMediaQueries()

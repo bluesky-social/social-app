@@ -14,7 +14,9 @@ type Props = {
   skip: () => void
 }
 
-export const WelcomeDesktop = observer(({next}: Props) => {
+export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
+  next,
+}: Props) {
   const pal = usePalette('default')
   const horizontal = useMediaQuery({minWidth: 1300})
   const title = (

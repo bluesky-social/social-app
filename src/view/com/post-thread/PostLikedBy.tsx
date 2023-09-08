@@ -8,7 +8,11 @@ import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-export const PostLikedBy = observer(function ({uri}: {uri: string}) {
+export const PostLikedBy = observer(function PostLikedByImpl({
+  uri,
+}: {
+  uri: string
+}) {
   const pal = usePalette('default')
   const store = useStores()
   const view = React.useMemo(() => new LikesModel(store, {uri}), [store, uri])

@@ -17,7 +17,7 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
 ): React.FC<P> =>
-  observer((props: P) => {
+  observer(function AuthRequired(props: P) {
     const store = useStores()
     if (store.session.isResumingSession) {
       return <Loading />

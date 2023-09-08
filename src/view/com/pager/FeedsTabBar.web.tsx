@@ -9,59 +9,55 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
 
-export const FeedsTabBar = observer(
-  (
-    props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
-  ) => {
-    const {isMobile} = useWebMediaQueries()
-    if (isMobile) {
-      return <FeedsTabBarMobile {...props} />
-    } else {
-      return <FeedsTabBarDesktop {...props} />
-    }
-  },
-)
+export const FeedsTabBar = observer(function FeedsTabBarImpl(
+  props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
+) {
+  const {isMobile} = useWebMediaQueries()
+  if (isMobile) {
+    return <FeedsTabBarMobile {...props} />
+  } else {
+    return <FeedsTabBarDesktop {...props} />
+  }
+})
 
-const FeedsTabBarDesktop = observer(
-  (
-    props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
-  ) => {
-    const store = useStores()
-    const items = useMemo(
-      () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
-      [store.me.savedFeeds.pinnedFeedNames],
-    )
-    const pal = usePalette('default')
-    const interp = useAnimatedValue(0)
+const FeedsTabBarDesktop = observer(function FeedsTabBarDesktopImpl(
+  props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
+) {
+  const store = useStores()
+  const items = useMemo(
+    () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
+    [store.me.savedFeeds.pinnedFeedNames],
+  )
+  const pal = usePalette('default')
+  const interp = useAnimatedValue(0)
 
-    React.useEffect(() => {
-      Animated.timing(interp, {
-        toValue: store.shell.minimalShellMode ? 1 : 0,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    }, [interp, store.shell.minimalShellMode])
-    const transform = {
-      transform: [
-        {translateX: '-50%'},
-        {translateY: Animated.multiply(interp, -100)},
-      ],
-    }
+  React.useEffect(() => {
+    Animated.timing(interp, {
+      toValue: store.shell.minimalShellMode ? 1 : 0,
+      duration: 100,
+      useNativeDriver: true,
+      isInteraction: false,
+    }).start()
+  }, [interp, store.shell.minimalShellMode])
+  const transform = {
+    transform: [
+      {translateX: '-50%'},
+      {translateY: Animated.multiply(interp, -100)},
+    ],
+  }
 
-    return (
-      // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
-      <Animated.View style={[pal.view, styles.tabBar, transform]}>
-        <TabBar
-          key={items.join(',')}
-          {...props}
-          items={items}
-          indicatorColor={pal.colors.link}
-        />
-      </Animated.View>
-    )
-  },
-)
+  return (
+    // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
+    <Animated.View style={[pal.view, styles.tabBar, transform]}>
+      <TabBar
+        key={items.join(',')}
+        {...props}
+        items={items}
+        indicatorColor={pal.colors.link}
+      />
+    </Animated.View>
+  )
+})
 
 const styles = StyleSheet.create({
   tabBar: {

@@ -17,159 +17,161 @@ import * as Toast from '../util/Toast'
 
 export const snapPoints = ['90%']
 
-export const Component = observer(({}: {}) => {
-  const store = useStores()
-  const {isMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
-
-  React.useEffect(() => {
-    store.preferences.sync()
-  }, [store])
-
-  const onToggleAdultContent = React.useCallback(async () => {
-    if (isIOS) {
-      return
-    }
-    try {
-      await store.preferences.setAdultContentEnabled(
-        !store.preferences.adultContentEnabled,
-      )
-    } catch (e) {
-      Toast.show('There was an issue syncing your preferences with the server')
-      store.log.error('Failed to update preferences with server', {e})
-    }
-  }, [store])
-
-  const onPressDone = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
-
-  return (
-    <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
-      <Text style={[pal.text, styles.title]}>Content Filtering</Text>
-      <ScrollView style={styles.scrollContainer}>
-        <View style={s.mb10}>
-          {isIOS ? (
-            store.preferences.adultContentEnabled ? null : (
-              <Text type="md" style={pal.textLight}>
-                Adult content can only be enabled via the Web at{' '}
-                <TextLink
-                  style={pal.link}
-                  href="https://bsky.app"
-                  text="bsky.app"
-                />
-                .
-              </Text>
-            )
-          ) : (
-            <ToggleButton
-              type="default-light"
-              label="Enable Adult Content"
-              isSelected={store.preferences.adultContentEnabled}
-              onPress={onToggleAdultContent}
-              style={styles.toggleBtn}
-            />
-          )}
-        </View>
-        <ContentLabelPref
-          group="nsfw"
-          disabled={!store.preferences.adultContentEnabled}
-        />
-        <ContentLabelPref
-          group="nudity"
-          disabled={!store.preferences.adultContentEnabled}
-        />
-        <ContentLabelPref
-          group="suggestive"
-          disabled={!store.preferences.adultContentEnabled}
-        />
-        <ContentLabelPref
-          group="gore"
-          disabled={!store.preferences.adultContentEnabled}
-        />
-        <ContentLabelPref group="hate" />
-        <ContentLabelPref group="spam" />
-        <ContentLabelPref group="impersonation" />
-        <View style={{height: isMobile ? 60 : 0}} />
-      </ScrollView>
-      <View
-        style={[
-          styles.btnContainer,
-          isMobile && styles.btnContainerMobile,
-          pal.borderDark,
-        ]}>
-        <Pressable
-          testID="sendReportBtn"
-          onPress={onPressDone}
-          accessibilityRole="button"
-          accessibilityLabel="Done"
-          accessibilityHint="">
-          <LinearGradient
-            colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={[styles.btn]}>
-            <Text style={[s.white, s.bold, s.f18]}>Done</Text>
-          </LinearGradient>
-        </Pressable>
-      </View>
-    </View>
-  )
-})
-
-// TODO: Refactor this component to pass labels down to each tab
-const ContentLabelPref = observer(
-  ({
-    group,
-    disabled,
-  }: {
-    group: keyof typeof CONFIGURABLE_LABEL_GROUPS
-    disabled?: boolean
-  }) => {
+export const Component = observer(
+  function ContentFilteringSettingsImpl({}: {}) {
     const store = useStores()
+    const {isMobile} = useWebMediaQueries()
     const pal = usePalette('default')
 
-    const onChange = React.useCallback(
-      async (v: LabelPreference) => {
-        try {
-          await store.preferences.setContentLabelPref(group, v)
-        } catch (e) {
-          Toast.show(
-            'There was an issue syncing your preferences with the server',
-          )
-          store.log.error('Failed to update preferences with server', {e})
-        }
-      },
-      [store, group],
-    )
+    React.useEffect(() => {
+      store.preferences.sync()
+    }, [store])
+
+    const onToggleAdultContent = React.useCallback(async () => {
+      if (isIOS) {
+        return
+      }
+      try {
+        await store.preferences.setAdultContentEnabled(
+          !store.preferences.adultContentEnabled,
+        )
+      } catch (e) {
+        Toast.show(
+          'There was an issue syncing your preferences with the server',
+        )
+        store.log.error('Failed to update preferences with server', {e})
+      }
+    }, [store])
+
+    const onPressDone = React.useCallback(() => {
+      store.shell.closeModal()
+    }, [store])
 
     return (
-      <View style={[styles.contentLabelPref, pal.border]}>
-        <View style={s.flex1}>
-          <Text type="md-medium" style={[pal.text]}>
-            {CONFIGURABLE_LABEL_GROUPS[group].title}
-          </Text>
-          {typeof CONFIGURABLE_LABEL_GROUPS[group].subtitle === 'string' && (
-            <Text type="sm" style={[pal.textLight]}>
-              {CONFIGURABLE_LABEL_GROUPS[group].subtitle}
-            </Text>
-          )}
-        </View>
-        {disabled ? (
-          <Text type="sm-bold" style={pal.textLight}>
-            Hide
-          </Text>
-        ) : (
-          <SelectGroup
-            current={store.preferences.contentLabels[group]}
-            onChange={onChange}
-            group={group}
+      <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
+        <Text style={[pal.text, styles.title]}>Content Filtering</Text>
+        <ScrollView style={styles.scrollContainer}>
+          <View style={s.mb10}>
+            {isIOS ? (
+              store.preferences.adultContentEnabled ? null : (
+                <Text type="md" style={pal.textLight}>
+                  Adult content can only be enabled via the Web at{' '}
+                  <TextLink
+                    style={pal.link}
+                    href="https://bsky.app"
+                    text="bsky.app"
+                  />
+                  .
+                </Text>
+              )
+            ) : (
+              <ToggleButton
+                type="default-light"
+                label="Enable Adult Content"
+                isSelected={store.preferences.adultContentEnabled}
+                onPress={onToggleAdultContent}
+                style={styles.toggleBtn}
+              />
+            )}
+          </View>
+          <ContentLabelPref
+            group="nsfw"
+            disabled={!store.preferences.adultContentEnabled}
           />
-        )}
+          <ContentLabelPref
+            group="nudity"
+            disabled={!store.preferences.adultContentEnabled}
+          />
+          <ContentLabelPref
+            group="suggestive"
+            disabled={!store.preferences.adultContentEnabled}
+          />
+          <ContentLabelPref
+            group="gore"
+            disabled={!store.preferences.adultContentEnabled}
+          />
+          <ContentLabelPref group="hate" />
+          <ContentLabelPref group="spam" />
+          <ContentLabelPref group="impersonation" />
+          <View style={{height: isMobile ? 60 : 0}} />
+        </ScrollView>
+        <View
+          style={[
+            styles.btnContainer,
+            isMobile && styles.btnContainerMobile,
+            pal.borderDark,
+          ]}>
+          <Pressable
+            testID="sendReportBtn"
+            onPress={onPressDone}
+            accessibilityRole="button"
+            accessibilityLabel="Done"
+            accessibilityHint="">
+            <LinearGradient
+              colors={[gradients.blueLight.start, gradients.blueLight.end]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={[styles.btn]}>
+              <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+            </LinearGradient>
+          </Pressable>
+        </View>
       </View>
     )
   },
 )
+
+// TODO: Refactor this component to pass labels down to each tab
+const ContentLabelPref = observer(function ContentLabelPrefImpl({
+  group,
+  disabled,
+}: {
+  group: keyof typeof CONFIGURABLE_LABEL_GROUPS
+  disabled?: boolean
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+
+  const onChange = React.useCallback(
+    async (v: LabelPreference) => {
+      try {
+        await store.preferences.setContentLabelPref(group, v)
+      } catch (e) {
+        Toast.show(
+          'There was an issue syncing your preferences with the server',
+        )
+        store.log.error('Failed to update preferences with server', {e})
+      }
+    },
+    [store, group],
+  )
+
+  return (
+    <View style={[styles.contentLabelPref, pal.border]}>
+      <View style={s.flex1}>
+        <Text type="md-medium" style={[pal.text]}>
+          {CONFIGURABLE_LABEL_GROUPS[group].title}
+        </Text>
+        {typeof CONFIGURABLE_LABEL_GROUPS[group].subtitle === 'string' && (
+          <Text type="sm" style={[pal.textLight]}>
+            {CONFIGURABLE_LABEL_GROUPS[group].subtitle}
+          </Text>
+        )}
+      </View>
+      {disabled ? (
+        <Text type="sm-bold" style={pal.textLight}>
+          Hide
+        </Text>
+      ) : (
+        <SelectGroup
+          current={store.preferences.contentLabels[group]}
+          onChange={onChange}
+          group={group}
+        />
+      )}
+    </View>
+  )
+})
 
 interface SelectGroupProps {
   current: LabelPreference

@@ -22,89 +22,82 @@ import {
   getModerationCauseKey,
 } from 'lib/moderation'
 
-export const ProfileCard = observer(
-  ({
-    testID,
-    profile,
-    noBg,
-    noBorder,
-    followers,
-    renderButton,
-  }: {
-    testID?: string
-    profile: AppBskyActorDefs.ProfileViewBasic
-    noBg?: boolean
-    noBorder?: boolean
-    followers?: AppBskyActorDefs.ProfileView[] | undefined
-    renderButton?: (
-      profile: AppBskyActorDefs.ProfileViewBasic,
-    ) => React.ReactNode
-  }) => {
-    const store = useStores()
-    const pal = usePalette('default')
+export const ProfileCard = observer(function ProfileCardImpl({
+  testID,
+  profile,
+  noBg,
+  noBorder,
+  followers,
+  renderButton,
+}: {
+  testID?: string
+  profile: AppBskyActorDefs.ProfileViewBasic
+  noBg?: boolean
+  noBorder?: boolean
+  followers?: AppBskyActorDefs.ProfileView[] | undefined
+  renderButton?: (profile: AppBskyActorDefs.ProfileViewBasic) => React.ReactNode
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
 
-    const moderation = moderateProfile(
-      profile,
-      store.preferences.moderationOpts,
-    )
+  const moderation = moderateProfile(profile, store.preferences.moderationOpts)
 
-    return (
-      <Link
-        testID={testID}
-        style={[
-          styles.outer,
-          pal.border,
-          noBorder && styles.outerNoBorder,
-          !noBg && pal.view,
-        ]}
-        href={makeProfileLink(profile)}
-        title={profile.handle}
-        asAnchor
-        anchorNoUnderline>
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <UserAvatar
-              size={40}
-              avatar={profile.avatar}
-              moderation={moderation.avatar}
-            />
-          </View>
-          <View style={styles.layoutContent}>
-            <Text
-              type="lg"
-              style={[s.bold, pal.text]}
-              numberOfLines={1}
-              lineHeight={1.2}>
-              {sanitizeDisplayName(
-                profile.displayName || sanitizeHandle(profile.handle),
-                moderation.profile,
-              )}
-            </Text>
-            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {sanitizeHandle(profile.handle, '@')}
-            </Text>
-            <ProfileCardPills
-              followedBy={!!profile.viewer?.followedBy}
-              moderation={moderation}
-            />
-            {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
-          </View>
-          {renderButton ? (
-            <View style={styles.layoutButton}>{renderButton(profile)}</View>
-          ) : undefined}
+  return (
+    <Link
+      testID={testID}
+      style={[
+        styles.outer,
+        pal.border,
+        noBorder && styles.outerNoBorder,
+        !noBg && pal.view,
+      ]}
+      href={makeProfileLink(profile)}
+      title={profile.handle}
+      asAnchor
+      anchorNoUnderline>
+      <View style={styles.layout}>
+        <View style={styles.layoutAvi}>
+          <UserAvatar
+            size={40}
+            avatar={profile.avatar}
+            moderation={moderation.avatar}
+          />
         </View>
-        {profile.description ? (
-          <View style={styles.details}>
-            <Text style={pal.text} numberOfLines={4}>
-              {profile.description as string}
-            </Text>
-          </View>
+        <View style={styles.layoutContent}>
+          <Text
+            type="lg"
+            style={[s.bold, pal.text]}
+            numberOfLines={1}
+            lineHeight={1.2}>
+            {sanitizeDisplayName(
+              profile.displayName || sanitizeHandle(profile.handle),
+              moderation.profile,
+            )}
+          </Text>
+          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+            {sanitizeHandle(profile.handle, '@')}
+          </Text>
+          <ProfileCardPills
+            followedBy={!!profile.viewer?.followedBy}
+            moderation={moderation}
+          />
+          {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
+        </View>
+        {renderButton ? (
+          <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
-        <FollowersList followers={followers} />
-      </Link>
-    )
-  },
-)
+      </View>
+      {profile.description ? (
+        <View style={styles.details}>
+          <Text style={pal.text} numberOfLines={4}>
+            {profile.description as string}
+          </Text>
+        </View>
+      ) : undefined}
+      <FollowersList followers={followers} />
+    </Link>
+  )
+})
 
 function ProfileCardPills({
   followedBy,
@@ -146,45 +139,47 @@ function ProfileCardPills({
   )
 }
 
-const FollowersList = observer(
-  ({followers}: {followers?: AppBskyActorDefs.ProfileView[] | undefined}) => {
-    const store = useStores()
-    const pal = usePalette('default')
-    if (!followers?.length) {
-      return null
-    }
+const FollowersList = observer(function FollowersListImpl({
+  followers,
+}: {
+  followers?: AppBskyActorDefs.ProfileView[] | undefined
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+  if (!followers?.length) {
+    return null
+  }
 
-    const followersWithMods = followers
-      .map(f => ({
-        f,
-        mod: moderateProfile(f, store.preferences.moderationOpts),
-      }))
-      .filter(({mod}) => !mod.account.filter)
+  const followersWithMods = followers
+    .map(f => ({
+      f,
+      mod: moderateProfile(f, store.preferences.moderationOpts),
+    }))
+    .filter(({mod}) => !mod.account.filter)
 
-    return (
-      <View style={styles.followedBy}>
-        <Text
-          type="sm"
-          style={[styles.followsByDesc, pal.textLight]}
-          numberOfLines={2}
-          lineHeight={1.2}>
-          Followed by{' '}
-          {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
-        </Text>
-        {followersWithMods.slice(0, 3).map(({f, mod}) => (
-          <View key={f.did} style={styles.followedByAviContainer}>
-            <View style={[styles.followedByAvi, pal.view]}>
-              <UserAvatar avatar={f.avatar} size={32} moderation={mod.avatar} />
-            </View>
+  return (
+    <View style={styles.followedBy}>
+      <Text
+        type="sm"
+        style={[styles.followsByDesc, pal.textLight]}
+        numberOfLines={2}
+        lineHeight={1.2}>
+        Followed by{' '}
+        {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
+      </Text>
+      {followersWithMods.slice(0, 3).map(({f, mod}) => (
+        <View key={f.did} style={styles.followedByAviContainer}>
+          <View style={[styles.followedByAvi, pal.view]}>
+            <UserAvatar avatar={f.avatar} size={32} moderation={mod.avatar} />
           </View>
-        ))}
-      </View>
-    )
-  },
-)
+        </View>
+      ))}
+    </View>
+  )
+})
 
 export const ProfileCardWithFollowBtn = observer(
-  ({
+  function ProfileCardWithFollowBtnImpl({
     profile,
     noBg,
     noBorder,
@@ -194,7 +189,7 @@ export const ProfileCardWithFollowBtn = observer(
     noBg?: boolean
     noBorder?: boolean
     followers?: AppBskyActorDefs.ProfileView[] | undefined
-  }) => {
+  }) {
     const store = useStores()
     const isMe = store.me.did === profile.did
 

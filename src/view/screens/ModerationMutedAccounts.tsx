@@ -27,7 +27,7 @@ type Props = NativeStackScreenProps<
   'ModerationMutedAccounts'
 >
 export const ModerationMutedAccounts = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function ModerationMutedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const {isTabletOrDesktop} = useWebMediaQueries()

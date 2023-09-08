@@ -23,7 +23,7 @@ import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {makeProfileLink} from 'lib/routes/links'
 
-export const BottomBarWeb = observer(() => {
+export const BottomBarWeb = observer(function BottomBarWebImpl() {
   const store = useStores()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()

@@ -24,7 +24,7 @@ import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
-const ShellInner = observer(() => {
+const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
@@ -81,7 +81,7 @@ const ShellInner = observer(() => {
   )
 })
 
-export const Shell: React.FC = observer(() => {
+export const Shell: React.FC = observer(function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
   return (

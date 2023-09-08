@@ -32,7 +32,9 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
-export const BottomBar = observer(({navigation}: BottomTabBarProps) => {
+export const BottomBar = observer(function BottomBarImpl({
+  navigation,
+}: BottomTabBarProps) {
   const store = useStores()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()

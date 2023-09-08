@@ -19,7 +19,7 @@ import debounce from 'lodash.debounce'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'DiscoverFeeds'>
 export const DiscoverFeedsScreen = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function DiscoverFeedsScreenImpl({}: Props) {
     const store = useStores()
     const pal = usePalette('default')
     const feeds = React.useMemo(() => new FeedsDiscoveryModel(store), [store])

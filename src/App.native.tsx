@@ -19,7 +19,7 @@ import {handleLink} from './Navigation'
 
 SplashScreen.preventAutoHideAsync()
 
-const App = observer(() => {
+const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )

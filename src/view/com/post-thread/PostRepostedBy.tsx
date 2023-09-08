@@ -8,7 +8,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 
-export const PostRepostedBy = observer(function PostRepostedBy({
+export const PostRepostedBy = observer(function PostRepostedByImpl({
   uri,
 }: {
   uri: string

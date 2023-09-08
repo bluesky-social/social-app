@@ -8,54 +8,52 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export const Composer = observer(
-  ({
-    active,
-    replyTo,
-    quote,
-    onPost,
-    onClose,
-    mention,
-  }: {
-    active: boolean
-    winHeight: number
-    replyTo?: ComposerOpts['replyTo']
-    quote: ComposerOpts['quote']
-    onPost?: ComposerOpts['onPost']
-    onClose: () => void
-    mention?: ComposerOpts['mention']
-  }) => {
-    const pal = usePalette('default')
-    const {isMobile} = useWebMediaQueries()
+export const Composer = observer(function ComposerImpl({
+  active,
+  replyTo,
+  quote,
+  onPost,
+  onClose,
+  mention,
+}: {
+  active: boolean
+  winHeight: number
+  replyTo?: ComposerOpts['replyTo']
+  quote: ComposerOpts['quote']
+  onPost?: ComposerOpts['onPost']
+  onClose: () => void
+  mention?: ComposerOpts['mention']
+}) {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
-    // rendering
-    // =
+  // rendering
+  // =
 
-    if (!active) {
-      return <View />
-    }
+  if (!active) {
+    return <View />
+  }
 
-    return (
-      <View style={styles.mask} aria-modal accessibilityViewIsModal>
-        <View
-          style={[
-            styles.container,
-            isMobile && styles.containerMobile,
-            pal.view,
-            pal.border,
-          ]}>
-          <ComposePost
-            replyTo={replyTo}
-            quote={quote}
-            onPost={onPost}
-            onClose={onClose}
-            mention={mention}
-          />
-        </View>
+  return (
+    <View style={styles.mask} aria-modal accessibilityViewIsModal>
+      <View
+        style={[
+          styles.container,
+          isMobile && styles.containerMobile,
+          pal.view,
+          pal.border,
+        ]}>
+        <ComposePost
+          replyTo={replyTo}
+          quote={quote}
+          onPost={onPost}
+          onClose={onClose}
+          mention={mention}
+        />
       </View>
-    )
-  },
-)
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   mask: {

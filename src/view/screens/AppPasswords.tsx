@@ -19,7 +19,7 @@ import {CenteredView} from 'view/com/util/Views'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function AppPasswordsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const {screen} = useAnalytics()
