@@ -23,7 +23,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from 'lib/icons'
 
 const HEADER_OFFSET_MOBILE = 78
-const HEADER_OFFSET_DESKTOP = 50
+const HEADER_OFFSET_TABLET = 50
+const HEADER_OFFSET_DESKTOP = 49
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -154,11 +155,15 @@ const FeedPage = observer(function FeedPageImpl({
   renderEmptyState?: () => JSX.Element
 }) {
   const store = useStores()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTablet} = useWebMediaQueries()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
   const {screen, track} = useAnalytics()
   const [headerOffset, setHeaderOffset] = React.useState(
-    isMobile ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP,
+    isMobile
+      ? HEADER_OFFSET_MOBILE
+      : isTablet
+      ? HEADER_OFFSET_TABLET
+      : HEADER_OFFSET_DESKTOP,
   )
   const scrollElRef = React.useRef<FlatList>(null)
   const {appState} = useAppState({
@@ -205,8 +210,14 @@ const FeedPage = observer(function FeedPageImpl({
 
   // listens for resize events
   React.useEffect(() => {
-    setHeaderOffset(isMobile ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP)
-  }, [isMobile])
+    setHeaderOffset(
+      isMobile
+        ? HEADER_OFFSET_MOBILE
+        : isTablet
+        ? HEADER_OFFSET_TABLET
+        : HEADER_OFFSET_DESKTOP,
+    )
+  }, [isMobile, isTablet])
 
   // fires when page within screen is activated/deactivated
   // - check for latest

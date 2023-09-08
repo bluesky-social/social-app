@@ -19,7 +19,7 @@ export const LoadLatestBtn = ({
   minimalShellMode?: boolean
 }) => {
   const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isDesktop} = useWebMediaQueries()
   if (isMobile) {
     return (
       <LoadLatestBtnMobile
@@ -28,6 +28,9 @@ export const LoadLatestBtn = ({
         showIndicator={showIndicator}
       />
     )
+  }
+  if (isDesktop) {
+    return null
   }
   return (
     <>
