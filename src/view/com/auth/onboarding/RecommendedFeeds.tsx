@@ -147,6 +147,10 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
               keyExtractor={item => item.uri}
               style={{flex: 1}}
             />
+          ) : isLoading ? (
+            <View>
+              <ActivityIndicator size="large" />
+            </View>
           ) : (
             <ErrorMessage message="Failed to load recommended feeds" />
           )}
