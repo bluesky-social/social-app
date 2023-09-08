@@ -1,4 +1,4 @@
-import React, {ReactNode, createContext, useContext, useMemo} from 'react'
+import React, {ReactNode, createContext, useContext} from 'react'
 import {
   TextStyle,
   useColorScheme,
@@ -111,17 +111,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     )
   }, [colorSchemeFromRN])
 
-  const value = useMemo(
-    () =>
-      theme === 'system'
-        ? nativeColorScheme === 'dark'
-          ? darkTheme
-          : defaultTheme
-        : theme === 'dark'
+  const value =
+    theme === 'system'
+      ? nativeColorScheme === 'dark'
         ? darkTheme
-        : defaultTheme,
-    [theme, nativeColorScheme],
-  )
+        : defaultTheme
+      : theme === 'dark'
+      ? darkTheme
+      : defaultTheme
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
