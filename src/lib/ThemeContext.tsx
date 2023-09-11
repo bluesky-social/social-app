@@ -1,5 +1,6 @@
 import React, {ReactNode, createContext, useContext} from 'react'
 import {
+  AppState,
   TextStyle,
   useColorScheme,
   ViewStyle,
@@ -98,17 +99,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const colorSchemeFromRN = useColorScheme()
   const [nativeColorScheme, setNativeColorScheme] =
     React.useState<ColorSchemeName>(colorSchemeFromRN)
-  const nativeColorSchemeChangeTimeout = React.useRef<NodeJS.Timeout | null>(
-    null,
-  )
 
   React.useEffect(() => {
-    if (nativeColorSchemeChangeTimeout.current)
-      clearTimeout(nativeColorSchemeChangeTimeout.current)
-    nativeColorSchemeChangeTimeout.current = setTimeout(
-      () => setNativeColorScheme(colorSchemeFromRN),
-      1000,
-    )
+    const subscription = AppState.addEventListener('change', state => {
+      const isActive = state === 'active'
+
+      if (!isActive) return
+
+      setNativeColorScheme(colorSchemeFromRN)
+    })
+    return () => subscription.remove()
   }, [colorSchemeFromRN])
 
   const value =
