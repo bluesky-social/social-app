@@ -7,6 +7,7 @@ import {
   AppBskyGraphListitem,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import chunk from 'lodash.chunk'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
@@ -211,12 +212,17 @@ export class ListModel {
         rkey: urip.rkey,
       }
     }
-    await this.rootStore.agent.com.atproto.repo.applyWrites({
-      repo: this.rootStore.me.did,
-      writes: [createDel(this.uri)].concat(
-        records.map(record => createDel(record.uri)),
-      ),
-    })
+    const writes = records
+      .map(record => createDel(record.uri))
+      .concat([createDel(this.uri)])
+
+    // apply in chunks
+    for (const writesChunk of chunk(writes, 10)) {
+      await this.rootStore.agent.com.atproto.repo.applyWrites({
+        repo: this.rootStore.me.did,
+        writes: writesChunk,
+      })
+    }
 
     this.rootStore.emitListDeleted(this.uri)
   }
