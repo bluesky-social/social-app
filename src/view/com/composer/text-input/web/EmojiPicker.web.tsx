@@ -58,21 +58,27 @@ export function EmojiPicker({close}: {close: () => void}) {
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={close} accessibilityViewIsModal>
       <View style={styles.mask}>
-        <View
-          style={[
-            styles.picker,
-            {
-              paddingTop: noPadding ? 0 : reducedPadding ? 150 : 325,
-              display: noPicker ? 'none' : 'flex',
-            },
-          ]}>
-          <Picker
-            // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
-            data={window.emojiMartData}
-            onEmojiSelect={onInsert}
-            autoFocus={false}
-          />
-        </View>
+        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+        <TouchableWithoutFeedback
+          onPress={e => {
+            e.stopPropagation() // prevent event from bubbling up to the mask
+          }}>
+          <View
+            style={[
+              styles.picker,
+              {
+                paddingTop: noPadding ? 0 : reducedPadding ? 150 : 325,
+                display: noPicker ? 'none' : 'flex',
+              },
+            ]}>
+            <Picker
+              // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
+              data={window.emojiMartData}
+              onEmojiSelect={onInsert}
+              autoFocus={false}
+            />
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </TouchableWithoutFeedback>
   )
