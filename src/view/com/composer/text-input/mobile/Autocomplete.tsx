@@ -93,7 +93,7 @@ export const Autocomplete = observer(function AutocompleteImpl({
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: -54,
+    marginLeft: -50, // Composer avatar width
     top: 10,
     borderTopWidth: 1,
   },

@@ -14,6 +14,7 @@ import {ScreenEvent, TrackEvent} from './types'
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
   trackAppLifecycleEvents: false,
+  proxy: 'https://api.events.bsky.app/v1',
 })
 
 export const track = segmentClient?.track?.bind?.(segmentClient) as TrackEvent

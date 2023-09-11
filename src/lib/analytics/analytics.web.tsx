@@ -15,7 +15,7 @@ const segmentClient = createClient(
   {
     integrations: {
       'Segment.io': {
-        apiHost: 'api.evt.bsky.app/v1',
+        apiHost: 'api.events.bsky.app/v1',
       },
     },
   },
