@@ -38,6 +38,7 @@ import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {Link} from '../util/Link'
 
 interface Props {
   view: ProfileModel
@@ -460,7 +461,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         {!blockHide && (
           <>
             <View style={styles.metricsLine}>
-              <TouchableOpacity
+              <Link
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
                 onPress={onPressFollowers}
@@ -473,8 +474,8 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 <Text type="md" style={[pal.textLight]}>
                   {pluralizedFollowers}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </Link>
+              <Link
                 testID="profileHeaderFollowsButton"
                 style={[s.flexRow, s.mr10]}
                 onPress={onPressFollows}
@@ -487,7 +488,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 <Text type="md" style={[pal.textLight]}>
                   following
                 </Text>
-              </TouchableOpacity>
+              </Link>
               <Text type="md" style={[s.bold, pal.text]}>
                 {formatCount(view.postsCount)}{' '}
                 <Text type="md" style={[pal.textLight]}>
