@@ -3,6 +3,7 @@ import {runInAction} from 'mobx'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  Pressable,
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
@@ -47,6 +48,10 @@ const CHILD_SPINNER = {
   _reactKey: '__child_spinner__',
   _isHighlightedPost: false,
 }
+const LOAD_MORE = {
+  _reactKey: '__load_more__',
+  _isHighlightedPost: false,
+}
 const BOTTOM_COMPONENT = {
   _reactKey: '__bottom_component__',
   _isHighlightedPost: false,
@@ -74,10 +79,14 @@ export const PostThread = observer(function PostThread({
   const ref = useRef<FlatList>(null)
   const hasScrolledIntoView = useRef<boolean>(false)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [maxVisible, setMaxVisible] = React.useState(100)
   const navigation = useNavigation<NavigationProp>()
   const posts = React.useMemo(() => {
     if (view.thread) {
-      const arr = [TOP_COMPONENT].concat(Array.from(flattenThread(view.thread)))
+      let arr = [TOP_COMPONENT].concat(Array.from(flattenThread(view.thread)))
+      if (arr.length > maxVisible) {
+        arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
+      }
       if (view.isLoadingFromCache) {
         if (view.thread?.postRecord?.reply) {
           arr.unshift(PARENT_SPINNER)
@@ -89,7 +98,7 @@ export const PostThread = observer(function PostThread({
       return arr
     }
     return []
-  }, [view.isLoadingFromCache, view.thread])
+  }, [view.isLoadingFromCache, view.thread, maxVisible])
   useSetTitle(
     view.thread?.postRecord &&
       `${sanitizeDisplayName(
@@ -178,7 +187,7 @@ export const PostThread = observer(function PostThread({
         return <ComposePrompt onPressCompose={onPressReply} />
       } else if (item === DELETED) {
         return (
-          <View style={[pal.border, pal.viewLight, styles.missingItem]}>
+          <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
               Deleted post.
             </Text>
@@ -186,11 +195,29 @@ export const PostThread = observer(function PostThread({
         )
       } else if (item === BLOCKED) {
         return (
-          <View style={[pal.border, pal.viewLight, styles.missingItem]}>
+          <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
               Blocked post.
             </Text>
           </View>
+        )
+      } else if (item === LOAD_MORE) {
+        return (
+          <Pressable
+            onPress={() => setMaxVisible(n => n + 50)}
+            style={[pal.border, pal.view, styles.itemContainer]}
+            accessibilityLabel="Load more posts"
+            accessibilityHint="">
+            <View
+              style={[
+                pal.viewLight,
+                {paddingHorizontal: 18, paddingVertical: 14, borderRadius: 6},
+              ]}>
+              <Text type="lg-medium" style={pal.text}>
+                Load more posts
+              </Text>
+            </View>
+          </Pressable>
         )
       } else if (item === BOTTOM_COMPONENT) {
         // HACK
@@ -373,8 +400,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 6,
   },
-  missingItem: {
-    borderTop: 1,
+  itemContainer: {
+    borderTopWidth: 1,
     paddingHorizontal: 18,
     paddingVertical: 18,
   },
