@@ -30,7 +30,7 @@ import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 
-export const FeedItem = observer(function ({
+export const FeedItem = observer(function FeedItemImpl({
   item,
   isThreadChild,
   isThreadLastChild,
@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 15,
     cursor: 'pointer',
+    overflow: 'hidden',
   },
   outerSmallTop: {
     borderTopWidth: 0,

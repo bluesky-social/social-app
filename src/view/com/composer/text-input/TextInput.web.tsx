@@ -37,135 +37,130 @@ interface TextInputProps {
 
 export const textInputWebEmitter = new EventEmitter()
 
-export const TextInput = React.forwardRef(
-  (
+export const TextInput = React.forwardRef(function TextInputImpl(
+  {
+    richtext,
+    placeholder,
+    suggestedLinks,
+    autocompleteView,
+    setRichText,
+    onPhotoPasted,
+    onPressPublish,
+    onSuggestedLinksChanged,
+  }: // onError, TODO
+  TextInputProps,
+  ref,
+) {
+  const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('publish', onPressPublish)
+    return () => {
+      textInputWebEmitter.removeListener('publish', onPressPublish)
+    }
+  }, [onPressPublish])
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+    return () => {
+      textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+    }
+  }, [onPhotoPasted])
+
+  const editor = useEditor(
     {
-      richtext,
-      placeholder,
-      suggestedLinks,
-      autocompleteView,
-      setRichText,
-      onPhotoPasted,
-      onPressPublish,
-      onSuggestedLinksChanged,
-    }: // onError, TODO
-    TextInputProps,
-    ref,
-  ) => {
-    const modeClass = useColorSchemeStyle(
-      'ProseMirror-light',
-      'ProseMirror-dark',
-    )
-
-    React.useEffect(() => {
-      textInputWebEmitter.addListener('publish', onPressPublish)
-      return () => {
-        textInputWebEmitter.removeListener('publish', onPressPublish)
-      }
-    }, [onPressPublish])
-    React.useEffect(() => {
-      textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
-      return () => {
-        textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
-      }
-    }, [onPhotoPasted])
-
-    const editor = useEditor(
-      {
-        extensions: [
-          Document,
-          LinkDecorator,
-          Mention.configure({
-            HTMLAttributes: {
-              class: 'mention',
-            },
-            suggestion: createSuggestion({autocompleteView}),
-          }),
-          Paragraph,
-          Placeholder.configure({
-            placeholder,
-          }),
-          Text,
-          History,
-          Hardbreak,
-        ],
-        editorProps: {
-          attributes: {
-            class: modeClass,
+      extensions: [
+        Document,
+        LinkDecorator,
+        Mention.configure({
+          HTMLAttributes: {
+            class: 'mention',
           },
-          handlePaste: (_, event) => {
-            const items = event.clipboardData?.items
-
-            if (items === undefined) {
-              return
-            }
-
-            getImageFromUri(items, (uri: string) => {
-              textInputWebEmitter.emit('photo-pasted', uri)
-            })
-          },
-          handleKeyDown: (_, event) => {
-            if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
-              textInputWebEmitter.emit('publish')
-            }
-          },
+          suggestion: createSuggestion({autocompleteView}),
+        }),
+        Paragraph,
+        Placeholder.configure({
+          placeholder,
+        }),
+        Text,
+        History,
+        Hardbreak,
+      ],
+      editorProps: {
+        attributes: {
+          class: modeClass,
         },
-        content: textToEditorJson(richtext.text.toString()),
-        autofocus: 'end',
-        editable: true,
-        injectCSS: true,
-        onUpdate({editor: editorProp}) {
-          const json = editorProp.getJSON()
+        handlePaste: (_, event) => {
+          const items = event.clipboardData?.items
 
-          const newRt = new RichText({text: editorJsonToText(json).trim()})
-          newRt.detectFacetsWithoutResolution()
-          setRichText(newRt)
+          if (items === undefined) {
+            return
+          }
 
-          const set: Set<string> = new Set()
+          getImageFromUri(items, (uri: string) => {
+            textInputWebEmitter.emit('photo-pasted', uri)
+          })
+        },
+        handleKeyDown: (_, event) => {
+          if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
+            textInputWebEmitter.emit('publish')
+          }
+        },
+      },
+      content: textToEditorJson(richtext.text.toString()),
+      autofocus: 'end',
+      editable: true,
+      injectCSS: true,
+      onUpdate({editor: editorProp}) {
+        const json = editorProp.getJSON()
 
-          if (newRt.facets) {
-            for (const facet of newRt.facets) {
-              for (const feature of facet.features) {
-                if (AppBskyRichtextFacet.isLink(feature)) {
-                  set.add(feature.uri)
-                }
+        const newRt = new RichText({text: editorJsonToText(json).trim()})
+        newRt.detectFacetsWithoutResolution()
+        setRichText(newRt)
+
+        const set: Set<string> = new Set()
+
+        if (newRt.facets) {
+          for (const facet of newRt.facets) {
+            for (const feature of facet.features) {
+              if (AppBskyRichtextFacet.isLink(feature)) {
+                set.add(feature.uri)
               }
             }
           }
+        }
 
-          if (!isEqual(set, suggestedLinks)) {
-            onSuggestedLinksChanged(set)
-          }
-        },
+        if (!isEqual(set, suggestedLinks)) {
+          onSuggestedLinksChanged(set)
+        }
       },
-      [modeClass],
-    )
+    },
+    [modeClass],
+  )
 
-    const onEmojiInserted = React.useCallback(
-      (emoji: Emoji) => {
-        editor?.chain().focus().insertContent(emoji.native).run()
-      },
-      [editor],
-    )
-    React.useEffect(() => {
-      textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
-      return () => {
-        textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
-      }
-    }, [onEmojiInserted])
+  const onEmojiInserted = React.useCallback(
+    (emoji: Emoji) => {
+      editor?.chain().focus().insertContent(emoji.native).run()
+    },
+    [editor],
+  )
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
+    return () => {
+      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
+    }
+  }, [onEmojiInserted])
 
-    React.useImperativeHandle(ref, () => ({
-      focus: () => {}, // TODO
-      blur: () => {}, // TODO
-    }))
+  React.useImperativeHandle(ref, () => ({
+    focus: () => {}, // TODO
+    blur: () => {}, // TODO
+  }))
 
-    return (
-      <View style={styles.container}>
-        <EditorContent editor={editor} />
-      </View>
-    )
-  },
-)
+  return (
+    <View style={styles.container}>
+      <EditorContent editor={editor} />
+    </View>
+  )
+})
 
 function editorJsonToText(json: JSONContent): string {
   let text = ''

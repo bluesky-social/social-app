@@ -32,7 +32,7 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
-  observer(({route}: Props) => {
+  observer(function ProfileScreenImpl({route}: Props) {
     const store = useStores()
     const {screen, track} = useAnalytics()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)

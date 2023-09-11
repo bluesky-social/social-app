@@ -21,7 +21,11 @@ import {useStores} from 'state/index'
  * @field Birth date
  * @readonly Terms of service & privacy policy
  */
-export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
+export const Step2 = observer(function Step2Impl({
+  model,
+}: {
+  model: CreateAccountModel
+}) {
   const pal = usePalette('default')
   const store = useStores()
 
@@ -45,7 +49,6 @@ export const Step2 = observer(({model}: {model: CreateAccountModel}) => {
             value={model.inviteCode}
             editable
             onChange={model.setInviteCode}
-            accessibilityRole="button"
             accessibilityLabel="Invite code"
             accessibilityHint="Input invite code to proceed"
           />
@@ -143,7 +146,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 10,
   },
-
   dateInputButton: {
     borderWidth: 1,
     borderRadius: 6,

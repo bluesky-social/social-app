@@ -14,7 +14,11 @@ export interface FABProps
   icon: JSX.Element
 }
 
-export const FABInner = observer(({testID, icon, ...props}: FABProps) => {
+export const FABInner = observer(function FABInnerImpl({
+  testID,
+  icon,
+  ...props
+}: FABProps) {
   const {isTablet} = useWebMediaQueries()
   const store = useStores()
   const interp = useAnimatedValue(0)

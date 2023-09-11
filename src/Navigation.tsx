@@ -330,7 +330,7 @@ function NotificationsTabNavigator() {
   )
 }
 
-const MyProfileTabNavigator = observer(() => {
+const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   return (
@@ -360,7 +360,7 @@ const MyProfileTabNavigator = observer(() => {
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
-const FlatNavigator = observer(() => {
+const FlatNavigator = observer(function FlatNavigatorImpl() {
   const pal = usePalette('default')
   const unreadCountLabel = useStores().me.notifications.unreadCountLabel
   const title = (page: string) => bskyTitle(page, unreadCountLabel)

@@ -14,7 +14,11 @@ import {s} from 'lib/styles'
 
 export const snapPoints = [520, '100%']
 
-export const Component = observer(({did}: {did: string}) => {
+export const Component = observer(function ProfilePreviewImpl({
+  did,
+}: {
+  did: string
+}) {
   const store = useStores()
   const pal = usePalette('default')
   const [model] = useState(new ProfileModel(store, {actor: did}))

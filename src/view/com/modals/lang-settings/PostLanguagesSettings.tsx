@@ -13,7 +13,7 @@ import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 
 export const snapPoints = ['100%']
 
-export const Component = observer(() => {
+export const Component = observer(function PostLanguagesSettingsImpl() {
   const store = useStores()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()

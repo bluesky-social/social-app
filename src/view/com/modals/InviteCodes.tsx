@@ -79,50 +79,56 @@ export function Component({}: {}) {
   )
 }
 
-const InviteCode = observer(
-  ({testID, code, used}: {testID: string; code: string; used?: boolean}) => {
-    const pal = usePalette('default')
-    const store = useStores()
-    const {invitesAvailable} = store.me
+const InviteCode = observer(function InviteCodeImpl({
+  testID,
+  code,
+  used,
+}: {
+  testID: string
+  code: string
+  used?: boolean
+}) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const {invitesAvailable} = store.me
 
-    const onPress = React.useCallback(() => {
-      Clipboard.setString(code)
-      Toast.show('Copied to clipboard')
-      store.invitedUsers.setInviteCopied(code)
-    }, [store, code])
+  const onPress = React.useCallback(() => {
+    Clipboard.setString(code)
+    Toast.show('Copied to clipboard')
+    store.invitedUsers.setInviteCopied(code)
+  }, [store, code])
 
-    return (
-      <TouchableOpacity
-        testID={testID}
-        style={[styles.inviteCode, pal.border]}
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel={
-          invitesAvailable === 1
-            ? 'Invite codes: 1 available'
-            : `Invite codes: ${invitesAvailable} available`
-        }
-        accessibilityHint="Opens list of invite codes">
-        <Text
-          testID={`${testID}-code`}
-          type={used ? 'md' : 'md-bold'}
-          style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
-          {code}
-        </Text>
-        <View style={styles.flex1} />
-        {!used && store.invitedUsers.isInviteCopied(code) && (
-          <Text style={[pal.textLight, styles.codeCopied]}>Copied</Text>
-        )}
-        {!used && (
-          <FontAwesomeIcon
-            icon={['far', 'clone']}
-            style={pal.text as FontAwesomeIconStyle}
-          />
-        )}
-      </TouchableOpacity>
-    )
-  },
-)
+  return (
+    <TouchableOpacity
+      testID={testID}
+      style={[styles.inviteCode, pal.border]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={
+        invitesAvailable === 1
+          ? 'Invite codes: 1 available'
+          : `Invite codes: ${invitesAvailable} available`
+      }
+      accessibilityHint="Opens list of invite codes">
+      <Text
+        testID={`${testID}-code`}
+        type={used ? 'md' : 'md-bold'}
+        style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
+        {code}
+      </Text>
+      <View style={styles.flex1} />
+      {!used && store.invitedUsers.isInviteCopied(code) && (
+        <Text style={[pal.textLight, styles.codeCopied]}>Copied</Text>
+      )}
+      {!used && (
+        <FontAwesomeIcon
+          icon={['far', 'clone']}
+          style={pal.text as FontAwesomeIconStyle}
+        />
+      )}
+    </TouchableOpacity>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

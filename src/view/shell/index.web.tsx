@@ -17,7 +17,7 @@ import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 
-const ShellInner = observer(() => {
+const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
@@ -71,7 +71,7 @@ const ShellInner = observer(() => {
   )
 })
 
-export const Shell: React.FC = observer(() => {
+export const Shell: React.FC = observer(function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <View style={[s.hContentRegion, pageBg]}>

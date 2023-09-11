@@ -42,100 +42,98 @@ export const ViewSelector = React.forwardRef<
     onRefresh?: () => void
     onEndReached?: (info: {distanceFromEnd: number}) => void
   }
->(
-  (
-    {
-      sections,
-      items,
-      refreshing,
-      renderHeader,
-      renderItem,
-      ListFooterComponent,
-      onSelectView,
-      onScroll,
-      onRefresh,
-      onEndReached,
-    },
-    ref,
-  ) => {
-    const pal = usePalette('default')
-    const [selectedIndex, setSelectedIndex] = useState<number>(0)
-    const flatListRef = React.useRef<FlatList>(null)
-
-    // events
-    // =
-
-    const keyExtractor = React.useCallback((item: any) => item._reactKey, [])
-
-    const onPressSelection = React.useCallback(
-      (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
-      [setSelectedIndex, sections],
-    )
-    useEffect(() => {
-      onSelectView?.(selectedIndex)
-    }, [selectedIndex, onSelectView])
-
-    React.useImperativeHandle(ref, () => ({
-      scrollToTop: () => {
-        flatListRef.current?.scrollToOffset({offset: 0})
-      },
-    }))
-
-    // rendering
-    // =
-
-    const renderItemInternal = React.useCallback(
-      ({item}: {item: any}) => {
-        if (item === HEADER_ITEM) {
-          if (renderHeader) {
-            return renderHeader()
-          }
-          return <View />
-        } else if (item === SELECTOR_ITEM) {
-          return (
-            <Selector
-              items={sections}
-              selectedIndex={selectedIndex}
-              onSelect={onPressSelection}
-            />
-          )
-        } else {
-          return renderItem(item)
-        }
-      },
-      [sections, selectedIndex, onPressSelection, renderHeader, renderItem],
-    )
-
-    const data = React.useMemo(
-      () => [HEADER_ITEM, SELECTOR_ITEM, ...items],
-      [items],
-    )
-    return (
-      <FlatList
-        ref={flatListRef}
-        data={data}
-        keyExtractor={keyExtractor}
-        renderItem={renderItemInternal}
-        ListFooterComponent={ListFooterComponent}
-        // NOTE sticky header disabled on android due to major performance issues -prf
-        stickyHeaderIndices={isAndroid ? undefined : STICKY_HEADER_INDICES}
-        onScroll={onScroll}
-        onEndReached={onEndReached}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing!}
-            onRefresh={onRefresh}
-            tintColor={pal.colors.text}
-          />
-        }
-        onEndReachedThreshold={0.6}
-        contentContainerStyle={s.contentContainer}
-        removeClippedSubviews={true}
-        scrollIndicatorInsets={{right: 1}} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/bluesky-social/social-app/pull/464
-      />
-    )
+>(function ViewSelectorImpl(
+  {
+    sections,
+    items,
+    refreshing,
+    renderHeader,
+    renderItem,
+    ListFooterComponent,
+    onSelectView,
+    onScroll,
+    onRefresh,
+    onEndReached,
   },
-)
+  ref,
+) {
+  const pal = usePalette('default')
+  const [selectedIndex, setSelectedIndex] = useState<number>(0)
+  const flatListRef = React.useRef<FlatList>(null)
+
+  // events
+  // =
+
+  const keyExtractor = React.useCallback((item: any) => item._reactKey, [])
+
+  const onPressSelection = React.useCallback(
+    (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
+    [setSelectedIndex, sections],
+  )
+  useEffect(() => {
+    onSelectView?.(selectedIndex)
+  }, [selectedIndex, onSelectView])
+
+  React.useImperativeHandle(ref, () => ({
+    scrollToTop: () => {
+      flatListRef.current?.scrollToOffset({offset: 0})
+    },
+  }))
+
+  // rendering
+  // =
+
+  const renderItemInternal = React.useCallback(
+    ({item}: {item: any}) => {
+      if (item === HEADER_ITEM) {
+        if (renderHeader) {
+          return renderHeader()
+        }
+        return <View />
+      } else if (item === SELECTOR_ITEM) {
+        return (
+          <Selector
+            items={sections}
+            selectedIndex={selectedIndex}
+            onSelect={onPressSelection}
+          />
+        )
+      } else {
+        return renderItem(item)
+      }
+    },
+    [sections, selectedIndex, onPressSelection, renderHeader, renderItem],
+  )
+
+  const data = React.useMemo(
+    () => [HEADER_ITEM, SELECTOR_ITEM, ...items],
+    [items],
+  )
+  return (
+    <FlatList
+      ref={flatListRef}
+      data={data}
+      keyExtractor={keyExtractor}
+      renderItem={renderItemInternal}
+      ListFooterComponent={ListFooterComponent}
+      // NOTE sticky header disabled on android due to major performance issues -prf
+      stickyHeaderIndices={isAndroid ? undefined : STICKY_HEADER_INDICES}
+      onScroll={onScroll}
+      onEndReached={onEndReached}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing!}
+          onRefresh={onRefresh}
+          tintColor={pal.colors.text}
+        />
+      }
+      onEndReachedThreshold={0.6}
+      contentContainerStyle={s.contentContainer}
+      removeClippedSubviews={true}
+      scrollIndicatorInsets={{right: 1}} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/bluesky-social/social-app/pull/464
+    />
+  )
+})
 
 export function Selector({
   selectedIndex,

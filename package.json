@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
-    "prebuild": "expo prebuild",
+    "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -181,6 +181,7 @@
     "eslint": "^8.19.0",
     "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-ft-flow": "^2.0.3",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-native-a11y": "^3.3.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.3",
@@ -252,6 +253,6 @@
     ]
   },
   "lint-staged": {
-    "*": "yarn eslint --ext .js,.jsx,.ts,.tsx --fix"
+    "*{.js,.jsx,.ts,.tsx}": "yarn eslint --fix"
   }
 }

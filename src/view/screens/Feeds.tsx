@@ -25,7 +25,7 @@ const MOBILE_HEADER_OFFSET = 40
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
-  observer<Props>(({}: Props) => {
+  observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const {isMobile} = useWebMediaQueries()

@@ -28,7 +28,7 @@ const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function HomeScreenImpl({}: Props) {
     const store = useStores()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
@@ -142,152 +142,141 @@ export const HomeScreen = withAuthRequired(
   }),
 )
 
-const FeedPage = observer(
-  ({
-    testID,
-    isPageFocused,
-    feed,
-    renderEmptyState,
-  }: {
-    testID?: string
-    feed: PostsFeedModel
-    isPageFocused: boolean
-    renderEmptyState?: () => JSX.Element
-  }) => {
-    const store = useStores()
-    const {isMobile} = useWebMediaQueries()
-    const [onMainScroll, isScrolledDown, resetMainScroll] =
-      useOnMainScroll(store)
-    const {screen, track} = useAnalytics()
-    const [headerOffset, setHeaderOffset] = React.useState(
-      isMobile ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP,
-    )
-    const scrollElRef = React.useRef<FlatList>(null)
-    const {appState} = useAppState({
-      onForeground: () => doPoll(true),
-    })
-    const isScreenFocused = useIsFocused()
+const FeedPage = observer(function FeedPageImpl({
+  testID,
+  isPageFocused,
+  feed,
+  renderEmptyState,
+}: {
+  testID?: string
+  feed: PostsFeedModel
+  isPageFocused: boolean
+  renderEmptyState?: () => JSX.Element
+}) {
+  const store = useStores()
+  const {isMobile} = useWebMediaQueries()
+  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
+  const {screen, track} = useAnalytics()
+  const [headerOffset, setHeaderOffset] = React.useState(
+    isMobile ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP,
+  )
+  const scrollElRef = React.useRef<FlatList>(null)
+  const {appState} = useAppState({
+    onForeground: () => doPoll(true),
+  })
+  const isScreenFocused = useIsFocused()
 
-    React.useEffect(() => {
-      // called on first load
-      if (!feed.hasLoaded && isPageFocused) {
-        feed.setup()
-      }
-    }, [isPageFocused, feed])
+  React.useEffect(() => {
+    // called on first load
+    if (!feed.hasLoaded && isPageFocused) {
+      feed.setup()
+    }
+  }, [isPageFocused, feed])
 
-    const doPoll = React.useCallback(
-      (knownActive = false) => {
-        if (
-          (!knownActive && appState !== 'active') ||
-          !isScreenFocused ||
-          !isPageFocused
-        ) {
-          return
-        }
-        if (feed.isLoading) {
-          return
-        }
-        store.log.debug('HomeScreen: Polling for new posts')
-        feed.checkForLatest()
-      },
-      [appState, isScreenFocused, isPageFocused, store, feed],
-    )
-
-    const scrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerOffset})
-      resetMainScroll()
-    }, [headerOffset, resetMainScroll])
-
-    const onSoftReset = React.useCallback(() => {
-      if (isPageFocused) {
-        scrollToTop()
-        feed.refresh()
-      }
-    }, [isPageFocused, scrollToTop, feed])
-
-    // listens for resize events
-    React.useEffect(() => {
-      setHeaderOffset(isMobile ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP)
-    }, [isMobile])
-
-    // fires when page within screen is activated/deactivated
-    // - check for latest
-    React.useEffect(() => {
-      if (!isPageFocused || !isScreenFocused) {
+  const doPoll = React.useCallback(
+    (knownActive = false) => {
+      if (
+        (!knownActive && appState !== 'active') ||
+        !isScreenFocused ||
+        !isPageFocused
+      ) {
         return
       }
-
-      const softResetSub = store.onScreenSoftReset(onSoftReset)
-      const feedCleanup = feed.registerListeners()
-      const pollInterval = setInterval(doPoll, POLL_FREQ)
-
-      screen('Feed')
-      store.log.debug('HomeScreen: Updating feed')
+      if (feed.isLoading) {
+        return
+      }
+      store.log.debug('HomeScreen: Polling for new posts')
       feed.checkForLatest()
-      if (feed.hasContent) {
-        feed.update()
-      }
+    },
+    [appState, isScreenFocused, isPageFocused, store, feed],
+  )
 
-      return () => {
-        clearInterval(pollInterval)
-        softResetSub.remove()
-        feedCleanup()
-      }
-    }, [
-      store,
-      doPoll,
-      onSoftReset,
-      screen,
-      feed,
-      isPageFocused,
-      isScreenFocused,
-    ])
+  const scrollToTop = React.useCallback(() => {
+    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+    resetMainScroll()
+  }, [headerOffset, resetMainScroll])
 
-    const onPressCompose = React.useCallback(() => {
-      track('HomeScreen:PressCompose')
-      store.shell.openComposer({})
-    }, [store, track])
-
-    const onPressTryAgain = React.useCallback(() => {
-      feed.refresh()
-    }, [feed])
-
-    const onPressLoadLatest = React.useCallback(() => {
+  const onSoftReset = React.useCallback(() => {
+    if (isPageFocused) {
       scrollToTop()
       feed.refresh()
-    }, [feed, scrollToTop])
+    }
+  }, [isPageFocused, scrollToTop, feed])
 
-    const hasNew = feed.hasNewLatest && !feed.isRefreshing
-    return (
-      <View testID={testID} style={s.h100pct}>
-        <Feed
-          testID={testID ? `${testID}-feed` : undefined}
-          key="default"
-          feed={feed}
-          scrollElRef={scrollElRef}
-          onPressTryAgain={onPressTryAgain}
-          onScroll={onMainScroll}
-          scrollEventThrottle={100}
-          renderEmptyState={renderEmptyState}
-          headerOffset={headerOffset}
+  // listens for resize events
+  React.useEffect(() => {
+    setHeaderOffset(isMobile ? HEADER_OFFSET_MOBILE : HEADER_OFFSET_DESKTOP)
+  }, [isMobile])
+
+  // fires when page within screen is activated/deactivated
+  // - check for latest
+  React.useEffect(() => {
+    if (!isPageFocused || !isScreenFocused) {
+      return
+    }
+
+    const softResetSub = store.onScreenSoftReset(onSoftReset)
+    const feedCleanup = feed.registerListeners()
+    const pollInterval = setInterval(doPoll, POLL_FREQ)
+
+    screen('Feed')
+    store.log.debug('HomeScreen: Updating feed')
+    feed.checkForLatest()
+    if (feed.hasContent) {
+      feed.update()
+    }
+
+    return () => {
+      clearInterval(pollInterval)
+      softResetSub.remove()
+      feedCleanup()
+    }
+  }, [store, doPoll, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
+
+  const onPressCompose = React.useCallback(() => {
+    track('HomeScreen:PressCompose')
+    store.shell.openComposer({})
+  }, [store, track])
+
+  const onPressTryAgain = React.useCallback(() => {
+    feed.refresh()
+  }, [feed])
+
+  const onPressLoadLatest = React.useCallback(() => {
+    scrollToTop()
+    feed.refresh()
+  }, [feed, scrollToTop])
+
+  const hasNew = feed.hasNewLatest && !feed.isRefreshing
+  return (
+    <View testID={testID} style={s.h100pct}>
+      <Feed
+        testID={testID ? `${testID}-feed` : undefined}
+        key="default"
+        feed={feed}
+        scrollElRef={scrollElRef}
+        onPressTryAgain={onPressTryAgain}
+        onScroll={onMainScroll}
+        scrollEventThrottle={100}
+        renderEmptyState={renderEmptyState}
+        headerOffset={headerOffset}
+      />
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label="Load new posts"
+          showIndicator={hasNew}
+          minimalShellMode={store.shell.minimalShellMode}
         />
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label="Load new posts"
-            showIndicator={hasNew}
-            minimalShellMode={store.shell.minimalShellMode}
-          />
-        )}
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel="New post"
-          accessibilityHint=""
-        />
-      </View>
-    )
-  },
-)
+      )}
+      <FAB
+        testID="composeFAB"
+        onPress={onPressCompose}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel="New post"
+        accessibilityHint=""
+      />
+    </View>
+  )
+})

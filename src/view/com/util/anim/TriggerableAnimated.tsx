@@ -26,7 +26,7 @@ type PropsInner = TriggerableAnimatedProps & {
 export const TriggerableAnimated = React.forwardRef<
   TriggerableAnimatedRef,
   TriggerableAnimatedProps
->(({children, ...props}, ref) => {
+>(function TriggerableAnimatedImpl({children, ...props}, ref) {
   const [anim, setAnim] = React.useState<TriggeredAnimation | undefined>(
     undefined,
   )

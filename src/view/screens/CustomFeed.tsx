@@ -42,7 +42,7 @@ import {NavigationProp} from 'lib/routes/types'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 
 export const CustomFeedScreen = withAuthRequired(
-  observer((props: Props) => {
+  observer(function CustomFeedScreenImpl(props: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
@@ -119,7 +119,10 @@ export const CustomFeedScreen = withAuthRequired(
 )
 
 export const CustomFeedScreenInner = observer(
-  ({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
+  function CustomFeedScreenInnerImpl({
+    route,
+    feedOwnerDid,
+  }: Props & {feedOwnerDid: string}) {
     const store = useStores()
     const pal = usePalette('default')
     const {isTabletOrDesktop} = useWebMediaQueries()

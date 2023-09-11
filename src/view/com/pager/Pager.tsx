@@ -24,7 +24,7 @@ interface Props {
   testID?: string
 }
 export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
-  (
+  function PagerImpl(
     {
       children,
       tabBarPosition = 'top',
@@ -34,7 +34,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       testID,
     }: React.PropsWithChildren<Props>,
     ref,
-  ) => {
+  ) {
     const [selectedPage, setSelectedPage] = React.useState(0)
     const pagerView = React.useRef<PagerView>(null)
 
