@@ -118,6 +118,7 @@ export class CreateAccountModel {
         password: this.password,
         inviteCode: this.inviteCode,
       })
+      /* dont await */ this.rootStore.preferences.setBirthDate(this.birthDate)
       track('Create Account')
     } catch (e: any) {
       this.rootStore.onboarding.skip() // undo starting the onboard

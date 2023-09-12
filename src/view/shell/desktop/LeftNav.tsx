@@ -311,14 +311,14 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         icon={
           <HandIcon
             strokeWidth={5.5}
-            style={pal.text as FontAwesomeIconStyle}
+            style={pal.text}
             size={isDesktop ? 24 : 27}
           />
         }
         iconFilled={
           <FontAwesomeIcon
             icon="hand"
-            style={pal.text as FontAwesomeIconStyle}
+            style={pal.text}
             size={isDesktop ? 20 : 26}
           />
         }
