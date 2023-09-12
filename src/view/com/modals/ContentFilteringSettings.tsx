@@ -128,7 +128,7 @@ const AdultContentEnabledPref = observer(
             </Text>
             <Button type="primary" label="Set Age" onPress={onSetAge} />
           </View>
-        ) : store.preferences.userAge >= 18 ? (
+        ) : (store.preferences.userAge || 0) >= 18 ? (
           <ToggleButton
             type="default-light"
             label="Enable Adult Content"

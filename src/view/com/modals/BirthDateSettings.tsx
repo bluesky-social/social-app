@@ -14,6 +14,7 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError} from 'lib/strings/errors'
 
 export const snapPoints = ['50%']
 
@@ -34,7 +35,7 @@ export const Component = observer(function Component({}: {}) {
       await store.preferences.setBirthDate(date)
       store.shell.closeModal()
     } catch (e) {
-      setError(e.toString())
+      setError(cleanError(String(e)))
     } finally {
       setIsProcessing(false)
     }

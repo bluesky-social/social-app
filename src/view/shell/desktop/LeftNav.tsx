@@ -318,7 +318,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         iconFilled={
           <FontAwesomeIcon
             icon="hand"
-            style={pal.text}
+            style={pal.text as FontAwesomeIconStyle}
             size={isDesktop ? 20 : 26}
           />
         }
