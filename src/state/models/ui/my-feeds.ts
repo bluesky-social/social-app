@@ -52,7 +52,7 @@ export class MyFeedsUIModel {
   }
 
   get isRefreshing() {
-    return this.saved.isRefreshing
+    return !this.saved.isLoading && this.saved.isRefreshing
   }
 
   get isLoading() {
@@ -66,6 +66,14 @@ export class MyFeedsUIModel {
     if (!this.discovery.hasLoaded) {
       await this.discovery.refresh()
     }
+  }
+
+  async refresh() {
+    return Promise.all([this.saved.refresh(), this.discovery.refresh()])
+  }
+
+  async loadMore() {
+    return this.discovery.loadMore()
   }
 
   get items() {
