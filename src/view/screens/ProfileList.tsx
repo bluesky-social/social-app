@@ -97,9 +97,9 @@ export const ProfileListScreen = withAuthRequired(
     }, [store, list])
 
     const onPressShareList = React.useCallback(() => {
-      const url = toShareUrl(`/profile/${name}/lists/${rkey}`)
+      const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
       shareUrl(url)
-    }, [name, rkey])
+    }, [list.creatorDid, rkey])
 
     const renderEmptyState = React.useCallback(() => {
       return <EmptyState icon="users-slash" message="This list is empty!" />

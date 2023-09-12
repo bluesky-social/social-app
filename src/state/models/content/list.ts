@@ -103,6 +103,10 @@ export class ListModel {
     return this.list?.viewer?.muted
   }
 
+  get creatorDid() {
+    return this.list?.creator.did
+  }
+
   // public api
   // =
 
