@@ -21,6 +21,7 @@ export const router = new Router({
   CustomFeed: '/profile/:name/feed/:rkey',
   CustomFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
   Debug: '/sys/debug',
+  DesignSystem: '/sys/ds',
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
   PreferencesHomeFeed: '/settings/home-feed',

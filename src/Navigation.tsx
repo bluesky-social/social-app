@@ -68,6 +68,7 @@ import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
+import {DesignSystemScreen} from 'view/screens/DesignSystem'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -224,6 +225,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PreferencesHomeFeed"
         component={PreferencesHomeFeed}
         options={{title: title('Home Feed Preferences')}}
+      />
+      <Stack.Screen
+        name="DesignSystem"
+        component={DesignSystemScreen}
+        options={{title: title('Design System')}}
       />
     </>
   )

@@ -192,6 +192,10 @@ export const SettingsScreen = withAuthRequired(
       navigation.navigate('Debug')
     }, [navigation])
 
+    const onPressDesignSystem = React.useCallback(() => {
+      navigation.navigate('DesignSystem')
+    }, [navigation])
+
     const onPressSavedFeeds = React.useCallback(() => {
       navigation.navigate('SavedFeeds')
     }, [navigation])
@@ -562,6 +566,16 @@ export const SettingsScreen = withAuthRequired(
                 accessibilityLabel="Opens the storybook page">
                 <Text type="lg" style={pal.text}>
                   Storybook
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[pal.view, styles.linkCardNoIcon]}
+                onPress={onPressDesignSystem}
+                accessibilityRole="button"
+                accessibilityHint="Open storybook page"
+                accessibilityLabel="Opens the storybook page">
+                <Text type="lg" style={pal.text}>
+                  Design System
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
