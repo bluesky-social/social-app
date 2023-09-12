@@ -40,7 +40,6 @@ import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
 import {ModerationScreen} from './view/screens/Moderation'
 import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
-import {DiscoverFeedsScreen} from 'view/screens/DiscoverFeeds'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {ProfileScreen} from './view/screens/Profile'
@@ -112,11 +111,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ModerationBlockedAccounts"
         component={ModerationBlockedAccounts}
         options={{title: title('Blocked Accounts')}}
-      />
-      <Stack.Screen
-        name="DiscoverFeeds"
-        component={DiscoverFeedsScreen}
-        options={{title: title('Discover Feeds')}}
       />
       <Stack.Screen
         name="Settings"
