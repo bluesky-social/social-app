@@ -33,7 +33,6 @@ import {isNative} from 'platform/detection'
 import {FollowState} from 'state/models/cache/my-follows'
 import {shareUrl} from 'lib/sharing'
 import {formatCount} from '../util/numeric/format'
-import {navigate} from '../../../Navigation'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
@@ -153,21 +152,14 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     })
   }, [track, store, view, onRefreshAll])
 
-  const onPressFollowers = React.useCallback(() => {
-    track('ProfileHeader:FollowersButtonClicked')
-    navigate('ProfileFollowers', {
-      name: isInvalidHandle(view.handle) ? view.did : view.handle,
-    })
-    store.shell.closeAllActiveElements() // for when used in the profile preview modal
-  }, [track, view, store.shell])
-
-  const onPressFollows = React.useCallback(() => {
-    track('ProfileHeader:FollowsButtonClicked')
-    navigate('ProfileFollows', {
-      name: isInvalidHandle(view.handle) ? view.did : view.handle,
-    })
-    store.shell.closeAllActiveElements() // for when used in the profile preview modal
-  }, [track, view, store.shell])
+  const trackPress = React.useCallback(
+    (f: 'Followers' | 'Follows') => {
+      track(`ProfileHeader:${f}ButtonClicked`, {
+        handle: view.handle,
+      })
+    },
+    [track, view],
+  )
 
   const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
@@ -464,8 +456,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               <Link
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
-                onPress={onPressFollowers}
-                accessibilityRole="button"
+                href={makeProfileLink(view, 'followers')}
+                onPressOut={() => trackPress('Followers')}
+                asAnchor
                 accessibilityLabel={`${followers} ${pluralizedFollowers}`}
                 accessibilityHint={'Opens followers list'}>
                 <Text type="md" style={[s.bold, pal.text]}>
@@ -478,8 +471,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               <Link
                 testID="profileHeaderFollowsButton"
                 style={[s.flexRow, s.mr10]}
-                onPress={onPressFollows}
-                accessibilityRole="button"
+                href={makeProfileLink(view, 'follows')}
+                onPressOut={() => trackPress('Follows')}
+                asAnchor
                 accessibilityLabel={`${following} following`}
                 accessibilityHint={'Opens following list'}>
                 <Text type="md" style={[s.bold, pal.text]}>
