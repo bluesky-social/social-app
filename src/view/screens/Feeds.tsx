@@ -14,7 +14,7 @@ import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {PostFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {FeedFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
@@ -86,7 +86,7 @@ export const FeedsScreen = withAuthRequired(
     const renderItem = React.useCallback(
       ({item}: {item: MyFeedsItem}) => {
         if (item.type === 'loading') {
-          return <PostFeedLoadingPlaceholder />
+          return <FeedFeedLoadingPlaceholder />
         } else if (item.type === 'error') {
           return <ErrorMessage message={item.error} />
         } else if (item.type === 'saved-feeds-header') {
