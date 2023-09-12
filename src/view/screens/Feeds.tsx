@@ -1,86 +1,46 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import isEqual from 'lodash.isequal'
+import {StyleSheet, RefreshControl, View, Pressable} from 'react-native'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {FlatList} from 'view/com/util/Views'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {Link} from 'view/com/util/Link'
 import {NativeStackScreenProps, FeedsTabNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
-import {PostsMultiFeedModel} from 'state/models/feeds/multi-feed'
-import {MultiFeed} from 'view/com/posts/MultiFeed'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useTimer} from 'lib/hooks/useTimer'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
-
-const LOAD_NEW_PROMPT_TIME = 60e3 // 60 seconds
-const MOBILE_HEADER_OFFSET = 40
+import {CenteredView} from 'view/com/util/Views'
+import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
+import debounce from 'lodash.debounce'
+import {Text} from 'view/com/util/text/Text'
+import {FeedsDiscoveryModel} from 'state/models/discovery/feeds'
+import {FlatList} from 'view/com/util/Views'
+import {useFocusEffect} from '@react-navigation/native'
+import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {isMobile} = useWebMediaQueries()
-    const flatListRef = React.useRef<FlatList>(null)
-    const multifeed = React.useMemo<PostsMultiFeedModel>(
-      () => new PostsMultiFeedModel(store),
-      [store],
-    )
-    const [onMainScroll, isScrolledDown, resetMainScroll] =
-      useOnMainScroll(store)
-    const [loadPromptVisible, setLoadPromptVisible] = React.useState(false)
-    const [resetPromptTimer] = useTimer(LOAD_NEW_PROMPT_TIME, () => {
-      setLoadPromptVisible(true)
-    })
-
-    const onSoftReset = React.useCallback(() => {
-      flatListRef.current?.scrollToOffset({offset: 0})
-      multifeed.loadLatest()
-      resetPromptTimer()
-      setLoadPromptVisible(false)
-      resetMainScroll()
-    }, [
-      flatListRef,
-      resetMainScroll,
-      multifeed,
-      resetPromptTimer,
-      setLoadPromptVisible,
-    ])
+    const {isTabletOrDesktop} = useWebMediaQueries()
+    const feeds = React.useMemo(() => new FeedsDiscoveryModel(store), [store])
+    const savedFeeds = React.useMemo(() => store.me.savedFeeds, [store])
 
     useFocusEffect(
       React.useCallback(() => {
-        const softResetSub = store.onScreenSoftReset(onSoftReset)
-        const multifeedCleanup = multifeed.registerListeners()
-        const cleanup = () => {
-          softResetSub.remove()
-          multifeedCleanup()
-        }
-
         store.shell.setMinimalShellMode(false)
-        return cleanup
-      }, [store, multifeed, onSoftReset]),
+        if (!feeds.hasLoaded) {
+          feeds.refresh()
+        }
+        if (!savedFeeds.hasLoaded) {
+          savedFeeds.refresh()
+        }
+      }, [store.shell, feeds, savedFeeds]),
     )
-
-    React.useEffect(() => {
-      if (
-        isEqual(
-          multifeed.feedInfos.map(f => f.uri),
-          store.me.savedFeeds.all.map(f => f.uri),
-        )
-      ) {
-        // no changes
-        return
-      }
-      multifeed.refresh()
-    }, [multifeed, store.me.savedFeeds.all])
 
     const onPressCompose = React.useCallback(() => {
       store.shell.openComposer({})
@@ -99,30 +59,155 @@ export const FeedsScreen = withAuthRequired(
       )
     }, [pal])
 
-    return (
-      <View style={[pal.view, styles.container]}>
-        <MultiFeed
-          scrollElRef={flatListRef}
-          multifeed={multifeed}
-          onScroll={onMainScroll}
-          scrollEventThrottle={100}
-          headerOffset={isMobile ? MOBILE_HEADER_OFFSET : undefined}
+    // search stuff
+    const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
+    const [query, setQuery] = React.useState<string>('')
+    const debouncedSearchFeeds = React.useMemo(
+      () => debounce(q => feeds.search(q), 500), // debounce for 500ms
+      [feeds],
+    )
+    const onChangeQuery = React.useCallback(
+      (text: string) => {
+        setQuery(text)
+        if (text.length > 1) {
+          debouncedSearchFeeds(text)
+        } else {
+          feeds.refresh()
+        }
+      },
+      [debouncedSearchFeeds, feeds],
+    )
+    const onPressClearQuery = React.useCallback(() => {
+      setQuery('')
+      feeds.refresh()
+    }, [feeds])
+    const onPressCancelSearch = React.useCallback(() => {
+      setIsInputFocused(false)
+      setQuery('')
+      feeds.refresh()
+    }, [feeds])
+    const onSubmitQuery = React.useCallback(() => {
+      debouncedSearchFeeds(query)
+      debouncedSearchFeeds.flush()
+    }, [debouncedSearchFeeds, query])
+
+    const onRefresh = React.useCallback(() => {
+      feeds.refresh()
+    }, [feeds])
+
+    const renderListEmptyComponent = () => {
+      return (
+        <View style={styles.empty}>
+          <Text type="lg" style={pal.textLight}>
+            {feeds.isLoading
+              ? isTabletOrDesktop
+                ? 'Loading...'
+                : ''
+              : query
+              ? `No results found for "${query}"`
+              : `We can't find any feeds for some reason. This is probably an error - try refreshing!`}
+          </Text>
+        </View>
+      )
+    }
+
+    const renderItem = React.useCallback(
+      ({item}: {item: CustomFeedModel}) => (
+        <CustomFeed
+          key={item.data.uri}
+          item={item}
+          showSaveBtn
+          showDescription
+          showLikes
         />
-        {isMobile && (
-          <ViewHeader
-            title="My Feeds"
-            canGoBack={false}
-            hideOnScroll
-            renderButton={renderHeaderBtn}
+      ),
+      [],
+    )
+
+    const ListHeaderComponent = React.useCallback(() => {
+      return (
+        <>
+          {!savedFeeds.isEmpty ? (
+            <>
+              <Text style={[pal.text, styles.subHeading]}>Saved Feeds</Text>
+              {savedFeeds.top5.map(f => {
+                return (
+                  <CustomFeed
+                    key={f.data.uri}
+                    item={f}
+                    showSaveBtn
+                    style={styles.savedFeed}
+                  />
+                )
+              })}
+              <Pressable
+                accessibilityRole="button"
+                style={styles.loadMore}
+                onPress={() => {
+                  // TODO: expand to full list
+                }}>
+                <Text type="md-medium" style={[pal.text, pal.link]}>
+                  Load more...
+                </Text>
+              </Pressable>
+            </>
+          ) : null}
+
+          <Text style={[pal.text, styles.subHeading]}>Discover new Feeds</Text>
+          <HeaderWithInput
+            isInputFocused={isInputFocused}
+            query={query}
+            setIsInputFocused={setIsInputFocused}
+            onChangeQuery={onChangeQuery}
+            onPressClearQuery={onPressClearQuery}
+            onPressCancelSearch={onPressCancelSearch}
+            onSubmitQuery={onSubmitQuery}
+            showMenu={false}
           />
-        )}
-        {isScrolledDown || loadPromptVisible ? (
-          <LoadLatestBtn
-            onPress={onSoftReset}
-            label="Load latest posts"
-            showIndicator={loadPromptVisible}
-          />
-        ) : null}
+        </>
+      )
+    }, [
+      isInputFocused,
+      onChangeQuery,
+      onPressCancelSearch,
+      onPressClearQuery,
+      onSubmitQuery,
+      pal.link,
+      pal.text,
+      query,
+      savedFeeds.isEmpty,
+      savedFeeds.top5,
+    ])
+
+    return (
+      <CenteredView style={[pal.view, styles.container]}>
+        <ViewHeader
+          title="My Feeds"
+          canGoBack={false}
+          renderButton={renderHeaderBtn}
+          showBorder
+        />
+
+        <FlatList
+          ListHeaderComponent={ListHeaderComponent}
+          style={[!isTabletOrDesktop && s.flex1, styles.list]}
+          data={feeds.feeds}
+          keyExtractor={item => item.data.uri}
+          contentContainerStyle={styles.contentContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={feeds.isRefreshing}
+              onRefresh={onRefresh}
+              tintColor={pal.colors.text}
+              titleColor={pal.colors.text}
+            />
+          }
+          renderItem={renderItem}
+          initialNumToRender={10}
+          ListEmptyComponent={renderListEmptyComponent}
+          onEndReached={() => feeds.loadMore()}
+          extraData={feeds.isLoading}
+        />
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
@@ -131,7 +216,7 @@ export const FeedsScreen = withAuthRequired(
           accessibilityLabel="New post"
           accessibilityHint=""
         />
-      </View>
+      </CenteredView>
     )
   }),
 )
@@ -139,5 +224,28 @@ export const FeedsScreen = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  list: {
+    height: '100%',
+  },
+  contentContainer: {
+    paddingBottom: 100,
+  },
+  empty: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
+  subHeading: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    paddingLeft: 16,
+    paddingTop: 16,
+  },
+  savedFeed: {
+    borderTopWidth: 0,
+  },
+  loadMore: {
+    alignSelf: 'flex-end',
+    paddingRight: 16,
   },
 })

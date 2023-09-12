@@ -54,6 +54,10 @@ export class SavedFeedsModel {
     return [...this.pinned, ...this.unpinned]
   }
 
+  get top5() {
+    return this.all.slice(0, 5)
+  }
+
   get pinnedFeedNames() {
     return this.pinned.map(f => f.displayName)
   }
