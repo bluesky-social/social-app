@@ -121,24 +121,43 @@ export const FeedsScreen = withAuthRequired(
           )
         } else if (item.type === 'discover-feeds-header') {
           return (
-            <View
-              style={[
-                pal.view,
-                styles.header,
-                {marginTop: 16, paddingRight: 10},
-              ]}>
-              <Text type="title-lg" style={[pal.text, s.bold]}>
-                Discover{isMobile ? '' : ' new feeds'}
-              </Text>
-              <View style={{flex: 1, maxWidth: 250}}>
-                <SearchInput
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                />
+            <>
+              <View
+                style={[
+                  pal.view,
+                  styles.header,
+                  {
+                    marginTop: 16,
+                    paddingLeft: isMobile ? 12 : undefined,
+                    paddingRight: 10,
+                    paddingBottom: isMobile ? 6 : undefined,
+                  },
+                ]}>
+                <Text type="title-lg" style={[pal.text, s.bold]}>
+                  Discover new feeds
+                </Text>
+                {!isMobile && (
+                  <View style={{flex: 1, maxWidth: 250}}>
+                    <SearchInput
+                      query={query}
+                      onChangeQuery={onChangeQuery}
+                      onPressCancelSearch={onPressCancelSearch}
+                      onSubmitQuery={onSubmitQuery}
+                    />
+                  </View>
+                )}
               </View>
-            </View>
+              {isMobile && (
+                <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
+                  <SearchInput
+                    query={query}
+                    onChangeQuery={onChangeQuery}
+                    onPressCancelSearch={onPressCancelSearch}
+                    onSubmitQuery={onSubmitQuery}
+                  />
+                </View>
+              )}
+            </>
           )
         } else if (item.type === 'discover-feed') {
           return (
@@ -211,18 +230,22 @@ function SavedFeed({
   const pal = usePalette('default')
   const urip = new AtUri(uri)
   const href = `/profile/${urip.hostname}/feed/${urip.rkey}`
+  const {isMobile} = useWebMediaQueries()
   return (
     <Link
       testID={`saved-feed-${displayName}`}
       href={href}
-      style={[pal.border, styles.savedFeed]}
+      style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
       hoverStyle={pal.viewLight}
       accessibilityLabel={displayName}
       accessibilityHint=""
       asAnchor
       anchorNoUnderline>
       <UserAvatar type="algo" size={28} avatar={avatar} />
-      <Text type="lg-medium" style={pal.text} numberOfLines={1}>
+      <Text
+        type={isMobile ? 'lg' : 'lg-medium'}
+        style={pal.text}
+        numberOfLines={1}>
         {displayName}
       </Text>
     </Link>
@@ -256,5 +279,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     gap: 12,
     borderBottomWidth: 1,
+  },
+  savedFeedMobile: {
+    paddingVertical: 10,
   },
 })
