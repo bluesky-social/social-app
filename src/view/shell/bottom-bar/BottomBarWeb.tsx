@@ -18,6 +18,7 @@ import {
   SatelliteDishIcon,
   SatelliteDishIconSolid,
   UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
 import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
@@ -88,14 +89,17 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
           )
         }}
       </NavItem>
-      <NavItem routeName="Profile" href={makeProfileLink(store.me)}>
-        {() => (
-          <UserIcon
-            size={28}
-            strokeWidth={1.5}
-            style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-          />
-        )}
+      <NavItem routeName="MyProfile" href={makeProfileLink(store.me)}>
+        {({isActive}) => {
+          const Icon = isActive ? UserIconSolid : UserIcon
+          return (
+            <Icon
+              size={28}
+              strokeWidth={1.5}
+              style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+            />
+          )
+        }}
       </NavItem>
     </Animated.View>
   )
