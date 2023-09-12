@@ -213,7 +213,7 @@ export const FeedsScreen = withAuthRequired(
           }
           renderItem={renderItem}
           initialNumToRender={10}
-          onEndReached={() => myFeeds.discovery.loadMore()}
+          onEndReached={() => myFeeds.loadMore()}
           extraData={myFeeds.isLoading}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
@@ -237,7 +237,7 @@ function SavedFeed({
   displayName,
 }: {
   uri: string
-  avatar: string
+  avatar: string | undefined
   displayName: string
 }) {
   const pal = usePalette('default')

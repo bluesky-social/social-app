@@ -41,10 +41,11 @@ export type MyFeedsItem =
     }
 
 export class MyFeedsUIModel {
-  discovery = new FeedsDiscoveryModel(this.rootStore)
+  discovery: FeedsDiscoveryModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this)
+    this.discovery = new FeedsDiscoveryModel(this.rootStore)
   }
 
   get saved() {
