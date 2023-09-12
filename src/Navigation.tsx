@@ -348,7 +348,6 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
         component={ProfileScreen}
         initialParams={{
           name: store.me.did,
-          hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
@@ -399,9 +398,9 @@ const FlatNavigator = observer(function FlatNavigatorImpl() {
         name="MyProfile"
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
         component={ProfileScreen}
+        options={{title: title('My Profile')}}
         initialParams={{
-          name: store.me.did,
-          hideBackButton: true,
+          name: store.me.handle,
         }}
       />
       {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
