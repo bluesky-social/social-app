@@ -118,7 +118,7 @@ export function UserAvatar({
       return {
         width: size,
         height: size,
-        borderRadius: 8,
+        borderRadius: size > 32 ? 8 : 3,
       }
     }
     return {

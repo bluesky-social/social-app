@@ -1,5 +1,6 @@
 import React from 'react'
-import {StyleSheet, RefreshControl, View, Pressable} from 'react-native'
+import {StyleSheet, RefreshControl, View} from 'react-native'
+import {AtUri} from '@atproto/api'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {FAB} from 'view/com/util/fab/FAB'
@@ -11,40 +12,59 @@ import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
-import {CenteredView} from 'view/com/util/Views'
-import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
+import {SearchInput} from 'view/com/util/forms/SearchInput'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {PostFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
-import {FeedsDiscoveryModel} from 'state/models/discovery/feeds'
+import {MyFeedsUIModel, MyFeedsItem} from 'state/models/ui/my-feeds'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
 import {CustomFeed} from 'view/com/feeds/CustomFeed'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {isTabletOrDesktop} = useWebMediaQueries()
-    const feeds = React.useMemo(() => new FeedsDiscoveryModel(store), [store])
-    const savedFeeds = React.useMemo(() => store.me.savedFeeds, [store])
+    const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+    const myFeeds = React.useMemo(() => new MyFeedsUIModel(store), [store])
+    const [query, setQuery] = React.useState<string>('')
+    const debouncedSearchFeeds = React.useMemo(
+      () => debounce(q => myFeeds.discovery.search(q), 500), // debounce for 500ms
+      [myFeeds],
+    )
 
     useFocusEffect(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
-        if (!feeds.hasLoaded) {
-          feeds.refresh()
-        }
-        if (!savedFeeds.hasLoaded) {
-          savedFeeds.refresh()
-        }
-      }, [store.shell, feeds, savedFeeds]),
+        myFeeds.setup()
+      }, [store.shell, myFeeds]),
     )
 
     const onPressCompose = React.useCallback(() => {
       store.shell.openComposer({})
     }, [store])
+    const onChangeQuery = React.useCallback(
+      (text: string) => {
+        setQuery(text)
+        if (text.length > 1) {
+          debouncedSearchFeeds(text)
+        } else {
+          myFeeds.discovery.refresh()
+        }
+      },
+      [debouncedSearchFeeds, myFeeds.discovery],
+    )
+    const onPressCancelSearch = React.useCallback(() => {
+      setQuery('')
+      myFeeds.discovery.refresh()
+    }, [myFeeds])
+    const onSubmitQuery = React.useCallback(() => {
+      debouncedSearchFeeds(query)
+      debouncedSearchFeeds.flush()
+    }, [debouncedSearchFeeds, query])
 
     const renderHeaderBtn = React.useCallback(() => {
       return (
@@ -59,144 +79,101 @@ export const FeedsScreen = withAuthRequired(
       )
     }, [pal])
 
-    // search stuff
-    const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
-    const [query, setQuery] = React.useState<string>('')
-    const debouncedSearchFeeds = React.useMemo(
-      () => debounce(q => feeds.search(q), 500), // debounce for 500ms
-      [feeds],
-    )
-    const onChangeQuery = React.useCallback(
-      (text: string) => {
-        setQuery(text)
-        if (text.length > 1) {
-          debouncedSearchFeeds(text)
-        } else {
-          feeds.refresh()
-        }
-      },
-      [debouncedSearchFeeds, feeds],
-    )
-    const onPressClearQuery = React.useCallback(() => {
-      setQuery('')
-      feeds.refresh()
-    }, [feeds])
-    const onPressCancelSearch = React.useCallback(() => {
-      setIsInputFocused(false)
-      setQuery('')
-      feeds.refresh()
-    }, [feeds])
-    const onSubmitQuery = React.useCallback(() => {
-      debouncedSearchFeeds(query)
-      debouncedSearchFeeds.flush()
-    }, [debouncedSearchFeeds, query])
-
     const onRefresh = React.useCallback(() => {
-      feeds.refresh()
-    }, [feeds])
-
-    const renderListEmptyComponent = () => {
-      return (
-        <View style={styles.empty}>
-          <Text type="lg" style={pal.textLight}>
-            {feeds.isLoading
-              ? isTabletOrDesktop
-                ? 'Loading...'
-                : ''
-              : query
-              ? `No results found for "${query}"`
-              : `We can't find any feeds for some reason. This is probably an error - try refreshing!`}
-          </Text>
-        </View>
-      )
-    }
+      myFeeds.refresh()
+    }, [myFeeds])
 
     const renderItem = React.useCallback(
-      ({item}: {item: CustomFeedModel}) => (
-        <CustomFeed
-          key={item.data.uri}
-          item={item}
-          showSaveBtn
-          showDescription
-          showLikes
-        />
-      ),
-      [],
+      ({item}: {item: MyFeedsItem}) => {
+        if (item.type === 'loading') {
+          return <PostFeedLoadingPlaceholder />
+        } else if (item.type === 'error') {
+          return <ErrorMessage message={item.error} />
+        } else if (item.type === 'saved-feeds-header') {
+          if (!isMobile) {
+            return (
+              <View
+                style={[
+                  pal.view,
+                  styles.header,
+                  pal.border,
+                  {
+                    borderBottomWidth: 1,
+                  },
+                ]}>
+                <Text type="title-lg" style={[pal.text, s.bold]}>
+                  My Feeds
+                </Text>
+                <Link href="/settings/saved-feeds">
+                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                </Link>
+              </View>
+            )
+          }
+          return <View />
+        } else if (item.type === 'saved-feed') {
+          return (
+            <SavedFeed
+              uri={item.feed.uri}
+              avatar={item.feed.data.avatar}
+              displayName={item.feed.displayName}
+            />
+          )
+        } else if (item.type === 'discover-feeds-header') {
+          return (
+            <View
+              style={[
+                pal.view,
+                styles.header,
+                {marginTop: 16, paddingRight: 10},
+              ]}>
+              <Text type="title-lg" style={[pal.text, s.bold]}>
+                Discover new feeds
+              </Text>
+              <View style={{flex: 1, maxWidth: 250}}>
+                <SearchInput
+                  query={query}
+                  onChangeQuery={onChangeQuery}
+                  onPressCancelSearch={onPressCancelSearch}
+                  onSubmitQuery={onSubmitQuery}
+                />
+              </View>
+            </View>
+          )
+        } else if (item.type === 'discover-feed') {
+          return (
+            <CustomFeed
+              item={item.feed}
+              showSaveBtn
+              showDescription
+              showLikes
+            />
+          )
+        }
+        return null
+      },
+      [isMobile, pal, query, onChangeQuery, onPressCancelSearch, onSubmitQuery],
     )
 
-    const ListHeaderComponent = React.useCallback(() => {
-      return (
-        <>
-          {!savedFeeds.isEmpty ? (
-            <>
-              <Text style={[pal.text, styles.subHeading]}>Saved Feeds</Text>
-              {savedFeeds.top5.map(f => {
-                return (
-                  <CustomFeed
-                    key={f.data.uri}
-                    item={f}
-                    showSaveBtn
-                    style={styles.savedFeed}
-                  />
-                )
-              })}
-              <Pressable
-                accessibilityRole="button"
-                style={styles.loadMore}
-                onPress={() => {
-                  // TODO: expand to full list
-                }}>
-                <Text type="md-medium" style={[pal.text, pal.link]}>
-                  Load more...
-                </Text>
-              </Pressable>
-            </>
-          ) : null}
-
-          <Text style={[pal.text, styles.subHeading]}>Discover new Feeds</Text>
-          <HeaderWithInput
-            isInputFocused={isInputFocused}
-            query={query}
-            setIsInputFocused={setIsInputFocused}
-            onChangeQuery={onChangeQuery}
-            onPressClearQuery={onPressClearQuery}
-            onPressCancelSearch={onPressCancelSearch}
-            onSubmitQuery={onSubmitQuery}
-            showMenu={false}
-          />
-        </>
-      )
-    }, [
-      isInputFocused,
-      onChangeQuery,
-      onPressCancelSearch,
-      onPressClearQuery,
-      onSubmitQuery,
-      pal.link,
-      pal.text,
-      query,
-      savedFeeds.isEmpty,
-      savedFeeds.top5,
-    ])
-
     return (
-      <CenteredView style={[pal.view, styles.container]}>
-        <ViewHeader
-          title="My Feeds"
-          canGoBack={false}
-          renderButton={renderHeaderBtn}
-          showBorder
-        />
+      <View style={[pal.view, styles.container]}>
+        {isMobile && (
+          <ViewHeader
+            title="My Feeds"
+            canGoBack={false}
+            renderButton={renderHeaderBtn}
+            showBorder
+          />
+        )}
 
         <FlatList
-          ListHeaderComponent={ListHeaderComponent}
           style={[!isTabletOrDesktop && s.flex1, styles.list]}
-          data={feeds.feeds}
-          keyExtractor={item => item.data.uri}
+          data={myFeeds.items}
+          keyExtractor={item => item._reactKey}
           contentContainerStyle={styles.contentContainer}
           refreshControl={
             <RefreshControl
-              refreshing={feeds.isRefreshing}
+              refreshing={myFeeds.isRefreshing}
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
@@ -204,9 +181,10 @@ export const FeedsScreen = withAuthRequired(
           }
           renderItem={renderItem}
           initialNumToRender={10}
-          ListEmptyComponent={renderListEmptyComponent}
-          onEndReached={() => feeds.loadMore()}
-          extraData={feeds.isLoading}
+          onEndReached={() => myFeeds.loadMore()}
+          extraData={myFeeds.isLoading}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
         />
         <FAB
           testID="composeFAB"
@@ -216,10 +194,40 @@ export const FeedsScreen = withAuthRequired(
           accessibilityLabel="New post"
           accessibilityHint=""
         />
-      </CenteredView>
+      </View>
     )
   }),
 )
+
+function SavedFeed({
+  uri,
+  avatar,
+  displayName,
+}: {
+  uri: string
+  avatar: string
+  displayName: string
+}) {
+  const pal = usePalette('default')
+  const urip = new AtUri(uri)
+  const href = `/profile/${urip.hostname}/feed/${urip.rkey}`
+  return (
+    <Link
+      testID={`saved-feed-${displayName}`}
+      href={href}
+      style={[pal.border, styles.savedFeed]}
+      hoverStyle={pal.viewLight}
+      accessibilityLabel={displayName}
+      accessibilityHint=""
+      asAnchor
+      anchorNoUnderline>
+      <UserAvatar type="algo" size={28} avatar={avatar} />
+      <Text type="lg-medium" style={pal.text} numberOfLines={1}>
+        {displayName}
+      </Text>
+    </Link>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -231,21 +239,22 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 100,
   },
-  empty: {
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
     paddingHorizontal: 16,
-    paddingTop: 10,
+    paddingVertical: 12,
   },
-  subHeading: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    paddingLeft: 16,
-    paddingTop: 16,
-  },
+
   savedFeed: {
-    borderTopWidth: 0,
-  },
-  loadMore: {
-    alignSelf: 'flex-end',
-    paddingRight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 12,
+    borderBottomWidth: 1,
   },
 })
