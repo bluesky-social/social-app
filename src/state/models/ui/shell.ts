@@ -136,6 +136,10 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
+export interface BirthDateSettingsModal {
+  name: 'birth-date-settings'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -143,6 +147,7 @@ export type Modal =
   | DeleteAccountModal
   | EditProfileModal
   | ProfilePreviewModal
+  | BirthDateSettingsModal
 
   // Curation
   | ContentFilteringSettingsModal

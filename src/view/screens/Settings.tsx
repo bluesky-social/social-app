@@ -40,6 +40,7 @@ import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
+import {HandIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
@@ -175,7 +176,7 @@ export const SettingsScreen = withAuthRequired(
       Toast.show('Copied build version to clipboard')
     }, [])
 
-    const openPreferencesModal = React.useCallback(() => {
+    const openHomeFeedPreferences = React.useCallback(() => {
       navigation.navigate('PreferencesHomeFeed')
     }, [navigation])
 
@@ -219,6 +220,19 @@ export const SettingsScreen = withAuthRequired(
                     {store.session.currentSession?.email}
                   </Text>
                 </Text>
+              </View>
+              <View style={[styles.infoLine]}>
+                <Text type="lg-medium" style={pal.text}>
+                  Birthday:{' '}
+                </Text>
+                <Link
+                  onPress={() =>
+                    store.shell.openModal({name: 'birth-date-settings'})
+                  }>
+                  <Text type="lg" style={pal.link}>
+                    Show
+                  </Text>
+                </Link>
               </View>
               <View style={styles.spacer20} />
             </>
@@ -387,15 +401,15 @@ export const SettingsScreen = withAuthRequired(
           <View style={styles.spacer20} />
 
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Advanced
+            Basics
           </Text>
           <TouchableOpacity
             testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={openPreferencesModal}
+            onPress={openHomeFeedPreferences}
             accessibilityRole="button"
-            accessibilityHint="Open home feed preferences modal"
-            accessibilityLabel="Opens the home feed preferences modal">
+            accessibilityHint=""
+            accessibilityLabel="Opens the home feed preferences">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="sliders"
@@ -404,23 +418,6 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               Home Feed Preferences
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            testID="appPasswordBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={onPressAppPasswords}
-            accessibilityRole="button"
-            accessibilityHint="Open app password settings"
-            accessibilityLabel="Opens the app password settings page">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="lock"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              App passwords
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -454,6 +451,44 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               Content languages
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="moderationBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={
+              isSwitching ? undefined : () => navigation.navigate('Moderation')
+            }
+            accessibilityRole="button"
+            accessibilityHint=""
+            accessibilityLabel="Opens moderation settings">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <HandIcon style={pal.text} size={18} strokeWidth={6} />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Moderation
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.spacer20} />
+
+          <Text type="xl-bold" style={[pal.text, styles.heading]}>
+            Advanced
+          </Text>
+          <TouchableOpacity
+            testID="appPasswordBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={onPressAppPasswords}
+            accessibilityRole="button"
+            accessibilityHint="Open app password settings"
+            accessibilityLabel="Opens the app password settings page">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="lock"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              App passwords
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -620,6 +655,8 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   infoLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 18,
     paddingBottom: 6,
   },
