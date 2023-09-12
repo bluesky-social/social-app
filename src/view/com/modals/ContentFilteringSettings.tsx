@@ -123,7 +123,7 @@ const AdultContentEnabledPref = observer(
           )
         ) : typeof store.preferences.birthDate === 'undefined' ? (
           <View style={[pal.viewLight, styles.agePrompt]}>
-            <Text type="md" style={pal.text}>
+            <Text type="md" style={[pal.text, {flex: 1}]}>
               Confirm your age to enable adult content.
             </Text>
             <Button type="primary" label="Set Age" onPress={onSetAge} />
@@ -138,7 +138,7 @@ const AdultContentEnabledPref = observer(
           />
         ) : (
           <View style={[pal.viewLight, styles.agePrompt]}>
-            <Text type="md" style={pal.text}>
+            <Text type="md" style={[pal.text, {flex: 1}]}>
               You must be 18 or older to enable adult content.
             </Text>
             <Button type="primary" label="Set Age" onPress={onSetAge} />

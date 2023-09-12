@@ -224,15 +224,15 @@ export const SettingsScreen = withAuthRequired(
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
                   Birthday:{' '}
-                  <Link
-                    onPress={() =>
-                      store.shell.openModal({name: 'birth-date-settings'})
-                    }>
-                    <Text type="lg" style={pal.link}>
-                      Show
-                    </Text>
-                  </Link>
                 </Text>
+                <Link
+                  onPress={() =>
+                    store.shell.openModal({name: 'birth-date-settings'})
+                  }>
+                  <Text type="lg" style={pal.link}>
+                    Show
+                  </Text>
+                </Link>
               </View>
               <View style={styles.spacer20} />
             </>
@@ -655,6 +655,8 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   infoLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 18,
     paddingBottom: 6,
   },
