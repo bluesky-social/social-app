@@ -111,7 +111,8 @@ export class PostsMultiFeedModel {
         uri: makeProfileLink(feedInfo.data.creator, 'feed', urip.rkey),
       })
     }
-    if (!this.hasMore) {
+    if (!this.hasMore && this.hasContent) {
+      // only show if hasContent to avoid double discover-feed links
       items.push({_reactKey: '__footer__', type: 'footer'})
     }
     return items

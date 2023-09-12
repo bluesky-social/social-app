@@ -9,6 +9,7 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {CenteredView} from '../util/Views'
 import {LoggedOut} from './LoggedOut'
+import {Onboarding} from './Onboarding'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
@@ -16,13 +17,16 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
 ): React.FC<P> =>
-  observer((props: P) => {
+  observer(function AuthRequired(props: P) {
     const store = useStores()
     if (store.session.isResumingSession) {
       return <Loading />
     }
     if (!store.session.hasSession) {
       return <LoggedOut />
+    }
+    if (store.onboarding.isActive) {
+      return <Onboarding />
     }
     return <Component {...props} />
   })

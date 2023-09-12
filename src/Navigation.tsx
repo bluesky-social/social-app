@@ -67,6 +67,7 @@ import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
+import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -219,6 +220,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         component={SavedFeeds}
         options={{title: title('Edit My Feeds')}}
       />
+      <Stack.Screen
+        name="PreferencesHomeFeed"
+        component={PreferencesHomeFeed}
+        options={{title: title('Home Feed Preferences')}}
+      />
     </>
   )
 }
@@ -254,6 +260,7 @@ function TabsNavigator() {
 
 function HomeTabNavigator() {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+
   return (
     <HomeTab.Navigator
       screenOptions={{
@@ -323,7 +330,7 @@ function NotificationsTabNavigator() {
   )
 }
 
-const MyProfileTabNavigator = observer(() => {
+const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   const store = useStores()
   return (
@@ -353,7 +360,7 @@ const MyProfileTabNavigator = observer(() => {
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
-const FlatNavigator = observer(() => {
+const FlatNavigator = observer(function FlatNavigatorImpl() {
   const pal = usePalette('default')
   const store = useStores()
   const unreadCountLabel = store.me.notifications.unreadCountLabel

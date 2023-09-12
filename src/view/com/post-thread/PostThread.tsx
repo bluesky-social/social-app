@@ -1,4 +1,5 @@
 import React, {useRef} from 'react'
+import {runInAction} from 'mobx'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
@@ -17,18 +18,24 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {PostThreadItem} from './PostThreadItem'
 import {ComposePrompt} from '../composer/Prompt'
+import {ViewHeader} from '../util/ViewHeader'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isIOS, isDesktopWeb, isMobileWeb} from 'platform/detection'
+import {isNative, isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 
-const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 0}
+const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
+const TOP_COMPONENT = {
+  _reactKey: '__top_component__',
+  _isHighlightedPost: false,
+}
 const PARENT_SPINNER = {
   _reactKey: '__parent_spinner__',
   _isHighlightedPost: false,
@@ -46,6 +53,7 @@ const BOTTOM_COMPONENT = {
 }
 type YieldedItem =
   | PostThreadItemModel
+  | typeof TOP_COMPONENT
   | typeof PARENT_SPINNER
   | typeof REPLY_PROMPT
   | typeof DELETED
@@ -62,13 +70,14 @@ export const PostThread = observer(function PostThread({
   onPressReply: () => void
 }) {
   const pal = usePalette('default')
+  const {isTablet} = useWebMediaQueries()
   const ref = useRef<FlatList>(null)
   const hasScrolledIntoView = useRef<boolean>(false)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const posts = React.useMemo(() => {
     if (view.thread) {
-      const arr = Array.from(flattenThread(view.thread))
+      const arr = [TOP_COMPONENT].concat(Array.from(flattenThread(view.thread)))
       if (view.isLoadingFromCache) {
         if (view.thread?.postRecord?.reply) {
           arr.unshift(PARENT_SPINNER)
@@ -156,8 +165,10 @@ export const PostThread = observer(function PostThread({
   }, [navigation])
 
   const renderItem = React.useCallback(
-    ({item}: {item: YieldedItem}) => {
-      if (item === PARENT_SPINNER) {
+    ({item, index}: {item: YieldedItem; index: number}) => {
+      if (item === TOP_COMPONENT) {
+        return isTablet ? <ViewHeader title="Post" /> : null
+      } else if (item === PARENT_SPINNER) {
         return (
           <View style={styles.parentSpinner}>
             <ActivityIndicator />
@@ -185,19 +196,8 @@ export const PostThread = observer(function PostThread({
         // HACK
         // due to some complexities with how flatlist works, this is the easiest way
         // I could find to get a border positioned directly under the last item
-        // -
-        // addendum -- it's also the best way to get mobile web to add padding
-        // at the bottom of the thread since paddingbottom is ignored. yikes.
         // -prf
-        return (
-          <View
-            style={[
-              styles.bottomBorder,
-              pal.border,
-              isMobileWeb && styles.bottomSpacer,
-            ]}
-          />
-        )
+        return <View style={[pal.border, styles.bottomSpacer]} />
       } else if (item === CHILD_SPINNER) {
         return (
           <View style={styles.childSpinner}>
@@ -205,11 +205,20 @@ export const PostThread = observer(function PostThread({
           </View>
         )
       } else if (item instanceof PostThreadItemModel) {
-        return <PostThreadItem item={item} onPostReply={onRefresh} />
+        const prev = (
+          index - 1 >= 0 ? posts[index - 1] : undefined
+        ) as PostThreadItemModel
+        return (
+          <PostThreadItem
+            item={item}
+            onPostReply={onRefresh}
+            hasPrecedingItem={prev?._showChildReplyLine}
+          />
+        )
       }
       return <></>
     },
-    [onRefresh, onPressReply, pal],
+    [onRefresh, onPressReply, pal, posts, isTablet],
   )
 
   // loading
@@ -302,7 +311,7 @@ export const PostThread = observer(function PostThread({
       data={posts}
       initialNumToRender={posts.length}
       maintainVisibleContentPosition={
-        isIOS && view.isFromCache
+        isNative && view.isFromCache
           ? MAINTAIN_VISIBLE_CONTENT_POSITION
           : undefined
       }
@@ -317,11 +326,10 @@ export const PostThread = observer(function PostThread({
         />
       }
       onContentSizeChange={
-        isIOS && view.isFromCache ? undefined : onContentSizeChange
+        isNative && view.isFromCache ? undefined : onContentSizeChange
       }
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}
-      contentContainerStyle={styles.contentContainerExtra}
     />
   )
 })
@@ -352,7 +360,9 @@ function* flattenThread(
       }
     }
   } else if (!isAscending && !post.parent && post.post.replyCount) {
-    post._hasMore = true
+    runInAction(() => {
+      post._hasMore = true
+    })
   }
 }
 
@@ -372,13 +382,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   childSpinner: {},
-  bottomBorder: {
-    borderBottomWidth: 1,
-  },
   bottomSpacer: {
     height: 400,
-  },
-  contentContainerExtra: {
-    paddingBottom: 500,
+    borderTopWidth: 1,
   },
 })

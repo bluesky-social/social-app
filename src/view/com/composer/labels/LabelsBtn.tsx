@@ -11,9 +11,11 @@ import {isNative} from 'platform/detection'
 
 export const LabelsBtn = observer(function LabelsBtn({
   labels,
+  hasMedia,
   onChange,
 }: {
   labels: string[]
+  hasMedia: boolean
   onChange: (v: string[]) => void
 }) {
   const pal = usePalette('default')
@@ -23,7 +25,7 @@ export const LabelsBtn = observer(function LabelsBtn({
     <Button
       type="default-light"
       testID="labelsBtn"
-      style={styles.button}
+      style={[styles.button, !hasMedia && styles.dimmed]}
       accessibilityLabel="Content warnings"
       accessibilityHint=""
       onPress={() => {
@@ -32,7 +34,7 @@ export const LabelsBtn = observer(function LabelsBtn({
             Keyboard.dismiss()
           }
         }
-        store.shell.openModal({name: 'self-label', labels, onChange})
+        store.shell.openModal({name: 'self-label', labels, hasMedia, onChange})
       }}>
       <ShieldExclamation style={pal.link} size={26} />
       {labels.length > 0 ? (
@@ -52,6 +54,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 14,
     marginRight: 4,
+  },
+  dimmed: {
+    opacity: 0.4,
   },
   label: {
     maxWidth: 100,

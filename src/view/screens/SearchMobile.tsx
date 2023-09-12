@@ -30,7 +30,7 @@ import {isAndroid, isIOS} from 'platform/detection'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
-  observer<Props>(({}: Props) => {
+  observer<Props>(function SearchScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const scrollViewRef = React.useRef<ScrollView>(null)
@@ -79,6 +79,10 @@ export const SearchScreen = withAuthRequired(
     }, [setQuery, autocompleteView, store])
 
     const onSubmitQuery = React.useCallback(() => {
+      if (query.length === 0) {
+        return
+      }
+
       const model = new SearchUIModel(store)
       model.fetch(query)
       setSearchUIModel(model)

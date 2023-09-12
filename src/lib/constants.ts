@@ -148,3 +148,110 @@ export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
 export const BACK_HITSLOP = HITSLOP_30
+
+export const RECOMMENDED_FEEDS = [
+  {
+    did: 'did:plc:hsqwcidfez66lwm3gxhfv5in',
+    rkey: 'aaaf2pqeodmpy',
+  },
+  {
+    did: 'did:plc:gekdk2nd47gkk3utfz2xf7cn',
+    rkey: 'aaap4tbjcfe5y',
+  },
+  {
+    did: 'did:plc:5rw2on4i56btlcajojaxwcat',
+    rkey: 'aaao6g552b33o',
+  },
+  {
+    did: 'did:plc:jfhpnnst6flqway4eaeqzj2a',
+    rkey: 'for-science',
+  },
+  {
+    did: 'did:plc:7q4nnnxawajbfaq7to5dpbsy',
+    rkey: 'bsky-news',
+  },
+  {
+    did: 'did:plc:jcoy7v3a2t4rcfdh6i4kza25',
+    rkey: 'astro',
+  },
+  {
+    did: 'did:plc:tenurhgjptubkk5zf5qhi3og',
+    rkey: 'h-nba',
+  },
+  {
+    did: 'did:plc:vpkhqolt662uhesyj6nxm7ys',
+    rkey: 'devfeed',
+  },
+  {
+    did: 'did:plc:cndfx4udwgvpjaakvxvh7wm5',
+    rkey: 'flipboard-tech',
+  },
+  {
+    did: 'did:plc:w4xbfzo7kqfes5zb7r6qv3rw',
+    rkey: 'blacksky',
+  },
+  {
+    did: 'did:plc:lptjvw6ut224kwrj7ub3sqbe',
+    rkey: 'aaaotfjzjplna',
+  },
+  {
+    did: 'did:plc:gkvpokm7ec5j5yxls6xk4e3z',
+    rkey: 'formula-one',
+  },
+  {
+    did: 'did:plc:q6gjnaw2blty4crticxkmujt',
+    rkey: 'positivifeed',
+  },
+  {
+    did: 'did:plc:l72uci4styb4jucsgcrrj5ap',
+    rkey: 'aaao5dzfm36u4',
+  },
+  {
+    did: 'did:plc:k3jkadxv5kkjgs6boyon7m6n',
+    rkey: 'aaaavlyvqzst2',
+  },
+  {
+    did: 'did:plc:nkahctfdi6bxk72umytfwghw',
+    rkey: 'aaado2uvfsc6w',
+  },
+  {
+    did: 'did:plc:epihigio3d7un7u3gpqiy5gv',
+    rkey: 'aaaekwsc7zsvs',
+  },
+  {
+    did: 'did:plc:qiknc4t5rq7yngvz7g4aezq7',
+    rkey: 'aaaejxlobe474',
+  },
+  {
+    did: 'did:plc:mlq4aycufcuolr7ax6sezpc4',
+    rkey: 'aaaoudweck6uy',
+  },
+  {
+    did: 'did:plc:rcez5hcvq3vzlu5x7xrjyccg',
+    rkey: 'aaadzjxbcddzi',
+  },
+  {
+    did: 'did:plc:lnxbuzaenlwjrncx6sc4cfdr',
+    rkey: 'aaab2vesjtszc',
+  },
+  {
+    did: 'did:plc:x3cya3wkt4n6u4ihmvpsc5if',
+    rkey: 'aaacynbxwimok',
+  },
+  {
+    did: 'did:plc:abv47bjgzjgoh3yrygwoi36x',
+    rkey: 'aaagt6amuur5e',
+  },
+  {
+    did: 'did:plc:ffkgesg3jsv2j7aagkzrtcvt',
+    rkey: 'aaacjerk7gwek',
+  },
+  {
+    did: 'did:plc:geoqe3qls5mwezckxxsewys2',
+    rkey: 'aaai43yetqshu',
+  },
+  {
+    did: 'did:plc:2wqomm3tjqbgktbrfwgvrw34',
+    rkey: 'authors',
+  },
+]

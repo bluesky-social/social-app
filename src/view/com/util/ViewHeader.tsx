@@ -8,15 +8,16 @@ import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const ViewHeader = observer(function ({
+export const ViewHeader = observer(function ViewHeaderImpl({
   title,
   canGoBack,
+  showBackButton = true,
   hideOnScroll,
   showOnDesktop,
   showBorder,
@@ -24,6 +25,7 @@ export const ViewHeader = observer(function ({
 }: {
   title: string
   canGoBack?: boolean
+  showBackButton?: boolean
   hideOnScroll?: boolean
   showOnDesktop?: boolean
   showBorder?: boolean
@@ -33,6 +35,7 @@ export const ViewHeader = observer(function ({
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
+  const {isDesktop, isTablet} = useWebMediaQueries()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -47,9 +50,15 @@ export const ViewHeader = observer(function ({
     store.shell.openDrawer()
   }, [track, store])
 
-  if (isDesktopWeb) {
+  if (isDesktop) {
     if (showOnDesktop) {
-      return <DesktopWebHeader title={title} renderButton={renderButton} />
+      return (
+        <DesktopWebHeader
+          title={title}
+          renderButton={renderButton}
+          showBorder={showBorder}
+        />
+      )
     }
     return null
   } else {
@@ -59,30 +68,32 @@ export const ViewHeader = observer(function ({
 
     return (
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
-        <TouchableOpacity
-          testID="viewHeaderDrawerBtn"
-          onPress={canGoBack ? onPressBack : onPressMenu}
-          hitSlop={BACK_HITSLOP}
-          style={canGoBack ? styles.backBtn : styles.backBtnWide}
-          accessibilityRole="button"
-          accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-          accessibilityHint={
-            canGoBack ? '' : 'Access navigation links and settings'
-          }>
-          {canGoBack ? (
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={[styles.backIcon, pal.text]}
-            />
-          ) : (
-            <FontAwesomeIcon
-              size={18}
-              icon="bars"
-              style={[styles.backIcon, pal.textLight]}
-            />
-          )}
-        </TouchableOpacity>
+        {showBackButton ? (
+          <TouchableOpacity
+            testID="viewHeaderDrawerBtn"
+            onPress={canGoBack ? onPressBack : onPressMenu}
+            hitSlop={BACK_HITSLOP}
+            style={canGoBack ? styles.backBtn : styles.backBtnWide}
+            accessibilityRole="button"
+            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+            accessibilityHint={
+              canGoBack ? '' : 'Access navigation links and settings'
+            }>
+            {canGoBack ? (
+              <FontAwesomeIcon
+                size={18}
+                icon="angle-left"
+                style={[styles.backIcon, pal.text]}
+              />
+            ) : !isTablet ? (
+              <FontAwesomeIcon
+                size={18}
+                icon="bars"
+                style={[styles.backIcon, pal.textLight]}
+              />
+            ) : null}
+          </TouchableOpacity>
+        ) : null}
         <View style={styles.titleContainer} pointerEvents="none">
           <Text type="title" style={[pal.text, styles.title]}>
             {title}
@@ -90,9 +101,9 @@ export const ViewHeader = observer(function ({
         </View>
         {renderButton ? (
           renderButton()
-        ) : (
+        ) : showBackButton ? (
           <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
-        )}
+        ) : null}
       </Container>
     )
   }
@@ -101,13 +112,24 @@ export const ViewHeader = observer(function ({
 function DesktopWebHeader({
   title,
   renderButton,
+  showBorder = true,
 }: {
   title: string
   renderButton?: () => JSX.Element
+  showBorder?: boolean
 }) {
   const pal = usePalette('default')
   return (
-    <CenteredView style={[styles.header, styles.desktopHeader, pal.border]}>
+    <CenteredView
+      style={[
+        styles.header,
+        styles.headerFixed,
+        styles.desktopHeader,
+        pal.border,
+        {
+          borderBottomWidth: showBorder ? 1 : 0,
+        },
+      ]}>
       <View style={styles.titleContainer} pointerEvents="none">
         <Text type="title-lg" style={[pal.text, styles.title]}>
           {title}
@@ -118,69 +140,68 @@ function DesktopWebHeader({
   )
 }
 
-const Container = observer(
-  ({
-    children,
-    hideOnScroll,
-    showBorder,
-  }: {
-    children: React.ReactNode
-    hideOnScroll: boolean
-    showBorder?: boolean
-  }) => {
-    const store = useStores()
-    const pal = usePalette('default')
-    const interp = useAnimatedValue(0)
+const Container = observer(function ContainerImpl({
+  children,
+  hideOnScroll,
+  showBorder,
+}: {
+  children: React.ReactNode
+  hideOnScroll: boolean
+  showBorder?: boolean
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const interp = useAnimatedValue(0)
 
-    React.useEffect(() => {
-      if (store.shell.minimalShellMode) {
-        Animated.timing(interp, {
-          toValue: 1,
-          duration: 100,
-          useNativeDriver: true,
-          isInteraction: false,
-        }).start()
-      } else {
-        Animated.timing(interp, {
-          toValue: 0,
-          duration: 100,
-          useNativeDriver: true,
-          isInteraction: false,
-        }).start()
-      }
-    }, [interp, store.shell.minimalShellMode])
-    const transform = {
-      transform: [{translateY: Animated.multiply(interp, -100)}],
+  React.useEffect(() => {
+    if (store.shell.minimalShellMode) {
+      Animated.timing(interp, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    } else {
+      Animated.timing(interp, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
     }
+  }, [interp, store.shell.minimalShellMode])
+  const transform = {
+    transform: [{translateY: Animated.multiply(interp, -100)}],
+  }
 
-    if (!hideOnScroll) {
-      return (
-        <View
-          style={[
-            styles.header,
-            pal.view,
-            pal.border,
-            showBorder && styles.border,
-          ]}>
-          {children}
-        </View>
-      )
-    }
+  if (!hideOnScroll) {
     return (
-      <Animated.View
+      <View
         style={[
           styles.header,
+          styles.headerFixed,
           pal.view,
           pal.border,
-          styles.headerFloating,
-          transform,
           showBorder && styles.border,
         ]}>
         {children}
-      </Animated.View>
+      </View>
     )
-  },
-)
+  }
+  return (
+    <Animated.View
+      style={[
+        styles.header,
+        styles.headerFloating,
+        pal.view,
+        pal.border,
+        transform,
+        showBorder && styles.border,
+      ]}>
+      {children}
+    </Animated.View>
+  )
+})
 
 const styles = StyleSheet.create({
   header: {
@@ -188,6 +209,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
+    width: '100%',
+  },
+  headerFixed: {
+    maxWidth: 600,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   headerFloating: {
     position: 'absolute',
@@ -195,13 +222,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   desktopHeader: {
-    borderBottomWidth: 1,
     paddingVertical: 12,
   },
   border: {
     borderBottomWidth: 1,
   },
-
   titleContainer: {
     marginLeft: 'auto',
     marginRight: 'auto',

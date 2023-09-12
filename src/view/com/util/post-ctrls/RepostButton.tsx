@@ -6,9 +6,6 @@ import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../text/Text'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
-import {createHitslop} from 'lib/constants'
-
-const HITSLOP = createHitslop(5)
 
 interface Props {
   isReposted: boolean
@@ -47,9 +44,8 @@ export const RepostButton = ({
   return (
     <TouchableOpacity
       testID="repostBtn"
-      hitSlop={HITSLOP}
       onPress={onPressToggleRepostWrapper}
-      style={styles.control}
+      style={[styles.control, !big && styles.controlPad]}
       accessibilityRole="button"
       accessibilityLabel={`${
         isReposted ? 'Undo repost' : 'Repost'
@@ -83,8 +79,9 @@ const styles = StyleSheet.create({
   control: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  controlPad: {
     padding: 5,
-    margin: -5,
   },
   reposted: {
     color: colors.green3,

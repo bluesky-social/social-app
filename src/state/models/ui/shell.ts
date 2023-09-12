@@ -8,6 +8,7 @@ import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 import {StyleProp, ViewStyle} from 'react-native'
+import {isWeb} from 'platform/detection'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -48,16 +49,15 @@ export interface ModerationDetailsModal {
   moderation: ModerationUI
 }
 
-export interface ReportPostModal {
-  name: 'report-post'
-  postUri: string
-  postCid: string
-}
-
-export interface ReportAccountModal {
-  name: 'report-account'
-  did: string
-}
+export type ReportModal = {
+  name: 'report'
+} & (
+  | {
+      uri: string
+      cid: string
+    }
+  | {did: string}
+)
 
 export interface CreateOrEditMuteListModal {
   name: 'create-or-edit-mute-list'
@@ -103,6 +103,7 @@ export interface RepostModal {
 export interface SelfLabelModal {
   name: 'self-label'
   labels: string[]
+  hasMedia: boolean
   onChange: (labels: string[]) => void
 }
 
@@ -135,14 +136,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface PreferencesHomeFeed {
-  name: 'preferences-home-feed'
-}
-
-export interface OnboardingModal {
-  name: 'onboarding'
-}
-
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -155,12 +148,10 @@ export type Modal =
   | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
   | PostLanguagesSettingsModal
-  | PreferencesHomeFeed
 
   // Moderation
   | ModerationDetailsModal
-  | ReportAccountModal
-  | ReportPostModal
+  | ReportModal
   | CreateOrEditMuteListModal
   | ListAddRemoveUserModal
 
@@ -175,9 +166,6 @@ export type Modal =
   // Bluesky access
   | WaitlistModal
   | InviteCodesModal
-
-  // Onboarding
-  | OnboardingModal
 
   // Generic
   | ConfirmModal
@@ -233,6 +221,7 @@ export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: () => void
   quote?: ComposerOptsQuote
+  mention?: string // handle of user to mention
 }
 
 export class ShellUiModel {
@@ -267,13 +256,20 @@ export class ShellUiModel {
   hydrate(v: unknown) {
     if (isObj(v)) {
       if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
-        this.colorMode = v.colorMode
+        this.setColorMode(v.colorMode)
       }
     }
   }
 
   setColorMode(mode: ColorMode) {
     this.colorMode = mode
+
+    if (isWeb && typeof window !== 'undefined') {
+      const html = window.document.documentElement
+      // remove any other color mode classes
+      html.className = html.className.replace(/colorMode--\w+/g, '')
+      html.classList.add(`colorMode--${mode}`)
+    }
   }
 
   setMinimalShellMode(v: boolean) {

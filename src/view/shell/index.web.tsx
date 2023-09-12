@@ -17,10 +17,9 @@ import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 
-const ShellInner = observer(() => {
+const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
-  const {isDesktop} = useWebMediaQueries()
-
+  const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
 
   useEffect(() => {
@@ -29,14 +28,17 @@ const ShellInner = observer(() => {
     })
   }, [navigator, store.shell])
 
+  const showBottomBar = isMobile && !store.onboarding.isActive
+  const showSideNavs =
+    !isMobile && store.session.hasSession && !store.onboarding.isActive
   return (
-    <>
+    <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
         <ErrorBoundary>
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      {isDesktop && store.session.hasSession && (
+      {showSideNavs && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav />
@@ -49,8 +51,9 @@ const ShellInner = observer(() => {
         replyTo={store.shell.composerOpts?.replyTo}
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
+        mention={store.shell.composerOpts?.mention}
       />
-      {!isDesktop && <BottomBarWeb />}
+      {showBottomBar && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (
@@ -64,11 +67,11 @@ const ShellInner = observer(() => {
           </View>
         </TouchableOpacity>
       )}
-    </>
+    </View>
   )
 })
 
-export const Shell: React.FC = observer(() => {
+export const Shell: React.FC = observer(function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <View style={[s.hContentRegion, pageBg]}>

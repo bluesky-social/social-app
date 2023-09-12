@@ -32,7 +32,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   // Web manipulation
   prev?: RNImage
   attributes: ImageManipulationAttributes = {
-    aspectRatio: '1:1',
+    aspectRatio: 'None',
     scale: 1,
     flipHorizontal: false,
     flipVertical: false,
@@ -120,8 +120,8 @@ export class ImageModel implements Omit<RNImage, 'size'> {
     }
   }
 
-  async setAltText(altText: string) {
-    this.altText = altText
+  setAltText(altText: string) {
+    this.altText = altText.trim()
   }
 
   // Only compress prior to upload

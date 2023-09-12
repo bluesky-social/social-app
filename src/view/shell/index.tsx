@@ -1,7 +1,12 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StatusBar} from 'expo-status-bar'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {
+  DimensionValue,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
@@ -19,13 +24,13 @@ import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
-const ShellInner = observer(() => {
+const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
-    () => ({height: '100%', paddingTop: safeAreaInsets.top}),
+    () => ({height: '100%' as DimensionValue, paddingTop: safeAreaInsets.top}),
     [safeAreaInsets],
   )
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
@@ -68,6 +73,7 @@ const ShellInner = observer(() => {
         replyTo={store.shell.composerOpts?.replyTo}
         onPost={store.shell.composerOpts?.onPost}
         quote={store.shell.composerOpts?.quote}
+        mention={store.shell.composerOpts?.mention}
       />
       <ModalsContainer />
       <Lightbox />
@@ -75,7 +81,7 @@ const ShellInner = observer(() => {
   )
 })
 
-export const Shell: React.FC = observer(() => {
+export const Shell: React.FC = observer(function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
   return (

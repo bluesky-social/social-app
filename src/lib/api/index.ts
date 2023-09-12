@@ -14,6 +14,7 @@ import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -92,7 +93,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     | AppBskyEmbedRecordWithMedia.Main
     | undefined
   let reply
-  const rt = new RichText(
+  let rt = new RichText(
     {text: opts.rawText.trim()},
     {
       cleanNewlines: true,
@@ -101,6 +102,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
 
   opts.onStateChange?.('Processing...')
   await rt.detectFacets(store.agent)
+  rt = shortenLinks(rt)
 
   // filter out any mention facets that didn't map to a user
   rt.facets = rt.facets?.filter(facet => {

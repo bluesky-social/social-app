@@ -9,41 +9,39 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {colors} from 'lib/styles'
 import {HITSLOP_20} from 'lib/constants'
 
-export const LoadLatestBtn = observer(
-  ({
-    onPress,
-    label,
-    showIndicator,
-  }: {
-    onPress: () => void
-    label: string
-    showIndicator: boolean
-    minimalShellMode?: boolean // NOTE not used on mobile -prf
-  }) => {
-    const store = useStores()
-    const pal = usePalette('default')
-    const safeAreaInsets = useSafeAreaInsets()
-    return (
-      <TouchableOpacity
-        style={[
-          styles.loadLatest,
-          pal.borderDark,
-          pal.view,
-          !store.shell.minimalShellMode && {
-            bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
-          },
-        ]}
-        onPress={onPress}
-        hitSlop={HITSLOP_20}
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityHint="">
-        <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
-        {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
-      </TouchableOpacity>
-    )
-  },
-)
+export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
+  onPress,
+  label,
+  showIndicator,
+}: {
+  onPress: () => void
+  label: string
+  showIndicator: boolean
+  minimalShellMode?: boolean // NOTE not used on mobile -prf
+}) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const safeAreaInsets = useSafeAreaInsets()
+  return (
+    <TouchableOpacity
+      style={[
+        styles.loadLatest,
+        pal.borderDark,
+        pal.view,
+        !store.shell.minimalShellMode && {
+          bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
+        },
+      ]}
+      onPress={onPress}
+      hitSlop={HITSLOP_20}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint="">
+      <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
+      {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
+    </TouchableOpacity>
+  )
+})
 
 const styles = StyleSheet.create({
   loadLatest: {

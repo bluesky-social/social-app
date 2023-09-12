@@ -10,6 +10,7 @@ import {
 import {observer} from 'mobx-react-lite'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
+import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {CreateAccountModel} from 'state/models/ui/create-account'
@@ -19,52 +20,59 @@ import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
 
-export const CreateAccount = observer(
-  ({onPressBack}: {onPressBack: () => void}) => {
-    const {track, screen} = useAnalytics()
-    const pal = usePalette('default')
-    const store = useStores()
-    const model = React.useMemo(() => new CreateAccountModel(store), [store])
+export const CreateAccount = observer(function CreateAccountImpl({
+  onPressBack,
+}: {
+  onPressBack: () => void
+}) {
+  const {track, screen} = useAnalytics()
+  const pal = usePalette('default')
+  const store = useStores()
+  const model = React.useMemo(() => new CreateAccountModel(store), [store])
 
-    React.useEffect(() => {
-      screen('CreateAccount')
-    }, [screen])
+  React.useEffect(() => {
+    screen('CreateAccount')
+  }, [screen])
 
-    React.useEffect(() => {
-      model.fetchServiceDescription()
-    }, [model])
+  React.useEffect(() => {
+    model.fetchServiceDescription()
+  }, [model])
 
-    const onPressRetryConnect = React.useCallback(
-      () => model.fetchServiceDescription(),
-      [model],
-    )
+  const onPressRetryConnect = React.useCallback(
+    () => model.fetchServiceDescription(),
+    [model],
+  )
 
-    const onPressBackInner = React.useCallback(() => {
-      if (model.canBack) {
-        model.back()
-      } else {
-        onPressBack()
+  const onPressBackInner = React.useCallback(() => {
+    if (model.canBack) {
+      model.back()
+    } else {
+      onPressBack()
+    }
+  }, [model, onPressBack])
+
+  const onPressNext = React.useCallback(async () => {
+    if (!model.canNext) {
+      return
+    }
+    if (model.step < 3) {
+      model.next()
+    } else {
+      try {
+        await model.submit()
+      } catch {
+        // dont need to handle here
+      } finally {
+        track('Try Create Account')
       }
-    }, [model, onPressBack])
+    }
+  }, [model, track])
 
-    const onPressNext = React.useCallback(async () => {
-      if (!model.canNext) {
-        return
-      }
-      if (model.step < 3) {
-        model.next()
-      } else {
-        try {
-          await model.submit()
-        } catch {
-          // dont need to handle here
-        } finally {
-          track('Try Create Account')
-        }
-      }
-    }, [model, track])
-
-    return (
+  return (
+    <LoggedOutLayout
+      leadin={`Step ${model.step}`}
+      title="Create Account"
+      description="We're so excited to have you join us!">
       <ScrollView testID="createAccount" style={pal.view}>
         <KeyboardAvoidingView behavior="padding">
           <View style={styles.stepContainer}>
@@ -119,9 +127,9 @@ export const CreateAccount = observer(
           <View style={s.footerSpacer} />
         </KeyboardAvoidingView>
       </ScrollView>
-    )
-  },
-)
+    </LoggedOutLayout>
+  )
+})
 
 const styles = StyleSheet.create({
   stepContainer: {

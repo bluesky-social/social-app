@@ -28,8 +28,9 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {isEmbedByEmbedder} from 'lib/embeds'
 
-export const FeedItem = observer(function ({
+export const FeedItem = observer(function FeedItemImpl({
   item,
   isThreadChild,
   isThreadLastChild,
@@ -60,8 +61,7 @@ export const FeedItem = observer(function ({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const translatorUrl = getTranslatorLink(record?.text || '')
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
@@ -143,7 +143,7 @@ export const FeedItem = observer(function ({
       borderColor: pal.colors.border,
       paddingBottom:
         isThreadLastChild || (!isThreadChild && !isThreadParent)
-          ? 12
+          ? 6
           : undefined,
     },
     isThreadChild ? styles.outerSmallTop : undefined,
@@ -274,7 +274,6 @@ export const FeedItem = observer(function ({
             testID="contentHider-post"
             moderation={item.moderation.content}
             ignoreMute
-            style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               moderation={item.moderation.content}
@@ -294,6 +293,10 @@ export const FeedItem = observer(function ({
               <ContentHider
                 testID="contentHider-embed"
                 moderation={item.moderation.embed}
+                ignoreMute={isEmbedByEmbedder(
+                  item.post.embed,
+                  item.post.author.did,
+                )}
                 style={styles.embed}>
                 <PostEmbeds
                   embed={item.post.embed}
@@ -312,7 +315,6 @@ export const FeedItem = observer(function ({
             )}
           </ContentHider>
           <PostCtrls
-            style={styles.ctrls}
             itemUri={itemUri}
             itemCid={itemCid}
             itemHref={itemHref}
@@ -346,6 +348,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
+    cursor: 'pointer',
+    overflow: 'hidden',
   },
   outerSmallTop: {
     borderTopWidth: 0,
@@ -385,9 +389,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 4,
   },
-  contentHider: {
-    marginBottom: 6,
-  },
   contentHiderChild: {
     marginTop: 6,
   },
@@ -396,8 +397,5 @@ const styles = StyleSheet.create({
   },
   translateLink: {
     marginBottom: 6,
-  },
-  ctrls: {
-    marginTop: 4,
   },
 })

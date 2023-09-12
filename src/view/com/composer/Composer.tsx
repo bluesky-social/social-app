@@ -32,17 +32,22 @@ import {s, colors, gradients} from 'lib/styles'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {toShortUrl} from 'lib/strings/url-helpers'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isDesktopWeb, isAndroid, isIOS} from 'platform/detection'
+import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
+import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
+import {insertMentionAt} from 'lib/strings/mention-manip'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -53,17 +58,31 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   onClose,
   quote: initQuote,
+  mention: initMention,
 }: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {isDesktop, isMobile} = useWebMediaQueries()
   const store = useStores()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  const [richtext, setRichText] = useState(new RichText({text: ''}))
-  const graphemeLength = useMemo(() => richtext.graphemeLength, [richtext])
+  const [richtext, setRichText] = useState(
+    new RichText({
+      text: initMention
+        ? insertMentionAt(
+            `@${initMention}`,
+            initMention.length + 1,
+            `${initMention}`,
+          ) // insert mention if passed in
+        : '',
+    }),
+  )
+  const graphemeLength = useMemo(() => {
+    return shortenLinks(richtext).graphemeLength
+  }, [richtext])
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
@@ -82,9 +101,9 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isAndroid ? insets.top : isDesktopWeb ? 0 : 15,
+      paddingTop: isAndroid ? insets.top : isMobile ? 15 : 0,
     }),
-    [insets, isKeyboardVisible],
+    [insets, isKeyboardVisible, isMobile],
   )
 
   const onPressCancel = useCallback(() => {
@@ -126,7 +145,7 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
   useEffect(() => {
-    if (isDesktopWeb) {
+    if (isWeb) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
@@ -147,8 +166,8 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const onPressPublish = async (rt: RichText) => {
-    if (isProcessing || rt.graphemeLength > MAX_GRAPHEME_LENGTH) {
+  const onPressPublish = async () => {
+    if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
     if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
@@ -157,7 +176,7 @@ export const ComposePost = observer(function ComposePost({
 
     setError('')
 
-    if (rt.text.trim().length === 0 && gallery.isEmpty) {
+    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
       setError('Did you want to say anything?')
       return
     }
@@ -166,7 +185,7 @@ export const ComposePost = observer(function ComposePost({
 
     try {
       await apilib.post(store, {
-        rawText: rt.text,
+        rawText: richtext.text,
         replyTo: replyTo?.uri,
         images: gallery.images,
         quote,
@@ -196,6 +215,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
+    store.preferences.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
@@ -214,6 +234,7 @@ export const ComposePost = observer(function ComposePost({
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
+  const hasMedia = gallery.size > 0 || Boolean(extLink)
 
   return (
     <KeyboardAvoidingView
@@ -221,7 +242,7 @@ export const ComposePost = observer(function ComposePost({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
-        <View style={styles.topbar}>
+        <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
           <TouchableOpacity
             testID="composerDiscardButton"
             onPress={onPressCancel}
@@ -232,7 +253,7 @@ export const ComposePost = observer(function ComposePost({
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
-          <LabelsBtn labels={labels} onChange={setLabels} />
+          <LabelsBtn labels={labels} onChange={setLabels} hasMedia={hasMedia} />
           {isProcessing ? (
             <View style={styles.postBtn}>
               <ActivityIndicator />
@@ -240,9 +261,7 @@ export const ComposePost = observer(function ComposePost({
           ) : canPost ? (
             <TouchableOpacity
               testID="composerPublishBtn"
-              onPress={() => {
-                onPressPublish(richtext)
-              }}
+              onPress={onPressPublish}
               accessibilityRole="button"
               accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
               accessibilityHint={
@@ -317,7 +336,12 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : undefined}
 
-          <View style={[pal.border, styles.textInputLayout]}>
+          <View
+            style={[
+              pal.border,
+              styles.textInputLayout,
+              isNative && styles.textInputLayoutMobile,
+            ]}>
             <UserAvatar avatar={store.me.avatar} size={50} />
             <TextInput
               ref={textInput}
@@ -345,27 +369,30 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={s.mt5}>
+            <View style={[s.mt5, isWeb && s.mb10]}>
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
         </ScrollView>
         {!extLink && suggestedLinks.size > 0 ? (
           <View style={s.mb5}>
-            {Array.from(suggestedLinks).map(url => (
-              <TouchableOpacity
-                key={`suggested-${url}`}
-                testID="addLinkCardBtn"
-                style={[pal.borderDark, styles.addExtLinkBtn]}
-                onPress={() => onPressAddLinkCard(url)}
-                accessibilityRole="button"
-                accessibilityLabel="Add link card"
-                accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
-                <Text style={pal.text}>
-                  Add link card: <Text style={pal.link}>{url}</Text>
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {Array.from(suggestedLinks)
+              .slice(0, 3)
+              .map(url => (
+                <TouchableOpacity
+                  key={`suggested-${url}`}
+                  testID="addLinkCardBtn"
+                  style={[pal.borderDark, styles.addExtLinkBtn]}
+                  onPress={() => onPressAddLinkCard(url)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Add link card"
+                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
+                  <Text style={pal.text}>
+                    Add link card:{' '}
+                    <Text style={pal.link}>{toShortUrl(url)}</Text>
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </View>
         ) : null}
         <View style={[pal.border, styles.bottomBar]}>
@@ -375,6 +402,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
+          {isDesktop ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -393,10 +421,13 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: isDesktopWeb ? 10 : undefined,
-    paddingBottom: isDesktopWeb ? 10 : 4,
+    paddingBottom: 4,
     paddingHorizontal: 20,
     height: 55,
+  },
+  topbarDesktop: {
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   postBtn: {
     borderRadius: 20,
@@ -444,10 +475,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   textInputLayout: {
-    flex: isDesktopWeb ? undefined : 1,
     flexDirection: 'row',
     borderTopWidth: 1,
     paddingTop: 16,
+  },
+  textInputLayoutMobile: {
+    flex: 1,
   },
   replyToLayout: {
     flexDirection: 'row',

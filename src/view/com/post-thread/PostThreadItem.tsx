@@ -19,6 +19,7 @@ import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
+import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
@@ -33,13 +34,16 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {isDesktopWeb} from 'platform/detection'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
+  hasPrecedingItem,
 }: {
   item: PostThreadItemModel
   onPostReply: () => void
+  hasPrecedingItem: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -56,6 +60,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const itemTitle = `Post by ${item.post.author.handle}`
   const authorHref = makeProfileLink(item.post.author)
   const authorTitle = item.post.author.handle
+  const isAuthorMuted = item.post.author.viewer?.muted
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return makeProfileLink(item.post.author, 'post', urip.rkey, 'liked-by')
@@ -67,8 +72,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   }, [item.post.uri, item.post.author])
   const repostsTitle = 'Reposts of this post'
 
-  const primaryLanguage = store.preferences.contentLanguages[0] || 'en'
-  const translatorUrl = getTranslatorLink(primaryLanguage, record?.text || '')
+  const translatorUrl = getTranslatorLink(record?.text || '')
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
@@ -191,7 +195,8 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
             <View style={styles.layoutContent}>
-              <View style={[styles.meta, styles.metaExpandedLine1]}>
+              <View
+                style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <View style={[s.flexRow]}>
                   <Link
                     style={styles.metaItem}
@@ -208,29 +213,43 @@ export const PostThreadItem = observer(function PostThreadItem({
                       )}
                     </Text>
                   </Link>
-                  <Text type="md" style={[styles.metaItem, pal.textLight]}>
-                    &middot;&nbsp;
-                    <TimeElapsed timestamp={item.post.indexedAt}>
-                      {({timeElapsed}) => <>{timeElapsed}</>}
-                    </TimeElapsed>
-                  </Text>
+                  <TimeElapsed timestamp={item.post.indexedAt}>
+                    {({timeElapsed}) => (
+                      <Text
+                        type="md"
+                        style={[styles.metaItem, pal.textLight]}
+                        title={niceDate(item.post.indexedAt)}>
+                        &middot;&nbsp;{timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
                 </View>
-                <View style={s.flex1} />
-                <PostDropdownBtn
-                  testID="postDropdownBtn"
-                  itemUri={itemUri}
-                  itemCid={itemCid}
-                  itemHref={itemHref}
-                  itemTitle={itemTitle}
-                  isAuthor={item.post.author.did === store.me.did}
-                  isThreadMuted={item.isThreadMuted}
-                  onCopyPostText={onCopyPostText}
-                  onOpenTranslate={onOpenTranslate}
-                  onToggleThreadMute={onToggleThreadMute}
-                  onDeletePost={onDeletePost}
-                />
               </View>
               <View style={styles.meta}>
+                {isAuthorMuted && (
+                  <View
+                    style={[
+                      pal.viewLight,
+                      {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 4,
+                        borderRadius: 6,
+                        paddingHorizontal: 6,
+                        paddingVertical: 2,
+                        marginRight: 4,
+                      },
+                    ]}>
+                    <FontAwesomeIcon
+                      icon={['far', 'eye-slash']}
+                      size={12}
+                      color={pal.colors.textLight}
+                    />
+                    <Text type="sm-medium" style={pal.textLight}>
+                      Muted
+                    </Text>
+                  </View>
+                )}
                 <Link
                   style={styles.metaItem}
                   href={authorHref}
@@ -241,6 +260,25 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </Link>
               </View>
             </View>
+            <PostDropdownBtn
+              testID="postDropdownBtn"
+              itemUri={itemUri}
+              itemCid={itemCid}
+              itemHref={itemHref}
+              itemTitle={itemTitle}
+              isAuthor={item.post.author.did === store.me.did}
+              isThreadMuted={item.isThreadMuted}
+              onCopyPostText={onCopyPostText}
+              onOpenTranslate={onOpenTranslate}
+              onToggleThreadMute={onToggleThreadMute}
+              onDeletePost={onDeletePost}
+              style={{
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+                marginLeft: 'auto',
+                width: 40,
+              }}
+            />
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
             <ContentHider
@@ -268,7 +306,13 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               ) : undefined}
               {item.post.embed && (
-                <ContentHider moderation={item.moderation.embed} style={s.mb10}>
+                <ContentHider
+                  moderation={item.moderation.embed}
+                  ignoreMute={isEmbedByEmbedder(
+                    item.post.embed,
+                    item.post.author.did,
+                  )}
+                  style={s.mb10}>
                   <PostEmbeds
                     embed={item.post.embed}
                     moderation={item.moderation.embed}
@@ -354,8 +398,8 @@ export const PostThreadItem = observer(function PostThreadItem({
             styles.outer,
             pal.border,
             pal.view,
-            item._showParentReplyLine && styles.noTopBorder,
-            !item._showChildReplyLine && {borderBottomWidth: 1},
+            item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
+            styles.cursor,
           ]}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
@@ -382,7 +426,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             style={[
               styles.layout,
               {
-                paddingBottom: item._showChildReplyLine ? 0 : 16,
+                paddingBottom: item._showChildReplyLine ? 0 : 8,
               },
             ]}>
             <View style={styles.layoutAvi}>
@@ -430,7 +474,9 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </View>
               ) : undefined}
               {item.post.embed && (
-                <ContentHider style={s.mb10} moderation={item.moderation.embed}>
+                <ContentHider
+                  style={styles.contentHider}
+                  moderation={item.moderation.embed}>
                   <PostEmbeds
                     embed={item.post.embed}
                     moderation={item.moderation.embed}
@@ -476,7 +522,7 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderBottomColor: pal.colors.border},
+              {borderTopColor: pal.colors.border},
               pal.view,
             ]}
             href={itemHref}
@@ -554,7 +600,7 @@ const styles = StyleSheet.create({
   },
   metaItem: {
     paddingRight: 5,
-    maxWidth: 240,
+    maxWidth: isDesktopWeb ? 380 : 220,
   },
   alert: {
     marginBottom: 6,
@@ -565,7 +611,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 8,
     paddingRight: 10,
-    minHeight: 36,
   },
   postTextLargeContainer: {
     paddingHorizontal: 0,
@@ -594,7 +639,7 @@ const styles = StyleSheet.create({
   loadMore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    borderTopWidth: 1,
     paddingLeft: 80,
     paddingRight: 20,
     paddingVertical: 12,
@@ -603,5 +648,9 @@ const styles = StyleSheet.create({
     width: 2,
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  cursor: {
+    // @ts-ignore web only
+    cursor: 'pointer',
   },
 })

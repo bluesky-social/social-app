@@ -24,6 +24,7 @@ import {
 } from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 interface AddedProps {
   desktopFixedHeight?: boolean
@@ -37,7 +38,7 @@ export function CenteredView({
   return <View style={style} {...props} />
 }
 
-export const FlatList = React.forwardRef(function <ItemT>(
+export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   {
     contentContainerStyle,
     style,
@@ -48,6 +49,7 @@ export const FlatList = React.forwardRef(function <ItemT>(
   ref: React.Ref<RNFlatList>,
 ) {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   contentContainerStyle = addStyle(
     contentContainerStyle,
     styles.containerScroll,
@@ -67,6 +69,20 @@ export const FlatList = React.forwardRef(function <ItemT>(
   }
   if (desktopFixedHeight) {
     style = addStyle(style, styles.fixedHeight)
+    if (!isMobile) {
+      // NOTE
+      // react native web produces *three* wrapping divs
+      // the first two use the `style` prop and the innermost uses the
+      // `contentContainerStyle`. Unfortunately the stable-gutter style
+      // needs to be applied to only the "middle" of these. To hack
+      // around this, we set data-stable-gutters which can then be
+      // styled in our external CSS.
+      // -prf
+      // @ts-ignore web only -prf
+      props.dataSet = props.dataSet || {}
+      // @ts-ignore web only -prf
+      props.dataSet.stableGutters = '1'
+    }
   }
   return (
     <RNFlatList
@@ -83,7 +99,7 @@ export const FlatList = React.forwardRef(function <ItemT>(
   )
 })
 
-export const ScrollView = React.forwardRef(function (
+export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
   ref: React.Ref<RNScrollView>,
 ) {
@@ -110,6 +126,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    // @ts-ignore web only
     minHeight: '100vh',
   },
   container: {
@@ -125,7 +142,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   fixedHeight: {
+    // @ts-ignore web only
     height: '100vh',
-    scrollbarGutter: 'stable both-edges',
   },
 })

@@ -94,7 +94,7 @@ export function createSuggestion({
 }
 
 const MentionList = forwardRef<MentionListRef, SuggestionProps>(
-  (props: SuggestionProps, ref) => {
+  function MentionListImpl(props: SuggestionProps, ref) {
     const [selectedIndex, setSelectedIndex] = useState(0)
     const pal = usePalette('default')
     const {getGraphemeString} = useGrapheme()

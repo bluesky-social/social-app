@@ -35,10 +35,10 @@ import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -58,6 +58,7 @@ export const SettingsScreen = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
+    const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
     const [isSwitching, setIsSwitching] = React.useState(false)
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
@@ -162,6 +163,11 @@ export const SettingsScreen = withAuthRequired(
       Toast.show('Preferences reset')
     }, [store])
 
+    const onPressResetOnboarding = React.useCallback(async () => {
+      store.onboarding.reset()
+      Toast.show('Onboarding reset')
+    }, [store])
+
     const onPressBuildInfo = React.useCallback(() => {
       Clipboard.setString(
         `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
@@ -170,10 +176,8 @@ export const SettingsScreen = withAuthRequired(
     }, [])
 
     const openPreferencesModal = React.useCallback(() => {
-      store.shell.openModal({
-        name: 'preferences-home-feed',
-      })
-    }, [store])
+      navigation.navigate('PreferencesHomeFeed')
+    }, [navigation])
 
     const onPressAppPasswords = React.useCallback(() => {
       navigation.navigate('AppPasswords')
@@ -200,7 +204,7 @@ export const SettingsScreen = withAuthRequired(
         <ViewHeader title="Settings" />
         <ScrollView
           style={[s.hContentRegion]}
-          contentContainerStyle={!isDesktopWeb && pal.viewLight}
+          contentContainerStyle={isMobile && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
           {store.session.currentSession !== undefined ? (
@@ -344,7 +348,7 @@ export const SettingsScreen = withAuthRequired(
           <View style={[pal.view, styles.toggleCard]}>
             <ToggleButton
               type="default-light"
-              label="Require alt text on images"
+              label="Require alt text before posting"
               labelType="lg"
               isSelected={store.preferences.requireAltTextEnabled}
               onPress={store.preferences.toggleRequireAltTextEnabled}
@@ -386,7 +390,7 @@ export const SettingsScreen = withAuthRequired(
             Advanced
           </Text>
           <TouchableOpacity
-            testID="preferencesHomeFeedModalButton"
+            testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openPreferencesModal}
             accessibilityRole="button"
@@ -505,7 +509,7 @@ export const SettingsScreen = withAuthRequired(
               System log
             </Text>
           </TouchableOpacity>
-          {isDesktopWeb ? (
+          {__DEV__ ? (
             <ToggleButton
               type="default-light"
               label="Experiment: Use AppView Proxy"
@@ -533,6 +537,16 @@ export const SettingsScreen = withAuthRequired(
                 accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[pal.view, styles.linkCardNoIcon]}
+                onPress={onPressResetOnboarding}
+                accessibilityRole="button"
+                accessibilityHint="Reset onboarding"
+                accessibilityLabel="Resets the onboarding state">
+                <Text type="lg" style={pal.text}>
+                  Reset onboarding state
                 </Text>
               </TouchableOpacity>
             </>

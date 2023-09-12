@@ -18,8 +18,8 @@ export class FeedViewPostsSlice {
   constructor(public items: FeedViewPost[] = []) {}
 
   get _reactKey() {
-    return `slice-${this.rootItem.post.uri}-${
-      this.rootItem.reason?.indexedAt || this.rootItem.post.indexedAt
+    return `slice-${this.items[0].post.uri}-${
+      this.items[0].reason?.indexedAt || this.items[0].post.indexedAt
     }`
   }
 
@@ -105,6 +105,7 @@ export class FeedTuner {
   tune(
     feed: FeedViewPost[],
     tunerFns: FeedTunerFn[] = [],
+    {dryRun}: {dryRun: boolean} = {dryRun: false},
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
 
@@ -156,9 +157,11 @@ export class FeedTuner {
       }
     }
 
-    for (const slice of slices) {
-      for (const item of slice.items) {
-        this.seenUris.add(item.post.uri)
+    if (!dryRun) {
+      for (const slice of slices) {
+        for (const item of slice.items) {
+          this.seenUris.add(item.post.uri)
+        }
       }
     }
 

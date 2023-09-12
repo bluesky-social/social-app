@@ -22,7 +22,7 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -42,7 +42,7 @@ import {NavigationProp} from 'lib/routes/types'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 
 export const CustomFeedScreen = withAuthRequired(
-  observer((props: Props) => {
+  observer(function CustomFeedScreenImpl(props: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
@@ -119,9 +119,13 @@ export const CustomFeedScreen = withAuthRequired(
 )
 
 export const CustomFeedScreenInner = observer(
-  ({route, feedOwnerDid}: Props & {feedOwnerDid: string}) => {
+  function CustomFeedScreenInnerImpl({
+    route,
+    feedOwnerDid,
+  }: Props & {feedOwnerDid: string}) {
     const store = useStores()
     const pal = usePalette('default')
+    const {isTabletOrDesktop} = useWebMediaQueries()
     const {track} = useAnalytics()
     const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
@@ -188,6 +192,15 @@ export const CustomFeedScreenInner = observer(
       track('CustomFeed:Share')
     }, [handleOrDid, rkey, track])
 
+    const onPressReport = React.useCallback(() => {
+      if (!currentFeed) return
+      store.shell.openModal({
+        name: 'report',
+        uri: currentFeed.uri,
+        cid: currentFeed.data.cid,
+      })
+    }, [store, currentFeed])
+
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
       resetMainScroll()
@@ -200,15 +213,37 @@ export const CustomFeedScreenInner = observer(
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
         {
-          testID: 'feedHeaderDropdownRemoveBtn',
-          label: 'Remove from my feeds',
+          testID: 'feedHeaderDropdownToggleSavedBtn',
+          label: currentFeed?.isSaved
+            ? 'Remove from my feeds'
+            : 'Add to my feeds',
           onPress: onToggleSaved,
+          icon: currentFeed?.isSaved
+            ? {
+                ios: {
+                  name: 'trash',
+                },
+                android: 'ic_delete',
+                web: 'trash',
+              }
+            : {
+                ios: {
+                  name: 'plus',
+                },
+                android: '',
+                web: 'plus',
+              },
+        },
+        {
+          testID: 'feedHeaderDropdownReportBtn',
+          label: 'Report feed',
+          onPress: onPressReport,
           icon: {
             ios: {
-              name: 'trash',
+              name: 'exclamationmark.triangle',
             },
-            android: 'ic_delete',
-            web: 'trash',
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
           },
         },
         {
@@ -225,7 +260,7 @@ export const CustomFeedScreenInner = observer(
         },
       ]
       return items
-    }, [onToggleSaved, onPressShare])
+    }, [currentFeed?.isSaved, onToggleSaved, onPressReport, onPressShare])
 
     const renderHeaderBtns = React.useCallback(() => {
       return (
@@ -258,12 +293,7 @@ export const CustomFeedScreenInner = observer(
               />
             </Button>
           ) : undefined}
-          {currentFeed?.isSaved ? (
-            <NativeDropdown
-              testID="feedHeaderDropdownBtn"
-              items={dropdownItems}
-            />
-          ) : (
+          {!currentFeed?.isSaved ? (
             <Button
               type="default-light"
               onPress={onToggleSaved}
@@ -275,7 +305,21 @@ export const CustomFeedScreenInner = observer(
                 Add to My Feeds
               </Text>
             </Button>
-          )}
+          ) : null}
+          <NativeDropdown testID="feedHeaderDropdownBtn" items={dropdownItems}>
+            <View
+              style={{
+                paddingLeft: currentFeed?.isSaved ? 12 : 6,
+                paddingRight: 12,
+                paddingVertical: 8,
+              }}>
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={pal.colors.textLight}
+              />
+            </View>
+          </NativeDropdown>
         </View>
       )
     }, [
@@ -317,7 +361,7 @@ export const CustomFeedScreenInner = observer(
                   )}
                 </Text>
               )}
-              {isDesktopWeb && (
+              {isTabletOrDesktop && (
                 <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
                   <Button
                     type={currentFeed?.isSaved ? 'default' : 'inverted'}
@@ -370,6 +414,17 @@ export const CustomFeedScreenInner = observer(
                       color={pal.colors.icon}
                     />
                   </Button>
+                  <Button
+                    type="default"
+                    accessibilityLabel="Report this feed"
+                    accessibilityHint=""
+                    onPress={onPressReport}>
+                    <FontAwesomeIcon
+                      icon="circle-exclamation"
+                      size={18}
+                      color={pal.colors.icon}
+                    />
+                  </Button>
                 </View>
               )}
             </View>
@@ -401,7 +456,14 @@ export const CustomFeedScreenInner = observer(
               ) : null}
             </View>
           </View>
-          <View style={[styles.fakeSelector, pal.border]}>
+          <View
+            style={[
+              styles.fakeSelector,
+              {
+                paddingHorizontal: isTabletOrDesktop ? 16 : 6,
+              },
+              pal.border,
+            ]}>
             <View
               style={[styles.fakeSelectorItem, {borderColor: pal.colors.link}]}>
               <Text type="md-medium" style={[pal.text]}>
@@ -419,18 +481,26 @@ export const CustomFeedScreenInner = observer(
       onToggleLiked,
       onPressShare,
       handleOrDid,
+      onPressReport,
       rkey,
       isPinned,
       onTogglePinned,
+      isTabletOrDesktop,
     ])
 
     const renderEmptyState = React.useCallback(() => {
-      return <EmptyState icon="feed" message="This list is empty!" />
-    }, [])
+      return (
+        <View style={[pal.border, {borderTopWidth: 1, paddingTop: 20}]}>
+          <EmptyState icon="feed" message="This feed is empty!" />
+        </View>
+      )
+    }, [pal.border])
 
     return (
       <View style={s.hContentRegion}>
-        <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
+        {!isTabletOrDesktop && (
+          <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
+        )}
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
@@ -439,6 +509,7 @@ export const CustomFeedScreenInner = observer(
           ListHeaderComponent={renderListHeaderComponent}
           renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned]}
+          style={!isTabletOrDesktop ? {flex: 1} : undefined}
         />
         {isScrolledDown ? (
           <LoadLatestBtn
@@ -452,7 +523,7 @@ export const CustomFeedScreenInner = observer(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="Compose post"
+          accessibilityLabel="New post"
           accessibilityHint=""
         />
       </View>
@@ -494,7 +565,6 @@ const styles = StyleSheet.create({
   },
   fakeSelector: {
     flexDirection: 'row',
-    paddingHorizontal: isDesktopWeb ? 16 : 6,
   },
   fakeSelectorItem: {
     paddingHorizontal: 12,

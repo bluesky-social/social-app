@@ -14,7 +14,6 @@ import (
 	"syscall"
 	"time"
 
-	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -38,9 +37,7 @@ type Server struct {
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
-	pdsHost := cctx.String("pds-host")
-	atpHandle := cctx.String("handle")
-	atpPassword := cctx.String("password")
+	appviewHost := cctx.String("appview-host")
 	mailmodoAPIKey := cctx.String("mailmodo-api-key")
 	mailmodoListName := cctx.String("mailmodo-list-name")
 
@@ -50,27 +47,11 @@ func serve(cctx *cli.Context) error {
 	// Mailmodo client.
 	mailmodo := NewMailmodo(mailmodoAPIKey, mailmodoListName)
 
-	// create a new session
-	// TODO: does this work with no auth at all?
+	// create a new session (no auth)
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
-		Host:   pdsHost,
-		Auth: &xrpc.AuthInfo{
-			Handle: atpHandle,
-		},
+		Host:   appviewHost,
 	}
-
-	auth, err := comatproto.ServerCreateSession(context.TODO(), xrpcc, &comatproto.ServerCreateSession_Input{
-		Identifier: xrpcc.Auth.Handle,
-		Password:   atpPassword,
-	})
-	if err != nil {
-		return err
-	}
-	xrpcc.Auth.AccessJwt = auth.AccessJwt
-	xrpcc.Auth.RefreshJwt = auth.RefreshJwt
-	xrpcc.Auth.Did = auth.Did
-	xrpcc.Auth.Handle = auth.Handle
 
 	// httpd
 	var (
@@ -137,7 +118,6 @@ func serve(cctx *cli.Context) error {
 	//
 	// configure routes
 	//
-
 	// static files
 	staticHandler := http.FileServer(func() http.FileSystem {
 		if debug {
@@ -150,13 +130,28 @@ func serve(cctx *cli.Context) error {
 		}
 		return http.FS(fsys)
 	}())
+
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v4", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v6", echo.WrapHandler(staticHandler))
-	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)))
 	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
 	e.GET("/security.txt", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
+	})
+	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			path := c.Request().URL.Path
+			maxAge := 1 * (60 * 60) // default is 1 hour
+
+			// Cache javascript and images files for 1 week, which works because
+			// they're always versioned (e.g. /static/js/main.64c14927.js)
+			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") {
+				maxAge = 7 * (60 * 60 * 24) // 1 week
+			}
+
+			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+			return next(c)
+		}
 	})
 
 	// home
@@ -173,6 +168,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/moderation/blocked-accounts", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
+	e.GET("/settings/home-feed", server.WebGeneric)
 	e.GET("/settings/saved-feeds", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)

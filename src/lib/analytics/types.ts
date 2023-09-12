@@ -86,6 +86,8 @@ interface TrackPropertiesMap {
   'MobileShell:SearchButtonPressed': {}
   'MobileShell:NotificationsButtonPressed': {}
   'MobileShell:FeedsButtonPressed': {}
+  // NOTIFICATIONS events
+  'Notificatons:OpenApp': {}
   // LISTS events
   'Lists:onRefresh': {}
   'Lists:onEndReached': {}
@@ -120,6 +122,8 @@ interface TrackPropertiesMap {
   // ONBOARDING events
   'Onboarding:Begin': {}
   'Onboarding:Complete': {}
+  'Onboarding:Skipped': {}
+  'Onboarding:Reset': {}
 }
 
 interface ScreenPropertiesMap {

@@ -10,8 +10,8 @@ import {FeedsDiscoveryModel} from 'state/models/discovery/feeds'
 import {CenteredView, FlatList} from 'view/com/util/Views'
 import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {Text} from 'view/com/util/text/Text'
-import {isDesktopWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {HeaderWithInput} from 'view/com/search/HeaderWithInput'
@@ -19,16 +19,17 @@ import debounce from 'lodash.debounce'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'DiscoverFeeds'>
 export const DiscoverFeedsScreen = withAuthRequired(
-  observer(({}: Props) => {
+  observer(function DiscoverFeedsScreenImpl({}: Props) {
     const store = useStores()
     const pal = usePalette('default')
     const feeds = React.useMemo(() => new FeedsDiscoveryModel(store), [store])
+    const {isTabletOrDesktop} = useWebMediaQueries()
 
     // search stuff
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
-      () => debounce(query => feeds.search(query), 500), // debounce for 500ms
+      () => debounce(q => feeds.search(q), 500), // debounce for 500ms
       [feeds],
     )
     const onChangeQuery = React.useCallback(
@@ -59,7 +60,9 @@ export const DiscoverFeedsScreen = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
-        feeds.refresh()
+        if (!feeds.hasLoaded) {
+          feeds.refresh()
+        }
       }, [store, feeds]),
     )
 
@@ -67,23 +70,21 @@ export const DiscoverFeedsScreen = withAuthRequired(
       feeds.refresh()
     }, [feeds])
 
-    const renderListEmptyComponent = React.useCallback(() => {
+    const renderListEmptyComponent = () => {
       return (
-        <View
-          style={[
-            pal.border,
-            !isDesktopWeb && s.flex1,
-            pal.viewLight,
-            styles.empty,
-          ]}>
-          <Text type="lg" style={[pal.text]}>
+        <View style={styles.empty}>
+          <Text type="lg" style={pal.textLight}>
             {feeds.isLoading
-              ? 'Loading...'
+              ? isTabletOrDesktop
+                ? 'Loading...'
+                : ''
+              : query
+              ? `No results found for "${query}"`
               : `We can't find any feeds for some reason. This is probably an error - try refreshing!`}
           </Text>
         </View>
       )
-    }, [pal, feeds.isLoading])
+    }
 
     const renderItem = React.useCallback(
       ({item}: {item: CustomFeedModel}) => (
@@ -100,21 +101,22 @@ export const DiscoverFeedsScreen = withAuthRequired(
 
     return (
       <CenteredView style={[styles.container, pal.view]}>
-        <View style={[isDesktopWeb && styles.containerDesktop, pal.border]}>
+        <View
+          style={[isTabletOrDesktop && styles.containerDesktop, pal.border]}>
           <ViewHeader title="Discover Feeds" showOnDesktop />
-          <HeaderWithInput
-            isInputFocused={isInputFocused}
-            query={query}
-            setIsInputFocused={setIsInputFocused}
-            onChangeQuery={onChangeQuery}
-            onPressClearQuery={onPressClearQuery}
-            onPressCancelSearch={onPressCancelSearch}
-            onSubmitQuery={onSubmitQuery}
-            showMenu={false}
-          />
         </View>
+        <HeaderWithInput
+          isInputFocused={isInputFocused}
+          query={query}
+          setIsInputFocused={setIsInputFocused}
+          onChangeQuery={onChangeQuery}
+          onPressClearQuery={onPressClearQuery}
+          onPressCancelSearch={onPressCancelSearch}
+          onSubmitQuery={onSubmitQuery}
+          showMenu={false}
+        />
         <FlatList
-          style={[!isDesktopWeb && s.flex1]}
+          style={[!isTabletOrDesktop && s.flex1]}
           data={feeds.feeds}
           keyExtractor={item => item.data.uri}
           contentContainerStyle={styles.contentContainer}
@@ -149,10 +151,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
   },
   empty: {
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    borderRadius: 8,
-    marginHorizontal: 18,
-    marginTop: 10,
+    paddingHorizontal: 16,
+    paddingTop: 10,
   },
 })

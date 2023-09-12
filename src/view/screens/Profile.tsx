@@ -32,7 +32,7 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
-  observer(({route}: Props) => {
+  observer(function ProfileScreenImpl({route}: Props) {
     const store = useStores()
     const {screen, track} = useAnalytics()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
@@ -92,8 +92,10 @@ export const ProfileScreen = withAuthRequired(
 
     const onPressCompose = React.useCallback(() => {
       track('ProfileScreen:PressCompose')
-      store.shell.openComposer({})
-    }, [store, track])
+      const mention =
+        uiState.profile.handle === store.me.handle ? '' : uiState.profile.handle
+      store.shell.openComposer({mention})
+    }, [store, track, uiState])
     const onSelectView = React.useCallback(
       (index: number) => {
         uiState.setSelectedViewIndex(index)
@@ -282,7 +284,7 @@ export const ProfileScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="Compose post"
+          accessibilityLabel="New post"
           accessibilityHint=""
         />
       </ScreenHider>

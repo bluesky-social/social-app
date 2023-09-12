@@ -3,6 +3,7 @@ import {
   AppBskyFeedGetTimeline as GetTimeline,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
+  AppBskyFeedGetActorLikes as GetActorLikes,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -11,8 +12,17 @@ import {cleanError} from 'lib/strings/errors'
 import {FeedTuner} from 'lib/api/feed-manip'
 import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
+import {FeedViewPostsSlice} from 'lib/api/feed-manip'
 
 const PAGE_SIZE = 30
+
+type Options = {
+  /**
+   * Formats the feed in a flat array with no threading of replies, just
+   * top-level posts.
+   */
+  isSimpleFeed?: boolean
+}
 
 type QueryParams =
   | GetTimeline.QueryParams
@@ -35,6 +45,7 @@ export class PostsFeedModel {
   pollCursor: string | undefined
   tuner = new FeedTuner()
   pageSize = PAGE_SIZE
+  options: Options = {}
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
@@ -47,8 +58,9 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'custom',
+    public feedType: 'home' | 'author' | 'custom' | 'likes',
     params: QueryParams,
+    options?: Options,
   ) {
     makeAutoObservable(
       this,
@@ -60,6 +72,7 @@ export class PostsFeedModel {
       {autoBind: true},
     )
     this.params = params
+    this.options = options || {}
   }
 
   get hasContent() {
@@ -259,11 +272,22 @@ export class PostsFeedModel {
    * Check if new posts are available
    */
   async checkForLatest() {
-    if (this.hasNewLatest || this.isLoading) {
+    if (!this.hasLoaded || this.hasNewLatest || this.isLoading) {
       return
     }
     const res = await this._getFeed({limit: 1})
-    this.setHasNewLatest(res.data.feed[0]?.post.uri !== this.pollCursor)
+    if (res.data.feed[0]) {
+      const slices = this.tuner.tune(res.data.feed, this.feedTuners, {
+        dryRun: true,
+      })
+      if (slices[0]) {
+        const sliceModel = new PostsFeedSliceModel(this.rootStore, slices[0])
+        if (sliceModel.moderation.content.filter) {
+          return
+        }
+        this.setHasNewLatest(sliceModel.uri !== this.pollCursor)
+      }
+    }
   }
 
   /**
@@ -345,11 +369,22 @@ export class PostsFeedModel {
       this.rootStore.posts.fromFeedItem(item)
     }
 
-    const slices = this.tuner.tune(res.data.feed, this.feedTuners)
+    const slices = this.options.isSimpleFeed
+      ? res.data.feed.map(item => new FeedViewPostsSlice([item]))
+      : this.tuner.tune(res.data.feed, this.feedTuners)
 
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
       const sliceModel = new PostsFeedSliceModel(this.rootStore, slice)
+      const dupTest = (item: PostsFeedSliceModel) =>
+        item._reactKey === sliceModel._reactKey
+      // sanity check
+      // if a duplicate _reactKey passes through, the UI breaks hard
+      if (!replace) {
+        if (this.slices.find(dupTest) || toAppend.find(dupTest)) {
+          continue
+        }
+      }
       toAppend.push(sliceModel)
     }
     runInAction(() => {
@@ -406,9 +441,13 @@ export class PostsFeedModel {
         res.data.feed = res.data.feed.slice(0, params.limit)
       }
       return res
-    } else {
+    } else if (this.feedType === 'author') {
       return this.rootStore.agent.getAuthorFeed(
         params as GetAuthorFeed.QueryParams,
+      )
+    } else {
+      return this.rootStore.agent.getActorLikes(
+        params as GetActorLikes.QueryParams,
       )
     }
   }

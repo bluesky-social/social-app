@@ -3,15 +3,14 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import type {Modal as ModalIface} from 'state/models/ui/shell'
-import {isMobileWeb} from 'platform/detection'
 
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
-import * as ReportPostModal from './report/ReportPost'
-import * as ReportAccountModal from './report/ReportAccount'
+import * as ReportModal from './report/Modal'
 import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as DeleteAccountModal from './DeleteAccount'
@@ -27,10 +26,7 @@ import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
-import * as OnboardingModal from './OnboardingModal'
 import * as ModerationDetailsModal from './ModerationDetails'
-
-import * as PreferencesHomeFeed from './PreferencesHomeFeed'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -51,6 +47,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
 function Modal({modal}: {modal: ModalIface}) {
   const store = useStores()
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   if (!store.shell.isModalActive) {
     return null
@@ -76,10 +73,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ProfilePreviewModal.Component {...modal} />
   } else if (modal.name === 'server-input') {
     element = <ServerInputModal.Component {...modal} />
-  } else if (modal.name === 'report-post') {
-    element = <ReportPostModal.Component {...modal} />
-  } else if (modal.name === 'report-account') {
-    element = <ReportAccountModal.Component {...modal} />
+  } else if (modal.name === 'report') {
+    element = <ReportModal.Component {...modal} />
   } else if (modal.name === 'create-or-edit-mute-list') {
     element = <CreateOrEditMuteListModal.Component {...modal} />
   } else if (modal.name === 'list-add-remove-user') {
@@ -110,10 +105,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <AltTextImageModal.Component {...modal} />
   } else if (modal.name === 'edit-image') {
     element = <EditImageModal.Component {...modal} />
-  } else if (modal.name === 'preferences-home-feed') {
-    element = <PreferencesHomeFeed.Component />
-  } else if (modal.name === 'onboarding') {
-    element = <OnboardingModal.Component />
   } else if (modal.name === 'moderation-details') {
     element = <ModerationDetailsModal.Component {...modal} />
   } else {
@@ -121,15 +112,15 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={onPressMask}>
       <View style={styles.mask}>
-        {/* eslint-disable-next-line */}
+        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
             style={[
               styles.container,
-              isMobileWeb && styles.containerMobile,
+              isMobile && styles.containerMobile,
               pal.view,
               pal.border,
             ]}>
@@ -154,7 +145,9 @@ const styles = StyleSheet.create({
   },
   container: {
     width: 500,
+    // @ts-ignore web only
     maxWidth: '100vw',
+    // @ts-ignore web only
     maxHeight: '100vh',
     paddingVertical: 20,
     paddingHorizontal: 24,

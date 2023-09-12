@@ -1,3 +1,4 @@
+const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
@@ -13,7 +14,9 @@ export function ago(date: number | string | Date): string {
     ts = date
   }
   const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
-  if (diffSeconds < MINUTE) {
+  if (diffSeconds < NOW) {
+    return `now`
+  } else if (diffSeconds < MINUTE) {
     return `${diffSeconds}s`
   } else if (diffSeconds < HOUR) {
     return `${Math.floor(diffSeconds / MINUTE)}m`

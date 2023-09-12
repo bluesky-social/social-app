@@ -1,11 +1,11 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {RichText} from '@atproto/api'
+import {RichText, AppBskyRichtextFacet} from '@atproto/api'
+import EventEmitter from 'eventemitter3'
 import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
 import {Document} from '@tiptap/extension-document'
 import History from '@tiptap/extension-history'
 import Hardbreak from '@tiptap/extension-hard-break'
-import {Link} from '@tiptap/extension-link'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
@@ -15,6 +15,8 @@ import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
+import {Emoji} from './web/EmojiPicker.web'
+import {LinkDecorator} from './web/LinkDecorator'
 
 export interface TextInputRef {
   focus: () => void
@@ -33,103 +35,133 @@ interface TextInputProps {
   onError: (err: string) => void
 }
 
-export const TextInput = React.forwardRef(
-  (
+export const textInputWebEmitter = new EventEmitter()
+
+export const TextInput = React.forwardRef(function TextInputImpl(
+  {
+    richtext,
+    placeholder,
+    suggestedLinks,
+    autocompleteView,
+    setRichText,
+    onPhotoPasted,
+    onPressPublish,
+    onSuggestedLinksChanged,
+  }: // onError, TODO
+  TextInputProps,
+  ref,
+) {
+  const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('publish', onPressPublish)
+    return () => {
+      textInputWebEmitter.removeListener('publish', onPressPublish)
+    }
+  }, [onPressPublish])
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+    return () => {
+      textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+    }
+  }, [onPhotoPasted])
+
+  const editor = useEditor(
     {
-      richtext,
-      placeholder,
-      suggestedLinks,
-      autocompleteView,
-      setRichText,
-      onPhotoPasted,
-      onPressPublish,
-      onSuggestedLinksChanged,
-    }: // onError, TODO
-    TextInputProps,
-    ref,
-  ) => {
-    const modeClass = useColorSchemeStyle(
-      'ProseMirror-light',
-      'ProseMirror-dark',
-    )
-
-    const editor = useEditor(
-      {
-        extensions: [
-          Document,
-          Link.configure({
-            protocols: ['http', 'https'],
-            autolink: true,
-          }),
-          Mention.configure({
-            HTMLAttributes: {
-              class: 'mention',
-            },
-            suggestion: createSuggestion({autocompleteView}),
-          }),
-          Paragraph,
-          Placeholder.configure({
-            placeholder,
-          }),
-          Text,
-          History,
-          Hardbreak,
-        ],
-        editorProps: {
-          attributes: {
-            class: modeClass,
+      extensions: [
+        Document,
+        LinkDecorator,
+        Mention.configure({
+          HTMLAttributes: {
+            class: 'mention',
           },
-          handlePaste: (_, event) => {
-            const items = event.clipboardData?.items
-
-            if (items === undefined) {
-              return
-            }
-
-            getImageFromUri(items, onPhotoPasted)
-          },
-          handleKeyDown: (_, event) => {
-            if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
-              // Workaround relying on previous state from `setRichText` to
-              // get the updated text content during editor initialization
-              setRichText((state: RichText) => {
-                onPressPublish(state)
-                return state
-              })
-            }
-          },
+          suggestion: createSuggestion({autocompleteView}),
+        }),
+        Paragraph,
+        Placeholder.configure({
+          placeholder,
+        }),
+        Text,
+        History,
+        Hardbreak,
+      ],
+      editorProps: {
+        attributes: {
+          class: modeClass,
         },
-        content: richtext.text.toString(),
-        autofocus: true,
-        editable: true,
-        injectCSS: true,
-        onUpdate({editor: editorProp}) {
-          const json = editorProp.getJSON()
+        handlePaste: (_, event) => {
+          const items = event.clipboardData?.items
 
-          const newRt = new RichText({text: editorJsonToText(json).trim()})
-          setRichText(newRt)
+          if (items === undefined) {
+            return
+          }
 
-          const newSuggestedLinks = new Set(editorJsonToLinks(json))
-          if (!isEqual(newSuggestedLinks, suggestedLinks)) {
-            onSuggestedLinksChanged(newSuggestedLinks)
+          getImageFromUri(items, (uri: string) => {
+            textInputWebEmitter.emit('photo-pasted', uri)
+          })
+        },
+        handleKeyDown: (_, event) => {
+          if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
+            textInputWebEmitter.emit('publish')
+            return true
           }
         },
       },
-      [modeClass],
-    )
+      content: textToEditorJson(richtext.text.toString()),
+      autofocus: 'end',
+      editable: true,
+      injectCSS: true,
+      onUpdate({editor: editorProp}) {
+        const json = editorProp.getJSON()
 
-    React.useImperativeHandle(ref, () => ({
-      focus: () => {}, // TODO
-      blur: () => {}, // TODO
-    }))
+        const newRt = new RichText({text: editorJsonToText(json).trim()})
+        newRt.detectFacetsWithoutResolution()
+        setRichText(newRt)
 
-    return (
-      <View style={styles.container}>
-        <EditorContent editor={editor} />
-      </View>
-    )
-  },
-)
+        const set: Set<string> = new Set()
+
+        if (newRt.facets) {
+          for (const facet of newRt.facets) {
+            for (const feature of facet.features) {
+              if (AppBskyRichtextFacet.isLink(feature)) {
+                set.add(feature.uri)
+              }
+            }
+          }
+        }
+
+        if (!isEqual(set, suggestedLinks)) {
+          onSuggestedLinksChanged(set)
+        }
+      },
+    },
+    [modeClass],
+  )
+
+  const onEmojiInserted = React.useCallback(
+    (emoji: Emoji) => {
+      editor?.chain().focus().insertContent(emoji.native).run()
+    },
+    [editor],
+  )
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
+    return () => {
+      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
+    }
+  }, [onEmojiInserted])
+
+  React.useImperativeHandle(ref, () => ({
+    focus: () => {}, // TODO
+    blur: () => {}, // TODO
+  }))
+
+  return (
+    <View style={styles.container}>
+      <EditorContent editor={editor} />
+    </View>
+  )
+})
 
 function editorJsonToText(json: JSONContent): string {
   let text = ''
@@ -150,20 +182,59 @@ function editorJsonToText(json: JSONContent): string {
   return text
 }
 
-function editorJsonToLinks(json: JSONContent): string[] {
-  let links: string[] = []
-  if (json.content?.length) {
-    for (const node of json.content) {
-      links = links.concat(editorJsonToLinks(node))
+function textToEditorJson(text: string): JSONContent {
+  if (text === '' || text.length === 0) {
+    return {
+      text: '',
     }
   }
 
-  const link = json.marks?.find(m => m.type === 'link')
-  if (link?.attrs?.href) {
-    links.push(link.attrs.href)
+  const lines = text.split('\n')
+  const docContent: JSONContent[] = []
+
+  for (const line of lines) {
+    if (line.trim() === '') {
+      continue // skip empty lines
+    }
+
+    const paragraphContent: JSONContent[] = []
+    let position = 0
+
+    while (position < line.length) {
+      if (line[position] === '@') {
+        // Handle mentions
+        let endPosition = position + 1
+        while (endPosition < line.length && /\S/.test(line[endPosition])) {
+          endPosition++
+        }
+        const mentionId = line.substring(position + 1, endPosition)
+        paragraphContent.push({
+          type: 'mention',
+          attrs: {id: mentionId},
+        })
+        position = endPosition
+      } else {
+        // Handle regular text
+        let endPosition = line.indexOf('@', position)
+        if (endPosition === -1) endPosition = line.length
+        paragraphContent.push({
+          type: 'text',
+          text: line.substring(position, endPosition),
+        })
+        position = endPosition
+      }
+    }
+
+    docContent.push({
+      type: 'paragraph',
+      content: paragraphContent,
+    })
   }
 
-  return links
+  return {
+    type: 'doc',
+    content: docContent,
+  }
 }
 
 const styles = StyleSheet.create({

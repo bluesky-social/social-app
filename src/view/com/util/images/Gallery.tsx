@@ -1,6 +1,6 @@
 import {AppBskyEmbedImages} from '@atproto/api'
 import React, {ComponentProps, FC} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 
 type EventFunction = (index: number) => void
@@ -14,8 +14,6 @@ interface GalleryItemProps {
   imageStyle: ComponentProps<typeof Image>['style']
 }
 
-const DELAY_PRESS_IN = 500
-
 export const GalleryItem: FC<GalleryItemProps> = ({
   images,
   index,
@@ -28,8 +26,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 
   return (
     <View>
-      <TouchableOpacity
-        delayPressIn={DELAY_PRESS_IN}
+      <Pressable
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
@@ -44,7 +41,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityHint=""
           accessibilityIgnoresInvertColors
         />
-      </TouchableOpacity>
+      </Pressable>
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
           <Text style={styles.alt} accessible={false}>

@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
     width: 42,
     height: 26,
     borderRadius: 15,
-    padding: 4,
-    borderWidth: 1,
+    padding: 3,
+    borderWidth: 2,
   },
   circleFill: {
     width: 16,

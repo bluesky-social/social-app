@@ -14,8 +14,8 @@ import {ListModel} from 'state/models/content/list'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {isDesktopWeb} from 'platform/detection'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {ListActions} from 'view/com/lists/ListActions'
@@ -23,9 +23,10 @@ import {s} from 'lib/styles'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
-  observer(({route}: Props) => {
+  observer(function ProfileListScreenImpl({route}: Props) {
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
+    const {isTabletOrDesktop} = useWebMediaQueries()
     const pal = usePalette('default')
     const {name, rkey} = route.params
 
@@ -74,7 +75,7 @@ export const ProfileListScreen = withAuthRequired(
       store.shell.openModal({
         name: 'confirm',
         title: 'Delete List',
-        message: 'Are you sure',
+        message: 'Are you sure?',
         async onPressConfirm() {
           await list.delete()
           if (navigation.canGoBack()) {
@@ -85,6 +86,15 @@ export const ProfileListScreen = withAuthRequired(
         },
       })
     }, [store, list, navigation])
+
+    const onPressReportList = React.useCallback(() => {
+      if (!list.list) return
+      store.shell.openModal({
+        name: 'report',
+        uri: list.uri,
+        cid: list.list.cid,
+      })
+    }, [store, list])
 
     const onPressShareList = React.useCallback(() => {
       const url = toShareUrl(`/profile/${name}/lists/${rkey}`)
@@ -104,6 +114,7 @@ export const ProfileListScreen = withAuthRequired(
           onPressEditList={onPressEditList}
           onToggleSubscribed={onToggleSubscribed}
           onPressShareList={onPressShareList}
+          onPressReportList={onPressReportList}
           reversed={true}
         />
       )
@@ -114,13 +125,14 @@ export const ProfileListScreen = withAuthRequired(
       onPressEditList,
       onPressShareList,
       onToggleSubscribed,
+      onPressReportList,
     ])
 
     return (
       <CenteredView
         style={[
           styles.container,
-          isDesktopWeb && styles.containerDesktop,
+          isTabletOrDesktop && styles.containerDesktop,
           pal.view,
           pal.border,
         ]}
@@ -132,6 +144,7 @@ export const ProfileListScreen = withAuthRequired(
           onToggleSubscribed={onToggleSubscribed}
           onPressEditList={onPressEditList}
           onPressDeleteList={onPressDeleteList}
+          onPressReportList={onPressReportList}
           onPressShareList={onPressShareList}
           style={[s.flex1]}
         />
@@ -143,10 +156,11 @@ export const ProfileListScreen = withAuthRequired(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 100,
+    paddingBottom: 100,
   },
   containerDesktop: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    paddingBottom: 0,
   },
 })

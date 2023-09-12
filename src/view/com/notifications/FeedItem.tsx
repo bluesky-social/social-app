@@ -11,6 +11,7 @@ import {
   AppBskyEmbedImages,
   ProfileModeration,
   moderateProfile,
+  AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -51,7 +52,7 @@ interface Author {
   moderation: ProfileModeration
 }
 
-export const FeedItem = observer(function ({
+export const FeedItem = observer(function FeedItemImpl({
   item,
 }: {
   item: NotificationsFeedItemModel
@@ -122,7 +123,7 @@ export const FeedItem = observer(function ({
   }
 
   if (item.isReply || item.isMention || item.isQuote) {
-    if (item.additionalPost?.error) {
+    if (!item.additionalPost || item.additionalPost?.error) {
       // hide errors - it doesnt help the user to show them
       return <View />
     }
@@ -134,8 +135,7 @@ export const FeedItem = observer(function ({
         noFeedback
         accessible={false}>
         <Post
-          uri={item.uri}
-          initView={item.additionalPost}
+          view={item.additionalPost}
           style={
             item.isRead
               ? undefined
@@ -401,6 +401,9 @@ function AdditionalPostText({
   const text = additionalPost.thread?.postRecord.text
   const images = AppBskyEmbedImages.isView(additionalPost.thread.post.embed)
     ? additionalPost.thread.post.embed.images
+    : AppBskyEmbedRecordWithMedia.isView(additionalPost.thread.post.embed) &&
+      AppBskyEmbedImages.isView(additionalPost.thread.post.embed.media)
+    ? additionalPost.thread.post.embed.media.images
     : undefined
   return (
     <>

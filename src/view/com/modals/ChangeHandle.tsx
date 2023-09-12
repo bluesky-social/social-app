@@ -316,9 +316,9 @@ function CustomHandleForm({
   // events
   // =
   const onPressCopy = React.useCallback(() => {
-    Clipboard.setString(`did=${store.me.did}`)
+    Clipboard.setString(isDNSForm ? `did=${store.me.did}` : store.me.did)
     Toast.show('Copied to clipboard')
-  }, [store.me.did])
+  }, [store.me.did, isDNSForm])
   const onChangeHandle = React.useCallback(
     (v: string) => {
       setHandle(v)
@@ -410,15 +410,15 @@ function CustomHandleForm({
       {isDNSForm ? (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Add the following record to your domain:
+            Add the following DNS record to your domain:
           </Text>
           <View style={[styles.dnsTable, pal.btn]}>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              Domain:
+              Host:
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                _atproto.
+                _atproto
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
@@ -438,6 +438,12 @@ function CustomHandleForm({
               </Text>
             </View>
           </View>
+          <Text type="md" style={[pal.text, s.pt20, s.pl5]}>
+            This should create a domain record at:{' '}
+          </Text>
+          <Text type="mono" style={[styles.monoText, pal.text, s.pt5, s.pl5]}>
+            _atproto.{handle}
+          </Text>
         </>
       ) : (
         <>

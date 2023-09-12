@@ -9,8 +9,9 @@ import {
   TextProps,
   View,
   ViewStyle,
-  TouchableOpacity,
+  Pressable,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native'
 import {
   useLinkProps,
@@ -112,7 +113,7 @@ export const Link = observer(function Link({
   }
 
   return (
-    <TouchableOpacity
+    <Pressable
       testID={testID}
       style={style}
       onPress={onPress}
@@ -122,7 +123,7 @@ export const Link = observer(function Link({
       href={asAnchor ? sanitizeUrl(href) : undefined}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
-    </TouchableOpacity>
+    </Pressable>
   )
 })
 
@@ -135,6 +136,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines,
   lineHeight,
   dataSet,
+  title,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -144,6 +146,7 @@ export const TextLink = observer(function TextLink({
   numberOfLines?: number
   lineHeight?: number
   dataSet?: any
+  title?: string
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
@@ -173,8 +176,8 @@ export const TextLink = observer(function TextLink({
       style={style}
       numberOfLines={numberOfLines}
       lineHeight={lineHeight}
-      // @ts-ignore web only -prf
       dataSet={dataSet}
+      title={title}
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
       {...props}>
@@ -197,6 +200,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessible?: boolean
   accessibilityLabel?: string
   accessibilityHint?: string
+  title?: string
 }
 export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   testID,
@@ -218,6 +222,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
         text={text}
         numberOfLines={numberOfLines}
         lineHeight={lineHeight}
+        title={props.title}
         {...props}
       />
     )
@@ -229,6 +234,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
       style={style}
       numberOfLines={numberOfLines}
       lineHeight={lineHeight}
+      title={props.title}
       {...props}>
       {text}
     </Text>
@@ -253,15 +259,21 @@ function onPressInner(
   e?: Event,
 ) {
   let shouldHandle = false
+  const isLeftClick =
+    // @ts-ignore Web only -prf
+    Platform.OS === 'web' && (e.button == null || e.button === 0)
+  // @ts-ignore Web only -prf
+  const isMiddleClick = Platform.OS === 'web' && e.button === 1
+  const isMetaKey =
+    // @ts-ignore Web only -prf
+    Platform.OS === 'web' && (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
+  const newTab = isMetaKey || isMiddleClick
 
   if (Platform.OS !== 'web' || !e) {
     shouldHandle = e ? !e.defaultPrevented : true
   } else if (
     !e.defaultPrevented && // onPress prevented default
-    // @ts-ignore Web only -prf
-    !(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && // ignore clicks with modifier keys
-    // @ts-ignore Web only -prf
-    (e.button == null || e.button === 0) && // ignore everything but left clicks
+    (isLeftClick || isMiddleClick) && // ignore everything but left and middle clicks
     // @ts-ignore Web only -prf
     [undefined, null, '', 'self'].includes(e.currentTarget?.target) // let browser handle "target=_blank" etc.
   ) {
@@ -271,7 +283,7 @@ function onPressInner(
 
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
-    if (href.startsWith('http') || href.startsWith('mailto')) {
+    if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
       Linking.openURL(href)
     } else {
       store.shell.closeModal() // close any active modals

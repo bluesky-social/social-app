@@ -5,7 +5,8 @@ import {Text} from '../util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isWeb} from 'platform/detection'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ScrollView} from 'view/com/modals/util'
@@ -16,13 +17,16 @@ export const snapPoints = ['50%']
 
 export const Component = observer(function Component({
   labels,
+  hasMedia,
   onChange,
 }: {
   labels: string[]
+  hasMedia: boolean
   onChange: (labels: string[]) => void
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {isMobile} = useWebMediaQueries()
   const [selected, setSelected] = useState(labels)
 
   const toggleAdultLabel = (label: string) => {
@@ -52,7 +56,12 @@ export const Component = observer(function Component({
       </View>
 
       <ScrollView>
-        <View style={[styles.section, pal.border, {borderBottomWidth: 1}]}>
+        <View
+          style={[
+            styles.section,
+            pal.border,
+            {borderBottomWidth: 1, paddingHorizontal: isMobile ? 20 : 0},
+          ]}>
           <View
             style={{
               flexDirection: 'row',
@@ -74,46 +83,59 @@ export const Component = observer(function Component({
               </Button>
             ) : null}
           </View>
-          <View style={s.flexRow}>
-            <SelectableBtn
-              testID="sexualLabelBtn"
-              selected={selected.includes('sexual')}
-              left
-              label="Suggestive"
-              onSelect={() => toggleAdultLabel('sexual')}
-              accessibilityHint=""
-              style={s.flex1}
-            />
-            <SelectableBtn
-              testID="nudityLabelBtn"
-              selected={selected.includes('nudity')}
-              label="Nudity"
-              onSelect={() => toggleAdultLabel('nudity')}
-              accessibilityHint=""
-              style={s.flex1}
-            />
-            <SelectableBtn
-              testID="pornLabelBtn"
-              selected={selected.includes('porn')}
-              label="Porn"
-              right
-              onSelect={() => toggleAdultLabel('porn')}
-              accessibilityHint=""
-              style={s.flex1}
-            />
-          </View>
+          {hasMedia ? (
+            <>
+              <View style={s.flexRow}>
+                <SelectableBtn
+                  testID="sexualLabelBtn"
+                  selected={selected.includes('sexual')}
+                  left
+                  label="Suggestive"
+                  onSelect={() => toggleAdultLabel('sexual')}
+                  accessibilityHint=""
+                  style={s.flex1}
+                />
+                <SelectableBtn
+                  testID="nudityLabelBtn"
+                  selected={selected.includes('nudity')}
+                  label="Nudity"
+                  onSelect={() => toggleAdultLabel('nudity')}
+                  accessibilityHint=""
+                  style={s.flex1}
+                />
+                <SelectableBtn
+                  testID="pornLabelBtn"
+                  selected={selected.includes('porn')}
+                  label="Porn"
+                  right
+                  onSelect={() => toggleAdultLabel('porn')}
+                  accessibilityHint=""
+                  style={s.flex1}
+                />
+              </View>
 
-          <Text style={[pal.text, styles.adultExplainer]}>
-            {selected.includes('sexual') ? (
-              <>Pictures meant for adults.</>
-            ) : selected.includes('nudity') ? (
-              <>Artistic or non-erotic nudity.</>
-            ) : selected.includes('porn') ? (
-              <>Sexual activity or erotic nudity.</>
-            ) : (
-              <>If none are selected, suitable for all ages.</>
-            )}
-          </Text>
+              <Text style={[pal.text, styles.adultExplainer]}>
+                {selected.includes('sexual') ? (
+                  <>Pictures meant for adults.</>
+                ) : selected.includes('nudity') ? (
+                  <>Artistic or non-erotic nudity.</>
+                ) : selected.includes('porn') ? (
+                  <>Sexual activity or erotic nudity.</>
+                ) : (
+                  <>If none are selected, suitable for all ages.</>
+                )}
+              </Text>
+            </>
+          ) : (
+            <View>
+              <Text style={[pal.textLight]}>
+                <Text type="md-bold" style={[pal.textLight]}>
+                  Not Applicable
+                </Text>
+                . This warning is only available for posts with media attached.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
@@ -137,11 +159,11 @@ export const Component = observer(function Component({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: isDesktopWeb ? 0 : 40,
+    paddingBottom: isWeb ? 0 : 40,
   },
   titleSection: {
-    paddingTop: isDesktopWeb ? 0 : 4,
-    paddingBottom: isDesktopWeb ? 14 : 10,
+    paddingTop: isWeb ? 0 : 4,
+    paddingBottom: isWeb ? 14 : 10,
   },
   title: {
     textAlign: 'center',
@@ -155,7 +177,6 @@ const styles = StyleSheet.create({
   section: {
     borderTopWidth: 1,
     paddingVertical: 20,
-    paddingHorizontal: isDesktopWeb ? 0 : 20,
   },
   adultExplainer: {
     paddingLeft: 5,

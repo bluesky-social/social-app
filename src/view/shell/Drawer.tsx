@@ -44,7 +44,7 @@ import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 
-export const DrawerContent = observer(() => {
+export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
@@ -400,7 +400,7 @@ function MenuItem({
   )
 }
 
-const InviteCodes = observer(() => {
+const InviteCodes = observer(function InviteCodesImpl() {
   const {track} = useAnalytics()
   const store = useStores()
   const pal = usePalette('default')
