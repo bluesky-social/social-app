@@ -128,7 +128,7 @@ export const FeedsScreen = withAuthRequired(
                 {marginTop: 16, paddingRight: 10},
               ]}>
               <Text type="title-lg" style={[pal.text, s.bold]}>
-                Discover new feeds
+                Discover{isMobile ? '' : ' new feeds'}
               </Text>
               <View style={{flex: 1, maxWidth: 250}}>
                 <SearchInput
@@ -159,7 +159,7 @@ export const FeedsScreen = withAuthRequired(
       <View style={[pal.view, styles.container]}>
         {isMobile && (
           <ViewHeader
-            title="My Feeds"
+            title="Feeds"
             canGoBack={false}
             renderButton={renderHeaderBtn}
             showBorder
@@ -181,7 +181,7 @@ export const FeedsScreen = withAuthRequired(
           }
           renderItem={renderItem}
           initialNumToRender={10}
-          onEndReached={() => myFeeds.loadMore()}
+          onEndReached={() => myFeeds.discovery.loadMore()}
           extraData={myFeeds.isLoading}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
