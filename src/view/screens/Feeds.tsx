@@ -168,6 +168,19 @@ export const FeedsScreen = withAuthRequired(
               showLikes
             />
           )
+        } else if (item.type === 'discover-feeds-no-results') {
+          return (
+            <View
+              style={{
+                paddingHorizontal: 16,
+                paddingTop: 10,
+                paddingBottom: '150%',
+              }}>
+              <Text type="lg" style={pal.textLight}>
+                No results found for "{query}"
+              </Text>
+            </View>
+          )
         }
         return null
       },

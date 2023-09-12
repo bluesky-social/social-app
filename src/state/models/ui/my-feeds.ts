@@ -32,6 +32,10 @@ export type MyFeedsItem =
     }
   | {
       _reactKey: string
+      type: 'discover-feeds-no-results'
+    }
+  | {
+      _reactKey: string
       type: 'discover-feed'
       feed: CustomFeedModel
     }
@@ -107,6 +111,11 @@ export class MyFeedsUIModel {
         _reactKey: '__discover_feeds_error__',
         type: 'error',
         error: this.discovery.error,
+      })
+    } else if (this.discovery.isEmpty) {
+      items.push({
+        _reactKey: '__discover_feeds_no_results__',
+        type: 'discover-feeds-no-results',
       })
     } else {
       items = items.concat(
