@@ -77,6 +77,27 @@ export function useStyles<T = ComponentProps>(props: Props<T> & T) {
   return {styles, props: rest}
 }
 
+export function useMultiStyle<
+  O extends Record<string, Parameters<typeof light.pick<{}>>[0]>,
+>(
+  styles: O,
+): {
+  [Name in keyof O]: ReturnType<typeof light.style>
+} {
+  const {theme} = React.useContext(Context)
+  const breakpoints = useBreakpoints()
+
+  return React.useMemo(() => {
+    return Object.entries(styles).reduce((acc, [key, style]) => {
+      acc[key as keyof O] = theme.style(
+        theme.applyBreakpoints(style, breakpoints.active),
+      )
+      return acc
+    }, {} as {[Name in keyof O]: ReturnType<typeof light.style>})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [styles, breakpoints.current, theme])
+}
+
 export const Box = React.forwardRef<View, Props<ViewProps>>(function BoxThemed(
   {children, style, ...props},
   ref,
