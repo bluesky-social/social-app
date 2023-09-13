@@ -129,6 +129,15 @@ export function listUriToHref(url: string): string {
   }
 }
 
+export function feedUriToHref(url: string): string {
+  try {
+    const {hostname, rkey} = new AtUri(url)
+    return `/profile/${hostname}/feed/${rkey}`
+  } catch {
+    return ''
+  }
+}
+
 export function getYoutubeVideoId(link: string): string | undefined {
   let url
   try {

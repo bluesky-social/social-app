@@ -8,6 +8,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
+import {FeedSourceInfo} from 'lib/api/feed/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
@@ -32,11 +33,13 @@ import {isEmbedByEmbedder} from 'lib/embeds'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
+  source,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
 }: {
   item: PostsFeedItemModel
+  source?: FeedSourceInfo
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -179,7 +182,20 @@ export const FeedItem = observer(function FeedItemImpl({
         </View>
 
         <View style={{paddingTop: 12}}>
-          {item.reasonRepost && (
+          {source ? (
+            <Link
+              title={sanitizeDisplayName(source.displayName)}
+              href={source.uri}>
+              <DesktopWebTextLink
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}
+                text={sanitizeDisplayName(source.displayName)}
+                href={source.uri}
+              />
+            </Link>
+          ) : item.reasonRepost ? (
             <Link
               style={styles.includeReason}
               href={makeProfileLink(item.reasonRepost.by)}
@@ -188,10 +204,10 @@ export const FeedItem = observer(function FeedItemImpl({
               )}>
               <FontAwesomeIcon
                 icon="retweet"
-                style={[
-                  styles.includeReasonIcon,
-                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                ]}
+                style={{
+                  marginRight: 4,
+                  color: pal.colors.textLight,
+                }}
               />
               <Text
                 type="sm-bold"
@@ -212,7 +228,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 />
               </Text>
             </Link>
-          )}
+          ) : null}
         </View>
       </View>
 
@@ -362,11 +378,8 @@ const styles = StyleSheet.create({
   includeReason: {
     flexDirection: 'row',
     marginTop: 2,
-    marginBottom: 4,
+    marginBottom: 2,
     marginLeft: -20,
-  },
-  includeReasonIcon: {
-    marginRight: 4,
   },
   layout: {
     flexDirection: 'row',

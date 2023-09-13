@@ -233,9 +233,6 @@ const FeedPage = observer(function FeedPageImpl({
     screen('Feed')
     store.log.debug('HomeScreen: Updating feed')
     feed.checkForLatest()
-    if (feed.hasContent) {
-      feed.update()
-    }
 
     return () => {
       clearInterval(pollInterval)

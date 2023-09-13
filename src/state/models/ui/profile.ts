@@ -240,13 +240,6 @@ export class ProfileUiModel {
       .catch(err => this.rootStore.log.error('Failed to fetch lists', err))
   }
 
-  async update() {
-    const view = this.currentView
-    if (view instanceof PostsFeedModel) {
-      await view.update()
-    }
-  }
-
   async refresh() {
     await Promise.all([this.profile.refresh(), this.currentView.refresh()])
   }
