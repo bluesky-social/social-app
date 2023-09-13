@@ -186,14 +186,21 @@ export const FeedItem = observer(function FeedItemImpl({
             <Link
               title={sanitizeDisplayName(source.displayName)}
               href={source.uri}>
-              <DesktopWebTextLink
+              <Text
                 type="sm-bold"
                 style={pal.textLight}
                 lineHeight={1.2}
-                numberOfLines={1}
-                text={sanitizeDisplayName(source.displayName)}
-                href={source.uri}
-              />
+                numberOfLines={1}>
+                From{' '}
+                <DesktopWebTextLink
+                  type="sm-bold"
+                  style={pal.textLight}
+                  lineHeight={1.2}
+                  numberOfLines={1}
+                  text={sanitizeDisplayName(source.displayName)}
+                  href={source.uri}
+                />
+              </Text>
             </Link>
           ) : item.reasonRepost ? (
             <Link
