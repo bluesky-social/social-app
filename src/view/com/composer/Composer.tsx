@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  BackHandler,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -129,6 +130,20 @@ export const ComposePost = observer(function ComposePost({
       onClose()
     }
   }, [store, onClose, graphemeLength, gallery])
+  // android back button
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        onPressCancel()
+        return true
+      },
+    )
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [onPressCancel])
 
   // initial setup
   useEffect(() => {
