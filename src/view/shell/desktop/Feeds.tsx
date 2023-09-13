@@ -5,7 +5,6 @@ import {AtUri} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {CogIcon} from 'lib/icons'
 import {TextLink} from 'view/com/util/Link'
 import {getCurrentRoute} from 'lib/routes/helpers'
 
@@ -22,45 +21,35 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
 
   return (
     <View style={[styles.container, pal.view, pal.border]}>
-      <TextLink
-        type="sm-bold"
-        href="/settings/saved-feeds"
-        text={
-          <>
-            My Feeds <CogIcon style={pal.text} size={16} strokeWidth={1.3} />
-          </>
-        }
-        style={[
-          pal.text,
-          {display: 'flex', alignItems: 'center', paddingVertical: 6},
-        ]}
-      />
       <FeedItem href="/" title="Following" current={route.name === 'Home'} />
-      {[...store.me.savedFeeds.pinned, ...store.me.savedFeeds.unpinned].map(
-        feed => {
-          try {
-            const {hostname, rkey} = new AtUri(feed.uri)
-            const href = `/profile/${hostname}/feed/${rkey}`
-            const params = route.params as Record<string, string>
-            return (
-              <FeedItem
-                key={feed.uri}
-                href={href}
-                title={feed.displayName}
-                current={
-                  route.name === 'CustomFeed' &&
-                  params.name === hostname &&
-                  params.rkey === rkey
-                }
-              />
-            )
-          } catch {
-            return null
-          }
-        },
-      )}
-      <View style={{paddingVertical: 6}}>
-        <TextLink type="lg" href="/feeds" text="Find more" style={[pal.link]} />
+      {store.me.savedFeeds.pinned.map(feed => {
+        try {
+          const {hostname, rkey} = new AtUri(feed.uri)
+          const href = `/profile/${hostname}/feed/${rkey}`
+          const params = route.params as Record<string, string>
+          return (
+            <FeedItem
+              key={feed.uri}
+              href={href}
+              title={feed.displayName}
+              current={
+                route.name === 'CustomFeed' &&
+                params.name === hostname &&
+                params.rkey === rkey
+              }
+            />
+          )
+        } catch {
+          return null
+        }
+      })}
+      <View style={{paddingTop: 8, paddingBottom: 6}}>
+        <TextLink
+          type="lg"
+          href="/feeds"
+          text="More feeds"
+          style={[pal.link]}
+        />
       </View>
     </View>
   )
@@ -79,10 +68,13 @@ function FeedItem({
   return (
     <View style={{paddingVertical: 6}}>
       <TextLink
-        type={current ? 'xl-medium' : 'xl'}
+        type="xl"
         href={href}
         text={title}
-        style={[current ? pal.text : pal.textLight, {letterSpacing: 0.15}]}
+        style={[
+          current ? pal.text : pal.textLight,
+          {letterSpacing: 0.15, fontWeight: current ? '500' : 'normal'},
+        ]}
       />
     </View>
   )
