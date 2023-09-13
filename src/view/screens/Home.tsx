@@ -1,6 +1,8 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import useAppState from 'react-native-appstate-hook'
@@ -8,6 +10,7 @@ import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
+import {TextLink} from 'view/com/util/Link'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -16,6 +19,7 @@ import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/fab/FAB'
 import {useStores} from 'state/index'
+import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -24,7 +28,7 @@ import {ComposeIcon2} from 'lib/icons'
 
 const HEADER_OFFSET_MOBILE = 78
 const HEADER_OFFSET_TABLET = 50
-const HEADER_OFFSET_DESKTOP = 49
+const HEADER_OFFSET_DESKTOP = 0
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -155,7 +159,8 @@ const FeedPage = observer(function FeedPageImpl({
   renderEmptyState?: () => JSX.Element
 }) {
   const store = useStores()
-  const {isMobile, isTablet} = useWebMediaQueries()
+  const pal = usePalette('default')
+  const {isMobile, isTablet, isDesktop} = useWebMediaQueries()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
   const {screen, track} = useAnalytics()
   const [headerOffset, setHeaderOffset] = React.useState(
@@ -170,6 +175,7 @@ const FeedPage = observer(function FeedPageImpl({
     onForeground: () => doPoll(true),
   })
   const isScreenFocused = useIsFocused()
+  const hasNew = feed.hasNewLatest && !feed.isRefreshing
 
   React.useEffect(() => {
     // called on first load
@@ -255,7 +261,44 @@ const FeedPage = observer(function FeedPageImpl({
     feed.refresh()
   }, [feed, scrollToTop])
 
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
+  const ListHeaderComponent = React.useCallback(() => {
+    if (isDesktop) {
+      return (
+        <View
+          style={[
+            pal.view,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 18,
+              paddingVertical: 12,
+            },
+          ]}>
+          <TextLink
+            type="title-lg"
+            href="/"
+            style={{fontWeight: 'bold'}}
+            text={store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+            onPress={() => store.emitScreenSoftReset()}
+          />
+          <TextLink
+            type="title-lg"
+            href="/settings/home-feed"
+            style={{fontWeight: 'bold'}}
+            text={
+              <FontAwesomeIcon
+                icon="sliders"
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+            }
+          />
+        </View>
+      )
+    }
+    return <></>
+  }, [isDesktop, pal, store])
+
   return (
     <View testID={testID} style={s.h100pct}>
       <Feed
@@ -267,6 +310,7 @@ const FeedPage = observer(function FeedPageImpl({
         onScroll={onMainScroll}
         scrollEventThrottle={100}
         renderEmptyState={renderEmptyState}
+        ListHeaderComponent={ListHeaderComponent}
         headerOffset={headerOffset}
       />
       {(isScrolledDown || hasNew) && (

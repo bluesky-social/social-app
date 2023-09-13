@@ -140,6 +140,7 @@ export const TextLink = observer(function TextLink({
   lineHeight,
   dataSet,
   title,
+  onPress,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -157,9 +158,14 @@ export const TextLink = observer(function TextLink({
 
   props.onPress = React.useCallback(
     (e?: Event) => {
+      if (onPress) {
+        e?.preventDefault?.()
+        // @ts-ignore function signature differs by platform -prf
+        return onPress()
+      }
       return onPressInner(store, navigation, sanitizeUrl(href), e)
     },
-    [store, navigation, href],
+    [onPress, store, navigation, href],
   )
   const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)
