@@ -64,6 +64,10 @@ export const DrawerContent = observer(function DrawerContentImpl() {
       const state = navigation.getState()
       store.shell.closeDrawer()
       if (isWeb) {
+        // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
+        if (tab === 'MyProfile') {
+          navigation.navigate('Profile', {name: store.me.handle})
+        }
         // @ts-ignore must be Home, Search, Notifications, or MyProfile
         navigation.navigate(tab)
       } else {

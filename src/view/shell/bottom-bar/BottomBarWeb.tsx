@@ -23,6 +23,7 @@ import {
 import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {makeProfileLink} from 'lib/routes/links'
+import {CommonNavigatorParams} from 'lib/routes/types'
 
 export const BottomBarWeb = observer(function BottomBarWebImpl() {
   const store = useStores()
@@ -89,7 +90,7 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
           )
         }}
       </NavItem>
-      <NavItem routeName="MyProfile" href={makeProfileLink(store.me)}>
+      <NavItem routeName="Profile" href={makeProfileLink(store.me)}>
         {({isActive}) => {
           const Icon = isActive ? UserIconSolid : UserIcon
           return (
@@ -111,7 +112,14 @@ const NavItem: React.FC<{
   routeName: string
 }> = ({children, href, routeName}) => {
   const currentRoute = useNavigationState(getCurrentRoute)
-  const isActive = isTab(currentRoute.name, routeName)
+  const store = useStores()
+  const isActive =
+    currentRoute.name === 'Profile'
+      ? isTab(currentRoute.name, routeName) &&
+        (currentRoute.params as CommonNavigatorParams['Profile']).name ===
+          store.me.handle
+      : isTab(currentRoute.name, routeName)
+
   return (
     <Link href={href} style={styles.ctrl}>
       {children({isActive})}
