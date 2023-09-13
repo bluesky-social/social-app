@@ -60,12 +60,7 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
         },
       )}
       <View style={{paddingVertical: 6}}>
-        <TextLink
-          type="lg"
-          href="/search/feeds"
-          text="Find more"
-          style={[pal.link]}
-        />
+        <TextLink type="lg" href="/feeds" text="Find more" style={[pal.link]} />
       </View>
     </View>
   )
