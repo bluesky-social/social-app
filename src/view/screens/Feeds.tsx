@@ -137,14 +137,13 @@ export const FeedsScreen = withAuthRequired(
                   Discover new feeds
                 </Text>
                 {!isMobile && (
-                  <View style={{flex: 1, maxWidth: 250}}>
-                    <SearchInput
-                      query={query}
-                      onChangeQuery={onChangeQuery}
-                      onPressCancelSearch={onPressCancelSearch}
-                      onSubmitQuery={onSubmitQuery}
-                    />
-                  </View>
+                  <SearchInput
+                    query={query}
+                    onChangeQuery={onChangeQuery}
+                    onPressCancelSearch={onPressCancelSearch}
+                    onSubmitQuery={onSubmitQuery}
+                    style={{flex: 1, maxWidth: 250}}
+                  />
                 )}
               </View>
               {isMobile && (

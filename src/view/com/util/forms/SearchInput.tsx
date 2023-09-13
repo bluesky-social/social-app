@@ -1,5 +1,12 @@
 import React from 'react'
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -14,6 +21,7 @@ interface Props {
   onChangeQuery: (v: string) => void
   onPressCancelSearch: () => void
   onSubmitQuery: () => void
+  style?: StyleProp<ViewStyle>
 }
 export function SearchInput({
   query,
@@ -21,6 +29,7 @@ export function SearchInput({
   onChangeQuery,
   onPressCancelSearch,
   onSubmitQuery,
+  style,
 }: Props) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -32,7 +41,7 @@ export function SearchInput({
   }, [onPressCancelSearch, textInput])
 
   return (
-    <View style={[pal.viewLight, styles.container]}>
+    <View style={[pal.viewLight, styles.container, style]}>
       <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
       <TextInput
         testID="searchTextInput"
@@ -87,6 +96,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 17,
+    minWidth: 0, // overflow mitigation for firefox
   },
   cancelBtn: {
     paddingLeft: 10,
