@@ -77,19 +77,20 @@ export function useStyles<T = ComponentProps>(props: Props<T> & T) {
   return {styles, props: rest}
 }
 
-export const Box = React.forwardRef<View, Props<ViewProps>>(
-  ({children, style, ...props}, ref) => {
-    const {styles, props: rest} = useStyles<ViewProps>(props)
-    return (
-      <View {...rest} style={[styles, style]} ref={ref}>
-        {children}
-      </View>
-    )
-  },
-)
+export const Box = React.forwardRef<View, Props<ViewProps>>(function BoxThemed(
+  {children, style, ...props},
+  ref,
+) {
+  const {styles, props: rest} = useStyles<ViewProps>(props)
+  return (
+    <View {...rest} style={[styles, style]} ref={ref}>
+      {children}
+    </View>
+  )
+})
 
 export const Text = React.forwardRef<RNText, Props<TextProps>>(
-  ({children, style, ...props}, ref) => {
+  function TextThemed({children, style, ...props}, ref) {
     const {styles, props: rest} = useStyles<TextProps>({
       color: 'text',
       ...props,
@@ -144,7 +145,10 @@ const asToTypeStyles: {
   },
 }
 
-export const P = React.forwardRef<RNText, TypeProps>((props, ref) => {
+export const P = React.forwardRef<RNText, TypeProps>(function PThemed(
+  props,
+  ref,
+) {
   // @ts-expect-error role is web only
   return <Text role="paragraph" c="text" {...props} ref={ref} />
 })
@@ -154,32 +158,33 @@ export const P = React.forwardRef<RNText, TypeProps>((props, ref) => {
  * @see https://docs.expo.dev/develop/user-interface/fonts/
  */
 function createHeadingComponent(element: HeadingElements) {
-  return React.forwardRef<RNText, TypeProps>(
-    ({children, style, as, ...props}, ref) => {
-      const asEl = as || element
-      const extra = Platform.select({
-        web: {
-          'aria-level': asToAriaLevel[element],
-        },
-        default: {},
-      })
-      const {styles, props: rest} = useStyles({
-        color: 'text',
-        ...merge(asToTypeStyles[asEl], props),
-      })
+  return React.forwardRef<RNText, TypeProps>(function HeadingThemed(
+    {children, style, as, ...props},
+    ref,
+  ) {
+    const asEl = as || element
+    const extra = Platform.select({
+      web: {
+        'aria-level': asToAriaLevel[element],
+      },
+      default: {},
+    })
+    const {styles, props: rest} = useStyles({
+      color: 'text',
+      ...merge(asToTypeStyles[asEl], props),
+    })
 
-      return (
-        <RNText
-          role="heading"
-          {...extra}
-          {...rest}
-          style={[styles, style]}
-          ref={ref}>
-          {children}
-        </RNText>
-      )
-    },
-  )
+    return (
+      <RNText
+        role="heading"
+        {...extra}
+        {...rest}
+        style={[styles, style]}
+        ref={ref}>
+        {children}
+      </RNText>
+    )
+  })
 }
 
 export const H1 = createHeadingComponent('h1')
