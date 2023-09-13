@@ -4,7 +4,6 @@ export const router = new Router({
   Home: '/',
   Search: '/search',
   Feeds: '/feeds',
-  DiscoverFeeds: '/search/feeds',
   Notifications: '/notifications',
   Settings: '/settings',
   Moderation: '/moderation',
