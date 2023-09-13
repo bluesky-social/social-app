@@ -1,5 +1,7 @@
 import React from 'react'
 import {StyleSheet, RefreshControl, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -256,10 +258,17 @@ function SavedFeed({
       <UserAvatar type="algo" size={28} avatar={avatar} />
       <Text
         type={isMobile ? 'lg' : 'lg-medium'}
-        style={pal.text}
+        style={[pal.text, s.flex1]}
         numberOfLines={1}>
         {displayName}
       </Text>
+      {isMobile && (
+        <FontAwesomeIcon
+          icon="chevron-right"
+          size={14}
+          style={pal.textLight as FontAwesomeIconStyle}
+        />
+      )}
     </Link>
   )
 }
