@@ -27,7 +27,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 
@@ -65,12 +65,6 @@ export const FeedItem = observer(function FeedItemImpl({
     return urip.hostname
   }, [record?.reply])
   const translatorUrl = getTranslatorLink(record?.text || '')
-  const needsTranslation = useMemo(
-    () =>
-      store.preferences.contentLanguages.length > 0 &&
-      !isPostInLanguage(item.post, store.preferences.contentLanguages),
-    [item.post, store.preferences.contentLanguages],
-  )
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
@@ -327,15 +321,6 @@ export const FeedItem = observer(function FeedItemImpl({
                 />
               </ContentHider>
             ) : null}
-            {needsTranslation && (
-              <View style={[pal.borderDark, styles.translateLink]}>
-                <Link href={translatorUrl} title="Translate">
-                  <Text type="sm" style={pal.link}>
-                    Translate this post
-                  </Text>
-                </Link>
-              </View>
-            )}
           </ContentHider>
           <PostCtrls
             itemUri={itemUri}
