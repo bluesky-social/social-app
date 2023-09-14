@@ -283,7 +283,7 @@ function getSelfReplyUri(item: FeedViewPost): string | undefined {
   if (item.reply) {
     if (
       AppBskyFeedDefs.isPostView(item.reply.parent) &&
-      !AppBskyFeedDefs.isReasonRepost(item.reason) // don't thread respoted self-replies
+      !AppBskyFeedDefs.isReasonRepost(item.reason) // don't thread reposted self-replies
     ) {
       return item.reply.parent.author.did === item.post.author.did
         ? item.reply.parent.uri
