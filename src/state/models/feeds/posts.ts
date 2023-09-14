@@ -141,6 +141,8 @@ export class PostsFeedModel {
 
   get feedTuners() {
     const areRepliesEnabled = this.rootStore.preferences.homeFeedRepliesEnabled
+    const areRepliesByFollowedOnlyEnabled =
+      this.rootStore.preferences.homeFeedRepliesByFollowedOnlyEnabled
     const repliesThreshold = this.rootStore.preferences.homeFeedRepliesThreshold
     const areRepostsEnabled = this.rootStore.preferences.homeFeedRepostsEnabled
     const areQuotePostsEnabled =
@@ -164,7 +166,13 @@ export class PostsFeedModel {
       }
 
       if (areRepliesEnabled) {
-        feedTuners.push(FeedTuner.likedRepliesOnly({repliesThreshold}))
+        feedTuners.push(
+          FeedTuner.thresholdRepliesOnly({
+            userDid: this.rootStore.session.data?.did || '',
+            minLikes: repliesThreshold,
+            followedOnly: areRepliesByFollowedOnlyEnabled,
+          }),
+        )
       } else {
         feedTuners.push(FeedTuner.removeReplies)
       }
