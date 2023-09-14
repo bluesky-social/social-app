@@ -21,7 +21,8 @@
     "e2e:mock-server": "ts-node __e2e__/mock-server.ts",
     "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build": "detox build -c ios.sim.debug",
-    "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
+    "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all",
+    "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
     "@atproto/api": "^0.6.12",
