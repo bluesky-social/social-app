@@ -49,6 +49,10 @@ export const light = create({
     mr: ['marginRight'],
     my: ['marginTop', 'marginBottom'],
     mx: ['marginLeft', 'marginRight'],
+    /**
+     * Alias for `padding`, maps to all padding properties e.g. `paddingTop`,
+     * `paddingBottom`, etc.
+     */
     pa: ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'],
     pt: ['paddingTop'],
     pb: ['paddingBottom'],
@@ -83,6 +87,9 @@ export const light = create({
     tar: (_: boolean) => ({textAlign: 'right'}),
     mxa: (_: boolean) => ({marginLeft: 'auto', marginRight: 'auto'}),
     mya: (_: boolean) => ({marginTop: 'auto', marginBottom: 'auto'}),
+    /**
+     * Macro for applying `{ textTransform: 'uppercase' }` to a style.
+     */
     caps: (_: boolean) => ({textTransform: 'uppercase'}),
     font(value: 'sans' | 'mono', tokens) {
       return {
