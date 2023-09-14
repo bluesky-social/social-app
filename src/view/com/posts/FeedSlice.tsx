@@ -56,7 +56,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
         <FeedItem
           key={item._reactKey}
           item={item}
-          source={slice.source}
+          source={i === 0 ? slice.source : undefined}
           isThreadParent={slice.isThreadParentAt(i)}
           isThreadChild={slice.isThreadChildAt(i)}
           isThreadLastChild={

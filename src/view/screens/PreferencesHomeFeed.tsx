@@ -9,6 +9,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {isWeb} from 'platform/detection'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {RadioGroup} from 'view/com/util/forms/RadioGroup'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
@@ -79,16 +80,29 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               Show Replies
             </Text>
             <Text style={[pal.text, s.pb10]}>
+              Set this setting to "No" to never see replies.
+            </Text>
+            <View
+              style={[
+                pal.view,
+                {borderRadius: 18, paddingVertical: 6, marginBottom: 10},
+              ]}>
+              <RadioGroup
+                type="default-light"
+                items={[
+                  {key: 'yes', label: 'Yes'},
+                  {key: 'followed-only', label: 'Between followed users only'},
+                  {key: 'no', label: 'No'},
+                ]}
+                initialSelection={store.preferences.homeFeedRepliesMode}
+                onSelect={store.preferences.setHomeFeedRepliesMode}
+              />
+            </View>
+
+            <Text style={[pal.text, s.pb5]}>
               Adjust the number of likes a reply must have to be shown in your
               feed.
             </Text>
-            <ToggleButton
-              type="default-light"
-              label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
-              isSelected={store.preferences.homeFeedRepliesEnabled}
-              onPress={store.preferences.toggleHomeFeedRepliesEnabled}
-            />
-
             <RepliesThresholdInput
               enabled={store.preferences.homeFeedRepliesEnabled}
             />
