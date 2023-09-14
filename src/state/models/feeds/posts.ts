@@ -154,7 +154,7 @@ export class PostsFeedModel {
         ),
       ]
     }
-    if (this.feedType === 'home') {
+    if (this.feedType === 'home' || this.feedType === 'following') {
       const feedTuners = []
 
       if (areRepostsEnabled) {

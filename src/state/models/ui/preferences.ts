@@ -53,6 +53,7 @@ export class PreferencesModel {
   homeFeedRepliesThreshold: number = 2
   homeFeedRepostsEnabled: boolean = true
   homeFeedQuotePostsEnabled: boolean = true
+  homeFeedMergeFeedEnabled: boolean = false
   requireAltTextEnabled: boolean = false
 
   // used to linearize async modifications to state
@@ -81,6 +82,7 @@ export class PreferencesModel {
       homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
       homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
+      homeFeedMergeFeedEnabled: this.homeFeedMergeFeedEnabled,
       requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
@@ -168,6 +170,13 @@ export class PreferencesModel {
         typeof v.homeFeedQuotePostsEnabled === 'boolean'
       ) {
         this.homeFeedQuotePostsEnabled = v.homeFeedQuotePostsEnabled
+      }
+      // check if home feed mergefeed is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'homeFeedMergeFeedEnabled') &&
+        typeof v.homeFeedMergeFeedEnabled === 'boolean'
+      ) {
+        this.homeFeedMergeFeedEnabled = v.homeFeedMergeFeedEnabled
       }
       // check if requiring alt text is enabled in preferences, then hydrate
       if (
@@ -459,6 +468,10 @@ export class PreferencesModel {
 
   toggleHomeFeedQuotePostsEnabled() {
     this.homeFeedQuotePostsEnabled = !this.homeFeedQuotePostsEnabled
+  }
+
+  toggleHomeFeedMergeFeedEnabled() {
+    this.homeFeedMergeFeedEnabled = !this.homeFeedMergeFeedEnabled
   }
 
   toggleRequireAltTextEnabled() {

@@ -124,6 +124,22 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               onPress={store.preferences.toggleHomeFeedQuotePostsEnabled}
             />
           </View>
+
+          <View style={[pal.viewLight, styles.card]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
+              Show Posts from My Feeds (Experimental)
+            </Text>
+            <Text style={[pal.text, s.pb10]}>
+              Set this setting to "Yes" to show samples of your saved feeds in
+              your following feed.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.homeFeedMergeFeedEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.homeFeedMergeFeedEnabled}
+              onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}
+            />
+          </View>
         </View>
       </ScrollView>
 
