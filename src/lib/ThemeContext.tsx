@@ -93,37 +93,32 @@ export const ThemeContext = createContext<Theme>(defaultTheme)
 
 export const useTheme = () => useContext(ThemeContext)
 
+const getTheme = (theme: ColorSchemeName) =>
+  theme === 'dark' ? darkTheme : defaultTheme
+
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
   const colorSchemeFromRN = useColorScheme()
-  const [nativeColorScheme, setNativeColorScheme] =
+  const [statefulColorScheme, setStatefulColorScheme] =
     React.useState<ColorSchemeName>(colorSchemeFromRN)
+  const colorScheme = isWeb ? colorSchemeFromRN : statefulColorScheme
+  const themeValue = getTheme(theme === 'system' ? colorScheme : theme)
 
   React.useEffect(() => {
-    if (isWeb) {
-      setNativeColorScheme(colorSchemeFromRN)
-    }
-
+    if (!isWeb) return
     const subscription = AppState.addEventListener('change', state => {
       const isActive = state === 'active'
 
       if (!isActive) return
 
-      setNativeColorScheme(colorSchemeFromRN)
+      setStatefulColorScheme(colorSchemeFromRN)
     })
     return () => subscription.remove()
   }, [colorSchemeFromRN])
 
-  const value =
-    theme === 'system'
-      ? nativeColorScheme === 'dark'
-        ? darkTheme
-        : defaultTheme
-      : theme === 'dark'
-      ? darkTheme
-      : defaultTheme
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>
+  )
 }
