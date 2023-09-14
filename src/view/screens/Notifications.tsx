@@ -17,7 +17,7 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 
@@ -34,6 +34,10 @@ export const NotificationsScreen = withAuthRequired(
     const {screen} = useAnalytics()
     const pal = usePalette('default')
     const {isDesktop} = useWebMediaQueries()
+
+    const hasNew =
+      store.me.notifications.hasNewLatest &&
+      !store.me.notifications.isRefreshing
 
     // event handlers
     // =
@@ -111,18 +115,30 @@ export const NotificationsScreen = withAuthRequired(
               type="title-lg"
               href="/notifications"
               style={{fontWeight: 'bold'}}
-              text="Notifications"
+              text={
+                <>
+                  Notifications{' '}
+                  {hasNew && (
+                    <View
+                      style={{
+                        top: -8,
+                        backgroundColor: colors.blue3,
+                        width: 8,
+                        height: 8,
+                        borderRadius: 4,
+                      }}
+                    />
+                  )}
+                </>
+              }
               onPress={() => store.emitScreenSoftReset()}
             />
           </View>
         )
       }
       return <></>
-    }, [isDesktop, pal, store])
+    }, [isDesktop, pal, store, hasNew])
 
-    const hasNew =
-      store.me.notifications.hasNewLatest &&
-      !store.me.notifications.isRefreshing
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />

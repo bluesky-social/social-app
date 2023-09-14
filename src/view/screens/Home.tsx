@@ -20,7 +20,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FAB} from '../com/util/fab/FAB'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -279,7 +279,22 @@ const FeedPage = observer(function FeedPageImpl({
             type="title-lg"
             href="/"
             style={{fontWeight: 'bold'}}
-            text={store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+            text={
+              <>
+                {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+                {hasNew && (
+                  <View
+                    style={{
+                      top: -8,
+                      backgroundColor: colors.blue3,
+                      width: 8,
+                      height: 8,
+                      borderRadius: 4,
+                    }}
+                  />
+                )}
+              </>
+            }
             onPress={() => store.emitScreenSoftReset()}
           />
           <TextLink
@@ -297,7 +312,7 @@ const FeedPage = observer(function FeedPageImpl({
       )
     }
     return <></>
-  }, [isDesktop, pal, store])
+  }, [isDesktop, pal, store, hasNew])
 
   return (
     <View testID={testID} style={s.h100pct}>
