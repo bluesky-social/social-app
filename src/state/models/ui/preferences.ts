@@ -12,7 +12,6 @@ import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
-type HomeFeedRepliesMode = 'yes' | 'followed-only' | 'no'
 const LABEL_GROUPS = [
   'nsfw',
   'nudity',
@@ -51,8 +50,8 @@ export class PreferencesModel {
   pinnedFeeds: string[] = []
   birthDate: Date | undefined = undefined
   homeFeedRepliesEnabled: boolean = true
-  homeFeedRepliesFollowedOnlyEnabled: boolean = true
-  homeFeedRepliesThreshold: number = 2
+  homeFeedRepliesByFollowedOnlyEnabled: boolean = true
+  homeFeedRepliesThreshold: number = 0
   homeFeedRepostsEnabled: boolean = true
   homeFeedQuotePostsEnabled: boolean = true
   homeFeedMergeFeedEnabled: boolean = false
@@ -72,17 +71,6 @@ export class PreferencesModel {
     return getAge(this.birthDate)
   }
 
-  get homeFeedRepliesMode(): HomeFeedRepliesMode {
-    if (this.homeFeedRepliesEnabled) {
-      if (this.homeFeedRepliesFollowedOnlyEnabled) {
-        return 'followed-only'
-      } else {
-        return 'yes'
-      }
-    }
-    return 'no'
-  }
-
   serialize() {
     return {
       contentLanguages: this.contentLanguages,
@@ -92,8 +80,8 @@ export class PreferencesModel {
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
       homeFeedRepliesEnabled: this.homeFeedRepliesEnabled,
-      homeFeedRepliesFollowedOnlyEnabled:
-        this.homeFeedRepliesFollowedOnlyEnabled,
+      homeFeedRepliesByFollowedOnlyEnabled:
+        this.homeFeedRepliesByFollowedOnlyEnabled,
       homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
       homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
@@ -167,11 +155,11 @@ export class PreferencesModel {
       }
       // check if home feed replies "followed only" are enabled in preferences, then hydrate
       if (
-        hasProp(v, 'homeFeedRepliesFollowedOnlyEnabled') &&
-        typeof v.homeFeedRepliesFollowedOnlyEnabled === 'boolean'
+        hasProp(v, 'homeFeedRepliesByFollowedOnlyEnabled') &&
+        typeof v.homeFeedRepliesByFollowedOnlyEnabled === 'boolean'
       ) {
-        this.homeFeedRepliesFollowedOnlyEnabled =
-          v.homeFeedRepliesFollowedOnlyEnabled
+        this.homeFeedRepliesByFollowedOnlyEnabled =
+          v.homeFeedRepliesByFollowedOnlyEnabled
       }
       // check if home feed replies threshold is enabled in preferences, then hydrate
       if (
@@ -477,17 +465,13 @@ export class PreferencesModel {
     await this.rootStore.agent.setPersonalDetails({birthDate})
   }
 
-  setHomeFeedRepliesMode(v: string) {
-    if (v === 'yes') {
-      this.homeFeedRepliesEnabled = true
-      this.homeFeedRepliesFollowedOnlyEnabled = false
-    } else if (v === 'followed-only') {
-      this.homeFeedRepliesEnabled = true
-      this.homeFeedRepliesFollowedOnlyEnabled = true
-    } else {
-      this.homeFeedRepliesEnabled = false
-      this.homeFeedRepliesFollowedOnlyEnabled = false
-    }
+  toggleHomeFeedRepliesEnabled() {
+    this.homeFeedRepliesEnabled = !this.homeFeedRepliesEnabled
+  }
+
+  toggleHomeFeedRepliesByFollowedOnlyEnabled() {
+    this.homeFeedRepliesByFollowedOnlyEnabled =
+      !this.homeFeedRepliesByFollowedOnlyEnabled
   }
 
   setHomeFeedRepliesThreshold(threshold: number) {

@@ -9,7 +9,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {isWeb} from 'platform/detection'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {RadioGroup} from 'view/com/util/forms/RadioGroup'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
@@ -20,14 +19,7 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const [value, setValue] = useState(store.preferences.homeFeedRepliesThreshold)
 
   return (
-    <View style={[s.mt10, !enabled && styles.dimmed]}>
-      <Text type="xs" style={pal.text}>
-        {value === 0
-          ? `Show all replies`
-          : `Show replies with at least ${value} ${
-              value > 1 ? `likes` : `like`
-            }`}
-      </Text>
+    <View style={[!enabled && styles.dimmed]}>
       <Slider
         value={value}
         onValueChange={(v: number | number[]) => {
@@ -41,6 +33,13 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
         disabled={!enabled}
         thumbTintColor={colors.blue3}
       />
+      <Text type="xs" style={pal.text}>
+        {value === 0
+          ? `Show all replies`
+          : `Show replies with at least ${value} ${
+              value > 1 ? `likes` : `like`
+            }`}
+      </Text>
     </View>
   )
 }
@@ -80,26 +79,41 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               Show Replies
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to never see replies.
+              Set this setting to "No" to hide all replies from your feed.
             </Text>
-            <View
-              style={[
-                pal.view,
-                {borderRadius: 18, paddingVertical: 6, marginBottom: 10},
-              ]}>
-              <RadioGroup
-                type="default-light"
-                items={[
-                  {key: 'yes', label: 'Yes'},
-                  {key: 'followed-only', label: 'Between followed users only'},
-                  {key: 'no', label: 'No'},
-                ]}
-                initialSelection={store.preferences.homeFeedRepliesMode}
-                onSelect={store.preferences.setHomeFeedRepliesMode}
-              />
-            </View>
-
-            <Text style={[pal.text, s.pb5]}>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.homeFeedRepliesEnabled}
+              onPress={store.preferences.toggleHomeFeedRepliesEnabled}
+            />
+          </View>
+          <View
+            style={[
+              pal.viewLight,
+              styles.card,
+              !store.preferences.homeFeedRepliesEnabled && styles.dimmed,
+            ]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
+              Reply Filters
+            </Text>
+            <Text style={[pal.text, s.pb10]}>
+              Enable this setting to only see replies between people you follow.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label="Followed users only"
+              isSelected={
+                store.preferences.homeFeedRepliesByFollowedOnlyEnabled
+              }
+              onPress={
+                store.preferences.homeFeedRepliesEnabled
+                  ? store.preferences.toggleHomeFeedRepliesByFollowedOnlyEnabled
+                  : undefined
+              }
+              style={[s.mb10]}
+            />
+            <Text style={[pal.text]}>
               Adjust the number of likes a reply must have to be shown in your
               feed.
             </Text>
