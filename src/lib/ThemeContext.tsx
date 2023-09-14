@@ -3,7 +3,7 @@ import React, {ReactNode, createContext, useContext} from 'react'
 import {
   AppState,
   TextStyle,
-  useColorScheme,
+  useColorScheme as useColorScheme_BUGGY,
   ViewStyle,
   ColorSchemeName,
 } from 'react-native'
@@ -93,30 +93,35 @@ export const ThemeContext = createContext<Theme>(defaultTheme)
 
 export const useTheme = () => useContext(ThemeContext)
 
-const getTheme = (theme: ColorSchemeName) =>
-  theme === 'dark' ? darkTheme : defaultTheme
+function getTheme(theme: ColorSchemeName) {
+  return theme === 'dark' ? darkTheme : defaultTheme
+}
+
+function useColorScheme_FIXED() {
+  const colorScheme = useColorScheme_BUGGY()
+  const [currentColorScheme, setCurrentColorScheme] =
+    React.useState<ColorSchemeName>(colorScheme)
+
+  React.useEffect(() => {
+    // we don't need to be updating state on web
+    if (isWeb) return
+    const subscription = AppState.addEventListener('change', state => {
+      const isActive = state === 'active'
+      if (!isActive) return
+      setCurrentColorScheme(colorScheme)
+    })
+    return () => subscription.remove()
+  }, [colorScheme])
+
+  return isWeb ? colorScheme : currentColorScheme
+}
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
-  const colorSchemeFromRN = useColorScheme()
-  const [statefulColorScheme, setStatefulColorScheme] =
-    React.useState<ColorSchemeName>(colorSchemeFromRN)
-  const colorScheme = isWeb ? colorSchemeFromRN : statefulColorScheme
+  const colorScheme = useColorScheme_FIXED()
   const themeValue = getTheme(theme === 'system' ? colorScheme : theme)
-
-  React.useEffect(() => {
-    if (!isWeb) return
-    const subscription = AppState.addEventListener('change', state => {
-      const isActive = state === 'active'
-
-      if (!isActive) return
-
-      setStatefulColorScheme(colorSchemeFromRN)
-    })
-    return () => subscription.remove()
-  }, [colorSchemeFromRN])
 
   return (
     <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>
