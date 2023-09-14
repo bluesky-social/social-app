@@ -40,7 +40,7 @@ import {AccountData} from 'state/models/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
-import {HandIcon} from 'lib/icons'
+import {HandIcon, HashtagIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
@@ -423,17 +423,14 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            accessibilityHint="Saved Feeds"
+            accessibilityHint="My Saved Feeds"
             accessibilityLabel="Opens screen with all saved feeds"
             onPress={onPressSavedFeeds}>
             <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="satellite-dish"
-                style={pal.text as FontAwesomeIconStyle}
-              />
+              <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
             </View>
             <Text type="lg" style={pal.text}>
-              Saved Feeds
+              My Saved Feeds
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
