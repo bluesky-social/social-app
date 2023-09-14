@@ -1,7 +1,7 @@
 import React, {useMemo, useRef} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
+import {useNavigation, useIsFocused} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -123,6 +123,7 @@ export const CustomFeedScreenInner = observer(
     const pal = usePalette('default')
     const palInverted = usePalette('inverted')
     const navigation = useNavigation<NavigationProp>()
+    const isScreenFocused = useIsFocused()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {track} = useAnalytics()
     const {rkey, name: handleOrDid} = route.params
@@ -211,6 +212,25 @@ export const CustomFeedScreenInner = observer(
     const onPressCompose = React.useCallback(() => {
       store.shell.openComposer({})
     }, [store])
+
+    const onSoftReset = React.useCallback(() => {
+      if (isScreenFocused) {
+        onScrollToTop()
+        algoFeed.refresh()
+      }
+    }, [isScreenFocused, onScrollToTop, algoFeed])
+
+    // fires when page within screen is activated/deactivated
+    React.useEffect(() => {
+      if (!isScreenFocused) {
+        return
+      }
+
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
+      return () => {
+        softResetSub.remove()
+      }
+    }, [store, onSoftReset, isScreenFocused])
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
@@ -385,7 +405,7 @@ export const CustomFeedScreenInner = observer(
         />
         {isScrolledDown ? (
           <LoadLatestBtn
-            onPress={onScrollToTop}
+            onPress={onSoftReset}
             label="Scroll to top"
             showIndicator={false}
           />
