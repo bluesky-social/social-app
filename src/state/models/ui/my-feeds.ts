@@ -6,7 +6,11 @@ import {RootStoreModel} from '../root-store'
 export type MyFeedsItem =
   | {
       _reactKey: string
-      type: 'loading'
+      type: 'spinner'
+    }
+  | {
+      _reactKey: string
+      type: 'discover-feeds-loading'
     }
   | {
       _reactKey: string
@@ -85,7 +89,10 @@ export class MyFeedsUIModel {
       type: 'saved-feeds-header',
     })
     if (this.saved.isLoading) {
-      items.push({_reactKey: '__saved_feeds_loading__', type: 'loading'})
+      items.push({
+        _reactKey: '__saved_feeds_loading__',
+        type: 'spinner',
+      })
     } else if (this.saved.hasError) {
       items.push({
         _reactKey: '__saved_feeds_error__',
@@ -113,8 +120,11 @@ export class MyFeedsUIModel {
       _reactKey: '__discover_feeds_header__',
       type: 'discover-feeds-header',
     })
-    if (this.discovery.isLoading) {
-      items.push({_reactKey: '__discover_feeds_loading__', type: 'loading'})
+    if (this.discovery.isLoading && !this.discovery.hasContent) {
+      items.push({
+        _reactKey: '__discover_feeds_loading__',
+        type: 'discover-feeds-loading',
+      })
     } else if (this.discovery.hasError) {
       items.push({
         _reactKey: '__discover_feeds_error__',
@@ -134,6 +144,12 @@ export class MyFeedsUIModel {
           feed,
         })),
       )
+      if (this.discovery.isLoading) {
+        items.push({
+          _reactKey: '__discover_feeds_loading_more__',
+          type: 'spinner',
+        })
+      }
     }
 
     return items

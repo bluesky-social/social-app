@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, RefreshControl, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, RefreshControl, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
@@ -87,8 +87,14 @@ export const FeedsScreen = withAuthRequired(
 
     const renderItem = React.useCallback(
       ({item}: {item: MyFeedsItem}) => {
-        if (item.type === 'loading') {
+        if (item.type === 'discover-feeds-loading') {
           return <FeedFeedLoadingPlaceholder />
+        } else if (item.type === 'spinner') {
+          return (
+            <View style={s.p10}>
+              <ActivityIndicator />
+            </View>
+          )
         } else if (item.type === 'error') {
           return <ErrorMessage message={item.error} />
         } else if (item.type === 'saved-feeds-header') {
