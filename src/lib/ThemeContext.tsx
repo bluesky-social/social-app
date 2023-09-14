@@ -1,3 +1,4 @@
+import {isWeb} from 'platform/detection'
 import React, {ReactNode, createContext, useContext} from 'react'
 import {
   AppState,
@@ -101,6 +102,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     React.useState<ColorSchemeName>(colorSchemeFromRN)
 
   React.useEffect(() => {
+    if (isWeb) {
+      setNativeColorScheme(colorSchemeFromRN)
+    }
+
     const subscription = AppState.addEventListener('change', state => {
       const isActive = state === 'active'
 
