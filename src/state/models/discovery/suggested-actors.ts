@@ -23,10 +23,7 @@ export class SuggestedActorsModel {
   // data
   suggestions: SuggestedActor[] = []
 
-  constructor(
-    public rootStore: RootStoreModel,
-    opts?: {pageSize?: number; withSetup?: boolean},
-  ) {
+  constructor(public rootStore: RootStoreModel, opts?: {pageSize?: number}) {
     if (opts?.pageSize) {
       this.pageSize = opts.pageSize
     }
