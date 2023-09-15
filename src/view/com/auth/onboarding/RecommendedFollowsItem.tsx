@@ -85,10 +85,10 @@ export const ProfileCard = observer(function ProfileCardImpl({
       ) : undefined}
       {addingMoreSuggestions ? (
         <View style={styles.addingMoreContainer}>
-          <ActivityIndicator color={pal.colors.text} />
+          <ActivityIndicator size="small" color={pal.colors.text} />
           <Text style={[pal.text]}>Finding similar accounts...</Text>
         </View>
-      ) : undefined}
+      ) : null}
     </View>
   )
 })
@@ -126,5 +126,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
+    gap: 4,
   },
 })

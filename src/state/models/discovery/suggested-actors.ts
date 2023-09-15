@@ -116,10 +116,15 @@ export class SuggestedActorsModel {
         actor: actor,
       })
     const {suggestions: moreSuggestions} = res.data
+    this.rootStore.me.follows.hydrateProfiles(moreSuggestions)
     const indexToInsertAt = this.suggestions.findIndex(
       suggestion => suggestion.did === actor,
     )
-    this.suggestions.splice(indexToInsertAt + 1, 0, ...moreSuggestions)
+    this.suggestions.splice(
+      indexToInsertAt + 1,
+      0,
+      ...moreSuggestions.splice(0, 5),
+    )
   }
 
   // state transitions
