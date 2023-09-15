@@ -9,6 +9,7 @@ import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
 import {ToggleButton} from '../util/forms/ToggleButton'
+import {Button} from '../util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
 import {isIOS} from 'platform/detection'
@@ -27,22 +28,6 @@ export const Component = observer(
       store.preferences.sync()
     }, [store])
 
-    const onToggleAdultContent = React.useCallback(async () => {
-      if (isIOS) {
-        return
-      }
-      try {
-        await store.preferences.setAdultContentEnabled(
-          !store.preferences.adultContentEnabled,
-        )
-      } catch (e) {
-        Toast.show(
-          'There was an issue syncing your preferences with the server',
-        )
-        store.log.error('Failed to update preferences with server', {e})
-      }
-    }, [store])
-
     const onPressDone = React.useCallback(() => {
       store.shell.closeModal()
     }, [store])
@@ -51,29 +36,7 @@ export const Component = observer(
       <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
         <Text style={[pal.text, styles.title]}>Content Filtering</Text>
         <ScrollView style={styles.scrollContainer}>
-          <View style={s.mb10}>
-            {isIOS ? (
-              store.preferences.adultContentEnabled ? null : (
-                <Text type="md" style={pal.textLight}>
-                  Adult content can only be enabled via the Web at{' '}
-                  <TextLink
-                    style={pal.link}
-                    href="https://bsky.app"
-                    text="bsky.app"
-                  />
-                  .
-                </Text>
-              )
-            ) : (
-              <ToggleButton
-                type="default-light"
-                label="Enable Adult Content"
-                isSelected={store.preferences.adultContentEnabled}
-                onPress={onToggleAdultContent}
-                style={styles.toggleBtn}
-              />
-            )}
-          </View>
+          <AdultContentEnabledPref />
           <ContentLabelPref
             group="nsfw"
             disabled={!store.preferences.adultContentEnabled}
@@ -116,6 +79,71 @@ export const Component = observer(
             </LinearGradient>
           </Pressable>
         </View>
+      </View>
+    )
+  },
+)
+
+const AdultContentEnabledPref = observer(
+  function AdultContentEnabledPrefImpl() {
+    const store = useStores()
+    const pal = usePalette('default')
+
+    const onSetAge = () => store.shell.openModal({name: 'birth-date-settings'})
+
+    const onToggleAdultContent = async () => {
+      if (isIOS) {
+        return
+      }
+      try {
+        await store.preferences.setAdultContentEnabled(
+          !store.preferences.adultContentEnabled,
+        )
+      } catch (e) {
+        Toast.show(
+          'There was an issue syncing your preferences with the server',
+        )
+        store.log.error('Failed to update preferences with server', {e})
+      }
+    }
+
+    return (
+      <View style={s.mb10}>
+        {isIOS ? (
+          store.preferences.adultContentEnabled ? null : (
+            <Text type="md" style={pal.textLight}>
+              Adult content can only be enabled via the Web at{' '}
+              <TextLink
+                style={pal.link}
+                href="https://bsky.app"
+                text="bsky.app"
+              />
+              .
+            </Text>
+          )
+        ) : typeof store.preferences.birthDate === 'undefined' ? (
+          <View style={[pal.viewLight, styles.agePrompt]}>
+            <Text type="md" style={[pal.text, {flex: 1}]}>
+              Confirm your age to enable adult content.
+            </Text>
+            <Button type="primary" label="Set Age" onPress={onSetAge} />
+          </View>
+        ) : (store.preferences.userAge || 0) >= 18 ? (
+          <ToggleButton
+            type="default-light"
+            label="Enable Adult Content"
+            isSelected={store.preferences.adultContentEnabled}
+            onPress={onToggleAdultContent}
+            style={styles.toggleBtn}
+          />
+        ) : (
+          <View style={[pal.viewLight, styles.agePrompt]}>
+            <Text type="md" style={[pal.text, {flex: 1}]}>
+              You must be 18 or older to enable adult content.
+            </Text>
+            <Button type="primary" label="Set Age" onPress={onSetAge} />
+          </View>
+        )}
       </View>
     )
   },
@@ -275,6 +303,16 @@ const styles = StyleSheet.create({
   btnContainerMobile: {
     paddingBottom: 40,
     borderTopWidth: 1,
+  },
+
+  agePrompt: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 14,
+    paddingRight: 10,
+    paddingVertical: 8,
+    borderRadius: 8,
   },
 
   contentLabelPref: {

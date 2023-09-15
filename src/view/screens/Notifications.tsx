@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppState, FlatList, View} from 'react-native'
+import {FlatList, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {
@@ -18,7 +18,6 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 
-const NOTIFICATION_MARK_READ_TIMEOUT = 5000
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
@@ -56,22 +55,10 @@ export const NotificationsScreen = withAuthRequired(
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
         store.me.notifications.update()
         screen('Notifications')
-        // marks notifications read if the user opens the notifications tab for x seconds
-        // but doesn't open any notifications or any other tab
-        const markReadTimeout = setTimeout(() => {
-          store.me.notifications.markAllRead()
-        }, NOTIFICATION_MARK_READ_TIMEOUT) // mark all notifications as read after 3s
-        // marks notification read if the user suspends the app while in the notification tab
-        // then opens the app into the notification tab and then closes the app again
-        const markReadOnBlur = AppState.addEventListener('change', event => {
-          if (event === 'background') store.me.notifications.markAllRead()
-        })
 
         return () => {
           softResetSub.remove()
-          markReadOnBlur.remove()
           store.me.notifications.markAllRead()
-          clearTimeout(markReadTimeout) // in case we unmount before the timeout fires
         }
       }, [store, screen, onPressLoadLatest]),
     )

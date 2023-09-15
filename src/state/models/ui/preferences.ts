@@ -7,6 +7,7 @@ import {RootStoreModel} from '../root-store'
 import {ModerationOpts} from '@atproto/api'
 import {DEFAULT_FEEDS} from 'lib/constants'
 import {deviceLocales} from 'platform/detection'
+import {getAge} from 'lib/strings/time'
 import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
@@ -47,6 +48,7 @@ export class PreferencesModel {
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
+  birthDate: Date | undefined = undefined
   homeFeedRepliesEnabled: boolean = true
   homeFeedRepliesThreshold: number = 2
   homeFeedRepostsEnabled: boolean = true
@@ -58,6 +60,13 @@ export class PreferencesModel {
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {lock: false}, {autoBind: true})
+  }
+
+  get userAge(): number | undefined {
+    if (!this.birthDate) {
+      return undefined
+    }
+    return getAge(this.birthDate)
   }
 
   serialize() {
@@ -199,6 +208,7 @@ export class PreferencesModel {
         ) {
           this.pinnedFeeds = prefs.feeds.pinned
         }
+        this.birthDate = prefs.birthDate
       })
 
       // set defaults on missing items
@@ -428,6 +438,11 @@ export class PreferencesModel {
       this.pinnedFeeds.filter(uri => uri !== v),
       () => this.rootStore.agent.removePinnedFeed(v),
     )
+  }
+
+  async setBirthDate(birthDate: Date) {
+    this.birthDate = birthDate
+    await this.rootStore.agent.setPersonalDetails({birthDate})
   }
 
   toggleHomeFeedRepliesEnabled() {

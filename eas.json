@@ -33,6 +33,13 @@
         "resourceClass": "m-large"
       },
       "channel": "production"
+    },
+    "dev-android-apk": {
+      "developmentClient": true,
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      }
     }
   },
   "submit": {

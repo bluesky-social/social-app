@@ -224,7 +224,6 @@ const DropdownItems = ({
       {/* This TouchableWithoutFeedback renders the background so if the user clicks outside, the dropdown closes */}
       <TouchableWithoutFeedback
         onPress={onOuterPress}
-        accessibilityRole="button"
         accessibilityLabel="Toggle dropdown"
         accessibilityHint="">
         <View style={[styles.bg]} />

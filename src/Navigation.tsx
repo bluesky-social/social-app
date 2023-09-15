@@ -348,7 +348,6 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
         component={ProfileScreen}
         initialParams={{
           name: store.me.did,
-          hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
@@ -362,7 +361,9 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
  */
 const FlatNavigator = observer(function FlatNavigatorImpl() {
   const pal = usePalette('default')
-  const unreadCountLabel = useStores().me.notifications.unreadCountLabel
+  const store = useStores()
+  const unreadCountLabel = store.me.notifications.unreadCountLabel
+
   const title = (page: string) => bskyTitle(page, unreadCountLabel)
   return (
     <Flat.Navigator
