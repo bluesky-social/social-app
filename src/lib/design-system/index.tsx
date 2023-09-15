@@ -62,8 +62,12 @@ export const ThemeProvider = ({
   </Context.Provider>
 )
 
+export function useTheme() {
+  return React.useContext(Context)
+}
+
 export function useBreakpoints() {
-  const {theme} = React.useContext(Context)
+  const {theme} = useTheme()
   const [breakpoints, setBreakpoints] = React.useState(
     theme.getActiveBreakpoints({width: Dimensions.get('window').width}),
   )
@@ -83,12 +87,12 @@ export function useBreakpoints() {
 }
 
 export function usePick<T = NativeProps>(props: ComponentProps<T>) {
-  const {theme} = React.useContext(Context)
+  const {theme} = useTheme()
   return React.useMemo(() => theme.pick(props), [props, theme])
 }
 
 export function useStyle(props: StyleProps) {
-  const {theme} = React.useContext(Context)
+  const {theme} = useTheme()
   const breakpoints = useBreakpoints()
   const {styles: responsiveStyles} = usePick(props)
   return React.useMemo(() => {
@@ -104,7 +108,7 @@ export function useStyles<O extends Record<string, StyleProps>>(
 ): {
   [Name in keyof O]: ReturnType<typeof light.style>
 } {
-  const {theme} = React.useContext(Context)
+  const {theme} = useTheme()
   const breakpoints = useBreakpoints()
   return React.useMemo(() => {
     return Object.entries(styles).reduce((acc, [key, style]) => {
