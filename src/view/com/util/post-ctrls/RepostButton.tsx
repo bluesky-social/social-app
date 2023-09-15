@@ -6,7 +6,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../text/Text'
 import {pluralize} from 'lib/strings/helpers'
 import {useStores} from 'state/index'
-import {HITSLOP_10} from 'lib/constants'
+import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 
 interface Props {
   isReposted: boolean
@@ -52,7 +52,7 @@ export const RepostButton = ({
         isReposted ? 'Undo repost' : 'Repost'
       } (${repostCount} ${pluralize(repostCount || 0, 'repost')})`}
       accessibilityHint=""
-      hitSlop={HITSLOP_10}>
+      hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
       <RepostIcon
         style={
           isReposted
