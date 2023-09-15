@@ -2,6 +2,7 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {hasProp} from 'lib/type-guards'
 import {track} from 'lib/analytics/analytics'
+import {SuggestedActorsModel} from './suggested-actors'
 
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',
@@ -17,7 +18,11 @@ export class OnboardingModel {
   // state
   step: OnboardingStep = 'Home' // default state to skip onboarding, only enabled for new users by calling start()
 
+  // data
+  suggestedActors: SuggestedActorsModel
+
   constructor(public rootStore: RootStoreModel) {
+    this.suggestedActors = new SuggestedActorsModel(this.rootStore)
     makeAutoObservable(this, {
       rootStore: false,
       hydrate: false,
@@ -58,6 +63,8 @@ export class OnboardingModel {
       return this.step
     } else if (this.step === 'RecommendedFeeds') {
       this.step = 'RecommendedFollows'
+      // prefetch recommended follows
+      this.suggestedActors.loadMore(true)
       return this.step
     } else if (this.step === 'RecommendedFollows') {
       this.finish()
@@ -94,13 +101,5 @@ export class OnboardingModel {
 
   get isActive() {
     return !this.isComplete
-  }
-
-  async getRecommendedFollows() {
-    const res =
-      await this.rootStore.agent.api.app.bsky.graph.getSuggestedFollowsByActor({
-        actor: this.rootStore.me.did,
-      })
-    return res.data.suggestions
   }
 }

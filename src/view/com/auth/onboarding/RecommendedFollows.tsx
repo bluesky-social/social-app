@@ -10,7 +10,6 @@ import {Button} from 'view/com/util/forms/Button'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
-import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
 import {RecommendedFollowsItem} from './RecommendedFollowsItem'
 
 type Props = {
@@ -20,17 +19,14 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   next,
 }: Props) {
   const store = useStores()
-  const suggestedActors = React.useMemo<SuggestedActorsModel>(
-    () => new SuggestedActorsModel(store, {withSetup: true}),
-    [store],
-  )
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
+
   React.useEffect(() => {
-    if (!suggestedActors.hasLoaded) {
-      suggestedActors.loadMore(true)
+    if (!store.onboarding.suggestedActors.hasLoaded) {
+      store.onboarding.suggestedActors.loadMore(true)
     }
-  }, [suggestedActors])
+  }, [store])
 
   const title = (
     <>
@@ -97,11 +93,11 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          {suggestedActors.isLoading ? (
+          {store.onboarding.suggestedActors.isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
             <FlatList
-              data={suggestedActors.suggestions}
+              data={store.onboarding.suggestedActors.suggestions}
               renderItem={({item}) => <RecommendedFollowsItem item={item} />}
               keyExtractor={item => item.did}
               style={{flex: 1}}
@@ -120,11 +116,11 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           <Text type="lg-medium" style={[pal.text, mStyles.header]}>
             Check out some recommended users. Follow them to see similar users.
           </Text>
-          {suggestedActors.isLoading ? (
+          {store.onboarding.suggestedActors.isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
             <FlatList
-              data={suggestedActors.suggestions}
+              data={store.onboarding.suggestedActors.suggestions}
               renderItem={({item}) => <RecommendedFollowsItem item={item} />}
               keyExtractor={item => item.did}
               style={{flex: 1}}
