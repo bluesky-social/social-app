@@ -12,8 +12,8 @@ export const DesignSystemScreen = withAuthRequired(
   observer(function DesignSystem({}: Props) {
     return (
       <ThemeProvider theme={themes.dark}>
-        <Box pa="m" gtPhone={{padding: 'l'}}>
-          <H2 as="h1" c="theme" gtPhone={{mb: 'm', marginTop: 'l'}} debug>
+        <Box pa="m" gtPhone={{padding: 'l'}} debug>
+          <H2 as="h1" c="theme" gtPhone={{mb: 'm', marginTop: 'l'}}>
             Heading 1
           </H2>
           <H1 as="h2" c="theme" style={{color: 'tomato'}}>

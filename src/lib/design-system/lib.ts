@@ -81,7 +81,7 @@ type Styles<T extends Tokens, P extends Properties, C extends Macros<T>> = {
 type ResponsiveStyles<
   B extends Breakpoints,
   S extends Styles<any, any, any>,
-> = {
+> = S & {
   [Breakpoint in keyof B]?: S
 }
 
@@ -279,10 +279,10 @@ export const create = <
   type InnerResponsiveStyles = ResponsiveStyles<typeof breakpoints, InnerStyles>
 
   function pick<Props = Partial<ViewProps & TextProps & ImageProps>>(
-    props: InnerStyles & InnerResponsiveStyles & Props,
+    props: InnerResponsiveStyles & Props,
   ) {
-    const res = {styles: {default: {}}, props: {}} as {
-      styles: InnerResponsiveStyles & {default: InnerStyles}
+    const res = {styles: {}, props: {}} as {
+      styles: InnerResponsiveStyles
       props: Props
     }
 
@@ -291,7 +291,7 @@ export const create = <
       if (value === undefined) continue
       if (allPropertyKeys.includes(prop)) {
         // @ts-ignore no index sig, it's fine
-        res.styles.default[prop] = value
+        res.styles[prop] = value
       } else if (keyofBreakpoints.includes(prop)) {
         // @ts-ignore no index sig, it's fine
         res.styles[prop] = value
@@ -342,19 +342,20 @@ export const create = <
 
   function applyBreakpoints(
     styles: InnerResponsiveStyles,
-    bp: (keyof typeof breakpoints | 'default')[],
+    bp: (keyof typeof breakpoints)[],
   ) {
-    let s = styles.default as InnerStyles
+    let s = styles
 
     for (const breakpoint of bp) {
-      s = {...s, ...styles[breakpoint]}
+      const o = styles[breakpoint] || {}
+      s = {...s, ...o}
     }
 
     return s
   }
 
   function getActiveBreakpoints({width}: {width: number}) {
-    const active: (keyof typeof breakpoints | 'default')[] = ['default']
+    const active: (keyof typeof breakpoints)[] = []
 
     for (const breakpoint in breakpoints) {
       if (width >= breakpoints[breakpoint]) {

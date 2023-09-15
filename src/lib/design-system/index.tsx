@@ -12,15 +12,19 @@ import merge from 'lodash.merge'
 
 import {Theme, light} from './themes'
 
-type ComponentProps = Partial<ViewProps & TextProps & ImageProps>
-export type Props<T = ComponentProps> = Parameters<typeof light.pick<T>>[0] & {
+type NativeProps = Partial<ViewProps & TextProps & ImageProps>
+export type StyleProps = Parameters<typeof light.style>[0] &
+  Record<string, unknown>
+export type ComponentProps<T = NativeProps> = Parameters<
+  typeof light.pick<T>
+>[0] & {
   /**
    * Debug mode will log the styles and props to the console
    */
   debug?: boolean
 }
 type HeadingElements = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-type TypeProps = Props<TextProps> & {
+type TypeProps = ComponentProps<TextProps> & {
   as?: HeadingElements
 }
 
@@ -53,44 +57,35 @@ export function useBreakpoints() {
   return breakpoints
 }
 
-export function useStyles<T = ComponentProps>(props: Props<T> & T) {
+export function usePick<T = NativeProps>(props: ComponentProps<T>) {
+  const {theme} = React.useContext(Context)
+  return React.useMemo(() => theme.pick(props), [props, theme])
+}
+
+export function useStyle(props: StyleProps) {
   const {theme} = React.useContext(Context)
   const breakpoints = useBreakpoints()
-  const {
-    styles: responsiveStyles,
-    props: {debug, ...rest},
-  } = React.useMemo(
-    () => theme.pick<T & Pick<Props, 'debug'>>(props),
-    [props, theme],
-  )
-  const styles = React.useMemo(() => {
+  const {styles: responsiveStyles} = usePick(props)
+  return React.useMemo(() => {
     return theme.style(
       theme.applyBreakpoints(responsiveStyles, breakpoints.active),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responsiveStyles, breakpoints.current, theme])
-
-  if (debug) {
-    console.debug({styles, props: rest, breakpoints})
-  }
-
-  return {styles, props: rest}
 }
 
-export function useMultiStyle<
-  O extends Record<string, Parameters<typeof light.pick<{}>>[0]>,
->(
+export function useStyles<O extends Record<string, StyleProps>>(
   styles: O,
 ): {
   [Name in keyof O]: ReturnType<typeof light.style>
 } {
   const {theme} = React.useContext(Context)
   const breakpoints = useBreakpoints()
-
   return React.useMemo(() => {
     return Object.entries(styles).reduce((acc, [key, style]) => {
+      const responsiveStyles = theme.pick(style).styles
       acc[key as keyof O] = theme.style(
-        theme.applyBreakpoints(style, breakpoints.active),
+        theme.applyBreakpoints(responsiveStyles, breakpoints.active),
       )
       return acc
     }, {} as {[Name in keyof O]: ReturnType<typeof light.style>})
@@ -98,24 +93,27 @@ export function useMultiStyle<
   }, [styles, breakpoints.current, theme])
 }
 
-export const Box = React.forwardRef<View, Props<ViewProps>>(function BoxThemed(
-  {children, style, ...props},
-  ref,
-) {
-  const {styles, props: rest} = useStyles<ViewProps>(props)
-  return (
-    <View {...rest} style={[styles, style]} ref={ref}>
-      {children}
-    </View>
-  )
-})
+export const Box = React.forwardRef<View, ComponentProps<ViewProps>>(
+  function BoxThemed({children, style, ...props}, ref) {
+    const {styles: pickedStyles, props: rest} = usePick<ViewProps>(props)
+    const styles = useStyle(pickedStyles)
+    if (props.debug) console.log({styles: pickedStyles, props: rest})
+    return (
+      <View {...rest} style={[styles, style]} ref={ref}>
+        {children}
+      </View>
+    )
+  },
+)
 
-export const Text = React.forwardRef<RNText, Props<TextProps>>(
+export const Text = React.forwardRef<RNText, ComponentProps<TextProps>>(
   function TextThemed({children, style, ...props}, ref) {
-    const {styles, props: rest} = useStyles<TextProps>({
+    const {styles: pickedStyles, props: rest} = usePick<TextProps>(props)
+    const styles = useStyle({
       color: 'text',
-      ...props,
+      ...pickedStyles,
     })
+    if (props.debug) console.log({styles, props: rest})
     return (
       <RNText {...rest} style={[styles, style]} ref={ref}>
         {children}
@@ -134,7 +132,7 @@ const asToAriaLevel = {
 }
 
 const asToTypeStyles: {
-  [key in HeadingElements]: Props
+  [key in HeadingElements]: ComponentProps
 } = {
   h1: {
     fontSize: 'l',
@@ -190,10 +188,12 @@ function createHeadingComponent(element: HeadingElements) {
       },
       default: {},
     })
-    const {styles, props: rest} = useStyles({
+    const {styles: pickedStyles, props: rest} = usePick<TextProps>(props)
+    const styles = useStyle({
       color: 'text',
-      ...merge(asToTypeStyles[asEl], props),
+      ...merge(asToTypeStyles[asEl], pickedStyles),
     })
+    if (props.debug) console.debug({styles, props: rest})
 
     return (
       <RNText
