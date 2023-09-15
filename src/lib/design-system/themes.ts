@@ -9,6 +9,7 @@ export const light = create({
       m: 16,
       l: 24,
     },
+    // naming inspo https://polaris.shopify.com/tokens/color
     color: {
       surface: '#fff',
 
