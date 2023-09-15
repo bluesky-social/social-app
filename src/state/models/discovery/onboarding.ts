@@ -95,4 +95,12 @@ export class OnboardingModel {
   get isActive() {
     return !this.isComplete
   }
+
+  async getRecommendedFollows() {
+    const res =
+      await this.rootStore.agent.api.app.bsky.graph.getSuggestedFollowsByActor({
+        actor: this.rootStore.me.did,
+      })
+    return res.data.suggestions
+  }
 }

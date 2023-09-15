@@ -23,7 +23,10 @@ export class SuggestedActorsModel {
   // data
   suggestions: SuggestedActor[] = []
 
-  constructor(public rootStore: RootStoreModel, opts?: {pageSize?: number}) {
+  constructor(
+    public rootStore: RootStoreModel,
+    opts?: {pageSize?: number; withSetup?: boolean},
+  ) {
     if (opts?.pageSize) {
       this.pageSize = opts.pageSize
     }
@@ -109,6 +112,15 @@ export class SuggestedActorsModel {
       this._xIdle(e)
     }
   })
+
+  async fetchSuggestedFollows(actor: string): Promise<SuggestedActor[]> {
+    const res =
+      await this.rootStore.agent.app.bsky.graph.getSuggestedFollowsByActor({
+        actor: actor,
+      })
+    const {suggestions} = res.data
+    return suggestions
+  }
 
   // state transitions
   // =

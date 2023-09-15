@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
@@ -7,10 +7,11 @@ import {Text} from 'view/com/util/text/Text'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Button} from 'view/com/util/forms/Button'
-import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {RECOMMENDED_FEEDS} from 'lib/constants'
+import {useStores} from 'state/index'
+import {SuggestedActorsModel} from 'state/models/discovery/suggested-actors'
+import {RecommendedFollowsItem} from './RecommendedFollowsItem'
 
 type Props = {
   next: () => void
@@ -18,8 +19,18 @@ type Props = {
 export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   next,
 }: Props) {
+  const store = useStores()
+  const suggestedActors = React.useMemo<SuggestedActorsModel>(
+    () => new SuggestedActorsModel(store, {withSetup: true}),
+    [store],
+  )
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
+  React.useEffect(() => {
+    if (!suggestedActors.hasLoaded) {
+      suggestedActors.loadMore(true)
+    }
+  }, [suggestedActors])
 
   const title = (
     <>
@@ -81,37 +92,44 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
     <>
       <TabletOrDesktop>
         <TitleColumnLayout
-          testID="recommendedFeedsOnboarding"
+          testID="recommendedFollowsOnboarding"
           title={title}
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          <FlatList
-            data={RECOMMENDED_FEEDS}
-            renderItem={({item}) => <RecommendedFeedsItem {...item} />}
-            keyExtractor={item => item.did + item.rkey}
-            style={{flex: 1}}
-          />
+          {suggestedActors.isLoading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <FlatList
+              data={suggestedActors.suggestions}
+              renderItem={({item}) => <RecommendedFollowsItem item={item} />}
+              keyExtractor={item => item.did}
+              style={{flex: 1}}
+            />
+          )}
         </TitleColumnLayout>
       </TabletOrDesktop>
+
       <Mobile>
-        <View style={[mStyles.container]} testID="recommendedFeedsOnboarding">
+        <View style={[mStyles.container]} testID="recommendedFollowsOnboarding">
           <ViewHeader
-            title="Recommended Feeds"
+            title="Recommended Follows"
             showBackButton={false}
             showOnDesktop
           />
           <Text type="lg-medium" style={[pal.text, mStyles.header]}>
             Check out some recommended users. Follow them to see similar users.
           </Text>
-
-          <FlatList
-            data={RECOMMENDED_FEEDS}
-            renderItem={({item}) => <RecommendedFeedsItem {...item} />}
-            keyExtractor={item => item.did + item.rkey}
-            style={{flex: 1}}
-          />
-
+          {suggestedActors.isLoading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <FlatList
+              data={suggestedActors.suggestions}
+              renderItem={({item}) => <RecommendedFollowsItem item={item} />}
+              keyExtractor={item => item.did}
+              style={{flex: 1}}
+            />
+          )}
           <Button
             onPress={next}
             label="Continue"

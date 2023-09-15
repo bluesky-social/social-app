@@ -54,6 +54,7 @@ export const FollowButton = observer(function FollowButtonImpl({
       }
       onPress={onToggleFollowInner}
       label={followState === FollowState.Following ? 'Unfollow' : 'Follow'}
+      withLoading={true}
     />
   )
 })
