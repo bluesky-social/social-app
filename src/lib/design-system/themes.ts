@@ -10,8 +10,17 @@ export const light = create({
       l: 24,
     },
     color: {
-      theme: 'blue',
+      surface: '#fff',
+
+      // Text
       text: '#000',
+      textInverted: '#fff',
+
+      // Interactive elements
+      textLink: '#0085ff',
+
+      // UI
+      border: '#f0e9e9',
     },
     fontSize: {
       xxs: 10,
@@ -66,6 +75,7 @@ export const light = create({
     fw: ['fontWeight'],
     lh: ['lineHeight'],
     ta: ['textAlign'],
+    radius: ['borderRadius'],
   },
   macros: {
     inline: (_: boolean) => ({flexDirection: 'row'}),
@@ -108,8 +118,17 @@ export const dark: typeof light = create({
   tokens: {
     ...light.config.tokens,
     color: {
-      theme: 'blue',
-      text: '#333',
+      surface: '#000',
+
+      // Text
+      text: '#fff',
+      textInverted: '#000',
+
+      // Interactive elements
+      textLink: '#0085ff',
+
+      // UI
+      border: '#f0e9e9',
     },
   },
 })
