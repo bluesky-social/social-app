@@ -15,7 +15,7 @@ import {RECOMMENDED_FEEDS} from 'lib/constants'
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
+export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   next,
 }: Props) {
   const pal = usePalette('default')
@@ -29,7 +29,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title1,
           isTabletOrMobile && tdStyles.title1Small,
         ]}>
-        Choose your
+        Follow some
       </Text>
       <Text
         style={[
@@ -37,7 +37,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title2,
           isTabletOrMobile && tdStyles.title2Small,
         ]}>
-        Recomended
+        Recommended
       </Text>
       <Text
         style={[
@@ -45,11 +45,11 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title2,
           isTabletOrMobile && tdStyles.title2Small,
         ]}>
-        Feeds
+        Users
       </Text>
       <Text type="2xl-medium" style={[pal.textLight, tdStyles.description]}>
-        Feeds are created by users to curate content. Choose some feeds that you
-        find interesting.
+        Follow some users to get started. We can recommend you more users based
+        on who you find interesting.
       </Text>
       <View
         style={{
@@ -68,7 +68,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Next
+              Done
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -102,8 +102,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             showOnDesktop
           />
           <Text type="lg-medium" style={[pal.text, mStyles.header]}>
-            Check out some recommended feeds. Tap + to add them to your list of
-            pinned feeds.
+            Check out some recommended users. Follow them to see similar users.
           </Text>
 
           <FlatList

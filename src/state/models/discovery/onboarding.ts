@@ -6,6 +6,7 @@ import {track} from 'lib/analytics/analytics'
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',
   RecommendedFeeds: 'RecommendedFeeds',
+  RecommendedFollows: 'RecommendedFollows',
   Home: 'Home',
 } as const
 
@@ -56,6 +57,9 @@ export class OnboardingModel {
       this.step = 'RecommendedFeeds'
       return this.step
     } else if (this.step === 'RecommendedFeeds') {
+      this.step = 'RecommendedFollows'
+      return this.step
+    } else if (this.step === 'RecommendedFollows') {
       this.finish()
       return this.step
     } else {
