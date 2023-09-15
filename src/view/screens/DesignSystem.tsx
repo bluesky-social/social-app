@@ -4,14 +4,13 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 
 import {ThemeProvider, Box, Text, H1, H2, H3, P} from 'lib/design-system'
-import * as themes from 'lib/design-system/themes'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'DesignSystem'>
 
 export const DesignSystemScreen = withAuthRequired(
   observer(function DesignSystem({}: Props) {
     return (
-      <ThemeProvider theme={themes.dark}>
+      <ThemeProvider theme="dark">
         <Box pa="m" gtPhone={{padding: 'l'}} debug>
           <H2 as="h1" c="theme" gtPhone={{mb: 'm', marginTop: 'l'}}>
             Heading 1

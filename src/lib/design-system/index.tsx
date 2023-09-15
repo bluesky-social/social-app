@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import merge from 'lodash.merge'
 
-import {Theme, light} from './themes'
+import {Theme, light, dark} from './themes'
 
 type NativeProps = Partial<ViewProps & TextProps & ImageProps>
 export type StyleProps = Parameters<typeof light.style>[0] &
@@ -28,13 +28,38 @@ type TypeProps = ComponentProps<TextProps> & {
   as?: HeadingElements
 }
 
-const Context = React.createContext({theme: light})
+const themes = {
+  light,
+  dark,
+}
+type ThemeName = keyof typeof themes
+const Context = React.createContext<{
+  themeName: ThemeName
+  theme: Theme
+  themes: {
+    [key in ThemeName]: Theme
+  }
+}>({
+  themeName: 'light',
+  theme: light,
+  themes: {
+    light,
+    dark,
+  },
+})
 
 export const ThemeProvider = ({
   children,
   theme,
-}: React.PropsWithChildren<{theme: Theme}>) => (
-  <Context.Provider value={{theme}}>{children}</Context.Provider>
+}: React.PropsWithChildren<{theme: ThemeName}>) => (
+  <Context.Provider
+    value={{
+      themeName: theme,
+      theme: themes[theme],
+      themes,
+    }}>
+    {children}
+  </Context.Provider>
 )
 
 export function useBreakpoints() {
