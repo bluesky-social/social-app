@@ -23,7 +23,12 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   const {isTabletOrMobile} = useWebMediaQueries()
 
   React.useEffect(() => {
-    if (!store.onboarding.suggestedActors.hasLoaded) {
+    // Load suggested actors if not already loaded
+    // prefetch should happen in the onboarding model
+    if (
+      !store.onboarding.suggestedActors.hasLoaded ||
+      store.onboarding.suggestedActors.isEmpty
+    ) {
       store.onboarding.suggestedActors.loadMore(true)
     }
   }, [store])
