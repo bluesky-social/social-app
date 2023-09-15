@@ -1,11 +1,54 @@
 import React from 'react'
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from '../text/Text'
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+  Pressable,
+} from 'react-native'
+import {Text as RNText} from '../text/Text'
 import {Button, ButtonType} from './Button'
 import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
 import {colors} from 'lib/styles'
 import {TypographyVariant} from 'lib/ThemeContext'
+
+import {ComponentProps, Box, Text} from 'lib/design-system'
+
+export function Toggle({
+  children,
+  selected,
+  ...props
+}: React.PropsWithChildren<
+  ComponentProps & {
+    selected: boolean
+  }
+>) {
+  return (
+    <Pressable {...props}>
+      <Box inline aic gap="s" py="s" radius={24}>
+        <Box rel w={42} h={26} radius={15} borderWidth={2} borderColor="border">
+          <Box
+            abs
+            w={16}
+            h={16}
+            radius={10}
+            bg={selected ? 'textLink' : 'border'}
+            top={3}
+            left={selected ? undefined : 3}
+            right={selected ? 3 : undefined}
+          />
+        </Box>
+
+        <Box>
+          {/* @ts-ignore userSelect is a web property */}
+          <Text style={{userSelect: 'none'}}>{children}</Text>
+        </Box>
+      </Box>
+    </Pressable>
+  )
+}
 
 export function ToggleButton({
   type = 'default-light',
@@ -146,9 +189,11 @@ export function ToggleButton({
           />
         </View>
         {label === '' ? null : (
-          <Text type={labelType || 'button'} style={[labelStyle, styles.label]}>
+          <RNText
+            type={labelType || 'button'}
+            style={[labelStyle, styles.label]}>
             {label}
-          </Text>
+          </RNText>
         )}
       </View>
     </Button>
