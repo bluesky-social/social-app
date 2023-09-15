@@ -110,13 +110,16 @@ export class SuggestedActorsModel {
     }
   })
 
-  async fetchSuggestedFollows(actor: string): Promise<SuggestedActor[]> {
+  async insertSuggestionsByActor(actor: string) {
     const res =
       await this.rootStore.agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: actor,
       })
-    const {suggestions} = res.data
-    return suggestions
+    const {suggestions: moreSuggestions} = res.data
+    const indexToInsertAt = this.suggestions.findIndex(
+      suggestion => suggestion.did === actor,
+    )
+    this.suggestions.splice(indexToInsertAt + 1, 0, ...moreSuggestions)
   }
 
   // state transitions

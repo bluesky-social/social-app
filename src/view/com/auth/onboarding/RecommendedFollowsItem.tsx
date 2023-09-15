@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
@@ -34,6 +34,8 @@ export const ProfileCard = observer(function ProfileCardImpl({
   const store = useStores()
   const pal = usePalette('default')
   const moderation = moderateProfile(profile, store.preferences.moderationOpts)
+  const [addingMoreSuggestions, setAddingMoreSuggestions] =
+    React.useState(false)
 
   return (
     <View style={styles.card}>
@@ -61,13 +63,30 @@ export const ProfileCard = observer(function ProfileCardImpl({
           </Text>
         </View>
 
-        <FollowButton did={profile.did} />
+        <FollowButton
+          did={profile.did}
+          onToggleFollow={async isFollow => {
+            if (isFollow) {
+              setAddingMoreSuggestions(true)
+              await store.onboarding.suggestedActors.insertSuggestionsByActor(
+                profile.did,
+              )
+              setAddingMoreSuggestions(false)
+            }
+          }}
+        />
       </View>
       {profile.description ? (
         <View style={styles.details}>
           <Text style={pal.text} numberOfLines={4}>
             {profile.description as string}
           </Text>
+        </View>
+      ) : undefined}
+      {addingMoreSuggestions ? (
+        <View style={styles.addingMoreContainer}>
+          <ActivityIndicator color={pal.colors.text} />
+          <Text style={[pal.text]}>Finding similar accounts...</Text>
         </View>
       ) : undefined}
     </View>
@@ -101,5 +120,11 @@ const styles = StyleSheet.create({
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
+  },
+  addingMoreContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
   },
 })
