@@ -1,3 +1,4 @@
+// @ts-ignore no decl -prf
 import * as findLast from 'array.prototype.findlast'
 /// <reference lib="dom" />
 
