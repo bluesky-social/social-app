@@ -97,6 +97,13 @@ function getTheme(theme: ColorSchemeName) {
   return theme === 'dark' ? darkTheme : defaultTheme
 }
 
+/**
+ * With RN iOS, we can only "trust" the color scheme reported while the app is
+ * active. This is a workaround until the bug is fixed upstream.
+ *
+ * @see https://github.com/bluesky-social/social-app/pull/1417#issuecomment-1719868504
+ * @see https://github.com/facebook/react-native/pull/39439
+ */
 function useColorScheme_FIXED() {
   const colorScheme = useColorScheme_BUGGY()
   const [currentColorScheme, setCurrentColorScheme] =
