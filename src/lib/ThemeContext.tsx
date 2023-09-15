@@ -1,8 +1,9 @@
+import {isWeb} from 'platform/detection'
 import React, {ReactNode, createContext, useContext} from 'react'
 import {
   AppState,
   TextStyle,
-  useColorScheme,
+  useColorScheme as useColorScheme_BUGGY,
   ViewStyle,
   ColorSchemeName,
 } from 'react-native'
@@ -92,33 +93,44 @@ export const ThemeContext = createContext<Theme>(defaultTheme)
 
 export const useTheme = () => useContext(ThemeContext)
 
+function getTheme(theme: ColorSchemeName) {
+  return theme === 'dark' ? darkTheme : defaultTheme
+}
+
+/**
+ * With RN iOS, we can only "trust" the color scheme reported while the app is
+ * active. This is a workaround until the bug is fixed upstream.
+ *
+ * @see https://github.com/bluesky-social/social-app/pull/1417#issuecomment-1719868504
+ * @see https://github.com/facebook/react-native/pull/39439
+ */
+function useColorScheme_FIXED() {
+  const colorScheme = useColorScheme_BUGGY()
+  const [currentColorScheme, setCurrentColorScheme] =
+    React.useState<ColorSchemeName>(colorScheme)
+
+  React.useEffect(() => {
+    // we don't need to be updating state on web
+    if (isWeb) return
+    const subscription = AppState.addEventListener('change', state => {
+      const isActive = state === 'active'
+      if (!isActive) return
+      setCurrentColorScheme(colorScheme)
+    })
+    return () => subscription.remove()
+  }, [colorScheme])
+
+  return isWeb ? colorScheme : currentColorScheme
+}
+
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
-  const colorSchemeFromRN = useColorScheme()
-  const [nativeColorScheme, setNativeColorScheme] =
-    React.useState<ColorSchemeName>(colorSchemeFromRN)
+  const colorScheme = useColorScheme_FIXED()
+  const themeValue = getTheme(theme === 'system' ? colorScheme : theme)
 
-  React.useEffect(() => {
-    const subscription = AppState.addEventListener('change', state => {
-      const isActive = state === 'active'
-
-      if (!isActive) return
-
-      setNativeColorScheme(colorSchemeFromRN)
-    })
-    return () => subscription.remove()
-  }, [colorSchemeFromRN])
-
-  const value =
-    theme === 'system'
-      ? nativeColorScheme === 'dark'
-        ? darkTheme
-        : defaultTheme
-      : theme === 'dark'
-      ? darkTheme
-      : defaultTheme
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>
+  )
 }
