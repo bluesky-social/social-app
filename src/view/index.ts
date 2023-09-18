@@ -93,6 +93,7 @@ import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
 import {faList} from '@fortawesome/free-solid-svg-icons/faList'
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight'
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown'
 
 export function setup() {
   library.add(
@@ -189,5 +190,6 @@ export function setup() {
     faPause,
     faList,
     faChevronRight,
+    faChevronDown,
   )
 }

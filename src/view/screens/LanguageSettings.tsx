@@ -17,6 +17,7 @@ import {
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {LANGUAGES} from 'lib/../locale/languages'
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -39,6 +40,13 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
     track('Settings:ContentlanguagesButtonClicked')
     store.shell.openModal({name: 'content-languages-settings'})
   }, [track, store])
+
+  const onChangePrimaryLanguage = React.useCallback(
+    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+      store.preferences.setPrimaryLanguage(value)
+    },
+    [store.preferences],
+  )
 
   const myLanguages = React.useMemo(() => {
     return (
@@ -69,6 +77,76 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
           <Text style={[pal.text, s.pb10]}>
             Your preferred language for translating posts in your feeds.
           </Text>
+
+          <View style={{position: 'relative'}}>
+            <RNPickerSelect
+              value={store.preferences.primaryLanguage}
+              onValueChange={onChangePrimaryLanguage}
+              items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+                label: l.name,
+                value: l.code2,
+                key: l.code2 + l.code3,
+              }))}
+              style={{
+                inputAndroid: {
+                  backgroundColor: pal.viewLight.backgroundColor,
+                  color: pal.text.color,
+                  fontSize: 14,
+                  letterSpacing: 0.5,
+                  fontWeight: '500',
+                  paddingHorizontal: 14,
+                  paddingVertical: 8,
+                  borderRadius: 24,
+                },
+                inputIOS: {
+                  backgroundColor: pal.viewLight.backgroundColor,
+                  color: pal.text.color,
+                  fontSize: 14,
+                  letterSpacing: 0.5,
+                  fontWeight: '500',
+                  paddingHorizontal: 14,
+                  paddingVertical: 8,
+                  borderRadius: 24,
+                },
+                inputWeb: {
+                  // @ts-ignore web only
+                  cursor: 'pointer',
+                  '-moz-appearance': 'none',
+                  '-webkit-appearance': 'none',
+                  appearance: 'none',
+                  outline: 0,
+                  borderWidth: 0,
+                  backgroundColor: pal.viewLight.backgroundColor,
+                  color: pal.text.color,
+                  fontSize: 14,
+                  letterSpacing: 0.5,
+                  fontWeight: '500',
+                  paddingHorizontal: 14,
+                  paddingVertical: 8,
+                  borderRadius: 24,
+                },
+              }}
+            />
+
+            <View
+              style={{
+                position: 'absolute',
+                top: 1,
+                right: 1,
+                bottom: 1,
+                width: 40,
+                backgroundColor: pal.viewLight.backgroundColor,
+                borderRadius: 24,
+                pointerEvents: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesomeIcon
+                icon="chevron-down"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+          </View>
         </View>
 
         <View
@@ -84,11 +162,12 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
             Content Languages
           </Text>
           <Text style={[pal.text, s.pb10]}>
-            Select the languages of content you'd like to see in your feeds.
+            Select the languages of content you'd like to see in your feeds. If
+            none are selected, all languages will be shown.
           </Text>
           <Text style={[pal.textLight, s.pb20]}>
             Your languages:{' '}
-            {myLanguages.length ? myLanguages : '(none selected)'}
+            {myLanguages.length ? myLanguages : 'No languages selected'}
           </Text>
 
           <Button
