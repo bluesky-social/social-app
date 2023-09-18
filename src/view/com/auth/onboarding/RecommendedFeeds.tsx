@@ -34,13 +34,15 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           success,
         } = await store.agent.app.bsky.feed.getSuggestedFeeds()
 
-        if (!success) return
+        if (!success) {
+          return []
+        }
 
         return (feeds.length ? feeds : []).map(feed => {
           return new CustomFeedModel(store, feed)
         })
       } catch (e) {
-        return
+        return []
       }
     },
   })
