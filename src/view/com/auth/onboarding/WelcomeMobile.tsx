@@ -88,6 +88,7 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
         onPress={next}
         label="Continue"
         testID="continueBtn"
+        style={[styles.buttonContainer]}
         labelStyle={styles.buttonText}
       />
     </View>
@@ -116,6 +117,9 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 20,
+  },
+  buttonContainer: {
+    alignItems: 'center',
   },
   buttonText: {
     textAlign: 'center',
