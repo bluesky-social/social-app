@@ -34,13 +34,15 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           success,
         } = await store.agent.app.bsky.feed.getSuggestedFeeds()
 
-        if (!success) return
+        if (!success) {
+          return []
+        }
 
         return (feeds.length ? feeds : []).map(feed => {
           return new CustomFeedModel(store, feed)
         })
       } catch (e) {
-        return
+        return []
       }
     },
   })
@@ -148,11 +150,13 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
               style={{flex: 1}}
             />
           ) : isLoading ? (
-            <View>
+            <View style={{flex: 1}}>
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <ErrorMessage message="Failed to load recommended feeds" />
+            <View style={{flex: 1}}>
+              <ErrorMessage message="Failed to load recommended feeds" />
+            </View>
           )}
 
           <Button
