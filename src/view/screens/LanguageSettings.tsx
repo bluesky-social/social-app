@@ -165,21 +165,20 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
             Select the languages of content you'd like to see in your feeds. If
             none are selected, all languages will be shown.
           </Text>
-          <Text style={[pal.textLight, s.pb20]}>
-            Your languages:{' '}
-            {myLanguages.length ? myLanguages : 'No languages selected'}
-          </Text>
 
           <Button
             type="default"
             onPress={onPressContentLanguages}
             style={styles.button}>
             <FontAwesomeIcon
-              icon="plus"
+              icon={myLanguages.length ? 'check' : 'plus'}
               style={pal.text as FontAwesomeIconStyle}
             />
-            <Text type="button" style={pal.text}>
-              Select Languages
+            <Text
+              type="button"
+              style={[pal.text, {flexShrink: 1, overflow: 'hidden'}]}
+              numberOfLines={1}>
+              {myLanguages.length ? myLanguages : 'Select languages'}
             </Text>
           </Button>
         </View>
