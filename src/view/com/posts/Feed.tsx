@@ -19,7 +19,6 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -55,7 +54,6 @@ export const Feed = observer(function Feed({
   const theme = useTheme()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const listWrapperRef = React.useRef<View>(null)
 
   const data = React.useMemo(() => {
     let feedItems: any[] = []
@@ -154,44 +152,8 @@ export const Feed = observer(function Feed({
     [feed],
   )
 
-  // This is the handler for the middle mouse button click on the feed.
-  // Normally, we would do this via `onAuxClick` handler on each link element
-  // However, that handler is not supported on react-native-web and there are some
-  // discrepancies between various browsers (i.e: safari doesn't trigger it and routes through click event)
-  // So, this temporary alternative is meant to bridge the gap in an efficient way until the support improves.
-  React.useEffect(() => {
-    if (listWrapperRef?.current && isWeb) {
-      const wrapperEl = listWrapperRef.current
-      const handleAuxClick = (e: MouseEvent & {target: HTMLElement}) => {
-        // Only handle the middle mouse button click, early exit otherwise
-        if (e.button !== 1) return
-
-        // Each feed item is wrapped by a div with a data-href attribute
-        // The value of the attr contains the link to the post
-        // Maybe this needs a better selector? in case there are nested items with links?
-        const parentWithPostLink = e.target.closest?.('div[data-href]')
-
-        // Only try to process the click if we found a parent with the data-href attr and there is a value for it
-        console.log(parentWithPostLink)
-        if (parentWithPostLink) {
-          const href = parentWithPostLink.getAttribute('data-href')
-          console.log(parentWithPostLink, href)
-          if (href) window.open(href, '_blank')
-        }
-      }
-
-      // @ts-ignore For web only
-      wrapperEl.addEventListener('auxclick', handleAuxClick)
-
-      return () => {
-        // @ts-ignore For web only
-        wrapperEl?.removeEventListener('auxclick', handleAuxClick)
-      }
-    }
-  }, [])
-
   return (
-    <View testID={testID} style={style} ref={listWrapperRef}>
+    <View testID={testID} style={style}>
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
