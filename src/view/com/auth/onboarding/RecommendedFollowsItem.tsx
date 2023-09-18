@@ -12,6 +12,7 @@ import {s} from 'lib/styles'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import Animated, {FadeInRight} from 'react-native-reanimated'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Props = {
   item: SuggestedActor
@@ -19,11 +20,20 @@ type Props = {
 }
 export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   return (
     <Animated.View
       entering={FadeInRight.delay(50 * index).springify()}
-      style={[styles.cardContainer, pal.view, pal.border]}>
+      style={[
+        styles.cardContainer,
+        pal.view,
+        pal.border,
+        {
+          maxWidth: isMobile ? undefined : 670,
+          borderRightWidth: isMobile ? undefined : 1,
+        },
+      ]}>
       <ProfileCard key={item.did} profile={item} />
     </Animated.View>
   )
@@ -52,7 +62,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
         </View>
         <View style={styles.layoutContent}>
           <Text
-            type="lg"
+            type="2xl-bold"
             style={[s.bold, pal.text]}
             numberOfLines={1}
             lineHeight={1.2}>
@@ -61,13 +71,14 @@ export const ProfileCard = observer(function ProfileCardImpl({
               moderation.profile,
             )}
           </Text>
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
             {sanitizeHandle(profile.handle, '@')}
           </Text>
         </View>
 
         <FollowButton
           did={profile.did}
+          labelStyle={styles.followButton}
           onToggleFollow={async isFollow => {
             if (isFollow) {
               setAddingMoreSuggestions(true)
@@ -81,7 +92,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
       </View>
       {profile.description ? (
         <View style={styles.details}>
-          <Text style={pal.text} numberOfLines={4}>
+          <Text type="lg" style={pal.text} numberOfLines={4}>
             {profile.description as string}
           </Text>
         </View>
@@ -130,5 +141,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 4,
     gap: 4,
+  },
+  followButton: {
+    fontSize: 16,
   },
 })
