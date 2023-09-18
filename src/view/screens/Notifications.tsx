@@ -114,7 +114,7 @@ export const NotificationsScreen = withAuthRequired(
             <TextLink
               type="title-lg"
               href="/notifications"
-              style={{fontWeight: 'bold'}}
+              style={[pal.text, {fontWeight: 'bold'}]}
               text={
                 <>
                   Notifications{' '}

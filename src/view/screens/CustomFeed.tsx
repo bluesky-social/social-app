@@ -322,7 +322,7 @@ export const CustomFeedScreenInner = observer(
               <TextLink
                 type="title-lg"
                 href="/"
-                style={{fontWeight: 'bold'}}
+                style={[pal.text, {fontWeight: 'bold'}]}
                 text={currentFeed?.displayName || ''}
                 onPress={() => store.emitScreenSoftReset()}
               />

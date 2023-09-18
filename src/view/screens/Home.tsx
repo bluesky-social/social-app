@@ -278,7 +278,7 @@ const FeedPage = observer(function FeedPageImpl({
           <TextLink
             type="title-lg"
             href="/"
-            style={{fontWeight: 'bold'}}
+            style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
                 {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
