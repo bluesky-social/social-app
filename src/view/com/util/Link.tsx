@@ -24,7 +24,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
-import {isAndroid, isDesktopWeb, isWeb} from 'platform/detection'
+import {isAndroid, isDesktopWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 
@@ -95,21 +95,16 @@ export const Link = observer(function Link({
         accessibilityRole="link"
         {...props}>
         {/* @ts-ignore web only -prf */}
-        <View style={style} dataSet={{href}} href={anchorHref}>
+        <View style={style} href={anchorHref}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
       </TouchableWithoutFeedback>
     )
   }
 
-  // @ts-ignore web only -prf
-  props.dataSet = props.dataSet || {}
-  if (isWeb) {
-    // @ts-ignore web only
-    props.dataSet.href = href
-  }
-
   if (anchorNoUnderline) {
+    // @ts-ignore web only -prf
+    props.dataSet = props.dataSet || {}
     // @ts-ignore web only -prf
     props.dataSet.noUnderline = 1
   }
