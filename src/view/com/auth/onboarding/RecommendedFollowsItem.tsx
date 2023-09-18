@@ -11,18 +11,20 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
+import Animated, {FadeInRight} from 'react-native-reanimated'
 
 type Props = {
   item: SuggestedActor
 }
 export const RecommendedFollowsItem: React.FC<Props> = ({item}) => {
   const pal = usePalette('default')
+
   return (
-    <View>
-      <View style={[styles.cardContainer, pal.view, pal.border]}>
-        <ProfileCard key={item.did} profile={item} />
-      </View>
-    </View>
+    <Animated.View
+      entering={FadeInRight}
+      style={[styles.cardContainer, pal.view, pal.border]}>
+      <ProfileCard key={item.did} profile={item} />
+    </Animated.View>
   )
 }
 
