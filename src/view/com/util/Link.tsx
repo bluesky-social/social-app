@@ -24,7 +24,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
-import {isAndroid, isDesktopWeb} from 'platform/detection'
+import {isAndroid, isDesktopWeb, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 
@@ -57,6 +57,7 @@ export const Link = observer(function Link({
 }: Props) {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
+  const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
 
   const onPress = React.useCallback(
     (e?: Event) => {
@@ -94,16 +95,21 @@ export const Link = observer(function Link({
         accessibilityRole="link"
         {...props}>
         {/* @ts-ignore web only -prf */}
-        <View style={style} href={asAnchor ? sanitizeUrl(href) : undefined}>
+        <View style={style} dataSet={{href}} href={anchorHref}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
       </TouchableWithoutFeedback>
     )
   }
 
+  // @ts-ignore web only -prf
+  props.dataSet = props.dataSet || {}
+  if (isWeb) {
+    // @ts-ignore web only
+    props.dataSet.href = href
+  }
+
   if (anchorNoUnderline) {
-    // @ts-ignore web only -prf
-    props.dataSet = props.dataSet || {}
     // @ts-ignore web only -prf
     props.dataSet.noUnderline = 1
   }
@@ -120,7 +126,7 @@ export const Link = observer(function Link({
       accessible={accessible}
       accessibilityRole="link"
       // @ts-ignore web only -prf
-      href={asAnchor ? sanitizeUrl(href) : undefined}
+      href={anchorHref}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </Pressable>
