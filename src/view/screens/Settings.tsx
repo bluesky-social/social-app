@@ -146,9 +146,8 @@ export const SettingsScreen = withAuthRequired(
     }, [track, store])
 
     const onPressContentLanguages = React.useCallback(() => {
-      track('Settings:ContentlanguagesButtonClicked')
-      store.shell.openModal({name: 'content-languages-settings'})
-    }, [track, store])
+      navigation.navigate('LanguageSettings')
+    }, [navigation])
 
     const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')

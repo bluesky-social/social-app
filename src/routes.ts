@@ -7,6 +7,7 @@ export const router = new Router({
   DiscoverFeeds: '/search/feeds',
   Notifications: '/notifications',
   Settings: '/settings',
+  LanguageSettings: '/settings/language',
   Moderation: '/moderation',
   ModerationMuteLists: '/moderation/mute-lists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
