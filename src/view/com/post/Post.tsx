@@ -115,7 +115,10 @@ const PostLoaded = observer(function PostLoadedImpl({
     replyAuthorDid = urip.hostname
   }
 
-  const translatorUrl = getTranslatorLink(record?.text || '')
+  const translatorUrl = getTranslatorLink(
+    record?.text || '',
+    store.preferences.primaryLanguage,
+  )
   const needsTranslation = useMemo(
     () =>
       store.preferences.contentLanguages.length > 0 &&
