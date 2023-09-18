@@ -21,11 +21,13 @@ export const Feed = observer(function Feed({
   scrollElRef,
   onPressTryAgain,
   onScroll,
+  ListHeaderComponent,
 }: {
   view: NotificationsFeedModel
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
+  ListHeaderComponent?: () => JSX.Element
 }) {
   const pal = usePalette('default')
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -142,6 +144,7 @@ export const Feed = observer(function Feed({
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
+          ListHeaderComponent={ListHeaderComponent}
           ListFooterComponent={FeedFooter}
           refreshControl={
             <RefreshControl
@@ -156,6 +159,8 @@ export const Feed = observer(function Feed({
           onScroll={onScroll}
           scrollEventThrottle={100}
           contentContainerStyle={s.contentContainer}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
         />
       ) : null}
     </View>

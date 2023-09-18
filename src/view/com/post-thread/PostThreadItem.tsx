@@ -483,15 +483,6 @@ export const PostThreadItem = observer(function PostThreadItem({
                   />
                 </ContentHider>
               )}
-              {needsTranslation && (
-                <View style={[pal.borderDark, styles.translateLink]}>
-                  <Link href={translatorUrl} title="Translate">
-                    <Text type="sm" style={pal.link}>
-                      Translate this post
-                    </Text>
-                  </Link>
-                </View>
-              )}
               <PostCtrls
                 itemUri={itemUri}
                 itemCid={itemCid}

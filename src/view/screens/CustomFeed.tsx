@@ -1,7 +1,7 @@
 import React, {useMemo, useRef} from 'react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
+import {useNavigation, useIsFocused} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -14,11 +14,8 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {Feed} from 'view/com/posts/Feed'
-import {pluralize} from 'lib/strings/helpers'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {TextLink} from 'view/com/util/Link'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {ViewHeader} from 'view/com/util/ViewHeader'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
@@ -34,7 +31,6 @@ import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
-import {makeProfileLink} from 'lib/routes/links'
 import {resolveName} from 'lib/api'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
@@ -125,7 +121,10 @@ export const CustomFeedScreenInner = observer(
   }: Props & {feedOwnerDid: string}) {
     const store = useStores()
     const pal = usePalette('default')
-    const {isTabletOrDesktop} = useWebMediaQueries()
+    const palInverted = usePalette('inverted')
+    const navigation = useNavigation<NavigationProp>()
+    const isScreenFocused = useIsFocused()
+    const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {track} = useAnalytics()
     const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
@@ -186,6 +185,10 @@ export const CustomFeedScreenInner = observer(
       })
     }, [store, currentFeed])
 
+    const onPressViewAuthor = React.useCallback(() => {
+      navigation.navigate('Profile', {name: handleOrDid})
+    }, [handleOrDid, navigation])
+
     const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)
       shareUrl(url)
@@ -210,8 +213,39 @@ export const CustomFeedScreenInner = observer(
       store.shell.openComposer({})
     }, [store])
 
+    const onSoftReset = React.useCallback(() => {
+      if (isScreenFocused) {
+        onScrollToTop()
+        algoFeed.refresh()
+      }
+    }, [isScreenFocused, onScrollToTop, algoFeed])
+
+    // fires when page within screen is activated/deactivated
+    React.useEffect(() => {
+      if (!isScreenFocused) {
+        return
+      }
+
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
+      return () => {
+        softResetSub.remove()
+      }
+    }, [store, onSoftReset, isScreenFocused])
+
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       let items: DropdownItem[] = [
+        {
+          testID: 'feedHeaderDropdownViewAuthorBtn',
+          label: 'View author',
+          onPress: onPressViewAuthor,
+          icon: {
+            ios: {
+              name: 'person',
+            },
+            android: '',
+            web: ['far', 'user'],
+          },
+        },
         {
           testID: 'feedHeaderDropdownToggleSavedBtn',
           label: currentFeed?.isSaved
@@ -260,232 +294,12 @@ export const CustomFeedScreenInner = observer(
         },
       ]
       return items
-    }, [currentFeed?.isSaved, onToggleSaved, onPressReport, onPressShare])
-
-    const renderHeaderBtns = React.useCallback(() => {
-      return (
-        <View style={styles.headerBtns}>
-          <Button
-            type="default-light"
-            testID="toggleLikeBtn"
-            accessibilityLabel="Like this feed"
-            accessibilityHint=""
-            onPress={onToggleLiked}>
-            {currentFeed?.isLiked ? (
-              <HeartIconSolid size={19} style={styles.liked} />
-            ) : (
-              <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
-            )}
-          </Button>
-          {currentFeed?.isSaved ? (
-            <Button
-              type="default-light"
-              accessibilityLabel={
-                isPinned ? 'Unpin this feed' : 'Pin this feed'
-              }
-              accessibilityHint=""
-              onPress={onTogglePinned}>
-              <FontAwesomeIcon
-                icon="thumb-tack"
-                size={17}
-                color={isPinned ? colors.blue3 : pal.colors.textLight}
-                style={styles.top1}
-              />
-            </Button>
-          ) : undefined}
-          {!currentFeed?.isSaved ? (
-            <Button
-              type="default-light"
-              onPress={onToggleSaved}
-              accessibilityLabel="Add to my feeds"
-              accessibilityHint=""
-              style={styles.headerAddBtn}>
-              <FontAwesomeIcon icon="plus" color={pal.colors.link} size={19} />
-              <Text type="xl-medium" style={pal.link}>
-                Add to My Feeds
-              </Text>
-            </Button>
-          ) : null}
-          <NativeDropdown testID="feedHeaderDropdownBtn" items={dropdownItems}>
-            <View
-              style={{
-                paddingLeft: currentFeed?.isSaved ? 12 : 6,
-                paddingRight: 12,
-                paddingVertical: 8,
-              }}>
-              <FontAwesomeIcon
-                icon="ellipsis"
-                size={20}
-                color={pal.colors.textLight}
-              />
-            </View>
-          </NativeDropdown>
-        </View>
-      )
     }, [
-      pal,
       currentFeed?.isSaved,
-      currentFeed?.isLiked,
-      isPinned,
       onToggleSaved,
-      onTogglePinned,
-      onToggleLiked,
-      dropdownItems,
-    ])
-
-    const renderListHeaderComponent = React.useCallback(() => {
-      return (
-        <>
-          <View style={[styles.header, pal.border]}>
-            <View style={s.flex1}>
-              <Text
-                testID="feedName"
-                type="title-xl"
-                style={[pal.text, s.bold]}>
-                {currentFeed?.displayName}
-              </Text>
-              {currentFeed && (
-                <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                  by{' '}
-                  {currentFeed.data.creator.did === store.me.did ? (
-                    'you'
-                  ) : (
-                    <TextLink
-                      text={sanitizeHandle(
-                        currentFeed.data.creator.handle,
-                        '@',
-                      )}
-                      href={makeProfileLink(currentFeed.data.creator)}
-                      style={[pal.textLight]}
-                    />
-                  )}
-                </Text>
-              )}
-              {isTabletOrDesktop && (
-                <View style={[styles.headerBtns, styles.headerBtnsDesktop]}>
-                  <Button
-                    type={currentFeed?.isSaved ? 'default' : 'inverted'}
-                    onPress={onToggleSaved}
-                    accessibilityLabel={
-                      currentFeed?.isSaved
-                        ? 'Unsave this feed'
-                        : 'Save this feed'
-                    }
-                    accessibilityHint=""
-                    label={
-                      currentFeed?.isSaved
-                        ? 'Remove from My Feeds'
-                        : 'Add to My Feeds'
-                    }
-                  />
-                  <Button
-                    type="default"
-                    accessibilityLabel={
-                      isPinned ? 'Unpin this feed' : 'Pin this feed'
-                    }
-                    accessibilityHint=""
-                    onPress={onTogglePinned}>
-                    <FontAwesomeIcon
-                      icon="thumb-tack"
-                      size={15}
-                      color={isPinned ? colors.blue3 : pal.colors.icon}
-                      style={styles.top2}
-                    />
-                  </Button>
-                  <Button
-                    type="default"
-                    accessibilityLabel="Like this feed"
-                    accessibilityHint=""
-                    onPress={onToggleLiked}>
-                    {currentFeed?.isLiked ? (
-                      <HeartIconSolid size={18} style={styles.liked} />
-                    ) : (
-                      <HeartIcon strokeWidth={3} size={18} style={pal.icon} />
-                    )}
-                  </Button>
-                  <Button
-                    type="default"
-                    accessibilityLabel="Share this feed"
-                    accessibilityHint=""
-                    onPress={onPressShare}>
-                    <FontAwesomeIcon
-                      icon="share"
-                      size={18}
-                      color={pal.colors.icon}
-                    />
-                  </Button>
-                  <Button
-                    type="default"
-                    accessibilityLabel="Report this feed"
-                    accessibilityHint=""
-                    onPress={onPressReport}>
-                    <FontAwesomeIcon
-                      icon="circle-exclamation"
-                      size={18}
-                      color={pal.colors.icon}
-                    />
-                  </Button>
-                </View>
-              )}
-            </View>
-            <View>
-              <UserAvatar
-                type="algo"
-                avatar={currentFeed?.data.avatar}
-                size={64}
-              />
-            </View>
-          </View>
-          <View style={styles.headerDetails}>
-            {currentFeed?.data.description ? (
-              <Text style={[pal.text, s.mb10]} numberOfLines={6}>
-                {currentFeed.data.description}
-              </Text>
-            ) : null}
-            <View style={styles.headerDetailsFooter}>
-              {currentFeed ? (
-                <TextLink
-                  type="md-medium"
-                  style={pal.textLight}
-                  href={`/profile/${handleOrDid}/feed/${rkey}/liked-by`}
-                  text={`Liked by ${currentFeed.data.likeCount} ${pluralize(
-                    currentFeed?.data.likeCount || 0,
-                    'user',
-                  )}`}
-                />
-              ) : null}
-            </View>
-          </View>
-          <View
-            style={[
-              styles.fakeSelector,
-              {
-                paddingHorizontal: isTabletOrDesktop ? 16 : 6,
-              },
-              pal.border,
-            ]}>
-            <View
-              style={[styles.fakeSelectorItem, {borderColor: pal.colors.link}]}>
-              <Text type="md-medium" style={[pal.text]}>
-                Feed
-              </Text>
-            </View>
-          </View>
-        </>
-      )
-    }, [
-      pal,
-      currentFeed,
-      store.me.did,
-      onToggleSaved,
-      onToggleLiked,
-      onPressShare,
-      handleOrDid,
       onPressReport,
-      rkey,
-      isPinned,
-      onTogglePinned,
-      isTabletOrDesktop,
+      onPressShare,
+      onPressViewAuthor,
     ])
 
     const renderEmptyState = React.useCallback(() => {
@@ -498,22 +312,100 @@ export const CustomFeedScreenInner = observer(
 
     return (
       <View style={s.hContentRegion}>
-        {!isTabletOrDesktop && (
-          <ViewHeader title="" renderButton={currentFeed && renderHeaderBtns} />
-        )}
+        <SimpleViewHeader
+          showBackButton={isMobile}
+          style={
+            !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
+          }>
+          <Text type="title-lg" style={styles.headerText} numberOfLines={1}>
+            {currentFeed ? (
+              <TextLink
+                type="title-lg"
+                href="/"
+                style={[pal.text, {fontWeight: 'bold'}]}
+                text={currentFeed?.displayName || ''}
+                onPress={() => store.emitScreenSoftReset()}
+              />
+            ) : (
+              'Loading...'
+            )}
+          </Text>
+          {currentFeed ? (
+            <>
+              <Button
+                type="default-light"
+                testID="toggleLikeBtn"
+                accessibilityLabel="Like this feed"
+                accessibilityHint=""
+                onPress={onToggleLiked}
+                style={styles.headerBtn}>
+                {currentFeed?.isLiked ? (
+                  <HeartIconSolid size={19} style={styles.liked} />
+                ) : (
+                  <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
+                )}
+              </Button>
+              {currentFeed?.isSaved ? (
+                <Button
+                  type="default-light"
+                  accessibilityLabel={
+                    isPinned ? 'Unpin this feed' : 'Pin this feed'
+                  }
+                  accessibilityHint=""
+                  onPress={onTogglePinned}
+                  style={styles.headerBtn}>
+                  <FontAwesomeIcon
+                    icon="thumb-tack"
+                    size={17}
+                    color={isPinned ? colors.blue3 : pal.colors.textLight}
+                    style={styles.top1}
+                  />
+                </Button>
+              ) : (
+                <Button
+                  type="inverted"
+                  onPress={onToggleSaved}
+                  accessibilityLabel="Add to my feeds"
+                  accessibilityHint=""
+                  style={styles.headerAddBtn}>
+                  <FontAwesomeIcon
+                    icon="plus"
+                    color={palInverted.colors.text}
+                    size={19}
+                  />
+                  <Text type="button" style={palInverted.text}>
+                    Add{!isMobile && ' to My Feeds'}
+                  </Text>
+                </Button>
+              )}
+            </>
+          ) : null}
+          <NativeDropdown testID="feedHeaderDropdownBtn" items={dropdownItems}>
+            <View
+              style={{
+                paddingLeft: 12,
+                paddingRight: isMobile ? 12 : 0,
+              }}>
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={pal.colors.textLight}
+              />
+            </View>
+          </NativeDropdown>
+        </SimpleViewHeader>
         <Feed
           scrollElRef={scrollElRef}
           feed={algoFeed}
           onScroll={onMainScroll}
           scrollEventThrottle={100}
-          ListHeaderComponent={renderListHeaderComponent}
           renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned]}
           style={!isTabletOrDesktop ? {flex: 1} : undefined}
         />
         {isScrolledDown ? (
           <LoadLatestBtn
-            onPress={onScrollToTop}
+            onPress={onSoftReset}
             label="Scroll to top"
             showIndicator={false}
           />
@@ -540,36 +432,19 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     borderTopWidth: 1,
   },
-  headerBtns: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  headerText: {
+    flex: 1,
+    fontWeight: 'bold',
   },
-  headerBtnsDesktop: {
-    marginTop: 8,
-    gap: 4,
+  headerBtn: {
+    paddingVertical: 0,
   },
   headerAddBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingLeft: 4,
-  },
-  headerDetails: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  headerDetailsFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  fakeSelector: {
-    flexDirection: 'row',
-  },
-  fakeSelectorItem: {
-    paddingHorizontal: 12,
-    paddingBottom: 8,
-    borderBottomWidth: 3,
+    paddingVertical: 4,
+    paddingLeft: 10,
   },
   liked: {
     color: colors.red3,

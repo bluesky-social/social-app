@@ -14,6 +14,13 @@ import {PostsFeedSliceModel} from './posts-slice'
 import {track} from 'lib/analytics/analytics'
 import {FeedViewPostsSlice} from 'lib/api/feed-manip'
 
+import {FeedAPI, FeedAPIResponse} from 'lib/api/feed/types'
+import {FollowingFeedAPI} from 'lib/api/feed/following'
+import {AuthorFeedAPI} from 'lib/api/feed/author'
+import {LikesFeedAPI} from 'lib/api/feed/likes'
+import {CustomFeedAPI} from 'lib/api/feed/custom'
+import {MergeFeedAPI} from 'lib/api/feed/merge'
+
 const PAGE_SIZE = 30
 
 type Options = {
@@ -27,6 +34,7 @@ type Options = {
 type QueryParams =
   | GetTimeline.QueryParams
   | GetAuthorFeed.QueryParams
+  | GetActorLikes.QueryParams
   | GetCustomFeed.QueryParams
 
 export class PostsFeedModel {
@@ -41,8 +49,8 @@ export class PostsFeedModel {
   loadMoreError = ''
   params: QueryParams
   hasMore = true
-  loadMoreCursor: string | undefined
   pollCursor: string | undefined
+  api: FeedAPI
   tuner = new FeedTuner()
   pageSize = PAGE_SIZE
   options: Options = {}
@@ -50,7 +58,7 @@ export class PostsFeedModel {
   // used to linearize async modifications to state
   lock = new AwaitLock()
 
-  // used to track if what's hot is coming up empty
+  // used to track if a feed is coming up empty
   emptyFetches = 0
 
   // data
@@ -58,7 +66,7 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'author' | 'custom' | 'likes',
+    public feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
     params: QueryParams,
     options?: Options,
   ) {
@@ -67,12 +75,33 @@ export class PostsFeedModel {
       {
         rootStore: false,
         params: false,
-        loadMoreCursor: false,
       },
       {autoBind: true},
     )
     this.params = params
     this.options = options || {}
+    if (feedType === 'home') {
+      this.api = new MergeFeedAPI(rootStore)
+    } else if (feedType === 'following') {
+      this.api = new FollowingFeedAPI(rootStore)
+    } else if (feedType === 'author') {
+      this.api = new AuthorFeedAPI(
+        rootStore,
+        params as GetAuthorFeed.QueryParams,
+      )
+    } else if (feedType === 'likes') {
+      this.api = new LikesFeedAPI(
+        rootStore,
+        params as GetActorLikes.QueryParams,
+      )
+    } else if (feedType === 'custom') {
+      this.api = new CustomFeedAPI(
+        rootStore,
+        params as GetCustomFeed.QueryParams,
+      )
+    } else {
+      this.api = new FollowingFeedAPI(rootStore)
+    }
   }
 
   get hasContent() {
@@ -105,7 +134,6 @@ export class PostsFeedModel {
     this.hasLoaded = false
     this.error = ''
     this.hasMore = true
-    this.loadMoreCursor = undefined
     this.pollCursor = undefined
     this.slices = []
     this.tuner.reset()
@@ -113,6 +141,8 @@ export class PostsFeedModel {
 
   get feedTuners() {
     const areRepliesEnabled = this.rootStore.preferences.homeFeedRepliesEnabled
+    const areRepliesByFollowedOnlyEnabled =
+      this.rootStore.preferences.homeFeedRepliesByFollowedOnlyEnabled
     const repliesThreshold = this.rootStore.preferences.homeFeedRepliesThreshold
     const areRepostsEnabled = this.rootStore.preferences.homeFeedRepostsEnabled
     const areQuotePostsEnabled =
@@ -126,7 +156,7 @@ export class PostsFeedModel {
         ),
       ]
     }
-    if (this.feedType === 'home') {
+    if (this.feedType === 'home' || this.feedType === 'following') {
       const feedTuners = []
 
       if (areRepostsEnabled) {
@@ -136,7 +166,13 @@ export class PostsFeedModel {
       }
 
       if (areRepliesEnabled) {
-        feedTuners.push(FeedTuner.likedRepliesOnly({repliesThreshold}))
+        feedTuners.push(
+          FeedTuner.thresholdRepliesOnly({
+            userDid: this.rootStore.session.data?.did || '',
+            minLikes: repliesThreshold,
+            followedOnly: areRepliesByFollowedOnlyEnabled,
+          }),
+        )
       } else {
         feedTuners.push(FeedTuner.removeReplies)
       }
@@ -161,10 +197,11 @@ export class PostsFeedModel {
     await this.lock.acquireAsync()
     try {
       this.setHasNewLatest(false)
+      this.api.reset()
       this.tuner.reset()
       this._xLoading(isRefreshing)
       try {
-        const res = await this._getFeed({limit: this.pageSize})
+        const res = await this.api.fetchNext({limit: this.pageSize})
         await this._replaceAll(res)
         this._xIdle()
       } catch (e: any) {
@@ -201,8 +238,7 @@ export class PostsFeedModel {
       }
       this._xLoading()
       try {
-        const res = await this._getFeed({
-          cursor: this.loadMoreCursor,
+        const res = await this.api.fetchNext({
           limit: this.pageSize,
         })
         await this._appendAll(res)
@@ -231,53 +267,15 @@ export class PostsFeedModel {
   }
 
   /**
-   * Update content in-place
-   */
-  update = bundleAsync(async () => {
-    await this.lock.acquireAsync()
-    try {
-      if (!this.slices.length) {
-        return
-      }
-      this._xLoading()
-      let numToFetch = this.slices.length
-      let cursor
-      try {
-        do {
-          const res: GetTimeline.Response = await this._getFeed({
-            cursor,
-            limit: Math.min(numToFetch, 100),
-          })
-          if (res.data.feed.length === 0) {
-            break // sanity check
-          }
-          this._updateAll(res)
-          numToFetch -= res.data.feed.length
-          cursor = res.data.cursor
-        } while (cursor && numToFetch > 0)
-        this._xIdle()
-      } catch (e: any) {
-        this._xIdle() // don't bubble the error to the user
-        this.rootStore.log.error('FeedView: Failed to update', {
-          params: this.params,
-          e,
-        })
-      }
-    } finally {
-      this.lock.release()
-    }
-  })
-
-  /**
    * Check if new posts are available
    */
   async checkForLatest() {
     if (!this.hasLoaded || this.hasNewLatest || this.isLoading) {
       return
     }
-    const res = await this._getFeed({limit: 1})
-    if (res.data.feed[0]) {
-      const slices = this.tuner.tune(res.data.feed, this.feedTuners, {
+    const post = await this.api.peekLatest()
+    if (post) {
+      const slices = this.tuner.tune([post], this.feedTuners, {
         dryRun: true,
       })
       if (slices[0]) {
@@ -345,33 +343,27 @@ export class PostsFeedModel {
   // helper functions
   // =
 
-  async _replaceAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
-  ) {
-    this.pollCursor = res.data.feed[0]?.post.uri
+  async _replaceAll(res: FeedAPIResponse) {
+    this.pollCursor = res.feed[0]?.post.uri
     return this._appendAll(res, true)
   }
 
-  async _appendAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
-    replace = false,
-  ) {
-    this.loadMoreCursor = res.data.cursor
-    this.hasMore = !!this.loadMoreCursor
+  async _appendAll(res: FeedAPIResponse, replace = false) {
+    this.hasMore = !!res.cursor
     if (replace) {
       this.emptyFetches = 0
     }
 
     this.rootStore.me.follows.hydrateProfiles(
-      res.data.feed.map(item => item.post.author),
+      res.feed.map(item => item.post.author),
     )
-    for (const item of res.data.feed) {
+    for (const item of res.feed) {
       this.rootStore.posts.fromFeedItem(item)
     }
 
     const slices = this.options.isSimpleFeed
-      ? res.data.feed.map(item => new FeedViewPostsSlice([item]))
-      : this.tuner.tune(res.data.feed, this.feedTuners)
+      ? res.feed.map(item => new FeedViewPostsSlice([item]))
+      : this.tuner.tune(res.feed, this.feedTuners)
 
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
@@ -400,55 +392,5 @@ export class PostsFeedModel {
         }
       }
     })
-  }
-
-  _updateAll(
-    res: GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response,
-  ) {
-    for (const item of res.data.feed) {
-      this.rootStore.posts.fromFeedItem(item)
-      const existingSlice = this.slices.find(slice =>
-        slice.containsUri(item.post.uri),
-      )
-      if (existingSlice) {
-        const existingItem = existingSlice.items.find(
-          item2 => item2.post.uri === item.post.uri,
-        )
-        if (existingItem) {
-          existingItem.copyMetrics(item)
-        }
-      }
-    }
-  }
-
-  protected async _getFeed(
-    params: QueryParams,
-  ): Promise<
-    GetTimeline.Response | GetAuthorFeed.Response | GetCustomFeed.Response
-  > {
-    params = Object.assign({}, this.params, params)
-    if (this.feedType === 'home') {
-      return this.rootStore.agent.getTimeline(params as GetTimeline.QueryParams)
-    } else if (this.feedType === 'custom') {
-      const res = await this.rootStore.agent.app.bsky.feed.getFeed(
-        params as GetCustomFeed.QueryParams,
-      )
-      // NOTE
-      // some custom feeds fail to enforce the pagination limit
-      // so we manually truncate here
-      // -prf
-      if (params.limit && res.data.feed.length > params.limit) {
-        res.data.feed = res.data.feed.slice(0, params.limit)
-      }
-      return res
-    } else if (this.feedType === 'author') {
-      return this.rootStore.agent.getAuthorFeed(
-        params as GetAuthorFeed.QueryParams,
-      )
-    } else {
-      return this.rootStore.agent.getActorLikes(
-        params as GetActorLikes.QueryParams,
-      )
-    }
   }
 }

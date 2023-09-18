@@ -26,6 +26,7 @@ import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
 import {isAndroid, isDesktopWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
+import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 
 type Event =
@@ -38,6 +39,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   href?: string
   title?: string
   children?: React.ReactNode
+  hoverStyle?: StyleProp<ViewStyle>
   noFeedback?: boolean
   asAnchor?: boolean
   anchorNoUnderline?: boolean
@@ -112,8 +114,9 @@ export const Link = observer(function Link({
     props.accessibilityLabel = title
   }
 
+  const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
-    <Pressable
+    <Com
       testID={testID}
       style={style}
       onPress={onPress}
@@ -123,7 +126,7 @@ export const Link = observer(function Link({
       href={asAnchor ? sanitizeUrl(href) : undefined}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
-    </Pressable>
+    </Com>
   )
 })
 
@@ -137,6 +140,7 @@ export const TextLink = observer(function TextLink({
   lineHeight,
   dataSet,
   title,
+  onPress,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -154,9 +158,14 @@ export const TextLink = observer(function TextLink({
 
   props.onPress = React.useCallback(
     (e?: Event) => {
+      if (onPress) {
+        e?.preventDefault?.()
+        // @ts-ignore function signature differs by platform -prf
+        return onPress()
+      }
       return onPressInner(store, navigation, sanitizeUrl(href), e)
     },
-    [store, navigation, href],
+    [onPress, store, navigation, href],
   )
   const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)

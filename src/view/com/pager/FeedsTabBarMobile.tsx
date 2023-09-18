@@ -9,8 +9,8 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
-import {CogIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 
@@ -67,12 +67,15 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         </Text>
         <View style={[pal.view]}>
           <Link
-            href="/settings/saved-feeds"
+            href="/settings/home-feed"
             hitSlop={HITSLOP_10}
             accessibilityRole="button"
-            accessibilityLabel="Edit Saved Feeds"
-            accessibilityHint="Opens screen to edit Saved Feeds">
-            <CogIcon size={21} strokeWidth={2} style={pal.textLight} />
+            accessibilityLabel="Home Feed Preferences"
+            accessibilityHint="">
+            <FontAwesomeIcon
+              icon="sliders"
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
           </Link>
         </View>
       </View>

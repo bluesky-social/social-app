@@ -19,14 +19,7 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const [value, setValue] = useState(store.preferences.homeFeedRepliesThreshold)
 
   return (
-    <View style={[s.mt10, !enabled && styles.dimmed]}>
-      <Text type="xs" style={pal.text}>
-        {value === 0
-          ? `Show all replies`
-          : `Show replies with at least ${value} ${
-              value > 1 ? `likes` : `like`
-            }`}
-      </Text>
+    <View style={[!enabled && styles.dimmed]}>
       <Slider
         value={value}
         onValueChange={(v: number | number[]) => {
@@ -40,6 +33,13 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
         disabled={!enabled}
         thumbTintColor={colors.blue3}
       />
+      <Text type="xs" style={pal.text}>
+        {value === 0
+          ? `Show all replies`
+          : `Show replies with at least ${value} ${
+              value > 1 ? `likes` : `like`
+            }`}
+      </Text>
     </View>
   )
 }
@@ -79,8 +79,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               Show Replies
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Adjust the number of likes a reply must have to be shown in your
-              feed.
+              Set this setting to "No" to hide all replies from your feed.
             </Text>
             <ToggleButton
               type="default-light"
@@ -88,7 +87,36 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               isSelected={store.preferences.homeFeedRepliesEnabled}
               onPress={store.preferences.toggleHomeFeedRepliesEnabled}
             />
-
+          </View>
+          <View
+            style={[
+              pal.viewLight,
+              styles.card,
+              !store.preferences.homeFeedRepliesEnabled && styles.dimmed,
+            ]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
+              Reply Filters
+            </Text>
+            <Text style={[pal.text, s.pb10]}>
+              Enable this setting to only see replies between people you follow.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label="Followed users only"
+              isSelected={
+                store.preferences.homeFeedRepliesByFollowedOnlyEnabled
+              }
+              onPress={
+                store.preferences.homeFeedRepliesEnabled
+                  ? store.preferences.toggleHomeFeedRepliesByFollowedOnlyEnabled
+                  : undefined
+              }
+              style={[s.mb10]}
+            />
+            <Text style={[pal.text]}>
+              Adjust the number of likes a reply must have to be shown in your
+              feed.
+            </Text>
             <RepliesThresholdInput
               enabled={store.preferences.homeFeedRepliesEnabled}
             />
@@ -122,6 +150,22 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               label={store.preferences.homeFeedQuotePostsEnabled ? 'Yes' : 'No'}
               isSelected={store.preferences.homeFeedQuotePostsEnabled}
               onPress={store.preferences.toggleHomeFeedQuotePostsEnabled}
+            />
+          </View>
+
+          <View style={[pal.viewLight, styles.card]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
+              Show Posts from My Feeds (Experimental)
+            </Text>
+            <Text style={[pal.text, s.pb10]}>
+              Set this setting to "Yes" to show samples of your saved feeds in
+              your following feed.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.homeFeedMergeFeedEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.homeFeedMergeFeedEnabled}
+              onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}
             />
           </View>
         </View>

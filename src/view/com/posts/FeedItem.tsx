@@ -8,6 +8,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
+import {FeedSourceInfo} from 'lib/api/feed/types'
 import {Link, DesktopWebTextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
@@ -26,17 +27,19 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
+  source,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
 }: {
   item: PostsFeedItemModel
+  source?: FeedSourceInfo
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -62,12 +65,6 @@ export const FeedItem = observer(function FeedItemImpl({
     return urip.hostname
   }, [record?.reply])
   const translatorUrl = getTranslatorLink(record?.text || '')
-  const needsTranslation = useMemo(
-    () =>
-      store.preferences.contentLanguages.length > 0 &&
-      !isPostInLanguage(item.post, store.preferences.contentLanguages),
-    [item.post, store.preferences.contentLanguages],
-  )
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
@@ -179,7 +176,27 @@ export const FeedItem = observer(function FeedItemImpl({
         </View>
 
         <View style={{paddingTop: 12}}>
-          {item.reasonRepost && (
+          {source ? (
+            <Link
+              title={sanitizeDisplayName(source.displayName)}
+              href={source.uri}>
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                From{' '}
+                <DesktopWebTextLink
+                  type="sm-bold"
+                  style={pal.textLight}
+                  lineHeight={1.2}
+                  numberOfLines={1}
+                  text={sanitizeDisplayName(source.displayName)}
+                  href={source.uri}
+                />
+              </Text>
+            </Link>
+          ) : item.reasonRepost ? (
             <Link
               style={styles.includeReason}
               href={makeProfileLink(item.reasonRepost.by)}
@@ -188,10 +205,10 @@ export const FeedItem = observer(function FeedItemImpl({
               )}>
               <FontAwesomeIcon
                 icon="retweet"
-                style={[
-                  styles.includeReasonIcon,
-                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                ]}
+                style={{
+                  marginRight: 4,
+                  color: pal.colors.textLight,
+                }}
               />
               <Text
                 type="sm-bold"
@@ -212,7 +229,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 />
               </Text>
             </Link>
-          )}
+          ) : null}
         </View>
       </View>
 
@@ -304,15 +321,6 @@ export const FeedItem = observer(function FeedItemImpl({
                 />
               </ContentHider>
             ) : null}
-            {needsTranslation && (
-              <View style={[pal.borderDark, styles.translateLink]}>
-                <Link href={translatorUrl} title="Translate">
-                  <Text type="sm" style={pal.link}>
-                    Translate this post
-                  </Text>
-                </Link>
-              </View>
-            )}
           </ContentHider>
           <PostCtrls
             itemUri={itemUri}
@@ -362,11 +370,8 @@ const styles = StyleSheet.create({
   includeReason: {
     flexDirection: 'row',
     marginTop: 2,
-    marginBottom: 4,
+    marginBottom: 2,
     marginLeft: -20,
-  },
-  includeReasonIcon: {
-    marginRight: 4,
   },
   layout: {
     flexDirection: 'row',

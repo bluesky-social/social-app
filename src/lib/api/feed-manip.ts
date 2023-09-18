@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
 } from '@atproto/api'
+import {FeedSourceInfo} from './feed/types'
 import {isPostInLanguage} from '../../locale/helpers'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
@@ -64,6 +65,11 @@ export class FeedViewPostsSlice {
     )
   }
 
+  get source(): FeedSourceInfo | undefined {
+    return this.items.find(item => '__source' in item && !!item.__source)
+      ?.__source as FeedSourceInfo
+  }
+
   containsUri(uri: string) {
     return !!this.items.find(item => item.post.uri === uri)
   }
@@ -90,6 +96,23 @@ export class FeedViewPostsSlice {
         this.items.splice(0, 0, {post: reply.parent})
       }
     }
+  }
+
+  isFollowingAllAuthors(userDid: string) {
+    const item = this.rootItem
+    if (item.post.author.did === userDid) {
+      return true
+    }
+    if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+      const parent = item.reply?.parent
+      if (parent?.author.did === userDid) {
+        return true
+      }
+      return (
+        parent?.author.viewer?.following && item.post.author.viewer?.following
+      )
+    }
+    return false
   }
 }
 
@@ -222,20 +245,34 @@ export class FeedTuner {
     return slices
   }
 
-  static likedRepliesOnly({repliesThreshold}: {repliesThreshold: number}) {
+  static thresholdRepliesOnly({
+    userDid,
+    minLikes,
+    followedOnly,
+  }: {
+    userDid: string
+    minLikes: number
+    followedOnly: boolean
+  }) {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      // remove any replies without at least repliesThreshold likes
+      // remove any replies without at least minLikes likes
       for (let i = slices.length - 1; i >= 0; i--) {
-        if (slices[i].isFullThread || !slices[i].isReply) {
+        const slice = slices[i]
+        if (slice.isFullThread || !slice.isReply) {
           continue
         }
 
-        const item = slices[i].rootItem
+        const item = slice.rootItem
         const isRepost = Boolean(item.reason)
-        if (!isRepost && (item.post.likeCount || 0) < repliesThreshold) {
+        if (isRepost) {
+          continue
+        }
+        if ((item.post.likeCount || 0) < minLikes) {
+          slices.splice(i, 1)
+        } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
           slices.splice(i, 1)
         }
       }
