@@ -233,18 +233,22 @@ export class PreferencesModel {
 
       // set defaults on missing items
       if (typeof prefs.feeds.saved === 'undefined') {
-        const {saved, pinned} = await DEFAULT_FEEDS(
-          this.rootStore.agent.service.toString(),
-          (handle: string) =>
-            this.rootStore.agent
-              .resolveHandle({handle})
-              .then(({data}) => data.did),
-        )
-        runInAction(() => {
-          this.savedFeeds = saved
-          this.pinnedFeeds = pinned
-        })
-        await this.rootStore.agent.setSavedFeeds(saved, pinned)
+        try {
+          const {saved, pinned} = await DEFAULT_FEEDS(
+            this.rootStore.agent.service.toString(),
+            (handle: string) =>
+              this.rootStore.agent
+                .resolveHandle({handle})
+                .then(({data}) => data.did),
+          )
+          runInAction(() => {
+            this.savedFeeds = saved
+            this.pinnedFeeds = pinned
+          })
+          await this.rootStore.agent.setSavedFeeds(saved, pinned)
+        } catch (error) {
+          this.rootStore.log.error('Failed to set default feeds', {error})
+        }
       }
     } finally {
       this.lock.release()
