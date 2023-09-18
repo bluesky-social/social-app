@@ -59,6 +59,7 @@ export const Link = observer(function Link({
 }: Props) {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
+  const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
 
   const onPress = React.useCallback(
     (e?: Event) => {
@@ -96,7 +97,7 @@ export const Link = observer(function Link({
         accessibilityRole="link"
         {...props}>
         {/* @ts-ignore web only -prf */}
-        <View style={style} href={asAnchor ? sanitizeUrl(href) : undefined}>
+        <View style={style} href={anchorHref}>
           {children ? children : <Text>{title || 'link'}</Text>}
         </View>
       </TouchableWithoutFeedback>
@@ -123,7 +124,7 @@ export const Link = observer(function Link({
       accessible={accessible}
       accessibilityRole="link"
       // @ts-ignore web only -prf
-      href={asAnchor ? sanitizeUrl(href) : undefined}
+      href={anchorHref}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </Com>
