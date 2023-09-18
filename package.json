@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.50.0",
+  "version": "1.51.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -103,6 +103,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.omit": "^4.5.0",
     "lodash.once": "^4.1.1",
+    "lodash.random": "^3.2.0",
     "lodash.samplesize": "^4.2.0",
     "lodash.set": "^4.3.2",
     "lodash.shuffle": "^4.2.0",
@@ -152,8 +153,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.2.3",
-    "@atproto/pds": "^0.2.0-beta.2",
+    "@atproto/dev-env": "^0.2.5",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
@@ -170,6 +170,7 @@
     "@types/lodash.isequal": "^4.5.6",
     "@types/lodash.omit": "^4.5.7",
     "@types/lodash.once": "^4.1.7",
+    "@types/lodash.random": "^3.2.7",
     "@types/lodash.samplesize": "^4.2.7",
     "@types/lodash.set": "^4.3.7",
     "@types/lodash.shuffle": "^4.2.7",

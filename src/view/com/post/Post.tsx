@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react'
+import React, {useState} from 'react'
 import {
   ActivityIndicator,
   Linking,
@@ -28,7 +28,7 @@ import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 
 export const Post = observer(function PostImpl({
@@ -118,12 +118,6 @@ const PostLoaded = observer(function PostLoadedImpl({
   const translatorUrl = getTranslatorLink(
     record?.text || '',
     store.preferences.primaryLanguage,
-  )
-  const needsTranslation = useMemo(
-    () =>
-      store.preferences.contentLanguages.length > 0 &&
-      !isPostInLanguage(item.post, store.preferences.contentLanguages),
-    [item.post, store.preferences.contentLanguages],
   )
 
   const onPressReply = React.useCallback(() => {
@@ -259,15 +253,6 @@ const PostLoaded = observer(function PostLoadedImpl({
                 />
               </ContentHider>
             ) : null}
-            {needsTranslation && (
-              <View style={[pal.borderDark, styles.translateLink]}>
-                <Link href={translatorUrl} title="Translate">
-                  <Text type="sm" style={pal.link}>
-                    Translate this post
-                  </Text>
-                </Link>
-              </View>
-            )}
           </ContentHider>
           <PostCtrls
             itemUri={itemUri}
@@ -324,9 +309,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-  },
-  translateLink: {
-    marginBottom: 12,
   },
   replyLine: {
     position: 'absolute',

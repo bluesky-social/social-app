@@ -28,8 +28,7 @@ import {
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
   UserIconSolid,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
+  HashtagIcon,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -258,21 +257,21 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           <MenuItem
             icon={
               isAtFeeds ? (
-                <SatelliteDishIconSolid
-                  strokeWidth={1.5}
+                <HashtagIcon
+                  strokeWidth={3}
                   style={pal.text as FontAwesomeIconStyle}
                   size={24}
                 />
               ) : (
-                <SatelliteDishIcon
-                  strokeWidth={1.5}
+                <HashtagIcon
+                  strokeWidth={2}
                   style={pal.text as FontAwesomeIconStyle}
                   size={24}
                 />
               )
             }
-            label="My Feeds"
-            accessibilityLabel="My Feeds"
+            label="Feeds"
+            accessibilityLabel="Feeds"
             accessibilityHint=""
             onPress={onPressMyFeeds}
           />

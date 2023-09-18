@@ -18,8 +18,7 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
+  HashtagIcon,
   BellIcon,
   BellIconSolid,
 } from 'lib/icons'
@@ -134,16 +133,16 @@ export const BottomBar = observer(function BottomBarImpl({
         testID="bottomBarFeedsBtn"
         icon={
           isAtFeeds ? (
-            <SatelliteDishIconSolid
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
+            <HashtagIcon
+              size={24}
+              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+              strokeWidth={4}
             />
           ) : (
-            <SatelliteDishIcon
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
+            <HashtagIcon
+              size={24}
+              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+              strokeWidth={2.25}
             />
           )
         }

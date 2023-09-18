@@ -28,7 +28,7 @@ export function FollowingEmptyState() {
   }, [navigation])
 
   const onPressDiscoverFeeds = React.useCallback(() => {
-    navigation.navigate('DiscoverFeeds')
+    navigation.navigate('Feeds')
   }, [navigation])
 
   return (

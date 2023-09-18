@@ -9,12 +9,15 @@ import {
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
+import {TextLink} from 'view/com/util/Link'
 import {InvitedUsers} from '../com/notifications/InvitedUsers'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
-import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 
@@ -29,6 +32,12 @@ export const NotificationsScreen = withAuthRequired(
       useOnMainScroll(store)
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()
+    const pal = usePalette('default')
+    const {isDesktop} = useWebMediaQueries()
+
+    const hasNew =
+      store.me.notifications.hasNewLatest &&
+      !store.me.notifications.isRefreshing
 
     // event handlers
     // =
@@ -88,9 +97,48 @@ export const NotificationsScreen = withAuthRequired(
       ),
     )
 
-    const hasNew =
-      store.me.notifications.hasNewLatest &&
-      !store.me.notifications.isRefreshing
+    const ListHeaderComponent = React.useCallback(() => {
+      if (isDesktop) {
+        return (
+          <View
+            style={[
+              pal.view,
+              {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 18,
+                paddingVertical: 12,
+              },
+            ]}>
+            <TextLink
+              type="title-lg"
+              href="/notifications"
+              style={[pal.text, {fontWeight: 'bold'}]}
+              text={
+                <>
+                  Notifications{' '}
+                  {hasNew && (
+                    <View
+                      style={{
+                        top: -8,
+                        backgroundColor: colors.blue3,
+                        width: 8,
+                        height: 8,
+                        borderRadius: 4,
+                      }}
+                    />
+                  )}
+                </>
+              }
+              onPress={() => store.emitScreenSoftReset()}
+            />
+          </View>
+        )
+      }
+      return <></>
+    }, [isDesktop, pal, store, hasNew])
+
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
@@ -100,6 +148,7 @@ export const NotificationsScreen = withAuthRequired(
           onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
+          ListHeaderComponent={ListHeaderComponent}
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
