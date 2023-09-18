@@ -208,6 +208,6 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     flexDirection: 'row',
-    gap: 4,
+    gap: 8,
   },
 })
