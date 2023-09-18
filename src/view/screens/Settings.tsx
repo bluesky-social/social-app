@@ -145,7 +145,7 @@ export const SettingsScreen = withAuthRequired(
       store.shell.openModal({name: 'invite-codes'})
     }, [track, store])
 
-    const onPressContentLanguages = React.useCallback(() => {
+    const onPressLanguageSettings = React.useCallback(() => {
       navigation.navigate('LanguageSettings')
     }, [navigation])
 
@@ -436,12 +436,12 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            testID="contentLanguagesBtn"
+            testID="languageSettingsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressContentLanguages}
+            onPress={isSwitching ? undefined : onPressLanguageSettings}
             accessibilityRole="button"
-            accessibilityHint="Content languages"
-            accessibilityLabel="Opens configurable content language settings">
+            accessibilityHint="Language settings"
+            accessibilityLabel="Opens configurable language settings">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="language"
@@ -449,7 +449,7 @@ export const SettingsScreen = withAuthRequired(
               />
             </View>
             <Text type="lg" style={pal.text}>
-              Content languages
+              Languages
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
