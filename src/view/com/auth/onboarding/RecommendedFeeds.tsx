@@ -148,11 +148,13 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
               style={{flex: 1}}
             />
           ) : isLoading ? (
-            <View>
+            <View style={{flex: 1}}>
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <ErrorMessage message="Failed to load recommended feeds" />
+            <View style={{flex: 1}}>
+              <ErrorMessage message="Failed to load recommended feeds" />
+            </View>
           )}
 
           <Button
