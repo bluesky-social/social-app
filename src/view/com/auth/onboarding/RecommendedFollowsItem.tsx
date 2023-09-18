@@ -15,13 +15,14 @@ import Animated, {FadeInRight} from 'react-native-reanimated'
 
 type Props = {
   item: SuggestedActor
+  index: number
 }
-export const RecommendedFollowsItem: React.FC<Props> = ({item}) => {
+export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
   const pal = usePalette('default')
 
   return (
     <Animated.View
-      entering={FadeInRight}
+      entering={FadeInRight.delay(50 * index).springify()}
       style={[styles.cardContainer, pal.view, pal.border]}>
       <ProfileCard key={item.did} profile={item} />
     </Animated.View>

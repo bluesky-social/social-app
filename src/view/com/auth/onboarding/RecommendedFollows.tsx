@@ -103,8 +103,10 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           ) : (
             <FlatList
               data={store.onboarding.suggestedActors.suggestions}
-              renderItem={({item}) => <RecommendedFollowsItem item={item} />}
-              keyExtractor={item => item.did}
+              renderItem={({item, index}) => (
+                <RecommendedFollowsItem item={item} index={index} />
+              )}
+              keyExtractor={(item, index) => item.did + index.toString()}
               style={{flex: 1}}
             />
           )}
@@ -126,8 +128,10 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           ) : (
             <FlatList
               data={store.onboarding.suggestedActors.suggestions}
-              renderItem={({item}) => <RecommendedFollowsItem item={item} />}
-              keyExtractor={item => item.did}
+              renderItem={({item, index}) => (
+                <RecommendedFollowsItem item={item} index={index} />
+              )}
+              keyExtractor={(item, index) => item.did + index.toString()}
               style={{flex: 1}}
             />
           )}
