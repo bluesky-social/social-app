@@ -69,7 +69,7 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
             <HashtagIcon
               size={22}
               style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={isActive ? 3 : 2.5}
+              strokeWidth={isActive ? 4 : 2.5}
             />
           )
         }}
