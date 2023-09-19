@@ -180,6 +180,10 @@ export const SettingsScreen = withAuthRequired(
       navigation.navigate('PreferencesHomeFeed')
     }, [navigation])
 
+    const openThreadsPreferences = React.useCallback(() => {
+      navigation.navigate('PreferencesThreads')
+    }, [navigation])
+
     const onPressAppPasswords = React.useCallback(() => {
       navigation.navigate('AppPasswords')
     }, [navigation])
@@ -431,6 +435,24 @@ export const SettingsScreen = withAuthRequired(
             </View>
             <Text type="lg" style={pal.text}>
               My Saved Feeds
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="preferencesThreadsButton"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            onPress={openThreadsPreferences}
+            accessibilityRole="button"
+            accessibilityHint=""
+            accessibilityLabel="Opens the threads preferences">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon={['far', 'comments']}
+                style={pal.text as FontAwesomeIconStyle}
+                size={18}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Post Thread Preferences
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

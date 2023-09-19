@@ -66,7 +66,10 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
       ]}>
       <ViewHeader title="Home Feed Preferences" showOnDesktop />
       <View
-        style={[styles.titleSection, isTabletOrDesktop && {paddingTop: 20}]}>
+        style={[
+          styles.titleSection,
+          isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
+        ]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
           Fine-tune the content you see on your home screen.
         </Text>

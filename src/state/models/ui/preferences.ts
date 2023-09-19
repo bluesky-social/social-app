@@ -25,6 +25,7 @@ const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
 const DEFAULT_LANG_CODES = (deviceLocales || [])
   .concat(['en', 'ja', 'pt', 'de'])
   .slice(0, 6)
+const THREAD_SORT_VALUES = ['oldest', 'newest', 'most-likes', 'random']
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -55,6 +56,8 @@ export class PreferencesModel {
   homeFeedRepostsEnabled: boolean = true
   homeFeedQuotePostsEnabled: boolean = true
   homeFeedMergeFeedEnabled: boolean = false
+  threadDefaultSort: string = 'oldest'
+  threadFollowedUsersFirst: boolean = true
   requireAltTextEnabled: boolean = false
 
   // used to linearize async modifications to state
@@ -86,6 +89,8 @@ export class PreferencesModel {
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
       homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
       homeFeedMergeFeedEnabled: this.homeFeedMergeFeedEnabled,
+      threadDefaultSort: this.threadDefaultSort,
+      threadFollowedUsersFirst: this.threadFollowedUsersFirst,
       requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
@@ -188,6 +193,21 @@ export class PreferencesModel {
         typeof v.homeFeedMergeFeedEnabled === 'boolean'
       ) {
         this.homeFeedMergeFeedEnabled = v.homeFeedMergeFeedEnabled
+      }
+      // check if thread sort order is set in preferences, then hydrate
+      if (
+        hasProp(v, 'threadDefaultSort') &&
+        typeof v.threadDefaultSort === 'string' &&
+        THREAD_SORT_VALUES.includes(v.threadDefaultSort)
+      ) {
+        this.threadDefaultSort = v.threadDefaultSort
+      }
+      // check if tread followed-users-first is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'threadFollowedUsersFirst') &&
+        typeof v.threadFollowedUsersFirst === 'boolean'
+      ) {
+        this.threadFollowedUsersFirst = v.threadFollowedUsersFirst
       }
       // check if requiring alt text is enabled in preferences, then hydrate
       if (
@@ -492,6 +512,16 @@ export class PreferencesModel {
 
   toggleHomeFeedMergeFeedEnabled() {
     this.homeFeedMergeFeedEnabled = !this.homeFeedMergeFeedEnabled
+  }
+
+  setThreadDefaultSort(v: string) {
+    if (THREAD_SORT_VALUES.includes(v)) {
+      this.threadDefaultSort = v
+    }
+  }
+
+  toggleThreadFollowedUsersFirst() {
+    this.threadFollowedUsersFirst = !this.threadFollowedUsersFirst
   }
 
   toggleRequireAltTextEnabled() {
