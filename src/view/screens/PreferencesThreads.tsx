@@ -44,11 +44,10 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
         <View style={styles.cardsContainer}>
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Sort Replies By...
+              Sort Replies
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Replies always show in the order of the conversation, but multiple
-              replies to the same post can be sorted in different ways.
+              Sort replies to the same post by:
             </Text>
             <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
               <RadioGroup
@@ -67,11 +66,10 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Followed Users First
+              Prioritize Your Follows
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "Yes" to show replies by people you follow
-              before all others.
+              Show replies by people you follow before all other replies.
             </Text>
             <ToggleButton
               type="default-light"
