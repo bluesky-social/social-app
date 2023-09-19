@@ -50,9 +50,11 @@ export class PreferencesModel {
   pinnedFeeds: string[] = []
   birthDate: Date | undefined = undefined
   homeFeedRepliesEnabled: boolean = true
-  homeFeedRepliesThreshold: number = 2
+  homeFeedRepliesByFollowedOnlyEnabled: boolean = true
+  homeFeedRepliesThreshold: number = 0
   homeFeedRepostsEnabled: boolean = true
   homeFeedQuotePostsEnabled: boolean = true
+  homeFeedMergeFeedEnabled: boolean = false
   requireAltTextEnabled: boolean = false
 
   // used to linearize async modifications to state
@@ -78,9 +80,12 @@ export class PreferencesModel {
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
       homeFeedRepliesEnabled: this.homeFeedRepliesEnabled,
+      homeFeedRepliesByFollowedOnlyEnabled:
+        this.homeFeedRepliesByFollowedOnlyEnabled,
       homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
       homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
+      homeFeedMergeFeedEnabled: this.homeFeedMergeFeedEnabled,
       requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
@@ -148,6 +153,14 @@ export class PreferencesModel {
       ) {
         this.homeFeedRepliesEnabled = v.homeFeedRepliesEnabled
       }
+      // check if home feed replies "followed only" are enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'homeFeedRepliesByFollowedOnlyEnabled') &&
+        typeof v.homeFeedRepliesByFollowedOnlyEnabled === 'boolean'
+      ) {
+        this.homeFeedRepliesByFollowedOnlyEnabled =
+          v.homeFeedRepliesByFollowedOnlyEnabled
+      }
       // check if home feed replies threshold is enabled in preferences, then hydrate
       if (
         hasProp(v, 'homeFeedRepliesThreshold') &&
@@ -168,6 +181,13 @@ export class PreferencesModel {
         typeof v.homeFeedQuotePostsEnabled === 'boolean'
       ) {
         this.homeFeedQuotePostsEnabled = v.homeFeedQuotePostsEnabled
+      }
+      // check if home feed mergefeed is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'homeFeedMergeFeedEnabled') &&
+        typeof v.homeFeedMergeFeedEnabled === 'boolean'
+      ) {
+        this.homeFeedMergeFeedEnabled = v.homeFeedMergeFeedEnabled
       }
       // check if requiring alt text is enabled in preferences, then hydrate
       if (
@@ -213,18 +233,22 @@ export class PreferencesModel {
 
       // set defaults on missing items
       if (typeof prefs.feeds.saved === 'undefined') {
-        const {saved, pinned} = await DEFAULT_FEEDS(
-          this.rootStore.agent.service.toString(),
-          (handle: string) =>
-            this.rootStore.agent
-              .resolveHandle({handle})
-              .then(({data}) => data.did),
-        )
-        runInAction(() => {
-          this.savedFeeds = saved
-          this.pinnedFeeds = pinned
-        })
-        await this.rootStore.agent.setSavedFeeds(saved, pinned)
+        try {
+          const {saved, pinned} = await DEFAULT_FEEDS(
+            this.rootStore.agent.service.toString(),
+            (handle: string) =>
+              this.rootStore.agent
+                .resolveHandle({handle})
+                .then(({data}) => data.did),
+          )
+          runInAction(() => {
+            this.savedFeeds = saved
+            this.pinnedFeeds = pinned
+          })
+          await this.rootStore.agent.setSavedFeeds(saved, pinned)
+        } catch (error) {
+          this.rootStore.log.error('Failed to set default feeds', {error})
+        }
       }
     } finally {
       this.lock.release()
@@ -449,6 +473,11 @@ export class PreferencesModel {
     this.homeFeedRepliesEnabled = !this.homeFeedRepliesEnabled
   }
 
+  toggleHomeFeedRepliesByFollowedOnlyEnabled() {
+    this.homeFeedRepliesByFollowedOnlyEnabled =
+      !this.homeFeedRepliesByFollowedOnlyEnabled
+  }
+
   setHomeFeedRepliesThreshold(threshold: number) {
     this.homeFeedRepliesThreshold = threshold
   }
@@ -459,6 +488,10 @@ export class PreferencesModel {
 
   toggleHomeFeedQuotePostsEnabled() {
     this.homeFeedQuotePostsEnabled = !this.homeFeedQuotePostsEnabled
+  }
+
+  toggleHomeFeedMergeFeedEnabled() {
+    this.homeFeedMergeFeedEnabled = !this.homeFeedMergeFeedEnabled
   }
 
   toggleRequireAltTextEnabled() {

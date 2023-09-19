@@ -16,6 +16,8 @@ import * as notifications from 'lib/notifications/notifications'
 import * as analytics from 'lib/analytics/analytics'
 import * as Toast from './view/com/util/Toast'
 import {handleLink} from './Navigation'
+import {QueryClientProvider} from '@tanstack/react-query'
+import {queryClient} from 'lib/react-query'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -51,17 +53,19 @@ const App = observer(function AppImpl() {
     return null
   }
   return (
-    <ThemeProvider theme={rootStore.shell.colorMode}>
-      <RootSiblingParent>
-        <analytics.Provider>
-          <RootStoreProvider value={rootStore}>
-            <GestureHandlerRootView style={s.h100pct}>
-              <Shell />
-            </GestureHandlerRootView>
-          </RootStoreProvider>
-        </analytics.Provider>
-      </RootSiblingParent>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={rootStore.shell.colorMode}>
+        <RootSiblingParent>
+          <analytics.Provider>
+            <RootStoreProvider value={rootStore}>
+              <GestureHandlerRootView style={s.h100pct}>
+                <Shell />
+              </GestureHandlerRootView>
+            </RootStoreProvider>
+          </analytics.Provider>
+        </RootSiblingParent>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 })
 

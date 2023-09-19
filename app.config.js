@@ -6,7 +6,7 @@ module.exports = function () {
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
-      version: '1.50.0',
+      version: '1.51.0',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -43,7 +43,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: 37,
+        versionCode: 38,
         adaptiveIcon: {
           foregroundImage: './assets/adaptive-icon.png',
           backgroundColor: '#ffffff',

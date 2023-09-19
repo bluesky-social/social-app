@@ -15,6 +15,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
+import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -106,7 +107,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityLabel={`Reply (${opts.replyCount} ${
           opts.replyCount === 1 ? 'reply' : 'replies'
         })`}
-        accessibilityHint="reply composer">
+        accessibilityHint=""
+        hitSlop={opts.big ? HITSLOP_20 : HITSLOP_10}>
         <CommentBottomArrow
           style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
           strokeWidth={3}
@@ -127,7 +129,8 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
           opts.likeCount
         } ${pluralize(opts.likeCount || 0, 'like')})`}
-        accessibilityHint="">
+        accessibilityHint=""
+        hitSlop={opts.big ? HITSLOP_20 : HITSLOP_10}>
         {opts.isLiked ? (
           <HeartIconSolid
             style={styles.ctrlIconLiked}

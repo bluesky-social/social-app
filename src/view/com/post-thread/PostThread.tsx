@@ -357,6 +357,8 @@ export const PostThread = observer(function PostThread({
       }
       onScrollToIndexFailed={onScrollToIndexFailed}
       style={s.hContentRegion}
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
     />
   )
 })
