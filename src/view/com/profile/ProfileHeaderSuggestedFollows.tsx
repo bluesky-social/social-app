@@ -218,7 +218,7 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
         <Button
           label={following ? 'Unfollow' : 'Follow'}
           type="inverted"
-          labelStyle={{textAlign: 'center', width: '100%'}}
+          labelStyle={{textAlign: 'center'}}
           onPress={toggle}
           withLoading
         />
