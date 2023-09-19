@@ -534,10 +534,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         <ProfileHeaderAlerts moderation={view.moderation} />
       </View>
 
-      <ProfileHeaderSuggestedFollows
-        actorDid={view.did}
-        active={showSuggestedFollows}
-      />
+      {!isProfilePreview && (
+        <ProfileHeaderSuggestedFollows
+          actorDid={view.did}
+          active={showSuggestedFollows}
+        />
+      )}
 
       {!isDesktop && !hideBackButton && (
         <TouchableWithoutFeedback

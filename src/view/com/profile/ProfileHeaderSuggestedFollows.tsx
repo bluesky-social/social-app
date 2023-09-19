@@ -56,7 +56,9 @@ export function ProfileHeaderSuggestedFollows({
   }, [active, animatedHeight])
 
   const {isLoading, data: suggestedFollows} = useQuery({
+    enabled: active,
     cacheTime: 0,
+    staleTime: 0,
     queryKey: ['suggested_follows_by_actor', actorDid],
     async queryFn() {
       try {
@@ -133,7 +135,6 @@ function SuggestedFollowSkeleton() {
           width: 60,
           borderRadius: 60,
           backgroundColor: pal.viewLight.backgroundColor,
-          marginBottom: 6,
           opacity: 0.6,
         }}
       />
@@ -142,7 +143,8 @@ function SuggestedFollowSkeleton() {
           height: 17,
           width: 70,
           borderRadius: 4,
-          backgroundColor: pal.border.borderColor,
+          backgroundColor: pal.viewLight.backgroundColor,
+          marginTop: 12,
           marginBottom: 4,
         }}
       />
@@ -151,8 +153,8 @@ function SuggestedFollowSkeleton() {
           height: 12,
           width: 70,
           borderRadius: 4,
-          backgroundColor: pal.border.borderColor,
-          marginBottom: 6,
+          backgroundColor: pal.viewLight.backgroundColor,
+          marginBottom: 12,
           opacity: 0.6,
         }}
       />
@@ -161,7 +163,7 @@ function SuggestedFollowSkeleton() {
           height: 32,
           borderRadius: 32,
           width: '100%',
-          backgroundColor: pal.border.borderColor,
+          backgroundColor: pal.viewLight.backgroundColor,
         }}
       />
     </View>
