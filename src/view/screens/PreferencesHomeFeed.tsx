@@ -178,7 +178,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
         style={[
           styles.btnContainer,
           !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
-          pal.borderDark,
+          pal.border,
         ]}>
         <TouchableOpacity
           testID="confirmBtn"

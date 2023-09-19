@@ -36,7 +36,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
         ]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
-          Fine-tune the discussion threads you see.
+          Fine-tune the discussion threads.
         </Text>
       </View>
 
@@ -48,8 +48,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
             </Text>
             <Text style={[pal.text, s.pb10]}>
               Replies always show in the order of the conversation, but multiple
-              replies to the same post can be sorted in different ways. This
-              setting controls which reply will show up first.
+              replies to the same post can be sorted in different ways.
             </Text>
             <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
               <RadioGroup
@@ -88,7 +87,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
         style={[
           styles.btnContainer,
           !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
-          pal.borderDark,
+          pal.border,
         ]}>
         <TouchableOpacity
           testID="confirmBtn"
