@@ -11,25 +11,36 @@ export function useFollowDid({did}: {did: string}) {
     state,
     following: state === FollowState.Following,
     toggle: React.useCallback(async () => {
-      const freshState = await store.me.follows.fetchFollowState(did)
-
-      if (freshState === FollowState.Following) {
+      if (state === FollowState.Following) {
         try {
           await store.agent.deleteFollow(store.me.follows.getFollowUri(did))
           store.me.follows.removeFollow(did)
+          return {
+            state: FollowState.NotFollowing,
+            following: false,
+          }
         } catch (e: any) {
           store.log.error('Failed to delete follow', e)
           throw e
         }
-      } else if (freshState === FollowState.NotFollowing) {
+      } else if (state === FollowState.NotFollowing) {
         try {
           const res = await store.agent.follow(did)
           store.me.follows.addFollow(did, res.uri)
+          return {
+            state: FollowState.Following,
+            following: true,
+          }
         } catch (e: any) {
           store.log.error('Failed to create follow', e)
           throw e
         }
       }
-    }, [store, did]),
+
+      return {
+        state: FollowState.Unknown,
+        following: false,
+      }
+    }, [store, did, state]),
   }
 }

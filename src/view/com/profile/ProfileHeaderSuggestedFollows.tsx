@@ -10,6 +10,7 @@ import {useQuery} from '@tanstack/react-query'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 
+import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
@@ -180,6 +181,14 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
   const {following, toggle} = useFollowDid({did: profile.did})
   const moderation = moderateProfile(profile, store.preferences.moderationOpts)
 
+  const onPress = React.useCallback(async () => {
+    try {
+      await toggle()
+    } catch (e: any) {
+      Toast.show('An issue occurred, please try again.')
+    }
+  }, [toggle])
+
   return (
     <Link
       href={makeProfileLink(profile)}
@@ -221,7 +230,7 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
           label={following ? 'Unfollow' : 'Follow'}
           type="inverted"
           labelStyle={{textAlign: 'center'}}
-          onPress={toggle}
+          onPress={onPress}
           withLoading
         />
       </View>
