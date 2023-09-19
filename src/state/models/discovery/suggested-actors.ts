@@ -110,21 +110,21 @@ export class SuggestedActorsModel {
     }
   })
 
-  async insertSuggestionsByActor(actor: string) {
+  async insertSuggestionsByActor(actor: string, indexToInsertAt: number) {
     const res =
       await this.rootStore.agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: actor,
       })
     const {suggestions: moreSuggestions} = res.data
     this.rootStore.me.follows.hydrateProfiles(moreSuggestions)
-    const indexToInsertAt = this.suggestions.findIndex(
-      suggestion => suggestion.did === actor,
+
+    // dedupe
+    const toInsert = moreSuggestions.filter(
+      s => !this.suggestions.find(s2 => s2.did === s.did),
     )
-    this.suggestions.splice(
-      indexToInsertAt + 1,
-      0,
-      ...moreSuggestions.splice(0, 5),
-    )
+
+    //  insert
+    this.suggestions.splice(indexToInsertAt + 1, 0, ...toInsert)
   }
 
   // state transitions
