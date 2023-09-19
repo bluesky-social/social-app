@@ -45,6 +45,7 @@ import {faEye} from '@fortawesome/free-solid-svg-icons/faEye'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
 import {faFaceSmile} from '@fortawesome/free-regular-svg-icons/faFaceSmile'
 import {faFire} from '@fortawesome/free-solid-svg-icons/faFire'
+import {faFlask} from '@fortawesome/free-solid-svg-icons'
 import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons/faFloppyDisk'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
@@ -144,6 +145,7 @@ export function setup() {
     farEyeSlash,
     faFaceSmile,
     faFire,
+    faFlask,
     faFloppyDisk,
     faGear,
     faGlobe,

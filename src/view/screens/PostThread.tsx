@@ -34,6 +34,7 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
       const threadCleanup = view.registerListeners()
 
       InteractionManager.runAfterInteractions(() => {
+        store.shell.setMinimalShellMode(false)
         if (!view.hasLoaded && !view.isLoading) {
           view.setup().catch(err => {
             store.log.error('Failed to fetch thread', err)
@@ -74,6 +75,7 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
           uri={uri}
           view={view}
           onPressReply={onPressReply}
+          treeView={store.preferences.threadTreeViewEnabled}
         />
       </View>
       {isMobile && (

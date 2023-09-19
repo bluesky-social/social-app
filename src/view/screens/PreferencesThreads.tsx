@@ -1,6 +1,7 @@
 import React from 'react'
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
@@ -76,6 +77,23 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
               label={store.preferences.threadFollowedUsersFirst ? 'Yes' : 'No'}
               isSelected={store.preferences.threadFollowedUsersFirst}
               onPress={store.preferences.toggleThreadFollowedUsersFirst}
+            />
+          </View>
+
+          <View style={[pal.viewLight, styles.card]}>
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
+              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Threaded
+              Mode
+            </Text>
+            <Text style={[pal.text, s.pb10]}>
+              Set this setting to "Yes" to show replies in a threaded view. This
+              is an experimental feature.
+            </Text>
+            <ToggleButton
+              type="default-light"
+              label={store.preferences.threadTreeViewEnabled ? 'Yes' : 'No'}
+              isSelected={store.preferences.threadTreeViewEnabled}
+              onPress={store.preferences.toggleThreadTreeViewEnabled}
             />
           </View>
         </View>

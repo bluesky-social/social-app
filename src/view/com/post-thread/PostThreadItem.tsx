@@ -35,15 +35,18 @@ import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
   onPostReply,
   hasPrecedingItem,
+  treeView,
 }: {
   item: PostThreadItemModel
   onPostReply: () => void
   hasPrecedingItem: boolean
+  treeView: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -389,25 +392,28 @@ export const PostThreadItem = observer(function PostThreadItem({
       </>
     )
   } else {
+    const isThreadedChild = treeView && item._depth > 0
     return (
-      <>
+      <PostOuterWrapper
+        item={item}
+        hasPrecedingItem={hasPrecedingItem}
+        treeView={treeView}>
         <PostHider
           testID={`postThreadItem-by-${item.post.author.handle}`}
           href={itemHref}
-          style={[
-            styles.outer,
-            pal.border,
-            pal.view,
-            item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
-            styles.cursor,
-          ]}
+          style={pal.view}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
 
           <View
-            style={{flexDirection: 'row', gap: 10, paddingLeft: 8, height: 16}}>
+            style={{
+              flexDirection: 'row',
+              gap: 10,
+              paddingLeft: 8,
+              height: isThreadedChild ? 8 : 16,
+            }}>
             <View style={{width: 52}}>
-              {item._showParentReplyLine && (
+              {!treeView && item._showParentReplyLine && (
                 <View
                   style={[
                     styles.replyLine,
@@ -426,25 +432,28 @@ export const PostThreadItem = observer(function PostThreadItem({
             style={[
               styles.layout,
               {
-                paddingBottom: item._showChildReplyLine ? 0 : 8,
+                paddingBottom:
+                  isThreadedChild || item._showChildReplyLine ? 0 : 8,
               },
             ]}>
             <View style={styles.layoutAvi}>
               <PreviewableUserAvatar
-                size={52}
+                size={isThreadedChild ? 24 : 52}
                 did={item.post.author.did}
                 handle={item.post.author.handle}
                 avatar={item.post.author.avatar}
                 moderation={item.moderation.avatar}
               />
 
-              {item._showChildReplyLine && (
+              {(isThreadedChild || item._showChildReplyLine) && (
                 <View
                   style={[
                     styles.replyLine,
                     {
                       flexGrow: 1,
-                      backgroundColor: pal.colors.replyLine,
+                      backgroundColor: isThreadedChild
+                        ? pal.colors.border
+                        : pal.colors.replyLine,
                       marginTop: 4,
                     },
                   ]}
@@ -513,24 +522,87 @@ export const PostThreadItem = observer(function PostThreadItem({
           <Link
             style={[
               styles.loadMore,
-              {borderTopColor: pal.colors.border},
-              pal.view,
+              treeView
+                ? {
+                    borderRadius: 8,
+                    marginHorizontal: 8,
+                    marginTop: 4,
+                  }
+                : {
+                    paddingLeft: 80,
+                    borderTopWidth: 1,
+                    borderTopColor: pal.colors.border,
+                  },
+              treeView ? pal.viewLight : pal.view,
             ]}
             href={itemHref}
             title={itemTitle}
             noFeedback>
-            <Text style={pal.link}>Continue thread...</Text>
+            <Text style={treeView ? pal.textLight : pal.link}>
+              Continue thread...
+            </Text>
             <FontAwesomeIcon
               icon="angle-right"
-              style={pal.link as FontAwesomeIconStyle}
+              style={
+                (treeView ? pal.textLight : pal.link) as FontAwesomeIconStyle
+              }
               size={18}
             />
           </Link>
         ) : undefined}
-      </>
+      </PostOuterWrapper>
     )
   }
 })
+
+function PostOuterWrapper({
+  item,
+  hasPrecedingItem,
+  treeView,
+  children,
+}: React.PropsWithChildren<{
+  item: PostThreadItemModel
+  hasPrecedingItem: boolean
+  treeView: boolean
+}>) {
+  const {isMobile} = useWebMediaQueries()
+  const pal = usePalette('default')
+  if (treeView && item._depth > 0) {
+    return (
+      <View
+        style={[
+          pal.view,
+          styles.cursor,
+          {flexDirection: 'row', paddingLeft: 10},
+        ]}>
+        {Array.from(Array(item._depth - 1)).map((_, n: number) => (
+          <View
+            key={`${item.uri}-padding-${n}`}
+            style={{
+              borderLeftWidth: 2,
+              borderLeftColor: pal.colors.border,
+              marginLeft: 19,
+              paddingLeft: isMobile ? 0 : 4,
+            }}
+          />
+        ))}
+        <View style={{flex: 1}}>{children}</View>
+      </View>
+    )
+  }
+  return (
+    <View
+      style={[
+        styles.outer,
+        pal.border,
+        pal.view,
+        item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
+        styles.cursor,
+      ]}>
+      {children}
+    </View>
+  )
+}
 
 function ExpandedPostDetails({
   post,
@@ -630,9 +702,7 @@ const styles = StyleSheet.create({
   loadMore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTopWidth: 1,
-    paddingLeft: 80,
-    paddingRight: 20,
+    paddingHorizontal: 20,
     paddingVertical: 12,
   },
   replyLine: {

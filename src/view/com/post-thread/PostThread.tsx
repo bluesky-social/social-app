@@ -69,10 +69,12 @@ export const PostThread = observer(function PostThread({
   uri,
   view,
   onPressReply,
+  treeView,
 }: {
   uri: string
   view: PostThreadModel
   onPressReply: () => void
+  treeView: boolean
 }) {
   const pal = usePalette('default')
   const {isTablet} = useWebMediaQueries()
@@ -184,7 +186,14 @@ export const PostThread = observer(function PostThread({
           </View>
         )
       } else if (item === REPLY_PROMPT) {
-        return <ComposePrompt onPressCompose={onPressReply} />
+        return (
+          <View
+            style={
+              treeView && [pal.border, {borderBottomWidth: 1, marginBottom: 6}]
+            }>
+            {isDesktopWeb && <ComposePrompt onPressCompose={onPressReply} />}
+          </View>
+        )
       } else if (item === DELETED) {
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
@@ -224,7 +233,18 @@ export const PostThread = observer(function PostThread({
         // due to some complexities with how flatlist works, this is the easiest way
         // I could find to get a border positioned directly under the last item
         // -prf
-        return <View style={[pal.border, styles.bottomSpacer]} />
+        return (
+          <View
+            style={[
+              {
+                height: 400,
+                borderTopWidth: 1,
+                borderColor: pal.colors.border,
+              },
+              treeView && {marginTop: 10},
+            ]}
+          />
+        )
       } else if (item === CHILD_SPINNER) {
         return (
           <View style={styles.childSpinner}>
@@ -240,12 +260,13 @@ export const PostThread = observer(function PostThread({
             item={item}
             onPostReply={onRefresh}
             hasPrecedingItem={prev?._showChildReplyLine}
+            treeView={treeView}
           />
         )
       }
       return <></>
     },
-    [onRefresh, onPressReply, pal, posts, isTablet],
+    [onRefresh, onPressReply, pal, posts, isTablet, treeView],
   )
 
   // loading
@@ -377,7 +398,7 @@ function* flattenThread(
     }
   }
   yield post
-  if (isDesktopWeb && post._isHighlightedPost) {
+  if (post._isHighlightedPost) {
     yield REPLY_PROMPT
   }
   if (post.replies?.length) {
@@ -411,8 +432,4 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   childSpinner: {},
-  bottomSpacer: {
-    height: 400,
-    borderTopWidth: 1,
-  },
 })
