@@ -34,17 +34,6 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@*":
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.3.13.tgz#e5ccaa83bb909e662286cdf74a77a76de6562a47"
-  integrity sha512-smDlomgipca16G+jKXAZSMfsAmA5wG8WR3Z1dj29ZShVJlhs6+HHdxX7dWVDYEdSeb2rp/wyHN/tQhxGDAkz/g==
-  dependencies:
-    "@atproto/common-web" "*"
-    "@atproto/uri" "*"
-    "@atproto/xrpc" "*"
-    tlds "^1.234.0"
-    typed-emitter "^2.1.0"
-
 "@atproto/api@^0.6.13":
   version "0.6.13"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.13.tgz#26caeae983c577dfedf6ab1f054b31eb158d8ca6"

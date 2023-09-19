@@ -115,14 +115,17 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
 
       <Mobile>
         <View style={[mStyles.container]} testID="recommendedFollowsOnboarding">
-          <ViewHeader
-            title="Recommended Follows"
-            showBackButton={false}
-            showOnDesktop
-          />
-          <Text type="lg-medium" style={[pal.text, mStyles.header]}>
-            Check out some recommended users. Follow them to see similar users.
-          </Text>
+          <View>
+            <ViewHeader
+              title="Recommended Follows"
+              showBackButton={false}
+              showOnDesktop
+            />
+            <Text type="lg-medium" style={[pal.text, mStyles.header]}>
+              Check out some recommended users. Follow them to see similar
+              users.
+            </Text>
+          </View>
           {store.onboarding.suggestedActors.isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
