@@ -36,6 +36,7 @@ import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faCommentSlash} from '@fortawesome/free-solid-svg-icons/faCommentSlash'
+import {faComments} from '@fortawesome/free-regular-svg-icons/faComments'
 import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
@@ -134,6 +135,7 @@ export function setup() {
     farClone,
     faComment,
     faCommentSlash,
+    faComments,
     faCompass,
     faEllipsis,
     faEnvelope,
