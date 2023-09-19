@@ -1,5 +1,5 @@
-import React from 'react'
-import {ImageStyle, Keyboard} from 'react-native'
+import React, {useState} from 'react'
+import {ImageStyle, Keyboard, LayoutChangeEvent} from 'react-native'
 import {GalleryModel} from 'state/models/media/gallery'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -8,15 +8,45 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
 import {Text} from 'view/com/util/text/Text'
 import {openAltTextModal} from 'lib/media/alt-text'
+import {Dimensions} from 'lib/media/types'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
-interface Props {
+const IMAGE_GAP = 8
+
+interface GalleryProps {
   gallery: GalleryModel
 }
 
-export const Gallery = observer(function GalleryImpl({gallery}: Props) {
+export const Gallery = (props: GalleryProps) => {
+  const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
+
+  const onLayout = (evt: LayoutChangeEvent) => {
+    const {width, height} = evt.nativeEvent.layout
+    setContainerInfo({
+      width,
+      height,
+    })
+  }
+
+  return (
+    <View onLayout={onLayout}>
+      {containerInfo ? (
+        <GalleryInner {...props} containerInfo={containerInfo} />
+      ) : undefined}
+    </View>
+  )
+}
+
+interface GalleryInnerProps extends GalleryProps {
+  containerInfo: Dimensions
+}
+
+const GalleryInner = observer(function GalleryImpl({
+  gallery,
+  containerInfo,
+}: GalleryInnerProps) {
   const store = useStores()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -26,7 +56,7 @@ export const Gallery = observer(function GalleryImpl({gallery}: Props) {
   if (gallery.size === 1) {
     side = 250
   } else {
-    side = (isMobile ? 350 : 560) / gallery.size
+    side = (containerInfo.width - IMAGE_GAP * (gallery.size - 1)) / gallery.size
   }
 
   const imageStyle = {
@@ -169,7 +199,7 @@ const styles = StyleSheet.create({
   gallery: {
     flex: 1,
     flexDirection: 'row',
-    gap: 8,
+    gap: IMAGE_GAP,
     marginTop: 16,
   },
   image: {
