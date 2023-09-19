@@ -425,19 +425,6 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            testID="savedFeedsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            accessibilityHint="My Saved Feeds"
-            accessibilityLabel="Opens screen with all saved feeds"
-            onPress={onPressSavedFeeds}>
-            <View style={[styles.iconContainer, pal.btn]}>
-              <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
-            </View>
-            <Text type="lg" style={pal.text}>
-              My Saved Feeds
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
             testID="preferencesThreadsButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openThreadsPreferences}
@@ -452,7 +439,20 @@ export const SettingsScreen = withAuthRequired(
               />
             </View>
             <Text type="lg" style={pal.text}>
-              Post Thread Preferences
+              Thread Preferences
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="savedFeedsBtn"
+            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            accessibilityHint="My Saved Feeds"
+            accessibilityLabel="Opens screen with all saved feeds"
+            onPress={onPressSavedFeeds}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
+            </View>
+            <Text type="lg" style={pal.text}>
+              My Saved Feeds
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
