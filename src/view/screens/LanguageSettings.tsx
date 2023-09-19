@@ -75,7 +75,7 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
             Primary Language
           </Text>
           <Text style={[pal.text, s.pb10]}>
-            Your preferred language for translating posts in your feeds.
+            Select your preferred language for translations in your feed.
           </Text>
 
           <View style={{position: 'relative'}}>
@@ -162,7 +162,7 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
             Content Languages
           </Text>
           <Text style={[pal.text, s.pb10]}>
-            Select the languages of content you'd like to see in your feeds. If
+            Select which languages you want your subscribed feeds to include. If
             none are selected, all languages will be shown.
           </Text>
 
