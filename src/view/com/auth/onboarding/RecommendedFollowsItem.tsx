@@ -149,8 +149,9 @@ const styles = StyleSheet.create({
   addingMoreContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 4,
+    paddingLeft: 54,
+    paddingTop: 4,
+    paddingBottom: 12,
     gap: 4,
   },
   followButton: {
