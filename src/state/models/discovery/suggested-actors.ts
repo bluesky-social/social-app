@@ -19,6 +19,7 @@ export class SuggestedActorsModel {
   loadMoreCursor: string | undefined = undefined
   error = ''
   hasMore = false
+  lastInsertedAtIndex = -1
 
   // data
   suggestions: SuggestedActor[] = []
@@ -109,6 +110,24 @@ export class SuggestedActorsModel {
       this._xIdle(e)
     }
   })
+
+  async insertSuggestionsByActor(actor: string, indexToInsertAt: number) {
+    // fetch suggestions
+    const res =
+      await this.rootStore.agent.app.bsky.graph.getSuggestedFollowsByActor({
+        actor: actor,
+      })
+    const {suggestions: moreSuggestions} = res.data
+    this.rootStore.me.follows.hydrateProfiles(moreSuggestions)
+    // dedupe
+    const toInsert = moreSuggestions.filter(
+      s => !this.suggestions.find(s2 => s2.did === s.did),
+    )
+    //  insert
+    this.suggestions.splice(indexToInsertAt + 1, 0, ...toInsert)
+    // update index
+    this.lastInsertedAtIndex = indexToInsertAt
+  }
 
   // state transitions
   // =
