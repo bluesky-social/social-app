@@ -204,14 +204,14 @@ export class PreferencesModel {
       ) {
         this.threadDefaultSort = v.threadDefaultSort
       }
-      // check if tread followed-users-first is enabled in preferences, then hydrate
+      // check if thread followed-users-first is enabled in preferences, then hydrate
       if (
         hasProp(v, 'threadFollowedUsersFirst') &&
         typeof v.threadFollowedUsersFirst === 'boolean'
       ) {
         this.threadFollowedUsersFirst = v.threadFollowedUsersFirst
       }
-      // check if tread treeview is enabled in preferences, then hydrate
+      // check if thread treeview is enabled in preferences, then hydrate
       if (
         hasProp(v, 'threadTreeViewEnabled') &&
         typeof v.threadTreeViewEnabled === 'boolean'
