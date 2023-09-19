@@ -30,18 +30,18 @@ export const FollowButton = observer(function FollowButtonImpl({
     const updatedFollowState = await store.me.follows.fetchFollowState(did)
     if (updatedFollowState === FollowState.Following) {
       try {
+        onToggleFollow?.(false)
         await store.agent.deleteFollow(store.me.follows.getFollowUri(did))
         store.me.follows.removeFollow(did)
-        onToggleFollow?.(false)
       } catch (e: any) {
         store.log.error('Failed to delete follow', e)
         Toast.show('An issue occurred, please try again.')
       }
     } else if (updatedFollowState === FollowState.NotFollowing) {
       try {
+        onToggleFollow?.(true)
         const res = await store.agent.follow(did)
         store.me.follows.addFollow(did, res.uri)
-        onToggleFollow?.(true)
       } catch (e: any) {
         store.log.error('Failed to create follow', e)
         Toast.show('An issue occurred, please try again.')

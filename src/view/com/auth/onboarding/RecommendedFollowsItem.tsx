@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
@@ -20,11 +20,19 @@ type Props = {
 }
 export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
   const pal = usePalette('default')
+  const store = useStores()
   const {isMobile} = useWebMediaQueries()
+  const delay = useMemo(() => {
+    return (
+      50 *
+      (Math.abs(store.onboarding.suggestedActors.lastInsertedAtIndex - index) %
+        5)
+    )
+  }, [index, store.onboarding.suggestedActors.lastInsertedAtIndex])
 
   return (
     <Animated.View
-      entering={FadeInRight.delay(50 * index).springify()}
+      entering={FadeInRight.delay(delay).springify()}
       style={[
         styles.cardContainer,
         pal.view,
@@ -34,15 +42,17 @@ export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
           borderRightWidth: isMobile ? undefined : 1,
         },
       ]}>
-      <ProfileCard key={item.did} profile={item} />
+      <ProfileCard key={item.did} profile={item} index={index} />
     </Animated.View>
   )
 }
 
 export const ProfileCard = observer(function ProfileCardImpl({
   profile,
+  index,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
+  index: number
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -84,6 +94,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
               setAddingMoreSuggestions(true)
               await store.onboarding.suggestedActors.insertSuggestionsByActor(
                 profile.did,
+                index,
               )
               setAddingMoreSuggestions(false)
             }
