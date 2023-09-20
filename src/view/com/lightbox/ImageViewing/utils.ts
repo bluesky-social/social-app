@@ -6,14 +6,7 @@
  *
  */
 
-import {
-  Animated,
-  GestureResponderEvent,
-  PanResponder,
-  PanResponderGestureState,
-  PanResponderInstance,
-  NativeTouchEvent,
-} from 'react-native'
+import {Animated, NativeTouchEvent} from 'react-native'
 import {Dimensions, Position} from './@types'
 
 type CacheStorageItem = {key: string; value: any}
@@ -130,40 +123,6 @@ export const getImageTranslateForScale = (
 
   return getImageTranslate(targetImageDimensions, screen)
 }
-
-type HandlerType = (
-  event: GestureResponderEvent,
-  state: PanResponderGestureState,
-) => void
-
-type PanResponderProps = {
-  onGrant: HandlerType
-  onStart?: HandlerType
-  onMove: HandlerType
-  onRelease?: HandlerType
-  onTerminate?: HandlerType
-}
-
-export const createPanResponder = ({
-  onGrant,
-  onStart,
-  onMove,
-  onRelease,
-  onTerminate,
-}: PanResponderProps): PanResponderInstance =>
-  PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onStartShouldSetPanResponderCapture: () => true,
-    onMoveShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponderCapture: () => true,
-    onPanResponderGrant: onGrant,
-    onPanResponderStart: onStart,
-    onPanResponderMove: onMove,
-    onPanResponderRelease: onRelease,
-    onPanResponderTerminate: onTerminate,
-    onPanResponderTerminationRequest: () => false,
-    onShouldBlockNativeResponder: () => false,
-  })
 
 export const getDistanceBetweenTouches = (
   touches: NativeTouchEvent[],
