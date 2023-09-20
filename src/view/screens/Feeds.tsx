@@ -262,10 +262,7 @@ function SavedFeed({
       asAnchor
       anchorNoUnderline>
       <UserAvatar type="algo" size={28} avatar={avatar} />
-      <Text
-        type={isMobile ? 'lg' : 'lg-medium'}
-        style={[pal.text, s.flex1]}
-        numberOfLines={1}>
+      <Text type="lg-medium" style={[pal.text, s.flex1]} numberOfLines={1}>
         {displayName}
       </Text>
       {isMobile && (
