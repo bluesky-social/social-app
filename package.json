@@ -25,7 +25,7 @@
     "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
-    "@atproto/api": "^0.6.13",
+    "@atproto/api": "^0.6.14",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
