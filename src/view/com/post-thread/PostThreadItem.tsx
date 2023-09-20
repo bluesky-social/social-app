@@ -413,7 +413,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               height: isThreadedChild ? 8 : 16,
             }}>
             <View style={{width: 52}}>
-              {!treeView && item._showParentReplyLine && (
+              {!isThreadedChild && item._showParentReplyLine && (
                 <View
                   style={[
                     styles.replyLine,
