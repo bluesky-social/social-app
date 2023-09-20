@@ -16,7 +16,10 @@ import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {FeedFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {
+  LoadingPlaceholder,
+  FeedFeedLoadingPlaceholder,
+} from 'view/com/util/LoadingPlaceholder'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
@@ -42,7 +45,12 @@ export const FeedsScreen = withAuthRequired(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
         myFeeds.setup()
-      }, [store.shell, myFeeds]),
+
+        const softResetSub = store.onScreenSoftReset(() => myFeeds.refresh())
+        return () => {
+          softResetSub.remove()
+        }
+      }, [store, myFeeds]),
     )
 
     const onPressCompose = React.useCallback(() => {
@@ -119,6 +127,14 @@ export const FeedsScreen = withAuthRequired(
             )
           }
           return <View />
+        } else if (item.type === 'saved-feeds-loading') {
+          return (
+            <>
+              {Array.from(Array(item.numItems)).map((_, i) => (
+                <SavedFeedLoadingPlaceholder key={`placeholder-${i}`} />
+              ))}
+            </>
+          )
         } else if (item.type === 'saved-feed') {
           return (
             <SavedFeed
@@ -262,10 +278,7 @@ function SavedFeed({
       asAnchor
       anchorNoUnderline>
       <UserAvatar type="algo" size={28} avatar={avatar} />
-      <Text
-        type={isMobile ? 'lg' : 'lg-medium'}
-        style={[pal.text, s.flex1]}
-        numberOfLines={1}>
+      <Text type="lg-medium" style={[pal.text, s.flex1]} numberOfLines={1}>
         {displayName}
       </Text>
       {isMobile && (
@@ -276,6 +289,22 @@ function SavedFeed({
         />
       )}
     </Link>
+  )
+}
+
+function SavedFeedLoadingPlaceholder() {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+  return (
+    <View
+      style={[
+        pal.border,
+        styles.savedFeed,
+        isMobile && styles.savedFeedMobile,
+      ]}>
+      <LoadingPlaceholder width={28} height={28} style={{borderRadius: 4}} />
+      <LoadingPlaceholder width={140} height={12} />
+    </View>
   )
 }
 

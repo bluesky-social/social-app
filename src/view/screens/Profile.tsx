@@ -187,7 +187,9 @@ export const ProfileScreen = withAuthRequired(
               />
             )
           } else if (item instanceof CustomFeedModel) {
-            return <CustomFeed item={item} showSaveBtn showLikes />
+            return (
+              <CustomFeed item={item} showSaveBtn showLikes showDescription />
+            )
           }
           // if section is posts or posts & replies
         } else {
