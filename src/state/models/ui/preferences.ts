@@ -8,6 +8,7 @@ import {ModerationOpts} from '@atproto/api'
 import {DEFAULT_FEEDS} from 'lib/constants'
 import {deviceLocales} from 'platform/detection'
 import {getAge} from 'lib/strings/time'
+import {FeedTuner} from 'lib/api/feed-manip'
 import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
@@ -539,6 +540,52 @@ export class PreferencesModel {
 
   toggleRequireAltTextEnabled() {
     this.requireAltTextEnabled = !this.requireAltTextEnabled
+  }
+
+  getFeedTuners(
+    feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
+  ) {
+    const areRepliesEnabled = this.homeFeedRepliesEnabled
+    const areRepliesByFollowedOnlyEnabled =
+      this.homeFeedRepliesByFollowedOnlyEnabled
+    const repliesThreshold = this.homeFeedRepliesThreshold
+    const areRepostsEnabled = this.homeFeedRepostsEnabled
+    const areQuotePostsEnabled = this.homeFeedQuotePostsEnabled
+
+    if (feedType === 'custom') {
+      return [
+        FeedTuner.dedupReposts,
+        FeedTuner.preferredLangOnly(this.contentLanguages),
+      ]
+    }
+    if (feedType === 'home' || feedType === 'following') {
+      const feedTuners = []
+
+      if (areRepostsEnabled) {
+        feedTuners.push(FeedTuner.dedupReposts)
+      } else {
+        feedTuners.push(FeedTuner.removeReposts)
+      }
+
+      if (areRepliesEnabled) {
+        feedTuners.push(
+          FeedTuner.thresholdRepliesOnly({
+            userDid: this.rootStore.session.data?.did || '',
+            minLikes: repliesThreshold,
+            followedOnly: areRepliesByFollowedOnlyEnabled,
+          }),
+        )
+      } else {
+        feedTuners.push(FeedTuner.removeReplies)
+      }
+
+      if (!areQuotePostsEnabled) {
+        feedTuners.push(FeedTuner.removeQuotePosts)
+      }
+
+      return feedTuners
+    }
+    return []
   }
 }
 
