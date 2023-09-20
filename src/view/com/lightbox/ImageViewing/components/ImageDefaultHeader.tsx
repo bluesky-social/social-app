@@ -34,6 +34,7 @@ const ImageDefaultHeader = ({onRequestClose}: Props) => (
 const styles = StyleSheet.create({
   root: {
     alignItems: 'flex-end',
+    pointerEvents: 'box-none',
   },
   closeButton: {
     marginRight: 8,
