@@ -33,6 +33,10 @@ import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from './state'
+import {getRoutingInstrumentation} from 'lib/sentry'
+import {bskyTitle} from 'lib/strings/headings'
+import {JSX} from 'react/jsx-runtime'
+import {timeout} from 'lib/async/timeout'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -62,11 +66,8 @@ import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
-import {getRoutingInstrumentation} from 'lib/sentry'
-import {bskyTitle} from 'lib/strings/headings'
-import {JSX} from 'react/jsx-runtime'
-import {timeout} from 'lib/async/timeout'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
+import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -218,6 +219,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PreferencesHomeFeed"
         component={PreferencesHomeFeed}
         options={{title: title('Home Feed Preferences')}}
+      />
+      <Stack.Screen
+        name="PreferencesThreads"
+        component={PreferencesThreads}
+        options={{title: title('Threads Preferences')}}
       />
     </>
   )

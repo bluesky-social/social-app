@@ -285,11 +285,6 @@ export const ComposePost = observer(function ComposePost({
             </View>
           )}
         </View>
-        {isProcessing ? (
-          <View style={[pal.btn, styles.processingLine]}>
-            <Text style={pal.text}>{processingState}</Text>
-          </View>
-        ) : undefined}
         {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
@@ -374,6 +369,12 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : undefined}
         </ScrollView>
+        {isProcessing ? (
+          <View style={[pal.viewLight, styles.processingLine]}>
+            <ActivityIndicator />
+            <Text style={pal.textLight}>{processingState}</Text>
+          </View>
+        ) : undefined}
         {!extLink && suggestedLinks.size > 0 ? (
           <View style={s.mb5}>
             {Array.from(suggestedLinks)
@@ -435,11 +436,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   processingLine: {
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    marginHorizontal: 15,
-    marginBottom: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 26,
+    paddingVertical: 12,
   },
   errorLine: {
     flexDirection: 'row',

@@ -7,47 +7,31 @@ import {Text} from 'view/com/util/text/Text'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Button} from 'view/com/util/forms/Button'
-import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useQuery} from '@tanstack/react-query'
 import {useStores} from 'state/index'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {RecommendedFollowsItem} from './RecommendedFollowsItem'
 
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
+export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   next,
 }: Props) {
   const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
-  const {isLoading, data: recommendedFeeds} = useQuery({
-    staleTime: Infinity, // fixed list rn, never refetch
-    queryKey: ['onboarding', 'recommended_feeds'],
-    async queryFn() {
-      try {
-        const {
-          data: {feeds},
-          success,
-        } = await store.agent.app.bsky.feed.getSuggestedFeeds()
 
-        if (!success) {
-          return []
-        }
-
-        return (feeds.length ? feeds : []).map(feed => {
-          return new CustomFeedModel(store, feed)
-        })
-      } catch (e) {
-        return []
-      }
-    },
-  })
-
-  const hasFeeds = recommendedFeeds && recommendedFeeds.length
+  React.useEffect(() => {
+    // Load suggested actors if not already loaded
+    // prefetch should happen in the onboarding model
+    if (
+      !store.onboarding.suggestedActors.hasLoaded ||
+      store.onboarding.suggestedActors.isEmpty
+    ) {
+      store.onboarding.suggestedActors.loadMore(true)
+    }
+  }, [store])
 
   const title = (
     <>
@@ -57,7 +41,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title1,
           isTabletOrMobile && tdStyles.title1Small,
         ]}>
-        Choose your
+        Follow some
       </Text>
       <Text
         style={[
@@ -65,7 +49,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title2,
           isTabletOrMobile && tdStyles.title2Small,
         ]}>
-        Recomended
+        Recommended
       </Text>
       <Text
         style={[
@@ -73,11 +57,11 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title2,
           isTabletOrMobile && tdStyles.title2Small,
         ]}>
-        Feeds
+        Users
       </Text>
       <Text type="2xl-medium" style={[pal.textLight, tdStyles.description]}>
-        Feeds are created by users to curate content. Choose some feeds that you
-        find interesting.
+        Follow some users to get started. We can recommend you more users based
+        on who you find interesting.
       </Text>
       <View
         style={{
@@ -96,7 +80,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Next
+              Done
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -109,56 +93,51 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
     <>
       <TabletOrDesktop>
         <TitleColumnLayout
-          testID="recommendedFeedsOnboarding"
+          testID="recommendedFollowsOnboarding"
           title={title}
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          {hasFeeds ? (
+          {store.onboarding.suggestedActors.isLoading ? (
+            <ActivityIndicator size="large" />
+          ) : (
             <FlatList
-              data={recommendedFeeds}
-              renderItem={({item}) => <RecommendedFeedsItem item={item} />}
-              keyExtractor={item => item.uri}
+              data={store.onboarding.suggestedActors.suggestions}
+              renderItem={({item, index}) => (
+                <RecommendedFollowsItem item={item} index={index} />
+              )}
+              keyExtractor={(item, index) => item.did + index.toString()}
               style={{flex: 1}}
             />
-          ) : isLoading ? (
-            <View>
-              <ActivityIndicator size="large" />
-            </View>
-          ) : (
-            <ErrorMessage message="Failed to load recommended feeds" />
           )}
         </TitleColumnLayout>
       </TabletOrDesktop>
-      <Mobile>
-        <View style={[mStyles.container]} testID="recommendedFeedsOnboarding">
-          <ViewHeader
-            title="Recommended Feeds"
-            showBackButton={false}
-            showOnDesktop
-          />
-          <Text type="lg-medium" style={[pal.text, mStyles.header]}>
-            Check out some recommended feeds. Tap + to add them to your list of
-            pinned feeds.
-          </Text>
 
-          {hasFeeds ? (
+      <Mobile>
+        <View style={[mStyles.container]} testID="recommendedFollowsOnboarding">
+          <View>
+            <ViewHeader
+              title="Recommended Follows"
+              showBackButton={false}
+              showOnDesktop
+            />
+            <Text type="lg-medium" style={[pal.text, mStyles.header]}>
+              Check out some recommended users. Follow them to see similar
+              users.
+            </Text>
+          </View>
+          {store.onboarding.suggestedActors.isLoading ? (
+            <ActivityIndicator size="large" />
+          ) : (
             <FlatList
-              data={recommendedFeeds}
-              renderItem={({item}) => <RecommendedFeedsItem item={item} />}
-              keyExtractor={item => item.uri}
+              data={store.onboarding.suggestedActors.suggestions}
+              renderItem={({item, index}) => (
+                <RecommendedFollowsItem item={item} index={index} />
+              )}
+              keyExtractor={(item, index) => item.did + index.toString()}
               style={{flex: 1}}
             />
-          ) : isLoading ? (
-            <View style={{flex: 1}}>
-              <ActivityIndicator size="large" />
-            </View>
-          ) : (
-            <View style={{flex: 1}}>
-              <ErrorMessage message="Failed to load recommended feeds" />
-            </View>
           )}
-
           <Button
             onPress={next}
             label="Continue"

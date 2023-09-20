@@ -2,10 +2,12 @@ import {makeAutoObservable} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {hasProp} from 'lib/type-guards'
 import {track} from 'lib/analytics/analytics'
+import {SuggestedActorsModel} from './suggested-actors'
 
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',
   RecommendedFeeds: 'RecommendedFeeds',
+  RecommendedFollows: 'RecommendedFollows',
   Home: 'Home',
 } as const
 
@@ -16,7 +18,11 @@ export class OnboardingModel {
   // state
   step: OnboardingStep = 'Home' // default state to skip onboarding, only enabled for new users by calling start()
 
+  // data
+  suggestedActors: SuggestedActorsModel
+
   constructor(public rootStore: RootStoreModel) {
+    this.suggestedActors = new SuggestedActorsModel(this.rootStore)
     makeAutoObservable(this, {
       rootStore: false,
       hydrate: false,
@@ -56,6 +62,11 @@ export class OnboardingModel {
       this.step = 'RecommendedFeeds'
       return this.step
     } else if (this.step === 'RecommendedFeeds') {
+      this.step = 'RecommendedFollows'
+      // prefetch recommended follows
+      this.suggestedActors.loadMore(true)
+      return this.step
+    } else if (this.step === 'RecommendedFollows') {
       this.finish()
       return this.step
     } else {
