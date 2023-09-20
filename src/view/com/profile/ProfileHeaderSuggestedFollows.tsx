@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, StyleSheet, ScrollView} from 'react-native'
+import {View, StyleSheet, ScrollView, Pressable} from 'react-native'
 import Animated, {
   useSharedValue,
   withTiming,
@@ -9,6 +9,10 @@ import Animated, {
 import {useQuery} from '@tanstack/react-query'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 
 import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
@@ -24,15 +28,16 @@ import {Link} from 'view/com/util/Link'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
-const CARD_HEIGHT = 170
-const TOTAL_HEIGHT = CARD_HEIGHT + INNER_PADDING * 2 + OUTER_PADDING * 2
+const TOTAL_HEIGHT = 250
 
 export function ProfileHeaderSuggestedFollows({
   actorDid,
   active,
+  requestDismiss,
 }: {
   actorDid: string
   active: boolean
+  requestDismiss: () => void
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -89,14 +94,44 @@ export function ProfileHeaderSuggestedFollows({
         <View
           style={{
             backgroundColor: pal.viewLight.backgroundColor,
-            height: CARD_HEIGHT + INNER_PADDING * 2,
-            paddingTop: INNER_PADDING,
-            paddingLeft: INNER_PADDING / 2,
+            height: '100%',
+            paddingTop: INNER_PADDING / 2,
+            paddingBottom: INNER_PADDING,
           }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingTop: 4,
+              paddingBottom: INNER_PADDING / 2,
+              paddingLeft: INNER_PADDING,
+              paddingRight: INNER_PADDING / 2,
+            }}>
+            <Text type="sm-bold" style={[pal.textLight]}>
+              Suggested for you
+            </Text>
+
+            <Pressable
+              accessibilityRole="button"
+              onPress={requestDismiss}
+              hitSlop={10}
+              style={{padding: INNER_PADDING / 2}}>
+              <FontAwesomeIcon
+                icon="x"
+                size={12}
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </Pressable>
+          </View>
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{alignItems: 'flex-start'}}>
+            contentContainerStyle={{
+              alignItems: 'flex-start',
+              paddingLeft: INNER_PADDING / 2,
+            }}>
             {isLoading ? (
               <>
                 <SuggestedFollowSkeleton />

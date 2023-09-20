@@ -389,14 +389,26 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                     styles.btn,
                     styles.mainBtn,
                     pal.btn,
-                    {paddingHorizontal: 10},
+                    {
+                      paddingHorizontal: 10,
+                      backgroundColor: showSuggestedFollows
+                        ? colors.blue3
+                        : pal.viewLight.backgroundColor,
+                    },
                   ]}
                   accessibilityRole="button"
                   accessibilityLabel={`Show follows similar to ${view.handle}`}
                   accessibilityHint={`Shows a list of users similar to this user.`}>
                   <FontAwesomeIcon
                     icon="user-plus"
-                    style={[pal.text]}
+                    style={[
+                      pal.text,
+                      {
+                        color: showSuggestedFollows
+                          ? colors.white
+                          : pal.text.color,
+                      },
+                    ]}
                     size={14}
                   />
                 </TouchableOpacity>
@@ -538,6 +550,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         <ProfileHeaderSuggestedFollows
           actorDid={view.did}
           active={showSuggestedFollows}
+          requestDismiss={() => setShowSuggestedFollows(!showSuggestedFollows)}
         />
       )}
 
