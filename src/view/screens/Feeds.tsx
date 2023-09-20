@@ -45,7 +45,12 @@ export const FeedsScreen = withAuthRequired(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
         myFeeds.setup()
-      }, [store.shell, myFeeds]),
+
+        const softResetSub = store.onScreenSoftReset(() => myFeeds.refresh())
+        return () => {
+          softResetSub.remove()
+        }
+      }, [store, myFeeds]),
     )
 
     const onPressCompose = React.useCallback(() => {
