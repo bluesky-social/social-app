@@ -244,7 +244,7 @@ export const CustomFeedScreenInner = observer(
     }, [store, onSoftReset, isScreenFocused])
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
-      let items: DropdownItem[] = [
+      return [
         currentFeed
           ? {
               testID: 'feedHeaderDropdownAboutBtn',
@@ -317,8 +317,7 @@ export const CustomFeedScreenInner = observer(
             web: 'share',
           },
         },
-      ].filter(Boolean)
-      return items
+      ].filter(Boolean) as DropdownItem[]
     }, [
       currentFeed,
       onPressAbout,
