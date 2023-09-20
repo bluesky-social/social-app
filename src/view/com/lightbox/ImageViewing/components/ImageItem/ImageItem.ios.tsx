@@ -32,6 +32,7 @@ const SWIPE_CLOSE_VELOCITY = 1
 const SCREEN = Dimensions.get('screen')
 const SCREEN_WIDTH = SCREEN.width
 const SCREEN_HEIGHT = SCREEN.height
+const MAX_SCALE = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -58,13 +59,18 @@ const ImageItem = ({
   const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
-  const handleDoubleTap = useDoubleTapToZoom(scrollViewRef, scaled, SCREEN)
+  const handleDoubleTap = useDoubleTapToZoom(
+    scrollViewRef,
+    scaled,
+    SCREEN,
+    imageDimensions,
+  )
 
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
   const scrollValueY = new Animated.Value(0)
   const scaleValue = new Animated.Value(scale || 1)
   const translateValue = new Animated.ValueXY(translate)
-  const maxScale = scale && scale > 0 ? Math.max(1 / scale, 1) : 1
+  const maxScrollViewZoom = MAX_SCALE / (scale || 1)
 
   const imageOpacity = scrollValueY.interpolate({
     inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
@@ -118,7 +124,7 @@ const ImageItem = ({
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        maximumZoomScale={maxScale}
+        maximumZoomScale={maxScrollViewZoom}
         contentContainerStyle={styles.imageScrollContainer}
         scrollEnabled={swipeToCloseEnabled}
         onScrollEndDrag={onScrollEndDrag}
