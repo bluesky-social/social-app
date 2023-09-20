@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Copyright (c) JOB TODAY S.A. and its affiliates.
  *
@@ -7,19 +6,19 @@
  *
  */
 
-import {useMemo, useEffect} from 'react'
+import {useEffect} from 'react'
 import {
   Animated,
   Dimensions,
   GestureResponderEvent,
   GestureResponderHandlers,
   NativeTouchEvent,
+  PanResponder,
   PanResponderGestureState,
 } from 'react-native'
 
 import {Position} from '../@types'
 import {
-  createPanResponder,
   getDistanceBetweenTouches,
   getImageTranslate,
   getImageDimensionsByTranslate,
@@ -160,8 +159,12 @@ const usePanResponder = ({
     longPressHandlerRef && clearTimeout(longPressHandlerRef)
   }
 
-  const handlers = {
-    onGrant: (
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponderCapture: () => true,
+    onMoveShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponderCapture: () => true,
+    onPanResponderGrant: (
       _: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
@@ -173,7 +176,7 @@ const usePanResponder = ({
 
       longPressHandlerRef = setTimeout(onLongPress, delayLongPress)
     },
-    onStart: (
+    onPanResponderStart: (
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
@@ -234,7 +237,7 @@ const usePanResponder = ({
         lastTapTS = Date.now()
       }
     },
-    onMove: (
+    onPanResponderMove: (
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
@@ -356,7 +359,7 @@ const usePanResponder = ({
         tmpTranslate = {x: nextTranslateX, y: nextTranslateY}
       }
     },
-    onRelease: () => {
+    onPanResponderRelease: () => {
       cancelLongPressHandle()
 
       if (isDoubleTapPerformed) {
@@ -418,9 +421,9 @@ const usePanResponder = ({
         tmpTranslate = null
       }
     },
-  }
-
-  const panResponder = useMemo(() => createPanResponder(handlers), [handlers])
+    onPanResponderTerminationRequest: () => false,
+    onShouldBlockNativeResponder: () => false,
+  })
 
   return [panResponder.panHandlers, scaleValue, translateValue]
 }
