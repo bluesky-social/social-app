@@ -16,7 +16,10 @@ import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {FeedFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {
+  LoadingPlaceholder,
+  FeedFeedLoadingPlaceholder,
+} from 'view/com/util/LoadingPlaceholder'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
@@ -119,6 +122,14 @@ export const FeedsScreen = withAuthRequired(
             )
           }
           return <View />
+        } else if (item.type === 'saved-feeds-loading') {
+          return (
+            <>
+              {Array.from(Array(item.numItems)).map((_, i) => (
+                <SavedFeedLoadingPlaceholder key={`placeholder-${i}`} />
+              ))}
+            </>
+          )
         } else if (item.type === 'saved-feed') {
           return (
             <SavedFeed
@@ -273,6 +284,22 @@ function SavedFeed({
         />
       )}
     </Link>
+  )
+}
+
+function SavedFeedLoadingPlaceholder() {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+  return (
+    <View
+      style={[
+        pal.border,
+        styles.savedFeed,
+        isMobile && styles.savedFeedMobile,
+      ]}>
+      <LoadingPlaceholder width={28} height={28} style={{borderRadius: 4}} />
+      <LoadingPlaceholder width={140} height={12} />
+    </View>
   )
 }
 
