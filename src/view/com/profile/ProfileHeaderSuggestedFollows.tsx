@@ -120,7 +120,7 @@ export function ProfileHeaderSuggestedFollows({
               <FontAwesomeIcon
                 icon="x"
                 size={12}
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.textLight as FontAwesomeIconStyle}
               />
             </Pressable>
           </View>
