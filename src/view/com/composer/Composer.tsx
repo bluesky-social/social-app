@@ -253,36 +253,48 @@ export const ComposePost = observer(function ComposePost({
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
           <View style={s.flex1} />
-          <LabelsBtn labels={labels} onChange={setLabels} hasMedia={hasMedia} />
           {isProcessing ? (
-            <View style={styles.postBtn}>
-              <ActivityIndicator />
-            </View>
-          ) : canPost ? (
-            <TouchableOpacity
-              testID="composerPublishBtn"
-              onPress={onPressPublish}
-              accessibilityRole="button"
-              accessibilityLabel={replyTo ? 'Publish reply' : 'Publish post'}
-              accessibilityHint={
-                replyTo
-                  ? 'Double tap to publish your reply'
-                  : 'Double tap to publish your post'
-              }>
-              <LinearGradient
-                colors={[gradients.blueLight.start, gradients.blueLight.end]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
-                style={styles.postBtn}>
-                <Text style={[s.white, s.f16, s.bold]}>
-                  {replyTo ? 'Reply' : 'Post'}
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            <>
+              <Text style={pal.textLight}>{processingState}</Text>
+              <View style={styles.postBtn}>
+                <ActivityIndicator />
+              </View>
+            </>
           ) : (
-            <View style={[styles.postBtn, pal.btn]}>
-              <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
-            </View>
+            <>
+              <LabelsBtn
+                labels={labels}
+                onChange={setLabels}
+                hasMedia={hasMedia}
+              />
+              {canPost ? (
+                <TouchableOpacity
+                  testID="composerPublishBtn"
+                  onPress={onPressPublish}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    replyTo ? 'Publish reply' : 'Publish post'
+                  }
+                  accessibilityHint="">
+                  <LinearGradient
+                    colors={[
+                      gradients.blueLight.start,
+                      gradients.blueLight.end,
+                    ]}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 1}}
+                    style={styles.postBtn}>
+                    <Text style={[s.white, s.f16, s.bold]}>
+                      {replyTo ? 'Reply' : 'Post'}
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              ) : (
+                <View style={[styles.postBtn, pal.btn]}>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
+                </View>
+              )}
+            </>
           )}
         </View>
         {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
@@ -369,12 +381,6 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : undefined}
         </ScrollView>
-        {isProcessing ? (
-          <View style={[pal.viewLight, styles.processingLine]}>
-            <ActivityIndicator />
-            <Text style={pal.textLight}>{processingState}</Text>
-          </View>
-        ) : undefined}
         {!extLink && suggestedLinks.size > 0 ? (
           <View style={s.mb5}>
             {Array.from(suggestedLinks)
@@ -434,13 +440,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 6,
-  },
-  processingLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 26,
-    paddingVertical: 12,
   },
   errorLine: {
     flexDirection: 'row',
