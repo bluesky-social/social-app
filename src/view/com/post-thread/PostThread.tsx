@@ -55,6 +55,7 @@ const LOAD_MORE = {
 const BOTTOM_COMPONENT = {
   _reactKey: '__bottom_component__',
   _isHighlightedPost: false,
+  _showBorder: true,
 }
 type YieldedItem =
   | PostThreadItemModel
@@ -101,6 +102,13 @@ export const PostThread = observer(function PostThread({
     }
     return []
   }, [view.isLoadingFromCache, view.thread, maxVisible])
+  const highlightedPostIndex = posts.findIndex(post => post._isHighlightedPost)
+  const showBottomBorder =
+    !treeView ||
+    // in the treeview, only show the bottom border
+    // if there are replies under the highlighted posts
+    posts.findLast(v => v instanceof PostThreadItemModel) !==
+      posts[highlightedPostIndex]
   useSetTitle(
     view.thread?.postRecord &&
       `${sanitizeDisplayName(
@@ -137,17 +145,16 @@ export const PostThread = observer(function PostThread({
       return
     }
 
-    const index = posts.findIndex(post => post._isHighlightedPost)
-    if (index !== -1) {
+    if (highlightedPostIndex !== -1) {
       ref.current?.scrollToIndex({
-        index,
+        index: highlightedPostIndex,
         animated: false,
         viewPosition: 0,
       })
       hasScrolledIntoView.current = true
     }
   }, [
-    posts,
+    highlightedPostIndex,
     view.hasContent,
     view.isFromCache,
     view.isLoadingFromCache,
@@ -236,8 +243,8 @@ export const PostThread = observer(function PostThread({
         return (
           <View
             style={[
-              {
-                height: 400,
+              {height: 400},
+              showBottomBorder && {
                 borderTopWidth: 1,
                 borderColor: pal.colors.border,
               },
@@ -266,7 +273,7 @@ export const PostThread = observer(function PostThread({
       }
       return <></>
     },
-    [onRefresh, onPressReply, pal, posts, isTablet, treeView],
+    [onRefresh, onPressReply, pal, posts, isTablet, treeView, showBottomBorder],
   )
 
   // loading
