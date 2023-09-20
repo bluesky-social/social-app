@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Slider} from '@miblanchard/react-native-slider'
 import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
@@ -158,11 +159,12 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Posts from My Feeds (Experimental)
+              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Show
+              Posts from My Feeds
             </Text>
             <Text style={[pal.text, s.pb10]}>
               Set this setting to "Yes" to show samples of your saved feeds in
-              your following feed.
+              your following feed. This is an experimental feature.
             </Text>
             <ToggleButton
               type="default-light"

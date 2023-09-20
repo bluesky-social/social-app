@@ -74,6 +74,7 @@ export const PostThreadScreen = withAuthRequired(({route}: Props) => {
           uri={uri}
           view={view}
           onPressReply={onPressReply}
+          treeView={store.preferences.threadTreeViewEnabled}
         />
       </View>
       {isMobile && (

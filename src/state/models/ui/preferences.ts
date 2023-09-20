@@ -58,6 +58,7 @@ export class PreferencesModel {
   homeFeedMergeFeedEnabled: boolean = false
   threadDefaultSort: string = 'oldest'
   threadFollowedUsersFirst: boolean = true
+  threadTreeViewEnabled: boolean = false
   requireAltTextEnabled: boolean = false
 
   // used to linearize async modifications to state
@@ -91,6 +92,7 @@ export class PreferencesModel {
       homeFeedMergeFeedEnabled: this.homeFeedMergeFeedEnabled,
       threadDefaultSort: this.threadDefaultSort,
       threadFollowedUsersFirst: this.threadFollowedUsersFirst,
+      threadTreeViewEnabled: this.threadTreeViewEnabled,
       requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
@@ -202,12 +204,19 @@ export class PreferencesModel {
       ) {
         this.threadDefaultSort = v.threadDefaultSort
       }
-      // check if tread followed-users-first is enabled in preferences, then hydrate
+      // check if thread followed-users-first is enabled in preferences, then hydrate
       if (
         hasProp(v, 'threadFollowedUsersFirst') &&
         typeof v.threadFollowedUsersFirst === 'boolean'
       ) {
         this.threadFollowedUsersFirst = v.threadFollowedUsersFirst
+      }
+      // check if thread treeview is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'threadTreeViewEnabled') &&
+        typeof v.threadTreeViewEnabled === 'boolean'
+      ) {
+        this.threadTreeViewEnabled = v.threadTreeViewEnabled
       }
       // check if requiring alt text is enabled in preferences, then hydrate
       if (
@@ -522,6 +531,10 @@ export class PreferencesModel {
 
   toggleThreadFollowedUsersFirst() {
     this.threadFollowedUsersFirst = !this.threadFollowedUsersFirst
+  }
+
+  toggleThreadTreeViewEnabled() {
+    this.threadTreeViewEnabled = !this.threadTreeViewEnabled
   }
 
   toggleRequireAltTextEnabled() {
