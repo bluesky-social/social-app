@@ -401,7 +401,7 @@ export const PostThreadItem = observer(function PostThreadItem({
         <PostHider
           testID={`postThreadItem-by-${item.post.author.handle}`}
           href={itemHref}
-          style={pal.view}
+          style={[pal.view]}
           moderation={item.moderation.content}>
           <PostSandboxWarning />
 
@@ -432,8 +432,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             style={[
               styles.layout,
               {
-                paddingBottom:
-                  isThreadedChild || item._showChildReplyLine ? 0 : 8,
+                paddingBottom: item._showChildReplyLine ? 0 : 8,
               },
             ]}>
             <View style={styles.layoutAvi}>
@@ -445,7 +444,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 moderation={item.moderation.avatar}
               />
 
-              {(isThreadedChild || item._showChildReplyLine) && (
+              {item._showChildReplyLine && (
                 <View
                   style={[
                     styles.replyLine,
@@ -473,7 +472,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.alert}
               />
               {item.richText?.text ? (
-                <View style={styles.postTextContainer}>
+                <View
+                  style={[
+                    styles.postTextContainer,
+                    isThreadedChild && {paddingTop: 2},
+                  ]}>
                   <RichText
                     type="post-text"
                     richText={item.richText}
@@ -517,39 +520,30 @@ export const PostThreadItem = observer(function PostThreadItem({
               />
             </View>
           </View>
+          {item._hasMore ? (
+            <Link
+              style={[
+                styles.loadMore,
+                {
+                  paddingLeft: treeView ? 44 : 70,
+                  paddingTop: 0,
+                  paddingBottom: treeView ? 4 : 12,
+                },
+              ]}
+              href={itemHref}
+              title={itemTitle}
+              noFeedback>
+              <Text type="sm-medium" style={pal.textLight}>
+                More
+              </Text>
+              <FontAwesomeIcon
+                icon="angle-right"
+                color={pal.colors.textLight}
+                size={14}
+              />
+            </Link>
+          ) : undefined}
         </PostHider>
-        {item._hasMore ? (
-          <Link
-            style={[
-              styles.loadMore,
-              treeView
-                ? {
-                    borderRadius: 8,
-                    marginHorizontal: 8,
-                    marginTop: 4,
-                  }
-                : {
-                    paddingLeft: 80,
-                    borderTopWidth: 1,
-                    borderTopColor: pal.colors.border,
-                  },
-              treeView ? pal.viewLight : pal.view,
-            ]}
-            href={itemHref}
-            title={itemTitle}
-            noFeedback>
-            <Text style={treeView ? pal.textLight : pal.link}>
-              Continue thread...
-            </Text>
-            <FontAwesomeIcon
-              icon="angle-right"
-              style={
-                (treeView ? pal.textLight : pal.link) as FontAwesomeIconStyle
-              }
-              size={18}
-            />
-          </Link>
-        ) : undefined}
       </PostOuterWrapper>
     )
   }
@@ -594,8 +588,8 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
-        pal.border,
         pal.view,
+        pal.border,
         item._showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         styles.cursor,
       ]}>
@@ -672,7 +666,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 8,
+    paddingBottom: 4,
     paddingRight: 10,
   },
   postTextLargeContainer: {
@@ -701,9 +695,10 @@ const styles = StyleSheet.create({
   },
   loadMore: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 4,
     paddingHorizontal: 20,
-    paddingVertical: 12,
   },
   replyLine: {
     width: 2,
