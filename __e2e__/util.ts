@@ -69,6 +69,14 @@ export async function login(
   await element(by.id('loginNextButton')).tap()
 }
 
+export async function loginAsAlice() {
+  await element(by.id('e2eSignInAlice')).tap()
+}
+
+export async function loginAsBob() {
+  await element(by.id('e2eSignInBob')).tap()
+}
+
 async function openAppForDebugBuild(platform: string, opts: any) {
   const deepLinkUrl = // Local testing with packager
     /*process.env.EXPO_USE_UPDATES
