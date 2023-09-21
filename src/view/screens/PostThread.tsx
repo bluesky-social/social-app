@@ -76,7 +76,7 @@ export const PostThreadScreen = withAuthRequired(
             uri={uri}
             view={view}
             onPressReply={onPressReply}
-            treeView={store.preferences.threadTreeViewEnabled}
+            treeView={!!store.preferences.thread.lab_treeViewEnabled}
           />
         </View>
         {isMobile && !store.shell.minimalShellMode && (

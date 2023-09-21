@@ -8,6 +8,7 @@ import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
+import {ThreadViewPreference} from '../ui/preferences'
 import {PostThreadItemModel} from './post-thread-item'
 
 export class PostThreadModel {
@@ -241,7 +242,7 @@ export class PostThreadModel {
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
-    sortThread(thread, this.rootStore.preferences)
+    sortThread(thread, this.rootStore.preferences.thread)
     this.thread = thread
   }
 }
@@ -263,16 +264,11 @@ function pruneReplies(post: MaybePost) {
   }
 }
 
-interface SortSettings {
-  threadDefaultSort: string
-  threadFollowedUsersFirst: boolean
-}
-
 type MaybeThreadItem =
   | PostThreadItemModel
   | AppBskyFeedDefs.NotFoundPost
   | AppBskyFeedDefs.BlockedPost
-function sortThread(item: MaybeThreadItem, opts: SortSettings) {
+function sortThread(item: MaybeThreadItem, opts: ThreadViewPreference) {
   if ('notFound' in item) {
     return
   }
