@@ -25,6 +25,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {Link} from 'view/com/util/Link'
+import {useAnalytics} from 'lib/analytics/analytics'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -39,6 +40,7 @@ export function ProfileHeaderSuggestedFollows({
   active: boolean
   requestDismiss: () => void
 }) {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const animatedHeight = useSharedValue(0)
@@ -49,6 +51,8 @@ export function ProfileHeaderSuggestedFollows({
 
   React.useEffect(() => {
     if (active) {
+      track('ProfileHeader:SuggestedFollowsOpened')
+
       animatedHeight.value = withTiming(TOTAL_HEIGHT, {
         duration: 500,
         easing: Easing.inOut(Easing.exp),
@@ -59,7 +63,7 @@ export function ProfileHeaderSuggestedFollows({
         easing: Easing.inOut(Easing.exp),
       })
     }
-  }, [active, animatedHeight])
+  }, [active, animatedHeight, track])
 
   const {isLoading, data: suggestedFollows} = useQuery({
     enabled: active,
@@ -211,6 +215,7 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
 }: {
   profile: AppBskyActorDefs.ProfileView
 }) {
+  const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
   const {following, toggle} = useFollowDid({did: profile.did})
@@ -218,11 +223,15 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
 
   const onPress = React.useCallback(async () => {
     try {
-      await toggle()
+      const {following} = await toggle()
+
+      if (following) {
+        track('ProfileHeader:SuggestedFollowFollowed')
+      }
     } catch (e: any) {
       Toast.show('An issue occurred, please try again.')
     }
-  }, [toggle])
+  }, [toggle, track])
 
   return (
     <Link
