@@ -50,14 +50,10 @@ import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 
-type Props = ComposerOpts & {
-  onClose: () => void
-}
-
+type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
   replyTo,
   onPost,
-  onClose,
   quote: initQuote,
   mention: initMention,
 }: Props) {
@@ -91,6 +87,9 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(store), [store])
+  const onClose = useCallback(() => {
+    store.shell.closeComposer()
+  }, [store])
 
   const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
