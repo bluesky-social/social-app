@@ -13,12 +13,14 @@ import {useStores} from 'state/index'
 import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const snapPoints = ['70%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
   const onClose = React.useCallback(() => {
     store.shell.closeModal()
@@ -34,7 +36,11 @@ export function Component({}: {}) {
           </Text>
         </View>
         <View style={styles.flex1} />
-        <View style={styles.btnContainer}>
+        <View
+          style={[
+            styles.btnContainer,
+            isTabletOrDesktop && styles.btnContainerDesktop,
+          ]}>
           <Button
             type="primary"
             label="Done"
@@ -185,6 +191,9 @@ const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  btnContainerDesktop: {
+    marginTop: 14,
   },
   btn: {
     flexDirection: 'row',
