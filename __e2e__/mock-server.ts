@@ -55,7 +55,7 @@ async function main() {
         }
         if ('feeds' in url.query) {
           console.log('Generating mock feed')
-          await server.mocker.createFeed('alice')
+          await server.mocker.createFeed('alice', 'alice-favs', [])
         }
         if ('thread' in url.query) {
           console.log('Generating mock posts')
@@ -69,6 +69,82 @@ async function main() {
               root: {cid: res.cid, uri: res.uri},
             },
           })
+        }
+        if ('mergefeed' in url.query) {
+          console.log('Generating mock users')
+          await server.mocker.createUser('alice')
+          await server.mocker.createUser('bob')
+          await server.mocker.createUser('carla')
+          await server.mocker.createUser('dan')
+          await server.mocker.users.alice.agent.upsertProfile(() => ({
+            displayName: 'Alice',
+            description: 'Test user 1',
+          }))
+          await server.mocker.users.bob.agent.upsertProfile(() => ({
+            displayName: 'Bob',
+            description: 'Test user 2',
+          }))
+          await server.mocker.users.carla.agent.upsertProfile(() => ({
+            displayName: 'Carla',
+            description: 'Test user 3',
+          }))
+          await server.mocker.users.dan.agent.upsertProfile(() => ({
+            displayName: 'Dan',
+            description: 'Test user 4',
+          }))
+          console.log('Generating mock follows')
+          await server.mocker.follow('alice', 'bob')
+          await server.mocker.follow('alice', 'carla')
+          console.log('Generating mock posts')
+          let posts: Record<string, any[]> = {
+            alice: [],
+            bob: [],
+            carla: [],
+            dan: [],
+          }
+          for (let i = 0; i < 10; i++) {
+            for (let user in server.mocker.users) {
+              if (user === 'alice') continue
+              posts[user].push(
+                await server.mocker.createPost(user, `Post ${i}`),
+              )
+            }
+          }
+          for (let i = 0; i < 10; i++) {
+            for (let user in server.mocker.users) {
+              if (user === 'alice') continue
+              if (i % 5 === 0) {
+                await server.mocker.createReply(user, 'Self reply', {
+                  cid: posts[user][i].cid,
+                  uri: posts[user][i].uri,
+                })
+              }
+              if (i % 5 === 1) {
+                await server.mocker.createReply(user, 'Reply to bob', {
+                  cid: posts.bob[i].cid,
+                  uri: posts.bob[i].uri,
+                })
+              }
+              if (i % 5 === 2) {
+                await server.mocker.createReply(user, 'Reply to dan', {
+                  cid: posts.dan[i].cid,
+                  uri: posts.dan[i].uri,
+                })
+              }
+              await server.mocker.users[user].agent.post({text: `Post ${i}`})
+            }
+          }
+          console.log('Generating mock feeds')
+          await server.mocker.createFeed(
+            'alice',
+            'alice-favs',
+            posts.dan.map(p => p.uri),
+          )
+          await server.mocker.createFeed(
+            'alice',
+            'alice-favs2',
+            posts.dan.map(p => p.uri),
+          )
         }
         if ('labels' in url.query) {
           console.log('Generating naughty users with labels')

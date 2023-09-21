@@ -185,6 +185,17 @@ export const CustomFeedScreenInner = observer(
       })
     }, [store, currentFeed])
 
+    const onPressAbout = React.useCallback(() => {
+      store.shell.openModal({
+        name: 'confirm',
+        title: currentFeed?.displayName || '',
+        message:
+          currentFeed?.data.description || 'This feed has no description.',
+        confirmBtnText: 'Close',
+        onPressConfirm() {},
+      })
+    }, [store, currentFeed])
+
     const onPressViewAuthor = React.useCallback(() => {
       navigation.navigate('Profile', {name: handleOrDid})
     }, [handleOrDid, navigation])
@@ -233,7 +244,21 @@ export const CustomFeedScreenInner = observer(
     }, [store, onSoftReset, isScreenFocused])
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
-      let items: DropdownItem[] = [
+      return [
+        currentFeed
+          ? {
+              testID: 'feedHeaderDropdownAboutBtn',
+              label: 'About this feed',
+              onPress: onPressAbout,
+              icon: {
+                ios: {
+                  name: 'info.circle',
+                },
+                android: '',
+                web: 'info',
+              },
+            }
+          : undefined,
         {
           testID: 'feedHeaderDropdownViewAuthorBtn',
           label: 'View author',
@@ -292,10 +317,10 @@ export const CustomFeedScreenInner = observer(
             web: 'share',
           },
         },
-      ]
-      return items
+      ].filter(Boolean) as DropdownItem[]
     }, [
-      currentFeed?.isSaved,
+      currentFeed,
+      onPressAbout,
       onToggleSaved,
       onPressReport,
       onPressShare,

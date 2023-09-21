@@ -4,6 +4,7 @@ import {RootStoreModel} from 'state/index'
 import {timeout} from 'lib/async/timeout'
 import {bundleAsync} from 'lib/async/bundle'
 import {feedUriToHref} from 'lib/strings/url-helpers'
+import {FeedTuner} from '../feed-manip'
 import {FeedAPI, FeedAPIResponse, FeedSourceInfo} from './types'
 
 const REQUEST_WAIT_MS = 500 // 500ms
@@ -43,7 +44,7 @@ export class MergeFeedAPI implements FeedAPI {
 
     // always keep following topped up
     if (this.following.numReady < limit) {
-      promises.push(this.following.fetchNext(30))
+      promises.push(this.following.fetchNext(60))
     }
 
     // pick the next feeds to sample from
@@ -84,7 +85,8 @@ export class MergeFeedAPI implements FeedAPI {
     const i = this.itemCursor++
     const candidateFeeds = this.customFeeds.filter(f => f.numReady > 0)
     const canSample = candidateFeeds.length > 0
-    const hasFollows = this.following.numReady > 0
+    const hasFollows = this.following.hasMore
+    const hasFollowsReady = this.following.numReady > 0
 
     // this condition establishes the frequency that custom feeds are woven into follows
     const shouldSample =
@@ -98,7 +100,11 @@ export class MergeFeedAPI implements FeedAPI {
       // time to sample, or the user isnt following anybody
       return candidateFeeds[this.sampleCursor++ % candidateFeeds.length].take(1)
     }
-    // not time to sample
+    if (!hasFollowsReady) {
+      // stop here so more follows can be fetched
+      return []
+    }
+    // provide follow
     return this.following.take(1)
   }
 
@@ -174,6 +180,13 @@ class MergeFeedSource {
 }
 
 class MergeFeedSource_Following extends MergeFeedSource {
+  tuner = new FeedTuner()
+
+  reset() {
+    super.reset()
+    this.tuner.reset()
+  }
+
   async fetchNext(n: number) {
     return this._fetchNextInner(n)
   }
@@ -183,10 +196,16 @@ class MergeFeedSource_Following extends MergeFeedSource {
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
     const res = await this.rootStore.agent.getTimeline({cursor, limit})
-    // filter out mutes pre-emptively to ensure better mixing
-    res.data.feed = res.data.feed.filter(
-      post => !post.post.author.viewer?.muted,
+    // run the tuner pre-emptively to ensure better mixing
+    const slices = this.tuner.tune(
+      res.data.feed,
+      this.rootStore.preferences.getFeedTuners('home'),
+      {
+        dryRun: false,
+        maintainOrder: true,
+      },
     )
+    res.data.feed = slices.map(slice => slice.rootItem)
     return res
   }
 }

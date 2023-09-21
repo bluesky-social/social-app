@@ -10,6 +10,11 @@ export type MyFeedsItem =
     }
   | {
       _reactKey: string
+      type: 'saved-feeds-loading'
+      numItems: number
+    }
+  | {
+      _reactKey: string
       type: 'discover-feeds-loading'
     }
   | {
@@ -91,7 +96,8 @@ export class MyFeedsUIModel {
     if (this.saved.isLoading) {
       items.push({
         _reactKey: '__saved_feeds_loading__',
-        type: 'spinner',
+        type: 'saved-feeds-loading',
+        numItems: this.rootStore.preferences.savedFeeds.length || 3,
       })
     } else if (this.saved.hasError) {
       items.push({

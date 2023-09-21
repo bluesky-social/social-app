@@ -1,7 +1,7 @@
 import net from 'net'
 import path from 'path'
 import fs from 'fs'
-import {TestPds as DevEnvTestPDS, TestNetworkNoAppView} from '@atproto/dev-env'
+import {TestNetworkNoAppView} from '@atproto/dev-env'
 import {AtUri, BskyAgent} from '@atproto/api'
 
 export interface TestUser {
@@ -24,7 +24,7 @@ export async function createServer(
   const port = await getPort()
   const port2 = await getPort(port + 1)
   const pdsUrl = `http://localhost:${port}`
-  const {pds, plc} = await TestNetworkNoAppView.create({
+  const testNet = await TestNetworkNoAppView.create({
     pds: {port, publicUrl: pdsUrl, inviteRequired},
     plc: {port: port2},
   })
@@ -35,10 +35,10 @@ export async function createServer(
 
   return {
     pdsUrl,
-    mocker: new Mocker(pds, pdsUrl, pic),
+    mocker: new Mocker(testNet, pdsUrl, pic),
     async close() {
-      await pds.server.destroy()
-      await plc.server.destroy()
+      await testNet.pds.server.destroy()
+      await testNet.plc.server.destroy()
     },
   }
 }
@@ -48,11 +48,19 @@ class Mocker {
   users: Record<string, TestUser> = {}
 
   constructor(
-    public pds: DevEnvTestPDS,
+    public testNet: TestNetworkNoAppView,
     public service: string,
     public pic: Uint8Array,
   ) {
     this.agent = new BskyAgent({service})
+  }
+
+  get pds() {
+    return this.testNet.pds
+  }
+
+  get plc() {
+    return this.testNet.plc
   }
 
   // NOTE
@@ -212,24 +220,34 @@ class Mocker {
     return await agent.like(uri, cid)
   }
 
-  async createFeed(user: string) {
+  async createFeed(user: string, rkey: string, posts: string[]) {
     const agent = this.users[user]?.agent
     if (!agent) {
       throw new Error(`Not a user: ${user}`)
     }
-    const fg1Uri = AtUri.make(
+    const fgUri = AtUri.make(
       this.users[user].did,
       'app.bsky.feed.generator',
-      'alice-favs',
+      rkey,
     )
+    const fg1 = await this.testNet.createFeedGen({
+      [fgUri.toString()]: async () => {
+        return {
+          encoding: 'application/json',
+          body: {
+            feed: posts.slice(0, 30).map(uri => ({post: uri})),
+          },
+        }
+      },
+    })
     const avatarRes = await agent.api.com.atproto.repo.uploadBlob(this.pic, {
       encoding: 'image/png',
     })
     return await agent.api.app.bsky.feed.generator.create(
-      {repo: this.users[user].did, rkey: fg1Uri.rkey},
+      {repo: this.users[user].did, rkey},
       {
-        did: 'did:web:fake.com',
-        displayName: 'alices feed',
+        did: fg1.did,
+        displayName: rkey,
         description: 'all my fav stuff',
         avatar: avatarRes.data.blob,
         createdAt: new Date().toISOString(),

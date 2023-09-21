@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Slider} from '@miblanchard/react-native-slider'
 import {Text} from '../com/util/text/Text'
 import {useStores} from 'state/index'
@@ -66,7 +67,10 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
       ]}>
       <ViewHeader title="Home Feed Preferences" showOnDesktop />
       <View
-        style={[styles.titleSection, isTabletOrDesktop && {paddingTop: 20}]}>
+        style={[
+          styles.titleSection,
+          isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
+        ]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
           Fine-tune the content you see on your home screen.
         </Text>
@@ -82,6 +86,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               Set this setting to "No" to hide all replies from your feed.
             </Text>
             <ToggleButton
+              testID="toggleRepliesBtn"
               type="default-light"
               label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
               isSelected={store.preferences.homeFeedRepliesEnabled}
@@ -155,11 +160,12 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Posts from My Feeds (Experimental)
+              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Show
+              Posts from My Feeds
             </Text>
             <Text style={[pal.text, s.pb10]}>
               Set this setting to "Yes" to show samples of your saved feeds in
-              your following feed.
+              your following feed. This is an experimental feature.
             </Text>
             <ToggleButton
               type="default-light"
@@ -175,7 +181,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
         style={[
           styles.btnContainer,
           !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
-          pal.borderDark,
+          pal.border,
         ]}>
         <TouchableOpacity
           testID="confirmBtn"

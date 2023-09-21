@@ -241,7 +241,7 @@ export class PostThreadModel {
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
-    sortThread(thread)
+    sortThread(thread, this.rootStore.preferences)
     this.thread = thread
   }
 }
@@ -263,11 +263,16 @@ function pruneReplies(post: MaybePost) {
   }
 }
 
+interface SortSettings {
+  threadDefaultSort: string
+  threadFollowedUsersFirst: boolean
+}
+
 type MaybeThreadItem =
   | PostThreadItemModel
   | AppBskyFeedDefs.NotFoundPost
   | AppBskyFeedDefs.BlockedPost
-function sortThread(item: MaybeThreadItem) {
+function sortThread(item: MaybeThreadItem, opts: SortSettings) {
   if ('notFound' in item) {
     return
   }
@@ -296,13 +301,31 @@ function sortThread(item: MaybeThreadItem) {
       if (modScore(a.moderation) !== modScore(b.moderation)) {
         return modScore(a.moderation) - modScore(b.moderation)
       }
-      if (a.post.likeCount === b.post.likeCount) {
-        return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
-      } else {
-        return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
+      if (opts.threadFollowedUsersFirst) {
+        const af = a.post.author.viewer?.following
+        const bf = b.post.author.viewer?.following
+        if (af && !bf) {
+          return -1
+        } else if (!af && bf) {
+          return 1
+        }
       }
+      if (opts.threadDefaultSort === 'oldest') {
+        return a.post.indexedAt.localeCompare(b.post.indexedAt)
+      } else if (opts.threadDefaultSort === 'newest') {
+        return b.post.indexedAt.localeCompare(a.post.indexedAt)
+      } else if (opts.threadDefaultSort === 'most-likes') {
+        if (a.post.likeCount === b.post.likeCount) {
+          return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
+        } else {
+          return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
+        }
+      } else if (opts.threadDefaultSort === 'random') {
+        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+      }
+      return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
-    item.replies.forEach(reply => sortThread(reply))
+    item.replies.forEach(reply => sortThread(reply, opts))
   }
 }
 

@@ -8,6 +8,7 @@ import {ModerationOpts} from '@atproto/api'
 import {DEFAULT_FEEDS} from 'lib/constants'
 import {deviceLocales} from 'platform/detection'
 import {getAge} from 'lib/strings/time'
+import {FeedTuner} from 'lib/api/feed-manip'
 import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
@@ -25,6 +26,7 @@ const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
 const DEFAULT_LANG_CODES = (deviceLocales || [])
   .concat(['en', 'ja', 'pt', 'de'])
   .slice(0, 6)
+const THREAD_SORT_VALUES = ['oldest', 'newest', 'most-likes', 'random']
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -56,6 +58,9 @@ export class PreferencesModel {
   homeFeedRepostsEnabled: boolean = true
   homeFeedQuotePostsEnabled: boolean = true
   homeFeedMergeFeedEnabled: boolean = false
+  threadDefaultSort: string = 'oldest'
+  threadFollowedUsersFirst: boolean = true
+  threadTreeViewEnabled: boolean = false
   requireAltTextEnabled: boolean = false
 
   // used to linearize async modifications to state
@@ -88,6 +93,9 @@ export class PreferencesModel {
       homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
       homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
       homeFeedMergeFeedEnabled: this.homeFeedMergeFeedEnabled,
+      threadDefaultSort: this.threadDefaultSort,
+      threadFollowedUsersFirst: this.threadFollowedUsersFirst,
+      threadTreeViewEnabled: this.threadTreeViewEnabled,
       requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
@@ -199,6 +207,28 @@ export class PreferencesModel {
         typeof v.homeFeedMergeFeedEnabled === 'boolean'
       ) {
         this.homeFeedMergeFeedEnabled = v.homeFeedMergeFeedEnabled
+      }
+      // check if thread sort order is set in preferences, then hydrate
+      if (
+        hasProp(v, 'threadDefaultSort') &&
+        typeof v.threadDefaultSort === 'string' &&
+        THREAD_SORT_VALUES.includes(v.threadDefaultSort)
+      ) {
+        this.threadDefaultSort = v.threadDefaultSort
+      }
+      // check if thread followed-users-first is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'threadFollowedUsersFirst') &&
+        typeof v.threadFollowedUsersFirst === 'boolean'
+      ) {
+        this.threadFollowedUsersFirst = v.threadFollowedUsersFirst
+      }
+      // check if thread treeview is enabled in preferences, then hydrate
+      if (
+        hasProp(v, 'threadTreeViewEnabled') &&
+        typeof v.threadTreeViewEnabled === 'boolean'
+      ) {
+        this.threadTreeViewEnabled = v.threadTreeViewEnabled
       }
       // check if requiring alt text is enabled in preferences, then hydrate
       if (
@@ -505,12 +535,72 @@ export class PreferencesModel {
     this.homeFeedMergeFeedEnabled = !this.homeFeedMergeFeedEnabled
   }
 
+  setThreadDefaultSort(v: string) {
+    if (THREAD_SORT_VALUES.includes(v)) {
+      this.threadDefaultSort = v
+    }
+  }
+
+  toggleThreadFollowedUsersFirst() {
+    this.threadFollowedUsersFirst = !this.threadFollowedUsersFirst
+  }
+
+  toggleThreadTreeViewEnabled() {
+    this.threadTreeViewEnabled = !this.threadTreeViewEnabled
+  }
+
   toggleRequireAltTextEnabled() {
     this.requireAltTextEnabled = !this.requireAltTextEnabled
   }
 
   setPrimaryLanguage(lang: string) {
     this.primaryLanguage = lang
+  } 
+
+  getFeedTuners(
+    feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
+  ) {
+    const areRepliesEnabled = this.homeFeedRepliesEnabled
+    const areRepliesByFollowedOnlyEnabled =
+      this.homeFeedRepliesByFollowedOnlyEnabled
+    const repliesThreshold = this.homeFeedRepliesThreshold
+    const areRepostsEnabled = this.homeFeedRepostsEnabled
+    const areQuotePostsEnabled = this.homeFeedQuotePostsEnabled
+
+    if (feedType === 'custom') {
+      return [
+        FeedTuner.dedupReposts,
+        FeedTuner.preferredLangOnly(this.contentLanguages),
+      ]
+    }
+    if (feedType === 'home' || feedType === 'following') {
+      const feedTuners = []
+
+      if (areRepostsEnabled) {
+        feedTuners.push(FeedTuner.dedupReposts)
+      } else {
+        feedTuners.push(FeedTuner.removeReposts)
+      }
+
+      if (areRepliesEnabled) {
+        feedTuners.push(
+          FeedTuner.thresholdRepliesOnly({
+            userDid: this.rootStore.session.data?.did || '',
+            minLikes: repliesThreshold,
+            followedOnly: areRepliesByFollowedOnlyEnabled,
+          }),
+        )
+      } else {
+        feedTuners.push(FeedTuner.removeReplies)
+      }
+
+      if (!areQuotePostsEnabled) {
+        feedTuners.push(FeedTuner.removeQuotePosts)
+      }
+
+      return feedTuners
+    }
+    return []
   }
 }
 

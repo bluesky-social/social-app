@@ -1,18 +1,17 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer, sleep} from '../util'
+import {openApp, loginAsAlice, createServer, sleep} from '../util'
 
 describe('Self-labeling', () => {
-  let service: string
   beforeAll(async () => {
-    service = await createServer('?users')
+    await createServer('?users')
     await openApp({
       permissions: {notifications: 'YES', medialibrary: 'YES', photos: 'YES'},
     })
   })
 
   it('Login', async () => {
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
   })
 

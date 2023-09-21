@@ -83,8 +83,14 @@ export async function DEFAULT_FEEDS(
     // local dev
     const aliceDid = await resolveHandle('alice.test')
     return {
-      pinned: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
-      saved: [`at://${aliceDid}/app.bsky.feed.generator/alice-favs`],
+      pinned: [
+        `at://${aliceDid}/app.bsky.feed.generator/alice-favs`,
+        `at://${aliceDid}/app.bsky.feed.generator/alice-favs2`,
+      ],
+      saved: [
+        `at://${aliceDid}/app.bsky.feed.generator/alice-favs`,
+        `at://${aliceDid}/app.bsky.feed.generator/alice-favs2`,
+      ],
     }
   } else if (IS_STAGING(serviceUrl)) {
     // staging

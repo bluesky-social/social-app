@@ -1,9 +1,10 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {Text} from './text/Text'
 import {DesktopWebTextLink} from './Link'
 import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {UserAvatar} from './UserAvatar'
 import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -19,10 +20,14 @@ interface PostMetaOpts {
     handle: string
     displayName?: string | undefined
   }
-  showAvatar?: boolean
   authorHasWarning: boolean
   postHref: string
   timestamp: string
+  showAvatar?: boolean
+  avatarSize?: number
+  displayNameType?: TypographyVariant
+  displayNameStyle?: StyleProp<TextStyle>
+  style?: StyleProp<ViewStyle>
 }
 
 export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
@@ -31,20 +36,20 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
   const handle = opts.author.handle
 
   return (
-    <View style={styles.metaOneLine}>
-      {opts.showAvatar && typeof opts.author.avatar !== 'undefined' && (
+    <View style={[styles.container, opts.style]}>
+      {opts.showAvatar && (
         <View style={styles.avatar}>
           <UserAvatar
             avatar={opts.author.avatar}
-            size={16}
+            size={opts.avatarSize || 16}
             // TODO moderation
           />
         </View>
       )}
       <View style={styles.maxWidth}>
         <DesktopWebTextLink
-          type="lg-bold"
-          style={pal.text}
+          type={opts.displayNameType || 'lg-bold'}
+          style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
           lineHeight={1.2}
           text={
@@ -90,12 +95,13 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
 })
 
 const styles = StyleSheet.create({
-  metaOneLine: {
+  container: {
     flexDirection: 'row',
-    alignItems: isAndroid ? 'center' : 'baseline',
+    alignItems: 'center',
     paddingBottom: 2,
     gap: 4,
     zIndex: 1,
+    flex: 1,
   },
   avatar: {
     alignSelf: 'center',

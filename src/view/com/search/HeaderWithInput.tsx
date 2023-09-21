@@ -102,6 +102,7 @@ export function HeaderWithInput({
         />
         {query ? (
           <TouchableOpacity
+            testID="searchTextInputClearBtn"
             onPress={onPressClearQuery}
             accessibilityRole="button"
             accessibilityLabel="Clear search query"

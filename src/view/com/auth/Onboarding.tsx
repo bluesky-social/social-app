@@ -7,6 +7,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
+import {RecommendedFollows} from './onboarding/RecommendedFollows'
 
 export const Onboarding = observer(function OnboardingImpl() {
   const pal = usePalette('default')
@@ -27,6 +28,9 @@ export const Onboarding = observer(function OnboardingImpl() {
         )}
         {store.onboarding.step === 'RecommendedFeeds' && (
           <RecommendedFeeds next={next} />
+        )}
+        {store.onboarding.step === 'RecommendedFollows' && (
+          <RecommendedFollows next={next} />
         )}
       </ErrorBoundary>
     </SafeAreaView>
