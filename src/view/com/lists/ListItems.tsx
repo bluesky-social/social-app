@@ -284,7 +284,10 @@ const ListHeader = observer(function ListHeaderImpl({
   const descriptionRT = React.useMemo(
     () =>
       list?.description &&
-      new RichText({text: list.description, facets: list.descriptionFacets}),
+      new RichText({
+        text: list.description,
+        facets: (list.descriptionFacets || [])?.slice(),
+      }),
     [list],
   )
   return (
