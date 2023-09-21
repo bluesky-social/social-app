@@ -3,12 +3,13 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {clamp} from 'lodash'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {colors} from 'lib/styles'
 import {HITSLOP_20} from 'lib/constants'
+import {isWeb} from 'platform/detection'
+import {clamp} from 'lib/numbers'
 
 export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress,
@@ -22,8 +23,12 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
 }) {
   const store = useStores()
   const pal = usePalette('default')
-  const {isDesktop, isTablet, isMobile} = useWebMediaQueries()
+  const {isDesktop, isTablet} = useWebMediaQueries()
   const safeAreaInsets = useSafeAreaInsets()
+  const minMode = store.shell.minimalShellMode
+  const bottom = isTablet
+    ? 50
+    : (minMode ? 16 : 60) + (isWeb ? 20 : clamp(safeAreaInsets.bottom, 15, 60))
   return (
     <TouchableOpacity
       style={[
@@ -32,10 +37,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
         isTablet && styles.loadLatestTablet,
         pal.borderDark,
         pal.view,
-        isMobile &&
-          !store.shell.minimalShellMode && {
-            bottom: 60 + clamp(safeAreaInsets.bottom, 15, 30),
-          },
+        {bottom},
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
   loadLatest: {
     position: 'absolute',
     left: 18,
-    bottom: 35,
+    bottom: 44,
     borderWidth: 1,
     width: 52,
     height: 52,
