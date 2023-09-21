@@ -1,6 +1,11 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer} from '../util'
+/**
+ * This test is being skipped until we can resolve the detox crash issue
+ * with the side drawer.
+ */
+
+import {openApp, loginAsAlice, createServer} from '../util'
 
 describe('invite-codes', () => {
   let service: string
@@ -12,7 +17,7 @@ describe('invite-codes', () => {
 
   it('I can fetch invite codes', async () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
     await element(by.id('viewHeaderDrawerBtn')).tap()
     await expect(element(by.id('drawer'))).toBeVisible()
     await element(by.id('menuItemInviteCodes')).tap()
@@ -47,15 +52,10 @@ describe('invite-codes', () => {
     await expect(element(by.id('recommendedFeedsOnboarding'))).toBeVisible()
     await element(by.id('continueBtn')).tap()
     await expect(element(by.id('homeScreen'))).toBeVisible()
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
-    await element(by.id('signOutBtn')).tap()
   })
 
   it('I get a notification for the new user', async () => {
-    await expect(element(by.id('signInButton'))).toBeVisible()
-    await login(service, 'alice', 'hunter2')
-    await element(by.id('viewHeaderDrawerBtn')).tap()
+    await loginAsAlice()
     await element(by.id('menuItemButton-Notifications')).tap()
     await expect(element(by.id('invitedUser'))).toBeVisible()
   })

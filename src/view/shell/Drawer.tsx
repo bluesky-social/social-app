@@ -28,8 +28,7 @@ import {
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
   UserIconSolid,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
+  HashtagIcon,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -64,8 +63,13 @@ export const DrawerContent = observer(function DrawerContentImpl() {
       const state = navigation.getState()
       store.shell.closeDrawer()
       if (isWeb) {
-        // @ts-ignore must be Home, Search, Notifications, or MyProfile
-        navigation.navigate(tab)
+        // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
+        if (tab === 'MyProfile') {
+          navigation.navigate('Profile', {name: store.me.handle})
+        } else {
+          // @ts-ignore must be Home, Search, Notifications, or MyProfile
+          navigation.navigate(tab)
+        }
       } else {
         const tabState = getTabState(state, tab)
         if (tabState === TabState.InsideAtRoot) {
@@ -140,41 +144,45 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
       ]}>
       <SafeAreaView style={s.flex1}>
-        <View style={styles.main}>
-          <TouchableOpacity
-            testID="profileCardButton"
-            accessibilityLabel="Profile"
-            accessibilityHint="Navigates to your profile"
-            onPress={onPressProfile}>
-            <UserAvatar size={80} avatar={store.me.avatar} />
-            <Text
-              type="title-lg"
-              style={[pal.text, s.bold, styles.profileCardDisplayName]}
-              numberOfLines={1}>
-              {store.me.displayName || store.me.handle}
-            </Text>
-            <Text
-              type="2xl"
-              style={[pal.textLight, styles.profileCardHandle]}
-              numberOfLines={1}>
-              @{store.me.handle}
-            </Text>
-            <Text
-              type="xl"
-              style={[pal.textLight, styles.profileCardFollowers]}>
-              <Text type="xl-medium" style={pal.text}>
-                {formatCountShortOnly(store.me.followersCount ?? 0)}
-              </Text>{' '}
-              {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
-              <Text type="xl-medium" style={pal.text}>
-                {formatCountShortOnly(store.me.followsCount ?? 0)}
-              </Text>{' '}
-              following
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <InviteCodes />
         <ScrollView style={styles.main}>
+          <View style={{}}>
+            <TouchableOpacity
+              testID="profileCardButton"
+              accessibilityLabel="Profile"
+              accessibilityHint="Navigates to your profile"
+              onPress={onPressProfile}>
+              <UserAvatar size={80} avatar={store.me.avatar} />
+              <Text
+                type="title-lg"
+                style={[pal.text, s.bold, styles.profileCardDisplayName]}
+                numberOfLines={1}>
+                {store.me.displayName || store.me.handle}
+              </Text>
+              <Text
+                type="2xl"
+                style={[pal.textLight, styles.profileCardHandle]}
+                numberOfLines={1}>
+                @{store.me.handle}
+              </Text>
+              <Text
+                type="xl"
+                style={[pal.textLight, styles.profileCardFollowers]}>
+                <Text type="xl-medium" style={pal.text}>
+                  {formatCountShortOnly(store.me.followersCount ?? 0)}
+                </Text>{' '}
+                {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
+                <Text type="xl-medium" style={pal.text}>
+                  {formatCountShortOnly(store.me.followsCount ?? 0)}
+                </Text>{' '}
+                following
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <InviteCodes style={{paddingLeft: 0}} />
+
+          <View style={{height: 10}} />
+
           <MenuItem
             icon={
               isAtSearch ? (
@@ -249,21 +257,21 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           <MenuItem
             icon={
               isAtFeeds ? (
-                <SatelliteDishIconSolid
-                  strokeWidth={1.5}
+                <HashtagIcon
+                  strokeWidth={3}
                   style={pal.text as FontAwesomeIconStyle}
                   size={24}
                 />
               ) : (
-                <SatelliteDishIcon
-                  strokeWidth={1.5}
+                <HashtagIcon
+                  strokeWidth={2}
                   style={pal.text as FontAwesomeIconStyle}
                   size={24}
                 />
               )
             }
-            label="My Feeds"
-            accessibilityLabel="My Feeds"
+            label="Feeds"
+            accessibilityLabel="Feeds"
             accessibilityHint=""
             onPress={onPressMyFeeds}
           />
@@ -308,6 +316,8 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             accessibilityHint=""
             onPress={onPressSettings}
           />
+
+          <View style={styles.smallSpacer} />
           <View style={styles.smallSpacer} />
         </ScrollView>
         <View style={styles.footer}>
@@ -400,7 +410,11 @@ function MenuItem({
   )
 }
 
-const InviteCodes = observer(function InviteCodesImpl() {
+const InviteCodes = observer(function InviteCodesImpl({
+  style,
+}: {
+  style?: StyleProp<ViewStyle>
+}) {
   const {track} = useAnalytics()
   const store = useStores()
   const pal = usePalette('default')
@@ -413,7 +427,7 @@ const InviteCodes = observer(function InviteCodesImpl() {
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"
-      style={[styles.inviteCodes]}
+      style={[styles.inviteCodes, style]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={
@@ -443,7 +457,6 @@ const InviteCodes = observer(function InviteCodesImpl() {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    paddingTop: 20,
     paddingBottom: 50,
     maxWidth: 300,
   },
@@ -519,6 +532,7 @@ const styles = StyleSheet.create({
   },
 
   footer: {
+    flexWrap: 'wrap',
     flexDirection: 'row',
     gap: 8,
     paddingRight: 20,

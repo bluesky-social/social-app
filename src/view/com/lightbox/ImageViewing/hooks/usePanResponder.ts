@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Copyright (c) JOB TODAY S.A. and its affiliates.
  *
@@ -7,19 +6,19 @@
  *
  */
 
-import {useMemo, useEffect} from 'react'
+import {useEffect} from 'react'
 import {
   Animated,
   Dimensions,
   GestureResponderEvent,
   GestureResponderHandlers,
   NativeTouchEvent,
+  PanResponder,
   PanResponderGestureState,
 } from 'react-native'
 
 import {Position} from '../@types'
 import {
-  createPanResponder,
   getDistanceBetweenTouches,
   getImageTranslate,
   getImageDimensionsByTranslate,
@@ -29,8 +28,10 @@ const SCREEN = Dimensions.get('window')
 const SCREEN_WIDTH = SCREEN.width
 const SCREEN_HEIGHT = SCREEN.height
 const MIN_DIMENSION = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT)
+const ANDROID_BAR_HEIGHT = 24
 
-const SCALE_MAX = 2
+const MIN_ZOOM = 2
+const MAX_SCALE = 2
 const DOUBLE_TAP_DELAY = 300
 const OUT_BOUND_MULTIPLIER = 0.75
 
@@ -87,23 +88,56 @@ const usePanResponder = ({
     return [top, left, bottom, right]
   }
 
-  const getTranslateInBounds = (translate: Position, scale: number) => {
-    const inBoundTranslate = {x: translate.x, y: translate.y}
-    const [topBound, leftBound, bottomBound, rightBound] = getBounds(scale)
+  const getTransformAfterDoubleTap = (
+    touchX: number,
+    touchY: number,
+  ): [number, Position] => {
+    let nextScale = initialScale
+    let nextTranslateX = initialTranslate.x
+    let nextTranslateY = initialTranslate.y
 
-    if (translate.x > leftBound) {
-      inBoundTranslate.x = leftBound
-    } else if (translate.x < rightBound) {
-      inBoundTranslate.x = rightBound
+    // First, let's figure out how much we want to zoom in.
+    // We want to try to zoom in at least close enough to get rid of black bars.
+    const imageAspect = imageDimensions.width / imageDimensions.height
+    const screenAspect = SCREEN.width / SCREEN.height
+    let zoom = Math.max(
+      imageAspect / screenAspect,
+      screenAspect / imageAspect,
+      MIN_ZOOM,
+    )
+    // Don't zoom so hard that the original image's pixels become blurry.
+    zoom = Math.min(zoom, MAX_SCALE / initialScale)
+    nextScale = initialScale * zoom
+
+    // Next, let's see if we need to adjust the scaled image translation.
+    // Ideally, we want the tapped point to stay under the finger after the scaling.
+    const dx = SCREEN.width / 2 - touchX
+    const dy = SCREEN.height / 2 - (touchY - ANDROID_BAR_HEIGHT)
+    // Before we try to adjust the translation, check how much wiggle room we have.
+    // We don't want to introduce new black bars or make existing black bars unbalanced.
+    const [topBound, leftBound, bottomBound, rightBound] = getBounds(nextScale)
+    if (leftBound > rightBound) {
+      // Content fills the screen horizontally so we have horizontal wiggle room.
+      // Try to keep the tapped point under the finger after zoom.
+      nextTranslateX += dx * zoom - dx
+      nextTranslateX = Math.min(nextTranslateX, leftBound)
+      nextTranslateX = Math.max(nextTranslateX, rightBound)
+    }
+    if (topBound > bottomBound) {
+      // Content fills the screen vertically so we have vertical wiggle room.
+      // Try to keep the tapped point under the finger after zoom.
+      nextTranslateY += dy * zoom - dy
+      nextTranslateY = Math.min(nextTranslateY, topBound)
+      nextTranslateY = Math.max(nextTranslateY, bottomBound)
     }
 
-    if (translate.y > topBound) {
-      inBoundTranslate.y = topBound
-    } else if (translate.y < bottomBound) {
-      inBoundTranslate.y = bottomBound
-    }
-
-    return inBoundTranslate
+    return [
+      nextScale,
+      {
+        x: nextTranslateX,
+        y: nextTranslateY,
+      },
+    ]
   }
 
   const fitsScreenByWidth = () =>
@@ -125,8 +159,12 @@ const usePanResponder = ({
     longPressHandlerRef && clearTimeout(longPressHandlerRef)
   }
 
-  const handlers = {
-    onGrant: (
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponderCapture: () => true,
+    onMoveShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponderCapture: () => true,
+    onPanResponderGrant: (
       _: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
@@ -138,7 +176,7 @@ const usePanResponder = ({
 
       longPressHandlerRef = setTimeout(onLongPress, delayLongPress)
     },
-    onStart: (
+    onPanResponderStart: (
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
@@ -157,25 +195,18 @@ const usePanResponder = ({
       )
 
       if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
-        const isScaled = currentTranslate.x !== initialTranslate.x // currentScale !== initialScale;
-        const {pageX: touchX, pageY: touchY} = event.nativeEvent.touches[0]
-        const targetScale = SCALE_MAX
-        const nextScale = isScaled ? initialScale : targetScale
-        const nextTranslate = isScaled
-          ? initialTranslate
-          : getTranslateInBounds(
-              {
-                x:
-                  initialTranslate.x +
-                  (SCREEN_WIDTH / 2 - touchX) * (targetScale / currentScale),
-                y:
-                  initialTranslate.y +
-                  (SCREEN_HEIGHT / 2 - touchY) * (targetScale / currentScale),
-              },
-              targetScale,
-            )
+        let nextScale = initialScale
+        let nextTranslate = initialTranslate
 
-        onZoom(!isScaled)
+        const willZoom = currentScale === initialScale
+        if (willZoom) {
+          const {pageX: touchX, pageY: touchY} = event.nativeEvent.touches[0]
+          ;[nextScale, nextTranslate] = getTransformAfterDoubleTap(
+            touchX,
+            touchY,
+          )
+        }
+        onZoom(willZoom)
 
         Animated.parallel(
           [
@@ -206,7 +237,7 @@ const usePanResponder = ({
         lastTapTS = Date.now()
       }
     },
-    onMove: (
+    onPanResponderMove: (
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
@@ -328,7 +359,7 @@ const usePanResponder = ({
         tmpTranslate = {x: nextTranslateX, y: nextTranslateY}
       }
     },
-    onRelease: () => {
+    onPanResponderRelease: () => {
       cancelLongPressHandle()
 
       if (isDoubleTapPerformed) {
@@ -336,8 +367,8 @@ const usePanResponder = ({
       }
 
       if (tmpScale > 0) {
-        if (tmpScale < initialScale || tmpScale > SCALE_MAX) {
-          tmpScale = tmpScale < initialScale ? initialScale : SCALE_MAX
+        if (tmpScale < initialScale || tmpScale > MAX_SCALE) {
+          tmpScale = tmpScale < initialScale ? initialScale : MAX_SCALE
           Animated.timing(scaleValue, {
             toValue: tmpScale,
             duration: 100,
@@ -390,9 +421,9 @@ const usePanResponder = ({
         tmpTranslate = null
       }
     },
-  }
-
-  const panResponder = useMemo(() => createPanResponder(handlers), [handlers])
+    onPanResponderTerminationRequest: () => false,
+    onShouldBlockNativeResponder: () => false,
+  })
 
   return [panResponder.panHandlers, scaleValue, translateValue]
 }

@@ -139,7 +139,7 @@ export class RootStoreModel {
     this.agent = agent
     applyDebugHeader(this.agent)
     this.me.clear()
-    /* dont await */ this.preferences.sync()
+    await this.preferences.sync()
     await this.me.load()
     if (!hadSession) {
       await resetNavigation()

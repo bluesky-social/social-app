@@ -38,11 +38,11 @@ export function PostAlerts({
       accessibilityHint=""
       style={[styles.container, pal.viewLight, style]}>
       <ShieldExclamation style={pal.text} size={16} />
-      <Text type="lg" style={pal.text}>
-        {desc.name}
-      </Text>
-      <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
-        Learn More
+      <Text type="lg" style={[pal.text]}>
+        {desc.name}{' '}
+        <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
+          Learn More
+        </Text>
       </Text>
     </Pressable>
   )

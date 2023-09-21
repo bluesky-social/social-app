@@ -49,6 +49,9 @@ export const styles = StyleSheet.create({
   homeIcon: {
     top: 0,
   },
+  feedsIcon: {
+    top: -2,
+  },
   searchIcon: {
     top: -2,
   },

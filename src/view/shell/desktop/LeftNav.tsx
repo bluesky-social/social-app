@@ -32,8 +32,7 @@ import {
   CogIconSolid,
   ComposeIcon2,
   HandIcon,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
+  HashtagIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
@@ -272,20 +271,20 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       <NavItem
         href="/feeds"
         icon={
-          <SatelliteDishIcon
-            strokeWidth={1.75}
+          <HashtagIcon
+            strokeWidth={2.25}
             style={pal.text as FontAwesomeIconStyle}
             size={isDesktop ? 24 : 28}
           />
         }
         iconFilled={
-          <SatelliteDishIconSolid
-            strokeWidth={1.75}
+          <HashtagIcon
+            strokeWidth={2.5}
             style={pal.text as FontAwesomeIconStyle}
             size={isDesktop ? 24 : 28}
           />
         }
-        label="My Feeds"
+        label="Feeds"
       />
       <NavItem
         href="/notifications"

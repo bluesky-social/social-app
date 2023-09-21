@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 1,
     top: 0,
+    pointerEvents: 'box-none',
   },
   footer: {
     position: 'absolute',

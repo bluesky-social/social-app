@@ -1,16 +1,15 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer} from '../util'
+import {openApp, loginAsAlice, createServer} from '../util'
 
 describe('Thread screen', () => {
-  let service: string
   beforeAll(async () => {
-    service = await createServer('?users&follows&thread')
+    await createServer('?users&follows&thread')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
   it('Login & navigate to thread', async () => {
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
     await element(by.id('feedItem-by-bob.test')).atIndex(0).tap()
     await expect(

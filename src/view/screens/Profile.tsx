@@ -69,9 +69,7 @@ export const ProfileScreen = withAuthRequired(
         let aborted = false
         store.shell.setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
-        if (hasSetup) {
-          uiState.update()
-        } else {
+        if (!hasSetup) {
           uiState.setup().then(() => {
             if (aborted) {
               return
@@ -189,7 +187,9 @@ export const ProfileScreen = withAuthRequired(
               />
             )
           } else if (item instanceof CustomFeedModel) {
-            return <CustomFeed item={item} showSaveBtn showLikes />
+            return (
+              <CustomFeed item={item} showSaveBtn showLikes showDescription />
+            )
           }
           // if section is posts or posts & replies
         } else {

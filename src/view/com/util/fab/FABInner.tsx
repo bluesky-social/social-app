@@ -6,7 +6,8 @@ import {gradients} from 'lib/styles'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isWeb} from 'platform/detection'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {clamp} from 'lib/numbers'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -19,12 +20,13 @@ export const FABInner = observer(function FABInnerImpl({
   icon,
   ...props
 }: FABProps) {
+  const insets = useSafeAreaInsets()
   const {isTablet} = useWebMediaQueries()
   const store = useStores()
   const interp = useAnimatedValue(0)
   React.useEffect(() => {
     Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 1 : 0,
+      toValue: store.shell.minimalShellMode ? 0 : 1,
       duration: 100,
       useNativeDriver: true,
       isInteraction: false,
@@ -33,25 +35,14 @@ export const FABInner = observer(function FABInnerImpl({
   const transform = isTablet
     ? undefined
     : {
-        transform: [{translateY: Animated.multiply(interp, 60)}],
+        transform: [{translateY: Animated.multiply(interp, -44)}],
       }
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
+  const right = isTablet ? 50 : 24
+  const bottom = isTablet ? 50 : clamp(insets.bottom, 15, 60) + 15
   return (
     <TouchableWithoutFeedback testID={testID} {...props}>
-      <Animated.View
-        style={[
-          styles.outer,
-          size,
-          isWeb && isTablet
-            ? {
-                right: 50,
-                bottom: 50,
-              }
-            : {
-                bottom: 114,
-              },
-          transform,
-        ]}>
+      <Animated.View style={[styles.outer, size, {right, bottom}, transform]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
@@ -78,8 +69,6 @@ const styles = StyleSheet.create({
   outer: {
     position: 'absolute',
     zIndex: 1,
-    right: 24,
-    bottom: 94,
   },
   inner: {
     justifyContent: 'center',

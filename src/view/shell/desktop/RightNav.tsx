@@ -4,6 +4,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {DesktopSearch} from './Search'
+import {DesktopFeeds} from './Feeds'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
@@ -26,6 +27,7 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
   return (
     <View style={[styles.rightNav, pal.view]}>
       {store.session.hasSession && <DesktopSearch />}
+      {store.session.hasSession && <DesktopFeeds />}
       <View style={styles.message}>
         {store.session.isSandbox ? (
           <View style={[palError.view, styles.messageLine, s.p10]}>
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    marginTop: 20,
+    paddingVertical: 18,
     paddingHorizontal: 10,
   },
   messageLine: {
@@ -134,7 +136,6 @@ const styles = StyleSheet.create({
   },
 
   inviteCodes: {
-    marginTop: 12,
     borderTopWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,

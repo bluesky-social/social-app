@@ -9,6 +9,8 @@ import {Shell} from './view/shell/index'
 import {ToastContainer} from './view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {observer} from 'mobx-react-lite'
+import {QueryClientProvider} from '@tanstack/react-query'
+import {queryClient} from 'lib/react-query'
 
 const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -30,18 +32,20 @@ const App = observer(function AppImpl() {
   }
 
   return (
-    <ThemeProvider theme={rootStore.shell.colorMode}>
-      <RootSiblingParent>
-        <analytics.Provider>
-          <RootStoreProvider value={rootStore}>
-            <SafeAreaProvider>
-              <Shell />
-            </SafeAreaProvider>
-            <ToastContainer />
-          </RootStoreProvider>
-        </analytics.Provider>
-      </RootSiblingParent>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={rootStore.shell.colorMode}>
+        <RootSiblingParent>
+          <analytics.Provider>
+            <RootStoreProvider value={rootStore}>
+              <SafeAreaProvider>
+                <Shell />
+              </SafeAreaProvider>
+              <ToastContainer />
+            </RootStoreProvider>
+          </analytics.Provider>
+        </RootSiblingParent>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 })
 

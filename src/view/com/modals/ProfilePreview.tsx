@@ -35,13 +35,18 @@ export const Component = observer(function ProfilePreviewImpl({
   }, [model, screen])
 
   return (
-    <View style={[pal.view, s.flex1]}>
+    <View testID="profilePreview" style={[pal.view, s.flex1]}>
       <View
         style={[
           styles.headerWrapper,
           isLoading && isIOS && styles.headerPositionAdjust,
         ]}>
-        <ProfileHeader view={model} hideBackButton onRefreshAll={() => {}} />
+        <ProfileHeader
+          view={model}
+          hideBackButton
+          onRefreshAll={() => {}}
+          isProfilePreview
+        />
       </View>
       <View style={[styles.hintWrapper, pal.view]}>
         <View style={styles.hint}>

@@ -8,22 +8,17 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
 import {HeartIcon} from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {makeRecordUri} from 'lib/strings/url-helpers'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 
 export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
-  did,
-  rkey,
+  item,
 }: {
-  did: string
-  rkey: string
+  item: CustomFeedModel
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  const uri = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
-  const item = useCustomFeed(uri)
   if (!item) return null
   const onToggle = async () => {
     if (item.isSaved) {

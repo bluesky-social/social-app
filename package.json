@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.50.0",
+  "version": "1.51.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -21,10 +21,11 @@
     "e2e:mock-server": "ts-node __e2e__/mock-server.ts",
     "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build": "detox build -c ios.sim.debug",
-    "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all"
+    "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all",
+    "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
-    "@atproto/api": "^0.6.12",
+    "@atproto/api": "^0.6.14",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
@@ -52,6 +53,7 @@
     "@segment/analytics-react-native": "^2.10.1",
     "@segment/sovran-react-native": "^0.4.5",
     "@sentry/react-native": "5.5.0",
+    "@tanstack/react-query": "^4.33.0",
     "@tiptap/core": "^2.0.0-beta.220",
     "@tiptap/extension-document": "^2.0.0-beta.220",
     "@tiptap/extension-hard-break": "^2.0.3",
@@ -65,6 +67,7 @@
     "@tiptap/suggestion": "^2.0.0-beta.220",
     "@types/node": "^18.16.2",
     "@zxing/text-encoding": "^0.9.0",
+    "array.prototype.findlast": "^1.2.3",
     "await-lock": "^2.2.2",
     "base64-js": "^1.5.1",
     "bcp-47-match": "^2.0.3",
@@ -79,8 +82,8 @@
     "expo-dev-client": "2.4.7",
     "expo-device": "~5.4.0",
     "expo-image": "~1.3.2",
-    "expo-image-manipulator": "~11.3.0",
-    "expo-image-picker": "~14.3.2",
+    "expo-image-manipulator": "~11.5.0",
+    "expo-image-picker": "~14.5.0",
     "expo-localization": "~14.3.0",
     "expo-media-library": "~15.4.1",
     "expo-notifications": "~0.20.1",
@@ -99,6 +102,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.omit": "^4.5.0",
     "lodash.once": "^4.1.1",
+    "lodash.random": "^3.2.0",
     "lodash.samplesize": "^4.2.0",
     "lodash.set": "^4.3.2",
     "lodash.shuffle": "^4.2.0",
@@ -147,8 +151,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.2.3",
-    "@atproto/pds": "^0.2.0-beta.2",
+    "@atproto/dev-env": "^0.2.5",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
@@ -165,6 +168,7 @@
     "@types/lodash.isequal": "^4.5.6",
     "@types/lodash.omit": "^4.5.7",
     "@types/lodash.once": "^4.1.7",
+    "@types/lodash.random": "^3.2.7",
     "@types/lodash.samplesize": "^4.2.7",
     "@types/lodash.set": "^4.3.7",
     "@types/lodash.shuffle": "^4.2.7",

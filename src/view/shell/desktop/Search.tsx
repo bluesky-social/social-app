@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     width: 300,
+    paddingBottom: 18,
   },
   search: {
     paddingHorizontal: 16,

@@ -1,16 +1,15 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer} from '../util'
+import {openApp, loginAsAlice, createServer} from '../util'
 
 describe('Shell', () => {
-  let service: string
   beforeAll(async () => {
-    service = await createServer('?users')
+    await createServer('?users')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
   it('Login', async () => {
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
   })
 

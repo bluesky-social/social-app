@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
@@ -10,7 +10,10 @@ import {Button} from 'view/com/util/forms/Button'
 import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {RECOMMENDED_FEEDS} from 'lib/constants'
+import {useQuery} from '@tanstack/react-query'
+import {useStores} from 'state/index'
+import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 
 type Props = {
   next: () => void
@@ -18,8 +21,33 @@ type Props = {
 export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
   next,
 }: Props) {
+  const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
+  const {isLoading, data: recommendedFeeds} = useQuery({
+    staleTime: Infinity, // fixed list rn, never refetch
+    queryKey: ['onboarding', 'recommended_feeds'],
+    async queryFn() {
+      try {
+        const {
+          data: {feeds},
+          success,
+        } = await store.agent.app.bsky.feed.getSuggestedFeeds()
+
+        if (!success) {
+          return []
+        }
+
+        return (feeds.length ? feeds : []).map(feed => {
+          return new CustomFeedModel(store, feed)
+        })
+      } catch (e) {
+        return []
+      }
+    },
+  })
+
+  const hasFeeds = recommendedFeeds && recommendedFeeds.length
 
   const title = (
     <>
@@ -68,7 +96,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Done
+              Next
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -86,12 +114,20 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          <FlatList
-            data={RECOMMENDED_FEEDS}
-            renderItem={({item}) => <RecommendedFeedsItem {...item} />}
-            keyExtractor={item => item.did + item.rkey}
-            style={{flex: 1}}
-          />
+          {hasFeeds ? (
+            <FlatList
+              data={recommendedFeeds}
+              renderItem={({item}) => <RecommendedFeedsItem item={item} />}
+              keyExtractor={item => item.uri}
+              style={{flex: 1}}
+            />
+          ) : isLoading ? (
+            <View>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : (
+            <ErrorMessage message="Failed to load recommended feeds" />
+          )}
         </TitleColumnLayout>
       </TabletOrDesktop>
       <Mobile>
@@ -106,12 +142,22 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             pinned feeds.
           </Text>
 
-          <FlatList
-            data={RECOMMENDED_FEEDS}
-            renderItem={({item}) => <RecommendedFeedsItem {...item} />}
-            keyExtractor={item => item.did + item.rkey}
-            style={{flex: 1}}
-          />
+          {hasFeeds ? (
+            <FlatList
+              data={recommendedFeeds}
+              renderItem={({item}) => <RecommendedFeedsItem item={item} />}
+              keyExtractor={item => item.uri}
+              style={{flex: 1}}
+            />
+          ) : isLoading ? (
+            <View style={{flex: 1}}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : (
+            <View style={{flex: 1}}>
+              <ErrorMessage message="Failed to load recommended feeds" />
+            </View>
+          )}
 
           <Button
             onPress={next}
@@ -169,6 +215,7 @@ const mStyles = StyleSheet.create({
     marginBottom: 16,
     marginHorizontal: 16,
     marginTop: 16,
+    alignItems: 'center',
   },
   buttonText: {
     textAlign: 'center',

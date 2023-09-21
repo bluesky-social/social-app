@@ -70,7 +70,7 @@ export const SavedFeeds = withAuthRequired(
       return (
         <>
           <View style={[styles.footerLinks, pal.border]}>
-            <Link style={styles.footerLink} href="/search/feeds">
+            <Link style={styles.footerLink} href="/feeds">
               <FontAwesomeIcon
                 icon="search"
                 size={18}

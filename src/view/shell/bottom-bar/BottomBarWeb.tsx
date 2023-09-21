@@ -15,13 +15,14 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  SatelliteDishIcon,
-  SatelliteDishIconSolid,
+  HashtagIcon,
   UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
 import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {makeProfileLink} from 'lib/routes/links'
+import {CommonNavigatorParams} from 'lib/routes/types'
 
 export const BottomBarWeb = observer(function BottomBarWebImpl() {
   const store = useStores()
@@ -66,12 +67,11 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
       </NavItem>
       <NavItem routeName="Feeds" href="/feeds">
         {({isActive}) => {
-          const Icon = isActive ? SatelliteDishIconSolid : SatelliteDishIcon
           return (
-            <Icon
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
+            <HashtagIcon
+              size={22}
+              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+              strokeWidth={isActive ? 4 : 2.5}
             />
           )
         }}
@@ -89,13 +89,16 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
         }}
       </NavItem>
       <NavItem routeName="Profile" href={makeProfileLink(store.me)}>
-        {() => (
-          <UserIcon
-            size={28}
-            strokeWidth={1.5}
-            style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-          />
-        )}
+        {({isActive}) => {
+          const Icon = isActive ? UserIconSolid : UserIcon
+          return (
+            <Icon
+              size={28}
+              strokeWidth={1.5}
+              style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+            />
+          )
+        }}
       </NavItem>
     </Animated.View>
   )
@@ -107,7 +110,14 @@ const NavItem: React.FC<{
   routeName: string
 }> = ({children, href, routeName}) => {
   const currentRoute = useNavigationState(getCurrentRoute)
-  const isActive = isTab(currentRoute.name, routeName)
+  const store = useStores()
+  const isActive =
+    currentRoute.name === 'Profile'
+      ? isTab(currentRoute.name, routeName) &&
+        (currentRoute.params as CommonNavigatorParams['Profile']).name ===
+          store.me.handle
+      : isTab(currentRoute.name, routeName)
+
   return (
     <Link href={href} style={styles.ctrl}>
       {children({isActive})}
