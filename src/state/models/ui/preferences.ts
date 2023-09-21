@@ -555,7 +555,7 @@ export class PreferencesModel {
 
   setPrimaryLanguage(lang: string) {
     this.primaryLanguage = lang
-  } 
+  }
 
   getFeedTuners(
     feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
