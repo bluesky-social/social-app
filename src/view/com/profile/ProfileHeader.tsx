@@ -38,17 +38,20 @@ import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {Link} from '../util/Link'
+import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 
 interface Props {
   view: ProfileModel
   onRefreshAll: () => void
   hideBackButton?: boolean
+  isProfilePreview?: boolean
 }
 
 export const ProfileHeader = observer(function ProfileHeaderImpl({
   view,
   onRefreshAll,
   hideBackButton = false,
+  isProfilePreview,
 }: Props) {
   const pal = usePalette('default')
 
@@ -95,6 +98,7 @@ export const ProfileHeader = observer(function ProfileHeaderImpl({
       view={view}
       onRefreshAll={onRefreshAll}
       hideBackButton={hideBackButton}
+      isProfilePreview={isProfilePreview}
     />
   )
 })
@@ -103,6 +107,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   view,
   onRefreshAll,
   hideBackButton = false,
+  isProfilePreview,
 }: Props) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
@@ -111,6 +116,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const {track} = useAnalytics()
   const invalidHandle = isInvalidHandle(view.handle)
   const {isDesktop} = useWebMediaQueries()
+  const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
 
   const onPressBack = React.useCallback(() => {
     navigation.goBack()
@@ -133,6 +139,8 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     )
     view?.toggleFollowing().then(
       () => {
+        setShowSuggestedFollows(Boolean(view.viewer.following))
+
         Toast.show(
           `${
             view.viewer.following ? 'Following' : 'No longer following'
@@ -141,7 +149,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       },
       err => store.log.error('Failed to toggle follow', err),
     )
-  }, [track, view, store.log])
+  }, [track, view, store.log, setShowSuggestedFollows])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -373,6 +381,39 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             </TouchableOpacity>
           ) : !view.viewer.blockedBy ? (
             <>
+              {!isProfilePreview && (
+                <TouchableOpacity
+                  testID="suggestedFollowsBtn"
+                  onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
+                  style={[
+                    styles.btn,
+                    styles.mainBtn,
+                    pal.btn,
+                    {
+                      paddingHorizontal: 10,
+                      backgroundColor: showSuggestedFollows
+                        ? colors.blue3
+                        : pal.viewLight.backgroundColor,
+                    },
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Show follows similar to ${view.handle}`}
+                  accessibilityHint={`Shows a list of users similar to this user.`}>
+                  <FontAwesomeIcon
+                    icon="user-plus"
+                    style={[
+                      pal.text,
+                      {
+                        color: showSuggestedFollows
+                          ? colors.white
+                          : pal.text.color,
+                      },
+                    ]}
+                    size={14}
+                  />
+                </TouchableOpacity>
+              )}
+
               {store.me.follows.getFollowState(view.did) ===
               FollowState.Following ? (
                 <TouchableOpacity
@@ -504,6 +545,15 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         )}
         <ProfileHeaderAlerts moderation={view.moderation} />
       </View>
+
+      {!isProfilePreview && (
+        <ProfileHeaderSuggestedFollows
+          actorDid={view.did}
+          active={showSuggestedFollows}
+          requestDismiss={() => setShowSuggestedFollows(!showSuggestedFollows)}
+        />
+      )}
+
       {!isDesktop && !hideBackButton && (
         <TouchableWithoutFeedback
           onPress={onPressBack}

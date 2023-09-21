@@ -41,7 +41,12 @@ export const Component = observer(function ProfilePreviewImpl({
           styles.headerWrapper,
           isLoading && isIOS && styles.headerPositionAdjust,
         ]}>
-        <ProfileHeader view={model} hideBackButton onRefreshAll={() => {}} />
+        <ProfileHeader
+          view={model}
+          hideBackButton
+          onRefreshAll={() => {}}
+          isProfilePreview
+        />
       </View>
       <View style={[styles.hintWrapper, pal.view]}>
         <View style={styles.hint}>
