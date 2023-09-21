@@ -25,7 +25,7 @@ export function Selector({
     undefined,
   )
   const itemRefs = useMemo(
-    () => Array.from({length: items.length}).map(() => createRef<View>()),
+    () => Array.from({length: items.length}, () => createRef<View>()),
     [items.length],
   )
 

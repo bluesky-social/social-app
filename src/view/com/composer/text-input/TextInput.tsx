@@ -187,7 +187,7 @@ export const TextInput = forwardRef(function TextInputImpl(
   const textDecorated = useMemo(() => {
     let i = 0
 
-    return Array.from(richtext.segments()).map(segment => (
+    return Array.from(richtext.segments(), segment => (
       <Text
         key={i++}
         style={[

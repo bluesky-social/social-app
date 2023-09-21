@@ -583,7 +583,7 @@ function PostOuterWrapper({
             paddingTop: item._depth === 1 ? 8 : 0,
           },
         ]}>
-        {Array.from(Array(item._depth - 1)).map((_, n: number) => (
+        {Array.from(Array(item._depth - 1), (_, n: number) => (
           <View
             key={`${item.uri}-padding-${n}`}
             style={{
