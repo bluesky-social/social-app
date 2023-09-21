@@ -470,7 +470,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 showAvatar={isThreadedChild}
                 avatarSize={26}
                 displayNameType="md-bold"
-                displayNameStyle={s.ml2}
+                displayNameStyle={isThreadedChild && s.ml2}
                 style={isThreadedChild && s.mb5}
               />
               <PostAlerts
