@@ -170,13 +170,13 @@ export const PostThreadItem = observer(function PostThreadItem({
       <>
         {item.rootUri !== item.uri && (
           <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
-            <View style={{width: 52}}>
+            <View style={{width: 38}}>
               <View
                 style={[
                   styles.replyLine,
                   {
                     flexGrow: 1,
-                    backgroundColor: pal.colors.replyLine,
+                    backgroundColor: pal.colors.border,
                   },
                 ]}
               />
@@ -395,7 +395,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       </>
     )
   } else {
-    const isThreadedChild = treeView && item._depth > 0
+    const isThreadedChild = treeView && item._depth > 1
     return (
       <PostOuterWrapper
         item={item}
@@ -415,14 +415,14 @@ export const PostThreadItem = observer(function PostThreadItem({
               paddingLeft: 8,
               height: isThreadedChild ? 8 : 16,
             }}>
-            <View style={{width: 52}}>
+            <View style={{width: 38}}>
               {!isThreadedChild && item._showParentReplyLine && (
                 <View
                   style={[
                     styles.replyLine,
                     {
                       flexGrow: 1,
-                      backgroundColor: pal.colors.replyLine,
+                      backgroundColor: pal.colors.border,
                       marginBottom: 4,
                     },
                   ]}
@@ -442,7 +442,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             {!isThreadedChild && (
               <View style={styles.layoutAvi}>
                 <PreviewableUserAvatar
-                  size={isThreadedChild ? 36 : 52}
+                  size={38}
                   did={item.post.author.did}
                   handle={item.post.author.handle}
                   avatar={item.post.author.avatar}
@@ -455,9 +455,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                       styles.replyLine,
                       {
                         flexGrow: 1,
-                        backgroundColor: isThreadedChild
-                          ? pal.colors.border
-                          : pal.colors.replyLine,
+                        backgroundColor: pal.colors.border,
                         marginTop: 4,
                       },
                     ]}
@@ -475,7 +473,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 showAvatar={isThreadedChild}
                 avatarSize={26}
                 displayNameType="md-bold"
-                displayNameStyle={s.ml2}
+                displayNameStyle={isThreadedChild && s.ml2}
                 style={isThreadedChild && s.mb5}
               />
               <PostAlerts
@@ -483,11 +481,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.alert}
               />
               {item.richText?.text ? (
-                <View
-                  style={[
-                    styles.postTextContainer,
-                    // isThreadedChild && {paddingTop: 2},
-                  ]}>
+                <View style={styles.postTextContainer}>
                   <RichText
                     type="post-text"
                     richText={item.richText}
@@ -572,7 +566,7 @@ function PostOuterWrapper({
 }>) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  if (treeView && item._depth > 0) {
+  if (treeView && item._depth > 1) {
     return (
       <View
         style={[
@@ -581,7 +575,7 @@ function PostOuterWrapper({
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingLeft: 10,
+            paddingLeft: 20,
             borderTopWidth: item._depth === 1 ? 1 : 0,
             paddingTop: item._depth === 1 ? 8 : 0,
           },
@@ -592,8 +586,8 @@ function PostOuterWrapper({
             style={{
               borderLeftWidth: 2,
               borderLeftColor: pal.colors.border,
-              marginLeft: isMobile ? 6 : 14,
-              paddingLeft: isMobile ? 6 : 12,
+              marginLeft: n === 0 ? 14 : isMobile ? 6 : 14,
+              paddingLeft: n === 0 ? 18 : isMobile ? 6 : 12,
             }}
           />
         ))}
