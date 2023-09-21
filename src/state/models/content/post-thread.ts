@@ -297,7 +297,7 @@ function sortThread(item: MaybeThreadItem, opts: ThreadViewPreference) {
       if (modScore(a.moderation) !== modScore(b.moderation)) {
         return modScore(a.moderation) - modScore(b.moderation)
       }
-      if (opts.threadFollowedUsersFirst) {
+      if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following
         if (af && !bf) {
@@ -306,17 +306,17 @@ function sortThread(item: MaybeThreadItem, opts: ThreadViewPreference) {
           return 1
         }
       }
-      if (opts.threadDefaultSort === 'oldest') {
+      if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
-      } else if (opts.threadDefaultSort === 'newest') {
+      } else if (opts.sort === 'newest') {
         return b.post.indexedAt.localeCompare(a.post.indexedAt)
-      } else if (opts.threadDefaultSort === 'most-likes') {
+      } else if (opts.sort === 'most-likes') {
         if (a.post.likeCount === b.post.likeCount) {
           return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
         } else {
           return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
-      } else if (opts.threadDefaultSort === 'random') {
+      } else if (opts.sort === 'random') {
         return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
