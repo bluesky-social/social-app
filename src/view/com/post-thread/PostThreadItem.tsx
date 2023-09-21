@@ -166,7 +166,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     return (
       <>
         {item.rootUri !== item.uri && (
-          <View style={{paddingLeft: 18, flexDirection: 'row', height: 16}}>
+          <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
             <View style={{width: 52}}>
               <View
                 style={[
@@ -432,33 +432,36 @@ export const PostThreadItem = observer(function PostThreadItem({
             style={[
               styles.layout,
               {
-                paddingBottom: item._showChildReplyLine ? 0 : 8,
+                paddingBottom:
+                  item._showChildReplyLine && !isThreadedChild ? 0 : 8,
               },
             ]}>
-            <View style={styles.layoutAvi}>
-              <PreviewableUserAvatar
-                size={isThreadedChild ? 24 : 52}
-                did={item.post.author.did}
-                handle={item.post.author.handle}
-                avatar={item.post.author.avatar}
-                moderation={item.moderation.avatar}
-              />
-
-              {item._showChildReplyLine && (
-                <View
-                  style={[
-                    styles.replyLine,
-                    {
-                      flexGrow: 1,
-                      backgroundColor: isThreadedChild
-                        ? pal.colors.border
-                        : pal.colors.replyLine,
-                      marginTop: 4,
-                    },
-                  ]}
+            {!isThreadedChild && (
+              <View style={styles.layoutAvi}>
+                <PreviewableUserAvatar
+                  size={isThreadedChild ? 36 : 52}
+                  did={item.post.author.did}
+                  handle={item.post.author.handle}
+                  avatar={item.post.author.avatar}
+                  moderation={item.moderation.avatar}
                 />
-              )}
-            </View>
+
+                {item._showChildReplyLine && (
+                  <View
+                    style={[
+                      styles.replyLine,
+                      {
+                        flexGrow: 1,
+                        backgroundColor: isThreadedChild
+                          ? pal.colors.border
+                          : pal.colors.replyLine,
+                        marginTop: 4,
+                      },
+                    ]}
+                  />
+                )}
+              </View>
+            )}
 
             <View style={styles.layoutContent}>
               <PostMeta
@@ -466,6 +469,11 @@ export const PostThreadItem = observer(function PostThreadItem({
                 authorHasWarning={!!item.post.author.labels?.length}
                 timestamp={item.post.indexedAt}
                 postHref={itemHref}
+                showAvatar={isThreadedChild}
+                avatarSize={26}
+                displayNameType="md-bold"
+                displayNameStyle={s.ml2}
+                style={isThreadedChild && s.mb5}
               />
               <PostAlerts
                 moderation={item.moderation.content}
@@ -475,7 +483,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 <View
                   style={[
                     styles.postTextContainer,
-                    isThreadedChild && {paddingTop: 2},
+                    // isThreadedChild && {paddingTop: 2},
                   ]}>
                   <RichText
                     type="post-text"
@@ -525,7 +533,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               style={[
                 styles.loadMore,
                 {
-                  paddingLeft: treeView ? 44 : 70,
+                  paddingLeft: treeView ? 8 : 70,
                   paddingTop: 0,
                   paddingBottom: treeView ? 4 : 12,
                 },
@@ -566,8 +574,14 @@ function PostOuterWrapper({
       <View
         style={[
           pal.view,
+          pal.border,
           styles.cursor,
-          {flexDirection: 'row', paddingLeft: 10},
+          {
+            flexDirection: 'row',
+            paddingLeft: 10,
+            borderTopWidth: item._depth === 1 ? 1 : 0,
+            paddingTop: item._depth === 1 ? 8 : 0,
+          },
         ]}>
         {Array.from(Array(item._depth - 1)).map((_, n: number) => (
           <View
@@ -575,8 +589,8 @@ function PostOuterWrapper({
             style={{
               borderLeftWidth: 2,
               borderLeftColor: pal.colors.border,
-              marginLeft: 19,
-              paddingLeft: isMobile ? 0 : 4,
+              marginLeft: isMobile ? 6 : 14,
+              paddingLeft: isMobile ? 6 : 12,
             }}
           />
         ))}
@@ -626,12 +640,12 @@ function ExpandedPostDetails({
 const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
-    paddingLeft: 10,
+    paddingLeft: 8,
   },
   outerHighlighted: {
     paddingTop: 16,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 8,
+    paddingRight: 8,
   },
   noTopBorder: {
     borderTopWidth: 0,

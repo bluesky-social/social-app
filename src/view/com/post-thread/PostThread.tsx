@@ -103,12 +103,6 @@ export const PostThread = observer(function PostThread({
     return []
   }, [view.isLoadingFromCache, view.thread, maxVisible])
   const highlightedPostIndex = posts.findIndex(post => post._isHighlightedPost)
-  const showBottomBorder =
-    !treeView ||
-    // in the treeview, only show the bottom border
-    // if there are replies under the highlighted posts
-    posts.findLast(v => v instanceof PostThreadItemModel) !==
-      posts[highlightedPostIndex]
   useSetTitle(
     view.thread?.postRecord &&
       `${sanitizeDisplayName(
@@ -194,10 +188,7 @@ export const PostThread = observer(function PostThread({
         )
       } else if (item === REPLY_PROMPT) {
         return (
-          <View
-            style={
-              treeView && [pal.border, {borderBottomWidth: 1, marginBottom: 6}]
-            }>
+          <View>
             {isDesktopWeb && <ComposePrompt onPressCompose={onPressReply} />}
           </View>
         )
@@ -242,14 +233,11 @@ export const PostThread = observer(function PostThread({
         // -prf
         return (
           <View
-            style={[
-              {height: 400},
-              showBottomBorder && {
-                borderTopWidth: 1,
-                borderColor: pal.colors.border,
-              },
-              treeView && {marginTop: 10},
-            ]}
+            style={{
+              height: 400,
+              borderTopWidth: 1,
+              borderColor: pal.colors.border,
+            }}
           />
         )
       } else if (item === CHILD_SPINNER) {
@@ -273,7 +261,7 @@ export const PostThread = observer(function PostThread({
       }
       return <></>
     },
-    [onRefresh, onPressReply, pal, posts, isTablet, treeView, showBottomBorder],
+    [onRefresh, onPressReply, pal, posts, isTablet, treeView],
   )
 
   // loading
