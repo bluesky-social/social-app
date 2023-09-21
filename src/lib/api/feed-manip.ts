@@ -128,23 +128,32 @@ export class FeedTuner {
   tune(
     feed: FeedViewPost[],
     tunerFns: FeedTunerFn[] = [],
-    {dryRun}: {dryRun: boolean} = {dryRun: false},
+    {dryRun, maintainOrder}: {dryRun: boolean; maintainOrder: boolean} = {
+      dryRun: false,
+      maintainOrder: false,
+    },
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
 
-    // arrange the posts into thread slices
-    for (let i = feed.length - 1; i >= 0; i--) {
-      const item = feed[i]
+    if (maintainOrder) {
+      slices = feed.map(item => new FeedViewPostsSlice([item]))
+    } else {
+      // arrange the posts into thread slices
+      for (let i = feed.length - 1; i >= 0; i--) {
+        const item = feed[i]
 
-      const selfReplyUri = getSelfReplyUri(item)
-      if (selfReplyUri) {
-        const parent = slices.find(item2 => item2.isNextInThread(selfReplyUri))
-        if (parent) {
-          parent.insert(item)
-          continue
+        const selfReplyUri = getSelfReplyUri(item)
+        if (selfReplyUri) {
+          const parent = slices.find(item2 =>
+            item2.isNextInThread(selfReplyUri),
+          )
+          if (parent) {
+            parent.insert(item)
+            continue
+          }
         }
+        slices.unshift(new FeedViewPostsSlice([item]))
       }
-      slices.unshift(new FeedViewPostsSlice([item]))
     }
 
     // run the custom tuners

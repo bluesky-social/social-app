@@ -1,11 +1,10 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer, sleep} from '../util'
+import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
 
 describe('Mute lists', () => {
-  let service: string
   beforeAll(async () => {
-    service = await createServer('?users&follows&labels')
+    await createServer('?users&follows&labels')
     await openApp({
       permissions: {notifications: 'YES', medialibrary: 'YES', photos: 'YES'},
     })
@@ -13,10 +12,8 @@ describe('Mute lists', () => {
 
   it('Login and view my mutelists', async () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
-    await login(service, 'alice', 'hunter2')
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await expect(element(by.id('drawer'))).toBeVisible()
-    await element(by.id('menuItemButton-Moderation')).tap()
+    await loginAsAlice()
+    await element(by.id('e2eGotoModeration')).tap()
     await element(by.id('mutelistsBtn')).tap()
     await expect(element(by.id('list-Muted Users'))).toBeVisible()
     await element(by.id('list-Muted Users')).tap()
@@ -141,19 +138,9 @@ describe('Mute lists', () => {
   })
 
   it('Can report a mute list', async () => {
-    await element(by.id('bottomBarHomeBtn')).tap()
-    // Last test leaves us in the list view so we are going back 1 screen to the lists list screen
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    // then to the moderation screen
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    // then to the home screen
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    // then open the drawer to go to settings
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
+    await element(by.id('e2eGotoSettings')).tap()
     await element(by.id('signOutBtn')).tap()
-    await expect(element(by.id('signInButton'))).toBeVisible()
-    await login(service, 'bob.test', 'hunter2')
+    await loginAsBob()
     await element(by.id('bottomBarSearchBtn')).tap()
     await element(by.id('searchTextInput')).typeText('alice')
     await element(by.id('searchAutoCompleteResult-alice.test')).tap()

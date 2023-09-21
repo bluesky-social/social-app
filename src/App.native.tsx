@@ -18,6 +18,7 @@ import * as Toast from './view/com/util/Toast'
 import {handleLink} from './Navigation'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {queryClient} from 'lib/react-query'
+import {TestCtrls} from 'view/com/testing/TestCtrls'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -59,6 +60,7 @@ const App = observer(function AppImpl() {
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
               <GestureHandlerRootView style={s.h100pct}>
+                <TestCtrls />
                 <Shell />
               </GestureHandlerRootView>
             </RootStoreProvider>

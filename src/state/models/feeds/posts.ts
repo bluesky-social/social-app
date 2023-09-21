@@ -139,53 +139,6 @@ export class PostsFeedModel {
     this.tuner.reset()
   }
 
-  get feedTuners() {
-    const areRepliesEnabled = this.rootStore.preferences.homeFeedRepliesEnabled
-    const areRepliesByFollowedOnlyEnabled =
-      this.rootStore.preferences.homeFeedRepliesByFollowedOnlyEnabled
-    const repliesThreshold = this.rootStore.preferences.homeFeedRepliesThreshold
-    const areRepostsEnabled = this.rootStore.preferences.homeFeedRepostsEnabled
-    const areQuotePostsEnabled =
-      this.rootStore.preferences.homeFeedQuotePostsEnabled
-
-    if (this.feedType === 'custom') {
-      return [
-        FeedTuner.dedupReposts,
-        FeedTuner.preferredLangOnly(
-          this.rootStore.preferences.contentLanguages,
-        ),
-      ]
-    }
-    if (this.feedType === 'home' || this.feedType === 'following') {
-      const feedTuners = []
-
-      if (areRepostsEnabled) {
-        feedTuners.push(FeedTuner.dedupReposts)
-      } else {
-        feedTuners.push(FeedTuner.removeReposts)
-      }
-
-      if (areRepliesEnabled) {
-        feedTuners.push(
-          FeedTuner.thresholdRepliesOnly({
-            userDid: this.rootStore.session.data?.did || '',
-            minLikes: repliesThreshold,
-            followedOnly: areRepliesByFollowedOnlyEnabled,
-          }),
-        )
-      } else {
-        feedTuners.push(FeedTuner.removeReplies)
-      }
-
-      if (!areQuotePostsEnabled) {
-        feedTuners.push(FeedTuner.removeQuotePosts)
-      }
-
-      return feedTuners
-    }
-    return []
-  }
-
   /**
    * Load for first render
    */
@@ -275,9 +228,14 @@ export class PostsFeedModel {
     }
     const post = await this.api.peekLatest()
     if (post) {
-      const slices = this.tuner.tune([post], this.feedTuners, {
-        dryRun: true,
-      })
+      const slices = this.tuner.tune(
+        [post],
+        this.rootStore.preferences.getFeedTuners(this.feedType),
+        {
+          dryRun: true,
+          maintainOrder: true,
+        },
+      )
       if (slices[0]) {
         const sliceModel = new PostsFeedSliceModel(this.rootStore, slices[0])
         if (sliceModel.moderation.content.filter) {
@@ -363,7 +321,10 @@ export class PostsFeedModel {
 
     const slices = this.options.isSimpleFeed
       ? res.feed.map(item => new FeedViewPostsSlice([item]))
-      : this.tuner.tune(res.feed, this.feedTuners)
+      : this.tuner.tune(
+          res.feed,
+          this.rootStore.preferences.getFeedTuners(this.feedType),
+        )
 
     const toAppend: PostsFeedSliceModel[] = []
     for (const slice of slices) {
