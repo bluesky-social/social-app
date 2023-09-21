@@ -225,7 +225,6 @@ export class PreferencesModel {
         this.birthDate = prefs.birthDate
       })
 
-      console.log(JSON.stringify(this.homeFeed))
       // sync legacy values if needed
       await this.syncLegacyPreferences()
 
