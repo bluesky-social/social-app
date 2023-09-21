@@ -67,6 +67,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         </Text>
         <View style={[pal.view]}>
           <Link
+            testID="viewHeaderHomeFeedPrefsBtn"
             href="/settings/home-feed"
             hitSlop={HITSLOP_10}
             accessibilityRole="button"

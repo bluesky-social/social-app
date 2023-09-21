@@ -299,6 +299,7 @@ export const FeedItem = observer(function FeedItemImpl({
             {item.richText?.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
+                  testID="postText"
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}

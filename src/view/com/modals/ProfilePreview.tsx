@@ -35,7 +35,7 @@ export const Component = observer(function ProfilePreviewImpl({
   }, [model, screen])
 
   return (
-    <View style={[pal.view, s.flex1]}>
+    <View testID="profilePreview" style={[pal.view, s.flex1]}>
       <View
         style={[
           styles.headerWrapper,

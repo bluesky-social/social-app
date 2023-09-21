@@ -8,6 +8,7 @@ import {colors} from 'lib/styles'
 import {TypographyVariant} from 'lib/ThemeContext'
 
 export function ToggleButton({
+  testID,
   type = 'default-light',
   label,
   isSelected,
@@ -15,6 +16,7 @@ export function ToggleButton({
   labelType,
   onPress,
 }: {
+  testID?: string
   type?: ButtonType
   label: string
   isSelected: boolean
@@ -134,7 +136,7 @@ export function ToggleButton({
     },
   })
   return (
-    <Button type={type} onPress={onPress} style={style}>
+    <Button testID={testID} type={type} onPress={onPress} style={style}>
       <View style={styles.outer}>
         <View style={[circleStyle, styles.circle]}>
           <View

@@ -28,7 +28,7 @@ export function TestCtrls() {
     })
   }
   return (
-    <View style={{position: 'absolute', top: 100, left: 0, zIndex: 100}}>
+    <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
       <Pressable
         testID="e2eSignInAlice"
         onPress={onPressSignInAlice}
@@ -62,6 +62,12 @@ export function TestCtrls() {
       <Pressable
         testID="e2eToggleMergefeed"
         onPress={() => store.preferences.toggleHomeFeedMergeFeedEnabled()}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eRefreshHome"
+        onPress={() => store.me.mainFeed.refresh()}
         accessibilityRole="button"
         style={BTN}
       />
