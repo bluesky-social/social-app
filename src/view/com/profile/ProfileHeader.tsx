@@ -506,6 +506,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       </View>
       {!isDesktop && !hideBackButton && (
         <TouchableWithoutFeedback
+          testID="profileHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
           accessibilityRole="button"

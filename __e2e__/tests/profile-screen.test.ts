@@ -1,11 +1,10 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer, sleep} from '../util'
+import {openApp, loginAsAlice, createServer, sleep} from '../util'
 
 describe('Profile screen', () => {
-  let service: string
   beforeAll(async () => {
-    service = await createServer('?users&posts&feeds')
+    await createServer('?users&posts&feeds')
     await openApp({
       permissions: {notifications: 'YES', medialibrary: 'YES', photos: 'YES'},
     })
@@ -13,7 +12,7 @@ describe('Profile screen', () => {
 
   it('Login and navigate to my profile', async () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
     await element(by.id('bottomBarProfileBtn')).tap()
   })
 

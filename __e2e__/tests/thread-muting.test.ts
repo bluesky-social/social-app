@@ -1,42 +1,34 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer} from '../util'
+import {openApp, loginAsAlice, loginAsBob, createServer} from '../util'
 
 describe('Thread muting', () => {
-  let service: string
   beforeAll(async () => {
-    service = await createServer('?users&follows')
+    await createServer('?users&follows')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
   it('Login, create a thread, and log out', async () => {
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
     await element(by.id('composeFAB')).tap()
     await element(by.id('composerTextInput')).typeText('Test thread')
     await element(by.id('composerPublishBtn')).tap()
     await expect(element(by.id('composeFAB'))).toBeVisible()
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
-    await element(by.id('signOutBtn')).tap()
   })
 
   it('Login, reply to the thread, and log out', async () => {
-    await login(service, 'bob', 'hunter2')
+    await loginAsBob()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
     const alicePosts = by.id('feedItem-by-alice.test')
     await element(by.id('replyBtn').withAncestor(alicePosts)).atIndex(0).tap()
     await element(by.id('composerTextInput')).typeText('Reply 1')
     await element(by.id('composerPublishBtn')).tap()
     await expect(element(by.id('composeFAB'))).toBeVisible()
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
-    await element(by.id('signOutBtn')).tap()
   })
 
   it('Login, confirm notification exists, mute thread, and log out', async () => {
-    await login(service, 'alice', 'hunter2')
-
+    await loginAsAlice()
     await element(by.id('bottomBarNotificationsBtn')).tap()
     const bobNotifs = by.id('feedItem-by-bob.test')
     await expect(
@@ -50,14 +42,10 @@ describe('Thread muting', () => {
     await waitFor(element(by.id('viewHeaderDrawerBtn')))
       .toBeVisible()
       .withTimeout(5000)
-
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
-    await element(by.id('signOutBtn')).tap()
   })
 
   it('Login, reply to the thread twice, and log out', async () => {
-    await login(service, 'bob', 'hunter2')
+    await loginAsBob()
 
     await element(by.id('bottomBarProfileBtn')).tap()
     await element(by.id('selector-1')).tap()
@@ -74,13 +62,10 @@ describe('Thread muting', () => {
     await expect(element(by.id('composeFAB'))).toBeVisible()
 
     await element(by.id('bottomBarHomeBtn')).tap()
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
-    await element(by.id('signOutBtn')).tap()
   })
 
   it('Login, confirm notifications dont exist, unmute the thread, confirm notifications exist', async () => {
-    await login(service, 'alice', 'hunter2')
+    await loginAsAlice()
 
     await element(by.id('bottomBarNotificationsBtn')).tap()
     const bobNotifs = by.id('feedItem-by-bob.test')
@@ -93,7 +78,7 @@ describe('Thread muting', () => {
     await element(by.id('postDropdownBtn').withAncestor(alicePosts))
       .atIndex(0)
       .tap()
-    await element(by.text('Mute thread')).tap()
+    await element(by.text('Unmute thread')).tap()
 
     // TODO
     // the swipe down to trigger PTR isnt working and I dont want to block on this

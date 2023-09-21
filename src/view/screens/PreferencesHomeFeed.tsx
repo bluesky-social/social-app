@@ -86,6 +86,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               Set this setting to "No" to hide all replies from your feed.
             </Text>
             <ToggleButton
+              testID="toggleRepliesBtn"
               type="default-light"
               label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
               isSelected={store.preferences.homeFeedRepliesEnabled}
