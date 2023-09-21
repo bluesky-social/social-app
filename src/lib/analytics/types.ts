@@ -71,6 +71,8 @@ interface TrackPropertiesMap {
   'ProfileHeader:UnblockAccountButtonClicked': {}
   'ProfileHeader:FollowButtonClicked': {}
   'ProfileHeader:UnfollowButtonClicked': {}
+  'ProfileHeader:SuggestedFollowsOpened': {}
+  'ProfileHeader:SuggestedFollowFollowed': {}
   'ViewHeader:MenuButtonClicked': {}
   // SETTINGS events
   'Settings:SwitchAccountButtonClicked': {}
@@ -128,6 +130,7 @@ interface TrackPropertiesMap {
   'Onboarding:Complete': {}
   'Onboarding:Skipped': {}
   'Onboarding:Reset': {}
+  'Onboarding:SuggestedFollowFollowed': {}
 }
 
 interface ScreenPropertiesMap {

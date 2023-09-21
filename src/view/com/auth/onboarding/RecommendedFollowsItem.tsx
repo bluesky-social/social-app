@@ -13,6 +13,7 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import Animated, {FadeInRight} from 'react-native-reanimated'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useAnalytics} from 'lib/analytics/analytics'
 
 type Props = {
   item: SuggestedActor
@@ -54,6 +55,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
   profile: AppBskyActorDefs.ProfileViewBasic
   index: number
 }) {
+  const {track} = useAnalytics()
   const store = useStores()
   const pal = usePalette('default')
   const moderation = moderateProfile(profile, store.preferences.moderationOpts)
@@ -97,6 +99,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
                 index,
               )
               setAddingMoreSuggestions(false)
+              track('Onboarding:SuggestedFollowFollowed')
             }
           }}
         />
