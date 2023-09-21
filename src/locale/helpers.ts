@@ -79,8 +79,8 @@ export function isPostInLanguage(
   return bcp47Match.basicFilter(lang, targetLangs).length > 0
 }
 
-export function getTranslatorLink(text: string): string {
-  return `https://translate.google.com/?sl=auto&text=${encodeURIComponent(
+export function getTranslatorLink(text: string, lang: string): string {
+  return `https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(
     text,
   )}`
 }

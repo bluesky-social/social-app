@@ -46,6 +46,7 @@ import {ModerationScreen} from './view/screens/Moderation'
 import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
+import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
@@ -117,6 +118,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Settings"
         component={SettingsScreen}
         options={{title: title('Settings')}}
+      />
+      <Stack.Screen
+        name="LanguageSettings"
+        component={LanguageSettingsScreen}
+        options={{title: title('Language Settings')}}
       />
       <Stack.Screen
         name="Profile"

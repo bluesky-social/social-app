@@ -64,7 +64,10 @@ export const FeedItem = observer(function FeedItemImpl({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const translatorUrl = getTranslatorLink(record?.text || '')
+  const translatorUrl = getTranslatorLink(
+    record?.text || '',
+    store.preferences.primaryLanguage,
+  )
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')

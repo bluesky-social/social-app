@@ -44,6 +44,7 @@ export class LabelPreferencesModel {
 
 export class PreferencesModel {
   adultContentEnabled = false
+  primaryLanguage: string = deviceLocales[0] || 'en'
   contentLanguages: string[] = deviceLocales || []
   postLanguage: string = deviceLocales[0] || 'en'
   postLanguageHistory: string[] = DEFAULT_LANG_CODES
@@ -78,6 +79,7 @@ export class PreferencesModel {
 
   serialize() {
     return {
+      primaryLanguage: this.primaryLanguage,
       contentLanguages: this.contentLanguages,
       postLanguage: this.postLanguage,
       postLanguageHistory: this.postLanguageHistory,
@@ -105,6 +107,15 @@ export class PreferencesModel {
    */
   hydrate(v: unknown) {
     if (isObj(v)) {
+      if (
+        hasProp(v, 'primaryLanguage') &&
+        typeof v.primaryLanguage === 'string'
+      ) {
+        this.primaryLanguage = v.primaryLanguage
+      } else {
+        // default to the device languages
+        this.primaryLanguage = deviceLocales[0] || 'en'
+      }
       // check if content languages in preferences exist, otherwise default to device languages
       if (
         hasProp(v, 'contentLanguages') &&
@@ -540,6 +551,10 @@ export class PreferencesModel {
 
   toggleRequireAltTextEnabled() {
     this.requireAltTextEnabled = !this.requireAltTextEnabled
+  }
+
+  setPrimaryLanguage(lang: string) {
+    this.primaryLanguage = lang
   }
 
   getFeedTuners(
