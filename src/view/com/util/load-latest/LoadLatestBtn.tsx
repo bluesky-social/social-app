@@ -28,7 +28,8 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   const minMode = store.shell.minimalShellMode
   const bottom = isTablet
     ? 50
-    : (minMode ? 16 : 60) + (isWeb ? 20 : clamp(safeAreaInsets.bottom, 15, 60))
+    : (minMode || isDesktop ? 16 : 60) +
+      (isWeb ? 20 : clamp(safeAreaInsets.bottom, 15, 60))
   return (
     <TouchableOpacity
       style={[
