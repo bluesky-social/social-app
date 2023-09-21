@@ -33,7 +33,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
 
 const styles = StyleSheet.create({
   prompt: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
     paddingTop: 10,
     paddingBottom: 10,
     flexDirection: 'row',
