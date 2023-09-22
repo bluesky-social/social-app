@@ -6,5 +6,4 @@ services:
     plan: starter
     dockerCommand: bskyweb serve
     healthCheckPath: /
-    plan: starter
     numInstances: 1
