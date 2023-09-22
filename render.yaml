@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: webapp
+    runtime: docker
+    repo: https://github.com/bluesky-social/social-app
+    plan: starter
+    dockerCommand: bskyweb serve
+    healthCheckPath: /
+    plan: starter
+    numInstances: 1
