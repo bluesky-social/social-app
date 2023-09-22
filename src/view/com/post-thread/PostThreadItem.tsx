@@ -81,8 +81,10 @@ export const PostThreadItem = observer(function PostThreadItem({
   )
   const needsTranslation = useMemo(
     () =>
-      store.preferences.primaryLanguage &&
-      !isPostInLanguage(item.post, [store.preferences.primaryLanguage]),
+      Boolean(
+        store.preferences.primaryLanguage &&
+          !isPostInLanguage(item.post, [store.preferences.primaryLanguage]),
+      ),
     [item.post, store.preferences.primaryLanguage],
   )
 
