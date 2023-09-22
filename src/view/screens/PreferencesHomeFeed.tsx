@@ -19,7 +19,7 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
   const pal = usePalette('default')
   const [value, setValue] = useState(
-    Number(store.preferences.homeFeed.hideRepliesByLikeCount) || 0,
+    store.preferences.homeFeed.hideRepliesByLikeCount,
   )
   const save = React.useMemo(
     () =>
@@ -109,7 +109,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             style={[
               pal.viewLight,
               styles.card,
-              !!store.preferences.homeFeed.hideReplies && styles.dimmed,
+              store.preferences.homeFeed.hideReplies && styles.dimmed,
             ]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
               Reply Filters
@@ -120,7 +120,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               type="default-light"
               label="Followed users only"
-              isSelected={!!store.preferences.homeFeed.hideRepliesByUnfollowed}
+              isSelected={store.preferences.homeFeed.hideRepliesByUnfollowed}
               onPress={
                 !store.preferences.homeFeed.hideReplies
                   ? store.preferences.toggleHomeFeedHideRepliesByUnfollowed

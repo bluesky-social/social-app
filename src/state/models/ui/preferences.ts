@@ -1,7 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   LabelPreference as APILabelPreference,
-  AppBskyActorDefs,
+  BskyFeedViewPreference,
+  BskyThreadViewPreference,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
@@ -16,11 +17,12 @@ import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
-export type FeedViewPreference = Omit<AppBskyActorDefs.FeedViewPref, '$type'>
-export type ThreadViewPreference = Omit<
-  AppBskyActorDefs.ThreadViewPref,
-  '$type'
->
+export type FeedViewPreference = BskyFeedViewPreference & {
+  lab_mergeFeedEnabled?: boolean | undefined
+}
+export type ThreadViewPreference = BskyThreadViewPreference & {
+  lab_treeViewEnabled?: boolean | undefined
+}
 const LABEL_GROUPS = [
   'nsfw',
   'nudity',
@@ -570,7 +572,7 @@ export class PreferencesModel {
         feedTuners.push(
           FeedTuner.thresholdRepliesOnly({
             userDid: this.rootStore.session.data?.did || '',
-            minLikes: Number(this.homeFeed.hideRepliesByLikeCount),
+            minLikes: this.homeFeed.hideRepliesByLikeCount,
             followedOnly: !!this.homeFeed.hideRepliesByUnfollowed,
           }),
         )

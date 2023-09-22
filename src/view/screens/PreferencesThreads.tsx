@@ -60,9 +60,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
                   {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
                 ]}
                 onSelect={store.preferences.setThreadSort}
-                initialSelection={
-                  String(store.preferences.thread.sort) || 'oldest'
-                }
+                initialSelection={store.preferences.thread.sort}
               />
             </View>
           </View>
@@ -79,7 +77,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
               label={
                 store.preferences.thread.prioritizeFollowedUsers ? 'Yes' : 'No'
               }
-              isSelected={!!store.preferences.thread.prioritizeFollowedUsers}
+              isSelected={store.preferences.thread.prioritizeFollowedUsers}
               onPress={store.preferences.togglePrioritizedFollowedUsers}
             />
           </View>
