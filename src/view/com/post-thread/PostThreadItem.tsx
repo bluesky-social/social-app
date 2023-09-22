@@ -81,9 +81,9 @@ export const PostThreadItem = observer(function PostThreadItem({
   )
   const needsTranslation = useMemo(
     () =>
-      store.preferences.contentLanguages.length > 0 &&
-      !isPostInLanguage(item.post, store.preferences.contentLanguages),
-    [item.post, store.preferences.contentLanguages],
+      store.preferences.primaryLanguage &&
+      !isPostInLanguage(item.post, [store.preferences.primaryLanguage]),
+    [item.post, store.preferences.primaryLanguage],
   )
 
   const onPressReply = React.useCallback(() => {
