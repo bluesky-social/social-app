@@ -59,8 +59,8 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
                   {key: 'most-likes', label: 'Most-liked replies first'},
                   {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
                 ]}
-                onSelect={store.preferences.setThreadDefaultSort}
-                initialSelection={store.preferences.threadDefaultSort}
+                onSelect={store.preferences.setThreadSort}
+                initialSelection={store.preferences.thread.sort}
               />
             </View>
           </View>
@@ -74,9 +74,11 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.threadFollowedUsersFirst ? 'Yes' : 'No'}
-              isSelected={store.preferences.threadFollowedUsersFirst}
-              onPress={store.preferences.toggleThreadFollowedUsersFirst}
+              label={
+                store.preferences.thread.prioritizeFollowedUsers ? 'Yes' : 'No'
+              }
+              isSelected={store.preferences.thread.prioritizeFollowedUsers}
+              onPress={store.preferences.togglePrioritizedFollowedUsers}
             />
           </View>
 
@@ -91,8 +93,10 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.threadTreeViewEnabled ? 'Yes' : 'No'}
-              isSelected={store.preferences.threadTreeViewEnabled}
+              label={
+                store.preferences.thread.lab_treeViewEnabled ? 'Yes' : 'No'
+              }
+              isSelected={!!store.preferences.thread.lab_treeViewEnabled}
               onPress={store.preferences.toggleThreadTreeViewEnabled}
             />
           </View>

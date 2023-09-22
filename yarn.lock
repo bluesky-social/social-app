@@ -47,6 +47,19 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
+"@atproto/api@^0.6.16":
+  version "0.6.16"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.16.tgz#0e5f259a8eb8af239b4e77bf70d7e770b33f4eeb"
+  integrity sha512-DpG994bdwk7NWJSb36Af+0+FRWMFZgzTcrK0rN2tvlsMh6wBF/RdErjHKuoL8wcogGzbI2yp8eOqsA00lyoisw==
+  dependencies:
+    "@atproto/common-web" "^0.2.0"
+    "@atproto/lexicon" "^0.2.1"
+    "@atproto/syntax" "^0.1.1"
+    "@atproto/xrpc" "^0.3.1"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    typed-emitter "^2.1.0"
+
 "@atproto/bsky@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.5.tgz#4667977158a112f27aeab14fedb3ca1e3ebbd873"

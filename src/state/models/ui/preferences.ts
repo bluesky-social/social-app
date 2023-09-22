@@ -1,5 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {LabelPreference as APILabelPreference} from '@atproto/api'
+import {
+  LabelPreference as APILabelPreference,
+  BskyFeedViewPreference,
+  BskyThreadViewPreference,
+} from '@atproto/api'
 import AwaitLock from 'await-lock'
 import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
@@ -13,6 +17,12 @@ import {LANGUAGES} from '../../../locale/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
+export type FeedViewPreference = BskyFeedViewPreference & {
+  lab_mergeFeedEnabled?: boolean | undefined
+}
+export type ThreadViewPreference = BskyThreadViewPreference & {
+  lab_treeViewEnabled?: boolean | undefined
+}
 const LABEL_GROUPS = [
   'nsfw',
   'nudity',
@@ -27,6 +37,13 @@ const DEFAULT_LANG_CODES = (deviceLocales || [])
   .concat(['en', 'ja', 'pt', 'de'])
   .slice(0, 6)
 const THREAD_SORT_VALUES = ['oldest', 'newest', 'most-likes', 'random']
+
+interface LegacyPreferences {
+  hideReplies?: boolean
+  hideRepliesByLikeCount?: number
+  hideReposts?: boolean
+  hideQuotePosts?: boolean
+}
 
 export class LabelPreferencesModel {
   nsfw: LabelPreference = 'hide'
@@ -52,16 +69,23 @@ export class PreferencesModel {
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
   birthDate: Date | undefined = undefined
-  homeFeedRepliesEnabled: boolean = true
-  homeFeedRepliesByFollowedOnlyEnabled: boolean = true
-  homeFeedRepliesThreshold: number = 0
-  homeFeedRepostsEnabled: boolean = true
-  homeFeedQuotePostsEnabled: boolean = true
-  homeFeedMergeFeedEnabled: boolean = false
-  threadDefaultSort: string = 'oldest'
-  threadFollowedUsersFirst: boolean = true
-  threadTreeViewEnabled: boolean = false
+  homeFeed: FeedViewPreference = {
+    hideReplies: false,
+    hideRepliesByUnfollowed: false,
+    hideRepliesByLikeCount: 0,
+    hideReposts: false,
+    hideQuotePosts: false,
+    lab_mergeFeedEnabled: false, // experimental
+  }
+  thread: ThreadViewPreference = {
+    sort: 'oldest',
+    prioritizeFollowedUsers: true,
+    lab_treeViewEnabled: false, // experimental
+  }
   requireAltTextEnabled: boolean = false
+
+  // used to help with transitions from device-stored to server-stored preferences
+  legacyPreferences: LegacyPreferences | undefined
 
   // used to linearize async modifications to state
   lock = new AwaitLock()
@@ -86,16 +110,6 @@ export class PreferencesModel {
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
-      homeFeedRepliesEnabled: this.homeFeedRepliesEnabled,
-      homeFeedRepliesByFollowedOnlyEnabled:
-        this.homeFeedRepliesByFollowedOnlyEnabled,
-      homeFeedRepliesThreshold: this.homeFeedRepliesThreshold,
-      homeFeedRepostsEnabled: this.homeFeedRepostsEnabled,
-      homeFeedQuotePostsEnabled: this.homeFeedQuotePostsEnabled,
-      homeFeedMergeFeedEnabled: this.homeFeedMergeFeedEnabled,
-      threadDefaultSort: this.threadDefaultSort,
-      threadFollowedUsersFirst: this.threadFollowedUsersFirst,
-      threadTreeViewEnabled: this.threadTreeViewEnabled,
       requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
@@ -165,71 +179,6 @@ export class PreferencesModel {
       ) {
         this.pinnedFeeds = v.pinnedFeeds
       }
-      // check if home feed replies are enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'homeFeedRepliesEnabled') &&
-        typeof v.homeFeedRepliesEnabled === 'boolean'
-      ) {
-        this.homeFeedRepliesEnabled = v.homeFeedRepliesEnabled
-      }
-      // check if home feed replies "followed only" are enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'homeFeedRepliesByFollowedOnlyEnabled') &&
-        typeof v.homeFeedRepliesByFollowedOnlyEnabled === 'boolean'
-      ) {
-        this.homeFeedRepliesByFollowedOnlyEnabled =
-          v.homeFeedRepliesByFollowedOnlyEnabled
-      }
-      // check if home feed replies threshold is enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'homeFeedRepliesThreshold') &&
-        typeof v.homeFeedRepliesThreshold === 'number'
-      ) {
-        this.homeFeedRepliesThreshold = v.homeFeedRepliesThreshold
-      }
-      // check if home feed reposts are enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'homeFeedRepostsEnabled') &&
-        typeof v.homeFeedRepostsEnabled === 'boolean'
-      ) {
-        this.homeFeedRepostsEnabled = v.homeFeedRepostsEnabled
-      }
-      // check if home feed quote posts are enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'homeFeedQuotePostsEnabled') &&
-        typeof v.homeFeedQuotePostsEnabled === 'boolean'
-      ) {
-        this.homeFeedQuotePostsEnabled = v.homeFeedQuotePostsEnabled
-      }
-      // check if home feed mergefeed is enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'homeFeedMergeFeedEnabled') &&
-        typeof v.homeFeedMergeFeedEnabled === 'boolean'
-      ) {
-        this.homeFeedMergeFeedEnabled = v.homeFeedMergeFeedEnabled
-      }
-      // check if thread sort order is set in preferences, then hydrate
-      if (
-        hasProp(v, 'threadDefaultSort') &&
-        typeof v.threadDefaultSort === 'string' &&
-        THREAD_SORT_VALUES.includes(v.threadDefaultSort)
-      ) {
-        this.threadDefaultSort = v.threadDefaultSort
-      }
-      // check if thread followed-users-first is enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'threadFollowedUsersFirst') &&
-        typeof v.threadFollowedUsersFirst === 'boolean'
-      ) {
-        this.threadFollowedUsersFirst = v.threadFollowedUsersFirst
-      }
-      // check if thread treeview is enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'threadTreeViewEnabled') &&
-        typeof v.threadTreeViewEnabled === 'boolean'
-      ) {
-        this.threadTreeViewEnabled = v.threadTreeViewEnabled
-      }
       // check if requiring alt text is enabled in preferences, then hydrate
       if (
         hasProp(v, 'requireAltTextEnabled') &&
@@ -237,6 +186,8 @@ export class PreferencesModel {
       ) {
         this.requireAltTextEnabled = v.requireAltTextEnabled
       }
+      // grab legacy values
+      this.legacyPreferences = getLegacyPreferences(v)
     }
   }
 
@@ -250,6 +201,10 @@ export class PreferencesModel {
       const prefs = await this.rootStore.agent.getPreferences()
 
       runInAction(() => {
+        if (prefs.feedViewPrefs.home) {
+          this.homeFeed = prefs.feedViewPrefs.home
+        }
+        this.thread = prefs.threadViewPrefs
         this.adultContentEnabled = prefs.adultContentEnabled
         for (const label in prefs.contentLabels) {
           if (
@@ -271,6 +226,9 @@ export class PreferencesModel {
         }
         this.birthDate = prefs.birthDate
       })
+
+      // sync legacy values if needed
+      await this.syncLegacyPreferences()
 
       // set defaults on missing items
       if (typeof prefs.feeds.saved === 'undefined') {
@@ -296,6 +254,14 @@ export class PreferencesModel {
     }
 
     await this.rootStore.me.savedFeeds.updateCache(clearCache)
+  }
+
+  async syncLegacyPreferences() {
+    if (this.legacyPreferences) {
+      this.homeFeed = {...this.homeFeed, ...this.legacyPreferences}
+      this.legacyPreferences = undefined
+      await this.rootStore.agent.setFeedViewPrefs('home', this.homeFeed)
+    }
   }
 
   /**
@@ -510,43 +476,68 @@ export class PreferencesModel {
     await this.rootStore.agent.setPersonalDetails({birthDate})
   }
 
-  toggleHomeFeedRepliesEnabled() {
-    this.homeFeedRepliesEnabled = !this.homeFeedRepliesEnabled
+  async toggleHomeFeedHideReplies() {
+    this.homeFeed.hideReplies = !this.homeFeed.hideReplies
+    await this.rootStore.agent.setFeedViewPrefs('home', {
+      hideReplies: this.homeFeed.hideReplies,
+    })
   }
 
-  toggleHomeFeedRepliesByFollowedOnlyEnabled() {
-    this.homeFeedRepliesByFollowedOnlyEnabled =
-      !this.homeFeedRepliesByFollowedOnlyEnabled
+  async toggleHomeFeedHideRepliesByUnfollowed() {
+    this.homeFeed.hideRepliesByUnfollowed =
+      !this.homeFeed.hideRepliesByUnfollowed
+    await this.rootStore.agent.setFeedViewPrefs('home', {
+      hideRepliesByUnfollowed: this.homeFeed.hideRepliesByUnfollowed,
+    })
   }
 
-  setHomeFeedRepliesThreshold(threshold: number) {
-    this.homeFeedRepliesThreshold = threshold
+  async setHomeFeedHideRepliesByLikeCount(threshold: number) {
+    this.homeFeed.hideRepliesByLikeCount = threshold
+    await this.rootStore.agent.setFeedViewPrefs('home', {
+      hideRepliesByLikeCount: this.homeFeed.hideRepliesByLikeCount,
+    })
   }
 
-  toggleHomeFeedRepostsEnabled() {
-    this.homeFeedRepostsEnabled = !this.homeFeedRepostsEnabled
+  async toggleHomeFeedHideReposts() {
+    this.homeFeed.hideReposts = !this.homeFeed.hideReposts
+    await this.rootStore.agent.setFeedViewPrefs('home', {
+      hideReposts: this.homeFeed.hideReposts,
+    })
   }
 
-  toggleHomeFeedQuotePostsEnabled() {
-    this.homeFeedQuotePostsEnabled = !this.homeFeedQuotePostsEnabled
+  async toggleHomeFeedHideQuotePosts() {
+    this.homeFeed.hideQuotePosts = !this.homeFeed.hideQuotePosts
+    await this.rootStore.agent.setFeedViewPrefs('home', {
+      hideQuotePosts: this.homeFeed.hideQuotePosts,
+    })
   }
 
-  toggleHomeFeedMergeFeedEnabled() {
-    this.homeFeedMergeFeedEnabled = !this.homeFeedMergeFeedEnabled
+  async toggleHomeFeedMergeFeedEnabled() {
+    this.homeFeed.lab_mergeFeedEnabled = !this.homeFeed.lab_mergeFeedEnabled
+    await this.rootStore.agent.setFeedViewPrefs('home', {
+      lab_mergeFeedEnabled: this.homeFeed.lab_mergeFeedEnabled,
+    })
   }
 
-  setThreadDefaultSort(v: string) {
+  async setThreadSort(v: string) {
     if (THREAD_SORT_VALUES.includes(v)) {
-      this.threadDefaultSort = v
+      this.thread.sort = v
+      await this.rootStore.agent.setThreadViewPrefs({sort: v})
     }
   }
 
-  toggleThreadFollowedUsersFirst() {
-    this.threadFollowedUsersFirst = !this.threadFollowedUsersFirst
+  async togglePrioritizedFollowedUsers() {
+    this.thread.prioritizeFollowedUsers = !this.thread.prioritizeFollowedUsers
+    await this.rootStore.agent.setThreadViewPrefs({
+      prioritizeFollowedUsers: this.thread.prioritizeFollowedUsers,
+    })
   }
 
-  toggleThreadTreeViewEnabled() {
-    this.threadTreeViewEnabled = !this.threadTreeViewEnabled
+  async toggleThreadTreeViewEnabled() {
+    this.thread.lab_treeViewEnabled = !this.thread.lab_treeViewEnabled
+    await this.rootStore.agent.setThreadViewPrefs({
+      lab_treeViewEnabled: this.thread.lab_treeViewEnabled,
+    })
   }
 
   toggleRequireAltTextEnabled() {
@@ -560,13 +551,6 @@ export class PreferencesModel {
   getFeedTuners(
     feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
   ) {
-    const areRepliesEnabled = this.homeFeedRepliesEnabled
-    const areRepliesByFollowedOnlyEnabled =
-      this.homeFeedRepliesByFollowedOnlyEnabled
-    const repliesThreshold = this.homeFeedRepliesThreshold
-    const areRepostsEnabled = this.homeFeedRepostsEnabled
-    const areQuotePostsEnabled = this.homeFeedQuotePostsEnabled
-
     if (feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
@@ -576,25 +560,25 @@ export class PreferencesModel {
     if (feedType === 'home' || feedType === 'following') {
       const feedTuners = []
 
-      if (areRepostsEnabled) {
-        feedTuners.push(FeedTuner.dedupReposts)
-      } else {
+      if (this.homeFeed.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
+      } else {
+        feedTuners.push(FeedTuner.dedupReposts)
       }
 
-      if (areRepliesEnabled) {
+      if (this.homeFeed.hideReplies) {
+        feedTuners.push(FeedTuner.removeReplies)
+      } else {
         feedTuners.push(
           FeedTuner.thresholdRepliesOnly({
             userDid: this.rootStore.session.data?.did || '',
-            minLikes: repliesThreshold,
-            followedOnly: areRepliesByFollowedOnlyEnabled,
+            minLikes: this.homeFeed.hideRepliesByLikeCount,
+            followedOnly: !!this.homeFeed.hideRepliesByUnfollowed,
           }),
         )
-      } else {
-        feedTuners.push(FeedTuner.removeReplies)
       }
 
-      if (!areQuotePostsEnabled) {
+      if (this.homeFeed.hideQuotePosts) {
         feedTuners.push(FeedTuner.removeQuotePosts)
       }
 
@@ -610,4 +594,38 @@ function tempfixLabelPref(pref: LabelPreference): APILabelPreference {
     return 'ignore'
   }
   return pref
+}
+
+function getLegacyPreferences(
+  v: Record<string, unknown>,
+): LegacyPreferences | undefined {
+  const legacyPreferences: LegacyPreferences = {}
+  if (
+    hasProp(v, 'homeFeedRepliesEnabled') &&
+    typeof v.homeFeedRepliesEnabled === 'boolean'
+  ) {
+    legacyPreferences.hideReplies = !v.homeFeedRepliesEnabled
+  }
+  if (
+    hasProp(v, 'homeFeedRepliesThreshold') &&
+    typeof v.homeFeedRepliesThreshold === 'number'
+  ) {
+    legacyPreferences.hideRepliesByLikeCount = v.homeFeedRepliesThreshold
+  }
+  if (
+    hasProp(v, 'homeFeedRepostsEnabled') &&
+    typeof v.homeFeedRepostsEnabled === 'boolean'
+  ) {
+    legacyPreferences.hideReposts = !v.homeFeedRepostsEnabled
+  }
+  if (
+    hasProp(v, 'homeFeedQuotePostsEnabled') &&
+    typeof v.homeFeedQuotePostsEnabled === 'boolean'
+  ) {
+    legacyPreferences.hideQuotePosts = !v.homeFeedQuotePostsEnabled
+  }
+  if (Object.keys(legacyPreferences).length) {
+    return legacyPreferences
+  }
+  return undefined
 }

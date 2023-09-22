@@ -8,6 +8,7 @@ import {AtUri} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
+import {ThreadViewPreference} from '../ui/preferences'
 import {PostThreadItemModel} from './post-thread-item'
 
 export class PostThreadModel {
@@ -241,7 +242,7 @@ export class PostThreadModel {
       res.data.thread as AppBskyFeedDefs.ThreadViewPost,
       thread.uri,
     )
-    sortThread(thread, this.rootStore.preferences)
+    sortThread(thread, this.rootStore.preferences.thread)
     this.thread = thread
   }
 }
@@ -263,16 +264,11 @@ function pruneReplies(post: MaybePost) {
   }
 }
 
-interface SortSettings {
-  threadDefaultSort: string
-  threadFollowedUsersFirst: boolean
-}
-
 type MaybeThreadItem =
   | PostThreadItemModel
   | AppBskyFeedDefs.NotFoundPost
   | AppBskyFeedDefs.BlockedPost
-function sortThread(item: MaybeThreadItem, opts: SortSettings) {
+function sortThread(item: MaybeThreadItem, opts: ThreadViewPreference) {
   if ('notFound' in item) {
     return
   }
@@ -301,7 +297,7 @@ function sortThread(item: MaybeThreadItem, opts: SortSettings) {
       if (modScore(a.moderation) !== modScore(b.moderation)) {
         return modScore(a.moderation) - modScore(b.moderation)
       }
-      if (opts.threadFollowedUsersFirst) {
+      if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following
         if (af && !bf) {
@@ -310,17 +306,17 @@ function sortThread(item: MaybeThreadItem, opts: SortSettings) {
           return 1
         }
       }
-      if (opts.threadDefaultSort === 'oldest') {
+      if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
-      } else if (opts.threadDefaultSort === 'newest') {
+      } else if (opts.sort === 'newest') {
         return b.post.indexedAt.localeCompare(a.post.indexedAt)
-      } else if (opts.threadDefaultSort === 'most-likes') {
+      } else if (opts.sort === 'most-likes') {
         if (a.post.likeCount === b.post.likeCount) {
           return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
         } else {
           return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
-      } else if (opts.threadDefaultSort === 'random') {
+      } else if (opts.sort === 'random') {
         return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
