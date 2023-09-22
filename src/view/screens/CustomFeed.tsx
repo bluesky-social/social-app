@@ -405,7 +405,11 @@ export const CustomFeedScreenInner = observer(
               )}
             </>
           ) : null}
-          <NativeDropdown testID="feedHeaderDropdownBtn" items={dropdownItems}>
+          <NativeDropdown
+            testID="feedHeaderDropdownBtn"
+            items={dropdownItems}
+            accessibilityLabel="More options"
+            accessibilityHint="">
             <View
               style={{
                 paddingLeft: 12,

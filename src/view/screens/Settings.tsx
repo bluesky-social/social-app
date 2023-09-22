@@ -651,7 +651,11 @@ function AccountDropdownBtn({handle}: {handle: string}) {
   ]
   return (
     <Pressable accessibilityRole="button" style={s.pl10}>
-      <NativeDropdown testID="accountSettingsDropdownBtn" items={items}>
+      <NativeDropdown
+        testID="accountSettingsDropdownBtn"
+        items={items}
+        accessibilityLabel="Account options"
+        accessibilityHint="">
         <FontAwesomeIcon
           icon="ellipsis-h"
           style={pal.textLight as FontAwesomeIconStyle}

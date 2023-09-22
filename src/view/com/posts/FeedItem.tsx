@@ -203,9 +203,9 @@ export const FeedItem = observer(function FeedItemImpl({
             <Link
               style={styles.includeReason}
               href={makeProfileLink(item.reasonRepost.by)}
-              title={sanitizeDisplayName(
+              title={`Reposted by ${sanitizeDisplayName(
                 item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
-              )}>
+              )}`}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{

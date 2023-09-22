@@ -106,7 +106,11 @@ export function UserBanner({
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <NativeDropdown testID="changeBannerBtn" items={dropdownItems}>
+    <NativeDropdown
+      testID="changeBannerBtn"
+      items={dropdownItems}
+      accessibilityLabel="Image options"
+      accessibilityHint="">
       {banner ? (
         <Image
           testID="userBannerImage"

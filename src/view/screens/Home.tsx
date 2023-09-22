@@ -301,6 +301,8 @@ const FeedPage = observer(function FeedPageImpl({
             type="title-lg"
             href="/settings/home-feed"
             style={{fontWeight: 'bold'}}
+            accessibilityLabel="Feed Preferences"
+            accessibilityHint=""
             text={
               <FontAwesomeIcon
                 icon="sliders"

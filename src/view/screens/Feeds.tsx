@@ -120,7 +120,10 @@ export const FeedsScreen = withAuthRequired(
                 <Text type="title-lg" style={[pal.text, s.bold]}>
                   My Feeds
                 </Text>
-                <Link href="/settings/saved-feeds">
+                <Link
+                  href="/settings/saved-feeds"
+                  accessibilityLabel="Edit My Feeds"
+                  accessibilityHint="">
                   <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
                 </Link>
               </View>
