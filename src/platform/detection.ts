@@ -12,7 +12,6 @@ export const isMobileWeb =
   isWeb &&
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
-export const isDesktopWeb = isWeb && !isMobileWeb
 
 export const deviceLocales = dedupArray(
   getLocales?.().map?.(locale => locale.languageCode),
