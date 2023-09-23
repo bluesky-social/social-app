@@ -116,7 +116,7 @@ export class CreateAccountModel {
         email: this.email,
         handle: createFullHandle(this.handle, this.userDomain),
         password: this.password,
-        inviteCode: this.inviteCode,
+        inviteCode: this.inviteCode.trim(),
       })
       /* dont await */ this.rootStore.preferences.setBirthDate(this.birthDate)
       track('Create Account')
