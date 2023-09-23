@@ -19,7 +19,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       ios: {
-        buildNumber: '4',
+        buildNumber: '5',
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
