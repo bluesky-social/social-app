@@ -29,6 +29,8 @@ describe('Create account', () => {
     await element(by.id('continueBtn')).tap()
     await expect(element(by.id('recommendedFeedsOnboarding'))).toBeVisible()
     await element(by.id('continueBtn')).tap()
+    await expect(element(by.id('recommendedFollowsOnboarding'))).toBeVisible()
+    await element(by.id('continueBtn')).tap()
     await expect(element(by.id('homeScreen'))).toBeVisible()
   })
 })
