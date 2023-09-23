@@ -19,7 +19,7 @@ describe('Profile screen', () => {
   it('Can see feeds', async () => {
     await element(by.id('selector')).swipe('left')
     await element(by.id('selector-4')).tap()
-    await expect(element(by.id('feed-alices feed'))).toBeVisible()
+    await expect(element(by.id('feed-alice-favs'))).toBeVisible()
     await element(by.id('selector')).swipe('right')
     await element(by.id('selector-0')).tap()
   })
