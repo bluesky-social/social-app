@@ -142,6 +142,7 @@ export const TextLink = observer(function TextLink({
   dataSet,
   title,
   onPress,
+  ...orgProps
 }: {
   testID?: string
   type?: TypographyVariant
@@ -190,7 +191,8 @@ export const TextLink = observer(function TextLink({
       title={title}
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
-      {...props}>
+      {...props}
+      {...orgProps}>
       {text}
     </Text>
   )

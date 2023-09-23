@@ -47,6 +47,7 @@ const ProfileCard = observer(function ProfileCardImpl() {
     <Link
       href={makeProfileLink(store.me)}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
+      title="My Profile"
       asAnchor>
       <UserAvatar avatar={store.me.avatar} size={size} />
     </Link>
