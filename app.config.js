@@ -43,7 +43,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: 38,
+        versionCode: 39,
         adaptiveIcon: {
           foregroundImage: './assets/adaptive-icon.png',
           backgroundColor: '#ffffff',
