@@ -6,6 +6,7 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   Pressable,
+  InteractionManager,
 } from 'react-native'
 import {
   FontAwesomeIcon,
@@ -60,19 +61,19 @@ export function TagInput({
 
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
-      if (e.nativeEvent.key === 'Enter') {
+      if (e.nativeEvent.key === 'Enter' || e.nativeEvent.key === ' ') {
         const _tags = value.trim().split(' ').filter(Boolean)
 
         if (_tags.length > 0) {
           handleChangeTags(
             Array.from(new Set([...tags, ..._tags])).slice(0, max),
           )
-          setValue('')
         }
 
-        setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => {
+          setValue('')
           input.current?.focus()
-        }, 100)
+        })
       } else if (e.nativeEvent.key === 'Backspace' && value === '') {
         handleChangeTags(tags.slice(0, -1))
       }
@@ -84,6 +85,15 @@ export function TagInput({
     const sanitized = value.replace(/^#/, '')
     setValue(sanitized)
   }, [])
+
+  const onBlur = React.useCallback(() => {
+    const _tags = value.trim().split(' ').filter(Boolean)
+
+    if (_tags.length > 0) {
+      handleChangeTags(Array.from(new Set([...tags, ..._tags])).slice(0, max))
+      setValue('')
+    }
+  }, [value, tags, max, handleChangeTags])
 
   const removeTag = React.useCallback(
     (tag: string) => {
@@ -110,6 +120,7 @@ export function TagInput({
           value={value}
           onKeyPress={onKeyPress}
           onChangeText={onChangeText}
+          onBlur={onBlur}
           style={[styles.input, pal.textLight]}
           placeholder="Add tags..."
           autoCapitalize="none"
