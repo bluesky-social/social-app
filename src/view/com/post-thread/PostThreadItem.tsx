@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri, AppBskyFeedDefs} from '@atproto/api'
+import {AtUri, AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -326,11 +326,33 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </ContentHider>
               )}
             </ContentHider>
+
+            {AppBskyFeedPost.isRecord(item.post.record) &&
+            item.post.record.tags?.length ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: 8,
+                  paddingBottom: 12,
+                }}>
+                {item.post.record.tags.map(tag => (
+                  <Text
+                    key={tag}
+                    type="xs-medium"
+                    style={[styles.tag, pal.viewLight, pal.textLight]}>
+                    #{tag}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+
             <ExpandedPostDetails
               post={item.post}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
+
             {hasEngagement ? (
               <View style={[styles.expandedInfo, pal.border]}>
                 {item.post.repostCount ? (
@@ -719,5 +741,10 @@ const styles = StyleSheet.create({
   cursor: {
     // @ts-ignore web only
     cursor: 'pointer',
+  },
+  tag: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
   },
 })
