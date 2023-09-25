@@ -31,10 +31,11 @@ function getDecorations(doc: ProsemirrorNode) {
 
       let match
       while ((match = TAG_REGEX.exec(textContent))) {
-        const [, m] = match
+        const [m] = match
+        const hasLeadingSpace = /^\s/.test(m)
         const tag = m.trim().replace(/\p{P}+$/gu, '')
         if (tag.length > 66) continue
-        const from = match.index + 1
+        const from = match.index + (hasLeadingSpace ? 1 : 0)
         const to = from + tag.length + 1
         decorations.push(
           Decoration.inline(paragraphNode.pos + from, paragraphNode.pos + to, {

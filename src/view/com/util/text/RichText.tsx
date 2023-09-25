@@ -69,6 +69,7 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
+    const tag = segment.tag
     if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
       els.push(
         <TextLink
@@ -87,6 +88,17 @@ export function RichText({
           type={type}
           text={toShortUrl(segment.text)}
           href={link.uri}
+          style={[style, lineHeightStyle, pal.link]}
+          dataSet={WORD_WRAP}
+        />,
+      )
+    } else if (tag && AppBskyRichtextFacet.validateTag(tag).success) {
+      els.push(
+        <TextLink
+          key={key}
+          type={type}
+          text={segment.text}
+          href={`/search?q=${tag.tag}`}
           style={[style, lineHeightStyle, pal.link]}
           dataSet={WORD_WRAP}
         />,
