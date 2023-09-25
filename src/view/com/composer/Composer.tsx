@@ -396,7 +396,7 @@ export const ComposePost = observer(function ComposePost({
               pal.border,
               {borderTopWidth: 1, paddingVertical: 10, marginTop: 10},
             ]}>
-            <TagInput max={8} onChangeTags={onChangeTags} />
+            <TagInput onChangeTags={onChangeTags} />
           </View>
         </ScrollView>
         {!extLink && suggestedLinks.size > 0 ? (

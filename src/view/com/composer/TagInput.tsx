@@ -53,10 +53,10 @@ function Tag({
 }
 
 export function TagInput({
-  max,
+  max = 8,
   onChangeTags,
 }: {
-  max: number
+  max?: number
   onChangeTags: (tags: string[]) => void
 }) {
   const pal = usePalette('default')
