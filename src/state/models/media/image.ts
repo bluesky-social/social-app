@@ -8,6 +8,7 @@ import {openCropper} from 'lib/media/picker'
 import {ActionCrop, FlipType, SaveFormat} from 'expo-image-manipulator'
 import {Position} from 'react-avatar-editor'
 import {Dimensions} from 'lib/media/types'
+import {isIOS} from 'platform/detection'
 
 export interface ImageManipulationAttributes {
   aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
@@ -164,8 +165,13 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   // Mobile
   async crop() {
     try {
-      // openCropper requires an output width and height hence
-      // getting upload dimensions before cropping is necessary.
+      // NOTE
+      // on ios, react-native-image-cropper gives really bad quality
+      // without specifying width and height. on android, however, the
+      // crop stretches incorrectly if you do specify it. these are
+      // both separate bugs in the library. we deal with that by
+      // providing width & height for ios only
+      // -prf
       const {width, height} = this.getUploadDimensions({
         width: this.width,
         height: this.height,
@@ -175,8 +181,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
         mediaType: 'photo',
         path: this.path,
         freeStyleCropEnabled: true,
-        width,
-        height,
+        ...(isIOS ? {width, height} : {}),
       })
 
       runInAction(() => {
