@@ -48,6 +48,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {TagInput} from './TagInput'
 
 type Props = ComposerOpts & {
   onClose: () => void
@@ -380,6 +381,14 @@ export const ComposePost = observer(function ComposePost({
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
+
+          <View
+            style={[
+              pal.border,
+              {borderTopWidth: 1, paddingVertical: 10, marginTop: 10},
+            ]}>
+            <TagInput max={8} />
+          </View>
         </ScrollView>
         {!extLink && suggestedLinks.size > 0 ? (
           <View style={s.mb5}>
