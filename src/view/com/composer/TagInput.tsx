@@ -6,7 +6,6 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   Pressable,
-  InteractionManager,
 } from 'react-native'
 import {
   FontAwesomeIcon,
@@ -72,28 +71,33 @@ export function TagInput({
     [onChangeTags, setTags],
   )
 
+  const onSubmitEditing = React.useCallback(() => {
+    const _tags = sanitize(value)
+
+    if (_tags.length > 0) {
+      handleChangeTags(uniq([...tags, ..._tags]).slice(0, max))
+    }
+
+    // TODO: this is a hack to get the input to clear on iOS
+    setTimeout(() => {
+      setValue('')
+      input.current?.focus()
+    }, 1) // only positive values work
+  }, [max, value, tags, setValue, handleChangeTags])
+
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
-      if (e.nativeEvent.key === 'Enter' || e.nativeEvent.key === ' ') {
-        const _tags = sanitize(value)
-
-        if (_tags.length > 0) {
-          handleChangeTags(uniq([...tags, ..._tags]).slice(0, max))
-        }
-
-        InteractionManager.runAfterInteractions(() => {
-          setValue('')
-          input.current?.focus()
-        })
+      if (e.nativeEvent.key === ' ') {
+        onSubmitEditing()
       } else if (e.nativeEvent.key === 'Backspace' && value === '') {
         handleChangeTags(tags.slice(0, -1))
       }
     },
-    [max, value, tags, setValue, handleChangeTags],
+    [value, tags, onSubmitEditing, handleChangeTags],
   )
 
-  const onChangeText = React.useCallback((value: string) => {
-    setValue(value)
+  const onChangeText = React.useCallback((v: string) => {
+    setValue(v)
   }, [])
 
   const onBlur = React.useCallback(() => {
@@ -129,8 +133,10 @@ export function TagInput({
           ref={input}
           value={value}
           onKeyPress={onKeyPress}
+          onSubmitEditing={onSubmitEditing}
           onChangeText={onChangeText}
           onBlur={onBlur}
+          blurOnSubmit={false}
           style={[styles.input, pal.textLight]}
           placeholder="Add tags..."
           autoCapitalize="none"
@@ -162,5 +168,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 4,
+    overflow: 'hidden',
   },
 })
