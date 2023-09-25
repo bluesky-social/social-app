@@ -16,6 +16,19 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 
+function uniq(tags: string[]) {
+  return Array.from(new Set(tags))
+}
+
+function sanitize(tagString: string) {
+  return tagString
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .map(t => t.trim())
+    .map(t => t.replace(/^#/, ''))
+}
+
 function Tag({
   tag,
   removeTag,
@@ -62,12 +75,10 @@ export function TagInput({
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
       if (e.nativeEvent.key === 'Enter' || e.nativeEvent.key === ' ') {
-        const _tags = value.trim().split(' ').filter(Boolean)
+        const _tags = sanitize(value)
 
         if (_tags.length > 0) {
-          handleChangeTags(
-            Array.from(new Set([...tags, ..._tags])).slice(0, max),
-          )
+          handleChangeTags(uniq([...tags, ..._tags]).slice(0, max))
         }
 
         InteractionManager.runAfterInteractions(() => {
@@ -82,15 +93,14 @@ export function TagInput({
   )
 
   const onChangeText = React.useCallback((value: string) => {
-    const sanitized = value.replace(/^#/, '')
-    setValue(sanitized)
+    setValue(value)
   }, [])
 
   const onBlur = React.useCallback(() => {
-    const _tags = value.trim().split(' ').filter(Boolean)
+    const _tags = sanitize(value)
 
     if (_tags.length > 0) {
-      handleChangeTags(Array.from(new Set([...tags, ..._tags])).slice(0, max))
+      handleChangeTags(uniq([...tags, ..._tags]).slice(0, max))
       setValue('')
     }
   }, [value, tags, max, handleChangeTags])
