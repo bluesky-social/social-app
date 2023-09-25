@@ -133,10 +133,12 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
       await image.compress()
       const path = image.compressed?.path ?? image.path
+      const {width, height} = image.compressed || image
       const res = await uploadBlob(store, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
         alt: image.altText ?? '',
+        aspectRatio: {width, height},
       })
     }
 
