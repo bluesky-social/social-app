@@ -337,12 +337,18 @@ export const PostThreadItem = observer(function PostThreadItem({
                   paddingBottom: 12,
                 }}>
                 {item.post.record.tags.map(tag => (
-                  <Text
+                  <Link
                     key={tag}
-                    type="xs-medium"
-                    style={[styles.tag, pal.viewLight, pal.textLight]}>
-                    #{tag}
-                  </Text>
+                    asAnchor
+                    accessible
+                    anchorNoUnderline
+                    href={`/search?q=${tag}`}>
+                    <Text
+                      type="xs-medium"
+                      style={[styles.tag, pal.viewLight, pal.textLight]}>
+                      #{tag}
+                    </Text>
+                  </Link>
                 ))}
               </View>
             ) : null}
