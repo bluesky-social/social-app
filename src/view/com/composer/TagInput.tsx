@@ -138,7 +138,7 @@ export function TagInput({
           autoComplete="off"
           accessible={true}
           accessibilityLabel="Add tags to your post"
-          accessibilityHint={`You may add up to 8 tags to your post, including those used inline.`}
+          accessibilityHint={`Type a tag and press enter to add it. You can add up to ${max} tag.`}
         />
       )}
     </View>
