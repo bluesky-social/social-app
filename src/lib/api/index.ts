@@ -263,7 +263,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       embed,
       langs,
       labels,
-      tags: opts.tags?.filter(t => t.replace(/^#/, '')),
+      tags: opts.tags,
     })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)
