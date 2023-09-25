@@ -91,6 +91,7 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(store), [store])
+  const [tags, setTags] = useState<string[]>([])
 
   const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
@@ -167,6 +168,13 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
+  const onChangeTags = useCallback(
+    (tags: string[]) => {
+      setTags(tags)
+    },
+    [setTags],
+  )
+
   const onPressPublish = async () => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
@@ -195,6 +203,7 @@ export const ComposePost = observer(function ComposePost({
         onStateChange: setProcessingState,
         knownHandles: autocompleteView.knownHandles,
         langs: store.preferences.postLanguages,
+        tags,
       })
     } catch (e: any) {
       if (extLink) {
@@ -387,7 +396,7 @@ export const ComposePost = observer(function ComposePost({
               pal.border,
               {borderTopWidth: 1, paddingVertical: 10, marginTop: 10},
             ]}>
-            <TagInput max={8} />
+            <TagInput max={8} onChangeTags={onChangeTags} />
           </View>
         </ScrollView>
         {!extLink && suggestedLinks.size > 0 ? (

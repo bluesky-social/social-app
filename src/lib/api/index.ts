@@ -83,6 +83,7 @@ interface PostOpts {
   knownHandles?: Set<string>
   onStateChange?: (state: string) => void
   langs?: string[]
+  tags?: string[]
 }
 
 export async function post(store: RootStoreModel, opts: PostOpts) {
@@ -264,6 +265,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       embed,
       langs,
       labels,
+      tags: opts.tags?.filter(t => t.replace(/^#/, '')),
     })
   } catch (e: any) {
     console.error(`Failed to create post: ${e.toString()}`)

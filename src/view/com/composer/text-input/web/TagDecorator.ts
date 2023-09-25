@@ -33,6 +33,7 @@ function getDecorations(doc: ProsemirrorNode) {
       while ((match = TAG_REGEX.exec(textContent))) {
         const [, m] = match
         const tag = m.trim().replace(/\p{P}+$/gu, '')
+        if (tag.length > 66) continue
         const from = match.index + 1
         const to = from + tag.length + 1
         decorations.push(

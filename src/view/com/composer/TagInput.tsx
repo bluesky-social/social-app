@@ -38,11 +38,25 @@ function Tag({
   )
 }
 
-export function TagInput({max}: {max: number}) {
+export function TagInput({
+  max,
+  onChangeTags,
+}: {
+  max: number
+  onChangeTags: (tags: string[]) => void
+}) {
   const pal = usePalette('default')
   const input = React.useRef<TextInput>(null)
   const [value, setValue] = React.useState('')
   const [tags, setTags] = React.useState<string[]>([])
+
+  const handleChangeTags = React.useCallback(
+    (_tags: string[]) => {
+      setTags(_tags)
+      onChangeTags(_tags)
+    },
+    [onChangeTags, setTags],
+  )
 
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
@@ -50,7 +64,9 @@ export function TagInput({max}: {max: number}) {
         const _tags = value.trim().split(' ').filter(Boolean)
 
         if (_tags.length > 0) {
-          setTags(Array.from(new Set([...tags, ..._tags])).slice(0, max))
+          handleChangeTags(
+            Array.from(new Set([...tags, ..._tags])).slice(0, max),
+          )
           setValue('')
         }
 
@@ -58,10 +74,10 @@ export function TagInput({max}: {max: number}) {
           input.current?.focus()
         }, 100)
       } else if (e.nativeEvent.key === 'Backspace' && value === '') {
-        setTags(tags.slice(0, -1))
+        handleChangeTags(tags.slice(0, -1))
       }
     },
-    [max, value, tags, setValue, setTags],
+    [max, value, tags, setValue, handleChangeTags],
   )
 
   const onChangeText = React.useCallback((value: string) => {
@@ -71,9 +87,9 @@ export function TagInput({max}: {max: number}) {
 
   const removeTag = React.useCallback(
     (tag: string) => {
-      setTags(tags.filter(t => t !== tag))
+      handleChangeTags(tags.filter(t => t !== tag))
     },
-    [tags, setTags],
+    [tags, handleChangeTags],
   )
 
   return (
