@@ -178,7 +178,7 @@ export const FeedItem = observer(function FeedItemImpl({
           )}
         </View>
 
-        <View style={{paddingTop: 12}}>
+        <View style={{paddingTop: 12, flexShrink: 1}}>
           {source ? (
             <Link
               title={sanitizeDisplayName(source.displayName)}
@@ -211,6 +211,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 style={{
                   marginRight: 4,
                   color: pal.colors.textLight,
+                  minWidth: 16,
                 }}
               />
               <Text
