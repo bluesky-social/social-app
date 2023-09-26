@@ -12,6 +12,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
+import {isWeb} from 'platform/detection'
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 
@@ -20,12 +21,7 @@ function uniq(tags: string[]) {
 }
 
 function sanitize(tagString: string) {
-  return tagString
-    .trim()
-    .split(' ')
-    .filter(Boolean)
-    .map(t => t.trim())
-    .map(t => t.replace(/^#/, ''))
+  return tagString.trim().replace(/^#/, '')
 }
 
 function Tag({
@@ -72,28 +68,32 @@ export function TagInput({
   )
 
   const onSubmitEditing = React.useCallback(() => {
-    const _tags = sanitize(value)
+    const tag = sanitize(value)
 
-    if (_tags.length > 0) {
-      handleChangeTags(uniq([...tags, ..._tags]).slice(0, max))
+    if (tag.length > 0) {
+      handleChangeTags(uniq([...tags, tag]).slice(0, max))
     }
 
-    // TODO: this is a hack to get the input to clear on iOS
-    setTimeout(() => {
+    if (isWeb) {
       setValue('')
       input.current?.focus()
-    }, 1) // only positive values work
+    } else {
+      // This is a hack to get the input to clear on iOS/Android, and only
+      // positive values work here
+      setTimeout(() => {
+        setValue('')
+        input.current?.focus()
+      }, 1)
+    }
   }, [max, value, tags, setValue, handleChangeTags])
 
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
-      if (e.nativeEvent.key === ' ') {
-        onSubmitEditing()
-      } else if (e.nativeEvent.key === 'Backspace' && value === '') {
+      if (e.nativeEvent.key === 'Backspace' && value === '') {
         handleChangeTags(tags.slice(0, -1))
       }
     },
-    [value, tags, onSubmitEditing, handleChangeTags],
+    [value, tags, handleChangeTags],
   )
 
   const onChangeText = React.useCallback((v: string) => {
@@ -101,10 +101,10 @@ export function TagInput({
   }, [])
 
   const onBlur = React.useCallback(() => {
-    const _tags = sanitize(value)
+    const tag = sanitize(value)
 
-    if (_tags.length > 0) {
-      handleChangeTags(uniq([...tags, ..._tags]).slice(0, max))
+    if (tag.length > 0) {
+      handleChangeTags(uniq([...tags, tag]).slice(0, max))
       setValue('')
     }
   }, [value, tags, max, handleChangeTags])
@@ -138,7 +138,7 @@ export function TagInput({
           onBlur={onBlur}
           blurOnSubmit={false}
           style={[styles.input, pal.textLight]}
-          placeholder="Add tags..."
+          placeholder="Enter a tag and press enter"
           autoCapitalize="none"
           autoCorrect={false}
           autoComplete="off"
