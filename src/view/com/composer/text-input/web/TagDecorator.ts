@@ -20,22 +20,21 @@ import {findChildren} from '@tiptap/core'
 import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
 
-const TAG_REGEX = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g
-
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
 
   findChildren(doc, node => node.type.name === 'paragraph').forEach(
     paragraphNode => {
       const textContent = paragraphNode.node.textContent
+      const regex = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g
 
       let match
-      while ((match = TAG_REGEX.exec(textContent))) {
+      while ((match = regex.exec(textContent))) {
         const [m] = match
         const hasLeadingSpace = /^\s/.test(m)
         const tag = m.trim().replace(/\p{P}+$/gu, '')
         if (tag.length > 66) continue
-        const from = match.index + (hasLeadingSpace ? 1 : 0)
+        const from = match.index + (hasLeadingSpace ? 2 : 1)
         const to = from + tag.length + 1
         decorations.push(
           Decoration.inline(paragraphNode.pos + from, paragraphNode.pos + to, {
