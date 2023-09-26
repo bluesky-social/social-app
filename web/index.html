@@ -136,6 +136,18 @@
       .tippy-content .items {
         width: fit-content;
       }
+      .ProseMirror .inline-tag {
+        position: relative;
+      }
+      .ProseMirror .inline-tag::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: whitesmoke;
+      }
 
       /* Tooltips */
       [data-tooltip] {
