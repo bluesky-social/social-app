@@ -27,6 +27,7 @@
   - Each test run: `yarn e2e:run`
 - Tips
   - Make sure to copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
+  - To run on device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
   - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
   - If the android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
