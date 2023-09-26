@@ -105,7 +105,7 @@ export function PostDropdownBtn({
     {
       label: 'separator',
     },
-    {
+    !isAuthor && {
       label: 'Report post',
       onPress() {
         store.shell.openModal({
