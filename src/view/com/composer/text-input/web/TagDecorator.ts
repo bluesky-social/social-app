@@ -16,34 +16,34 @@
 
 import {Mark} from '@tiptap/core'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
-import {findChildren} from '@tiptap/core'
 import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
 
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
 
-  findChildren(doc, node => node.type.name === 'paragraph').forEach(
-    paragraphNode => {
-      const textContent = paragraphNode.node.textContent
+  doc.descendants((node, pos) => {
+    if (node.isText && node.text) {
       const regex = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g
+      const textContent = node.textContent
 
       let match
       while ((match = regex.exec(textContent))) {
-        const [m] = match
-        const hasLeadingSpace = /^\s/.test(m)
-        const tag = m.trim().replace(/\p{P}+$/gu, '')
+        const [matchedString, tag] = match
+
         if (tag.length > 66) continue
-        const from = match.index + (hasLeadingSpace ? 2 : 1)
-        const to = from + tag.length + 1
+
+        const from = match.index + matchedString.indexOf(tag)
+        const to = from + tag.length
+
         decorations.push(
-          Decoration.inline(paragraphNode.pos + from, paragraphNode.pos + to, {
+          Decoration.inline(pos + from, pos + to, {
             class: 'autolink',
           }),
         )
       }
-    },
-  )
+    }
+  })
 
   return DecorationSet.create(doc, decorations)
 }
