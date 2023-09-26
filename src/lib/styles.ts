@@ -54,6 +54,9 @@ export const colors = {
   unreadNotifBg: '#ebf6ff',
   brandBlue: '#0066FF',
   like: '#ec4899',
+
+  teal: '#9AD5CA',
+  yellow: '#FED766',
 }
 
 export const gradients = {

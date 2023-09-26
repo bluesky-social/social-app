@@ -15,6 +15,7 @@ import {
 import {isWeb} from 'platform/detection'
 import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {colors} from 'lib/styles'
 
 function uniq(tags: string[]) {
   return Array.from(new Set(tags))
@@ -31,7 +32,6 @@ function Tag({
   tag: string
   removeTag: (tag: string) => void
 }) {
-  const pal = usePalette('default')
   return (
     <Pressable
       accessibilityRole="button"
@@ -40,9 +40,12 @@ function Tag({
         opacity: state.hovered || state.pressed || state.focused ? 0.8 : 1,
         outline: 0,
       })}>
-      <Text type="xs-medium" style={[styles.tag, pal.viewLight, pal.textLight]}>
-        #{tag}
-      </Text>
+      <View style={{position: 'relative'}}>
+        <View style={styles.tagBackground} />
+        <Text type="xs-medium" style={[styles.tag]}>
+          #{tag}
+        </Text>
+      </View>
     </Pressable>
   )
 }
@@ -154,10 +157,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     paddingVertical: 4,
   },
+  tagBackground: {
+    backgroundColor: colors.teal,
+    borderRadius: 4,
+    opacity: 0.3,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: -1,
+  },
   tag: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingTop: 2,
+    paddingBottom: 3,
+    paddingHorizontal: 5,
     borderRadius: 4,
     overflow: 'hidden',
+    color: colors.teal,
   },
 })
