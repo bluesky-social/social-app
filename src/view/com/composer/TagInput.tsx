@@ -100,15 +100,6 @@ export function TagInput({
     setValue(v)
   }, [])
 
-  const onBlur = React.useCallback(() => {
-    const tag = sanitize(value)
-
-    if (tag.length > 0) {
-      handleChangeTags(uniq([...tags, tag]).slice(0, max))
-      setValue('')
-    }
-  }, [value, tags, max, handleChangeTags])
-
   const removeTag = React.useCallback(
     (tag: string) => {
       handleChangeTags(tags.filter(t => t !== tag))
@@ -135,7 +126,6 @@ export function TagInput({
           onKeyPress={onKeyPress}
           onSubmitEditing={onSubmitEditing}
           onChangeText={onChangeText}
-          onBlur={onBlur}
           blurOnSubmit={false}
           style={[styles.input, pal.textLight]}
           placeholder="Enter a tag and press enter"
