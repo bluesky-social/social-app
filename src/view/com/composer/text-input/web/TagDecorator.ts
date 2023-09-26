@@ -38,7 +38,7 @@ function getDecorations(doc: ProsemirrorNode) {
 
         decorations.push(
           Decoration.inline(pos + from, pos + to, {
-            class: 'autolink',
+            class: 'inline-tag',
           }),
         )
       }

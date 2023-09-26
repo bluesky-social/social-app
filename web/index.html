@@ -48,6 +48,9 @@
         --text: black;
         --background: white;
         --backgroundLight: #F3F3F8;
+        --blue: #0085ff;
+        --teal: #9AD5CA;
+        --yellow: #FED766;
       }
       html.colorMode--dark {
         --text: white;
@@ -136,17 +139,36 @@
       .tippy-content .items {
         width: fit-content;
       }
-      .ProseMirror .inline-tag {
+
+      /* Hashtags in ProseMirror */
+      .ProseMirror .inline-tag,
+      .ProseMirror .mention {
         position: relative;
+        margin: 0 3px;
       }
-      .ProseMirror .inline-tag::after {
+      .ProseMirror .inline-tag::after,
+      .ProseMirror .mention::after {
         content: '';
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: whitesmoke;
+        top: -1px;
+        bottom: -2px;
+        left: -3px;
+        right: -3px;
+        z-index: -1;
+        opacity: 0.3;
+        border-radius: 4px;
+      }
+      .ProseMirror .inline-tag {
+        color: var(--teal);
+      }
+      .ProseMirror .inline-tag::after {
+        background-color: var(--teal);
+      }
+      .ProseMirror .mention {
+        color: var(--yellow);
+      }
+      .ProseMirror .mention::after {
+        background-color: var(--yellow);
       }
 
       /* Tooltips */
