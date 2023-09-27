@@ -91,7 +91,10 @@ export const ProfileScreen = withAuthRequired(
     const onPressCompose = React.useCallback(() => {
       track('ProfileScreen:PressCompose')
       const mention =
-        uiState.profile.handle === store.me.handle ? '' : uiState.profile.handle
+        uiState.profile.handle === store.me.handle ||
+        uiState.profile.handle === 'handle.invalid'
+          ? undefined
+          : uiState.profile.handle
       store.shell.openComposer({mention})
     }, [store, track, uiState])
     const onSelectView = React.useCallback(

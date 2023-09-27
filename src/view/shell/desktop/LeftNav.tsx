@@ -191,7 +191,8 @@ function ComposeBtn() {
     if (currentRoute.name === 'Profile') {
       const {name: handle} =
         currentRoute.params as CommonNavigatorParams['Profile']
-      if (handle === store.me.handle) return undefined
+      if (handle === store.me.handle || handle === 'handle.invalid')
+        return undefined
       return handle
     }
     return undefined
