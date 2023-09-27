@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    width: 500,
+    width: 648, // content is 600px, with a 648px padding (48px to take account for padding) the modal is the same width
     // @ts-ignore web only
     maxWidth: '100vw',
     // @ts-ignore web only
