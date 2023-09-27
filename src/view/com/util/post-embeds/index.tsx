@@ -93,7 +93,11 @@ export function PostEmbeds({
     const {images} = embed
 
     if (images.length > 0) {
-      const items = embed.images.map(img => ({uri: img.fullsize, alt: img.alt}))
+      const items = embed.images.map(img => ({
+        uri: img.fullsize,
+        alt: img.alt,
+        aspectRatio: img.aspectRatio,
+      }))
       const openLightbox = (index: number) => {
         store.shell.openLightbox(new ImagesLightbox(items, index))
       }
@@ -104,12 +108,13 @@ export function PostEmbeds({
       }
 
       if (images.length === 1) {
-        const {alt, thumb} = images[0]
+        const {alt, thumb, aspectRatio} = images[0]
         return (
           <View style={[styles.imagesContainer, style]}>
             <AutoSizedImage
               alt={alt}
               uri={thumb}
+              dimensionsHint={aspectRatio}
               onPress={() => openLightbox(0)}
               onPressIn={() => onPressIn(0)}
               style={[

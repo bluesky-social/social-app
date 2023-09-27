@@ -11,6 +11,7 @@ const MAX_ASPECT_RATIO = 5 // 5/1
 interface Props {
   alt?: string
   uri: string
+  dimensionsHint?: Dimensions
   onPress?: () => void
   onLongPress?: () => void
   onPressIn?: () => void
@@ -21,6 +22,7 @@ interface Props {
 export function AutoSizedImage({
   alt,
   uri,
+  dimensionsHint,
   onPress,
   onLongPress,
   onPressIn,
@@ -29,7 +31,7 @@ export function AutoSizedImage({
 }: Props) {
   const store = useStores()
   const [dim, setDim] = React.useState<Dimensions | undefined>(
-    store.imageSizes.get(uri),
+    dimensionsHint || store.imageSizes.get(uri),
   )
   const [aspectRatio, setAspectRatio] = React.useState<number>(
     dim ? calc(dim) : 1,
