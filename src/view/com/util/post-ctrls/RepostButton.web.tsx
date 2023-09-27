@@ -1,10 +1,15 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {RepostIcon} from 'lib/icons'
-import {DropdownButton} from '../forms/DropdownButton'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../text/Text'
+
+import {
+  NativeDropdown,
+  DropdownItem as NativeDropdownItem,
+} from '../forms/NativeDropdown'
+import {EventStopper} from '../EventStopper'
 
 interface Props {
   isReposted: boolean
@@ -12,6 +17,7 @@ interface Props {
   big?: boolean
   onRepost: () => void
   onQuote: () => void
+  style?: StyleProp<ViewStyle>
 }
 
 export const RepostButton = ({
@@ -30,44 +36,55 @@ export const RepostButton = ({
     [theme],
   )
 
-  const items = useMemo(
-    () => [
-      {
-        label: isReposted ? 'Undo repost' : 'Repost',
-        icon: 'retweet' as const,
-        onPress: onRepost,
+  const dropdownItems: NativeDropdownItem[] = [
+    {
+      label: isReposted ? 'Undo repost' : 'Repost',
+      testID: 'repostDropdownRepostBtn',
+      icon: {
+        ios: {name: 'repeat'},
+        android: '',
+        web: 'retweet',
       },
-      {label: 'Quote post', icon: 'quote-left' as const, onPress: onQuote},
-    ],
-    [isReposted, onRepost, onQuote],
-  )
+      onPress: onRepost,
+    },
+    {
+      label: 'Quote post',
+      testID: 'repostDropdownQuoteBtn',
+      icon: {
+        ios: {name: 'quote.bubble'},
+        android: '',
+        web: 'quote-left',
+      },
+      onPress: onQuote,
+    },
+  ]
 
   return (
-    <DropdownButton
-      type="bare"
-      items={items}
-      bottomOffset={4}
-      openToRight
-      rightOffset={-40}>
-      <View
-        style={[
-          styles.control,
-          !big && styles.controlPad,
-          (isReposted
-            ? styles.reposted
-            : defaultControlColor) as StyleProp<ViewStyle>,
-        ]}>
-        <RepostIcon strokeWidth={2.4} size={big ? 24 : 20} />
-        {typeof repostCount !== 'undefined' ? (
-          <Text
-            testID="repostCount"
-            type={isReposted ? 'md-bold' : 'md'}
-            style={styles.repostCount}>
-            {repostCount ?? 0}
-          </Text>
-        ) : undefined}
-      </View>
-    </DropdownButton>
+    <EventStopper>
+      <NativeDropdown
+        items={dropdownItems}
+        accessibilityLabel="Repost or quote post"
+        accessibilityHint="">
+        <View
+          style={[
+            styles.control,
+            !big && styles.controlPad,
+            (isReposted
+              ? styles.reposted
+              : defaultControlColor) as StyleProp<ViewStyle>,
+          ]}>
+          <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
+          {typeof repostCount !== 'undefined' ? (
+            <Text
+              testID="repostCount"
+              type={isReposted ? 'md-bold' : 'md'}
+              style={styles.repostCount}>
+              {repostCount ?? 0}
+            </Text>
+          ) : undefined}
+        </View>
+      </NativeDropdown>
+    </EventStopper>
   )
 }
 
