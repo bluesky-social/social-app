@@ -246,6 +246,7 @@ function TabsNavigator() {
     ),
     [],
   )
+
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"

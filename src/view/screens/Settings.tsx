@@ -3,8 +3,8 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
-  Pressable,
   StyleSheet,
+  Pressable,
   TextStyle,
   TouchableOpacity,
   View,
@@ -45,13 +45,13 @@ import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {reset as resetNavigation} from '../../Navigation'
 import {makeProfileLink} from 'lib/routes/links'
+import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
-import {DropdownItem, NativeDropdown} from 'view/com/util/forms/NativeDropdown'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -645,41 +645,6 @@ export const SettingsScreen = withAuthRequired(
     )
   }),
 )
-
-function AccountDropdownBtn({handle}: {handle: string}) {
-  const store = useStores()
-  const pal = usePalette('default')
-  const items: DropdownItem[] = [
-    {
-      label: 'Remove account',
-      onPress: () => {
-        store.session.removeAccount(handle)
-        Toast.show('Account removed from quick access')
-      },
-      icon: {
-        ios: {
-          name: 'trash',
-        },
-        android: 'ic_delete',
-        web: 'trash',
-      },
-    },
-  ]
-  return (
-    <Pressable accessibilityRole="button" style={s.pl10}>
-      <NativeDropdown
-        testID="accountSettingsDropdownBtn"
-        items={items}
-        accessibilityLabel="Account options"
-        accessibilityHint="">
-        <FontAwesomeIcon
-          icon="ellipsis-h"
-          style={pal.textLight as FontAwesomeIconStyle}
-        />
-      </NativeDropdown>
-    </Pressable>
-  )
-}
 
 const EmailConfirmationNotice = observer(
   function EmailConfirmationNoticeImpl() {
