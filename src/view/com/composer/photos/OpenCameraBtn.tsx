@@ -11,7 +11,7 @@ import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
 import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {GalleryModel} from 'state/models/media/gallery'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isMobileWeb, isNative} from 'platform/detection'
 
 type Props = {
   gallery: GalleryModel
@@ -22,7 +22,6 @@ export function OpenCameraBtn({gallery}: Props) {
   const {track} = useAnalytics()
   const store = useStores()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
-  const {isDesktop} = useWebMediaQueries()
 
   const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
@@ -44,7 +43,8 @@ export function OpenCameraBtn({gallery}: Props) {
     }
   }, [gallery, track, store, requestCameraAccessIfNeeded])
 
-  if (isDesktop) {
+  const shouldShowCameraButton = isNative || isMobileWeb
+  if (!shouldShowCameraButton) {
     return null
   }
 

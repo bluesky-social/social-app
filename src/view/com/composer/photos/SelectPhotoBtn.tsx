@@ -9,7 +9,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {GalleryModel} from 'state/models/media/gallery'
 import {HITSLOP_10} from 'lib/constants'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isNative} from 'platform/detection'
 
 type Props = {
   gallery: GalleryModel
@@ -19,17 +19,16 @@ export function SelectPhotoBtn({gallery}: Props) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const {isDesktop} = useWebMediaQueries()
 
   const onPressSelectPhotos = useCallback(async () => {
     track('Composer:GalleryOpened')
 
-    if (!isDesktop && !(await requestPhotoAccessIfNeeded())) {
+    if (!isNative && !(await requestPhotoAccessIfNeeded())) {
       return
     }
 
     gallery.pick()
-  }, [track, isDesktop, requestPhotoAccessIfNeeded, gallery])
+  }, [track, requestPhotoAccessIfNeeded, gallery])
 
   return (
     <TouchableOpacity
