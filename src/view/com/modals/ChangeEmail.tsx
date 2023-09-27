@@ -40,8 +40,11 @@ export const Component = observer(function Component({}: {}) {
       if (res.data.tokenRequired) {
         setStage(Stages.ConfirmCode)
       } else {
-        await store.agent.com.atproto.server.updateEmail({email})
-        store.session.updateLocalAccountData({email, emailConfirmed: false})
+        await store.agent.com.atproto.server.updateEmail({email: email.trim()})
+        store.session.updateLocalAccountData({
+          email: email.trim(),
+          emailConfirmed: false,
+        })
         Toast.show('Email updated')
         setStage(Stages.Done)
       }
@@ -57,10 +60,13 @@ export const Component = observer(function Component({}: {}) {
     setIsProcessing(true)
     try {
       await store.agent.com.atproto.server.updateEmail({
-        email,
-        token: confirmationCode,
+        email: email.trim(),
+        token: confirmationCode.trim(),
       })
-      store.session.updateLocalAccountData({email, emailConfirmed: false})
+      store.session.updateLocalAccountData({
+        email: email.trim(),
+        emailConfirmed: false,
+      })
       Toast.show('Email updated')
       setStage(Stages.Done)
     } catch (e) {

@@ -60,8 +60,8 @@ export const Component = observer(function Component({
     setIsProcessing(true)
     try {
       await store.agent.com.atproto.server.confirmEmail({
-        email: store.session.currentSession?.email || '',
-        token: confirmationCode,
+        email: (store.session.currentSession?.email || '').trim(),
+        token: confirmationCode.trim(),
       })
       store.session.updateLocalAccountData({emailConfirmed: true})
       Toast.show('Email verified')
