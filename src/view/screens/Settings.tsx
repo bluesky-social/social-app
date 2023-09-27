@@ -219,28 +219,25 @@ export const SettingsScreen = withAuthRequired(
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
                   Email:{' '}
-                  {!store.session.emailNeedsConfirmation && (
-                    <>
-                      <FontAwesomeIcon
-                        icon="check"
-                        size={10}
-                        style={{color: colors.green3}}
-                      />{' '}
-                    </>
-                  )}
-                  <Text type="lg" style={pal.text}>
-                    {store.session.currentSession?.email}
-                  </Text>{' '}
-                  {store.session.emailNeedsConfirmation && `(Unverified) `}
-                  <Link
-                    onPress={() =>
-                      store.shell.openModal({name: 'confirm', message: 'todo'})
-                    }>
-                    <Text type="lg" style={pal.link}>
-                      Change
-                    </Text>
-                  </Link>
                 </Text>
+                {!store.session.emailNeedsConfirmation && (
+                  <>
+                    <FontAwesomeIcon
+                      icon="check"
+                      size={10}
+                      style={{color: colors.green3, marginRight: 2}}
+                    />
+                  </>
+                )}
+                <Text type="lg" style={pal.text}>
+                  {store.session.currentSession?.email}{' '}
+                </Text>
+                <Link
+                  onPress={() => store.shell.openModal({name: 'change-email'})}>
+                  <Text type="lg" style={pal.link}>
+                    Change
+                  </Text>
+                </Link>
               </View>
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>

@@ -1,13 +1,6 @@
 import React, {useState} from 'react'
-import {
-  ActivityIndicator,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, TextInput, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -19,23 +12,39 @@ import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 
+enum Stages {
+  InputEmail,
+  ConfirmCode,
+  Done,
+}
+
 export const snapPoints = ['90%']
 
 export const Component = observer(function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
-  const [hasCode, setHasCode] = useState<boolean>(false)
+  const [stage, setStage] = useState<Stages>(Stages.InputEmail)
+  const [email, setEmail] = useState<string>(
+    store.session.currentSession?.email || '',
+  )
   const [confirmationCode, setConfirmationCode] = useState<string>('')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
 
-  const onSendEmail = async () => {
+  const onRequestChange = async () => {
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.requestEmailConfirmation()
-      setHasCode(true)
+      const res = await store.agent.com.atproto.server.requestEmailUpdate()
+      if (res.data.tokenRequired) {
+        setStage(Stages.ConfirmCode)
+      } else {
+        await store.agent.com.atproto.server.updateEmail({email})
+        store.session.updateLocalAccountData({email, emailConfirmed: false})
+        Toast.show('Email updated')
+        setStage(Stages.Done)
+      }
     } catch (e) {
       setError(cleanError(String(e)))
     } finally {
@@ -47,13 +56,13 @@ export const Component = observer(function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.confirmEmail({
-        email: store.session.currentSession?.email || '',
+      await store.agent.com.atproto.server.updateEmail({
+        email,
         token: confirmationCode,
       })
-      store.session.updateLocalAccountData({emailConfirmed: true})
-      Toast.show('Email verified')
-      store.shell.closeModal()
+      store.session.updateLocalAccountData({email, emailConfirmed: false})
+      Toast.show('Email updated')
+      setStage(Stages.Done)
     } catch (e) {
       setError(cleanError(String(e)))
     } finally {
@@ -61,37 +70,54 @@ export const Component = observer(function Component({}: {}) {
     }
   }
 
-  const onEmailIncorrect = () => {
+  const onVerify = async () => {
     store.shell.closeModal()
-    store.shell.openModal({name: 'change-email'})
+    store.shell.openModal({name: 'verify-email'})
   }
 
   return (
     <View
-      testID="verifyEmailModal"
+      testID="changeEmailModal"
       style={[pal.view, styles.container, isMobile && {paddingHorizontal: 18}]}>
       <View style={styles.titleSection}>
         <Text type="title-lg" style={[pal.text, styles.title]}>
-          {hasCode ? 'Enter Confirmation Code' : 'Verify Your Email'}
+          {stage === Stages.InputEmail ? 'Change Your Email' : ''}
+          {stage === Stages.ConfirmCode ? 'Security Step Required' : ''}
+          {stage === Stages.Done ? 'Email Updated' : ''}
         </Text>
       </View>
 
       <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-        {hasCode ? (
+        {stage === Stages.InputEmail ? (
+          <>Enter your new email address below.</>
+        ) : stage === Stages.ConfirmCode ? (
           <>
-            An email has been sent to{' '}
+            An email has been sent to your previous address,{' '}
             {store.session.currentSession?.email || ''}. It includes a
             confirmation code which you can enter below.
           </>
         ) : (
           <>
-            This is important in case you ever need to change your email or
-            reset your password.
+            Your email has been updated but not verified. As a next step, please
+            verify your new email.
           </>
         )}
       </Text>
 
-      {hasCode ? (
+      {stage === Stages.InputEmail && (
+        <TextInput
+          testID="emailInput"
+          style={[styles.textInput, pal.border, pal.text]}
+          placeholder="alice@mail.com"
+          placeholderTextColor={pal.colors.textLight}
+          value={email}
+          onChangeText={setEmail}
+          accessible={true}
+          accessibilityLabel="Email"
+          accessibilityHint=""
+        />
+      )}
+      {stage === Stages.ConfirmCode && (
         <TextInput
           testID="confirmCodeInput"
           style={[styles.textInput, pal.border, pal.text]}
@@ -103,21 +129,6 @@ export const Component = observer(function Component({}: {}) {
           accessibilityLabel="Confirmation code"
           accessibilityHint=""
         />
-      ) : (
-        <View style={[pal.border, styles.emailContainer]}>
-          <FontAwesomeIcon icon="envelope" color={pal.colors.text} size={16} />
-          <Text type="xl" style={[pal.text, s.flex1, {minWidth: 0}]}>
-            {store.session.currentSession?.email || ''}
-          </Text>
-          <Pressable
-            accessibilityLabel="Change my email"
-            accessibilityHint=""
-            onPress={onEmailIncorrect}>
-            <Text type="lg" style={pal.link}>
-              This is incorrect
-            </Text>
-          </Pressable>
-        </View>
       )}
 
       {error ? (
@@ -131,28 +142,40 @@ export const Component = observer(function Component({}: {}) {
           </View>
         ) : (
           <View style={{gap: 6}}>
-            <Button
-              testID="sendEmailBtn"
-              type="primary"
-              onPress={hasCode ? onConfirm : onSendEmail}
-              accessibilityLabel={
-                hasCode ? 'Confirm' : 'Send Confirmation Email'
-              }
-              accessibilityHint=""
-              label={hasCode ? 'Confirm' : 'Send Confirmation Email'}
-              labelContainerStyle={{justifyContent: 'center', padding: 4}}
-              labelStyle={[s.f18]}
-            />
-            {!hasCode && (
+            {stage === Stages.InputEmail && (
               <Button
-                testID="haveCodeBtn"
-                type="default"
-                accessibilityLabel="I have a code"
+                testID="requestChangeBtn"
+                type="primary"
+                onPress={onRequestChange}
+                accessibilityLabel="Request Change"
                 accessibilityHint=""
-                label="I have a confirmation code"
+                label="Request Change"
                 labelContainerStyle={{justifyContent: 'center', padding: 4}}
                 labelStyle={[s.f18]}
-                onPress={() => setHasCode(v => !v)}
+              />
+            )}
+            {stage === Stages.ConfirmCode && (
+              <Button
+                testID="confirmBtn"
+                type="primary"
+                onPress={onConfirm}
+                accessibilityLabel="Confirm Change"
+                accessibilityHint=""
+                label="Confirm Change"
+                labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                labelStyle={[s.f18]}
+              />
+            )}
+            {stage === Stages.Done && (
+              <Button
+                testID="verifyBtn"
+                type="primary"
+                onPress={onVerify}
+                accessibilityLabel="Verify New Email"
+                accessibilityHint=""
+                label="Verify New Email"
+                labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                labelStyle={[s.f18]}
               />
             )}
             <Button

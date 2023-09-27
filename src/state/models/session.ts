@@ -463,9 +463,9 @@ export class SessionModel {
     }
   }
 
-  setEmailConfirmed() {
+  updateLocalAccountData(changes: Partial<AccountData>) {
     this.accounts = this.accounts.map(acct =>
-      acct.did === this.data?.did ? {...acct, emailConfirmed: true} : acct,
+      acct.did === this.data?.did ? {...acct, ...changes} : acct,
     )
   }
 }

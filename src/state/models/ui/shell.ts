@@ -144,6 +144,10 @@ export interface VerifyEmailModal {
   name: 'verify-email'
 }
 
+export interface ChangeEmailModal {
+  name: 'change-email'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -153,6 +157,7 @@ export type Modal =
   | ProfilePreviewModal
   | BirthDateSettingsModal
   | VerifyEmailModal
+  | ChangeEmailModal
 
   // Curation
   | ContentFilteringSettingsModal
