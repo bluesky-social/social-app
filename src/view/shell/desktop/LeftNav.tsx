@@ -191,7 +191,11 @@ function ComposeBtn() {
     if (currentRoute.name === 'Profile') {
       const {name: handle} =
         currentRoute.params as CommonNavigatorParams['Profile']
-      if (handle === store.me.handle) return undefined
+      // what if a user has a valid handle, but the URL uses the DID?
+      // the DID should not be used, but consider accessing the actual
+      // profile data instead of purely looking at the URL -sfn
+      if (handle === store.me.handle || handle.startsWith('did:'))
+        return undefined
       return handle
     }
     return undefined
