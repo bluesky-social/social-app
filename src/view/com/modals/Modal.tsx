@@ -30,6 +30,7 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
+import * as SwitchAccountModal from './SwitchAccount'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -136,6 +137,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'birth-date-settings') {
     snapPoints = BirthDateSettingsModal.snapPoints
     element = <BirthDateSettingsModal.Component />
+  } else if (activeModal?.name === 'switch-account') {
+    snapPoints = SwitchAccountModal.snapPoints
+    element = <SwitchAccountModal.Component />
   } else {
     return null
   }
