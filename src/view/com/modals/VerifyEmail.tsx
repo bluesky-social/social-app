@@ -32,7 +32,7 @@ enum Stages {
 export const Component = observer(function Component({
   showReminder,
 }: {
-  showReminder?: booelean
+  showReminder?: boolean
 }) {
   const pal = usePalette('default')
   const store = useStores()
