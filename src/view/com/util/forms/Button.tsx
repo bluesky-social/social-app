@@ -42,6 +42,7 @@ export function Button({
   type = 'primary',
   label,
   style,
+  labelContainerStyle,
   labelStyle,
   onPress,
   children,
@@ -55,6 +56,7 @@ export function Button({
   type?: ButtonType
   label?: string
   style?: StyleProp<ViewStyle>
+  labelContainerStyle?: StyleProp<ViewStyle>
   labelStyle?: StyleProp<TextStyle>
   onPress?: () => void | Promise<void>
   testID?: string
@@ -173,7 +175,7 @@ export function Button({
     }
 
     return (
-      <View style={styles.labelContainer}>
+      <View style={[styles.labelContainer, labelContainerStyle]}>
         {label && withLoading && isLoading ? (
           <ActivityIndicator size={12} color={typeLabelStyle.color} />
         ) : null}
@@ -182,7 +184,15 @@ export function Button({
         </Text>
       </View>
     )
-  }, [children, label, withLoading, isLoading, typeLabelStyle, labelStyle])
+  }, [
+    children,
+    label,
+    withLoading,
+    isLoading,
+    labelContainerStyle,
+    typeLabelStyle,
+    labelStyle,
+  ])
 
   return (
     <Pressable

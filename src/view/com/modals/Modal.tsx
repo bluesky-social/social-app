@@ -30,6 +30,7 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
+import * as VerifyEmailModal from './VerifyEmail'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -136,6 +137,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'birth-date-settings') {
     snapPoints = BirthDateSettingsModal.snapPoints
     element = <BirthDateSettingsModal.Component />
+  } else if (activeModal?.name === 'verify-email') {
+    snapPoints = VerifyEmailModal.snapPoints
+    element = <VerifyEmailModal.Component />
   } else {
     return null
   }

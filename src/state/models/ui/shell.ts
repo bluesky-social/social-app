@@ -140,6 +140,10 @@ export interface BirthDateSettingsModal {
   name: 'birth-date-settings'
 }
 
+export interface VerifyEmailModal {
+  name: 'verify-email'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -148,6 +152,7 @@ export type Modal =
   | EditProfileModal
   | ProfilePreviewModal
   | BirthDateSettingsModal
+  | VerifyEmailModal
 
   // Curation
   | ContentFilteringSettingsModal

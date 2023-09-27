@@ -28,6 +28,7 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
+import * as VerifyEmailModal from './VerifyEmail'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -110,6 +111,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ModerationDetailsModal.Component {...modal} />
   } else if (modal.name === 'birth-date-settings') {
     element = <BirthDateSettingsModal.Component />
+  } else if (modal.name === 'verify-email') {
+    element = <VerifyEmailModal.Component />
   } else {
     return null
   }
