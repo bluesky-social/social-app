@@ -46,16 +46,17 @@ export class Reminders {
     if (sess.emailConfirmed) {
       return false
     }
+    const today = new Date()
     // shard the users into 2 day of the week buckets
     // (this is to avoid a sudden influx of email updates when
     // this feature rolls out)
     const code = toHashCode(sess.did) % 7
-    if (code !== 0 && code !== 1) {
+    if (code !== today.getDay() && code !== (today.getDay() + 1) % 7) {
       return false
     }
     // only ask once a day at most, but because of the bucketing
     // this will be more like weekly
-    return Date.now() - Number(this.lastEmailConfirm) > DAY
+    return Number(today) - Number(this.lastEmailConfirm) > DAY
   }
 
   setEmailConfirmationRequested() {
