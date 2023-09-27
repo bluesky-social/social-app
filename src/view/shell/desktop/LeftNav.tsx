@@ -185,24 +185,26 @@ function ComposeBtn() {
   const {getState} = useNavigation()
   const {isTablet} = useWebMediaQueries()
 
-  const getProfileHandle = () => {
+  const getProfileHandle = async () => {
     const {routes} = getState()
     const currentRoute = routes[routes.length - 1]
     if (currentRoute.name === 'Profile') {
-      const {name: handle} =
+      const {name: handleOrDid} =
         currentRoute.params as CommonNavigatorParams['Profile']
-      // what if a user has a valid handle, but the URL uses the DID?
-      // the DID should not be used, but consider accessing the actual
-      // profile data instead of purely looking at the URL -sfn
-      if (handle === store.me.handle || handle.startsWith('did:'))
+      const cached = await store.profiles.cache.get(handleOrDid)
+      const profile = cached ? cached.data : undefined
+      if (
+        profile?.handle === store.me.handle ||
+        profile?.handle === 'handle.invalid'
+      )
         return undefined
-      return handle
+      return profile?.handle
     }
     return undefined
   }
 
-  const onPressCompose = () =>
-    store.shell.openComposer({mention: getProfileHandle()})
+  const onPressCompose = async () =>
+    store.shell.openComposer({mention: await getProfileHandle()})
 
   if (isTablet) {
     return null
