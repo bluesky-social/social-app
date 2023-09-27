@@ -188,18 +188,25 @@ function ComposeBtn() {
   const getProfileHandle = async () => {
     const {routes} = getState()
     const currentRoute = routes[routes.length - 1]
+
     if (currentRoute.name === 'Profile') {
-      const {name: handleOrDid} =
+      let handle: string | undefined = (
         currentRoute.params as CommonNavigatorParams['Profile']
-      const cached = await store.profiles.cache.get(handleOrDid)
-      const profile = cached ? cached.data : undefined
-      if (
-        profile?.handle === store.me.handle ||
-        profile?.handle === 'handle.invalid'
-      )
+      ).name
+
+      if (handle.startsWith('did:')) {
+        const cached = await store.profiles.cache.get(handle)
+        const profile = cached ? cached.data : undefined
+        // if we can't resolve handle, set to undefined
+        handle = profile?.handle || undefined
+      }
+
+      if (!handle || handle === store.me.handle || handle === 'handle.invalid')
         return undefined
-      return profile?.handle
+
+      return handle
     }
+
     return undefined
   }
 
