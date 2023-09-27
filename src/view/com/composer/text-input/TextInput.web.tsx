@@ -12,6 +12,7 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {TagsAutocompleteView} from 'state/models/ui/tags-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
@@ -19,6 +20,7 @@ import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
 import {TagDecorator} from './web/TagDecorator'
+import {Tags, createTagsSuggestion} from './web/Tags'
 
 export interface TextInputRef {
   focus: () => void
@@ -30,6 +32,7 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
+  tagsAutocompleteView: TagsAutocompleteView
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -45,6 +48,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     placeholder,
     suggestedLinks,
     autocompleteView,
+    tagsAutocompleteView,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -58,7 +62,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
-      TagDecorator,
+      // TagDecorator,
+      Tags.configure({
+        HTMLAttributes: {
+          class: 'autolink',
+        },
+        suggestion: createTagsSuggestion({autocompleteView: tagsAutocompleteView}),
+      }),
       Mention.configure({
         HTMLAttributes: {
           class: 'mention',
