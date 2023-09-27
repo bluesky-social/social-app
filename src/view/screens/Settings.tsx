@@ -715,9 +715,11 @@ const EmailConfirmationNotice = observer(
                   borderRadius: 6,
                   paddingHorizontal: 12,
                   paddingVertical: 10,
+                  alignItems: 'center',
                 },
                 isMobile && {flex: 1},
               ]}
+              accessibilityRole="button"
               accessibilityLabel="Verify my email"
               accessibilityHint=""
               onPress={() => store.shell.openModal({name: 'verify-email'})}>
