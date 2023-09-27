@@ -113,7 +113,7 @@ function Modal({modal}: {modal: ModalIface}) {
   } else if (modal.name === 'birth-date-settings') {
     element = <BirthDateSettingsModal.Component />
   } else if (modal.name === 'verify-email') {
-    element = <VerifyEmailModal.Component />
+    element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {
     element = <ChangeEmailModal.Component />
   } else {

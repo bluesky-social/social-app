@@ -140,7 +140,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
     element = <BirthDateSettingsModal.Component />
   } else if (activeModal?.name === 'verify-email') {
     snapPoints = VerifyEmailModal.snapPoints
-    element = <VerifyEmailModal.Component />
+    element = <VerifyEmailModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-email') {
     snapPoints = ChangeEmailModal.snapPoints
     element = <ChangeEmailModal.Component />

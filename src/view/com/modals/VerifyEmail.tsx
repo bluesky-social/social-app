@@ -21,10 +21,22 @@ import {cleanError} from 'lib/strings/errors'
 
 export const snapPoints = ['90%']
 
-export const Component = observer(function Component({}: {}) {
+enum Stages {
+  Reminder,
+  Email,
+  ConfirmCode,
+}
+
+export const Component = observer(function Component({
+  showReminder,
+}: {
+  showReminder?: booelan
+}) {
   const pal = usePalette('default')
   const store = useStores()
-  const [hasCode, setHasCode] = useState<boolean>(false)
+  const [stage, setStage] = useState<Stage>(
+    showReminder ? Stages.Reminder : Stages.Email,
+  )
   const [confirmationCode, setConfirmationCode] = useState<string>('')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -35,7 +47,7 @@ export const Component = observer(function Component({}: {}) {
     setIsProcessing(true)
     try {
       await store.agent.com.atproto.server.requestEmailConfirmation()
-      setHasCode(true)
+      setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
     } finally {
@@ -72,38 +84,35 @@ export const Component = observer(function Component({}: {}) {
       style={[pal.view, styles.container, isMobile && {paddingHorizontal: 18}]}>
       <View style={styles.titleSection}>
         <Text type="title-lg" style={[pal.text, styles.title]}>
-          {hasCode ? 'Enter Confirmation Code' : 'Verify Your Email'}
+          {stage === Stages.Reminder ? 'Please Verify Your Email' : ''}
+          {stage === Stages.ConfirmCode ? 'Enter Confirmation Code' : ''}
+          {stage === Stages.Email ? 'Verify Your Email' : ''}
         </Text>
       </View>
 
       <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-        {hasCode ? (
+        {stage === Stages.Reminder ? (
+          <>
+            Your email has not yet been verified. This is an important security
+            step which we recommend.
+          </>
+        ) : stage === Stages.Email ? (
+          <>
+            This is important in case you ever need to change your email or
+            reset your password.
+          </>
+        ) : stage === Stages.ConfirmCode ? (
           <>
             An email has been sent to{' '}
             {store.session.currentSession?.email || ''}. It includes a
             confirmation code which you can enter below.
           </>
         ) : (
-          <>
-            This is important in case you ever need to change your email or
-            reset your password.
-          </>
+          ''
         )}
       </Text>
 
-      {hasCode ? (
-        <TextInput
-          testID="confirmCodeInput"
-          style={[styles.textInput, pal.border, pal.text]}
-          placeholder="XXXXX-XXXXX"
-          placeholderTextColor={pal.colors.textLight}
-          value={confirmationCode}
-          onChangeText={setConfirmationCode}
-          accessible={true}
-          accessibilityLabel="Confirmation code"
-          accessibilityHint=""
-        />
-      ) : (
+      {stage === Stages.Email ? (
         <View style={[pal.border, styles.emailContainer]}>
           <FontAwesomeIcon icon="envelope" color={pal.colors.text} size={16} />
           <Text type="xl" style={[pal.text, s.flex1, {minWidth: 0}]}>
@@ -118,7 +127,19 @@ export const Component = observer(function Component({}: {}) {
             </Text>
           </Pressable>
         </View>
-      )}
+      ) : stage === Stages.ConfirmCode ? (
+        <TextInput
+          testID="confirmCodeInput"
+          style={[styles.textInput, pal.border, pal.text]}
+          placeholder="XXXXX-XXXXX"
+          placeholderTextColor={pal.colors.textLight}
+          value={confirmationCode}
+          onChangeText={setConfirmationCode}
+          accessible={true}
+          accessibilityLabel="Confirmation code"
+          accessibilityHint=""
+        />
+      ) : undefined}
 
       {error ? (
         <ErrorMessage message={error} style={styles.error} />
@@ -131,37 +152,63 @@ export const Component = observer(function Component({}: {}) {
           </View>
         ) : (
           <View style={{gap: 6}}>
-            <Button
-              testID="sendEmailBtn"
-              type="primary"
-              onPress={hasCode ? onConfirm : onSendEmail}
-              accessibilityLabel={
-                hasCode ? 'Confirm' : 'Send Confirmation Email'
-              }
-              accessibilityHint=""
-              label={hasCode ? 'Confirm' : 'Send Confirmation Email'}
-              labelContainerStyle={{justifyContent: 'center', padding: 4}}
-              labelStyle={[s.f18]}
-            />
-            {!hasCode && (
+            {stage === Stages.Reminder && (
               <Button
-                testID="haveCodeBtn"
-                type="default"
-                accessibilityLabel="I have a code"
+                testID="getStartedBtn"
+                type="primary"
+                onPress={() => setStage(Stages.Email)}
+                accessibilityLabel="Get Started"
                 accessibilityHint=""
-                label="I have a confirmation code"
+                label="Get Started"
                 labelContainerStyle={{justifyContent: 'center', padding: 4}}
                 labelStyle={[s.f18]}
-                onPress={() => setHasCode(v => !v)}
+              />
+            )}
+            {stage === Stages.Email && (
+              <>
+                <Button
+                  testID="sendEmailBtn"
+                  type="primary"
+                  onPress={onSendEmail}
+                  accessibilityLabel="Send Confirmation Email"
+                  accessibilityHint=""
+                  label="Send Confirmation Email"
+                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelStyle={[s.f18]}
+                />
+                <Button
+                  testID="haveCodeBtn"
+                  type="default"
+                  accessibilityLabel="I have a code"
+                  accessibilityHint=""
+                  label="I have a confirmation code"
+                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelStyle={[s.f18]}
+                  onPress={() => setStage(Stages.ConfirmCode)}
+                />
+              </>
+            )}
+            {stage === Stages.ConfirmCode && (
+              <Button
+                testID="confirmBtn"
+                type="primary"
+                onPress={onConfirm}
+                accessibilityLabel="Confirm"
+                accessibilityHint=""
+                label="Confirm"
+                labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                labelStyle={[s.f18]}
               />
             )}
             <Button
               testID="cancelBtn"
               type="default"
               onPress={() => store.shell.closeModal()}
-              accessibilityLabel="Cancel"
+              accessibilityLabel={
+                stage === Stages.Reminder ? 'Not right now' : 'Cancel'
+              }
               accessibilityHint=""
-              label="Cancel"
+              label={stage === Stages.Reminder ? 'Not right now' : 'Cancel'}
               labelContainerStyle={{justifyContent: 'center', padding: 4}}
               labelStyle={[s.f18]}
             />
