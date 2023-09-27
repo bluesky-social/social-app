@@ -63,6 +63,7 @@
     "@tiptap/extension-paragraph": "^2.0.0-beta.220",
     "@tiptap/extension-placeholder": "^2.0.0-beta.220",
     "@tiptap/extension-text": "^2.0.0-beta.220",
+    "@tiptap/html": "^2.1.11",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/suggestion": "^2.0.0-beta.220",

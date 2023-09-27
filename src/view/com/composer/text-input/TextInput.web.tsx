@@ -17,6 +17,7 @@ import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
+import {generateJSON} from '@tiptap/html'
 
 export interface TextInputRef {
   focus: () => void
@@ -52,6 +53,26 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   ref,
 ) {
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+  const extensions = React.useMemo(
+    () => [
+      Document,
+      LinkDecorator,
+      Mention.configure({
+        HTMLAttributes: {
+          class: 'mention',
+        },
+        suggestion: createSuggestion({autocompleteView}),
+      }),
+      Paragraph,
+      Placeholder.configure({
+        placeholder,
+      }),
+      Text,
+      History,
+      Hardbreak,
+    ],
+    [autocompleteView, placeholder],
+  )
 
   React.useEffect(() => {
     textInputWebEmitter.addListener('publish', onPressPublish)
@@ -68,23 +89,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 
   const editor = useEditor(
     {
-      extensions: [
-        Document,
-        LinkDecorator,
-        Mention.configure({
-          HTMLAttributes: {
-            class: 'mention',
-          },
-          suggestion: createSuggestion({autocompleteView}),
-        }),
-        Paragraph,
-        Placeholder.configure({
-          placeholder,
-        }),
-        Text,
-        History,
-        Hardbreak,
-      ],
+      extensions,
       editorProps: {
         attributes: {
           class: modeClass,
@@ -107,7 +112,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           }
         },
       },
-      content: textToEditorJson(richtext.text.toString()),
+      content: generateJSON(richtext.text.toString(), extensions),
       autofocus: 'end',
       editable: true,
       injectCSS: true,
@@ -180,61 +185,6 @@ function editorJsonToText(json: JSONContent): string {
     text += `@${json.attrs?.id || ''}`
   }
   return text
-}
-
-function textToEditorJson(text: string): JSONContent {
-  if (text === '' || text.length === 0) {
-    return {
-      text: '',
-    }
-  }
-
-  const lines = text.split('\n')
-  const docContent: JSONContent[] = []
-
-  for (const line of lines) {
-    if (line.trim() === '') {
-      continue // skip empty lines
-    }
-
-    const paragraphContent: JSONContent[] = []
-    let position = 0
-
-    while (position < line.length) {
-      if (line[position] === '@') {
-        // Handle mentions
-        let endPosition = position + 1
-        while (endPosition < line.length && /\S/.test(line[endPosition])) {
-          endPosition++
-        }
-        const mentionId = line.substring(position + 1, endPosition)
-        paragraphContent.push({
-          type: 'mention',
-          attrs: {id: mentionId},
-        })
-        position = endPosition
-      } else {
-        // Handle regular text
-        let endPosition = line.indexOf('@', position)
-        if (endPosition === -1) endPosition = line.length
-        paragraphContent.push({
-          type: 'text',
-          text: line.substring(position, endPosition),
-        })
-        position = endPosition
-      }
-    }
-
-    docContent.push({
-      type: 'paragraph',
-      content: paragraphContent,
-    })
-  }
-
-  return {
-    type: 'doc',
-    content: docContent,
-  }
 }
 
 const styles = StyleSheet.create({
