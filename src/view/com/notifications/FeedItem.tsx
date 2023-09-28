@@ -39,6 +39,7 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 import {TimeElapsed} from '../util/TimeElapsed'
+import {isWeb} from 'platform/detection'
 
 const MAX_AUTHORS = 5
 
@@ -450,10 +451,12 @@ const styles = StyleSheet.create({
   overflowHidden: {
     overflow: 'hidden',
   },
-  pointer: {
-    // @ts-ignore web only
-    cursor: 'pointer',
-  },
+  pointer: isWeb
+    ? {
+        // @ts-ignore web only
+        cursor: 'pointer',
+      }
+    : {},
 
   outer: {
     padding: 10,
