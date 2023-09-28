@@ -81,10 +81,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadLatestInline: {
-    // @ts-ignore web only
-    left: 'calc(50vw - 282px)',
-  },
+  // @ts-ignore web only
+  loadLatestInline: isWeb
+    ? {
+        left: 'calc(50vw - 282px)',
+      }
+    : {},
   loadLatestOutOfLine: {
     // @ts-ignore web only
     left: 'calc(50vw - 382px)',
