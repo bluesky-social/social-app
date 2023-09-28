@@ -22,7 +22,7 @@ import {
 import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
 import {PostThreadModel} from 'state/models/content/post-thread'
 import {s, colors} from 'lib/styles'
-import {ago} from 'lib/strings/time'
+import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
@@ -38,6 +38,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
+import {TimeElapsed} from '../util/TimeElapsed'
 
 const MAX_AUTHORS = 5
 
@@ -88,7 +89,7 @@ export const FeedItem = observer(function FeedItemImpl({
   }, [item])
 
   const onToggleAuthorsExpanded = () => {
-    setAuthorsExpanded(!isAuthorsExpanded)
+    setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
   const authors: Author[] = useMemo(() => {
@@ -179,7 +180,6 @@ export const FeedItem = observer(function FeedItemImpl({
   }
 
   return (
-    // eslint-disable-next-line react-native-a11y/no-nested-touchables
     <Link
       testID={`feedItem-by-${item.author.handle}`}
       style={[
@@ -211,9 +211,9 @@ export const FeedItem = observer(function FeedItemImpl({
         )}
       </View>
       <View style={styles.layoutContent}>
-        <Pressable
-          onPress={authors.length > 1 ? onToggleAuthorsExpanded : undefined}
-          accessible={false}>
+        <ExpandListPressable
+          hasMultipleAuthors={authors.length > 1}
+          onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
           <CondensedAuthorsList
             visible={!isAuthorsExpanded}
             authors={authors}
@@ -239,9 +239,15 @@ export const FeedItem = observer(function FeedItemImpl({
               </>
             ) : undefined}
             <Text style={[pal.text]}> {action}</Text>
-            <Text style={[pal.textLight]}> {ago(item.indexedAt)}</Text>
+            <TimeElapsed timestamp={item.indexedAt}>
+              {({timeElapsed}) => (
+                <Text style={[pal.textLight]} title={niceDate(item.indexedAt)}>
+                  {' ' + timeElapsed}
+                </Text>
+              )}
+            </TimeElapsed>
           </Text>
-        </Pressable>
+        </ExpandListPressable>
         {item.isLike || item.isRepost || item.isQuote ? (
           <AdditionalPostText additionalPost={item.additionalPost} />
         ) : null}
@@ -249,6 +255,29 @@ export const FeedItem = observer(function FeedItemImpl({
     </Link>
   )
 })
+
+function ExpandListPressable({
+  hasMultipleAuthors,
+  children,
+  onToggleAuthorsExpanded,
+}: {
+  hasMultipleAuthors: boolean
+  children: React.ReactNode
+  onToggleAuthorsExpanded: () => void
+}) {
+  if (hasMultipleAuthors) {
+    return (
+      <Pressable
+        onPress={onToggleAuthorsExpanded}
+        style={[styles.expandedAuthorsTrigger]}
+        accessible={false}>
+        {children}
+      </Pressable>
+    )
+  } else {
+    return <>{children}</>
+  }
+}
 
 function CondensedAuthorsList({
   visible,
@@ -466,7 +495,9 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingLeft: 36,
   },
-
+  expandedAuthorsTrigger: {
+    zIndex: 1,
+  },
   expandedAuthorsCloseBtn: {
     flexDirection: 'row',
     alignItems: 'center',
