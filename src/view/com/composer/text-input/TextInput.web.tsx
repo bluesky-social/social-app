@@ -196,6 +196,8 @@ function editorJsonToText(json: JSONContent): string {
     text += json.text || ''
   } else if (json.type === 'mention') {
     text += `@${json.attrs?.id || ''}`
+  } else if (json.type === 'tag') {
+    text += `#${json.attrs?.id || ''}`
   }
   return text
 }
