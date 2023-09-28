@@ -136,6 +136,9 @@ export const Component = observer(function Component({}: {}) {
               accessible={true}
               accessibilityLabel="Email"
               accessibilityHint=""
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect={false}
             />
           )}
           {stage === Stages.ConfirmCode && (
@@ -149,6 +152,9 @@ export const Component = observer(function Component({}: {}) {
               accessible={true}
               accessibilityLabel="Confirmation code"
               accessibilityHint=""
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           )}
 

@@ -154,6 +154,9 @@ export const Component = observer(function Component({
               accessible={true}
               accessibilityLabel="Confirmation code"
               accessibilityHint=""
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           ) : undefined}
 
