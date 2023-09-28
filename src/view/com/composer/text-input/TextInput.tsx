@@ -21,6 +21,11 @@ import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
+import {
+  TagsAutocomplete,
+  getHashtagAt,
+  insertTagAt,
+} from './mobile/TagsAutocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
@@ -59,6 +64,7 @@ export const TextInput = forwardRef(function TextInputImpl(
     placeholder,
     suggestedLinks,
     autocompleteView,
+    tagsAutocompleteModel,
     setRichText,
     onPhotoPasted,
     onSuggestedLinksChanged,
@@ -96,15 +102,27 @@ export const TextInput = forwardRef(function TextInputImpl(
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
 
-        const prefix = getMentionAt(
+        const mentionPrefix = getMentionAt(
           newText,
           textInputSelection.current?.start || 0,
         )
-        if (prefix) {
+
+        if (mentionPrefix) {
           autocompleteView.setActive(true)
-          autocompleteView.setPrefix(prefix.value)
+          autocompleteView.setPrefix(mentionPrefix.value)
         } else {
           autocompleteView.setActive(false)
+        }
+
+        const hashtagPrefix = getHashtagAt(
+          newText,
+          textInputSelection.current?.start || 0,
+        )
+        if (hashtagPrefix) {
+          tagsAutocompleteModel.setActive(true)
+          tagsAutocompleteModel.search(hashtagPrefix.value || '')
+        } else {
+          tagsAutocompleteModel.setActive(false)
         }
 
         const set: Set<string> = new Set()
@@ -145,6 +163,7 @@ export const TextInput = forwardRef(function TextInputImpl(
       suggestedLinks,
       onSuggestedLinksChanged,
       onPhotoPasted,
+      tagsAutocompleteModel,
     ],
   )
 
@@ -186,6 +205,17 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, autocompleteView],
   )
 
+  const onSelectTag = useCallback(
+    (tag: string) => {
+      onChangeText(
+        insertTagAt(richtext.text, textInputSelection.current?.start || 0, tag),
+      )
+      tagsAutocompleteModel.commitRecentTag(tag)
+      tagsAutocompleteModel.setActive(false)
+    },
+    [onChangeText, richtext, tagsAutocompleteModel],
+  )
+
   const textDecorated = useMemo(() => {
     let i = 0
 
@@ -223,6 +253,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         view={autocompleteView}
         onSelect={onSelectAutocompleteItem}
       />
+      <TagsAutocomplete model={tagsAutocompleteModel} onSelect={onSelectTag} />
     </View>
   )
 })

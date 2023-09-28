@@ -13,7 +13,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
@@ -226,6 +226,14 @@ export const ComposePost = observer(function ComposePost({
         imageCount: gallery.size,
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
+
+      for (const facet of richtext.facets || []) {
+        for (const feature of facet.features) {
+          if (AppBskyRichtextFacet.isTag(feature)) {
+            tagsAutocompleteModel.commitRecentTag(feature.tag)
+          }
+        }
+      }
     }
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
