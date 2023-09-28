@@ -1,13 +1,14 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import Animated from 'react-native-reanimated'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useMediaQuery} from 'react-responsive'
+
+import {HITSLOP_20} from 'lib/constants'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {colors} from 'lib/styles'
-import {HITSLOP_20} from 'lib/constants'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
 import {isWeb} from 'platform/detection'
@@ -72,10 +73,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadLatestInline: {
-    // @ts-ignore web only
-    left: 'calc(50vw - 282px)',
-  },
+  loadLatestInline: isWeb
+    ? {
+        // @ts-ignore web only
+        left: 'calc(50vw - 282px)',
+      }
+    : {},
   loadLatestOutOfLine: {
     // @ts-ignore web only
     left: 'calc(50vw - 382px)',
