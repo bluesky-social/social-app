@@ -36,6 +36,7 @@ import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {isDesktopWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Tag} from 'view/com/Tag'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -339,18 +340,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   paddingBottom: 12,
                 }}>
                 {item.post.record.tags.map(tag => (
-                  <Link
-                    key={tag}
-                    asAnchor
-                    accessible
-                    anchorNoUnderline
-                    href={`/search?q=${tag}`}>
-                    <Text
-                      type="xs-medium"
-                      style={[styles.tag, pal.viewLight, pal.textLight]}>
-                      #{tag}
-                    </Text>
-                  </Link>
+                  <Tag key={tag} value={tag} textSize="post-text-lg" />
                 ))}
               </View>
             ) : null}

@@ -6,15 +6,61 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 
 import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
+import {Text, CustomTextProps} from 'view/com/util/text/Text'
+import {Link} from 'view/com/util/Link'
 
-export function Tag({value}: {value: string}) {
+export function Tag({
+  value,
+  textSize,
+}: {
+  value: string
+  textSize?: CustomTextProps['type']
+}) {
   const pal = usePalette('default')
+  const type = textSize || 'xs-medium'
 
   return (
-    <Text type="xs-medium" style={[styles.tag, pal.viewLight, pal.textLight]}>
-      #{value}
-    </Text>
+    <Link
+      asAnchor
+      accessible
+      anchorNoUnderline
+      href={`/search?q=${value}`}
+      style={[pal.border, styles.tag]}>
+      <Text type={type} style={[pal.textLight]}>
+        #{value}
+      </Text>
+    </Link>
+  )
+}
+
+export function InlineTag({
+  value,
+  textSize,
+}: {
+  value: string
+  textSize?: CustomTextProps['type']
+}) {
+  const pal = usePalette('default')
+  const type = textSize || 'xs-medium'
+
+  return (
+    <Link
+      asAnchor
+      accessible
+      anchorNoUnderline
+      href={`/search?q=${value}`}
+      style={[
+        pal.border,
+        styles.tag,
+        {
+          paddingTop: 0,
+          paddingBottom: 2,
+        },
+      ]}>
+      <Text type={type} style={[pal.textLight]}>
+        #{value}
+      </Text>
+    </Link>
   )
 }
 
@@ -74,8 +120,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingTop: 1,
+    paddingBottom: 2,
+    paddingHorizontal: 6,
     borderRadius: 20,
     overflow: 'hidden',
     borderWidth: 1,

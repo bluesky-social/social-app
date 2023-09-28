@@ -116,6 +116,7 @@
       }
       .ProseMirror p {
         margin: 0;
+        line-height: 1.5;
       }
       .ProseMirror p.is-editor-empty:first-child::before {
         color: #8d8e96;
@@ -155,8 +156,8 @@
       .ProseMirror .mention::after {
         content: '';
         position: absolute;
-        top: -1px;
-        bottom: -3px;
+        top: 0;
+        bottom: -2px;
         left: -8px;
         right: -8px;
         z-index: -1;
