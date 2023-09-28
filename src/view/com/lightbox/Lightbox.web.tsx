@@ -145,7 +145,6 @@ function LightboxInner({
       {imgs[index].alt ? (
         <View style={styles.footer}>
           <Pressable
-            accessibilityRole="button"
             accessibilityLabel="Expand alt text"
             accessibilityHint="If alt text is long, toggles alt text expanded state"
             onPress={() => {
