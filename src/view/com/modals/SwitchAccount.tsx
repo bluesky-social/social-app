@@ -35,18 +35,17 @@ export function Component({}: {}) {
     async (acct: AccountData) => {
       track('Settings:SwitchAccountButtonClicked')
       setIsSwitching(true)
-      if (await store.session.resumeSession(acct)) {
-        setIsSwitching(false)
-        store.shell.closeModal()
+      const success = await store.session.resumeSession(acct)
+      store.shell.closeModal()
+      if (success) {
         resetNavigation()
         Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-        return
+      } else {
+        Toast.show('Sorry! We need you to enter your password.')
+        navigation.navigate('HomeTab')
+        navigation.dispatch(StackActions.popToTop())
+        store.session.clear()
       }
-      setIsSwitching(false)
-      Toast.show('Sorry! We need you to enter your password.')
-      navigation.navigate('HomeTab')
-      navigation.dispatch(StackActions.popToTop())
-      store.session.clear()
     },
     [track, setIsSwitching, navigation, store],
   )
@@ -56,18 +55,14 @@ export function Component({}: {}) {
     store.session.logout()
   }, [track, store])
 
-  const onCancel = () => {
-    store.shell.closeModal()
-  }
-
   return (
     <View style={[styles.container, pal.view]}>
+      <Text type="title-xl" style={[styles.title, pal.text]}>
+        Switch Account
+      </Text>
       <BottomSheetScrollView
         style={styles.container}
         contentContainerStyle={[styles.innerContainer, pal.view]}>
-        <Text type="title-xl" style={[styles.title, pal.text]}>
-          Switch Account
-        </Text>
         {isSwitching ? (
           <View style={[pal.view, styles.linkCard]}>
             <ActivityIndicator />
@@ -127,17 +122,6 @@ export function Component({}: {}) {
             <AccountDropdownBtn handle={account.handle} />
           </TouchableOpacity>
         ))}
-        <TouchableOpacity
-          style={[styles.btn, s.mt10]}
-          onPress={onCancel}
-          accessibilityRole="button"
-          accessibilityLabel="Cancel switching account"
-          accessibilityHint="Closes the modal and returns to the previous screen"
-          onAccessibilityEscape={onCancel}>
-          <Text type="button-lg" style={pal.textLight}>
-            Cancel
-          </Text>
-        </TouchableOpacity>
       </BottomSheetScrollView>
     </View>
   )
@@ -154,14 +138,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 12,
     marginBottom: 12,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 32,
-    padding: 14,
-    marginHorizontal: 20,
   },
   linkCard: {
     flexDirection: 'row',
