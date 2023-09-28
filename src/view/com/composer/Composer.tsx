@@ -396,14 +396,6 @@ export const ComposePost = observer(function ComposePost({
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
-
-          <View
-            style={[
-              pal.border,
-              {borderTopWidth: 1, paddingVertical: 10, marginTop: 10},
-            ]}>
-            <TagInput onChangeTags={onChangeTags} />
-          </View>
         </ScrollView>
         {!extLink && suggestedLinks.size > 0 ? (
           <View style={s.mb5}>
@@ -426,6 +418,20 @@ export const ComposePost = observer(function ComposePost({
               ))}
           </View>
         ) : null}
+
+        <View
+          style={[
+            pal.border,
+            {
+              borderTopWidth: 1,
+              paddingVertical: 10,
+              marginTop: 10,
+              paddingHorizontal: 15,
+            },
+          ]}>
+          <TagInput onChangeTags={onChangeTags} />
+        </View>
+
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>
@@ -528,8 +534,7 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 10,
-    paddingLeft: 15,
-    paddingRight: 20,
+    paddingRight: 15,
     alignItems: 'center',
     borderTopWidth: 1,
   },
