@@ -60,7 +60,7 @@ module.exports = function (config) {
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
       ios: {
-        supportsTablet: false,
+        supportsTablet: true,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
