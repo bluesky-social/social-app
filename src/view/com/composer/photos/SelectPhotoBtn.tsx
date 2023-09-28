@@ -23,7 +23,7 @@ export function SelectPhotoBtn({gallery}: Props) {
   const onPressSelectPhotos = useCallback(async () => {
     track('Composer:GalleryOpened')
 
-    if (!isNative && !(await requestPhotoAccessIfNeeded())) {
+    if (isNative && !(await requestPhotoAccessIfNeeded())) {
       return
     }
 
