@@ -32,6 +32,7 @@ import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
+import * as SwitchAccountModal from './SwitchAccount'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 
@@ -144,6 +145,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'change-email') {
     snapPoints = ChangeEmailModal.snapPoints
     element = <ChangeEmailModal.Component />
+  } else if (activeModal?.name === 'switch-account') {
+    snapPoints = SwitchAccountModal.snapPoints
+    element = <SwitchAccountModal.Component />
   } else {
     return null
   }

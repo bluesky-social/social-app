@@ -150,6 +150,10 @@ export interface ChangeEmailModal {
   name: 'change-email'
 }
 
+export interface SwitchAccountModal {
+  name: 'switch-account'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -160,6 +164,7 @@ export type Modal =
   | BirthDateSettingsModal
   | VerifyEmailModal
   | ChangeEmailModal
+  | SwitchAccountModal
 
   // Curation
   | ContentFilteringSettingsModal
