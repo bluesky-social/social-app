@@ -148,6 +148,8 @@ export interface VerifyEmailModal {
 
 export interface ChangeEmailModal {
   name: 'change-email'
+}
+
 export interface SwitchAccountModal {
   name: 'switch-account'
 }
