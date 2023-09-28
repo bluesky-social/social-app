@@ -22,6 +22,7 @@ import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
 import {MutedThreads} from './muted-threads'
 import {reset as resetNavigation} from '../../Navigation'
+import {RecentTagsModel} from './ui/tags-autocomplete'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -53,6 +54,7 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
   mutedThreads = new MutedThreads()
+  recentTags = new RecentTagsModel()
 
   constructor(agent: BskyAgent) {
     this.agent = agent
@@ -77,6 +79,7 @@ export class RootStoreModel {
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
       mutedThreads: this.mutedThreads.serialize(),
+      recentTags: this.recentTags.serialize(),
     }
   }
 
@@ -108,6 +111,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'mutedThreads')) {
         this.mutedThreads.hydrate(v.mutedThreads)
+      }
+      if (hasProp(v, 'recentTags')) {
+        this.recentTags.hydrate(v.recentTags)
       }
     }
   }

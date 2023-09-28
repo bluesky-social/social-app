@@ -19,7 +19,7 @@ import PasteInput, {
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
-import {TagsAutocompleteView} from 'state/models/ui/tags-autocomplete'
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
@@ -40,7 +40,7 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  tagsAutocompleteView: TagsAutocompleteView
+  tagsAutocompleteModel: TagsAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>

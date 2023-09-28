@@ -16,7 +16,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
-import {TagsAutocompleteView} from 'state/models/ui/tags-autocomplete'
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
@@ -98,8 +98,8 @@ export const ComposePost = observer(function ComposePost({
     () => new UserAutocompleteModel(store),
     [store],
   )
-  const tagAutoCompleteView = useMemo<TagsAutocompleteView>(
-    () => new TagsAutocompleteView(store),
+  const tagsAutocompleteModel = useMemo<TagsAutocompleteModel>(
+    () => new TagsAutocompleteModel(store),
     [store],
   )
 
@@ -371,7 +371,7 @@ export const ComposePost = observer(function ComposePost({
               placeholder={selectTextInputPlaceholder}
               suggestedLinks={suggestedLinks}
               autocompleteView={autocompleteView}
-              tagsAutocompleteView={tagAutoCompleteView}
+              tagsAutocompleteModel={tagsAutocompleteModel}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}

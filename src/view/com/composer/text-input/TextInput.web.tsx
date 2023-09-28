@@ -12,15 +12,14 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
-import {TagsAutocompleteView} from 'state/models/ui/tags-autocomplete'
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
-import {TagDecorator} from './web/TagDecorator'
-import {Tags, createTagsSuggestion} from './web/Tags'
+import {Tags, createTagsAutocomplete} from './web/Tags'
 
 export interface TextInputRef {
   focus: () => void
@@ -32,7 +31,7 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  tagsAutocompleteView: TagsAutocompleteView
+  tagsAutocompleteModel: TagsAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -48,7 +47,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     placeholder,
     suggestedLinks,
     autocompleteView,
-    tagsAutocompleteView,
+    tagsAutocompleteModel,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -65,9 +64,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       // TagDecorator,
       Tags.configure({
         HTMLAttributes: {
-          class: 'autolink',
+          class: 'inline-tag',
         },
-        suggestion: createTagsSuggestion({autocompleteView: tagsAutocompleteView}),
+        suggestion: createTagsAutocomplete({
+          autocompleteModel: tagsAutocompleteModel,
+        }),
       }),
       Mention.configure({
         HTMLAttributes: {
@@ -83,7 +84,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       History,
       Hardbreak,
     ],
-    [autocompleteView, placeholder],
+    [autocompleteView, placeholder, tagsAutocompleteModel],
   )
 
   React.useEffect(() => {
