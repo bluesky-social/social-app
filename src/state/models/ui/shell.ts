@@ -24,6 +24,7 @@ export interface ConfirmModal {
   onPressCancel?: () => void | Promise<void>
   confirmBtnText?: string
   confirmBtnStyle?: StyleProp<ViewStyle>
+  cancelBtnText?: string
 }
 
 export interface EditProfileModal {
@@ -140,6 +141,15 @@ export interface BirthDateSettingsModal {
   name: 'birth-date-settings'
 }
 
+export interface VerifyEmailModal {
+  name: 'verify-email'
+  showReminder?: boolean
+}
+
+export interface ChangeEmailModal {
+  name: 'change-email'
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -148,6 +158,8 @@ export type Modal =
   | EditProfileModal
   | ProfilePreviewModal
   | BirthDateSettingsModal
+  | VerifyEmailModal
+  | ChangeEmailModal
 
   // Curation
   | ContentFilteringSettingsModal
@@ -250,6 +262,7 @@ export class ShellUiModel {
     })
 
     this.setupClock()
+    this.setupLoginModals()
   }
 
   serialize(): unknown {
@@ -374,5 +387,14 @@ export class ShellUiModel {
         this.tickEveryMinute = Date.now()
       })
     }, 60_000)
+  }
+
+  setupLoginModals() {
+    this.rootStore.onSessionReady(() => {
+      if (this.rootStore.reminders.shouldRequestEmailConfirmation) {
+        this.openModal({name: 'verify-email', showReminder: true})
+        this.rootStore.reminders.setEmailConfirmationRequested()
+      }
+    })
   }
 }

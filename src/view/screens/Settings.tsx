@@ -219,10 +219,25 @@ export const SettingsScreen = withAuthRequired(
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
                   Email:{' '}
-                  <Text type="lg" style={pal.text}>
-                    {store.session.currentSession?.email}
-                  </Text>
                 </Text>
+                {!store.session.emailNeedsConfirmation && (
+                  <>
+                    <FontAwesomeIcon
+                      icon="check"
+                      size={10}
+                      style={{color: colors.green3, marginRight: 2}}
+                    />
+                  </>
+                )}
+                <Text type="lg" style={pal.text}>
+                  {store.session.currentSession?.email}{' '}
+                </Text>
+                <Link
+                  onPress={() => store.shell.openModal({name: 'change-email'})}>
+                  <Text type="lg" style={pal.link}>
+                    Change
+                  </Text>
+                </Link>
               </View>
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
@@ -238,6 +253,7 @@ export const SettingsScreen = withAuthRequired(
                 </Link>
               </View>
               <View style={styles.spacer20} />
+              <EmailConfirmationNotice />
             </>
           ) : null}
           <View style={[s.flexRow, styles.heading]}>
@@ -664,6 +680,67 @@ function AccountDropdownBtn({handle}: {handle: string}) {
     </Pressable>
   )
 }
+
+const EmailConfirmationNotice = observer(
+  function EmailConfirmationNoticeImpl() {
+    const pal = usePalette('default')
+    const palInverted = usePalette('inverted')
+    const store = useStores()
+    const {isMobile} = useWebMediaQueries()
+
+    if (!store.session.emailNeedsConfirmation) {
+      return null
+    }
+
+    return (
+      <View style={{marginBottom: 20}}>
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          Verify email
+        </Text>
+        <View
+          style={[
+            {
+              paddingVertical: isMobile ? 12 : 0,
+              paddingHorizontal: 18,
+            },
+            pal.view,
+          ]}>
+          <View style={{flexDirection: 'row', marginBottom: 8}}>
+            <Pressable
+              style={[
+                palInverted.view,
+                {
+                  flexDirection: 'row',
+                  gap: 6,
+                  borderRadius: 6,
+                  paddingHorizontal: 12,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                },
+                isMobile && {flex: 1},
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Verify my email"
+              accessibilityHint=""
+              onPress={() => store.shell.openModal({name: 'verify-email'})}>
+              <FontAwesomeIcon
+                icon="envelope"
+                color={palInverted.colors.text}
+                size={16}
+              />
+              <Text type="button" style={palInverted.text}>
+                Verify My Email
+              </Text>
+            </Pressable>
+          </View>
+          <Text style={pal.textLight}>
+            Protect your account by verifying your email.
+          </Text>
+        </View>
+      </View>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   dimmed: {
