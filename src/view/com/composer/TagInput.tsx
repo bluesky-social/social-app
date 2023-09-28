@@ -20,6 +20,16 @@ function uniq(tags: string[]) {
   return Array.from(new Set(tags))
 }
 
+// function sanitize(tagString: string, { max }: { max: number }) {
+//   const sanitized = tagString.replace(/^#/, '')
+//     .split(/\s/)
+//     .map(t => t.trim())
+//     .map(t => t.replace(/^#/, ''))
+
+//   return uniq(sanitized)
+//     .slice(0, max)
+// }
+
 function sanitize(tagString: string) {
   return tagString.trim().replace(/^#/, '')
 }
@@ -91,9 +101,12 @@ export function TagInput({
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
       if (e.nativeEvent.key === 'Backspace' && value === '') {
         handleChangeTags(tags.slice(0, -1))
+      } else if (e.nativeEvent.key === ' ') {
+        e.preventDefault() // prevents an additional space on web
+        onSubmitEditing()
       }
     },
-    [value, tags, handleChangeTags],
+    [value, tags, handleChangeTags, onSubmitEditing],
   )
 
   const onChangeText = React.useCallback((v: string) => {
