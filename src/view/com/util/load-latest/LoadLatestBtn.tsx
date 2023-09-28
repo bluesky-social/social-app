@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-    // @ts-ignore web only
+  // @ts-ignore web only
   loadLatestInline: isWeb
     ? {
         left: 'calc(50vw - 282px)',
