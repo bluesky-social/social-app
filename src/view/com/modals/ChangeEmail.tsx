@@ -60,7 +60,15 @@ export const Component = observer(function Component({}: {}) {
         setStage(Stages.Done)
       }
     } catch (e) {
-      setError(cleanError(String(e)))
+      let err = cleanError(String(e))
+      // TEMP
+      // while rollout is occuring, we're giving a temporary error message
+      // you can remove this any time after Oct2023
+      // -prf
+      if (err === 'email must be confirmed (temporary)') {
+        err = `Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed.`
+      }
+      setError(err)
     } finally {
       setIsProcessing(false)
     }
