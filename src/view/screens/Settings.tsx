@@ -36,14 +36,13 @@ import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {AccountData} from 'state/models/session'
+import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
 import {HandIcon, HashtagIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {reset as resetNavigation} from '../../Navigation'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 
@@ -61,7 +60,8 @@ export const SettingsScreen = withAuthRequired(
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
-    const [isSwitching, setIsSwitching] = React.useState(false)
+    const [isSwitching, setIsSwitching, onPressSwitchAccount] =
+      useAccountSwitcher()
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
       store.agent,
     )
@@ -89,25 +89,6 @@ export const SettingsScreen = withAuthRequired(
         screen('Settings')
         store.shell.setMinimalShellMode(false)
       }, [screen, store]),
-    )
-
-    const onPressSwitchAccount = React.useCallback(
-      async (acct: AccountData) => {
-        track('Settings:SwitchAccountButtonClicked')
-        setIsSwitching(true)
-        if (await store.session.resumeSession(acct)) {
-          setIsSwitching(false)
-          resetNavigation()
-          Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-          return
-        }
-        setIsSwitching(false)
-        Toast.show('Sorry! We need you to enter your password.')
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-        store.session.clear()
-      },
-      [track, setIsSwitching, navigation, store],
     )
 
     const onPressAddAccount = React.useCallback(() => {

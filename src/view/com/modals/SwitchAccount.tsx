@@ -10,11 +10,7 @@ import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {StackActions, useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
-import {AccountData} from 'state/models/session'
-import {reset as resetNavigation} from '../../../Navigation'
-import * as Toast from '../../com/util/Toast'
+import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {UserAvatar} from '../util/UserAvatar'
 import {AccountDropdownBtn} from '../util/AccountDropdownBtn'
 import {Link} from '../util/Link'
@@ -28,27 +24,7 @@ export function Component({}: {}) {
   const {track} = useAnalytics()
 
   const store = useStores()
-  const [isSwitching, setIsSwitching] = React.useState(false)
-  const navigation = useNavigation<NavigationProp>()
-
-  const onPressSwitchAccount = React.useCallback(
-    async (acct: AccountData) => {
-      track('Settings:SwitchAccountButtonClicked')
-      setIsSwitching(true)
-      const success = await store.session.resumeSession(acct)
-      store.shell.closeModal()
-      if (success) {
-        resetNavigation()
-        Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-      } else {
-        Toast.show('Sorry! We need you to enter your password.')
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-        store.session.clear()
-      }
-    },
-    [track, setIsSwitching, navigation, store],
-  )
+  const [isSwitching, _, onPressSwitchAccount] = useAccountSwitcher()
 
   const onPressSignout = React.useCallback(() => {
     track('Settings:SignOutButtonClicked')
