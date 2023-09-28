@@ -5,7 +5,6 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
-  Pressable,
 } from 'react-native'
 import {
   FontAwesomeIcon,
@@ -13,8 +12,8 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 
 import {isWeb} from 'platform/detection'
-import {Text} from 'view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {EditableTag} from 'view/com/Tag'
 
 function uniq(tags: string[]) {
   return Array.from(new Set(tags))
@@ -32,29 +31,6 @@ function uniq(tags: string[]) {
 
 function sanitize(tagString: string) {
   return tagString.trim().replace(/^#/, '')
-}
-
-function Tag({
-  tag,
-  removeTag,
-}: {
-  tag: string
-  removeTag: (tag: string) => void
-}) {
-  const pal = usePalette('default')
-  return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => removeTag(tag)}
-      style={state => ({
-        opacity: state.hovered || state.pressed || state.focused ? 0.8 : 1,
-        outline: 0,
-      })}>
-      <Text type="xs-medium" style={[styles.tag, pal.viewLight, pal.textLight]}>
-        #{tag}
-      </Text>
-    </Pressable>
-  )
 }
 
 export function TagInput({
@@ -130,7 +106,7 @@ export function TagInput({
         />
       )}
       {tags.map(tag => (
-        <Tag key={tag} tag={tag} removeTag={removeTag} />
+        <EditableTag key={tag} value={tag} onRemove={removeTag} />
       ))}
       {tags.length >= max ? null : (
         <TextInput

@@ -48,6 +48,7 @@
         --text: black;
         --background: white;
         --backgroundLight: #F3F3F8;
+        --border: #f0e9e9;
         --blue: #0085ff;
         --teal: #9AD5CA;
         --yellow: #FED766;
@@ -56,12 +57,14 @@
         --text: white;
         --background: black;
         --backgroundLight: #26272D;
+        --border: #26272D;
       }
       @media (prefers-color-scheme: light) {
         html.colorMode--system {
           --text: black;
           --background: white;
           --backgroundLight: #F3F3F8;
+          --border: #f0e9e9;
         }
       }
       @media (prefers-color-scheme: dark) {
@@ -69,6 +72,7 @@
           --text: white;
           --background: black;
           --backgroundLight: #26272D;
+          --border: #26272D;
         }
       }
 
@@ -145,25 +149,28 @@
       .ProseMirror .inline-tag,
       .ProseMirror .mention {
         position: relative;
-        margin: 0 3px;
+        margin: 0 6px;
       }
       .ProseMirror .inline-tag::after,
       .ProseMirror .mention::after {
         content: '';
         position: absolute;
         top: -1px;
-        bottom: -2px;
-        left: -3px;
-        right: -3px;
+        bottom: -3px;
+        left: -8px;
+        right: -8px;
         z-index: -1;
         opacity: 0.3;
-        border-radius: 4px;
+        border-radius: 30px;
+        border-width: 1px;
+        border-style: solid;
       }
       .ProseMirror .inline-tag {
-        color: var(--teal);
+        color: var(--text);
       }
       .ProseMirror .inline-tag::after {
-        background-color: var(--teal);
+        background-color: var(--background);
+        border-color: var(--border):
       }
       .ProseMirror .mention {
         color: var(--yellow);
