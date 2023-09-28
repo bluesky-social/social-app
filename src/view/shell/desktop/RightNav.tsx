@@ -125,6 +125,8 @@ const styles = StyleSheet.create({
     // @ts-ignore web only
     left: 'calc(50vw + 310px)',
     width: 304,
+    // @ts-ignore web only
+    maxHeight: '90vh',
   },
 
   message: {
