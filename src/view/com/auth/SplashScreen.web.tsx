@@ -6,7 +6,8 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
-import {isMobileWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -16,6 +17,9 @@ export const SplashScreen = ({
   onPressCreateAccount: () => void
 }) => {
   const pal = usePalette('default')
+  const {isTabletOrMobile} = useWebMediaQueries()
+  const styles = useStyles()
+  const isMobileWeb = isWeb && isTabletOrMobile
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
@@ -55,13 +59,14 @@ export const SplashScreen = ({
           </View>
         </ErrorBoundary>
       </View>
-      <Footer />
+      <Footer styles={styles} />
     </CenteredView>
   )
 }
 
-function Footer() {
+function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
   const pal = usePalette('default')
+
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
@@ -82,78 +87,81 @@ function Footer() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-  },
-  containerInner: {
-    height: '100%',
-    justifyContent: 'center',
-    // @ts-ignore web only
-    paddingBottom: '20vh',
-    paddingHorizontal: 20,
-  },
-  containerInnerMobile: {
-    paddingBottom: 50,
-  },
-  title: {
-    textAlign: 'center',
-    color: colors.blue3,
-    fontSize: 68,
-    fontWeight: 'bold',
-    paddingBottom: 10,
-  },
-  titleMobile: {
-    textAlign: 'center',
-    color: colors.blue3,
-    fontSize: 58,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    textAlign: 'center',
-    color: colors.gray5,
-    fontSize: 52,
-    fontWeight: 'bold',
-    paddingBottom: 30,
-  },
-  subtitleMobile: {
-    textAlign: 'center',
-    color: colors.gray5,
-    fontSize: 42,
-    fontWeight: 'bold',
-    paddingBottom: 30,
-  },
-  btns: {
-    flexDirection: isMobileWeb ? 'column' : 'row',
-    gap: 20,
-    justifyContent: 'center',
-    paddingBottom: 40,
-  },
-  btn: {
-    borderRadius: 30,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    minWidth: 220,
-  },
-  btnLabel: {
-    textAlign: 'center',
-    fontSize: 18,
-  },
-  notice: {
-    paddingHorizontal: 40,
-    textAlign: 'center',
-  },
-  footer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    padding: 20,
-    borderTopWidth: 1,
-    flexDirection: 'row',
-  },
-  footerLink: {
-    marginRight: 20,
-  },
-})
+const useStyles = () => {
+  const {isTabletOrMobile} = useWebMediaQueries()
+  const isMobileWeb = isWeb && isTabletOrMobile
+  return StyleSheet.create({
+    container: {
+      height: '100%',
+    },
+    containerInner: {
+      height: '100%',
+      justifyContent: 'center',
+      // @ts-ignore web only
+      paddingBottom: '20vh',
+      paddingHorizontal: 20,
+    },
+    containerInnerMobile: {
+      paddingBottom: 50,
+    },
+    title: {
+      textAlign: 'center',
+      color: colors.blue3,
+      fontSize: 68,
+      fontWeight: 'bold',
+      paddingBottom: 10,
+    },
+    titleMobile: {
+      textAlign: 'center',
+      color: colors.blue3,
+      fontSize: 58,
+      fontWeight: 'bold',
+    },
+    subtitle: {
+      textAlign: 'center',
+      color: colors.gray5,
+      fontSize: 52,
+      fontWeight: 'bold',
+      paddingBottom: 30,
+    },
+    subtitleMobile: {
+      textAlign: 'center',
+      color: colors.gray5,
+      fontSize: 42,
+      fontWeight: 'bold',
+      paddingBottom: 30,
+    },
+    btns: {
+      flexDirection: isMobileWeb ? 'column' : 'row',
+      gap: 20,
+      justifyContent: 'center',
+      paddingBottom: 40,
+    },
+    btn: {
+      borderRadius: 30,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      minWidth: 220,
+    },
+    btnLabel: {
+      textAlign: 'center',
+      fontSize: 18,
+    },
+    notice: {
+      paddingHorizontal: 40,
+      textAlign: 'center',
+    },
+    footer: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: 20,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+    },
+    footerLink: {
+      marginRight: 20,
+    },
+  })
+}

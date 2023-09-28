@@ -2,11 +2,17 @@ import {useState, useCallback, useRef} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {RootStoreModel} from 'state/index'
 import {s} from 'lib/styles'
-import {isDesktopWeb} from 'platform/detection'
+import {useWebMediaQueries} from './useWebMediaQueries'
 
-const DY_LIMIT_UP = isDesktopWeb ? 30 : 10
-const DY_LIMIT_DOWN = isDesktopWeb ? 150 : 10
 const Y_LIMIT = 10
+
+const useDeviceLimits = () => {
+  const {isDesktop} = useWebMediaQueries()
+  return {
+    dyLimitUp: isDesktop ? 30 : 10,
+    dyLimitDown: isDesktop ? 150 : 10,
+  }
+}
 
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
@@ -18,6 +24,8 @@ export function useOnMainScroll(
 ): [OnScrollCb, boolean, ResetCb] {
   let lastY = useRef(0)
   let [isScrolledDown, setIsScrolledDown] = useState(false)
+  const {dyLimitUp, dyLimitDown} = useDeviceLimits()
+
   return [
     useCallback(
       (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -25,15 +33,11 @@ export function useOnMainScroll(
         const dy = y - (lastY.current || 0)
         lastY.current = y
 
-        if (
-          !store.shell.minimalShellMode &&
-          dy > DY_LIMIT_DOWN &&
-          y > Y_LIMIT
-        ) {
+        if (!store.shell.minimalShellMode && dy > dyLimitDown && y > Y_LIMIT) {
           store.shell.setMinimalShellMode(true)
         } else if (
           store.shell.minimalShellMode &&
-          (dy < DY_LIMIT_UP * -1 || y <= Y_LIMIT)
+          (dy < dyLimitUp * -1 || y <= Y_LIMIT)
         ) {
           store.shell.setMinimalShellMode(false)
         }
@@ -50,7 +54,7 @@ export function useOnMainScroll(
           setIsScrolledDown(false)
         }
       },
-      [store, isScrolledDown],
+      [store.shell, dyLimitDown, dyLimitUp, isScrolledDown],
     ),
     isScrolledDown,
     useCallback(() => {
