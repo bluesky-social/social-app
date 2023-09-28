@@ -241,7 +241,9 @@ export const FeedItem = observer(function FeedItemImpl({
             <Text style={[pal.text]}> {action}</Text>
             <TimeElapsed timestamp={item.indexedAt}>
               {({timeElapsed}) => (
-                <Text style={[pal.textLight]} title={niceDate(item.indexedAt)}>
+                <Text
+                  style={[pal.textLight, styles.pointer]}
+                  title={niceDate(item.indexedAt)}>
                   {' ' + timeElapsed}
                 </Text>
               )}
@@ -447,6 +449,10 @@ function AdditionalPostText({
 const styles = StyleSheet.create({
   overflowHidden: {
     overflow: 'hidden',
+  },
+  pointer: {
+    // @ts-ignore web only
+    cursor: 'pointer',
   },
 
   outer: {
