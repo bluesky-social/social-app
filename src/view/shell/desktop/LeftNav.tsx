@@ -42,7 +42,7 @@ import {makeProfileLink} from 'lib/routes/links'
 const ProfileCard = observer(function ProfileCardImpl() {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
-  const size = isDesktop ? 32 : 48
+  const size = 48
   return store.me.handle ? (
     <Link
       href={makeProfileLink(store.me)}
