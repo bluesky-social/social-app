@@ -16,6 +16,7 @@ import {AccountDropdownBtn} from '../util/AccountDropdownBtn'
 import {Link} from '../util/Link'
 import {makeProfileLink} from 'lib/routes/links'
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet'
+import {Haptics} from 'lib/haptics'
 
 export const snapPoints = ['40%', '90%']
 
@@ -25,6 +26,10 @@ export function Component({}: {}) {
 
   const store = useStores()
   const [isSwitching, _, onPressSwitchAccount] = useAccountSwitcher()
+
+  React.useEffect(() => {
+    Haptics.default()
+  })
 
   const onPressSignout = React.useCallback(() => {
     track('Settings:SignOutButtonClicked')
