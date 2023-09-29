@@ -325,7 +325,7 @@ const ImageItem = ({
       <GestureDetector gesture={Gesture.Exclusive(Gesture.Simultaneous(pinch, pan), doubleTap)}>
         <AnimatedImage
           source={imageSrc}
-          resizeMode="contain"
+          contentFit="contain"
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
