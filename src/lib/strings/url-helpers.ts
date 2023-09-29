@@ -166,3 +166,25 @@ export function getYoutubeVideoId(link: string): string | undefined {
   }
   return videoId
 }
+
+export function linkRequiresWarning(uri: string, label: string) {
+  try {
+    const urip = new URL(uri)
+    label = label.replace(/^http(s?):\/\//i, '')
+    return !label.startsWith(urip.hostname)
+  } catch {
+    return true
+  }
+}
+
+export function isPossiblyAUrl(str: string): boolean {
+  str = str.trim()
+  if (str.startsWith('http://')) {
+    return true
+  }
+  if (str.startsWith('https://')) {
+    return true
+  }
+  const [firstWord] = str.split(/[\s\/]/)
+  return isValidDomain(firstWord)
+}

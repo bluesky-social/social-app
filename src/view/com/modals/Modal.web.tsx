@@ -30,6 +30,7 @@ import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
+import * as LinkWarningModal from './LinkWarning'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -116,6 +117,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {
     element = <ChangeEmailModal.Component />
+  } else if (modal.name === 'link-warning') {
+    element = <LinkWarningModal.Component {...modal} />
   } else {
     return null
   }

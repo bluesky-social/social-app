@@ -89,6 +89,7 @@ export function RichText({
           href={link.uri}
           style={[style, lineHeightStyle, pal.link]}
           dataSet={WORD_WRAP}
+          warnOnMismatchingLabel
         />,
       )
     } else {
