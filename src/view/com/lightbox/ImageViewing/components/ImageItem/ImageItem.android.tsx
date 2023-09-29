@@ -12,6 +12,7 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedReaction,
   useSharedValue,
+  withSpring,
 } from 'react-native-reanimated'
 import {
   GestureDetector,
@@ -25,7 +26,8 @@ import useImageDimensions from '../../hooks/useImageDimensions'
 import {ImageSource} from '../../@types'
 
 const SCREEN = Dimensions.get('window')
-const MAX_SCALE = 2
+const MIN_DOUBLE_TAP_SCALE = 2
+const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -150,6 +152,11 @@ function clampTranslation(value, scaledSize, screenSize) {
   return clampedValue
 }
 
+function withClampedSpring(value) {
+  'worklet'
+  return withSpring(value, { overshootClamping: true })
+}
+
 const initialTransform = createTransform();
 
 const ImageItem = ({
@@ -201,16 +208,12 @@ const ImageItem = ({
     return toStyle(t)
   })
 
-  function getPanLimitAdjustment(nextPanTranslation) {
+  function getPanAdjustment(candidateTransform) {
     'worklet';
     if (!imageDimensions) {
       return [0, 0]
     }
-    let t = createTransform();
-    prependPan(t, nextPanTranslation)
-    prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value);
-    prependTransform(t, committedTransform.value)
-    const [nextTranslateX, nextTranslateY, nextScale] = readTransform(t)
+    const [nextTranslateX, nextTranslateY, nextScale] = readTransform(candidateTransform)
     const scaledDimensions = getScaledDimensions(imageDimensions, nextScale)
     const clampedTranslateX = clampTranslation(nextTranslateX, scaledDimensions.width, SCREEN.width)
     const clampedTranslateY = clampTranslation(nextTranslateY, scaledDimensions.height, SCREEN.height)
@@ -231,12 +234,17 @@ const ImageItem = ({
         return;
       }
       const [,,committedScale] = readTransform(committedTransform.value)
-      const maxCommittedScale = (imageDimensions.width / SCREEN.width) * MAX_SCALE
+      const maxCommittedScale = (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
       const minPinchScale = 1 / committedScale;
       const maxPinchScale = maxCommittedScale / committedScale;
       const nextPinchScale = Math.min(Math.max(minPinchScale, e.scale), maxPinchScale);
       pinchScale.value = nextPinchScale
-      const [dx, dy] = getPanLimitAdjustment(panTranslation.value)
+
+      const t = createTransform();
+      prependPan(t, panTranslation.value)
+      prependPinch(t, nextPinchScale, pinchOrigin.value, pinchTranslation.value);
+      prependTransform(t, committedTransform.value)
+      const [dx, dy] = getPanAdjustment(t)
       if (dx !== 0 || dy !== 0) {
         pinchTranslation.value = {
           x: pinchTranslation.value.x + dx,
@@ -263,7 +271,11 @@ const ImageItem = ({
         return;
       }
       const nextPanTranslation = { x: e.translationX, y: e.translationY }
-      const [dx, dy] = getPanLimitAdjustment(nextPanTranslation)
+      let t = createTransform();
+      prependPan(t, nextPanTranslation)
+      prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value);
+      prependTransform(t, committedTransform.value)
+      const [dx, dy] = getPanAdjustment(t)
       nextPanTranslation.x += dx
       nextPanTranslation.y += dy
       panTranslation.value = nextPanTranslation;
@@ -277,11 +289,40 @@ const ImageItem = ({
       panTranslation.value = { x: 0, y: 0 };
     });
 
+  const doubleTap = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd((e) => {
+      if (!imageDimensions) {
+        return;
+      }
+      const [,,committedScale] = readTransform(committedTransform.value)
+      if (committedScale !== 1) {
+        let t = createTransform();
+        committedTransform.value = withClampedSpring(t)
+        return;
+      }
+      const origin = {
+        x: e.absoluteX - SCREEN.width/2,
+        y: e.absoluteY - SCREEN.height/2
+      };
+      const imageAspect = imageDimensions.width / imageDimensions.height
+      const screenAspect = SCREEN.width / SCREEN.height
+      const candidateScale = Math.max(imageAspect / screenAspect, screenAspect / imageAspect, MIN_DOUBLE_TAP_SCALE)
+      const maxScale = (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+      const scale = Math.min(candidateScale, maxScale)
+      const candidateTransform = createTransform();
+      prependPinch(candidateTransform, scale, origin, {x: 0, y: 0})
+      const [dx, dy] = getPanAdjustment(candidateTransform)
+      const finalTransform = createTransform();
+      prependPinch(finalTransform, scale, origin, {x: dx, y: dy})
+      committedTransform.value = withClampedSpring(finalTransform)
+    });
+
   const isLoading = !isLoaded || !imageDimensions;
   return (
     <View
       style={styles.container}>
-      <GestureDetector gesture={Gesture.Simultaneous(pinch, pan)}>
+      <GestureDetector gesture={Gesture.Exclusive(Gesture.Simultaneous(pinch, pan), doubleTap)}>
         <AnimatedImage
           source={imageSrc}
           resizeMode="contain"
