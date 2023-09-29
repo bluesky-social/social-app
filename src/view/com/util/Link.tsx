@@ -176,7 +176,11 @@ export const TextLink = observer(function TextLink({
         linkRequiresWarning(href, typeof text === 'string' ? text : '')
       if (requiresWarning) {
         e?.preventDefault?.()
-        store.shell.openModal({name: 'link-warning', text, href})
+        store.shell.openModal({
+          name: 'link-warning',
+          text: typeof text === 'string' ? text : '',
+          href,
+        })
       }
       if (onPress) {
         e?.preventDefault?.()
