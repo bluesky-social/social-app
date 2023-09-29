@@ -25,6 +25,7 @@ import useImageDimensions from '../../hooks/useImageDimensions'
 import {ImageSource} from '../../@types'
 
 const SCREEN = Dimensions.get('window')
+const MAX_SCALE = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -226,9 +227,15 @@ const ImageItem = ({
       };
     })
     .onChange((e) => {
+      if (!imageDimensions) {
+        return;
+      }
       const [,,committedScale] = readTransform(committedTransform.value)
-      const nextScale = Math.max(e.scale, 1 / committedScale);
-      pinchScale.value = nextScale
+      const maxCommittedScale = (imageDimensions.width / SCREEN.width) * MAX_SCALE
+      const minPinchScale = 1 / committedScale;
+      const maxPinchScale = maxCommittedScale / committedScale;
+      const nextPinchScale = Math.min(Math.max(minPinchScale, e.scale), maxPinchScale);
+      pinchScale.value = nextPinchScale
       const [dx, dy] = getPanLimitAdjustment(panTranslation.value)
       if (dx !== 0 || dy !== 0) {
         pinchTranslation.value = {
