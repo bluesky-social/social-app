@@ -129,15 +129,40 @@ function ImageViewing({
             <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
           )}
         </Animated.View>
-        {/* TODO: show gallery again */}
-        <ImageItem
-          onZoom={onZoom}
-          imageSrc={images[0]}
-          onRequestClose={onRequestCloseEnhanced}
-          onLongPress={onLongPress}
-          delayLongPress={delayLongPress}
-          swipeToCloseEnabled={swipeToCloseEnabled}
-          doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+        <VirtualizedList
+          ref={imageList}
+          data={images}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          getItem={(_, index) => images[index]}
+          getItemCount={() => images.length}
+          getItemLayout={(_, index) => ({
+            length: SCREEN_WIDTH,
+            offset: SCREEN_WIDTH * index,
+            index,
+          })}
+          renderItem={({item: imageSrc}) => (
+            <ImageItem
+              onZoom={onZoom}
+              imageSrc={imageSrc}
+              onRequestClose={onRequestCloseEnhanced}
+              onLongPress={onLongPress}
+              delayLongPress={delayLongPress}
+              swipeToCloseEnabled={swipeToCloseEnabled}
+              doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+            />
+          )}
+          onMomentumScrollEnd={onScroll}
+          //@ts-ignore
+          keyExtractor={(imageSrc, index) =>
+            keyExtractor
+              ? keyExtractor(imageSrc, index)
+              : typeof imageSrc === 'number'
+              ? `${imageSrc}`
+              : imageSrc.uri
+          }
         />
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, {transform: footerTransform}]}>

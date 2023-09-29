@@ -10,7 +10,9 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
+  useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -38,7 +40,7 @@ type Props = {
   doubleTapToZoomEnabled?: boolean
 }
 
- type Matrix3 = readonly [
+ type Matrix3 = [
   number,
   number,
   number,
@@ -106,6 +108,14 @@ function prependPinch(t, scale, origin, translation) {
   prependTranslate(t, -origin.x, -origin.y);
 }
 
+function applyRounding(t) {
+  'worklet'
+  t[2] = Math.round(t[2])
+  t[5] = Math.round(t[5])
+  t[0] = Math.round(t[0] * 200) / 200;
+  t[4] = Math.round(t[0] * 200) / 200;
+}
+
 function toStyle(t) {
   "worklet";
   const [translateX, translateY, scale] = readTransform(t)
@@ -154,12 +164,31 @@ const ImageItem = ({
   swipeToCloseEnabled = true,
   doubleTapToZoomEnabled = true,
 }: Props) => {
+  const [isScaled, setIsScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const pinchOrigin = useSharedValue({ x: 0, y: 0 })
   const pinchScale = useSharedValue(1)
   const pinchTranslation = useSharedValue({ x: 0, y: 0 })
   const panTranslation = useSharedValue({ x: 0, y: 0 })
+
+  useAnimatedReaction(
+    () => {
+      if (pinchScale.value !== 1) {
+        return true;
+      }
+      const [,,scale] = readTransform(committedTransform.value)
+      if (scale !== 1) {
+        return true;
+      }
+      return false;
+    },
+    (isScaledNow, wasScaledBefore) => {
+      if (isScaledNow !== wasScaledBefore) {
+        runOnJS(setIsScaled)(isScaledNow)
+      }
+    }
+  )
 
   const animatedStyle = useAnimatedStyle(() => {
     let t = createTransform();
@@ -210,6 +239,7 @@ const ImageItem = ({
       let t = createTransform();
       prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
       prependTransform(t, committedTransform.value);
+      applyRounding(t)
       committedTransform.value = t
       pinchScale.value = 1;
       pinchOrigin.value = { x: 0, y: 0 };
@@ -218,6 +248,7 @@ const ImageItem = ({
 
   const pan = Gesture.Pan()
     .averageTouches(true)
+    .enabled(isScaled)
     .onChange((e) => {
       if (!imageDimensions) {
         return;
@@ -232,6 +263,7 @@ const ImageItem = ({
       let t = createTransform();
       prependPan(t, panTranslation.value)
       prependTransform(t, committedTransform.value);
+      applyRounding(t)
       committedTransform.value = t
       panTranslation.value = { x: 0, y: 0 };
     });
