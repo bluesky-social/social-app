@@ -1,19 +1,16 @@
 import React, {useCallback, useRef, useEffect, useState} from 'react'
 
 import {
+  ActivityIndicator,
   View,
   Dimensions,
   StyleSheet,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  NativeMethodsMixin,
 } from 'react-native'
 import {Image} from 'expo-image'
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useAnimatedReaction,
-  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
 import {
@@ -26,7 +23,6 @@ const AnimatedImage = Animated.createAnimatedComponent(Image)
 import useImageDimensions from '../../hooks/useImageDimensions'
 
 import {ImageSource} from '../../@types'
-import {ImageLoading} from './ImageLoading'
 
 const SCREEN = Dimensions.get('window')
 
@@ -165,6 +161,7 @@ const ImageItem = ({
   doubleTapToZoomEnabled = true,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const pinchOrigin = useSharedValue({ x: 0, y: 0 })
@@ -268,6 +265,7 @@ const ImageItem = ({
       panTranslation.value = { x: 0, y: 0 };
     });
 
+  const isLoading = !isLoaded || !imageDimensions;
   return (
     <View
       style={styles.container}>
@@ -278,8 +276,11 @@ const ImageItem = ({
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-        />
+          onLoad={() => setIsLoaded(true)}
+        >
+        </AnimatedImage>
       </GestureDetector>
+      {isLoading && <ActivityIndicator size="small" color="#FFF" style={styles.loading} />}
     </View>
     )
 }
@@ -292,6 +293,13 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  }
 })
 
 export default React.memo(ImageItem)
