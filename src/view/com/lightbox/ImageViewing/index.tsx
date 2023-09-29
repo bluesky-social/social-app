@@ -87,8 +87,6 @@ function ImageViewing({
 
   const onZoom = useCallback(
     (isScaled: boolean) => {
-      // @ts-ignore
-      imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
       toggleBarsVisible(!isScaled)
     },
     [toggleBarsVisible],

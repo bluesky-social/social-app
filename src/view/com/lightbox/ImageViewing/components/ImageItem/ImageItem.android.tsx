@@ -180,12 +180,17 @@ const ImageItem = ({
       }
       return false;
     },
-    (isScaledNow, wasScaledBefore) => {
-      if (isScaledNow !== wasScaledBefore) {
-        runOnJS(setIsScaled)(isScaledNow)
+    (nextIsScaled, prevIsScaled) => {
+      if (nextIsScaled !== prevIsScaled) {
+        runOnJS(handleZoom)(nextIsScaled)
       }
     }
   )
+
+  function handleZoom(nextIsScaled) {
+    setIsScaled(nextIsScaled)
+    onZoom(nextIsScaled)
+  }
 
   const animatedStyle = useAnimatedStyle(() => {
     let t = createTransform();
