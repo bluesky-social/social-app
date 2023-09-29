@@ -24,6 +24,7 @@ export const Component = observer(function Component({
   const pal = usePalette('default')
   const store = useStores()
   const {isMobile} = useWebMediaQueries()
+  const potentiallyMisleading = isPossiblyAUrl(text)
 
   const onPressVisit = () => {
     store.shell.closeModal()
@@ -36,9 +37,22 @@ export const Component = observer(function Component({
         testID="linkWarningModal"
         style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
         <View style={styles.titleSection}>
-          <Text type="title-lg" style={[pal.text, styles.title]}>
-            Leaving Bluesky
-          </Text>
+          {potentiallyMisleading ? (
+            <>
+              <FontAwesomeIcon
+                icon="circle-exclamation"
+                color={pal.colors.text}
+                size={18}
+              />
+              <Text type="title-lg" style={[pal.text, styles.title]}>
+                Potentially Misleading Link
+              </Text>
+            </>
+          ) : (
+            <Text type="title-lg" style={[pal.text, styles.title]}>
+              Leaving Bluesky
+            </Text>
+          )}
         </View>
 
         <View style={{gap: 10}}>
@@ -48,36 +62,10 @@ export const Component = observer(function Component({
 
           <LinkBox href={href} />
 
-          {isPossiblyAUrl(text) && (
-            <View
-              style={[
-                pal.viewLight,
-                {
-                  paddingHorizontal: 12,
-                  paddingVertical: 10,
-                  borderRadius: 6,
-                  gap: 6,
-                },
-              ]}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 4,
-                  paddingHorizontal: 4,
-                }}>
-                <FontAwesomeIcon
-                  icon="circle-exclamation"
-                  color={pal.colors.text}
-                  size={14}
-                />
-                <Text type="lg" style={pal.text}>
-                  Which is different than:
-                </Text>
-              </View>
-
-              <LinkBox href={text} />
-            </View>
+          {potentiallyMisleading && (
+            <Text type="lg" style={pal.text}>
+              Make sure this is where you intend to go!
+            </Text>
           )}
         </View>
 
@@ -141,13 +129,16 @@ const styles = StyleSheet.create({
     paddingBottom: isWeb ? 0 : 40,
   },
   titleSection: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
     paddingTop: isWeb ? 0 : 4,
     paddingBottom: isWeb ? 14 : 10,
   },
   title: {
     textAlign: 'center',
     fontWeight: '600',
-    marginBottom: 5,
   },
   linkBox: {
     paddingHorizontal: 12,
