@@ -11,7 +11,6 @@ export const Composer = observer(function ComposerImpl({
   winHeight,
   replyTo,
   onPost,
-  onClose,
   quote,
   mention,
 }: {
@@ -19,7 +18,6 @@ export const Composer = observer(function ComposerImpl({
   winHeight: number
   replyTo?: ComposerOpts['replyTo']
   onPost?: ComposerOpts['onPost']
-  onClose: () => void
   quote?: ComposerOpts['quote']
   mention?: ComposerOpts['mention']
 }) {
@@ -64,7 +62,6 @@ export const Composer = observer(function ComposerImpl({
       <ComposePost
         replyTo={replyTo}
         onPost={onPost}
-        onClose={onClose}
         quote={quote}
         mention={mention}
       />

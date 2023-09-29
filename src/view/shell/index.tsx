@@ -44,7 +44,10 @@ const ShellInner = observer(function ShellInnerImpl() {
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   React.useEffect(() => {
-    backHandler.init(store)
+    const listener = backHandler.init(store)
+    return () => {
+      listener()
+    }
   }, [store])
 
   return (
@@ -68,7 +71,6 @@ const ShellInner = observer(function ShellInnerImpl() {
       </View>
       <Composer
         active={store.shell.isComposerActive}
-        onClose={() => store.shell.closeComposer()}
         winHeight={winDim.height}
         replyTo={store.shell.composerOpts?.replyTo}
         onPost={store.shell.composerOpts?.onPost}
