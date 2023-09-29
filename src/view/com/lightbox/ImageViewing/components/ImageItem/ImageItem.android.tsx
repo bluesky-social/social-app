@@ -12,6 +12,7 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedReaction,
   useSharedValue,
+  withDecay,
   withSpring,
 } from 'react-native-reanimated'
 import {
@@ -115,18 +116,6 @@ function applyRounding(t) {
   t[4] = Math.round(t[0] * 200) / 200;
 }
 
-function toStyle(t) {
-  "worklet";
-  const [translateX, translateY, scale] = readTransform(t)
-  return {
-    transform: [
-      { translateX },
-      { translateY },
-      { scale }
-    ],
-  };
-}
-
 function getScaledDimensions(imageDimensions, scale) {
   'worklet'
   const imageAspect = imageDimensions.width / imageDimensions.height
@@ -176,14 +165,15 @@ const ImageItem = ({
   const pinchScale = useSharedValue(1)
   const pinchTranslation = useSharedValue({ x: 0, y: 0 })
   const panTranslation = useSharedValue({ x: 0, y: 0 })
+  const dismissSwipeTranslateY = useSharedValue(0)
 
   useAnimatedReaction(
     () => {
       if (pinchScale.value !== 1) {
         return true;
       }
-      const [,,scale] = readTransform(committedTransform.value)
-      if (scale !== 1) {
+      const [,,committedScale] = readTransform(committedTransform.value)
+      if (committedScale !== 1) {
         return true;
       }
       return false;
@@ -205,7 +195,17 @@ const ImageItem = ({
     prependPan(t, panTranslation.value);
     prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value);
     prependTransform(t, committedTransform.value);
-    return toStyle(t)
+    const [translateX, translateY, scale] = readTransform(t)
+    const dismissDistance = dismissSwipeTranslateY.value
+    const dismissProgress = Math.min(Math.abs(dismissDistance) / (SCREEN.height/2), 1);
+    return {
+      opacity: 1 - dismissProgress,
+      transform: [
+        { translateX },
+        { translateY: translateY + dismissDistance },
+        { scale }
+      ],
+    };
   })
 
   function getPanAdjustment(candidateTransform) {
@@ -318,11 +318,31 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     });
 
+  const dismissSwipePan = Gesture.Pan()
+    .enabled(!isScaled)
+    .activeOffsetY([-10, 10])
+    .failOffsetX([-2, 2])
+    .maxPointers(1)
+    .onUpdate(e => {
+      dismissSwipeTranslateY.value = e.translationY
+    })
+    .onEnd((e) => {
+      if (Math.abs(e.velocityY) > 1000) {
+        dismissSwipeTranslateY.value = withDecay({ velocity: e.velocityY })
+        runOnJS(onRequestClose)();
+      } else {
+        dismissSwipeTranslateY.value = withSpring(0, {
+          stiffness: 700,
+          damping: 50
+        })
+      }
+    });
+
   const isLoading = !isLoaded || !imageDimensions;
   return (
     <View
       style={styles.container}>
-      <GestureDetector gesture={Gesture.Exclusive(Gesture.Simultaneous(pinch, pan), doubleTap)}>
+      <GestureDetector gesture={Gesture.Exclusive(dismissSwipePan, Gesture.Simultaneous(pinch, pan), doubleTap)}>
         <AnimatedImage
           source={imageSrc}
           contentFit="contain"

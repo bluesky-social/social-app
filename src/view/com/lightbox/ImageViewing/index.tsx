@@ -132,6 +132,7 @@ function ImageViewing({
           data={images}
           horizontal
           pagingEnabled
+          nestedScrollEnabled
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           getItem={(_, index) => images[index]}
