@@ -23,7 +23,7 @@ import {ViewHeader} from '../util/ViewHeader'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isNative, isDesktopWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useNavigation} from '@react-navigation/native'
@@ -78,7 +78,7 @@ export const PostThread = observer(function PostThread({
   treeView: boolean
 }) {
   const pal = usePalette('default')
-  const {isTablet} = useWebMediaQueries()
+  const {isTablet, isDesktop} = useWebMediaQueries()
   const ref = useRef<FlatList>(null)
   const hasScrolledIntoView = useRef<boolean>(false)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
@@ -189,7 +189,7 @@ export const PostThread = observer(function PostThread({
       } else if (item === REPLY_PROMPT) {
         return (
           <View>
-            {isDesktopWeb && <ComposePrompt onPressCompose={onPressReply} />}
+            {isDesktop && <ComposePrompt onPressCompose={onPressReply} />}
           </View>
         )
       } else if (item === DELETED) {
@@ -261,7 +261,20 @@ export const PostThread = observer(function PostThread({
       }
       return <></>
     },
-    [onRefresh, onPressReply, pal, posts, isTablet, treeView],
+    [
+      isTablet,
+      isDesktop,
+      onPressReply,
+      pal.border,
+      pal.viewLight,
+      pal.textLight,
+      pal.view,
+      pal.text,
+      pal.colors.border,
+      posts,
+      onRefresh,
+      treeView,
+    ],
   )
 
   // loading

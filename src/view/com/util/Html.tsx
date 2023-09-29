@@ -4,13 +4,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from './text/Text'
 import {TextLink} from './Link'
-import {isDesktopWeb} from 'platform/detection'
 import {
   H1 as ExpoH1,
   H2 as ExpoH2,
   H3 as ExpoH3,
   H4 as ExpoH4,
 } from '@expo/html-elements'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 /**
  * These utilities are used to define long documents in an html-like
@@ -27,30 +27,35 @@ interface IsChildProps {
 //   | React.ReactNode
 
 export function H1({children}: React.PropsWithChildren<{}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-xl']
   return <ExpoH1 style={[typography, pal.text, styles.h1]}>{children}</ExpoH1>
 }
 
 export function H2({children}: React.PropsWithChildren<{}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-lg']
   return <ExpoH2 style={[typography, pal.text, styles.h2]}>{children}</ExpoH2>
 }
 
 export function H3({children}: React.PropsWithChildren<{}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography.title
   return <ExpoH3 style={[typography, pal.text, styles.h3]}>{children}</ExpoH3>
 }
 
 export function H4({children}: React.PropsWithChildren<{}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-sm']
   return <ExpoH4 style={[typography, pal.text, styles.h4]}>{children}</ExpoH4>
 }
 
 export function P({children}: React.PropsWithChildren<{}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   return (
     <Text type="md" style={[pal.text, styles.p]}>
@@ -60,6 +65,7 @@ export function P({children}: React.PropsWithChildren<{}>) {
 }
 
 export function UL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
+  const styles = useStyles()
   return (
     <View style={[styles.ul, isChild && styles.ulChild]}>
       {markChildProps(children)}
@@ -68,6 +74,7 @@ export function UL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
 }
 
 export function OL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
+  const styles = useStyles()
   return (
     <View style={[styles.ol, isChild && styles.olChild]}>
       {markChildProps(children)}
@@ -79,6 +86,7 @@ export function LI({
   children,
   value,
 }: React.PropsWithChildren<{value?: string}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   return (
     <View style={styles.li}>
@@ -91,6 +99,7 @@ export function LI({
 }
 
 export function A({children, href}: React.PropsWithChildren<{href: string}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   return (
     <TextLink
@@ -112,6 +121,7 @@ export function STRONG({children}: React.PropsWithChildren<{}>) {
 }
 
 export function EM({children}: React.PropsWithChildren<{}>) {
+  const styles = useStyles()
   const pal = usePalette('default')
   return (
     <Text type="md" style={[pal.text, styles.em]}>
@@ -132,58 +142,61 @@ function markChildProps(children: React.ReactNode) {
   })
 }
 
-const styles = StyleSheet.create({
-  h1: {
-    marginTop: 20,
-    marginBottom: 10,
-    letterSpacing: 0.8,
-  },
-  h2: {
-    marginTop: 20,
-    marginBottom: 10,
-    letterSpacing: 0.8,
-  },
-  h3: {
-    marginTop: 0,
-    marginBottom: 10,
-  },
-  h4: {
-    marginTop: 0,
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  p: {
-    marginBottom: 10,
-  },
-  ul: {
-    marginBottom: 10,
-    paddingLeft: isDesktopWeb ? 18 : 4,
-  },
-  ulChild: {
-    paddingTop: 10,
-    marginBottom: 0,
-  },
-  ol: {
-    marginBottom: 10,
-    paddingLeft: isDesktopWeb ? 18 : 4,
-  },
-  olChild: {
-    paddingTop: 10,
-    marginBottom: 0,
-  },
-  li: {
-    flexDirection: 'row',
-    paddingRight: 20,
-    marginBottom: 10,
-  },
-  liBullet: {
-    paddingRight: 10,
-  },
-  liText: {},
-  a: {
-    marginBottom: 10,
-  },
-  em: {
-    fontStyle: 'italic',
-  },
-})
+const useStyles = () => {
+  const {isDesktop} = useWebMediaQueries()
+  return StyleSheet.create({
+    h1: {
+      marginTop: 20,
+      marginBottom: 10,
+      letterSpacing: 0.8,
+    },
+    h2: {
+      marginTop: 20,
+      marginBottom: 10,
+      letterSpacing: 0.8,
+    },
+    h3: {
+      marginTop: 0,
+      marginBottom: 10,
+    },
+    h4: {
+      marginTop: 0,
+      marginBottom: 10,
+      fontWeight: 'bold',
+    },
+    p: {
+      marginBottom: 10,
+    },
+    ul: {
+      marginBottom: 10,
+      paddingLeft: isDesktop ? 18 : 4,
+    },
+    ulChild: {
+      paddingTop: 10,
+      marginBottom: 0,
+    },
+    ol: {
+      marginBottom: 10,
+      paddingLeft: isDesktop ? 18 : 4,
+    },
+    olChild: {
+      paddingTop: 10,
+      marginBottom: 0,
+    },
+    li: {
+      flexDirection: 'row',
+      paddingRight: 20,
+      marginBottom: 10,
+    },
+    liBullet: {
+      paddingRight: 10,
+    },
+    liText: {},
+    a: {
+      marginBottom: 10,
+    },
+    em: {
+      fontStyle: 'italic',
+    },
+  })
+}

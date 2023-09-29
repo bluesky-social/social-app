@@ -34,7 +34,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
-import {isDesktopWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const PostThreadItem = observer(function PostThreadItem({
@@ -51,6 +50,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const pal = usePalette('default')
   const store = useStores()
   const [deleted, setDeleted] = React.useState(false)
+  const styles = useStyles()
   const record = item.postRecord
   const hasEngagement = item.post.likeCount || item.post.repostCount
 
@@ -75,12 +75,17 @@ export const PostThreadItem = observer(function PostThreadItem({
   }, [item.post.uri, item.post.author])
   const repostsTitle = 'Reposts of this post'
 
-  const translatorUrl = getTranslatorLink(record?.text || '')
+  const translatorUrl = getTranslatorLink(
+    record?.text || '',
+    store.preferences.primaryLanguage,
+  )
   const needsTranslation = useMemo(
     () =>
-      store.preferences.contentLanguages.length > 0 &&
-      !isPostInLanguage(item.post, store.preferences.contentLanguages),
-    [item.post, store.preferences.contentLanguages],
+      Boolean(
+        store.preferences.primaryLanguage &&
+          !isPostInLanguage(item.post, [store.preferences.primaryLanguage]),
+      ),
+    [item.post, store.preferences.primaryLanguage],
   )
 
   const onPressReply = React.useCallback(() => {
@@ -167,13 +172,13 @@ export const PostThreadItem = observer(function PostThreadItem({
       <>
         {item.rootUri !== item.uri && (
           <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
-            <View style={{width: 52}}>
+            <View style={{width: 38}}>
               <View
                 style={[
                   styles.replyLine,
                   {
                     flexGrow: 1,
-                    backgroundColor: pal.colors.replyLine,
+                    backgroundColor: pal.colors.border,
                   },
                 ]}
               />
@@ -392,7 +397,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       </>
     )
   } else {
-    const isThreadedChild = treeView && item._depth > 0
+    const isThreadedChild = treeView && item._depth > 1
     return (
       <PostOuterWrapper
         item={item}
@@ -412,14 +417,14 @@ export const PostThreadItem = observer(function PostThreadItem({
               paddingLeft: 8,
               height: isThreadedChild ? 8 : 16,
             }}>
-            <View style={{width: 52}}>
+            <View style={{width: 38}}>
               {!isThreadedChild && item._showParentReplyLine && (
                 <View
                   style={[
                     styles.replyLine,
                     {
                       flexGrow: 1,
-                      backgroundColor: pal.colors.replyLine,
+                      backgroundColor: pal.colors.border,
                       marginBottom: 4,
                     },
                   ]}
@@ -439,7 +444,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             {!isThreadedChild && (
               <View style={styles.layoutAvi}>
                 <PreviewableUserAvatar
-                  size={isThreadedChild ? 36 : 52}
+                  size={38}
                   did={item.post.author.did}
                   handle={item.post.author.handle}
                   avatar={item.post.author.avatar}
@@ -452,9 +457,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                       styles.replyLine,
                       {
                         flexGrow: 1,
-                        backgroundColor: isThreadedChild
-                          ? pal.colors.border
-                          : pal.colors.replyLine,
+                        backgroundColor: pal.colors.border,
                         marginTop: 4,
                       },
                     ]}
@@ -472,7 +475,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 showAvatar={isThreadedChild}
                 avatarSize={26}
                 displayNameType="md-bold"
-                displayNameStyle={s.ml2}
+                displayNameStyle={isThreadedChild && s.ml2}
                 style={isThreadedChild && s.mb5}
               />
               <PostAlerts
@@ -480,11 +483,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 style={styles.alert}
               />
               {item.richText?.text ? (
-                <View
-                  style={[
-                    styles.postTextContainer,
-                    // isThreadedChild && {paddingTop: 2},
-                  ]}>
+                <View style={styles.postTextContainer}>
                   <RichText
                     type="post-text"
                     richText={item.richText}
@@ -569,7 +568,8 @@ function PostOuterWrapper({
 }>) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  if (treeView && item._depth > 0) {
+  const styles = useStyles()
+  if (treeView && item._depth > 1) {
     return (
       <View
         style={[
@@ -578,7 +578,7 @@ function PostOuterWrapper({
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingLeft: 10,
+            paddingLeft: 20,
             borderTopWidth: item._depth === 1 ? 1 : 0,
             paddingTop: item._depth === 1 ? 8 : 0,
           },
@@ -589,8 +589,8 @@ function PostOuterWrapper({
             style={{
               borderLeftWidth: 2,
               borderLeftColor: pal.colors.border,
-              marginLeft: isMobile ? 6 : 14,
-              paddingLeft: isMobile ? 6 : 12,
+              marginLeft: n === 0 ? 14 : isMobile ? 6 : 14,
+              paddingLeft: n === 0 ? 18 : isMobile ? 6 : 12,
             }}
           />
         ))}
@@ -637,90 +637,93 @@ function ExpandedPostDetails({
   )
 }
 
-const styles = StyleSheet.create({
-  outer: {
-    borderTopWidth: 1,
-    paddingLeft: 8,
-  },
-  outerHighlighted: {
-    paddingTop: 16,
-    paddingLeft: 8,
-    paddingRight: 8,
-  },
-  noTopBorder: {
-    borderTopWidth: 0,
-  },
-  layout: {
-    flexDirection: 'row',
-    gap: 10,
-    paddingLeft: 8,
-  },
-  layoutAvi: {},
-  layoutContent: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  meta: {
-    flexDirection: 'row',
-    paddingTop: 2,
-    paddingBottom: 2,
-  },
-  metaExpandedLine1: {
-    paddingTop: 5,
-    paddingBottom: 0,
-  },
-  metaItem: {
-    paddingRight: 5,
-    maxWidth: isDesktopWeb ? 380 : 220,
-  },
-  alert: {
-    marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    paddingBottom: 4,
-    paddingRight: 10,
-  },
-  postTextLargeContainer: {
-    paddingHorizontal: 0,
-    paddingBottom: 10,
-  },
-  translateLink: {
-    marginBottom: 6,
-  },
-  contentHider: {
-    marginBottom: 6,
-  },
-  contentHiderChild: {
-    marginTop: 6,
-  },
-  expandedInfo: {
-    flexDirection: 'row',
-    padding: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    marginTop: 5,
-    marginBottom: 15,
-  },
-  expandedInfoItem: {
-    marginRight: 10,
-  },
-  loadMore: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: 4,
-    paddingHorizontal: 20,
-  },
-  replyLine: {
-    width: 2,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  cursor: {
-    // @ts-ignore web only
-    cursor: 'pointer',
-  },
-})
+const useStyles = () => {
+  const {isDesktop} = useWebMediaQueries()
+  return StyleSheet.create({
+    outer: {
+      borderTopWidth: 1,
+      paddingLeft: 8,
+    },
+    outerHighlighted: {
+      paddingTop: 16,
+      paddingLeft: 8,
+      paddingRight: 8,
+    },
+    noTopBorder: {
+      borderTopWidth: 0,
+    },
+    layout: {
+      flexDirection: 'row',
+      gap: 10,
+      paddingLeft: 8,
+    },
+    layoutAvi: {},
+    layoutContent: {
+      flex: 1,
+      paddingRight: 10,
+    },
+    meta: {
+      flexDirection: 'row',
+      paddingTop: 2,
+      paddingBottom: 2,
+    },
+    metaExpandedLine1: {
+      paddingTop: 5,
+      paddingBottom: 0,
+    },
+    metaItem: {
+      paddingRight: 5,
+      maxWidth: isDesktop ? 380 : 220,
+    },
+    alert: {
+      marginBottom: 6,
+    },
+    postTextContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      paddingBottom: 4,
+      paddingRight: 10,
+    },
+    postTextLargeContainer: {
+      paddingHorizontal: 0,
+      paddingBottom: 10,
+    },
+    translateLink: {
+      marginBottom: 6,
+    },
+    contentHider: {
+      marginBottom: 6,
+    },
+    contentHiderChild: {
+      marginTop: 6,
+    },
+    expandedInfo: {
+      flexDirection: 'row',
+      padding: 10,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      marginTop: 5,
+      marginBottom: 15,
+    },
+    expandedInfoItem: {
+      marginRight: 10,
+    },
+    loadMore: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: 4,
+      paddingHorizontal: 20,
+    },
+    replyLine: {
+      width: 2,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+    cursor: {
+      // @ts-ignore web only
+      cursor: 'pointer',
+    },
+  })
+}

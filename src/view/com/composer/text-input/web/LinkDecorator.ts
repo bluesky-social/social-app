@@ -16,7 +16,6 @@
 
 import {Mark} from '@tiptap/core'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
-import {findChildren} from '@tiptap/core'
 import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
 import {isValidDomain} from 'lib/strings/url-helpers'
@@ -36,20 +35,20 @@ export const LinkDecorator = Mark.create({
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
 
-  findChildren(doc, node => node.type.name === 'paragraph').forEach(
-    paragraphNode => {
-      const textContent = paragraphNode.node.textContent
+  doc.descendants((node, pos) => {
+    if (node.isText && node.text) {
+      const textContent = node.textContent
 
       // links
       iterateUris(textContent, (from, to) => {
         decorations.push(
-          Decoration.inline(paragraphNode.pos + from, paragraphNode.pos + to, {
+          Decoration.inline(pos + from, pos + to, {
             class: 'autolink',
           }),
         )
       })
-    },
-  )
+    }
+  })
 
   return DecorationSet.create(doc, decorations)
 }

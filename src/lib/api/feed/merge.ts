@@ -109,7 +109,7 @@ export class MergeFeedAPI implements FeedAPI {
   }
 
   _captureFeedsIfNeeded() {
-    if (!this.rootStore.preferences.homeFeedMergeFeedEnabled) {
+    if (!this.rootStore.preferences.homeFeed.lab_mergeFeedEnabled) {
       return
     }
     if (this.customFeeds.length === 0) {

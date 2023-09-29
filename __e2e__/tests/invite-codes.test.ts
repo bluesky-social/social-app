@@ -18,16 +18,12 @@ describe('invite-codes', () => {
   it('I can fetch invite codes', async () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await expect(element(by.id('drawer'))).toBeVisible()
-    await element(by.id('menuItemInviteCodes')).tap()
+    await element(by.id('e2eOpenInviteCodesModal')).tap()
     await expect(element(by.id('inviteCodesModal'))).toBeVisible()
     const attrs = await element(by.id('inviteCode-0-code')).getAttributes()
     inviteCode = attrs.text
     await element(by.id('closeBtn')).tap()
-    await element(by.id('viewHeaderDrawerBtn')).tap()
-    await element(by.id('menuItemButton-Settings')).tap()
-    await element(by.id('signOutBtn')).tap()
+    await element(by.id('e2eSignOut')).tap()
   })
 
   it('I can create a new account with the invite code', async () => {
@@ -51,12 +47,18 @@ describe('invite-codes', () => {
     await element(by.id('continueBtn')).tap()
     await expect(element(by.id('recommendedFeedsOnboarding'))).toBeVisible()
     await element(by.id('continueBtn')).tap()
+    await expect(element(by.id('recommendedFollowsOnboarding'))).toBeVisible()
+    await element(by.id('continueBtn')).tap()
     await expect(element(by.id('homeScreen'))).toBeVisible()
   })
 
   it('I get a notification for the new user', async () => {
+    await element(by.id('e2eSignOut')).tap()
     await loginAsAlice()
-    await element(by.id('menuItemButton-Notifications')).tap()
+    await waitFor(element(by.id('homeScreen')))
+      .toBeVisible()
+      .withTimeout(5000)
+    await element(by.id('bottomBarNotificationsBtn')).tap()
     await expect(element(by.id('invitedUser'))).toBeVisible()
   })
 

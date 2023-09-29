@@ -115,7 +115,10 @@ const PostLoaded = observer(function PostLoadedImpl({
     replyAuthorDid = urip.hostname
   }
 
-  const translatorUrl = getTranslatorLink(record?.text || '')
+  const translatorUrl = getTranslatorLink(
+    record?.text || '',
+    store.preferences.primaryLanguage,
+  )
 
   const onPressReply = React.useCallback(() => {
     store.shell.openComposer({

@@ -8,6 +8,7 @@
   - brew tap wix/brew
   - brew install applesimutils
 - After initial setup:
+  - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
 - Start the dev servers
   - `git clone git@github.com:bluesky-social/atproto.git`
@@ -27,6 +28,7 @@
   - Each test run: `yarn e2e:run`
 - Tips
   - Make sure to copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
+  - To run on device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
   - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
   - If the android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
@@ -118,6 +120,7 @@ upload-sourcemaps \
 dist/bundles/main.jsbundle dist/bundles/ios-<hash>.map`
 
 ### OTA updates
+
 To create OTA updates, run `eas update` along with the `--branch` flag to indicate which branch you want to push the update to, and the `--message` flag to indicate a message for yourself and your team that shows up on https://expo.dev. ALl the channels (which make up the options for the `--branch` flag) are given in `eas.json`. [See more here](https://docs.expo.dev/eas-update/getting-started/)
 
 The clients which can receive an OTA update is governed by the `runtimeVersion` property in `app.json`. Right now, it is set so that only apps with the same `appVersion` (same as `version` property in `app.json`) can receive the update and install it. However, we can manually set `"runtimeVersion": "1.34.0"` or anything along those lines as well. This is useful if very little native code changes from update-to-update. If we are manually setting `runtimeVersion`, we should increment the version each time native code is changed. [See more here](https://docs.expo.dev/eas-update/runtime-versions/)

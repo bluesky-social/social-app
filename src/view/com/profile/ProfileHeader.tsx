@@ -454,7 +454,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           {dropdownItems?.length ? (
             <NativeDropdown
               testID="profileHeaderDropdownBtn"
-              items={dropdownItems}>
+              items={dropdownItems}
+              accessibilityLabel="More options"
+              accessibilityHint="">
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                 <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.text]} />
               </View>

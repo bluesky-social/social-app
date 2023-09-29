@@ -47,6 +47,19 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
+"@atproto/api@^0.6.20":
+  version "0.6.20"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.20.tgz#3a7eda60d73a5d5b6938e2dd016c24a7ba180c83"
+  integrity sha512-+peoKgkaxbglXQg9qEZcZIvyWm39yj0+syV3TBDrz5cWK4OIsdOyYBg2iISy+jvB5RzEUMe2WvOojP6Nq34mOg==
+  dependencies:
+    "@atproto/common-web" "^0.2.1"
+    "@atproto/lexicon" "^0.2.2"
+    "@atproto/syntax" "^0.1.2"
+    "@atproto/xrpc" "^0.3.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    typed-emitter "^2.1.0"
+
 "@atproto/bsky@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.5.tgz#4667977158a112f27aeab14fedb3ca1e3ebbd873"
@@ -89,6 +102,16 @@
   dependencies:
     graphemer "^1.4.0"
     multiformats "^9.6.4"
+    uint8arrays "3.0.0"
+    zod "^3.21.4"
+
+"@atproto/common-web@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.2.1.tgz#97412cb241321fc6c56a2b8c0b2416b3240caf50"
+  integrity sha512-5AoDKkKz7JhXSiicjhPihA/MJMlSuTQ9Aed9fflPuoTuT6C3aXbxaUZEcqqipSwlCfGpOzPmJmWJjMWWsYr2ew==
+  dependencies:
+    graphemer "^1.4.0"
+    multiformats "^9.9.0"
     uint8arrays "3.0.0"
     zod "^3.21.4"
 
@@ -196,6 +219,17 @@
     multiformats "^9.9.0"
     zod "^3.21.4"
 
+"@atproto/lexicon@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.2.2.tgz#938a39482ff41c6a908f4ad43274adba595f3643"
+  integrity sha512-CvmjaSDavHMOJTuNYE8VjYhL7TVxBYV8QSWh2jHCpzfmj02DvVD9UBIfnoVv67POJkEtWXddjoV9beaIbaq/Xg==
+  dependencies:
+    "@atproto/common-web" "^0.2.1"
+    "@atproto/syntax" "^0.1.2"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.21.4"
+
 "@atproto/pds@^0.1.14":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.1.14.tgz#7c5a49e412d599d2105bb7ecd019832ab952b19f"
@@ -263,6 +297,13 @@
   dependencies:
     "@atproto/common-web" "^0.2.0"
 
+"@atproto/syntax@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.1.2.tgz#417366d36b53ecf29d9d1f6e35179b1f3feef95b"
+  integrity sha512-n6VSuccMGouwftCvZBq9WNwI0qYCMOH/lTHSV+/dT232lX7pIrqisOlErUSBoOJ49B1Wxy1DjeeBS26ap9SsGQ==
+  dependencies:
+    "@atproto/common-web" "^0.2.1"
+
 "@atproto/xrpc-server@^0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc-server/-/xrpc-server-0.3.1.tgz#40eeae1dee79fcc835d7a0068ca90f9c91f0ba06"
@@ -286,6 +327,14 @@
   integrity sha512-VVoRC/omtXFMIDUyrkFjYkwJ3vevvsGH0L1UW6mTsL40DK3iJpi0GcdJlcqdMkIFJ+QLeAluEKgEcL7bAR5LiQ==
   dependencies:
     "@atproto/lexicon" "^0.2.1"
+    zod "^3.21.4"
+
+"@atproto/xrpc@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.3.2.tgz#432a364be4b3bf8660a088a07dadecac10209763"
+  integrity sha512-D9jGjcFnEMHuGQ56v6+78uX3RiytKLrA5ITLq6shy0Qj6Zvt5MqV+/cTFuNPKrNCrnWOtHFeRQwMqyGhNS9qZQ==
+  dependencies:
+    "@atproto/lexicon" "^0.2.2"
     zod "^3.21.4"
 
 "@babel/code-frame@7.10.4", "@babel/code-frame@~7.10.4":
@@ -3374,6 +3423,16 @@
   resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-0.8.0.tgz#dbf227c2081e5ffd3d2073ee68ecc84cf8639727"
   integrity sha512-kxiT6ySZsDbBvNWovrKVAfs4AQvAytKIf0f8KQLkVO6eNYMUmONBQPzi6onTTbVujXtZHambo7qr/PcedaR8Tg==
 
+"@react-native-picker/picker@2.4.10":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.10.tgz#339c7bfc6e1d9a5e934122eaaa7767dc1c5fb725"
+  integrity sha512-EvAlHmPEPOwvbP6Pjg/gtDV3XJzIjIxr10fXFNlX5r9HeHw582G1Zt2o8FLyB718nOttgj8HYUTGxvhu4N65sQ==
+
+"@react-native-picker/picker@^1.8.3":
+  version "1.16.8"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.16.8.tgz#2126ca54d4a5a3e9ea5e3f39ad1e6643f8e4b3d4"
+  integrity sha512-pacdQDX6V6EmjF+HoiIh6u++qx4mTK0WnhgUHRc01B+Qt5eoeUwseBqmqfTSXTx/aHDEd6PiIw7UGvKgFoqgFQ==
+
 "@react-native/assets-registry@^0.72.0":
   version "0.72.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets-registry/-/assets-registry-0.72.0.tgz#c82a76a1d86ec0c3907be76f7faf97a32bbed05d"
@@ -4948,6 +5007,13 @@
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-text/-/extension-text-2.1.6.tgz#23f36114ee164e3da2fd326145ac7b7f8bd34c56"
   integrity sha512-CqV0N6ngoXZFeJGlQ86FSZJ/0k7+BN3S6aSUcb5DRAKsSEv/Ga1LvSG24sHy+dwjTuj3EtRPJSVZTFcSB17ZSA==
+
+"@tiptap/html@^2.1.11":
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/@tiptap/html/-/html-2.1.11.tgz#998421b526f200d01c549f37eb8fae2a0d1f0ed6"
+  integrity sha512-VKmBb1c3YN9hZfBzkV+QERf3ZWBUHHxjv2/BOr/Dw6mbb6+0iA1nxO9vQYPUb+xAmlm0n8vWwc7YQ8rxBwTKWQ==
+  dependencies:
+    zeed-dom "^0.9.19"
 
 "@tiptap/pm@^2.0.0-beta.220":
   version "2.1.6"
@@ -15769,6 +15835,14 @@ react-native-pager-view@6.1.4:
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.1.4.tgz#3a63ebd1b72f81991157ea552bb9c887e529bc8c"
   integrity sha512-fmTwgGwPxGCBusKAq7gHzm+s1Yp0qh5rKPoQszaCuxrb+76KgK4Qe82jJNPUp2xTZOKSw+FbJU2QahF8ncTl+w==
 
+react-native-picker-select@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-8.1.0.tgz#667a5442f783f4bcfd3f65880c6926155fd2c39c"
+  integrity sha512-iLsLv2OEWpXnQMDYJS6du5Cl1HTHy887n60Yp5OOiMny0TDB9w5CfxTUYWtpsvJJrUa/Yrv+1NMQiJy7IA4ETw==
+  dependencies:
+    "@react-native-picker/picker" "^1.8.3"
+    lodash.isequal "^4.5.0"
+
 react-native-progress@bluesky-social/react-native-progress:
   version "5.0.0"
   resolved "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4"
@@ -19195,6 +19269,13 @@ yocto-queue@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.0.0.tgz#7f816433fb2cbc511ec8bf7d263c3b58a1a3c251"
   integrity sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==
+
+zeed-dom@^0.9.19:
+  version "0.9.26"
+  resolved "https://registry.yarnpkg.com/zeed-dom/-/zeed-dom-0.9.26.tgz#f0127d1024b34a1233a321bd6d0275b3ba998b30"
+  integrity sha512-HWjX8rA3Y/RI32zby3KIN1D+mgskce+She4K7kRyyx62OiVxJ5FnYm8vWq0YVAja3Tf2S1M0XAc6O2lRFcMgcQ==
+  dependencies:
+    css-what "^6.1.0"
 
 zeego@^1.6.2:
   version "1.7.0"

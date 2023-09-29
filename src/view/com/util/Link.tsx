@@ -24,10 +24,11 @@ import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
 import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
-import {isAndroid, isDesktopWeb} from 'platform/detection'
+import {isAndroid} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -142,6 +143,7 @@ export const TextLink = observer(function TextLink({
   dataSet,
   title,
   onPress,
+  ...orgProps
 }: {
   testID?: string
   type?: TypographyVariant
@@ -190,7 +192,8 @@ export const TextLink = observer(function TextLink({
       title={title}
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
-      {...props}>
+      {...props}
+      {...orgProps}>
       {text}
     </Text>
   )
@@ -222,7 +225,9 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   lineHeight,
   ...props
 }: DesktopWebTextLinkProps) {
-  if (isDesktopWeb) {
+  const {isDesktop} = useWebMediaQueries()
+
+  if (isDesktop) {
     return (
       <TextLink
         testID={testID}

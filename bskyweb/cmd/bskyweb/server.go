@@ -159,7 +159,6 @@ func serve(cctx *cli.Context) error {
 
 	// generic routes
 	e.GET("/search", server.WebGeneric)
-	e.GET("/search/feeds", server.WebGeneric)
 	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
 	e.GET("/moderation", server.WebGeneric)
@@ -167,9 +166,11 @@ func serve(cctx *cli.Context) error {
 	e.GET("/moderation/muted-accounts", server.WebGeneric)
 	e.GET("/moderation/blocked-accounts", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
+	e.GET("/settings/language", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
 	e.GET("/settings/home-feed", server.WebGeneric)
 	e.GET("/settings/saved-feeds", server.WebGeneric)
+	e.GET("/settings/threads", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
 	e.GET("/support", server.WebGeneric)

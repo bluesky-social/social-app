@@ -64,7 +64,10 @@ export const FeedItem = observer(function FeedItemImpl({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const translatorUrl = getTranslatorLink(record?.text || '')
+  const translatorUrl = getTranslatorLink(
+    record?.text || '',
+    store.preferences.primaryLanguage,
+  )
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
@@ -175,7 +178,7 @@ export const FeedItem = observer(function FeedItemImpl({
           )}
         </View>
 
-        <View style={{paddingTop: 12}}>
+        <View style={{paddingTop: 12, flexShrink: 1}}>
           {source ? (
             <Link
               title={sanitizeDisplayName(source.displayName)}
@@ -200,14 +203,15 @@ export const FeedItem = observer(function FeedItemImpl({
             <Link
               style={styles.includeReason}
               href={makeProfileLink(item.reasonRepost.by)}
-              title={sanitizeDisplayName(
+              title={`Reposted by ${sanitizeDisplayName(
                 item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
-              )}>
+              )}`}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{
                   marginRight: 4,
                   color: pal.colors.textLight,
+                  minWidth: 16,
                 }}
               />
               <Text

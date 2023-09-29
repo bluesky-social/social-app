@@ -25,7 +25,7 @@
     "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
-    "@atproto/api": "^0.6.14",
+    "@atproto/api": "^0.6.20",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
@@ -44,6 +44,7 @@
     "@react-native-community/blur": "^4.3.0",
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-native-menu/menu": "^0.8.0",
+    "@react-native-picker/picker": "2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native": "^6.1.6",
@@ -62,6 +63,7 @@
     "@tiptap/extension-paragraph": "^2.0.0-beta.220",
     "@tiptap/extension-placeholder": "^2.0.0-beta.220",
     "@tiptap/extension-text": "^2.0.0-beta.220",
+    "@tiptap/html": "^2.1.11",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/suggestion": "^2.0.0-beta.220",
@@ -130,6 +132,7 @@
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-pager-view": "6.1.4",
+    "react-native-picker-select": "^8.1.0",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-reanimated": "^3.4.2",
     "react-native-root-siblings": "^4.1.1",

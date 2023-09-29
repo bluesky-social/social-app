@@ -13,11 +13,23 @@ import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import debounce from 'lodash.debounce'
 
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
   const pal = usePalette('default')
-  const [value, setValue] = useState(store.preferences.homeFeedRepliesThreshold)
+  const [value, setValue] = useState(
+    store.preferences.homeFeed.hideRepliesByLikeCount,
+  )
+  const save = React.useMemo(
+    () =>
+      debounce(
+        threshold =>
+          store.preferences.setHomeFeedHideRepliesByLikeCount(threshold),
+        500,
+      ), // debouce for 500ms
+    [store],
+  )
 
   return (
     <View style={[!enabled && styles.dimmed]}>
@@ -26,7 +38,7 @@ function RepliesThresholdInput({enabled}: {enabled: boolean}) {
         onValueChange={(v: number | number[]) => {
           const threshold = Math.floor(Array.isArray(v) ? v[0] : v)
           setValue(threshold)
-          store.preferences.setHomeFeedRepliesThreshold(threshold)
+          save(threshold)
         }}
         minimumValue={0}
         maximumValue={25}
@@ -88,16 +100,16 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               testID="toggleRepliesBtn"
               type="default-light"
-              label={store.preferences.homeFeedRepliesEnabled ? 'Yes' : 'No'}
-              isSelected={store.preferences.homeFeedRepliesEnabled}
-              onPress={store.preferences.toggleHomeFeedRepliesEnabled}
+              label={store.preferences.homeFeed.hideReplies ? 'No' : 'Yes'}
+              isSelected={!store.preferences.homeFeed.hideReplies}
+              onPress={store.preferences.toggleHomeFeedHideReplies}
             />
           </View>
           <View
             style={[
               pal.viewLight,
               styles.card,
-              !store.preferences.homeFeedRepliesEnabled && styles.dimmed,
+              store.preferences.homeFeed.hideReplies && styles.dimmed,
             ]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
               Reply Filters
@@ -108,12 +120,10 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               type="default-light"
               label="Followed users only"
-              isSelected={
-                store.preferences.homeFeedRepliesByFollowedOnlyEnabled
-              }
+              isSelected={store.preferences.homeFeed.hideRepliesByUnfollowed}
               onPress={
-                store.preferences.homeFeedRepliesEnabled
-                  ? store.preferences.toggleHomeFeedRepliesByFollowedOnlyEnabled
+                !store.preferences.homeFeed.hideReplies
+                  ? store.preferences.toggleHomeFeedHideRepliesByUnfollowed
                   : undefined
               }
               style={[s.mb10]}
@@ -123,7 +133,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               feed.
             </Text>
             <RepliesThresholdInput
-              enabled={store.preferences.homeFeedRepliesEnabled}
+              enabled={!store.preferences.homeFeed.hideReplies}
             />
           </View>
 
@@ -136,9 +146,9 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeedRepostsEnabled ? 'Yes' : 'No'}
-              isSelected={store.preferences.homeFeedRepostsEnabled}
-              onPress={store.preferences.toggleHomeFeedRepostsEnabled}
+              label={store.preferences.homeFeed.hideReposts ? 'No' : 'Yes'}
+              isSelected={!store.preferences.homeFeed.hideReposts}
+              onPress={store.preferences.toggleHomeFeedHideReposts}
             />
           </View>
 
@@ -152,9 +162,9 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeedQuotePostsEnabled ? 'Yes' : 'No'}
-              isSelected={store.preferences.homeFeedQuotePostsEnabled}
-              onPress={store.preferences.toggleHomeFeedQuotePostsEnabled}
+              label={store.preferences.homeFeed.hideQuotePosts ? 'No' : 'Yes'}
+              isSelected={!store.preferences.homeFeed.hideQuotePosts}
+              onPress={store.preferences.toggleHomeFeedHideQuotePosts}
             />
           </View>
 
@@ -169,8 +179,10 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeedMergeFeedEnabled ? 'Yes' : 'No'}
-              isSelected={store.preferences.homeFeedMergeFeedEnabled}
+              label={
+                store.preferences.homeFeed.lab_mergeFeedEnabled ? 'Yes' : 'No'
+              }
+              isSelected={!!store.preferences.homeFeed.lab_mergeFeedEnabled}
               onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}
             />
           </View>

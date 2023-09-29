@@ -30,6 +30,7 @@ export const accountData = z.object({
   email: z.string().optional(),
   displayName: z.string().optional(),
   aviUrl: z.string().optional(),
+  emailConfirmed: z.boolean().optional(),
 })
 export type AccountData = z.infer<typeof accountData>
 
@@ -104,6 +105,10 @@ export class SessionModel {
 
   get switchableAccounts() {
     return this.accounts.filter(acct => acct.did !== this.data?.did)
+  }
+
+  get emailNeedsConfirmation() {
+    return !this.currentSession?.emailConfirmed
   }
 
   get isSandbox() {
@@ -217,6 +222,7 @@ export class SessionModel {
         ? addedInfo.displayName
         : existingAccount?.displayName || '',
       aviUrl: addedInfo ? addedInfo.aviUrl : existingAccount?.aviUrl || '',
+      emailConfirmed: session?.emailConfirmed,
     }
     if (!existingAccount) {
       this.accounts.push(newAccount)
@@ -246,6 +252,8 @@ export class SessionModel {
       did: acct.did,
       displayName: acct.displayName,
       aviUrl: acct.aviUrl,
+      email: acct.email,
+      emailConfirmed: acct.emailConfirmed,
     }))
   }
 
@@ -297,6 +305,8 @@ export class SessionModel {
           refreshJwt: account.refreshJwt || '',
           did: account.did,
           handle: account.handle,
+          email: account.email,
+          emailConfirmed: account.emailConfirmed,
         }),
       )
       const addedInfo = await this.loadAccountInfo(agent, account.did)
@@ -451,5 +461,11 @@ export class SessionModel {
       })
       await this.rootStore.me.load()
     }
+  }
+
+  updateLocalAccountData(changes: Partial<AccountData>) {
+    this.accounts = this.accounts.map(acct =>
+      acct.did === this.data?.did ? {...acct, ...changes} : acct,
+    )
   }
 }

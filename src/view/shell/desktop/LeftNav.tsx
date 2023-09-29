@@ -42,11 +42,12 @@ import {makeProfileLink} from 'lib/routes/links'
 const ProfileCard = observer(function ProfileCardImpl() {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
-  const size = isDesktop ? 64 : 48
+  const size = 48
   return store.me.handle ? (
     <Link
       href={makeProfileLink(store.me)}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
+      title="My Profile"
       asAnchor>
       <UserAvatar avatar={store.me.avatar} size={size} />
     </Link>
@@ -184,20 +185,33 @@ function ComposeBtn() {
   const {getState} = useNavigation()
   const {isTablet} = useWebMediaQueries()
 
-  const getProfileHandle = () => {
+  const getProfileHandle = async () => {
     const {routes} = getState()
     const currentRoute = routes[routes.length - 1]
+
     if (currentRoute.name === 'Profile') {
-      const {name: handle} =
+      let handle: string | undefined = (
         currentRoute.params as CommonNavigatorParams['Profile']
-      if (handle === store.me.handle) return undefined
+      ).name
+
+      if (handle.startsWith('did:')) {
+        const cached = await store.profiles.cache.get(handle)
+        const profile = cached ? cached.data : undefined
+        // if we can't resolve handle, set to undefined
+        handle = profile?.handle || undefined
+      }
+
+      if (!handle || handle === store.me.handle || handle === 'handle.invalid')
+        return undefined
+
       return handle
     }
+
     return undefined
   }
 
-  const onPressCompose = () =>
-    store.shell.openComposer({mention: getProfileHandle()})
+  const onPressCompose = async () =>
+    store.shell.openComposer({mention: await getProfileHandle()})
 
   if (isTablet) {
     return null

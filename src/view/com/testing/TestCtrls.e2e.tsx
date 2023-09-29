@@ -42,6 +42,12 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
+        testID="e2eSignOut"
+        onPress={() => store.session.logout()}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
         testID="e2eGotoHome"
         onPress={() => navigate('Home')}
         accessibilityRole="button"
@@ -68,6 +74,12 @@ export function TestCtrls() {
       <Pressable
         testID="e2eRefreshHome"
         onPress={() => store.me.mainFeed.refresh()}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eOpenInviteCodesModal"
+        onPress={() => store.shell.openModal({name: 'invite-codes'})}
         accessibilityRole="button"
         style={BTN}
       />

@@ -97,6 +97,7 @@ import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faUsersSlash} from '@fortawesome/free-solid-svg-icons/faUsersSlash'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown'
 
 export function setup() {
   library.add(
@@ -197,5 +198,6 @@ export function setup() {
     faTrashCan,
     faX,
     faXmark,
+    faChevronDown,
   )
 }

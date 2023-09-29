@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, View, useWindowDimensions} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
@@ -26,9 +26,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from 'lib/icons'
 
-const HEADER_OFFSET_MOBILE = 78
-const HEADER_OFFSET_TABLET = 50
-const HEADER_OFFSET_DESKTOP = 0
 const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -160,16 +157,10 @@ const FeedPage = observer(function FeedPageImpl({
 }) {
   const store = useStores()
   const pal = usePalette('default')
-  const {isMobile, isTablet, isDesktop} = useWebMediaQueries()
+  const {isDesktop} = useWebMediaQueries()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
   const {screen, track} = useAnalytics()
-  const [headerOffset, setHeaderOffset] = React.useState(
-    isMobile
-      ? HEADER_OFFSET_MOBILE
-      : isTablet
-      ? HEADER_OFFSET_TABLET
-      : HEADER_OFFSET_DESKTOP,
-  )
+  const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
   const {appState} = useAppState({
     onForeground: () => doPoll(true),
@@ -213,17 +204,6 @@ const FeedPage = observer(function FeedPageImpl({
       feed.refresh()
     }
   }, [isPageFocused, scrollToTop, feed])
-
-  // listens for resize events
-  React.useEffect(() => {
-    setHeaderOffset(
-      isMobile
-        ? HEADER_OFFSET_MOBILE
-        : isTablet
-        ? HEADER_OFFSET_TABLET
-        : HEADER_OFFSET_DESKTOP,
-    )
-  }, [isMobile, isTablet])
 
   // fires when page within screen is activated/deactivated
   // - check for latest
@@ -301,6 +281,8 @@ const FeedPage = observer(function FeedPageImpl({
             type="title-lg"
             href="/settings/home-feed"
             style={{fontWeight: 'bold'}}
+            accessibilityLabel="Feed Preferences"
+            accessibilityHint=""
             text={
               <FontAwesomeIcon
                 icon="sliders"
@@ -347,3 +329,17 @@ const FeedPage = observer(function FeedPageImpl({
     </View>
   )
 })
+
+function useHeaderOffset() {
+  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {fontScale} = useWindowDimensions()
+  if (isDesktop) {
+    return 0
+  }
+  if (isTablet) {
+    return 50
+  }
+  // default text takes 44px, plus 34px of pad
+  // scale the 44px by the font scale
+  return 34 + 44 * fontScale
+}

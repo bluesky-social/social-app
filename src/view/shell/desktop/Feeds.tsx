@@ -82,11 +82,12 @@ function FeedItem({
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
+    flex: 1,
+    overflowY: 'auto',
     width: 300,
     paddingHorizontal: 12,
+    paddingVertical: 18,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    paddingVertical: 18,
   },
 })

@@ -1,14 +1,7 @@
 import React, {useState, useCallback} from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TextInput as RNTextInput,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useTheme} from 'lib/ThemeContext'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+// @ts-ignore types not available -prf
+import {unstable_createElement} from 'react-native-web'
 import {usePalette} from 'lib/hooks/usePalette'
 
 interface Props {
@@ -25,59 +18,48 @@ interface Props {
 }
 
 export function DateInput(props: Props) {
-  const theme = useTheme()
   const pal = usePalette('default')
-  const palError = usePalette('error')
-  const [value, setValue] = useState(props.value.toLocaleDateString())
-  const [isValid, setIsValid] = useState(true)
+  const [value, setValue] = useState(toDateInputValue(props.value))
 
   const onChangeInternal = useCallback(
-    (v: string) => {
-      setValue(v)
-      const d = new Date(v)
-      if (!isNaN(Number(d))) {
-        setIsValid(true)
-        props.onChange(d)
-      } else {
-        setIsValid(false)
+    (v: Date) => {
+      if (!v) {
+        return
       }
+      setValue(toDateInputValue(v))
+      props.onChange(v)
     },
-    [setValue, setIsValid, props],
+    [setValue, props],
   )
 
   return (
-    <View style={[isValid ? pal.border : palError.border, styles.container]}>
-      <FontAwesomeIcon
-        icon={['far', 'calendar']}
-        style={[pal.textLight, styles.icon]}
-      />
-      <RNTextInput
-        testID={props.testID}
-        style={[pal.text, styles.textInput]}
-        placeholderTextColor={pal.colors.textLight}
-        autoCapitalize="none"
-        autoCorrect={false}
-        keyboardAppearance={theme.colorScheme}
-        onChangeText={v => onChangeInternal(v)}
-        value={value}
-        accessibilityLabel={props.accessibilityLabel}
-        accessibilityHint={props.accessibilityHint}
-        accessibilityLabelledBy={props.accessibilityLabelledBy}
-      />
+    <View style={[pal.borderDark, styles.container]}>
+      {unstable_createElement('input', {
+        type: 'date',
+        testID: props.testID,
+        value,
+        onChange: (e: any) => onChangeInternal(e.currentTarget.valueAsDate),
+        style: [pal.text, pal.view, pal.border, styles.textInput],
+        placeholderTextColor: pal.colors.textLight,
+        accessibilityLabel: props.accessibilityLabel,
+        accessibilityHint: props.accessibilityHint,
+        accessibilityLabelledBy: props.accessibilityLabelledBy,
+      })}
     </View>
   )
 }
 
+// we need the date in the form yyyy-MM-dd to pass to the input
+function toDateInputValue(d: Date): string {
+  return d.toISOString().split('T')[0]
+}
+
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderRadius: 6,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 4,
-  },
-  icon: {
-    marginLeft: 10,
+    borderWidth: 1,
+    borderRadius: 10,
   },
   textInput: {
     flex: 1,
@@ -88,5 +70,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     fontWeight: '400',
     borderRadius: 10,
+    borderWidth: 0,
   },
 })
