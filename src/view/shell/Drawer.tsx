@@ -273,6 +273,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             label="Feeds"
             accessibilityLabel="Feeds"
             accessibilityHint=""
+            bold={isAtFeeds}
             onPress={onPressMyFeeds}
           />
           <MenuItem
