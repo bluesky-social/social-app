@@ -32,7 +32,7 @@ export const Component = observer(function Component({
   }
 
   return (
-    <SafeAreaView style={s.flex1}>
+    <SafeAreaView style={[s.flex1, pal.view]}>
       <ScrollView
         testID="linkWarningModal"
         style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
