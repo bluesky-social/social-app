@@ -14,6 +14,7 @@
   - `git clone git@github.com:bluesky-social/atproto.git`
   - `cd atproto`
   - `pnpm i`
+  - `pnpm build`
   - `cd packages/dev-env && pnpm start`
 - Run the dev app
   - iOS: `yarn ios`
