@@ -223,7 +223,6 @@ export class RootStoreModel {
   }
   emitSessionReady() {
     DeviceEventEmitter.emit('session-ready')
-    window.agent = this.agent
   }
 
   // the session was dropped due to bad/expired refresh tokens
