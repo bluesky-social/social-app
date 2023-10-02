@@ -10,7 +10,7 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isPossiblyAUrl} from 'lib/strings/url-helpers'
+import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
 
 export const snapPoints = ['50%']
 
@@ -101,9 +101,10 @@ function LinkBox({href}: {href: string}) {
   const [scheme, hostname, rest] = React.useMemo(() => {
     try {
       const urlp = new URL(href)
+      const [subdomain, apexdomain] = splitApexDomain(urlp.hostname)
       return [
-        urlp.protocol + '//',
-        urlp.hostname,
+        urlp.protocol + '//' + subdomain,
+        apexdomain,
         urlp.pathname + urlp.search + urlp.hash,
       ]
     } catch {

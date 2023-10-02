@@ -1,6 +1,7 @@
 import {AtUri} from '@atproto/api'
 import {PROD_SERVICE} from 'state/index'
 import TLDs from 'tlds'
+import psl from 'psl'
 
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
@@ -187,4 +188,15 @@ export function isPossiblyAUrl(str: string): boolean {
   }
   const [firstWord] = str.split(/[\s\/]/)
   return isValidDomain(firstWord)
+}
+
+export function splitApexDomain(hostname: string): [string, string] {
+  const hostnamep = psl.parse(hostname)
+  if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
+    return ['', hostname]
+  }
+  return [
+    hostnamep.subdomain ? `${hostnamep.subdomain}.` : '',
+    hostnamep.domain,
+  ]
 }
