@@ -169,13 +169,30 @@ export function getYoutubeVideoId(link: string): string | undefined {
 }
 
 export function linkRequiresWarning(uri: string, label: string) {
+  const labelDomain = labelToDomain(label)
+  if (!labelDomain) {
+    return true
+  }
   try {
     const urip = new URL(uri)
-    label = label.replace(/^http(s?):\/\//i, '')
-    return !label.startsWith(urip.hostname)
+    return labelDomain !== urip.hostname
   } catch {
     return true
   }
+}
+
+function labelToDomain(label: string): string | undefined {
+  // any spaces just immediately consider the label a non-url
+  if (/\s/.test(label)) {
+    return undefined
+  }
+  try {
+    return new URL(label).hostname
+  } catch {}
+  try {
+    return new URL('https://' + label).hostname
+  } catch {}
+  return undefined
 }
 
 export function isPossiblyAUrl(str: string): boolean {

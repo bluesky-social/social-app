@@ -7,12 +7,26 @@ import {
 describe('linkRequiresWarning', () => {
   type Case = [string, string, boolean]
   const cases: Case[] = [
-    ['http://example.com', '', true],
     ['http://example.com', 'http://example.com', false],
     ['http://example.com', 'example.com', false],
+    ['http://example.com', 'example.com/page', false],
+    ['http://example.com', '', true],
     ['http://example.com', 'other.com', true],
     ['http://example.com', 'http://other.com', true],
     ['http://example.com', 'some label', true],
+    ['http://example.com', 'example.com more', true],
+    ['http://example.com', 'http://example.co', true],
+    ['http://example.co', 'http://example.com', true],
+    ['http://example.com', 'example.co', true],
+    ['http://example.co', 'example.com', true],
+    ['http://site.pages.dev', 'http://site.page', true],
+    ['http://site.page', 'http://site.pages.dev', true],
+    ['http://site.pages.dev', 'site.page', true],
+    ['http://site.page', 'site.pages.dev', true],
+    ['http://site.pages.dev', 'http://site.pages', true],
+    ['http://site.pages', 'http://site.pages.dev', true],
+    ['http://site.pages.dev', 'site.pages', true],
+    ['http://site.pages', 'site.pages.dev', true],
 
     // bad uri inputs, default to true
     ['', '', true],
