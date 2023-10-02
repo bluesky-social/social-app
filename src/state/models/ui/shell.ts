@@ -154,6 +154,12 @@ export interface SwitchAccountModal {
   name: 'switch-account'
 }
 
+export interface LinkWarningModal {
+  name: 'link-warning'
+  text: string
+  href: string
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -191,6 +197,7 @@ export type Modal =
 
   // Generic
   | ConfirmModal
+  | LinkWarningModal
 
 interface LightboxModel {}
 
