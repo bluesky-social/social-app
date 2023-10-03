@@ -156,7 +156,6 @@ const ImageItem = ({
   delayLongPress,
   swipeToCloseEnabled = true,
   doubleTapToZoomEnabled = true,
-  gestureRef,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -224,7 +223,6 @@ const ImageItem = ({
   }
 
   const pinch = Gesture.Pinch()
-    .withRef(gestureRef)
     .onStart((e) => {
       pinchOrigin.value = {
         x: e.focalX - SCREEN.width/2,
@@ -267,7 +265,6 @@ const ImageItem = ({
 
   const pan = Gesture.Pan()
     .averageTouches(true)
-    .enabled(isScaled)
     .onChange((e) => {
       if (!imageDimensions) {
         return;
