@@ -253,7 +253,7 @@ function ReminderIllustration() {
   const palInverted = usePalette('inverted')
   return (
     <View style={[pal.viewLight, {borderRadius: 8, marginBottom: 20}]}>
-      <Svg viewBox="0 0 112 84" fill="none">
+      <Svg viewBox="0 0 112 84" fill="none" height={200}>
         <Path
           fillRule="evenodd"
           clipRule="evenodd"
