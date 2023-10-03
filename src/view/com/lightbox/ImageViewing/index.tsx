@@ -77,6 +77,7 @@ function ImageViewing({
   FooterComponent,
 }: Props) {
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
+  const [isScaled, setIsScaled] = useState(false)
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose)
   const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
   const [headerTransform, footerTransform, toggleBarsVisible] =
@@ -91,6 +92,7 @@ function ImageViewing({
   const onZoom = useCallback(
     (isScaled: boolean) => {
       toggleBarsVisible(!isScaled)
+      setIsScaled(isScaled)
     },
     [toggleBarsVisible],
   )
@@ -135,6 +137,7 @@ function ImageViewing({
           data={images}
           horizontal
           pagingEnabled
+          scrollEnabled={!isScaled}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           getItem={(_, index) => images[index]}
