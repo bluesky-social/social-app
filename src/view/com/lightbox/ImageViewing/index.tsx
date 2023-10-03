@@ -10,10 +10,12 @@
 
 import React, {
   ComponentType,
+  createRef,
   useCallback,
   useRef,
   useEffect,
   useMemo,
+  useState,
 } from 'react'
 import {
   Animated,
@@ -33,6 +35,7 @@ import useAnimatedComponents from './hooks/useAnimatedComponents'
 import useImageIndexChange from './hooks/useImageIndexChange'
 import useRequestClose from './hooks/useRequestClose'
 import {ImageSource} from './@types'
+import {ScrollView} from 'react-native-gesture-handler';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
@@ -109,6 +112,13 @@ function ImageViewing({
     return null
   }
 
+  const [gestureRefs] = useState(new Map())
+  for (let imageSrc of images) {
+    if (!gestureRefs.get(imageSrc)) {
+      gestureRefs.set(imageSrc, createRef())
+    }
+  }
+
   return (
     <SafeAreaView
       style={styles.screen}
@@ -132,7 +142,6 @@ function ImageViewing({
           data={images}
           horizontal
           pagingEnabled
-          nestedScrollEnabled
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           getItem={(_, index) => images[index]}
@@ -151,6 +160,13 @@ function ImageViewing({
               delayLongPress={delayLongPress}
               swipeToCloseEnabled={swipeToCloseEnabled}
               doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+              gestureRef={gestureRefs.get(imageSrc)}
+            />
+          )}
+          renderScrollComponent={props => (
+            <ScrollView
+              {...props}
+              waitFor={Array.from(gestureRefs.values())}
             />
           )}
           onMomentumScrollEnd={onScroll}
