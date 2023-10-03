@@ -323,7 +323,7 @@ const ImageItem = ({
   const dismissSwipePan = Gesture.Pan()
     .enabled(!isScaled)
     .activeOffsetY([-10, 10])
-    .failOffsetX([-2, 2])
+    .failOffsetX([-10, 10])
     .maxPointers(1)
     .onUpdate(e => {
       dismissSwipeTranslateY.value = e.translationY
@@ -344,6 +344,7 @@ const ImageItem = ({
   return (
     <View
       style={styles.container}>
+      {isLoading && <ActivityIndicator size="small" color="#FFF" style={styles.loading} />}
       <GestureDetector gesture={Gesture.Exclusive(dismissSwipePan, Gesture.Simultaneous(pinch, pan), doubleTap)}>
         <AnimatedImage
           source={imageSrc}
@@ -355,7 +356,6 @@ const ImageItem = ({
         >
         </AnimatedImage>
       </GestureDetector>
-      {isLoading && <ActivityIndicator size="small" color="#FFF" style={styles.loading} />}
     </View>
     )
 }
