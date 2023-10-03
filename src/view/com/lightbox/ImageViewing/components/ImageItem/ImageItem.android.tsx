@@ -264,6 +264,7 @@ const ImageItem = ({
     });
 
   const pan = Gesture.Pan()
+    .enabled(isScaled)
     .averageTouches(true)
     .onChange((e) => {
       if (!imageDimensions) {
