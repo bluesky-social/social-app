@@ -110,6 +110,13 @@ function ImageViewing({
     }
   }, [imageList, imageIndex])
 
+  const [pinchRefs] = useState(new Map())
+  for (let imageSrc of images) {
+    if (!pinchRefs.get(imageSrc)) {
+      pinchRefs.set(imageSrc, createRef())
+    }
+  }
+
   if (!visible) {
     return null
   }
@@ -156,8 +163,15 @@ function ImageViewing({
               delayLongPress={delayLongPress}
               swipeToCloseEnabled={swipeToCloseEnabled}
               doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+              pinchRef={pinchRefs.get(imageSrc)}
             />
           )}
+          renderScrollComponent={props => (
+            <ScrollView
+              {...props}
+              waitFor={Array.from(pinchRefs.values())}
+            />
+            )}
           onMomentumScrollEnd={onScroll}
           //@ts-ignore
           keyExtractor={(imageSrc, index) =>
