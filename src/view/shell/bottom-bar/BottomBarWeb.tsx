@@ -109,7 +109,12 @@ const NavItem: React.FC<{
   href: string
   routeName: string
 }> = ({children, href, routeName}) => {
-  const currentRoute = useNavigationState(getCurrentRoute)
+  const currentRoute = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
   const store = useStores()
   const isActive =
     currentRoute.name === 'Profile'
