@@ -307,7 +307,7 @@ export class PostsFeedModel {
   }
 
   async _appendAll(res: FeedAPIResponse, replace = false) {
-    this.hasMore = !!res.cursor
+    this.hasMore = !!res.cursor && res.feed.length > 0
     if (replace) {
       this.emptyFetches = 0
     }
