@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {Svg, Circle, Path} from 'react-native-svg'
 import {ScrollView, TextInput} from './util'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -88,6 +89,7 @@ export const Component = observer(function Component({
         <ScrollView
           testID="verifyEmailModal"
           style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
+          {stage === Stages.Reminder && <ReminderIllustration />}
           <View style={styles.titleSection}>
             <Text type="title-lg" style={[pal.text, styles.title]}>
               {stage === Stages.Reminder ? 'Please Verify Your Email' : ''}
@@ -245,6 +247,31 @@ export const Component = observer(function Component({
     </KeyboardAvoidingView>
   )
 })
+
+function ReminderIllustration() {
+  const pal = usePalette('default')
+  const palInverted = usePalette('inverted')
+  return (
+    <View style={[pal.viewLight, {borderRadius: 8, marginBottom: 20}]}>
+      <Svg viewBox="0 0 112 84" fill="none" height={200}>
+        <Path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M26 26.4264V55C26 60.5229 30.4772 65 36 65H76C81.5228 65 86 60.5229 86 55V27.4214L63.5685 49.8528C59.6633 53.7581 53.3316 53.7581 49.4264 49.8528L26 26.4264Z"
+          fill={palInverted.colors.background}
+        />
+        <Path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M83.666 19.5784C85.47 21.7297 84.4897 24.7895 82.5044 26.7748L60.669 48.6102C58.3259 50.9533 54.5269 50.9533 52.1838 48.6102L29.9502 26.3766C27.8241 24.2505 26.8952 20.8876 29.0597 18.8005C30.8581 17.0665 33.3045 16 36 16H76C79.0782 16 81.8316 17.3908 83.666 19.5784Z"
+          fill={palInverted.colors.background}
+        />
+        <Circle cx="82" cy="61" r="13" fill="#20BC07" />
+        <Path d="M75 61L80 66L89 57" stroke="white" strokeWidth="2" />
+      </Svg>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
