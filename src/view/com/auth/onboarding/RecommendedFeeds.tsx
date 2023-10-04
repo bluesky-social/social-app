@@ -65,7 +65,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           tdStyles.title2,
           isTabletOrMobile && tdStyles.title2Small,
         ]}>
-        Recomended
+        Recommended
       </Text>
       <Text
         style={[
