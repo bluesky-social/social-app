@@ -37,56 +37,64 @@ export function FollowingEmptyState() {
   }, [navigation])
 
   return (
-    <View style={styles.emptyContainer}>
-      <View style={styles.emptyIconContainer}>
-        <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
-      </View>
-      <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        Your following feed is empty! Find some accounts to follow to fix this.
-      </Text>
-      <Button
-        type="inverted"
-        style={styles.emptyBtn}
-        onPress={onPressFindAccounts}>
-        <Text type="lg-medium" style={palInverted.text}>
-          Find accounts to follow
+    <View style={styles.container}>
+      <View style={styles.inner}>
+        <View style={styles.iconContainer}>
+          <MagnifyingGlassIcon style={[styles.icon, pal.text]} size={62} />
+        </View>
+        <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+          Your following feed is empty! Find some accounts to follow to fix
+          this.
         </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
-          size={14}
-        />
-      </Button>
+        <Button
+          type="inverted"
+          style={styles.emptyBtn}
+          onPress={onPressFindAccounts}>
+          <Text type="lg-medium" style={palInverted.text}>
+            Find accounts to follow
+          </Text>
+          <FontAwesomeIcon
+            icon="angle-right"
+            style={palInverted.text as FontAwesomeIconStyle}
+            size={14}
+          />
+        </Button>
 
-      <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-        You can also discover new Custom Feeds to follow.
-      </Text>
-      <Button
-        type="inverted"
-        style={[styles.emptyBtn, s.mt10]}
-        onPress={onPressDiscoverFeeds}>
-        <Text type="lg-medium" style={palInverted.text}>
-          Discover new custom feeds
+        <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
+          You can also discover new Custom Feeds to follow.
         </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
-          size={14}
-        />
-      </Button>
+        <Button
+          type="inverted"
+          style={[styles.emptyBtn, s.mt10]}
+          onPress={onPressDiscoverFeeds}>
+          <Text type="lg-medium" style={palInverted.text}>
+            Discover new custom feeds
+          </Text>
+          <FontAwesomeIcon
+            icon="angle-right"
+            style={palInverted.text as FontAwesomeIconStyle}
+            size={14}
+          />
+        </Button>
+      </View>
     </View>
   )
 }
 const styles = StyleSheet.create({
-  emptyContainer: {
+  container: {
     height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
     paddingVertical: 40,
     paddingHorizontal: 30,
   },
-  emptyIconContainer: {
+  inner: {
+    maxWidth: 460,
+  },
+  iconContainer: {
     marginBottom: 16,
   },
-  emptyIcon: {
+  icon: {
     marginLeft: 'auto',
     marginRight: 'auto',
   },
@@ -98,14 +106,5 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 24,
     borderRadius: 30,
-  },
-
-  feedsTip: {
-    position: 'absolute',
-    left: 22,
-  },
-  feedsTipArrow: {
-    marginLeft: 32,
-    marginTop: 8,
   },
 })
