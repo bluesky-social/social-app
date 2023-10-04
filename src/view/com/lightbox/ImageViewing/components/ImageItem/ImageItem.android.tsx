@@ -8,7 +8,9 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import Animated, {
+  measure,
   runOnJS,
+  useAnimatedRef,
   useAnimatedStyle,
   useAnimatedReaction,
   useSharedValue,
@@ -167,6 +169,7 @@ const ImageItem = ({
   const pinchTranslation = useSharedValue({ x: 0, y: 0 })
   const panTranslation = useSharedValue({ x: 0, y: 0 })
   const dismissSwipeTranslateY = useSharedValue(0)
+  const containerRef = useAnimatedRef();
 
   useAnimatedReaction(
     () => {
@@ -222,6 +225,16 @@ const ImageItem = ({
     const dy = clampedTranslateY - nextTranslateY
     return [dx, dy]
   }
+
+  const consumeHScroll = Gesture.Manual()
+    .onTouchesDown((e, manager) => {
+      const measurement = measure(containerRef);
+      if (!measurement || measurement.pageX !== 0) {
+        manager.activate();
+      } else {
+        manager.fail();
+      }
+    })
 
   const pinch = Gesture.Pinch()
     .withRef(gestureRef)
@@ -342,10 +355,11 @@ const ImageItem = ({
 
   const isLoading = !isLoaded || !imageDimensions;
   return (
-    <View
+    <Animated.View
+      ref={containerRef}
       style={styles.container}>
       {isLoading && <ActivityIndicator size="small" color="#FFF" style={styles.loading} />}
-      <GestureDetector gesture={Gesture.Exclusive(dismissSwipePan, Gesture.Simultaneous(pinch, pan), doubleTap)}>
+      <GestureDetector gesture={Gesture.Exclusive(consumeHScroll, dismissSwipePan, Gesture.Simultaneous(pinch, pan), doubleTap)}>
         <AnimatedImage
           source={imageSrc}
           contentFit="contain"
@@ -356,8 +370,8 @@ const ImageItem = ({
         >
         </AnimatedImage>
       </GestureDetector>
-    </View>
-    )
+    </Animated.View>
+  );
 }
 
 const styles = StyleSheet.create({
