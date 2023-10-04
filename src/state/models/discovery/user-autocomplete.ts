@@ -4,6 +4,12 @@ import AwaitLock from 'await-lock'
 import {RootStoreModel} from '../root-store'
 import {isInvalidHandle} from 'lib/strings/handles'
 
+interface Suggestion {
+  handle: string
+  displayName: string | undefined
+  avatar: string | undefined
+}
+
 export class UserAutocompleteModel {
   // state
   isLoading = false
@@ -12,7 +18,6 @@ export class UserAutocompleteModel {
   lock = new AwaitLock()
 
   // data
-  follows: AppBskyActorDefs.ProfileViewBasic[] = []
   searchRes: AppBskyActorDefs.ProfileViewBasic[] = []
   knownHandles: Set<string> = new Set()
 
@@ -27,29 +32,48 @@ export class UserAutocompleteModel {
     )
   }
 
-  get suggestions() {
+  get follows(): Suggestion[] {
+    return Object.values(this.rootStore.me.follows.byDid)
+  }
+
+  get suggestions(): Suggestion[] {
     if (!this.isActive) {
       return []
     }
     if (this.prefix) {
-      return this.searchRes.map(user => ({
-        handle: user.handle,
-        displayName: user.displayName,
-        avatar: user.avatar,
-      }))
+      const items: Suggestion[] = []
+      for (const item of this.follows) {
+        if (prefixMatch(this.prefix, item)) {
+          items.push(item)
+        }
+      }
+      for (const item of this.searchRes) {
+        if (!items.find(item2 => item2.handle === item.handle)) {
+          items.push({
+            handle: item.handle,
+            displayName: item.displayName,
+            avatar: item.avatar,
+          })
+        }
+      }
+      return items
     }
-    return this.follows.map(follow => ({
-      handle: follow.handle,
-      displayName: follow.displayName,
-      avatar: follow.avatar,
-    }))
+    return this.follows
   }
 
   // public api
   // =
 
   async setup() {
-    await this._getFollows()
+    await this.rootStore.me.follows.syncIfNeeded()
+    runInAction(() => {
+      for (const did in this.rootStore.me.follows.byDid) {
+        const info = this.rootStore.me.follows.byDid[did]
+        if (!isInvalidHandle(info.handle)) {
+          this.knownHandles.add(info.handle)
+        }
+      }
+    })
   }
 
   setActive(v: boolean) {
@@ -57,7 +81,7 @@ export class UserAutocompleteModel {
   }
 
   async setPrefix(prefix: string) {
-    const origPrefix = prefix.trim()
+    const origPrefix = prefix.trim().toLocaleLowerCase()
     this.prefix = origPrefix
     await this.lock.acquireAsync()
     try {
@@ -77,18 +101,6 @@ export class UserAutocompleteModel {
   // internal
   // =
 
-  async _getFollows() {
-    const res = await this.rootStore.agent.getFollows({
-      actor: this.rootStore.me.did || '',
-    })
-    runInAction(() => {
-      this.follows = res.data.follows.filter(f => !isInvalidHandle(f.handle))
-      for (const f of this.follows) {
-        this.knownHandles.add(f.handle)
-      }
-    })
-  }
-
   async _search() {
     const res = await this.rootStore.agent.searchActorsTypeahead({
       term: this.prefix,
@@ -101,4 +113,14 @@ export class UserAutocompleteModel {
       }
     })
   }
+}
+
+function prefixMatch(prefix: string, info: Suggestion): boolean {
+  if (info.handle.includes(prefix)) {
+    return true
+  }
+  if (info.displayName?.toLocaleLowerCase().includes(prefix)) {
+    return true
+  }
+  return false
 }

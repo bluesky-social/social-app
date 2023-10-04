@@ -1,6 +1,13 @@
 import {makeAutoObservable} from 'mobx'
-import {AppBskyActorDefs} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphGetFollows as GetFollows,
+  moderateProfile,
+} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
+
+const MAX_SYNC_PAGES = 10
+const SYNC_TTL = 60e3 * 10 // 10 minutes
 
 type Profile = AppBskyActorDefs.ProfileViewBasic | AppBskyActorDefs.ProfileView
 
@@ -13,8 +20,8 @@ export enum FollowState {
 export interface FollowInfo {
   followRecordUri: string | undefined
   handle: string
-  displayName?: string
-  avatar?: string
+  displayName: string | undefined
+  avatar: string | undefined
 }
 
 /**
@@ -24,7 +31,8 @@ export interface FollowInfo {
  */
 export class MyFollowsCache {
   // data
-  followDidToRecordMap: Record<string, FollowInfo> = {}
+  byDid: Record<string, FollowInfo> = {}
+  lastSync = 0
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -40,14 +48,45 @@ export class MyFollowsCache {
   // =
 
   clear() {
-    this.followDidToRecordMap = {}
+    this.byDid = {}
+  }
+
+  /**
+   * Syncs a subset of the user's follows
+   * for performance reasons, caps out at 1000 follows
+   */
+  async syncIfNeeded() {
+    if (this.lastSync > Date.now() - SYNC_TTL) {
+      return
+    }
+
+    let cursor
+    for (let i = 0; i < MAX_SYNC_PAGES; i++) {
+      const res: GetFollows.Response = await this.rootStore.agent.getFollows({
+        actor: this.rootStore.me.did,
+        cursor,
+        limit: 100,
+      })
+      res.data.follows = res.data.follows.filter(
+        profile =>
+          !moderateProfile(profile, this.rootStore.preferences.moderationOpts)
+            .account.filter,
+      )
+      this.hydrateMany(res.data.follows)
+      if (!res.data.cursor) {
+        break
+      }
+      cursor = res.data.cursor
+    }
+
+    this.lastSync = Date.now()
   }
 
   getFollowState(did: string): FollowState {
-    if (typeof this.followDidToRecordMap[did] === 'undefined') {
+    if (typeof this.byDid[did] === 'undefined') {
       return FollowState.Unknown
     }
-    if (typeof this.followDidToRecordMap[did].followRecordUri === 'string') {
+    if (typeof this.byDid[did].followRecordUri === 'string') {
       return FollowState.Following
     }
     return FollowState.NotFollowing
@@ -61,7 +100,7 @@ export class MyFollowsCache {
   }
 
   getFollowUri(did: string): string {
-    const v = this.followDidToRecordMap[did]
+    const v = this.byDid[did]
     if (typeof v === 'string') {
       return v
     }
@@ -69,17 +108,17 @@ export class MyFollowsCache {
   }
 
   addFollow(did: string, info: FollowInfo) {
-    this.followDidToRecordMap[did] = info
+    this.byDid[did] = info
   }
 
   removeFollow(did: string) {
-    if (this.followDidToRecordMap[did]) {
-      this.followDidToRecordMap[did].followRecordUri = undefined
+    if (this.byDid[did]) {
+      this.byDid[did].followRecordUri = undefined
     }
   }
 
   hydrate(did: string, profile: Profile) {
-    this.followDidToRecordMap[did] = {
+    this.byDid[did] = {
       followRecordUri: profile.viewer?.following,
       handle: profile.handle,
       displayName: profile.displayName,
