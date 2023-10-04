@@ -1,9 +1,9 @@
 import React, {ComponentProps} from 'react'
 import {
-  Animated,
   GestureResponderEvent,
   TouchableOpacity,
   View,
+  Animated,
 } from 'react-native'
 import {StackActions} from '@react-navigation/native'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
@@ -28,6 +28,7 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+// import Animated from 'react-native-reanimated'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 

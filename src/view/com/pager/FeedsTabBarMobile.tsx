@@ -1,11 +1,10 @@
 import React, {useMemo} from 'react'
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, Animated} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -13,27 +12,16 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+// import Animated from 'react-native-reanimated'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const store = useStores()
   const pal = usePalette('default')
-  const interp = useAnimatedValue(0)
-
-  React.useEffect(() => {
-    Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 1 : 0,
-      duration: 100,
-      useNativeDriver: true,
-      isInteraction: false,
-    }).start()
-  }, [interp, store.shell.minimalShellMode])
-  const transform = {
-    transform: [{translateY: Animated.multiply(interp, -100)}],
-  }
-
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
+  const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
     store.shell.openDrawer()
@@ -45,7 +33,13 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   )
 
   return (
-    <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
+    <Animated.View
+      style={[
+        pal.view,
+        pal.border,
+        styles.tabBar,
+        headerMinimalShellTransform,
+      ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity

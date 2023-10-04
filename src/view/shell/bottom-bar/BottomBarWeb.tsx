@@ -23,6 +23,7 @@ import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
+// import Animated from 'react-native-reanimated'
 
 export const BottomBarWeb = observer(function BottomBarWebImpl() {
   const store = useStores()
