@@ -322,37 +322,45 @@ export const SettingsScreen = withAuthRequired(
 
           <View style={styles.spacer20} />
 
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Invite a Friend
-          </Text>
-          <TouchableOpacity
-            testID="inviteFriendBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}
-            accessibilityRole="button"
-            accessibilityLabel="Invite"
-            accessibilityHint="Opens invite code list">
-            <View
-              style={[
-                styles.iconContainer,
-                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-              ]}>
-              <FontAwesomeIcon
-                icon="ticket"
-                style={
-                  (store.me.invitesAvailable > 0
-                    ? primaryText
-                    : pal.text) as FontAwesomeIconStyle
-                }
-              />
-            </View>
-            <Text
-              type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {formatCount(store.me.invitesAvailable)} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
-            </Text>
-          </TouchableOpacity>
+          {store.me.invitesAvailable !== null && (
+            <>
+              <Text type="xl-bold" style={[pal.text, styles.heading]}>
+                Invite a Friend
+              </Text>
+              <TouchableOpacity
+                testID="inviteFriendBtn"
+                style={[
+                  styles.linkCard,
+                  pal.view,
+                  isSwitching && styles.dimmed,
+                ]}
+                onPress={isSwitching ? undefined : onPressInviteCodes}
+                accessibilityRole="button"
+                accessibilityLabel="Invite"
+                accessibilityHint="Opens invite code list">
+                <View
+                  style={[
+                    styles.iconContainer,
+                    store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
+                  ]}>
+                  <FontAwesomeIcon
+                    icon="ticket"
+                    style={
+                      (store.me.invitesAvailable > 0
+                        ? primaryText
+                        : pal.text) as FontAwesomeIconStyle
+                    }
+                  />
+                </View>
+                <Text
+                  type="lg"
+                  style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
+                  {formatCount(store.me.invitesAvailable)} invite{' '}
+                  {pluralize(store.me.invitesAvailable, 'code')} available
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
 
           <View style={styles.spacer20} />
 

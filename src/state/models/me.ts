@@ -25,13 +25,13 @@ export class MeModel {
   savedFeeds: SavedFeedsModel
   notifications: NotificationsFeedModel
   follows: MyFollowsCache
-  invites: ComAtprotoServerDefs.InviteCode[] = []
+  invites: ComAtprotoServerDefs.InviteCode[] | null = []
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
   lastProfileStateUpdate = Date.now()
   lastNotifsUpdate = Date.now()
 
   get invitesAvailable() {
-    return this.invites.filter(isInviteAvailable).length
+    return this.invites?.filter(isInviteAvailable).length || null
   }
 
   constructor(public rootStore: RootStoreModel) {
@@ -180,7 +180,9 @@ export class MeModel {
       } catch (e) {
         this.rootStore.log.error('Failed to fetch user invite codes', e)
       }
-      await this.rootStore.invitedUsers.fetch(this.invites)
+      if (this.invites) {
+        await this.rootStore.invitedUsers.fetch(this.invites)
+      }
     }
   }
 
