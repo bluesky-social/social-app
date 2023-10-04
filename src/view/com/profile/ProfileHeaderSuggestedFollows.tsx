@@ -83,7 +83,7 @@ export function ProfileHeaderSuggestedFollows({
           return []
         }
 
-        store.me.follows.hydrateProfiles(suggestions)
+        store.me.follows.hydrateMany(suggestions)
 
         return suggestions
       } catch (e) {

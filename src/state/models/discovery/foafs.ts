@@ -60,7 +60,7 @@ export class FoafsModel {
                 this.rootStore.preferences.moderationOpts,
               ).account.filter,
           )
-          this.rootStore.me.follows.hydrateProfiles(res.data.follows)
+          this.rootStore.me.follows.hydrateMany(res.data.follows)
           if (!res.data.cursor) {
             break
           }
@@ -100,7 +100,7 @@ export class FoafsModel {
       for (let i = 0; i < results.length; i++) {
         const res = results[i]
         if (res.status === 'fulfilled') {
-          this.rootStore.me.follows.hydrateProfiles(res.value.data.follows)
+          this.rootStore.me.follows.hydrateMany(res.value.data.follows)
         }
         const profile = profiles.data.profiles[i]
         const source = this.sources[i]

@@ -10,6 +10,13 @@ export enum FollowState {
   Unknown,
 }
 
+export interface FollowInfo {
+  followRecordUri: string | undefined
+  handle: string
+  displayName?: string
+  avatar?: string
+}
+
 /**
  * This model is used to maintain a synced local cache of the user's
  * follows. It should be periodically refreshed and updated any time
@@ -17,9 +24,7 @@ export enum FollowState {
  */
 export class MyFollowsCache {
   // data
-  followDidToRecordMap: Record<string, string | boolean> = {}
-  lastSync = 0
-  myDid?: string
+  followDidToRecordMap: Record<string, FollowInfo> = {}
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -36,15 +41,13 @@ export class MyFollowsCache {
 
   clear() {
     this.followDidToRecordMap = {}
-    this.lastSync = 0
-    this.myDid = undefined
   }
 
   getFollowState(did: string): FollowState {
     if (typeof this.followDidToRecordMap[did] === 'undefined') {
       return FollowState.Unknown
     }
-    if (typeof this.followDidToRecordMap[did] === 'string') {
+    if (typeof this.followDidToRecordMap[did].followRecordUri === 'string') {
       return FollowState.Following
     }
     return FollowState.NotFollowing
@@ -53,11 +56,7 @@ export class MyFollowsCache {
   async fetchFollowState(did: string): Promise<FollowState> {
     // TODO: can we get a more efficient method for this? getProfile fetches more data than we need -prf
     const res = await this.rootStore.agent.getProfile({actor: did})
-    if (res.data.viewer?.following) {
-      this.addFollow(did, res.data.viewer.following)
-    } else {
-      this.removeFollow(did)
-    }
+    this.hydrate(did, res.data)
     return this.getFollowState(did)
   }
 
@@ -69,33 +68,28 @@ export class MyFollowsCache {
     throw new Error('Not a followed user')
   }
 
-  addFollow(did: string, recordUri: string) {
-    this.followDidToRecordMap[did] = recordUri
+  addFollow(did: string, info: FollowInfo) {
+    this.followDidToRecordMap[did] = info
   }
 
   removeFollow(did: string) {
-    this.followDidToRecordMap[did] = false
-  }
-
-  /**
-   * Use this to incrementally update the cache as views provide information
-   */
-  hydrate(did: string, recordUri: string | undefined) {
-    if (recordUri) {
-      this.followDidToRecordMap[did] = recordUri
-    } else {
-      this.followDidToRecordMap[did] = false
+    if (this.followDidToRecordMap[did]) {
+      this.followDidToRecordMap[did].followRecordUri = undefined
     }
   }
 
-  /**
-   * Use this to incrementally update the cache as views provide information
-   */
-  hydrateProfiles(profiles: Profile[]) {
+  hydrate(did: string, profile: Profile) {
+    this.followDidToRecordMap[did] = {
+      followRecordUri: profile.viewer?.following,
+      handle: profile.handle,
+      displayName: profile.displayName,
+      avatar: profile.avatar,
+    }
+  }
+
+  hydrateMany(profiles: Profile[]) {
     for (const profile of profiles) {
-      if (profile.viewer) {
-        this.hydrate(profile.did, profile.viewer.following)
-      }
+      this.hydrate(profile.did, profile)
     }
   }
 }

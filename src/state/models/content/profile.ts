@@ -290,8 +290,8 @@ export class ProfileModel {
     this.labels = res.data.labels
     if (res.data.viewer) {
       Object.assign(this.viewer, res.data.viewer)
-      this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
+    this.rootStore.me.follows.hydrate(this.did, res.data)
   }
 
   async _createRichText() {
