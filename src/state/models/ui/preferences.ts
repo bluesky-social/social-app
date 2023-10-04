@@ -441,7 +441,7 @@ export class PreferencesModel {
 
   async addSavedFeed(v: string) {
     return this._optimisticUpdateSavedFeeds(
-      [...this.savedFeeds, v],
+      [...this.savedFeeds.filter(uri => uri !== v), v],
       this.pinnedFeeds,
       () => this.rootStore.agent.addSavedFeed(v),
     )
@@ -457,8 +457,8 @@ export class PreferencesModel {
 
   async addPinnedFeed(v: string) {
     return this._optimisticUpdateSavedFeeds(
-      this.savedFeeds,
-      [...this.pinnedFeeds, v],
+      [...this.savedFeeds.filter(uri => uri !== v), v],
+      [...this.pinnedFeeds.filter(uri => uri !== v), v],
       () => this.rootStore.agent.addPinnedFeed(v),
     )
   }
