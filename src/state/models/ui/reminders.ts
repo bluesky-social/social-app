@@ -46,6 +46,9 @@ export class Reminders {
     if (sess.emailConfirmed) {
       return false
     }
+    if (this.rootStore.onboarding.isActive) {
+      return false
+    }
     const today = new Date()
     // shard the users into 2 day of the week buckets
     // (this is to avoid a sudden influx of email updates when
