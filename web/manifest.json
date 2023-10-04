@@ -1,0 +1,77 @@
+{
+  "background_color": "#ffffff",
+  "categories": [
+      "social",
+      "news",
+      "magazines",
+      "AT Protocol"
+  ],
+  "description": "Bluesky is an American social media platform. It emerged from an initiative within Twitter Inc. to develop what was described as a 'decentralized social network protocol', now known as the AT Protocol, the standard on top of which the Bluesky platform has been built.",
+  "display": "standalone",
+  "icons": [
+      {
+          "src": "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/a0/fb/94/a0fb9435-09bf-70e3-9b98-48c374c8e4ee/AppIcon-1x_U007ephone-85-220.png/460x0w.webp",
+          "sizes": "460x460",
+          "type": "image/png"
+      }
+  ],
+  "name": "Bluesky",
+  "screenshots": [
+      {
+          "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/1b/2f/57/1b2f57ed-ff49-f29c-bb8c-060f49ce05c4/3eee298d-3165-4726-b88d-aafaf76c44b0_Simulator_Screen_Shot_-_iPhone_14_-_2023-03-08_at_16.59.30.png/460x0w.webp",
+          "sizes": "460x996",
+          "type": "image/png"
+      },
+      {
+          "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/bd/ba/3e/bdba3e27-ffc7-5891-e012-28d61da5f8ad/ed5c6597-5270-4021-8268-bb63b3c885bb_Simulator_Screen_Shot_-_iPhone_14_-_2023-03-08_at_16.56.47.png/460x0w.webp",
+          "sizes": "460x996",
+          "type": "image/png"
+      },
+      {
+          "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/5a/69/a2/5a69a2ce-1753-13da-4bdd-331b36f05fe7/2f4d3c9f-5fc6-4064-8eca-ad9d37a6328b_Simulator_Screen_Shot_-_iPhone_14_-_2023-03-08_at_16.57.01.png/460x0w.webp",
+          "sizes": "460x996",
+          "type": "image/png"
+      }
+  ],
+  "shortcuts": [
+      {
+          "name": "Feeds",
+          "url": "/feeds?utm_source=jumplist&utm_medium=shortcut",
+          "icons": [
+              {
+                  "src": "https://abs.twimg.com/responsive-web/client-web/icon-search-stroke.5f9aa88a.png",
+                  "type": "image/png",
+                  "sizes": "192x192"
+              }
+          ]
+      },
+      {
+          "name": "Notifications",
+          "url": "/notifications?utm_source=jumplist&utm_medium=shortcut",
+          "icons": [
+              {
+                  "src": "https://abs.twimg.com/responsive-web/client-web/icon-notifications-stroke.429602da.png",
+                  "type": "image/png",
+                  "sizes": "192x192"
+              }
+          ]
+      }
+  ],
+  "short_name": "Bluesky",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "scope": "/",
+  "android_package_name": "xyz.blueskyweb.app",
+  "prefer_related_applications": true,
+  "related_applications": [
+      {
+          "id": "xyz.blueskyweb.app",
+          "platform": "chromeos_play",
+          "url": "https://play.google.com/store/apps/details?id=xyz.blueskyweb.app"
+      }
+  ],
+  "launch_handler": {
+      "route_to": "existing-client",
+      "navigate_existing_client": "never"
+  }
+}
