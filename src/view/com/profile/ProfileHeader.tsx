@@ -392,8 +392,8 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                     {
                       paddingHorizontal: 10,
                       backgroundColor: showSuggestedFollows
-                        ? colors.blue3
-                        : pal.viewLight.backgroundColor,
+                        ? pal.colors.text
+                        : pal.colors.backgroundLight,
                     },
                   ]}
                   accessibilityRole="button"
