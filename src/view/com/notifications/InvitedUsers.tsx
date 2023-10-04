@@ -75,7 +75,7 @@ function InvitedUser({
           <FollowButton
             unfollowedType="primary"
             followedType="primary-light"
-            did={profile.did}
+            profile={profile}
           />
           <Button
             testID="dismissBtn"
