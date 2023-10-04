@@ -1,18 +1,13 @@
 import React, {ComponentProps} from 'react'
 import {observer} from 'mobx-react-lite'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lib/numbers'
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -28,18 +23,30 @@ export const FABInner = observer(function FABInnerImpl({
   const insets = useSafeAreaInsets()
   const {isTablet} = useWebMediaQueries()
   const store = useStores()
-  const interp = useSharedValue(0)
+
+  const interp = useAnimatedValue(0)
   React.useEffect(() => {
     if (store.shell.minimalShellMode) {
-      interp.value = withTiming(0, {duration: 100})
+      Animated.timing(interp, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
     } else {
-      interp.value = withTiming(1, {duration: 100})
+      Animated.timing(interp, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
     }
   }, [interp, store.shell.minimalShellMode])
-  const transform = useAnimatedStyle(() => ({
-    transform: [{translateY: interpolate(interp.value, [0, 1], [0, -44])}],
-  }))
-
+  const transform = isTablet
+    ? undefined
+    : {
+        transform: [{translateY: Animated.multiply(interp, -44)}],
+      }
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
   const right = isTablet ? 50 : 24
   const bottom = isTablet ? 50 : clamp(insets.bottom, 15, 60) + 15
