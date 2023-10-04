@@ -137,7 +137,7 @@ export class ProfileModel {
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
-        this.rootStore.me.follows.addFollow(this.did, res.uri)
+        this.rootStore.me.follows.hydrate(this.did, this)
       })
       track('Profile:Follow', {
         username: this.handle,

@@ -4,11 +4,7 @@ import AwaitLock from 'await-lock'
 import {RootStoreModel} from '../root-store'
 import {isInvalidHandle} from 'lib/strings/handles'
 
-interface Suggestion {
-  handle: string
-  displayName: string | undefined
-  avatar: string | undefined
-}
+type ProfileViewBasic = AppBskyActorDefs.ProfileViewBasic
 
 export class UserAutocompleteModel {
   // state
@@ -18,8 +14,8 @@ export class UserAutocompleteModel {
   lock = new AwaitLock()
 
   // data
-  searchRes: AppBskyActorDefs.ProfileViewBasic[] = []
   knownHandles: Set<string> = new Set()
+  _suggestions: ProfileViewBasic[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -32,33 +28,20 @@ export class UserAutocompleteModel {
     )
   }
 
-  get follows(): Suggestion[] {
-    return Object.values(this.rootStore.me.follows.byDid)
+  get follows(): ProfileViewBasic[] {
+    return Object.values(this.rootStore.me.follows.byDid).map(item => ({
+      did: item.did,
+      handle: item.handle,
+      displayName: item.displayName,
+      avatar: item.avatar,
+    }))
   }
 
-  get suggestions(): Suggestion[] {
+  get suggestions(): ProfileViewBasic[] {
     if (!this.isActive) {
       return []
     }
-    if (this.prefix) {
-      const items: Suggestion[] = []
-      for (const item of this.follows) {
-        if (prefixMatch(this.prefix, item)) {
-          items.push(item)
-        }
-      }
-      for (const item of this.searchRes) {
-        if (!items.find(item2 => item2.handle === item.handle)) {
-          items.push({
-            handle: item.handle,
-            displayName: item.displayName,
-            avatar: item.avatar,
-          })
-        }
-      }
-      return items
-    }
-    return this.follows
+    return this._suggestions
   }
 
   // public api
@@ -89,9 +72,27 @@ export class UserAutocompleteModel {
         if (this.prefix !== origPrefix) {
           return // another prefix was set before we got our chance
         }
-        await this._search()
+
+        // reset to follow results
+        this._computeSuggestions([])
+
+        // ask backend
+        const res = await this.rootStore.agent.searchActorsTypeahead({
+          term: this.prefix,
+          limit: 8,
+        })
+        this._computeSuggestions(res.data.actors)
+
+        // update known handles
+        runInAction(() => {
+          for (const u of res.data.actors) {
+            this.knownHandles.add(u.handle)
+          }
+        })
       } else {
-        this.searchRes = []
+        runInAction(() => {
+          this._computeSuggestions([])
+        })
       }
     } finally {
       this.lock.release()
@@ -101,21 +102,35 @@ export class UserAutocompleteModel {
   // internal
   // =
 
-  async _search() {
-    const res = await this.rootStore.agent.searchActorsTypeahead({
-      term: this.prefix,
-      limit: 8,
-    })
-    runInAction(() => {
-      this.searchRes = res.data.actors
-      for (const u of this.searchRes) {
-        this.knownHandles.add(u.handle)
+  _computeSuggestions(searchRes: AppBskyActorDefs.ProfileViewBasic[] = []) {
+    if (this.prefix) {
+      const items: ProfileViewBasic[] = []
+      for (const item of this.follows) {
+        if (prefixMatch(this.prefix, item)) {
+          items.push(item)
+        }
+        if (items.length >= 8) {
+          break
+        }
       }
-    })
+      for (const item of searchRes) {
+        if (!items.find(item2 => item2.handle === item.handle)) {
+          items.push({
+            did: item.did,
+            handle: item.handle,
+            displayName: item.displayName,
+            avatar: item.avatar,
+          })
+        }
+      }
+      this._suggestions = items
+    } else {
+      this._suggestions = this.follows
+    }
   }
 }
 
-function prefixMatch(prefix: string, info: Suggestion): boolean {
+function prefixMatch(prefix: string, info: ProfileViewBasic): boolean {
   if (info.handle.includes(prefix)) {
     return true
   }

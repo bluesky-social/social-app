@@ -18,6 +18,7 @@ export enum FollowState {
 }
 
 export interface FollowInfo {
+  did: string
   followRecordUri: string | undefined
   handle: string
   displayName: string | undefined
@@ -119,6 +120,7 @@ export class MyFollowsCache {
 
   hydrate(did: string, profile: Profile) {
     this.byDid[did] = {
+      did,
       followRecordUri: profile.viewer?.following,
       handle: profile.handle,
       displayName: profile.displayName,
