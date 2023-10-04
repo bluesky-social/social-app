@@ -10,7 +10,7 @@ import {
 } from 'state/models/discovery/suggested-actors'
 import {Text} from '../util/text/Text'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {ProfileCardLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {RefWithInfoAndFollowers} from 'state/models/discovery/foafs'
@@ -85,11 +85,21 @@ export const Suggestions = observer(
           )
       } else if (suggestedActors.isLoading) {
         items = items.concat([
+          {
+            _reactKey: '__suggested_heading__',
+            type: 'heading',
+            title: 'Suggested Follows',
+          },
           {_reactKey: '__suggested_loading__', type: 'loading-placeholder'},
         ])
       }
       if (foafs.isLoading) {
         items = items.concat([
+          {
+            _reactKey: '__popular_heading__',
+            type: 'heading',
+            title: 'In Your Network',
+          },
           {_reactKey: '__foafs_loading__', type: 'loading-placeholder'},
         ])
       } else {
@@ -206,7 +216,14 @@ export const Suggestions = observer(
           )
         }
         if (item.type === 'loading-placeholder') {
-          return <ProfileCardFeedLoadingPlaceholder />
+          return (
+            <View>
+              <ProfileCardLoadingPlaceholder />
+              <ProfileCardLoadingPlaceholder />
+              <ProfileCardLoadingPlaceholder />
+              <ProfileCardLoadingPlaceholder />
+            </View>
+          )
         }
         return null
       },
