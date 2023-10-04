@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
   container: {
     width: SCREEN.width,
     height: SCREEN.height,
+    overflow: 'hidden'
   },
   image: {
     flex: 1,
