@@ -172,7 +172,10 @@ function ImageViewing({
               waitFor={Array.from(gestureRefs.values())}
             />
           )}
-          onMomentumScrollEnd={onScroll}
+          onMomentumScrollEnd={e => {
+            setIsScaled(false);
+            onScroll(e);
+          }}
           //@ts-ignore
           keyExtractor={(imageSrc, index) =>
             keyExtractor
