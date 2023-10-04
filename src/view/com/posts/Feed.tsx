@@ -144,7 +144,7 @@ export const Feed = observer(function Feed({
 
   const FeedFooter = React.useCallback(
     () =>
-      feed.isLoading ? (
+      feed.isLoadingMore ? (
         <View style={styles.feedFooter}>
           <ActivityIndicator />
         </View>
@@ -153,7 +153,7 @@ export const Feed = observer(function Feed({
       ) : (
         <View />
       ),
-    [feed.isLoading, feed.hasMore, feed.isEmpty, renderEndOfFeed],
+    [feed.isLoadingMore, feed.hasMore, feed.isEmpty, renderEndOfFeed],
   )
 
   return (

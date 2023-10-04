@@ -116,6 +116,10 @@ export class PostsFeedModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  get isLoadingMore() {
+    return this.isLoading && !this.isRefreshing
+  }
+
   setHasNewLatest(v: boolean) {
     this.hasNewLatest = v
   }
