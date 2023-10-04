@@ -116,6 +116,10 @@ export class PostsFeedModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  get isLoadingMore() {
+    return this.isLoading && !this.isRefreshing
+  }
+
   setHasNewLatest(v: boolean) {
     this.hasNewLatest = v
   }
@@ -307,7 +311,7 @@ export class PostsFeedModel {
   }
 
   async _appendAll(res: FeedAPIResponse, replace = false) {
-    this.hasMore = !!res.cursor
+    this.hasMore = !!res.cursor && res.feed.length > 0
     if (replace) {
       this.emptyFetches = 0
     }

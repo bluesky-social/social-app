@@ -13,6 +13,7 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {TextLink} from 'view/com/util/Link'
 import {Feed} from '../com/posts/Feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
+import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
@@ -110,6 +111,10 @@ export const HomeScreen = withAuthRequired(
       return <FollowingEmptyState />
     }, [])
 
+    const renderFollowingEndOfFeed = React.useCallback(() => {
+      return <FollowingEndOfFeed />
+    }, [])
+
     const renderCustomFeedEmptyState = React.useCallback(() => {
       return <CustomFeedEmptyState />
     }, [])
@@ -127,6 +132,7 @@ export const HomeScreen = withAuthRequired(
           isPageFocused={selectedPage === 0}
           feed={store.me.mainFeed}
           renderEmptyState={renderFollowingEmptyState}
+          renderEndOfFeed={renderFollowingEndOfFeed}
         />
         {customFeeds.map((f, index) => {
           return (
@@ -149,11 +155,13 @@ const FeedPage = observer(function FeedPageImpl({
   isPageFocused,
   feed,
   renderEmptyState,
+  renderEndOfFeed,
 }: {
   testID?: string
   feed: PostsFeedModel
   isPageFocused: boolean
   renderEmptyState?: () => JSX.Element
+  renderEndOfFeed?: () => JSX.Element
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -307,6 +315,7 @@ const FeedPage = observer(function FeedPageImpl({
         onScroll={onMainScroll}
         scrollEventThrottle={100}
         renderEmptyState={renderEmptyState}
+        renderEndOfFeed={renderEndOfFeed}
         ListHeaderComponent={ListHeaderComponent}
         headerOffset={headerOffset}
       />

@@ -6,10 +6,6 @@ import {toHashCode} from 'lib/strings/helpers'
 const DAY = 60e3 * 24 * 1 // 1 day (ms)
 
 export class Reminders {
-  // NOTE
-  // by defaulting to the current date, we ensure that the user won't be nagged
-  // on first run (aka right after creating an account)
-  // -prf
   lastEmailConfirm: Date = new Date()
 
   constructor(public rootStore: RootStoreModel) {
@@ -44,6 +40,9 @@ export class Reminders {
       return false
     }
     if (sess.emailConfirmed) {
+      return false
+    }
+    if (this.rootStore.onboarding.isActive) {
       return false
     }
     const today = new Date()

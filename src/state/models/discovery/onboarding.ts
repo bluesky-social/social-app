@@ -81,6 +81,7 @@ export class OnboardingModel {
   }
 
   finish() {
+    this.rootStore.me.mainFeed.refresh() // load the selected content
     this.step = 'Home'
     track('Onboarding:Complete')
   }

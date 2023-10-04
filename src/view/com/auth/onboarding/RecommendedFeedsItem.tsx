@@ -30,7 +30,6 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
       }
     } else {
       try {
-        await item.save()
         await item.pin()
       } catch (e) {
         Toast.show('There was an issue contacting your server')
