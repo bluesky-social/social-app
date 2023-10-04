@@ -11,6 +11,7 @@
     "web": "expo start --web",
     "build-web": "expo export:web && node ./scripts/post-web-build.js && cp --verbose ./web-build/static/js/*.* ./bskyweb/static/js/",
     "start": "expo start --dev-client",
+    "start:prod": "expo start --dev-client --no-dev --minify",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
     "test": "jest --forceExit --testTimeout=20000 --bail",
     "test-watch": "jest --watchAll",
