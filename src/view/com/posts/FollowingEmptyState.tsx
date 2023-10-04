@@ -28,7 +28,12 @@ export function FollowingEmptyState() {
   }, [navigation])
 
   const onPressDiscoverFeeds = React.useCallback(() => {
-    navigation.navigate('Feeds')
+    if (isWeb) {
+      navigation.navigate('Feeds')
+    } else {
+      navigation.navigate('FeedsTab')
+      navigation.popToTop()
+    }
   }, [navigation])
 
   return (
