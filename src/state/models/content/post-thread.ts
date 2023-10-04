@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AppBskyFeedGetPostThread as GetPostThread,
   AppBskyFeedDefs,
+  AppBskyFeedPost,
   PostModeration,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -74,6 +75,13 @@ export class PostThreadModel {
 
   get isThreadMuted() {
     return this.rootStore.mutedThreads.uris.has(this.rootUri)
+  }
+
+  get isCachedPostAReply() {
+    if (AppBskyFeedPost.isRecord(this.thread?.post.record)) {
+      return !!this.thread?.post.record.reply
+    }
+    return false
   }
 
   // public api
