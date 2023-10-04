@@ -43,8 +43,8 @@ export function FollowingEmptyState() {
           <MagnifyingGlassIcon style={[styles.icon, pal.text]} size={62} />
         </View>
         <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-          Your following feed is empty! Find some accounts to follow to fix
-          this.
+          Your following feed is empty! Follow more users to see what's
+          happening.
         </Text>
         <Button
           type="inverted"

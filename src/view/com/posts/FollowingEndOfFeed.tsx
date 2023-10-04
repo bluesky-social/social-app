@@ -39,8 +39,8 @@ export function FollowingEndOfFeed() {
     <View style={[styles.container, pal.border]}>
       <View style={styles.inner}>
         <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-          You've reached the end of your feed! Find some accounts to follow to
-          fix this.
+          You've reached the end of your feed! Find some more accounts to
+          follow.
         </Text>
         <Button
           type="inverted"
