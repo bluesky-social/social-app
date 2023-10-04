@@ -6,6 +6,7 @@
  *
  */
 
+import {useState} from 'react'
 import {Animated} from 'react-native'
 
 const INITIAL_POSITION = {x: 0, y: 0}
@@ -15,8 +16,8 @@ const ANIMATION_CONFIG = {
 }
 
 const useAnimatedComponents = () => {
-  const headerTranslate = new Animated.ValueXY(INITIAL_POSITION)
-  const footerTranslate = new Animated.ValueXY(INITIAL_POSITION)
+  const [headerTranslate] = useState(() => new Animated.ValueXY(INITIAL_POSITION))
+  const [footerTranslate] = useState(() => new Animated.ValueXY(INITIAL_POSITION))
 
   const toggleVisible = (isVisible: boolean) => {
     if (isVisible) {
