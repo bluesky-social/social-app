@@ -93,7 +93,7 @@ export function HeaderWithInput({
           onBlur={() => setIsInputFocused(false)}
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
-          autoFocus={isMobile}
+          autoFocus={false}
           accessibilityRole="search"
           accessibilityLabel="Search"
           accessibilityHint=""
