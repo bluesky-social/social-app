@@ -153,7 +153,7 @@ export const Feed = observer(function Feed({
       ) : (
         <View />
       ),
-    [feed, renderEndOfFeed],
+    [feed.isLoading, feed.hasMore, feed.isEmpty, renderEndOfFeed],
   )
 
   return (
