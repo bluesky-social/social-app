@@ -78,6 +78,7 @@ function ImageViewing({
 }: Props) {
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
   const [isScaled, setIsScaled] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose)
   const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
   const [headerTransform, footerTransform, toggleBarsVisible] =
@@ -144,7 +145,7 @@ function ImageViewing({
           data={images}
           horizontal
           pagingEnabled
-          scrollEnabled={!isScaled}
+          scrollEnabled={!isScaled || isDragging}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           getItem={(_, index) => images[index]}
@@ -172,6 +173,12 @@ function ImageViewing({
               waitFor={Array.from(gestureRefs.values())}
             />
           )}
+          onScrollBeginDrag={e => {
+            setIsDragging(true);
+          }}
+          onScrollEndDrag={e => {
+            setIsDragging(false);
+          }}
           onMomentumScrollEnd={e => {
             setIsScaled(false);
             onScroll(e);
