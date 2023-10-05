@@ -52,23 +52,14 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
-
-  // TODO: It's not valid to reinitialize Animated values during render.
-  // This is a bug.
-  const scrollValueY = new Animated.Value(0)
-  const scaleValue = new Animated.Value(scale || 1)
-  const translateValue = new Animated.ValueXY(translate)
+  const [scrollValueY] = useState(() => new Animated.Value(0))
   const maxScrollViewZoom = MAX_SCALE / (scale || 1)
 
   const imageOpacity = scrollValueY.interpolate({
     inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
     outputRange: [0.5, 1, 0.5],
   })
-  const imagesStyles = getImageStyles(
-    imageDimensions,
-    translateValue,
-    scaleValue,
-  )
+  const imagesStyles = getImageStyles(imageDimensions, translate, scale || 1)
   const imageStylesWithOpacity = {...imagesStyles, opacity: imageOpacity}
 
   const onScrollEndDrag = useCallback(
@@ -262,20 +253,21 @@ const getZoomRectAfterDoubleTap = (
 
 const getImageStyles = (
   image: {width: number; height: number} | null,
-  translate: Animated.ValueXY,
-  scale?: Animated.Value,
+  translate: {readonly x: number; readonly y: number} | undefined,
+  scale?: number,
 ) => {
   if (!image?.width || !image?.height) {
     return {width: 0, height: 0}
   }
-
-  const transform = translate.getTranslateTransform()
-
+  const transform = []
+  if (translate) {
+    transform.push({translateX: translate.x})
+    transform.push({translateY: translate.y})
+  }
   if (scale) {
     // @ts-ignore TODO - is scale incorrect? might need to remove -prf
     transform.push({scale}, {perspective: new Animated.Value(1000)})
   }
-
   return {
     width: image.width,
     height: image.height,
