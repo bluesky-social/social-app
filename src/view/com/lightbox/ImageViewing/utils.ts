@@ -7,12 +7,9 @@
  */
 
 import {Animated} from 'react-native'
-import {Dimensions, Position} from './@types'
+import type {Size, Position} from './types'
 
-export const getImageTransform = (
-  image: Dimensions | null,
-  screen: Dimensions,
-) => {
+export const getImageTransform = (image: Size | null, screen: Size) => {
   if (!image?.width || !image?.height) {
     return [] as const
   }
@@ -26,7 +23,7 @@ export const getImageTransform = (
 }
 
 export const getImageStyles = (
-  image: Dimensions | null,
+  image: Size | null,
   translate: Animated.ValueXY,
   scale?: Animated.Value,
 ) => {
@@ -48,10 +45,7 @@ export const getImageStyles = (
   }
 }
 
-export const getImageTranslate = (
-  image: Dimensions,
-  screen: Dimensions,
-): Position => {
+export const getImageTranslate = (image: Size, screen: Size): Position => {
   const getTranslateForAxis = (axis: 'x' | 'y'): number => {
     const imageSize = axis === 'x' ? image.width : image.height
     const screenSize = axis === 'x' ? screen.width : screen.height

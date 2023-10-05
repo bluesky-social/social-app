@@ -17,8 +17,8 @@ import {
   PanResponderGestureState,
 } from 'react-native'
 
-import {Position} from '../@types'
 import {getImageTranslate} from '../utils'
+import type {Position, Size} from '../types'
 
 const SCREEN = Dimensions.get('window')
 const SCREEN_WIDTH = SCREEN.width
@@ -402,8 +402,8 @@ const usePanResponder = ({
 
 const getImageDimensionsByTranslate = (
   translate: Position,
-  screen: {width: number; height: number},
-): {width: number; height: number} => ({
+  screen: Size,
+): Size => ({
   width: screen.width - translate.x * 2,
   height: screen.height - translate.y * 2,
 })

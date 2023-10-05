@@ -21,10 +21,9 @@ import {Image} from 'expo-image'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
 import usePanResponder from '../../hooks/usePanResponder'
-
 import {getImageStyles, getImageTransform} from '../../utils'
-import {ImageSource} from '../../@types'
 import {ImageLoading} from './ImageLoading'
+import type {ImageSource} from '../../types'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1.75

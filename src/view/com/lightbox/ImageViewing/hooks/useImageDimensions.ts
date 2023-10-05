@@ -8,7 +8,7 @@
 
 import {useEffect, useState} from 'react'
 import {Image, ImageURISource} from 'react-native'
-import {Dimensions, ImageSource} from '../@types'
+import type {ImageSource, Size} from '../types'
 
 const CACHE_SIZE = 50
 
@@ -33,11 +33,11 @@ const createCache = (cacheSize: number) => ({
 
 const imageDimensionsCache = createCache(CACHE_SIZE)
 
-const useImageDimensions = (image: ImageSource): Dimensions | null => {
-  const [dimensions, setDimensions] = useState<Dimensions | null>(null)
+const useImageDimensions = (image: ImageSource): Size | null => {
+  const [dimensions, setDimensions] = useState<Size | null>(null)
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const getImageDimensions = (image: ImageSource): Promise<Dimensions> => {
+  const getImageDimensions = (image: ImageSource): Promise<Size> => {
     return new Promise(resolve => {
       if (typeof image === 'number') {
         const cacheKey = `${image}`

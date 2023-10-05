@@ -20,12 +20,10 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 import {Image} from 'expo-image'
-
 import useImageDimensions from '../../hooks/useImageDimensions'
-
 import {getImageStyles, getImageTransform} from '../../utils'
-import {ImageSource} from '../../@types'
 import {ImageLoading} from './ImageLoading'
+import type {ImageSource, Size} from '../../types'
 
 const DOUBLE_TAP_DELAY = 300
 const SWIPE_CLOSE_OFFSET = 75
@@ -173,7 +171,7 @@ const styles = StyleSheet.create({
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: {width: number; height: number} | null,
+  imageDimensions: Size | null,
   touchX: number,
   touchY: number,
 ): {

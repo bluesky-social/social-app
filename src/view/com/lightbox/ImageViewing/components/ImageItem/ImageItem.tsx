@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {ImageSource} from '../../@types'
+import type {ImageSource} from '../../types'
 
 type Props = {
   imageSrc: ImageSource

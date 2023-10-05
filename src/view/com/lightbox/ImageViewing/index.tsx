@@ -31,8 +31,8 @@ import {ModalsContainer} from '../../modals/Modal'
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
-import {ImageSource} from './@types'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import type {ImageSource} from './types'
 
 type Props = {
   images: ImageSource[]
