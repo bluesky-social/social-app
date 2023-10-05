@@ -31,7 +31,7 @@ import {ModalsContainer} from '../../modals/Modal'
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
-import {ImageSource, Dimensions as ScreenDimensions} from './@types'
+import {ImageSource} from './@types'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
@@ -50,6 +50,11 @@ type Props = {
 const DEFAULT_BG_COLOR = '#000'
 const SCREEN = Dimensions.get('screen')
 const SCREEN_WIDTH = SCREEN.width
+const INITIAL_POSITION = {x: 0, y: 0}
+const ANIMATION_CONFIG = {
+  duration: 200,
+  useNativeDriver: true,
+}
 
 function ImageViewing({
   images,
@@ -62,19 +67,58 @@ function ImageViewing({
   FooterComponent,
 }: Props) {
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
-  const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose)
-  const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
-  const [headerTransform, footerTransform, toggleBarsVisible] =
-    useAnimatedComponents()
+  const [opacity, setOpacity] = useState(1)
+  const [currentImageIndex, setImageIndex] = useState(imageIndex)
 
-  const onZoom = useCallback(
-    (isScaled: boolean) => {
-      // @ts-ignore
-      imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
-      toggleBarsVisible(!isScaled)
-    },
-    [toggleBarsVisible],
-  )
+  // TODO: It's not valid to reinitialize Animated values during render.
+  // This is a bug.
+  const headerTranslate = new Animated.ValueXY(INITIAL_POSITION)
+  const footerTranslate = new Animated.ValueXY(INITIAL_POSITION)
+
+  const toggleBarsVisible = (isVisible: boolean) => {
+    if (isVisible) {
+      Animated.parallel([
+        Animated.timing(headerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
+        Animated.timing(footerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
+      ]).start()
+    } else {
+      Animated.parallel([
+        Animated.timing(headerTranslate.y, {
+          ...ANIMATION_CONFIG,
+          toValue: -300,
+        }),
+        Animated.timing(footerTranslate.y, {
+          ...ANIMATION_CONFIG,
+          toValue: 300,
+        }),
+      ]).start()
+    }
+  }
+
+  const onRequestCloseEnhanced = () => {
+    setOpacity(0)
+    onRequestClose()
+    setTimeout(() => setOpacity(1), 0)
+  }
+
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const {
+      nativeEvent: {
+        contentOffset: {x: scrollX},
+      },
+    } = event
+
+    if (SCREEN.width) {
+      const nextIndex = Math.round(scrollX / SCREEN.width)
+      setImageIndex(nextIndex < 0 ? 0 : nextIndex)
+    }
+  }
+
+  const onZoom = (isScaled: boolean) => {
+    // @ts-ignore
+    imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
+    toggleBarsVisible(!isScaled)
+  }
 
   const edges = useMemo(() => {
     if (Platform.OS === 'android') {
@@ -93,6 +137,8 @@ function ImageViewing({
     return null
   }
 
+  const headerTransform = headerTranslate.getTranslateTransform()
+  const footerTransform = footerTranslate.getTranslateTransform()
   return (
     <SafeAreaView
       style={styles.screen}
@@ -152,73 +198,6 @@ function ImageViewing({
       </View>
     </SafeAreaView>
   )
-}
-
-const INITIAL_POSITION = {x: 0, y: 0}
-const ANIMATION_CONFIG = {
-  duration: 200,
-  useNativeDriver: true,
-}
-
-const useAnimatedComponents = () => {
-  const headerTranslate = new Animated.ValueXY(INITIAL_POSITION)
-  const footerTranslate = new Animated.ValueXY(INITIAL_POSITION)
-
-  const toggleVisible = (isVisible: boolean) => {
-    if (isVisible) {
-      Animated.parallel([
-        Animated.timing(headerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
-        Animated.timing(footerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
-      ]).start()
-    } else {
-      Animated.parallel([
-        Animated.timing(headerTranslate.y, {
-          ...ANIMATION_CONFIG,
-          toValue: -300,
-        }),
-        Animated.timing(footerTranslate.y, {
-          ...ANIMATION_CONFIG,
-          toValue: 300,
-        }),
-      ]).start()
-    }
-  }
-
-  const headerTransform = headerTranslate.getTranslateTransform()
-  const footerTransform = footerTranslate.getTranslateTransform()
-
-  return [headerTransform, footerTransform, toggleVisible] as const
-}
-
-const useRequestClose = (onRequestClose: () => void) => {
-  const [opacity, setOpacity] = useState(1)
-
-  return [
-    opacity,
-    () => {
-      setOpacity(0)
-      onRequestClose()
-      setTimeout(() => setOpacity(1), 0)
-    },
-  ] as const
-}
-
-const useImageIndexChange = (imageIndex: number, screen: ScreenDimensions) => {
-  const [currentImageIndex, setImageIndex] = useState(imageIndex)
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const {
-      nativeEvent: {
-        contentOffset: {x: scrollX},
-      },
-    } = event
-
-    if (screen.width) {
-      const nextIndex = Math.round(scrollX / screen.width)
-      setImageIndex(nextIndex < 0 ? 0 : nextIndex)
-    }
-  }
-
-  return [currentImageIndex, onScroll] as const
 }
 
 const styles = StyleSheet.create({
