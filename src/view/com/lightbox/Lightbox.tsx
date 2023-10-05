@@ -15,93 +15,9 @@ import * as MediaLibrary from 'expo-media-library'
 
 export const Lightbox = observer(function Lightbox() {
   const store = useStores()
-  const [isAltExpanded, setAltExpanded] = React.useState(false)
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
-
   const onClose = React.useCallback(() => {
     store.shell.closeLightbox()
   }, [store])
-
-  const saveImageToAlbumWithToasts = React.useCallback(
-    async (uri: string) => {
-      if (!permissionResponse || permissionResponse.granted === false) {
-        Toast.show('Permission to access camera roll is required.')
-        if (permissionResponse?.canAskAgain) {
-          requestPermission()
-        } else {
-          Toast.show(
-            'Permission to access camera roll was denied. Please enable it in your system settings.',
-          )
-        }
-        return
-      }
-
-      try {
-        await saveImageToMediaLibrary({uri})
-        Toast.show('Saved to your camera roll.')
-      } catch (e: any) {
-        Toast.show(`Failed to save image: ${String(e)}`)
-      }
-    },
-    [permissionResponse, requestPermission],
-  )
-
-  const LightboxFooter = React.useCallback(
-    ({imageIndex}: {imageIndex: number}) => {
-      const lightbox = store.shell.activeLightbox
-      if (!lightbox) {
-        return null
-      }
-
-      let altText = ''
-      let uri = ''
-      if (lightbox.name === 'images') {
-        const opts = lightbox as models.ImagesLightbox
-        uri = opts.images[imageIndex].uri
-        altText = opts.images[imageIndex].alt || ''
-      } else if (lightbox.name === 'profile-image') {
-        const opts = lightbox as models.ProfileImageLightbox
-        uri = opts.profileView.avatar || ''
-      }
-
-      return (
-        <View style={[styles.footer]}>
-          {altText ? (
-            <Pressable
-              onPress={() => setAltExpanded(!isAltExpanded)}
-              accessibilityRole="button">
-              <Text
-                style={[s.gray3, styles.footerText]}
-                numberOfLines={isAltExpanded ? undefined : 3}>
-                {altText}
-              </Text>
-            </Pressable>
-          ) : null}
-          <View style={styles.footerBtns}>
-            <Button
-              type="primary-outline"
-              style={styles.footerBtn}
-              onPress={() => saveImageToAlbumWithToasts(uri)}>
-              <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
-              <Text type="xl" style={s.white}>
-                Save
-              </Text>
-            </Button>
-            <Button
-              type="primary-outline"
-              style={styles.footerBtn}
-              onPress={() => shareImageModal({uri})}>
-              <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
-              <Text type="xl" style={s.white}>
-                Share
-              </Text>
-            </Button>
-          </View>
-        </View>
-      )
-    },
-    [store.shell.activeLightbox, isAltExpanded, saveImageToAlbumWithToasts],
-  )
 
   if (!store.shell.activeLightbox) {
     return null
@@ -130,6 +46,92 @@ export const Lightbox = observer(function Lightbox() {
   } else {
     return null
   }
+})
+
+const LightboxFooter = observer(function LightboxFooter({
+  imageIndex,
+}: {
+  imageIndex: number
+}) {
+  const store = useStores()
+  const [isAltExpanded, setAltExpanded] = React.useState(false)
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
+
+  const saveImageToAlbumWithToasts = React.useCallback(
+    async (uri: string) => {
+      if (!permissionResponse || permissionResponse.granted === false) {
+        Toast.show('Permission to access camera roll is required.')
+        if (permissionResponse?.canAskAgain) {
+          requestPermission()
+        } else {
+          Toast.show(
+            'Permission to access camera roll was denied. Please enable it in your system settings.',
+          )
+        }
+        return
+      }
+
+      try {
+        await saveImageToMediaLibrary({uri})
+        Toast.show('Saved to your camera roll.')
+      } catch (e: any) {
+        Toast.show(`Failed to save image: ${String(e)}`)
+      }
+    },
+    [permissionResponse, requestPermission],
+  )
+
+  const lightbox = store.shell.activeLightbox
+  if (!lightbox) {
+    return null
+  }
+
+  let altText = ''
+  let uri = ''
+  if (lightbox.name === 'images') {
+    const opts = lightbox as models.ImagesLightbox
+    uri = opts.images[imageIndex].uri
+    altText = opts.images[imageIndex].alt || ''
+  } else if (lightbox.name === 'profile-image') {
+    const opts = lightbox as models.ProfileImageLightbox
+    uri = opts.profileView.avatar || ''
+  }
+
+  return (
+    <View style={[styles.footer]}>
+      {altText ? (
+        <Pressable
+          onPress={() => setAltExpanded(!isAltExpanded)}
+          accessibilityRole="button">
+          <Text
+            style={[s.gray3, styles.footerText]}
+            numberOfLines={isAltExpanded ? undefined : 3}>
+            {altText}
+          </Text>
+        </Pressable>
+      ) : null}
+      <View style={styles.footerBtns}>
+        <Button
+          type="primary-outline"
+          style={styles.footerBtn}
+          onPress={() => saveImageToAlbumWithToasts(uri)}>
+          <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
+          <Text type="xl" style={s.white}>
+            Save
+          </Text>
+        </Button>
+        <Button
+          type="primary-outline"
+          style={styles.footerBtn}
+          onPress={() => shareImageModal({uri})}>
+          <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
+          <Text type="xl" style={s.white}>
+            Share
+          </Text>
+        </Button>
+      </View>
+    </View>
+  )
 })
 
 const styles = StyleSheet.create({
