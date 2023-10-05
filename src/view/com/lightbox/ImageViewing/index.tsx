@@ -165,6 +165,7 @@ function ImageViewing({
               swipeToCloseEnabled={swipeToCloseEnabled}
               doubleTapToZoomEnabled={doubleTapToZoomEnabled}
               gestureRef={gestureRefs.get(imageSrc)}
+              isDragging={isDragging}
             />
           )}
           renderScrollComponent={props => (

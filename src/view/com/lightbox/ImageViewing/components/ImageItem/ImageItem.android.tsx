@@ -158,6 +158,7 @@ const ImageItem = ({
   delayLongPress,
   swipeToCloseEnabled = true,
   doubleTapToZoomEnabled = true,
+  isDragging,
   gestureRef,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
@@ -228,12 +229,16 @@ const ImageItem = ({
 
   const consumeHScroll = Gesture.Manual()
     .onTouchesDown((e, manager) => {
+      if (isDragging) {
+        manager.activate();
+        return;
+      }
       const measurement = measure(containerRef);
       if (!measurement || measurement.pageX !== 0) {
         manager.activate();
-      } else {
-        manager.fail();
+        return;
       }
+      manager.fail();
     })
 
   const pinch = Gesture.Pinch()
