@@ -6,7 +6,6 @@
  *
  */
 
-import {Animated} from 'react-native'
 import {Dimensions, Position} from './@types'
 
 export const getImageTransform = (
@@ -23,29 +22,6 @@ export const getImageTransform = (
   const {x, y} = getImageTranslate(image, screen)
 
   return [{x, y}, scale] as const
-}
-
-export const getImageStyles = (
-  image: Dimensions | null,
-  translate: Animated.ValueXY,
-  scale?: Animated.Value,
-) => {
-  if (!image?.width || !image?.height) {
-    return {width: 0, height: 0}
-  }
-
-  const transform = translate.getTranslateTransform()
-
-  if (scale) {
-    // @ts-ignore TODO - is scale incorrect? might need to remove -prf
-    transform.push({scale}, {perspective: new Animated.Value(1000)})
-  }
-
-  return {
-    width: image.width,
-    height: image.height,
-    transform,
-  }
 }
 
 export const getImageTranslate = (

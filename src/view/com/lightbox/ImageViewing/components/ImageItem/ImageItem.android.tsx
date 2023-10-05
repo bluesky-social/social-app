@@ -22,7 +22,7 @@ import {Image} from 'expo-image'
 import useImageDimensions from '../../hooks/useImageDimensions'
 import usePanResponder from '../../hooks/usePanResponder'
 
-import {getImageStyles, getImageTransform} from '../../utils'
+import {getImageTransform} from '../../utils'
 import {ImageSource} from '../../@types'
 import {ImageLoading} from './ImageLoading'
 
@@ -132,5 +132,28 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT * 2,
   },
 })
+
+const getImageStyles = (
+  image: {width: number; height: number} | null,
+  translate: Animated.ValueXY,
+  scale?: Animated.Value,
+) => {
+  if (!image?.width || !image?.height) {
+    return {width: 0, height: 0}
+  }
+
+  const transform = translate.getTranslateTransform()
+
+  if (scale) {
+    // @ts-ignore TODO - is scale incorrect? might need to remove -prf
+    transform.push({scale}, {perspective: new Animated.Value(1000)})
+  }
+
+  return {
+    width: image.width,
+    height: image.height,
+    transform,
+  }
+}
 
 export default React.memo(ImageItem)
