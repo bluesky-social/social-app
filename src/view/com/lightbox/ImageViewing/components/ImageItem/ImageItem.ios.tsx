@@ -38,17 +38,11 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
-  swipeToCloseEnabled?: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-const ImageItem = ({
-  imageSrc,
-  onZoom,
-  onRequestClose,
-  swipeToCloseEnabled = true,
-}: Props) => {
+const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
   const scrollViewRef = useRef<ScrollView>(null)
   const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
@@ -85,15 +79,11 @@ const ImageItem = ({
       onZoom(currentScaled)
       setScaled(currentScaled)
 
-      if (
-        !currentScaled &&
-        swipeToCloseEnabled &&
-        Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
-      ) {
+      if (!currentScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
         onRequestClose()
       }
     },
-    [onRequestClose, onZoom, swipeToCloseEnabled],
+    [onRequestClose, onZoom],
   )
 
   const onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -116,12 +106,10 @@ const ImageItem = ({
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxScrollViewZoom}
         contentContainerStyle={styles.imageScrollContainer}
-        scrollEnabled={swipeToCloseEnabled}
+        scrollEnabled={true}
+        onScroll={onScroll}
         onScrollEndDrag={onScrollEndDrag}
-        scrollEventThrottle={1}
-        {...(swipeToCloseEnabled && {
-          onScroll,
-        })}>
+        scrollEventThrottle={1}>
         {(!loaded || !imageDimensions) && <ImageLoading />}
         <TouchableWithoutFeedback
           onPress={handleDoubleTap}

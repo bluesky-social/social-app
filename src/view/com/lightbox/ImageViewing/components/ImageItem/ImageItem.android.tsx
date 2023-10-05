@@ -36,17 +36,11 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (isZoomed: boolean) => void
-  swipeToCloseEnabled?: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-const ImageItem = ({
-  imageSrc,
-  onZoom,
-  onRequestClose,
-  swipeToCloseEnabled = true,
-}: Props) => {
+const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
   const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null)
   const imageDimensions = useImageDimensions(imageSrc)
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
@@ -113,11 +107,9 @@ const ImageItem = ({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.imageScrollContainer}
-      scrollEnabled={swipeToCloseEnabled}
-      {...(swipeToCloseEnabled && {
-        onScroll,
-        onScrollEndDrag,
-      })}>
+      scrollEnabled={true}
+      onScroll={onScroll}
+      onScrollEndDrag={onScrollEndDrag}>
       <AnimatedImage
         {...panHandlers}
         source={imageSrc}

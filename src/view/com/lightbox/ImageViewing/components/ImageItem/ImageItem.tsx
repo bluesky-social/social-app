@@ -8,7 +8,6 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
-  swipeToCloseEnabled?: boolean
 }
 
 const ImageItem = (_props: Props) => {
