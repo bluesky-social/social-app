@@ -38,8 +38,6 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
-  onLongPress: (image: ImageSource) => void
-  delayLongPress: number
   swipeToCloseEnabled?: boolean
   doubleTapToZoomEnabled?: boolean
 }
@@ -50,8 +48,6 @@ const ImageItem = ({
   imageSrc,
   onZoom,
   onRequestClose,
-  onLongPress,
-  delayLongPress,
   swipeToCloseEnabled = true,
   doubleTapToZoomEnabled = true,
 }: Props) => {
@@ -112,10 +108,6 @@ const ImageItem = ({
     scrollValueY.setValue(offsetY)
   }
 
-  const onLongPressHandler = useCallback(() => {
-    onLongPress(imageSrc)
-  }, [imageSrc, onLongPress])
-
   return (
     <View>
       <ScrollView
@@ -135,8 +127,6 @@ const ImageItem = ({
         {(!loaded || !imageDimensions) && <ImageLoading />}
         <TouchableWithoutFeedback
           onPress={doubleTapToZoomEnabled ? handleDoubleTap : undefined}
-          onLongPress={onLongPressHandler}
-          delayLongPress={delayLongPress}
           accessibilityRole="image"
           accessibilityLabel={imageSrc.alt}
           accessibilityHint="">

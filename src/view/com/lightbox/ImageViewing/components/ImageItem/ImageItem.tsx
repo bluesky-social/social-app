@@ -8,8 +8,6 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
-  onLongPress: (image: ImageSource) => void
-  delayLongPress: number
   swipeToCloseEnabled?: boolean
   doubleTapToZoomEnabled?: boolean
 }
