@@ -8,11 +8,29 @@
 
 import {useEffect, useState} from 'react'
 import {Image, ImageURISource} from 'react-native'
-
-import {createCache} from '../utils'
 import {Dimensions, ImageSource} from '../@types'
 
 const CACHE_SIZE = 50
+
+type CacheStorageItem = {key: string; value: any}
+
+const createCache = (cacheSize: number) => ({
+  _storage: [] as CacheStorageItem[],
+  get(key: string): any {
+    const {value} =
+      this._storage.find(({key: storageKey}) => storageKey === key) || {}
+
+    return value
+  },
+  set(key: string, value: any) {
+    if (this._storage.length >= cacheSize) {
+      this._storage.shift()
+    }
+
+    this._storage.push({key, value})
+  },
+})
+
 const imageDimensionsCache = createCache(CACHE_SIZE)
 
 const useImageDimensions = (image: ImageSource): Dimensions | null => {

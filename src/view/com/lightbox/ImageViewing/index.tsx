@@ -12,12 +12,14 @@ import React, {
   ComponentType,
   useCallback,
   useRef,
-  useEffect,
   useMemo,
+  useState,
 } from 'react'
 import {
   Animated,
   Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
   StyleSheet,
   View,
   VirtualizedList,
@@ -29,9 +31,6 @@ import {ModalsContainer} from '../../modals/Modal'
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
-import useAnimatedComponents from './hooks/useAnimatedComponents'
-import useImageIndexChange from './hooks/useImageIndexChange'
-import useRequestClose from './hooks/useRequestClose'
 import {ImageSource} from './@types'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
@@ -41,22 +40,21 @@ type Props = {
   imageIndex: number
   visible: boolean
   onRequestClose: () => void
-  onLongPress?: (image: ImageSource) => void
-  onImageIndexChange?: (imageIndex: number) => void
   presentationStyle?: ModalProps['presentationStyle']
   animationType?: ModalProps['animationType']
   backgroundColor?: string
-  swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
-  delayLongPress?: number
   HeaderComponent?: ComponentType<{imageIndex: number}>
   FooterComponent?: ComponentType<{imageIndex: number}>
 }
 
 const DEFAULT_BG_COLOR = '#000'
-const DEFAULT_DELAY_LONG_PRESS = 800
 const SCREEN = Dimensions.get('screen')
 const SCREEN_WIDTH = SCREEN.width
+const INITIAL_POSITION = {x: 0, y: 0}
+const ANIMATION_CONFIG = {
+  duration: 200,
+  useNativeDriver: true,
+}
 
 function ImageViewing({
   images,
@@ -64,35 +62,63 @@ function ImageViewing({
   imageIndex,
   visible,
   onRequestClose,
-  onLongPress = () => {},
-  onImageIndexChange,
   backgroundColor = DEFAULT_BG_COLOR,
-  swipeToCloseEnabled,
-  doubleTapToZoomEnabled,
-  delayLongPress = DEFAULT_DELAY_LONG_PRESS,
   HeaderComponent,
   FooterComponent,
 }: Props) {
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
-  const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose)
-  const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
-  const [headerTransform, footerTransform, toggleBarsVisible] =
-    useAnimatedComponents()
+  const [opacity, setOpacity] = useState(1)
+  const [currentImageIndex, setImageIndex] = useState(imageIndex)
 
-  useEffect(() => {
-    if (onImageIndexChange) {
-      onImageIndexChange(currentImageIndex)
+  // TODO: It's not valid to reinitialize Animated values during render.
+  // This is a bug.
+  const headerTranslate = new Animated.ValueXY(INITIAL_POSITION)
+  const footerTranslate = new Animated.ValueXY(INITIAL_POSITION)
+
+  const toggleBarsVisible = (isVisible: boolean) => {
+    if (isVisible) {
+      Animated.parallel([
+        Animated.timing(headerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
+        Animated.timing(footerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
+      ]).start()
+    } else {
+      Animated.parallel([
+        Animated.timing(headerTranslate.y, {
+          ...ANIMATION_CONFIG,
+          toValue: -300,
+        }),
+        Animated.timing(footerTranslate.y, {
+          ...ANIMATION_CONFIG,
+          toValue: 300,
+        }),
+      ]).start()
     }
-  }, [currentImageIndex, onImageIndexChange])
+  }
 
-  const onZoom = useCallback(
-    (isScaled: boolean) => {
-      // @ts-ignore
-      imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
-      toggleBarsVisible(!isScaled)
-    },
-    [toggleBarsVisible],
-  )
+  const onRequestCloseEnhanced = () => {
+    setOpacity(0)
+    onRequestClose()
+    setTimeout(() => setOpacity(1), 0)
+  }
+
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const {
+      nativeEvent: {
+        contentOffset: {x: scrollX},
+      },
+    } = event
+
+    if (SCREEN.width) {
+      const nextIndex = Math.round(scrollX / SCREEN.width)
+      setImageIndex(nextIndex < 0 ? 0 : nextIndex)
+    }
+  }
+
+  const onZoom = (isScaled: boolean) => {
+    // @ts-ignore
+    imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
+    toggleBarsVisible(!isScaled)
+  }
 
   const edges = useMemo(() => {
     if (Platform.OS === 'android') {
@@ -111,6 +137,8 @@ function ImageViewing({
     return null
   }
 
+  const headerTransform = headerTranslate.getTranslateTransform()
+  const footerTransform = footerTranslate.getTranslateTransform()
   return (
     <SafeAreaView
       style={styles.screen}
@@ -148,10 +176,6 @@ function ImageViewing({
               onZoom={onZoom}
               imageSrc={imageSrc}
               onRequestClose={onRequestCloseEnhanced}
-              onLongPress={onLongPress}
-              delayLongPress={delayLongPress}
-              swipeToCloseEnabled={swipeToCloseEnabled}
-              doubleTapToZoomEnabled={doubleTapToZoomEnabled}
             />
           )}
           onMomentumScrollEnd={onScroll}

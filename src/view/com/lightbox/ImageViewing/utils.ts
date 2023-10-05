@@ -6,41 +6,8 @@
  *
  */
 
-import {Animated, NativeTouchEvent} from 'react-native'
+import {Animated} from 'react-native'
 import {Dimensions, Position} from './@types'
-
-type CacheStorageItem = {key: string; value: any}
-
-export const createCache = (cacheSize: number) => ({
-  _storage: [] as CacheStorageItem[],
-  get(key: string): any {
-    const {value} =
-      this._storage.find(({key: storageKey}) => storageKey === key) || {}
-
-    return value
-  },
-  set(key: string, value: any) {
-    if (this._storage.length >= cacheSize) {
-      this._storage.shift()
-    }
-
-    this._storage.push({key, value})
-  },
-})
-
-export const splitArrayIntoBatches = (arr: any[], batchSize: number): any[] =>
-  arr.reduce((result, item) => {
-    const batch = result.pop() || []
-
-    if (batch.length < batchSize) {
-      batch.push(item)
-      result.push(batch)
-    } else {
-      result.push(batch, [item])
-    }
-
-    return result
-  }, [])
 
 export const getImageTransform = (
   image: Dimensions | null,
@@ -96,44 +63,4 @@ export const getImageTranslate = (
     x: getTranslateForAxis('x'),
     y: getTranslateForAxis('y'),
   }
-}
-
-export const getImageDimensionsByTranslate = (
-  translate: Position,
-  screen: Dimensions,
-): Dimensions => ({
-  width: screen.width - translate.x * 2,
-  height: screen.height - translate.y * 2,
-})
-
-export const getImageTranslateForScale = (
-  currentTranslate: Position,
-  targetScale: number,
-  screen: Dimensions,
-): Position => {
-  const {width, height} = getImageDimensionsByTranslate(
-    currentTranslate,
-    screen,
-  )
-
-  const targetImageDimensions = {
-    width: width * targetScale,
-    height: height * targetScale,
-  }
-
-  return getImageTranslate(targetImageDimensions, screen)
-}
-
-export const getDistanceBetweenTouches = (
-  touches: NativeTouchEvent[],
-): number => {
-  const [a, b] = touches
-
-  if (a == null || b == null) {
-    return 0
-  }
-
-  return Math.sqrt(
-    Math.pow(a.pageX - b.pageX, 2) + Math.pow(a.pageY - b.pageY, 2),
-  )
 }

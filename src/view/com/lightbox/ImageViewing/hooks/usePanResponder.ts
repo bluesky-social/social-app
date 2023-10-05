@@ -18,16 +18,11 @@ import {
 } from 'react-native'
 
 import {Position} from '../@types'
-import {
-  getDistanceBetweenTouches,
-  getImageTranslate,
-  getImageDimensionsByTranslate,
-} from '../utils'
+import {getImageTranslate} from '../utils'
 
 const SCREEN = Dimensions.get('window')
 const SCREEN_WIDTH = SCREEN.width
 const SCREEN_HEIGHT = SCREEN.height
-const MIN_DIMENSION = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT)
 const ANDROID_BAR_HEIGHT = 24
 
 const MIN_ZOOM = 2
@@ -39,18 +34,12 @@ type Props = {
   initialScale: number
   initialTranslate: Position
   onZoom: (isZoomed: boolean) => void
-  doubleTapToZoomEnabled: boolean
-  onLongPress: () => void
-  delayLongPress: number
 }
 
 const usePanResponder = ({
   initialScale,
   initialTranslate,
   onZoom,
-  doubleTapToZoomEnabled,
-  onLongPress,
-  delayLongPress,
 }: Props): Readonly<
   [GestureResponderHandlers, Animated.Value, Animated.ValueXY]
 > => {
@@ -62,9 +51,9 @@ const usePanResponder = ({
   let tmpTranslate: Position | null = null
   let isDoubleTapPerformed = false
   let lastTapTS: number | null = null
-  let longPressHandlerRef: NodeJS.Timeout | null = null
 
-  const meaningfulShift = MIN_DIMENSION * 0.01
+  // TODO: It's not valid to reinitialize Animated values during render.
+  // This is a bug.
   const scaleValue = new Animated.Value(initialScale)
   const translateValue = new Animated.ValueXY(initialTranslate)
 
@@ -155,10 +144,6 @@ const usePanResponder = ({
     return () => scaleValue.removeAllListeners()
   })
 
-  const cancelLongPressHandle = () => {
-    longPressHandlerRef && clearTimeout(longPressHandlerRef)
-  }
-
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onStartShouldSetPanResponderCapture: () => true,
@@ -173,8 +158,6 @@ const usePanResponder = ({
       if (gestureState.numberActiveTouches > 1) {
         return
       }
-
-      longPressHandlerRef = setTimeout(onLongPress, delayLongPress)
     },
     onPanResponderStart: (
       event: GestureResponderEvent,
@@ -194,7 +177,7 @@ const usePanResponder = ({
         lastTapTS && tapTS - lastTapTS < DOUBLE_TAP_DELAY,
       )
 
-      if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
+      if (isDoubleTapPerformed) {
         let nextScale = initialScale
         let nextTranslate = initialTranslate
 
@@ -241,15 +224,8 @@ const usePanResponder = ({
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
-      const {dx, dy} = gestureState
-
-      if (Math.abs(dx) >= meaningfulShift || Math.abs(dy) >= meaningfulShift) {
-        cancelLongPressHandle()
-      }
-
       // Don't need to handle move because double tap in progress (was handled in onStart)
-      if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
-        cancelLongPressHandle()
+      if (isDoubleTapPerformed) {
         return
       }
 
@@ -267,8 +243,6 @@ const usePanResponder = ({
         numberInitialTouches === 2 && gestureState.numberActiveTouches === 2
 
       if (isPinchGesture) {
-        cancelLongPressHandle()
-
         const initialDistance = getDistanceBetweenTouches(initialTouches)
         const currentDistance = getDistanceBetweenTouches(
           event.nativeEvent.touches,
@@ -315,7 +289,7 @@ const usePanResponder = ({
 
       if (isTapGesture && currentScale > initialScale) {
         const {x, y} = currentTranslate
-        // eslint-disable-next-line @typescript-eslint/no-shadow
+
         const {dx, dy} = gestureState
         const [topBound, leftBound, bottomBound, rightBound] =
           getBounds(currentScale)
@@ -360,8 +334,6 @@ const usePanResponder = ({
       }
     },
     onPanResponderRelease: () => {
-      cancelLongPressHandle()
-
       if (isDoubleTapPerformed) {
         isDoubleTapPerformed = false
       }
@@ -426,6 +398,26 @@ const usePanResponder = ({
   })
 
   return [panResponder.panHandlers, scaleValue, translateValue]
+}
+
+const getImageDimensionsByTranslate = (
+  translate: Position,
+  screen: {width: number; height: number},
+): {width: number; height: number} => ({
+  width: screen.width - translate.x * 2,
+  height: screen.height - translate.y * 2,
+})
+
+const getDistanceBetweenTouches = (touches: NativeTouchEvent[]): number => {
+  const [a, b] = touches
+
+  if (a == null || b == null) {
+    return 0
+  }
+
+  return Math.sqrt(
+    Math.pow(a.pageX - b.pageX, 2) + Math.pow(a.pageY - b.pageY, 2),
+  )
 }
 
 export default usePanResponder

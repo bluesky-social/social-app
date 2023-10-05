@@ -36,23 +36,11 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (isZoomed: boolean) => void
-  onLongPress: (image: ImageSource) => void
-  delayLongPress: number
-  swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-const ImageItem = ({
-  imageSrc,
-  onZoom,
-  onRequestClose,
-  onLongPress,
-  delayLongPress,
-  swipeToCloseEnabled = true,
-  doubleTapToZoomEnabled = true,
-}: Props) => {
+const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
   const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null)
   const imageDimensions = useImageDimensions(imageSrc)
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
@@ -72,17 +60,10 @@ const ImageItem = ({
     [onZoom],
   )
 
-  const onLongPressHandler = useCallback(() => {
-    onLongPress(imageSrc)
-  }, [imageSrc, onLongPress])
-
   const [panHandlers, scaleValue, translateValue] = usePanResponder({
     initialScale: scale || 1,
     initialTranslate: translate || {x: 0, y: 0},
     onZoom: onZoomPerformed,
-    doubleTapToZoomEnabled,
-    onLongPress: onLongPressHandler,
-    delayLongPress,
   })
 
   const imagesStyles = getImageStyles(
@@ -126,11 +107,9 @@ const ImageItem = ({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.imageScrollContainer}
-      scrollEnabled={swipeToCloseEnabled}
-      {...(swipeToCloseEnabled && {
-        onScroll,
-        onScrollEndDrag,
-      })}>
+      scrollEnabled={true}
+      onScroll={onScroll}
+      onScrollEndDrag={onScrollEndDrag}>
       <AnimatedImage
         {...panHandlers}
         source={imageSrc}
