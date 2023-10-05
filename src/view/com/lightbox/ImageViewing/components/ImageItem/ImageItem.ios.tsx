@@ -55,6 +55,9 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
   )
 
   const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
+
+  // TODO: It's not valid to reinitialize Animated values during render.
+  // This is a bug.
   const scrollValueY = new Animated.Value(0)
   const scaleValue = new Animated.Value(scale || 1)
   const translateValue = new Animated.ValueXY(translate)

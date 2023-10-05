@@ -56,6 +56,8 @@ const usePanResponder = ({
   let isDoubleTapPerformed = false
   let lastTapTS: number | null = null
 
+  // TODO: It's not valid to reinitialize Animated values during render.
+  // This is a bug.
   const scaleValue = new Animated.Value(initialScale)
   const translateValue = new Animated.ValueXY(initialTranslate)
 
