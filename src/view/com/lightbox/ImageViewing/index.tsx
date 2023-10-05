@@ -12,7 +12,6 @@ import React, {
   ComponentType,
   useCallback,
   useRef,
-  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -41,7 +40,6 @@ type Props = {
   imageIndex: number
   visible: boolean
   onRequestClose: () => void
-  onImageIndexChange?: (imageIndex: number) => void
   presentationStyle?: ModalProps['presentationStyle']
   animationType?: ModalProps['animationType']
   backgroundColor?: string
@@ -59,7 +57,6 @@ function ImageViewing({
   imageIndex,
   visible,
   onRequestClose,
-  onImageIndexChange,
   backgroundColor = DEFAULT_BG_COLOR,
   HeaderComponent,
   FooterComponent,
@@ -69,12 +66,6 @@ function ImageViewing({
   const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
   const [headerTransform, footerTransform, toggleBarsVisible] =
     useAnimatedComponents()
-
-  useEffect(() => {
-    if (onImageIndexChange) {
-      onImageIndexChange(currentImageIndex)
-    }
-  }, [currentImageIndex, onImageIndexChange])
 
   const onZoom = useCallback(
     (isScaled: boolean) => {
