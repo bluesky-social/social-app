@@ -69,11 +69,12 @@ function ImageViewing({
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
   const [opacity, setOpacity] = useState(1)
   const [currentImageIndex, setImageIndex] = useState(imageIndex)
-
-  // TODO: It's not valid to reinitialize Animated values during render.
-  // This is a bug.
-  const headerTranslate = new Animated.ValueXY(INITIAL_POSITION)
-  const footerTranslate = new Animated.ValueXY(INITIAL_POSITION)
+  const [headerTranslate] = useState(
+    () => new Animated.ValueXY(INITIAL_POSITION),
+  )
+  const [footerTranslate] = useState(
+    () => new Animated.ValueXY(INITIAL_POSITION),
+  )
 
   const toggleBarsVisible = (isVisible: boolean) => {
     if (isVisible) {
