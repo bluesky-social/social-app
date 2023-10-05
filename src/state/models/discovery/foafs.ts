@@ -1,8 +1,4 @@
-import {
-  AppBskyActorDefs,
-  AppBskyGraphGetFollows as GetFollows,
-  moderateProfile,
-} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import sampleSize from 'lodash.samplesize'
 import {bundleAsync} from 'lib/async/bundle'
@@ -43,35 +39,13 @@ export class FoafsModel {
     try {
       this.isLoading = true
 
-      // fetch & hydrate up to 1000 follows
-      {
-        let cursor
-        for (let i = 0; i < 10; i++) {
-          const res: GetFollows.Response =
-            await this.rootStore.agent.getFollows({
-              actor: this.rootStore.me.did,
-              cursor,
-              limit: 100,
-            })
-          res.data.follows = res.data.follows.filter(
-            profile =>
-              !moderateProfile(
-                profile,
-                this.rootStore.preferences.moderationOpts,
-              ).account.filter,
-          )
-          this.rootStore.me.follows.hydrateProfiles(res.data.follows)
-          if (!res.data.cursor) {
-            break
-          }
-          cursor = res.data.cursor
-        }
-      }
+      // fetch some of the user's follows
+      await this.rootStore.me.follows.syncIfNeeded()
 
       // grab 10 of the users followed by the user
       runInAction(() => {
         this.sources = sampleSize(
-          Object.keys(this.rootStore.me.follows.followDidToRecordMap),
+          Object.keys(this.rootStore.me.follows.byDid),
           10,
         )
       })
@@ -100,7 +74,7 @@ export class FoafsModel {
       for (let i = 0; i < results.length; i++) {
         const res = results[i]
         if (res.status === 'fulfilled') {
-          this.rootStore.me.follows.hydrateProfiles(res.value.data.follows)
+          this.rootStore.me.follows.hydrateMany(res.value.data.follows)
         }
         const profile = profiles.data.profiles[i]
         const source = this.sources[i]

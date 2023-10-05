@@ -316,7 +316,7 @@ export class PostsFeedModel {
       this.emptyFetches = 0
     }
 
-    this.rootStore.me.follows.hydrateProfiles(
+    this.rootStore.me.follows.hydrateMany(
       res.feed.map(item => item.post.author),
     )
     for (const item of res.feed) {

@@ -76,7 +76,7 @@ export class SuggestedActorsModel {
           !moderateProfile(actor, this.rootStore.preferences.moderationOpts)
             .account.filter,
       )
-      this.rootStore.me.follows.hydrateProfiles(actors)
+      this.rootStore.me.follows.hydrateMany(actors)
 
       runInAction(() => {
         if (replace) {
@@ -118,7 +118,7 @@ export class SuggestedActorsModel {
         actor: actor,
       })
     const {suggestions: moreSuggestions} = res.data
-    this.rootStore.me.follows.hydrateProfiles(moreSuggestions)
+    this.rootStore.me.follows.hydrateMany(moreSuggestions)
     // dedupe
     const toInsert = moreSuggestions.filter(
       s => !this.suggestions.find(s2 => s2.did === s.did),

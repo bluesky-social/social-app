@@ -126,7 +126,7 @@ export class LikesModel {
   _appendAll(res: GetLikes.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.rootStore.me.follows.hydrateProfiles(
+    this.rootStore.me.follows.hydrateMany(
       res.data.likes.map(like => like.actor),
     )
     this.likes = this.likes.concat(res.data.likes)
