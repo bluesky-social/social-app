@@ -38,14 +38,12 @@ type Props = {
   initialScale: number
   initialTranslate: Position
   onZoom: (isZoomed: boolean) => void
-  doubleTapToZoomEnabled: boolean
 }
 
 const usePanResponder = ({
   initialScale,
   initialTranslate,
   onZoom,
-  doubleTapToZoomEnabled,
 }: Props): Readonly<
   [GestureResponderHandlers, Animated.Value, Animated.ValueXY]
 > => {
@@ -181,7 +179,7 @@ const usePanResponder = ({
         lastTapTS && tapTS - lastTapTS < DOUBLE_TAP_DELAY,
       )
 
-      if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
+      if (isDoubleTapPerformed) {
         let nextScale = initialScale
         let nextTranslate = initialTranslate
 
@@ -229,7 +227,7 @@ const usePanResponder = ({
       gestureState: PanResponderGestureState,
     ) => {
       // Don't need to handle move because double tap in progress (was handled in onStart)
-      if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
+      if (isDoubleTapPerformed) {
         return
       }
 

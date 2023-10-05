@@ -46,7 +46,6 @@ type Props = {
   animationType?: ModalProps['animationType']
   backgroundColor?: string
   swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
   HeaderComponent?: ComponentType<{imageIndex: number}>
   FooterComponent?: ComponentType<{imageIndex: number}>
 }
@@ -64,7 +63,6 @@ function ImageViewing({
   onImageIndexChange,
   backgroundColor = DEFAULT_BG_COLOR,
   swipeToCloseEnabled,
-  doubleTapToZoomEnabled,
   HeaderComponent,
   FooterComponent,
 }: Props) {
@@ -144,7 +142,6 @@ function ImageViewing({
               imageSrc={imageSrc}
               onRequestClose={onRequestCloseEnhanced}
               swipeToCloseEnabled={swipeToCloseEnabled}
-              doubleTapToZoomEnabled={doubleTapToZoomEnabled}
             />
           )}
           onMomentumScrollEnd={onScroll}

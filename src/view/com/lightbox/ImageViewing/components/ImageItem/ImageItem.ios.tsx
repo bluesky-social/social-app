@@ -39,7 +39,6 @@ type Props = {
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
   swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
@@ -49,7 +48,6 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   swipeToCloseEnabled = true,
-  doubleTapToZoomEnabled = true,
 }: Props) => {
   const scrollViewRef = useRef<ScrollView>(null)
   const [loaded, setLoaded] = useState(false)
@@ -126,7 +124,7 @@ const ImageItem = ({
         })}>
         {(!loaded || !imageDimensions) && <ImageLoading />}
         <TouchableWithoutFeedback
-          onPress={doubleTapToZoomEnabled ? handleDoubleTap : undefined}
+          onPress={handleDoubleTap}
           accessibilityRole="image"
           accessibilityLabel={imageSrc.alt}
           accessibilityHint="">

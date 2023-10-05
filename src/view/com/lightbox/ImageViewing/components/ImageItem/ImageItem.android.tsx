@@ -37,7 +37,6 @@ type Props = {
   onRequestClose: () => void
   onZoom: (isZoomed: boolean) => void
   swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
@@ -47,7 +46,6 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   swipeToCloseEnabled = true,
-  doubleTapToZoomEnabled = true,
 }: Props) => {
   const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null)
   const imageDimensions = useImageDimensions(imageSrc)
@@ -72,7 +70,6 @@ const ImageItem = ({
     initialScale: scale || 1,
     initialTranslate: translate || {x: 0, y: 0},
     onZoom: onZoomPerformed,
-    doubleTapToZoomEnabled,
   })
 
   const imagesStyles = getImageStyles(
