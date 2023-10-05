@@ -18,11 +18,7 @@ import {
 } from 'react-native'
 
 import {Position} from '../@types'
-import {
-  getDistanceBetweenTouches,
-  getImageTranslate,
-  getImageDimensionsByTranslate,
-} from '../utils'
+import {getImageTranslate} from '../utils'
 
 const SCREEN = Dimensions.get('window')
 const SCREEN_WIDTH = SCREEN.width
@@ -402,6 +398,26 @@ const usePanResponder = ({
   })
 
   return [panResponder.panHandlers, scaleValue, translateValue]
+}
+
+const getImageDimensionsByTranslate = (
+  translate: Position,
+  screen: {width: number; height: number},
+): {width: number; height: number} => ({
+  width: screen.width - translate.x * 2,
+  height: screen.height - translate.y * 2,
+})
+
+const getDistanceBetweenTouches = (touches: NativeTouchEvent[]): number => {
+  const [a, b] = touches
+
+  if (a == null || b == null) {
+    return 0
+  }
+
+  return Math.sqrt(
+    Math.pow(a.pageX - b.pageX, 2) + Math.pow(a.pageY - b.pageY, 2),
+  )
 }
 
 export default usePanResponder
