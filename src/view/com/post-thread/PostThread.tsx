@@ -439,5 +439,7 @@ const styles = StyleSheet.create({
   parentSpinner: {
     paddingVertical: 10,
   },
-  childSpinner: {},
+  childSpinner: {
+    paddingBottom: 200,
+  },
 })
