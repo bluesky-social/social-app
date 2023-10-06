@@ -119,7 +119,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
 
-        const newRt = new RichText({text: editorJsonToText(json).trim()})
+        const newRt = new RichText({text: editorJsonToText(json).trimEnd()})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
 
