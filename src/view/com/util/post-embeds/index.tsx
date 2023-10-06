@@ -23,9 +23,9 @@ import {ImagesLightbox} from 'state/models/ui/shell'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {YoutubeEmbed} from './YoutubeEmbed'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {getYoutubeVideoId} from 'lib/strings/url-helpers'
+import {ExternalPlayerEmbed} from './ExternalPlayerEmbed'
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {CustomFeedEmbed} from './CustomFeedEmbed'
@@ -154,10 +154,17 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
-    const youtubeVideoId = getYoutubeVideoId(link.uri)
+    // TODO factor this out!
+    const embedPlayerParams = parseEmbedPlayerFromUrl(link.uri)
 
-    if (youtubeVideoId) {
-      return <YoutubeEmbed link={link} style={style} />
+    if (embedPlayerParams) {
+      return (
+        <ExternalPlayerEmbed
+          link={link}
+          params={embedPlayerParams}
+          style={style}
+        />
+      )
     }
 
     return (

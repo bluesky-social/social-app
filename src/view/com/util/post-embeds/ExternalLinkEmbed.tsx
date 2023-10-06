@@ -9,10 +9,8 @@ import {toNiceDomain} from 'lib/strings/url-helpers'
 
 export const ExternalLinkEmbed = ({
   link,
-  imageChild,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
-  imageChild?: React.ReactNode
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -45,7 +43,6 @@ export const ExternalLinkEmbed = ({
             source={{uri: link.thumb}}
             accessibilityIgnoresInvertColors
           />
-          {imageChild}
         </View>
       ) : undefined}
       <View

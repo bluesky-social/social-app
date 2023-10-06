@@ -1,0 +1,272 @@
+import React from 'react'
+import {
+  ActivityIndicator,
+  Dimensions,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
+import {Image} from 'expo-image'
+import {WebView} from 'react-native-webview'
+import YoutubePlayer from 'react-native-youtube-iframe'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {EmbedPlayerParams} from 'lib/strings/embed-player'
+import {usePalette} from 'lib/hooks/usePalette'
+import {Text} from '../text/Text'
+import {EventStopper} from '../EventStopper'
+import {AppBskyEmbedExternal} from '@atproto/api'
+import {isNative} from 'platform/detection'
+
+const ALL_ORIGINS = ['*']
+
+interface ShouldStartLoadRequest {
+  url: string
+}
+
+export function ExternalPlayerEmbed({
+  link,
+  params,
+  style,
+}: {
+  link: AppBskyEmbedExternal.ViewExternal
+  params: EmbedPlayerParams
+  style?: StyleProp<ViewStyle>
+}) {
+  const pal = usePalette('default')
+  const [isPlayerActive, setPlayerActive] = React.useState(false)
+  const [dim, setDim] = React.useState({
+    width: 0,
+    height: 0,
+  })
+
+  // measure the layout to set sizing
+  const onLayout = (event: {
+    nativeEvent: {layout: {width: any; height: any}}
+  }) => {
+    setDim({
+      width: event.nativeEvent.layout.width,
+      height: event.nativeEvent.layout.height,
+    })
+  }
+
+  // calculate height for the player and the screen size
+  const height = React.useMemo(() => {
+    if (params.type === 'youtube_video') {
+      return (dim.width / 16) * 9
+    }
+    if (params.type === 'spotify_song') {
+      if (dim.width <= 300) {
+        return 180
+      }
+      return 232
+    }
+    if (params.type === 'spotify_playlist') {
+      return 420
+    }
+    if (params.type === 'spotify_album') {
+      return 420
+    }
+    return dim.width
+  }, [params.type, dim])
+
+  // HACK
+  if (link.thumb && link.thumb.includes('bsky.public.url')) {
+    link.thumb = link.thumb.replace(
+      'https://bsky.public.url',
+      'http://localhost:56022',
+    )
+  }
+
+  if (isPlayerActive) {
+    return (
+      <View style={[{marginTop: 4}, style]} onLayout={onLayout}>
+        <EventStopper>
+          <Player
+            width={dim.width}
+            height={height}
+            link={link}
+            params={params}
+            onLeaveViewport={() => setPlayerActive(false)}
+          />
+        </EventStopper>
+      </View>
+    )
+  }
+
+  return (
+    <Pressable
+      style={[
+        {
+          borderRadius: 8,
+          marginTop: 4,
+        },
+        pal.view,
+        style,
+      ]}
+      onPress={() => setPlayerActive(true)}
+      accessibilityRole="button"
+      accessibilityLabel={link.title}
+      accessibilityHint=""
+      onLayout={onLayout}>
+      <Placeholder
+        width={dim.width}
+        height={height}
+        link={link}
+        params={params}
+        isLoading={false}
+      />
+    </Pressable>
+  )
+}
+
+function Placeholder({
+  width,
+  height,
+  params,
+  link,
+  isLoading,
+}: {
+  width: number
+  height: number
+  link: AppBskyEmbedExternal.ViewExternal
+  params: EmbedPlayerParams
+  isLoading: boolean
+}) {
+  return (
+    <View>
+      {link.thumb ? (
+        <Image
+          style={{width, height, borderRadius: 6}}
+          source={{uri: link.thumb}}
+          accessibilityIgnoresInvertColors
+        />
+      ) : (
+        <View />
+      )}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width,
+          backgroundColor: '#000c',
+          paddingHorizontal: 20,
+          paddingVertical: 18,
+          borderBottomLeftRadius: 6,
+          borderBottomRightRadius: 6,
+          flexDirection: 'row',
+          gap: 10,
+        }}>
+        <View style={{paddingTop: 6, width: 30}}>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <FontAwesomeIcon icon="play" size={24} color="white" />
+          )}
+        </View>
+        <View style={{flex: 1}}>
+          <Text type="lg-bold" numberOfLines={2} style={{color: '#fff'}}>
+            {link.title || link.uri}
+          </Text>
+          {params.type.startsWith('youtube') && (
+            <Text style={{color: '#fff'}}>YouTube</Text>
+          )}
+          {params.type.startsWith('twitch') && (
+            <Text style={{color: '#fff'}}>Twitch.tv</Text>
+          )}
+          {params.type.startsWith('spotify') && (
+            <Text style={{color: '#fff'}}>Spotify</Text>
+          )}
+        </View>
+      </View>
+    </View>
+  )
+}
+
+function Player({
+  width,
+  height,
+  link,
+  params,
+  onLeaveViewport,
+}: {
+  width: number
+  height: number
+  link: AppBskyEmbedExternal.ViewExternal
+  params: EmbedPlayerParams
+  onLeaveViewport: () => void
+}) {
+  const ref = React.useRef<View>(null)
+  const [loading, setLoading] = React.useState(true)
+
+  // watch for leaving the viewport due to scrolling
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      ref.current?.measure((x, y, width, height, pageX, pageY) => {
+        const window = Dimensions.get('window')
+        const top = pageY
+        const bot = pageY + height
+        const isVisible = isNative
+          ? top >= 0 && bot <= window.height
+          : !(top >= window.height || bot <= 0)
+        if (!isVisible) {
+          onLeaveViewport()
+        }
+      })
+    }, 1e3)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [ref, onLeaveViewport])
+
+  // ensures we only load what's requested
+  const onShouldStartLoadWithRequest = React.useCallback(
+    (event: ShouldStartLoadRequest) => event.url === params.playerUri,
+    [params.playerUri],
+  )
+
+  // TODO: is this needed?
+  const originWhitelist =
+    params.type === 'spotify_album' ||
+    params.type === 'spotify_playlist' ||
+    params.type === 'spotify_song'
+      ? ALL_ORIGINS
+      : undefined
+
+  return (
+    <View ref={ref} style={{height}}>
+      {isNative && params.type === 'youtube_video' ? (
+        <YoutubePlayer
+          videoId={params.videoId}
+          play
+          height={height}
+          onReady={() => setLoading(false)}
+        />
+      ) : (
+        <WebView
+          javaScriptEnabled={true}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          originWhitelist={originWhitelist}
+          mediaPlaybackRequiresUserAction={false}
+          allowsInlineMediaPlayback
+          bounces={false}
+          allowsFullscreenVideo
+          source={{uri: params.playerUri}}
+          onLoad={() => setLoading(false)}
+        />
+      )}
+      {loading && (
+        <View style={{position: 'absolute', left: 0, top: 0}}>
+          <Placeholder
+            width={width}
+            height={height}
+            params={params}
+            link={link}
+            isLoading
+          />
+        </View>
+      )}
+    </View>
+  )
+}
