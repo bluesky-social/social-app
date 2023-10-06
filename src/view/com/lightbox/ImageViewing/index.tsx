@@ -10,6 +10,7 @@
 
 import React, {
   ComponentType,
+  createRef,
   useCallback,
   useRef,
   useMemo,
@@ -32,6 +33,7 @@ import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
 import {ImageSource} from './@types'
+import {ScrollView, GestureType} from 'react-native-gesture-handler'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
@@ -67,6 +69,8 @@ function ImageViewing({
   FooterComponent,
 }: Props) {
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
+  const [isScaled, setIsScaled] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const [opacity, setOpacity] = useState(1)
   const [currentImageIndex, setImageIndex] = useState(imageIndex)
   const [headerTranslate] = useState(
@@ -115,10 +119,9 @@ function ImageViewing({
     }
   }
 
-  const onZoom = (isScaled: boolean) => {
-    // @ts-ignore
-    imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
-    toggleBarsVisible(!isScaled)
+  const onZoom = (nextIsScaled: boolean) => {
+    toggleBarsVisible(!nextIsScaled)
+    setIsScaled(false)
   }
 
   const edges = useMemo(() => {
@@ -133,6 +136,17 @@ function ImageViewing({
       imageList.current?.scrollToIndex({index: imageIndex, animated: false})
     }
   }, [imageList, imageIndex])
+
+  // This is a hack.
+  // RNGH doesn't have an easy way to express that pinch of individual items
+  // should "steal" all pinches from the scroll view. So we're keeping a ref
+  // to all pinch gestures so that we may give them to <ScrollView waitFor={...}>.
+  const [pinchGestureRefs] = useState(new Map())
+  for (let imageSrc of images) {
+    if (!pinchGestureRefs.get(imageSrc)) {
+      pinchGestureRefs.set(imageSrc, createRef<GestureType | undefined>())
+    }
+  }
 
   if (!visible) {
     return null
@@ -163,6 +177,7 @@ function ImageViewing({
           data={images}
           horizontal
           pagingEnabled
+          scrollEnabled={!isScaled || isDragging}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           getItem={(_, index) => images[index]}
@@ -177,9 +192,26 @@ function ImageViewing({
               onZoom={onZoom}
               imageSrc={imageSrc}
               onRequestClose={onRequestCloseEnhanced}
+              pinchGestureRef={pinchGestureRefs.get(imageSrc)}
+              isScrollViewBeingDragged={isDragging}
             />
           )}
-          onMomentumScrollEnd={onScroll}
+          renderScrollComponent={props => (
+            <ScrollView
+              {...props}
+              waitFor={Array.from(pinchGestureRefs.values())}
+            />
+          )}
+          onScrollBeginDrag={() => {
+            setIsDragging(true)
+          }}
+          onScrollEndDrag={() => {
+            setIsDragging(false)
+          }}
+          onMomentumScrollEnd={e => {
+            setIsScaled(false)
+            onScroll(e)
+          }}
           //@ts-ignore
           keyExtractor={(imageSrc, index) =>
             keyExtractor

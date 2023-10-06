@@ -6,7 +6,7 @@
  *
  */
 
-import React, {useCallback, useRef, useState} from 'react'
+import React, {MutableRefObject, useCallback, useRef, useState} from 'react'
 
 import {
   Animated,
@@ -20,11 +20,11 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 import {Image} from 'expo-image'
+import {GestureType} from 'react-native-gesture-handler'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
 
-import {getImageTransform} from '../../utils'
-import {ImageSource} from '../../@types'
+import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 import {ImageLoading} from './ImageLoading'
 
 const DOUBLE_TAP_DELAY = 300
@@ -40,6 +40,8 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
+  pinchGestureRef: MutableRefObject<GestureType>
+  isScrollViewBeingDragged: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: {width: number; height: number} | null,
+  imageDimensions: ImageDimensions | null,
   touchX: number,
   touchY: number,
 ): {
@@ -252,7 +254,7 @@ const getZoomRectAfterDoubleTap = (
 }
 
 const getImageStyles = (
-  image: {width: number; height: number} | null,
+  image: ImageDimensions | null,
   translate: {readonly x: number; readonly y: number} | undefined,
   scale?: number,
 ) => {
@@ -272,6 +274,39 @@ const getImageStyles = (
     width: image.width,
     height: image.height,
     transform,
+  }
+}
+
+const getImageTransform = (
+  image: ImageDimensions | null,
+  screen: ImageDimensions,
+) => {
+  if (!image?.width || !image?.height) {
+    return [] as const
+  }
+
+  const wScale = screen.width / image.width
+  const hScale = screen.height / image.height
+  const scale = Math.min(wScale, hScale)
+  const {x, y} = getImageTranslate(image, screen)
+
+  return [{x, y}, scale] as const
+}
+
+const getImageTranslate = (
+  image: ImageDimensions,
+  screen: ImageDimensions,
+): {x: number; y: number} => {
+  const getTranslateForAxis = (axis: 'x' | 'y'): number => {
+    const imageSize = axis === 'x' ? image.width : image.height
+    const screenSize = axis === 'x' ? screen.width : screen.height
+
+    return (screenSize - imageSize) / 2
+  }
+
+  return {
+    x: getTranslateForAxis('x'),
+    y: getTranslateForAxis('y'),
   }
 }
 
