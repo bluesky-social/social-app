@@ -31,10 +31,8 @@ const DOUBLE_TAP_DELAY = 300
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
 const SCREEN = Dimensions.get('screen')
-const SCREEN_WIDTH = SCREEN.width
-const SCREEN_HEIGHT = SCREEN.height
-const MIN_ZOOM = 2
-const MAX_SCALE = 2
+const MAX_ORIGINAL_IMAGE_ZOOM = 2
+const MIN_DOUBLE_TAP_SCALE = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -53,16 +51,17 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
   const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
-  const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
   const [scrollValueY] = useState(() => new Animated.Value(0))
-  const maxScrollViewZoom = MAX_SCALE / (scale || 1)
+  const maxZoomScale = imageDimensions
+    ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+    : 1
 
-  const imageOpacity = scrollValueY.interpolate({
-    inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-    outputRange: [0.5, 1, 0.5],
-  })
-  const imagesStyles = getImageStyles(imageDimensions, translate, scale || 1)
-  const imageStylesWithOpacity = {...imagesStyles, opacity: imageOpacity}
+  const animatedStyle = {
+    opacity: scrollValueY.interpolate({
+      inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
+      outputRange: [0.5, 1, 0.5],
+    }),
+  }
 
   const onScrollEndDrag = useCallback(
     ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -132,7 +131,7 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        maximumZoomScale={maxScrollViewZoom}
+        maximumZoomScale={maxZoomScale}
         contentContainerStyle={styles.imageScrollContainer}
         scrollEnabled={true}
         onScroll={onScroll}
@@ -145,8 +144,9 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
           accessibilityLabel={imageSrc.alt}
           accessibilityHint="">
           <AnimatedImage
+            contentFit="contain"
             source={imageSrc}
-            style={imageStylesWithOpacity}
+            style={[styles.image, animatedStyle]}
             onLoad={() => setLoaded(true)}
           />
         </TouchableWithoutFeedback>
@@ -156,12 +156,16 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
 }
 
 const styles = StyleSheet.create({
-  listItem: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  },
   imageScrollContainer: {
-    height: SCREEN_HEIGHT,
+    height: SCREEN.height,
+  },
+  listItem: {
+    width: SCREEN.width,
+    height: SCREEN.height,
+  },
+  image: {
+    width: SCREEN.width,
+    height: SCREEN.height,
   },
 })
 
@@ -191,7 +195,7 @@ const getZoomRectAfterDoubleTap = (
   const zoom = Math.max(
     imageAspect / screenAspect,
     screenAspect / imageAspect,
-    MIN_ZOOM,
+    MIN_DOUBLE_TAP_SCALE,
   )
   // Unlike in the Android version, we don't constrain the *max* zoom level here.
   // Instead, this is done in the ScrollView props so that it constraints pinch too.
@@ -250,63 +254,6 @@ const getZoomRectAfterDoubleTap = (
     y: rectY,
     height: rectHeight,
     width: rectWidth,
-  }
-}
-
-const getImageStyles = (
-  image: ImageDimensions | null,
-  translate: {readonly x: number; readonly y: number} | undefined,
-  scale?: number,
-) => {
-  if (!image?.width || !image?.height) {
-    return {width: 0, height: 0}
-  }
-  const transform = []
-  if (translate) {
-    transform.push({translateX: translate.x})
-    transform.push({translateY: translate.y})
-  }
-  if (scale) {
-    // @ts-ignore TODO - is scale incorrect? might need to remove -prf
-    transform.push({scale}, {perspective: new Animated.Value(1000)})
-  }
-  return {
-    width: image.width,
-    height: image.height,
-    transform,
-  }
-}
-
-const getImageTransform = (
-  image: ImageDimensions | null,
-  screen: ImageDimensions,
-) => {
-  if (!image?.width || !image?.height) {
-    return [] as const
-  }
-
-  const wScale = screen.width / image.width
-  const hScale = screen.height / image.height
-  const scale = Math.min(wScale, hScale)
-  const {x, y} = getImageTranslate(image, screen)
-
-  return [{x, y}, scale] as const
-}
-
-const getImageTranslate = (
-  image: ImageDimensions,
-  screen: ImageDimensions,
-): {x: number; y: number} => {
-  const getTranslateForAxis = (axis: 'x' | 'y'): number => {
-    const imageSize = axis === 'x' ? image.width : image.height
-    const screenSize = axis === 'x' ? screen.width : screen.height
-
-    return (screenSize - imageSize) / 2
-  }
-
-  return {
-    x: getTranslateForAxis('x'),
-    y: getTranslateForAxis('y'),
   }
 }
 
