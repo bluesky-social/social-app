@@ -20,7 +20,7 @@ module.exports = function () {
       },
       ios: {
         buildNumber: '5',
-        supportsTablet: false,
+        supportsTablet: true,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,

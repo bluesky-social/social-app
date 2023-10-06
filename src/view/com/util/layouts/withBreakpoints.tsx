@@ -1,5 +1,4 @@
 import React from 'react'
-import {isNative} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export const withBreakpoints = <P extends object>(
@@ -8,12 +7,12 @@ export const withBreakpoints = <P extends object>(
   Desktop: React.ComponentType<P>,
 ): React.FC<P> =>
   function WithBreakpoints(props: P) {
-    const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+    const {isMobile, isTablet} = useWebMediaQueries()
 
-    if (isMobile || isNative) {
+    if (isMobile) {
       return <Mobile {...props} />
     }
-    if (isTabletOrMobile) {
+    if (isTablet) {
       return <Tablet {...props} />
     }
     return <Desktop {...props} />

@@ -64,12 +64,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadLatestTablet: {
-    // @ts-ignore web only
-    left: '50vw',
-    // @ts-ignore web only -prf
-    transform: 'translateX(-282px)',
-  },
+  // @ts-ignore web only
+  loadLatestTablet: isWeb
+    ? {
+        left: '50vw',
+        transform: 'translateX(-282px)',
+      }
+    : {},
   loadLatestDesktop: {
     // @ts-ignore web only
     left: '50vw',
