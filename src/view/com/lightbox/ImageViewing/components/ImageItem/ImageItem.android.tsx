@@ -61,16 +61,21 @@ const ImageItem = ({
   const dismissSwipeTranslateY = useSharedValue(0)
   const containerRef = useAnimatedRef()
 
-  function getCommittedScale(): number {
-    'worklet'
-    const [, , committedScale] = readTransform(committedTransform.value)
-    return committedScale
-  }
-
   // Keep track of when we're entering or leaving scaled rendering.
+  // Note: DO NOT move any logic reading animated values outside this function.
   useAnimatedReaction(
     () => {
-      return pinchScale.value !== 1 || getCommittedScale() !== 1
+      if (pinchScale.value !== 1) {
+        // We're currently pinching.
+        return true
+      }
+      const [, , committedScale] = readTransform(committedTransform.value)
+      if (committedScale !== 1) {
+        // We started from a pinched in state.
+        return true
+      }
+      // We're at rest.
+      return false
     },
     (nextIsScaled, prevIsScaled) => {
       if (nextIsScaled !== prevIsScaled) {
@@ -169,7 +174,7 @@ const ImageItem = ({
       }
       // Don't let the picture zoom in so close that it gets blurry.
       // Also, like in stock Android apps, don't let the user zoom out further than 1:1.
-      const committedScale = getCommittedScale()
+      const [, , committedScale] = readTransform(committedTransform.value)
       const maxCommittedScale =
         (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
       const minPinchScale = 1 / committedScale
@@ -256,7 +261,7 @@ const ImageItem = ({
       if (!imageDimensions) {
         return
       }
-      const committedScale = getCommittedScale()
+      const [, , committedScale] = readTransform(committedTransform.value)
       if (committedScale !== 1) {
         // Go back to 1:1 using the identity vector.
         let t = createTransform()
