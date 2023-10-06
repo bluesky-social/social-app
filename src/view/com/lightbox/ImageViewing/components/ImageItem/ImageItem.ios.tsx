@@ -6,20 +6,25 @@
  *
  */
 
-import React, {MutableRefObject, useCallback, useRef, useState} from 'react'
+import React, {MutableRefObject, useCallback, useState} from 'react'
 
 import {
-  Animated,
   Dimensions,
-  ScrollView,
   StyleSheet,
   View,
-  NativeScrollEvent,
   NativeSyntheticEvent,
   NativeTouchEvent,
   TouchableWithoutFeedback,
 } from 'react-native'
 import {Image} from 'expo-image'
+import Animated, {
+  interpolate,
+  runOnJS,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {GestureType} from 'react-native-gesture-handler'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
@@ -47,45 +52,42 @@ const AnimatedImage = Animated.createAnimatedComponent(Image)
 let lastTapTS: number | null = null
 
 const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
-  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const translationY = useSharedValue(0)
   const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
-  const [scrollValueY] = useState(() => new Animated.Value(0))
   const maxZoomScale = imageDimensions
     ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
     : 1
 
-  const animatedStyle = {
-    opacity: scrollValueY.interpolate({
-      inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-      outputRange: [0.5, 1, 0.5],
-    }),
-  }
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translationY.value,
+        [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
+        [0.5, 1, 0.5],
+      ),
+    }
+  })
 
-  const onScrollEndDrag = useCallback(
-    ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const velocityY = nativeEvent?.velocity?.y ?? 0
-      const currentScaled = nativeEvent?.zoomScale > 1
-
-      onZoom(currentScaled)
-      setScaled(currentScaled)
-
-      if (!currentScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
-        onRequestClose()
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll(e) {
+      translationY.value = e.zoomScale > 1 ? 0 : e.contentOffset.y
+    },
+    onEndDrag(e) {
+      const velocityY = e.velocity?.y ?? 0
+      const nextIsScaled = e.zoomScale > 1
+      runOnJS(handleZoom)(nextIsScaled)
+      if (!nextIsScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
+        runOnJS(onRequestClose)()
       }
     },
-    [onRequestClose, onZoom],
-  )
+  })
 
-  const onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = nativeEvent?.contentOffset?.y ?? 0
-
-    if (nativeEvent?.zoomScale > 1) {
-      return
-    }
-
-    scrollValueY.setValue(offsetY)
+  function handleZoom(nextIsScaled: boolean) {
+    onZoom(nextIsScaled)
+    setScaled(nextIsScaled)
   }
 
   const handleDoubleTap = useCallback(
@@ -120,12 +122,13 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
         lastTapTS = nowTS
       }
     },
-    [imageDimensions, scaled],
+    [imageDimensions, scaled, scrollViewRef],
   )
 
   return (
     <View>
-      <ScrollView
+      <Animated.ScrollView
+        // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
         style={styles.listItem}
         pinchGestureEnabled
@@ -133,10 +136,7 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         contentContainerStyle={styles.imageScrollContainer}
-        scrollEnabled={true}
-        onScroll={onScroll}
-        onScrollEndDrag={onScrollEndDrag}
-        scrollEventThrottle={1}>
+        onScroll={scrollHandler}>
         {(!loaded || !imageDimensions) && <ImageLoading />}
         <TouchableWithoutFeedback
           onPress={handleDoubleTap}
@@ -150,7 +150,7 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
             onLoad={() => setLoaded(true)}
           />
         </TouchableWithoutFeedback>
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   )
 }
