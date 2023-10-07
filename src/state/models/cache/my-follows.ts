@@ -102,8 +102,8 @@ export class MyFollowsCache {
 
   getFollowUri(did: string): string {
     const v = this.byDid[did]
-    if (typeof v === 'string') {
-      return v
+    if (v && typeof v.followRecordUri === 'string') {
+      return v.followRecordUri
     }
     throw new Error('Not a followed user')
   }
