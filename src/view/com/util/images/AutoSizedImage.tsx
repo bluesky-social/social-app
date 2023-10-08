@@ -63,7 +63,7 @@ export function AutoSizedImage({
           accessible={true} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
           accessibilityLabel={alt}
-          accessibilityHint=""
+          accessibilityHint="Tap to view fully"
         />
         {children}
       </Pressable>
