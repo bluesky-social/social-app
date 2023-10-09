@@ -89,16 +89,16 @@ export function EditableTag({
       onPointerEnter={hoverIn}
       onPointerLeave={hoverOut}
       style={state => [
-        pal.border,
+        pal.viewLight,
         styles.tag,
         {
-          opacity: hovered || state.pressed || state.focused ? 0.8 : 1,
+          opacity: state.pressed || state.focused ? 0.8 : 1,
           outline: 0,
           paddingRight: 6,
         },
       ]}>
       <Text
-        type="xs-medium"
+        type="sm-medium"
         style={[pal.textLight, {lineHeight: 13, paddingBottom: 2}]}>
         #{value}
       </Text>
@@ -106,10 +106,12 @@ export function EditableTag({
         icon="x"
         style={
           {
-            color: hovered ? pal.textLight.color : pal.border.borderColor,
+            opacity: hovered ? 1 : 0.5,
+            color: pal.textLight.color,
+            marginTop: -1,
           } as FontAwesomeIconStyle
         }
-        size={8}
+        size={11}
       />
     </Pressable>
   )
@@ -119,12 +121,11 @@ const styles = StyleSheet.create({
   tag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingTop: 1,
-    paddingBottom: 2,
-    paddingHorizontal: 6,
-    borderRadius: 20,
+    gap: 6,
+    paddingTop: 4,
+    paddingBottom: 3,
+    paddingHorizontal: 8,
+    borderRadius: 4,
     overflow: 'hidden',
-    borderWidth: 1,
   },
 })
