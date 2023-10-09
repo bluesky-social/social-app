@@ -43,6 +43,7 @@ import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
 import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {ListsScreen} from './view/screens/Lists'
 import {ModerationScreen} from './view/screens/Moderation'
 import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
 import {NotFoundScreen} from './view/screens/NotFound'
@@ -94,6 +95,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="NotFound"
         getComponent={() => NotFoundScreen}
         options={{title: title('Not Found')}}
+      />
+      <Stack.Screen
+        name="Lists"
+        component={ListsScreen}
+        options={{title: title('Lists')}}
       />
       <Stack.Screen
         name="Moderation"

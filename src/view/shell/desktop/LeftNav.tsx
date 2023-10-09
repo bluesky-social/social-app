@@ -31,7 +31,7 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
-  HandIcon,
+  ListIcon,
   HashtagIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
@@ -320,22 +320,22 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Notifications"
       />
       <NavItem
-        href="/moderation"
+        href="/lists"
         icon={
-          <HandIcon
-            strokeWidth={5.5}
+          <ListIcon
             style={pal.text}
-            size={isDesktop ? 24 : 27}
+            size={isDesktop ? 26 : 30}
+            strokeWidth={2}
           />
         }
         iconFilled={
-          <FontAwesomeIcon
-            icon="hand"
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 20 : 26}
+          <ListIcon
+            style={pal.text}
+            size={isDesktop ? 26 : 30}
+            strokeWidth={3}
           />
         }
-        label="Moderation"
+        label="Lists"
       />
       {store.session.hasSession && (
         <NavItem
