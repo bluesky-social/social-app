@@ -418,6 +418,7 @@ export class PreferencesModel {
     const oldPinned = this.pinnedFeeds
     this.savedFeeds = saved
     this.pinnedFeeds = pinned
+    await this.lock.acquireAsync()
     try {
       const res = await cb()
       runInAction(() => {
@@ -430,6 +431,8 @@ export class PreferencesModel {
         this.pinnedFeeds = oldPinned
       })
       throw e
+    } finally {
+      this.lock.release()
     }
   }
 
@@ -441,7 +444,7 @@ export class PreferencesModel {
 
   async addSavedFeed(v: string) {
     return this._optimisticUpdateSavedFeeds(
-      [...this.savedFeeds, v],
+      [...this.savedFeeds.filter(uri => uri !== v), v],
       this.pinnedFeeds,
       () => this.rootStore.agent.addSavedFeed(v),
     )
@@ -457,8 +460,8 @@ export class PreferencesModel {
 
   async addPinnedFeed(v: string) {
     return this._optimisticUpdateSavedFeeds(
-      this.savedFeeds,
-      [...this.pinnedFeeds, v],
+      [...this.savedFeeds.filter(uri => uri !== v), v],
+      [...this.pinnedFeeds.filter(uri => uri !== v), v],
       () => this.rootStore.agent.addPinnedFeed(v),
     )
   }
@@ -473,71 +476,121 @@ export class PreferencesModel {
 
   async setBirthDate(birthDate: Date) {
     this.birthDate = birthDate
-    await this.rootStore.agent.setPersonalDetails({birthDate})
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setPersonalDetails({birthDate})
+    } finally {
+      this.lock.release()
+    }
   }
 
   async toggleHomeFeedHideReplies() {
     this.homeFeed.hideReplies = !this.homeFeed.hideReplies
-    await this.rootStore.agent.setFeedViewPrefs('home', {
-      hideReplies: this.homeFeed.hideReplies,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setFeedViewPrefs('home', {
+        hideReplies: this.homeFeed.hideReplies,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async toggleHomeFeedHideRepliesByUnfollowed() {
     this.homeFeed.hideRepliesByUnfollowed =
       !this.homeFeed.hideRepliesByUnfollowed
-    await this.rootStore.agent.setFeedViewPrefs('home', {
-      hideRepliesByUnfollowed: this.homeFeed.hideRepliesByUnfollowed,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setFeedViewPrefs('home', {
+        hideRepliesByUnfollowed: this.homeFeed.hideRepliesByUnfollowed,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async setHomeFeedHideRepliesByLikeCount(threshold: number) {
     this.homeFeed.hideRepliesByLikeCount = threshold
-    await this.rootStore.agent.setFeedViewPrefs('home', {
-      hideRepliesByLikeCount: this.homeFeed.hideRepliesByLikeCount,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setFeedViewPrefs('home', {
+        hideRepliesByLikeCount: this.homeFeed.hideRepliesByLikeCount,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async toggleHomeFeedHideReposts() {
     this.homeFeed.hideReposts = !this.homeFeed.hideReposts
-    await this.rootStore.agent.setFeedViewPrefs('home', {
-      hideReposts: this.homeFeed.hideReposts,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setFeedViewPrefs('home', {
+        hideReposts: this.homeFeed.hideReposts,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async toggleHomeFeedHideQuotePosts() {
     this.homeFeed.hideQuotePosts = !this.homeFeed.hideQuotePosts
-    await this.rootStore.agent.setFeedViewPrefs('home', {
-      hideQuotePosts: this.homeFeed.hideQuotePosts,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setFeedViewPrefs('home', {
+        hideQuotePosts: this.homeFeed.hideQuotePosts,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async toggleHomeFeedMergeFeedEnabled() {
     this.homeFeed.lab_mergeFeedEnabled = !this.homeFeed.lab_mergeFeedEnabled
-    await this.rootStore.agent.setFeedViewPrefs('home', {
-      lab_mergeFeedEnabled: this.homeFeed.lab_mergeFeedEnabled,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setFeedViewPrefs('home', {
+        lab_mergeFeedEnabled: this.homeFeed.lab_mergeFeedEnabled,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async setThreadSort(v: string) {
     if (THREAD_SORT_VALUES.includes(v)) {
       this.thread.sort = v
-      await this.rootStore.agent.setThreadViewPrefs({sort: v})
+      await this.lock.acquireAsync()
+      try {
+        await this.rootStore.agent.setThreadViewPrefs({sort: v})
+      } finally {
+        this.lock.release()
+      }
     }
   }
 
   async togglePrioritizedFollowedUsers() {
     this.thread.prioritizeFollowedUsers = !this.thread.prioritizeFollowedUsers
-    await this.rootStore.agent.setThreadViewPrefs({
-      prioritizeFollowedUsers: this.thread.prioritizeFollowedUsers,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setThreadViewPrefs({
+        prioritizeFollowedUsers: this.thread.prioritizeFollowedUsers,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   async toggleThreadTreeViewEnabled() {
     this.thread.lab_treeViewEnabled = !this.thread.lab_treeViewEnabled
-    await this.rootStore.agent.setThreadViewPrefs({
-      lab_treeViewEnabled: this.thread.lab_treeViewEnabled,
-    })
+    await this.lock.acquireAsync()
+    try {
+      await this.rootStore.agent.setThreadViewPrefs({
+        lab_treeViewEnabled: this.thread.lab_treeViewEnabled,
+      })
+    } finally {
+      this.lock.release()
+    }
   }
 
   toggleRequireAltTextEnabled() {

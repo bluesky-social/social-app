@@ -48,7 +48,6 @@ const ShellInner = observer(function ShellInnerImpl() {
       )}
       <Composer
         active={store.shell.isComposerActive}
-        onClose={() => store.shell.closeComposer()}
         winHeight={0}
         replyTo={store.shell.composerOpts?.replyTo}
         quote={store.shell.composerOpts?.quote}

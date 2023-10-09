@@ -7,11 +7,11 @@ import {
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useStores} from 'state/index'
-import {isDesktopWeb} from 'platform/detection'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
 import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {GalleryModel} from 'state/models/media/gallery'
+import {isMobileWeb, isNative} from 'platform/detection'
 
 type Props = {
   gallery: GalleryModel
@@ -43,7 +43,8 @@ export function OpenCameraBtn({gallery}: Props) {
     }
   }, [gallery, track, store, requestCameraAccessIfNeeded])
 
-  if (isDesktopWeb) {
+  const shouldShowCameraButton = isNative || isMobileWeb
+  if (!shouldShowCameraButton) {
     return null
   }
 

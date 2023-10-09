@@ -1,6 +1,7 @@
 import {AtUri} from '@atproto/api'
 import {PROD_SERVICE} from 'state/index'
 import TLDs from 'tlds'
+import psl from 'psl'
 
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
@@ -165,4 +166,54 @@ export function getYoutubeVideoId(link: string): string | undefined {
     return undefined
   }
   return videoId
+}
+
+export function linkRequiresWarning(uri: string, label: string) {
+  const labelDomain = labelToDomain(label)
+  if (!labelDomain) {
+    return true
+  }
+  try {
+    const urip = new URL(uri)
+    return labelDomain !== urip.hostname
+  } catch {
+    return true
+  }
+}
+
+function labelToDomain(label: string): string | undefined {
+  // any spaces just immediately consider the label a non-url
+  if (/\s/.test(label)) {
+    return undefined
+  }
+  try {
+    return new URL(label).hostname
+  } catch {}
+  try {
+    return new URL('https://' + label).hostname
+  } catch {}
+  return undefined
+}
+
+export function isPossiblyAUrl(str: string): boolean {
+  str = str.trim()
+  if (str.startsWith('http://')) {
+    return true
+  }
+  if (str.startsWith('https://')) {
+    return true
+  }
+  const [firstWord] = str.split(/[\s\/]/)
+  return isValidDomain(firstWord)
+}
+
+export function splitApexDomain(hostname: string): [string, string] {
+  const hostnamep = psl.parse(hostname)
+  if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
+    return ['', hostname]
+  }
+  return [
+    hostnamep.subdomain ? `${hostnamep.subdomain}.` : '',
+    hostnamep.domain,
+  ]
 }

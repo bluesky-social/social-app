@@ -21,6 +21,7 @@ import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
 import {MutedThreads} from './muted-threads'
+import {Reminders} from './ui/reminders'
 import {reset as resetNavigation} from '../../Navigation'
 import {RecentTagsModel} from './ui/tags-autocomplete'
 
@@ -54,6 +55,7 @@ export class RootStoreModel {
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
   mutedThreads = new MutedThreads()
+  reminders = new Reminders(this)
   recentTags = new RecentTagsModel()
 
   constructor(agent: BskyAgent) {
@@ -79,6 +81,7 @@ export class RootStoreModel {
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
       mutedThreads: this.mutedThreads.serialize(),
+      reminders: this.reminders.serialize(),
       recentTags: this.recentTags.serialize(),
     }
   }
@@ -114,6 +117,9 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'recentTags')) {
         this.recentTags.hydrate(v.recentTags)
+      }
+      if (hasProp(v, 'reminders')) {
+        this.reminders.hydrate(v.reminders)
       }
     }
   }

@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 10,
     fontSize: 16,
-    height: 100,
+    height: 120,
     textAlignVertical: 'top',
   },
   btn: {

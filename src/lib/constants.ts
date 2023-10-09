@@ -79,6 +79,7 @@ export async function DEFAULT_FEEDS(
   serviceUrl: string,
   resolveHandle: (name: string) => Promise<string>,
 ) {
+  // TODO: remove this when the test suite no longer relies on it
   if (IS_LOCAL_DEV(serviceUrl)) {
     // local dev
     const aliceDid = await resolveHandle('alice.test')
@@ -106,16 +107,8 @@ export async function DEFAULT_FEEDS(
   } else {
     // production
     return {
-      pinned: [
-        PROD_DEFAULT_FEED('whats-hot'),
-        PROD_DEFAULT_FEED('with-friends'),
-      ],
-      saved: [
-        PROD_DEFAULT_FEED('bsky-team'),
-        PROD_DEFAULT_FEED('with-friends'),
-        PROD_DEFAULT_FEED('whats-hot'),
-        PROD_DEFAULT_FEED('hot-classic'),
-      ],
+      pinned: [PROD_DEFAULT_FEED('whats-hot')],
+      saved: [PROD_DEFAULT_FEED('whats-hot')],
     }
   }
 }

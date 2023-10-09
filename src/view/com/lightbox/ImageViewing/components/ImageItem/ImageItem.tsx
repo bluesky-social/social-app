@@ -1,17 +1,16 @@
 // default implementation fallback for web
 
-import React from 'react'
+import React, {MutableRefObject} from 'react'
 import {View} from 'react-native'
+import {GestureType} from 'react-native-gesture-handler'
 import {ImageSource} from '../../@types'
 
 type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
-  onLongPress: (image: ImageSource) => void
-  delayLongPress: number
-  swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
+  pinchGestureRef: MutableRefObject<GestureType | undefined>
+  isScrollViewBeingDragged: boolean
 }
 
 const ImageItem = (_props: Props) => {

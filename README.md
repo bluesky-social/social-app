@@ -1,24 +1,33 @@
 # Bluesky Social App
 
-Welcome friends! This is the codebase for the Bluesky Social app. It serves as a resource to engineers building on the [AT Protocol](https://atproto.com).
+Welcome friends! This is the codebase for the Bluesky Social app.
+
+Get the app itself:
 
 - **Web: [bsky.app](https://bsky.app)**
 - **iOS: [App Store](https://apps.apple.com/us/app/bluesky-social/id6444370199)**
 - **Android: [Play Store](https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&hl=en_US&gl=US)**
 
-Links:
+## Development Resources
 
-- [Build instructions](./docs/build.md)
-- [ATProto repo](https://github.com/bluesky-social/atproto)
-- [ATProto docs](https://atproto.com)
+This is a [React Native](https://reactnative.dev/) application, written in the TypeScript programming language. It builds on the `atproto` TypeScript packages (like [`@atproto/api`](https://www.npmjs.com/package/@atproto/api)), code for which is also on open source, but in [a different git repository](https://github.com/bluesky-social/atproto).
 
-## Rules & guidelines
+There is a small about of Go language source code (in `./bskyweb/`), for a web service that returns the React Native Web application.
 
---- 
+The [Build Instructions](./docs/builds.md) are a good place to get started with the app itself.
 
-ℹ️ While we do accept contributions, we prioritize high quality issues and pull requests. Adhering to the below guidelines will ensure a more timely review.
+The Authenticated Transfer Protocol ("AT Protocol" or "atproto") is a decentralized social media protocol. You don't *need* to understand AT Protocol to work with this application, but it can help. Learn more at:
 
----
+- [Overview and Guides](https://atproto.com/guides/overview)
+- [Github Discussions](https://github.com/bluesky-social/atproto/discussions) 👈 Great place to ask questions
+- [Protocol Specifications](https://atproto.com/specs/atp)
+- [Blogpost on self-authenticating data structures](https://blueskyweb.xyz/blog/3-6-2022-a-self-authenticating-social-protocol)
+
+The Bluesky Social application encompases a set of schemas and APIs built in the overall AT Protocol framework. The namespace for these "Lexicons" is `app.bsky.*`.
+
+## Contributions
+
+> While we do accept contributions, we prioritize high quality issues and pull requests. Adhering to the below guidelines will ensure a more timely review.
 
 **Rules:**
 

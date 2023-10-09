@@ -33,6 +33,7 @@ export const Feed = observer(function Feed({
   onScroll,
   scrollEventThrottle,
   renderEmptyState,
+  renderEndOfFeed,
   testID,
   headerOffset = 0,
   ListHeaderComponent,
@@ -45,6 +46,7 @@ export const Feed = observer(function Feed({
   onScroll?: OnScrollCb
   scrollEventThrottle?: number
   renderEmptyState?: () => JSX.Element
+  renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
   ListHeaderComponent?: () => JSX.Element
@@ -142,14 +144,16 @@ export const Feed = observer(function Feed({
 
   const FeedFooter = React.useCallback(
     () =>
-      feed.isLoading ? (
+      feed.isLoadingMore ? (
         <View style={styles.feedFooter}>
           <ActivityIndicator />
         </View>
+      ) : !feed.hasMore && !feed.isEmpty && renderEndOfFeed ? (
+        renderEndOfFeed()
       ) : (
         <View />
       ),
-    [feed],
+    [feed.isLoadingMore, feed.hasMore, feed.isEmpty, renderEndOfFeed],
   )
 
   return (

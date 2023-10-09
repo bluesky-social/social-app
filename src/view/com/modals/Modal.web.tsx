@@ -28,6 +28,9 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
+import * as VerifyEmailModal from './VerifyEmail'
+import * as ChangeEmailModal from './ChangeEmail'
+import * as LinkWarningModal from './LinkWarning'
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
@@ -110,6 +113,12 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ModerationDetailsModal.Component {...modal} />
   } else if (modal.name === 'birth-date-settings') {
     element = <BirthDateSettingsModal.Component />
+  } else if (modal.name === 'verify-email') {
+    element = <VerifyEmailModal.Component {...modal} />
+  } else if (modal.name === 'change-email') {
+    element = <ChangeEmailModal.Component />
+  } else if (modal.name === 'link-warning') {
+    element = <LinkWarningModal.Component {...modal} />
   } else {
     return null
   }
@@ -147,11 +156,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    width: 500,
+    width: 600,
     // @ts-ignore web only
     maxWidth: '100vw',
     // @ts-ignore web only
-    maxHeight: '100vh',
+    maxHeight: '90vh',
     paddingVertical: 20,
     paddingHorizontal: 24,
     borderRadius: 8,

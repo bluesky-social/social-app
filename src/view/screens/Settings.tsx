@@ -3,8 +3,8 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
-  Pressable,
   StyleSheet,
+  Pressable,
   TextStyle,
   TouchableOpacity,
   View,
@@ -36,22 +36,21 @@ import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {AccountData} from 'state/models/session'
+import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
 import {HandIcon, HashtagIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {reset as resetNavigation} from '../../Navigation'
 import {makeProfileLink} from 'lib/routes/links'
+import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
-import {DropdownItem, NativeDropdown} from 'view/com/util/forms/NativeDropdown'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -61,7 +60,8 @@ export const SettingsScreen = withAuthRequired(
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
-    const [isSwitching, setIsSwitching] = React.useState(false)
+    const [isSwitching, setIsSwitching, onPressSwitchAccount] =
+      useAccountSwitcher()
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
       store.agent,
     )
@@ -89,25 +89,6 @@ export const SettingsScreen = withAuthRequired(
         screen('Settings')
         store.shell.setMinimalShellMode(false)
       }, [screen, store]),
-    )
-
-    const onPressSwitchAccount = React.useCallback(
-      async (acct: AccountData) => {
-        track('Settings:SwitchAccountButtonClicked')
-        setIsSwitching(true)
-        if (await store.session.resumeSession(acct)) {
-          setIsSwitching(false)
-          resetNavigation()
-          Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-          return
-        }
-        setIsSwitching(false)
-        Toast.show('Sorry! We need you to enter your password.')
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-        store.session.clear()
-      },
-      [track, setIsSwitching, navigation, store],
     )
 
     const onPressAddAccount = React.useCallback(() => {
@@ -219,10 +200,25 @@ export const SettingsScreen = withAuthRequired(
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
                   Email:{' '}
-                  <Text type="lg" style={pal.text}>
-                    {store.session.currentSession?.email}
-                  </Text>
                 </Text>
+                {!store.session.emailNeedsConfirmation && (
+                  <>
+                    <FontAwesomeIcon
+                      icon="check"
+                      size={10}
+                      style={{color: colors.green3, marginRight: 2}}
+                    />
+                  </>
+                )}
+                <Text type="lg" style={pal.text}>
+                  {store.session.currentSession?.email}{' '}
+                </Text>
+                <Link
+                  onPress={() => store.shell.openModal({name: 'change-email'})}>
+                  <Text type="lg" style={pal.link}>
+                    Change
+                  </Text>
+                </Link>
               </View>
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
@@ -238,6 +234,7 @@ export const SettingsScreen = withAuthRequired(
                 </Link>
               </View>
               <View style={styles.spacer20} />
+              <EmailConfirmationNotice />
             </>
           ) : null}
           <View style={[s.flexRow, styles.heading]}>
@@ -325,37 +322,45 @@ export const SettingsScreen = withAuthRequired(
 
           <View style={styles.spacer20} />
 
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Invite a Friend
-          </Text>
-          <TouchableOpacity
-            testID="inviteFriendBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}
-            accessibilityRole="button"
-            accessibilityLabel="Invite"
-            accessibilityHint="Opens invite code list">
-            <View
-              style={[
-                styles.iconContainer,
-                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-              ]}>
-              <FontAwesomeIcon
-                icon="ticket"
-                style={
-                  (store.me.invitesAvailable > 0
-                    ? primaryText
-                    : pal.text) as FontAwesomeIconStyle
-                }
-              />
-            </View>
-            <Text
-              type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {formatCount(store.me.invitesAvailable)} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
-            </Text>
-          </TouchableOpacity>
+          {store.me.invitesAvailable !== null && (
+            <>
+              <Text type="xl-bold" style={[pal.text, styles.heading]}>
+                Invite a Friend
+              </Text>
+              <TouchableOpacity
+                testID="inviteFriendBtn"
+                style={[
+                  styles.linkCard,
+                  pal.view,
+                  isSwitching && styles.dimmed,
+                ]}
+                onPress={isSwitching ? undefined : onPressInviteCodes}
+                accessibilityRole="button"
+                accessibilityLabel="Invite"
+                accessibilityHint="Opens invite code list">
+                <View
+                  style={[
+                    styles.iconContainer,
+                    store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
+                  ]}>
+                  <FontAwesomeIcon
+                    icon="ticket"
+                    style={
+                      (store.me.invitesAvailable > 0
+                        ? primaryText
+                        : pal.text) as FontAwesomeIconStyle
+                    }
+                  />
+                </View>
+                <Text
+                  type="lg"
+                  style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
+                  {formatCount(store.me.invitesAvailable)} invite{' '}
+                  {pluralize(store.me.invitesAvailable, 'code')} available
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
 
           <View style={styles.spacer20} />
 
@@ -630,40 +635,66 @@ export const SettingsScreen = withAuthRequired(
   }),
 )
 
-function AccountDropdownBtn({handle}: {handle: string}) {
-  const store = useStores()
-  const pal = usePalette('default')
-  const items: DropdownItem[] = [
-    {
-      label: 'Remove account',
-      onPress: () => {
-        store.session.removeAccount(handle)
-        Toast.show('Account removed from quick access')
-      },
-      icon: {
-        ios: {
-          name: 'trash',
-        },
-        android: 'ic_delete',
-        web: 'trash',
-      },
-    },
-  ]
-  return (
-    <Pressable accessibilityRole="button" style={s.pl10}>
-      <NativeDropdown
-        testID="accountSettingsDropdownBtn"
-        items={items}
-        accessibilityLabel="Account options"
-        accessibilityHint="">
-        <FontAwesomeIcon
-          icon="ellipsis-h"
-          style={pal.textLight as FontAwesomeIconStyle}
-        />
-      </NativeDropdown>
-    </Pressable>
-  )
-}
+const EmailConfirmationNotice = observer(
+  function EmailConfirmationNoticeImpl() {
+    const pal = usePalette('default')
+    const palInverted = usePalette('inverted')
+    const store = useStores()
+    const {isMobile} = useWebMediaQueries()
+
+    if (!store.session.emailNeedsConfirmation) {
+      return null
+    }
+
+    return (
+      <View style={{marginBottom: 20}}>
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          Verify email
+        </Text>
+        <View
+          style={[
+            {
+              paddingVertical: isMobile ? 12 : 0,
+              paddingHorizontal: 18,
+            },
+            pal.view,
+          ]}>
+          <View style={{flexDirection: 'row', marginBottom: 8}}>
+            <Pressable
+              style={[
+                palInverted.view,
+                {
+                  flexDirection: 'row',
+                  gap: 6,
+                  borderRadius: 6,
+                  paddingHorizontal: 12,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                },
+                isMobile && {flex: 1},
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Verify my email"
+              accessibilityHint=""
+              onPress={() => store.shell.openModal({name: 'verify-email'})}>
+              <FontAwesomeIcon
+                icon="envelope"
+                color={palInverted.colors.text}
+                size={16}
+              />
+              <Text type="button" style={palInverted.text}>
+                Verify My Email
+              </Text>
+            </Pressable>
+          </View>
+          <Text style={pal.textLight}>
+            Protect your account by verifying your email.
+          </Text>
+        </View>
+      </View>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   dimmed: {

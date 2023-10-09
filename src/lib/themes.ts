@@ -264,8 +264,8 @@ export const defaultTheme: Theme = {
       fontWeight: '400',
     },
     'post-text-lg': {
-      fontSize: 22,
-      letterSpacing: 0.4,
+      fontSize: 20,
+      letterSpacing: 0.2,
       fontWeight: '400',
     },
     'button-lg': {

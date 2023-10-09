@@ -137,7 +137,7 @@ export class ProfileModel {
       runInAction(() => {
         this.followersCount++
         this.viewer.following = res.uri
-        this.rootStore.me.follows.addFollow(this.did, res.uri)
+        this.rootStore.me.follows.hydrate(this.did, this)
       })
       track('Profile:Follow', {
         username: this.handle,
@@ -290,8 +290,8 @@ export class ProfileModel {
     this.labels = res.data.labels
     if (res.data.viewer) {
       Object.assign(this.viewer, res.data.viewer)
-      this.rootStore.me.follows.hydrate(this.did, res.data.viewer.following)
     }
+    this.rootStore.me.follows.hydrate(this.did, res.data)
   }
 
   async _createRichText() {

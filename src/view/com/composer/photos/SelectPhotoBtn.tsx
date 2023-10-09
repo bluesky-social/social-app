@@ -6,10 +6,10 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {isDesktopWeb} from 'platform/detection'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {GalleryModel} from 'state/models/media/gallery'
 import {HITSLOP_10} from 'lib/constants'
+import {isNative} from 'platform/detection'
 
 type Props = {
   gallery: GalleryModel
@@ -23,12 +23,12 @@ export function SelectPhotoBtn({gallery}: Props) {
   const onPressSelectPhotos = useCallback(async () => {
     track('Composer:GalleryOpened')
 
-    if (!isDesktopWeb && !(await requestPhotoAccessIfNeeded())) {
+    if (isNative && !(await requestPhotoAccessIfNeeded())) {
       return
     }
 
     gallery.pick()
-  }, [track, gallery, requestPhotoAccessIfNeeded])
+  }, [track, requestPhotoAccessIfNeeded, gallery])
 
   return (
     <TouchableOpacity

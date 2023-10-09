@@ -69,6 +69,9 @@ export function UserBanner({
               return
             }
             const items = await openPicker()
+            if (!items[0]) {
+              return
+            }
 
             onSelectNewBanner?.(
               await openCropper(store, {

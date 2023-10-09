@@ -89,7 +89,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
         </View>
 
         <FollowButton
-          did={profile.did}
+          profile={profile}
           labelStyle={styles.followButton}
           onToggleFollow={async isFollow => {
             if (isFollow) {

@@ -19,7 +19,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useFollowDid} from 'lib/hooks/useFollowDid'
+import {useFollowProfile} from 'lib/hooks/useFollowProfile'
 import {Button} from 'view/com/util/forms/Button'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -83,7 +83,7 @@ export function ProfileHeaderSuggestedFollows({
           return []
         }
 
-        store.me.follows.hydrateProfiles(suggestions)
+        store.me.follows.hydrateMany(suggestions)
 
         return suggestions
       } catch (e) {
@@ -218,7 +218,7 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const store = useStores()
-  const {following, toggle} = useFollowDid({did: profile.did})
+  const {following, toggle} = useFollowProfile(profile)
   const moderation = moderateProfile(profile, store.preferences.moderationOpts)
 
   const onPress = React.useCallback(async () => {

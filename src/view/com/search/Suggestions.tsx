@@ -2,7 +2,7 @@ import React, {forwardRef, ForwardedRef} from 'react'
 import {RefreshControl, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {AppBskyActorDefs} from '@atproto/api'
-import {CenteredView, FlatList} from '../util/Views'
+import {FlatList} from '../util/Views'
 import {FoafsModel} from 'state/models/discovery/foafs'
 import {
   SuggestedActorsModel,
@@ -10,11 +10,12 @@ import {
 } from 'state/models/discovery/suggested-actors'
 import {Text} from '../util/text/Text'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {ProfileCardLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {RefWithInfoAndFollowers} from 'state/models/discovery/foafs'
 import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 
 interface Heading {
   _reactKey: string
@@ -36,7 +37,16 @@ interface ProfileView {
   type: 'profile-view'
   view: AppBskyActorDefs.ProfileViewBasic
 }
-type Item = Heading | RefWrapper | SuggestWrapper | ProfileView
+interface LoadingPlaceholder {
+  _reactKey: string
+  type: 'loading-placeholder'
+}
+type Item =
+  | Heading
+  | RefWrapper
+  | SuggestWrapper
+  | ProfileView
+  | LoadingPlaceholder
 
 // FIXME(dan): Figure out why the false positives
 /* eslint-disable react/prop-types */
@@ -57,23 +67,6 @@ export const Suggestions = observer(
     const data = React.useMemo(() => {
       let items: Item[] = []
 
-      if (foafs.popular.length > 0) {
-        items = items
-          .concat([
-            {
-              _reactKey: '__popular_heading__',
-              type: 'heading',
-              title: 'In Your Network',
-            },
-          ])
-          .concat(
-            foafs.popular.map(ref => ({
-              _reactKey: `popular-${ref.did}`,
-              type: 'ref',
-              ref,
-            })),
-          )
-      }
       if (suggestedActors.hasContent) {
         items = items
           .concat([
@@ -90,34 +83,73 @@ export const Suggestions = observer(
               suggested,
             })),
           )
+      } else if (suggestedActors.isLoading) {
+        items = items.concat([
+          {
+            _reactKey: '__suggested_heading__',
+            type: 'heading',
+            title: 'Suggested Follows',
+          },
+          {_reactKey: '__suggested_loading__', type: 'loading-placeholder'},
+        ])
       }
-      for (const source of foafs.sources) {
-        const item = foafs.foafs.get(source)
-        if (!item || item.follows.length === 0) {
-          continue
+      if (foafs.isLoading) {
+        items = items.concat([
+          {
+            _reactKey: '__popular_heading__',
+            type: 'heading',
+            title: 'In Your Network',
+          },
+          {_reactKey: '__foafs_loading__', type: 'loading-placeholder'},
+        ])
+      } else {
+        if (foafs.popular.length > 0) {
+          items = items
+            .concat([
+              {
+                _reactKey: '__popular_heading__',
+                type: 'heading',
+                title: 'In Your Network',
+              },
+            ])
+            .concat(
+              foafs.popular.map(ref => ({
+                _reactKey: `popular-${ref.did}`,
+                type: 'ref',
+                ref,
+              })),
+            )
         }
-        items = items
-          .concat([
-            {
-              _reactKey: `__${item.did}_heading__`,
-              type: 'heading',
-              title: `Followed by ${sanitizeDisplayName(
-                item.displayName || sanitizeHandle(item.handle),
-              )}`,
-            },
-          ])
-          .concat(
-            item.follows.slice(0, 10).map(view => ({
-              _reactKey: `${item.did}-${view.did}`,
-              type: 'profile-view',
-              view,
-            })),
-          )
+        for (const source of foafs.sources) {
+          const item = foafs.foafs.get(source)
+          if (!item || item.follows.length === 0) {
+            continue
+          }
+          items = items
+            .concat([
+              {
+                _reactKey: `__${item.did}_heading__`,
+                type: 'heading',
+                title: `Followed by ${sanitizeDisplayName(
+                  item.displayName || sanitizeHandle(item.handle),
+                )}`,
+              },
+            ])
+            .concat(
+              item.follows.slice(0, 10).map(view => ({
+                _reactKey: `${item.did}-${view.did}`,
+                type: 'profile-view',
+                view,
+              })),
+            )
+        }
       }
 
       return items
     }, [
+      foafs.isLoading,
       foafs.popular,
+      suggestedActors.isLoading,
       suggestedActors.hasContent,
       suggestedActors.suggestions,
       foafs.sources,
@@ -183,18 +215,21 @@ export const Suggestions = observer(
             </View>
           )
         }
+        if (item.type === 'loading-placeholder') {
+          return (
+            <View>
+              <ProfileCardLoadingPlaceholder />
+              <ProfileCardLoadingPlaceholder />
+              <ProfileCardLoadingPlaceholder />
+              <ProfileCardLoadingPlaceholder />
+            </View>
+          )
+        }
         return null
       },
       [pal],
     )
 
-    if (foafs.isLoading || suggestedActors.isLoading) {
-      return (
-        <CenteredView>
-          <ProfileCardFeedLoadingPlaceholder />
-        </CenteredView>
-      )
-    }
     return (
       <FlatList
         ref={flatListRef}
@@ -210,6 +245,7 @@ export const Suggestions = observer(
         }
         renderItem={renderItem}
         initialNumToRender={15}
+        contentContainerStyle={s.contentContainer}
       />
     )
   }),

@@ -61,7 +61,7 @@ export class InvitedUsers {
             profile => !profile.viewer?.following,
           )
         })
-        this.rootStore.me.follows.hydrateProfiles(this.profiles)
+        this.rootStore.me.follows.hydrateMany(this.profiles)
       } catch (e) {
         this.rootStore.log.error(
           'Failed to fetch profiles for invited users',

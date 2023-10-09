@@ -95,7 +95,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     | undefined
   let reply
   let rt = new RichText(
-    {text: opts.rawText.trim()},
+    {text: opts.rawText.trimEnd()},
     {
       cleanNewlines: true,
     },

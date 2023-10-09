@@ -23,11 +23,16 @@ import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {useStores, RootStoreModel} from 'state/index'
-import {convertBskyAppUrlIfNeeded, isExternalUrl} from 'lib/strings/url-helpers'
-import {isAndroid, isDesktopWeb} from 'platform/detection'
+import {
+  convertBskyAppUrlIfNeeded,
+  isExternalUrl,
+  linkRequiresWarning,
+} from 'lib/strings/url-helpers'
+import {isAndroid} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -142,6 +147,7 @@ export const TextLink = observer(function TextLink({
   dataSet,
   title,
   onPress,
+  warnOnMismatchingLabel,
   ...orgProps
 }: {
   testID?: string
@@ -153,13 +159,29 @@ export const TextLink = observer(function TextLink({
   lineHeight?: number
   dataSet?: any
   title?: string
+  warnOnMismatchingLabel?: boolean
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
 
+  if (warnOnMismatchingLabel && typeof text !== 'string') {
+    console.error('Unable to detect mismatching label')
+  }
+
   props.onPress = React.useCallback(
     (e?: Event) => {
+      const requiresWarning =
+        warnOnMismatchingLabel &&
+        linkRequiresWarning(href, typeof text === 'string' ? text : '')
+      if (requiresWarning) {
+        e?.preventDefault?.()
+        store.shell.openModal({
+          name: 'link-warning',
+          text: typeof text === 'string' ? text : '',
+          href,
+        })
+      }
       if (onPress) {
         e?.preventDefault?.()
         // @ts-ignore function signature differs by platform -prf
@@ -167,7 +189,7 @@ export const TextLink = observer(function TextLink({
       }
       return onPressInner(store, navigation, sanitizeUrl(href), e)
     },
-    [onPress, store, navigation, href],
+    [onPress, store, navigation, href, text, warnOnMismatchingLabel],
   )
   const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)
@@ -224,7 +246,9 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   lineHeight,
   ...props
 }: DesktopWebTextLinkProps) {
-  if (isDesktopWeb) {
+  const {isDesktop} = useWebMediaQueries()
+
+  if (isDesktop) {
     return (
       <TextLink
         testID={testID}

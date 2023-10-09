@@ -71,6 +71,7 @@ export const NotificationsScreen = withAuthRequired(
         }
       }, [store, screen, onPressLoadLatest]),
     )
+
     useTabFocusEffect(
       'Notifications',
       React.useCallback(

@@ -13,7 +13,6 @@ export const Composer = observer(function ComposerImpl({
   replyTo,
   quote,
   onPost,
-  onClose,
   mention,
 }: {
   active: boolean
@@ -21,7 +20,6 @@ export const Composer = observer(function ComposerImpl({
   replyTo?: ComposerOpts['replyTo']
   quote: ComposerOpts['quote']
   onPost?: ComposerOpts['onPost']
-  onClose: () => void
   mention?: ComposerOpts['mention']
 }) {
   const pal = usePalette('default')
@@ -47,7 +45,6 @@ export const Composer = observer(function ComposerImpl({
           replyTo={replyTo}
           quote={quote}
           onPost={onPost}
-          onClose={onClose}
           mention={mention}
         />
       </View>

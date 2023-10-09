@@ -75,6 +75,9 @@ export const BottomBar = observer(function BottomBarImpl({
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
+  const onLongPressProfile = React.useCallback(() => {
+    store.shell.openModal({name: 'switch-account'})
+  }, [store])
 
   return (
     <Animated.View
@@ -202,6 +205,7 @@ export const BottomBar = observer(function BottomBarImpl({
           </View>
         }
         onPress={onPressProfile}
+        onLongPress={onLongPressProfile}
         accessibilityRole="tab"
         accessibilityLabel="Profile"
         accessibilityHint=""

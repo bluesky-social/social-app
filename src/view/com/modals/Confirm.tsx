@@ -23,6 +23,7 @@ export function Component({
   onPressCancel,
   confirmBtnText,
   confirmBtnStyle,
+  cancelBtnText,
 }: ConfirmModal) {
   const pal = usePalette('default')
   const store = useStores()
@@ -84,7 +85,7 @@ export function Component({
           accessibilityLabel="Cancel"
           accessibilityHint="">
           <Text type="button-lg" style={pal.textLight}>
-            Cancel
+            {cancelBtnText ?? 'Cancel'}
           </Text>
         </TouchableOpacity>
       )}

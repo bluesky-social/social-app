@@ -200,7 +200,7 @@ export const ProfileCardWithFollowBtn = observer(
         noBorder={noBorder}
         followers={followers}
         renderButton={
-          isMe ? undefined : () => <FollowButton did={profile.did} />
+          isMe ? undefined : () => <FollowButton profile={profile} />
         }
       />
     )
