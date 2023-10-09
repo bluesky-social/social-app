@@ -6,7 +6,7 @@ import {
   SuggestionOptions,
   SuggestionProps,
   SuggestionKeyDownProps,
-} from '@tiptap/suggestion'
+} from '@estrattonbailey/tiptap-suggestion'
 
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'

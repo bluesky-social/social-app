@@ -3,7 +3,7 @@
 import {mergeAttributes, Node} from '@tiptap/core'
 import {Node as ProseMirrorNode} from '@tiptap/pm/model'
 import {PluginKey} from '@tiptap/pm/state'
-import Suggestion, {SuggestionOptions} from '@tiptap/suggestion'
+import Suggestion, {SuggestionOptions} from '@estrattonbailey/tiptap-suggestion'
 
 export type TagOptions = {
   HTMLAttributes: Record<string, any>

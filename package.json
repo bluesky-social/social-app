@@ -29,6 +29,7 @@
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
+    "@estrattonbailey/tiptap-suggestion": "^2.2.0-rc.3",
     "@expo/html-elements": "^0.4.2",
     "@expo/webpack-config": "^19.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",

@@ -1812,6 +1812,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.47.0.tgz#5478fdf443ff8158f9de171c704ae45308696c7d"
   integrity sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==
 
+"@estrattonbailey/tiptap-suggestion@^2.2.0-rc.3":
+  version "2.2.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@estrattonbailey/tiptap-suggestion/-/tiptap-suggestion-2.2.0-rc.3.tgz#190edb6b9bb620977ef5f1b8c9467bce8900cd21"
+  integrity sha512-RY16dkvtoCXLSgwW8E5j40LI+v2SUXzfbN63OPPDO7RrI/cXGyjpTz4pAGTOa2q4aU/2QTR/xPjBIpPHhxikLw==
+
 "@expo/bunyan@4.0.0", "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@expo/bunyan/-/bunyan-4.0.0.tgz#be0c1de943c7987a9fbd309ea0b1acd605890c7b"
