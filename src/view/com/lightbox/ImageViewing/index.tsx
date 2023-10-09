@@ -71,7 +71,6 @@ function ImageViewing({
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [opacity, setOpacity] = useState(1)
   const [currentImageIndex, setImageIndex] = useState(imageIndex)
   const [headerTranslate] = useState(
     () => new Animated.ValueXY(INITIAL_POSITION),
@@ -98,12 +97,6 @@ function ImageViewing({
         }),
       ]).start()
     }
-  }
-
-  const onRequestCloseEnhanced = () => {
-    setOpacity(0)
-    onRequestClose()
-    setTimeout(() => setOpacity(1), 0)
   }
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -162,14 +155,14 @@ function ImageViewing({
       aria-modal
       accessibilityViewIsModal>
       <ModalsContainer />
-      <View style={[styles.container, {opacity, backgroundColor}]}>
+      <View style={[styles.container, {backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (
             React.createElement(HeaderComponent, {
               imageIndex: currentImageIndex,
             })
           ) : (
-            <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
+            <ImageDefaultHeader onRequestClose={onRequestClose} />
           )}
         </Animated.View>
         <VirtualizedList
@@ -191,7 +184,7 @@ function ImageViewing({
             <ImageItem
               onZoom={onZoom}
               imageSrc={imageSrc}
-              onRequestClose={onRequestCloseEnhanced}
+              onRequestClose={onRequestClose}
               pinchGestureRef={pinchGestureRefs.get(imageSrc)}
               isScrollViewBeingDragged={isDragging}
             />

@@ -166,7 +166,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   async crop() {
     try {
       // NOTE
-      // on ios, react-native-image-cropper gives really bad quality
+      // on ios, react-native-image-crop-picker gives really bad quality
       // without specifying width and height. on android, however, the
       // crop stretches incorrectly if you do specify it. these are
       // both separate bugs in the library. we deal with that by
