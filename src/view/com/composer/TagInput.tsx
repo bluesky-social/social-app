@@ -140,9 +140,9 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     minWidth: 100,
-    fontSize: 14,
-    lineHeight: 14,
-    paddingTop: 4,
+    fontSize: 15,
+    lineHeight: 15,
+    paddingTop: 5,
     paddingBottom: 6,
   },
 })

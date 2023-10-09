@@ -340,7 +340,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                   paddingBottom: 12,
                 }}>
                 {item.post.record.tags.map(tag => (
-                  <Tag key={tag} value={tag} textSize="post-text-lg" />
+                  <Tag key={tag} value={tag} textSize="md-medium" />
                 ))}
               </View>
             ) : null}

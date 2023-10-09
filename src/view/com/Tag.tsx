@@ -25,7 +25,7 @@ export function Tag({
       accessible
       anchorNoUnderline
       href={`/search?q=${value}`}
-      style={[pal.border, styles.tag]}>
+      style={[pal.viewLight, styles.tag]}>
       <Text type={type} style={[pal.textLight]}>
         #{value}
       </Text>
@@ -50,7 +50,7 @@ export function InlineTag({
       anchorNoUnderline
       href={`/search?q=${value}`}
       style={[
-        pal.border,
+        pal.viewLight,
         styles.tag,
         {
           paddingTop: 0,
@@ -97,9 +97,7 @@ export function EditableTag({
           paddingRight: 6,
         },
       ]}>
-      <Text
-        type="sm-medium"
-        style={[pal.textLight, {lineHeight: 13, paddingBottom: 2}]}>
+      <Text type="md-medium" style={[pal.textLight, {lineHeight: 13}]}>
         #{value}
       </Text>
       <FontAwesomeIcon
@@ -108,10 +106,10 @@ export function EditableTag({
           {
             opacity: hovered ? 1 : 0.5,
             color: pal.textLight.color,
-            marginTop: -1,
+            marginTop: 1,
           } as FontAwesomeIconStyle
         }
-        size={11}
+        size={10}
       />
     </Pressable>
   )
@@ -122,8 +120,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingTop: 4,
-    paddingBottom: 3,
+    paddingTop: 3,
+    paddingBottom: 4,
     paddingHorizontal: 8,
     borderRadius: 4,
     overflow: 'hidden',
