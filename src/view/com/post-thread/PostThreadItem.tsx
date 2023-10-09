@@ -333,12 +333,17 @@ export const PostThreadItem = observer(function PostThreadItem({
             {AppBskyFeedPost.isRecord(item.post.record) &&
             item.post.record.tags?.length ? (
               <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  gap: 8,
-                  paddingBottom: 12,
-                }}>
+                style={[
+                  pal.border,
+                  {
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    gap: 8,
+                    paddingBottom: 12,
+                    marginBottom: 12,
+                    borderBottomWidth: 1,
+                  },
+                ]}>
                 {item.post.record.tags.map(tag => (
                   <Tag key={tag} value={tag} textSize="md-medium" />
                 ))}
@@ -387,7 +392,7 @@ export const PostThreadItem = observer(function PostThreadItem({
             ) : (
               <></>
             )}
-            <View style={[s.pl10, s.pb5]}>
+            <View style={[s.pb5]}>
               <PostCtrls
                 big
                 itemUri={itemUri}
@@ -718,7 +723,7 @@ const useStyles = () => {
     },
     expandedInfo: {
       flexDirection: 'row',
-      padding: 10,
+      paddingVertical: 10,
       borderTopWidth: 1,
       borderBottomWidth: 1,
       marginTop: 5,

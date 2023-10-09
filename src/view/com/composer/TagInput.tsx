@@ -5,6 +5,7 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
+  Platform,
 } from 'react-native'
 import {
   FontAwesomeIcon,
@@ -141,8 +142,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     minWidth: 100,
     fontSize: 15,
-    lineHeight: 15,
-    paddingTop: 5,
-    paddingBottom: 6,
+    lineHeight: Platform.select({
+      web: 20,
+      native: 18,
+    }),
+    paddingTop: 4,
+    paddingBottom: 4,
   },
 })

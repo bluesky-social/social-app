@@ -7,7 +7,7 @@ import {
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text, CustomTextProps} from 'view/com/util/text/Text'
-import {Link} from 'view/com/util/Link'
+import {TextLink} from 'view/com/util/Link'
 
 export function Tag({
   value,
@@ -20,16 +20,13 @@ export function Tag({
   const type = textSize || 'xs-medium'
 
   return (
-    <Link
-      asAnchor
+    <TextLink
+      type={type}
+      text={`#${value}`}
       accessible
-      anchorNoUnderline
       href={`/search?q=${value}`}
-      style={[pal.viewLight, styles.tag]}>
-      <Text type={type} style={[pal.textLight]}>
-        #{value}
-      </Text>
-    </Link>
+      style={[pal.textLight]}
+    />
   )
 }
 
@@ -44,23 +41,19 @@ export function InlineTag({
   const type = textSize || 'xs-medium'
 
   return (
-    <Link
-      asAnchor
+    <TextLink
+      type={type}
+      text={`#${value}`}
       accessible
-      anchorNoUnderline
       href={`/search?q=${value}`}
       style={[
-        pal.viewLight,
-        styles.tag,
+        pal.link,
         {
           paddingTop: 0,
           paddingBottom: 2,
         },
-      ]}>
-      <Text type={type} style={[pal.textLight]}>
-        #{value}
-      </Text>
-    </Link>
+      ]}
+    />
   )
 }
 
@@ -90,14 +83,14 @@ export function EditableTag({
       onPointerLeave={hoverOut}
       style={state => [
         pal.viewLight,
-        styles.tag,
+        styles.editableTag,
         {
           opacity: state.pressed || state.focused ? 0.8 : 1,
           outline: 0,
           paddingRight: 6,
         },
       ]}>
-      <Text type="md-medium" style={[pal.textLight, {lineHeight: 13}]}>
+      <Text type="md-medium" style={[pal.textLight]}>
         #{value}
       </Text>
       <FontAwesomeIcon
@@ -116,11 +109,11 @@ export function EditableTag({
 }
 
 const styles = StyleSheet.create({
-  tag: {
+  editableTag: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingTop: 3,
+    paddingTop: 4,
     paddingBottom: 4,
     paddingHorizontal: 8,
     borderRadius: 4,
