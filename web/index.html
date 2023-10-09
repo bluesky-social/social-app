@@ -150,34 +150,34 @@
       .ProseMirror .inline-tag,
       .ProseMirror .mention {
         position: relative;
-        margin: 0 6px;
       }
-      .ProseMirror .inline-tag::after,
-      .ProseMirror .mention::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: -2px;
-        left: -8px;
-        right: -8px;
-        z-index: -1;
-        opacity: 0.3;
-        border-radius: 30px;
-        border-width: 1px;
-        border-style: solid;
+      .ProseMirror .inline-tag,
+      .ProseMirror .mention {
+        border-radius: 4px;
+        background-color: var(--backgroundLight);
+        padding: 0 2px 1px;
+
+        /* This approach works, but we can't do rounded corners
+        background-color: var(--backgroundLight);
+        box-shadow: -3px 0 var(--backgroundLight), -3px 2px var(--backgroundLight), 2px 0 var(--backgroundLight), 2px 2px var(--backgroundLight);
+        */
+
+        /*
+        This sorta works but not enough padding aroundd the next, looks bad.
+
+        border-radius: 4px;
+        background-color: red;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        */
       }
       .ProseMirror .inline-tag {
         color: var(--text);
       }
-      .ProseMirror .inline-tag::after {
-        background-color: var(--background);
-        border-color: var(--border):
-      }
       .ProseMirror .mention {
-        color: var(--yellow);
-      }
-      .ProseMirror .mention::after {
+        color: var(--text);
         background-color: var(--yellow);
+        box-shadow: -3px 0 var(--yellow), -3px 2px var(--yellow), 2px 0 var(--yellow), 2px 2px var(--yellow);
       }
 
       /* Tooltips */
