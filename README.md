@@ -14,7 +14,7 @@ This is a [React Native](https://reactnative.dev/) application, written in the T
 
 There is a small amount of Go language source code (in `./bskyweb/`), for a web service that returns the React Native Web application.
 
-The [Build Instructions](./docs/builds.md) are a good place to get started with the app itself.
+The [Build Instructions](./docs/build.md) are a good place to get started with the app itself.
 
 The Authenticated Transfer Protocol ("AT Protocol" or "atproto") is a decentralized social media protocol. You don't *need* to understand AT Protocol to work with this application, but it can help. Learn more at:
 
