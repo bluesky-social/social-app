@@ -29,6 +29,7 @@ import {CustomFeed} from 'view/com/feeds/CustomFeed'
 import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
+import {MediaSlice} from 'view/com/posts/MediaSlice'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -141,7 +142,7 @@ export const ProfileScreen = withAuthRequired(
       return uiState.showLoadingMoreFooter ? LoadingMoreFooter : undefined
     }, [uiState.showLoadingMoreFooter])
     const renderItem = React.useCallback(
-      (item: any) => {
+      (item: any | any[]) => {
         // if section is lists
         if (uiState.selectedView === Sections.Lists) {
           if (item === ProfileUiModel.LOADING_ITEM) {
@@ -236,10 +237,25 @@ export const ProfileScreen = withAuthRequired(
               />
             )
           } else if (item instanceof PostsFeedSliceModel) {
-            return (
-              <FeedSlice slice={item} ignoreFilterFor={uiState.profile.did} />
-            )
+            if (uiState.selectedView === Sections.PostsWithMedia) {
+              // MULLYTODO This never gets hit. Fix later
+              return (
+                <MediaSlice
+                  slice={item}
+                  ignoreFilterFor={uiState.profile.did}
+                />
+              )
+            } else {
+              return (
+                <FeedSlice slice={item} ignoreFilterFor={uiState.profile.did} />
+              )
+            }
           }
+
+          // MULLYTODO This is cheating. Fix later
+          return (
+            <MediaSlice slice={item} ignoreFilterFor={uiState.profile.did} />
+          )
         }
         return <View />
       },
@@ -278,6 +294,7 @@ export const ProfileScreen = withAuthRequired(
             onSelectView={onSelectView}
             onRefresh={onRefresh}
             onEndReached={onEndReached}
+            isProfileMediaTab={uiState.selectedView === Sections.PostsWithMedia}
           />
         ) : (
           <CenteredView>{renderHeader()}</CenteredView>

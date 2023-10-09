@@ -41,6 +41,7 @@ export const ViewSelector = React.forwardRef<
     onScroll?: OnScrollCb
     onRefresh?: () => void
     onEndReached?: (info: {distanceFromEnd: number}) => void
+    isProfileMediaTab: boolean
   }
 >(function ViewSelectorImpl(
   {
@@ -54,6 +55,7 @@ export const ViewSelector = React.forwardRef<
     onScroll,
     onRefresh,
     onEndReached,
+    isProfileMediaTab,
   },
   ref,
 ) {
@@ -105,10 +107,40 @@ export const ViewSelector = React.forwardRef<
     [sections, selectedIndex, onPressSelection, renderHeader, renderItem],
   )
 
-  const data = React.useMemo(
+  let data = React.useMemo(
     () => [HEADER_ITEM, SELECTOR_ITEM, ...items],
     [items],
   )
+
+  if (isProfileMediaTab) {
+    let i = 0
+    let fullImageArray: any[] = [[]]
+
+    while (i < items.length) {
+      if (
+        items[i].items &&
+        items[i].items.length === 1 &&
+        items[i].items[0].post.embed
+      ) {
+        let imgs: any[] = []
+        imgs = items[i].items[0].post.embed.images
+        if (imgs) {
+          for (let e = 0; e < imgs.length; e++) {
+            if (fullImageArray[fullImageArray.length - 1].length < 4) {
+              fullImageArray[fullImageArray.length - 1].push(imgs[e])
+            } else {
+              fullImageArray.push([])
+              fullImageArray[fullImageArray.length - 1].push(imgs[e])
+            }
+          }
+        }
+        i++
+      } else {
+        i++
+      }
+    }
+    data = [HEADER_ITEM, SELECTOR_ITEM, ...fullImageArray]
+  }
   return (
     <FlatList
       ref={flatListRef}
