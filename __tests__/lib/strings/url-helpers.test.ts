@@ -28,6 +28,7 @@ describe('linkRequiresWarning', () => {
     ['http://site.pages.dev', 'site.pages', true],
     ['http://site.pages', 'site.pages.dev', true],
     ['http://xn--pple-43d.com', '\u0430pple.com', true],
+    ['http://subdomain.xn--pple-43d.com', 'subdomain.\u0430pple.com', true],
     ['http://xn--s7y.co', '短.co', true],
 
     // bad uri inputs, default to true

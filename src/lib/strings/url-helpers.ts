@@ -170,7 +170,7 @@ export function getYoutubeVideoId(link: string): string | undefined {
 
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
-  if (!labelDomain || labelDomain.startsWith('xn--')) {
+  if (!labelDomain || /\bxn--/i.test(labelDomain)) {
     return true
   }
   try {
