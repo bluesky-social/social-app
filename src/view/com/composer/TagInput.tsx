@@ -57,7 +57,8 @@ export function TagInput({
   const onSubmitEditing = React.useCallback(() => {
     const tag = sanitize(value)
 
-    if (tag.length > 0) {
+    // enforce max hashtag length
+    if (tag.length > 0 && tag.length <= 64) {
       handleChangeTags(uniq([...tags, tag]).slice(0, max))
     }
 
