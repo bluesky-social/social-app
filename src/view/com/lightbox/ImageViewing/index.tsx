@@ -38,7 +38,6 @@ import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
   images: ImageSource[]
-  keyExtractor?: (imageSrc: ImageSource, index: number) => string
   imageIndex: number
   visible: boolean
   onRequestClose: () => void
@@ -60,7 +59,6 @@ const ANIMATION_CONFIG = {
 
 function ImageViewing({
   images,
-  keyExtractor,
   imageIndex,
   visible,
   onRequestClose,
@@ -205,14 +203,7 @@ function ImageViewing({
             setIsScaled(false)
             onScroll(e)
           }}
-          //@ts-ignore
-          keyExtractor={(imageSrc, index) =>
-            keyExtractor
-              ? keyExtractor(imageSrc, index)
-              : typeof imageSrc === 'number'
-              ? `${imageSrc}`
-              : imageSrc.uri
-          }
+          keyExtractor={imageSrc => imageSrc.uri}
         />
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, {transform: footerTransform}]}>
