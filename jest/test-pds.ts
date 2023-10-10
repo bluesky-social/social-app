@@ -1,7 +1,7 @@
 import net from 'net'
 import path from 'path'
 import fs from 'fs'
-import {TestNetworkNoAppView} from '@atproto/dev-env'
+import {TestNetwork} from '@atproto/dev-env'
 import {AtUri, BskyAgent} from '@atproto/api'
 
 export interface TestUser {
@@ -18,14 +18,59 @@ export interface TestPDS {
   close: () => Promise<void>
 }
 
+class StringIdGenerator {
+  _nextId = [0]
+  constructor(
+    public _chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  ) {}
+
+  next() {
+    const r = []
+    for (const char of this._nextId) {
+      r.unshift(this._chars[char])
+    }
+    this._increment()
+    return r.join('')
+  }
+
+  _increment() {
+    for (let i = 0; i < this._nextId.length; i++) {
+      const val = ++this._nextId[i]
+      if (val >= this._chars.length) {
+        this._nextId[i] = 0
+      } else {
+        return
+      }
+    }
+    this._nextId.push(0)
+  }
+
+  *[Symbol.iterator]() {
+    while (true) {
+      yield this.next()
+    }
+  }
+}
+
+const ids = new StringIdGenerator()
+
 export async function createServer(
   {inviteRequired}: {inviteRequired: boolean} = {inviteRequired: false},
 ): Promise<TestPDS> {
   const port = await getPort()
   const port2 = await getPort(port + 1)
   const pdsUrl = `http://localhost:${port}`
-  const testNet = await TestNetworkNoAppView.create({
-    pds: {port, publicUrl: pdsUrl, inviteRequired},
+  const id = ids.next()
+  const testNet = await TestNetwork.create({
+    pds: {
+      port,
+      publicUrl: pdsUrl,
+      inviteRequired,
+      dbPostgresSchema: `pds_${id}`,
+    },
+    bsky: {
+      dbPostgresSchema: `bsky_${id}`,
+    },
     plc: {port: port2},
   })
 
@@ -48,7 +93,7 @@ class Mocker {
   users: Record<string, TestUser> = {}
 
   constructor(
-    public testNet: TestNetworkNoAppView,
+    public testNet: TestNetwork,
     public service: string,
     public pic: Uint8Array,
   ) {
@@ -57,6 +102,10 @@ class Mocker {
 
   get pds() {
     return this.testNet.pds
+  }
+
+  get bsky() {
+    return this.testNet.bsky
   }
 
   get plc() {
@@ -81,11 +130,7 @@ class Mocker {
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
       {
-        headers: {
-          authorization: `Basic ${btoa(
-            `admin:${this.pds.ctx.cfg.adminPassword}`,
-          )}`,
-        },
+        headers: this.pds.adminAuthHeaders('admin'),
         encoding: 'application/json',
       },
     )
@@ -260,11 +305,7 @@ class Mocker {
     await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {
-        headers: {
-          authorization: `Basic ${btoa(
-            `admin:${this.pds.ctx.cfg.adminPassword}`,
-          )}`,
-        },
+        headers: this.pds.adminAuthHeaders('admin'),
         encoding: 'application/json',
       },
     )
@@ -275,24 +316,21 @@ class Mocker {
     if (!did) {
       throw new Error(`Invalid user: ${user}`)
     }
-    const ctx = this.pds.ctx
+    const ctx = this.bsky.ctx
     if (!ctx) {
-      throw new Error('Invalid PDS')
+      throw new Error('Invalid appview')
     }
-
-    await ctx.db.db
-      .insertInto('label')
-      .values([
-        {
-          src: ctx.cfg.labelerDid,
-          uri: did,
-          cid: '',
-          val: label,
-          neg: 0,
-          cts: new Date().toISOString(),
-        },
-      ])
-      .execute()
+    const labelSrvc = ctx.services.label(ctx.db.getPrimary())
+    await labelSrvc.createLabels([
+      {
+        src: ctx.cfg.labelerDid,
+        uri: did,
+        cid: '',
+        val: label,
+        neg: false,
+        cts: new Date().toISOString(),
+      },
+    ])
   }
 
   async labelProfile(label: string, user: string) {
@@ -307,43 +345,39 @@ class Mocker {
       rkey: 'self',
     })
 
-    const ctx = this.pds.ctx
+    const ctx = this.bsky.ctx
     if (!ctx) {
-      throw new Error('Invalid PDS')
+      throw new Error('Invalid appview')
     }
-    await ctx.db.db
-      .insertInto('label')
-      .values([
-        {
-          src: ctx.cfg.labelerDid,
-          uri: profile.uri,
-          cid: profile.cid,
-          val: label,
-          neg: 0,
-          cts: new Date().toISOString(),
-        },
-      ])
-      .execute()
+    const labelSrvc = ctx.services.label(ctx.db.getPrimary())
+    await labelSrvc.createLabels([
+      {
+        src: ctx.cfg.labelerDid,
+        uri: profile.uri,
+        cid: profile.cid,
+        val: label,
+        neg: false,
+        cts: new Date().toISOString(),
+      },
+    ])
   }
 
   async labelPost(label: string, {uri, cid}: {uri: string; cid: string}) {
-    const ctx = this.pds.ctx
+    const ctx = this.bsky.ctx
     if (!ctx) {
-      throw new Error('Invalid PDS')
+      throw new Error('Invalid appview')
     }
-    await ctx.db.db
-      .insertInto('label')
-      .values([
-        {
-          src: ctx.cfg.labelerDid,
-          uri,
-          cid,
-          val: label,
-          neg: 0,
-          cts: new Date().toISOString(),
-        },
-      ])
-      .execute()
+    const labelSrvc = ctx.services.label(ctx.db.getPrimary())
+    await labelSrvc.createLabels([
+      {
+        src: ctx.cfg.labelerDid,
+        uri,
+        cid,
+        val: label,
+        neg: false,
+        cts: new Date().toISOString(),
+      },
+    ])
   }
 
   async createMuteList(user: string, name: string): Promise<string> {

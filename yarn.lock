@@ -8135,10 +8135,10 @@ detect-port-alt@^1.1.6:
     address "^1.0.1"
     debug "^2.6.0"
 
-detox@^20.11.3:
-  version "20.11.3"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-20.11.3.tgz#56d5ea869977f5a747e1be0901b279ab953f8b7b"
-  integrity sha512-kdoRAtDLFxXpjt1QlniI+WryMtf7Y8mrZ33Ql8cTR9qoCS/CThi4pweYAQm8yUPqAv1ZtT3eIm3EzRwjEosgLA==
+detox@^20.13.0:
+  version "20.13.0"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-20.13.0.tgz#923111638dfdb16089eea4f07bf4f0b56468d097"
+  integrity sha512-p9MUcoHWFTqSDaoaN+/hnJYdzNYqdelUr/sxzy3zLoS/qehnVJv2yG9pYqz/+gKpJaMIpw2+TVw9imdAx5JpaA==
   dependencies:
     ajv "^8.6.3"
     bunyan "^1.8.12"
