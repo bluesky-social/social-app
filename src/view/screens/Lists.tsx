@@ -1,25 +1,18 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {EmptyStateWithButton} from 'view/com/util/EmptyStateWithButton'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
-import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from 'view/com/util/Views'
-import {ViewHeader} from 'view/com/util/ViewHeader'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ListsScreen'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export const ListsScreen = withAuthRequired(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
@@ -27,7 +20,7 @@ export const ListsScreen = withAuthRequired(({}: Props) => {
   const navigation = useNavigation<NavigationProp>()
 
   const mutelists: ListsListModel = React.useMemo(
-    () => new ListsListModel(store, 'my-modlists'),
+    () => new ListsListModel(store, 'mine'),
     [store],
   )
 
@@ -38,47 +31,23 @@ export const ListsScreen = withAuthRequired(({}: Props) => {
     }, [store, mutelists]),
   )
 
-  const onPressNewMuteList = React.useCallback(() => {
-    store.shell.openModal({
-      name: 'create-or-edit-mute-list',
-      onSave: (uri: string) => {
-        try {
-          const urip = new AtUri(uri)
-          navigation.navigate('ProfileList', {
-            name: urip.hostname,
-            rkey: urip.rkey,
-          })
-        } catch {}
-      },
-    })
-  }, [store, navigation])
-
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <EmptyStateWithButton
-        testID="emptyMuteLists"
-        icon="users-slash"
-        message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
-        buttonLabel="New Mute List"
-        onPress={onPressNewMuteList}
-      />
-    )
-  }, [onPressNewMuteList])
-
-  const renderHeaderButton = React.useCallback(
-    () => (
-      <Button
-        type="primary-light"
-        onPress={onPressNewMuteList}
-        style={styles.createBtn}>
-        <FontAwesomeIcon
-          icon="plus"
-          style={pal.link as FontAwesomeIconStyle}
-          size={18}
-        />
-      </Button>
-    ),
-    [onPressNewMuteList, pal],
+  const onPressNewList = React.useCallback(
+    (purpose: string) => {
+      store.shell.openModal({
+        name: 'create-or-edit-list',
+        purpose,
+        onSave: (uri: string) => {
+          try {
+            const urip = new AtUri(uri)
+            navigation.navigate('ProfileList', {
+              name: urip.hostname,
+              rkey: urip.rkey,
+            })
+          } catch {}
+        },
+      })
+    },
+    [store, navigation],
   )
 
   return (
@@ -89,17 +58,11 @@ export const ListsScreen = withAuthRequired(({}: Props) => {
         pal.border,
         isTabletOrDesktop && styles.containerDesktop,
       ]}
-      testID="moderationMutelistsScreen">
-      <ViewHeader
-        title="Mute Lists"
-        showOnDesktop
-        renderButton={renderHeaderButton}
-      />
+      testID="listsScreen">
       <ListsList
         listsList={mutelists}
-        showAddBtns={isTabletOrDesktop}
-        renderEmptyState={renderEmptyState}
-        onPressCreateNew={onPressNewMuteList}
+        purpose="curate"
+        onPressCreateNew={onPressNewList}
       />
     </CenteredView>
   )

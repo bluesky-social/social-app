@@ -1,5 +1,6 @@
-import React, {MutableRefObject} from 'react'
+import React from 'react'
 import {
+  ActivityIndicator,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -14,7 +15,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {ListCard} from './ListCard'
-import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Button} from '../util/forms/Button'
@@ -24,34 +24,31 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const CREATENEW_ITEM = {_reactKey: '__loading__'}
-const EMPTY_ITEM = {_reactKey: '__empty__'}
+const CURATELISTS_LOADING = {_reactKey: '__curatelists_loading__'}
+const MODLISTS_LOADING = {_reactKey: '__modlists_loading__'}
+const CURATELISTS_HEADER = {_reactKey: '__curatelists_header__'}
+const MODLISTS_HEADER = {_reactKey: '__modlists_header__'}
+const CURATELISTS_EMPTY = {_reactKey: '__curatelists_empty__'}
+const MODLISTS_EMPTY = {_reactKey: '__modlists_empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 export const ListsList = observer(function ListsListImpl({
   listsList,
-  showAddBtns,
+  purpose,
   style,
-  scrollElRef,
   onPressTryAgain,
   onPressCreateNew,
   renderItem,
-  renderEmptyState,
   testID,
-  headerOffset = 0,
 }: {
   listsList: ListsListModel
-  showAddBtns?: boolean
+  purpose?: 'curate' | 'mod' // if undefined, all
   style?: StyleProp<ViewStyle>
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressCreateNew: () => void
+  onPressCreateNew: (purpose: string) => void
   onPressTryAgain?: () => void
   renderItem?: (list: GraphDefs.ListView) => JSX.Element
-  renderEmptyState?: () => JSX.Element
   testID?: string
-  headerOffset?: number
 }) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -59,33 +56,43 @@ export const ListsList = observer(function ListsListImpl({
 
   const data = React.useMemo(() => {
     let items: any[] = []
-    if (listsList.hasLoaded) {
-      if (listsList.hasError) {
-        items = items.concat([ERROR_ITEM])
-      }
-      if (listsList.isEmpty) {
-        items = items.concat([EMPTY_ITEM])
+    if (listsList.hasError) {
+      items = items.concat([ERROR_ITEM])
+    }
+    if (!purpose || purpose === 'curate') {
+      items = items.concat([CURATELISTS_HEADER])
+      if (!listsList.hasLoaded && listsList.isLoading) {
+        items = items.concat([CURATELISTS_LOADING])
+      } else if (listsList.isCuratelistsEmpty) {
+        items = items.concat([CURATELISTS_EMPTY])
       } else {
-        if (showAddBtns) {
-          items = items.concat([CREATENEW_ITEM])
-        }
-        items = items.concat(listsList.lists)
+        items = items.concat(listsList.curatelists)
       }
-      if (listsList.loadMoreError) {
-        items = items.concat([LOAD_MORE_ERROR_ITEM])
+    }
+    if (!purpose || purpose === 'mod') {
+      items = items.concat([MODLISTS_HEADER])
+      if (!listsList.hasLoaded && listsList.isLoading) {
+        items = items.concat([MODLISTS_LOADING])
+      } else if (listsList.isModlistsEmpty) {
+        items = items.concat([MODLISTS_EMPTY])
+      } else {
+        items = items.concat(listsList.modlists)
       }
-    } else if (listsList.isLoading) {
-      items = items.concat([LOADING_ITEM])
+    }
+    if (listsList.loadMoreError) {
+      items = items.concat([LOAD_MORE_ERROR_ITEM])
     }
     return items
   }, [
+    purpose,
     listsList.hasError,
     listsList.hasLoaded,
     listsList.isLoading,
-    listsList.isEmpty,
-    listsList.lists,
+    listsList.modlists,
+    listsList.curatelists,
+    listsList.isCuratelistsEmpty,
+    listsList.isModlistsEmpty,
     listsList.loadMoreError,
-    showAddBtns,
   ])
 
   // events
@@ -120,13 +127,30 @@ export const ListsList = observer(function ListsListImpl({
 
   const renderItemInner = React.useCallback(
     ({item}: {item: any}) => {
-      if (item === EMPTY_ITEM) {
-        if (renderEmptyState) {
-          return renderEmptyState()
-        }
-        return <View />
-      } else if (item === CREATENEW_ITEM) {
-        return <CreateNewItem onPress={onPressCreateNew} />
+      if (item === CURATELISTS_EMPTY) {
+        return <Text style={{padding: 16}}>Empty TODO</Text>
+      } else if (item === MODLISTS_EMPTY) {
+        return <Text style={{padding: 16}}>Empty TODO</Text>
+      } else if (item === CURATELISTS_HEADER) {
+        return (
+          <Header
+            title="User Lists"
+            description="Public, shareable lists which can drive feeds."
+            onPress={() => onPressCreateNew('app.bsky.graph.defs#curatelist')}
+          />
+        )
+      } else if (item === MODLISTS_HEADER) {
+        return (
+          <Header
+            title="Moderation Lists"
+            description="Public, shareable lists of users to mute or block in bulk."
+            onPress={() => onPressCreateNew('app.bsky.graph.defs#modlist')}
+            style={{
+              marginTop: !purpose ? 20 : 0,
+              borderTopWidth: !purpose ? 1 : 0,
+            }}
+          />
+        )
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
@@ -141,8 +165,12 @@ export const ListsList = observer(function ListsListImpl({
             onPress={onPressRetryLoadMore}
           />
         )
-      } else if (item === LOADING_ITEM) {
-        return <ProfileCardFeedLoadingPlaceholder />
+      } else if (item === CURATELISTS_LOADING || item === MODLISTS_LOADING) {
+        return (
+          <View style={{padding: 20}}>
+            <ActivityIndicator />
+          </View>
+        )
       }
       return renderItem ? (
         renderItem(item)
@@ -155,12 +183,12 @@ export const ListsList = observer(function ListsListImpl({
       )
     },
     [
+      purpose,
       listsList,
       onPressTryAgain,
       onPressRetryLoadMore,
       onPressCreateNew,
       renderItem,
-      renderEmptyState,
     ],
   )
 
@@ -169,7 +197,6 @@ export const ListsList = observer(function ListsListImpl({
       {data.length > 0 && (
         <FlatList
           testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItemInner}
@@ -179,15 +206,12 @@ export const ListsList = observer(function ListsListImpl({
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
             />
           }
           contentContainerStyle={[s.contentContainer]}
-          style={{paddingTop: headerOffset}}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
-          contentOffset={{x: 0, y: headerOffset * -1}}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
         />
@@ -196,17 +220,50 @@ export const ListsList = observer(function ListsListImpl({
   )
 })
 
-function CreateNewItem({onPress}: {onPress: () => void}) {
+function Header({
+  title,
+  description,
+  onPress,
+  style,
+}: {
+  title: string
+  description: string
+  onPress: () => void
+  style?: StyleProp<ViewStyle>
+}) {
   const pal = usePalette('default')
 
   return (
-    <View style={[styles.createNewContainer]}>
-      <Button type="default" onPress={onPress} style={styles.createNewButton}>
-        <FontAwesomeIcon icon="plus" style={pal.text as FontAwesomeIconStyle} />
-        <Text type="button" style={pal.text}>
-          New Mute List
+    <View
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          borderBottomWidth: 1,
+        },
+        pal.border,
+        style,
+      ]}>
+      <View style={{flex: 1}}>
+        <Text type="title-lg" style={[pal.text, s.bold]}>
+          {title}
         </Text>
-      </Button>
+        <Text style={pal.textLight}>{description}</Text>
+      </View>
+      <View>
+        <Button type="default" onPress={onPress} style={styles.createNewButton}>
+          <FontAwesomeIcon
+            icon="plus"
+            style={pal.text as FontAwesomeIconStyle}
+          />
+          <Text type="button" style={pal.text}>
+            New
+          </Text>
+        </Button>
+      </View>
     </View>
   )
 }

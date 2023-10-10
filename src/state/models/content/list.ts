@@ -40,16 +40,28 @@ export class ListModel {
   list: GraphDefs.ListView | null = null
   items: GraphDefs.ListItemView[] = []
 
-  static async createModList(
+  static async createList(
     rootStore: RootStoreModel,
     {
+      purpose,
       name,
       description,
       avatar,
-    }: {name: string; description: string; avatar: RNImage | null | undefined},
+    }: {
+      purpose: string
+      name: string
+      description: string
+      avatar: RNImage | null | undefined
+    },
   ) {
+    if (
+      purpose !== 'app.bsky.graph.defs#curatelist' &&
+      purpose !== 'app.bsky.graph.defs#modlist'
+    ) {
+      throw new Error('Invalid list purpose: must be curatelist or modlist')
+    }
     const record: AppBskyGraphList.Record = {
-      purpose: 'app.bsky.graph.defs#modlist',
+      purpose,
       name,
       description,
       avatar: undefined,
@@ -69,7 +81,6 @@ export class ListModel {
       },
       record,
     )
-    await rootStore.agent.app.bsky.graph.muteActorList({list: res.uri})
     return res
   }
 

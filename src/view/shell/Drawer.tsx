@@ -30,6 +30,7 @@ import {
   UserIconSolid,
   HashtagIcon,
   ListIcon,
+  HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -109,6 +110,12 @@ export const DrawerContent = observer(function DrawerContentImpl() {
   const onPressLists = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Lists'})
     navigation.navigate('Lists')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
+
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
     store.shell.closeDrawer()
   }, [navigation, track, store.shell])
 
@@ -282,6 +289,13 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             accessibilityLabel="Lists"
             accessibilityHint=""
             onPress={onPressLists}
+          />
+          <MenuItem
+            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+            label="Moderation"
+            accessibilityLabel="Moderation"
+            accessibilityHint=""
+            onPress={onPressModeration}
           />
           <MenuItem
             icon={

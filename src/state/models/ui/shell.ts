@@ -60,8 +60,9 @@ export type ReportModal = {
   | {did: string}
 )
 
-export interface CreateOrEditMuteListModal {
-  name: 'create-or-edit-mute-list'
+export interface CreateOrEditListModal {
+  name: 'create-or-edit-list'
+  purpose?: string
   list?: ListModel
   onSave?: (uri: string) => void
 }
@@ -180,7 +181,7 @@ export type Modal =
   // Moderation
   | ModerationDetailsModal
   | ReportModal
-  | CreateOrEditMuteListModal
+  | CreateOrEditListModal
   | ListAddRemoveUserModal
 
   // Posts

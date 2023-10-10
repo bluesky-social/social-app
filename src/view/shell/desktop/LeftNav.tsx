@@ -33,6 +33,7 @@ import {
   ComposeIcon2,
   ListIcon,
   HashtagIcon,
+  HandIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
@@ -336,6 +337,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
           />
         }
         label="Lists"
+      />
+      <NavItem
+        href="/moderation"
+        icon={
+          <HandIcon
+            style={pal.text}
+            size={isDesktop ? 24 : 27}
+            strokeWidth={5.5}
+          />
+        }
+        iconFilled={
+          <FontAwesomeIcon
+            icon="hand"
+            style={pal.text as FontAwesomeIconStyle}
+            size={isDesktop ? 20 : 26}
+          />
+        }
+        label="Moderation"
       />
       {store.session.hasSession && (
         <NavItem

@@ -16,7 +16,7 @@ import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
-import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
+import * as CreateOrEditListModal from './CreateOrEditList'
 import * as ListAddRemoveUserModal from './ListAddRemoveUser'
 import * as AltImageModal from './AltImage'
 import * as EditImageModal from './AltImage'
@@ -101,9 +101,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'report') {
     snapPoints = ReportModal.snapPoints
     element = <ReportModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'create-or-edit-mute-list') {
-    snapPoints = CreateOrEditMuteListModal.snapPoints
-    element = <CreateOrEditMuteListModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'create-or-edit-list') {
+    snapPoints = CreateOrEditListModal.snapPoints
+    element = <CreateOrEditListModal.Component {...activeModal} />
   } else if (activeModal?.name === 'list-add-remove-user') {
     snapPoints = ListAddRemoveUserModal.snapPoints
     element = <ListAddRemoveUserModal.Component {...activeModal} />

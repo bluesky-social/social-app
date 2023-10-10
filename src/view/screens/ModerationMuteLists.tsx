@@ -8,7 +8,6 @@ import {
 import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {EmptyStateWithButton} from 'view/com/util/EmptyStateWithButton'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
@@ -30,7 +29,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
   const navigation = useNavigation<NavigationProp>()
 
   const mutelists: ListsListModel = React.useMemo(
-    () => new ListsListModel(store, 'my-modlists'),
+    () => new ListsListModel(store, 'mine'),
     [store],
   )
 
@@ -43,7 +42,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
 
   const onPressNewMuteList = React.useCallback(() => {
     store.shell.openModal({
-      name: 'create-or-edit-mute-list',
+      name: 'create-or-edit-list',
       onSave: (uri: string) => {
         try {
           const urip = new AtUri(uri)
@@ -55,18 +54,6 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
       },
     })
   }, [store, navigation])
-
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <EmptyStateWithButton
-        testID="emptyMuteLists"
-        icon="users-slash"
-        message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
-        buttonLabel="New Mute List"
-        onPress={onPressNewMuteList}
-      />
-    )
-  }, [onPressNewMuteList])
 
   const renderHeaderButton = React.useCallback(
     () => (
@@ -100,8 +87,7 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
       />
       <ListsList
         listsList={mutelists}
-        showAddBtns={isTabletOrDesktop}
-        renderEmptyState={renderEmptyState}
+        purpose="mod"
         onPressCreateNew={onPressNewMuteList}
       />
     </CenteredView>

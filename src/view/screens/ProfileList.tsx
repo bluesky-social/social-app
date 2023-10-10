@@ -63,7 +63,7 @@ export const ProfileListScreen = withAuthRequired(
 
     const onPressEditList = React.useCallback(() => {
       store.shell.openModal({
-        name: 'create-or-edit-mute-list',
+        name: 'create-or-edit-list',
         list,
         onSave() {
           list.refresh()

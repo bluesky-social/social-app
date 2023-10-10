@@ -97,8 +97,9 @@ interface TrackPropertiesMap {
   // LISTS events
   'Lists:onRefresh': {}
   'Lists:onEndReached': {}
-  'CreateMuteList:AvatarSelected': {}
-  'CreateMuteList:Save': {} // CAN BE SERVER
+  'CreateList:AvatarSelected': {}
+  'CreateList:SaveCurateList': {} // CAN BE SERVER
+  'CreateList:SaveModList': {} // CAN BE SERVER
   'Lists:Subscribe': {} // CAN BE SERVER
   'Lists:Unsubscribe': {} // CAN BE SERVER
   // CUSTOM FEED events

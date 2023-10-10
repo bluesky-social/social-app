@@ -11,7 +11,6 @@ import {UserAvatar} from '../util/UserAvatar'
 import {ListsList} from '../lists/ListsList'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListMembershipModel} from 'state/models/content/list-membership'
-import {EmptyStateWithButton} from '../util/EmptyStateWithButton'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
@@ -84,7 +83,7 @@ export const Component = observer(function ListAddRemoveUserImpl({
 
   const onPressNewMuteList = useCallback(() => {
     store.shell.openModal({
-      name: 'create-or-edit-mute-list',
+      name: 'create-or-edit-list',
       onSave: (_uri: string) => {
         listsList.refresh()
       },
@@ -166,17 +165,6 @@ export const Component = observer(function ListAddRemoveUserImpl({
     ],
   )
 
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <EmptyStateWithButton
-        icon="users-slash"
-        message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
-        buttonLabel="New Mute List"
-        onPress={onPressNewMuteList}
-      />
-    )
-  }, [onPressNewMuteList])
-
   // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
   const canSaveChanges =
     !listsList.isEmpty && !isEqual(selected, originalSelections)
@@ -186,10 +174,8 @@ export const Component = observer(function ListAddRemoveUserImpl({
       <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
       <ListsList
         listsList={listsList}
-        showAddBtns
         onPressCreateNew={onPressNewMuteList}
         renderItem={renderItem}
-        renderEmptyState={renderEmptyState}
         style={[styles.list, pal.border]}
       />
       <View style={[styles.btns, pal.border]}>
