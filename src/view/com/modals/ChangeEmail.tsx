@@ -1,11 +1,5 @@
 import React, {useState} from 'react'
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
 import {ScrollView, TextInput} from './util'
 import {observer} from 'mobx-react-lite'
 import {Text} from '../util/text/Text'
@@ -101,142 +95,134 @@ export const Component = observer(function Component({}: {}) {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={[pal.view, styles.container]}>
-      <SafeAreaView style={s.flex1}>
-        <ScrollView
-          testID="changeEmailModal"
-          style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
-          <View style={styles.titleSection}>
-            <Text type="title-lg" style={[pal.text, styles.title]}>
-              {stage === Stages.InputEmail ? 'Change Your Email' : ''}
-              {stage === Stages.ConfirmCode ? 'Security Step Required' : ''}
-              {stage === Stages.Done ? 'Email Updated' : ''}
-            </Text>
-          </View>
-
-          <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-            {stage === Stages.InputEmail ? (
-              <>Enter your new email address below.</>
-            ) : stage === Stages.ConfirmCode ? (
-              <>
-                An email has been sent to your previous address,{' '}
-                {store.session.currentSession?.email || ''}. It includes a
-                confirmation code which you can enter below.
-              </>
-            ) : (
-              <>
-                Your email has been updated but not verified. As a next step,
-                please verify your new email.
-              </>
-            )}
+    <SafeAreaView style={[pal.view, s.flex1]}>
+      <ScrollView
+        testID="changeEmailModal"
+        style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
+        <View style={styles.titleSection}>
+          <Text type="title-lg" style={[pal.text, styles.title]}>
+            {stage === Stages.InputEmail ? 'Change Your Email' : ''}
+            {stage === Stages.ConfirmCode ? 'Security Step Required' : ''}
+            {stage === Stages.Done ? 'Email Updated' : ''}
           </Text>
+        </View>
 
-          {stage === Stages.InputEmail && (
-            <TextInput
-              testID="emailInput"
-              style={[styles.textInput, pal.border, pal.text]}
-              placeholder="alice@mail.com"
-              placeholderTextColor={pal.colors.textLight}
-              value={email}
-              onChangeText={setEmail}
-              accessible={true}
-              accessibilityLabel="Email"
-              accessibilityHint=""
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-            />
+        <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
+          {stage === Stages.InputEmail ? (
+            <>Enter your new email address below.</>
+          ) : stage === Stages.ConfirmCode ? (
+            <>
+              An email has been sent to your previous address,{' '}
+              {store.session.currentSession?.email || ''}. It includes a
+              confirmation code which you can enter below.
+            </>
+          ) : (
+            <>
+              Your email has been updated but not verified. As a next step,
+              please verify your new email.
+            </>
           )}
-          {stage === Stages.ConfirmCode && (
-            <TextInput
-              testID="confirmCodeInput"
-              style={[styles.textInput, pal.border, pal.text]}
-              placeholder="XXXXX-XXXXX"
-              placeholderTextColor={pal.colors.textLight}
-              value={confirmationCode}
-              onChangeText={setConfirmationCode}
-              accessible={true}
-              accessibilityLabel="Confirmation code"
-              accessibilityHint=""
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-            />
-          )}
+        </Text>
 
-          {error ? (
-            <ErrorMessage message={error} style={styles.error} />
-          ) : undefined}
+        {stage === Stages.InputEmail && (
+          <TextInput
+            testID="emailInput"
+            style={[styles.textInput, pal.border, pal.text]}
+            placeholder="alice@mail.com"
+            placeholderTextColor={pal.colors.textLight}
+            value={email}
+            onChangeText={setEmail}
+            accessible={true}
+            accessibilityLabel="Email"
+            accessibilityHint=""
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+          />
+        )}
+        {stage === Stages.ConfirmCode && (
+          <TextInput
+            testID="confirmCodeInput"
+            style={[styles.textInput, pal.border, pal.text]}
+            placeholder="XXXXX-XXXXX"
+            placeholderTextColor={pal.colors.textLight}
+            value={confirmationCode}
+            onChangeText={setConfirmationCode}
+            accessible={true}
+            accessibilityLabel="Confirmation code"
+            accessibilityHint=""
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+          />
+        )}
 
-          <View style={[styles.btnContainer]}>
-            {isProcessing ? (
-              <View style={styles.btn}>
-                <ActivityIndicator color="#fff" />
-              </View>
-            ) : (
-              <View style={{gap: 6}}>
-                {stage === Stages.InputEmail && (
-                  <Button
-                    testID="requestChangeBtn"
-                    type="primary"
-                    onPress={onRequestChange}
-                    accessibilityLabel="Request Change"
-                    accessibilityHint=""
-                    label="Request Change"
-                    labelContainerStyle={{justifyContent: 'center', padding: 4}}
-                    labelStyle={[s.f18]}
-                  />
-                )}
-                {stage === Stages.ConfirmCode && (
-                  <Button
-                    testID="confirmBtn"
-                    type="primary"
-                    onPress={onConfirm}
-                    accessibilityLabel="Confirm Change"
-                    accessibilityHint=""
-                    label="Confirm Change"
-                    labelContainerStyle={{justifyContent: 'center', padding: 4}}
-                    labelStyle={[s.f18]}
-                  />
-                )}
-                {stage === Stages.Done && (
-                  <Button
-                    testID="verifyBtn"
-                    type="primary"
-                    onPress={onVerify}
-                    accessibilityLabel="Verify New Email"
-                    accessibilityHint=""
-                    label="Verify New Email"
-                    labelContainerStyle={{justifyContent: 'center', padding: 4}}
-                    labelStyle={[s.f18]}
-                  />
-                )}
+        {error ? (
+          <ErrorMessage message={error} style={styles.error} />
+        ) : undefined}
+
+        <View style={[styles.btnContainer]}>
+          {isProcessing ? (
+            <View style={styles.btn}>
+              <ActivityIndicator color="#fff" />
+            </View>
+          ) : (
+            <View style={{gap: 6}}>
+              {stage === Stages.InputEmail && (
                 <Button
-                  testID="cancelBtn"
-                  type="default"
-                  onPress={() => store.shell.closeModal()}
-                  accessibilityLabel="Cancel"
+                  testID="requestChangeBtn"
+                  type="primary"
+                  onPress={onRequestChange}
+                  accessibilityLabel="Request Change"
                   accessibilityHint=""
-                  label="Cancel"
+                  label="Request Change"
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
-              </View>
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+              )}
+              {stage === Stages.ConfirmCode && (
+                <Button
+                  testID="confirmBtn"
+                  type="primary"
+                  onPress={onConfirm}
+                  accessibilityLabel="Confirm Change"
+                  accessibilityHint=""
+                  label="Confirm Change"
+                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelStyle={[s.f18]}
+                />
+              )}
+              {stage === Stages.Done && (
+                <Button
+                  testID="verifyBtn"
+                  type="primary"
+                  onPress={onVerify}
+                  accessibilityLabel="Verify New Email"
+                  accessibilityHint=""
+                  label="Verify New Email"
+                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelStyle={[s.f18]}
+                />
+              )}
+              <Button
+                testID="cancelBtn"
+                type="default"
+                onPress={() => store.shell.closeModal()}
+                accessibilityLabel="Cancel"
+                accessibilityHint=""
+                label="Cancel"
+                labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                labelStyle={[s.f18]}
+              />
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 })
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: isWeb ? 0 : 40,
-  },
   titleSection: {
     paddingTop: isWeb ? 0 : 4,
     paddingBottom: isWeb ? 14 : 10,
