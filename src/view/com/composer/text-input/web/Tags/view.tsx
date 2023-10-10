@@ -12,6 +12,8 @@ import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 
+import {parsePunctuationFromTag} from './utils'
+
 type AutocompleteResult = string
 type ListProps = SuggestionProps<AutocompleteResult> & {
   autocompleteModel: TagsAutocompleteModel
@@ -99,8 +101,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
 
     const commit = React.useCallback(
       (query: string) => {
-        const tag = query.replace(/(\p{P}+)$/gu, '')
-        const punctuation = query.match(/(\p{P}+)$/gu)?.[0] || ''
+        const {tag, punctuation} = parsePunctuationFromTag(query)
         /*
          * This values here are passed directly to the `command` method
          * configured in the `Tags` plugin.

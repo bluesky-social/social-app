@@ -5,6 +5,8 @@ import {Node as ProseMirrorNode} from '@tiptap/pm/model'
 import {PluginKey} from '@tiptap/pm/state'
 import Suggestion, {SuggestionOptions} from '@estrattonbailey/tiptap-suggestion'
 
+import {findSuggestionMatch} from './utils'
+
 export type TagOptions = {
   HTMLAttributes: Record<string, any>
   renderLabel: (props: {options: TagOptions; node: ProseMirrorNode}) => string
@@ -64,55 +66,13 @@ export const Tags = Node.create<TagOptions>({
         },
         findSuggestionMatch({$position}) {
           const text = $position.nodeBefore?.isText && $position.nodeBefore.text
+          const cursorPosition = $position.pos
 
           if (!text) {
             return null
           }
 
-          const regex = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g
-          const puncRegex = /\p{P}+$/gu
-          const match = Array.from(text.matchAll(regex)).pop()
-
-          if (
-            !match ||
-            match.input === undefined ||
-            match.index === undefined
-          ) {
-            return null
-          }
-
-          const cursorPosition = $position.pos
-          const startIndex = cursorPosition - text.length
-          let [matchedString, tag] = match
-
-          const sanitized = tag.replace(puncRegex, '').replace(/^#/, '')
-
-          // one of our hashtag spec rules
-          if (sanitized.length > 64) return null
-
-          const from = startIndex + match.index + matchedString.indexOf(tag)
-          const to = from + tag.length
-
-          if (from < cursorPosition && to >= cursorPosition) {
-            return {
-              range: {
-                from,
-                to,
-              },
-              /**
-               * This is passed to the `items({ query })` method configured in
-               * `createTagsAutocomplete`.
-               *
-               * We parse out the punctuation later, but we don't want to pass
-               * the # to the search query.
-               */
-              query: tag.replace(/^#/, ''),
-              // raw text string
-              text: matchedString,
-            }
-          }
-
-          return null
+          return findSuggestionMatch({text, cursorPosition})
         },
       },
     }
