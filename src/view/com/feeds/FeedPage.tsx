@@ -26,11 +26,13 @@ export const FeedPage = observer(function FeedPageImpl({
   isPageFocused,
   feed,
   renderEmptyState,
+  renderEndOfFeed,
 }: {
   testID?: string
   feed: PostsFeedModel
   isPageFocused: boolean
-  renderEmptyState?: () => JSX.Element
+  renderEmptyState: () => JSX.Element
+  renderEndOfFeed?: () => JSX.Element
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -184,6 +186,7 @@ export const FeedPage = observer(function FeedPageImpl({
         onScroll={onMainScroll}
         scrollEventThrottle={100}
         renderEmptyState={renderEmptyState}
+        renderEndOfFeed={renderEndOfFeed}
         ListHeaderComponent={ListHeaderComponent}
         headerOffset={headerOffset}
       />
