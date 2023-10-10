@@ -213,7 +213,8 @@
     "webpack-dev-server": "^4.11.1"
   },
   "resolutions": {
-    "@types/react": "^18"
+    "@types/react": "^18",
+    "**/zeed-dom": "estrattonbailey/zeed-dom#publish"
   },
   "jest": {
     "preset": "jest-expo/ios",
