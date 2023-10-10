@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useMemo, useState} from 'react'
+import React, {ComponentType, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View, Platform} from 'react-native'
 
 import ImageItem from './components/ImageItem/ImageItem'
@@ -59,9 +59,9 @@ function ImageViewing({
     ],
   }))
 
-  const onZoom = (nextIsScaled: boolean) => {
+  const onZoom = useCallback((nextIsScaled: boolean) => {
     setIsScaled(nextIsScaled)
-  }
+  }, [])
 
   const edges = useMemo(() => {
     if (Platform.OS === 'android') {
