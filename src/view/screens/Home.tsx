@@ -160,7 +160,7 @@ const FeedPage = observer(function FeedPageImpl({
   testID?: string
   feed: PostsFeedModel
   isPageFocused: boolean
-  renderEmptyState?: () => JSX.Element
+  renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
 }) {
   const store = useStores()
