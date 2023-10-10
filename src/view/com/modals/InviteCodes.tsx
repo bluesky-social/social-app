@@ -26,33 +26,6 @@ export function Component({}: {}) {
     store.shell.closeModal()
   }, [store])
 
-  if (store.me.invites === null) {
-    return (
-      <View style={[styles.container, pal.view]} testID="inviteCodesModal">
-        <Text type="title-xl" style={[styles.title, pal.text]}>
-          Error
-        </Text>
-        <Text type="lg" style={[styles.description, pal.text]}>
-          An error occurred while loading invite codes.
-        </Text>
-        <View style={styles.flex1} />
-        <View
-          style={[
-            styles.btnContainer,
-            isTabletOrDesktop && styles.btnContainerDesktop,
-          ]}>
-          <Button
-            type="primary"
-            label="Done"
-            style={styles.btn}
-            labelStyle={styles.btnLabel}
-            onPress={onClose}
-          />
-        </View>
-      </View>
-    )
-  }
-
   if (store.me.invites.length === 0) {
     return (
       <View style={[styles.container, pal.view]} testID="inviteCodesModal">
