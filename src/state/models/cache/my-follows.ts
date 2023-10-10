@@ -5,6 +5,7 @@ import {
   moderateProfile,
 } from '@atproto/api'
 import {RootStoreModel} from '../root-store'
+import {bundleAsync} from 'lib/async/bundle'
 
 const MAX_SYNC_PAGES = 10
 const SYNC_TTL = 60e3 * 10 // 10 minutes
@@ -56,7 +57,7 @@ export class MyFollowsCache {
    * Syncs a subset of the user's follows
    * for performance reasons, caps out at 1000 follows
    */
-  async syncIfNeeded() {
+  syncIfNeeded = bundleAsync(async () => {
     if (this.lastSync > Date.now() - SYNC_TTL) {
       return
     }
@@ -81,7 +82,7 @@ export class MyFollowsCache {
     }
 
     this.lastSync = Date.now()
-  }
+  })
 
   getFollowState(did: string): FollowState {
     if (typeof this.byDid[did] === 'undefined') {
