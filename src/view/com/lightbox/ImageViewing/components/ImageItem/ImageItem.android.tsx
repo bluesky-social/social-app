@@ -307,7 +307,8 @@ const ImageItem = ({
       )}
       <GestureDetector gesture={composedGesture}>
         <AnimatedImage
-          source={imageSrc}
+          // NOTE: Don't pass imageSrc={imageSrc} or MobX will break.
+          source={{uri: imageSrc.uri}}
           contentFit="contain"
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
