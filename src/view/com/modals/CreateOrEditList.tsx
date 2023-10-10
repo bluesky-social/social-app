@@ -47,8 +47,8 @@ export function Component({
   const {track} = useAnalytics()
 
   const activePurpose = useMemo(() => {
-    if (list?.list?.purpose) {
-      return list.list.purpose
+    if (list?.data?.purpose) {
+      return list.data.purpose
     }
     if (purpose) {
       return purpose
@@ -59,11 +59,11 @@ export function Component({
   const purposeLabel = isCurateList ? 'User' : 'Moderation'
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.list?.name || '')
+  const [name, setName] = useState<string>(list?.data?.name || '')
   const [description, setDescription] = useState<string>(
-    list?.list?.description || '',
+    list?.data?.description || '',
   )
-  const [avatar, setAvatar] = useState<string | undefined>(list?.list?.avatar)
+  const [avatar, setAvatar] = useState<string | undefined>(list?.data?.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {

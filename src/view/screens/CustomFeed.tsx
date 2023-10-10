@@ -453,14 +453,6 @@ export const CustomFeedScreenInner = observer(
 )
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 16,
-    borderTopWidth: 1,
-  },
   headerText: {
     flex: 1,
     fontWeight: 'bold',

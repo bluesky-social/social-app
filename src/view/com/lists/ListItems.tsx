@@ -8,29 +8,20 @@ import {
   ViewStyle,
   FlatList,
 } from 'react-native'
-import {AppBskyActorDefs, AppBskyGraphDefs, RichText} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {ProfileCard} from '../profile/ProfileCard'
 import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
-import {RichText as RichTextCom} from '../util/text/RichText'
-import {UserAvatar} from '../util/UserAvatar'
-import {TextLink} from '../util/Link'
 import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
-import {ListActions} from './ListActions'
-import {makeProfileLink} from 'lib/routes/links'
-import {sanitizeHandle} from 'lib/strings/handles'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
-const HEADER_ITEM = {_reactKey: '__header__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -40,11 +31,6 @@ export const ListItems = observer(function ListItemsImpl({
   style,
   scrollElRef,
   onPressTryAgain,
-  onToggleSubscribed,
-  onPressEditList,
-  onPressDeleteList,
-  onPressShareList,
-  onPressReportList,
   renderEmptyState,
   testID,
   headerOffset = 0,
@@ -53,11 +39,6 @@ export const ListItems = observer(function ListItemsImpl({
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
-  onToggleSubscribed: () => void
-  onPressEditList: () => void
-  onPressDeleteList: () => void
-  onPressShareList: () => void
-  onPressReportList: () => void
   renderEmptyState?: () => JSX.Element
   testID?: string
   headerOffset?: number
@@ -68,7 +49,7 @@ export const ListItems = observer(function ListItemsImpl({
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   const data = React.useMemo(() => {
-    let items: any[] = [HEADER_ITEM]
+    let items: any[] = []
     if (list.hasLoaded) {
       if (list.hasError) {
         items = items.concat([ERROR_ITEM])
@@ -161,18 +142,6 @@ export const ListItems = observer(function ListItemsImpl({
           return renderEmptyState()
         }
         return <View />
-      } else if (item === HEADER_ITEM) {
-        return list.list ? (
-          <ListHeader
-            list={list.list}
-            isOwner={list.isOwner}
-            onToggleSubscribed={onToggleSubscribed}
-            onPressEditList={onPressEditList}
-            onPressDeleteList={onPressDeleteList}
-            onPressShareList={onPressShareList}
-            onPressReportList={onPressReportList}
-          />
-        ) : null
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
@@ -203,14 +172,7 @@ export const ListItems = observer(function ListItemsImpl({
     [
       renderMemberButton,
       renderEmptyState,
-      list.list,
-      list.isOwner,
       list.error,
-      onToggleSubscribed,
-      onPressEditList,
-      onPressDeleteList,
-      onPressShareList,
-      onPressReportList,
       onPressTryAgain,
       onPressRetryLoadMore,
     ],
@@ -258,92 +220,6 @@ export const ListItems = observer(function ListItemsImpl({
         />
       )}
     </View>
-  )
-})
-
-const ListHeader = observer(function ListHeaderImpl({
-  list,
-  isOwner,
-  onToggleSubscribed,
-  onPressEditList,
-  onPressDeleteList,
-  onPressShareList,
-  onPressReportList,
-}: {
-  list: AppBskyGraphDefs.ListView
-  isOwner: boolean
-  onToggleSubscribed: () => void
-  onPressEditList: () => void
-  onPressDeleteList: () => void
-  onPressShareList: () => void
-  onPressReportList: () => void
-}) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const {isDesktop} = useWebMediaQueries()
-  const descriptionRT = React.useMemo(
-    () =>
-      list?.description &&
-      new RichText({
-        text: list.description,
-        facets: (list.descriptionFacets || [])?.slice(),
-      }),
-    [list],
-  )
-  return (
-    <>
-      <View style={[styles.header, pal.border]}>
-        <View style={s.flex1}>
-          <Text testID="listName" type="title-xl" style={[pal.text, s.bold]}>
-            {list.name}
-          </Text>
-          {list && (
-            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list '}
-              by{' '}
-              {list.creator.did === store.me.did ? (
-                'you'
-              ) : (
-                <TextLink
-                  text={sanitizeHandle(list.creator.handle, '@')}
-                  href={makeProfileLink(list.creator)}
-                  style={pal.textLight}
-                />
-              )}
-            </Text>
-          )}
-          {descriptionRT && (
-            <RichTextCom
-              testID="listDescription"
-              style={[pal.text, styles.headerDescription]}
-              richText={descriptionRT}
-            />
-          )}
-          {isDesktop && (
-            <ListActions
-              isOwner={isOwner}
-              muted={list.viewer?.muted}
-              onPressDeleteList={onPressDeleteList}
-              onPressEditList={onPressEditList}
-              onToggleSubscribed={onToggleSubscribed}
-              onPressShareList={onPressShareList}
-              onPressReportList={onPressReportList}
-            />
-          )}
-        </View>
-        <View>
-          <UserAvatar type="list" avatar={list.avatar} size={64} />
-        </View>
-      </View>
-      <View
-        style={{flexDirection: 'row', paddingHorizontal: isDesktop ? 16 : 6}}>
-        <View style={[styles.fakeSelectorItem, {borderColor: pal.colors.link}]}>
-          <Text type="md-medium" style={[pal.text]}>
-            Muted users
-          </Text>
-        </View>
-      </View>
-    </>
   )
 })
 

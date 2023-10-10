@@ -1,32 +1,53 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {useNavigation} from '@react-navigation/native'
+// import {useNavigation} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewHeader} from 'view/com/util/ViewHeader'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
+import {Text} from 'view/com/util/text/Text'
+import {TextLink} from 'view/com/util/Link'
+import {
+  NativeDropdown /*, DropdownItem*/,
+} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {ListItems} from 'view/com/lists/ListItems'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {EmptyState} from 'view/com/util/EmptyState'
-import * as Toast from 'view/com/util/Toast'
+import {RichText} from 'view/com/util/text/RichText'
+import {Feed} from 'view/com/posts/Feed'
+import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {TabBar} from 'view/com/pager/TabBar'
+// import * as Toast from 'view/com/util/Toast'
 import {ListModel} from 'state/models/content/list'
+import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {shareUrl} from 'lib/sharing'
-import {ListActions} from 'view/com/lists/ListActions'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+// import {NavigationProp} from 'lib/routes/types'
+// import {toShareUrl} from 'lib/strings/url-helpers'
+// import {shareUrl} from 'lib/sharing'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
 import {s} from 'lib/styles'
+import {isNative} from 'platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
   observer(function ProfileListScreenImpl({route}: Props) {
     const store = useStores()
-    const navigation = useNavigation<NavigationProp>()
-    const {isTabletOrDesktop} = useWebMediaQueries()
+    // const navigation = useNavigation<NavigationProp>()
     const pal = usePalette('default')
     const {name, rkey} = route.params
 
@@ -37,7 +58,7 @@ export const ProfileListScreen = withAuthRequired(
       )
       return model
     }, [store, name, rkey])
-    useSetTitle(list.list?.name)
+    useSetTitle(list.data?.name)
 
     useFocusEffect(
       React.useCallback(() => {
@@ -46,9 +67,10 @@ export const ProfileListScreen = withAuthRequired(
       }, [store, list]),
     )
 
+    /* TODO
     const onToggleSubscribed = React.useCallback(async () => {
       try {
-        if (list.list?.viewer?.muted) {
+        if (list.data?.viewer?.muted) {
           await list.unsubscribe()
         } else {
           await list.subscribe()
@@ -88,79 +110,294 @@ export const ProfileListScreen = withAuthRequired(
     }, [store, list, navigation])
 
     const onPressReportList = React.useCallback(() => {
-      if (!list.list) return
+      if (!list.data) return
       store.shell.openModal({
         name: 'report',
         uri: list.uri,
-        cid: list.list.cid,
+        cid: list.data.cid,
       })
     }, [store, list])
 
     const onPressShareList = React.useCallback(() => {
       const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
       shareUrl(url)
-    }, [list.creatorDid, rkey])
+    }, [list.creatorDid, rkey])*/
 
-    const renderEmptyState = React.useCallback(() => {
-      return <EmptyState icon="users-slash" message="This list is empty!" />
-    }, [])
+    const onPressSelected = React.useCallback(() => {
+      store.emitScreenSoftReset()
+    }, [store])
 
-    const renderHeaderBtns = React.useCallback(() => {
+    const renderTabBar = React.useCallback(
+      (props: RenderTabBarFnProps) => {
+        return (
+          <Container>
+            <TabBar
+              {...props}
+              items={list.isCuratelist ? ['Posts', 'About'] : ['About']}
+              indicatorColor={pal.colors.link}
+              onPressSelected={onPressSelected}
+            />
+          </Container>
+        )
+      },
+      [list.isCuratelist, onPressSelected, pal.colors.link],
+    )
+
+    const onPageSelected = React.useCallback(
+      (index: number) => {
+        console.log('hit', index)
+        store.shell.setMinimalShellMode(false)
+        // setSelectedPage(index)
+        store.shell.setIsDrawerSwipeDisabled(index > 0)
+      },
+      [store], //, setSelectedPage],
+    )
+
+    if (list.isCuratelist) {
       return (
-        <ListActions
-          muted={list.list?.viewer?.muted}
-          isOwner={list.isOwner}
-          onPressDeleteList={onPressDeleteList}
-          onPressEditList={onPressEditList}
-          onToggleSubscribed={onToggleSubscribed}
-          onPressShareList={onPressShareList}
-          onPressReportList={onPressReportList}
-          reversed={true}
-        />
+        <View style={s.hContentRegion}>
+          <Header list={list} />
+          <Pager
+            onPageSelected={onPageSelected}
+            renderTabBar={renderTabBar}
+            tabBarPosition="top">
+            <FeedPage key="1" list={list} />
+            <AboutPage key="2" list={list} />
+          </Pager>
+        </View>
       )
-    }, [
-      list.isOwner,
-      list.list?.viewer?.muted,
-      onPressDeleteList,
-      onPressEditList,
-      onPressShareList,
-      onToggleSubscribed,
-      onPressReportList,
-    ])
-
+    }
     return (
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="moderationMutelistsScreen">
-        <ViewHeader title="" renderButton={renderHeaderBtns} />
-        <ListItems
-          list={list}
-          renderEmptyState={renderEmptyState}
-          onToggleSubscribed={onToggleSubscribed}
-          onPressEditList={onPressEditList}
-          onPressDeleteList={onPressDeleteList}
-          onPressReportList={onPressReportList}
-          onPressShareList={onPressShareList}
-          style={[s.flex1]}
-        />
-      </CenteredView>
+      <View style={s.hContentRegion}>
+        <Header list={list} />
+        <Pager
+          onPageSelected={onPageSelected}
+          renderTabBar={renderTabBar}
+          tabBarPosition="top">
+          <AboutPage key="1" list={list} />
+        </Pager>
+      </View>
     )
   }),
 )
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 100,
-  },
-  containerDesktop: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    paddingBottom: 0,
-  },
-})
+function Container({
+  children,
+  style,
+}: React.PropsWithChildren<{style?: StyleProp<ViewStyle>}>) {
+  const pal = usePalette('default')
+  return (
+    <CenteredView
+      style={[
+        {
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+        },
+        pal.border,
+        style,
+      ]}
+      testID="profileListScreen">
+      {children}
+    </CenteredView>
+  )
+}
+
+function Header({list}: {list: ListModel}) {
+  const store = useStores()
+  const {isMobile} = useWebMediaQueries()
+  const pal = usePalette('default')
+
+  if (list.isLoading || list.hasError || !list.data) {
+    return (
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        style={
+          !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
+        }>
+        <Text
+          type="title-lg"
+          style={{flex: 1, fontWeight: 'bold'}}
+          numberOfLines={1}>
+          {list.isLoading ? 'Loading...' : 'Failed to load'}
+        </Text>
+      </SimpleViewHeader>
+    )
+  }
+  return (
+    <SimpleViewHeader
+      showBackButton={isMobile}
+      style={
+        !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
+      }>
+      <View
+        style={{flex: 1, gap: 12, flexDirection: 'row', alignItems: 'center'}}>
+        <UserAvatar type="list" avatar={list.data.avatar} size={48} />
+        <View style={{flex: 1}}>
+          <Text
+            type="title-lg"
+            style={{flex: 1, fontWeight: 'bold'}}
+            numberOfLines={1}>
+            <TextLink
+              type="title-lg"
+              href="/"
+              style={[pal.text, {fontWeight: 'bold'}]}
+              text={list.data?.name || ''}
+              onPress={() => store.emitScreenSoftReset()}
+            />
+          </Text>
+
+          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+            {list.isModlist && 'Moderation list '}
+            by{' '}
+            {list.isOwner ? (
+              'you'
+            ) : (
+              <TextLink
+                text={sanitizeHandle(list.data.creator.handle, '@')}
+                href={makeProfileLink(list.data.creator)}
+                style={pal.textLight}
+              />
+            )}
+          </Text>
+        </View>
+        <NativeDropdown
+          testID="listHeaderDropdownBtn"
+          items={[]}
+          accessibilityLabel="More options"
+          accessibilityHint="">
+          <View
+            style={{
+              paddingLeft: 12,
+              paddingRight: isMobile ? 12 : 0,
+            }}>
+            <FontAwesomeIcon
+              icon="ellipsis"
+              size={20}
+              color={pal.colors.textLight}
+            />
+          </View>
+        </NativeDropdown>
+      </View>
+    </SimpleViewHeader>
+  )
+}
+
+function AboutPage({list}: {list: ListModel}) {
+  const pal = usePalette('default')
+  console.log('render?')
+
+  const renderEmptyState = React.useCallback(() => {
+    console.log(4)
+    return (
+      <EmptyState
+        icon="users-slash"
+        message="This list is empty!"
+        style={{paddingVertical: 40}}
+      />
+    )
+  }, [])
+
+  if (list.isLoading) {
+    console.log(1)
+    return (
+      <Container style={[{borderTopWidth: 1, padding: 12}, pal.border]}>
+        <ActivityIndicator />
+      </Container>
+    )
+  }
+  if (list.error || !list.data) {
+    console.log(2)
+    return <View />
+  }
+  console.log(3)
+  return (
+    <Container
+      style={[
+        // @ts-ignore web only -prf
+        !isNative && {minHeight: '100vh'},
+      ]}>
+      {list.descriptionRT && (
+        <View
+          style={[
+            {borderTopWidth: 1, paddingVertical: 20, paddingHorizontal: 20},
+            pal.border,
+          ]}>
+          <RichText
+            testID="listDescription"
+            type="lg"
+            style={pal.text}
+            richText={list.descriptionRT}
+          />
+        </View>
+      )}
+      <ListItems
+        list={list}
+        renderEmptyState={renderEmptyState}
+        style={[s.flex1]}
+      />
+    </Container>
+  )
+}
+
+function FeedPage({list}: {list: ListModel}) {
+  const pal = usePalette('default')
+  const store = useStores()
+  const feed = React.useMemo(
+    () => new PostsFeedModel(store, 'list', {list: list.uri}),
+    [store, list],
+  )
+
+  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
+  const scrollElRef = React.useRef<FlatList>(null)
+  const hasNew = feed.hasNewLatest && !feed.isRefreshing
+
+  React.useEffect(() => {
+    // called on first load
+    if (!feed.hasLoaded) {
+      feed.setup()
+    }
+  }, [feed])
+
+  const scrollToTop = React.useCallback(() => {
+    scrollElRef.current?.scrollToOffset()
+    resetMainScroll()
+  }, [resetMainScroll])
+
+  const onPressTryAgain = React.useCallback(() => {
+    feed.refresh()
+  }, [feed])
+
+  const onPressLoadLatest = React.useCallback(() => {
+    scrollToTop()
+    feed.refresh()
+  }, [feed, scrollToTop])
+
+  const renderEmptyState = React.useCallback(() => {
+    return (
+      <View style={[pal.border, {borderTopWidth: 1, paddingTop: 20}]}>
+        <EmptyState icon="feed" message="This feed is empty!" />
+      </View>
+    )
+  }, [pal.border])
+
+  return (
+    <View>
+      <Feed
+        feed={feed}
+        scrollElRef={scrollElRef}
+        onPressTryAgain={onPressTryAgain}
+        onScroll={onMainScroll}
+        scrollEventThrottle={100}
+        renderEmptyState={renderEmptyState}
+      />
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label="Load new posts"
+          showIndicator={hasNew}
+          minimalShellMode={store.shell.minimalShellMode}
+        />
+      )}
+    </View>
+  )
+}

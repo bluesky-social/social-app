@@ -93,6 +93,5 @@ const styles = StyleSheet.create({
   headerBtns: {
     flexDirection: 'row',
     gap: 8,
-    marginTop: 12,
   },
 })

@@ -5,6 +5,7 @@ import {
   AppBskyGraphDefs as GraphDefs,
   AppBskyGraphList,
   AppBskyGraphListitem,
+  RichText,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import chunk from 'lodash.chunk'
@@ -37,8 +38,9 @@ export class ListModel {
   loadMoreCursor?: string
 
   // data
-  list: GraphDefs.ListView | null = null
+  data: GraphDefs.ListView | null = null
   items: GraphDefs.ListItemView[] = []
+  descriptionRT: RichText | null = null
 
   static async createList(
     rootStore: RootStoreModel,
@@ -106,16 +108,24 @@ export class ListModel {
     return this.hasLoaded && !this.hasContent
   }
 
+  get isCuratelist() {
+    return this.data?.purpose === 'app.bsky.graph.defs#curatelist'
+  }
+
+  get isModlist() {
+    return this.data?.purpose === 'app.bsky.graph.defs#modlist'
+  }
+
   get isOwner() {
-    return this.list?.creator.did === this.rootStore.me.did
+    return this.data?.creator.did === this.rootStore.me.did
   }
 
   get isSubscribed() {
-    return this.list?.viewer?.muted
+    return this.data?.viewer?.muted
   }
 
   get creatorDid() {
-    return this.list?.creator.did
+    return this.data?.creator.did
   }
 
   // public api
@@ -157,7 +167,7 @@ export class ListModel {
     description: string
     avatar: RNImage | null | undefined
   }) {
-    if (!this.list) {
+    if (!this.data) {
       return
     }
     if (!this.isOwner) {
@@ -194,7 +204,7 @@ export class ListModel {
   }
 
   async delete() {
-    if (!this.list) {
+    if (!this.data) {
       return
     }
     await this._resolveUri()
@@ -243,24 +253,24 @@ export class ListModel {
   }
 
   async subscribe() {
-    if (!this.list) {
+    if (!this.data) {
       return
     }
     await this._resolveUri()
     await this.rootStore.agent.app.bsky.graph.muteActorList({
-      list: this.list.uri,
+      list: this.data.uri,
     })
     track('Lists:Subscribe')
     await this.refresh()
   }
 
   async unsubscribe() {
-    if (!this.list) {
+    if (!this.data) {
       return
     }
     await this._resolveUri()
     await this.rootStore.agent.app.bsky.graph.unmuteActorList({
-      list: this.list.uri,
+      list: this.data.uri,
     })
     track('Lists:Unsubscribe')
     await this.refresh()
@@ -325,9 +335,15 @@ export class ListModel {
   _appendAll(res: GetList.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.list = res.data.list
+    this.data = res.data.list
     this.items = this.items.concat(
       res.data.items.map(item => ({...item, _reactKey: item.subject.did})),
     )
+    if (this.data.description) {
+      this.descriptionRT = new RichText({
+        text: this.data.description,
+        facets: (this.data.descriptionFacets || [])?.slice(),
+      })
+    }
   }
 }
