@@ -85,34 +85,26 @@ export const Tags = Node.create<TagOptions>({
           const startIndex = cursorPosition - text.length
           let [matchedString, tag] = match
 
-          const tagWithoutPunctuation = tag.replace(puncRegex, '')
-          // allow for multiple ending punctuation marks
-          const punctuationIndexOffset =
-            tag.length - tagWithoutPunctuation.length
+          const sanitized = tag.replace(puncRegex, '').replace(/^#/, '')
 
-          if (tagWithoutPunctuation.length > 66) return null
+          // one of our hashtag spec rules
+          if (sanitized.length > 64) return null
 
           const from = startIndex + match.index + matchedString.indexOf(tag)
-          // `to` should not include ending punctuation
           const to = from + tag.length
 
-          console.log({
-            from,
-            to,
-          })
-          if (
-            from < cursorPosition &&
-            to >= cursorPosition - punctuationIndexOffset
-          ) {
+          if (from < cursorPosition && to >= cursorPosition) {
             return {
               range: {
                 from,
                 to,
               },
               /**
-               * This is passed to the `items({ query })` method configured in `createTagsAutocomplete`.
+               * This is passed to the `items({ query })` method configured in
+               * `createTagsAutocomplete`.
                *
-               * TODO This value should follow the rules of our hashtags spec.
+               * We parse out the punctuation later, but we don't want to pass
+               * the # to the search query.
                */
               query: tag.replace(/^#/, ''),
               // raw text string
