@@ -143,7 +143,7 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
           accessibilityHint="">
           <AnimatedImage
             contentFit="contain"
-            source={imageSrc}
+            source={{uri: imageSrc.uri}}
             style={[styles.image, animatedStyle]}
             onLoad={() => setLoaded(true)}
           />
