@@ -27,7 +27,6 @@ import {
   ModalProps,
   Platform,
 } from 'react-native'
-import {ModalsContainer} from '../../modals/Modal'
 
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -155,7 +154,6 @@ function ImageViewing({
       edges={edges}
       aria-modal
       accessibilityViewIsModal>
-      <ModalsContainer />
       <View style={[styles.container, {backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (
