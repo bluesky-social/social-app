@@ -26,6 +26,9 @@ export function createTagsAutocomplete({
   autocompleteModel: TagsAutocompleteModel
 }): Omit<SuggestionOptions, 'editor'> {
   return {
+    /**
+     * This `query` param comes from the result of `findSuggestionMatch`
+     */
     async items({query}) {
       autocompleteModel.setActive(true)
       await autocompleteModel.search(query)
@@ -95,9 +98,19 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
     const [selectedIndex, setSelectedIndex] = useState(0)
 
     const commit = React.useCallback(
-      (tag: string) => {
-        // @ts-ignore we're dealing with strings here not mentions
-        command({id: tag})
+      (query: string) => {
+        const tag = query.replace(/(\p{P}+)$/gu, '')
+        const punctuation = query.match(/(\p{P}+)$/gu)?.[0] || ''
+        /*
+         * This values here are passed directly to the `command` method
+         * configured in the `Tags` plugin.
+         *
+         * The type error is ignored because we parse the tag and punctuation
+         * separately above. We could do this in `command` definition, but we
+         * only want to `commitRecentTag` with the sanitized tag.
+         */
+        // @ts-ignore
+        command({tag, punctuation})
         autocompleteModel.commitRecentTag(tag)
       },
       [command, autocompleteModel],

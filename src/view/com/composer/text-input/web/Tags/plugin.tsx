@@ -27,6 +27,8 @@ export const Tags = Node.create<TagOptions>({
         allowSpaces: true,
         pluginKey: TagsPluginKey,
         command: ({editor, range, props}) => {
+          const {tag, punctuation} = props
+
           // increase range.to by one when the next node is of type "text"
           // and starts with a space character
           const nodeAfter = editor.view.state.selection.$to.nodeAfter
@@ -42,11 +44,11 @@ export const Tags = Node.create<TagOptions>({
             .insertContentAt(range, [
               {
                 type: this.name,
-                attrs: props,
+                attrs: {id: tag},
               },
               {
                 type: 'text',
-                text: ' ',
+                text: `${punctuation || ''} `,
               },
             ])
             .run()
@@ -92,8 +94,12 @@ export const Tags = Node.create<TagOptions>({
 
           const from = startIndex + match.index + matchedString.indexOf(tag)
           // `to` should not include ending punctuation
-          const to = from + tagWithoutPunctuation.length
+          const to = from + tag.length
 
+          console.log({
+            from,
+            to,
+          })
           if (
             from < cursorPosition &&
             to >= cursorPosition - punctuationIndexOffset
@@ -103,8 +109,12 @@ export const Tags = Node.create<TagOptions>({
                 from,
                 to,
               },
-              // should not include ending punctuation
-              query: tagWithoutPunctuation.replace(/^#/, ''),
+              /**
+               * This is passed to the `items({ query })` method configured in `createTagsAutocomplete`.
+               *
+               * TODO This value should follow the rules of our hashtags spec.
+               */
+              query: tag.replace(/^#/, ''),
               // raw text string
               text: matchedString,
             }
