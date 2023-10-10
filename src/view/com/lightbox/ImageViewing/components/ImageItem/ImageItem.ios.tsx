@@ -6,20 +6,25 @@
  *
  */
 
-import React, {MutableRefObject, useCallback, useRef, useState} from 'react'
+import React, {MutableRefObject, useCallback, useState} from 'react'
 
 import {
-  Animated,
   Dimensions,
-  ScrollView,
   StyleSheet,
   View,
-  NativeScrollEvent,
   NativeSyntheticEvent,
   NativeTouchEvent,
   TouchableWithoutFeedback,
 } from 'react-native'
 import {Image} from 'expo-image'
+import Animated, {
+  interpolate,
+  runOnJS,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {GestureType} from 'react-native-gesture-handler'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
@@ -31,10 +36,8 @@ const DOUBLE_TAP_DELAY = 300
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
 const SCREEN = Dimensions.get('screen')
-const SCREEN_WIDTH = SCREEN.width
-const SCREEN_HEIGHT = SCREEN.height
-const MIN_ZOOM = 2
-const MAX_SCALE = 2
+const MAX_ORIGINAL_IMAGE_ZOOM = 2
+const MIN_DOUBLE_TAP_SCALE = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -49,44 +52,42 @@ const AnimatedImage = Animated.createAnimatedComponent(Image)
 let lastTapTS: number | null = null
 
 const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
-  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const translationY = useSharedValue(0)
   const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
-  const [translate, scale] = getImageTransform(imageDimensions, SCREEN)
-  const [scrollValueY] = useState(() => new Animated.Value(0))
-  const maxScrollViewZoom = MAX_SCALE / (scale || 1)
+  const maxZoomScale = imageDimensions
+    ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+    : 1
 
-  const imageOpacity = scrollValueY.interpolate({
-    inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-    outputRange: [0.5, 1, 0.5],
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translationY.value,
+        [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
+        [0.5, 1, 0.5],
+      ),
+    }
   })
-  const imagesStyles = getImageStyles(imageDimensions, translate, scale || 1)
-  const imageStylesWithOpacity = {...imagesStyles, opacity: imageOpacity}
 
-  const onScrollEndDrag = useCallback(
-    ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const velocityY = nativeEvent?.velocity?.y ?? 0
-      const currentScaled = nativeEvent?.zoomScale > 1
-
-      onZoom(currentScaled)
-      setScaled(currentScaled)
-
-      if (!currentScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
-        onRequestClose()
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll(e) {
+      translationY.value = e.zoomScale > 1 ? 0 : e.contentOffset.y
+    },
+    onEndDrag(e) {
+      const velocityY = e.velocity?.y ?? 0
+      const nextIsScaled = e.zoomScale > 1
+      runOnJS(handleZoom)(nextIsScaled)
+      if (!nextIsScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
+        runOnJS(onRequestClose)()
       }
     },
-    [onRequestClose, onZoom],
-  )
+  })
 
-  const onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = nativeEvent?.contentOffset?.y ?? 0
-
-    if (nativeEvent?.zoomScale > 1) {
-      return
-    }
-
-    scrollValueY.setValue(offsetY)
+  function handleZoom(nextIsScaled: boolean) {
+    onZoom(nextIsScaled)
+    setScaled(nextIsScaled)
   }
 
   const handleDoubleTap = useCallback(
@@ -121,23 +122,21 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
         lastTapTS = nowTS
       }
     },
-    [imageDimensions, scaled],
+    [imageDimensions, scaled, scrollViewRef],
   )
 
   return (
     <View>
-      <ScrollView
+      <Animated.ScrollView
+        // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
         style={styles.listItem}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        maximumZoomScale={maxScrollViewZoom}
+        maximumZoomScale={maxZoomScale}
         contentContainerStyle={styles.imageScrollContainer}
-        scrollEnabled={true}
-        onScroll={onScroll}
-        onScrollEndDrag={onScrollEndDrag}
-        scrollEventThrottle={1}>
+        onScroll={scrollHandler}>
         {(!loaded || !imageDimensions) && <ImageLoading />}
         <TouchableWithoutFeedback
           onPress={handleDoubleTap}
@@ -145,23 +144,28 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
           accessibilityLabel={imageSrc.alt}
           accessibilityHint="">
           <AnimatedImage
+            contentFit="contain"
             source={imageSrc}
-            style={imageStylesWithOpacity}
+            style={[styles.image, animatedStyle]}
             onLoad={() => setLoaded(true)}
           />
         </TouchableWithoutFeedback>
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  listItem: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  },
   imageScrollContainer: {
-    height: SCREEN_HEIGHT,
+    height: SCREEN.height,
+  },
+  listItem: {
+    width: SCREEN.width,
+    height: SCREEN.height,
+  },
+  image: {
+    width: SCREEN.width,
+    height: SCREEN.height,
   },
 })
 
@@ -191,7 +195,7 @@ const getZoomRectAfterDoubleTap = (
   const zoom = Math.max(
     imageAspect / screenAspect,
     screenAspect / imageAspect,
-    MIN_ZOOM,
+    MIN_DOUBLE_TAP_SCALE,
   )
   // Unlike in the Android version, we don't constrain the *max* zoom level here.
   // Instead, this is done in the ScrollView props so that it constraints pinch too.
@@ -250,63 +254,6 @@ const getZoomRectAfterDoubleTap = (
     y: rectY,
     height: rectHeight,
     width: rectWidth,
-  }
-}
-
-const getImageStyles = (
-  image: ImageDimensions | null,
-  translate: {readonly x: number; readonly y: number} | undefined,
-  scale?: number,
-) => {
-  if (!image?.width || !image?.height) {
-    return {width: 0, height: 0}
-  }
-  const transform = []
-  if (translate) {
-    transform.push({translateX: translate.x})
-    transform.push({translateY: translate.y})
-  }
-  if (scale) {
-    // @ts-ignore TODO - is scale incorrect? might need to remove -prf
-    transform.push({scale}, {perspective: new Animated.Value(1000)})
-  }
-  return {
-    width: image.width,
-    height: image.height,
-    transform,
-  }
-}
-
-const getImageTransform = (
-  image: ImageDimensions | null,
-  screen: ImageDimensions,
-) => {
-  if (!image?.width || !image?.height) {
-    return [] as const
-  }
-
-  const wScale = screen.width / image.width
-  const hScale = screen.height / image.height
-  const scale = Math.min(wScale, hScale)
-  const {x, y} = getImageTranslate(image, screen)
-
-  return [{x, y}, scale] as const
-}
-
-const getImageTranslate = (
-  image: ImageDimensions,
-  screen: ImageDimensions,
-): {x: number; y: number} => {
-  const getTranslateForAxis = (axis: 'x' | 'y'): number => {
-    const imageSize = axis === 'x' ? image.width : image.height
-    const screenSize = axis === 'x' ? screen.width : screen.height
-
-    return (screenSize - imageSize) / 2
-  }
-
-  return {
-    x: getTranslateForAxis('x'),
-    y: getTranslateForAxis('y'),
   }
 }
 
