@@ -194,11 +194,7 @@ export function linkRequiresWarning(uri: string, label: string) {
     if (!labelDomain) {
       return true
     }
-    try {
-      return labelDomain !== urip.hostname
-    } catch {
-      return true
-    }
+    return labelDomain !== urip.hostname
   }
 }
 
