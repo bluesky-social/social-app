@@ -131,6 +131,9 @@ export const ComposePost = observer(function ComposePost({
   }, [store, onClose, graphemeLength, gallery])
   // android back button
   useEffect(() => {
+    if (!isAndroid) {
+      return
+    }
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {

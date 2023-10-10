@@ -8,11 +8,29 @@
 
 import {useEffect, useState} from 'react'
 import {Image, ImageURISource} from 'react-native'
-
-import {createCache} from '../utils'
 import {Dimensions, ImageSource} from '../@types'
 
 const CACHE_SIZE = 50
+
+type CacheStorageItem = {key: string; value: any}
+
+const createCache = (cacheSize: number) => ({
+  _storage: [] as CacheStorageItem[],
+  get(key: string): any {
+    const {value} =
+      this._storage.find(({key: storageKey}) => storageKey === key) || {}
+
+    return value
+  },
+  set(key: string, value: any) {
+    if (this._storage.length >= cacheSize) {
+      this._storage.shift()
+    }
+
+    this._storage.push({key, value})
+  },
+})
+
 const imageDimensionsCache = createCache(CACHE_SIZE)
 
 const useImageDimensions = (image: ImageSource): Dimensions | null => {
@@ -21,29 +39,10 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const getImageDimensions = (image: ImageSource): Promise<Dimensions> => {
     return new Promise(resolve => {
-      if (typeof image === 'number') {
-        const cacheKey = `${image}`
-        let imageDimensions = imageDimensionsCache.get(cacheKey)
-
-        if (!imageDimensions) {
-          const {width, height} = Image.resolveAssetSource(image)
-          imageDimensions = {width, height}
-          imageDimensionsCache.set(cacheKey, imageDimensions)
-        }
-
-        resolve(imageDimensions)
-
-        return
-      }
-
-      // @ts-ignore
       if (image.uri) {
         const source = image as ImageURISource
-
         const cacheKey = source.uri as string
-
         const imageDimensions = imageDimensionsCache.get(cacheKey)
-
         if (imageDimensions) {
           resolve(imageDimensions)
         } else {

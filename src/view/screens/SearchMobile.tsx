@@ -148,18 +148,18 @@ export const SearchScreen = withAuthRequired(
               style={pal.view}
               onScroll={onMainScroll}
               scrollEventThrottle={100}>
-              {query && autocompleteView.searchRes.length ? (
+              {query && autocompleteView.suggestions.length ? (
                 <>
-                  {autocompleteView.searchRes.map((profile, index) => (
+                  {autocompleteView.suggestions.map((suggestion, index) => (
                     <ProfileCard
-                      key={profile.did}
-                      testID={`searchAutoCompleteResult-${profile.handle}`}
-                      profile={profile}
+                      key={suggestion.did}
+                      testID={`searchAutoCompleteResult-${suggestion.handle}`}
+                      profile={suggestion}
                       noBorder={index === 0}
                     />
                   ))}
                 </>
-              ) : query && !autocompleteView.searchRes.length ? (
+              ) : query && !autocompleteView.suggestions.length ? (
                 <View>
                   <Text style={[pal.textLight, styles.searchPrompt]}>
                     No results found for {autocompleteView.prefix}

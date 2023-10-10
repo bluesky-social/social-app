@@ -187,16 +187,19 @@ export const TextInput = forwardRef(function TextInputImpl(
   const textDecorated = useMemo(() => {
     let i = 0
 
-    return Array.from(richtext.segments()).map(segment => (
-      <Text
-        key={i++}
-        style={[
-          !segment.facet ? pal.text : pal.link,
-          styles.textInputFormatting,
-        ]}>
-        {segment.text}
-      </Text>
-    ))
+    return Array.from(richtext.segments()).map(segment => {
+      const isTag = AppBskyRichtextFacet.isTag(segment.facet?.features?.[0])
+      return (
+        <Text
+          key={i++}
+          style={[
+            segment.facet && !isTag ? pal.link : pal.text,
+            styles.textInputFormatting,
+          ]}>
+          {segment.text}
+        </Text>
+      )
+    })
   }, [richtext, pal.link, pal.text])
 
   return (

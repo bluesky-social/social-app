@@ -367,7 +367,7 @@ export const PostThread = observer(function PostThread({
       data={posts}
       initialNumToRender={posts.length}
       maintainVisibleContentPosition={
-        isNative && view.isFromCache
+        isNative && view.isFromCache && view.isCachedPostAReply
           ? MAINTAIN_VISIBLE_CONTENT_POSITION
           : undefined
       }
@@ -439,5 +439,7 @@ const styles = StyleSheet.create({
   parentSpinner: {
     paddingVertical: 10,
   },
-  childSpinner: {},
+  childSpinner: {
+    paddingBottom: 200,
+  },
 })

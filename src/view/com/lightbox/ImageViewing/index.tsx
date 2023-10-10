@@ -8,91 +8,78 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {
-  ComponentType,
-  useCallback,
-  useRef,
-  useEffect,
-  useMemo,
-} from 'react'
-import {
-  Animated,
-  Dimensions,
-  StyleSheet,
-  View,
-  VirtualizedList,
-  ModalProps,
-  Platform,
-} from 'react-native'
-import {ModalsContainer} from '../../modals/Modal'
+import React, {ComponentType, useMemo, useState} from 'react'
+import {Animated, StyleSheet, View, ModalProps, Platform} from 'react-native'
 
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
-import useAnimatedComponents from './hooks/useAnimatedComponents'
-import useImageIndexChange from './hooks/useImageIndexChange'
-import useRequestClose from './hooks/useRequestClose'
 import {ImageSource} from './@types'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import PagerView from 'react-native-pager-view'
 
 type Props = {
   images: ImageSource[]
-  keyExtractor?: (imageSrc: ImageSource, index: number) => string
-  imageIndex: number
+  initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
-  onLongPress?: (image: ImageSource) => void
-  onImageIndexChange?: (imageIndex: number) => void
   presentationStyle?: ModalProps['presentationStyle']
   animationType?: ModalProps['animationType']
   backgroundColor?: string
-  swipeToCloseEnabled?: boolean
-  doubleTapToZoomEnabled?: boolean
-  delayLongPress?: number
   HeaderComponent?: ComponentType<{imageIndex: number}>
   FooterComponent?: ComponentType<{imageIndex: number}>
 }
 
 const DEFAULT_BG_COLOR = '#000'
-const DEFAULT_DELAY_LONG_PRESS = 800
-const SCREEN = Dimensions.get('screen')
-const SCREEN_WIDTH = SCREEN.width
+const INITIAL_POSITION = {x: 0, y: 0}
+const ANIMATION_CONFIG = {
+  duration: 200,
+  useNativeDriver: true,
+}
 
 function ImageViewing({
   images,
-  keyExtractor,
-  imageIndex,
+  initialImageIndex,
   visible,
   onRequestClose,
-  onLongPress = () => {},
-  onImageIndexChange,
   backgroundColor = DEFAULT_BG_COLOR,
-  swipeToCloseEnabled,
-  doubleTapToZoomEnabled,
-  delayLongPress = DEFAULT_DELAY_LONG_PRESS,
   HeaderComponent,
   FooterComponent,
 }: Props) {
-  const imageList = useRef<VirtualizedList<ImageSource>>(null)
-  const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose)
-  const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
-  const [headerTransform, footerTransform, toggleBarsVisible] =
-    useAnimatedComponents()
-
-  useEffect(() => {
-    if (onImageIndexChange) {
-      onImageIndexChange(currentImageIndex)
-    }
-  }, [currentImageIndex, onImageIndexChange])
-
-  const onZoom = useCallback(
-    (isScaled: boolean) => {
-      // @ts-ignore
-      imageList?.current?.setNativeProps({scrollEnabled: !isScaled})
-      toggleBarsVisible(!isScaled)
-    },
-    [toggleBarsVisible],
+  const [isScaled, setIsScaled] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [imageIndex, setImageIndex] = useState(initialImageIndex)
+  const [headerTranslate] = useState(
+    () => new Animated.ValueXY(INITIAL_POSITION),
   )
+  const [footerTranslate] = useState(
+    () => new Animated.ValueXY(INITIAL_POSITION),
+  )
+
+  const toggleBarsVisible = (isVisible: boolean) => {
+    if (isVisible) {
+      Animated.parallel([
+        Animated.timing(headerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
+        Animated.timing(footerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
+      ]).start()
+    } else {
+      Animated.parallel([
+        Animated.timing(headerTranslate.y, {
+          ...ANIMATION_CONFIG,
+          toValue: -300,
+        }),
+        Animated.timing(footerTranslate.y, {
+          ...ANIMATION_CONFIG,
+          toValue: 300,
+        }),
+      ]).start()
+    }
+  }
+
+  const onZoom = (nextIsScaled: boolean) => {
+    toggleBarsVisible(!nextIsScaled)
+    setIsScaled(false)
+  }
 
   const edges = useMemo(() => {
     if (Platform.OS === 'android') {
@@ -101,73 +88,55 @@ function ImageViewing({
     return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
   }, [])
 
-  const onLayout = useCallback(() => {
-    if (imageIndex) {
-      imageList.current?.scrollToIndex({index: imageIndex, animated: false})
-    }
-  }, [imageList, imageIndex])
-
   if (!visible) {
     return null
   }
 
+  const headerTransform = headerTranslate.getTranslateTransform()
+  const footerTransform = footerTranslate.getTranslateTransform()
   return (
     <SafeAreaView
       style={styles.screen}
-      onLayout={onLayout}
       edges={edges}
       aria-modal
       accessibilityViewIsModal>
-      <ModalsContainer />
-      <View style={[styles.container, {opacity, backgroundColor}]}>
+      <View style={[styles.container, {backgroundColor}]}>
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (
             React.createElement(HeaderComponent, {
-              imageIndex: currentImageIndex,
+              imageIndex,
             })
           ) : (
-            <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
+            <ImageDefaultHeader onRequestClose={onRequestClose} />
           )}
         </Animated.View>
-        <VirtualizedList
-          ref={imageList}
-          data={images}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          getItem={(_, index) => images[index]}
-          getItemCount={() => images.length}
-          getItemLayout={(_, index) => ({
-            length: SCREEN_WIDTH,
-            offset: SCREEN_WIDTH * index,
-            index,
-          })}
-          renderItem={({item: imageSrc}) => (
-            <ImageItem
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={onRequestCloseEnhanced}
-              onLongPress={onLongPress}
-              delayLongPress={delayLongPress}
-              swipeToCloseEnabled={swipeToCloseEnabled}
-              doubleTapToZoomEnabled={doubleTapToZoomEnabled}
-            />
-          )}
-          onMomentumScrollEnd={onScroll}
-          //@ts-ignore
-          keyExtractor={(imageSrc, index) =>
-            keyExtractor
-              ? keyExtractor(imageSrc, index)
-              : typeof imageSrc === 'number'
-              ? `${imageSrc}`
-              : imageSrc.uri
-          }
-        />
+        <PagerView
+          scrollEnabled={!isScaled}
+          initialPage={initialImageIndex}
+          onPageSelected={e => {
+            setImageIndex(e.nativeEvent.position)
+            setIsScaled(false)
+          }}
+          onPageScrollStateChanged={e => {
+            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+          }}
+          overdrag={true}
+          style={styles.pager}>
+          {images.map(imageSrc => (
+            <View key={imageSrc.uri}>
+              <ImageItem
+                onZoom={onZoom}
+                imageSrc={imageSrc}
+                onRequestClose={onRequestClose}
+                isScrollViewBeingDragged={isDragging}
+              />
+            </View>
+          ))}
+        </PagerView>
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, {transform: footerTransform}]}>
             {React.createElement(FooterComponent, {
-              imageIndex: currentImageIndex,
+              imageIndex,
             })}
           </Animated.View>
         )}
@@ -179,10 +148,17 @@ function ImageViewing({
 const styles = StyleSheet.create({
   screen: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  pager: {
+    flex: 1,
   },
   header: {
     position: 'absolute',
@@ -200,7 +176,7 @@ const styles = StyleSheet.create({
 })
 
 const EnhancedImageViewing = (props: Props) => (
-  <ImageViewing key={props.imageIndex} {...props} />
+  <ImageViewing key={props.initialImageIndex} {...props} />
 )
 
 export default EnhancedImageViewing

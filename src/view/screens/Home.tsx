@@ -8,6 +8,7 @@ import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
+import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -108,6 +109,7 @@ export const HomeScreen = withAuthRequired(
           isPageFocused={selectedPage === 0}
           feed={store.me.mainFeed}
           renderEmptyState={FollowingEmptyState}
+          renderEndOfFeed={FollowingEndOfFeed}
         />
         {customFeeds.map((f, index) => {
           return (

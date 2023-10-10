@@ -174,6 +174,9 @@ export function UserAvatar({
               aspect: [1, 1],
             })
             const item = items[0]
+            if (!item) {
+              return
+            }
 
             const croppedImage = await openCropper(store, {
               mediaType: 'photo',

@@ -22,6 +22,13 @@ export const DesktopSearch = observer(function DesktopSearch() {
   )
   const navigation = useNavigation<NavigationProp>()
 
+  // initial setup
+  React.useEffect(() => {
+    if (store.me.did) {
+      autocompleteView.setup()
+    }
+  }, [autocompleteView, store.me.did])
+
   const onChangeQuery = React.useCallback(
     (text: string) => {
       setQuery(text)
@@ -90,9 +97,9 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
       {query !== '' && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {autocompleteView.searchRes.length ? (
+          {autocompleteView.suggestions.length ? (
             <>
-              {autocompleteView.searchRes.map((item, i) => (
+              {autocompleteView.suggestions.map((item, i) => (
                 <ProfileCard key={item.did} profile={item} noBorder={i === 0} />
               ))}
             </>

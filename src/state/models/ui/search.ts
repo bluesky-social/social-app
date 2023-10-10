@@ -59,7 +59,7 @@ export class SearchUIModel {
       } while (profilesSearch.length)
     }
 
-    this.rootStore.me.follows.hydrateProfiles(profiles)
+    this.rootStore.me.follows.hydrateMany(profiles)
 
     runInAction(() => {
       this.profiles = profiles

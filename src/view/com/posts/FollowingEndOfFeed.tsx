@@ -7,13 +7,12 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
-import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
 
-export function FollowingEmptyState() {
+export function FollowingEndOfFeed() {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
@@ -37,14 +36,11 @@ export function FollowingEmptyState() {
   }, [navigation])
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, pal.border]}>
       <View style={styles.inner}>
-        <View style={styles.iconContainer}>
-          <MagnifyingGlassIcon style={[styles.icon, pal.text]} size={62} />
-        </View>
         <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-          Your following feed is empty! Follow more users to see what's
-          happening.
+          You've reached the end of your feed! Find some more accounts to
+          follow.
         </Text>
         <Button
           type="inverted"
@@ -82,21 +78,15 @@ export function FollowingEmptyState() {
 }
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingVertical: 40,
+    paddingTop: 40,
+    paddingBottom: 80,
     paddingHorizontal: 30,
+    borderTopWidth: 1,
   },
   inner: {
     maxWidth: 460,
-  },
-  iconContainer: {
-    marginBottom: 16,
-  },
-  icon: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
   },
   emptyBtn: {
     marginVertical: 20,
