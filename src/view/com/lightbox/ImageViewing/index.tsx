@@ -8,13 +8,14 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useMemo, useState} from 'react'
-import {Animated, StyleSheet, View, ModalProps, Platform} from 'react-native'
+import React, {ComponentType, useCallback, useMemo, useState} from 'react'
+import {StyleSheet, View, Platform} from 'react-native'
 
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
 import {ImageSource} from './@types'
+import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import PagerView from 'react-native-pager-view'
 
@@ -23,19 +24,12 @@ type Props = {
   initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
-  presentationStyle?: ModalProps['presentationStyle']
-  animationType?: ModalProps['animationType']
   backgroundColor?: string
   HeaderComponent?: ComponentType<{imageIndex: number}>
   FooterComponent?: ComponentType<{imageIndex: number}>
 }
 
 const DEFAULT_BG_COLOR = '#000'
-const INITIAL_POSITION = {x: 0, y: 0}
-const ANIMATION_CONFIG = {
-  duration: 200,
-  useNativeDriver: true,
-}
 
 function ImageViewing({
   images,
@@ -49,37 +43,25 @@ function ImageViewing({
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
-  const [headerTranslate] = useState(
-    () => new Animated.ValueXY(INITIAL_POSITION),
-  )
-  const [footerTranslate] = useState(
-    () => new Animated.ValueXY(INITIAL_POSITION),
-  )
 
-  const toggleBarsVisible = (isVisible: boolean) => {
-    if (isVisible) {
-      Animated.parallel([
-        Animated.timing(headerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
-        Animated.timing(footerTranslate.y, {...ANIMATION_CONFIG, toValue: 0}),
-      ]).start()
-    } else {
-      Animated.parallel([
-        Animated.timing(headerTranslate.y, {
-          ...ANIMATION_CONFIG,
-          toValue: -300,
-        }),
-        Animated.timing(footerTranslate.y, {
-          ...ANIMATION_CONFIG,
-          toValue: 300,
-        }),
-      ]).start()
-    }
-  }
+  const animatedHeaderStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: withClampedSpring(isScaled ? -300 : 0),
+      },
+    ],
+  }))
+  const animatedFooterStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: withClampedSpring(isScaled ? 300 : 0),
+      },
+    ],
+  }))
 
-  const onZoom = (nextIsScaled: boolean) => {
-    toggleBarsVisible(!nextIsScaled)
-    setIsScaled(false)
-  }
+  const onZoom = useCallback((nextIsScaled: boolean) => {
+    setIsScaled(nextIsScaled)
+  }, [])
 
   const edges = useMemo(() => {
     if (Platform.OS === 'android') {
@@ -92,8 +74,6 @@ function ImageViewing({
     return null
   }
 
-  const headerTransform = headerTranslate.getTranslateTransform()
-  const footerTransform = footerTranslate.getTranslateTransform()
   return (
     <SafeAreaView
       style={styles.screen}
@@ -101,7 +81,7 @@ function ImageViewing({
       aria-modal
       accessibilityViewIsModal>
       <View style={[styles.container, {backgroundColor}]}>
-        <Animated.View style={[styles.header, {transform: headerTransform}]}>
+        <Animated.View style={[styles.header, animatedHeaderStyle]}>
           {typeof HeaderComponent !== 'undefined' ? (
             React.createElement(HeaderComponent, {
               imageIndex,
@@ -134,7 +114,7 @@ function ImageViewing({
           ))}
         </PagerView>
         {typeof FooterComponent !== 'undefined' && (
-          <Animated.View style={[styles.footer, {transform: footerTransform}]}>
+          <Animated.View style={[styles.footer, animatedFooterStyle]}>
             {React.createElement(FooterComponent, {
               imageIndex,
             })}
@@ -178,5 +158,10 @@ const styles = StyleSheet.create({
 const EnhancedImageViewing = (props: Props) => (
   <ImageViewing key={props.initialImageIndex} {...props} />
 )
+
+function withClampedSpring(value: any) {
+  'worklet'
+  return withSpring(value, {overshootClamping: true})
+}
 
 export default EnhancedImageViewing
