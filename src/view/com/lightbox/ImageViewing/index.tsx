@@ -38,8 +38,7 @@ import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
 type Props = {
   images: ImageSource[]
-  keyExtractor?: (imageSrc: ImageSource, index: number) => string
-  imageIndex: number
+  initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
   presentationStyle?: ModalProps['presentationStyle']
@@ -60,8 +59,7 @@ const ANIMATION_CONFIG = {
 
 function ImageViewing({
   images,
-  keyExtractor,
-  imageIndex,
+  initialImageIndex,
   visible,
   onRequestClose,
   backgroundColor = DEFAULT_BG_COLOR,
@@ -71,7 +69,7 @@ function ImageViewing({
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [currentImageIndex, setImageIndex] = useState(imageIndex)
+  const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [headerTranslate] = useState(
     () => new Animated.ValueXY(INITIAL_POSITION),
   )
@@ -125,10 +123,13 @@ function ImageViewing({
   }, [])
 
   const onLayout = useCallback(() => {
-    if (imageIndex) {
-      imageList.current?.scrollToIndex({index: imageIndex, animated: false})
+    if (initialImageIndex) {
+      imageList.current?.scrollToIndex({
+        index: initialImageIndex,
+        animated: false,
+      })
     }
-  }, [imageList, imageIndex])
+  }, [imageList, initialImageIndex])
 
   // This is a hack.
   // RNGH doesn't have an easy way to express that pinch of individual items
@@ -159,7 +160,7 @@ function ImageViewing({
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (
             React.createElement(HeaderComponent, {
-              imageIndex: currentImageIndex,
+              imageIndex,
             })
           ) : (
             <ImageDefaultHeader onRequestClose={onRequestClose} />
@@ -205,19 +206,12 @@ function ImageViewing({
             setIsScaled(false)
             onScroll(e)
           }}
-          //@ts-ignore
-          keyExtractor={(imageSrc, index) =>
-            keyExtractor
-              ? keyExtractor(imageSrc, index)
-              : typeof imageSrc === 'number'
-              ? `${imageSrc}`
-              : imageSrc.uri
-          }
+          keyExtractor={imageSrc => imageSrc.uri}
         />
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, {transform: footerTransform}]}>
             {React.createElement(FooterComponent, {
-              imageIndex: currentImageIndex,
+              imageIndex,
             })}
           </Animated.View>
         )}
@@ -250,7 +244,7 @@ const styles = StyleSheet.create({
 })
 
 const EnhancedImageViewing = (props: Props) => (
-  <ImageViewing key={props.imageIndex} {...props} />
+  <ImageViewing key={props.initialImageIndex} {...props} />
 )
 
 export default EnhancedImageViewing
