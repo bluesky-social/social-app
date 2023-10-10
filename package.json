@@ -23,6 +23,10 @@
     "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build": "detox build -c ios.sim.debug",
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all",
+    "perf:test:run": "maestro test __e2e__/maestro/scroll.yaml",
+    "perf:test:measure": "flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
+    "perf:test:results": "flashlight report .perf/results.json",
+    "perf:live:measure": "flashlight measure",
     "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
