@@ -1,9 +1,8 @@
-import React, {MutableRefObject, useState} from 'react'
+import React, {useState} from 'react'
 
 import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
 import {Image} from 'expo-image'
 import Animated, {
-  measure,
   runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
@@ -12,11 +11,7 @@ import Animated, {
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import {
-  GestureDetector,
-  Gesture,
-  GestureType,
-} from 'react-native-gesture-handler'
+import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import useImageDimensions from '../../hooks/useImageDimensions'
 import {
   createTransform,
@@ -40,7 +35,6 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (isZoomed: boolean) => void
-  pinchGestureRef: MutableRefObject<GestureType | undefined>
   isScrollViewBeingDragged: boolean
 }
 const ImageItem = ({
@@ -48,7 +42,6 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   isScrollViewBeingDragged,
-  pinchGestureRef,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -140,28 +133,7 @@ const ImageItem = ({
     return [dx, dy]
   }
 
-  // This is a hack.
-  // We need to disallow any gestures (and let the native parent scroll view scroll) while you're scrolling it.
-  // However, there is no great reliable way to coordinate this yet in RGNH.
-  // This "fake" manual gesture handler whenever you're trying to touch something while the parent scrollview is not at rest.
-  const consumeHScroll = Gesture.Manual().onTouchesDown((e, manager) => {
-    if (isScrollViewBeingDragged) {
-      // Steal the gesture (and do nothing, so native ScrollView does its thing).
-      manager.activate()
-      return
-    }
-    const measurement = measure(containerRef)
-    if (!measurement || measurement.pageX !== 0) {
-      // Steal the gesture (and do nothing, so native ScrollView does its thing).
-      manager.activate()
-      return
-    }
-    // Fail this "fake" gesture so that the gestures after it can proceed.
-    manager.fail()
-  })
-
   const pinch = Gesture.Pinch()
-    .withRef(pinchGestureRef)
     .onStart(e => {
       pinchOrigin.value = {
         x: e.focalX - SCREEN.width / 2,
@@ -318,19 +290,22 @@ const ImageItem = ({
       }
     })
 
+  const composedGesture = isScrollViewBeingDragged
+    ? // If the parent is not at rest, provide a no-op gesture.
+      Gesture.Manual()
+    : Gesture.Exclusive(
+        dismissSwipePan,
+        Gesture.Simultaneous(pinch, pan),
+        doubleTap,
+      )
+
   const isLoading = !isLoaded || !imageDimensions
   return (
     <Animated.View ref={containerRef} style={styles.container}>
       {isLoading && (
         <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
       )}
-      <GestureDetector
-        gesture={Gesture.Exclusive(
-          consumeHScroll,
-          dismissSwipePan,
-          Gesture.Simultaneous(pinch, pan),
-          doubleTap,
-        )}>
+      <GestureDetector gesture={composedGesture}>
         <AnimatedImage
           source={imageSrc}
           contentFit="contain"

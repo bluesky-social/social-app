@@ -8,32 +8,15 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {
-  ComponentType,
-  createRef,
-  useCallback,
-  useRef,
-  useMemo,
-  useState,
-} from 'react'
-import {
-  Animated,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  StyleSheet,
-  View,
-  VirtualizedList,
-  ModalProps,
-  Platform,
-} from 'react-native'
+import React, {ComponentType, useMemo, useState} from 'react'
+import {Animated, StyleSheet, View, ModalProps, Platform} from 'react-native'
 
 import ImageItem from './components/ImageItem/ImageItem'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 
 import {ImageSource} from './@types'
-import {ScrollView, GestureType} from 'react-native-gesture-handler'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import PagerView from 'react-native-pager-view'
 
 type Props = {
   images: ImageSource[]
@@ -48,8 +31,6 @@ type Props = {
 }
 
 const DEFAULT_BG_COLOR = '#000'
-const SCREEN = Dimensions.get('screen')
-const SCREEN_WIDTH = SCREEN.width
 const INITIAL_POSITION = {x: 0, y: 0}
 const ANIMATION_CONFIG = {
   duration: 200,
@@ -65,7 +46,6 @@ function ImageViewing({
   HeaderComponent,
   FooterComponent,
 }: Props) {
-  const imageList = useRef<VirtualizedList<ImageSource>>(null)
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -96,19 +76,6 @@ function ImageViewing({
     }
   }
 
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const {
-      nativeEvent: {
-        contentOffset: {x: scrollX},
-      },
-    } = event
-
-    if (SCREEN.width) {
-      const nextIndex = Math.round(scrollX / SCREEN.width)
-      setImageIndex(nextIndex < 0 ? 0 : nextIndex)
-    }
-  }
-
   const onZoom = (nextIsScaled: boolean) => {
     toggleBarsVisible(!nextIsScaled)
     setIsScaled(false)
@@ -121,26 +88,6 @@ function ImageViewing({
     return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
   }, [])
 
-  const onLayout = useCallback(() => {
-    if (initialImageIndex) {
-      imageList.current?.scrollToIndex({
-        index: initialImageIndex,
-        animated: false,
-      })
-    }
-  }, [imageList, initialImageIndex])
-
-  // This is a hack.
-  // RNGH doesn't have an easy way to express that pinch of individual items
-  // should "steal" all pinches from the scroll view. So we're keeping a ref
-  // to all pinch gestures so that we may give them to <ScrollView waitFor={...}>.
-  const [pinchGestureRefs] = useState(new Map())
-  for (let imageSrc of images) {
-    if (!pinchGestureRefs.get(imageSrc)) {
-      pinchGestureRefs.set(imageSrc, createRef<GestureType | undefined>())
-    }
-  }
-
   if (!visible) {
     return null
   }
@@ -150,7 +97,6 @@ function ImageViewing({
   return (
     <SafeAreaView
       style={styles.screen}
-      onLayout={onLayout}
       edges={edges}
       aria-modal
       accessibilityViewIsModal>
@@ -164,48 +110,29 @@ function ImageViewing({
             <ImageDefaultHeader onRequestClose={onRequestClose} />
           )}
         </Animated.View>
-        <VirtualizedList
-          ref={imageList}
-          data={images}
-          horizontal
-          pagingEnabled
-          scrollEnabled={!isScaled || isDragging}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          getItem={(_, index) => images[index]}
-          getItemCount={() => images.length}
-          getItemLayout={(_, index) => ({
-            length: SCREEN_WIDTH,
-            offset: SCREEN_WIDTH * index,
-            index,
-          })}
-          renderItem={({item: imageSrc}) => (
-            <ImageItem
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={onRequestClose}
-              pinchGestureRef={pinchGestureRefs.get(imageSrc)}
-              isScrollViewBeingDragged={isDragging}
-            />
-          )}
-          renderScrollComponent={props => (
-            <ScrollView
-              {...props}
-              waitFor={Array.from(pinchGestureRefs.values())}
-            />
-          )}
-          onScrollBeginDrag={() => {
-            setIsDragging(true)
-          }}
-          onScrollEndDrag={() => {
-            setIsDragging(false)
-          }}
-          onMomentumScrollEnd={e => {
+        <PagerView
+          scrollEnabled={!isScaled}
+          initialPage={initialImageIndex}
+          onPageSelected={e => {
+            setImageIndex(e.nativeEvent.position)
             setIsScaled(false)
-            onScroll(e)
           }}
-          keyExtractor={imageSrc => imageSrc.uri}
-        />
+          onPageScrollStateChanged={e => {
+            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+          }}
+          overdrag={true}
+          style={styles.pager}>
+          {images.map(imageSrc => (
+            <View key={imageSrc.uri}>
+              <ImageItem
+                onZoom={onZoom}
+                imageSrc={imageSrc}
+                onRequestClose={onRequestClose}
+                isScrollViewBeingDragged={isDragging}
+              />
+            </View>
+          ))}
+        </PagerView>
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, {transform: footerTransform}]}>
             {React.createElement(FooterComponent, {
@@ -221,10 +148,17 @@ function ImageViewing({
 const styles = StyleSheet.create({
   screen: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  pager: {
+    flex: 1,
   },
   header: {
     position: 'absolute',

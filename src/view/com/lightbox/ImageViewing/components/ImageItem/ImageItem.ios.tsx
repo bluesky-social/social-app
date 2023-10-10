@@ -6,7 +6,7 @@
  *
  */
 
-import React, {MutableRefObject, useCallback, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 
 import {
   Dimensions,
@@ -25,7 +25,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {GestureType} from 'react-native-gesture-handler'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
 
@@ -43,7 +42,6 @@ type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onZoom: (scaled: boolean) => void
-  pinchGestureRef: MutableRefObject<GestureType>
   isScrollViewBeingDragged: boolean
 }
 
@@ -145,7 +143,7 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
           accessibilityHint="">
           <AnimatedImage
             contentFit="contain"
-            source={imageSrc}
+            source={{uri: imageSrc.uri}}
             style={[styles.image, animatedStyle]}
             onLoad={() => setLoaded(true)}
           />
