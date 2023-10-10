@@ -19191,10 +19191,9 @@ yocto-queue@^1.0.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.0.0.tgz#7f816433fb2cbc511ec8bf7d263c3b58a1a3c251"
   integrity sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==
 
-zeed-dom@^0.9.19:
-  version "0.9.26"
-  resolved "https://registry.yarnpkg.com/zeed-dom/-/zeed-dom-0.9.26.tgz#f0127d1024b34a1233a321bd6d0275b3ba998b30"
-  integrity sha512-HWjX8rA3Y/RI32zby3KIN1D+mgskce+She4K7kRyyx62OiVxJ5FnYm8vWq0YVAja3Tf2S1M0XAc6O2lRFcMgcQ==
+zeed-dom@^0.9.19, zeed-dom@estrattonbailey/zeed-dom#publish:
+  version "0.10.8"
+  resolved "https://codeload.github.com/estrattonbailey/zeed-dom/tar.gz/aad32339dc2473b75aa0a90d8baee21c40a1e914"
   dependencies:
     css-what "^6.1.0"
 
