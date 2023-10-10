@@ -69,7 +69,7 @@ function ImageViewing({
   const imageList = useRef<VirtualizedList<ImageSource>>(null)
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [currentImageIndex, setImageIndex] = useState(initialImageIndex)
+  const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [headerTranslate] = useState(
     () => new Animated.ValueXY(INITIAL_POSITION),
   )
@@ -160,7 +160,7 @@ function ImageViewing({
         <Animated.View style={[styles.header, {transform: headerTransform}]}>
           {typeof HeaderComponent !== 'undefined' ? (
             React.createElement(HeaderComponent, {
-              imageIndex: currentImageIndex,
+              imageIndex,
             })
           ) : (
             <ImageDefaultHeader onRequestClose={onRequestClose} />
@@ -211,7 +211,7 @@ function ImageViewing({
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, {transform: footerTransform}]}>
             {React.createElement(FooterComponent, {
-              imageIndex: currentImageIndex,
+              imageIndex,
             })}
           </Animated.View>
         )}
