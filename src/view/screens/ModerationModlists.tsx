@@ -13,11 +13,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from 'view/com/util/Views'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 
-type Props = NativeStackScreenProps<
-  CommonNavigatorParams,
-  'ModerationMuteLists'
->
-export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
+export const ModerationModlistsScreen = withAuthRequired(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -62,8 +59,8 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
         pal.border,
         isTabletOrDesktop && styles.containerDesktop,
       ]}
-      testID="moderationMutelistsScreen">
-      <ViewHeader title="Mute Lists" showOnDesktop />
+      testID="ModerationModlistsScreen">
+      <ViewHeader title="Moderation Lists" showOnDesktop />
       <ListsList
         listsList={mutelists}
         purpose="mod"

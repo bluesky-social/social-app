@@ -231,7 +231,7 @@ export function Component({
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel="Save"
-              accessibilityHint="Creates the mute list">
+              accessibilityHint="">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}

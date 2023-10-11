@@ -66,9 +66,9 @@ export const ModerationScreen = withAuthRequired(
           </Text>
         </TouchableOpacity>
         <Link
-          testID="mutelistsBtn"
+          testID="moderationlistsBtn"
           style={[styles.linkCard, pal.view]}
-          href="/moderation/mute-lists">
+          href="/moderation/modlists">
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="users-slash"
@@ -76,7 +76,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Mute lists
+            Moderation lists
           </Text>
         </Link>
         <Link

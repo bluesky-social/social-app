@@ -45,7 +45,7 @@ import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
 import {ListsScreen} from './view/screens/Lists'
 import {ModerationScreen} from './view/screens/Moderation'
-import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
+import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
@@ -107,9 +107,9 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title('Moderation')}}
       />
       <Stack.Screen
-        name="ModerationMuteLists"
-        getComponent={() => ModerationMuteListsScreen}
-        options={{title: title('Mute Lists')}}
+        name="ModerationModlists"
+        getComponent={() => ModerationModlistsScreen}
+        options={{title: title('Moderation Lists')}}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
@@ -156,7 +156,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
-        options={{title: title('Mute List')}}
+        options={{title: title('List')}}
       />
       <Stack.Screen
         name="PostThread"

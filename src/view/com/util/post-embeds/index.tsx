@@ -75,7 +75,7 @@ export function PostEmbeds({
       return <CustomFeedEmbed record={embed.record} />
     }
 
-    // list embed (e.g. mute lists; i.e. ListView)
+    // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
       return <ListEmbed item={embed.record} />
     }
