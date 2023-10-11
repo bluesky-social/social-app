@@ -110,14 +110,21 @@ export class ListMembershipModel {
     })
   }
 
-  async updateTo(uris: string[]) {
+  async updateTo(
+    uris: string[],
+  ): Promise<{added: string[]; removed: string[]}> {
+    const added = []
+    const removed = []
     for (const uri of uris) {
       await this.add(uri)
+      added.push(uri)
     }
     for (const membership of this.memberships) {
       if (!uris.includes(membership.value.list)) {
         await this.remove(membership.value.list)
+        removed.push(membership.value.list)
       }
     }
+    return {added, removed}
   }
 }

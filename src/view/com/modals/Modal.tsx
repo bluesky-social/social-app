@@ -17,7 +17,8 @@ import * as ServerInputModal from './ServerInput'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
 import * as CreateOrEditListModal from './CreateOrEditList'
-import * as ListAddRemoveUserModal from './ListAddRemoveUser'
+import * as UserAddRemoveListsModal from './UserAddRemoveLists'
+import * as ListAddUserModal from './ListAddUser'
 import * as AltImageModal from './AltImage'
 import * as EditImageModal from './AltImage'
 import * as ReportModal from './report/Modal'
@@ -104,9 +105,12 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'create-or-edit-list') {
     snapPoints = CreateOrEditListModal.snapPoints
     element = <CreateOrEditListModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'list-add-remove-user') {
-    snapPoints = ListAddRemoveUserModal.snapPoints
-    element = <ListAddRemoveUserModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'user-add-remove-lists') {
+    snapPoints = UserAddRemoveListsModal.snapPoints
+    element = <UserAddRemoveListsModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'list-add-user') {
+    snapPoints = ListAddUserModal.snapPoints
+    element = <ListAddUserModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />

@@ -23,14 +23,16 @@ import isEqual from 'lodash.isequal'
 
 export const snapPoints = ['fullscreen']
 
-export const Component = observer(function ListAddRemoveUserImpl({
+export const Component = observer(function UserAddRemoveListsImpl({
   subject,
   displayName,
-  onUpdate,
+  onAdd,
+  onRemove,
 }: {
   subject: string
   displayName: string
-  onUpdate?: () => void
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -70,16 +72,22 @@ export const Component = observer(function ListAddRemoveUserImpl({
   }, [store])
 
   const onPressSave = useCallback(async () => {
+    let changes
     try {
-      await memberships.updateTo(selected)
+      changes = await memberships.updateTo(selected)
     } catch (err) {
       store.log.error('Failed to update memberships', {err})
       return
     }
     Toast.show('Lists updated')
-    onUpdate?.()
+    for (const uri of changes.added) {
+      onAdd?.(uri)
+    }
+    for (const uri of changes.removed) {
+      onRemove?.(uri)
+    }
     store.shell.closeModal()
-  }, [store, selected, memberships, onUpdate])
+  }, [store, selected, memberships, onAdd, onRemove])
 
   const onPressNewMuteList = useCallback(() => {
     store.shell.openModal({
@@ -170,7 +178,7 @@ export const Component = observer(function ListAddRemoveUserImpl({
     !listsList.isEmpty && !isEqual(selected, originalSelections)
 
   return (
-    <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
+    <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
       <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
       <ListsList
         listsList={listsList}

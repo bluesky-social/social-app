@@ -1,4 +1,4 @@
-import {AppBskyEmbedRecord, ModerationUI} from '@atproto/api'
+import {AppBskyEmbedRecord, AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
@@ -67,11 +67,18 @@ export interface CreateOrEditListModal {
   onSave?: (uri: string) => void
 }
 
-export interface ListAddRemoveUserModal {
-  name: 'list-add-remove-user'
+export interface UserAddRemoveListsModal {
+  name: 'user-add-remove-lists'
   subject: string
   displayName: string
-  onUpdate?: () => void
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}
+
+export interface ListAddUserModal {
+  name: 'list-add-user'
+  list: ListModel
+  onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }
 
 export interface EditImageModal {
@@ -181,8 +188,11 @@ export type Modal =
   // Moderation
   | ModerationDetailsModal
   | ReportModal
+
+  // Lists
   | CreateOrEditListModal
-  | ListAddRemoveUserModal
+  | UserAddRemoveListsModal
+  | ListAddUserModal
 
   // Posts
   | AltTextImageModal

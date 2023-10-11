@@ -25,6 +25,7 @@ import {RichText} from 'view/com/util/text/RichText'
 import {Feed} from 'view/com/posts/Feed'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from 'view/com/pager/TabBar'
+import {Button} from 'view/com/util/forms/Button'
 // import * as Toast from 'view/com/util/Toast'
 import {ListModel} from 'state/models/content/list'
 import {PostsFeedModel} from 'state/models/feeds/posts'
@@ -341,6 +342,7 @@ const Header = observer(function HeaderImpl({
 
 const AboutPage = observer(function AboutPageImpl({list}: {list: ListModel}) {
   const pal = usePalette('default')
+  const store = useStores()
 
   const renderEmptyState = React.useCallback(() => {
     return (
@@ -368,20 +370,40 @@ const AboutPage = observer(function AboutPageImpl({list}: {list: ListModel}) {
         // @ts-ignore web only -prf
         !isNative && {minHeight: '100vh'},
       ]}>
-      {list.descriptionRT && (
-        <View
-          style={[
-            {borderTopWidth: 1, paddingVertical: 20, paddingHorizontal: 20},
-            pal.border,
-          ]}>
+      <View
+        style={[
+          {
+            borderTopWidth: 1,
+            paddingVertical: 20,
+            paddingHorizontal: 20,
+            gap: 12,
+          },
+          pal.border,
+        ]}>
+        {list.descriptionRT ? (
           <RichText
             testID="listDescription"
             type="lg"
             style={pal.text}
             richText={list.descriptionRT}
           />
-        </View>
-      )}
+        ) : (
+          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+            No description
+          </Text>
+        )}
+        {list.isOwner && (
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              type="default"
+              label="Add user"
+              onPress={() =>
+                store.shell.openModal({name: 'list-add-user', list})
+              }
+            />
+          </View>
+        )}
+      </View>
       <ListItems
         list={list}
         renderEmptyState={renderEmptyState}

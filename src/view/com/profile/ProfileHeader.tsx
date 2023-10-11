@@ -181,7 +181,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const onPressAddRemoveLists = React.useCallback(() => {
     track('ProfileHeader:AddToListsButtonClicked')
     store.shell.openModal({
-      name: 'list-add-remove-user',
+      name: 'user-add-remove-lists',
       subject: view.did,
       displayName: view.displayName || view.handle,
     })

@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AtUri,
+  AppBskyActorDefs,
   AppBskyGraphGetList as GetList,
   AppBskyGraphDefs as GraphDefs,
   AppBskyGraphList,
@@ -128,6 +129,14 @@ export class ListModel {
     return this.data?.creator.did
   }
 
+  getMembership(did: string) {
+    return this.items.find(item => item.subject.did === did)
+  }
+
+  isMember(did: string) {
+    return !!this.getMembership(did)
+  }
+
   // public api
   // =
 
@@ -136,7 +145,6 @@ export class ListModel {
   }
 
   loadMore = bundleAsync(async (replace: boolean = false) => {
-    console.log('loadMore()', replace)
     if (!replace && !this.hasMore) {
       return
     }
@@ -158,6 +166,15 @@ export class ListModel {
       this._xIdle(replace ? e : undefined, !replace ? e : undefined)
     }
   })
+
+  async loadAll() {
+    for (let i = 0; i < 1000; i++) {
+      if (!this.hasMore) {
+        break
+      }
+      await this.loadMore()
+    }
+  }
 
   async updateMetadata({
     name,
@@ -251,6 +268,47 @@ export class ListModel {
     }
 
     this.rootStore.emitListDeleted(this.uri)
+  }
+
+  async addMember(profile: AppBskyActorDefs.ProfileViewBasic) {
+    if (this.isMember(profile.did)) {
+      return
+    }
+    await this.rootStore.agent.app.bsky.graph.listitem.create(
+      {
+        repo: this.rootStore.me.did,
+      },
+      {
+        subject: profile.did,
+        list: this.uri,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    runInAction(() => {
+      this.items = this.items.concat([
+        {_reactKey: profile.did, subject: profile},
+      ])
+    })
+  }
+
+  /**
+   * Just adds to local cache; used to reflect changes affected elsewhere
+   */
+  cacheAddMember(profile: AppBskyActorDefs.ProfileViewBasic) {
+    if (!this.isMember(profile.did)) {
+      this.items = this.items.concat([
+        {_reactKey: profile.did, subject: profile},
+      ])
+    }
+  }
+
+  /**
+   * Just removes from local cache; used to reflect changes affected elsewhere
+   */
+  cacheRemoveMember(profile: AppBskyActorDefs.ProfileViewBasic) {
+    if (this.isMember(profile.did)) {
+      this.items = this.items.filter(item => item.subject.did !== profile.did)
+    }
   }
 
   async subscribe() {

@@ -104,11 +104,18 @@ export const ListItems = observer(function ListItemsImpl({
   const onPressEditMembership = React.useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       store.shell.openModal({
-        name: 'list-add-remove-user',
+        name: 'user-add-remove-lists',
         subject: profile.did,
         displayName: profile.displayName || profile.handle,
-        onUpdate() {
-          list.refresh()
+        onAdd(listUri: string) {
+          if (listUri === list.uri) {
+            list.cacheAddMember(profile)
+          }
+        },
+        onRemove(listUri: string) {
+          if (listUri === list.uri) {
+            list.cacheRemoveMember(profile)
+          }
         },
       })
     },
