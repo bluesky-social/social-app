@@ -12,6 +12,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {isWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {EditableTag} from 'view/com/Tag'
@@ -40,6 +41,7 @@ export function TagInput({
 }: {
   max?: number
   onChangeTags: (tags: string[]) => void
+  tagsAutocompleteModel: TagsAutocompleteModel
 }) {
   const pal = usePalette('default')
   const input = React.useRef<TextInput>(null)

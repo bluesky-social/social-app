@@ -109,7 +109,15 @@ export class TagsAutocompleteModel {
   // TODO hook up to search type-ahead
   async _search() {
     runInAction(() => {
-      this.searchedTags = []
+      this.searchedTags = [
+        'bluesky',
+        'code',
+        'coding',
+        'dev',
+        'developer',
+        'development',
+        'devlife',
+      ]
     })
   }
 }

@@ -454,7 +454,10 @@ export const ComposePost = observer(function ComposePost({
               paddingHorizontal: 15,
             },
           ]}>
-          <TagInput onChangeTags={onChangeTags} />
+          <TagInput
+            onChangeTags={onChangeTags}
+            tagsAutocompleteModel={tagsAutocompleteModel}
+          />
         </View>
 
         <View style={[pal.border, styles.bottomBar]}>
