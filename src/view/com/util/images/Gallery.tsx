@@ -1,5 +1,5 @@
 import {AppBskyEmbedImages} from '@atproto/api'
-import React, {ComponentProps, FC} from 'react'
+import React, {FC} from 'react'
 import {StyleSheet, Text, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 
@@ -11,31 +11,29 @@ interface GalleryItemProps {
   onPress?: EventFunction
   onLongPress?: EventFunction
   onPressIn?: EventFunction
-  imageStyle: ComponentProps<typeof Image>['style']
 }
 
 export const GalleryItem: FC<GalleryItemProps> = ({
   images,
   index,
-  imageStyle,
   onPress,
   onPressIn,
   onLongPress,
 }) => {
   const image = images[index]
-
   return (
-    <View>
+    <View style={styles.fullWidth}>
       <Pressable
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
+        style={styles.fullWidth}
         accessibilityRole="button"
         accessibilityLabel={image.alt || 'Image'}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
-          style={imageStyle}
+          style={styles.image}
           accessible={true}
           accessibilityLabel={image.alt}
           accessibilityHint=""
@@ -54,6 +52,13 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 }
 
 const styles = StyleSheet.create({
+  fullWidth: {
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    borderRadius: 4,
+  },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
