@@ -91,6 +91,11 @@ func serve(cctx *cli.Context) error {
 	}
 
 	e.HideBanner = true
+	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
+	e.HTTPErrorHandler = server.errorHandler
+
+	e.IPExtractor = echo.ExtractIPFromXFFHeader()
+
 	// SECURITY: Do not modify without due consideration.
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
 		ContentTypeNosniff: "nosniff",
@@ -106,8 +111,23 @@ func serve(cctx *cli.Context) error {
 			return strings.HasPrefix(c.Request().URL.Path, "/static")
 		},
 	}))
-	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
-	e.HTTPErrorHandler = server.errorHandler
+	e.Use(middleware.RateLimiterWithConfig(middleware.RateLimiterConfig{
+		Skipper: middleware.DefaultSkipper,
+		Store: middleware.NewRateLimiterMemoryStoreWithConfig(
+			middleware.RateLimiterMemoryStoreConfig{
+				Rate:      10,              // requests per second
+				Burst:     30,              // allow bursts
+				ExpiresIn: 3 * time.Minute, // garbage collect entries older than 3 minutes
+			},
+		),
+		IdentifierExtractor: func(ctx echo.Context) (string, error) {
+			id := ctx.RealIP()
+			return id, nil
+		},
+		DenyHandler: func(c echo.Context, identifier string, err error) error {
+			return c.String(http.StatusTooManyRequests, "Your request has been rate limited. Please try again later. Contact security@bsky.app if you believe this was a mistake.\n")
+		},
+	}))
 
 	// redirect trailing slash to non-trailing slash.
 	// all of our current endpoints have no trailing slash.
