@@ -47,12 +47,22 @@ export const FABInner = observer(function FABInnerImpl({
     : {
         transform: [{translateY: Animated.multiply(interp, -44)}],
       }
-  const size = isTablet ? styles.sizeLarge : styles.sizeRegular
-  const right = isTablet ? 50 : 24
-  const bottom = isTablet ? 50 : clamp(insets.bottom, 15, 60) + 15
+
+  const size = React.useMemo(() => {
+    return isTablet ? styles.sizeLarge : styles.sizeRegular
+  }, [isTablet])
+  const tabletSpacing = React.useMemo(() => {
+    return isTablet
+      ? {right: 50, bottom: 50}
+      : {
+          right: 24,
+          bottom: clamp(insets.bottom, 15, 60) + 15,
+        }
+  }, [insets.bottom, isTablet])
+
   return (
     <TouchableWithoutFeedback testID={testID} {...props}>
-      <Animated.View style={[styles.outer, size, {right, bottom}, transform]}>
+      <Animated.View style={[styles.outer, size, tabletSpacing, transform]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}

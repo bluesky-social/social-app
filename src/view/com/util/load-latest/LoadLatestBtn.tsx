@@ -10,6 +10,10 @@ import {colors} from 'lib/styles'
 import {HITSLOP_20} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {clamp} from 'lib/numbers'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity)
 
 export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress,
@@ -26,19 +30,33 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const safeAreaInsets = useSafeAreaInsets()
   const minMode = store.shell.minimalShellMode
-  const bottom = isTablet
-    ? 50
-    : (minMode || isDesktop ? 16 : 60) +
-      (isWeb ? 20 : clamp(safeAreaInsets.bottom, 15, 60))
+  const bottomStyle = useAnimatedStyle(() => {
+    let style = {
+      bottom: 50,
+    }
+    if (isTablet) {
+      return style
+    }
+    if (minMode || isDesktop) {
+      style.bottom = 16
+    }
+    if (isWeb) {
+      style.bottom += 20
+      return style
+    }
+    style.bottom += clamp(safeAreaInsets.bottom, 15, 60)
+    return style
+  })
+
   return (
-    <TouchableOpacity
+    <AnimatedTouchableOpacity
       style={[
         styles.loadLatest,
         isDesktop && styles.loadLatestDesktop,
         isTablet && styles.loadLatestTablet,
         pal.borderDark,
         pal.view,
-        {bottom},
+        bottomStyle,
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}
@@ -47,7 +65,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
       accessibilityHint="">
       <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
       {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
-    </TouchableOpacity>
+    </AnimatedTouchableOpacity>
   )
 })
 
