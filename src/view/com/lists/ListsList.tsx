@@ -102,7 +102,11 @@ export const ListsList = observer(function ListsListImpl({
   const renderItemInner = React.useCallback(
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
-        return <Text style={{padding: 16}}>Empty TODO</Text>
+        return (
+          <View style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
+            <Text style={pal.textLight}>You have no lists.</Text>
+          </View>
+        )
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
@@ -134,7 +138,7 @@ export const ListsList = observer(function ListsListImpl({
         />
       )
     },
-    [listsList, onPressTryAgain, onPressRetryLoadMore, renderItem],
+    [listsList, onPressTryAgain, onPressRetryLoadMore, renderItem, pal],
   )
 
   const FlatListCom = inline ? RNFlatList : FlatList
