@@ -7,7 +7,7 @@ import {lh} from 'lib/styles'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
-import {InlineTag} from 'view/com/Tag'
+import {Tag} from 'view/com/Tag'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -95,7 +95,7 @@ export function RichText({
         />,
       )
     } else if (tag && AppBskyRichtextFacet.validateTag(tag).success) {
-      els.push(<InlineTag key={key} value={tag.tag} textSize={type} />)
+      els.push(<Tag key={key} value={tag.tag} textSize={type} />)
     } else {
       els.push(segment.text)
     }

@@ -30,33 +30,6 @@ export function Tag({
   )
 }
 
-export function InlineTag({
-  value,
-  textSize,
-}: {
-  value: string
-  textSize?: CustomTextProps['type']
-}) {
-  const pal = usePalette('default')
-  const type = textSize || 'xs-medium'
-
-  return (
-    <TextLink
-      type={type}
-      text={`#${value}`}
-      accessible
-      href={`/search?q=${value}`}
-      style={[
-        pal.link,
-        {
-          paddingTop: 0,
-          paddingBottom: 2,
-        },
-      ]}
-    />
-  )
-}
-
 export function EditableTag({
   value,
   onRemove,
