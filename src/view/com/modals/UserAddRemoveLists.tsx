@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Pressable, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -89,15 +89,6 @@ export const Component = observer(function UserAddRemoveListsImpl({
     store.shell.closeModal()
   }, [store, selected, memberships, onAdd, onRemove])
 
-  const onPressNewMuteList = useCallback(() => {
-    store.shell.openModal({
-      name: 'create-or-edit-list',
-      onSave: (_uri: string) => {
-        listsList.refresh()
-      },
-    })
-  }, [store, listsList])
-
   const onToggleSelected = useCallback(
     (uri: string) => {
       if (selected.includes(uri)) {
@@ -110,7 +101,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
   )
 
   const renderItem = useCallback(
-    (list: GraphDefs.ListView) => {
+    (list: GraphDefs.ListView, index: number) => {
       const isSelected = selected.includes(list.uri)
       return (
         <Pressable
@@ -118,7 +109,10 @@ export const Component = observer(function UserAddRemoveListsImpl({
           style={[
             styles.listItem,
             pal.border,
-            {opacity: membershipsLoaded ? 1 : 0.5},
+            {
+              opacity: membershipsLoaded ? 1 : 0.5,
+              borderTopWidth: index === 0 ? 0 : 1,
+            },
           ]}
           accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
             list.name
@@ -138,9 +132,10 @@ export const Component = observer(function UserAddRemoveListsImpl({
               {sanitizeDisplayName(list.name)}
             </Text>
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {list.purpose === 'app.bsky.graph.defs#curatelist' && 'User list'}
+              {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+                'User list '}
               {list.purpose === 'app.bsky.graph.defs#modlist' &&
-                'Moderation list'}
+                'Moderation list '}
               by{' '}
               {list.creator.did === store.me.did
                 ? 'you'
@@ -182,10 +177,12 @@ export const Component = observer(function UserAddRemoveListsImpl({
 
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
-      <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
+      <Text style={[styles.title, pal.text]}>
+        Update {displayName} in Lists
+      </Text>
       <ListsList
         listsList={listsList}
-        onPressCreateNew={onPressNewMuteList}
+        inline
         renderItem={renderItem}
         style={[styles.list, pal.border]}
       />
@@ -255,7 +252,6 @@ const styles = StyleSheet.create({
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderTopWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },

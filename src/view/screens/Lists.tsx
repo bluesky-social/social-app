@@ -82,7 +82,7 @@ export const ListsScreen = withAuthRequired(({}: Props) => {
           </Button>
         </View>
       </SimpleViewHeader>
-      <ListsList listsList={listsLists} onPressCreateNew={onPressNewList} />
+      <ListsList listsList={listsLists} />
     </View>
   )
 })

@@ -82,7 +82,7 @@ export const ModerationModlistsScreen = withAuthRequired(({}: Props) => {
           </Button>
         </View>
       </SimpleViewHeader>
-      <ListsList listsList={mutelists} onPressCreateNew={onPressNewList} />
+      <ListsList listsList={mutelists} />
     </View>
   )
 })

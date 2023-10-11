@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  FlatList as RNFlatList,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -26,15 +27,17 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 export const ListsList = observer(function ListsListImpl({
   listsList,
+  inline,
   style,
   onPressTryAgain,
   renderItem,
   testID,
 }: {
   listsList: ListsListModel
+  inline?: boolean
   style?: StyleProp<ViewStyle>
   onPressTryAgain?: () => void
-  renderItem?: (list: GraphDefs.ListView) => JSX.Element
+  renderItem?: (list: GraphDefs.ListView, index: number) => JSX.Element
   testID?: string
 }) {
   const pal = usePalette('default')
@@ -97,7 +100,7 @@ export const ListsList = observer(function ListsListImpl({
   // =
 
   const renderItemInner = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return <Text style={{padding: 16}}>Empty TODO</Text>
       } else if (item === ERROR_ITEM) {
@@ -122,7 +125,7 @@ export const ListsList = observer(function ListsListImpl({
         )
       }
       return renderItem ? (
-        renderItem(item)
+        renderItem(item, index)
       ) : (
         <ListCard
           list={item}
@@ -134,10 +137,11 @@ export const ListsList = observer(function ListsListImpl({
     [listsList, onPressTryAgain, onPressRetryLoadMore, renderItem],
   )
 
+  const FlatListCom = inline ? RNFlatList : FlatList
   return (
     <View testID={testID} style={style}>
       {data.length > 0 && (
-        <FlatList
+        <FlatListCom
           testID={testID ? `${testID}-flatlist` : undefined}
           data={data}
           keyExtractor={(item: any) => item._reactKey}
