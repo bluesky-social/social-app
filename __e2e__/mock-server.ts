@@ -502,6 +502,9 @@ async function main() {
               createdAt: new Date().toISOString(),
             },
           )
+
+          // flush caches
+          await server.mocker.testNet.processAll()
         }
       }
       console.log('Ready')

@@ -3,10 +3,8 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
 import {toHashCode} from 'lib/strings/helpers'
 
-const DAY = 60e3 * 24 * 1 // 1 day (ms)
-
 export class Reminders {
-  lastEmailConfirm: Date = new Date()
+  lastEmailConfirm: Date | null = null
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -45,6 +43,10 @@ export class Reminders {
     if (this.rootStore.onboarding.isActive) {
       return false
     }
+    // only prompt once
+    if (this.lastEmailConfirm) {
+      return false
+    }
     const today = new Date()
     // shard the users into 2 day of the week buckets
     // (this is to avoid a sudden influx of email updates when
@@ -53,9 +55,7 @@ export class Reminders {
     if (code !== today.getDay() && code !== (today.getDay() + 1) % 7) {
       return false
     }
-    // only ask once a day at most, but because of the bucketing
-    // this will be more like weekly
-    return Number(today) - Number(this.lastEmailConfirm) > DAY
+    return true
   }
 
   setEmailConfirmationRequested() {

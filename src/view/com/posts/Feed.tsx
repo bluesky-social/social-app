@@ -45,7 +45,7 @@ export const Feed = observer(function Feed({
   onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   scrollEventThrottle?: number
-  renderEmptyState?: () => JSX.Element
+  renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
@@ -116,10 +116,7 @@ export const Feed = observer(function Feed({
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_FEED_ITEM) {
-        if (renderEmptyState) {
-          return renderEmptyState()
-        }
-        return <View />
+        return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage

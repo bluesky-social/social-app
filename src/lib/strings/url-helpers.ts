@@ -170,14 +170,31 @@ export function getYoutubeVideoId(link: string): string | undefined {
 
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
-  if (!labelDomain) {
-    return true
-  }
+  let urip
   try {
-    const urip = new URL(uri)
-    return labelDomain !== urip.hostname
+    urip = new URL(uri)
   } catch {
     return true
+  }
+
+  if (urip.hostname === 'bsky.app') {
+    // if this is a link to internal content,
+    // warn if it represents itself as a URL to another app
+    if (
+      labelDomain &&
+      labelDomain !== 'bsky.app' &&
+      isPossiblyAUrl(labelDomain)
+    ) {
+      return true
+    }
+    return false
+  } else {
+    // if this is a link to external content,
+    // warn if the label doesnt match the target
+    if (!labelDomain) {
+      return true
+    }
+    return labelDomain !== urip.hostname
   }
 }
 

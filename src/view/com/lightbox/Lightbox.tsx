@@ -26,7 +26,7 @@ export const Lightbox = observer(function Lightbox() {
     return (
       <ImageView
         images={[{uri: opts.profileView.avatar || ''}]}
-        imageIndex={0}
+        initialImageIndex={0}
         visible
         onRequestClose={onClose}
         FooterComponent={LightboxFooter}
@@ -37,7 +37,7 @@ export const Lightbox = observer(function Lightbox() {
     return (
       <ImageView
         images={opts.images.map(img => ({...img}))}
-        imageIndex={opts.index}
+        initialImageIndex={opts.index}
         visible
         onRequestClose={onClose}
         FooterComponent={LightboxFooter}

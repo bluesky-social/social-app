@@ -19,7 +19,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       ios: {
-        buildNumber: '1',
+        buildNumber: '2',
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
@@ -43,7 +43,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: 40,
+        versionCode: 41,
         adaptiveIcon: {
           foregroundImage: './assets/adaptive-icon.png',
           backgroundColor: '#ffffff',

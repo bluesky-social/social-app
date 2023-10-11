@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -82,169 +81,163 @@ export const Component = observer(function Component({
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={[pal.view, styles.container]}>
-      <SafeAreaView style={s.flex1}>
-        <ScrollView
-          testID="verifyEmailModal"
-          style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
-          {stage === Stages.Reminder && <ReminderIllustration />}
-          <View style={styles.titleSection}>
-            <Text type="title-lg" style={[pal.text, styles.title]}>
-              {stage === Stages.Reminder ? 'Please Verify Your Email' : ''}
-              {stage === Stages.ConfirmCode ? 'Enter Confirmation Code' : ''}
-              {stage === Stages.Email ? 'Verify Your Email' : ''}
-            </Text>
-          </View>
-
-          <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-            {stage === Stages.Reminder ? (
-              <>
-                Your email has not yet been verified. This is an important
-                security step which we recommend.
-              </>
-            ) : stage === Stages.Email ? (
-              <>
-                This is important in case you ever need to change your email or
-                reset your password.
-              </>
-            ) : stage === Stages.ConfirmCode ? (
-              <>
-                An email has been sent to{' '}
-                {store.session.currentSession?.email || ''}. It includes a
-                confirmation code which you can enter below.
-              </>
-            ) : (
-              ''
-            )}
+    <SafeAreaView style={[pal.view, s.flex1]}>
+      <ScrollView
+        testID="verifyEmailModal"
+        style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
+        {stage === Stages.Reminder && <ReminderIllustration />}
+        <View style={styles.titleSection}>
+          <Text type="title-lg" style={[pal.text, styles.title]}>
+            {stage === Stages.Reminder ? 'Please Verify Your Email' : ''}
+            {stage === Stages.ConfirmCode ? 'Enter Confirmation Code' : ''}
+            {stage === Stages.Email ? 'Verify Your Email' : ''}
           </Text>
+        </View>
 
-          {stage === Stages.Email ? (
+        <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
+          {stage === Stages.Reminder ? (
             <>
-              <View style={styles.emailContainer}>
-                <FontAwesomeIcon
-                  icon="envelope"
-                  color={pal.colors.text}
-                  size={16}
-                />
-                <Text
-                  type="xl-medium"
-                  style={[pal.text, s.flex1, {minWidth: 0}]}>
-                  {store.session.currentSession?.email || ''}
-                </Text>
-              </View>
-              <Pressable
-                accessibilityRole="link"
-                accessibilityLabel="Change my email"
-                accessibilityHint=""
-                onPress={onEmailIncorrect}
-                style={styles.changeEmailLink}>
-                <Text type="lg" style={pal.link}>
-                  Change
-                </Text>
-              </Pressable>
+              Your email has not yet been verified. This is an important
+              security step which we recommend.
+            </>
+          ) : stage === Stages.Email ? (
+            <>
+              This is important in case you ever need to change your email or
+              reset your password.
             </>
           ) : stage === Stages.ConfirmCode ? (
-            <TextInput
-              testID="confirmCodeInput"
-              style={[styles.textInput, pal.border, pal.text]}
-              placeholder="XXXXX-XXXXX"
-              placeholderTextColor={pal.colors.textLight}
-              value={confirmationCode}
-              onChangeText={setConfirmationCode}
-              accessible={true}
-              accessibilityLabel="Confirmation code"
+            <>
+              An email has been sent to{' '}
+              {store.session.currentSession?.email || ''}. It includes a
+              confirmation code which you can enter below.
+            </>
+          ) : (
+            ''
+          )}
+        </Text>
+
+        {stage === Stages.Email ? (
+          <>
+            <View style={styles.emailContainer}>
+              <FontAwesomeIcon
+                icon="envelope"
+                color={pal.colors.text}
+                size={16}
+              />
+              <Text type="xl-medium" style={[pal.text, s.flex1, {minWidth: 0}]}>
+                {store.session.currentSession?.email || ''}
+              </Text>
+            </View>
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel="Change my email"
               accessibilityHint=""
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-            />
-          ) : undefined}
+              onPress={onEmailIncorrect}
+              style={styles.changeEmailLink}>
+              <Text type="lg" style={pal.link}>
+                Change
+              </Text>
+            </Pressable>
+          </>
+        ) : stage === Stages.ConfirmCode ? (
+          <TextInput
+            testID="confirmCodeInput"
+            style={[styles.textInput, pal.border, pal.text]}
+            placeholder="XXXXX-XXXXX"
+            placeholderTextColor={pal.colors.textLight}
+            value={confirmationCode}
+            onChangeText={setConfirmationCode}
+            accessible={true}
+            accessibilityLabel="Confirmation code"
+            accessibilityHint=""
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+          />
+        ) : undefined}
 
-          {error ? (
-            <ErrorMessage message={error} style={styles.error} />
-          ) : undefined}
+        {error ? (
+          <ErrorMessage message={error} style={styles.error} />
+        ) : undefined}
 
-          <View style={[styles.btnContainer]}>
-            {isProcessing ? (
-              <View style={styles.btn}>
-                <ActivityIndicator color="#fff" />
-              </View>
-            ) : (
-              <View style={{gap: 6}}>
-                {stage === Stages.Reminder && (
-                  <Button
-                    testID="getStartedBtn"
-                    type="primary"
-                    onPress={() => setStage(Stages.Email)}
-                    accessibilityLabel="Get Started"
-                    accessibilityHint=""
-                    label="Get Started"
-                    labelContainerStyle={{justifyContent: 'center', padding: 4}}
-                    labelStyle={[s.f18]}
-                  />
-                )}
-                {stage === Stages.Email && (
-                  <>
-                    <Button
-                      testID="sendEmailBtn"
-                      type="primary"
-                      onPress={onSendEmail}
-                      accessibilityLabel="Send Confirmation Email"
-                      accessibilityHint=""
-                      label="Send Confirmation Email"
-                      labelContainerStyle={{
-                        justifyContent: 'center',
-                        padding: 4,
-                      }}
-                      labelStyle={[s.f18]}
-                    />
-                    <Button
-                      testID="haveCodeBtn"
-                      type="default"
-                      accessibilityLabel="I have a code"
-                      accessibilityHint=""
-                      label="I have a confirmation code"
-                      labelContainerStyle={{
-                        justifyContent: 'center',
-                        padding: 4,
-                      }}
-                      labelStyle={[s.f18]}
-                      onPress={() => setStage(Stages.ConfirmCode)}
-                    />
-                  </>
-                )}
-                {stage === Stages.ConfirmCode && (
-                  <Button
-                    testID="confirmBtn"
-                    type="primary"
-                    onPress={onConfirm}
-                    accessibilityLabel="Confirm"
-                    accessibilityHint=""
-                    label="Confirm"
-                    labelContainerStyle={{justifyContent: 'center', padding: 4}}
-                    labelStyle={[s.f18]}
-                  />
-                )}
+        <View style={[styles.btnContainer]}>
+          {isProcessing ? (
+            <View style={styles.btn}>
+              <ActivityIndicator color="#fff" />
+            </View>
+          ) : (
+            <View style={{gap: 6}}>
+              {stage === Stages.Reminder && (
                 <Button
-                  testID="cancelBtn"
-                  type="default"
-                  onPress={() => store.shell.closeModal()}
-                  accessibilityLabel={
-                    stage === Stages.Reminder ? 'Not right now' : 'Cancel'
-                  }
+                  testID="getStartedBtn"
+                  type="primary"
+                  onPress={() => setStage(Stages.Email)}
+                  accessibilityLabel="Get Started"
                   accessibilityHint=""
-                  label={stage === Stages.Reminder ? 'Not right now' : 'Cancel'}
+                  label="Get Started"
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
-              </View>
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+              )}
+              {stage === Stages.Email && (
+                <>
+                  <Button
+                    testID="sendEmailBtn"
+                    type="primary"
+                    onPress={onSendEmail}
+                    accessibilityLabel="Send Confirmation Email"
+                    accessibilityHint=""
+                    label="Send Confirmation Email"
+                    labelContainerStyle={{
+                      justifyContent: 'center',
+                      padding: 4,
+                    }}
+                    labelStyle={[s.f18]}
+                  />
+                  <Button
+                    testID="haveCodeBtn"
+                    type="default"
+                    accessibilityLabel="I have a code"
+                    accessibilityHint=""
+                    label="I have a confirmation code"
+                    labelContainerStyle={{
+                      justifyContent: 'center',
+                      padding: 4,
+                    }}
+                    labelStyle={[s.f18]}
+                    onPress={() => setStage(Stages.ConfirmCode)}
+                  />
+                </>
+              )}
+              {stage === Stages.ConfirmCode && (
+                <Button
+                  testID="confirmBtn"
+                  type="primary"
+                  onPress={onConfirm}
+                  accessibilityLabel="Confirm"
+                  accessibilityHint=""
+                  label="Confirm"
+                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelStyle={[s.f18]}
+                />
+              )}
+              <Button
+                testID="cancelBtn"
+                type="default"
+                onPress={() => store.shell.closeModal()}
+                accessibilityLabel={
+                  stage === Stages.Reminder ? 'Not right now' : 'Cancel'
+                }
+                accessibilityHint=""
+                label={stage === Stages.Reminder ? 'Not right now' : 'Cancel'}
+                labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                labelStyle={[s.f18]}
+              />
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 })
 
@@ -274,10 +267,6 @@ function ReminderIllustration() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: isWeb ? 0 : 40,
-  },
   titleSection: {
     paddingTop: isWeb ? 0 : 4,
     paddingBottom: isWeb ? 14 : 10,

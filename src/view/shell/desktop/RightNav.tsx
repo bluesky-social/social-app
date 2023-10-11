@@ -7,7 +7,6 @@ import {DesktopSearch} from './Search'
 import {DesktopFeeds} from './Feeds'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
@@ -90,41 +89,32 @@ const InviteCodes = observer(function InviteCodesImpl() {
   const onPress = React.useCallback(() => {
     store.shell.openModal({name: 'invite-codes'})
   }, [store])
-
   return (
-    <View style={[styles.separator, pal.border]}>
-      {store.me.invitesAvailable === null ? (
-        <View style={[s.p10]}>
-          <LoadingPlaceholder width={186} height={32} style={[styles.br40]} />
-        </View>
-      ) : (
-        <TouchableOpacity
-          style={[styles.inviteCodes]}
-          onPress={onPress}
-          accessibilityRole="button"
-          accessibilityLabel={
-            invitesAvailable === 1
-              ? 'Invite codes: 1 available'
-              : `Invite codes: ${invitesAvailable} available`
-          }
-          accessibilityHint="Opens list of invite codes">
-          <FontAwesomeIcon
-            icon="ticket"
-            style={[
-              styles.inviteCodesIcon,
-              store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
-            ]}
-            size={16}
-          />
-          <Text
-            type="md-medium"
-            style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-            {formatCount(store.me.invitesAvailable)} invite{' '}
-            {pluralize(store.me.invitesAvailable, 'code')} available
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
+    <TouchableOpacity
+      style={[styles.inviteCodes, pal.border]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={
+        invitesAvailable === 1
+          ? 'Invite codes: 1 available'
+          : `Invite codes: ${invitesAvailable} available`
+      }
+      accessibilityHint="Opens list of invite codes">
+      <FontAwesomeIcon
+        icon="ticket"
+        style={[
+          styles.inviteCodesIcon,
+          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
+        ]}
+        size={16}
+      />
+      <Text
+        type="md-medium"
+        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
+        {formatCount(store.me.invitesAvailable)} invite{' '}
+        {pluralize(store.me.invitesAvailable, 'code')} available
+      </Text>
+    </TouchableOpacity>
   )
 })
 
@@ -141,20 +131,16 @@ const styles = StyleSheet.create({
 
   message: {
     paddingVertical: 18,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
   },
   messageLine: {
     marginBottom: 10,
   },
 
-  separator: {
-    borderTopWidth: 1,
-  },
-  br40: {borderRadius: 40},
-
   inviteCodes: {
-    paddingHorizontal: 12,
-    paddingVertical: 16,
+    borderTopWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
   },
