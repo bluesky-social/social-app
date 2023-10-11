@@ -43,6 +43,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       )
 
     case 3:
+      // Work around https://github.com/facebook/react-native/issues/40802
       const flexProp = Platform.OS === 'web' ? 'flex' : 'flexGrow'
       return (
         <View style={styles.flexRow}>
