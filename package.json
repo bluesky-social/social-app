@@ -214,7 +214,7 @@
   },
   "resolutions": {
     "@types/react": "^18",
-    "**/zeed-dom": "estrattonbailey/zeed-dom#publish"
+    "**/zeed-dom": "0.10.9"
   },
   "jest": {
     "preset": "jest-expo/ios",
