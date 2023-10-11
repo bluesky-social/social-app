@@ -61,7 +61,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
-      // TagDecorator,
       Tags.configure({
         HTMLAttributes: {
           class: 'inline-tag',

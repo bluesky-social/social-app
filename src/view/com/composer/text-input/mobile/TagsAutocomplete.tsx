@@ -23,6 +23,10 @@ export function getHashtagAt(text: string, position: number) {
     }
   }
 
+  /*
+   * show autocomplete after a single # is typed
+   * AND the cursor is next to the #
+   */
   const hashRegex = /#/g
   let hashMatch
   while ((hashMatch = hashRegex.exec(text))) {
@@ -38,7 +42,7 @@ export function insertTagAt(text: string, position: number, tag: string) {
   const target = getHashtagAt(text, position)
   if (target) {
     return `${text.slice(0, target.index)}#${tag} ${text.slice(
-      target.index + target.value.length + 1, // add 1 to include the "@"
+      target.index + target.value.length + 1, // add 1 to include the "#"
     )}`
   }
   return text

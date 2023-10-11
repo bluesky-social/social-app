@@ -1,4 +1,8 @@
-/** @see https://github.com/ueberdosis/tiptap/blob/main/packages/extension-mention/src/mention.ts */
+/**
+ * This is basically a fork of the Mention plugin from Tiptap.
+ *
+ * @see https://github.com/ueberdosis/tiptap/blob/025dfff1d9e4796edf3a451f7f53d06a07b95d69/packages/extension-mention/src/mention.ts
+ */
 
 import {mergeAttributes, Node} from '@tiptap/core'
 import {Node as ProseMirrorNode} from '@tiptap/pm/model'
@@ -127,14 +131,6 @@ export const Tags = Node.create<TagOptions>({
   },
 
   renderHTML({node, HTMLAttributes}) {
-    console.log(
-      'renderText',
-      node,
-      this.options.renderLabel({
-        options: this.options,
-        node,
-      }),
-    )
     return [
       'span',
       mergeAttributes(
