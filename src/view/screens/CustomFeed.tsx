@@ -283,7 +283,7 @@ export const CustomFeedScreenInner = observer(
                   name: 'trash',
                 },
                 android: 'ic_delete',
-                web: 'trash',
+                web: ['far', 'trash-can'],
               }
             : {
                 ios: {

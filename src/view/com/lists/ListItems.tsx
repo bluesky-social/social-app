@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   RefreshControl,
   StyleProp,
-  StyleSheet,
   View,
   ViewStyle,
   FlatList,
@@ -166,6 +165,7 @@ export const ListItems = observer(function ListItemsImpl({
           }`}
           profile={(item as AppBskyGraphDefs.ListItemView).subject}
           renderButton={renderMemberButton}
+          style={{paddingHorizontal: 14, paddingVertical: 4}}
         />
       )
     },
@@ -181,7 +181,7 @@ export const ListItems = observer(function ListItemsImpl({
   const Footer = React.useCallback(
     () =>
       list.isLoading ? (
-        <View style={styles.feedFooter}>
+        <View style={{paddingTop: 20}}>
           <ActivityIndicator />
         </View>
       ) : (
@@ -221,30 +221,4 @@ export const ListItems = observer(function ListItemsImpl({
       )}
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 16,
-    borderTopWidth: 1,
-  },
-  headerDescription: {
-    flex: 1,
-    marginTop: 8,
-  },
-  headerBtns: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 12,
-  },
-  fakeSelectorItem: {
-    paddingHorizontal: 12,
-    paddingBottom: 8,
-    borderBottomWidth: 3,
-  },
-  feedFooter: {paddingTop: 20},
 })

@@ -1,17 +1,12 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
-import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -40,35 +35,23 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
     }, [store, mutelists]),
   )
 
-  const onPressNewMuteList = React.useCallback(() => {
-    store.shell.openModal({
-      name: 'create-or-edit-list',
-      onSave: (uri: string) => {
-        try {
-          const urip = new AtUri(uri)
-          navigation.navigate('ProfileList', {
-            name: urip.hostname,
-            rkey: urip.rkey,
-          })
-        } catch {}
-      },
-    })
-  }, [store, navigation])
-
-  const renderHeaderButton = React.useCallback(
-    () => (
-      <Button
-        type="primary-light"
-        onPress={onPressNewMuteList}
-        style={styles.createBtn}>
-        <FontAwesomeIcon
-          icon="plus"
-          style={pal.link as FontAwesomeIconStyle}
-          size={18}
-        />
-      </Button>
-    ),
-    [onPressNewMuteList, pal],
+  const onPressNewList = React.useCallback(
+    (purpose: string) => {
+      store.shell.openModal({
+        name: 'create-or-edit-list',
+        purpose,
+        onSave: (uri: string) => {
+          try {
+            const urip = new AtUri(uri)
+            navigation.navigate('ProfileList', {
+              name: urip.hostname,
+              rkey: urip.rkey,
+            })
+          } catch {}
+        },
+      })
+    },
+    [store, navigation],
   )
 
   return (
@@ -80,15 +63,11 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
         isTabletOrDesktop && styles.containerDesktop,
       ]}
       testID="moderationMutelistsScreen">
-      <ViewHeader
-        title="Mute Lists"
-        showOnDesktop
-        renderButton={renderHeaderButton}
-      />
+      <ViewHeader title="Mute Lists" showOnDesktop />
       <ListsList
         listsList={mutelists}
         purpose="mod"
-        onPressCreateNew={onPressNewMuteList}
+        onPressCreateNew={onPressNewList}
       />
     </CenteredView>
   )

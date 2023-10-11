@@ -136,6 +136,7 @@ export class ListModel {
   }
 
   loadMore = bundleAsync(async (replace: boolean = false) => {
+    console.log('loadMore()', replace)
     if (!replace && !this.hasMore) {
       return
     }

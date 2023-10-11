@@ -9,15 +9,13 @@ import {
 import {useFocusEffect} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-// import {useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
-import {
-  NativeDropdown /*, DropdownItem*/,
-} from 'view/com/util/forms/NativeDropdown'
+import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {ListItems} from 'view/com/lists/ListItems'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
@@ -35,9 +33,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-// import {NavigationProp} from 'lib/routes/types'
-// import {toShareUrl} from 'lib/strings/url-helpers'
-// import {shareUrl} from 'lib/sharing'
+import {NavigationProp} from 'lib/routes/types'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {shareUrl} from 'lib/sharing'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {s} from 'lib/styles'
@@ -47,7 +45,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
   observer(function ProfileListScreenImpl({route}: Props) {
     const store = useStores()
-    // const navigation = useNavigation<NavigationProp>()
+    const navigation = useNavigation<NavigationProp>()
     const pal = usePalette('default')
     const {name, rkey} = route.params
 
@@ -67,8 +65,7 @@ export const ProfileListScreen = withAuthRequired(
       }, [store, list]),
     )
 
-    /* TODO
-    const onToggleSubscribed = React.useCallback(async () => {
+    /*const onToggleSubscribed = React.useCallback(async () => {
       try {
         if (list.data?.viewer?.muted) {
           await list.unsubscribe()
@@ -81,9 +78,9 @@ export const ProfileListScreen = withAuthRequired(
         )
         store.log.error('Failed up update subscription', {err})
       }
-    }, [store, list])
+    }, [store, list])*/
 
-    const onPressEditList = React.useCallback(() => {
+    const onPressEdit = React.useCallback(() => {
       store.shell.openModal({
         name: 'create-or-edit-list',
         list,
@@ -93,7 +90,7 @@ export const ProfileListScreen = withAuthRequired(
       })
     }, [store, list])
 
-    const onPressDeleteList = React.useCallback(() => {
+    const onPressDelete = React.useCallback(() => {
       store.shell.openModal({
         name: 'confirm',
         title: 'Delete List',
@@ -109,7 +106,7 @@ export const ProfileListScreen = withAuthRequired(
       })
     }, [store, list, navigation])
 
-    const onPressReportList = React.useCallback(() => {
+    const onPressReport = React.useCallback(() => {
       if (!list.data) return
       store.shell.openModal({
         name: 'report',
@@ -118,12 +115,82 @@ export const ProfileListScreen = withAuthRequired(
       })
     }, [store, list])
 
-    const onPressShareList = React.useCallback(() => {
+    const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
       shareUrl(url)
-    }, [list.creatorDid, rkey])*/
+    }, [list.creatorDid, rkey])
+
+    const dropdownItems: DropdownItem[] = React.useMemo(() => {
+      if (!list.hasLoaded) {
+        return []
+      }
+      let items: DropdownItem[] = [
+        {
+          testID: 'listHeaderDropdownShareBtn',
+          label: 'Share',
+          onPress: onPressShare,
+          icon: {
+            ios: {
+              name: 'square.and.arrow.up', // TODO
+            },
+            android: '',
+            web: 'share',
+          },
+        },
+      ]
+      if (list.isOwner) {
+        items.push({label: 'separator'})
+        items.push({
+          testID: 'listHeaderDropdownEditBtn',
+          label: 'Edit List',
+          onPress: onPressEdit,
+          icon: {
+            ios: {
+              name: 'exclamationmark.triangle', // TODO
+            },
+            android: '',
+            web: 'pen',
+          },
+        })
+        items.push({
+          testID: 'listHeaderDropdownDeleteBtn',
+          label: 'Delete List',
+          onPress: onPressDelete,
+          icon: {
+            ios: {
+              name: 'trash', // TODO
+            },
+            android: '',
+            web: ['far', 'trash-can'],
+          },
+        })
+      } else {
+        items.push({label: 'separator'})
+        items.push({
+          testID: 'listHeaderDropdownReportBtn',
+          label: 'Report List',
+          onPress: onPressReport,
+          icon: {
+            ios: {
+              name: 'exclamationmark.triangle', // TODO
+            },
+            android: '',
+            web: 'circle-exclamation',
+          },
+        })
+      }
+      return items
+    }, [
+      list.hasLoaded,
+      list.isOwner,
+      onPressShare,
+      onPressEdit,
+      onPressDelete,
+      onPressReport,
+    ])
 
     const onPressSelected = React.useCallback(() => {
+      // TODO
       store.emitScreenSoftReset()
     }, [store])
 
@@ -143,24 +210,11 @@ export const ProfileListScreen = withAuthRequired(
       [list.isCuratelist, onPressSelected, pal.colors.link],
     )
 
-    const onPageSelected = React.useCallback(
-      (index: number) => {
-        console.log('hit', index)
-        store.shell.setMinimalShellMode(false)
-        // setSelectedPage(index)
-        store.shell.setIsDrawerSwipeDisabled(index > 0)
-      },
-      [store], //, setSelectedPage],
-    )
-
     if (list.isCuratelist) {
       return (
         <View style={s.hContentRegion}>
-          <Header list={list} />
-          <Pager
-            onPageSelected={onPageSelected}
-            renderTabBar={renderTabBar}
-            tabBarPosition="top">
+          <Header list={list} dropdownItems={dropdownItems} />
+          <Pager renderTabBar={renderTabBar} tabBarPosition="top">
             <FeedPage key="1" list={list} />
             <AboutPage key="2" list={list} />
           </Pager>
@@ -169,11 +223,8 @@ export const ProfileListScreen = withAuthRequired(
     }
     return (
       <View style={s.hContentRegion}>
-        <Header list={list} />
-        <Pager
-          onPageSelected={onPageSelected}
-          renderTabBar={renderTabBar}
-          tabBarPosition="top">
+        <Header list={list} dropdownItems={dropdownItems} />
+        <Pager renderTabBar={renderTabBar} tabBarPosition="top">
           <AboutPage key="1" list={list} />
         </Pager>
       </View>
@@ -202,12 +253,18 @@ function Container({
   )
 }
 
-function Header({list}: {list: ListModel}) {
+const Header = observer(function HeaderImpl({
+  list,
+  dropdownItems,
+}: {
+  list: ListModel
+  dropdownItems: DropdownItem[]
+}) {
   const store = useStores()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
 
-  if (list.isLoading || list.hasError || !list.data) {
+  if (list.hasError || !list.data) {
     return (
       <SimpleViewHeader
         showBackButton={isMobile}
@@ -262,7 +319,7 @@ function Header({list}: {list: ListModel}) {
         </View>
         <NativeDropdown
           testID="listHeaderDropdownBtn"
-          items={[]}
+          items={dropdownItems}
           accessibilityLabel="More options"
           accessibilityHint="">
           <View
@@ -280,36 +337,31 @@ function Header({list}: {list: ListModel}) {
       </View>
     </SimpleViewHeader>
   )
-}
+})
 
-function AboutPage({list}: {list: ListModel}) {
+const AboutPage = observer(function AboutPageImpl({list}: {list: ListModel}) {
   const pal = usePalette('default')
-  console.log('render?')
 
   const renderEmptyState = React.useCallback(() => {
-    console.log(4)
     return (
       <EmptyState
         icon="users-slash"
         message="This list is empty!"
-        style={{paddingVertical: 40}}
+        style={{paddingTop: 40}}
       />
     )
   }, [])
 
-  if (list.isLoading) {
-    console.log(1)
+  if (list.error && !list.data) {
+    return <View />
+  }
+  if (!list.data) {
     return (
       <Container style={[{borderTopWidth: 1, padding: 12}, pal.border]}>
         <ActivityIndicator />
       </Container>
     )
   }
-  if (list.error || !list.data) {
-    console.log(2)
-    return <View />
-  }
-  console.log(3)
   return (
     <Container
       style={[
@@ -337,9 +389,9 @@ function AboutPage({list}: {list: ListModel}) {
       />
     </Container>
   )
-}
+})
 
-function FeedPage({list}: {list: ListModel}) {
+const FeedPage = observer(function FeedPageImpl({list}: {list: ListModel}) {
   const pal = usePalette('default')
   const store = useStores()
   const feed = React.useMemo(
@@ -359,7 +411,7 @@ function FeedPage({list}: {list: ListModel}) {
   }, [feed])
 
   const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset()
+    scrollElRef.current?.scrollToIndex({index: 0})
     resetMainScroll()
   }, [resetMainScroll])
 
@@ -374,9 +426,11 @@ function FeedPage({list}: {list: ListModel}) {
 
   const renderEmptyState = React.useCallback(() => {
     return (
-      <View style={[pal.border, {borderTopWidth: 1, paddingTop: 20}]}>
-        <EmptyState icon="feed" message="This feed is empty!" />
-      </View>
+      <EmptyState
+        icon="feed"
+        message="This feed is empty!"
+        style={[pal.border, {borderTopWidth: 1, paddingTop: 40}]}
+      />
     )
   }, [pal.border])
 
@@ -400,4 +454,4 @@ function FeedPage({list}: {list: ListModel}) {
       )}
     </View>
   )
-}
+})

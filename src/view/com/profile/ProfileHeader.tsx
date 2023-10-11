@@ -276,21 +276,20 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         },
       },
     ]
-    if (!isMe) {
-      items.push({label: 'separator'})
-      // Only add "Add to Lists" on other user's profiles, doesn't make sense to mute my own self!
-      items.push({
-        testID: 'profileHeaderDropdownListAddRemoveBtn',
-        label: 'Add to Lists',
-        onPress: onPressAddRemoveLists,
-        icon: {
-          ios: {
-            name: 'list.bullet',
-          },
-          android: 'ic_menu_add',
-          web: 'list',
+    items.push({label: 'separator'})
+    items.push({
+      testID: 'profileHeaderDropdownListAddRemoveBtn',
+      label: 'Add to Lists',
+      onPress: onPressAddRemoveLists,
+      icon: {
+        ios: {
+          name: 'list.bullet',
         },
-      })
+        android: 'ic_menu_add',
+        web: 'list',
+      },
+    })
+    if (!isMe) {
       if (!view.viewer.blocking) {
         items.push({
           testID: 'profileHeaderDropdownMuteBtn',
