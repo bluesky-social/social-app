@@ -11,7 +11,6 @@ import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from 'view/com/util/Views'
-import {ViewHeader} from 'view/com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export const ModerationModlistsScreen = withAuthRequired(({}: Props) => {
@@ -60,7 +59,6 @@ export const ModerationModlistsScreen = withAuthRequired(({}: Props) => {
         isTabletOrDesktop && styles.containerDesktop,
       ]}
       testID="ModerationModlistsScreen">
-      <ViewHeader title="Moderation Lists" showOnDesktop />
       <ListsList
         listsList={mutelists}
         purpose="mod"

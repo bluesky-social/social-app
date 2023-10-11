@@ -242,7 +242,6 @@ function Header({
           gap: 16,
           paddingHorizontal: 16,
           paddingVertical: 12,
-          borderBottomWidth: 1,
         },
         pal.border,
         style,
@@ -284,5 +283,6 @@ const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
   item: {
     paddingHorizontal: 18,
+    paddingVertical: 4,
   },
 })
