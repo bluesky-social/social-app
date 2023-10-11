@@ -4,6 +4,9 @@ import {RootStoreModel} from '../root-store'
 import Fuse from 'fuse.js'
 import {isObj, hasProp, isStrArray} from 'lib/type-guards'
 
+/**
+ * Used only to persist recent tags across app restarts.
+ */
 export class RecentTagsModel {
   _tags: string[] = []
 
@@ -65,18 +68,25 @@ export class TagsAutocompleteModel {
     }
 
     const items = Array.from(
+      // de-duplicates via Set
       new Set([
+        // sample up to 3 recent tags
         ...this.rootStore.recentTags.tags.slice(0, 3),
+        // sample up to 3 of your profile tags
         ...this.profileTags.slice(0, 3),
+        // and all searched tags
         ...this.searchedTags,
       ]),
     )
 
+    // no query, return default suggestions
     if (!this.query) {
       return items.slice(0, 9)
     }
 
+    // Fuse allows weighting values too, if we ever need it
     const fuse = new Fuse(items)
+    // search amongst mixed set of tags
     const results = fuse.search(this.query)
 
     return results.slice(0, 9).map(r => r.item)
@@ -96,20 +106,10 @@ export class TagsAutocompleteModel {
     }
   }
 
+  // TODO hook up to search type-ahead
   async _search() {
     runInAction(() => {
-      this.searchedTags = [
-        'code',
-        'dev',
-        'javascript',
-        'react',
-        'typescript',
-        'mobx',
-        'mobx-state-tree',
-        'mobx-react',
-        'mobx-react-lite',
-        'mobx-react-form',
-      ]
+      this.searchedTags = []
     })
   }
 }
