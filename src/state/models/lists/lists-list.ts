@@ -22,7 +22,7 @@ export class ListsListModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public source: 'mine' | string,
+    public source: 'mine' | 'my-curatelists' | 'my-modlists' | string,
   ) {
     makeAutoObservable(
       this,
@@ -95,8 +95,12 @@ export class ListsListModel {
     try {
       let cursor: string | undefined
       let lists: GraphDefs.ListView[] = []
-      if (this.source === 'mine') {
-        const [res1, res2, res3] = await Promise.all([
+      if (
+        this.source === 'mine' ||
+        this.source === 'my-curatelists' ||
+        this.source === 'my-modlists'
+      ) {
+        const promises = [
           accumulate(cursor =>
             this.rootStore.agent.app.bsky.graph
               .getLists({
@@ -106,32 +110,53 @@ export class ListsListModel {
               })
               .then(res => ({cursor: res.data.cursor, items: res.data.lists})),
           ),
-          accumulate(cursor =>
-            this.rootStore.agent.app.bsky.graph
-              .getListMutes({
-                cursor,
-                limit: 50,
-              })
-              .then(res => ({cursor: res.data.cursor, items: res.data.lists})),
-          ),
-          accumulate(cursor =>
-            this.rootStore.agent.app.bsky.graph
-              .getListBlocks({
-                cursor,
-                limit: 50,
-              })
-              .then(res => ({cursor: res.data.cursor, items: res.data.lists})),
-          ),
-        ])
-        lists = res1
-        for (let list of res2) {
-          if (!lists.find(l => l.uri === list.uri)) {
-            lists.push(list)
-          }
+        ]
+        if (this.source === 'my-modlists') {
+          promises.push(
+            accumulate(cursor =>
+              this.rootStore.agent.app.bsky.graph
+                .getListMutes({
+                  cursor,
+                  limit: 50,
+                })
+                .then(res => ({
+                  cursor: res.data.cursor,
+                  items: res.data.lists,
+                })),
+            ),
+          )
+          promises.push(
+            accumulate(cursor =>
+              this.rootStore.agent.app.bsky.graph
+                .getListBlocks({
+                  cursor,
+                  limit: 50,
+                })
+                .then(res => ({
+                  cursor: res.data.cursor,
+                  items: res.data.lists,
+                })),
+            ),
+          )
         }
-        for (let list of res3) {
-          if (!lists.find(l => l.uri === list.uri)) {
-            lists.push(list)
+        const resultset = await Promise.all(promises)
+        for (const res of resultset) {
+          for (let list of res) {
+            if (
+              this.source === 'my-curatelists' &&
+              list.purpose !== 'app.bsky.graph.defs#curatelist'
+            ) {
+              continue
+            }
+            if (
+              this.source === 'my-modlists' &&
+              list.purpose !== 'app.bsky.graph.defs#modlist'
+            ) {
+              continue
+            }
+            if (!lists.find(l => l.uri === list.uri)) {
+              lists.push(list)
+            }
           }
         }
       } else {

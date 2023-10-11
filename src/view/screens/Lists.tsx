@@ -1,84 +1,88 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {View} from 'react-native'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {useStores} from 'state/index'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListsList} from 'view/com/lists/ListsList'
+import {Text} from 'view/com/util/text/Text'
+import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CenteredView} from 'view/com/util/Views'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
+import {s} from 'lib/styles'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export const ListsScreen = withAuthRequired(({}: Props) => {
   const pal = usePalette('default')
   const store = useStores()
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const navigation = useNavigation<NavigationProp>()
 
-  const mutelists: ListsListModel = React.useMemo(
-    () => new ListsListModel(store, 'mine'),
+  const listsLists: ListsListModel = React.useMemo(
+    () => new ListsListModel(store, 'my-curatelists'),
     [store],
   )
 
   useFocusEffect(
     React.useCallback(() => {
       store.shell.setMinimalShellMode(false)
-      mutelists.refresh()
-    }, [store, mutelists]),
+      listsLists.refresh()
+    }, [store, listsLists]),
   )
 
-  const onPressNewList = React.useCallback(
-    (purpose: string) => {
-      store.shell.openModal({
-        name: 'create-or-edit-list',
-        purpose,
-        onSave: (uri: string) => {
-          try {
-            const urip = new AtUri(uri)
-            navigation.navigate('ProfileList', {
-              name: urip.hostname,
-              rkey: urip.rkey,
-            })
-          } catch {}
-        },
-      })
-    },
-    [store, navigation],
-  )
+  const onPressNewList = React.useCallback(() => {
+    store.shell.openModal({
+      name: 'create-or-edit-list',
+      purpose: 'app.bsky.graph.defs#curatelist',
+      onSave: (uri: string) => {
+        try {
+          const urip = new AtUri(uri)
+          navigation.navigate('ProfileList', {
+            name: urip.hostname,
+            rkey: urip.rkey,
+          })
+        } catch {}
+      },
+    })
+  }, [store, navigation])
 
   return (
-    <CenteredView
-      style={[
-        styles.container,
-        pal.view,
-        pal.border,
-        isTabletOrDesktop && styles.containerDesktop,
-      ]}
-      testID="listsScreen">
-      <ListsList
-        listsList={mutelists}
-        purpose="curate"
-        onPressCreateNew={onPressNewList}
-      />
-    </CenteredView>
+    <View style={s.hContentRegion} testID="listsScreen">
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        style={
+          !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
+        }>
+        <View style={{flex: 1}}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            User Lists
+          </Text>
+          <Text style={pal.textLight}>
+            Public, shareable lists which can drive feeds.
+          </Text>
+        </View>
+        <View>
+          <Button
+            type="default"
+            onPress={onPressNewList}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+            <FontAwesomeIcon icon="plus" color={pal.colors.text} />
+            <Text type="button" style={pal.text}>
+              New
+            </Text>
+          </Button>
+        </View>
+      </SimpleViewHeader>
+      <ListsList listsList={listsLists} onPressCreateNew={onPressNewList} />
+    </View>
   )
-})
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 100,
-  },
-  containerDesktop: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    paddingBottom: 0,
-  },
-  createBtn: {
-    width: 40,
-  },
 })
