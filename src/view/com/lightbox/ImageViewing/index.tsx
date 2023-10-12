@@ -46,6 +46,7 @@ function ImageViewing({
   const [showControls, setShowControls] = useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
+    pointerEvents: showControls ? 'auto' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
@@ -54,6 +55,7 @@ function ImageViewing({
     ],
   }))
   const animatedFooterStyle = useAnimatedStyle(() => ({
+    pointerEvents: showControls ? 'auto' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
