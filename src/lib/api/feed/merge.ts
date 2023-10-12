@@ -230,26 +230,31 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeed({
-      cursor,
-      limit,
-      feed: this.feedUri,
-    })
-    // NOTE
-    // some custom feeds fail to enforce the pagination limit
-    // so we manually truncate here
-    // -prf
-    if (limit && res.data.feed.length > limit) {
-      res.data.feed = res.data.feed.slice(0, limit)
+    try {
+      const res = await this.rootStore.agent.app.bsky.feed.getFeed({
+        cursor,
+        limit,
+        feed: this.feedUri,
+      })
+      // NOTE
+      // some custom feeds fail to enforce the pagination limit
+      // so we manually truncate here
+      // -prf
+      if (limit && res.data.feed.length > limit) {
+        res.data.feed = res.data.feed.slice(0, limit)
+      }
+      // filter out older posts
+      res.data.feed = res.data.feed.filter(
+        post => new Date(post.post.indexedAt) > this.minDate,
+      )
+      // attach source info
+      for (const post of res.data.feed) {
+        post.__source = this.sourceInfo
+      }
+      return res
+    } catch {
+      // dont bubble custom-feed errors
+      return {success: false, headers: {}, data: {feed: []}}
     }
-    // filter out older posts
-    res.data.feed = res.data.feed.filter(
-      post => new Date(post.post.indexedAt) > this.minDate,
-    )
-    // attach source info
-    for (const post of res.data.feed) {
-      post.__source = this.sourceInfo
-    }
-    return res
   }
 }
