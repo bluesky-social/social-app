@@ -40,7 +40,7 @@ export const CustomFeed = observer(function CustomFeedImpl({
         message: `Remove ${item.displayName} from my feeds?`,
         onPressConfirm: async () => {
           try {
-            await store.me.savedFeeds.unsave(item)
+            await item.unsave()
             Toast.show('Removed from my feeds')
           } catch (e) {
             Toast.show('There was an issue contacting your server')
@@ -50,7 +50,7 @@ export const CustomFeed = observer(function CustomFeedImpl({
       })
     } else {
       try {
-        await store.me.savedFeeds.save(item)
+        await item.save()
         Toast.show('Added to my feeds')
       } catch (e) {
         Toast.show('There was an issue contacting your server')

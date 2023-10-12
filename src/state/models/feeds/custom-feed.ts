@@ -57,6 +57,10 @@ export class CustomFeedModel {
     return this.rootStore.preferences.savedFeeds.includes(this.uri)
   }
 
+  get isPinned() {
+    return this.rootStore.preferences.isPinnedFeed(this.uri)
+  }
+
   get isLiked() {
     return this.data.viewer?.like
   }
@@ -88,6 +92,22 @@ export class CustomFeedModel {
         name: this.data.displayName,
         uri: this.uri,
       })
+    }
+  }
+
+  async togglePin() {
+    if (!this.isPinned) {
+      track('CustomFeed:Pin', {
+        name: this.data.displayName,
+        uri: this.uri,
+      })
+      return this.rootStore.preferences.addPinnedFeed(this.uri)
+    } else {
+      track('CustomFeed:Unpin', {
+        name: this.data.displayName,
+        uri: this.uri,
+      })
+      return this.rootStore.preferences.removePinnedFeed(this.uri)
     }
   }
 

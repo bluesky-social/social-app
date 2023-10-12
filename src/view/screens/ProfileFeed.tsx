@@ -139,7 +139,7 @@ export const CustomFeedScreenInner = observer(
       feed.setup()
       return feed
     }, [store, uri])
-    const isPinned = store.me.savedFeeds.isPinned(uri)
+    const isPinned = store.preferences.isPinnedFeed(uri)
     useSetTitle(feedInfo?.displayName)
 
     // events
@@ -179,10 +179,12 @@ export const CustomFeedScreenInner = observer(
 
     const onTogglePinned = React.useCallback(async () => {
       Haptics.default()
-      store.me.savedFeeds.togglePinnedFeed(feedInfo!).catch(e => {
-        Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to toggle pinned feed', {e})
-      })
+      if (feedInfo) {
+        feedInfo.togglePin().catch(e => {
+          Toast.show('There was an issue contacting the server')
+          store.log.error('Failed to toggle pinned feed', {e})
+        })
+      }
     }, [store, feedInfo])
 
     const onPressViewFeedPage = React.useCallback(() => {

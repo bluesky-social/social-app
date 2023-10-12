@@ -114,12 +114,12 @@ export class MergeFeedAPI implements FeedAPI {
     }
     if (this.customFeeds.length === 0) {
       this.customFeeds = shuffle(
-        this.rootStore.me.savedFeeds.all.map(
-          feed =>
+        this.rootStore.preferences.savedFeeds.map(
+          feedUri =>
             new MergeFeedSource_Custom(
               this.rootStore,
-              feed.uri,
-              feed.displayName,
+              feedUri,
+              'TODO', // TODO
             ),
         ),
       )

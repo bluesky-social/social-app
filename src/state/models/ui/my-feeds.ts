@@ -1,4 +1,5 @@
 import {makeAutoObservable} from 'mobx'
+import {SavedFeedsModel} from './saved-feeds'
 import {FeedsDiscoveryModel} from '../discovery/feeds'
 import {CustomFeedModel} from '../feeds/custom-feed'
 import {RootStoreModel} from '../root-store'
@@ -50,15 +51,13 @@ export type MyFeedsItem =
     }
 
 export class MyFeedsUIModel {
+  saved: SavedFeedsModel
   discovery: FeedsDiscoveryModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this)
+    this.saved = new SavedFeedsModel(this.rootStore)
     this.discovery = new FeedsDiscoveryModel(this.rootStore)
-  }
-
-  get saved() {
-    return this.rootStore.me.savedFeeds
   }
 
   get isRefreshing() {

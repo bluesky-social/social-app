@@ -30,29 +30,24 @@ export const HomeScreen = withAuthRequired(
     >([])
 
     React.useEffect(() => {
-      const {pinned} = store.me.savedFeeds
+      const pinned = store.preferences.pinnedFeeds
 
-      if (
-        isEqual(
-          pinned.map(p => p.uri),
-          requestedCustomFeeds,
-        )
-      ) {
+      if (isEqual(pinned, requestedCustomFeeds)) {
         // no changes
         return
       }
 
       const feeds = []
       for (const feed of pinned) {
-        const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
+        const model = new PostsFeedModel(store, 'custom', {feed: feed})
         feeds.push(model)
       }
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
-      setRequestedCustomFeeds(pinned.map(p => p.uri))
+      setRequestedCustomFeeds(pinned)
     }, [
       store,
-      store.me.savedFeeds.pinned,
+      store.preferences.pinnedFeeds,
       customFeeds,
       setCustomFeeds,
       pagerRef,

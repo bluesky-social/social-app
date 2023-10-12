@@ -14,6 +14,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
+import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -41,7 +42,11 @@ export const SavedFeeds = withAuthRequired(
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
 
-    const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
+    const savedFeeds = useMemo(() => {
+      const model = new SavedFeedsModel(store)
+      model.refresh()
+      return model
+    }, [store])
     useFocusEffect(
       useCallback(() => {
         screen('SavedFeeds')
@@ -123,7 +128,7 @@ export const SavedFeeds = withAuthRequired(
         <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
         <DraggableFlatList
           containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
-          data={savedFeeds.all}
+          data={savedFeeds.pinned.concat(savedFeeds.unpinned)}
           keyExtractor={item => item.data.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
@@ -134,7 +139,9 @@ export const SavedFeeds = withAuthRequired(
               titleColor={pal.colors.text}
             />
           }
-          renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
+          renderItem={({item, drag}) => (
+            <ListItem savedFeeds={savedFeeds} item={item} drag={drag} />
+          )}
           getItemLayout={(data, index) => ({
             length: 77,
             offset: 77 * index,
@@ -152,24 +159,25 @@ export const SavedFeeds = withAuthRequired(
 )
 
 const ListItem = observer(function ListItemImpl({
+  savedFeeds,
   item,
   drag,
 }: {
+  savedFeeds: SavedFeedsModel
   item: CustomFeedModel
   drag: () => void
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
-  const isPinned = savedFeeds.isPinned(item)
+  const isPinned = item.isPinned
 
   const onTogglePinned = useCallback(() => {
     Haptics.default()
-    savedFeeds.togglePinnedFeed(item).catch(e => {
+    item.togglePin().catch(e => {
       Toast.show('There was an issue contacting the server')
       store.log.error('Failed to toggle pinned feed', {e})
     })
-  }, [savedFeeds, item, store])
+  }, [item, store])
   const onPressUp = useCallback(
     () =>
       savedFeeds.movePinnedFeed(item, 'up').catch(e => {
