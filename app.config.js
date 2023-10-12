@@ -6,7 +6,7 @@ module.exports = function () {
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
-      version: '1.52.0',
+      version: '1.53.0',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -19,7 +19,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       ios: {
-        buildNumber: '2',
+        buildNumber: '1',
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
@@ -43,7 +43,7 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: 41,
+        versionCode: 42,
         adaptiveIcon: {
           foregroundImage: './assets/adaptive-icon.png',
           backgroundColor: '#ffffff',
