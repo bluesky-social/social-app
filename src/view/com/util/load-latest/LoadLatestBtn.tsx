@@ -74,14 +74,12 @@ const styles = StyleSheet.create({
   loadLatestTablet: {
     // @ts-ignore web only
     left: '50vw',
-    // @ts-ignore web only -prf
-    transform: 'translateX(-282px)',
+    transform: [{translateX: -282}],
   },
   loadLatestDesktop: {
     // @ts-ignore web only
     left: '50vw',
-    // @ts-ignore web only -prf
-    transform: 'translateX(-382px)',
+    transform: [{translateX: -382}],
   },
   indicator: {
     position: 'absolute',
