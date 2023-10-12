@@ -49,7 +49,6 @@ export function TagInput({
 
   const [value, setValue] = React.useState('')
   const [tags, setTags] = React.useState<string[]>([])
-  const [selectedItemIndex, setSelectedItemIndex] = React.useState(0)
   const [suggestions, setSuggestions] = React.useState<string[]>([])
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
 
@@ -57,9 +56,8 @@ export function TagInput({
     setValue('')
     model.setActive(false)
     model.clear()
-    setSelectedItemIndex(0)
     setSuggestions([])
-  }, [model, setValue, setSelectedItemIndex, setSuggestions])
+  }, [model, setValue, setSuggestions])
 
   const addTags = React.useCallback(
     (_tags: string[]) => {
@@ -85,16 +83,17 @@ export function TagInput({
         addTags(uniq([...tags, tag]).slice(0, max))
       }
 
-      setValue('')
-      input.current?.focus()
+      setTimeout(() => {
+        setValue('')
+        input.current?.focus()
+      }, 1)
     },
     [max, tags, setValue, addTags],
   )
 
   const onSubmitEditing = React.useCallback(() => {
-    const item = suggestions[selectedItemIndex]
-    addTagAndReset(item || value)
-  }, [value, suggestions, selectedItemIndex, addTagAndReset])
+    addTagAndReset(value)
+  }, [value, addTagAndReset])
 
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
@@ -106,29 +105,8 @@ export function TagInput({
         e.preventDefault() // prevents an additional space on web
         addTagAndReset(value)
       }
-
-      if (key === 'Escape') {
-        reset()
-      } else if (key === 'ArrowUp') {
-        e.preventDefault()
-        setSelectedItemIndex(
-          (selectedItemIndex + suggestions.length - 1) % suggestions.length,
-        )
-      } else if (key === 'ArrowDown') {
-        e.preventDefault()
-        setSelectedItemIndex((selectedItemIndex + 1) % suggestions.length)
-      }
     },
-    [
-      value,
-      tags,
-      selectedItemIndex,
-      suggestions.length,
-      reset,
-      setSelectedItemIndex,
-      addTags,
-      addTagAndReset,
-    ],
+    [value, tags, addTags, addTagAndReset],
   )
 
   const onChangeText = React.useCallback(
@@ -206,10 +184,11 @@ export function TagInput({
         <BottomSheet
           ref={sheet}
           index={-1}
-          snapPoints={[200]}
+          snapPoints={['90%']}
           enablePanDownToClose
+          keyboardBehavior="extend"
+          backgroundStyle={{backgroundColor: 'transparent'}}
           android_keyboardInputMode="adjustResize"
-          keyboardBlurBehavior="restore"
           backdropComponent={props => (
             <BottomSheetBackdrop
               appearsOnIndex={0}
@@ -236,9 +215,16 @@ export function TagInput({
               ))}
 
               <BottomSheetTextInput
+                autoCapitalize="none"
+                autoComplete="off"
                 placeholder="Add tags..."
                 value={value}
-                style={styles.input}
+                style={[
+                  styles.input,
+                  {
+                    placeholderTextColor: pal.textLight.color,
+                  },
+                ]}
                 onChangeText={onChangeText}
                 onKeyPress={onKeyPress}
                 onSubmitEditing={onSubmitEditing}
