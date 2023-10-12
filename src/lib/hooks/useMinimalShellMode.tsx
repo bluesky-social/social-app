@@ -15,7 +15,7 @@ export function useMinimalShellMode() {
     return {
       opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
-        {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, 100])},
+        {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, 25])},
       ],
     }
   })
@@ -23,7 +23,7 @@ export function useMinimalShellMode() {
     return {
       opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
-        {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, -100])},
+        {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, -25])},
       ],
     }
   })
