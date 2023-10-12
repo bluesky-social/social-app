@@ -13,12 +13,8 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
 
-import {
-  useSheet,
-  Sheet as BottomSheet,
-  Backdrop as BottomSheetBackdrop,
-} from 'view/com/util/BottomSheet'
 import {Portal} from 'view/com/util/Portal'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -53,22 +49,7 @@ export function TagInput({
   const [suggestions, setSuggestions] = React.useState<string[]>([])
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
 
-  const sheet = useSheet({
-    index: 0,
-    snaps: [0, '90%'],
-    async onStateChange(state) {
-      if (state.index > 0) {
-        model.setActive(true)
-        await model.search('') // get default results
-        setSuggestions(model.suggestions)
-        setIsInitialLoad(false)
-      } else {
-        reset()
-        setIsInitialLoad(true)
-        input.current?.blur()
-      }
-    },
-  })
+  const sheet = React.useRef<BottomSheet>(null)
 
   const reset = React.useCallback(() => {
     setValue('')
@@ -145,9 +126,27 @@ export function TagInput({
   )
 
   const openSheet = React.useCallback(() => {
-    sheet.index = 1
+    sheet.current?.snapToIndex(0)
     input.current?.focus()
   }, [sheet])
+
+  const onSheetChange = React.useCallback(
+    async (index: number) => {
+      if (index > -1) {
+        model.setActive(true)
+        await model.search('') // get default results
+        setSuggestions(model.suggestions)
+        setIsInitialLoad(false)
+      }
+    },
+    [model, setSuggestions, setIsInitialLoad],
+  )
+
+  const onCloseSheet = React.useCallback(() => {
+    reset()
+    setIsInitialLoad(true)
+    input.current?.blur()
+  }, [reset, setIsInitialLoad])
 
   return (
     <View>
@@ -184,9 +183,25 @@ export function TagInput({
       </Pressable>
 
       <Portal>
-        <BottomSheet sheet={sheet}>
-          <BottomSheetBackdrop sheet={sheet} />
-
+        <BottomSheet
+          ref={sheet}
+          index={-1}
+          snapPoints={['90%']}
+          enablePanDownToClose
+          keyboardBehavior="extend"
+          backgroundStyle={{backgroundColor: 'transparent'}}
+          android_keyboardInputMode="adjustResize"
+          backdropComponent={props => (
+            <BottomSheetBackdrop
+              appearsOnIndex={0}
+              disappearsOnIndex={-1}
+              {...props}
+            />
+          )}
+          handleIndicatorStyle={{backgroundColor: pal.text.color}}
+          handleStyle={{display: 'none'}}
+          onChange={onSheetChange}
+          onClose={onCloseSheet}>
           <Sheet.Outer>
             <Sheet.Handle />
 
