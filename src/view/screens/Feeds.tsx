@@ -268,7 +268,7 @@ function SavedFeed({
 }) {
   const pal = usePalette('default')
   const urip = new AtUri(uri)
-  const href = `/profile/${urip.hostname}/feed/${urip.rkey}`
+  const href = `/profile/${urip.hostname}/feed/${urip.rkey}?view=home`
   const {isMobile} = useWebMediaQueries()
   return (
     <Link

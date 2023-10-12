@@ -41,6 +41,7 @@ export const ProfileScreenHeader = observer(function HeaderImpl({
   const store = useStores()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const titleSize = isMobile ? 'title' : 'title-lg'
 
   if (!info) {
     return (
@@ -50,7 +51,7 @@ export const ProfileScreenHeader = observer(function HeaderImpl({
           !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
         }>
         <Text
-          type="title-lg"
+          type={titleSize}
           style={{flex: 1, fontWeight: 'bold'}}
           numberOfLines={1}>
           Loading...
@@ -67,9 +68,9 @@ export const ProfileScreenHeader = observer(function HeaderImpl({
       }>
       <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
         {minimalMode ? (
-          <Text type="title-lg" style={{flex: 1}} numberOfLines={1}>
+          <Text type={titleSize} style={{flex: 1}} numberOfLines={1}>
             <TextLink
-              type="title-lg"
+              type={titleSize}
               href={info.href}
               style={[pal.text, {fontWeight: 'bold'}]}
               text={info.title}
@@ -78,16 +79,20 @@ export const ProfileScreenHeader = observer(function HeaderImpl({
           </Text>
         ) : (
           <>
-            <View style={{marginRight: 12}}>
-              <UserAvatar type={avatarType} avatar={info.avatar} size={48} />
+            <View style={{marginRight: isMobile ? 8 : 12}}>
+              <UserAvatar
+                type={avatarType}
+                avatar={info.avatar}
+                size={isMobile ? 26 : 48}
+              />
             </View>
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, alignSelf: 'center'}}>
               <Text
-                type="title-lg"
-                style={{flex: 1, fontWeight: 'bold'}}
+                type={titleSize}
+                style={{fontWeight: 'bold'}}
                 numberOfLines={1}>
                 <TextLink
-                  type="title-lg"
+                  type={titleSize}
                   href="/"
                   style={[pal.text, {fontWeight: 'bold'}]}
                   text={info.title}
@@ -95,18 +100,20 @@ export const ProfileScreenHeader = observer(function HeaderImpl({
                 />
               </Text>
 
-              <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                {objectLabel} by{' '}
-                {info.isOwner ? (
-                  'you'
-                ) : (
-                  <TextLink
-                    text={sanitizeHandle(info.creator.handle, '@')}
-                    href={makeProfileLink(info.creator)}
-                    style={pal.textLight}
-                  />
-                )}
-              </Text>
+              {!isMobile && (
+                <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                  {objectLabel} by{' '}
+                  {info.isOwner ? (
+                    'you'
+                  ) : (
+                    <TextLink
+                      text={sanitizeHandle(info.creator.handle, '@')}
+                      href={makeProfileLink(info.creator)}
+                      style={pal.textLight}
+                    />
+                  )}
+                </Text>
+              )}
             </View>
           </>
         )}

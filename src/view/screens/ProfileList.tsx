@@ -16,6 +16,7 @@ import {RichText} from 'view/com/util/text/RichText'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from 'view/com/pager/TabBar'
 import {Button} from 'view/com/util/forms/Button'
+import {TextLink} from 'view/com/util/Link'
 // import * as Toast from 'view/com/util/Toast'
 import {ListModel} from 'state/models/content/list'
 import {PostsFeedModel} from 'state/models/feeds/posts'
@@ -28,6 +29,8 @@ import {shareUrl} from 'lib/sharing'
 import {resolveName} from 'lib/api'
 import {s} from 'lib/styles'
 import {isNative} from 'platform/detection'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
@@ -390,7 +393,9 @@ const AboutPage = observer(function AboutPageImpl({
   }
   if (!list.data) {
     return (
-      <CenteredView sideBorders style={{borderTopWidth: 1, padding: 12}}>
+      <CenteredView
+        sideBorders
+        style={[{borderTopWidth: 1, padding: 12}, pal.border]}>
         <ActivityIndicator />
       </CenteredView>
     )
@@ -424,6 +429,18 @@ const AboutPage = observer(function AboutPageImpl({
             No description
           </Text>
         )}
+        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          Created by{' '}
+          {list.isOwner ? (
+            'you'
+          ) : (
+            <TextLink
+              text={sanitizeHandle(list.data.creator.handle, '@')}
+              href={makeProfileLink(list.data.creator)}
+              style={pal.textLight}
+            />
+          )}
+        </Text>
         {list.isOwner && (
           <View style={{flexDirection: 'row'}}>
             <Button type="default" label="Add user" onPress={onPressAddUser} />

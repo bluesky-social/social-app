@@ -36,6 +36,8 @@ import {pluralize} from 'lib/strings/helpers'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
 import {isNative} from 'platform/detection'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export const ProfileFeedScreen = withAuthRequired(
@@ -140,6 +142,9 @@ export const CustomFeedScreenInner = observer(
     const isPinned = store.me.savedFeeds.isPinned(uri)
     useSetTitle(feedInfo?.displayName)
 
+    // events
+    // =
+
     const onToggleSaved = React.useCallback(async () => {
       try {
         Haptics.default()
@@ -199,13 +204,27 @@ export const CustomFeedScreenInner = observer(
       })
     }, [store, feedInfo])
 
-    const renderTabBar = React.useCallback((props: RenderTabBarFnProps) => {
-      return (
-        <CenteredView sideBorders>
-          <TabBar {...props} items={['Posts', 'About']} />
-        </CenteredView>
-      )
-    }, [])
+    const onPressSelectedTab = React.useCallback(() => {
+      store.emitScreenSoftReset()
+    }, [store])
+
+    // render
+    // =
+
+    const renderTabBar = React.useCallback(
+      (props: RenderTabBarFnProps) => {
+        return (
+          <CenteredView sideBorders>
+            <TabBar
+              {...props}
+              items={['Posts', 'About']}
+              onPressSelected={onPressSelectedTab}
+            />
+          </CenteredView>
+        )
+      },
+      [onPressSelectedTab],
+    )
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       return [
@@ -287,7 +306,6 @@ export const CustomFeedScreenInner = observer(
             dropdownItems={dropdownItems}
             isPinned={isPinned}
             minimalMode={minimalMode}
-            onToggleLiked={onToggleLiked}
             onTogglePinned={onTogglePinned}
             onToggleSaved={onToggleSaved}
           />
@@ -304,7 +322,6 @@ export const CustomFeedScreenInner = observer(
           dropdownItems={dropdownItems}
           isPinned={isPinned}
           minimalMode={minimalMode}
-          onToggleLiked={onToggleLiked}
           onTogglePinned={onTogglePinned}
           onToggleSaved={onToggleSaved}
         />
@@ -315,6 +332,7 @@ export const CustomFeedScreenInner = observer(
             feedOwnerDid={feedOwnerDid}
             feedRkey={rkey}
             feedInfo={feedInfo}
+            onToggleLiked={onToggleLiked}
           />
         </Pager>
       </View>
@@ -329,7 +347,6 @@ const Header = observer(function HeaderImpl({
   dropdownItems,
   isPinned,
   minimalMode,
-  onToggleLiked,
   onTogglePinned,
   onToggleSaved,
 }: {
@@ -339,7 +356,6 @@ const Header = observer(function HeaderImpl({
   dropdownItems: DropdownItem[]
   isPinned: boolean
   minimalMode: boolean
-  onToggleLiked: () => void
   onTogglePinned: () => void
   onToggleSaved: () => void
 }) {
@@ -364,19 +380,6 @@ const Header = observer(function HeaderImpl({
       avatarType="algo"
       minimalMode={minimalMode}
       dropdownItems={dropdownItems}>
-      <Button
-        type="default-light"
-        testID="toggleLikeBtn"
-        accessibilityLabel="Like this feed"
-        accessibilityHint=""
-        onPress={onToggleLiked}
-        style={styles.headerBtn}>
-        {feedInfo?.isLiked ? (
-          <HeartIconSolid size={19} style={styles.liked} />
-        ) : (
-          <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
-        )}
-      </Button>
       {feedInfo?.isSaved ? (
         <Button
           type="default-light"
@@ -416,10 +419,12 @@ const AboutPage = observer(function AboutPageImpl({
   feedOwnerDid,
   feedRkey,
   feedInfo,
+  onToggleLiked,
 }: {
   feedOwnerDid: string
   feedRkey: string
   feedInfo: CustomFeedModel | undefined
+  onToggleLiked: () => void
 }) {
   const pal = usePalette('default')
 
@@ -455,16 +460,43 @@ const AboutPage = observer(function AboutPageImpl({
             No description
           </Text>
         )}
-        {typeof feedInfo.data.likeCount === 'number' && (
-          <TextLink
-            href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-            text={`Liked by ${feedInfo.data.likeCount} ${pluralize(
-              feedInfo.data.likeCount,
-              'user',
-            )}`}
-            style={[pal.textLight, s.semiBold]}
-          />
-        )}
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+          <Button
+            type="default"
+            testID="toggleLikeBtn"
+            accessibilityLabel="Like this feed"
+            accessibilityHint=""
+            onPress={onToggleLiked}
+            style={{paddingHorizontal: 10}}>
+            {feedInfo?.isLiked ? (
+              <HeartIconSolid size={19} style={styles.liked} />
+            ) : (
+              <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
+            )}
+          </Button>
+          {typeof feedInfo.data.likeCount === 'number' && (
+            <TextLink
+              href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
+              text={`Liked by ${feedInfo.data.likeCount} ${pluralize(
+                feedInfo.data.likeCount,
+                'user',
+              )}`}
+              style={[pal.textLight, s.semiBold]}
+            />
+          )}
+        </View>
+        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          Created by{' '}
+          {feedInfo.isOwner ? (
+            'you'
+          ) : (
+            <TextLink
+              text={sanitizeHandle(feedInfo.data.creator.handle, '@')}
+              href={makeProfileLink(feedInfo.data.creator)}
+              style={pal.textLight}
+            />
+          )}
+        </Text>
       </View>
     </CenteredView>
   )
