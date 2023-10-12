@@ -1,15 +1,8 @@
-import React, {useMemo, useRef, MutableRefObject} from 'react'
-import {
-  FlatList,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-  ActivityIndicator,
-} from 'react-native'
+import React, {useMemo} from 'react'
+import {StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation, useIsFocused} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -21,10 +14,9 @@ import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {Feed} from 'view/com/posts/Feed'
 import {TextLink} from 'view/com/util/Link'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {ProfileScreenHeader} from 'view/com/profile-screen/ProfileScreenHeader'
+import {ProfileScreenFeedPage} from 'view/com/profile-screen/ProfileScreenFeedPage'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import {RichText} from 'view/com/util/text/RichText'
@@ -36,16 +28,10 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
-import {ComposeIcon2} from 'lib/icons'
-import {FAB} from '../com/util/fab/FAB'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {useOnMainScroll, OnScrollCb} from 'lib/hooks/useOnMainScroll'
-import {EmptyState} from 'view/com/util/EmptyState'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {resolveName} from 'lib/api'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink, makeCustomFeedLink} from 'lib/routes/links'
+import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
@@ -136,7 +122,6 @@ export const CustomFeedScreenInner = observer(
   }: Props & {feedOwnerDid: string}) {
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
-    const isScreenFocused = useIsFocused()
     const {track} = useAnalytics()
     const {rkey, name: handleOrDid, view: viewMode} = route.params
     const minimalMode = viewMode === 'home'
@@ -144,7 +129,6 @@ export const CustomFeedScreenInner = observer(
       () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
       [rkey, feedOwnerDid],
     )
-    const scrollElRef = useRef<FlatList>(null)
     const feedInfo = useCustomFeed(uri)
     const algoFeed: PostsFeedModel = useMemo(() => {
       const feed = new PostsFeedModel(store, 'custom', {
@@ -154,8 +138,6 @@ export const CustomFeedScreenInner = observer(
       return feed
     }, [store, uri])
     const isPinned = store.me.savedFeeds.isPinned(uri)
-    const [onMainScroll, isScrolledDown, resetMainScroll] =
-      useOnMainScroll(store)
     useSetTitle(feedInfo?.displayName)
 
     const onToggleSaved = React.useCallback(async () => {
@@ -217,41 +199,13 @@ export const CustomFeedScreenInner = observer(
       })
     }, [store, feedInfo])
 
-    const onScrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
-      resetMainScroll()
-    }, [scrollElRef, resetMainScroll])
-
-    const onPressCompose = React.useCallback(() => {
-      store.shell.openComposer({})
-    }, [store])
-
-    const onSoftReset = React.useCallback(() => {
-      if (isScreenFocused) {
-        onScrollToTop()
-        algoFeed.refresh()
-      }
-    }, [isScreenFocused, onScrollToTop, algoFeed])
-
     const renderTabBar = React.useCallback((props: RenderTabBarFnProps) => {
       return (
-        <Container>
+        <CenteredView sideBorders>
           <TabBar {...props} items={['Posts', 'About']} />
-        </Container>
+        </CenteredView>
       )
     }, [])
-
-    // fires when page within screen is activated/deactivated
-    React.useEffect(() => {
-      if (!isScreenFocused) {
-        return
-      }
-
-      const softResetSub = store.onScreenSoftReset(onSoftReset)
-      return () => {
-        softResetSub.remove()
-      }
-    }, [store, onSoftReset, isScreenFocused])
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       return [
@@ -327,6 +281,8 @@ export const CustomFeedScreenInner = observer(
       return (
         <View style={s.hContentRegion}>
           <Header
+            feedOwnerDid={feedOwnerDid}
+            feedRkey={rkey}
             feedInfo={feedInfo}
             dropdownItems={dropdownItems}
             isPinned={isPinned}
@@ -335,23 +291,15 @@ export const CustomFeedScreenInner = observer(
             onTogglePinned={onTogglePinned}
             onToggleSaved={onToggleSaved}
           />
-          <FeedPage
-            scrollElRef={scrollElRef}
-            algoFeed={algoFeed}
-            uri={uri}
-            isPinned={isPinned}
-            isScrolledDown={isScrolledDown}
-            minimalMode
-            onMainScroll={onMainScroll}
-            onPressCompose={onPressCompose}
-            onSoftReset={onSoftReset}
-          />
+          <ProfileScreenFeedPage feed={algoFeed} minimalMode />
         </View>
       )
     }
     return (
       <View style={s.hContentRegion}>
         <Header
+          feedOwnerDid={feedOwnerDid}
+          feedRkey={rkey}
           feedInfo={feedInfo}
           dropdownItems={dropdownItems}
           isPinned={isPinned}
@@ -361,17 +309,7 @@ export const CustomFeedScreenInner = observer(
           onToggleSaved={onToggleSaved}
         />
         <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-          <FeedPage
-            key="1"
-            scrollElRef={scrollElRef}
-            algoFeed={algoFeed}
-            uri={uri}
-            isPinned={isPinned}
-            isScrolledDown={isScrolledDown}
-            onMainScroll={onMainScroll}
-            onPressCompose={onPressCompose}
-            onSoftReset={onSoftReset}
-          />
+          <ProfileScreenFeedPage key="1" feed={algoFeed} />
           <AboutPage
             key="2"
             feedOwnerDid={feedOwnerDid}
@@ -384,27 +322,9 @@ export const CustomFeedScreenInner = observer(
   },
 )
 
-function Container({
-  children,
-  style,
-}: React.PropsWithChildren<{style?: StyleProp<ViewStyle>}>) {
-  const pal = usePalette('default')
-  return (
-    <CenteredView
-      style={[
-        {
-          borderLeftWidth: 1,
-          borderRightWidth: 1,
-        },
-        pal.border,
-        style,
-      ]}>
-      {children}
-    </CenteredView>
-  )
-}
-
 const Header = observer(function HeaderImpl({
+  feedOwnerDid,
+  feedRkey,
   feedInfo,
   dropdownItems,
   isPinned,
@@ -413,6 +333,8 @@ const Header = observer(function HeaderImpl({
   onTogglePinned,
   onToggleSaved,
 }: {
+  feedOwnerDid: string
+  feedRkey: string
   feedInfo: CustomFeedModel | undefined
   dropdownItems: DropdownItem[]
   isPinned: boolean
@@ -421,205 +343,72 @@ const Header = observer(function HeaderImpl({
   onTogglePinned: () => void
   onToggleSaved: () => void
 }) {
-  const store = useStores()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
 
-  if (!feedInfo) {
-    return (
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={
-          !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
-        }>
-        <Text
-          type="title-lg"
-          style={{flex: 1, fontWeight: 'bold'}}
-          numberOfLines={1}>
-          Loading...
-        </Text>
-      </SimpleViewHeader>
-    )
-  }
+  const info = feedInfo
+    ? {
+        href: makeCustomFeedLink(feedOwnerDid, feedRkey),
+        title: feedInfo.displayName,
+        avatar: feedInfo.data.avatar,
+        isOwner: feedInfo.isOwner,
+        creator: feedInfo.data.creator,
+      }
+    : undefined
 
   return (
-    <SimpleViewHeader
-      showBackButton={isMobile}
-      style={
-        !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
-      }>
-      <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-        {minimalMode ? (
-          <Text type="title-lg" style={styles.headerText} numberOfLines={1}>
-            <TextLink
-              type="title-lg"
-              href="/"
-              style={[pal.text, {fontWeight: 'bold'}]}
-              text={feedInfo?.displayName || ''}
-              onPress={() => store.emitScreenSoftReset()}
-            />
-          </Text>
+    <ProfileScreenHeader
+      info={info}
+      objectLabel="Feed"
+      avatarType="algo"
+      minimalMode={minimalMode}
+      dropdownItems={dropdownItems}>
+      <Button
+        type="default-light"
+        testID="toggleLikeBtn"
+        accessibilityLabel="Like this feed"
+        accessibilityHint=""
+        onPress={onToggleLiked}
+        style={styles.headerBtn}>
+        {feedInfo?.isLiked ? (
+          <HeartIconSolid size={19} style={styles.liked} />
         ) : (
-          <>
-            <View style={{marginRight: 12}}>
-              <UserAvatar type="algo" avatar={feedInfo.data.avatar} size={48} />
-            </View>
-            <View style={{flex: 1}}>
-              <Text
-                type="title-lg"
-                style={{flex: 1, fontWeight: 'bold'}}
-                numberOfLines={1}>
-                <TextLink
-                  type="title-lg"
-                  href="/"
-                  style={[pal.text, {fontWeight: 'bold'}]}
-                  text={feedInfo.data.displayName || ''}
-                  onPress={() => store.emitScreenSoftReset()}
-                />
-              </Text>
-
-              <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                Feed by{' '}
-                {feedInfo.isOwner ? (
-                  'you'
-                ) : (
-                  <TextLink
-                    text={sanitizeHandle(feedInfo.data.creator.handle, '@')}
-                    href={makeProfileLink(feedInfo.data.creator)}
-                    style={pal.textLight}
-                  />
-                )}
-              </Text>
-            </View>
-          </>
+          <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
         )}
+      </Button>
+      {feedInfo?.isSaved ? (
         <Button
           type="default-light"
-          testID="toggleLikeBtn"
-          accessibilityLabel="Like this feed"
+          accessibilityLabel={isPinned ? 'Unpin this feed' : 'Pin this feed'}
           accessibilityHint=""
-          onPress={onToggleLiked}
+          onPress={onTogglePinned}
           style={styles.headerBtn}>
-          {feedInfo?.isLiked ? (
-            <HeartIconSolid size={19} style={styles.liked} />
-          ) : (
-            <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
-          )}
+          <FontAwesomeIcon
+            icon="thumb-tack"
+            size={17}
+            color={isPinned ? colors.blue3 : pal.colors.textLight}
+            style={styles.top1}
+          />
         </Button>
-        {feedInfo?.isSaved ? (
-          <Button
-            type="default-light"
-            accessibilityLabel={isPinned ? 'Unpin this feed' : 'Pin this feed'}
-            accessibilityHint=""
-            onPress={onTogglePinned}
-            style={styles.headerBtn}>
-            <FontAwesomeIcon
-              icon="thumb-tack"
-              size={17}
-              color={isPinned ? colors.blue3 : pal.colors.textLight}
-              style={styles.top1}
-            />
-          </Button>
-        ) : (
-          <Button
-            type="inverted"
-            onPress={onToggleSaved}
-            accessibilityLabel="Add to my feeds"
-            accessibilityHint=""
-            style={styles.headerAddBtn}>
-            <FontAwesomeIcon
-              icon="plus"
-              color={palInverted.colors.text}
-              size={14}
-            />
-            <Text type="button" style={palInverted.text}>
-              Add{!isMobile && ' to My Feeds'}
-            </Text>
-          </Button>
-        )}
-        <NativeDropdown
-          testID="feedHeaderDropdownBtn"
-          items={dropdownItems}
-          accessibilityLabel="More options"
-          accessibilityHint="">
-          <View
-            style={{
-              paddingLeft: 12,
-              paddingRight: isMobile ? 12 : 0,
-            }}>
-            <FontAwesomeIcon
-              icon="ellipsis"
-              size={20}
-              color={pal.colors.textLight}
-            />
-          </View>
-        </NativeDropdown>
-      </View>
-    </SimpleViewHeader>
-  )
-})
-
-const FeedPage = observer(function FeedPageImpl({
-  scrollElRef,
-  algoFeed,
-  uri,
-  isPinned,
-  isScrolledDown,
-  minimalMode,
-  onMainScroll,
-  onPressCompose,
-  onSoftReset,
-}: {
-  scrollElRef: MutableRefObject<FlatList | null>
-  algoFeed: PostsFeedModel
-  uri: string
-  isPinned: boolean
-  isScrolledDown: boolean
-  minimalMode?: boolean
-  onMainScroll: OnScrollCb
-  onPressCompose: () => void
-  onSoftReset: () => void
-}) {
-  const pal = usePalette('default')
-  const {isTabletOrDesktop} = useWebMediaQueries()
-
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <View style={[pal.border, {borderTopWidth: 1, paddingTop: 20}]}>
-        <EmptyState icon="feed" message="This feed is empty!" />
-      </View>
-    )
-  }, [pal.border])
-
-  return (
-    <View style={s.flex1}>
-      <Feed
-        scrollElRef={scrollElRef}
-        feed={algoFeed}
-        onScroll={onMainScroll}
-        scrollEventThrottle={100}
-        renderEmptyState={renderEmptyState}
-        extraData={[uri, isPinned]}
-        style={!isTabletOrDesktop ? {flex: 1} : undefined}
-        desktopFixedHeightOffset={minimalMode ? 50 : 120}
-      />
-      {isScrolledDown ? (
-        <LoadLatestBtn
-          onPress={onSoftReset}
-          label="Scroll to top"
-          showIndicator={false}
-        />
-      ) : null}
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel="New post"
-        accessibilityHint=""
-      />
-    </View>
+      ) : (
+        <Button
+          type="inverted"
+          onPress={onToggleSaved}
+          accessibilityLabel="Add to my feeds"
+          accessibilityHint=""
+          style={styles.headerAddBtn}>
+          <FontAwesomeIcon
+            icon="plus"
+            color={palInverted.colors.text}
+            size={14}
+          />
+          <Text type="button" style={palInverted.text}>
+            Add{!isMobile && ' to My Feeds'}
+          </Text>
+        </Button>
+      )}
+    </ProfileScreenHeader>
   )
 })
 
@@ -638,7 +427,8 @@ const AboutPage = observer(function AboutPageImpl({
     return <View />
   }
   return (
-    <Container
+    <CenteredView
+      sideBorders
       style={[
         // @ts-ignore web only -prf
         !isNative && {minHeight: '100vh'},
@@ -676,7 +466,7 @@ const AboutPage = observer(function AboutPageImpl({
           />
         )}
       </View>
-    </Container>
+    </CenteredView>
   )
 })
 

@@ -1,28 +1,18 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
+import {ProfileScreenHeader} from 'view/com/profile-screen/ProfileScreenHeader'
+import {ProfileScreenFeedPage} from 'view/com/profile-screen/ProfileScreenFeedPage'
 import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
-import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {ListItems} from 'view/com/lists/ListItems'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {RichText} from 'view/com/util/text/RichText'
-import {Feed} from 'view/com/posts/Feed'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from 'view/com/pager/TabBar'
 import {Button} from 'view/com/util/forms/Button'
@@ -32,13 +22,9 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
 import {resolveName} from 'lib/api'
 import {s} from 'lib/styles'
 import {isNative} from 'platform/detection'
@@ -154,12 +140,22 @@ export const ProfileListScreenInner = observer(
     )
     useSetTitle(list.data?.name)
 
+    // init
+    // =
+
     useFocusEffect(
       React.useCallback(() => {
         store.shell.setMinimalShellMode(false)
-        list.loadMore(true)
-      }, [store, list]),
+        list.loadMore(true).then(() => {
+          if (list.isCuratelist) {
+            feed.setup()
+          }
+        })
+      }, [store, list, feed]),
     )
+
+    // events
+    // =
 
     /*const onToggleSubscribed = React.useCallback(async () => {
       try {
@@ -227,6 +223,13 @@ export const ProfileListScreenInner = observer(
         },
       })
     }, [store, list, feed])
+
+    const onPressSelectedTab = React.useCallback(() => {
+      store.emitScreenSoftReset()
+    }, [store])
+
+    // render
+    // =
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       if (!list.hasLoaded) {
@@ -297,25 +300,20 @@ export const ProfileListScreenInner = observer(
       onPressReport,
     ])
 
-    const onPressSelected = React.useCallback(() => {
-      // TODO
-      store.emitScreenSoftReset()
-    }, [store])
-
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
-          <Container>
+          <CenteredView sideBorders>
             <TabBar
               {...props}
               items={list.isCuratelist ? ['Posts', 'About'] : ['About']}
               indicatorColor={pal.colors.link}
-              onPressSelected={onPressSelected}
+              onPressSelected={onPressSelectedTab}
             />
-          </Container>
+          </CenteredView>
         )
       },
-      [list.isCuratelist, onPressSelected, pal.colors.link],
+      [list.isCuratelist, onPressSelectedTab, pal.colors.link],
     )
 
     if (list.isCuratelist) {
@@ -323,7 +321,7 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <Header list={list} dropdownItems={dropdownItems} />
           <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-            <FeedPage key="1" feed={feed} />
+            <ProfileScreenFeedPage key="1" feed={feed} />
             <AboutPage key="2" list={list} onPressAddUser={onPressAddUser} />
           </Pager>
         </View>
@@ -340,26 +338,6 @@ export const ProfileListScreenInner = observer(
   },
 )
 
-function Container({
-  children,
-  style,
-}: React.PropsWithChildren<{style?: StyleProp<ViewStyle>}>) {
-  const pal = usePalette('default')
-  return (
-    <CenteredView
-      style={[
-        {
-          borderLeftWidth: 1,
-          borderRightWidth: 1,
-        },
-        pal.border,
-        style,
-      ]}>
-      {children}
-    </CenteredView>
-  )
-}
-
 const Header = observer(function HeaderImpl({
   list,
   dropdownItems,
@@ -367,82 +345,24 @@ const Header = observer(function HeaderImpl({
   list: ListModel
   dropdownItems: DropdownItem[]
 }) {
-  const store = useStores()
-  const {isMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
+  const info = list.data
+    ? {
+        href: '', // TODO
+        title: list.data.name,
+        avatar: list.data.avatar,
+        isOwner: list.isOwner,
+        creator: list.data.creator,
+      }
+    : undefined
 
-  if (list.hasError || !list.data) {
-    return (
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={
-          !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
-        }>
-        <Text
-          type="title-lg"
-          style={{flex: 1, fontWeight: 'bold'}}
-          numberOfLines={1}>
-          {list.isLoading ? 'Loading...' : 'Failed to load'}
-        </Text>
-      </SimpleViewHeader>
-    )
-  }
   return (
-    <SimpleViewHeader
-      showBackButton={isMobile}
-      style={
-        !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
-      }>
-      <View
-        style={{flex: 1, gap: 12, flexDirection: 'row', alignItems: 'center'}}>
-        <UserAvatar type="list" avatar={list.data.avatar} size={48} />
-        <View style={{flex: 1}}>
-          <Text
-            type="title-lg"
-            style={{flex: 1, fontWeight: 'bold'}}
-            numberOfLines={1}>
-            <TextLink
-              type="title-lg"
-              href="/"
-              style={[pal.text, {fontWeight: 'bold'}]}
-              text={list.data?.name || ''}
-              onPress={() => store.emitScreenSoftReset()}
-            />
-          </Text>
-
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.isModlist && 'Moderation list '}
-            by{' '}
-            {list.isOwner ? (
-              'you'
-            ) : (
-              <TextLink
-                text={sanitizeHandle(list.data.creator.handle, '@')}
-                href={makeProfileLink(list.data.creator)}
-                style={pal.textLight}
-              />
-            )}
-          </Text>
-        </View>
-        <NativeDropdown
-          testID="listHeaderDropdownBtn"
-          items={dropdownItems}
-          accessibilityLabel="More options"
-          accessibilityHint="">
-          <View
-            style={{
-              paddingLeft: 12,
-              paddingRight: isMobile ? 12 : 0,
-            }}>
-            <FontAwesomeIcon
-              icon="ellipsis"
-              size={20}
-              color={pal.colors.textLight}
-            />
-          </View>
-        </NativeDropdown>
-      </View>
-    </SimpleViewHeader>
+    <ProfileScreenHeader
+      info={info}
+      objectLabel={list.isCuratelist ? 'User List' : 'Moderation List'}
+      avatarType="list"
+      minimalMode={false /*TODO*/}
+      dropdownItems={dropdownItems}
+    />
   )
 })
 
@@ -470,13 +390,14 @@ const AboutPage = observer(function AboutPageImpl({
   }
   if (!list.data) {
     return (
-      <Container style={[{borderTopWidth: 1, padding: 12}, pal.border]}>
+      <CenteredView sideBorders style={{borderTopWidth: 1, padding: 12}}>
         <ActivityIndicator />
-      </Container>
+      </CenteredView>
     )
   }
   return (
-    <Container
+    <CenteredView
+      sideBorders
       style={[
         // @ts-ignore web only -prf
         !isNative && {minHeight: '100vh'},
@@ -514,72 +435,6 @@ const AboutPage = observer(function AboutPageImpl({
         renderEmptyState={renderEmptyState}
         style={s.flex1}
       />
-    </Container>
-  )
-})
-
-const FeedPage = observer(function FeedPageImpl({
-  feed,
-}: {
-  feed: PostsFeedModel
-}) {
-  const pal = usePalette('default')
-  const store = useStores()
-
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
-  const scrollElRef = React.useRef<FlatList>(null)
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
-
-  React.useEffect(() => {
-    // called on first load
-    if (!feed.hasLoaded) {
-      feed.setup()
-    }
-  }, [feed])
-
-  const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToIndex({index: 0})
-    resetMainScroll()
-  }, [resetMainScroll])
-
-  const onPressTryAgain = React.useCallback(() => {
-    feed.refresh()
-  }, [feed])
-
-  const onPressLoadLatest = React.useCallback(() => {
-    scrollToTop()
-    feed.refresh()
-  }, [feed, scrollToTop])
-
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <EmptyState
-        icon="feed"
-        message="This feed is empty!"
-        style={[pal.border, {borderTopWidth: 1, paddingTop: 40}]}
-      />
-    )
-  }, [pal.border])
-
-  return (
-    <View>
-      <Feed
-        feed={feed}
-        scrollElRef={scrollElRef}
-        onPressTryAgain={onPressTryAgain}
-        onScroll={onMainScroll}
-        scrollEventThrottle={100}
-        renderEmptyState={renderEmptyState}
-        desktopFixedHeightOffset={120}
-      />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label="Load new posts"
-          showIndicator={hasNew}
-          minimalShellMode={store.shell.minimalShellMode}
-        />
-      )}
-    </View>
+    </CenteredView>
   )
 })

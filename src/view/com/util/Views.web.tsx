@@ -32,9 +32,18 @@ interface AddedProps {
 
 export function CenteredView({
   style,
+  sideBorders,
   ...props
-}: React.PropsWithChildren<ViewProps>) {
+}: React.PropsWithChildren<ViewProps & {sideBorders?: boolean}>) {
+  const pal = usePalette('default')
   style = addStyle(style, styles.container)
+  if (sideBorders) {
+    style = addStyle(style, {
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+    })
+    style = addStyle(style, pal.border)
+  }
   return <View style={style} {...props} />
 }
 
@@ -69,6 +78,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   }
   if (desktopFixedHeight) {
     if (typeof desktopFixedHeight === 'number') {
+      // @ts-ignore Web only -prf
       style = addStyle(style, {
         height: `calc(100vh - ${desktopFixedHeight}px)`,
       })
