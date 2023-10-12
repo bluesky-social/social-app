@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    left: 6,
-    bottom: 6,
+    left: 8,
+    bottom: 8,
   },
   alt: {
     color: 'white',
