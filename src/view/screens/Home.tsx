@@ -96,6 +96,14 @@ export const HomeScreen = withAuthRequired(
       [onPressSelected],
     )
 
+    const renderFollowingEmptyState = React.useCallback(() => {
+      return <FollowingEmptyState />
+    }, [])
+
+    const renderCustomFeedEmptyState = React.useCallback(() => {
+      return <CustomFeedEmptyState />
+    }, [])
+
     return (
       <Pager
         ref={pagerRef}
@@ -108,7 +116,7 @@ export const HomeScreen = withAuthRequired(
           testID="followingFeedPage"
           isPageFocused={selectedPage === 0}
           feed={store.me.mainFeed}
-          renderEmptyState={FollowingEmptyState}
+          renderEmptyState={renderFollowingEmptyState}
           renderEndOfFeed={FollowingEndOfFeed}
         />
         {customFeeds.map((f, index) => {
@@ -118,7 +126,7 @@ export const HomeScreen = withAuthRequired(
               testID="customFeedPage"
               isPageFocused={selectedPage === 1 + index}
               feed={f}
-              renderEmptyState={CustomFeedEmptyState}
+              renderEmptyState={renderCustomFeedEmptyState}
             />
           )
         })}

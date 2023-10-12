@@ -96,7 +96,7 @@ export const Feed = observer(function Feed({
   }, [feed, track, setIsRefreshing])
 
   const onEndReached = React.useCallback(async () => {
-    if (!feed.hasLoaded) return
+    if (!feed.hasLoaded || !feed.hasMore) return
 
     track('Feed:onEndReached')
     try {
