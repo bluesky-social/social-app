@@ -247,8 +247,7 @@ function Container({
         },
         pal.border,
         style,
-      ]}
-      testID="profileListScreen">
+      ]}>
       {children}
     </CenteredView>
   )

@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, RichText} from '@atproto/api'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from 'state/models/root-store'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -10,6 +10,7 @@ export class CustomFeedModel {
   // data
   _reactKey: string
   data: AppBskyFeedDefs.GeneratorView
+  descriptionRT: RichText | null = null
   isOnline: boolean
   isValid: boolean
 
@@ -21,6 +22,12 @@ export class CustomFeedModel {
   ) {
     this._reactKey = view.uri
     this.data = view
+    if (this.data.description) {
+      this.descriptionRT = new RichText({
+        text: this.data.description,
+        facets: (this.data.descriptionFacets || [])?.slice(),
+      })
+    }
     this.isOnline = isOnline ?? true
     this.isValid = isValid ?? true
     makeAutoObservable(
@@ -52,6 +59,10 @@ export class CustomFeedModel {
 
   get isLiked() {
     return this.data.viewer?.like
+  }
+
+  get isOwner() {
+    return this.data.creator.did === this.rootStore.me.did
   }
 
   // public apis
@@ -140,6 +151,12 @@ export class CustomFeedModel {
     })
     runInAction(() => {
       this.data = res.data.view
+      if (this.data.description) {
+        this.descriptionRT = new RichText({
+          text: this.data.description,
+          facets: (this.data.descriptionFacets || [])?.slice(),
+        })
+      }
       this.isOnline = res.data.isOnline
       this.isValid = res.data.isValid
     })
