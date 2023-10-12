@@ -46,7 +46,14 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   )
 
   return (
-    <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
+    <Animated.View
+      style={[
+        pal.view,
+        pal.border,
+        styles.tabBar,
+        transform,
+        store.shell.minimalShellMode && styles.disabled,
+      ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity
@@ -113,5 +120,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 21,
+  },
+  disabled: {
+    pointerEvents: 'none',
   },
 })

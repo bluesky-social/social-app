@@ -87,6 +87,7 @@ export const BottomBar = observer(function BottomBarImpl({
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
+        store.shell.minimalShellMode && styles.disabled,
       ]}>
       <Btn
         testID="bottomBarHomeBtn"
