@@ -52,8 +52,8 @@ import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
-import {CustomFeedScreen} from './view/screens/CustomFeed'
-import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
+import {ProfileFeedScreen} from './view/screens/ProfileFeed'
+import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
 import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
@@ -174,13 +174,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
-        name="CustomFeed"
-        getComponent={() => CustomFeedScreen}
+        name="ProfileFeed"
+        getComponent={() => ProfileFeedScreen}
         options={{title: title('Feed')}}
       />
       <Stack.Screen
-        name="CustomFeedLikedBy"
-        getComponent={() => CustomFeedLikedByScreen}
+        name="ProfileFeedLikedBy"
+        getComponent={() => ProfileFeedLikedByScreen}
         options={{title: title('Liked by')}}
       />
       <Stack.Screen

@@ -51,9 +51,8 @@ import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
 import {isNative} from 'platform/detection'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
-
-export const CustomFeedScreen = withAuthRequired(
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
+export const ProfileFeedScreen = withAuthRequired(
   observer(function CustomFeedScreenImpl(props: Props) {
     const pal = usePalette('default')
     const store = useStores()
@@ -200,7 +199,7 @@ export const CustomFeedScreenInner = observer(
     }, [store, feedInfo])
 
     const onPressViewFeedPage = React.useCallback(() => {
-      navigation.push('CustomFeed', {name: handleOrDid, rkey})
+      navigation.push('ProfileFeed', {name: handleOrDid, rkey})
     }, [handleOrDid, rkey, navigation])
 
     const onPressShare = React.useCallback(() => {

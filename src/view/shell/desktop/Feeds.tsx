@@ -33,7 +33,7 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
               href={href}
               title={feed.displayName}
               current={
-                route.name === 'CustomFeed' &&
+                route.name === 'ProfileFeed' &&
                 params.name === hostname &&
                 params.rkey === rkey
               }
