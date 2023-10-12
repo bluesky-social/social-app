@@ -24,13 +24,14 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   React.useEffect(() => {
     Animated.timing(interp, {
       toValue: store.shell.minimalShellMode ? 1 : 0,
-      duration: 100,
+      duration: 150,
       useNativeDriver: true,
       isInteraction: false,
     }).start()
   }, [interp, store.shell.minimalShellMode])
   const transform = {
-    transform: [{translateY: Animated.multiply(interp, -100)}],
+    opacity: Animated.subtract(1, interp),
+    transform: [{translateY: Animated.multiply(interp, -50)}],
   }
 
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)

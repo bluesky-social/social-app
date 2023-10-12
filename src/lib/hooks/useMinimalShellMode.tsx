@@ -7,21 +7,22 @@ export function useMinimalShellMode() {
   const store = useStores()
   const minimalShellInterp = useAnimatedValue(0)
   const footerMinimalShellTransform = {
-    transform: [{translateY: Animated.multiply(minimalShellInterp, 100)}],
+    opacity: Animated.subtract(1, minimalShellInterp),
+    transform: [{translateY: Animated.multiply(minimalShellInterp, 50)}],
   }
 
   React.useEffect(() => {
     if (store.shell.minimalShellMode) {
       Animated.timing(minimalShellInterp, {
         toValue: 1,
-        duration: 100,
+        duration: 150,
         useNativeDriver: true,
         isInteraction: false,
       }).start()
     } else {
       Animated.timing(minimalShellInterp, {
         toValue: 0,
-        duration: 100,
+        duration: 150,
         useNativeDriver: true,
         isInteraction: false,
       }).start()
