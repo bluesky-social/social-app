@@ -2,15 +2,15 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {colors} from 'lib/styles'
 import {HITSLOP_20} from 'lib/constants'
-import {isWeb} from 'platform/detection'
-import {clamp} from 'lib/numbers'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import Animated from 'react-native-reanimated'
 
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity)
 export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress,
   label,
@@ -21,25 +21,19 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   showIndicator: boolean
   minimalShellMode?: boolean // NOTE not used on mobile -prf
 }) {
-  const store = useStores()
   const pal = usePalette('default')
   const {isDesktop, isTablet} = useWebMediaQueries()
-  const safeAreaInsets = useSafeAreaInsets()
-  const minMode = store.shell.minimalShellMode
-  const bottom = isTablet
-    ? 50
-    : (minMode || isDesktop ? 16 : 60) +
-      (isWeb ? 20 : clamp(safeAreaInsets.bottom, 15, 60))
+  const {fabMinimalShellTransform} = useMinimalShellMode()
 
   return (
-    <TouchableOpacity
+    <AnimatedTouchableOpacity
       style={[
         styles.loadLatest,
         isDesktop && styles.loadLatestDesktop,
         isTablet && styles.loadLatestTablet,
         pal.borderDark,
         pal.view,
-        {bottom},
+        fabMinimalShellTransform,
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}
@@ -48,7 +42,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
       accessibilityHint="">
       <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
       {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
-    </TouchableOpacity>
+    </AnimatedTouchableOpacity>
   )
 })
 

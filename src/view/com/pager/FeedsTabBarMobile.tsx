@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, TouchableOpacity, View, Animated} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -13,7 +13,7 @@ import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-// import Animated from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},

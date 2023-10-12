@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react'
-import {Animated, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
