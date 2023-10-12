@@ -45,16 +45,18 @@ function ImageViewing({
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
+    opacity: withClampedSpring(isScaled ? 0 : 1),
     transform: [
       {
-        translateY: withClampedSpring(isScaled ? -300 : 0),
+        translateY: withClampedSpring(isScaled ? -30 : 0),
       },
     ],
   }))
   const animatedFooterStyle = useAnimatedStyle(() => ({
+    opacity: withClampedSpring(isScaled ? 0 : 1),
     transform: [
       {
-        translateY: withClampedSpring(isScaled ? 300 : 0),
+        translateY: withClampedSpring(isScaled ? 30 : 0),
       },
     ],
   }))
@@ -161,7 +163,7 @@ const EnhancedImageViewing = (props: Props) => (
 
 function withClampedSpring(value: any) {
   'worklet'
-  return withSpring(value, {overshootClamping: true})
+  return withSpring(value, {overshootClamping: true, stiffness: 300})
 }
 
 export default EnhancedImageViewing
