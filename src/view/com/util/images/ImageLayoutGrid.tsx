@@ -1,5 +1,5 @@
 import React from 'react'
-import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {GalleryItem} from './Gallery'
 
@@ -14,7 +14,9 @@ interface ImageLayoutGridProps {
 export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
   return (
     <View style={style}>
-      <ImageLayoutGridInner {...props} />
+      <View style={styles.container}>
+        <ImageLayoutGridInner {...props} />
+      </View>
     </View>
   )
 }
@@ -34,28 +36,26 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return (
         <View style={styles.flexRow}>
           <View style={styles.smallItem}>
-            <GalleryItem index={0} {...props} />
+            <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
           <View style={styles.smallItem}>
-            <GalleryItem index={1} {...props} />
+            <GalleryItem {...props} index={1} imageStyle={styles.image} />
           </View>
         </View>
       )
 
     case 3:
-      // Work around https://github.com/facebook/react-native/issues/40802
-      const flexProp = Platform.OS === 'web' ? 'flex' : 'flexGrow'
       return (
         <View style={styles.flexRow}>
-          <View style={{[flexProp]: 2, aspectRatio: 1}}>
-            <GalleryItem index={0} {...props} />
+          <View style={{flex: 2, aspectRatio: 1}}>
+            <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
-          <View style={{[flexProp]: 1, gap: 5}}>
+          <View style={{flex: 1}}>
             <View style={styles.smallItem}>
-              <GalleryItem index={1} {...props} />
+              <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
             <View style={styles.smallItem}>
-              <GalleryItem index={2} {...props} />
+              <GalleryItem {...props} index={2} imageStyle={styles.image} />
             </View>
           </View>
         </View>
@@ -64,20 +64,20 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 4:
       return (
         <View style={styles.flexRow}>
-          <View style={{flex: 1, gap: 5}}>
+          <View style={{flex: 1}}>
             <View style={styles.smallItem}>
-              <GalleryItem index={0} {...props} />
+              <GalleryItem {...props} index={0} imageStyle={styles.image} />
             </View>
             <View style={styles.smallItem}>
-              <GalleryItem index={2} {...props} />
+              <GalleryItem {...props} index={2} imageStyle={styles.image} />
             </View>
           </View>
-          <View style={{flex: 1, gap: 5}}>
+          <View style={{flex: 1}}>
             <View style={styles.smallItem}>
-              <GalleryItem index={1} {...props} />
+              <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
             <View style={styles.smallItem}>
-              <GalleryItem index={3} {...props} />
+              <GalleryItem {...props} index={3} imageStyle={styles.image} />
             </View>
           </View>
         </View>
@@ -88,7 +88,18 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   }
 }
 
+// This is used to compute margins (rather than flexbox gap) due to Yoga bugs:
+// https://github.com/facebook/yoga/issues/1418
+const IMAGE_GAP = 5
+
 const styles = StyleSheet.create({
-  flexRow: {flexDirection: 'row', gap: 5},
+  container: {
+    marginHorizontal: -IMAGE_GAP / 2,
+    marginVertical: -IMAGE_GAP / 2,
+  },
+  flexRow: {flexDirection: 'row'},
   smallItem: {flex: 1, aspectRatio: 1},
+  image: {
+    margin: IMAGE_GAP / 2,
+  },
 })
