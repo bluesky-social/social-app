@@ -64,8 +64,10 @@ export const Component = observer(function Component({
   )
 
   return (
-    <SafeAreaView testID="listAddUserModal" style={[pal.view, s.flex1]}>
-      <ScrollView style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
+    <SafeAreaView
+      testID="listAddUserModal"
+      style={[pal.view, isWeb ? styles.fixedHeight : s.flex1]}>
+      <View style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
         <View style={styles.titleSection}>
           <Text type="title-lg" style={[pal.text, styles.title]}>
             Add User to List
@@ -102,28 +104,30 @@ export const Component = observer(function Component({
             </Pressable>
           ) : undefined}
         </View>
-        {autocompleteView.suggestions.length ? (
-          <>
-            {autocompleteView.suggestions.map((item, i) => (
-              <UserResult
-                key={item.did}
-                list={list}
-                profile={item}
-                noBorder={i === 0}
-                onAdd={onAdd}
-              />
-            ))}
-          </>
-        ) : (
-          <Text
-            type="xl"
-            style={[
-              pal.textLight,
-              {paddingHorizontal: 12, paddingVertical: 16},
-            ]}>
-            No results found for {autocompleteView.prefix}
-          </Text>
-        )}
+        <ScrollView style={[s.flex1]}>
+          {autocompleteView.suggestions.length ? (
+            <>
+              {autocompleteView.suggestions.slice(0, 40).map((item, i) => (
+                <UserResult
+                  key={item.did}
+                  list={list}
+                  profile={item}
+                  noBorder={i === 0}
+                  onAdd={onAdd}
+                />
+              ))}
+            </>
+          ) : (
+            <Text
+              type="xl"
+              style={[
+                pal.textLight,
+                {paddingHorizontal: 12, paddingVertical: 16},
+              ]}>
+              No results found for {autocompleteView.prefix}
+            </Text>
+          )}
+        </ScrollView>
         <View style={[styles.btnContainer]}>
           <Button
             testID="doneBtn"
@@ -136,7 +140,7 @@ export const Component = observer(function Component({
             labelStyle={[s.f18]}
           />
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 })
@@ -190,6 +194,10 @@ function UserResult({
 }
 
 const styles = StyleSheet.create({
+  fixedHeight: {
+    // @ts-ignore web only -prf
+    height: '80vh',
+  },
   titleSection: {
     paddingTop: isWeb ? 0 : 4,
     paddingBottom: isWeb ? 14 : 10,
