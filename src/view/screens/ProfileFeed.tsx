@@ -593,7 +593,7 @@ const FeedPage = observer(function FeedPageImpl({
   }, [pal.border])
 
   return (
-    <View style={s.hContentRegion}>
+    <View style={s.flex1}>
       <Feed
         scrollElRef={scrollElRef}
         feed={algoFeed}

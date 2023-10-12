@@ -58,7 +58,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     )
 
     return (
-      <View testID={testID}>
+      <View testID={testID} style={s.flex1}>
         {tabBarPosition === 'top' &&
           renderTabBar({
             selectedPage,
@@ -66,7 +66,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           })}
         <AnimatedPagerView
           ref={pagerView}
-          style={s.h100pct}
+          style={s.flex1}
           initialPage={initialPage}
           onPageSelected={onPageSelectedInner}>
           {children}
