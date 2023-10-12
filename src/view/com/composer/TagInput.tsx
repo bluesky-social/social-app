@@ -7,16 +7,18 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  TextInput,
 } from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetTextInput,
-} from '@gorhom/bottom-sheet'
 
+import {
+  useSheet,
+  Sheet as BottomSheet,
+  Backdrop as BottomSheetBackdrop,
+} from 'view/com/util/BottomSheet'
 import {Portal} from 'view/com/util/Portal'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -43,14 +45,30 @@ export function TagInput({
 }) {
   const store = useStores()
   const model = React.useMemo(() => new TagsAutocompleteModel(store), [store])
-  const sheet = React.useRef<BottomSheet>(null)
   const pal = usePalette('default')
-  const input = React.useRef<HTMLInputElement>(null)
+  const input = React.useRef<TextInput>(null)
 
   const [value, setValue] = React.useState('')
   const [tags, setTags] = React.useState<string[]>([])
   const [suggestions, setSuggestions] = React.useState<string[]>([])
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
+
+  const sheet = useSheet({
+    index: 0,
+    snaps: [0, '90%'],
+    async onStateChange(state) {
+      if (state.index > 0) {
+        model.setActive(true)
+        await model.search('') // get default results
+        setSuggestions(model.suggestions)
+        setIsInitialLoad(false)
+      } else {
+        reset()
+        setIsInitialLoad(true)
+        input.current?.blur()
+      }
+    },
+  })
 
   const reset = React.useCallback(() => {
     setValue('')
@@ -83,10 +101,7 @@ export function TagInput({
         addTags(uniq([...tags, tag]).slice(0, max))
       }
 
-      setTimeout(() => {
-        setValue('')
-        input.current?.focus()
-      }, 1)
+      setValue('')
     },
     [max, tags, setValue, addTags],
   )
@@ -102,8 +117,10 @@ export function TagInput({
       if (key === 'Backspace' && value === '') {
         addTags(tags.slice(0, -1))
       } else if (key === ' ') {
-        e.preventDefault() // prevents an additional space on web
         addTagAndReset(value)
+        setTimeout(() => {
+          setValue('')
+        }, 1)
       }
     },
     [value, tags, addTags, addTagAndReset],
@@ -127,31 +144,17 @@ export function TagInput({
     [model, setValue],
   )
 
-  const onCloseSheet = React.useCallback(() => {
-    reset()
-    setIsInitialLoad(true)
-  }, [reset, setIsInitialLoad])
-
-  const onSheetChange = React.useCallback(
-    async (index: number) => {
-      if (index > -1) {
-        model.setActive(true)
-        await model.search('') // get default results
-        setSuggestions(model.suggestions)
-        setIsInitialLoad(false)
-      }
-    },
-    [model, setIsInitialLoad, setSuggestions],
-  )
+  const openSheet = React.useCallback(() => {
+    sheet.index = 1
+    input.current?.focus()
+  }, [sheet])
 
   return (
     <View>
       <Pressable
         accessibilityRole="button"
         style={styles.selectedTags}
-        onPress={() => {
-          sheet.current?.snapToIndex(0)
-        }}>
+        onPress={openSheet}>
         <View style={[pal.viewLight, styles.button]}>
           {tags.length ? (
             <Text type="md-medium" style={[pal.textLight]}>
@@ -181,76 +184,61 @@ export function TagInput({
       </Pressable>
 
       <Portal>
-        <BottomSheet
-          ref={sheet}
-          index={-1}
-          snapPoints={['90%']}
-          enablePanDownToClose
-          keyboardBehavior="extend"
-          backgroundStyle={{backgroundColor: 'transparent'}}
-          android_keyboardInputMode="adjustResize"
-          backdropComponent={props => (
-            <BottomSheetBackdrop
-              appearsOnIndex={0}
-              disappearsOnIndex={-1}
-              {...props}
-            />
-          )}
-          handleIndicatorStyle={{backgroundColor: pal.text.color}}
-          handleStyle={{display: 'none'}}
-          onChange={onSheetChange}
-          onClose={onCloseSheet}>
+        <BottomSheet sheet={sheet}>
+          <BottomSheetBackdrop sheet={sheet} />
+
           <Sheet.Outer>
             <Sheet.Handle />
 
-            <View style={styles.outer}>
-              <FontAwesomeIcon
-                icon="tags"
-                size={14}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
+            <Sheet.Content>
+              <View style={styles.outer}>
+                <FontAwesomeIcon
+                  icon="tags"
+                  size={14}
+                  style={pal.textLight as FontAwesomeIconStyle}
+                />
 
-              {tags.map(tag => (
-                <TagButton key={tag} value={tag} onClick={removeTag} />
-              ))}
+                {tags.map(tag => (
+                  <TagButton key={tag} value={tag} onClick={removeTag} />
+                ))}
 
-              <BottomSheetTextInput
-                autoCapitalize="none"
-                autoComplete="off"
-                placeholder="Add tags..."
-                value={value}
-                style={[
-                  styles.input,
-                  {
-                    placeholderTextColor: pal.textLight.color,
-                  },
-                ]}
-                onChangeText={onChangeText}
-                onKeyPress={onKeyPress}
-                onSubmitEditing={onSubmitEditing}
-              />
-            </View>
+                <TextInput
+                  ref={input}
+                  blurOnSubmit={false}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  placeholder="Add tags..."
+                  value={value}
+                  style={[styles.input, {}]}
+                  onChangeText={onChangeText}
+                  onKeyPress={onKeyPress}
+                  onSubmitEditing={onSubmitEditing}
+                  accessibilityHint="Add tags to your post"
+                  accessibilityLabel="Add tags to your post"
+                />
+              </View>
 
-            <View style={{marginHorizontal: -20}}>
-              <ScrollView horizontal>
-                <View style={styles.suggestions}>
-                  {isInitialLoad && <ActivityIndicator />}
+              <View style={{marginHorizontal: -20}}>
+                <ScrollView horizontal>
+                  <View style={styles.suggestions}>
+                    {isInitialLoad && <ActivityIndicator />}
 
-                  {suggestions
-                    .filter(s => !tags.find(t => t === s))
-                    .map(suggestion => {
-                      return (
-                        <TagButton
-                          key={suggestion}
-                          icon="plus"
-                          value={suggestion}
-                          onClick={addTagAndReset}
-                        />
-                      )
-                    })}
-                </View>
-              </ScrollView>
-            </View>
+                    {suggestions
+                      .filter(s => !tags.find(t => t === s))
+                      .map(suggestion => {
+                        return (
+                          <TagButton
+                            key={suggestion}
+                            icon="plus"
+                            value={suggestion}
+                            onClick={addTagAndReset}
+                          />
+                        )
+                      })}
+                  </View>
+                </ScrollView>
+              </View>
+            </Sheet.Content>
           </Sheet.Outer>
         </BottomSheet>
       </Portal>

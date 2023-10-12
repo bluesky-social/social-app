@@ -10,9 +10,13 @@ export function Outer(props: React.PropsWithChildren<{}>) {
     <>
       <View style={[pal.view, styles.background]} />
 
-      <View style={styles.content}>{props.children}</View>
+      {props.children}
     </>
   )
+}
+
+export function Content(props: React.PropsWithChildren<{}>) {
+  return <View style={styles.content}>{props.children}</View>
 }
 
 export function Handle() {
@@ -28,7 +32,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     height: Dimensions.get('window').height * 2,
-    zIndex: -1,
+    zIndex: 1,
   },
   content: {
     paddingVertical: 40,
@@ -36,6 +40,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',
+    zIndex: 2,
   },
   handle: {
     position: 'absolute',
@@ -44,5 +49,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 6,
     borderRadius: 10,
+    zIndex: 2,
   },
 })
