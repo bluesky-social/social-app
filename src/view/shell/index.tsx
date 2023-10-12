@@ -10,6 +10,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
+import {Provider, Outlet} from 'view/com/util/Portal'
 import {useStores} from 'state/index'
 import {ModalsContainer} from 'view/com/modals/Modal'
 import {Lightbox} from 'view/com/lightbox/Lightbox'
@@ -79,6 +80,7 @@ const ShellInner = observer(function ShellInnerImpl() {
       />
       <ModalsContainer />
       <Lightbox />
+      <Outlet />
     </>
   )
 })
@@ -88,12 +90,16 @@ export const Shell: React.FC = observer(function ShellImpl() {
   const theme = useTheme()
   return (
     <SafeAreaProvider style={pal.view}>
-      <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
-        <RoutesContainer>
-          <ShellInner />
-        </RoutesContainer>
-      </View>
+      <Provider>
+        <View
+          testID="mobileShellView"
+          style={[styles.outerContainer, pal.view]}>
+          <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+          <RoutesContainer>
+            <ShellInner />
+          </RoutesContainer>
+        </View>
+      </Provider>
     </SafeAreaProvider>
   )
 })

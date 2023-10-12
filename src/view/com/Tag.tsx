@@ -81,6 +81,59 @@ export function EditableTag({
   )
 }
 
+export function TagButton({
+  value,
+  icon = 'x',
+  onClick,
+}: {
+  value: string
+  icon?: React.ComponentProps<typeof FontAwesomeIcon>['icon']
+  onClick?: (tag: string) => void
+}) {
+  const pal = usePalette('default')
+  const [hovered, setHovered] = React.useState(false)
+
+  const hoverIn = React.useCallback(() => {
+    setHovered(true)
+  }, [setHovered])
+
+  const hoverOut = React.useCallback(() => {
+    setHovered(false)
+  }, [setHovered])
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => onClick?.(value)}
+      onPointerEnter={hoverIn}
+      onPointerLeave={hoverOut}
+      style={state => [
+        pal.viewLight,
+        styles.editableTag,
+        {
+          opacity: state.pressed || state.focused ? 0.8 : 1,
+          outline: 0,
+          paddingRight: 6,
+        },
+      ]}>
+      <Text type="md-medium" style={[pal.textLight]}>
+        #{value}
+      </Text>
+      <FontAwesomeIcon
+        icon={icon}
+        style={
+          {
+            opacity: hovered ? 1 : 0.5,
+            color: pal.textLight.color,
+            marginTop: 1,
+          } as FontAwesomeIconStyle
+        }
+        size={10}
+      />
+    </Pressable>
+  )
+}
+
 const styles = StyleSheet.create({
   editableTag: {
     flexDirection: 'row',

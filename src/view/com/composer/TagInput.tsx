@@ -1,35 +1,34 @@
 import React from 'react'
 import {
-  TextInput,
   View,
   StyleSheet,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   Platform,
+  Pressable,
+  ScrollView,
 } from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetTextInput,
+} from '@gorhom/bottom-sheet'
 
+import {Portal} from 'view/com/util/Portal'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
-import {isWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
-import {EditableTag} from 'view/com/Tag'
+import {TagButton} from 'view/com/Tag'
+import {Text} from 'view/com/util/text/Text'
+import * as Sheet from 'view/com/sheets/Base'
+import {useStores} from 'state/index'
+import {ActivityIndicator} from 'react-native'
 
 function uniq(tags: string[]) {
   return Array.from(new Set(tags))
 }
-
-// function sanitize(tagString: string, { max }: { max: number }) {
-//   const sanitized = tagString.replace(/^#/, '')
-//     .split(/\s/)
-//     .map(t => t.trim())
-//     .map(t => t.replace(/^#/, ''))
-
-//   return uniq(sanitized)
-//     .slice(0, max)
-// }
 
 function sanitize(tagString: string) {
   return tagString.trim().replace(/^#/, '')
@@ -41,14 +40,28 @@ export function TagInput({
 }: {
   max?: number
   onChangeTags: (tags: string[]) => void
-  tagsAutocompleteModel: TagsAutocompleteModel
 }) {
+  const store = useStores()
+  const model = React.useMemo(() => new TagsAutocompleteModel(store), [store])
+  const sheet = React.useRef<BottomSheet>(null)
   const pal = usePalette('default')
-  const input = React.useRef<TextInput>(null)
+  const input = React.useRef<HTMLInputElement>(null)
+
   const [value, setValue] = React.useState('')
   const [tags, setTags] = React.useState<string[]>([])
+  const [selectedItemIndex, setSelectedItemIndex] = React.useState(0)
+  const [suggestions, setSuggestions] = React.useState<string[]>([])
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
 
-  const handleChangeTags = React.useCallback(
+  const reset = React.useCallback(() => {
+    setValue('')
+    model.setActive(false)
+    model.clear()
+    setSelectedItemIndex(0)
+    setSuggestions([])
+  }, [model, setValue, setSelectedItemIndex, setSuggestions])
+
+  const addTags = React.useCallback(
     (_tags: string[]) => {
       setTags(_tags)
       onChangeTags(_tags)
@@ -56,90 +69,222 @@ export function TagInput({
     [onChangeTags, setTags],
   )
 
-  const onSubmitEditing = React.useCallback(() => {
-    const tag = sanitize(value)
+  const removeTag = React.useCallback(
+    (tag: string) => {
+      addTags(tags.filter(t => t !== tag))
+    },
+    [tags, addTags],
+  )
 
-    // enforce max hashtag length
-    if (tag.length > 0 && tag.length <= 64) {
-      handleChangeTags(uniq([...tags, tag]).slice(0, max))
-    }
+  const addTagAndReset = React.useCallback(
+    (value: string) => {
+      const tag = sanitize(value)
 
-    if (isWeb) {
+      // enforce max hashtag length
+      if (tag.length > 0 && tag.length <= 64) {
+        addTags(uniq([...tags, tag]).slice(0, max))
+      }
+
       setValue('')
       input.current?.focus()
-    } else {
-      // This is a hack to get the input to clear on iOS/Android, and only
-      // positive values work here
-      setTimeout(() => {
-        setValue('')
-        input.current?.focus()
-      }, 1)
-    }
-  }, [max, value, tags, setValue, handleChangeTags])
+    },
+    [max, tags, setValue, addTags],
+  )
+
+  const onSubmitEditing = React.useCallback(() => {
+    const item = suggestions[selectedItemIndex]
+    addTagAndReset(item || value)
+  }, [value, suggestions, selectedItemIndex, addTagAndReset])
 
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
-      if (e.nativeEvent.key === 'Backspace' && value === '') {
-        handleChangeTags(tags.slice(0, -1))
-      } else if (e.nativeEvent.key === ' ') {
+      const {key} = e.nativeEvent
+
+      if (key === 'Backspace' && value === '') {
+        addTags(tags.slice(0, -1))
+      } else if (key === ' ') {
         e.preventDefault() // prevents an additional space on web
-        onSubmitEditing()
+        addTagAndReset(value)
+      }
+
+      if (key === 'Escape') {
+        reset()
+      } else if (key === 'ArrowUp') {
+        e.preventDefault()
+        setSelectedItemIndex(
+          (selectedItemIndex + suggestions.length - 1) % suggestions.length,
+        )
+      } else if (key === 'ArrowDown') {
+        e.preventDefault()
+        setSelectedItemIndex((selectedItemIndex + 1) % suggestions.length)
       }
     },
-    [value, tags, handleChangeTags, onSubmitEditing],
+    [
+      value,
+      tags,
+      selectedItemIndex,
+      suggestions.length,
+      reset,
+      setSelectedItemIndex,
+      addTags,
+      addTagAndReset,
+    ],
   )
 
-  const onChangeText = React.useCallback((v: string) => {
-    setValue(v)
-  }, [])
+  const onChangeText = React.useCallback(
+    async (v: string) => {
+      setValue(v)
 
-  const removeTag = React.useCallback(
-    (tag: string) => {
-      handleChangeTags(tags.filter(t => t !== tag))
+      if (v.length > 0) {
+        model.setActive(true)
+        await model.search(v)
+
+        setSuggestions(model.suggestions)
+      } else {
+        model.clear()
+
+        setSuggestions(model.suggestions)
+      }
     },
-    [tags, handleChangeTags],
+    [model, setValue],
+  )
+
+  const onCloseSheet = React.useCallback(() => {
+    reset()
+    setIsInitialLoad(true)
+  }, [reset, setIsInitialLoad])
+
+  const onSheetChange = React.useCallback(
+    async (index: number) => {
+      if (index > -1) {
+        model.setActive(true)
+        await model.search('') // get default results
+        setSuggestions(model.suggestions)
+        setIsInitialLoad(false)
+      }
+    },
+    [model, setIsInitialLoad, setSuggestions],
   )
 
   return (
-    <View style={styles.outer}>
-      {!tags.length && (
-        <FontAwesomeIcon
-          icon="tags"
-          size={14}
-          style={pal.textLight as FontAwesomeIconStyle}
-        />
-      )}
-      {tags.map(tag => (
-        <EditableTag key={tag} value={tag} onRemove={removeTag} />
-      ))}
-      {tags.length >= max ? null : (
-        <TextInput
-          ref={input}
-          value={value}
-          onKeyPress={onKeyPress}
-          onSubmitEditing={onSubmitEditing}
-          onChangeText={onChangeText}
-          blurOnSubmit={false}
-          style={[styles.input, pal.textLight]}
-          placeholder="Enter a tag and press enter"
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoComplete="off"
-          accessible={true}
-          accessibilityLabel="Add tags to your post"
-          accessibilityHint={`Type a tag and press enter to add it. You can add up to ${max} tag.`}
-        />
-      )}
+    <View>
+      <Pressable
+        accessibilityRole="button"
+        style={styles.selectedTags}
+        onPress={() => {
+          sheet.current?.snapToIndex(0)
+        }}>
+        <View style={[pal.viewLight, styles.button]}>
+          {tags.length ? (
+            <Text type="md-medium" style={[pal.textLight]}>
+              Add +
+            </Text>
+          ) : (
+            <>
+              <FontAwesomeIcon
+                icon="tags"
+                size={12}
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+              <Text type="md-medium" style={[pal.textLight]}>
+                Click to add tags to your post
+              </Text>
+            </>
+          )}
+        </View>
+
+        {tags.map(tag => (
+          <View key={tag} style={[pal.viewLight, styles.button]}>
+            <Text type="md-medium" style={[pal.textLight]}>
+              #{tag}
+            </Text>
+          </View>
+        ))}
+      </Pressable>
+
+      <Portal>
+        <BottomSheet
+          ref={sheet}
+          index={-1}
+          snapPoints={[200]}
+          enablePanDownToClose
+          android_keyboardInputMode="adjustResize"
+          keyboardBlurBehavior="restore"
+          backdropComponent={props => (
+            <BottomSheetBackdrop
+              appearsOnIndex={0}
+              disappearsOnIndex={-1}
+              {...props}
+            />
+          )}
+          handleIndicatorStyle={{backgroundColor: pal.text.color}}
+          handleStyle={{display: 'none'}}
+          onChange={onSheetChange}
+          onClose={onCloseSheet}>
+          <Sheet.Outer>
+            <Sheet.Handle />
+
+            <View style={styles.outer}>
+              <FontAwesomeIcon
+                icon="tags"
+                size={14}
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+
+              {tags.map(tag => (
+                <TagButton key={tag} value={tag} onClick={removeTag} />
+              ))}
+
+              <BottomSheetTextInput
+                placeholder="Add tags..."
+                value={value}
+                style={styles.input}
+                onChangeText={onChangeText}
+                onKeyPress={onKeyPress}
+                onSubmitEditing={onSubmitEditing}
+              />
+            </View>
+
+            <View style={{marginHorizontal: -20}}>
+              <ScrollView horizontal>
+                <View style={styles.suggestions}>
+                  {isInitialLoad && <ActivityIndicator />}
+
+                  {suggestions
+                    .filter(s => !tags.find(t => t === s))
+                    .map(suggestion => {
+                      return (
+                        <TagButton
+                          key={suggestion}
+                          icon="plus"
+                          value={suggestion}
+                          onClick={addTagAndReset}
+                        />
+                      )
+                    })}
+                </View>
+              </ScrollView>
+            </View>
+          </Sheet.Outer>
+        </BottomSheet>
+      </Portal>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  selectedTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 8,
+  },
   outer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: 8,
+    marginBottom: 20,
   },
   input: {
     flexGrow: 1,
@@ -151,5 +296,21 @@ const styles = StyleSheet.create({
     }),
     paddingTop: 4,
     paddingBottom: 4,
+  },
+  suggestions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingLeft: 20,
+    paddingVertical: 8,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
   },
 })

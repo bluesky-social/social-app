@@ -4,8 +4,14 @@ import {RootStoreModel} from '../root-store'
 import Fuse from 'fuse.js'
 import {isObj, hasProp, isStrArray} from 'lib/type-guards'
 
+function uniq(arr: string[]) {
+  return Array.from(new Set(arr))
+}
+
 /**
  * Used only to persist recent tags across app restarts.
+ *
+ * TODO may want an LRU?
  */
 export class RecentTagsModel {
   _tags: string[] = []
@@ -62,6 +68,11 @@ export class TagsAutocompleteModel {
     this.rootStore.recentTags.add(tag)
   }
 
+  clear() {
+    this.query = ''
+    this.searchedTags = []
+  }
+
   get suggestions() {
     if (!this.isActive) {
       return []
@@ -87,9 +98,9 @@ export class TagsAutocompleteModel {
     // Fuse allows weighting values too, if we ever need it
     const fuse = new Fuse(items)
     // search amongst mixed set of tags
-    const results = fuse.search(this.query)
-
-    return results.slice(0, 9).map(r => r.item)
+    const results = fuse.search(this.query).map(r => r.item)
+    // backfill again in case search has no results
+    return uniq([...results, ...items]).slice(0, 9)
   }
 
   async search(query: string) {
@@ -98,8 +109,6 @@ export class TagsAutocompleteModel {
     await this.lock.acquireAsync()
 
     try {
-      // another query was set before we got our chance
-      if (this.query !== this.query) return
       await this._search()
     } finally {
       this.lock.release()
