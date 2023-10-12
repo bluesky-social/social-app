@@ -43,26 +43,34 @@ function ImageViewing({
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
+  const [showControls, setShowControls] = useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
-    opacity: withClampedSpring(isScaled ? 0 : 1),
+    opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
-        translateY: withClampedSpring(isScaled ? -30 : 0),
+        translateY: withClampedSpring(showControls ? 0 : -30),
       },
     ],
   }))
   const animatedFooterStyle = useAnimatedStyle(() => ({
-    opacity: withClampedSpring(isScaled ? 0 : 1),
+    opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
-        translateY: withClampedSpring(isScaled ? 30 : 0),
+        translateY: withClampedSpring(showControls ? 0 : 30),
       },
     ],
   }))
 
+  const onTap = useCallback(() => {
+    setShowControls(show => !show)
+  }, [])
+
   const onZoom = useCallback((nextIsScaled: boolean) => {
     setIsScaled(nextIsScaled)
+    if (nextIsScaled) {
+      setShowControls(false)
+    }
   }, [])
 
   const edges = useMemo(() => {
@@ -107,6 +115,7 @@ function ImageViewing({
           {images.map(imageSrc => (
             <View key={imageSrc.uri}>
               <ImageItem
+                onTap={onTap}
                 onZoom={onZoom}
                 imageSrc={imageSrc}
                 onRequestClose={onRequestClose}

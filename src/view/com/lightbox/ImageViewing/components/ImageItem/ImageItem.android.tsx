@@ -34,11 +34,13 @@ const initialTransform = createTransform()
 type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
+  onTap: () => void
   onZoom: (isZoomed: boolean) => void
   isScrollViewBeingDragged: boolean
 }
 const ImageItem = ({
   imageSrc,
+  onTap,
   onZoom,
   onRequestClose,
   isScrollViewBeingDragged,
@@ -227,6 +229,10 @@ const ImageItem = ({
       panTranslation.value = {x: 0, y: 0}
     })
 
+  const singleTap = Gesture.Tap().onEnd(() => {
+    runOnJS(onTap)()
+  })
+
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(e => {
@@ -297,6 +303,7 @@ const ImageItem = ({
         dismissSwipePan,
         Gesture.Simultaneous(pinch, pan),
         doubleTap,
+        singleTap,
       )
 
   const isLoading = !isLoaded || !imageDimensions
