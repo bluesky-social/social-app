@@ -39,24 +39,119 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {resolveName} from 'lib/api'
 import {s} from 'lib/styles'
 import {isNative} from 'platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
-  observer(function ProfileListScreenImpl({route}: Props) {
+  observer(function ProfileListScreenImpl(props: Props) {
+    const pal = usePalette('default')
+    const store = useStores()
+    const navigation = useNavigation<NavigationProp>()
+
+    const {name: handleOrDid} = props.route.params
+
+    const [listOwnerDid, setListOwnerDid] = React.useState<string | undefined>()
+    const [error, setError] = React.useState<string | undefined>()
+
+    const onPressBack = React.useCallback(() => {
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Home')
+      }
+    }, [navigation])
+
+    React.useEffect(() => {
+      /*
+       * We must resolve the DID of the list owner before we can fetch the list.
+       */
+      async function fetchDid() {
+        try {
+          const did = await resolveName(store, handleOrDid)
+          setListOwnerDid(did)
+        } catch (e) {
+          setError(
+            `We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
+          )
+        }
+      }
+
+      fetchDid()
+    }, [store, handleOrDid, setListOwnerDid])
+
+    if (error) {
+      return (
+        <CenteredView>
+          <View
+            style={[
+              pal.view,
+              pal.border,
+              {
+                margin: 10,
+                paddingHorizontal: 18,
+                paddingVertical: 14,
+                borderRadius: 6,
+              },
+            ]}>
+            <Text type="title-lg" style={[pal.text, s.mb10]}>
+              Could not load list
+            </Text>
+            <Text type="md" style={[pal.text, s.mb20]}>
+              {error}
+            </Text>
+
+            <View style={{flexDirection: 'row'}}>
+              <Button
+                type="default"
+                accessibilityLabel="Go Back"
+                accessibilityHint="Return to previous page"
+                onPress={onPressBack}
+                style={{flexShrink: 1}}>
+                <Text type="button" style={pal.text}>
+                  Go Back
+                </Text>
+              </Button>
+            </View>
+          </View>
+        </CenteredView>
+      )
+    }
+
+    return listOwnerDid ? (
+      <ProfileListScreenInner {...props} listOwnerDid={listOwnerDid} />
+    ) : (
+      <CenteredView>
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
+      </CenteredView>
+    )
+  }),
+)
+
+export const ProfileListScreenInner = observer(
+  function ProfileListScreenInnerImpl({
+    route,
+    listOwnerDid,
+  }: Props & {listOwnerDid: string}) {
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const pal = usePalette('default')
-    const {name, rkey} = route.params
+    const {rkey} = route.params
 
     const list: ListModel = React.useMemo(() => {
       const model = new ListModel(
         store,
-        `at://${name}/app.bsky.graph.list/${rkey}`,
+        `at://${listOwnerDid}/app.bsky.graph.list/${rkey}`,
       )
       return model
-    }, [store, name, rkey])
+    }, [store, listOwnerDid, rkey])
+    const feed = React.useMemo(
+      () => new PostsFeedModel(store, 'list', {list: list.uri}),
+      [store, list],
+    )
     useSetTitle(list.data?.name)
 
     useFocusEffect(
@@ -120,6 +215,18 @@ export const ProfileListScreen = withAuthRequired(
       const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
       shareUrl(url)
     }, [list.creatorDid, rkey])
+
+    const onPressAddUser = React.useCallback(() => {
+      store.shell.openModal({
+        name: 'list-add-user',
+        list,
+        onAdd() {
+          if (list.isCuratelist) {
+            feed.refresh()
+          }
+        },
+      })
+    }, [store, list, feed])
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       if (!list.hasLoaded) {
@@ -216,8 +323,8 @@ export const ProfileListScreen = withAuthRequired(
         <View style={s.hContentRegion}>
           <Header list={list} dropdownItems={dropdownItems} />
           <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-            <FeedPage key="1" list={list} />
-            <AboutPage key="2" list={list} />
+            <FeedPage key="1" feed={feed} />
+            <AboutPage key="2" list={list} onPressAddUser={onPressAddUser} />
           </Pager>
         </View>
       )
@@ -226,11 +333,11 @@ export const ProfileListScreen = withAuthRequired(
       <View style={s.hContentRegion}>
         <Header list={list} dropdownItems={dropdownItems} />
         <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-          <AboutPage key="1" list={list} />
+          <AboutPage key="1" list={list} onPressAddUser={onPressAddUser} />
         </Pager>
       </View>
     )
-  }),
+  },
 )
 
 function Container({
@@ -339,9 +446,14 @@ const Header = observer(function HeaderImpl({
   )
 })
 
-const AboutPage = observer(function AboutPageImpl({list}: {list: ListModel}) {
+const AboutPage = observer(function AboutPageImpl({
+  list,
+  onPressAddUser,
+}: {
+  list: ListModel
+  onPressAddUser: () => void
+}) {
   const pal = usePalette('default')
-  const store = useStores()
 
   const renderEmptyState = React.useCallback(() => {
     return (
@@ -393,32 +505,26 @@ const AboutPage = observer(function AboutPageImpl({list}: {list: ListModel}) {
         )}
         {list.isOwner && (
           <View style={{flexDirection: 'row'}}>
-            <Button
-              type="default"
-              label="Add user"
-              onPress={() =>
-                store.shell.openModal({name: 'list-add-user', list})
-              }
-            />
+            <Button type="default" label="Add user" onPress={onPressAddUser} />
           </View>
         )}
       </View>
       <ListItems
         list={list}
         renderEmptyState={renderEmptyState}
-        style={[s.flex1]}
+        style={s.flex1}
       />
     </Container>
   )
 })
 
-const FeedPage = observer(function FeedPageImpl({list}: {list: ListModel}) {
+const FeedPage = observer(function FeedPageImpl({
+  feed,
+}: {
+  feed: PostsFeedModel
+}) {
   const pal = usePalette('default')
   const store = useStores()
-  const feed = React.useMemo(
-    () => new PostsFeedModel(store, 'list', {list: list.uri}),
-    [store, list],
-  )
 
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
   const scrollElRef = React.useRef<FlatList>(null)
@@ -464,6 +570,7 @@ const FeedPage = observer(function FeedPageImpl({list}: {list: ListModel}) {
         onScroll={onMainScroll}
         scrollEventThrottle={100}
         renderEmptyState={renderEmptyState}
+        desktopFixedHeightOffset={120}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
