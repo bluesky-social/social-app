@@ -126,7 +126,7 @@ export const CustomFeedScreenInner = observer(
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
     const {rkey, name: handleOrDid, view: viewMode} = route.params
-    const minimalMode = viewMode === 'home'
+    const minimalMode = viewMode === 'simple'
     const uri = useMemo(
       () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
       [rkey, feedOwnerDid],

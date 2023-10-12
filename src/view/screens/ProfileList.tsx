@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, FlatList, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
@@ -23,12 +23,12 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {resolveName} from 'lib/api'
 import {s} from 'lib/styles'
-import {isNative} from 'platform/detection'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 
@@ -377,6 +377,37 @@ const AboutPage = observer(function AboutPageImpl({
   onPressAddUser: () => void
 }) {
   const pal = usePalette('default')
+  const store = useStores()
+  const scrollElRef = React.useRef<FlatList>(null)
+
+  // events
+  // =
+
+  const onScrollToTop = React.useCallback(() => {
+    scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
+  }, [scrollElRef])
+
+  const onSoftReset = React.useCallback(() => {
+    onScrollToTop()
+    list.refresh()
+  }, [onScrollToTop, list])
+
+  // init
+  // =
+
+  React.useEffect(() => {
+    const softResetSub = store.onScreenSoftReset(onSoftReset)
+    return () => {
+      softResetSub.remove()
+    }
+  }, [store, onSoftReset])
+
+  // render
+  // =
+
+  const renderHeader = React.useCallback(() => {
+    return <AboutSection list={list} onPressAddUser={onPressAddUser} />
+  }, [list, onPressAddUser])
 
   const renderEmptyState = React.useCallback(() => {
     return (
@@ -400,58 +431,70 @@ const AboutPage = observer(function AboutPageImpl({
       </CenteredView>
     )
   }
+
   return (
-    <CenteredView
-      sideBorders
-      style={[
-        // @ts-ignore web only -prf
-        !isNative && {minHeight: '100vh'},
-      ]}>
-      <View
-        style={[
-          {
-            borderTopWidth: 1,
-            paddingVertical: 20,
-            paddingHorizontal: 20,
-            gap: 12,
-          },
-          pal.border,
-        ]}>
-        {list.descriptionRT ? (
-          <RichText
-            testID="listDescription"
-            type="lg"
-            style={pal.text}
-            richText={list.descriptionRT}
-          />
-        ) : (
-          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-            No description
-          </Text>
-        )}
-        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          Created by{' '}
-          {list.isOwner ? (
-            'you'
-          ) : (
-            <TextLink
-              text={sanitizeHandle(list.data.creator.handle, '@')}
-              href={makeProfileLink(list.data.creator)}
-              style={pal.textLight}
-            />
-          )}
-        </Text>
-        {list.isOwner && (
-          <View style={{flexDirection: 'row'}}>
-            <Button type="default" label="Add user" onPress={onPressAddUser} />
-          </View>
-        )}
-      </View>
-      <ListItems
-        list={list}
-        renderEmptyState={renderEmptyState}
-        style={s.flex1}
-      />
-    </CenteredView>
+    <ListItems
+      scrollElRef={scrollElRef}
+      list={list}
+      renderHeader={renderHeader}
+      renderEmptyState={renderEmptyState}
+      style={s.flex1}
+      desktopFixedHeightOffset={120}
+    />
   )
 })
+
+function AboutSection({
+  list,
+  onPressAddUser,
+}: {
+  list: ListModel
+  onPressAddUser: () => void
+}) {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+  if (!list.data) {
+    return <View />
+  }
+  return (
+    <View
+      style={[
+        {
+          borderTopWidth: 1,
+          padding: isMobile ? 14 : 20,
+          gap: 12,
+        },
+        pal.border,
+      ]}>
+      {list.descriptionRT ? (
+        <RichText
+          testID="listDescription"
+          type="lg"
+          style={pal.text}
+          richText={list.descriptionRT}
+        />
+      ) : (
+        <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+          No description
+        </Text>
+      )}
+      <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+        Created by{' '}
+        {list.isOwner ? (
+          'you'
+        ) : (
+          <TextLink
+            text={sanitizeHandle(list.data.creator.handle, '@')}
+            href={makeProfileLink(list.data.creator)}
+            style={pal.textLight}
+          />
+        )}
+      </Text>
+      {list.isOwner && (
+        <View style={{flexDirection: 'row'}}>
+          <Button type="default" label="Add user" onPress={onPressAddUser} />
+        </View>
+      )}
+    </View>
+  )
+}

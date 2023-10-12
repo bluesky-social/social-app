@@ -25,7 +25,7 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
       {store.me.savedFeeds.pinned.map(feed => {
         try {
           const {hostname, rkey} = new AtUri(feed.uri)
-          const href = `/profile/${hostname}/feed/${rkey}?view=home`
+          const href = `/profile/${hostname}/feed/${rkey}?view=simple`
           const params = route.params as Record<string, string>
           return (
             <FeedItem

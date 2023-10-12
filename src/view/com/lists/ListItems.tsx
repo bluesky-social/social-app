@@ -1,13 +1,14 @@
 import React, {MutableRefObject} from 'react'
 import {
   ActivityIndicator,
+  FlatList as RNFlatList,
   RefreshControl,
   StyleProp,
   View,
   ViewStyle,
-  FlatList,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {FlatList} from '../util/Views.web'
 import {observer} from 'mobx-react-lite'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -18,8 +19,10 @@ import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 
+const HEADER_ITEM = {_reactKey: '__header__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
@@ -30,25 +33,28 @@ export const ListItems = observer(function ListItemsImpl({
   style,
   scrollElRef,
   onPressTryAgain,
+  renderHeader,
   renderEmptyState,
   testID,
-  headerOffset = 0,
+  desktopFixedHeightOffset,
 }: {
   list: ListModel
   style?: StyleProp<ViewStyle>
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef?: MutableRefObject<RNFlatList<any> | null>
   onPressTryAgain?: () => void
-  renderEmptyState?: () => JSX.Element
+  renderHeader: () => JSX.Element
+  renderEmptyState: () => JSX.Element
   testID?: string
-  headerOffset?: number
+  desktopFixedHeightOffset?: number
 }) {
   const pal = usePalette('default')
   const store = useStores()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const {isMobile} = useWebMediaQueries()
 
   const data = React.useMemo(() => {
-    let items: any[] = []
+    let items: any[] = [HEADER_ITEM]
     if (list.hasLoaded) {
       if (list.hasError) {
         items = items.concat([ERROR_ITEM])
@@ -143,11 +149,10 @@ export const ListItems = observer(function ListItemsImpl({
 
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
-      if (item === EMPTY_ITEM) {
-        if (renderEmptyState) {
-          return renderEmptyState()
-        }
-        return <View />
+      if (item === HEADER_ITEM) {
+        return renderHeader()
+      } else if (item === EMPTY_ITEM) {
+        return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
@@ -172,29 +177,28 @@ export const ListItems = observer(function ListItemsImpl({
           }`}
           profile={(item as AppBskyGraphDefs.ListItemView).subject}
           renderButton={renderMemberButton}
-          style={{paddingHorizontal: 14, paddingVertical: 4}}
+          style={{paddingHorizontal: isMobile ? 8 : 14, paddingVertical: 4}}
         />
       )
     },
     [
       renderMemberButton,
+      renderHeader,
       renderEmptyState,
       list.error,
       onPressTryAgain,
       onPressRetryLoadMore,
+      isMobile,
     ],
   )
 
   const Footer = React.useCallback(
-    () =>
-      list.isLoading ? (
-        <View style={{paddingTop: 20}}>
-          <ActivityIndicator />
-        </View>
-      ) : (
-        <View />
-      ),
-    [list],
+    () => (
+      <View style={{paddingTop: 20, paddingBottom: 200}}>
+        {list.isLoading && <ActivityIndicator />}
+      </View>
+    ),
+    [list.isLoading],
   )
 
   return (
@@ -204,7 +208,7 @@ export const ListItems = observer(function ListItemsImpl({
           testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}
           data={data}
-          keyExtractor={item => item._reactKey}
+          keyExtractor={(item: any) => item._reactKey}
           renderItem={renderItem}
           ListFooterComponent={Footer}
           refreshControl={
@@ -213,17 +217,14 @@ export const ListItems = observer(function ListItemsImpl({
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
             />
           }
           contentContainerStyle={s.contentContainer}
-          style={{paddingTop: headerOffset}}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           removeClippedSubviews={true}
-          contentOffset={{x: 0, y: headerOffset * -1}}
           // @ts-ignore our .web version only -prf
-          desktopFixedHeight
+          desktopFixedHeight={desktopFixedHeightOffset || true}
         />
       )}
     </View>
