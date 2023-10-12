@@ -27,7 +27,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 interface AddedProps {
-  desktopFixedHeight?: boolean
+  desktopFixedHeight?: boolean | number
 }
 
 export function CenteredView({
@@ -68,7 +68,13 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     })
   }
   if (desktopFixedHeight) {
-    style = addStyle(style, styles.fixedHeight)
+    if (typeof desktopFixedHeight === 'number') {
+      style = addStyle(style, {
+        height: `calc(100vh - ${desktopFixedHeight}px)`,
+      })
+    } else {
+      style = addStyle(style, styles.fixedHeight)
+    }
     if (!isMobile) {
       // NOTE
       // react native web produces *three* wrapping divs

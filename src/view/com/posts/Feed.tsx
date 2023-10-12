@@ -36,6 +36,7 @@ export const Feed = observer(function Feed({
   renderEndOfFeed,
   testID,
   headerOffset = 0,
+  desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
 }: {
@@ -49,6 +50,7 @@ export const Feed = observer(function Feed({
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
 }) {
@@ -183,7 +185,9 @@ export const Feed = observer(function Feed({
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
-        desktopFixedHeight
+        desktopFixedHeight={
+          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+        }
       />
     </View>
   )

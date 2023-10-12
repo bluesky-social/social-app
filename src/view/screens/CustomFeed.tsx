@@ -342,6 +342,7 @@ export const CustomFeedScreenInner = observer(
             uri={uri}
             isPinned={isPinned}
             isScrolledDown={isScrolledDown}
+            minimalMode
             onMainScroll={onMainScroll}
             onPressCompose={onPressCompose}
             onSoftReset={onSoftReset}
@@ -566,6 +567,7 @@ const FeedPage = observer(function FeedPageImpl({
   uri,
   isPinned,
   isScrolledDown,
+  minimalMode,
   onMainScroll,
   onPressCompose,
   onSoftReset,
@@ -575,6 +577,7 @@ const FeedPage = observer(function FeedPageImpl({
   uri: string
   isPinned: boolean
   isScrolledDown: boolean
+  minimalMode?: boolean
   onMainScroll: OnScrollCb
   onPressCompose: () => void
   onSoftReset: () => void
@@ -600,6 +603,7 @@ const FeedPage = observer(function FeedPageImpl({
         renderEmptyState={renderEmptyState}
         extraData={[uri, isPinned]}
         style={!isTabletOrDesktop ? {flex: 1} : undefined}
+        desktopFixedHeightOffset={minimalMode ? 50 : 120}
       />
       {isScrolledDown ? (
         <LoadLatestBtn
