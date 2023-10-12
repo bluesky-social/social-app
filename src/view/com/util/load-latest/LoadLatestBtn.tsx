@@ -47,7 +47,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
 
 const styles = StyleSheet.create({
   loadLatest: {
-    position: 'absolute',
+    position: isWeb ? 'fixed' : 'absolute',
     left: 18,
     bottom: 44,
     borderWidth: 1,
