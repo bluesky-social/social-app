@@ -1,6 +1,7 @@
 import React from 'react'
 import {useStores} from 'state/index'
 import {
+  Easing,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +13,7 @@ export function useMinimalShellMode() {
   const minimalShellInterp = useSharedValue(0)
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
+      opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
         {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, 100])},
       ],
@@ -19,6 +21,7 @@ export function useMinimalShellMode() {
   })
   const headerMinimalShellTransform = useAnimatedStyle(() => {
     return {
+      opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
         {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, -100])},
       ],
@@ -35,11 +38,13 @@ export function useMinimalShellMode() {
   React.useEffect(() => {
     if (store.shell.minimalShellMode) {
       minimalShellInterp.value = withTiming(1, {
-        duration: 100,
+        duration: 125,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       })
     } else {
       minimalShellInterp.value = withTiming(0, {
-        duration: 100,
+        duration: 125,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       })
     }
   }, [minimalShellInterp, store.shell.minimalShellMode])
