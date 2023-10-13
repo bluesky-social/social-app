@@ -43,24 +43,36 @@ function ImageViewing({
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
+  const [showControls, setShowControls] = useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
+    pointerEvents: showControls ? 'auto' : 'none',
+    opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
-        translateY: withClampedSpring(isScaled ? -300 : 0),
+        translateY: withClampedSpring(showControls ? 0 : -30),
       },
     ],
   }))
   const animatedFooterStyle = useAnimatedStyle(() => ({
+    pointerEvents: showControls ? 'auto' : 'none',
+    opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
-        translateY: withClampedSpring(isScaled ? 300 : 0),
+        translateY: withClampedSpring(showControls ? 0 : 30),
       },
     ],
   }))
 
+  const onTap = useCallback(() => {
+    setShowControls(show => !show)
+  }, [])
+
   const onZoom = useCallback((nextIsScaled: boolean) => {
     setIsScaled(nextIsScaled)
+    if (nextIsScaled) {
+      setShowControls(false)
+    }
   }, [])
 
   const edges = useMemo(() => {
@@ -105,6 +117,7 @@ function ImageViewing({
           {images.map(imageSrc => (
             <View key={imageSrc.uri}>
               <ImageItem
+                onTap={onTap}
                 onZoom={onZoom}
                 imageSrc={imageSrc}
                 onRequestClose={onRequestClose}
@@ -161,7 +174,7 @@ const EnhancedImageViewing = (props: Props) => (
 
 function withClampedSpring(value: any) {
   'worklet'
-  return withSpring(value, {overshootClamping: true})
+  return withSpring(value, {overshootClamping: true, stiffness: 300})
 }
 
 export default EnhancedImageViewing
