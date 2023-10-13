@@ -115,6 +115,19 @@ export class PostsFeedModel {
     }
   }
 
+  get reactKey() {
+    if (this.feedType === 'author') {
+      return (this.params as GetAuthorFeed.QueryParams).actor
+    }
+    if (this.feedType === 'custom') {
+      return (this.params as GetCustomFeed.QueryParams).feed
+    }
+    if (this.feedType === 'list') {
+      return (this.params as GetListFeed.QueryParams).list
+    }
+    return this.feedType
+  }
+
   get hasContent() {
     return this.slices.length !== 0
   }
