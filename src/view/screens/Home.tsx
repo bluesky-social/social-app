@@ -1,6 +1,7 @@
 import React from 'react'
 import {useWindowDimensions} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
+import {useSharedValue} from 'react-native-reanimated'
 import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import isEqual from 'lodash.isequal'
@@ -28,6 +29,7 @@ export const HomeScreen = withAuthRequired(
     const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
       string[]
     >([])
+    const dragProgress = useSharedValue(selectedPage)
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds
@@ -79,6 +81,12 @@ export const HomeScreen = withAuthRequired(
       [store, setSelectedPage],
     )
 
+    const onPageScroll = React.useCallback((e) => {
+      'worklet'
+      const progress = (e.offset + e.position) / customFeeds.length;
+      dragProgress.value = progress;
+    }, [customFeeds])
+
     const onPressSelected = React.useCallback(() => {
       store.emitScreenSoftReset()
     }, [store])
@@ -111,11 +119,7 @@ export const HomeScreen = withAuthRequired(
         ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
-        onPageScroll={(e) => {
-          'worklet'
-          const progress = (e.offset + e.position) / customFeeds.length;
-          console.log(progress)
-        }}
+        onPageScroll={onPageScroll}
         renderTabBar={renderTabBar}
         tabBarPosition="top">
         <FeedPage
