@@ -65,7 +65,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       // This delay gives us a decent chance the navigation has flushed *and* images have loaded.
       // It's acceptable because the data is already being fetched + it usually takes longer anyway.
       // TODO: Figure out why avatar/cover don't always show instantly from cache.
-      await timeout(500)
+      await timeout(200)
       store.shell.closeModal()
     }
   }
