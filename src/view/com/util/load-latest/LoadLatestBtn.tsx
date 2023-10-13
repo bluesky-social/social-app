@@ -10,7 +10,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
-        
+
 export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress,
   label,

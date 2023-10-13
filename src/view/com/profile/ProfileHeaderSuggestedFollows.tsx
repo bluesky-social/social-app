@@ -223,9 +223,9 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
 
   const onPress = React.useCallback(async () => {
     try {
-      const {following} = await toggle()
+      const {following: isFollowing} = await toggle()
 
-      if (following) {
+      if (isFollowing) {
         track('ProfileHeader:SuggestedFollowFollowed')
       }
     } catch (e: any) {
