@@ -1,13 +1,5 @@
-import React, {useMemo, useState} from 'react'
-import {
-  LayoutChangeEvent,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {ImageStyle} from 'expo-image'
-import {Dimensions} from 'lib/media/types'
+import React from 'react'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {GalleryItem} from './Gallery'
 
@@ -20,21 +12,11 @@ interface ImageLayoutGridProps {
 }
 
 export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
-  const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
-
-  const onLayout = (evt: LayoutChangeEvent) => {
-    const {width, height} = evt.nativeEvent.layout
-    setContainerInfo({
-      width,
-      height,
-    })
-  }
-
   return (
-    <View style={style} onLayout={onLayout}>
-      {containerInfo ? (
-        <ImageLayoutGridInner {...props} containerInfo={containerInfo} />
-      ) : undefined}
+    <View style={style}>
+      <View style={styles.container}>
+        <ImageLayoutGridInner {...props} />
+      </View>
     </View>
   )
 }
@@ -44,70 +26,80 @@ interface ImageLayoutGridInnerProps {
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
-  containerInfo: Dimensions
 }
 
-function ImageLayoutGridInner({
-  containerInfo,
-  ...props
-}: ImageLayoutGridInnerProps) {
+function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const count = props.images.length
-  const size1 = useMemo<ImageStyle>(() => {
-    if (count === 3) {
-      const size = (containerInfo.width - 10) / 3
-      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
-    } else {
-      const size = (containerInfo.width - 5) / 2
-      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
-    }
-  }, [count, containerInfo])
-  const size2 = React.useMemo<ImageStyle>(() => {
-    if (count === 3) {
-      const size = ((containerInfo.width - 10) / 3) * 2 + 5
-      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
-    } else {
-      const size = (containerInfo.width - 5) / 2
-      return {width: size, height: size, resizeMode: 'cover', borderRadius: 4}
-    }
-  }, [count, containerInfo])
 
   switch (count) {
     case 2:
       return (
         <View style={styles.flexRow}>
-          <GalleryItem index={0} {...props} imageStyle={size1} />
-          <GalleryItem index={1} {...props} imageStyle={size1} />
+          <View style={styles.smallItem}>
+            <GalleryItem {...props} index={0} imageStyle={styles.image} />
+          </View>
+          <View style={styles.smallItem}>
+            <GalleryItem {...props} index={1} imageStyle={styles.image} />
+          </View>
         </View>
       )
+
     case 3:
       return (
         <View style={styles.flexRow}>
-          <GalleryItem index={0} {...props} imageStyle={size2} />
-          <View style={styles.flexColumn}>
-            <GalleryItem index={1} {...props} imageStyle={size1} />
-            <GalleryItem index={2} {...props} imageStyle={size1} />
+          <View style={{flex: 2, aspectRatio: 1}}>
+            <GalleryItem {...props} index={0} imageStyle={styles.image} />
+          </View>
+          <View style={{flex: 1}}>
+            <View style={styles.smallItem}>
+              <GalleryItem {...props} index={1} imageStyle={styles.image} />
+            </View>
+            <View style={styles.smallItem}>
+              <GalleryItem {...props} index={2} imageStyle={styles.image} />
+            </View>
           </View>
         </View>
       )
+
     case 4:
       return (
         <View style={styles.flexRow}>
-          <View style={styles.flexColumn}>
-            <GalleryItem index={0} {...props} imageStyle={size1} />
-            <GalleryItem index={2} {...props} imageStyle={size1} />
+          <View style={{flex: 1}}>
+            <View style={styles.smallItem}>
+              <GalleryItem {...props} index={0} imageStyle={styles.image} />
+            </View>
+            <View style={styles.smallItem}>
+              <GalleryItem {...props} index={2} imageStyle={styles.image} />
+            </View>
           </View>
-          <View style={styles.flexColumn}>
-            <GalleryItem index={1} {...props} imageStyle={size1} />
-            <GalleryItem index={3} {...props} imageStyle={size1} />
+          <View style={{flex: 1}}>
+            <View style={styles.smallItem}>
+              <GalleryItem {...props} index={1} imageStyle={styles.image} />
+            </View>
+            <View style={styles.smallItem}>
+              <GalleryItem {...props} index={3} imageStyle={styles.image} />
+            </View>
           </View>
         </View>
       )
+
     default:
       return null
   }
 }
 
+// This is used to compute margins (rather than flexbox gap) due to Yoga bugs:
+// https://github.com/facebook/yoga/issues/1418
+const IMAGE_GAP = 5
+
 const styles = StyleSheet.create({
-  flexRow: {flexDirection: 'row', gap: 5},
-  flexColumn: {flexDirection: 'column', gap: 5},
+  container: {
+    marginHorizontal: -IMAGE_GAP / 2,
+    marginVertical: -IMAGE_GAP / 2,
+  },
+  flexRow: {flexDirection: 'row'},
+  smallItem: {flex: 1, aspectRatio: 1},
+  image: {
+    margin: IMAGE_GAP / 2,
+  },
 })

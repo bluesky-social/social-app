@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.52.0",
+  "version": "1.53.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -217,7 +217,7 @@
   },
   "resolutions": {
     "@types/react": "^18",
-    "**/zeed-dom": "estrattonbailey/zeed-dom#publish"
+    "**/zeed-dom": "0.10.9"
   },
   "jest": {
     "preset": "jest-expo/ios",

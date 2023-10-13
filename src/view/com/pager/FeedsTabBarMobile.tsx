@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {autorun} from 'mobx'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
@@ -22,15 +23,18 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   const interp = useAnimatedValue(0)
 
   React.useEffect(() => {
-    Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 1 : 0,
-      duration: 100,
-      useNativeDriver: true,
-      isInteraction: false,
-    }).start()
-  }, [interp, store.shell.minimalShellMode])
+    return autorun(() => {
+      Animated.timing(interp, {
+        toValue: store.shell.minimalShellMode ? 1 : 0,
+        duration: 150,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    })
+  }, [interp, store])
   const transform = {
-    transform: [{translateY: Animated.multiply(interp, -100)}],
+    opacity: Animated.subtract(1, interp),
+    transform: [{translateY: Animated.multiply(interp, -50)}],
   }
 
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
@@ -45,7 +49,14 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   )
 
   return (
-    <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
+    <Animated.View
+      style={[
+        pal.view,
+        pal.border,
+        styles.tabBar,
+        transform,
+        store.shell.minimalShellMode && styles.disabled,
+      ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity
@@ -112,5 +123,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 21,
+  },
+  disabled: {
+    pointerEvents: 'none',
   },
 })

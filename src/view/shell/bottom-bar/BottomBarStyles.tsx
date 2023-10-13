@@ -65,4 +65,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 100,
   },
+  disabled: {
+    pointerEvents: 'none',
+  },
 })
