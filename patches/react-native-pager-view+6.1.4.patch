@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-pager-view/ios/ReactNativePageView.m b/node_modules/react-native-pager-view/ios/ReactNativePageView.m
-index ab0fc7f..fbbf19f 100644
+index ab0fc7f..1ace752 100644
 --- a/node_modules/react-native-pager-view/ios/ReactNativePageView.m
 +++ b/node_modules/react-native-pager-view/ios/ReactNativePageView.m
 @@ -1,6 +1,6 @@
@@ -19,7 +19,7 @@ index ab0fc7f..fbbf19f 100644
  
  @property(nonatomic, strong) UIPageViewController *reactPageViewController;
  @property(nonatomic, strong) RCTEventDispatcher *eventDispatcher;
-@@ -80,6 +80,10 @@
+@@ -80,6 +80,10 @@ - (void)didMoveToWindow {
          [self setupInitialController];
      }
  
@@ -30,13 +30,13 @@ index ab0fc7f..fbbf19f 100644
      if (self.reactViewController.navigationController != nil && self.reactViewController.navigationController.interactivePopGestureRecognizer != nil) {
          [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:self.reactViewController.navigationController.interactivePopGestureRecognizer];
      }
-@@ -463,4 +467,21 @@
+@@ -463,4 +467,21 @@ - (NSString *)determineScrollDirection:(UIScrollView *)scrollView {
  - (BOOL)isLtrLayout {
      return [_layoutDirection isEqualToString:@"ltr"];
  }
 +
 +- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-+    if (otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
++    if (!_overdrag && otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
 +        UIPanGestureRecognizer* p = (UIPanGestureRecognizer*) gestureRecognizer;
 +        CGPoint velocity = [p velocityInView:self];
 +        if (self.currentIndex == 0 && velocity.x > 0) {
