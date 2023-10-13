@@ -1,5 +1,5 @@
-import React, {useRef, useMemo, useEffect, useState, useCallback} from 'react'
-import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
+import React, {useRef, useMemo, useCallback} from 'react'
+import {StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -26,19 +26,11 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
-  const [itemXs, setItemXs] = useState<number[]>([])
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
   const {isDesktop, isTablet} = useWebMediaQueries()
-
-  // scrolls to the selected item when the page changes
-  useEffect(() => {
-    scrollElRef.current?.scrollTo({
-      x: itemXs[selectedPage] || 0,
-    })
-  }, [scrollElRef, itemXs, selectedPage])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -48,19 +40,6 @@ export function TabBar({
       }
     },
     [onSelect, selectedPage, onPressSelected],
-  )
-
-  // calculates the x position of each item on mount and on layout change
-  const onItemLayout = React.useCallback(
-    (e: LayoutChangeEvent, index: number) => {
-      const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
-        const Xs = [...prev]
-        Xs[index] = x
-        return Xs
-      })
-    },
-    [],
   )
 
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
@@ -77,7 +56,6 @@ export function TabBar({
           return (
             <PressableWithHover
               key={item}
-              onLayout={e => onItemLayout(e, i)}
               style={[styles.item, selected && indicatorStyle]}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
