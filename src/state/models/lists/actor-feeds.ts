@@ -3,7 +3,7 @@ import {AppBskyFeedGetActorFeeds as GetActorFeeds} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
 
 const PAGE_SIZE = 30
 
@@ -17,7 +17,7 @@ export class ActorFeedsModel {
   loadMoreCursor?: string
 
   // data
-  feeds: CustomFeedModel[] = []
+  feeds: FeedSourceModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -114,7 +114,9 @@ export class ActorFeedsModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     for (const f of res.data.feeds) {
-      this.feeds.push(new CustomFeedModel(this.rootStore, f))
+      const model = new FeedSourceModel(this.rootStore, f.uri)
+      model.hydrateFeedGenerator(f)
+      this.feeds.push(model)
     }
   }
 }

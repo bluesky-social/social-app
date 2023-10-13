@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 import {SavedFeedsModel} from './saved-feeds'
 import {FeedsDiscoveryModel} from '../discovery/feeds'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
 import {RootStoreModel} from '../root-store'
 
 export type MyFeedsItem =
@@ -30,7 +30,7 @@ export type MyFeedsItem =
   | {
       _reactKey: string
       type: 'saved-feed'
-      feed: CustomFeedModel
+      feed: FeedSourceModel
     }
   | {
       _reactKey: string
@@ -47,7 +47,7 @@ export type MyFeedsItem =
   | {
       _reactKey: string
       type: 'discover-feed'
-      feed: CustomFeedModel
+      feed: FeedSourceModel
     }
 
 export class MyFeedsUIModel {

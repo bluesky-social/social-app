@@ -10,12 +10,12 @@ import {HeartIcon} from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 
 export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
   item,
 }: {
-  item: CustomFeedModel
+  item: FeedSourceModel
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -54,7 +54,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           },
         ]}>
         <View style={{marginTop: 2}}>
-          <UserAvatar type="algo" size={42} avatar={item.data.avatar} />
+          <UserAvatar type="algo" size={42} avatar={item.avatar} />
         </View>
         <View style={{flex: isMobile ? 1 : undefined}}>
           <Text
@@ -65,10 +65,10 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           </Text>
 
           <Text style={[pal.textLight, {marginBottom: 8}]} numberOfLines={1}>
-            by {sanitizeHandle(item.data.creator.handle, '@')}
+            by {sanitizeHandle(item.creatorHandle, '@')}
           </Text>
 
-          {item.data.description ? (
+          {item.descriptionRT ? (
             <Text
               type="xl"
               style={[
@@ -80,7 +80,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                 },
               ]}
               numberOfLines={6}>
-              {item.data.description}
+              {item.descriptionRT.text /* TODO */}
             </Text>
           ) : null}
 
@@ -129,7 +129,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                 style={[pal.textLight, {position: 'relative', top: 2}]}
               />
               <Text type="lg-medium" style={[pal.text, pal.textLight]}>
-                {item.data.likeCount || 0}
+                {item.likeCount || 0}
               </Text>
             </View>
           </View>

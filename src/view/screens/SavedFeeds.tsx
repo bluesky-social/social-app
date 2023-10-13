@@ -26,9 +26,9 @@ import DraggableFlatList, {
   ShadowDecorator,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {Link, TextLink} from 'view/com/util/Link'
@@ -107,7 +107,7 @@ export const SavedFeeds = withAuthRequired(
     const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
 
     const onDragEnd = useCallback(
-      async ({data}: {data: CustomFeedModel[]}) => {
+      async ({data}: {data: FeedSourceModel[]}) => {
         try {
           await savedFeeds.reorderPinnedFeeds(data)
         } catch (e) {
@@ -129,7 +129,7 @@ export const SavedFeeds = withAuthRequired(
         <DraggableFlatList
           containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
           data={savedFeeds.pinned.concat(savedFeeds.unpinned)}
-          keyExtractor={item => item.data.uri}
+          keyExtractor={item => item.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
             <RefreshControl
@@ -164,7 +164,7 @@ const ListItem = observer(function ListItemImpl({
   drag,
 }: {
   savedFeeds: SavedFeedsModel
-  item: CustomFeedModel
+  item: FeedSourceModel
   drag: () => void
 }) {
   const pal = usePalette('default')
@@ -230,8 +230,8 @@ const ListItem = observer(function ListItemImpl({
               style={s.ml20}
             />
           ) : null}
-          <CustomFeed
-            key={item.data.uri}
+          <FeedSourceCard
+            key={item.uri}
             item={item}
             showSaveBtn
             style={styles.noBorder}

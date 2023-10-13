@@ -10,7 +10,7 @@ import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -41,7 +41,7 @@ import {makeProfileLink} from 'lib/routes/links'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export const ProfileFeedScreen = withAuthRequired(
-  observer(function CustomFeedScreenImpl(props: Props) {
+  observer(function ProfileFeedScreenImpl(props: Props) {
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
@@ -106,7 +106,7 @@ export const ProfileFeedScreen = withAuthRequired(
     }
 
     return feedOwnerDid ? (
-      <CustomFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
+      <ProfileFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
     ) : (
       <CenteredView>
         <View style={s.p20}>
@@ -117,8 +117,8 @@ export const ProfileFeedScreen = withAuthRequired(
   }),
 )
 
-export const CustomFeedScreenInner = observer(
-  function CustomFeedScreenInnerImpl({
+export const ProfileFeedScreenInner = observer(
+  function ProfileFeedScreenInnerImpl({
     route,
     feedOwnerDid,
   }: Props & {feedOwnerDid: string}) {
@@ -202,7 +202,7 @@ export const CustomFeedScreenInner = observer(
       store.shell.openModal({
         name: 'report',
         uri: feedInfo.uri,
-        cid: feedInfo.data.cid,
+        cid: feedInfo.cid,
       })
     }, [store, feedInfo])
 
@@ -354,7 +354,7 @@ const Header = observer(function HeaderImpl({
 }: {
   feedOwnerDid: string
   feedRkey: string
-  feedInfo: CustomFeedModel | undefined
+  feedInfo: FeedSourceModel | undefined
   dropdownItems: DropdownItem[]
   isPinned: boolean
   minimalMode: boolean
@@ -369,9 +369,9 @@ const Header = observer(function HeaderImpl({
     ? {
         href: makeCustomFeedLink(feedOwnerDid, feedRkey),
         title: feedInfo.displayName,
-        avatar: feedInfo.data.avatar,
+        avatar: feedInfo.avatar,
         isOwner: feedInfo.isOwner,
-        creator: feedInfo.data.creator,
+        creator: {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle},
       }
     : undefined
 
@@ -425,7 +425,7 @@ const AboutPage = observer(function AboutPageImpl({
 }: {
   feedOwnerDid: string
   feedRkey: string
-  feedInfo: CustomFeedModel | undefined
+  feedInfo: FeedSourceModel | undefined
   onToggleLiked: () => void
 }) {
   const pal = usePalette('default')
@@ -476,11 +476,11 @@ const AboutPage = observer(function AboutPageImpl({
               <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
             )}
           </Button>
-          {typeof feedInfo.data.likeCount === 'number' && (
+          {typeof feedInfo.likeCount === 'number' && (
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-              text={`Liked by ${feedInfo.data.likeCount} ${pluralize(
-                feedInfo.data.likeCount,
+              text={`Liked by ${feedInfo.likeCount} ${pluralize(
+                feedInfo.likeCount,
                 'user',
               )}`}
               style={[pal.textLight, s.semiBold]}
@@ -493,8 +493,11 @@ const AboutPage = observer(function AboutPageImpl({
             'you'
           ) : (
             <TextLink
-              text={sanitizeHandle(feedInfo.data.creator.handle, '@')}
-              href={makeProfileLink(feedInfo.data.creator)}
+              text={sanitizeHandle(feedInfo.creatorHandle, '@')}
+              href={makeProfileLink({
+                did: feedInfo.creatorDid,
+                handle: feedInfo.creatorHandle,
+              })}
               style={pal.textLight}
             />
           )}

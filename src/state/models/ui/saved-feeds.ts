@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
 import {track} from 'lib/analytics/analytics'
 
 export class SavedFeedsModel {
@@ -13,7 +13,7 @@ export class SavedFeedsModel {
   error = ''
 
   // data
-  all: CustomFeedModel[] = []
+  all: FeedSourceModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -59,16 +59,13 @@ export class SavedFeedsModel {
     this._xLoading(true)
     try {
       await this.rootStore.preferences.sync()
-      const uris = this.rootStore.preferences.savedFeeds
-      const feeds: CustomFeedModel[] = []
-      for (let i = 0; i < uris.length; i += 25) {
-        const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
-          feeds: uris.slice(i, 25),
-        })
-        for (const info of res.data.feeds) {
-          feeds.push(new CustomFeedModel(this.rootStore, info))
-        }
-      }
+      const uris = dedup(
+        this.rootStore.preferences.pinnedFeeds.concat(
+          this.rootStore.preferences.savedFeeds,
+        ),
+      )
+      const feeds = uris.map(uri => new FeedSourceModel(this.rootStore, uri))
+      await Promise.all(feeds.map(f => f.setup()))
       runInAction(() => {
         this.all = feeds
       })
@@ -78,14 +75,14 @@ export class SavedFeedsModel {
     }
   })
 
-  async reorderPinnedFeeds(feeds: CustomFeedModel[]) {
+  async reorderPinnedFeeds(feeds: FeedSourceModel[]) {
     return this.rootStore.preferences.setSavedFeeds(
       this.rootStore.preferences.savedFeeds,
       feeds.filter(feed => feed.isPinned).map(feed => feed.uri),
     )
   }
 
-  async movePinnedFeed(item: CustomFeedModel, direction: 'up' | 'down') {
+  async movePinnedFeed(item: FeedSourceModel, direction: 'up' | 'down') {
     const pinned = this.rootStore.preferences.pinnedFeeds.slice()
     const index = pinned.indexOf(item.uri)
     if (index === -1) {
@@ -105,7 +102,7 @@ export class SavedFeedsModel {
       pinned,
     )
     track('CustomFeed:Reorder', {
-      name: item.data.displayName,
+      name: item.displayName,
       uri: item.uri,
       index: pinned.indexOf(item.uri),
     })
@@ -129,4 +126,8 @@ export class SavedFeedsModel {
       this.rootStore.log.error('Failed to fetch user feeds', err)
     }
   }
+}
+
+function dedup(strings: string[]): string[] {
+  return Array.from(new Set(strings))
 }

@@ -26,7 +26,7 @@ import {Text} from 'view/com/util/text/Text'
 import {MyFeedsUIModel, MyFeedsItem} from 'state/models/ui/my-feeds'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
@@ -142,7 +142,7 @@ export const FeedsScreen = withAuthRequired(
           return (
             <SavedFeed
               uri={item.feed.uri}
-              avatar={item.feed.data.avatar}
+              avatar={item.feed.avatar}
               displayName={item.feed.displayName}
             />
           )
@@ -187,7 +187,7 @@ export const FeedsScreen = withAuthRequired(
           )
         } else if (item.type === 'discover-feed') {
           return (
-            <CustomFeed
+            <FeedSourceCard
               item={item.feed}
               showSaveBtn
               showDescription
