@@ -34,6 +34,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {isUriImage} from 'lib/media/util'
 import {downloadAndResize} from 'lib/media/manip'
 import {POST_IMG_MAX} from 'lib/constants'
+import {useStores} from 'state/index'
 
 export interface TextInputRef {
   focus: () => void
@@ -45,7 +46,6 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  tagsAutocompleteModel: TagsAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -64,7 +64,6 @@ export const TextInput = forwardRef(function TextInputImpl(
     placeholder,
     suggestedLinks,
     autocompleteView,
-    tagsAutocompleteModel,
     setRichText,
     onPhotoPasted,
     onSuggestedLinksChanged,
@@ -73,10 +72,15 @@ export const TextInput = forwardRef(function TextInputImpl(
   }: TextInputProps,
   ref,
 ) {
+  const store = useStores()
   const pal = usePalette('default')
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
+  const tagsAutocompleteModel = React.useMemo(
+    () => new TagsAutocompleteModel(store),
+    [store],
+  )
 
   React.useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
@@ -210,7 +214,6 @@ export const TextInput = forwardRef(function TextInputImpl(
       onChangeText(
         insertTagAt(richtext.text, textInputSelection.current?.start || 0, tag),
       )
-      tagsAutocompleteModel.commitRecentTag(tag)
       tagsAutocompleteModel.setActive(false)
     },
     [onChangeText, richtext, tagsAutocompleteModel],

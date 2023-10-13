@@ -20,6 +20,7 @@ import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
 import {Tags, createTagsAutocomplete} from './web/Tags'
+import {useStores} from 'state/index'
 
 export interface TextInputRef {
   focus: () => void
@@ -31,7 +32,6 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   autocompleteView: UserAutocompleteModel
-  tagsAutocompleteModel: TagsAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -47,7 +47,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     placeholder,
     suggestedLinks,
     autocompleteView,
-    tagsAutocompleteModel,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -56,6 +55,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
+  const store = useStores()
+  const tagsAutocompleteModel = React.useMemo(
+    () => new TagsAutocompleteModel(store),
+    [store],
+  )
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
   const extensions = React.useMemo(
     () => [

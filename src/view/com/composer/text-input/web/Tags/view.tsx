@@ -112,9 +112,8 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
          */
         // @ts-ignore
         command({tag, punctuation})
-        autocompleteModel.commitRecentTag(tag)
       },
-      [command, autocompleteModel],
+      [command],
     )
 
     const selectItem = React.useCallback(
@@ -142,7 +141,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
         if (event.key === 'Enter') {
           if (!props.items.length) {
             // no items, use whatever the user typed
-            commit(props.autocompleteModel.query)
+            commit(autocompleteModel.query)
           } else {
             selectItem(selectedIndex)
           }
@@ -150,7 +149,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
         }
 
         if (event.key === ' ') {
-          commit(props.autocompleteModel.query)
+          commit(autocompleteModel.query)
           return true
         }
 

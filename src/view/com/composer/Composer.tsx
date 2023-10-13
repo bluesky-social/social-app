@@ -244,6 +244,10 @@ export const ComposePost = observer(function ComposePost({
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
 
+      // save outline tags
+      tags.forEach(tag => tagsAutocompleteModel.commitRecentTag(tag))
+
+      // save inline tags
       for (const facet of richtext.facets || []) {
         for (const feature of facet.features) {
           if (AppBskyRichtextFacet.isTag(feature)) {
@@ -396,7 +400,6 @@ export const ComposePost = observer(function ComposePost({
               placeholder={selectTextInputPlaceholder}
               suggestedLinks={suggestedLinks}
               autocompleteView={autocompleteView}
-              tagsAutocompleteModel={tagsAutocompleteModel}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
