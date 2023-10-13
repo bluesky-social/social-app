@@ -19,10 +19,9 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress: () => void
   label: string
   showIndicator: boolean
-  minimalShellMode?: boolean // NOTE not used on mobile -prf
 }) {
   const pal = usePalette('default')
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isDesktop, isTablet, isMobile} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
 
   return (
@@ -33,7 +32,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
         isTablet && styles.loadLatestTablet,
         pal.borderDark,
         pal.view,
-        fabMinimalShellTransform,
+        isMobile && fabMinimalShellTransform,
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}
@@ -61,13 +60,11 @@ const styles = StyleSheet.create({
   },
   loadLatestTablet: {
     // @ts-ignore web only
-    left: '50vw',
-    transform: [{translateX: -282}],
+    left: 'calc(50vw - 282px)',
   },
   loadLatestDesktop: {
     // @ts-ignore web only
-    left: '50vw',
-    transform: [{translateX: -382}],
+    left: 'calc(50vw - 382px)',
   },
   indicator: {
     position: 'absolute',
