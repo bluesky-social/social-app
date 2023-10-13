@@ -125,6 +125,10 @@ export class ListModel {
     return this.data?.viewer?.muted
   }
 
+  get isPinned() {
+    return this.rootStore.preferences.isPinnedFeed(this.uri)
+  }
+
   get creatorDid() {
     return this.data?.creator.did
   }
@@ -308,6 +312,35 @@ export class ListModel {
   cacheRemoveMember(profile: AppBskyActorDefs.ProfileViewBasic) {
     if (this.isMember(profile.did)) {
       this.items = this.items.filter(item => item.subject.did !== profile.did)
+    }
+  }
+
+  async pin() {
+    try {
+      await this.rootStore.preferences.addPinnedFeed(this.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to pin feed', error)
+    } finally {
+      track('CustomFeed:Pin', {
+        name: this.data?.name || '',
+        uri: this.uri,
+      })
+    }
+  }
+
+  async togglePin() {
+    if (!this.isPinned) {
+      track('CustomFeed:Pin', {
+        name: this.data?.name || '',
+        uri: this.uri,
+      })
+      return this.rootStore.preferences.addPinnedFeed(this.uri)
+    } else {
+      track('CustomFeed:Unpin', {
+        name: this.data?.name || '',
+        uri: this.uri,
+      })
+      return this.rootStore.preferences.removePinnedFeed(this.uri)
     }
   }
 

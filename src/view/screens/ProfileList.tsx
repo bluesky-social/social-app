@@ -3,6 +3,7 @@ import {ActivityIndicator, FlatList, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ProfileScreenHeader} from 'view/com/profile-screen/ProfileScreenHeader'
@@ -17,7 +18,8 @@ import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from 'view/com/pager/TabBar'
 import {Button} from 'view/com/util/forms/Button'
 import {TextLink} from 'view/com/util/Link'
-// import * as Toast from 'view/com/util/Toast'
+import * as Toast from 'view/com/util/Toast'
+import {Haptics} from 'lib/haptics'
 import {ListModel} from 'state/models/content/list'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useStores} from 'state/index'
@@ -28,7 +30,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {resolveName} from 'lib/api'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 
@@ -201,6 +203,14 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list, navigation])
 
+    const onTogglePinned = React.useCallback(async () => {
+      Haptics.default()
+      list.togglePin().catch(e => {
+        Toast.show('There was an issue contacting the server')
+        store.log.error('Failed to toggle pinned list', {e})
+      })
+    }, [store, list])
+
     const onPressReport = React.useCallback(() => {
       if (!list.data) return
       store.shell.openModal({
@@ -322,7 +332,11 @@ export const ProfileListScreenInner = observer(
     if (list.isCuratelist) {
       return (
         <View style={s.hContentRegion}>
-          <Header list={list} dropdownItems={dropdownItems} />
+          <Header
+            list={list}
+            dropdownItems={dropdownItems}
+            onTogglePinned={onTogglePinned}
+          />
           <Pager renderTabBar={renderTabBar} tabBarPosition="top">
             <ProfileScreenFeedPage key="1" feed={feed} />
             <AboutPage key="2" list={list} onPressAddUser={onPressAddUser} />
@@ -332,7 +346,11 @@ export const ProfileListScreenInner = observer(
     }
     return (
       <View style={s.hContentRegion}>
-        <Header list={list} dropdownItems={dropdownItems} />
+        <Header
+          list={list}
+          dropdownItems={dropdownItems}
+          onTogglePinned={onTogglePinned}
+        />
         <Pager renderTabBar={renderTabBar} tabBarPosition="top">
           <AboutPage key="1" list={list} onPressAddUser={onPressAddUser} />
         </Pager>
@@ -344,10 +362,13 @@ export const ProfileListScreenInner = observer(
 const Header = observer(function HeaderImpl({
   list,
   dropdownItems,
+  onTogglePinned,
 }: {
   list: ListModel
   dropdownItems: DropdownItem[]
+  onTogglePinned: () => void
 }) {
+  const pal = usePalette('default')
   const info = list.data
     ? {
         href: '', // TODO
@@ -364,8 +385,25 @@ const Header = observer(function HeaderImpl({
       objectLabel={list.isCuratelist ? 'User List' : 'Moderation List'}
       avatarType="list"
       minimalMode={false /*TODO*/}
-      dropdownItems={dropdownItems}
-    />
+      dropdownItems={dropdownItems}>
+      {list.isCuratelist && (
+        <Button
+          type="default-light"
+          accessibilityLabel={
+            list.isPinned ? 'Unpin this list' : 'Pin this list'
+          }
+          accessibilityHint=""
+          onPress={onTogglePinned}
+          style={{paddingVertical: 0}}>
+          <FontAwesomeIcon
+            icon="thumb-tack"
+            size={17}
+            color={list.isPinned ? colors.blue3 : pal.colors.textLight}
+            style={{position: 'relative', top: 1}}
+          />
+        </Button>
+      )}
+    </ProfileScreenHeader>
   )
 })
 

@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import {useStores} from 'state/index'
 import isEqual from 'lodash.isequal'
 import {AtUri} from '@atproto/api'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 
 interface RightNavItem {
   uri: string
@@ -24,20 +25,20 @@ export function useDesktopRightNavItems(uris: string[]): RightNavItem[] {
     }
 
     async function fetchFeedInfo() {
-      const res = await store.agent.app.bsky.feed.getFeedGenerators({
-        feeds: uris.slice(0, 25),
-      })
+      const models = uris
+        .slice(0, 25)
+        .map(uri => new FeedSourceModel(store, uri))
+      await Promise.all(models.map(m => m.setup()))
       setItems(
-        res.data.feeds.map(f => {
-          const {hostname, collection, rkey} = new AtUri(f.uri)
-          const href = `/profile/${hostname}/feed/${rkey}?view=simple`
+        models.map(model => {
+          const {hostname, collection, rkey} = new AtUri(model.uri)
           return {
-            uri: f.uri,
-            href,
+            uri: model.uri,
+            href: model.href + '?view=simple',
             hostname,
             collection,
             rkey,
-            displayName: f.displayName,
+            displayName: model.displayName,
           }
         }),
       )

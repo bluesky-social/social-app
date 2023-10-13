@@ -26,13 +26,17 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
       {items.map(item => {
         try {
           const params = route.params as Record<string, string>
+          const routeName =
+            item.collection === 'app.bsky.feed.generator'
+              ? 'ProfileFeed'
+              : 'ProfileList'
           return (
             <FeedItem
               key={item.uri}
               href={item.href}
               title={item.displayName}
               current={
-                route.name === 'ProfileFeed' &&
+                route.name === routeName &&
                 params.name === item.hostname &&
                 params.rkey === item.rkey
               }

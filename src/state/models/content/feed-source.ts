@@ -48,6 +48,13 @@ export class FeedSourceModel {
     )
   }
 
+  get href() {
+    const urip = new AtUri(this.uri)
+    const collection =
+      urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
+    return `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+  }
+
   get isSaved() {
     return this.rootStore.preferences.savedFeeds.includes(this.uri)
   }
@@ -74,7 +81,7 @@ export class FeedSourceModel {
       } else if (this.type === 'list') {
         const res = await this.rootStore.agent.app.bsky.graph.getList({
           list: this.uri,
-          limit: 0,
+          limit: 1,
         })
         this.hydrateList(res.data.list)
       }
