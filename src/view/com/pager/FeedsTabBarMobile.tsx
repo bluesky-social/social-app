@@ -20,7 +20,6 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
 ) {
   const store = useStores()
   const pal = usePalette('default')
-
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerMinimalShellTransform} = useMinimalShellMode()
 
@@ -87,6 +86,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         onSelect={props.onSelect}
         testID={props.testID}
         items={items}
+        dragProgress={props.dragProgress}
         indicatorColor={pal.colors.link}
       />
     </Animated.View>

@@ -98,6 +98,7 @@ export const HomeScreen = withAuthRequired(
             key="FEEDS_TAB_BAR"
             selectedPage={props.selectedPage}
             onSelect={props.onSelect}
+            dragProgress={dragProgress}
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
           />

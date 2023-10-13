@@ -1,5 +1,6 @@
-import React, {useRef, useMemo, useCallback} from 'react'
-import {StyleSheet, View, ScrollView} from 'react-native'
+import React, {useMemo, useCallback} from 'react'
+import {useAnimatedReaction, useAnimatedRef, useDerivedValue, useSharedValue, measure, scrollTo} from 'react-native-reanimated'
+import {Dimensions, StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -16,8 +17,11 @@ export interface TabBarProps {
   onPressSelected?: () => void
 }
 
+const SCREEN = Dimensions.get('screen')
+
 export function TabBar({
   testID,
+  dragProgress,
   selectedPage,
   items,
   indicatorColor,
@@ -25,7 +29,8 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const scrollElRef = useRef<ScrollView>(null)
+  const contentSize = useSharedValue(0)
+  const scrollElRef = useAnimatedRef(null)
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
@@ -42,6 +47,14 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   )
 
+  useAnimatedReaction(() => {
+    return dragProgress.value * (contentSize.value - SCREEN.width)
+  }, (nextX, prevX) => {
+    if (prevX !== nextX) {
+      scrollTo(scrollElRef, nextX, 0, false);
+    }
+  }, [dragProgress, contentSize])
+
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
   return (
@@ -50,7 +63,10 @@ export function TabBar({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={styles.contentContainer}
+        onContentSizeChange={e => {
+          contentSize.value = e
+        }}>
         {items.map((item, i) => {
           const selected = i === selectedPage
           return (
