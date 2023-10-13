@@ -60,14 +60,14 @@ export const ProfileHeader = observer(function ProfileHeaderImpl({
   if (!view || !view.hasLoaded) {
     return (
       <View style={pal.view}>
-        <LoadingPlaceholder width="100%" height={120} />
+        <LoadingPlaceholder width="100%" height={153} />
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
           <LoadingPlaceholder width={80} height={80} style={styles.br40} />
         </View>
         <View style={styles.content}>
           <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder width={100} height={31} style={styles.br50} />
+            <LoadingPlaceholder width={167} height={31} style={styles.br50} />
           </View>
           <View>
             <Text type="title-2xl" style={[pal.text, styles.title]}>
