@@ -1,7 +1,10 @@
-export const Sentry = {
+jest.mock('sentry-expo', () => ({
   init: () => jest.fn(),
   Native: {
-    ReactNativeTracing: {},
+    ReactNativeTracing: jest.fn().mockImplementation(() => ({
+      start: jest.fn(),
+      stop: jest.fn(),
+    })),
     ReactNavigationInstrumentation: jest.fn(),
   },
-}
+}))
