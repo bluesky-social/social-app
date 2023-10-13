@@ -9,7 +9,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {ProfileHeader} from '../profile/ProfileHeader'
 import {InfoCircleIcon} from 'lib/icons'
 import {useNavigationState} from '@react-navigation/native'
-import {isIOS} from 'platform/detection'
 import {s} from 'lib/styles'
 
 export const snapPoints = [520, '100%']
@@ -36,11 +35,7 @@ export const Component = observer(function ProfilePreviewImpl({
 
   return (
     <View testID="profilePreview" style={[pal.view, s.flex1]}>
-      <View
-        style={[
-          styles.headerWrapper,
-          isLoading && isIOS && styles.headerPositionAdjust,
-        ]}>
+      <View style={[styles.headerWrapper]}>
         <ProfileHeader
           view={model}
           hideBackButton
@@ -69,10 +64,6 @@ export const Component = observer(function ProfilePreviewImpl({
 const styles = StyleSheet.create({
   headerWrapper: {
     height: 440,
-  },
-  headerPositionAdjust: {
-    // HACK align the header for the profilescreen transition -prf
-    paddingTop: 23,
   },
   hintWrapper: {
     height: 80,

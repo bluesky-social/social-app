@@ -6,6 +6,7 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
+import {timeout} from 'lib/async/timeout'
 import {navigate} from '../../../Navigation'
 import once from 'lodash.once'
 
@@ -59,8 +60,12 @@ export const ModalsContainer = observer(function ModalsContainer() {
     if (snapPoint === -1) {
       store.shell.closeModal()
     } else if (activeModal?.name === 'profile-preview' && snapPoint === 1) {
-      // ensure we navigate to Profile and close the modal
       await navigateOnce('Profile', {name: activeModal.did})
+      // There is no particular callback for when the view has actually been presented.
+      // This delay gives us a decent chance the navigation has flushed *and* images have loaded.
+      // It's acceptable because the data is already being fetched + it usually takes longer anyway.
+      // TODO: Figure out why avatar/cover don't always show instantly from cache.
+      await timeout(500)
       store.shell.closeModal()
     }
   }
