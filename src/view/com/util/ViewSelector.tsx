@@ -144,8 +144,6 @@ export function Selector({
   items: string[]
   onSelect?: (index: number) => void
 }) {
-  const [height, setHeight] = useState(0)
-
   const pal = usePalette('default')
   const borderColor = useColorSchemeStyle(
     {borderColor: colors.black},
@@ -160,22 +158,13 @@ export function Selector({
     <View
       style={{
         width: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        height,
         backgroundColor: pal.colors.background,
       }}>
       <ScrollView
         testID="selector"
         horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{position: 'absolute'}}>
-        <View
-          style={[pal.view, styles.outer]}
-          onLayout={e => {
-            const {height: layoutHeight} = e.nativeEvent.layout
-            setHeight(layoutHeight || 60)
-          }}>
+        showsHorizontalScrollIndicator={false}>
+        <View style={[pal.view, styles.outer]}>
           {items.map((item, i) => {
             const selected = i === selectedIndex
             return (
