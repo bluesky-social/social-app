@@ -111,6 +111,11 @@ export const HomeScreen = withAuthRequired(
         ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
+        onPageScroll={(e) => {
+          'worklet'
+          const progress = (e.offset + e.position) / customFeeds.length;
+          console.log(progress)
+        }}
         renderTabBar={renderTabBar}
         tabBarPosition="top">
         <FeedPage
