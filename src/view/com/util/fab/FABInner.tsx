@@ -21,7 +21,7 @@ export const FABInner = observer(function FABInnerImpl({
   ...props
 }: FABProps) {
   const insets = useSafeAreaInsets()
-  const {isTablet} = useWebMediaQueries()
+  const {isMobile, isTablet} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
 
   const size = React.useMemo(() => {
@@ -39,7 +39,12 @@ export const FABInner = observer(function FABInnerImpl({
   return (
     <TouchableWithoutFeedback testID={testID} {...props}>
       <Animated.View
-        style={[styles.outer, size, tabletSpacing, fabMinimalShellTransform]}>
+        style={[
+          styles.outer,
+          size,
+          tabletSpacing,
+          isMobile && fabMinimalShellTransform,
+        ]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
