@@ -55,12 +55,12 @@ export const ModalsContainer = observer(function ModalsContainer() {
       navigateOnce('Profile', {name: activeModal.did})
     }
   }
-  const onBottomSheetChange = (snapPoint: number) => {
+  const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
       store.shell.closeModal()
     } else if (activeModal?.name === 'profile-preview' && snapPoint === 1) {
       // ensure we navigate to Profile and close the modal
-      navigateOnce('Profile', {name: activeModal.did})
+      await navigateOnce('Profile', {name: activeModal.did})
       store.shell.closeModal()
     }
   }
