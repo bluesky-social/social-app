@@ -1,6 +1,6 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {useStores} from 'state/index'
@@ -36,11 +36,13 @@ import * as SwitchAccountModal from './SwitchAccount'
 import * as LinkWarningModal from './LinkWarning'
 
 const DEFAULT_SNAPPOINTS = ['90%']
+const HANDLE_HEIGHT = 24
 
 export const ModalsContainer = observer(function ModalsContainer() {
   const store = useStores()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
+  const safeAreaInsets = useSafeAreaInsets()
 
   const activeModal =
     store.shell.activeModals[store.shell.activeModals.length - 1]
@@ -75,6 +77,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
     }
   }, [store.shell.isModalActive, bottomSheetRef, activeModal?.name])
 
+  let needsSafeTopInset = false
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
   if (activeModal?.name === 'confirm') {
@@ -86,6 +89,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'profile-preview') {
     snapPoints = ProfilePreviewModal.snapPoints
     element = <ProfilePreviewModal.Component {...activeModal} />
+    needsSafeTopInset = true // Need to align with the target profile screen.
   } else if (activeModal?.name === 'server-input') {
     snapPoints = ServerInputModal.snapPoints
     element = <ServerInputModal.Component {...activeModal} />
@@ -164,10 +168,13 @@ export const ModalsContainer = observer(function ModalsContainer() {
     )
   }
 
+  const topInset = needsSafeTopInset ? safeAreaInsets.top - HANDLE_HEIGHT : 0
   return (
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
+      topInset={topInset}
+      handleHeight={HANDLE_HEIGHT}
       index={store.shell.isModalActive ? 0 : -1}
       enablePanDownToClose
       android_keyboardInputMode="adjustResize"
