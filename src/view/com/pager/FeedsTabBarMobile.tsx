@@ -32,6 +32,10 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
     [store.me.savedFeeds.pinnedFeedNames],
   )
 
+  const tabBarKey = useMemo(() => {
+    return items.join(',')
+  }, [items])
+
   return (
     <Animated.View
       style={[
@@ -75,8 +79,11 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         </View>
       </View>
       <TabBar
-        key={items.join(',')}
-        {...props}
+        key={tabBarKey}
+        onPressSelected={props.onPressSelected}
+        selectedPage={props.selectedPage}
+        onSelect={props.onSelect}
+        testID={props.testID}
         items={items}
         indicatorColor={pal.colors.link}
       />

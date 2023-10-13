@@ -87,7 +87,9 @@ export const HomeScreen = withAuthRequired(
       (props: RenderTabBarFnProps) => {
         return (
           <FeedsTabBar
-            {...props}
+            key="FEEDS_TAB_BAR"
+            selectedPage={props.selectedPage}
+            onSelect={props.onSelect}
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
           />

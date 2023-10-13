@@ -64,6 +64,7 @@ export function TabBar({
   )
 
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
+
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
