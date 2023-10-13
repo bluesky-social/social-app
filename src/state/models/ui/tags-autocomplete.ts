@@ -48,7 +48,7 @@ export class TagsAutocompleteModel {
   isActive = false
   query = ''
   searchedTags: string[] = []
-  profileTags: string[] = []
+  profileTags: string[] = ['biology']
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(

@@ -109,11 +109,11 @@ export function TagButton({
       onPointerLeave={hoverOut}
       style={state => [
         pal.viewLight,
-        styles.editableTag,
+        styles.tagButton,
         {
-          opacity: state.pressed || state.focused ? 0.8 : 1,
           outline: 0,
-          paddingRight: 6,
+          opacity: state.pressed || state.focused ? 0.6 : 1,
+          paddingRight: 10,
         },
       ]}>
       <Text type="md-medium" style={[pal.textLight]}>
@@ -144,5 +144,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 4,
     overflow: 'hidden',
+  },
+  tagButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 1,
+    paddingVertical: 6,
+    paddingTop: 5,
+    paddingHorizontal: 12,
+    borderRadius: 20,
   },
 })
