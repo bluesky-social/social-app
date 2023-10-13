@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {autorun} from 'mobx'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
@@ -22,13 +23,15 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   const interp = useAnimatedValue(0)
 
   React.useEffect(() => {
-    Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 1 : 0,
-      duration: 150,
-      useNativeDriver: true,
-      isInteraction: false,
-    }).start()
-  }, [interp, store.shell.minimalShellMode])
+    return autorun(() => {
+      Animated.timing(interp, {
+        toValue: store.shell.minimalShellMode ? 1 : 0,
+        duration: 150,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    })
+  }, [interp, store])
   const transform = {
     opacity: Animated.subtract(1, interp),
     transform: [{translateY: Animated.multiply(interp, -50)}],

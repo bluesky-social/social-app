@@ -1,4 +1,5 @@
 import React from 'react'
+import {autorun} from 'mobx'
 import {useStores} from 'state/index'
 import {Animated} from 'react-native'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -12,22 +13,24 @@ export function useMinimalShellMode() {
   }
 
   React.useEffect(() => {
-    if (store.shell.minimalShellMode) {
-      Animated.timing(minimalShellInterp, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    } else {
-      Animated.timing(minimalShellInterp, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    }
-  }, [minimalShellInterp, store.shell.minimalShellMode])
+    return autorun(() => {
+      if (store.shell.minimalShellMode) {
+        Animated.timing(minimalShellInterp, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+          isInteraction: false,
+        }).start()
+      } else {
+        Animated.timing(minimalShellInterp, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+          isInteraction: false,
+        }).start()
+      }
+    })
+  }, [minimalShellInterp, store])
 
   return {footerMinimalShellTransform}
 }

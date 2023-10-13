@@ -1,5 +1,6 @@
 import React, {ComponentProps} from 'react'
 import {observer} from 'mobx-react-lite'
+import {autorun} from 'mobx'
 import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
@@ -25,13 +26,15 @@ export const FABInner = observer(function FABInnerImpl({
   const store = useStores()
   const interp = useAnimatedValue(0)
   React.useEffect(() => {
-    Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 0 : 1,
-      duration: 100,
-      useNativeDriver: true,
-      isInteraction: false,
-    }).start()
-  }, [interp, store.shell.minimalShellMode])
+    return autorun(() => {
+      Animated.timing(interp, {
+        toValue: store.shell.minimalShellMode ? 0 : 1,
+        duration: 100,
+        useNativeDriver: true,
+        isInteraction: false,
+      }).start()
+    })
+  }, [interp, store])
   const transform = isTablet
     ? undefined
     : {
