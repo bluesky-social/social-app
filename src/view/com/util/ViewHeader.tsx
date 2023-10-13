@@ -1,6 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {reaction} from 'mobx'
+import {autorun} from 'mobx'
 import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
@@ -155,26 +155,23 @@ const Container = observer(function ContainerImpl({
   const interp = useAnimatedValue(0)
 
   React.useEffect(() => {
-    return reaction(
-      () => store.shell.minimalShellMode,
-      isMinimalShell => {
-        if (isMinimalShell) {
-          Animated.timing(interp, {
-            toValue: 1,
-            duration: 100,
-            useNativeDriver: true,
-            isInteraction: false,
-          }).start()
-        } else {
-          Animated.timing(interp, {
-            toValue: 0,
-            duration: 100,
-            useNativeDriver: true,
-            isInteraction: false,
-          }).start()
-        }
-      },
-    )
+    return autorun(() => {
+      if (store.shell.minimalShellMode) {
+        Animated.timing(interp, {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: true,
+          isInteraction: false,
+        }).start()
+      } else {
+        Animated.timing(interp, {
+          toValue: 0,
+          duration: 100,
+          useNativeDriver: true,
+          isInteraction: false,
+        }).start()
+      }
+    })
   }, [interp, store])
   const transform = {
     transform: [{translateY: Animated.multiply(interp, -100)}],
