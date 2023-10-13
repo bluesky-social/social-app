@@ -5,7 +5,6 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   Platform,
-  Pressable,
   ScrollView,
   TextInput,
 } from 'react-native'
@@ -19,10 +18,10 @@ import {Portal} from 'view/com/util/Portal'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TagButton} from 'view/com/Tag'
-import {Text} from 'view/com/util/text/Text'
 import * as Sheet from 'view/com/sheets/Base'
 import {useStores} from 'state/index'
 import {ActivityIndicator} from 'react-native'
+import {TagInputEntryButton} from './TagInputEntryButton'
 
 function uniq(tags: string[]) {
   return Array.from(new Set(tags))
@@ -150,37 +149,7 @@ export function TagInput({
 
   return (
     <View>
-      <Pressable
-        accessibilityRole="button"
-        style={styles.selectedTags}
-        onPress={openSheet}>
-        <View style={[pal.viewLight, styles.button]}>
-          {tags.length ? (
-            <Text type="md-medium" style={[pal.textLight]}>
-              Add +
-            </Text>
-          ) : (
-            <>
-              <FontAwesomeIcon
-                icon="tags"
-                size={12}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-              <Text type="md-medium" style={[pal.textLight]}>
-                Click to add tags to your post
-              </Text>
-            </>
-          )}
-        </View>
-
-        {tags.map(tag => (
-          <View key={tag} style={[pal.viewLight, styles.button]}>
-            <Text type="md-medium" style={[pal.textLight]}>
-              #{tag}
-            </Text>
-          </View>
-        ))}
-      </Pressable>
+      <TagInputEntryButton onRequestOpen={openSheet} tags={tags} />
 
       <Portal>
         <BottomSheet
