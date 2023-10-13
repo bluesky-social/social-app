@@ -1,5 +1,5 @@
-import React, {useMemo, useCallback} from 'react'
-import {useAnimatedReaction, useAnimatedRef, useDerivedValue, useSharedValue, measure, scrollTo} from 'react-native-reanimated'
+import React, {useMemo, useCallback, useState} from 'react'
+import Animated, {useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, measure, interpolate, scrollTo, withSpring} from 'react-native-reanimated'
 import {Dimensions, StyleSheet, View, ScrollView} from 'react-native'
 import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
@@ -31,11 +31,19 @@ export function TabBar({
   const pal = usePalette('default')
   const contentSize = useSharedValue(0)
   const scrollElRef = useAnimatedRef(null)
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
-  )
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const [layouts, setLayouts] = useState([])
+
+  const indicatorStyle = useAnimatedStyle(() => {
+    const approxIndex = dragProgress.value * (items.length - 1)
+    if (layouts.length < items.length - 1 || layouts.some(l => l === undefined)) {
+      return {}
+    }
+    return {
+      width: interpolate(approxIndex, layouts.map((l, i) => i), layouts.map(l => l.width)),
+      left: interpolate(approxIndex, layouts.map((l, i) => i), layouts.map(l => l.x)),
+    }
+  })
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -55,6 +63,17 @@ export function TabBar({
     }
   }, [dragProgress, contentSize])
 
+  const onItemLayout = (e: LayoutChangeEvent, index: number) => {
+    const l = e.nativeEvent.layout
+    setLayouts(ls => items.map((item, i) => {
+      if (i === index) {
+        return l
+      } else {
+        return ls[i]
+      }
+    }))
+  }
+
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
   return (
@@ -72,7 +91,8 @@ export function TabBar({
           return (
             <PressableWithHover
               key={item}
-              style={[styles.item, selected && indicatorStyle]}
+              onLayout={e => onItemLayout(e, i)}
+              style={[styles.item]}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <Text
@@ -84,7 +104,16 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
+        <Animated.View
+          style={[{
+            position: 'absolute',
+            bottom: 0,
+            height: 3,
+            backgroundColor: indicatorColor || pal.colors.link,
+          }, indicatorStyle]}
+        />
       </DraggableScrollView>
+
     </View>
   )
 }
