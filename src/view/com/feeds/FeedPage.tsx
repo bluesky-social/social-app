@@ -195,7 +195,6 @@ export const FeedPage = observer(function FeedPageImpl({
           onPress={onPressLoadLatest}
           label="Load new posts"
           showIndicator={hasNew}
-          minimalShellMode={false}
         />
       )}
       <FAB
