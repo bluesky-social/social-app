@@ -1,4 +1,5 @@
 import React from 'react'
+import {autorun} from 'mobx'
 import {useStores} from 'state/index'
 import {
   Easing,
@@ -51,6 +52,7 @@ export function useMinimalShellMode() {
       }
     })
   }, [minimalShellInterp, store.shell.minimalShellMode])
+
 
   return {
     footerMinimalShellTransform,

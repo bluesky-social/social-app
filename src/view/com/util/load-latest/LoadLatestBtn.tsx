@@ -8,9 +8,9 @@ import {colors} from 'lib/styles'
 import {HITSLOP_20} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
-
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
+        
 export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress,
   label,
@@ -62,14 +62,12 @@ const styles = StyleSheet.create({
   loadLatestTablet: {
     // @ts-ignore web only
     left: '50vw',
-    // @ts-ignore web only -prf
-    transform: 'translateX(-282px)',
+    transform: [{translateX: -282}],
   },
   loadLatestDesktop: {
     // @ts-ignore web only
     left: '50vw',
-    // @ts-ignore web only -prf
-    transform: 'translateX(-382px)',
+    transform: [{translateX: -382}],
   },
   indicator: {
     position: 'absolute',

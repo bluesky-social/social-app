@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
+import {autorun} from 'mobx'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
@@ -20,6 +21,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
 ) {
   const store = useStores()
   const pal = usePalette('default')
+
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerMinimalShellTransform} = useMinimalShellMode()
 
@@ -43,6 +45,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         pal.border,
         styles.tabBar,
         headerMinimalShellTransform,
+        store.shell.minimalShellMode && styles.disabled,
       ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
@@ -113,5 +116,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 21,
+  },
+  disabled: {
+    pointerEvents: 'none',
   },
 })
