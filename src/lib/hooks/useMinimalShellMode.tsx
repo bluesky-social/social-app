@@ -8,7 +8,6 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {autorun} from 'mobx'
 
 export function useMinimalShellMode() {
   const store = useStores()
@@ -52,7 +51,6 @@ export function useMinimalShellMode() {
       }
     })
   }, [minimalShellInterp, store.shell.minimalShellMode])
-
 
   return {
     footerMinimalShellTransform,
