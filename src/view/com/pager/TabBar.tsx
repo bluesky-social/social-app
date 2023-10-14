@@ -1,9 +1,9 @@
 import React, {useMemo, useCallback, useState} from 'react'
-import Animated, {useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, measure, interpolate, scrollTo, withSpring} from 'react-native-reanimated'
+import Animated, {useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, measure, interpolate, interpolateColor, scrollTo, withSpring} from 'react-native-reanimated'
 import {Dimensions, StyleSheet, View, ScrollView} from 'react-native'
-import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {isWeb} from 'platform/detection'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -34,14 +34,14 @@ export function TabBar({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [layouts, setLayouts] = useState([])
 
+  const approxIndex = useDerivedValue(() => dragProgress.value * (items.length - 1))
   const indicatorStyle = useAnimatedStyle(() => {
-    const approxIndex = dragProgress.value * (items.length - 1)
     if (layouts.length < items.length - 1 || layouts.some(l => l === undefined)) {
       return {}
     }
     return {
-      width: interpolate(approxIndex, layouts.map((l, i) => i), layouts.map(l => l.width)),
-      left: interpolate(approxIndex, layouts.map((l, i) => i), layouts.map(l => l.x)),
+      width: interpolate(approxIndex.value, layouts.map((l, i) => i), layouts.map(l => l.width)),
+      left: interpolate(approxIndex.value, layouts.map((l, i) => i), layouts.map(l => l.x)),
     }
   })
 
@@ -87,7 +87,6 @@ export function TabBar({
           contentSize.value = e
         }}>
         {items.map((item, i) => {
-          const selected = i === selectedPage
           return (
             <PressableWithHover
               key={item}
@@ -95,12 +94,13 @@ export function TabBar({
               style={[styles.item]}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
-              <Text
+              <MaybeHighlightedText
                 type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                 testID={testID ? `${testID}-${item}` : undefined}
-                style={selected ? pal.text : pal.textLight}>
+                approxIndex={approxIndex}
+                index={i}>
                 {item}
-              </Text>
+              </MaybeHighlightedText>
             </PressableWithHover>
           )
         })}
@@ -115,6 +115,18 @@ export function TabBar({
       </DraggableScrollView>
 
     </View>
+  )
+}
+
+export function MaybeHighlightedText({ approxIndex, index, style, type, ...rest }) {
+  const pal = usePalette('default')
+  const theme = useTheme()
+  const typography = theme.typography[type]
+  const animatedStyle = useAnimatedStyle(() => ({
+    color: interpolateColor(Math.min(Math.abs(approxIndex.value - index), 1), [0, 1], [pal.text.color, pal.textLight.color])
+  }))
+  return (
+    <Animated.Text {...rest} style={[style, typography, animatedStyle]} />
   )
 }
 
