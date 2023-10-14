@@ -1,7 +1,6 @@
 import React, {useMemo} from 'react'
 import {StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
@@ -15,7 +14,10 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {TextLink} from 'view/com/util/Link'
-import {ProfileScreenHeader} from 'view/com/profile-screen/ProfileScreenHeader'
+import {
+  ProfileScreenHeader,
+  ProfileScreenHeaderBtn,
+} from 'view/com/profile-screen/ProfileScreenHeader'
 import {ProfileScreenFeedPage} from 'view/com/profile-screen/ProfileScreenFeedPage'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
@@ -23,7 +25,6 @@ import {RichText} from 'view/com/util/text/RichText'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from 'view/com/pager/TabBar'
 import * as Toast from 'view/com/util/Toast'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -122,6 +123,7 @@ export const ProfileFeedScreenInner = observer(
     route,
     feedOwnerDid,
   }: Props & {feedOwnerDid: string}) {
+    const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
@@ -228,6 +230,35 @@ export const ProfileFeedScreenInner = observer(
       [onPressSelectedTab],
     )
 
+    const headerBtns: ProfileScreenHeaderBtn[] = React.useMemo(() => {
+      let items: ProfileScreenHeaderBtn[] = []
+      items.push({
+        icon: {
+          icon: ['far', 'bookmark'],
+          size: 15,
+          color: pal.colors.text,
+        },
+        accessibilityLabel: 'Bookmark this feed',
+        onPress: onToggleSaved,
+      })
+      items.push({
+        icon: {
+          icon: 'thumb-tack',
+          size: 14,
+          color: isPinned ? colors.blue3 : pal.colors.text,
+        },
+        accessibilityLabel: isPinned ? 'Unpin this feed' : 'Pin this feed',
+        onPress: onTogglePinned,
+      })
+      return items
+    }, [
+      pal,
+      // palInverted,
+      isPinned,
+      onTogglePinned,
+      onToggleSaved,
+    ])
+
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       return [
         minimalMode
@@ -306,10 +337,8 @@ export const ProfileFeedScreenInner = observer(
             feedRkey={rkey}
             feedInfo={feedInfo}
             dropdownItems={dropdownItems}
-            isPinned={isPinned}
-            minimalMode={minimalMode}
-            onTogglePinned={onTogglePinned}
-            onToggleSaved={onToggleSaved}
+            headerBtns={headerBtns}
+            minimalMode
           />
           <ProfileScreenFeedPage feed={algoFeed} minimalMode />
         </View>
@@ -322,10 +351,8 @@ export const ProfileFeedScreenInner = observer(
           feedRkey={rkey}
           feedInfo={feedInfo}
           dropdownItems={dropdownItems}
-          isPinned={isPinned}
-          minimalMode={minimalMode}
-          onTogglePinned={onTogglePinned}
-          onToggleSaved={onToggleSaved}
+          headerBtns={headerBtns}
+          minimalMode={false}
         />
         <Pager renderTabBar={renderTabBar} tabBarPosition="top">
           <ProfileScreenFeedPage key="1" feed={algoFeed} />
@@ -347,24 +374,16 @@ const Header = observer(function HeaderImpl({
   feedRkey,
   feedInfo,
   dropdownItems,
-  isPinned,
+  headerBtns,
   minimalMode,
-  onTogglePinned,
-  onToggleSaved,
 }: {
   feedOwnerDid: string
   feedRkey: string
   feedInfo: FeedSourceModel | undefined
   dropdownItems: DropdownItem[]
-  isPinned: boolean
+  headerBtns: ProfileScreenHeaderBtn[]
   minimalMode: boolean
-  onTogglePinned: () => void
-  onToggleSaved: () => void
 }) {
-  const {isMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
-
   const info = feedInfo
     ? {
         href: makeCustomFeedLink(feedOwnerDid, feedRkey),
@@ -381,39 +400,9 @@ const Header = observer(function HeaderImpl({
       objectLabel="Feed"
       avatarType="algo"
       minimalMode={minimalMode}
-      dropdownItems={dropdownItems}>
-      {feedInfo?.isSaved ? (
-        <Button
-          type="default-light"
-          accessibilityLabel={isPinned ? 'Unpin this feed' : 'Pin this feed'}
-          accessibilityHint=""
-          onPress={onTogglePinned}
-          style={styles.headerBtn}>
-          <FontAwesomeIcon
-            icon="thumb-tack"
-            size={17}
-            color={isPinned ? colors.blue3 : pal.colors.textLight}
-            style={styles.top1}
-          />
-        </Button>
-      ) : (
-        <Button
-          type="inverted"
-          onPress={onToggleSaved}
-          accessibilityLabel="Add to my feeds"
-          accessibilityHint=""
-          style={styles.headerAddBtn}>
-          <FontAwesomeIcon
-            icon="plus"
-            color={palInverted.colors.text}
-            size={14}
-          />
-          <Text type="button" style={palInverted.text}>
-            Add{!isMobile && ' to My Feeds'}
-          </Text>
-        </Button>
-      )}
-    </ProfileScreenHeader>
+      dropdownItems={dropdownItems}
+      buttons={headerBtns}
+    />
   )
 })
 

@@ -121,8 +121,12 @@ export class ListModel {
     return this.data?.creator.did === this.rootStore.me.did
   }
 
-  get isSubscribed() {
-    return this.data?.viewer?.muted
+  get isBlocking() {
+    return !!this.data?.viewer?.blocked
+  }
+
+  get isMuting() {
+    return !!this.data?.viewer?.muted
   }
 
   get isPinned() {

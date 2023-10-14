@@ -1,12 +1,15 @@
 import React from 'react'
-import {ActivityIndicator, FlatList, View} from 'react-native'
+import {ActivityIndicator, FlatList, Pressable, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ProfileScreenHeader} from 'view/com/profile-screen/ProfileScreenHeader'
+import {
+  ProfileScreenHeader,
+  ProfileScreenHeaderBtn,
+} from 'view/com/profile-screen/ProfileScreenHeader'
 import {ProfileScreenFeedPage} from 'view/com/profile-screen/ProfileScreenFeedPage'
 import {Text} from 'view/com/util/text/Text'
 import {DropdownItem} from 'view/com/util/forms/NativeDropdown'
@@ -130,7 +133,9 @@ export const ProfileListScreenInner = observer(
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
     const pal = usePalette('default')
-    const {rkey} = route.params
+    const palInverted = usePalette('inverted')
+    const {rkey, view: viewMode} = route.params
+    const minimalMode = viewMode === 'simple'
 
     const list: ListModel = React.useMemo(() => {
       const model = new ListModel(
@@ -244,6 +249,93 @@ export const ProfileListScreenInner = observer(
     // render
     // =
 
+    const headerBtns: ProfileScreenHeaderBtn[] = React.useMemo(() => {
+      if (!list.hasLoaded) {
+        return []
+      }
+      let items: ProfileScreenHeaderBtn[] = []
+      items.push({
+        icon: {
+          icon: ['far', 'bookmark'],
+          size: 15,
+          color: pal.colors.text,
+        },
+        accessibilityLabel: 'Bookmark this list',
+        onPress: () => {}, // TODO
+      })
+      if (list.isCuratelist) {
+        items.push({
+          icon: {
+            icon: 'thumb-tack',
+            size: 14,
+            color: list.isPinned ? colors.blue3 : pal.colors.text,
+          },
+          accessibilityLabel: list.isPinned
+            ? 'Unpin this list'
+            : 'Pin this list',
+          onPress: onTogglePinned,
+        })
+      } else if (list.isModlist) {
+        if (list.isBlocking) {
+          items.push({
+            icon: {
+              icon: 'check',
+              size: 14,
+              color: pal.colors.text,
+            },
+            label: 'Blocking',
+            accessibilityLabel: 'Unblock this list',
+            onPress: onTogglePinned,
+          })
+        } else if (list.isMuting) {
+          items.push({
+            icon: {
+              icon: 'check',
+              size: 14,
+              color: pal.colors.text,
+            },
+            label: 'Muting',
+            accessibilityLabel: 'Unmute this list',
+            onPress: onTogglePinned,
+          })
+        } else {
+          items.push({
+            inverted: true,
+            icon: {
+              icon: 'user-slash',
+              size: 14,
+              color: palInverted.colors.text,
+            },
+            label: 'Block',
+            accessibilityLabel: 'Block this list',
+            onPress: onTogglePinned,
+          })
+          items.push({
+            inverted: true,
+            icon: {
+              icon: 'comment-slash',
+              size: 14,
+              color: palInverted.colors.text,
+            },
+            label: 'Mute',
+            accessibilityLabel: 'Mute this list',
+            onPress: onTogglePinned,
+          })
+        }
+      }
+      return items
+    }, [
+      pal,
+      palInverted,
+      list.hasLoaded,
+      list.isCuratelist,
+      list.isModlist,
+      list.isPinned,
+      list.isMuting,
+      list.isBlocking,
+      onTogglePinned,
+    ])
+
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       if (!list.hasLoaded) {
         return []
@@ -266,7 +358,7 @@ export const ProfileListScreenInner = observer(
         items.push({label: 'separator'})
         items.push({
           testID: 'listHeaderDropdownEditBtn',
-          label: 'Edit List',
+          label: 'Edit List Profile',
           onPress: onPressEdit,
           icon: {
             ios: {
@@ -330,12 +422,25 @@ export const ProfileListScreenInner = observer(
     )
 
     if (list.isCuratelist) {
+      if (minimalMode) {
+        return (
+          <View style={s.hContentRegion}>
+            <Header
+              list={list}
+              dropdownItems={dropdownItems}
+              headerBtns={headerBtns}
+              minimalMode
+            />
+            <ProfileScreenFeedPage key="1" feed={feed} minimalMode />
+          </View>
+        )
+      }
       return (
         <View style={s.hContentRegion}>
           <Header
             list={list}
             dropdownItems={dropdownItems}
-            onTogglePinned={onTogglePinned}
+            headerBtns={headerBtns}
           />
           <Pager renderTabBar={renderTabBar} tabBarPosition="top">
             <ProfileScreenFeedPage key="1" feed={feed} />
@@ -349,7 +454,8 @@ export const ProfileListScreenInner = observer(
         <Header
           list={list}
           dropdownItems={dropdownItems}
-          onTogglePinned={onTogglePinned}
+          headerBtns={headerBtns}
+          minimalMode={minimalMode}
         />
         <Pager renderTabBar={renderTabBar} tabBarPosition="top">
           <AboutPage key="1" list={list} onPressAddUser={onPressAddUser} />
@@ -362,13 +468,14 @@ export const ProfileListScreenInner = observer(
 const Header = observer(function HeaderImpl({
   list,
   dropdownItems,
-  onTogglePinned,
+  headerBtns,
+  minimalMode,
 }: {
   list: ListModel
   dropdownItems: DropdownItem[]
-  onTogglePinned: () => void
+  headerBtns: ProfileScreenHeaderBtn[]
+  minimalMode?: boolean
 }) {
-  const pal = usePalette('default')
   const info = list.data
     ? {
         href: '', // TODO
@@ -384,26 +491,10 @@ const Header = observer(function HeaderImpl({
       info={info}
       objectLabel={list.isCuratelist ? 'User List' : 'Moderation List'}
       avatarType="list"
-      minimalMode={false /*TODO*/}
-      dropdownItems={dropdownItems}>
-      {list.isCuratelist && (
-        <Button
-          type="default-light"
-          accessibilityLabel={
-            list.isPinned ? 'Unpin this list' : 'Pin this list'
-          }
-          accessibilityHint=""
-          onPress={onTogglePinned}
-          style={{paddingVertical: 0}}>
-          <FontAwesomeIcon
-            icon="thumb-tack"
-            size={17}
-            color={list.isPinned ? colors.blue3 : pal.colors.textLight}
-            style={{position: 'relative', top: 1}}
-          />
-        </Button>
-      )}
-    </ProfileScreenHeader>
+      minimalMode={minimalMode}
+      dropdownItems={dropdownItems}
+      buttons={headerBtns}
+    />
   )
 })
 
@@ -495,44 +586,70 @@ function AboutSection({
     return <View />
   }
   return (
-    <View
-      style={[
-        {
-          borderTopWidth: 1,
-          padding: isMobile ? 14 : 20,
-          gap: 12,
-        },
-        pal.border,
-      ]}>
-      {list.descriptionRT ? (
-        <RichText
-          testID="listDescription"
-          type="lg"
-          style={pal.text}
-          richText={list.descriptionRT}
-        />
-      ) : (
-        <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-          No description
-        </Text>
-      )}
-      <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-        Created by{' '}
-        {list.isOwner ? (
-          'you'
-        ) : (
-          <TextLink
-            text={sanitizeHandle(list.data.creator.handle, '@')}
-            href={makeProfileLink(list.data.creator)}
-            style={pal.textLight}
+    <>
+      <View
+        style={[
+          {
+            borderTopWidth: 1,
+            padding: isMobile ? 14 : 20,
+            gap: 12,
+          },
+          pal.border,
+        ]}>
+        {list.descriptionRT ? (
+          <RichText
+            testID="listDescription"
+            type="lg"
+            style={pal.text}
+            richText={list.descriptionRT}
           />
+        ) : (
+          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+            No description
+          </Text>
         )}
-      </Text>
-      {list.isOwner && (
-        <View style={{flexDirection: 'row'}}>
-          <Button type="default" label="Add user" onPress={onPressAddUser} />
-        </View>
-      )}
-    </View>
+        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          Created by{' '}
+          {list.isOwner ? (
+            'you'
+          ) : (
+            <TextLink
+              text={sanitizeHandle(list.data.creator.handle, '@')}
+              href={makeProfileLink(list.data.creator)}
+              style={pal.textLight}
+            />
+          )}
+        </Text>
+      </View>
+      <View
+        style={[
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderTopWidth: 1,
+            paddingHorizontal: isMobile ? 14 : 20,
+            paddingVertical: isMobile ? 14 : 18,
+          },
+          pal.border,
+        ]}>
+        <Text type="lg-bold">Users</Text>
+        {list.isOwner && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Add a user to this list"
+            accessibilityHint=""
+            onPress={onPressAddUser}
+            style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+            <FontAwesomeIcon
+              icon="user-plus"
+              color={pal.colors.link}
+              size={16}
+            />
+            <Text style={pal.link}>Add</Text>
+          </Pressable>
+        )}
+      </View>
+    </>
   )
 }
