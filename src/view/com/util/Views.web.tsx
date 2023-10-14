@@ -36,7 +36,10 @@ export function CenteredView({
   ...props
 }: React.PropsWithChildren<ViewProps & {sideBorders?: boolean}>) {
   const pal = usePalette('default')
-  style = addStyle(style, styles.container)
+  const {isMobile} = useWebMediaQueries()
+  if (!isMobile) {
+    style = addStyle(style, styles.container)
+  }
   if (sideBorders) {
     style = addStyle(style, {
       borderLeftWidth: 1,
@@ -59,10 +62,12 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    styles.containerScroll,
-  )
+  if (!isMobile) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerScroll,
+    )
+  }
   if (contentOffset && contentOffset?.y !== 0) {
     // NOTE
     // we use paddingTop & contentOffset to space around the floating header
@@ -121,10 +126,13 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
 ) {
   const pal = usePalette('default')
 
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    styles.containerScroll,
-  )
+  const {isMobile} = useWebMediaQueries()
+  if (!isMobile) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerScroll,
+    )
+  }
   return (
     <RNScrollView
       contentContainerStyle={[

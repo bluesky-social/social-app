@@ -153,7 +153,7 @@ export const ProfileScreenHeader = observer(function HeaderImpl({
             <UserAvatar
               type={avatarType}
               avatar={info.avatar}
-              size={isMobile ? 26 : 48}
+              size={isMobile ? 32 : 48}
             />
           </View>
           {buttons?.map(btn => (
