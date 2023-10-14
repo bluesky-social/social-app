@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
     zIndex: 1,
-    left: '50%',
+    left: 'calc(50% - 299px)',
     width: 598,
     top: 0,
     flexDirection: 'row',
