@@ -81,11 +81,16 @@ export const HomeScreen = withAuthRequired(
       [store, setSelectedPage],
     )
 
-    const onPageScroll = React.useCallback((e) => {
-      'worklet'
-      const progress = (e.offset + e.position) / customFeeds.length;
-      dragProgress.value = progress;
-    }, [customFeeds])
+    const onPageScroll = React.useCallback(
+      e => {
+        'worklet'
+        if (customFeeds.length > 0) {
+          const progress = (e.offset + e.position) / customFeeds.length
+          dragProgress.value = progress
+        }
+      },
+      [customFeeds, dragProgress],
+    )
 
     const onPressSelected = React.useCallback(() => {
       store.emitScreenSoftReset()
@@ -104,7 +109,7 @@ export const HomeScreen = withAuthRequired(
           />
         )
       },
-      [onPressSelected],
+      [dragProgress, onPressSelected],
     )
 
     const renderFollowingEmptyState = React.useCallback(() => {
