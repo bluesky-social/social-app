@@ -30,6 +30,7 @@ export const HomeScreen = withAuthRequired(
       string[]
     >([])
     const dragProgress = useSharedValue(selectedPage)
+    const dragState = useSharedValue('idle')
 
     React.useEffect(() => {
       const {pinned} = store.me.savedFeeds
@@ -90,6 +91,10 @@ export const HomeScreen = withAuthRequired(
       [dragProgress],
     )
 
+    const onPageScrollStateChanged = React.useCallback(e => {
+      dragState.value = e.nativeEvent.pageScrollState
+    })
+
     const onPressSelected = React.useCallback(() => {
       store.emitScreenSoftReset()
     }, [store])
@@ -102,6 +107,7 @@ export const HomeScreen = withAuthRequired(
             selectedPage={props.selectedPage}
             onSelect={props.onSelect}
             dragProgress={dragProgress}
+            dragState={dragState}
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
           />
@@ -124,6 +130,7 @@ export const HomeScreen = withAuthRequired(
         testID="homeScreen"
         onPageSelected={onPageSelected}
         onPageScroll={onPageScroll}
+        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={renderTabBar}
         tabBarPosition="top">
         <FeedPage

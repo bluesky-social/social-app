@@ -87,6 +87,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         testID={props.testID}
         items={items}
         dragProgress={props.dragProgress}
+        dragState={props.dragState}
         indicatorColor={pal.colors.link}
       />
     </Animated.View>

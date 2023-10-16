@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback, useState} from 'react'
+import React, {useMemo, useCallback, useEffect, useState} from 'react'
 import Animated, {useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, measure, interpolate, interpolateColor, scrollTo, withSpring} from 'react-native-reanimated'
 import {Dimensions, StyleSheet, View, ScrollView} from 'react-native'
 import {PressableWithHover} from '../util/PressableWithHover'
@@ -22,6 +22,7 @@ const SCREEN = Dimensions.get('screen')
 export function TabBar({
   testID,
   dragProgress,
+  dragState,
   selectedPage,
   items,
   indicatorColor,
@@ -33,6 +34,7 @@ export function TabBar({
   const scrollElRef = useAnimatedRef(null)
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [layouts, setLayouts] = useState([])
+  const shouldSync = useSharedValue(true)
 
   const indicatorStyle = useAnimatedStyle(() => {
     if (layouts.length < items.length - 1 || layouts.some(l => l === undefined)) {
@@ -57,8 +59,18 @@ export function TabBar({
   useAnimatedReaction(() => {
     return (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
   }, (nextX, prevX) => {
-    if (prevX !== nextX) {
+    if (shouldSync.value && prevX !== nextX) {
       scrollTo(scrollElRef, nextX, 0, false);
+    }
+  })
+
+  useAnimatedReaction(() => {
+    return dragState.value
+  }, (nextDragState, prevDragState) => {
+    if (nextDragState === 'idle' && nextDragState !== prevDragState) {
+      const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
+      scrollTo(scrollElRef, nextX, 0, true);
+      shouldSync.value = true
     }
   })
 
@@ -84,6 +96,9 @@ export function TabBar({
         contentContainerStyle={styles.contentContainer}
         onContentSizeChange={e => {
           contentSize.value = e
+        }}
+        onScrollBeginDrag={e => {
+          shouldSync.value = false
         }}>
         {items.map((item, i) => {
           return (

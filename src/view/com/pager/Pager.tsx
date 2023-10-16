@@ -34,6 +34,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       initialPage = 0,
       renderTabBar,
       onPageScroll,
+      onPageScrollStateChanged,
       onPageSelected,
       testID,
     }: React.PropsWithChildren<Props>,
@@ -74,7 +75,8 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           style={s.h100pct}
           initialPage={initialPage}
           onPageSelected={onPageSelectedInner}
-          onPageScroll={handlePageScroll}>
+          onPageScroll={handlePageScroll}
+          onPageScrollStateChanged={onPageScrollStateChanged}>
           {children}
         </AnimatedPagerView>
         {tabBarPosition === 'bottom' &&
