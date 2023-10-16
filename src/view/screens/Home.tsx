@@ -84,12 +84,10 @@ export const HomeScreen = withAuthRequired(
     const onPageScroll = React.useCallback(
       e => {
         'worklet'
-        if (customFeeds.length > 0) {
-          const progress = (e.offset + e.position) / customFeeds.length
-          dragProgress.value = progress
-        }
+        const progress = e.offset + e.position
+        dragProgress.value = progress
       },
-      [customFeeds, dragProgress],
+      [dragProgress],
     )
 
     const onPressSelected = React.useCallback(() => {

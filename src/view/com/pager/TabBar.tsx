@@ -34,14 +34,13 @@ export function TabBar({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [layouts, setLayouts] = useState([])
 
-  const approxIndex = useDerivedValue(() => dragProgress.value * (items.length - 1))
   const indicatorStyle = useAnimatedStyle(() => {
     if (layouts.length < items.length - 1 || layouts.some(l => l === undefined)) {
       return {}
     }
     return {
-      width: interpolate(approxIndex.value, layouts.map((l, i) => i), layouts.map(l => l.width)),
-      left: interpolate(approxIndex.value, layouts.map((l, i) => i), layouts.map(l => l.x)),
+      width: interpolate(dragProgress.value, layouts.map((l, i) => i), layouts.map(l => l.width)),
+      left: interpolate(dragProgress.value, layouts.map((l, i) => i), layouts.map(l => l.x)),
     }
   })
 
@@ -56,12 +55,12 @@ export function TabBar({
   )
 
   useAnimatedReaction(() => {
-    return dragProgress.value * (contentSize.value - SCREEN.width)
+    return (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
   }, (nextX, prevX) => {
     if (prevX !== nextX) {
       scrollTo(scrollElRef, nextX, 0, false);
     }
-  }, [dragProgress, contentSize])
+  })
 
   const onItemLayout = (e: LayoutChangeEvent, index: number) => {
     const l = e.nativeEvent.layout
@@ -97,7 +96,7 @@ export function TabBar({
               <MaybeHighlightedText
                 type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                 testID={testID ? `${testID}-${item}` : undefined}
-                approxIndex={approxIndex}
+                approxIndex={dragProgress}
                 index={i}>
                 {item}
               </MaybeHighlightedText>
