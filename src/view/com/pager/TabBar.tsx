@@ -1,6 +1,6 @@
 import React, {useMemo, useCallback, useEffect, useState} from 'react'
 import Animated, {useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, measure, interpolate, interpolateColor, scrollTo, withSpring} from 'react-native-reanimated'
-import {Dimensions, StyleSheet, View, ScrollView} from 'react-native'
+import {Dimensions, StyleSheet, View, ScrollView, useWindowDimensions} from 'react-native'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -17,8 +17,6 @@ export interface TabBarProps {
   onPressSelected?: () => void
 }
 
-const SCREEN = Dimensions.get('screen')
-
 export function TabBar({
   testID,
   dragProgress,
@@ -30,6 +28,7 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
+  const {width: windowWidth} = useWindowDimensions()
   const contentSize = useSharedValue(0)
   const scrollElRef = useAnimatedRef(null)
   const {isDesktop, isTablet} = useWebMediaQueries()
@@ -56,7 +55,7 @@ export function TabBar({
   const onPressItem = (index: number) => {
     if (!didScroll.value) {
       scrollElRef.current.scrollTo({
-        x: scrollX.value + ((index - selectedPage) / (items.length - 1)) * (contentSize.value - SCREEN.width),
+        x: scrollX.value + ((index - selectedPage) / (items.length - 1)) * (contentSize.value - windowWidth),
         animated: true
       })
     }
@@ -68,7 +67,7 @@ export function TabBar({
   };
 
   useAnimatedReaction(() => {
-    return (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
+    return (dragProgress.value / (items.length - 1)) * (contentSize.value - windowWidth)
   }, (nextX, prevX) => {
     if (shouldSync.value && prevX !== nextX) {
       scrollTo(scrollElRef, nextX, 0, false);
@@ -79,7 +78,7 @@ export function TabBar({
     return dragState.value
   }, (nextDragState, prevDragState) => {
     if (nextDragState === 'idle' && nextDragState !== prevDragState) {
-      const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
+      const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - windowWidth)
       scrollTo(scrollElRef, nextX, 0, true);
       shouldSync.value = true
       didScroll.value = false
