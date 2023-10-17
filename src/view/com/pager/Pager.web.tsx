@@ -21,6 +21,7 @@ export const Pager = React.forwardRef(function PagerImpl(
     initialPage = 0,
     renderTabBar,
     onPageSelected,
+    onPageScroll,
   }: React.PropsWithChildren<Props>,
   ref,
 ) {
@@ -34,8 +35,12 @@ export const Pager = React.forwardRef(function PagerImpl(
     (index: number) => {
       setSelectedPage(index)
       onPageSelected?.(index)
+      onPageScroll?.({
+        position: index,
+        offset: 0
+      })
     },
-    [setSelectedPage, onPageSelected],
+    [setSelectedPage, onPageSelected, onPageScroll],
   )
 
   return (
