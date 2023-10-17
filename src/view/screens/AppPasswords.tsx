@@ -16,6 +16,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import { s } from 'lib/styles'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
@@ -189,7 +190,7 @@ function AppPassword({
         <Text type="md-bold" style={pal.text}>
           {name}
         </Text>
-        <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
+        <Text type="md" style={[pal.text, s.pr10]} numberOfLines={1}>
           Created{' '}
           {Intl.DateTimeFormat(primaryLocale, {
             year: 'numeric',
@@ -257,9 +258,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 14,
-  },
-  pr10: {
-    marginRight: 10,
   },
   btnContainer: {
     flexDirection: 'row',
