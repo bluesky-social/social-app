@@ -33,7 +33,6 @@ export function TabBar({
   const scrollElRef = useAnimatedRef(null)
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [layouts, setLayouts] = useState([])
-  const shouldSync = useSharedValue(true)
   const scrollX = useSharedValue(0)
   const didScroll = useSharedValue(false)
 
@@ -69,7 +68,7 @@ export function TabBar({
   useAnimatedReaction(() => {
     return (dragProgress.value / (items.length - 1)) * (contentSize.value - windowWidth)
   }, (nextX, prevX) => {
-    if (shouldSync.value && prevX !== nextX) {
+    if (prevX !== nextX && dragState.value !== 'idle' && !didScroll.value) {
       scrollTo(scrollElRef, nextX, 0, false);
     }
   })
@@ -80,7 +79,6 @@ export function TabBar({
     if (nextDragState === 'idle' && nextDragState !== prevDragState) {
       const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - windowWidth)
       scrollTo(scrollElRef, nextX, 0, true);
-      shouldSync.value = true
       didScroll.value = false
     }
   })
@@ -109,7 +107,6 @@ export function TabBar({
           contentSize.value = e
         }}
         onScrollBeginDrag={e => {
-          shouldSync.value = false
           didScroll.value = true
         }}
         onScroll={e => {
