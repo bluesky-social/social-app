@@ -1,6 +1,6 @@
 import React, {useMemo, useCallback, useEffect, useState} from 'react'
 import Animated, {useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useDerivedValue, useSharedValue, measure, interpolate, interpolateColor, scrollTo, withSpring} from 'react-native-reanimated'
-import {Dimensions, StyleSheet, View, ScrollView, useWindowDimensions} from 'react-native'
+import {Dimensions, StyleSheet, View, ScrollView} from 'react-native'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -28,8 +28,8 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const {width: windowWidth} = useWindowDimensions()
   const contentSize = useSharedValue(0)
+  const containerSize = useSharedValue(0)
   const scrollElRef = useAnimatedRef(null)
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [layouts, setLayouts] = useState([])
@@ -54,7 +54,7 @@ export function TabBar({
   const onPressItem = (index: number) => {
     if (!didScroll.value) {
       scrollElRef.current.scrollTo({
-        x: scrollX.value + ((index - selectedPage) / (items.length - 1)) * (contentSize.value - windowWidth),
+        x: scrollX.value + ((index - selectedPage) / (items.length - 1)) * (contentSize.value - containerSize.value),
         animated: true
       })
     }
@@ -66,7 +66,7 @@ export function TabBar({
   };
 
   useAnimatedReaction(() => {
-    return (dragProgress.value / (items.length - 1)) * (contentSize.value - windowWidth)
+    return (dragProgress.value / (items.length - 1)) * (contentSize.value - containerSize.value)
   }, (nextX, prevX) => {
     if (prevX !== nextX && dragState.value !== 'idle' && !didScroll.value) {
       scrollTo(scrollElRef, nextX, 0, false);
@@ -77,7 +77,7 @@ export function TabBar({
     return dragState.value
   }, (nextDragState, prevDragState) => {
     if (nextDragState === 'idle' && nextDragState !== prevDragState) {
-      const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - windowWidth)
+      const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - containerSize.value)
       scrollTo(scrollElRef, nextX, 0, true);
       didScroll.value = false
     }
@@ -108,6 +108,9 @@ export function TabBar({
         }}
         onScrollBeginDrag={e => {
           didScroll.value = true
+        }}
+        onLayout={e => {
+          containerSize.value = e.nativeEvent.layout.width
         }}
         onScroll={e => {
           scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
