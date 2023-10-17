@@ -35,6 +35,8 @@ export function TabBar({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [layouts, setLayouts] = useState([])
   const shouldSync = useSharedValue(true)
+  const scrollX = useSharedValue(0)
+  const didScroll = useSharedValue(false)
 
   const indicatorStyle = useAnimatedStyle(() => {
     if (layouts.length < items.length - 1 || layouts.some(l => l === undefined)) {
@@ -46,15 +48,19 @@ export function TabBar({
     }
   })
 
-  const onPressItem = useCallback(
-    (index: number) => {
-      onSelect?.(index)
-      if (index === selectedPage) {
-        onPressSelected?.()
-      }
-    },
-    [onSelect, selectedPage, onPressSelected],
-  )
+  const onPressItem = (index: number) => {
+    if (!didScroll.value) {
+      scrollElRef.current.scrollTo({
+        x: scrollX.value + ((index - selectedPage) / (items.length - 1)) * (contentSize.value - SCREEN.width),
+        animated: true
+      })
+    }
+    didScroll.value = false
+    onSelect?.(index)
+    if (index === selectedPage) {
+      onPressSelected?.()
+    }
+  };
 
   useAnimatedReaction(() => {
     return (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
@@ -71,6 +77,7 @@ export function TabBar({
       const nextX = (dragProgress.value / (items.length - 1)) * (contentSize.value - SCREEN.width)
       scrollTo(scrollElRef, nextX, 0, true);
       shouldSync.value = true
+      didScroll.value = false
     }
   })
 
@@ -99,7 +106,12 @@ export function TabBar({
         }}
         onScrollBeginDrag={e => {
           shouldSync.value = false
-        }}>
+          didScroll.value = true
+        }}
+        onScroll={e => {
+          scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
+        }}
+        scrollEventThrottle={16}>
         {items.map((item, i) => {
           return (
             <PressableWithHover
