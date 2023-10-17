@@ -38,8 +38,13 @@ export function TabBar({
   const scrollX = useSharedValue(0)
   const didScroll = useSharedValue(false)
 
+  const didLayout = (
+    layouts.length === items.length &&
+    layouts.every(l => l !== undefined)
+  );
+
   const indicatorStyle = useAnimatedStyle(() => {
-    if (layouts.length < items.length - 1 || layouts.some(l => l === undefined)) {
+    if (!didLayout) {
       return {}
     }
     return {
@@ -113,11 +118,15 @@ export function TabBar({
         }}
         scrollEventThrottle={16}>
         {items.map((item, i) => {
+          const isSelected = i === selectedPage
           return (
             <PressableWithHover
               key={item}
               onLayout={e => onItemLayout(e, i)}
-              style={[styles.item]}
+              style={[styles.item, {
+                borderBottomColor: (!didLayout && isSelected) ? indicatorColor : 'transparent',
+                borderBottomWidth: 3
+              }]}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <MaybeHighlightedText
@@ -130,21 +139,21 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
-        <Animated.View
+        {didLayout && <Animated.View
           style={[{
             position: 'absolute',
             bottom: 0,
             height: 3,
-            backgroundColor: indicatorColor || pal.colors.link,
+            backgroundColor: indicatorColor,
           }, indicatorStyle]}
-        />
+      />}
       </DraggableScrollView>
 
     </View>
   )
 }
 
-export function MaybeHighlightedText({ approxIndex, index, style, type, ...rest }) {
+export function MaybeHighlightedText({ approxIndex, index, type, ...rest }) {
   const pal = usePalette('default')
   const theme = useTheme()
   const typography = theme.typography[type]
@@ -152,7 +161,7 @@ export function MaybeHighlightedText({ approxIndex, index, style, type, ...rest 
     color: interpolateColor(Math.min(Math.abs(approxIndex.value - index), 1), [0, 1], [pal.text.color, pal.textLight.color])
   }))
   return (
-    <Animated.Text {...rest} style={[style, typography, animatedStyle]} />
+    <Animated.Text {...rest} style={[typography, animatedStyle]} />
   )
 }
 
