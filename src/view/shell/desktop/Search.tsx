@@ -141,9 +141,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 18,
+    fontSize: 17,
     width: '100%',
-    paddingTop: 6,
+    paddingTop: 7,
     paddingBottom: 9,
   },
   searchIconWrapper: {
