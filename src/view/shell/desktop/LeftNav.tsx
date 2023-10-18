@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
   },
   newPostBtnLabel: {
     color: colors.white,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '600',
   },
 })
