@@ -1,10 +1,6 @@
 import React, {ComponentProps} from 'react'
-import {
-  Animated,
-  GestureResponderEvent,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {StackActions} from '@react-navigation/native'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'

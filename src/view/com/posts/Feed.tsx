@@ -96,7 +96,7 @@ export const Feed = observer(function Feed({
   }, [feed, track, setIsRefreshing])
 
   const onEndReached = React.useCallback(async () => {
-    if (!feed.hasLoaded) return
+    if (!feed.hasLoaded || !feed.hasMore) return
 
     track('Feed:onEndReached')
     try {
@@ -178,7 +178,7 @@ export const Feed = observer(function Feed({
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.6}
+        onEndReachedThreshold={2}
         removeClippedSubviews={true}
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}

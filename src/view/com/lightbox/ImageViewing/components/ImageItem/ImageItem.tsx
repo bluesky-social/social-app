@@ -7,6 +7,7 @@ import {ImageSource} from '../../@types'
 type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
+  onTap: () => void
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
 }

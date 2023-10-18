@@ -483,9 +483,21 @@ function navigate<K extends keyof AllNavigatorParams>(
   params?: AllNavigatorParams[K],
 ) {
   if (navigationRef.isReady()) {
-    // @ts-ignore I dont know what would make typescript happy but I have a life -prf
-    navigationRef.navigate(name, params)
+    return Promise.race([
+      new Promise<void>(resolve => {
+        const handler = () => {
+          resolve()
+          navigationRef.removeListener('state', handler)
+        }
+        navigationRef.addListener('state', handler)
+
+        // @ts-ignore I dont know what would make typescript happy but I have a life -prf
+        navigationRef.navigate(name, params)
+      }),
+      timeout(1e3),
+    ])
   }
+  return Promise.resolve()
 }
 
 function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {

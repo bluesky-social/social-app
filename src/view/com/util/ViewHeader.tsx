@@ -1,17 +1,17 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {autorun} from 'mobx'
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {CenteredView} from './Views'
 import {Text} from './text/Text'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import Animated from 'react-native-reanimated'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -150,32 +150,8 @@ const Container = observer(function ContainerImpl({
   hideOnScroll: boolean
   showBorder?: boolean
 }) {
-  const store = useStores()
   const pal = usePalette('default')
-  const interp = useAnimatedValue(0)
-
-  React.useEffect(() => {
-    return autorun(() => {
-      if (store.shell.minimalShellMode) {
-        Animated.timing(interp, {
-          toValue: 1,
-          duration: 100,
-          useNativeDriver: true,
-          isInteraction: false,
-        }).start()
-      } else {
-        Animated.timing(interp, {
-          toValue: 0,
-          duration: 100,
-          useNativeDriver: true,
-          isInteraction: false,
-        }).start()
-      }
-    })
-  }, [interp, store])
-  const transform = {
-    transform: [{translateY: Animated.multiply(interp, -100)}],
-  }
+  const {headerMinimalShellTransform} = useMinimalShellMode()
 
   if (!hideOnScroll) {
     return (
@@ -198,7 +174,7 @@ const Container = observer(function ContainerImpl({
         styles.headerFloating,
         pal.view,
         pal.border,
-        transform,
+        headerMinimalShellTransform,
         showBorder && styles.border,
       ]}>
       {children}

@@ -156,7 +156,6 @@ export const NotificationsScreen = withAuthRequired(
             onPress={onPressLoadLatest}
             label="Load new notifications"
             showIndicator={hasNew}
-            minimalShellMode={true}
           />
         )}
       </View>

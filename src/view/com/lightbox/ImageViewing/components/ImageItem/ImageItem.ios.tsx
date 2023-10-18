@@ -6,16 +6,9 @@
  *
  */
 
-import React, {useCallback, useState} from 'react'
+import React, {useState} from 'react'
 
-import {
-  Dimensions,
-  StyleSheet,
-  View,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import {Dimensions, StyleSheet} from 'react-native'
 import {Image} from 'expo-image'
 import Animated, {
   interpolate,
@@ -25,13 +18,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
 
 import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 import {ImageLoading} from './ImageLoading'
 
-const DOUBLE_TAP_DELAY = 300
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
 const SCREEN = Dimensions.get('screen')
@@ -41,15 +34,14 @@ const MIN_DOUBLE_TAP_SCALE = 2
 type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
+  onTap: () => void
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-let lastTapTS: number | null = null
-
-const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
+const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [loaded, setLoaded] = useState(false)
@@ -71,12 +63,18 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
-      translationY.value = e.zoomScale > 1 ? 0 : e.contentOffset.y
+      const nextIsScaled = e.zoomScale > 1
+      translationY.value = nextIsScaled ? 0 : e.contentOffset.y
+      if (scaled !== nextIsScaled) {
+        runOnJS(handleZoom)(nextIsScaled)
+      }
     },
     onEndDrag(e) {
       const velocityY = e.velocity?.y ?? 0
       const nextIsScaled = e.zoomScale > 1
-      runOnJS(handleZoom)(nextIsScaled)
+      if (scaled !== nextIsScaled) {
+        runOnJS(handleZoom)(nextIsScaled)
+      }
       if (!nextIsScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
         runOnJS(onRequestClose)()
       }
@@ -88,43 +86,46 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
     setScaled(nextIsScaled)
   }
 
-  const handleDoubleTap = useCallback(
-    (event: NativeSyntheticEvent<NativeTouchEvent>) => {
-      const nowTS = new Date().getTime()
-      const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
+  function handleDoubleTap(absoluteX: number, absoluteY: number) {
+    const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
+    let nextZoomRect = {
+      x: 0,
+      y: 0,
+      width: SCREEN.width,
+      height: SCREEN.height,
+    }
 
-      if (lastTapTS && nowTS - lastTapTS < DOUBLE_TAP_DELAY) {
-        let nextZoomRect = {
-          x: 0,
-          y: 0,
-          width: SCREEN.width,
-          height: SCREEN.height,
-        }
+    const willZoom = !scaled
+    if (willZoom) {
+      nextZoomRect = getZoomRectAfterDoubleTap(
+        imageDimensions,
+        absoluteX,
+        absoluteY,
+      )
+    }
 
-        const willZoom = !scaled
-        if (willZoom) {
-          const {pageX, pageY} = event.nativeEvent
-          nextZoomRect = getZoomRectAfterDoubleTap(
-            imageDimensions,
-            pageX,
-            pageY,
-          )
-        }
+    // @ts-ignore
+    scrollResponderRef?.scrollResponderZoomTo({
+      ...nextZoomRect, // This rect is in screen coordinates
+      animated: true,
+    })
+  }
 
-        // @ts-ignore
-        scrollResponderRef?.scrollResponderZoomTo({
-          ...nextZoomRect, // This rect is in screen coordinates
-          animated: true,
-        })
-      } else {
-        lastTapTS = nowTS
-      }
-    },
-    [imageDimensions, scaled, scrollViewRef],
-  )
+  const singleTap = Gesture.Tap().onEnd(() => {
+    runOnJS(onTap)()
+  })
+
+  const doubleTap = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(e => {
+      const {absoluteX, absoluteY} = e
+      runOnJS(handleDoubleTap)(absoluteX, absoluteY)
+    })
+
+  const composedGesture = Gesture.Exclusive(doubleTap, singleTap)
 
   return (
-    <View>
+    <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
         // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
@@ -136,21 +137,17 @@ const ImageItem = ({imageSrc, onZoom, onRequestClose}: Props) => {
         contentContainerStyle={styles.imageScrollContainer}
         onScroll={scrollHandler}>
         {(!loaded || !imageDimensions) && <ImageLoading />}
-        <TouchableWithoutFeedback
-          onPress={handleDoubleTap}
-          accessibilityRole="image"
+        <AnimatedImage
+          contentFit="contain"
+          // NOTE: Don't pass imageSrc={imageSrc} or MobX will break.
+          source={{uri: imageSrc.uri}}
+          style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
-          accessibilityHint="">
-          <AnimatedImage
-            contentFit="contain"
-            // NOTE: Don't pass imageSrc={imageSrc} or MobX will break.
-            source={{uri: imageSrc.uri}}
-            style={[styles.image, animatedStyle]}
-            onLoad={() => setLoaded(true)}
-          />
-        </TouchableWithoutFeedback>
+          accessibilityHint=""
+          onLoad={() => setLoaded(true)}
+        />
       </Animated.ScrollView>
-    </View>
+    </GestureDetector>
   )
 }
 
