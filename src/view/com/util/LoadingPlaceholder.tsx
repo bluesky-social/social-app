@@ -53,7 +53,7 @@ export function PostLoadingPlaceholder({
         <LoadingPlaceholder width={'92%'} height={8} style={[s.mb5]} />
         <LoadingPlaceholder width={'93%'} height={8} style={[s.mb5]} />
         <LoadingPlaceholder width={'90%'} height={8} style={[s.mb5]} />
-        <LoadingPlaceholder width={'94%'} height={8} style={[s.mb5]} />
+        <LoadingPlaceholder width={'94%'} height={8} style={[s.mb10]} />
         <View style={s.flexRow}>
           <View style={s.flex1}>
             <FontAwesomeIcon
