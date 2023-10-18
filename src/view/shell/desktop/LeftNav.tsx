@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   newPostBtnIconWrapper: {
-    marginTop: 2 /* aligns the icon visually with the text */,
+    marginTop: 2, // aligns the icon visually with the text
   },
   newPostBtnLabel: {
     color: colors.white,
