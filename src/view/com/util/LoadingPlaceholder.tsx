@@ -48,10 +48,12 @@ export function PostLoadingPlaceholder({
     <View style={[styles.post, pal.view, style]}>
       <LoadingPlaceholder width={52} height={52} style={styles.avatar} />
       <View style={[s.flex1]}>
-        <LoadingPlaceholder width={100} height={8} style={[s.mb10]} />
-        <LoadingPlaceholder width={200} height={8} style={[s.mb5]} />
-        <LoadingPlaceholder width={200} height={8} style={[s.mb5]} />
-        <LoadingPlaceholder width={120} height={8} style={[s.mb10]} />
+        <LoadingPlaceholder width={'50%'} height={8} style={[s.mb10, s.mt10]} />
+        <LoadingPlaceholder width={'94%'} height={8} style={[s.mb5]} />
+        <LoadingPlaceholder width={'92%'} height={8} style={[s.mb5]} />
+        <LoadingPlaceholder width={'93%'} height={8} style={[s.mb5]} />
+        <LoadingPlaceholder width={'90%'} height={8} style={[s.mb5]} />
+        <LoadingPlaceholder width={'94%'} height={8} style={[s.mb5]} />
         <View style={s.flexRow}>
           <View style={s.flex1}>
             <FontAwesomeIcon
