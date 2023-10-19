@@ -95,7 +95,6 @@ export class TagsAutocompleteModel {
     const fuse = new Fuse(items)
     // search amongst mixed set of tags
     const results = fuse.search(this.query).map(r => r.item)
-    // backfill again in case search has no results
     return results.slice(0, 9)
   }
 
