@@ -120,6 +120,7 @@ export function TagInput({
 
       if (key === 'Backspace' && value === '') {
         addTags(tags.slice(0, -1))
+        closeDropdownAndReset()
       } else if (key === ' ') {
         e.preventDefault() // prevents an additional space on web
         addTagAndReset(value)

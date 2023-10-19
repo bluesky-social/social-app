@@ -4,10 +4,6 @@ import {RootStoreModel} from '../root-store'
 import Fuse from 'fuse.js'
 import {isObj, hasProp, isStrArray} from 'lib/type-guards'
 
-function uniq(arr: string[]) {
-  return Array.from(new Set(arr))
-}
-
 /**
  * Used only to persist recent tags across app restarts.
  *
@@ -100,7 +96,7 @@ export class TagsAutocompleteModel {
     // search amongst mixed set of tags
     const results = fuse.search(this.query).map(r => r.item)
     // backfill again in case search has no results
-    return uniq([...results, ...items]).slice(0, 9)
+    return results.slice(0, 9)
   }
 
   async search(query: string) {
