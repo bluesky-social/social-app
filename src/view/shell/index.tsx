@@ -23,6 +23,7 @@ import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
+import { ThemeProvider } from 'view/nova'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
@@ -87,14 +88,16 @@ export const Shell: React.FC = observer(function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
   return (
-    <SafeAreaProvider style={pal.view}>
-      <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
-        <RoutesContainer>
-          <ShellInner />
-        </RoutesContainer>
-      </View>
-    </SafeAreaProvider>
+    <ThemeProvider theme='light'>
+      <SafeAreaProvider style={pal.view}>
+        <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+          <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+          <RoutesContainer>
+            <ShellInner />
+          </RoutesContainer>
+        </View>
+      </SafeAreaProvider>
+    </ThemeProvider>
   )
 })
 
