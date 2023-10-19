@@ -31,57 +31,6 @@ export function Tag({
   )
 }
 
-export function EditableTag({
-  value,
-  onRemove,
-}: {
-  value: string
-  onRemove: (tag: string) => void
-}) {
-  const pal = usePalette('default')
-  const [hovered, setHovered] = React.useState(false)
-
-  const hoverIn = React.useCallback(() => {
-    setHovered(true)
-  }, [setHovered])
-
-  const hoverOut = React.useCallback(() => {
-    setHovered(false)
-  }, [setHovered])
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => onRemove(value)}
-      onPointerEnter={hoverIn}
-      onPointerLeave={hoverOut}
-      style={state => [
-        pal.viewLight,
-        styles.editableTag,
-        {
-          opacity: state.pressed || state.focused ? 0.8 : 1,
-          outline: 0,
-          paddingRight: 6,
-        },
-      ]}>
-      <Text type="md-medium" style={[pal.textLight]}>
-        #{value}
-      </Text>
-      <FontAwesomeIcon
-        icon="x"
-        style={
-          {
-            opacity: hovered ? 1 : 0.5,
-            color: pal.textLight.color,
-            marginTop: 1,
-          } as FontAwesomeIconStyle
-        }
-        size={10}
-      />
-    </Pressable>
-  )
-}
-
 export function TagButton({
   value,
   icon = 'x',
