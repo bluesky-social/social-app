@@ -22,21 +22,8 @@ import * as Sheet from 'view/com/sheets/Base'
 import {useStores} from 'state/index'
 import {ActivityIndicator} from 'react-native'
 import {TagInputEntryButton} from './TagInputEntryButton'
-import {
-  ENDING_PUNCTUATION_REGEX,
-  LEADING_HASH_REGEX,
-} from 'lib/strings/hashtags'
-
-function uniq(tags: string[]) {
-  return Array.from(new Set(tags))
-}
-
-function sanitize(tagString: string) {
-  return tagString
-    .trim()
-    .replace(LEADING_HASH_REGEX, '')
-    .replace(ENDING_PUNCTUATION_REGEX, '')
-}
+import {sanitize} from 'lib/strings/hashtags'
+import {uniq} from 'lib/strings/helpers'
 
 export function TagInput({
   max = 8,

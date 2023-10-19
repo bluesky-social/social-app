@@ -14,10 +14,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Pin} from 'pind'
 
-import {
-  ENDING_PUNCTUATION_REGEX,
-  LEADING_HASH_REGEX,
-} from 'lib/strings/hashtags'
 import {isWeb} from 'platform/detection'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -26,17 +22,8 @@ import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {TagInputEntryButton} from './TagInputEntryButton'
 import {TextInputFocusEventData} from 'react-native'
-
-function uniq(tags: string[]) {
-  return Array.from(new Set(tags))
-}
-
-function sanitize(tagString: string) {
-  return tagString
-    .trim()
-    .replace(LEADING_HASH_REGEX, '')
-    .replace(ENDING_PUNCTUATION_REGEX, '')
-}
+import {sanitize} from 'lib/strings/hashtags'
+import {uniq} from 'lib/strings/helpers'
 
 export function TagInput({
   max = 8,

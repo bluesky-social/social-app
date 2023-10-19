@@ -32,3 +32,7 @@ export function toHashCode(str: string, seed = 0): number {
 
   return 4294967296 * (2097151 & h2) + (h1 >>> 0)
 }
+
+export function uniq(tags: string[]) {
+  return Array.from(new Set(tags))
+}
