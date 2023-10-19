@@ -27,7 +27,10 @@ function uniq(tags: string[]) {
 }
 
 function sanitize(tagString: string) {
-  return tagString.trim().replace(/^#/, '')
+  return tagString
+    .trim()
+    .replace(/^#/, '')
+    .replace(/\p{P}+$/gu, '')
 }
 
 export function TagInput({
