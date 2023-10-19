@@ -36,7 +36,7 @@ export const SupportScreen = (_props: Props) => {
             text=" click here"
             style={pal.link}
           />{' '}
-          or visit {HELP_DESK_URL} to get in touch with us
+          or visit {HELP_DESK_URL} to get in touch with us.
         </Text>
       </CenteredView>
     </View>
