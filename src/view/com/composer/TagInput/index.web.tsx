@@ -14,6 +14,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Pin} from 'pind'
 
+import {isWeb} from 'platform/detection'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TagButton} from 'view/com/Tag'
@@ -132,6 +133,14 @@ export function TagInput({
         } else if (key === 'ArrowDown') {
           e.preventDefault()
           setSelectedItemIndex((selectedItemIndex + 1) % dropdownItems.length)
+        } else if (
+          isWeb &&
+          key === 'Tab' &&
+          // @ts-ignore web only
+          !e.nativeEvent.shiftKey
+        ) {
+          e.preventDefault()
+          onSubmitEditing()
         }
       }
     },
@@ -145,6 +154,7 @@ export function TagInput({
       setSelectedItemIndex,
       addTags,
       addTagAndReset,
+      onSubmitEditing,
     ],
   )
 
@@ -244,7 +254,12 @@ export function TagInput({
             )}
 
             {tags.map(tag => (
-              <TagButton key={tag} value={tag} onClick={removeTag} />
+              <TagButton
+                key={tag}
+                value={tag}
+                onClick={removeTag}
+                removeTag={removeTag}
+              />
             ))}
 
             {tags.length >= max ? null : (

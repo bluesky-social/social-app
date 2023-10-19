@@ -5,6 +5,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
+import {isWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text, CustomTextProps} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
@@ -85,13 +86,16 @@ export function TagButton({
   value,
   icon = 'x',
   onClick,
+  removeTag,
 }: {
   value: string
   icon?: React.ComponentProps<typeof FontAwesomeIcon>['icon']
   onClick?: (tag: string) => void
+  removeTag?: (tag: string) => void
 }) {
   const pal = usePalette('default')
   const [hovered, setHovered] = React.useState(false)
+  const [focused, setFocused] = React.useState(false)
 
   const hoverIn = React.useCallback(() => {
     setHovered(true)
@@ -101,12 +105,32 @@ export function TagButton({
     setHovered(false)
   }, [setHovered])
 
+  React.useEffect(() => {
+    if (!isWeb) return
+
+    function listener(e: KeyboardEvent) {
+      if (e.key === 'Backspace') {
+        if (focused) {
+          removeTag?.(value)
+        }
+      }
+    }
+
+    document.addEventListener('keydown', listener)
+
+    return () => {
+      document.removeEventListener('keydown', listener)
+    }
+  }, [value, focused, removeTag])
+
   return (
     <Pressable
       accessibilityRole="button"
       onPress={() => onClick?.(value)}
       onPointerEnter={hoverIn}
       onPointerLeave={hoverOut}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       style={state => [
         pal.viewLight,
         styles.tagButton,
