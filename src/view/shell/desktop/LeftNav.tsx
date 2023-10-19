@@ -1,7 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {
   useLinkProps,
   useNavigation,
@@ -11,7 +10,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
@@ -38,6 +36,7 @@ import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {makeProfileLink} from 'lib/routes/links'
+import {Box, Text, Pressable, useTheme} from 'view/nova'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const store = useStores()
@@ -110,6 +109,7 @@ const NavItem = observer(function NavItemImpl({
   iconFilled,
   label,
 }: NavItemProps) {
+  const { theme } = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   const {isDesktop, isTablet} = useWebMediaQueries()
@@ -143,40 +143,62 @@ const NavItem = observer(function NavItemImpl({
   )
 
   return (
-    <PressableWithHover
-      style={styles.navItemWrapper}
-      hoverStyle={pal.viewLight}
+    <Pressable
+      fdr
+      aic
+      pa={12}
+      radius={8}
+      gap={10}
+      style={state => ({
+        // TODO
+        backgroundColor: state.hovered ? theme.config.tokens.color.l2 : 'transparent',
+      })}
       // @ts-ignore the function signature differs on web -prf
       onPress={onPressWrapped}
       // @ts-ignore web only -prf
       href={href}
+      // @ts-ignore web only -prf
       dataSet={{noUnderline: 1}}
       accessibilityRole="tab"
       accessibilityLabel={label}
       accessibilityHint="">
-      <View
-        style={[
-          styles.navItemIconWrapper,
-          isTablet && styles.navItemIconWrapperTablet,
-        ]}>
+      <Box
+        aic
+        jcc
+        w={28}
+        h={28}
+        mt={2}
+        z={1}
+        gtMobile={{
+          w: 40,
+          h: 40,
+        }}
+        gtTablet={{
+          w: 28,
+          h: 28,
+        }}>
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
           <Text
-            type="button"
-            style={[
-              styles.navItemCount,
-              isTablet && styles.navItemCountTablet,
-            ]}>
+            abs
+            top={0}
+            left={15}
+            bg={colors.blue3}
+            c={colors.white}
+            fs='s'
+            fw={'bold'}
+            px={4}
+            radius={6}>
             {count}
           </Text>
         ) : null}
-      </View>
+      </Box>
       {isDesktop && (
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+        <Text fs='xl' fw={isCurrent ? 'bold' : 'normal'}>
           {label}
         </Text>
       )}
-    </PressableWithHover>
+    </Pressable>
   )
 })
 
@@ -230,7 +252,10 @@ function ComposeBtn() {
           style={styles.newPostBtnLabel}
         />
       </View>
-      <Text type="button" style={styles.newPostBtnLabel}>
+      <Text
+        c={colors.white}
+        fs='m'
+        fw={'bold'}>
         New Post
       </Text>
     </TouchableOpacity>
@@ -416,42 +441,6 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
-  },
-
-  navItemWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    padding: 12,
-    borderRadius: 8,
-    gap: 10,
-  },
-  navItemIconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 28,
-    height: 28,
-    marginTop: 2,
-    zIndex: 1,
-  },
-  navItemIconWrapperTablet: {
-    width: 40,
-    height: 40,
-  },
-  navItemCount: {
-    position: 'absolute',
-    top: 0,
-    left: 15,
-    backgroundColor: colors.blue3,
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: 'bold',
-    paddingHorizontal: 4,
-    borderRadius: 6,
-  },
-  navItemCountTablet: {
-    left: 18,
-    fontSize: 14,
   },
 
   newPostBtn: {
