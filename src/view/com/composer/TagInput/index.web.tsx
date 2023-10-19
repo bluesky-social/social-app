@@ -14,6 +14,10 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {Pin} from 'pind'
 
+import {
+  ENDING_PUNCTUATION_REGEX,
+  LEADING_HASH_REGEX,
+} from 'lib/strings/hashtags'
 import {isWeb} from 'platform/detection'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -30,8 +34,8 @@ function uniq(tags: string[]) {
 function sanitize(tagString: string) {
   return tagString
     .trim()
-    .replace(/^#/, '')
-    .replace(/\p{P}+$/gu, '')
+    .replace(LEADING_HASH_REGEX, '')
+    .replace(ENDING_PUNCTUATION_REGEX, '')
 }
 
 export function TagInput({

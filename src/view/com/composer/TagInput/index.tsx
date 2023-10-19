@@ -22,6 +22,10 @@ import * as Sheet from 'view/com/sheets/Base'
 import {useStores} from 'state/index'
 import {ActivityIndicator} from 'react-native'
 import {TagInputEntryButton} from './TagInputEntryButton'
+import {
+  ENDING_PUNCTUATION_REGEX,
+  LEADING_HASH_REGEX,
+} from 'lib/strings/hashtags'
 
 function uniq(tags: string[]) {
   return Array.from(new Set(tags))
@@ -30,8 +34,8 @@ function uniq(tags: string[]) {
 function sanitize(tagString: string) {
   return tagString
     .trim()
-    .replace(/^#/, '')
-    .replace(/\p{P}+$/gu, '')
+    .replace(LEADING_HASH_REGEX, '')
+    .replace(ENDING_PUNCTUATION_REGEX, '')
 }
 
 export function TagInput({

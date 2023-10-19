@@ -5,12 +5,11 @@ import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
+import {LEADING_HASH_REGEX, TAG_REGEX} from 'lib/strings/hashtags'
 
 export function getHashtagAt(text: string, position: number) {
-  const regex = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/gi
-
   let match
-  while ((match = regex.exec(text))) {
+  while ((match = TAG_REGEX.exec(text))) {
     const [matchedString, tag] = match
 
     if (tag.length > 66) continue
@@ -27,7 +26,7 @@ export function getHashtagAt(text: string, position: number) {
    * show autocomplete after a single # is typed
    * AND the cursor is next to the #
    */
-  const hashRegex = /#/g
+  const hashRegex = LEADING_HASH_REGEX
   let hashMatch
   while ((hashMatch = hashRegex.exec(text))) {
     if (position >= hashMatch.index && position <= hashMatch.index + 1) {

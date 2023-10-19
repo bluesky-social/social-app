@@ -1,5 +1,11 @@
+import {
+  TAG_REGEX,
+  ENDING_PUNCTUATION_REGEX,
+  LEADING_HASH_REGEX,
+} from 'lib/strings/hashtags'
+
 export function parsePunctuationFromTag(value: string) {
-  const reg = /(\p{P}+)$/gu
+  const reg = ENDING_PUNCTUATION_REGEX
   const tag = value.replace(reg, '')
   const punctuation = value.match(reg)?.[0] || ''
 
@@ -13,9 +19,7 @@ export function findSuggestionMatch({
   text: string
   cursorPosition: number
 }) {
-  const regex = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g
-  const puncRegex = /\p{P}+$/gu
-  const match = Array.from(text.matchAll(regex)).pop()
+  const match = Array.from(text.matchAll(TAG_REGEX)).pop()
 
   if (!match || match.input === undefined || match.index === undefined) {
     return null
@@ -24,7 +28,9 @@ export function findSuggestionMatch({
   const startIndex = cursorPosition - text.length
   let [matchedString, tag] = match
 
-  const sanitized = tag.replace(puncRegex, '').replace(/^#/, '')
+  const sanitized = tag
+    .replace(ENDING_PUNCTUATION_REGEX, '')
+    .replace(LEADING_HASH_REGEX, '')
 
   // one of our hashtag spec rules
   if (sanitized.length > 64) return null
@@ -45,7 +51,7 @@ export function findSuggestionMatch({
        * We parse out the punctuation later, but we don't want to pass
        * the # to the search query.
        */
-      query: tag.replace(/^#/, ''),
+      query: tag.replace(LEADING_HASH_REGEX, ''),
       // raw text string
       text: matchedString,
     }
