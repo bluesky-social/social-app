@@ -57,6 +57,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
+  const outlineTags = item.postRecord?.tags
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return makeProfileLink(item.post.author, 'post', urip.rkey)
@@ -91,6 +92,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const onPressReply = React.useCallback(() => {
     store.shell.openComposer({
+      outlineTags,
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
@@ -103,7 +105,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
       onPost: onPostReply,
     })
-  }, [store, item, record, onPostReply])
+  }, [store, item, record, onPostReply, outlineTags])
 
   const onPressToggleRepost = React.useCallback(() => {
     return item
@@ -399,6 +401,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                itemOutlineTags={outlineTags}
                 author={item.post.author}
                 text={item.richText?.text || record.text}
                 indexedAt={item.post.indexedAt}
@@ -530,6 +533,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                itemOutlineTags={outlineTags}
                 author={item.post.author}
                 text={item.richText?.text || record.text}
                 indexedAt={item.post.indexedAt}

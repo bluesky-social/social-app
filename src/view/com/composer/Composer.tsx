@@ -58,6 +58,7 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   quote: initQuote,
   mention: initMention,
+  outlineTags,
 }: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -89,7 +90,7 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(store), [store])
-  const [tags, setTags] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>(outlineTags || [])
   const onClose = useCallback(() => {
     store.shell.closeComposer()
   }, [store])
@@ -455,7 +456,7 @@ export const ComposePost = observer(function ComposePost({
               paddingHorizontal: 15,
             },
           ]}>
-          <TagInput onChangeTags={onChangeTags} />
+          <TagInput initialTags={tags} onChangeTags={onChangeTags} />
         </View>
 
         <View style={[pal.border, styles.bottomBar]}>

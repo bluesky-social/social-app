@@ -53,6 +53,7 @@ const ShellInner = observer(function ShellInnerImpl() {
         quote={store.shell.composerOpts?.quote}
         onPost={store.shell.composerOpts?.onPost}
         mention={store.shell.composerOpts?.mention}
+        outlineTags={store.shell.composerOpts?.outlineTags}
       />
       {showBottomBar && <BottomBarWeb />}
       <ModalsContainer />

@@ -106,6 +106,7 @@ const PostLoaded = observer(function PostLoadedImpl({
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
+  const outlineTags = item.postRecord?.tags
   const itemUrip = new AtUri(item.post.uri)
   const itemHref = makeProfileLink(item.post.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${item.post.author.handle}`
@@ -122,6 +123,7 @@ const PostLoaded = observer(function PostLoadedImpl({
 
   const onPressReply = React.useCallback(() => {
     store.shell.openComposer({
+      outlineTags,
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
@@ -133,7 +135,7 @@ const PostLoaded = observer(function PostLoadedImpl({
         },
       },
     })
-  }, [store, item, record])
+  }, [store, item, record, outlineTags])
 
   const onPressToggleRepost = React.useCallback(() => {
     return item

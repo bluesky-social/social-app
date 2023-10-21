@@ -77,6 +77,7 @@ const ShellInner = observer(function ShellInnerImpl() {
         onPost={store.shell.composerOpts?.onPost}
         quote={store.shell.composerOpts?.quote}
         mention={store.shell.composerOpts?.mention}
+        outlineTags={store.shell.composerOpts?.outlineTags}
       />
       <ModalsContainer />
       <Lightbox />

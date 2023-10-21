@@ -52,6 +52,7 @@ export const FeedItem = observer(function FeedItemImpl({
   const record = item.postRecord
   const itemUri = item.post.uri
   const itemCid = item.post.cid
+  const outlineTags = item.postRecord?.tags
   const itemHref = useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return makeProfileLink(item.post.author, 'post', urip.rkey)
@@ -72,6 +73,7 @@ export const FeedItem = observer(function FeedItemImpl({
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
     store.shell.openComposer({
+      outlineTags,
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
@@ -83,7 +85,7 @@ export const FeedItem = observer(function FeedItemImpl({
         },
       },
     })
-  }, [item, track, record, store])
+  }, [item, track, record, store, outlineTags])
 
   const onPressToggleRepost = React.useCallback(() => {
     track('FeedItem:PostRepost')
@@ -332,6 +334,7 @@ export const FeedItem = observer(function FeedItemImpl({
             itemCid={itemCid}
             itemHref={itemHref}
             itemTitle={itemTitle}
+            itemOutlineTags={outlineTags}
             author={item.post.author}
             text={item.richText?.text || record.text}
             indexedAt={item.post.indexedAt}

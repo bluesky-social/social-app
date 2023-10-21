@@ -27,9 +27,11 @@ import {uniq} from 'lib/strings/helpers'
 
 export function TagInput({
   max = 8,
+  initialTags = [],
   onChangeTags,
 }: {
   max?: number
+  initialTags?: string[]
   onChangeTags: (tags: string[]) => void
 }) {
   const store = useStores()
@@ -43,7 +45,7 @@ export function TagInput({
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   const [value, setValue] = React.useState('')
-  const [tags, setTags] = React.useState<string[]>([])
+  const [tags, setTags] = React.useState<string[]>(initialTags)
   const [dropdownIsOpen, setDropdownIsOpen] = React.useState(false)
   const [dropdownItems, setDropdownItems] = React.useState<
     {value: string; label: string}[]
