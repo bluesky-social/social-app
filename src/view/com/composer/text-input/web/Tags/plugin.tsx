@@ -25,8 +25,8 @@ export const Tags = Node.create<TagOptions>({
   addOptions() {
     return {
       HTMLAttributes: {},
-      renderLabel({options, node}) {
-        return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
+      renderLabel({node}) {
+        return `#${node.attrs.id}`
       },
       suggestion: {
         char: '#',
@@ -61,11 +61,15 @@ export const Tags = Node.create<TagOptions>({
 
           window.getSelection()?.collapseToEnd()
         },
+        /**
+         * This method and `findSuggestionMatch` below both have to return a
+         * truthy value, otherwise the suggestiond plugin will call `onExit`
+         * and we lose the ability to add a tag
+         */
         allow: ({state, range}) => {
           const $from = state.doc.resolve(range.from)
           const type = state.schema.nodes[this.name]
           const allow = !!$from.parent.type.contentMatch.matchType(type)
-
           return allow
         },
         findSuggestionMatch({$position}) {

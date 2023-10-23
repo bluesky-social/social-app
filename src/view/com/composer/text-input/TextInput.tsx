@@ -236,6 +236,8 @@ export const TextInput = forwardRef(function TextInputImpl(
     })
   }, [richtext, pal.link, pal.text])
 
+  console.log('render')
+
   return (
     <View style={styles.container}>
       <PasteInput

@@ -1,5 +1,5 @@
 import {
-  TAG_REGEX,
+  LOOSE_TAG_REGEX,
   ENDING_PUNCTUATION_REGEX,
   LEADING_HASH_REGEX,
 } from 'lib/strings/hashtags'
@@ -12,6 +12,13 @@ export function parsePunctuationFromTag(value: string) {
   return {tag, punctuation}
 }
 
+/**
+ * A result must be returned from this method in order for the suggestion
+ * plugin to remain active and allow for the user to select a suggestion.
+ *
+ * That's why we use the loose regex form that includes trialing punctuation.
+ * We strip that our later.
+ */
 export function findSuggestionMatch({
   text,
   cursorPosition,
@@ -19,24 +26,25 @@ export function findSuggestionMatch({
   text: string
   cursorPosition: number
 }) {
-  const match = Array.from(text.matchAll(TAG_REGEX)).pop()
+  const match = Array.from(text.matchAll(LOOSE_TAG_REGEX)).pop()
 
   if (!match || match.input === undefined || match.index === undefined) {
     return null
   }
 
   const startIndex = cursorPosition - text.length
-  let [matchedString, tag] = match
+  let [matchedString, looselyMatchedTag] = match
 
-  const sanitized = tag
+  const sanitized = looselyMatchedTag
     .replace(ENDING_PUNCTUATION_REGEX, '')
     .replace(LEADING_HASH_REGEX, '')
 
   // one of our hashtag spec rules
   if (sanitized.length > 64) return null
 
-  const from = startIndex + match.index + matchedString.indexOf(tag)
-  const to = from + tag.length
+  const from =
+    startIndex + match.index + matchedString.indexOf(looselyMatchedTag)
+  const to = from + looselyMatchedTag.length
 
   if (from < cursorPosition && to >= cursorPosition) {
     return {
@@ -48,10 +56,9 @@ export function findSuggestionMatch({
        * This is passed to the `items({ query })` method configured in
        * `createTagsAutocomplete`.
        *
-       * We parse out the punctuation later, but we don't want to pass
-       * the # to the search query.
+       * We parse out the punctuation later.
        */
-      query: tag.replace(LEADING_HASH_REGEX, ''),
+      query: looselyMatchedTag.replace(LEADING_HASH_REGEX, ''),
       // raw text string
       text: matchedString,
     }
