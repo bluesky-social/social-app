@@ -22,8 +22,8 @@ import {Text} from 'view/com/util/text/Text'
 import {useStores} from 'state/index'
 import {TagInputEntryButton} from './TagInputEntryButton'
 import {TextInputFocusEventData} from 'react-native'
-import {sanitize} from 'lib/strings/hashtags'
 import {uniq} from 'lib/strings/helpers'
+import {sanitizeHashtag} from './util'
 
 export function TagInput({
   max = 8,
@@ -84,7 +84,7 @@ export function TagInput({
 
   const addTagAndReset = React.useCallback(
     (value: string) => {
-      const tag = sanitize(value)
+      const tag = sanitizeHashtag(value)
 
       // enforce max hashtag length
       if (tag.length > 0 && tag.length <= 64) {

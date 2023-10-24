@@ -1,11 +1,15 @@
 import {
-  LOOSE_TAG_REGEX,
-  ENDING_PUNCTUATION_REGEX,
+  HASHTAG_REGEX_WITH_TRAILING_PUNCTUATION,
+  TRAILING_PUNCTUATION_REGEX,
   LEADING_HASH_REGEX,
-} from 'lib/strings/hashtags'
+} from '@atproto/api'
 
+/**
+ * This method eventually receives the `query` property from the result of
+ * `findSuggestionMatch` below.
+ */
 export function parsePunctuationFromTag(value: string) {
-  const reg = ENDING_PUNCTUATION_REGEX
+  const reg = TRAILING_PUNCTUATION_REGEX
   const tag = value.replace(reg, '')
   const punctuation = value.match(reg)?.[0] || ''
 
@@ -26,25 +30,27 @@ export function findSuggestionMatch({
   text: string
   cursorPosition: number
 }) {
-  const match = Array.from(text.matchAll(LOOSE_TAG_REGEX)).pop()
+  const match = Array.from(
+    text.matchAll(HASHTAG_REGEX_WITH_TRAILING_PUNCTUATION),
+  ).pop()
 
   if (!match || match.input === undefined || match.index === undefined) {
     return null
   }
 
   const startIndex = cursorPosition - text.length
-  let [matchedString, looselyMatchedTag] = match
+  let [matchedString, tagWithTrailingPunctuation] = match
 
-  const sanitized = looselyMatchedTag
-    .replace(ENDING_PUNCTUATION_REGEX, '')
+  const sanitized = tagWithTrailingPunctuation
+    .replace(TRAILING_PUNCTUATION_REGEX, '')
     .replace(LEADING_HASH_REGEX, '')
 
   // one of our hashtag spec rules
   if (sanitized.length > 64) return null
 
   const from =
-    startIndex + match.index + matchedString.indexOf(looselyMatchedTag)
-  const to = from + looselyMatchedTag.length
+    startIndex + match.index + matchedString.indexOf(tagWithTrailingPunctuation)
+  const to = from + tagWithTrailingPunctuation.length
 
   if (from < cursorPosition && to >= cursorPosition) {
     return {
@@ -58,7 +64,7 @@ export function findSuggestionMatch({
        *
        * We parse out the punctuation later.
        */
-      query: looselyMatchedTag.replace(LEADING_HASH_REGEX, ''),
+      query: tagWithTrailingPunctuation.replace(LEADING_HASH_REGEX, ''),
       // raw text string
       text: matchedString,
     }

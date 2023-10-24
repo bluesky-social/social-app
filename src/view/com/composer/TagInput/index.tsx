@@ -22,8 +22,8 @@ import * as Sheet from 'view/com/sheets/Base'
 import {useStores} from 'state/index'
 import {ActivityIndicator} from 'react-native'
 import {TagInputEntryButton} from './TagInputEntryButton'
-import {sanitize} from 'lib/strings/hashtags'
 import {uniq} from 'lib/strings/helpers'
+import {sanitizeHashtag} from './util'
 
 export function TagInput({
   max = 8,
@@ -70,7 +70,7 @@ export function TagInput({
 
   const addTagAndReset = React.useCallback(
     (value: string) => {
-      const tag = sanitize(value)
+      const tag = sanitizeHashtag(value)
 
       // enforce max hashtag length
       if (tag.length > 0 && tag.length <= 64) {

@@ -44,7 +44,7 @@ export class TagsAutocompleteModel {
   isActive = false
   query = ''
   searchedTags: string[] = []
-  profileTags: string[] = ['biology']
+  profileTags: string[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -113,15 +113,7 @@ export class TagsAutocompleteModel {
   // TODO hook up to search type-ahead
   async _search() {
     runInAction(() => {
-      this.searchedTags = [
-        'bluesky',
-        'code',
-        'coding',
-        'dev',
-        'developer',
-        'development',
-        'devlife',
-      ]
+      this.searchedTags = []
     })
   }
 }

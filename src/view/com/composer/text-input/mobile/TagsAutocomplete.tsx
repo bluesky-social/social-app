@@ -5,13 +5,13 @@ import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
-import {LEADING_HASH_REGEX, TAG_REGEX} from 'lib/strings/hashtags'
+import {LEADING_HASH_REGEX, HASHTAG_REGEX} from '@atproto/api'
 
 /**
  * Loops over matches in the text to find the hashtag under the cursor.
  */
 export function getHashtagAt(text: string, position: number) {
-  for (const match of Array.from(text.matchAll(TAG_REGEX))) {
+  for (const match of Array.from(text.matchAll(HASHTAG_REGEX))) {
     const {index} = match
     const [matchedString, tag] = match
 
