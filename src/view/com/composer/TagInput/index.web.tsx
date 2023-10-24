@@ -23,7 +23,7 @@ import {useStores} from 'state/index'
 import {TagInputEntryButton} from './TagInputEntryButton'
 import {TextInputFocusEventData} from 'react-native'
 import {uniq} from 'lib/strings/helpers'
-import {sanitizeHashtag} from './util'
+import {sanitizeHashtag, sanitizeHashtagOnChange} from './util'
 
 export function TagInput({
   max = 8,
@@ -153,12 +153,14 @@ export function TagInput({
   )
 
   const onChangeText = React.useCallback(
-    async (v: string) => {
-      setValue(v)
+    async (value: string) => {
+      const tag = sanitizeHashtagOnChange(value)
 
-      if (v.length > 0) {
+      setValue(tag)
+
+      if (tag.length > 0) {
         model.setActive(true)
-        await model.search(v)
+        await model.search(tag)
 
         setDropdownItems(
           model.suggestions.map(item => ({
@@ -199,9 +201,10 @@ export function TagInput({
         (!target || !target.id.includes('tag_autocomplete_option'))
       ) {
         setOpen(false)
+        setValue('')
       }
     },
-    [tags, setOpen],
+    [tags, setOpen, setValue],
   )
 
   React.useEffect(() => {

@@ -29,7 +29,9 @@ export function getHashtagAt(text: string, position: number) {
    * show autocomplete after a single # is typed
    * AND the cursor is next to the #
    */
-  for (const match of Array.from(text.matchAll(LEADING_HASH_REGEX))) {
+  for (const match of Array.from(
+    text.matchAll(new RegExp(LEADING_HASH_REGEX, 'g')),
+  )) {
     const {index} = match
     if (index === undefined) continue
     if (position >= index && position <= index + 1) {
