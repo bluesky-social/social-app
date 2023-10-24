@@ -174,11 +174,13 @@ export function TagInput({
 
             <Sheet.Content>
               <View style={styles.outer}>
-                <FontAwesomeIcon
-                  icon="tags"
-                  size={14}
-                  style={pal.textLight as FontAwesomeIconStyle}
-                />
+                {tags.length < 1 && (
+                  <FontAwesomeIcon
+                    icon="tags"
+                    size={14}
+                    style={pal.textLight as FontAwesomeIconStyle}
+                  />
+                )}
 
                 {tags.map(tag => (
                   <TagButton key={tag} value={tag} onClick={removeTag} />
@@ -250,8 +252,8 @@ const styles = StyleSheet.create({
       web: 20,
       native: 18,
     }),
-    paddingTop: 4,
-    paddingBottom: 4,
+    paddingTop: 6,
+    paddingBottom: 6,
   },
   suggestions: {
     flexDirection: 'row',
