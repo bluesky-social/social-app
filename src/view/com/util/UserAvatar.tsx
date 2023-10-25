@@ -27,7 +27,6 @@ interface BaseUserAvatarProps {
 
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  onSelectNewAvatar?: (img: RNImage | null) => void // TODO: Remove.
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -111,12 +110,8 @@ export function UserAvatar({
   size,
   avatar,
   moderation,
-  onSelectNewAvatar,
 }: UserAvatarProps) {
-  const store = useStores()
   const pal = usePalette('default')
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
   const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
@@ -133,94 +128,6 @@ export function UserAvatar({
     }
   }, [type, size])
 
-  const dropdownItems = useMemo(
-    () =>
-      [
-        !isWeb && {
-          testID: 'changeAvatarCameraBtn',
-          label: 'Camera',
-          icon: {
-            ios: {
-              name: 'camera',
-            },
-            android: 'ic_menu_camera',
-            web: 'camera',
-          },
-          onPress: async () => {
-            if (!(await requestCameraAccessIfNeeded())) {
-              return
-            }
-
-            onSelectNewAvatar?.(
-              await openCamera(store, {
-                width: 1000,
-                height: 1000,
-                cropperCircleOverlay: true,
-              }),
-            )
-          },
-        },
-        {
-          testID: 'changeAvatarLibraryBtn',
-          label: 'Library',
-          icon: {
-            ios: {
-              name: 'photo.on.rectangle.angled',
-            },
-            android: 'ic_menu_gallery',
-            web: 'gallery',
-          },
-          onPress: async () => {
-            if (!(await requestPhotoAccessIfNeeded())) {
-              return
-            }
-
-            const items = await openPicker({
-              aspect: [1, 1],
-            })
-            const item = items[0]
-            if (!item) {
-              return
-            }
-
-            const croppedImage = await openCropper(store, {
-              mediaType: 'photo',
-              cropperCircleOverlay: true,
-              height: item.height,
-              width: item.width,
-              path: item.path,
-            })
-
-            onSelectNewAvatar?.(croppedImage)
-          },
-        },
-        !!avatar && {
-          label: 'separator',
-        },
-        !!avatar && {
-          testID: 'changeAvatarRemoveBtn',
-          label: 'Remove',
-          icon: {
-            ios: {
-              name: 'trash',
-            },
-            android: 'ic_delete',
-            web: 'trash',
-          },
-          onPress: async () => {
-            onSelectNewAvatar?.(null)
-          },
-        },
-      ].filter(Boolean) as DropdownItem[],
-    [
-      avatar,
-      onSelectNewAvatar,
-      requestCameraAccessIfNeeded,
-      requestPhotoAccessIfNeeded,
-      store,
-    ],
-  )
-
   const alert = useMemo(() => {
     if (!moderation?.alert) {
       return null
@@ -236,32 +143,7 @@ export function UserAvatar({
     )
   }, [moderation?.alert, size, pal])
 
-  // onSelectNewAvatar is only passed as prop on the EditProfile component
-  return onSelectNewAvatar ? (
-    <NativeDropdown
-      testID="changeAvatarBtn"
-      items={dropdownItems}
-      accessibilityLabel="Image options"
-      accessibilityHint="">
-      {avatar ? (
-        <HighPriorityImage
-          testID="userAvatarImage"
-          style={aviStyle}
-          source={{uri: avatar}}
-          accessibilityRole="image"
-        />
-      ) : (
-        <DefaultAvatar type={type} size={size} />
-      )}
-      <View style={[styles.editButtonContainer, pal.btn]}>
-        <FontAwesomeIcon
-          icon="camera"
-          size={12}
-          color={pal.text.color as string}
-        />
-      </View>
-    </NativeDropdown>
-  ) : avatar &&
+  return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>
       <HighPriorityImage
