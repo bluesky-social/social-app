@@ -276,6 +276,181 @@ export function UserAvatar({
   )
 }
 
+export function EditableUserAvatar({
+  type = 'user',
+  size,
+  avatar,
+  moderation,
+  onSelectNewAvatar,
+}: UserAvatarProps) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+
+  const aviStyle = useMemo(() => {
+    if (type === 'algo' || type === 'list') {
+      return {
+        width: size,
+        height: size,
+        borderRadius: size > 32 ? 8 : 3,
+      }
+    }
+    return {
+      width: size,
+      height: size,
+      borderRadius: Math.floor(size / 2),
+    }
+  }, [type, size])
+
+  const dropdownItems = useMemo(
+    () =>
+      [
+        !isWeb && {
+          testID: 'changeAvatarCameraBtn',
+          label: 'Camera',
+          icon: {
+            ios: {
+              name: 'camera',
+            },
+            android: 'ic_menu_camera',
+            web: 'camera',
+          },
+          onPress: async () => {
+            if (!(await requestCameraAccessIfNeeded())) {
+              return
+            }
+
+            onSelectNewAvatar?.(
+              await openCamera(store, {
+                width: 1000,
+                height: 1000,
+                cropperCircleOverlay: true,
+              }),
+            )
+          },
+        },
+        {
+          testID: 'changeAvatarLibraryBtn',
+          label: 'Library',
+          icon: {
+            ios: {
+              name: 'photo.on.rectangle.angled',
+            },
+            android: 'ic_menu_gallery',
+            web: 'gallery',
+          },
+          onPress: async () => {
+            if (!(await requestPhotoAccessIfNeeded())) {
+              return
+            }
+
+            const items = await openPicker({
+              aspect: [1, 1],
+            })
+            const item = items[0]
+            if (!item) {
+              return
+            }
+
+            const croppedImage = await openCropper(store, {
+              mediaType: 'photo',
+              cropperCircleOverlay: true,
+              height: item.height,
+              width: item.width,
+              path: item.path,
+            })
+
+            onSelectNewAvatar?.(croppedImage)
+          },
+        },
+        !!avatar && {
+          label: 'separator',
+        },
+        !!avatar && {
+          testID: 'changeAvatarRemoveBtn',
+          label: 'Remove',
+          icon: {
+            ios: {
+              name: 'trash',
+            },
+            android: 'ic_delete',
+            web: 'trash',
+          },
+          onPress: async () => {
+            onSelectNewAvatar?.(null)
+          },
+        },
+      ].filter(Boolean) as DropdownItem[],
+    [
+      avatar,
+      onSelectNewAvatar,
+      requestCameraAccessIfNeeded,
+      requestPhotoAccessIfNeeded,
+      store,
+    ],
+  )
+
+  const alert = useMemo(() => {
+    if (!moderation?.alert) {
+      return null
+    }
+    return (
+      <View style={[styles.alertIconContainer, pal.view]}>
+        <FontAwesomeIcon
+          icon="exclamation-circle"
+          style={styles.alertIcon}
+          size={Math.floor(size / 3)}
+        />
+      </View>
+    )
+  }, [moderation?.alert, size, pal])
+
+  // onSelectNewAvatar is only passed as prop on the EditProfile component
+  return onSelectNewAvatar ? (
+    <NativeDropdown
+      testID="changeAvatarBtn"
+      items={dropdownItems}
+      accessibilityLabel="Image options"
+      accessibilityHint="">
+      {avatar ? (
+        <HighPriorityImage
+          testID="userAvatarImage"
+          style={aviStyle}
+          source={{uri: avatar}}
+          accessibilityRole="image"
+        />
+      ) : (
+        <DefaultAvatar type={type} size={size} />
+      )}
+      <View style={[styles.editButtonContainer, pal.btn]}>
+        <FontAwesomeIcon
+          icon="camera"
+          size={12}
+          color={pal.text.color as string}
+        />
+      </View>
+    </NativeDropdown>
+  ) : avatar &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
+    <View style={{width: size, height: size}}>
+      <HighPriorityImage
+        testID="userAvatarImage"
+        style={aviStyle}
+        contentFit="cover"
+        source={{uri: avatar}}
+        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+      />
+      {alert}
+    </View>
+  ) : (
+    <View style={{width: size, height: size}}>
+      <DefaultAvatar type={type} size={size} />
+      {alert}
+    </View>
+  )
+}
+
 export function PreviewableUserAvatar(props: PreviewableUserAvatarProps) {
   return (
     <UserPreviewLink did={props.did} handle={props.handle}>
