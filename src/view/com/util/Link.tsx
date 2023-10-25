@@ -1,5 +1,4 @@
-import React, {ComponentProps, useMemo} from 'react'
-import {observer} from 'mobx-react-lite'
+import React, {ComponentProps, memo, useMemo} from 'react'
 import {
   Linking,
   GestureResponderEvent,
@@ -50,7 +49,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
 }
 
-export const Link = observer(function Link({
+export const Link = memo(function Link({
   testID,
   style,
   href,
@@ -136,7 +135,7 @@ export const Link = observer(function Link({
   )
 })
 
-export const TextLink = observer(function TextLink({
+export const TextLink = memo(function TextLink({
   testID,
   type = 'md',
   style,
@@ -236,7 +235,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessibilityHint?: string
   title?: string
 }
-export const DesktopWebTextLink = observer(function DesktopWebTextLink({
+export const DesktopWebTextLink = memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,
