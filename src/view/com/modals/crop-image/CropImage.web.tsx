@@ -100,7 +100,7 @@ export function Component({
           accessibilityHint="Sets image aspect ratio to wide">
           <RectWideIcon
             size={24}
-            style={as === AspectRatio.Wide ? s.blue3 : undefined}
+            style={as === AspectRatio.Wide ? s.blue3 : pal.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -110,7 +110,7 @@ export function Component({
           accessibilityHint="Sets image aspect ratio to tall">
           <RectTallIcon
             size={24}
-            style={as === AspectRatio.Tall ? s.blue3 : undefined}
+            style={as === AspectRatio.Tall ? s.blue3 : pal.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -120,7 +120,7 @@ export function Component({
           accessibilityHint="Sets image aspect ratio to square">
           <SquareIcon
             size={24}
-            style={as === AspectRatio.Square ? s.blue3 : undefined}
+            style={as === AspectRatio.Square ? s.blue3 : pal.text}
           />
         </TouchableOpacity>
       </View>
