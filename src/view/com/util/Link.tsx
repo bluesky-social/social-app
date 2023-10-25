@@ -1,4 +1,4 @@
-import React, {ComponentProps, useMemo} from 'react'
+import React, {ComponentProps, memo, useMemo} from 'react'
 import {
   Linking,
   GestureResponderEvent,
@@ -49,7 +49,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
 }
 
-export function Link({
+export const Link = memo(function Link({
   testID,
   style,
   href,
@@ -133,9 +133,9 @@ export function Link({
       {children ? children : <Text>{title || 'link'}</Text>}
     </Com>
   )
-}
+})
 
-export function TextLink({
+export const TextLink = memo(function TextLink({
   testID,
   type = 'md',
   style,
@@ -217,7 +217,7 @@ export function TextLink({
       {text}
     </Text>
   )
-}
+})
 
 /**
  * Only acts as a link on desktop web
@@ -235,7 +235,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessibilityHint?: string
   title?: string
 }
-export function DesktopWebTextLink({
+export const DesktopWebTextLink = memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,
@@ -274,7 +274,7 @@ export function DesktopWebTextLink({
       {text}
     </Text>
   )
-}
+})
 
 // NOTE
 // we can't use the onPress given by useLinkProps because it will
