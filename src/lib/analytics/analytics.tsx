@@ -52,9 +52,7 @@ export function init(store: RootStoreModel) {
     const sess = store.session.currentSession
     if (sess && sess.did) {
       if (sess.email) {
-        const email_hashed = sha256(sess.email)
         const did_hashed = sha256(sess.did)
-        segmentClient.identify(email_hashed, {email_hashed})
         segmentClient.identify(did_hashed, {did_hashed})
         store.log.debug('Ping w/hash')
       } else {
