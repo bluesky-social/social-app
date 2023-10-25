@@ -13,6 +13,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Pin} from 'pind'
+import {sanitizeHashtag} from '@atproto/api'
 
 import {isWeb} from 'platform/detection'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
@@ -23,7 +24,7 @@ import {useStores} from 'state/index'
 import {TagInputEntryButton} from './TagInputEntryButton'
 import {TextInputFocusEventData} from 'react-native'
 import {uniq} from 'lib/strings/helpers'
-import {sanitizeHashtag, sanitizeHashtagOnChange} from './util'
+import {sanitizeHashtagOnChange} from './util'
 
 export function TagInput({
   max = 8,

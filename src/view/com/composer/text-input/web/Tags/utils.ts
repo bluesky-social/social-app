@@ -1,5 +1,5 @@
 import {
-  HASHTAG_REGEX_WITH_TRAILING_PUNCTUATION,
+  HASHTAG_WITH_TRAILING_PUNCTUATION_REGEX,
   TRAILING_PUNCTUATION_REGEX,
   LEADING_HASH_REGEX,
 } from '@atproto/api'
@@ -31,7 +31,7 @@ export function findSuggestionMatch({
   cursorPosition: number
 }) {
   const match = Array.from(
-    text.matchAll(HASHTAG_REGEX_WITH_TRAILING_PUNCTUATION),
+    text.matchAll(HASHTAG_WITH_TRAILING_PUNCTUATION_REGEX),
   ).pop()
 
   if (!match || match.input === undefined || match.index === undefined) {

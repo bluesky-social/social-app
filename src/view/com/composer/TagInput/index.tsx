@@ -13,6 +13,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
+import {sanitizeHashtag} from '@atproto/api'
 
 import {Portal} from 'view/com/util/Portal'
 import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
@@ -23,7 +24,7 @@ import {useStores} from 'state/index'
 import {ActivityIndicator} from 'react-native'
 import {TagInputEntryButton} from './TagInputEntryButton'
 import {uniq} from 'lib/strings/helpers'
-import {sanitizeHashtag, sanitizeHashtagOnChange} from './util'
+import {sanitizeHashtagOnChange} from './util'
 
 export function TagInput({
   max = 8,
