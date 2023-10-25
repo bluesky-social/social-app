@@ -77,6 +77,8 @@ export function Component({}: {}) {
           keyboardAppearance={theme.colorScheme}
           value={email}
           onChangeText={setEmail}
+          onSubmitEditing={onPressSignup}
+          enterKeyHint="done"
           accessible={true}
           accessibilityLabel="Email"
           accessibilityHint="Input your email to get on the Bluesky waitlist"
