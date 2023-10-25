@@ -27,7 +27,11 @@ interface BaseUserAvatarProps {
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
-  onSelectNewAvatar?: (img: RNImage | null) => void
+  onSelectNewAvatar?: (img: RNImage | null) => void // TODO: Remove.
+}
+
+interface EditableUserAvatarProps extends BaseUserAvatarProps {
+  onSelectNewAvatar?: (img: RNImage | null) => void // TODO: Make required.
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
@@ -282,7 +286,7 @@ export function EditableUserAvatar({
   avatar,
   moderation,
   onSelectNewAvatar,
-}: UserAvatarProps) {
+}: EditableUserAvatarProps) {
   const store = useStores()
   const pal = usePalette('default')
   const {requestCameraAccessIfNeeded} = useCameraPermission()
