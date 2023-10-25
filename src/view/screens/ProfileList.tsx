@@ -1,27 +1,31 @@
-import React from 'react'
-import {ActivityIndicator, FlatList, Pressable, View} from 'react-native'
+import React, {useCallback, useMemo} from 'react'
+import {ActivityIndicator, Pressable, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
+import {AppBskyGraphDefs, AppBskyActorDefs} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {
-  ProfileScreenHeader,
-  ProfileScreenHeaderBtn,
-} from 'view/com/profile-screen/ProfileScreenHeader'
-import {ProfileScreenFeedPage} from 'view/com/profile-screen/ProfileScreenFeedPage'
+import {TabsContainer, Tab, TabsContainerHandle} from 'view/com/tabs/Tabs'
+import {ProfileScreenHeaderBtn} from 'view/com/profile-screen/types'
+import {ProfileScreenFullHeader} from 'view/com/profile-screen/FullHeader'
 import {Text} from 'view/com/util/text/Text'
 import {DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
-import {ListItems} from 'view/com/lists/ListItems'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {RichText} from 'view/com/util/text/RichText'
-import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from 'view/com/pager/TabBar'
 import {Button} from 'view/com/util/forms/Button'
 import {TextLink} from 'view/com/util/Link'
 import * as Toast from 'view/com/util/Toast'
+import {FeedSlice} from 'view/com/posts/FeedSlice'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {
+  PostFeedLoadingPlaceholder,
+  ProfileCardFeedLoadingPlaceholder,
+} from 'view/com/util/LoadingPlaceholder'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {FAB} from 'view/com/util/fab/FAB'
 import {Haptics} from 'lib/haptics'
 import {ListModel} from 'state/models/content/list'
 import {PostsFeedModel} from 'state/models/feeds/posts'
@@ -29,13 +33,15 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {resolveName} from 'lib/api'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {ComposeIcon2} from 'lib/icons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
@@ -49,7 +55,7 @@ export const ProfileListScreen = withAuthRequired(
     const [listOwnerDid, setListOwnerDid] = React.useState<string | undefined>()
     const [error, setError] = React.useState<string | undefined>()
 
-    const onPressBack = React.useCallback(() => {
+    const onPressBack = useCallback(() => {
       if (navigation.canGoBack()) {
         navigation.goBack()
       } else {
@@ -134,17 +140,20 @@ export const ProfileListScreenInner = observer(
     const navigation = useNavigation<NavigationProp>()
     const pal = usePalette('default')
     const palInverted = usePalette('inverted')
-    const {rkey, view: viewMode} = route.params
-    const minimalMode = viewMode === 'simple'
+    const {isMobile} = useWebMediaQueries()
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
+    const tabsContainerRef = React.useRef<TabsContainerHandle>(null)
+    const {rkey} = route.params
 
-    const list: ListModel = React.useMemo(() => {
+    const list: ListModel = useMemo(() => {
       const model = new ListModel(
         store,
         `at://${listOwnerDid}/app.bsky.graph.list/${rkey}`,
       )
       return model
     }, [store, listOwnerDid, rkey])
-    const feed = React.useMemo(
+    const feed = useMemo(
       () => new PostsFeedModel(store, 'list', {list: list.uri}),
       [store, list],
     )
@@ -154,7 +163,7 @@ export const ProfileListScreenInner = observer(
     // =
 
     useFocusEffect(
-      React.useCallback(() => {
+      useCallback(() => {
         store.shell.setMinimalShellMode(false)
         list.loadMore(true).then(() => {
           if (list.isCuratelist) {
@@ -167,7 +176,12 @@ export const ProfileListScreenInner = observer(
     // events
     // =
 
-    /*const onToggleSubscribed = React.useCallback(async () => {
+    const onScrollToTop = useCallback(() => {
+      tabsContainerRef.current?.scrollToTop()
+      resetMainScroll()
+    }, [tabsContainerRef, resetMainScroll])
+
+    /*const onToggleSubscribed = useCallback(async () => {
       try {
         if (list.data?.viewer?.muted) {
           await list.unsubscribe()
@@ -182,7 +196,7 @@ export const ProfileListScreenInner = observer(
       }
     }, [store, list])*/
 
-    const onPressEdit = React.useCallback(() => {
+    const onPressEdit = useCallback(() => {
       store.shell.openModal({
         name: 'create-or-edit-list',
         list,
@@ -192,7 +206,7 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list])
 
-    const onPressDelete = React.useCallback(() => {
+    const onPressDelete = useCallback(() => {
       store.shell.openModal({
         name: 'confirm',
         title: 'Delete List',
@@ -208,7 +222,7 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list, navigation])
 
-    const onTogglePinned = React.useCallback(async () => {
+    const onTogglePinned = useCallback(async () => {
       Haptics.default()
       list.togglePin().catch(e => {
         Toast.show('There was an issue contacting the server')
@@ -216,7 +230,7 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list])
 
-    const onPressReport = React.useCallback(() => {
+    const onPressReport = useCallback(() => {
       if (!list.data) return
       store.shell.openModal({
         name: 'report',
@@ -225,12 +239,12 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list])
 
-    const onPressShare = React.useCallback(() => {
+    const onPressShare = useCallback(() => {
       const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
       shareUrl(url)
     }, [list.creatorDid, rkey])
 
-    const onPressAddUser = React.useCallback(() => {
+    const onPressAddUser = useCallback(() => {
       store.shell.openModal({
         name: 'list-add-user',
         list,
@@ -242,14 +256,38 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list, feed])
 
-    const onPressSelectedTab = React.useCallback(() => {
-      store.emitScreenSoftReset()
-    }, [store])
+    const onPressEditMembership = useCallback(
+      (profile: AppBskyActorDefs.ProfileViewBasic) => {
+        store.shell.openModal({
+          name: 'user-add-remove-lists',
+          subject: profile.did,
+          displayName: profile.displayName || profile.handle,
+          onAdd(listUri: string) {
+            if (listUri === list.uri) {
+              list.cacheAddMember(profile)
+            }
+          },
+          onRemove(listUri: string) {
+            if (listUri === list.uri) {
+              list.cacheRemoveMember(profile)
+            }
+          },
+        })
+      },
+      [store, list],
+    )
+
+    const onPostsRefresh = useCallback(() => feed.refresh(), [feed])
+    const onPostsEndReached = useCallback(() => feed.loadMore(), [feed])
+    const onPostsRetryLoadMore = useCallback(() => feed.retryLoadMore(), [feed])
+    const onAboutRefresh = useCallback(() => list.refresh(), [list])
+    const onAboutEndReached = useCallback(() => list.loadMore(), [list])
+    const onAboutRetryLoadMore = useCallback(() => list.retryLoadMore(), [list])
 
     // render
     // =
 
-    const headerBtns: ProfileScreenHeaderBtn[] = React.useMemo(() => {
+    const headerBtns: ProfileScreenHeaderBtn[] = useMemo(() => {
       if (!list.hasLoaded) {
         return []
       }
@@ -265,14 +303,9 @@ export const ProfileListScreenInner = observer(
       })
       if (list.isCuratelist) {
         items.push({
-          icon: {
-            icon: 'thumb-tack',
-            size: 14,
-            color: list.isPinned ? colors.blue3 : pal.colors.text,
-          },
-          accessibilityLabel: list.isPinned
-            ? 'Unpin this list'
-            : 'Pin this list',
+          inverted: !list.isPinned,
+          label: list.isPinned ? 'Unpin from home' : 'Pin to home',
+          accessibilityLabel: list.isPinned ? 'Unpin from home' : 'Pin to home',
           onPress: onTogglePinned,
         })
       } else if (list.isModlist) {
@@ -336,7 +369,7 @@ export const ProfileListScreenInner = observer(
       onTogglePinned,
     ])
 
-    const dropdownItems: DropdownItem[] = React.useMemo(() => {
+    const dropdownItems: DropdownItem[] = useMemo(() => {
       if (!list.hasLoaded) {
         return []
       }
@@ -405,173 +438,154 @@ export const ProfileListScreenInner = observer(
       onPressReport,
     ])
 
-    const renderTabBar = React.useCallback(
-      (props: RenderTabBarFnProps) => {
-        return (
-          <CenteredView sideBorders>
-            <TabBar
-              {...props}
-              items={list.isCuratelist ? ['Posts', 'About'] : ['About']}
-              indicatorColor={pal.colors.link}
-              onPressSelected={onPressSelectedTab}
-            />
-          </CenteredView>
-        )
-      },
-      [list.isCuratelist, onPressSelectedTab, pal.colors.link],
+    const renderHeader = useCallback(() => {
+      const info = list.data
+        ? {
+            href: '', // TODO
+            title: list.data.name,
+            avatar: list.data.avatar,
+            isOwner: list.isOwner,
+            creator: list.data.creator,
+          }
+        : undefined
+      return (
+        <ProfileScreenFullHeader
+          info={info}
+          avatarType="list"
+          dropdownItems={dropdownItems}
+          buttons={headerBtns}
+        />
+      )
+    }, [list, dropdownItems, headerBtns])
+
+    const renderPostsPlaceholder = useCallback(() => {
+      return <PostFeedLoadingPlaceholder />
+    }, [])
+
+    const renderPostsEmpty = useCallback(() => {
+      return <EmptyState icon="feed" message="This feed is empty!" />
+    }, [])
+
+    const renderPostsItem = useCallback(
+      (item: any) => <FeedSlice slice={item} />,
+      [],
     )
 
-    if (list.isCuratelist) {
-      if (minimalMode) {
-        return (
-          <View style={s.hContentRegion}>
-            <Header
-              list={list}
-              dropdownItems={dropdownItems}
-              headerBtns={headerBtns}
-              minimalMode
-            />
-            <ProfileScreenFeedPage key="1" feed={feed} minimalMode />
-          </View>
-        )
-      }
+    const renderAboutHeader = useCallback(() => {
+      return <AboutSection list={list} onPressAddUser={onPressAddUser} />
+    }, [list, onPressAddUser])
+
+    const renderAboutPlaceholder = useCallback(() => {
+      return <ProfileCardFeedLoadingPlaceholder />
+    }, [])
+
+    const renderAboutEmpty = useCallback(() => {
       return (
-        <View style={s.hContentRegion}>
-          <Header
-            list={list}
-            dropdownItems={dropdownItems}
-            headerBtns={headerBtns}
-          />
-          <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-            <ProfileScreenFeedPage key="1" feed={feed} />
-            <AboutPage key="2" list={list} onPressAddUser={onPressAddUser} />
-          </Pager>
-        </View>
+        <EmptyState
+          icon="users-slash"
+          message="This list is empty!"
+          style={{paddingTop: 40}}
+        />
       )
-    }
+    }, [])
+
+    const renderAboutItemMemberButton = useCallback(
+      (profile: AppBskyActorDefs.ProfileViewBasic) => {
+        return (
+          <Button
+            type="default"
+            label="Edit"
+            onPress={() => onPressEditMembership(profile)}
+          />
+        )
+      },
+      [onPressEditMembership],
+    )
+
+    const renderAboutItem = useCallback(
+      (item: any) => (
+        <ProfileCard
+          testID={`user-${
+            (item as AppBskyGraphDefs.ListItemView).subject.handle
+          }`}
+          profile={(item as AppBskyGraphDefs.ListItemView).subject}
+          renderButton={renderAboutItemMemberButton}
+          style={{paddingHorizontal: isMobile ? 8 : 14, paddingVertical: 4}}
+        />
+      ),
+      [renderAboutItemMemberButton, isMobile],
+    )
+
     return (
       <View style={s.hContentRegion}>
-        <Header
-          list={list}
-          dropdownItems={dropdownItems}
-          headerBtns={headerBtns}
-          minimalMode={minimalMode}
+        <TabsContainer
+          ref={tabsContainerRef}
+          renderHeader={renderHeader}
+          onSelectTab={onScrollToTop}
+          onScroll={onMainScroll}>
+          {list.isCuratelist ? (
+            <Tab
+              name="Posts"
+              items={feed.slices}
+              isLoading={feed.isLoading}
+              hasLoaded={feed.hasLoaded}
+              isRefreshing={feed.isRefreshing}
+              isEmpty={feed.isEmpty}
+              hasMore={feed.hasMore}
+              error={feed.error}
+              loadMoreError={feed.loadMoreError}
+              renderItem={renderPostsItem}
+              renderPlaceholder={renderPostsPlaceholder}
+              renderEmpty={renderPostsEmpty}
+              onRefresh={onPostsRefresh}
+              onEndReached={onPostsEndReached}
+              onRetryLoadMore={onPostsRetryLoadMore}
+            />
+          ) : null}
+          <Tab
+            name="About"
+            items={list.items}
+            isLoading={list.isLoading}
+            hasLoaded={list.hasLoaded}
+            isRefreshing={list.isRefreshing}
+            isEmpty={list.isEmpty}
+            hasMore={list.hasMore}
+            error={list.error}
+            loadMoreError={list.loadMoreError}
+            renderHeader={renderAboutHeader}
+            renderItem={renderAboutItem}
+            renderPlaceholder={renderAboutPlaceholder}
+            renderEmpty={renderAboutEmpty}
+            onRefresh={onAboutRefresh}
+            onEndReached={onAboutEndReached}
+            onRetryLoadMore={onAboutRetryLoadMore}
+          />
+        </TabsContainer>
+        {isScrolledDown ? (
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label="Scroll to top"
+            showIndicator={false}
+          />
+        ) : null}
+        <FAB
+          testID="composeFAB"
+          onPress={() => store.shell.openComposer({})}
+          icon={
+            <ComposeIcon2
+              strokeWidth={1.5}
+              size={29}
+              style={{color: 'white'}}
+            />
+          }
+          accessibilityRole="button"
+          accessibilityLabel="New post"
+          accessibilityHint=""
         />
-        <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-          <AboutPage key="1" list={list} onPressAddUser={onPressAddUser} />
-        </Pager>
       </View>
     )
   },
 )
-
-const Header = observer(function HeaderImpl({
-  list,
-  dropdownItems,
-  headerBtns,
-  minimalMode,
-}: {
-  list: ListModel
-  dropdownItems: DropdownItem[]
-  headerBtns: ProfileScreenHeaderBtn[]
-  minimalMode?: boolean
-}) {
-  const info = list.data
-    ? {
-        href: '', // TODO
-        title: list.data.name,
-        avatar: list.data.avatar,
-        isOwner: list.isOwner,
-        creator: list.data.creator,
-      }
-    : undefined
-
-  return (
-    <ProfileScreenHeader
-      info={info}
-      objectLabel={list.isCuratelist ? 'User List' : 'Moderation List'}
-      avatarType="list"
-      minimalMode={minimalMode}
-      dropdownItems={dropdownItems}
-      buttons={headerBtns}
-    />
-  )
-})
-
-const AboutPage = observer(function AboutPageImpl({
-  list,
-  onPressAddUser,
-}: {
-  list: ListModel
-  onPressAddUser: () => void
-}) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const scrollElRef = React.useRef<FlatList>(null)
-
-  // events
-  // =
-
-  const onScrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
-  }, [scrollElRef])
-
-  const onSoftReset = React.useCallback(() => {
-    onScrollToTop()
-    list.refresh()
-  }, [onScrollToTop, list])
-
-  // init
-  // =
-
-  React.useEffect(() => {
-    const softResetSub = store.onScreenSoftReset(onSoftReset)
-    return () => {
-      softResetSub.remove()
-    }
-  }, [store, onSoftReset])
-
-  // render
-  // =
-
-  const renderHeader = React.useCallback(() => {
-    return <AboutSection list={list} onPressAddUser={onPressAddUser} />
-  }, [list, onPressAddUser])
-
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <EmptyState
-        icon="users-slash"
-        message="This list is empty!"
-        style={{paddingTop: 40}}
-      />
-    )
-  }, [])
-
-  if (list.error && !list.data) {
-    return <View />
-  }
-  if (!list.data) {
-    return (
-      <CenteredView
-        sideBorders
-        style={[{borderTopWidth: 1, padding: 12}, pal.border]}>
-        <ActivityIndicator />
-      </CenteredView>
-    )
-  }
-
-  return (
-    <ListItems
-      scrollElRef={scrollElRef}
-      list={list}
-      renderHeader={renderHeader}
-      renderEmptyState={renderEmptyState}
-      style={s.flex1}
-      desktopFixedHeightOffset={120}
-    />
-  )
-})
 
 function AboutSection({
   list,
@@ -586,7 +600,7 @@ function AboutSection({
     return <View />
   }
   return (
-    <>
+    <View>
       <View
         style={[
           {
@@ -627,11 +641,9 @@ function AboutSection({
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderTopWidth: 1,
             paddingHorizontal: isMobile ? 14 : 20,
-            paddingVertical: isMobile ? 14 : 18,
+            paddingBottom: isMobile ? 14 : 18,
           },
-          pal.border,
         ]}>
         <Text type="lg-bold">Users</Text>
         {list.isOwner && (
@@ -650,6 +662,6 @@ function AboutSection({
           </Pressable>
         )}
       </View>
-    </>
+    </View>
   )
 }

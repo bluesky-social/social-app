@@ -158,6 +158,7 @@
     "sentry-expo": "~7.0.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "use-deep-compare": "^1.1.0",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },

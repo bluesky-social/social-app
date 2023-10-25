@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useMemo, useCallback} from 'react'
 import {StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
@@ -11,21 +11,23 @@ import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {FeedSourceModel} from 'state/models/content/feed-source'
 import {PostsFeedModel} from 'state/models/feeds/posts'
-import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
+import {TabsContainer, Tab, TabsContainerHandle} from 'view/com/tabs/Tabs'
+import {ProfileScreenHeaderBtn} from 'view/com/profile-screen/types'
+import {ProfileScreenFullHeader} from 'view/com/profile-screen/FullHeader'
 import {TextLink} from 'view/com/util/Link'
-import {
-  ProfileScreenHeader,
-  ProfileScreenHeaderBtn,
-} from 'view/com/profile-screen/ProfileScreenHeader'
-import {ProfileScreenFeedPage} from 'view/com/profile-screen/ProfileScreenFeedPage'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import {RichText} from 'view/com/util/text/RichText'
-import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from 'view/com/pager/TabBar'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {FAB} from 'view/com/util/fab/FAB'
+import {PostFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {FeedSlice} from 'view/com/posts/FeedSlice'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useCustomFeed} from 'lib/hooks/useCustomFeed'
+import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -36,9 +38,9 @@ import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
-import {isNative} from 'platform/detection'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {ComposeIcon2} from 'lib/icons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export const ProfileFeedScreen = withAuthRequired(
@@ -125,27 +127,33 @@ export const ProfileFeedScreenInner = observer(
   }: Props & {feedOwnerDid: string}) {
     const pal = usePalette('default')
     const store = useStores()
-    const navigation = useNavigation<NavigationProp>()
     const {track} = useAnalytics()
-    const {rkey, name: handleOrDid, view: viewMode} = route.params
-    const minimalMode = viewMode === 'simple'
+    const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
       () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
       [rkey, feedOwnerDid],
     )
     const feedInfo = useCustomFeed(uri)
-    const algoFeed: PostsFeedModel = useMemo(() => {
-      const feed = new PostsFeedModel(store, 'custom', {
+    const feed: PostsFeedModel = useMemo(() => {
+      const model = new PostsFeedModel(store, 'custom', {
         feed: uri,
       })
-      feed.setup()
-      return feed
+      model.setup()
+      return model
     }, [store, uri])
+    const [onMainScroll, isScrolledDown, resetMainScroll] =
+      useOnMainScroll(store)
+    const tabsContainerRef = React.useRef<TabsContainerHandle>(null)
     const isPinned = store.preferences.isPinnedFeed(uri)
     useSetTitle(feedInfo?.displayName)
 
     // events
     // =
+
+    const onScrollToTop = useCallback(() => {
+      tabsContainerRef.current?.scrollToTop()
+      resetMainScroll()
+    }, [tabsContainerRef, resetMainScroll])
 
     const onToggleSaved = React.useCallback(async () => {
       try {
@@ -189,10 +197,6 @@ export const ProfileFeedScreenInner = observer(
       }
     }, [store, feedInfo])
 
-    const onPressViewFeedPage = React.useCallback(() => {
-      navigation.push('ProfileFeed', {name: handleOrDid, rkey})
-    }, [handleOrDid, rkey, navigation])
-
     const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)
       shareUrl(url)
@@ -208,27 +212,12 @@ export const ProfileFeedScreenInner = observer(
       })
     }, [store, feedInfo])
 
-    const onPressSelectedTab = React.useCallback(() => {
-      store.emitScreenSoftReset()
-    }, [store])
+    const onPostsRefresh = useCallback(() => feed.refresh(), [feed])
+    const onPostsEndReached = useCallback(() => feed.loadMore(), [feed])
+    const onPostsRetryLoadMore = useCallback(() => feed.retryLoadMore(), [feed])
 
     // render
     // =
-
-    const renderTabBar = React.useCallback(
-      (props: RenderTabBarFnProps) => {
-        return (
-          <CenteredView sideBorders>
-            <TabBar
-              {...props}
-              items={['Posts', 'About']}
-              onPressSelected={onPressSelectedTab}
-            />
-          </CenteredView>
-        )
-      },
-      [onPressSelectedTab],
-    )
 
     const headerBtns: ProfileScreenHeaderBtn[] = React.useMemo(() => {
       let items: ProfileScreenHeaderBtn[] = []
@@ -261,20 +250,6 @@ export const ProfileFeedScreenInner = observer(
 
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       return [
-        minimalMode
-          ? {
-              testID: 'feedHeaderDropdownViewFeedBtn',
-              label: 'View feed page',
-              onPress: onPressViewFeedPage,
-              icon: {
-                ios: {
-                  name: 'info.circle',
-                },
-                android: '',
-                web: 'info',
-              },
-            }
-          : undefined,
         {
           testID: 'feedHeaderDropdownToggleSavedBtn',
           label: feedInfo?.isSaved ? 'Remove from my feeds' : 'Add to my feeds',
@@ -319,94 +294,129 @@ export const ProfileFeedScreenInner = observer(
             web: 'share',
           },
         },
-      ].filter(Boolean) as DropdownItem[]
-    }, [
-      feedInfo,
-      minimalMode,
-      onPressViewFeedPage,
-      onToggleSaved,
-      onPressReport,
-      onPressShare,
-    ])
+      ] as DropdownItem[]
+    }, [feedInfo, onToggleSaved, onPressReport, onPressShare])
 
-    if (minimalMode) {
+    const renderHeader = useCallback(() => {
+      const info = feedInfo
+        ? {
+            href: makeCustomFeedLink(feedOwnerDid, rkey),
+            title: feedInfo.displayName,
+            avatar: feedInfo.avatar,
+            isOwner: feedInfo.isOwner,
+            creator: {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle},
+          }
+        : undefined
       return (
-        <View style={s.hContentRegion}>
-          <Header
-            feedOwnerDid={feedOwnerDid}
-            feedRkey={rkey}
-            feedInfo={feedInfo}
-            dropdownItems={dropdownItems}
-            headerBtns={headerBtns}
-            minimalMode
-          />
-          <ProfileScreenFeedPage feed={algoFeed} minimalMode />
-        </View>
+        <ProfileScreenFullHeader
+          info={info}
+          avatarType="algo"
+          dropdownItems={dropdownItems}
+          buttons={headerBtns}
+        />
       )
-    }
-    return (
-      <View style={s.hContentRegion}>
-        <Header
+    }, [feedOwnerDid, rkey, feedInfo, dropdownItems, headerBtns])
+
+    const renderPostsPlaceholder = useCallback(() => {
+      return <PostFeedLoadingPlaceholder />
+    }, [])
+
+    const renderPostsEmpty = useCallback(() => {
+      return <EmptyState icon="feed" message="This feed is empty!" />
+    }, [])
+
+    const renderPostsItem = useCallback(
+      (item: any) => <FeedSlice slice={item} />,
+      [],
+    )
+
+    const renderAboutHeader = useCallback(() => {
+      return (
+        <AboutSection
           feedOwnerDid={feedOwnerDid}
           feedRkey={rkey}
           feedInfo={feedInfo}
-          dropdownItems={dropdownItems}
-          headerBtns={headerBtns}
-          minimalMode={false}
+          onToggleLiked={onToggleLiked}
         />
-        <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-          <ProfileScreenFeedPage key="1" feed={algoFeed} />
-          <AboutPage
-            key="2"
-            feedOwnerDid={feedOwnerDid}
-            feedRkey={rkey}
-            feedInfo={feedInfo}
-            onToggleLiked={onToggleLiked}
+      )
+    }, [feedOwnerDid, rkey, feedInfo, onToggleLiked])
+
+    return (
+      <View style={s.hContentRegion}>
+        <TabsContainer
+          ref={tabsContainerRef}
+          renderHeader={renderHeader}
+          onSelectTab={onScrollToTop}
+          onScroll={onMainScroll}>
+          <Tab
+            name="Posts"
+            items={feed.slices}
+            isLoading={feed.isLoading}
+            hasLoaded={feed.hasLoaded}
+            isRefreshing={feed.isRefreshing}
+            isEmpty={feed.isEmpty}
+            hasMore={feed.hasMore}
+            error={feed.error}
+            loadMoreError={feed.loadMoreError}
+            renderItem={renderPostsItem}
+            renderPlaceholder={renderPostsPlaceholder}
+            renderEmpty={renderPostsEmpty}
+            onRefresh={onPostsRefresh}
+            onEndReached={onPostsEndReached}
+            onRetryLoadMore={onPostsRetryLoadMore}
           />
-        </Pager>
+          <Tab name="About" renderHeader={renderAboutHeader} />
+        </TabsContainer>
+        {isScrolledDown ? (
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label="Scroll to top"
+            showIndicator={false}
+          />
+        ) : null}
+        <FAB
+          testID="composeFAB"
+          onPress={() => store.shell.openComposer({})}
+          icon={
+            <ComposeIcon2
+              strokeWidth={1.5}
+              size={29}
+              style={{color: 'white'}}
+            />
+          }
+          accessibilityRole="button"
+          accessibilityLabel="New post"
+          accessibilityHint=""
+        />
       </View>
     )
+
+    // return (
+    //   <View style={s.hContentRegion}>
+    //     <Header
+    //       feedOwnerDid={feedOwnerDid}
+    //       feedRkey={rkey}
+    //       feedInfo={feedInfo}
+    //       dropdownItems={dropdownItems}
+    //       headerBtns={headerBtns}
+    //       minimalMode={false}
+    //     />
+    //     <Pager renderTabBar={renderTabBar} tabBarPosition="top">
+    //       <ProfileScreenFeedPage key="1" feed={algoFeed} />
+    //       <AboutPage
+    //         key="2"
+    //         feedOwnerDid={feedOwnerDid}
+    //         feedRkey={rkey}
+    //         feedInfo={feedInfo}
+    //         onToggleLiked={onToggleLiked}
+    //       />
+    //     </Pager>
+    //   </View>
+    // )
   },
 )
 
-const Header = observer(function HeaderImpl({
-  feedOwnerDid,
-  feedRkey,
-  feedInfo,
-  dropdownItems,
-  headerBtns,
-  minimalMode,
-}: {
-  feedOwnerDid: string
-  feedRkey: string
-  feedInfo: FeedSourceModel | undefined
-  dropdownItems: DropdownItem[]
-  headerBtns: ProfileScreenHeaderBtn[]
-  minimalMode: boolean
-}) {
-  const info = feedInfo
-    ? {
-        href: makeCustomFeedLink(feedOwnerDid, feedRkey),
-        title: feedInfo.displayName,
-        avatar: feedInfo.avatar,
-        isOwner: feedInfo.isOwner,
-        creator: {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle},
-      }
-    : undefined
-
-  return (
-    <ProfileScreenHeader
-      info={info}
-      objectLabel="Feed"
-      avatarType="algo"
-      minimalMode={minimalMode}
-      dropdownItems={dropdownItems}
-      buttons={headerBtns}
-    />
-  )
-})
-
-const AboutPage = observer(function AboutPageImpl({
+const AboutSection = observer(function AboutPageImpl({
   feedOwnerDid,
   feedRkey,
   feedInfo,
@@ -423,104 +433,75 @@ const AboutPage = observer(function AboutPageImpl({
     return <View />
   }
   return (
-    <CenteredView
-      sideBorders
+    <View
       style={[
-        // @ts-ignore web only -prf
-        !isNative && {minHeight: '100vh'},
+        {
+          borderTopWidth: 1,
+          paddingVertical: 20,
+          paddingHorizontal: 20,
+          gap: 12,
+        },
+        pal.border,
       ]}>
-      <View
-        style={[
-          {
-            borderTopWidth: 1,
-            paddingVertical: 20,
-            paddingHorizontal: 20,
-            gap: 12,
-          },
-          pal.border,
-        ]}>
-        {feedInfo.descriptionRT ? (
-          <RichText
-            testID="listDescription"
-            type="lg"
-            style={pal.text}
-            richText={feedInfo.descriptionRT}
-          />
-        ) : (
-          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-            No description
-          </Text>
-        )}
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-          <Button
-            type="default"
-            testID="toggleLikeBtn"
-            accessibilityLabel="Like this feed"
-            accessibilityHint=""
-            onPress={onToggleLiked}
-            style={{paddingHorizontal: 10}}>
-            {feedInfo?.isLiked ? (
-              <HeartIconSolid size={19} style={styles.liked} />
-            ) : (
-              <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
-            )}
-          </Button>
-          {typeof feedInfo.likeCount === 'number' && (
-            <TextLink
-              href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-              text={`Liked by ${feedInfo.likeCount} ${pluralize(
-                feedInfo.likeCount,
-                'user',
-              )}`}
-              style={[pal.textLight, s.semiBold]}
-            />
-          )}
-        </View>
-        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          Created by{' '}
-          {feedInfo.isOwner ? (
-            'you'
-          ) : (
-            <TextLink
-              text={sanitizeHandle(feedInfo.creatorHandle, '@')}
-              href={makeProfileLink({
-                did: feedInfo.creatorDid,
-                handle: feedInfo.creatorHandle,
-              })}
-              style={pal.textLight}
-            />
-          )}
+      {feedInfo.descriptionRT ? (
+        <RichText
+          testID="listDescription"
+          type="lg"
+          style={pal.text}
+          richText={feedInfo.descriptionRT}
+        />
+      ) : (
+        <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+          No description
         </Text>
+      )}
+      <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+        <Button
+          type="default"
+          testID="toggleLikeBtn"
+          accessibilityLabel="Like this feed"
+          accessibilityHint=""
+          onPress={onToggleLiked}
+          style={{paddingHorizontal: 10}}>
+          {feedInfo?.isLiked ? (
+            <HeartIconSolid size={19} style={styles.liked} />
+          ) : (
+            <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
+          )}
+        </Button>
+        {typeof feedInfo.likeCount === 'number' && (
+          <TextLink
+            href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
+            text={`Liked by ${feedInfo.likeCount} ${pluralize(
+              feedInfo.likeCount,
+              'user',
+            )}`}
+            style={[pal.textLight, s.semiBold]}
+          />
+        )}
       </View>
-    </CenteredView>
+      <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+        Created by{' '}
+        {feedInfo.isOwner ? (
+          'you'
+        ) : (
+          <TextLink
+            text={sanitizeHandle(feedInfo.creatorHandle, '@')}
+            href={makeProfileLink({
+              did: feedInfo.creatorDid,
+              handle: feedInfo.creatorHandle,
+            })}
+            style={pal.textLight}
+          />
+        )}
+      </Text>
+    </View>
   )
 })
 
 const styles = StyleSheet.create({
-  headerText: {
-    flex: 1,
-    fontWeight: 'bold',
-  },
-  headerBtn: {
-    paddingVertical: 0,
-  },
-  headerAddBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: 4,
-    paddingLeft: 10,
-  },
   liked: {
     color: colors.red3,
-  },
-  top1: {
-    position: 'relative',
-    top: 1,
-  },
-  top2: {
-    position: 'relative',
-    top: 2,
   },
   notFoundContainer: {
     margin: 10,
