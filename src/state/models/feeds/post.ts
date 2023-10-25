@@ -116,6 +116,7 @@ export class PostsFeedItemModel {
           },
           () => this.rootStore.agent.deleteLike(url),
         )
+        track('Post:Unlike')
       } else {
         // like
         await updateDataOptimistically(
@@ -129,11 +130,10 @@ export class PostsFeedItemModel {
             this.post.viewer!.like = res.uri
           },
         )
+        track('Post:Like')
       }
     } catch (error) {
       this.rootStore.log.error('Failed to toggle like', error)
-    } finally {
-      track(this.post.viewer.like ? 'Post:Unlike' : 'Post:Like')
     }
   }
 
@@ -141,6 +141,7 @@ export class PostsFeedItemModel {
     this.post.viewer = this.post.viewer || {}
     try {
       if (this.post.viewer?.repost) {
+        // unrepost
         const url = this.post.viewer.repost
         await updateDataOptimistically(
           this.post,
@@ -150,7 +151,9 @@ export class PostsFeedItemModel {
           },
           () => this.rootStore.agent.deleteRepost(url),
         )
+        track('Post:Unrepost')
       } else {
+        // repost
         await updateDataOptimistically(
           this.post,
           () => {
@@ -162,11 +165,10 @@ export class PostsFeedItemModel {
             this.post.viewer!.repost = res.uri
           },
         )
+        track('Post:Repost')
       }
     } catch (error) {
       this.rootStore.log.error('Failed to toggle repost', error)
-    } finally {
-      track(this.post.viewer.repost ? 'Post:Unrepost' : 'Post:Repost')
     }
   }
 
@@ -174,13 +176,13 @@ export class PostsFeedItemModel {
     try {
       if (this.isThreadMuted) {
         this.rootStore.mutedThreads.uris.delete(this.rootUri)
+        track('Post:ThreadUnmute')
       } else {
         this.rootStore.mutedThreads.uris.add(this.rootUri)
+        track('Post:ThreadMute')
       }
     } catch (error) {
       this.rootStore.log.error('Failed to toggle thread mute', error)
-    } finally {
-      track(this.isThreadMuted ? 'Post:ThreadUnmute' : 'Post:ThreadMute')
     }
   }
 
