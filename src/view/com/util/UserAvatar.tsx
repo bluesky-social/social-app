@@ -23,18 +23,19 @@ interface BaseUserAvatarProps {
   type?: Type
   size: number
   avatar?: string | null
-  moderation?: ModerationUI
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
+  moderation?: ModerationUI
   onSelectNewAvatar?: (img: RNImage | null) => void // TODO: Remove.
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
-  onSelectNewAvatar?: (img: RNImage | null) => void // TODO: Make required.
+  onSelectNewAvatar: (img: RNImage | null) => void
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
+  moderation?: ModerationUI
   did: string
   handle: string
 }
@@ -284,7 +285,6 @@ export function EditableUserAvatar({
   type = 'user',
   size,
   avatar,
-  moderation,
   onSelectNewAvatar,
 }: EditableUserAvatarProps) {
   const store = useStores()
@@ -325,7 +325,7 @@ export function EditableUserAvatar({
               return
             }
 
-            onSelectNewAvatar?.(
+            onSelectNewAvatar(
               await openCamera(store, {
                 width: 1000,
                 height: 1000,
@@ -365,7 +365,7 @@ export function EditableUserAvatar({
               path: item.path,
             })
 
-            onSelectNewAvatar?.(croppedImage)
+            onSelectNewAvatar(croppedImage)
           },
         },
         !!avatar && {
@@ -382,7 +382,7 @@ export function EditableUserAvatar({
             web: 'trash',
           },
           onPress: async () => {
-            onSelectNewAvatar?.(null)
+            onSelectNewAvatar(null)
           },
         },
       ].filter(Boolean) as DropdownItem[],
@@ -395,23 +395,7 @@ export function EditableUserAvatar({
     ],
   )
 
-  const alert = useMemo(() => {
-    if (!moderation?.alert) {
-      return null
-    }
-    return (
-      <View style={[styles.alertIconContainer, pal.view]}>
-        <FontAwesomeIcon
-          icon="exclamation-circle"
-          style={styles.alertIcon}
-          size={Math.floor(size / 3)}
-        />
-      </View>
-    )
-  }, [moderation?.alert, size, pal])
-
-  // onSelectNewAvatar is only passed as prop on the EditProfile component
-  return onSelectNewAvatar ? (
+  return (
     <NativeDropdown
       testID="changeAvatarBtn"
       items={dropdownItems}
@@ -435,23 +419,6 @@ export function EditableUserAvatar({
         />
       </View>
     </NativeDropdown>
-  ) : avatar &&
-    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
-      <HighPriorityImage
-        testID="userAvatarImage"
-        style={aviStyle}
-        contentFit="cover"
-        source={{uri: avatar}}
-        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-      />
-      {alert}
-    </View>
-  ) : (
-    <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} size={size} />
-      {alert}
-    </View>
   )
 }
 
