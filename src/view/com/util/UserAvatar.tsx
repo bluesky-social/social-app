@@ -23,14 +23,18 @@ interface BaseUserAvatarProps {
   type?: Type
   size: number
   avatar?: string | null
-  moderation?: ModerationUI
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
-  onSelectNewAvatar?: (img: RNImage | null) => void
+  moderation?: ModerationUI
+}
+
+interface EditableUserAvatarProps extends BaseUserAvatarProps {
+  onSelectNewAvatar: (img: RNImage | null) => void
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
+  moderation?: ModerationUI
   did: string
   handle: string
 }
@@ -106,8 +110,65 @@ export function UserAvatar({
   size,
   avatar,
   moderation,
-  onSelectNewAvatar,
 }: UserAvatarProps) {
+  const pal = usePalette('default')
+
+  const aviStyle = useMemo(() => {
+    if (type === 'algo' || type === 'list') {
+      return {
+        width: size,
+        height: size,
+        borderRadius: size > 32 ? 8 : 3,
+      }
+    }
+    return {
+      width: size,
+      height: size,
+      borderRadius: Math.floor(size / 2),
+    }
+  }, [type, size])
+
+  const alert = useMemo(() => {
+    if (!moderation?.alert) {
+      return null
+    }
+    return (
+      <View style={[styles.alertIconContainer, pal.view]}>
+        <FontAwesomeIcon
+          icon="exclamation-circle"
+          style={styles.alertIcon}
+          size={Math.floor(size / 3)}
+        />
+      </View>
+    )
+  }, [moderation?.alert, size, pal])
+
+  return avatar &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
+    <View style={{width: size, height: size}}>
+      <HighPriorityImage
+        testID="userAvatarImage"
+        style={aviStyle}
+        contentFit="cover"
+        source={{uri: avatar}}
+        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+      />
+      {alert}
+    </View>
+  ) : (
+    <View style={{width: size, height: size}}>
+      <DefaultAvatar type={type} size={size} />
+      {alert}
+    </View>
+  )
+}
+
+export function EditableUserAvatar({
+  type = 'user',
+  size,
+  avatar,
+  onSelectNewAvatar,
+}: EditableUserAvatarProps) {
   const store = useStores()
   const pal = usePalette('default')
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -146,7 +207,7 @@ export function UserAvatar({
               return
             }
 
-            onSelectNewAvatar?.(
+            onSelectNewAvatar(
               await openCamera(store, {
                 width: 1000,
                 height: 1000,
@@ -186,7 +247,7 @@ export function UserAvatar({
               path: item.path,
             })
 
-            onSelectNewAvatar?.(croppedImage)
+            onSelectNewAvatar(croppedImage)
           },
         },
         !!avatar && {
@@ -203,7 +264,7 @@ export function UserAvatar({
             web: 'trash',
           },
           onPress: async () => {
-            onSelectNewAvatar?.(null)
+            onSelectNewAvatar(null)
           },
         },
       ].filter(Boolean) as DropdownItem[],
@@ -216,23 +277,7 @@ export function UserAvatar({
     ],
   )
 
-  const alert = useMemo(() => {
-    if (!moderation?.alert) {
-      return null
-    }
-    return (
-      <View style={[styles.alertIconContainer, pal.view]}>
-        <FontAwesomeIcon
-          icon="exclamation-circle"
-          style={styles.alertIcon}
-          size={Math.floor(size / 3)}
-        />
-      </View>
-    )
-  }, [moderation?.alert, size, pal])
-
-  // onSelectNewAvatar is only passed as prop on the EditProfile component
-  return onSelectNewAvatar ? (
+  return (
     <NativeDropdown
       testID="changeAvatarBtn"
       items={dropdownItems}
@@ -256,23 +301,6 @@ export function UserAvatar({
         />
       </View>
     </NativeDropdown>
-  ) : avatar &&
-    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
-      <HighPriorityImage
-        testID="userAvatarImage"
-        style={aviStyle}
-        contentFit="cover"
-        source={{uri: avatar}}
-        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-      />
-      {alert}
-    </View>
-  ) : (
-    <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} size={size} />
-      {alert}
-    </View>
   )
 }
 
