@@ -45,8 +45,8 @@ export function useAnalytics() {
 export function init(store: RootStoreModel) {
   store.onSessionLoaded(() => {
     const sess = store.session.currentSession
-    if (sess && sess.did) {
-      if (sess.email) {
+    if (sess) {
+      if (sess.did) {
         const did_hashed = sha256(sess.did)
         segmentClient.identify(did_hashed, {did_hashed})
         store.log.debug('Ping w/hash')
