@@ -9,6 +9,7 @@ import {TextLink} from 'view/com/util/Link'
 import {CenteredView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {HELP_DESK_URL} from 'lib/constants'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
@@ -29,14 +30,13 @@ export const SupportScreen = (_props: Props) => {
           Support
         </Text>
         <Text style={[pal.text, s.p20]}>
-          If you need help, email us at{' '}
+          The support form has been moved. If you need help, please
           <TextLink
-            href="mailto:support@bsky.app"
-            text="support@bsky.app"
+            href={HELP_DESK_URL}
+            text=" click here"
             style={pal.link}
           />{' '}
-          with a description of your issue and information about how we can help
-          you.
+          or visit {HELP_DESK_URL} to get in touch with us.
         </Text>
       </CenteredView>
     </View>
