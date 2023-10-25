@@ -155,7 +155,7 @@
     "react-native-web-linear-gradient": "^1.1.2",
     "react-responsive": "^9.0.2",
     "rn-fetch-blob": "^0.12.0",
-    "sentry-expo": "~7.0.1",
+    "sentry-expo": "^7.1.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "zeego": "^1.6.2",
