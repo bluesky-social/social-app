@@ -6,8 +6,6 @@ import {isObj, hasProp, isStrArray} from 'lib/type-guards'
 
 /**
  * Used only to persist recent tags across app restarts.
- *
- * TODO may want an LRU?
  */
 export class RecentTagsModel {
   _tags: string[] = []
@@ -21,7 +19,7 @@ export class RecentTagsModel {
   }
 
   add(tag: string) {
-    this._tags = Array.from(new Set([tag, ...this._tags]))
+    this._tags = Array.from(new Set([tag, ...this._tags])).slice(0, 100) // save up to 100 recent tags
   }
 
   remove(tag: string) {
@@ -74,22 +72,31 @@ export class TagsAutocompleteModel {
       return []
     }
 
+    // no query, return default suggestions
+    if (!this.query) {
+      return Array.from(
+        // de-duplicates via Set
+        new Set([
+          // sample 6 recent tags
+          ...this.rootStore.recentTags.tags.slice(0, 6),
+          // sample 3 of your profile tags
+          ...this.profileTags.slice(0, 3),
+        ]),
+      )
+    }
+
+    // we're going to search this list
     const items = Array.from(
       // de-duplicates via Set
       new Set([
-        // sample up to 3 recent tags
-        ...this.rootStore.recentTags.tags.slice(0, 3),
-        // sample up to 3 of your profile tags
-        ...this.profileTags.slice(0, 3),
+        // all recent tags
+        ...this.rootStore.recentTags.tags,
+        // all profile tags
+        ...this.profileTags,
         // and all searched tags
         ...this.searchedTags,
       ]),
     )
-
-    // no query, return default suggestions
-    if (!this.query) {
-      return items.slice(0, 9)
-    }
 
     // Fuse allows weighting values too, if we ever need it
     const fuse = new Fuse(items)
