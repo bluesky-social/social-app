@@ -364,7 +364,13 @@ export const ProfileListScreenInner = observer(
   },
 )
 
-function Header({rkey, list}: {rkey: string; list: ListModel}) {
+const Header = observer(function HeaderImpl({
+  rkey,
+  list,
+}: {
+  rkey: string
+  list: ListModel
+}) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const store = useStores()
@@ -628,7 +634,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
       </NativeDropdown>
     </ProfileSubpageHeader>
   )
-}
+})
 
 function AboutSection({
   list,

@@ -344,7 +344,13 @@ export class ListModel {
         name: this.data?.name || '',
         uri: this.uri,
       })
-      return this.rootStore.preferences.removePinnedFeed(this.uri)
+      // TEMPORARY
+      // lists are temporarily piggybacking on the saved/pinned feeds preferences
+      // we'll eventually replace saved feeds with the bookmarks API
+      // until then, we need to unsave lists instead of just unpin them
+      // -prf
+      // return this.rootStore.preferences.removePinnedFeed(this.uri)
+      return this.rootStore.preferences.removeSavedFeed(this.uri)
     }
   }
 
