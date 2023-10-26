@@ -53,7 +53,6 @@ export const PostThreadItem = observer(function PostThreadItem({
   const [deleted, setDeleted] = React.useState(false)
   const styles = useStyles()
   const record = item.postRecord
-  const hasEngagement = item.post.likeCount || item.post.repostCount
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
@@ -332,25 +331,29 @@ export const PostThreadItem = observer(function PostThreadItem({
               )}
             </ContentHider>
 
-            {AppBskyFeedPost.isRecord(item.post.record) &&
-            item.post.record.tags?.length ? (
-              <View
-                style={[
-                  pal.border,
-                  {
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    gap: 8,
-                    paddingBottom: 12,
-                    marginBottom: 12,
-                    borderBottomWidth: 1,
-                  },
-                ]}>
-                {item.post.record.tags.map(tag => (
-                  <Tag key={tag} value={tag} textSize="md-medium" />
-                ))}
-              </View>
-            ) : null}
+            <View style={[styles.expandedInfo, pal.border]}>
+              {item.post.repostCount ? (
+                <Link href={repostsHref} title={repostsTitle}>
+                  <Text testID="repostCount" type="lg" style={pal.textLight}>
+                    <Text type="xl-bold" style={pal.text}>
+                      {formatCount(item.post.repostCount)}
+                    </Text>{' '}
+                    {pluralize(item.post.repostCount, 'repost')}
+                  </Text>
+                </Link>
+              ) : null}
+              {item.post.likeCount ? (
+                <Link href={likesHref} title={likesTitle}>
+                  <Text testID="likeCount" type="lg" style={pal.textLight}>
+                    <Text type="xl-bold" style={pal.text}>
+                      {formatCount(item.post.likeCount)}
+                    </Text>{' '}
+                    {pluralize(item.post.likeCount, 'like')}
+                  </Text>
+                </Link>
+              ) : null}
+              <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
+            </View>
 
             <ExpandedPostDetails
               post={item.post}
@@ -358,43 +361,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               needsTranslation={needsTranslation}
             />
 
-            {hasEngagement ? (
-              <View style={[styles.expandedInfo, pal.border]}>
-                {item.post.repostCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={repostsHref}
-                    title={repostsTitle}>
-                    <Text testID="repostCount" type="lg" style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(item.post.repostCount)}
-                      </Text>{' '}
-                      {pluralize(item.post.repostCount, 'repost')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-                {item.post.likeCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
-                    <Text testID="likeCount" type="lg" style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(item.post.likeCount)}
-                      </Text>{' '}
-                      {pluralize(item.post.likeCount, 'like')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-              </View>
-            ) : (
-              <></>
-            )}
-            <View style={[s.pb5]}>
+            <View style={{paddingTop: 15, paddingBottom: 5}}>
               <PostCtrls
                 big
                 itemUri={itemUri}
@@ -649,17 +616,37 @@ function ExpandedPostDetails({
   translatorUrl: string
 }) {
   const pal = usePalette('default')
+  const hasTags =
+    AppBskyFeedPost.isRecord(post.record) && post.record.tags?.length
+  if (!hasTags && !needsTranslation) {
+    return null
+  }
   return (
-    <View style={[s.flexRow, s.mt2, s.mb10]}>
-      <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 10,
+        marginBottom: 2,
+        rowGap: 6,
+        columnGap: 8,
+      }}>
       {needsTranslation && (
-        <>
-          <Text style={pal.textLight}> • </Text>
-          <Link href={translatorUrl} title="Translate">
-            <Text style={pal.link}>Translate</Text>
-          </Link>
-        </>
+        <Link href={translatorUrl} title="Translate">
+          <Text style={pal.link}>Translate</Text>
+        </Link>
       )}
+      {hasTags && AppBskyFeedPost.isRecord(post.record)
+        ? post.record.tags!.map(tag => (
+            <Tag
+              key={tag}
+              value={tag}
+              textSize="md"
+              style={pal.textLight}
+              smallSigil
+            />
+          ))
+        : null}
     </View>
   )
 }
@@ -714,7 +701,7 @@ const useStyles = () => {
     },
     postTextLargeContainer: {
       paddingHorizontal: 0,
-      paddingBottom: 10,
+      // paddingBottom: 10,
     },
     translateLink: {
       marginBottom: 6,
@@ -727,14 +714,14 @@ const useStyles = () => {
     },
     expandedInfo: {
       flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'baseline',
+      gap: 12,
       paddingVertical: 10,
+      paddingHorizontal: 2,
       borderTopWidth: 1,
       borderBottomWidth: 1,
       marginTop: 5,
-      marginBottom: 15,
-    },
-    expandedInfoItem: {
-      marginRight: 10,
     },
     loadMore: {
       flexDirection: 'row',

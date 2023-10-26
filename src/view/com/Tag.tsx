@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Pressable} from 'react-native'
+import {StyleSheet, Pressable, StyleProp, TextStyle} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -7,18 +7,25 @@ import {
 
 import {isWeb} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
 import {Text, CustomTextProps} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 
 export function Tag({
   value,
   textSize,
+  smallSigil,
+  style,
 }: {
   value: string
   textSize?: CustomTextProps['type']
+  smallSigil?: boolean
+  style?: StyleProp<TextStyle>
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
   const type = textSize || 'xs-medium'
+  const typeFontSize = theme.typography[type].fontSize || 16
+  const hashtagFontSize = typeFontSize * (smallSigil ? 0.8 : 1)
 
   return (
     <TextLink
@@ -26,8 +33,19 @@ export function Tag({
       text={`#${value}`}
       accessible
       href={`/search?q=${value}`}
-      style={[pal.textLight]}
-    />
+      style={style}>
+      <Text
+        style={[
+          style,
+          {
+            fontSize: hashtagFontSize,
+            fontWeight: '500',
+          },
+        ]}>
+        #
+      </Text>
+      {value}
+    </TextLink>
   )
 }
 

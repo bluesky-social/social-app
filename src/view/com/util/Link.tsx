@@ -148,19 +148,22 @@ export const TextLink = observer(function TextLink({
   title,
   onPress,
   warnOnMismatchingLabel,
+  children,
   ...orgProps
-}: {
-  testID?: string
-  type?: TypographyVariant
-  style?: StyleProp<TextStyle>
-  href: string
-  text: string | JSX.Element | React.ReactNode
-  numberOfLines?: number
-  lineHeight?: number
-  dataSet?: any
-  title?: string
-  warnOnMismatchingLabel?: boolean
-} & TextProps) {
+}: React.PropsWithChildren<
+  {
+    testID?: string
+    type?: TypographyVariant
+    style?: StyleProp<TextStyle>
+    href: string
+    text: string | JSX.Element | React.ReactNode
+    numberOfLines?: number
+    lineHeight?: number
+    dataSet?: any
+    title?: string
+    warnOnMismatchingLabel?: boolean
+  } & TextProps
+>) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
@@ -215,7 +218,7 @@ export const TextLink = observer(function TextLink({
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
       {...props}
       {...orgProps}>
-      {text}
+      {children || text}
     </Text>
   )
 })

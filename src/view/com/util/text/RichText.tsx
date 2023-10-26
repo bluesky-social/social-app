@@ -95,7 +95,15 @@ export function RichText({
         />,
       )
     } else if (tag && AppBskyRichtextFacet.validateTag(tag).success) {
-      els.push(<Tag key={key} value={tag.tag} textSize={type} />)
+      els.push(
+        <Tag
+          key={key}
+          value={tag.tag}
+          textSize={type}
+          style={pal.link}
+          smallSigil
+        />,
+      )
     } else {
       els.push(segment.text)
     }
