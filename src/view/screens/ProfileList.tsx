@@ -488,7 +488,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
         onPress: onPressShare,
         icon: {
           ios: {
-            name: 'square.and.arrow.up', // TODO
+            name: 'square.and.arrow.up',
           },
           android: '',
           web: 'share',
@@ -503,7 +503,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
         onPress: onPressEdit,
         icon: {
           ios: {
-            name: 'exclamationmark.triangle', // TODO
+            name: 'pencil',
           },
           android: '',
           web: 'pen',
@@ -515,7 +515,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
         onPress: onPressDelete,
         icon: {
           ios: {
-            name: 'trash', // TODO
+            name: 'trash',
           },
           android: '',
           web: ['far', 'trash-can'],
@@ -529,7 +529,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
         onPress: onPressReport,
         icon: {
           ios: {
-            name: 'exclamationmark.triangle', // TODO
+            name: 'exclamationmark.triangle',
           },
           android: '',
           web: 'circle-exclamation',
@@ -554,7 +554,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
         onPress: onSubscribeMute,
         icon: {
           ios: {
-            name: 'square.and.arrow.up', // TODO
+            name: 'speaker.slash',
           },
           android: '',
           web: 'user-slash',
@@ -566,7 +566,7 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
         onPress: onSubscribeBlock,
         icon: {
           ios: {
-            name: 'square.and.arrow.up', // TODO
+            name: 'person.fill.xmark',
           },
           android: '',
           web: 'ban',
