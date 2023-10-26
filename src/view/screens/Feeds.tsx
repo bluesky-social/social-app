@@ -264,10 +264,30 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
       accessibilityHint=""
       asAnchor
       anchorNoUnderline>
-      <UserAvatar type="algo" size={28} avatar={feed.avatar} />
-      <Text type="lg-medium" style={[pal.text, s.flex1]} numberOfLines={1}>
-        {feed.displayName}
-      </Text>
+      {feed.error ? (
+        <View
+          style={{width: 28, flexDirection: 'row', justifyContent: 'center'}}>
+          <FontAwesomeIcon
+            icon="exclamation-circle"
+            color={pal.colors.textLight}
+          />
+        </View>
+      ) : (
+        <UserAvatar type="algo" size={28} avatar={feed.avatar} />
+      )}
+      <View
+        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+        <Text type="lg-medium" style={pal.text} numberOfLines={1}>
+          {feed.displayName}
+        </Text>
+        {feed.error && (
+          <View style={[styles.offlineSlug, pal.borderDark]}>
+            <Text type="xs" style={pal.textLight}>
+              Feed offline
+            </Text>
+          </View>
+        )}
+      </View>
       {isMobile && (
         <FontAwesomeIcon
           icon="chevron-right"
@@ -325,5 +345,11 @@ const styles = StyleSheet.create({
   },
   savedFeedMobile: {
     paddingVertical: 10,
+  },
+  offlineSlug: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
 })

@@ -37,7 +37,7 @@ export class FeedSourceModel {
         this.type = 'list'
       }
     } catch {}
-    this.displayName = uri
+    this.displayName = uri.split('/').pop() || ''
 
     makeAutoObservable(
       this,
