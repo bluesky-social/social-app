@@ -39,7 +39,7 @@ import {shareUrl} from 'lib/sharing'
 import {resolveName} from 'lib/api'
 import {s} from 'lib/styles'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
+import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
@@ -594,7 +594,10 @@ const Header = observer(function HeaderImpl({
   return (
     <ProfileSubpageHeader
       isLoading={!list.hasLoaded}
-      href={'' /* TODO*/}
+      href={makeListLink(
+        list.data?.creator.handle || list.data?.creator.did || '',
+        rkey,
+      )}
       title={list.data?.name || 'User list'}
       avatar={list.data?.avatar}
       isOwner={list.isOwner}
