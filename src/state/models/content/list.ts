@@ -353,11 +353,14 @@ export class ListModel {
       return
     }
     await this._resolveUri()
-    await this.rootStore.agent.app.bsky.graph.muteActorList({
-      list: this.data.uri,
-    })
+    await this.rootStore.agent.muteModList(this.data.uri)
     track('Lists:Mute')
-    await this.refresh()
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), muted: true}}
+      }
+    })
   }
 
   async unmute() {
@@ -365,11 +368,14 @@ export class ListModel {
       return
     }
     await this._resolveUri()
-    await this.rootStore.agent.app.bsky.graph.unmuteActorList({
-      list: this.data.uri,
-    })
+    await this.rootStore.agent.unmuteModList(this.data.uri)
     track('Lists:Unmute')
-    await this.refresh()
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), muted: false}}
+      }
+    })
   }
 
   async block() {
@@ -377,15 +383,14 @@ export class ListModel {
       return
     }
     await this._resolveUri()
-    await this.rootStore.agent.app.bsky.graph.listblock.create(
-      {repo: this.rootStore.me.did},
-      {
-        subject: this.data.uri,
-        createdAt: new Date().toISOString(),
-      },
-    )
+    const res = await this.rootStore.agent.blockModList(this.data.uri)
     track('Lists:Block')
-    await this.refresh()
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), blocked: res.uri}}
+      }
+    })
   }
 
   async unblock() {
@@ -393,13 +398,14 @@ export class ListModel {
       return
     }
     await this._resolveUri()
-    const {rkey} = new AtUri(this.data.viewer.blocked)
-    await this.rootStore.agent.app.bsky.graph.listblock.delete({
-      repo: this.rootStore.me.did,
-      rkey,
-    })
+    await this.rootStore.agent.unblockModList(this.data.uri)
     track('Lists:Unblock')
-    await this.refresh()
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), blocked: undefined}}
+      }
+    })
   }
 
   /**
