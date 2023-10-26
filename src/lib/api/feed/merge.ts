@@ -115,12 +115,7 @@ export class MergeFeedAPI implements FeedAPI {
     if (this.customFeeds.length === 0) {
       this.customFeeds = shuffle(
         this.rootStore.preferences.savedFeeds.map(
-          feedUri =>
-            new MergeFeedSource_Custom(
-              this.rootStore,
-              feedUri,
-              'TODO', // TODO
-            ),
+          feedUri => new MergeFeedSource_Custom(this.rootStore, feedUri),
         ),
       )
     }
@@ -213,17 +208,25 @@ class MergeFeedSource_Following extends MergeFeedSource {
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
 
-  constructor(
-    public rootStore: RootStoreModel,
-    public feedUri: string,
-    public feedDisplayName: string,
-  ) {
+  constructor(public rootStore: RootStoreModel, public feedUri: string) {
     super(rootStore)
     this.sourceInfo = {
-      displayName: feedDisplayName,
+      displayName: feedUri.split('/').pop() || '',
       uri: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
+    this.rootStore.agent.app.bsky.feed
+      .getFeedGenerator({
+        feed: feedUri,
+      })
+      .then(
+        res => {
+          if (this.sourceInfo) {
+            this.sourceInfo.displayName = res.data.view.displayName
+          }
+        },
+        _err => {},
+      )
   }
 
   protected async _getFeed(
