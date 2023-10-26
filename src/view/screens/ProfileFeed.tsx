@@ -155,6 +155,16 @@ export const ProfileFeedScreenInner = observer(
       resetMainScroll()
     }, [tabsContainerRef, resetMainScroll])
 
+    const onSelectTab = useCallback(
+      (tab: number) => {
+        if (tab === 0) {
+          feed.refresh()
+        }
+        onScrollToTop()
+      },
+      [feed, onScrollToTop],
+    )
+
     const onToggleSaved = React.useCallback(async () => {
       try {
         Haptics.default()
@@ -353,7 +363,7 @@ export const ProfileFeedScreenInner = observer(
         <TabsContainer
           ref={tabsContainerRef}
           renderHeader={renderHeader}
-          onSelectTab={onScrollToTop}
+          onSelectTab={onSelectTab}
           onScroll={onMainScroll}>
           <Tab
             name="Posts"

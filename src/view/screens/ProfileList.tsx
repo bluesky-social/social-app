@@ -178,6 +178,16 @@ export const ProfileListScreenInner = observer(
       resetMainScroll()
     }, [tabsContainerRef, resetMainScroll])
 
+    const onSelectTab = useCallback(
+      (tab: number) => {
+        if (tab === 0 && list.isCuratelist) {
+          feed.refresh()
+        }
+        onScrollToTop()
+      },
+      [feed, list, onScrollToTop],
+    )
+
     const onPressAddUser = useCallback(() => {
       store.shell.openModal({
         name: 'list-add-user',
@@ -288,7 +298,7 @@ export const ProfileListScreenInner = observer(
         <TabsContainer
           ref={tabsContainerRef}
           renderHeader={renderHeader}
-          onSelectTab={onScrollToTop}
+          onSelectTab={onSelectTab}
           onScroll={onMainScroll}>
           {list.isCuratelist ? (
             <Tab
