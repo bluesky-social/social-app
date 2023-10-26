@@ -68,6 +68,7 @@ export class SavedFeedsModel {
       await Promise.all(feeds.map(f => f.setup()))
       runInAction(() => {
         this.all = feeds
+        this._updatePinSortOrder()
       })
       this._xIdle()
     } catch (e: any) {
@@ -76,7 +77,8 @@ export class SavedFeedsModel {
   })
 
   async reorderPinnedFeeds(feeds: FeedSourceModel[]) {
-    return this.rootStore.preferences.setSavedFeeds(
+    this._updatePinSortOrder(feeds.map(f => f.uri))
+    await this.rootStore.preferences.setSavedFeeds(
       this.rootStore.preferences.savedFeeds,
       feeds.filter(feed => feed.isPinned).map(feed => feed.uri),
     )
@@ -101,6 +103,7 @@ export class SavedFeedsModel {
       this.rootStore.preferences.savedFeeds,
       pinned,
     )
+    this._updatePinSortOrder()
     track('CustomFeed:Reorder', {
       name: item.displayName,
       uri: item.uri,
@@ -125,6 +128,18 @@ export class SavedFeedsModel {
     if (err) {
       this.rootStore.log.error('Failed to fetch user feeds', err)
     }
+  }
+
+  // helpers
+  // =
+
+  _updatePinSortOrder(order?: string[]) {
+    order ??= this.rootStore.preferences.pinnedFeeds.concat(
+      this.rootStore.preferences.savedFeeds,
+    )
+    this.all.sort((a, b) => {
+      return order!.indexOf(a.uri) - order!.indexOf(b.uri)
+    })
   }
 }
 
