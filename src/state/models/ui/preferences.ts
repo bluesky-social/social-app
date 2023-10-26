@@ -616,13 +616,16 @@ export class PreferencesModel {
   }
 
   getFeedTuners(
-    feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
+    feedType: 'home' | 'following' | 'author' | 'custom' | 'list' | 'likes',
   ) {
     if (feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
         FeedTuner.preferredLangOnly(this.contentLanguages),
       ]
+    }
+    if (feedType === 'list') {
+      return [FeedTuner.dedupReposts]
     }
     if (feedType === 'home' || feedType === 'following') {
       const feedTuners = []
