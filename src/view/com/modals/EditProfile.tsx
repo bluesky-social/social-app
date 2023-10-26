@@ -20,7 +20,7 @@ import {enforceLen} from 'lib/strings/helpers'
 import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
 import {compressIfNeeded} from 'lib/media/manip'
 import {UserBanner} from '../util/UserBanner'
-import {UserAvatar} from '../util/UserAvatar'
+import {EditableUserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -153,7 +153,7 @@ export function Component({
             onSelectNewBanner={onSelectNewBanner}
           />
           <View style={[styles.avi, {borderColor: pal.colors.background}]}>
-            <UserAvatar
+            <EditableUserAvatar
               size={80}
               avatar={userAvatar}
               onSelectNewAvatar={onSelectNewAvatar}

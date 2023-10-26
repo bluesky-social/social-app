@@ -18,7 +18,7 @@ import {ListModel} from 'state/models/content/list'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {compressIfNeeded} from 'lib/media/manip'
-import {UserAvatar} from '../util/UserAvatar'
+import {EditableUserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -148,7 +148,7 @@ export function Component({
         )}
         <Text style={[styles.label, pal.text]}>List Avatar</Text>
         <View style={[styles.avi, {borderColor: pal.colors.background}]}>
-          <UserAvatar
+          <EditableUserAvatar
             type="list"
             size={80}
             avatar={avatar}

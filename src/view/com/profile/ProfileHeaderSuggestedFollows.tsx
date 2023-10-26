@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, StyleSheet, ScrollView, Pressable} from 'react-native'
+import {View, StyleSheet, Pressable, ScrollView} from 'react-native'
 import Animated, {
   useSharedValue,
   withTiming,
@@ -26,6 +26,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {Link} from 'view/com/util/Link'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {isWeb} from 'platform/detection'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -100,7 +101,6 @@ export function ProfileHeaderSuggestedFollows({
             backgroundColor: pal.viewLight.backgroundColor,
             height: '100%',
             paddingTop: INNER_PADDING / 2,
-            paddingBottom: INNER_PADDING,
           }}>
           <View
             style={{
@@ -130,11 +130,15 @@ export function ProfileHeaderSuggestedFollows({
           </View>
 
           <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            showsHorizontalScrollIndicator={isWeb}
+            persistentScrollbar={true}
+            scrollIndicatorInsets={{bottom: 0}}
+            scrollEnabled={true}
             contentContainerStyle={{
               alignItems: 'flex-start',
               paddingLeft: INNER_PADDING / 2,
+              paddingBottom: INNER_PADDING,
             }}>
             {isLoading ? (
               <>
