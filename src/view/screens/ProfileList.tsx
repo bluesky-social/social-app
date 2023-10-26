@@ -577,8 +577,9 @@ function Header({rkey, list}: {rkey: string; list: ListModel}) {
 
   return (
     <ProfileSubpageHeader
+      isLoading={!list.hasLoaded}
       href={'' /* TODO*/}
-      title={list.data?.name}
+      title={list.data?.name || 'User list'}
       avatar={list.data?.avatar}
       isOwner={list.isOwner}
       creator={list.data?.creator}

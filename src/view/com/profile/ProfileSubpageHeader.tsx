@@ -8,6 +8,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
 import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {CenteredView} from '../util/Views'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
@@ -17,6 +18,7 @@ import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
 
 export const ProfileSubpageHeader = observer(function HeaderImpl({
+  isLoading,
   href,
   title,
   avatar,
@@ -25,6 +27,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   avatarType,
   children,
 }: React.PropsWithChildren<{
+  isLoading?: boolean
   href: string
   title: string | undefined
   avatar: string | undefined
@@ -115,29 +118,41 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
           <UserAvatar type={avatarType} size={58} avatar={avatar} />
         </Pressable>
         <View style={{flex: 1}}>
-          <TextLink
-            type="title-xl"
-            href={href}
-            style={[pal.text, {fontWeight: 'bold'}]}
-            text={title || '...'}
-            onPress={() => store.emitScreenSoftReset()}
-            numberOfLines={4}
-          />
+          {isLoading ? (
+            <LoadingPlaceholder
+              width={200}
+              height={32}
+              style={{marginVertical: 6}}
+            />
+          ) : (
+            <TextLink
+              type="title-xl"
+              href={href}
+              style={[pal.text, {fontWeight: 'bold'}]}
+              text={title || ''}
+              onPress={() => store.emitScreenSoftReset()}
+              numberOfLines={4}
+            />
+          )}
 
-          <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
-            by{' '}
-            {!creator ? (
-              ''
-            ) : isOwner ? (
-              'you'
-            ) : (
-              <TextLink
-                text={sanitizeHandle(creator.handle, '@')}
-                href={makeProfileLink(creator)}
-                style={pal.textLight}
-              />
-            )}
-          </Text>
+          {isLoading ? (
+            <LoadingPlaceholder width={50} height={8} />
+          ) : (
+            <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
+              by{' '}
+              {!creator ? (
+                '—'
+              ) : isOwner ? (
+                'you'
+              ) : (
+                <TextLink
+                  text={sanitizeHandle(creator.handle, '@')}
+                  href={makeProfileLink(creator)}
+                  style={pal.textLight}
+                />
+              )}
+            </Text>
+          )}
         </View>
         {!isMobile && (
           <View

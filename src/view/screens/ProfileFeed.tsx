@@ -271,6 +271,7 @@ export const ProfileFeedScreenInner = observer(
     const renderHeader = useCallback(() => {
       return (
         <ProfileSubpageHeader
+          isLoading={!feedInfo?.hasLoaded}
           href={makeCustomFeedLink(feedOwnerDid, rkey)}
           title={feedInfo?.displayName}
           avatar={feedInfo?.avatar}
@@ -396,29 +397,6 @@ export const ProfileFeedScreenInner = observer(
         />
       </View>
     )
-
-    // return (
-    //   <View style={s.hContentRegion}>
-    //     <Header
-    //       feedOwnerDid={feedOwnerDid}
-    //       feedRkey={rkey}
-    //       feedInfo={feedInfo}
-    //       dropdownItems={dropdownItems}
-    //       headerBtns={headerBtns}
-    //       minimalMode={false}
-    //     />
-    //     <Pager renderTabBar={renderTabBar} tabBarPosition="top">
-    //       <ProfileScreenFeedPage key="1" feed={algoFeed} />
-    //       <AboutPage
-    //         key="2"
-    //         feedOwnerDid={feedOwnerDid}
-    //         feedRkey={rkey}
-    //         feedInfo={feedInfo}
-    //         onToggleLiked={onToggleLiked}
-    //       />
-    //     </Pager>
-    //   </View>
-    // )
   },
 )
 
