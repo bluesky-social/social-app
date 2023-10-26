@@ -99,7 +99,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
       <View
         style={{
           flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           gap: 10,
           paddingTop: 14,
           paddingBottom: 6,
@@ -144,7 +144,6 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              alignSelf: 'flex-start',
             }}>
             {children}
           </View>
