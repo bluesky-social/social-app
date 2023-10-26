@@ -2,6 +2,7 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
+import {RichText} from '../util/text/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
@@ -120,9 +121,11 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
       </View>
 
       {showDescription && item.descriptionRT ? (
-        <Text style={[pal.textLight, styles.description]} numberOfLines={3}>
-          {item.descriptionRT.text /*TODO*/}
-        </Text>
+        <RichText
+          style={[pal.textLight, styles.description]}
+          richText={item.descriptionRT}
+          numberOfLines={3}
+        />
       ) : null}
 
       {showLikes ? (

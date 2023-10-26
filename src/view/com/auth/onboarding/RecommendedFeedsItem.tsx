@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
+import {RichText} from 'view/com/util/text/RichText'
 import {Button} from 'view/com/util/forms/Button'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -69,7 +70,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           </Text>
 
           {item.descriptionRT ? (
-            <Text
+            <RichText
               type="xl"
               style={[
                 pal.text,
@@ -79,9 +80,9 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                   marginBottom: 18,
                 },
               ]}
-              numberOfLines={6}>
-              {item.descriptionRT.text /* TODO */}
-            </Text>
+              richText={item.descriptionRT}
+              numberOfLines={6}
+            />
           ) : null}
 
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
