@@ -45,7 +45,7 @@ export function ProfileHeaderAlerts({
             accessibilityHint=""
             style={[styles.container, pal.viewLight, style]}>
             <ShieldExclamation style={pal.text} size={24} />
-            <Text type="lg" style={pal.text}>
+            <Text type="lg" style={[{flex: 1}, pal.text]}>
               {desc.name}
             </Text>
             <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>

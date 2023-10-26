@@ -114,14 +114,14 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
           style={{width: 58}}>
           <UserAvatar type={avatarType} size={58} avatar={avatar} />
         </Pressable>
-        <View>
+        <View style={{flex: 1}}>
           <TextLink
             type="title-xl"
             href={href}
             style={[pal.text, {fontWeight: 'bold'}]}
             text={title || '...'}
             onPress={() => store.emitScreenSoftReset()}
-            numberOfLines={1}
+            numberOfLines={4}
           />
 
           <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
@@ -144,7 +144,6 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginLeft: 'auto',
               alignSelf: 'flex-start',
             }}>
             {children}
