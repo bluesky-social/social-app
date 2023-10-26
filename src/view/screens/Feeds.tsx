@@ -52,6 +52,10 @@ export const FeedsScreen = withAuthRequired(
         }
       }, [store, myFeeds]),
     )
+    React.useEffect(() => {
+      // watch for changes to saved/pinned feeds
+      return myFeeds.registerListeners()
+    }, [myFeeds])
 
     const onPressCompose = React.useCallback(() => {
       store.shell.openComposer({})

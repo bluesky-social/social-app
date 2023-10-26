@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, reaction} from 'mobx'
 import {SavedFeedsModel} from './saved-feeds'
 import {FeedsDiscoveryModel} from '../discovery/feeds'
 import {FeedSourceModel} from '../content/feed-source'
@@ -74,6 +74,21 @@ export class MyFeedsUIModel {
     }
     if (!this.discovery.hasLoaded) {
       await this.discovery.refresh()
+    }
+  }
+
+  registerListeners() {
+    const dispose1 = reaction(
+      () => this.rootStore.preferences.savedFeeds,
+      () => this.saved.refresh(),
+    )
+    const dispose2 = reaction(
+      () => this.rootStore.preferences.pinnedFeeds,
+      () => this.saved.refresh(),
+    )
+    return () => {
+      dispose1()
+      dispose2()
     }
   }
 
