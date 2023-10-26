@@ -136,7 +136,6 @@ export const ProfileListScreenInner = observer(
     listOwnerDid,
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
-    const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
@@ -177,69 +176,6 @@ export const ProfileListScreenInner = observer(
       tabsContainerRef.current?.scrollToTop()
       resetMainScroll()
     }, [tabsContainerRef, resetMainScroll])
-
-    /*const onToggleSubscribed = useCallback(async () => {
-      try {
-        if (list.data?.viewer?.muted) {
-          await list.unsubscribe()
-        } else {
-          await list.subscribe()
-        }
-      } catch (err) {
-        Toast.show(
-          'There was an an issue updating your subscription, please check your internet connection and try again.',
-        )
-        store.log.error('Failed up update subscription', {err})
-      }
-    }, [store, list])*/
-
-    const onPressEdit = useCallback(() => {
-      store.shell.openModal({
-        name: 'create-or-edit-list',
-        list,
-        onSave() {
-          list.refresh()
-        },
-      })
-    }, [store, list])
-
-    const onPressDelete = useCallback(() => {
-      store.shell.openModal({
-        name: 'confirm',
-        title: 'Delete List',
-        message: 'Are you sure?',
-        async onPressConfirm() {
-          await list.delete()
-          if (navigation.canGoBack()) {
-            navigation.goBack()
-          } else {
-            navigation.navigate('Home')
-          }
-        },
-      })
-    }, [store, list, navigation])
-
-    const onTogglePinned = useCallback(async () => {
-      Haptics.default()
-      list.togglePin().catch(e => {
-        Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to toggle pinned list', {e})
-      })
-    }, [store, list])
-
-    const onPressReport = useCallback(() => {
-      if (!list.data) return
-      store.shell.openModal({
-        name: 'report',
-        uri: list.uri,
-        cid: list.data.cid,
-      })
-    }, [store, list])
-
-    const onPressShare = useCallback(() => {
-      const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
-      shareUrl(url)
-    }, [list.creatorDid, rkey])
 
     const onPressAddUser = useCallback(() => {
       store.shell.openModal({
@@ -284,84 +220,9 @@ export const ProfileListScreenInner = observer(
     // render
     // =
 
-    const dropdownItems: DropdownItem[] = useMemo(() => {
-      if (!list.hasLoaded) {
-        return []
-      }
-      let items: DropdownItem[] = [
-        {
-          testID: 'listHeaderDropdownShareBtn',
-          label: 'Share',
-          onPress: onPressShare,
-          icon: {
-            ios: {
-              name: 'square.and.arrow.up', // TODO
-            },
-            android: '',
-            web: 'share',
-          },
-        },
-      ]
-      if (list.isOwner) {
-        items.push({label: 'separator'})
-        items.push({
-          testID: 'listHeaderDropdownEditBtn',
-          label: 'Edit List Details',
-          onPress: onPressEdit,
-          icon: {
-            ios: {
-              name: 'exclamationmark.triangle', // TODO
-            },
-            android: '',
-            web: 'pen',
-          },
-        })
-        items.push({
-          testID: 'listHeaderDropdownDeleteBtn',
-          label: 'Delete List',
-          onPress: onPressDelete,
-          icon: {
-            ios: {
-              name: 'trash', // TODO
-            },
-            android: '',
-            web: ['far', 'trash-can'],
-          },
-        })
-      } else {
-        items.push({label: 'separator'})
-        items.push({
-          testID: 'listHeaderDropdownReportBtn',
-          label: 'Report List',
-          onPress: onPressReport,
-          icon: {
-            ios: {
-              name: 'exclamationmark.triangle', // TODO
-            },
-            android: '',
-            web: 'circle-exclamation',
-          },
-        })
-      }
-      return items
-    }, [
-      list.hasLoaded,
-      list.isOwner,
-      onPressShare,
-      onPressEdit,
-      onPressDelete,
-      onPressReport,
-    ])
-
     const renderHeader = useCallback(() => {
-      return (
-        <Header
-          list={list}
-          dropdownItems={dropdownItems}
-          onTogglePinned={onTogglePinned}
-        />
-      )
-    }, [list, dropdownItems, onTogglePinned])
+      return <Header rkey={rkey} list={list} />
+    }, [rkey, list])
 
     const renderPostsPlaceholder = useCallback(() => {
       return <PostFeedLoadingPlaceholder />
@@ -492,24 +353,204 @@ export const ProfileListScreenInner = observer(
   },
 )
 
-function Header({
-  list,
-  dropdownItems,
-  onTogglePinned,
-}: {
-  list: ListModel
-  dropdownItems: DropdownItem[]
-  onTogglePinned: () => void
-}) {
+function Header({rkey, list}: {rkey: string; list: ListModel}) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
+  const store = useStores()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onTogglePinned = useCallback(async () => {
+    Haptics.default()
+    list.togglePin().catch(e => {
+      Toast.show('There was an issue contacting the server')
+      store.log.error('Failed to toggle pinned list', {e})
+    })
+  }, [store, list])
+
+  const onSubscribeMute = useCallback(() => {
+    store.shell.openModal({
+      name: 'confirm',
+      title: 'Mute these accounts?',
+      message:
+        'Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.',
+      confirmBtnText: 'Mute this List',
+      async onPressConfirm() {
+        try {
+          await list.mute()
+          Toast.show('List muted')
+        } catch {
+          Toast.show(
+            'There was an issue. Please check your internet connection and try again.',
+          )
+        }
+      },
+      onPressCancel() {
+        store.shell.closeModal()
+      },
+    })
+  }, [store, list])
+
+  const onUnsubscribeMute = useCallback(async () => {
+    try {
+      await list.unmute()
+      Toast.show('List unmuted')
+    } catch {
+      Toast.show(
+        'There was an issue. Please check your internet connection and try again.',
+      )
+    }
+  }, [list])
+
+  const onSubscribeBlock = useCallback(() => {
+    store.shell.openModal({
+      name: 'confirm',
+      title: 'Block these accounts?',
+      message:
+        'Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
+      confirmBtnText: 'Block this List',
+      async onPressConfirm() {
+        try {
+          await list.block()
+          Toast.show('List blocked')
+        } catch {
+          Toast.show(
+            'There was an issue. Please check your internet connection and try again.',
+          )
+        }
+      },
+      onPressCancel() {
+        store.shell.closeModal()
+      },
+    })
+  }, [store, list])
+
+  const onUnsubscribeBlock = useCallback(async () => {
+    try {
+      await list.unblock()
+      Toast.show('List unblocked')
+    } catch {
+      Toast.show(
+        'There was an issue. Please check your internet connection and try again.',
+      )
+    }
+  }, [list])
+
+  const onPressEdit = useCallback(() => {
+    store.shell.openModal({
+      name: 'create-or-edit-list',
+      list,
+      onSave() {
+        list.refresh()
+      },
+    })
+  }, [store, list])
+
+  const onPressDelete = useCallback(() => {
+    store.shell.openModal({
+      name: 'confirm',
+      title: 'Delete List',
+      message: 'Are you sure?',
+      async onPressConfirm() {
+        await list.delete()
+        Toast.show('List deleted')
+        if (navigation.canGoBack()) {
+          navigation.goBack()
+        } else {
+          navigation.navigate('Home')
+        }
+      },
+    })
+  }, [store, list, navigation])
+
+  const onPressReport = useCallback(() => {
+    if (!list.data) return
+    store.shell.openModal({
+      name: 'report',
+      uri: list.uri,
+      cid: list.data.cid,
+    })
+  }, [store, list])
+
+  const onPressShare = useCallback(() => {
+    const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
+    shareUrl(url)
+  }, [list.creatorDid, rkey])
+
+  const dropdownItems: DropdownItem[] = useMemo(() => {
+    if (!list.hasLoaded) {
+      return []
+    }
+    let items: DropdownItem[] = [
+      {
+        testID: 'listHeaderDropdownShareBtn',
+        label: 'Share',
+        onPress: onPressShare,
+        icon: {
+          ios: {
+            name: 'square.and.arrow.up', // TODO
+          },
+          android: '',
+          web: 'share',
+        },
+      },
+    ]
+    if (list.isOwner) {
+      items.push({label: 'separator'})
+      items.push({
+        testID: 'listHeaderDropdownEditBtn',
+        label: 'Edit List Details',
+        onPress: onPressEdit,
+        icon: {
+          ios: {
+            name: 'exclamationmark.triangle', // TODO
+          },
+          android: '',
+          web: 'pen',
+        },
+      })
+      items.push({
+        testID: 'listHeaderDropdownDeleteBtn',
+        label: 'Delete List',
+        onPress: onPressDelete,
+        icon: {
+          ios: {
+            name: 'trash', // TODO
+          },
+          android: '',
+          web: ['far', 'trash-can'],
+        },
+      })
+    } else {
+      items.push({label: 'separator'})
+      items.push({
+        testID: 'listHeaderDropdownReportBtn',
+        label: 'Report List',
+        onPress: onPressReport,
+        icon: {
+          ios: {
+            name: 'exclamationmark.triangle', // TODO
+          },
+          android: '',
+          web: 'circle-exclamation',
+        },
+      })
+    }
+    return items
+  }, [
+    list.hasLoaded,
+    list.isOwner,
+    onPressShare,
+    onPressEdit,
+    onPressDelete,
+    onPressReport,
+  ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
       {
         testID: 'subscribeDropdownMuteBtn',
-        label: 'Mute users',
-        onPress: () => {}, // TODO
+        label: 'Mute accounts',
+        onPress: onSubscribeMute,
         icon: {
           ios: {
             name: 'square.and.arrow.up', // TODO
@@ -520,8 +561,8 @@ function Header({
       },
       {
         testID: 'subscribeDropdownBlockBtn',
-        label: 'Block users',
-        onPress: () => {}, // TODO
+        label: 'Block accounts',
+        onPress: onSubscribeBlock,
         icon: {
           ios: {
             name: 'square.and.arrow.up', // TODO
@@ -531,7 +572,7 @@ function Header({
         },
       },
     ]
-  }, [])
+  }, [onSubscribeMute, onSubscribeBlock])
 
   return (
     <ProfileSubpageHeader
@@ -549,9 +590,9 @@ function Header({
         />
       ) : list.isModlist ? (
         list.isBlocking ? (
-          <Button type="default" label="Blocking" onPress={undefined} />
+          <Button type="default" label="Unblock" onPress={onUnsubscribeBlock} />
         ) : list.isMuting ? (
-          <Button type="default" label="Muting" onPress={undefined} />
+          <Button type="default" label="Unmute" onPress={onUnsubscribeMute} />
         ) : (
           <NativeDropdown
             testID="subscribeBtn"

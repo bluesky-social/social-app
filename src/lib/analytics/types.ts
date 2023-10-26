@@ -100,8 +100,10 @@ interface TrackPropertiesMap {
   'CreateList:AvatarSelected': {}
   'CreateList:SaveCurateList': {} // CAN BE SERVER
   'CreateList:SaveModList': {} // CAN BE SERVER
-  'Lists:Subscribe': {} // CAN BE SERVER
-  'Lists:Unsubscribe': {} // CAN BE SERVER
+  'Lists:Mute': {} // CAN BE SERVER
+  'Lists:Unmute': {} // CAN BE SERVER
+  'Lists:Block': {} // CAN BE SERVER
+  'Lists:Unblock': {} // CAN BE SERVER
   // CUSTOM FEED events
   'CustomFeed:Save': {}
   'CustomFeed:Unsave': {}

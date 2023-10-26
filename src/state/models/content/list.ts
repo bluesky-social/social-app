@@ -348,7 +348,7 @@ export class ListModel {
     }
   }
 
-  async subscribe() {
+  async mute() {
     if (!this.data) {
       return
     }
@@ -356,11 +356,11 @@ export class ListModel {
     await this.rootStore.agent.app.bsky.graph.muteActorList({
       list: this.data.uri,
     })
-    track('Lists:Subscribe')
+    track('Lists:Mute')
     await this.refresh()
   }
 
-  async unsubscribe() {
+  async unmute() {
     if (!this.data) {
       return
     }
@@ -368,7 +368,37 @@ export class ListModel {
     await this.rootStore.agent.app.bsky.graph.unmuteActorList({
       list: this.data.uri,
     })
-    track('Lists:Unsubscribe')
+    track('Lists:Unmute')
+    await this.refresh()
+  }
+
+  async block() {
+    if (!this.data) {
+      return
+    }
+    await this._resolveUri()
+    await this.rootStore.agent.app.bsky.graph.listblock.create(
+      {repo: this.rootStore.me.did},
+      {
+        subject: this.data.uri,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    track('Lists:Block')
+    await this.refresh()
+  }
+
+  async unblock() {
+    if (!this.data || !this.data.viewer?.blocked) {
+      return
+    }
+    await this._resolveUri()
+    const {rkey} = new AtUri(this.data.viewer.blocked)
+    await this.rootStore.agent.app.bsky.graph.listblock.delete({
+      repo: this.rootStore.me.did,
+      rkey,
+    })
+    track('Lists:Unblock')
     await this.refresh()
   }
 
