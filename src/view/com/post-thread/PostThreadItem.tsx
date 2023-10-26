@@ -8,7 +8,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {PostThreadItemModel} from 'state/models/content/post-thread-item'
-import {Link} from '../util/Link'
+import {Link, TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
 import {PostDropdownBtn} from '../util/forms/PostDropdownBtn'
@@ -18,7 +18,7 @@ import {s} from 'lib/styles'
 import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {pluralize} from 'lib/strings/helpers'
+import {countLines, pluralize} from 'lib/strings/helpers'
 import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {useStores} from 'state/index'
@@ -35,6 +35,7 @@ import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {MAX_POST_LINES} from 'lib/constants'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -50,6 +51,9 @@ export const PostThreadItem = observer(function PostThreadItem({
   const pal = usePalette('default')
   const store = useStores()
   const [deleted, setDeleted] = React.useState(false)
+  const [limitLines, setLimitLines] = React.useState(
+    countLines(item.richText?.text) >= MAX_POST_LINES,
+  )
   const styles = useStyles()
   const record = item.postRecord
   const hasEngagement = item.post.likeCount || item.post.repostCount
@@ -150,6 +154,10 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
     )
   }, [item, store])
+
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
 
   if (!record) {
     return <ErrorMessage message="Invalid or unsupported post record" />
@@ -489,8 +497,17 @@ export const PostThreadItem = observer(function PostThreadItem({
                     richText={item.richText}
                     style={[pal.text, s.flex1]}
                     lineHeight={1.3}
+                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   />
                 </View>
+              ) : undefined}
+              {limitLines ? (
+                <TextLink
+                  text="Show More"
+                  style={pal.link}
+                  onPress={onPressShowMore}
+                  href="#"
+                />
               ) : undefined}
               {item.post.embed && (
                 <ContentHider

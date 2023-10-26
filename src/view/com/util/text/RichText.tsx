@@ -52,6 +52,7 @@ export function RichText({
         testID={testID}
         type={type}
         style={[style, pal.text, lineHeightStyle]}
+        numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}

@@ -14,7 +14,7 @@ import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadModel} from 'state/models/content/post-thread'
 import {PostThreadItemModel} from 'state/models/content/post-thread-item'
-import {Link} from '../util/Link'
+import {Link, TextLink} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
@@ -30,6 +30,8 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {MAX_POST_LINES} from 'lib/constants'
+import {countLines} from 'lib/strings/helpers'
 
 export const Post = observer(function PostImpl({
   view,
@@ -103,7 +105,9 @@ const PostLoaded = observer(function PostLoadedImpl({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-
+  const [limitLines, setLimitLines] = React.useState(
+    countLines(item.richText?.text) >= MAX_POST_LINES,
+  )
   const itemUri = item.post.uri
   const itemCid = item.post.cid
   const itemUrip = new AtUri(item.post.uri)
@@ -182,6 +186,10 @@ const PostLoaded = observer(function PostLoadedImpl({
     )
   }, [item, setDeleted, store])
 
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
+
   return (
     <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
       {showReplyLine && <View style={styles.replyLine} />}
@@ -239,9 +247,18 @@ const PostLoaded = observer(function PostLoadedImpl({
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={s.flex1}
                 />
               </View>
+            ) : undefined}
+            {limitLines ? (
+              <TextLink
+                text="Show More"
+                style={pal.link}
+                onPress={onPressShowMore}
+                href="#"
+              />
             ) : undefined}
             {item.post.embed ? (
               <ContentHider

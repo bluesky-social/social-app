@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
 import {FeedSourceInfo} from 'lib/api/feed/types'
-import {Link, DesktopWebTextLink} from '../util/Link'
+import {Link, DesktopWebTextLink, TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -30,6 +30,8 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
+import {MAX_POST_LINES} from 'lib/constants'
+import {countLines} from 'lib/strings/helpers'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
@@ -49,6 +51,9 @@ export const FeedItem = observer(function FeedItemImpl({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const [deleted, setDeleted] = useState(false)
+  const [limitLines, setLimitLines] = useState(
+    countLines(item.richText?.text) >= MAX_POST_LINES,
+  )
   const record = item.postRecord
   const itemUri = item.post.uri
   const itemCid = item.post.cid
@@ -135,6 +140,10 @@ export const FeedItem = observer(function FeedItemImpl({
       },
     )
   }, [track, item, setDeleted, store])
+
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
 
   const outerStyles = [
     styles.outer,
@@ -307,9 +316,18 @@ export const FeedItem = observer(function FeedItemImpl({
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={s.flex1}
                 />
               </View>
+            ) : undefined}
+            {limitLines ? (
+              <TextLink
+                text="Show More"
+                style={pal.link}
+                onPress={onPressShowMore}
+                href="#"
+              />
             ) : undefined}
             {item.post.embed ? (
               <ContentHider
