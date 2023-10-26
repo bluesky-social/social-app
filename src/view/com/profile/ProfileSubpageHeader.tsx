@@ -16,6 +16,7 @@ import {useStores} from 'state/index'
 import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
+import {ImagesLightbox} from 'state/models/ui/shell'
 
 export const ProfileSubpageHeader = observer(function HeaderImpl({
   isLoading,
@@ -57,6 +58,14 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   const onPressMenu = React.useCallback(() => {
     store.shell.openDrawer()
   }, [store])
+
+  const onPressAvi = React.useCallback(() => {
+    if (
+      avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
+    ) {
+      store.shell.openLightbox(new ImagesLightbox([{uri: avatar}], 0))
+    }
+  }, [store, avatar])
 
   return (
     <CenteredView>
@@ -110,7 +119,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
         }}>
         <Pressable
           testID="headerAviButton"
-          onPress={undefined /*TODO onPressAvi*/}
+          onPress={onPressAvi}
           accessibilityRole="image"
           accessibilityLabel="View the avatar"
           accessibilityHint=""
