@@ -153,6 +153,7 @@ export const ProfileListScreenInner = observer(
       () => new PostsFeedModel(store, 'list', {list: list.uri}),
       [store, list],
     )
+    const isOwner = list.isOwner
     useSetTitle(list.data?.name)
 
     // init
@@ -275,11 +276,11 @@ export const ProfileListScreenInner = observer(
             (item as AppBskyGraphDefs.ListItemView).subject.handle
           }`}
           profile={(item as AppBskyGraphDefs.ListItemView).subject}
-          renderButton={renderAboutItemMemberButton}
+          renderButton={isOwner ? renderAboutItemMemberButton : undefined}
           style={{paddingHorizontal: isMobile ? 8 : 14, paddingVertical: 4}}
         />
       ),
-      [renderAboutItemMemberButton, isMobile],
+      [renderAboutItemMemberButton, isOwner, isMobile],
     )
 
     return (
