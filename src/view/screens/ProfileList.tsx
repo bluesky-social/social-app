@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {ActivityIndicator, Pressable, View} from 'react-native'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {AppBskyGraphDefs, AppBskyActorDefs} from '@atproto/api'
@@ -8,10 +8,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {TabsContainer, Tab, TabsContainerHandle} from 'view/com/tabs/Tabs'
-import {ProfileScreenHeaderBtn} from 'view/com/profile-screen/types'
-import {ProfileScreenFullHeader} from 'view/com/profile-screen/FullHeader'
+import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Text} from 'view/com/util/text/Text'
-import {DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {RichText} from 'view/com/util/text/RichText'
@@ -138,8 +137,6 @@ export const ProfileListScreenInner = observer(
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
-    const pal = usePalette('default')
-    const palInverted = usePalette('inverted')
     const {isMobile} = useWebMediaQueries()
     const [onMainScroll, isScrolledDown, resetMainScroll] =
       useOnMainScroll(store)
@@ -287,88 +284,6 @@ export const ProfileListScreenInner = observer(
     // render
     // =
 
-    const headerBtns: ProfileScreenHeaderBtn[] = useMemo(() => {
-      if (!list.hasLoaded) {
-        return []
-      }
-      let items: ProfileScreenHeaderBtn[] = []
-      items.push({
-        icon: {
-          icon: ['far', 'bookmark'],
-          size: 15,
-          color: pal.colors.text,
-        },
-        accessibilityLabel: 'Bookmark this list',
-        onPress: () => {}, // TODO
-      })
-      if (list.isCuratelist) {
-        items.push({
-          inverted: !list.isPinned,
-          label: list.isPinned ? 'Unpin from home' : 'Pin to home',
-          accessibilityLabel: list.isPinned ? 'Unpin from home' : 'Pin to home',
-          onPress: onTogglePinned,
-        })
-      } else if (list.isModlist) {
-        if (list.isBlocking) {
-          items.push({
-            icon: {
-              icon: 'check',
-              size: 14,
-              color: pal.colors.text,
-            },
-            label: 'Blocking',
-            accessibilityLabel: 'Unblock this list',
-            onPress: onTogglePinned,
-          })
-        } else if (list.isMuting) {
-          items.push({
-            icon: {
-              icon: 'check',
-              size: 14,
-              color: pal.colors.text,
-            },
-            label: 'Muting',
-            accessibilityLabel: 'Unmute this list',
-            onPress: onTogglePinned,
-          })
-        } else {
-          items.push({
-            inverted: true,
-            icon: {
-              icon: 'user-slash',
-              size: 14,
-              color: palInverted.colors.text,
-            },
-            label: 'Block',
-            accessibilityLabel: 'Block this list',
-            onPress: onTogglePinned,
-          })
-          items.push({
-            inverted: true,
-            icon: {
-              icon: 'comment-slash',
-              size: 14,
-              color: palInverted.colors.text,
-            },
-            label: 'Mute',
-            accessibilityLabel: 'Mute this list',
-            onPress: onTogglePinned,
-          })
-        }
-      }
-      return items
-    }, [
-      pal,
-      palInverted,
-      list.hasLoaded,
-      list.isCuratelist,
-      list.isModlist,
-      list.isPinned,
-      list.isMuting,
-      list.isBlocking,
-      onTogglePinned,
-    ])
-
     const dropdownItems: DropdownItem[] = useMemo(() => {
       if (!list.hasLoaded) {
         return []
@@ -391,7 +306,7 @@ export const ProfileListScreenInner = observer(
         items.push({label: 'separator'})
         items.push({
           testID: 'listHeaderDropdownEditBtn',
-          label: 'Edit List Profile',
+          label: 'Edit List Details',
           onPress: onPressEdit,
           icon: {
             ios: {
@@ -439,24 +354,14 @@ export const ProfileListScreenInner = observer(
     ])
 
     const renderHeader = useCallback(() => {
-      const info = list.data
-        ? {
-            href: '', // TODO
-            title: list.data.name,
-            avatar: list.data.avatar,
-            isOwner: list.isOwner,
-            creator: list.data.creator,
-          }
-        : undefined
       return (
-        <ProfileScreenFullHeader
-          info={info}
-          avatarType="list"
+        <Header
+          list={list}
           dropdownItems={dropdownItems}
-          buttons={headerBtns}
+          onTogglePinned={onTogglePinned}
         />
       )
-    }, [list, dropdownItems, headerBtns])
+    }, [list, dropdownItems, onTogglePinned])
 
     const renderPostsPlaceholder = useCallback(() => {
       return <PostFeedLoadingPlaceholder />
@@ -587,6 +492,91 @@ export const ProfileListScreenInner = observer(
   },
 )
 
+function Header({
+  list,
+  dropdownItems,
+  onTogglePinned,
+}: {
+  list: ListModel
+  dropdownItems: DropdownItem[]
+  onTogglePinned: () => void
+}) {
+  const pal = usePalette('default')
+  const palInverted = usePalette('inverted')
+
+  const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
+    return [
+      {
+        testID: 'subscribeDropdownMuteBtn',
+        label: 'Mute users',
+        onPress: () => {}, // TODO
+        icon: {
+          ios: {
+            name: 'square.and.arrow.up', // TODO
+          },
+          android: '',
+          web: 'user-slash',
+        },
+      },
+      {
+        testID: 'subscribeDropdownBlockBtn',
+        label: 'Block users',
+        onPress: () => {}, // TODO
+        icon: {
+          ios: {
+            name: 'square.and.arrow.up', // TODO
+          },
+          android: '',
+          web: 'ban',
+        },
+      },
+    ]
+  }, [])
+
+  return (
+    <ProfileSubpageHeader
+      href={'' /* TODO*/}
+      title={list.data?.name}
+      avatar={list.data?.avatar}
+      isOwner={list.isOwner}
+      creator={list.data?.creator}
+      avatarType="list">
+      {list.isCuratelist ? (
+        <Button
+          type={list.isPinned ? 'default' : 'inverted'}
+          label={list.isPinned ? 'Unpin' : 'Pin to home'}
+          onPress={onTogglePinned}
+        />
+      ) : list.isModlist ? (
+        list.isBlocking ? (
+          <Button type="default" label="Blocking" onPress={undefined} />
+        ) : list.isMuting ? (
+          <Button type="default" label="Muting" onPress={undefined} />
+        ) : (
+          <NativeDropdown
+            testID="subscribeBtn"
+            items={subscribeDropdownItems}
+            accessibilityLabel="Subscribe to this list"
+            accessibilityHint="">
+            <View style={[palInverted.view, styles.btn]}>
+              <Text style={palInverted.text}>Subscribe</Text>
+            </View>
+          </NativeDropdown>
+        )
+      ) : null}
+      <NativeDropdown
+        testID="headerDropdownBtn"
+        items={dropdownItems}
+        accessibilityLabel="More options"
+        accessibilityHint="">
+        <View style={[pal.viewLight, styles.btn]}>
+          <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
+        </View>
+      </NativeDropdown>
+    </ProfileSubpageHeader>
+  )
+}
+
 function AboutSection({
   list,
   onPressAddUser,
@@ -623,7 +613,7 @@ function AboutSection({
           </Text>
         )}
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          Created by{' '}
+          {list.isCuratelist ? 'User list' : 'Moderation list'} by{' '}
           {list.isOwner ? (
             'you'
           ) : (
@@ -665,3 +655,15 @@ function AboutSection({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 50,
+    marginLeft: 6,
+  },
+})

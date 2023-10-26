@@ -4,6 +4,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
@@ -13,8 +14,7 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {TabsContainer, Tab, TabsContainerHandle} from 'view/com/tabs/Tabs'
-import {ProfileScreenHeaderBtn} from 'view/com/profile-screen/types'
-import {ProfileScreenFullHeader} from 'view/com/profile-screen/FullHeader'
+import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {TextLink} from 'view/com/util/Link'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
@@ -32,7 +32,7 @@ import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {resolveName} from 'lib/api'
 import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
@@ -219,35 +219,6 @@ export const ProfileFeedScreenInner = observer(
     // render
     // =
 
-    const headerBtns: ProfileScreenHeaderBtn[] = React.useMemo(() => {
-      let items: ProfileScreenHeaderBtn[] = []
-      items.push({
-        icon: {
-          icon: ['far', 'bookmark'],
-          size: 15,
-          color: pal.colors.text,
-        },
-        accessibilityLabel: 'Bookmark this feed',
-        onPress: onToggleSaved,
-      })
-      items.push({
-        icon: {
-          icon: 'thumb-tack',
-          size: 14,
-          color: isPinned ? colors.blue3 : pal.colors.text,
-        },
-        accessibilityLabel: isPinned ? 'Unpin this feed' : 'Pin this feed',
-        onPress: onTogglePinned,
-      })
-      return items
-    }, [
-      pal,
-      // palInverted,
-      isPinned,
-      onTogglePinned,
-      onToggleSaved,
-    ])
-
     const dropdownItems: DropdownItem[] = React.useMemo(() => {
       return [
         {
@@ -298,24 +269,59 @@ export const ProfileFeedScreenInner = observer(
     }, [feedInfo, onToggleSaved, onPressReport, onPressShare])
 
     const renderHeader = useCallback(() => {
-      const info = feedInfo
-        ? {
-            href: makeCustomFeedLink(feedOwnerDid, rkey),
-            title: feedInfo.displayName,
-            avatar: feedInfo.avatar,
-            isOwner: feedInfo.isOwner,
-            creator: {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle},
-          }
-        : undefined
       return (
-        <ProfileScreenFullHeader
-          info={info}
-          avatarType="algo"
-          dropdownItems={dropdownItems}
-          buttons={headerBtns}
-        />
+        <ProfileSubpageHeader
+          href={makeCustomFeedLink(feedOwnerDid, rkey)}
+          title={feedInfo?.displayName}
+          avatar={feedInfo?.avatar}
+          isOwner={feedInfo?.isOwner}
+          creator={
+            feedInfo
+              ? {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle}
+              : undefined
+          }
+          avatarType="algo">
+          {feedInfo && (
+            <>
+              <Button
+                type="default"
+                label={feedInfo?.isSaved ? 'Unsave' : 'Save'}
+                onPress={onToggleSaved}
+                style={styles.btn}
+              />
+              <Button
+                type={isPinned ? 'default' : 'inverted'}
+                label={isPinned ? 'Unpin' : 'Pin to home'}
+                onPress={onTogglePinned}
+                style={styles.btn}
+              />
+            </>
+          )}
+          <NativeDropdown
+            testID="headerDropdownBtn"
+            items={dropdownItems}
+            accessibilityLabel="More options"
+            accessibilityHint="">
+            <View style={[pal.viewLight, styles.btn]}>
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={pal.colors.text}
+              />
+            </View>
+          </NativeDropdown>
+        </ProfileSubpageHeader>
       )
-    }, [feedOwnerDid, rkey, feedInfo, dropdownItems, headerBtns])
+    }, [
+      pal,
+      feedOwnerDid,
+      rkey,
+      feedInfo,
+      isPinned,
+      onTogglePinned,
+      onToggleSaved,
+      dropdownItems,
+    ])
 
     const renderPostsPlaceholder = useCallback(() => {
       return <PostFeedLoadingPlaceholder />
@@ -500,6 +506,15 @@ const AboutSection = observer(function AboutPageImpl({
 })
 
 const styles = StyleSheet.create({
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 50,
+    marginLeft: 6,
+  },
   liked: {
     color: colors.red3,
   },

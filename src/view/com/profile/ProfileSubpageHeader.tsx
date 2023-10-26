@@ -3,7 +3,6 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Text} from '../util/text/Text'
@@ -13,27 +12,35 @@ import {CenteredView} from '../util/Views'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {useStores} from 'state/index'
-import {ProfileScreenHeaderInfo, ProfileScreenHeaderBtn} from './types'
 import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
 
-export const ProfileScreenFullHeader = observer(function HeaderImpl({
-  info,
+export const ProfileSubpageHeader = observer(function HeaderImpl({
+  href,
+  title,
+  avatar,
+  isOwner,
+  creator,
   avatarType,
-  buttons,
-  dropdownItems,
-}: {
-  info: ProfileScreenHeaderInfo | undefined
+  children,
+}: React.PropsWithChildren<{
+  href: string
+  title: string | undefined
+  avatar: string | undefined
+  isOwner: boolean | undefined
+  creator:
+    | {
+        did: string
+        handle: string
+      }
+    | undefined
   avatarType: UserAvatarType
-  buttons?: ProfileScreenHeaderBtn[]
-  dropdownItems: DropdownItem[]
-}) {
+}>) {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
   const canGoBack = navigation.canGoBack()
 
   const onPressBack = React.useCallback(() => {
@@ -47,31 +54,6 @@ export const ProfileScreenFullHeader = observer(function HeaderImpl({
   const onPressMenu = React.useCallback(() => {
     store.shell.openDrawer()
   }, [store])
-
-  const buttonsRendered = buttons?.map((btn, i) => (
-    <Pressable
-      key={String(i + (btn.label || ''))}
-      style={[btn.inverted ? palInverted.view : pal.viewLight, styles.btn]}
-      accessibilityRole="button"
-      accessibilityLabel={btn.accessibilityLabel}
-      accessibilityHint=""
-      onPress={btn.onPress}>
-      {btn.icon && (
-        <View style={{justifyContent: 'center', height: 20}}>
-          <FontAwesomeIcon {...btn.icon} />
-        </View>
-      )}
-      {btn.label && (
-        <View style={{justifyContent: 'center', height: 20}}>
-          <Text
-            type="button"
-            style={btn.inverted ? palInverted.text : pal.text}>
-            {btn.label}
-          </Text>
-        </View>
-      )}
-    </Pressable>
-  ))
 
   return (
     <CenteredView>
@@ -111,20 +93,7 @@ export const ProfileScreenFullHeader = observer(function HeaderImpl({
             )}
           </Pressable>
           <View style={{flex: 1}} />
-          {buttonsRendered}
-          <NativeDropdown
-            testID="headerDropdownBtn"
-            items={dropdownItems}
-            accessibilityLabel="More options"
-            accessibilityHint="">
-            <View style={[pal.viewLight, styles.btn]}>
-              <FontAwesomeIcon
-                icon="ellipsis"
-                size={20}
-                color={pal.colors.text}
-              />
-            </View>
-          </NativeDropdown>
+          {children}
         </View>
       )}
       <View
@@ -141,30 +110,30 @@ export const ProfileScreenFullHeader = observer(function HeaderImpl({
           onPress={undefined /*TODO onPressAvi*/}
           accessibilityRole="image"
           accessibilityLabel="View the avatar"
-          accessibilityHint="">
-          <UserAvatar type={avatarType} size={58} avatar={info?.avatar} />
+          accessibilityHint=""
+          style={{width: 58}}>
+          <UserAvatar type={avatarType} size={58} avatar={avatar} />
         </Pressable>
         <View>
-          <Text type="title-xl" style={{fontWeight: 'bold'}} numberOfLines={1}>
-            <TextLink
-              type="title-xl"
-              href="/"
-              style={[pal.text, {fontWeight: 'bold'}]}
-              text={info?.title || 'Loading...'}
-              onPress={() => store.emitScreenSoftReset()}
-            />
-          </Text>
+          <TextLink
+            type="title-xl"
+            href={href}
+            style={[pal.text, {fontWeight: 'bold'}]}
+            text={title || '...'}
+            onPress={() => store.emitScreenSoftReset()}
+            numberOfLines={1}
+          />
 
           <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
             by{' '}
-            {!info ? (
+            {!creator ? (
               ''
-            ) : info.isOwner ? (
+            ) : isOwner ? (
               'you'
             ) : (
               <TextLink
-                text={sanitizeHandle(info.creator.handle, '@')}
-                href={makeProfileLink(info.creator)}
+                text={sanitizeHandle(creator.handle, '@')}
+                href={makeProfileLink(creator)}
                 style={pal.textLight}
               />
             )}
@@ -178,20 +147,7 @@ export const ProfileScreenFullHeader = observer(function HeaderImpl({
               marginLeft: 'auto',
               alignSelf: 'flex-start',
             }}>
-            {buttonsRendered}
-            <NativeDropdown
-              testID="headerDropdownBtn"
-              items={dropdownItems}
-              accessibilityLabel="More options"
-              accessibilityHint="">
-              <View style={[pal.viewLight, styles.btn]}>
-                <FontAwesomeIcon
-                  icon="ellipsis"
-                  size={20}
-                  color={pal.colors.text}
-                />
-              </View>
-            </NativeDropdown>
+            {children}
           </View>
         )}
       </View>
@@ -211,14 +167,5 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     marginTop: 6,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: 50,
-    marginLeft: 6,
   },
 })
