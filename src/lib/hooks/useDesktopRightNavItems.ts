@@ -34,7 +34,7 @@ export function useDesktopRightNavItems(uris: string[]): RightNavItem[] {
           const {hostname, collection, rkey} = new AtUri(model.uri)
           return {
             uri: model.uri,
-            href: model.href + '?view=simple',
+            href: model.href,
             hostname,
             collection,
             rkey,

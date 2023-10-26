@@ -261,7 +261,7 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
   return (
     <Link
       testID={`saved-feed-${feed.displayName}`}
-      href={feed.href + '?view=simple'}
+      href={feed.href}
       style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
       hoverStyle={pal.viewLight}
       accessibilityLabel={feed.displayName}

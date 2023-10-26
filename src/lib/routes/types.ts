@@ -15,11 +15,11 @@ export type CommonNavigatorParams = {
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
-  ProfileList: {name: string; rkey: string; view?: string}
+  ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
-  ProfileFeed: {name: string; rkey: string; view?: string}
+  ProfileFeed: {name: string; rkey: string}
   ProfileFeedLikedBy: {name: string; rkey: string}
   Debug: undefined
   Log: undefined
