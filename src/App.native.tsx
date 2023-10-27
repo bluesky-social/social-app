@@ -2,7 +2,6 @@ import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
 import 'lib/sentry' // must be relatively on top
 import {withSentry} from 'lib/sentry'
-import {Linking} from 'react-native'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
@@ -15,7 +14,6 @@ import {Shell} from './view/shell'
 import * as notifications from 'lib/notifications/notifications'
 import * as analytics from 'lib/analytics/analytics'
 import * as Toast from './view/com/util/Toast'
-import {handleLink} from './Navigation'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
@@ -34,14 +32,6 @@ const App = observer(function AppImpl() {
       setRootStore(store)
       analytics.init(store)
       notifications.init(store)
-      Linking.getInitialURL().then((url: string | null) => {
-        if (url) {
-          handleLink(url)
-        }
-      })
-      Linking.addEventListener('url', ({url}) => {
-        handleLink(url)
-      })
       store.onSessionDropped(() => {
         Toast.show('Sorry! Your session expired. Please log in again.')
       })
