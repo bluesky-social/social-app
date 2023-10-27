@@ -92,42 +92,42 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
     <>
       <Stack.Screen
         name="NotFound"
-        component={NotFoundScreen}
+        component={lazyInit(() => NotFoundScreen)}
         options={{title: title('Not Found')}}
       />
       <Stack.Screen
         name="Moderation"
-        component={ModerationScreen}
+        component={lazyInit(() => ModerationScreen)}
         options={{title: title('Moderation')}}
       />
       <Stack.Screen
         name="ModerationMuteLists"
-        component={ModerationMuteListsScreen}
+        component={lazyInit(() => ModerationMuteListsScreen)}
         options={{title: title('Mute Lists')}}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
-        component={ModerationMutedAccounts}
+        component={lazyInit(() => ModerationMutedAccounts)}
         options={{title: title('Muted Accounts')}}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
-        component={ModerationBlockedAccounts}
+        component={lazyInit(() => ModerationBlockedAccounts)}
         options={{title: title('Blocked Accounts')}}
       />
       <Stack.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={lazyInit(() => SettingsScreen)}
         options={{title: title('Settings')}}
       />
       <Stack.Screen
         name="LanguageSettings"
-        component={LanguageSettingsScreen}
+        component={lazyInit(() => LanguageSettingsScreen)}
         options={{title: title('Language Settings')}}
       />
       <Stack.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={lazyInit(() => ProfileScreen)}
         options={({route}) => ({
           title: title(`@${route.params.name}`),
           animation: 'none',
@@ -135,101 +135,101 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="ProfileFollowers"
-        component={ProfileFollowersScreen}
+        component={lazyInit(() => ProfileFollowersScreen)}
         options={({route}) => ({
           title: title(`People following @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileFollows"
-        component={ProfileFollowsScreen}
+        component={lazyInit(() => ProfileFollowsScreen)}
         options={({route}) => ({
           title: title(`People followed by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileList"
-        component={ProfileListScreen}
+        component={lazyInit(() => ProfileListScreen)}
         options={{title: title('Mute List')}}
       />
       <Stack.Screen
         name="PostThread"
-        component={PostThreadScreen}
+        component={lazyInit(() => PostThreadScreen)}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
         name="PostLikedBy"
-        component={PostLikedByScreen}
+        component={lazyInit(() => PostLikedByScreen)}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
         name="PostRepostedBy"
-        component={PostRepostedByScreen}
+        component={lazyInit(() => PostRepostedByScreen)}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
         name="CustomFeed"
-        component={CustomFeedScreen}
+        component={lazyInit(() => CustomFeedScreen)}
         options={{title: title('Feed')}}
       />
       <Stack.Screen
         name="CustomFeedLikedBy"
-        component={CustomFeedLikedByScreen}
+        component={lazyInit(() => CustomFeedLikedByScreen)}
         options={{title: title('Liked by')}}
       />
       <Stack.Screen
         name="Debug"
-        component={DebugScreen}
+        component={lazyInit(() => DebugScreen)}
         options={{title: title('Debug')}}
       />
       <Stack.Screen
         name="Log"
-        component={LogScreen}
+        component={lazyInit(() => LogScreen)}
         options={{title: title('Log')}}
       />
       <Stack.Screen
         name="Support"
-        component={SupportScreen}
+        component={lazyInit(() => SupportScreen)}
         options={{title: title('Support')}}
       />
       <Stack.Screen
         name="PrivacyPolicy"
-        component={PrivacyPolicyScreen}
+        component={lazyInit(() => PrivacyPolicyScreen)}
         options={{title: title('Privacy Policy')}}
       />
       <Stack.Screen
         name="TermsOfService"
-        component={TermsOfServiceScreen}
+        component={lazyInit(() => TermsOfServiceScreen)}
         options={{title: title('Terms of Service')}}
       />
       <Stack.Screen
         name="CommunityGuidelines"
-        component={CommunityGuidelinesScreen}
+        component={lazyInit(() => CommunityGuidelinesScreen)}
         options={{title: title('Community Guidelines')}}
       />
       <Stack.Screen
         name="CopyrightPolicy"
-        component={CopyrightPolicyScreen}
+        component={lazyInit(() => CopyrightPolicyScreen)}
         options={{title: title('Copyright Policy')}}
       />
       <Stack.Screen
         name="AppPasswords"
-        component={AppPasswords}
+        component={lazyInit(() => AppPasswords)}
         options={{title: title('App Passwords')}}
       />
       <Stack.Screen
         name="SavedFeeds"
-        component={SavedFeeds}
+        component={lazyInit(() => SavedFeeds)}
         options={{title: title('Edit My Feeds')}}
       />
       <Stack.Screen
         name="PreferencesHomeFeed"
-        component={PreferencesHomeFeed}
+        component={lazyInit(() => PreferencesHomeFeed)}
         options={{title: title('Home Feed Preferences')}}
       />
       <Stack.Screen
         name="PreferencesThreads"
-        component={PreferencesThreads}
+        component={lazyInit(() => PreferencesThreads)}
         options={{title: title('Threads Preferences')}}
       />
     </>
@@ -254,14 +254,23 @@ function TabsNavigator() {
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
       tabBar={tabBar}>
-      <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
-      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
-      <Tab.Screen name="FeedsTab" component={FeedsTabNavigator} />
+      <Tab.Screen name="HomeTab" component={lazyInit(() => HomeTabNavigator)} />
+      <Tab.Screen
+        name="SearchTab"
+        component={lazyInit(() => SearchTabNavigator)}
+      />
+      <Tab.Screen
+        name="FeedsTab"
+        component={lazyInit(() => FeedsTabNavigator)}
+      />
       <Tab.Screen
         name="NotificationsTab"
-        component={NotificationsTabNavigator}
+        component={lazyInit(() => NotificationsTabNavigator)}
       />
-      <Tab.Screen name="MyProfileTab" component={MyProfileTabNavigator} />
+      <Tab.Screen
+        name="MyProfileTab"
+        component={lazyInit(() => MyProfileTabNavigator)}
+      />
     </Tab.Navigator>
   )
 }
@@ -278,7 +287,7 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <HomeTab.Screen name="Home" component={HomeScreen} />
+      <HomeTab.Screen name="Home" component={lazyInit(() => HomeScreen)} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -295,7 +304,10 @@ function SearchTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <SearchTab.Screen name="Search" component={SearchScreen} />
+      <SearchTab.Screen
+        name="Search"
+        component={lazyInit(() => SearchScreen)}
+      />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
   )
@@ -312,7 +324,7 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <FeedsTab.Screen name="Feeds" component={FeedsScreen} />
+      <FeedsTab.Screen name="Feeds" component={lazyInit(() => FeedsScreen)} />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
@@ -331,7 +343,7 @@ function NotificationsTabNavigator() {
       }}>
       <NotificationsTab.Screen
         name="Notifications"
-        component={NotificationsScreen}
+        component={lazyInit(() => NotificationsScreen)}
       />
       {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>
@@ -352,8 +364,8 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
       }}>
       <MyProfileTab.Screen
         name="MyProfile"
+        component={lazyInit(() => ProfileScreen)}
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
-        component={ProfileScreen}
         initialParams={{
           name: store.me.did,
         }}
@@ -384,22 +396,22 @@ const FlatNavigator = observer(function FlatNavigatorImpl() {
       }}>
       <Flat.Screen
         name="Home"
-        component={HomeScreen}
+        component={lazyInit(() => HomeScreen)}
         options={{title: title('Home')}}
       />
       <Flat.Screen
         name="Search"
-        component={SearchScreen}
+        component={lazyInit(() => SearchScreen)}
         options={{title: title('Search')}}
       />
       <Flat.Screen
         name="Feeds"
-        component={FeedsScreen}
+        component={lazyInit(() => FeedsScreen)}
         options={{title: title('Feeds')}}
       />
       <Flat.Screen
         name="Notifications"
-        component={NotificationsScreen}
+        component={lazyInit(() => NotificationsScreen)}
         options={{title: title('Notifications')}}
       />
       {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
@@ -576,6 +588,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
 })
+
+// This is a hack to ensure that we initialize screen modules only when that screen renders.
+// This does not delay loading code; it only delays module init (transitively).
+let lazyWrappers = new Map()
+function lazyInit<Props>(initModule: () => React.ComponentType<Props>) {
+  // Normally, returning a different component type onduring render would cause remounts.
+  // However, React includes special logic that unwraps lazy(...) and compares the inner types.
+  // As long as lazy resolves to the same component reference across re-renders, it won't remount.
+  return React.lazy(() => ({
+    // @ts-ignore - not sure how to type this
+    then(resolve) {
+      // Thanks to inline requires, this ensures the module is initialized lazily.
+      let Component = initModule()
+      if (!lazyWrappers.has(Component)) {
+        // We do need an extra wrapping component around each screen to work around an issue
+        // in React that causes lazy(memo(...)) to remount for different lazy() calls.
+        // By wrapping in an extra component, we ensure lazy doesn't resolve to a memo.
+        lazyWrappers.set(Component, function Wrapper(props: Props) {
+          // @ts-ignore - not sure how to type this
+          return <Component {...props} />
+        })
+      }
+      const wrapper = lazyWrappers.get(Component)
+      resolve!({default: wrapper})
+    },
+  }))
+}
 
 export {
   navigate,
