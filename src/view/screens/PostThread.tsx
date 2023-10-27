@@ -54,6 +54,7 @@ export const PostThreadScreen = withAuthRequired(
         return
       }
       store.shell.openComposer({
+        outlineTags: view.thread.postRecord?.tags,
         replyTo: {
           uri: view.thread.post.uri,
           cid: view.thread.post.cid,

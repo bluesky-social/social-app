@@ -251,6 +251,7 @@ export interface ComposerOpts {
   onPost?: () => void
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
+  outlineTags?: string[]
 }
 
 export class ShellUiModel {

@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {observer} from 'mobx-react-lite'
 import {Linking, StyleSheet, View} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri, AppBskyFeedDefs} from '@atproto/api'
+import {AtUri, AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -35,6 +35,7 @@ import {formatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Tag} from 'view/com/Tag'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -52,10 +53,10 @@ export const PostThreadItem = observer(function PostThreadItem({
   const [deleted, setDeleted] = React.useState(false)
   const styles = useStyles()
   const record = item.postRecord
-  const hasEngagement = item.post.likeCount || item.post.repostCount
 
   const itemUri = item.post.uri
   const itemCid = item.post.cid
+  const outlineTags = item.postRecord?.tags
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(item.post.uri)
     return makeProfileLink(item.post.author, 'post', urip.rkey)
@@ -90,6 +91,7 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const onPressReply = React.useCallback(() => {
     store.shell.openComposer({
+      outlineTags,
       replyTo: {
         uri: item.post.uri,
         cid: item.post.cid,
@@ -102,7 +104,7 @@ export const PostThreadItem = observer(function PostThreadItem({
       },
       onPost: onPostReply,
     })
-  }, [store, item, record, onPostReply])
+  }, [store, item, record, onPostReply, outlineTags])
 
   const onPressToggleRepost = React.useCallback(() => {
     return item
@@ -328,54 +330,45 @@ export const PostThreadItem = observer(function PostThreadItem({
                 </ContentHider>
               )}
             </ContentHider>
+
+            <View style={[styles.expandedInfo, pal.border]}>
+              {item.post.repostCount ? (
+                <Link href={repostsHref} title={repostsTitle}>
+                  <Text testID="repostCount" type="lg" style={pal.textLight}>
+                    <Text type="xl-bold" style={pal.text}>
+                      {formatCount(item.post.repostCount)}
+                    </Text>{' '}
+                    {pluralize(item.post.repostCount, 'repost')}
+                  </Text>
+                </Link>
+              ) : null}
+              {item.post.likeCount ? (
+                <Link href={likesHref} title={likesTitle}>
+                  <Text testID="likeCount" type="lg" style={pal.textLight}>
+                    <Text type="xl-bold" style={pal.text}>
+                      {formatCount(item.post.likeCount)}
+                    </Text>{' '}
+                    {pluralize(item.post.likeCount, 'like')}
+                  </Text>
+                </Link>
+              ) : null}
+              <Text style={pal.textLight}>{niceDate(item.post.indexedAt)}</Text>
+            </View>
+
             <ExpandedPostDetails
               post={item.post}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {hasEngagement ? (
-              <View style={[styles.expandedInfo, pal.border]}>
-                {item.post.repostCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={repostsHref}
-                    title={repostsTitle}>
-                    <Text testID="repostCount" type="lg" style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(item.post.repostCount)}
-                      </Text>{' '}
-                      {pluralize(item.post.repostCount, 'repost')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-                {item.post.likeCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
-                    <Text testID="likeCount" type="lg" style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(item.post.likeCount)}
-                      </Text>{' '}
-                      {pluralize(item.post.likeCount, 'like')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-              </View>
-            ) : (
-              <></>
-            )}
-            <View style={[s.pl10, s.pb5]}>
+
+            <View style={{paddingTop: 15, paddingBottom: 5}}>
               <PostCtrls
                 big
                 itemUri={itemUri}
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                itemOutlineTags={outlineTags}
                 author={item.post.author}
                 text={item.richText?.text || record.text}
                 indexedAt={item.post.indexedAt}
@@ -507,6 +500,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 itemCid={itemCid}
                 itemHref={itemHref}
                 itemTitle={itemTitle}
+                itemOutlineTags={outlineTags}
                 author={item.post.author}
                 text={item.richText?.text || record.text}
                 indexedAt={item.post.indexedAt}
@@ -622,17 +616,37 @@ function ExpandedPostDetails({
   translatorUrl: string
 }) {
   const pal = usePalette('default')
+  const hasTags =
+    AppBskyFeedPost.isRecord(post.record) && post.record.tags?.length
+  if (!hasTags && !needsTranslation) {
+    return null
+  }
   return (
-    <View style={[s.flexRow, s.mt2, s.mb10]}>
-      <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 10,
+        marginBottom: 2,
+        rowGap: 6,
+        columnGap: 8,
+      }}>
       {needsTranslation && (
-        <>
-          <Text style={pal.textLight}> • </Text>
-          <Link href={translatorUrl} title="Translate">
-            <Text style={pal.link}>Translate</Text>
-          </Link>
-        </>
+        <Link href={translatorUrl} title="Translate">
+          <Text style={pal.link}>Translate</Text>
+        </Link>
       )}
+      {hasTags && AppBskyFeedPost.isRecord(post.record)
+        ? post.record.tags!.map(tag => (
+            <Tag
+              key={tag}
+              value={tag}
+              textSize="md"
+              style={pal.textLight}
+              smallSigil
+            />
+          ))
+        : null}
     </View>
   )
 }
@@ -687,7 +701,7 @@ const useStyles = () => {
     },
     postTextLargeContainer: {
       paddingHorizontal: 0,
-      paddingBottom: 10,
+      // paddingBottom: 10,
     },
     translateLink: {
       marginBottom: 6,
@@ -700,14 +714,15 @@ const useStyles = () => {
     },
     expandedInfo: {
       flexDirection: 'row',
-      padding: 10,
+      flexWrap: 'wrap',
+      alignItems: 'baseline',
+      rowGap: 8,
+      columnGap: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 2,
       borderTopWidth: 1,
       borderBottomWidth: 1,
       marginTop: 5,
-      marginBottom: 15,
-    },
-    expandedInfoItem: {
-      marginRight: 10,
     },
     loadMore: {
       flexDirection: 'row',
@@ -724,6 +739,11 @@ const useStyles = () => {
     cursor: {
       // @ts-ignore web only
       cursor: 'pointer',
+    },
+    tag: {
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+      borderRadius: 4,
     },
   })
 }

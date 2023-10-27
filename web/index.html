@@ -48,17 +48,23 @@
         --text: black;
         --background: white;
         --backgroundLight: #F3F3F8;
+        --border: #f0e9e9;
+        --blue: #0085ff;
+        --teal: #9AD5CA;
+        --yellow: #FED766;
       }
       html.colorMode--dark {
         --text: white;
         --background: black;
         --backgroundLight: #26272D;
+        --border: #26272D;
       }
       @media (prefers-color-scheme: light) {
         html.colorMode--system {
           --text: black;
           --background: white;
           --backgroundLight: #F3F3F8;
+          --border: #f0e9e9;
         }
       }
       @media (prefers-color-scheme: dark) {
@@ -66,6 +72,7 @@
           --text: white;
           --background: black;
           --backgroundLight: #26272D;
+          --border: #26272D;
         }
       }
 
@@ -109,6 +116,7 @@
       }
       .ProseMirror p {
         margin: 0;
+        line-height: 1.5;
       }
       .ProseMirror p.is-editor-empty:first-child::before {
         color: #8d8e96;
@@ -133,8 +141,42 @@
       input:focus {
         outline: 0;
       }
+      /* TODO make this more obvious */
       .tippy-content .items {
         width: fit-content;
+      }
+
+      /* Hashtags in ProseMirror */
+      .ProseMirror .inline-tag,
+      .ProseMirror .mention {
+        position: relative;
+      }
+      .ProseMirror .inline-tag,
+      .ProseMirror .mention {
+        border-radius: 4px;
+        background-color: var(--backgroundLight);
+        padding: 0 3px 2px;
+
+        /* This approach works, but we can't do rounded corners
+        background-color: var(--backgroundLight);
+        box-shadow: -3px 0 var(--backgroundLight), -3px 2px var(--backgroundLight), 2px 0 var(--backgroundLight), 2px 2px var(--backgroundLight);
+        */
+
+        /*
+        This sorta works but not enough padding aroundd the next, looks bad.
+
+        border-radius: 4px;
+        background-color: red;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        */
+      }
+      .ProseMirror .inline-tag {
+        color: var(--text);
+      }
+      .ProseMirror .mention {
+        color: var(--text);
+        background-color: var(--yellow);
       }
 
       /* Tooltips */

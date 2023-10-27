@@ -13,6 +13,7 @@ export const Composer = observer(function ComposerImpl({
   onPost,
   quote,
   mention,
+  outlineTags,
 }: {
   active: boolean
   winHeight: number
@@ -20,6 +21,7 @@ export const Composer = observer(function ComposerImpl({
   onPost?: ComposerOpts['onPost']
   quote?: ComposerOpts['quote']
   mention?: ComposerOpts['mention']
+  outlineTags?: ComposerOpts['outlineTags']
 }) {
   const pal = usePalette('default')
   const initInterp = useAnimatedValue(0)
@@ -64,6 +66,7 @@ export const Composer = observer(function ComposerImpl({
         onPost={onPost}
         quote={quote}
         mention={mention}
+        outlineTags={outlineTags}
       />
     </Animated.View>
   )

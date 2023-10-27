@@ -14,6 +14,7 @@ export const Composer = observer(function ComposerImpl({
   quote,
   onPost,
   mention,
+  outlineTags,
 }: {
   active: boolean
   winHeight: number
@@ -21,6 +22,7 @@ export const Composer = observer(function ComposerImpl({
   quote: ComposerOpts['quote']
   onPost?: ComposerOpts['onPost']
   mention?: ComposerOpts['mention']
+  outlineTags?: ComposerOpts['outlineTags']
 }) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -46,6 +48,7 @@ export const Composer = observer(function ComposerImpl({
           quote={quote}
           onPost={onPost}
           mention={mention}
+          outlineTags={outlineTags}
         />
       </View>
     </View>

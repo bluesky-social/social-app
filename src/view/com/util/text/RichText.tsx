@@ -7,6 +7,7 @@ import {lh} from 'lib/styles'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {Tag} from 'view/com/Tag'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -69,6 +70,7 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
+    const tag = segment.tag
     if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
       els.push(
         <TextLink
@@ -90,6 +92,16 @@ export function RichText({
           style={[style, lineHeightStyle, pal.link]}
           dataSet={WORD_WRAP}
           warnOnMismatchingLabel
+        />,
+      )
+    } else if (tag && AppBskyRichtextFacet.validateTag(tag).success) {
+      els.push(
+        <Tag
+          key={key}
+          value={tag.tag}
+          textSize={type}
+          style={pal.link}
+          smallSigil
         />,
       )
     } else {

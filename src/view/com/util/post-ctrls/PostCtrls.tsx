@@ -22,6 +22,7 @@ interface PostCtrlsOpts {
   itemCid: string
   itemHref: string
   itemTitle: string
+  itemOutlineTags?: string[]
   isAuthor: boolean
   author: {
     did: string
@@ -70,6 +71,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   const onQuote = useCallback(() => {
     store.shell.closeModal()
     store.shell.openComposer({
+      outlineTags: opts.itemOutlineTags,
       quote: {
         uri: opts.itemUri,
         cid: opts.itemCid,
@@ -86,6 +88,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     opts.itemUri,
     opts.text,
     store.shell,
+    opts.itemOutlineTags,
   ])
 
   const onPressToggleLikeWrapper = async () => {

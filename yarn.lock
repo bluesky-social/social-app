@@ -1812,6 +1812,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.47.0.tgz#5478fdf443ff8158f9de171c704ae45308696c7d"
   integrity sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==
 
+"@estrattonbailey/tiptap-suggestion@^2.2.0-rc.3":
+  version "2.2.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@estrattonbailey/tiptap-suggestion/-/tiptap-suggestion-2.2.0-rc.3.tgz#190edb6b9bb620977ef5f1b8c9467bce8900cd21"
+  integrity sha512-RY16dkvtoCXLSgwW8E5j40LI+v2SUXzfbN63OPPDO7RrI/cXGyjpTz4pAGTOa2q4aU/2QTR/xPjBIpPHhxikLw==
+
 "@expo/bunyan@4.0.0", "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@expo/bunyan/-/bunyan-4.0.0.tgz#be0c1de943c7987a9fbd309ea0b1acd605890c7b"
@@ -3481,12 +3486,12 @@
     invariant "^2.2.4"
     nullthrows "^1.1.1"
 
-"@react-navigation/bottom-tabs@^6.5.7":
-  version "6.5.8"
-  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.5.8.tgz#9536c6e45154abc183c363d07c94991e10b14856"
-  integrity sha512-0aa/jXea+LyBgR5NoRNWGKw0aFhjHwCkusigMRXIrCA4kINauDcAO0w0iFbZeKfaTCVAix5kK5UxDJJ2aJpevg==
+"@react-navigation/bottom-tabs@^6.5.9":
+  version "6.5.9"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-6.5.9.tgz#d132e787b58b23dedfeb19b586f9467613a0c6bf"
+  integrity sha512-366D4pwq41qKqzsrEk3OPW9atTQJrfrLHPJhX3NLOinRIuDrxal1jJwN3vzNZoEg7gIEKaPYckuqUKg0zRFdog==
   dependencies:
-    "@react-navigation/elements" "^1.3.18"
+    "@react-navigation/elements" "^1.3.19"
     color "^4.2.3"
     warn-once "^0.1.0"
 
@@ -3515,6 +3520,11 @@
   version "1.3.18"
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.18.tgz#d8364b40276f3efb9c229c39da3b8b465f18f0a2"
   integrity sha512-/0hwnJkrr415yP0Hf4PjUKgGyfshrvNUKFXN85Mrt1gY49hy9IwxZgrrxlh0THXkPeq8q4VWw44eHDfAcQf20Q==
+
+"@react-navigation/elements@^1.3.19":
+  version "1.3.19"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.19.tgz#18a4a754836af19c20d987e8ffc4f8b0ee2cbece"
+  integrity sha512-7hLvSYKPuDS070pza5gd43WDX7QgfuEmuTWNbCJhKdWlLudYmq3qzxGCBwCfO2dEI6+p8tla5wruaWiGKAbTYw==
 
 "@react-navigation/native-stack@^6.9.12":
   version "6.9.13"
@@ -10088,6 +10098,11 @@ funpermaproxy@^1.1.0:
   resolved "https://registry.yarnpkg.com/funpermaproxy/-/funpermaproxy-1.1.0.tgz#39cb0b8bea908051e4608d8a414f1d87b55bf557"
   integrity sha512-2Sp1hWuO8m5fqeFDusyhKqYPT+7rGLw34N3qonDcdRP8+n7M7Gl/yKp/q7oCxnnJ6pWCectOmLFJpsMU/++KrQ==
 
+fuse.js@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-6.6.2.tgz#fe463fed4b98c0226ac3da2856a415576dc9a111"
+  integrity sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==
+
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
@@ -14520,6 +14535,13 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
+pind@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/pind/-/pind-0.5.0.tgz#9f04be810b0c91aac0bb0976a57ba1d76126d0c8"
+  integrity sha512-xK7GlJl2AeQQaYbtxoGOsGVa0Ms8M4B3CPIIohC2gmeDBRrxtBSWyzPc6cgdG4AEEvQETt//bIBETPy8VFO+BA==
+  dependencies:
+    tackjs "^3.0.1"
+
 pinkie-promise@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/pinkie-promise/-/pinkie-promise-2.0.1.tgz#2135d6dfa7a358c069ac9b178776288228450ffa"
@@ -17615,6 +17637,11 @@ symbol-tree@^3.2.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
+
+tackjs@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/tackjs/-/tackjs-3.0.1.tgz#d69af48df5921320953d28131a8ae110ae11ea06"
+  integrity sha512-a/0vc4RWqG/9mYeldQ9uhGGTicc4LCr0EPpjV0IIKB21QkmFfkN559wu/Z4rprOzWDnEjUzdwsqIIrQC1H+rpg==
 
 tailwindcss@^3.0.2:
   version "3.3.3"

@@ -19,7 +19,13 @@ import PasteInput, {
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
+import {
+  TagsAutocomplete,
+  getHashtagAt,
+  insertTagAt,
+} from './mobile/TagsAutocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
@@ -28,6 +34,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {isUriImage} from 'lib/media/util'
 import {downloadAndResize} from 'lib/media/manip'
 import {POST_IMG_MAX} from 'lib/constants'
+import {useStores} from 'state/index'
 
 export interface TextInputRef {
   focus: () => void
@@ -65,10 +72,15 @@ export const TextInput = forwardRef(function TextInputImpl(
   }: TextInputProps,
   ref,
 ) {
+  const store = useStores()
   const pal = usePalette('default')
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
+  const tagsAutocompleteModel = React.useMemo(
+    () => new TagsAutocompleteModel(store),
+    [store],
+  )
 
   React.useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
@@ -94,15 +106,27 @@ export const TextInput = forwardRef(function TextInputImpl(
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
 
-        const prefix = getMentionAt(
+        const mentionPrefix = getMentionAt(
           newText,
           textInputSelection.current?.start || 0,
         )
-        if (prefix) {
+
+        if (mentionPrefix) {
           autocompleteView.setActive(true)
-          autocompleteView.setPrefix(prefix.value)
+          autocompleteView.setPrefix(mentionPrefix.value)
         } else {
           autocompleteView.setActive(false)
+        }
+
+        const hashtagPrefix = getHashtagAt(
+          newText,
+          textInputSelection.current?.start || 0,
+        )
+        if (hashtagPrefix) {
+          tagsAutocompleteModel.setActive(true)
+          tagsAutocompleteModel.search(hashtagPrefix.value || '')
+        } else {
+          tagsAutocompleteModel.setActive(false)
         }
 
         const set: Set<string> = new Set()
@@ -143,6 +167,7 @@ export const TextInput = forwardRef(function TextInputImpl(
       suggestedLinks,
       onSuggestedLinksChanged,
       onPhotoPasted,
+      tagsAutocompleteModel,
     ],
   )
 
@@ -184,16 +209,25 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, autocompleteView],
   )
 
+  const onSelectTag = useCallback(
+    (tag: string) => {
+      onChangeText(
+        insertTagAt(richtext.text, textInputSelection.current?.start || 0, tag),
+      )
+      tagsAutocompleteModel.setActive(false)
+    },
+    [onChangeText, richtext, tagsAutocompleteModel],
+  )
+
   const textDecorated = useMemo(() => {
     let i = 0
 
     return Array.from(richtext.segments()).map(segment => {
-      const isTag = AppBskyRichtextFacet.isTag(segment.facet?.features?.[0])
       return (
         <Text
           key={i++}
           style={[
-            segment.facet && !isTag ? pal.link : pal.text,
+            segment.facet ? pal.link : pal.text,
             styles.textInputFormatting,
           ]}>
           {segment.text}
@@ -224,6 +258,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         view={autocompleteView}
         onSelect={onSelectAutocompleteItem}
       />
+      <TagsAutocomplete model={tagsAutocompleteModel} onSelect={onSelectTag} />
     </View>
   )
 })

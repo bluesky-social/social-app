@@ -14,9 +14,10 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
@@ -49,6 +50,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {TagInput} from './TagInput'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -56,6 +58,7 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   quote: initQuote,
   mention: initMention,
+  outlineTags,
 }: Props) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -87,12 +90,17 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(store), [store])
+  const [tags, setTags] = useState<string[]>(outlineTags || [])
   const onClose = useCallback(() => {
     store.shell.closeComposer()
   }, [store])
 
   const autocompleteView = useMemo<UserAutocompleteModel>(
     () => new UserAutocompleteModel(store),
+    [store],
+  )
+  const tagsAutocompleteModel = useMemo<TagsAutocompleteModel>(
+    () => new TagsAutocompleteModel(store),
     [store],
   )
 
@@ -183,6 +191,13 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
+  const onChangeTags = useCallback(
+    (tags: string[]) => {
+      setTags(tags)
+    },
+    [setTags],
+  )
+
   const onPressPublish = async () => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
@@ -211,6 +226,7 @@ export const ComposePost = observer(function ComposePost({
         onStateChange: setProcessingState,
         knownHandles: autocompleteView.knownHandles,
         langs: store.preferences.postLanguages,
+        tags,
       })
     } catch (e: any) {
       if (extLink) {
@@ -228,6 +244,18 @@ export const ComposePost = observer(function ComposePost({
         imageCount: gallery.size,
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
+
+      // save outline tags
+      tags.forEach(tag => tagsAutocompleteModel.commitRecentTag(tag))
+
+      // save inline tags
+      for (const facet of richtext.facets || []) {
+        for (const feature of facet.features) {
+          if (AppBskyRichtextFacet.isTag(feature)) {
+            tagsAutocompleteModel.commitRecentTag(feature.tag)
+          }
+        }
+      }
     }
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
@@ -419,6 +447,18 @@ export const ComposePost = observer(function ComposePost({
               ))}
           </View>
         ) : null}
+
+        <View
+          style={[
+            {
+              paddingVertical: 10,
+              marginTop: 10,
+              paddingHorizontal: 15,
+            },
+          ]}>
+          <TagInput initialTags={tags} onChangeTags={onChangeTags} />
+        </View>
+
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>
@@ -521,8 +561,7 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 10,
-    paddingLeft: 15,
-    paddingRight: 20,
+    paddingRight: 15,
     alignItems: 'center',
     borderTopWidth: 1,
   },

@@ -12,12 +12,15 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
+import {Tags, createTagsAutocomplete} from './web/Tags'
+import {useStores} from 'state/index'
 
 export interface TextInputRef {
   focus: () => void
@@ -52,11 +55,24 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
+  const store = useStores()
+  const tagsAutocompleteModel = React.useMemo(
+    () => new TagsAutocompleteModel(store),
+    [store],
+  )
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
   const extensions = React.useMemo(
     () => [
       Document,
       LinkDecorator,
+      Tags.configure({
+        HTMLAttributes: {
+          class: 'inline-tag',
+        },
+        suggestion: createTagsAutocomplete({
+          autocompleteModel: tagsAutocompleteModel,
+        }),
+      }),
       Mention.configure({
         HTMLAttributes: {
           class: 'mention',
@@ -71,7 +87,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       History,
       Hardbreak,
     ],
-    [autocompleteView, placeholder],
+    [autocompleteView, placeholder, tagsAutocompleteModel],
   )
 
   React.useEffect(() => {
@@ -183,6 +199,8 @@ function editorJsonToText(json: JSONContent): string {
     text += json.text || ''
   } else if (json.type === 'mention') {
     text += `@${json.attrs?.id || ''}`
+  } else if (json.type === 'tag') {
+    text += `#${json.attrs?.id || ''}`
   }
   return text
 }
