@@ -1,0 +1,6 @@
+# launch.yaml
+
+appId: xyz.blueskyweb.app
+---
+- launchApp
+- "scroll"
