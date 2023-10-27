@@ -1,0 +1,27 @@
+diff --git a/node_modules/metro-runtime/src/polyfills/require.js b/node_modules/metro-runtime/src/polyfills/require.js
+index ce67cb4..1a0a6a9 100644
+--- a/node_modules/metro-runtime/src/polyfills/require.js
++++ b/node_modules/metro-runtime/src/polyfills/require.js
+@@ -280,6 +280,7 @@ function registerSegment(segmentId, moduleDefiner, moduleIds) {
+     });
+   }
+ }
++var moduleCount = 0;
+ function loadModuleImplementation(moduleId, module) {
+   if (!module && moduleDefinersBySegmentID.length > 0) {
+     const segmentId = definingSegmentByModuleID.get(moduleId) ?? 0;
+@@ -303,7 +304,13 @@ function loadModuleImplementation(moduleId, module) {
+     throw module.error;
+   }
+   if (__DEV__) {
+-    var Systrace = requireSystrace();
++    var Systrace = {
++      beginEvent(label) {
++        moduleCount++;
++        console.log('MODULE INIT', moduleCount, label)
++      },
++      endEvent() {}
++    };
+     var Refresh = requireRefresh();
+   }
+ 
