@@ -21,7 +21,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
 const ShellInner = observer(function ShellInnerImpl() {
@@ -87,7 +90,7 @@ export const Shell: React.FC = observer(function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
   return (
-    <SafeAreaProvider style={pal.view}>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics} style={pal.view}>
       <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
         <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
         <RoutesContainer>

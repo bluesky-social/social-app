@@ -34,7 +34,6 @@ const App = observer(function AppImpl() {
       setRootStore(store)
       analytics.init(store)
       notifications.init(store)
-      SplashScreen.hideAsync()
       Linking.getInitialURL().then((url: string | null) => {
         if (url) {
           handleLink(url)
