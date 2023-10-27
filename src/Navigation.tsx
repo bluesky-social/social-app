@@ -92,42 +92,42 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
     <>
       <Stack.Screen
         name="NotFound"
-        component={NotFoundScreen}
+        getComponent={() => NotFoundScreen}
         options={{title: title('Not Found')}}
       />
       <Stack.Screen
         name="Moderation"
-        component={ModerationScreen}
+        getComponent={() => ModerationScreen}
         options={{title: title('Moderation')}}
       />
       <Stack.Screen
         name="ModerationMuteLists"
-        component={ModerationMuteListsScreen}
+        getComponent={() => ModerationMuteListsScreen}
         options={{title: title('Mute Lists')}}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
-        component={ModerationMutedAccounts}
+        getComponent={() => ModerationMutedAccounts}
         options={{title: title('Muted Accounts')}}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
-        component={ModerationBlockedAccounts}
+        getComponent={() => ModerationBlockedAccounts}
         options={{title: title('Blocked Accounts')}}
       />
       <Stack.Screen
         name="Settings"
-        component={SettingsScreen}
+        getComponent={() => SettingsScreen}
         options={{title: title('Settings')}}
       />
       <Stack.Screen
         name="LanguageSettings"
-        component={LanguageSettingsScreen}
+        getComponent={() => LanguageSettingsScreen}
         options={{title: title('Language Settings')}}
       />
       <Stack.Screen
         name="Profile"
-        component={ProfileScreen}
+        getComponent={() => ProfileScreen}
         options={({route}) => ({
           title: title(`@${route.params.name}`),
           animation: 'none',
@@ -135,101 +135,101 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="ProfileFollowers"
-        component={ProfileFollowersScreen}
+        getComponent={() => ProfileFollowersScreen}
         options={({route}) => ({
           title: title(`People following @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileFollows"
-        component={ProfileFollowsScreen}
+        getComponent={() => ProfileFollowsScreen}
         options={({route}) => ({
           title: title(`People followed by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileList"
-        component={ProfileListScreen}
+        getComponent={() => ProfileListScreen}
         options={{title: title('Mute List')}}
       />
       <Stack.Screen
         name="PostThread"
-        component={PostThreadScreen}
+        getComponent={() => PostThreadScreen}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
         name="PostLikedBy"
-        component={PostLikedByScreen}
+        getComponent={() => PostLikedByScreen}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
         name="PostRepostedBy"
-        component={PostRepostedByScreen}
+        getComponent={() => PostRepostedByScreen}
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
         name="CustomFeed"
-        component={CustomFeedScreen}
+        getComponent={() => CustomFeedScreen}
         options={{title: title('Feed')}}
       />
       <Stack.Screen
         name="CustomFeedLikedBy"
-        component={CustomFeedLikedByScreen}
+        getComponent={() => CustomFeedLikedByScreen}
         options={{title: title('Liked by')}}
       />
       <Stack.Screen
         name="Debug"
-        component={DebugScreen}
+        getComponent={() => DebugScreen}
         options={{title: title('Debug')}}
       />
       <Stack.Screen
         name="Log"
-        component={LogScreen}
+        getComponent={() => LogScreen}
         options={{title: title('Log')}}
       />
       <Stack.Screen
         name="Support"
-        component={SupportScreen}
+        getComponent={() => SupportScreen}
         options={{title: title('Support')}}
       />
       <Stack.Screen
         name="PrivacyPolicy"
-        component={PrivacyPolicyScreen}
+        getComponent={() => PrivacyPolicyScreen}
         options={{title: title('Privacy Policy')}}
       />
       <Stack.Screen
         name="TermsOfService"
-        component={TermsOfServiceScreen}
+        getComponent={() => TermsOfServiceScreen}
         options={{title: title('Terms of Service')}}
       />
       <Stack.Screen
         name="CommunityGuidelines"
-        component={CommunityGuidelinesScreen}
+        getComponent={() => CommunityGuidelinesScreen}
         options={{title: title('Community Guidelines')}}
       />
       <Stack.Screen
         name="CopyrightPolicy"
-        component={CopyrightPolicyScreen}
+        getComponent={() => CopyrightPolicyScreen}
         options={{title: title('Copyright Policy')}}
       />
       <Stack.Screen
         name="AppPasswords"
-        component={AppPasswords}
+        getComponent={() => AppPasswords}
         options={{title: title('App Passwords')}}
       />
       <Stack.Screen
         name="SavedFeeds"
-        component={SavedFeeds}
+        getComponent={() => SavedFeeds}
         options={{title: title('Edit My Feeds')}}
       />
       <Stack.Screen
         name="PreferencesHomeFeed"
-        component={PreferencesHomeFeed}
+        getComponent={() => PreferencesHomeFeed}
         options={{title: title('Home Feed Preferences')}}
       />
       <Stack.Screen
         name="PreferencesThreads"
-        component={PreferencesThreads}
+        getComponent={() => PreferencesThreads}
         options={{title: title('Threads Preferences')}}
       />
     </>
@@ -254,14 +254,17 @@ function TabsNavigator() {
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
       tabBar={tabBar}>
-      <Tab.Screen name="HomeTab" component={HomeTabNavigator} />
-      <Tab.Screen name="SearchTab" component={SearchTabNavigator} />
-      <Tab.Screen name="FeedsTab" component={FeedsTabNavigator} />
+      <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
+      <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
+      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
-        component={NotificationsTabNavigator}
+        getComponent={() => NotificationsTabNavigator}
       />
-      <Tab.Screen name="MyProfileTab" component={MyProfileTabNavigator} />
+      <Tab.Screen
+        name="MyProfileTab"
+        getComponent={() => MyProfileTabNavigator}
+      />
     </Tab.Navigator>
   )
 }
@@ -278,7 +281,7 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <HomeTab.Screen name="Home" component={HomeScreen} />
+      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -295,7 +298,7 @@ function SearchTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <SearchTab.Screen name="Search" component={SearchScreen} />
+      <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
   )
@@ -312,7 +315,7 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <FeedsTab.Screen name="Feeds" component={FeedsScreen} />
+      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
@@ -331,7 +334,7 @@ function NotificationsTabNavigator() {
       }}>
       <NotificationsTab.Screen
         name="Notifications"
-        component={NotificationsScreen}
+        getComponent={() => NotificationsScreen}
       />
       {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>
@@ -353,7 +356,7 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
       <MyProfileTab.Screen
         name="MyProfile"
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
-        component={ProfileScreen}
+        getComponent={() => ProfileScreen}
         initialParams={{
           name: store.me.did,
         }}
@@ -384,22 +387,22 @@ const FlatNavigator = observer(function FlatNavigatorImpl() {
       }}>
       <Flat.Screen
         name="Home"
-        component={HomeScreen}
+        getComponent={() => HomeScreen}
         options={{title: title('Home')}}
       />
       <Flat.Screen
         name="Search"
-        component={SearchScreen}
+        getComponent={() => SearchScreen}
         options={{title: title('Search')}}
       />
       <Flat.Screen
         name="Feeds"
-        component={FeedsScreen}
+        getComponent={() => FeedsScreen}
         options={{title: title('Feeds')}}
       />
       <Flat.Screen
         name="Notifications"
-        component={NotificationsScreen}
+        getComponent={() => NotificationsScreen}
         options={{title: title('Notifications')}}
       />
       {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
