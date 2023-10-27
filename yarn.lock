@@ -15917,6 +15917,11 @@ react-native-splash-screen@^3.3.0:
   resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz#3af71ed17afe50fee69590a45aec399d071ead02"
   integrity sha512-rGjt6HkoSXxMqH4SQUJ1gnPQlPJV8+J47+4yhgTIan4bVvAwJhEeJH7wWt9hXSdH4+VfwTS0GTaflj1Tw83IhA==
 
+react-native-startup-time@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-startup-time/-/react-native-startup-time-2.1.0.tgz#55c503503c903a4668051a9b600d9b868597b932"
+  integrity sha512-cm014/ig/ddHEEiAKoxfTDxUwrs5gaoxKpAOnpMIuhW5yozLxhouDtkozD26TLQ2UcIgftowgaScPMeZnI1YYg==
+
 react-native-svg@13.9.0:
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.9.0.tgz#8df8a690dd00362601f074dec5d3a86dd0f99c7f"

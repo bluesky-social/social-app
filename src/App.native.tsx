@@ -17,6 +17,7 @@ import * as Toast from './view/com/util/Toast'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
+import {StartupTime} from 'react-native-startup-time'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -49,6 +50,17 @@ const App = observer(function AppImpl() {
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
               <GestureHandlerRootView style={s.h100pct}>
+                <StartupTime
+                  style={{
+                    backgroundColor: 'red',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    zIndex: 100000,
+                    width: 100,
+                    height: 100,
+                  }}
+                />
                 <TestCtrls />
                 <Shell />
               </GestureHandlerRootView>
