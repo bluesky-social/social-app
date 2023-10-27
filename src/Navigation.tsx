@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
+import * as SplashScreen from 'expo-splash-screen'
 import {observer} from 'mobx-react-lite'
 import {
   NavigationContainer,
@@ -462,6 +463,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onReady={() => {
+        SplashScreen.hideAsync()
         // Register the navigation container with the Sentry instrumentation (only works on native)
         if (isNative) {
           const routingInstrumentation = getRoutingInstrumentation()
