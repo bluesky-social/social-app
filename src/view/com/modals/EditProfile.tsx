@@ -25,6 +25,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
+import Animated, {FadeOut} from 'react-native-reanimated'
+
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity)
 
 export const snapPoints = ['fullscreen']
 
@@ -219,18 +223,21 @@ export function Component({
               </LinearGradient>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            testID="editProfileCancelBtn"
-            style={s.mt5}
-            onPress={onPressCancel}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel profile editing"
-            accessibilityHint=""
-            onAccessibilityEscape={onPressCancel}>
-            <View style={[styles.btn]}>
-              <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
-            </View>
-          </TouchableOpacity>
+          {!isProcessing && (
+            <AnimatedTouchableOpacity
+              exiting={FadeOut}
+              testID="editProfileCancelBtn"
+              style={s.mt5}
+              onPress={onPressCancel}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel profile editing"
+              accessibilityHint=""
+              onAccessibilityEscape={onPressCancel}>
+              <View style={[styles.btn]}>
+                <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
+              </View>
+            </AnimatedTouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
