@@ -144,7 +144,7 @@ export function Component({
   ])
 
   return (
-    <KeyboardAvoidingView behavior="height">
+    <KeyboardAvoidingView style={s.flex1} behavior="height">
       <ScrollView style={[pal.view]} testID="editProfileModal">
         <Text style={[styles.title, pal.text]}>Edit my profile</Text>
         <View style={styles.photos}>
