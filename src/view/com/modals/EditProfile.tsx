@@ -26,6 +26,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import Animated, {FadeOut} from 'react-native-reanimated'
+import {isWeb} from 'platform/detection'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -225,7 +226,7 @@ export function Component({
           )}
           {!isProcessing && (
             <AnimatedTouchableOpacity
-              exiting={FadeOut}
+              exiting={!isWeb ? FadeOut : undefined}
               testID="editProfileCancelBtn"
               style={s.mt5}
               onPress={onPressCancel}
