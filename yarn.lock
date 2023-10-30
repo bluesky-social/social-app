@@ -47,18 +47,19 @@
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
 
-"@atproto/api@^0.6.20":
-  version "0.6.20"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.20.tgz#3a7eda60d73a5d5b6938e2dd016c24a7ba180c83"
-  integrity sha512-+peoKgkaxbglXQg9qEZcZIvyWm39yj0+syV3TBDrz5cWK4OIsdOyYBg2iISy+jvB5RzEUMe2WvOojP6Nq34mOg==
+"@atproto/api@^0.6.21":
+  version "0.6.21"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.6.21.tgz#6e5b00facf46f2556d9766290341aae7e6ef75c8"
+  integrity sha512-ZWVEnLhZ8nonkCVzeFgdUFZhTOUtPxvicZFuttvb2G2Q5u43RmJ5qXXZvox/S9XQEw7TubG6Jza1mesH7CjfVQ==
   dependencies:
-    "@atproto/common-web" "^0.2.1"
-    "@atproto/lexicon" "^0.2.2"
-    "@atproto/syntax" "^0.1.2"
-    "@atproto/xrpc" "^0.3.2"
+    "@atproto/common-web" "^0.2.2"
+    "@atproto/lexicon" "^0.2.3"
+    "@atproto/syntax" "^0.1.3"
+    "@atproto/xrpc" "^0.3.3"
     multiformats "^9.9.0"
     tlds "^1.234.0"
     typed-emitter "^2.1.0"
+    zod "^3.21.4"
 
 "@atproto/bsky@^0.0.5":
   version "0.0.5"
@@ -105,10 +106,10 @@
     uint8arrays "3.0.0"
     zod "^3.21.4"
 
-"@atproto/common-web@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.2.1.tgz#97412cb241321fc6c56a2b8c0b2416b3240caf50"
-  integrity sha512-5AoDKkKz7JhXSiicjhPihA/MJMlSuTQ9Aed9fflPuoTuT6C3aXbxaUZEcqqipSwlCfGpOzPmJmWJjMWWsYr2ew==
+"@atproto/common-web@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.2.2.tgz#decc12584c84f3c34d077d1afe7442bfc21bcf6c"
+  integrity sha512-XWZHj82kWGdhm0y6e/DxLA5qK0LPHTozfPCH2ws1B/Qh9Hh5DD/gakvlIRT1FouwPM+hWcs8YHVJ8bjnehrhHA==
   dependencies:
     graphemer "^1.4.0"
     multiformats "^9.9.0"
@@ -219,13 +220,13 @@
     multiformats "^9.9.0"
     zod "^3.21.4"
 
-"@atproto/lexicon@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.2.2.tgz#938a39482ff41c6a908f4ad43274adba595f3643"
-  integrity sha512-CvmjaSDavHMOJTuNYE8VjYhL7TVxBYV8QSWh2jHCpzfmj02DvVD9UBIfnoVv67POJkEtWXddjoV9beaIbaq/Xg==
+"@atproto/lexicon@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.2.3.tgz#3f8ba24187d5628ec06b1bdbec90747f7cdc0948"
+  integrity sha512-1xUs0KNw4CopWI5HSlLYZ8UHW5nb6V7sldO5OPONiEVKjETrqqjfopezloYAIBNrekUNXwd1pbp05afkAxW5og==
   dependencies:
-    "@atproto/common-web" "^0.2.1"
-    "@atproto/syntax" "^0.1.2"
+    "@atproto/common-web" "^0.2.2"
+    "@atproto/syntax" "^0.1.3"
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
     zod "^3.21.4"
@@ -297,12 +298,12 @@
   dependencies:
     "@atproto/common-web" "^0.2.0"
 
-"@atproto/syntax@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.1.2.tgz#417366d36b53ecf29d9d1f6e35179b1f3feef95b"
-  integrity sha512-n6VSuccMGouwftCvZBq9WNwI0qYCMOH/lTHSV+/dT232lX7pIrqisOlErUSBoOJ49B1Wxy1DjeeBS26ap9SsGQ==
+"@atproto/syntax@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.1.3.tgz#5cafd5d82eee939fde06a2eacd11b264fb2f3b13"
+  integrity sha512-Xbw+Rx15puW8wZ/ro40nAQVc7ymPqcGOinVt8Jxi+lcY/1iKpID9a86E6ZOzvw0ncFKONwILYk1+xGeUT6OUNA==
   dependencies:
-    "@atproto/common-web" "^0.2.1"
+    "@atproto/common-web" "^0.2.2"
 
 "@atproto/xrpc-server@^0.3.1":
   version "0.3.1"
@@ -329,12 +330,12 @@
     "@atproto/lexicon" "^0.2.1"
     zod "^3.21.4"
 
-"@atproto/xrpc@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.3.2.tgz#432a364be4b3bf8660a088a07dadecac10209763"
-  integrity sha512-D9jGjcFnEMHuGQ56v6+78uX3RiytKLrA5ITLq6shy0Qj6Zvt5MqV+/cTFuNPKrNCrnWOtHFeRQwMqyGhNS9qZQ==
+"@atproto/xrpc@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.3.3.tgz#05f1c431ccd366e950637b93acca85faa249f52b"
+  integrity sha512-o0VUrUGu5Y/1F+ujZKIJYpuHdfXaIDacxuiq2IjwR2rbHXlefh+9FJy5XNkq4do+jMj7U+gSiPrgqaqLYbc9ng==
   dependencies:
-    "@atproto/lexicon" "^0.2.2"
+    "@atproto/lexicon" "^0.2.3"
     zod "^3.21.4"
 
 "@babel/code-frame@7.10.4", "@babel/code-frame@~7.10.4":

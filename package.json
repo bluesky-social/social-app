@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.54.0",
+  "version": "1.55.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -31,7 +31,7 @@
     "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
-    "@atproto/api": "^0.6.20",
+    "@atproto/api": "^0.6.21",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
