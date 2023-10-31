@@ -460,18 +460,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 140,
     borderRadius: 24,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 13, // visually aligns the text vertically inside the button
+    paddingLeft: 16,
+    paddingRight: 18, // looks nicer like this
     backgroundColor: colors.blue3,
     marginLeft: 12,
     marginTop: 20,
     marginBottom: 10,
     gap: 8,
   },
-  newPostBtnIconWrapper: {},
+  newPostBtnIconWrapper: {
+    marginTop: 2, // aligns the icon visually with the text
+  },
   newPostBtnLabel: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })
