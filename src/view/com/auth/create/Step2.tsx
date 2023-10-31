@@ -61,8 +61,8 @@ export const Step2 = observer(function Step2Impl({
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
-            accessibilityLabel="button"
-            accessibilityHint="Opens Bluesky waitlist form">
+            accessibilityLabel="Join the waitlist."
+            accessibilityHint="">
             <View style={styles.touchable}>
               <Text style={pal.link}>Join the waitlist.</Text>
             </View>
