@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     width: 140,
     borderRadius: 24,
     paddingTop: 10,
-    paddingBottom: 13, // visually aligns the text vertically inside the button
+    paddingBottom: 12, // visually aligns the text vertically inside the button
     paddingLeft: 16,
     paddingRight: 18, // looks nicer like this
     backgroundColor: colors.blue3,
