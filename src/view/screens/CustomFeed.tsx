@@ -209,12 +209,8 @@ export const CustomFeedScreenInner = observer(
     }, [store, onSoftReset, isScreenFocused])
 
     const renderEmptyState = React.useCallback(() => {
-      return (
-        <View style={[pal.border, {borderTopWidth: 1, paddingTop: 20}]}>
-          <EmptyState icon="feed" message="This feed is empty!" />
-        </View>
-      )
-    }, [pal.border])
+      return <EmptyState icon="feed" message="This feed is empty!" />
+    }, [])
 
     return (
       <View style={s.hContentRegion}>
