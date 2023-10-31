@@ -11,6 +11,8 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri, AppBskyFeedGetFeed} from '@atproto/api'
 
+import {useStores} from 'state/index'
+import {Haptics} from 'lib/haptics'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
@@ -29,6 +31,7 @@ import {TextLink} from '../util/Link'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {Button} from 'view/com/util/forms/Button'
 import {CustomFeedContextMenu} from 'view/com/feeds/CustomFeedContextMenu'
+import * as Toast from 'view/com/util/Toast'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -286,6 +289,7 @@ function FeedInnerHeader({
   params: AppBskyFeedGetFeed.QueryParams
   showContextMenu?: boolean
 }) {
+  const store = useStores()
   const pal = usePalette('default')
   const {host, rkey} = new AtUri(params.feed)
   const uri = makeRecordUri(host, 'app.bsky.feed.generator', rkey)
@@ -293,6 +297,20 @@ function FeedInnerHeader({
   const author = feed?.data?.creator?.handle
   const {isDesktop} = useWebMediaQueries()
   const shareUrl = toShareUrl(`/profile/${host}`)
+
+  const removeFeed = React.useCallback(async () => {
+    try {
+      Haptics.default()
+      if (feed?.isSaved) {
+        await feed?.unsave()
+      }
+    } catch (err) {
+      Toast.show(
+        'There was an an issue removing this feed. Please check your internet connection and try again.',
+      )
+      store.log.error('Failed to remove feed', {err})
+    }
+  }, [store, feed])
 
   return (
     <View
@@ -356,10 +374,11 @@ function FeedInnerHeader({
             }}>
             <Text style={{width: '100%'}}>{error.message}</Text>
 
-            {error.type === 'upstream' ? (
+            {error.type === 'upstream' && feed?.isSaved ? (
               <Button
                 type="default-light"
                 style={{marginTop: 12}}
+                onPress={removeFeed}
                 accessibilityLabel="Remove from my feeds"
                 accessibilityHint="Un-pin and remove this feed from your home screen feeds.">
                 Remove from my feeds
