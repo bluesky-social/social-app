@@ -7,11 +7,16 @@ export function useCustomFeed(uri: string): CustomFeedModel | undefined {
   const [item, setItem] = useState<CustomFeedModel | undefined>()
   useEffect(() => {
     async function fetchView() {
-      const res = await store.agent.app.bsky.feed.getFeedGenerator({
-        feed: uri,
-      })
-      const view = res.data.view
-      return view
+      try {
+        const res = await store.agent.app.bsky.feed.getFeedGenerator({
+          feed: uri,
+        })
+        const view = res.data.view
+        return view
+      } catch (e) {
+        store.log.error('useCustomFeed failed to getFeedGenerator', e)
+        return undefined
+      }
     }
     async function buildFeedItem() {
       const view = await fetchView()
