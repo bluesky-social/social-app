@@ -52,6 +52,8 @@ export function AutoSizedImage({
 
   if (onPress || onLongPress || onPressIn) {
     return (
+      // disable a11y rule because in this case we want the tags on the image (#1640)
+      // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
       <Pressable
         onPress={onPress}
         onLongPress={onLongPress}
