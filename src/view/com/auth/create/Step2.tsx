@@ -11,6 +11,7 @@ import {TextInput} from '../util/TextInput'
 import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {useStores} from 'state/index'
+import {isWeb} from 'platform/detection'
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -60,10 +61,11 @@ export const Step2 = observer(function Step2Impl({
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
-            accessibilityRole="button"
-            accessibilityLabel="Waitlist"
+            accessibilityLabel="button"
             accessibilityHint="Opens Bluesky waitlist form">
-            <Text style={pal.link}>Join the waitlist.</Text>
+            <View style={styles.touchable}>
+              <Text style={pal.link}>Join the waitlist.</Text>
+            </View>
           </TouchableWithoutFeedback>
         </Text>
       ) : (
@@ -150,5 +152,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     paddingVertical: 14,
+  },
+  // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
+  touchable: {
+    ...(isWeb && {cursor: 'pointer'}),
   },
 })
