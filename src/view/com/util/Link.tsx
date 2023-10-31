@@ -27,11 +27,10 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from 'lib/strings/url-helpers'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -245,9 +244,7 @@ export const DesktopWebTextLink = memo(function DesktopWebTextLink({
   lineHeight,
   ...props
 }: DesktopWebTextLinkProps) {
-  const {isDesktop} = useWebMediaQueries()
-
-  if (isDesktop) {
+  if (isWeb) {
     return (
       <TextLink
         testID={testID}
