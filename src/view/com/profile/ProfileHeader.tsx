@@ -306,20 +306,22 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           },
         })
       }
-      items.push({
-        testID: 'profileHeaderDropdownBlockBtn',
-        label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
-        onPress: view.viewer.blocking
-          ? onPressUnblockAccount
-          : onPressBlockAccount,
-        icon: {
-          ios: {
-            name: 'person.fill.xmark',
+      if (!view.viewer.blockingByList) {
+        items.push({
+          testID: 'profileHeaderDropdownBlockBtn',
+          label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
+          onPress: view.viewer.blocking
+            ? onPressUnblockAccount
+            : onPressBlockAccount,
+          icon: {
+            ios: {
+              name: 'person.fill.xmark',
+            },
+            android: 'ic_menu_close_clear_cancel',
+            web: 'user-slash',
           },
-          android: 'ic_menu_close_clear_cancel',
-          web: 'user-slash',
-        },
-      })
+        })
+      }
       items.push({
         testID: 'profileHeaderDropdownReportBtn',
         label: 'Report Account',
@@ -338,6 +340,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     isMe,
     view.viewer.muted,
     view.viewer.blocking,
+    view.viewer.blockingByList,
     onPressShare,
     onPressUnmuteAccount,
     onPressMuteAccount,
@@ -370,17 +373,19 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               </Text>
             </TouchableOpacity>
           ) : view.viewer.blocking ? (
-            <TouchableOpacity
-              testID="unblockBtn"
-              onPress={onPressUnblockAccount}
-              style={[styles.btn, styles.mainBtn, pal.btn]}
-              accessibilityRole="button"
-              accessibilityLabel="Unblock"
-              accessibilityHint="">
-              <Text type="button" style={[pal.text, s.bold]}>
-                Unblock
-              </Text>
-            </TouchableOpacity>
+            view.viewer.blockingByList ? null : (
+              <TouchableOpacity
+                testID="unblockBtn"
+                onPress={onPressUnblockAccount}
+                style={[styles.btn, styles.mainBtn, pal.btn]}
+                accessibilityRole="button"
+                accessibilityLabel="Unblock"
+                accessibilityHint="">
+                <Text type="button" style={[pal.text, s.bold]}>
+                  Unblock
+                </Text>
+              </TouchableOpacity>
+            )
           ) : !view.viewer.blockedBy ? (
             <>
               {!isProfilePreview && (
