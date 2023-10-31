@@ -467,6 +467,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       theme={theme}
       onReady={() => {
         SplashScreen.hideAsync()
+        const initMs = Math.round(
+          performance.now() - global.__BUNDLE_START_TIME__,
+        )
+        console.log(`Time to first paint: ${initMs} ms`)
+
         // Register the navigation container with the Sentry instrumentation (only works on native)
         if (isNative) {
           const routingInstrumentation = getRoutingInstrumentation()
