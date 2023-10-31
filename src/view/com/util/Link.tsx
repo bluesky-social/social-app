@@ -27,11 +27,10 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from 'lib/strings/url-helpers'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -222,7 +221,7 @@ export const TextLink = memo(function TextLink({
 /**
  * Only acts as a link on desktop web
  */
-interface DesktopWebTextLinkProps extends TextProps {
+interface TextLinkOnWebOnlyProps extends TextProps {
   testID?: string
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
@@ -235,7 +234,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessibilityHint?: string
   title?: string
 }
-export const DesktopWebTextLink = memo(function DesktopWebTextLink({
+export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,
@@ -244,10 +243,8 @@ export const DesktopWebTextLink = memo(function DesktopWebTextLink({
   numberOfLines,
   lineHeight,
   ...props
-}: DesktopWebTextLinkProps) {
-  const {isDesktop} = useWebMediaQueries()
-
-  if (isDesktop) {
+}: TextLinkOnWebOnlyProps) {
+  if (isWeb) {
     return (
       <TextLink
         testID={testID}

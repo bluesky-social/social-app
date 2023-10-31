@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
 import {FeedSourceInfo} from 'lib/api/feed/types'
-import {Link, DesktopWebTextLink} from '../util/Link'
+import {Link, TextLinkOnWebOnly} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -189,7 +189,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 From{' '}
-                <DesktopWebTextLink
+                <TextLinkOnWebOnly
                   type="sm-bold"
                   style={pal.textLight}
                   lineHeight={1.2}
@@ -220,7 +220,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 Reposted by{' '}
-                <DesktopWebTextLink
+                <TextLinkOnWebOnly
                   type="sm-bold"
                   style={pal.textLight}
                   lineHeight={1.2}

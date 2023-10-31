@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {Text} from './text/Text'
-import {DesktopWebTextLink} from './Link'
+import {TextLinkOnWebOnly} from './Link'
 import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TypographyVariant} from 'lib/ThemeContext'
@@ -47,7 +47,7 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
         </View>
       )}
       <View style={styles.maxWidth}>
-        <DesktopWebTextLink
+        <TextLinkOnWebOnly
           type={opts.displayNameType || 'lg-bold'}
           style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
@@ -78,7 +78,7 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
       )}
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
-          <DesktopWebTextLink
+          <TextLinkOnWebOnly
             type="md"
             style={pal.textLight}
             lineHeight={1.2}
