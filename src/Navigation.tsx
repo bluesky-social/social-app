@@ -34,7 +34,6 @@ import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from './state'
-import {getRoutingInstrumentation} from 'lib/sentry'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
@@ -472,12 +471,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           performance.now() - global.__BUNDLE_START_TIME__,
         )
         console.log(`Time to first paint: ${initMs} ms`)
-
-        // Register the navigation container with the Sentry instrumentation (only works on native)
-        if (isNative) {
-          const routingInstrumentation = getRoutingInstrumentation()
-          routingInstrumentation.registerNavigationContainer(navigationRef)
-        }
       }}>
       {children}
     </NavigationContainer>

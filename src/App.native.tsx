@@ -1,7 +1,6 @@
 import 'react-native-url-polyfill/auto'
 import React, {useState, useEffect} from 'react'
 import 'lib/sentry' // must be relatively on top
-import {withSentry} from 'lib/sentry'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
@@ -60,4 +59,4 @@ const App = observer(function AppImpl() {
   )
 })
 
-export default withSentry(App)
+export default App
