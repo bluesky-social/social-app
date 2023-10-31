@@ -23,6 +23,11 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 
 const PAGE_SIZE = 30
 
+export type PostsFeedModelError = {
+  type: 'network' | 'upstream'
+  message: string
+}
+
 type Options = {
   /**
    * Formats the feed in a flat array with no threading of replies, just
@@ -47,6 +52,7 @@ export class PostsFeedModel {
   isBlockedBy = false
   error = ''
   loadMoreError = ''
+  cleanError?: PostsFeedModelError = undefined
   params: QueryParams
   hasMore = true
   pollCursor: string | undefined
@@ -137,6 +143,7 @@ export class PostsFeedModel {
     this.hasNewLatest = false
     this.hasLoaded = false
     this.error = ''
+    this.cleanError = undefined
     this.hasMore = true
     this.pollCursor = undefined
     this.slices = []
@@ -281,6 +288,7 @@ export class PostsFeedModel {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
+    this.cleanError = undefined
   }
 
   _xIdle(error?: any, loadMoreError?: any) {
@@ -290,7 +298,8 @@ export class PostsFeedModel {
     this.isBlocking = error instanceof GetAuthorFeed.BlockedActorError
     this.isBlockedBy = error instanceof GetAuthorFeed.BlockedByActorError
     this.error = cleanError(error)
-    this.loadMoreError = cleanError(loadMoreError)
+    this.loadMoreError = cleanError(loadMoreError) // TODO
+    this.cleanError = this.error ? this._cleanError(this.error) : undefined
     if (error) {
       this.rootStore.log.error('Posts feed request failed', error)
     }
@@ -357,5 +366,22 @@ export class PostsFeedModel {
         }
       }
     })
+  }
+
+  _cleanError(error: string) {
+    const e: PostsFeedModelError = {
+      type: 'network',
+      message: `Hmmm, the feed appears to be offline. Please check your internet connection and try again.`,
+    }
+
+    if (
+      error.includes('could not find feed') ||
+      error.includes('server appears to be experiencing issues')
+    ) {
+      e.type = 'upstream'
+      e.message = `Hmmm, we're having trouble finding this feed. It may have been deleted.`
+    }
+
+    return e
   }
 }

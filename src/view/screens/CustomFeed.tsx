@@ -21,19 +21,16 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {shareUrl} from 'lib/sharing'
-import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {ComposeIcon2} from 'lib/icons'
 import {FAB} from '../com/util/fab/FAB'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {EmptyState} from 'view/com/util/EmptyState'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {resolveName} from 'lib/api'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
+import {CustomFeedContextMenu} from 'view/com/feeds/CustomFeedContextMenu'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 
@@ -122,11 +119,9 @@ export const CustomFeedScreenInner = observer(
     const store = useStores()
     const pal = usePalette('default')
     const palInverted = usePalette('inverted')
-    const navigation = useNavigation<NavigationProp>()
     const isScreenFocused = useIsFocused()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-    const {track} = useAnalytics()
-    const {rkey, name: handleOrDid} = route.params
+    const {rkey} = route.params
     const uri = useMemo(
       () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
       [rkey, feedOwnerDid],
@@ -185,36 +180,6 @@ export const CustomFeedScreenInner = observer(
       })
     }, [store, currentFeed])
 
-    const onPressAbout = React.useCallback(() => {
-      store.shell.openModal({
-        name: 'confirm',
-        title: currentFeed?.displayName || '',
-        message:
-          currentFeed?.data.description || 'This feed has no description.',
-        confirmBtnText: 'Close',
-        onPressConfirm() {},
-      })
-    }, [store, currentFeed])
-
-    const onPressViewAuthor = React.useCallback(() => {
-      navigation.navigate('Profile', {name: handleOrDid})
-    }, [handleOrDid, navigation])
-
-    const onPressShare = React.useCallback(() => {
-      const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)
-      shareUrl(url)
-      track('CustomFeed:Share')
-    }, [handleOrDid, rkey, track])
-
-    const onPressReport = React.useCallback(() => {
-      if (!currentFeed) return
-      store.shell.openModal({
-        name: 'report',
-        uri: currentFeed.uri,
-        cid: currentFeed.data.cid,
-      })
-    }, [store, currentFeed])
-
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0, animated: true})
       resetMainScroll()
@@ -242,90 +207,6 @@ export const CustomFeedScreenInner = observer(
         softResetSub.remove()
       }
     }, [store, onSoftReset, isScreenFocused])
-
-    const dropdownItems: DropdownItem[] = React.useMemo(() => {
-      return [
-        currentFeed
-          ? {
-              testID: 'feedHeaderDropdownAboutBtn',
-              label: 'About this feed',
-              onPress: onPressAbout,
-              icon: {
-                ios: {
-                  name: 'info.circle',
-                },
-                android: '',
-                web: 'info',
-              },
-            }
-          : undefined,
-        {
-          testID: 'feedHeaderDropdownViewAuthorBtn',
-          label: 'View author',
-          onPress: onPressViewAuthor,
-          icon: {
-            ios: {
-              name: 'person',
-            },
-            android: '',
-            web: ['far', 'user'],
-          },
-        },
-        {
-          testID: 'feedHeaderDropdownToggleSavedBtn',
-          label: currentFeed?.isSaved
-            ? 'Remove from my feeds'
-            : 'Add to my feeds',
-          onPress: onToggleSaved,
-          icon: currentFeed?.isSaved
-            ? {
-                ios: {
-                  name: 'trash',
-                },
-                android: 'ic_delete',
-                web: 'trash',
-              }
-            : {
-                ios: {
-                  name: 'plus',
-                },
-                android: '',
-                web: 'plus',
-              },
-        },
-        {
-          testID: 'feedHeaderDropdownReportBtn',
-          label: 'Report feed',
-          onPress: onPressReport,
-          icon: {
-            ios: {
-              name: 'exclamationmark.triangle',
-            },
-            android: 'ic_menu_report_image',
-            web: 'circle-exclamation',
-          },
-        },
-        {
-          testID: 'feedHeaderDropdownShareBtn',
-          label: 'Share link',
-          onPress: onPressShare,
-          icon: {
-            ios: {
-              name: 'square.and.arrow.up',
-            },
-            android: 'ic_menu_share',
-            web: 'share',
-          },
-        },
-      ].filter(Boolean) as DropdownItem[]
-    }, [
-      currentFeed,
-      onPressAbout,
-      onToggleSaved,
-      onPressReport,
-      onPressShare,
-      onPressViewAuthor,
-    ])
 
     const renderEmptyState = React.useCallback(() => {
       return (
@@ -403,25 +284,24 @@ export const CustomFeedScreenInner = observer(
                   </Text>
                 </Button>
               )}
+
+              <CustomFeedContextMenu
+                feed={currentFeed}
+                testID="feedHeaderDropdownBtn">
+                <View
+                  style={{
+                    paddingLeft: 12,
+                    paddingRight: isMobile ? 12 : 0,
+                  }}>
+                  <FontAwesomeIcon
+                    icon="ellipsis"
+                    size={20}
+                    color={pal.colors.textLight}
+                  />
+                </View>
+              </CustomFeedContextMenu>
             </>
           ) : null}
-          <NativeDropdown
-            testID="feedHeaderDropdownBtn"
-            items={dropdownItems}
-            accessibilityLabel="More options"
-            accessibilityHint="">
-            <View
-              style={{
-                paddingLeft: 12,
-                paddingRight: isMobile ? 12 : 0,
-              }}>
-              <FontAwesomeIcon
-                icon="ellipsis"
-                size={20}
-                color={pal.colors.textLight}
-              />
-            </View>
-          </NativeDropdown>
         </SimpleViewHeader>
         <Feed
           scrollElRef={scrollElRef}
@@ -431,6 +311,7 @@ export const CustomFeedScreenInner = observer(
           renderEmptyState={renderEmptyState}
           extraData={[uri, isPinned]}
           style={!isTabletOrDesktop ? {flex: 1} : undefined}
+          showFeedHeaderContextMenu={false}
         />
         {isScrolledDown ? (
           <LoadLatestBtn

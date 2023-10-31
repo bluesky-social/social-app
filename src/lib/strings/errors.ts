@@ -22,6 +22,7 @@ export function isNetworkError(e: unknown) {
   return (
     str.includes('Abort') ||
     str.includes('Network request failed') ||
-    str.includes('Failed to fetch')
+    str.includes('Failed to fetch') ||
+    str.includes('NetworkError when attempting to fetch resource')
   )
 }
