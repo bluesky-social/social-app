@@ -298,7 +298,7 @@ export class PostsFeedModel {
     this.isBlocking = error instanceof GetAuthorFeed.BlockedActorError
     this.isBlockedBy = error instanceof GetAuthorFeed.BlockedByActorError
     this.error = cleanError(error)
-    this.loadMoreError = cleanError(loadMoreError) // TODO
+    this.loadMoreError = cleanError(loadMoreError)
     this.cleanError = this.error ? this._cleanError(this.error) : undefined
     if (error) {
       this.rootStore.log.error('Posts feed request failed', error)

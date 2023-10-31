@@ -250,7 +250,11 @@ function ErrorMessage({
       <Text style={{paddingRight: 18}}>
         {feed.cleanError?.message || feed.error}
       </Text>
-      <Button type="default-light" onPress={onPress}>
+      <Button
+        type="default-light"
+        onPress={onPress}
+        accessibilityLabel="Retry"
+        accessibilityHint="Retries the last action, which errored out">
         Try again
       </Button>
     </View>
@@ -353,7 +357,11 @@ function FeedInnerHeader({
             <Text style={{width: '100%'}}>{error.message}</Text>
 
             {error.type === 'upstream' ? (
-              <Button type="default-light" style={{marginTop: 12}}>
+              <Button
+                type="default-light"
+                style={{marginTop: 12}}
+                accessibilityLabel="Remove from my feeds"
+                accessibilityHint="Un-pin and remove this feed from your home screen feeds.">
                 Remove from my feeds
               </Button>
             ) : null}
