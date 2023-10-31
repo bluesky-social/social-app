@@ -10,10 +10,26 @@ import {GalleryModel} from '../media/gallery'
 import {StyleProp, ViewStyle} from 'react-native'
 import {isWeb} from 'platform/detection'
 
+// For Waverly
+import {GroupSearchItem} from 'w2-api/waverly_sdk'
+import {PickableData} from 'view/com/w2/web-reader/DraggableFab'
+
 export type ColorMode = 'system' | 'light' | 'dark'
 
 export function isColorMode(v: unknown): v is ColorMode {
   return v === 'system' || v === 'light' || v === 'dark'
+}
+
+// For Waverly
+export type FabMode = 'waverly' | 'create' | 'plus'
+export function isFabMode(v: unknown): v is FabMode {
+  return v === 'waverly' || v === 'create' || v === 'plus'
+}
+
+// For Waverly
+export type FabStyle = 'square' | 'round'
+export function isFabStyle(v: unknown): v is FabStyle {
+  return v === 'square' || v === 'round'
 }
 
 export interface ConfirmModal {
@@ -137,6 +153,20 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
+// For Waverly
+export interface GroupSelectorModal {
+  name: 'group-selector'
+  onSelect: (g: GroupSearchItem) => void
+}
+
+// For Waverly
+export interface WaverlyModal {
+  name: 'waverly-button'
+  onWordDJ: (pd: PickableData | undefined) => void
+  onWaverlyChat: (pd: PickableData | undefined) => void
+  pickableData?: PickableData
+}
+
 export interface BirthDateSettingsModal {
   name: 'birth-date-settings'
 }
@@ -194,6 +224,12 @@ export type Modal =
   // Bluesky access
   | WaitlistModal
   | InviteCodesModal
+
+  // WordDj
+  | GroupSelectorModal
+
+  // Waverly
+  | WaverlyModal
 
   // Generic
   | ConfirmModal
@@ -253,6 +289,12 @@ export interface ComposerOpts {
   mention?: string // handle of user to mention
 }
 
+// For Waverly
+export interface FabCallbacks {
+  onFabMoved: (x: number, y: number) => void
+  onFabReleased: () => void
+}
+
 export class ShellUiModel {
   colorMode: ColorMode = 'system'
   minimalShellMode = false
@@ -265,6 +307,25 @@ export class ShellUiModel {
   isComposerActive = false
   composerOpts: ComposerOpts | undefined
   tickEveryMinute = Date.now()
+
+  // Waverly Fab state.
+  isFabVisible = true
+  isFabMovable = true
+  fabMode: FabMode = 'waverly'
+  fabStyle: FabStyle = 'round'
+  fabOffset: {x: number; y: number} = {x: 0, y: 0}
+  isFabPressed: boolean = false // True while the Fab is being pressed
+  hasFabMoved: boolean = false // Reset every time the Fab is released.
+  hitting: {pickID: string} = {pickID: ''}
+
+  fabUseDefaultCallbacks = true
+  fabCallbacks: FabCallbacks = {onFabMoved: () => {}, onFabReleased: () => {}}
+  fabDefaultCallbacks: FabCallbacks = {
+    onFabMoved: () => {},
+    onFabReleased: () => {},
+  }
+
+  pickableData: Map<string, PickableData> = new Map<string, PickableData>()
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
@@ -402,11 +463,81 @@ export class ShellUiModel {
   }
 
   setupLoginModals() {
-    this.rootStore.onSessionReady(() => {
-      if (this.rootStore.reminders.shouldRequestEmailConfirmation) {
-        this.openModal({name: 'verify-email', showReminder: true})
-        this.rootStore.reminders.setEmailConfirmationRequested()
-      }
-    })
+    // Waverly does not handle reminders for now
+    //
+    // this.rootStore.onSessionReady(() => {
+    //   if (this.rootStore.reminders.shouldRequestEmailConfirmation) {
+    //     this.openModal({name: 'verify-email', showReminder: true})
+    //     this.rootStore.reminders.setEmailConfirmationRequested()
+    //   }
+    // })
+  }
+
+  // Fab methods.
+  setFabUseDefaultCallbacks() {
+    this.fabUseDefaultCallbacks = true
+  }
+  setFabDefaultCallbacks(
+    onFabMoved: (x: number, y: number) => void,
+    onFabReleased: () => void,
+  ) {
+    this.fabDefaultCallbacks = {
+      onFabMoved,
+      onFabReleased,
+    }
+  }
+  setFabUseCustomCallbacks(
+    onFabMoved: (x: number, y: number) => void,
+    onFabReleased: () => void,
+  ) {
+    this.fabUseDefaultCallbacks = false
+    this.fabCallbacks = {
+      onFabMoved,
+      onFabReleased,
+    }
+  }
+  onFabMoved(x: number, y: number) {
+    if (this.fabUseDefaultCallbacks) this.fabDefaultCallbacks.onFabMoved(x, y)
+    else this.fabCallbacks.onFabMoved(x, y)
+  }
+  onFabReleased() {
+    if (this.fabUseDefaultCallbacks) this.fabDefaultCallbacks.onFabReleased()
+    else this.fabCallbacks.onFabReleased()
+  }
+  hideFab() {
+    this.isFabVisible = false
+  }
+  showFab() {
+    this.isFabVisible = true
+  }
+  setIsFabMovable(v: boolean) {
+    this.isFabMovable = v
+  }
+  setFabMode(mode: FabMode, style: FabStyle) {
+    this.fabMode = mode
+    this.fabStyle = style
+  }
+  setFabOffset(x: number, y: number) {
+    this.fabOffset = {x, y}
+  }
+
+  setPickableData(pd: PickableData) {
+    this.pickableData.set(pd.pickID, pd)
+  }
+  getPickableData(v: string) {
+    return this.pickableData.get(v)
+  }
+
+  clearHitting() {
+    this.hitting = {pickID: ''}
+  }
+  setHitting(pickID: string) {
+    this.hitting = {pickID: pickID}
+  }
+  setIsFabPressed(v: boolean) {
+    this.isFabPressed = v
+  }
+  setHasFabMoved(v: boolean) {
+    this.hasFabMoved = v
   }
 }

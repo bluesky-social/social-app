@@ -30,6 +30,9 @@ import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
   observer(function ProfileScreenImpl({route}: Props) {
@@ -253,44 +256,46 @@ export const ProfileScreen = withAuthRequired(
     )
 
     return (
-      <ScreenHider
-        testID="profileView"
-        style={styles.container}
-        screenDescription="profile"
-        moderation={uiState.profile.moderation.account}>
-        {uiState.profile.hasError ? (
-          <ErrorScreen
-            testID="profileErrorScreen"
-            title="Failed to load profile"
-            message={uiState.profile.error}
-            onPressTryAgain={onPressTryAgain}
+      <WaverlyScreenPadding>
+        <ScreenHider
+          testID="profileView"
+          style={styles.container}
+          screenDescription="profile"
+          moderation={uiState.profile.moderation.account}>
+          {uiState.profile.hasError ? (
+            <ErrorScreen
+              testID="profileErrorScreen"
+              title="Failed to load profile"
+              message={uiState.profile.error}
+              onPressTryAgain={onPressTryAgain}
+            />
+          ) : uiState.profile.hasLoaded ? (
+            <ViewSelector
+              ref={viewSelectorRef}
+              swipeEnabled={false}
+              sections={uiState.selectorItems}
+              items={uiState.uiItems}
+              renderHeader={renderHeader}
+              renderItem={renderItem}
+              ListFooterComponent={Footer}
+              refreshing={uiState.isRefreshing || false}
+              onSelectView={onSelectView}
+              onRefresh={onRefresh}
+              onEndReached={onEndReached}
+            />
+          ) : (
+            <CenteredView>{renderHeader()}</CenteredView>
+          )}
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel="New post"
+            accessibilityHint=""
           />
-        ) : uiState.profile.hasLoaded ? (
-          <ViewSelector
-            ref={viewSelectorRef}
-            swipeEnabled={false}
-            sections={uiState.selectorItems}
-            items={uiState.uiItems}
-            renderHeader={renderHeader}
-            renderItem={renderItem}
-            ListFooterComponent={Footer}
-            refreshing={uiState.isRefreshing || false}
-            onSelectView={onSelectView}
-            onRefresh={onRefresh}
-            onEndReached={onEndReached}
-          />
-        ) : (
-          <CenteredView>{renderHeader()}</CenteredView>
-        )}
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel="New post"
-          accessibilityHint=""
-        />
-      </ScreenHider>
+        </ScreenHider>
+      </WaverlyScreenPadding>
     )
   }),
 )

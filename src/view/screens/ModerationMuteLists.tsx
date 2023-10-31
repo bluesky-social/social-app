@@ -19,6 +19,9 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from 'view/com/util/Views'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationMuteLists'
@@ -85,26 +88,28 @@ export const ModerationMuteListsScreen = withAuthRequired(({}: Props) => {
   )
 
   return (
-    <CenteredView
-      style={[
-        styles.container,
-        pal.view,
-        pal.border,
-        isTabletOrDesktop && styles.containerDesktop,
-      ]}
-      testID="moderationMutelistsScreen">
-      <ViewHeader
-        title="Mute Lists"
-        showOnDesktop
-        renderButton={renderHeaderButton}
-      />
-      <ListsList
-        listsList={mutelists}
-        showAddBtns={isTabletOrDesktop}
-        renderEmptyState={renderEmptyState}
-        onPressCreateNew={onPressNewMuteList}
-      />
-    </CenteredView>
+    <WaverlyScreenPadding>
+      <CenteredView
+        style={[
+          styles.container,
+          pal.view,
+          pal.border,
+          isTabletOrDesktop && styles.containerDesktop,
+        ]}
+        testID="moderationMutelistsScreen">
+        <ViewHeader
+          title="Mute Lists"
+          showOnDesktop
+          renderButton={renderHeaderButton}
+        />
+        <ListsList
+          listsList={mutelists}
+          showAddBtns={isTabletOrDesktop}
+          renderEmptyState={renderEmptyState}
+          onPressCreateNew={onPressNewMuteList}
+        />
+      </CenteredView>
+    </WaverlyScreenPadding>
   )
 })
 

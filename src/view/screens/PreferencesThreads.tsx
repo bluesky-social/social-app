@@ -13,6 +13,9 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export const PreferencesThreads = observer(function PreferencesThreadsImpl({
   navigation,
@@ -22,108 +25,112 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   return (
-    <CenteredView
-      testID="preferencesThreadsScreen"
-      style={[
-        pal.view,
-        pal.border,
-        styles.container,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader title="Thread Preferences" showOnDesktop />
-      <View
+    <WaverlyScreenPadding>
+      <CenteredView
+        testID="preferencesThreadsScreen"
         style={[
-          styles.titleSection,
-          isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
+          pal.view,
+          pal.border,
+          styles.container,
+          isTabletOrDesktop && styles.desktopContainer,
         ]}>
-        <Text type="xl" style={[pal.textLight, styles.description]}>
-          Fine-tune the discussion threads.
-        </Text>
-      </View>
+        <ViewHeader title="Thread Preferences" showOnDesktop />
+        <View
+          style={[
+            styles.titleSection,
+            isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
+          ]}>
+          <Text type="xl" style={[pal.textLight, styles.description]}>
+            Fine-tune the discussion threads.
+          </Text>
+        </View>
 
-      <ScrollView>
-        <View style={styles.cardsContainer}>
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Sort Replies
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Sort replies to the same post by:
-            </Text>
-            <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
-              <RadioGroup
+        <ScrollView>
+          <View style={styles.cardsContainer}>
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                Sort Replies
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Sort replies to the same post by:
+              </Text>
+              <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
+                <RadioGroup
+                  type="default-light"
+                  items={[
+                    {key: 'oldest', label: 'Oldest replies first'},
+                    {key: 'newest', label: 'Newest replies first'},
+                    {key: 'most-likes', label: 'Most-liked replies first'},
+                    {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
+                  ]}
+                  onSelect={store.preferences.setThreadSort}
+                  initialSelection={store.preferences.thread.sort}
+                />
+              </View>
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                Prioritize Your Follows
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Show replies by people you follow before all other replies.
+              </Text>
+              <ToggleButton
                 type="default-light"
-                items={[
-                  {key: 'oldest', label: 'Oldest replies first'},
-                  {key: 'newest', label: 'Newest replies first'},
-                  {key: 'most-likes', label: 'Most-liked replies first'},
-                  {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
-                ]}
-                onSelect={store.preferences.setThreadSort}
-                initialSelection={store.preferences.thread.sort}
+                label={
+                  store.preferences.thread.prioritizeFollowedUsers
+                    ? 'Yes'
+                    : 'No'
+                }
+                isSelected={store.preferences.thread.prioritizeFollowedUsers}
+                onPress={store.preferences.togglePrioritizedFollowedUsers}
+              />
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                <FontAwesomeIcon icon="flask" color={pal.colors.text} />{' '}
+                Threaded Mode
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Set this setting to "Yes" to show replies in a threaded view.
+                This is an experimental feature.
+              </Text>
+              <ToggleButton
+                type="default-light"
+                label={
+                  store.preferences.thread.lab_treeViewEnabled ? 'Yes' : 'No'
+                }
+                isSelected={!!store.preferences.thread.lab_treeViewEnabled}
+                onPress={store.preferences.toggleThreadTreeViewEnabled}
               />
             </View>
           </View>
+        </ScrollView>
 
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Prioritize Your Follows
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Show replies by people you follow before all other replies.
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={
-                store.preferences.thread.prioritizeFollowedUsers ? 'Yes' : 'No'
-              }
-              isSelected={store.preferences.thread.prioritizeFollowedUsers}
-              onPress={store.preferences.togglePrioritizedFollowedUsers}
-            />
-          </View>
-
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Threaded
-              Mode
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Set this setting to "Yes" to show replies in a threaded view. This
-              is an experimental feature.
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={
-                store.preferences.thread.lab_treeViewEnabled ? 'Yes' : 'No'
-              }
-              isSelected={!!store.preferences.thread.lab_treeViewEnabled}
-              onPress={store.preferences.toggleThreadTreeViewEnabled}
-            />
-          </View>
+        <View
+          style={[
+            styles.btnContainer,
+            !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
+            pal.border,
+          ]}>
+          <TouchableOpacity
+            testID="confirmBtn"
+            onPress={() => {
+              navigation.canGoBack()
+                ? navigation.goBack()
+                : navigation.navigate('Settings')
+            }}
+            style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
+            accessibilityRole="button"
+            accessibilityLabel="Confirm"
+            accessibilityHint="">
+            <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-
-      <View
-        style={[
-          styles.btnContainer,
-          !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
-          pal.border,
-        ]}>
-        <TouchableOpacity
-          testID="confirmBtn"
-          onPress={() => {
-            navigation.canGoBack()
-              ? navigation.goBack()
-              : navigation.navigate('Settings')
-          }}
-          style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
-          accessibilityRole="button"
-          accessibilityLabel="Confirm"
-          accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
-        </TouchableOpacity>
-      </View>
-    </CenteredView>
+      </CenteredView>
+    </WaverlyScreenPadding>
   )
 })
 

@@ -21,6 +21,9 @@ import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
@@ -141,24 +144,26 @@ export const NotificationsScreen = withAuthRequired(
     }, [isDesktop, pal, store, hasNew])
 
     return (
-      <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title="Notifications" canGoBack={false} />
-        <InvitedUsers />
-        <Feed
-          view={store.me.notifications}
-          onPressTryAgain={onPressTryAgain}
-          onScroll={onMainScroll}
-          scrollElRef={scrollElRef}
-          ListHeaderComponent={ListHeaderComponent}
-        />
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label="Load new notifications"
-            showIndicator={hasNew}
+      <WaverlyScreenPadding>
+        <View testID="notificationsScreen" style={s.hContentRegion}>
+          <ViewHeader title="Notifications" canGoBack={false} />
+          <InvitedUsers />
+          <Feed
+            view={store.me.notifications}
+            onPressTryAgain={onPressTryAgain}
+            onScroll={onMainScroll}
+            scrollElRef={scrollElRef}
+            ListHeaderComponent={ListHeaderComponent}
           />
-        )}
-      </View>
+          {(isScrolledDown || hasNew) && (
+            <LoadLatestBtn
+              onPress={onPressLoadLatest}
+              label="Load new notifications"
+              showIndicator={hasNew}
+            />
+          )}
+        </View>
+      </WaverlyScreenPadding>
     )
   }),
 )

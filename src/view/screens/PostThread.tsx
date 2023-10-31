@@ -15,6 +15,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 const SHELL_FOOTER_HEIGHT = 44
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
@@ -69,29 +72,31 @@ export const PostThreadScreen = withAuthRequired(
     }, [view, store])
 
     return (
-      <View style={s.hContentRegion}>
-        {isMobile && <ViewHeader title="Post" />}
-        <View style={s.flex1}>
-          <PostThreadComponent
-            uri={uri}
-            view={view}
-            onPressReply={onPressReply}
-            treeView={!!store.preferences.thread.lab_treeViewEnabled}
-          />
-        </View>
-        {isMobile && !store.shell.minimalShellMode && (
-          <View
-            style={[
-              styles.prompt,
-              {
-                bottom:
-                  SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30),
-              },
-            ]}>
-            <ComposePrompt onPressCompose={onPressReply} />
+      <WaverlyScreenPadding>
+        <View style={s.hContentRegion}>
+          {isMobile && <ViewHeader title="Post" />}
+          <View style={s.flex1}>
+            <PostThreadComponent
+              uri={uri}
+              view={view}
+              onPressReply={onPressReply}
+              treeView={!!store.preferences.thread.lab_treeViewEnabled}
+            />
           </View>
-        )}
-      </View>
+          {isMobile && !store.shell.minimalShellMode && (
+            <View
+              style={[
+                styles.prompt,
+                {
+                  bottom:
+                    SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30),
+                },
+              ]}>
+              <ComposePrompt onPressCompose={onPressReply} />
+            </View>
+          )}
+        </View>
+      </WaverlyScreenPadding>
     )
   }),
 )

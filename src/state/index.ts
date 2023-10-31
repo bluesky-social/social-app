@@ -9,6 +9,7 @@ export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const PROD_SERVICE = 'https://bsky.social'
+export const WAVERLY_TEST_SERVICE = 'https://pds.test.waverly.social'
 export const DEFAULT_SERVICE = PROD_SERVICE
 const ROOT_STATE_STORAGE_KEY = 'root'
 const STATE_FETCH_INTERVAL = 15e3

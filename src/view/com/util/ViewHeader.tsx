@@ -22,14 +22,18 @@ export const ViewHeader = observer(function ViewHeaderImpl({
   hideOnScroll,
   showOnDesktop,
   showBorder,
+  buttonWidth,
+  renderTitle,
   renderButton,
 }: {
-  title: string
+  title?: string
   canGoBack?: boolean
   showBackButton?: boolean
   hideOnScroll?: boolean
   showOnDesktop?: boolean
   showBorder?: boolean
+  buttonWidth?: number
+  renderTitle?: () => JSX.Element
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -74,7 +78,10 @@ export const ViewHeader = observer(function ViewHeaderImpl({
             testID="viewHeaderDrawerBtn"
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
+            style={[
+              canGoBack ? styles.backBtn : styles.backBtnWide,
+              buttonWidth !== undefined && {width: buttonWidth},
+            ]}
             accessibilityRole="button"
             accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
             accessibilityHint={
@@ -82,8 +89,8 @@ export const ViewHeader = observer(function ViewHeaderImpl({
             }>
             {canGoBack ? (
               <FontAwesomeIcon
-                size={18}
                 icon="angle-left"
+                size={24}
                 style={[styles.backIcon, pal.text]}
               />
             ) : !isTablet ? (
@@ -95,10 +102,16 @@ export const ViewHeader = observer(function ViewHeaderImpl({
             ) : null}
           </TouchableOpacity>
         ) : null}
-        <View style={styles.titleContainer} pointerEvents="none">
-          <Text type="title" style={[pal.text, styles.title]}>
-            {title}
-          </Text>
+        <View
+          style={styles.titleContainer}
+          pointerEvents={renderTitle ? 'auto' : 'none'}>
+          {title !== undefined ? (
+            <Text type="title" style={[pal.text, styles.title]}>
+              {title}
+            </Text>
+          ) : (
+            renderTitle?.()
+          )}
         </View>
         {renderButton ? (
           renderButton()
@@ -115,7 +128,7 @@ function DesktopWebHeader({
   renderButton,
   showBorder = true,
 }: {
-  title: string
+  title?: string
   renderButton?: () => JSX.Element
   showBorder?: boolean
 }) {

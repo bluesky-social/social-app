@@ -2,10 +2,10 @@ module.exports = function () {
   const hasSentryToken = !!process.env.SENTRY_AUTH_TOKEN
   return {
     expo: {
-      name: 'Bluesky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
-      owner: 'blueskysocial',
+      name: 'Waverly',
+      slug: 'waverly',
+      scheme: 'waverly',
+      owner: 'waverlyai',
       version: '1.55.0',
       runtimeVersion: {
         policy: 'appVersion',
@@ -21,7 +21,7 @@ module.exports = function () {
       ios: {
         buildNumber: '1',
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'social.waverly.ios.app',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -36,7 +36,7 @@ module.exports = function () {
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
         },
-        associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        associatedDomains: ["applinks:waverly.social", "www.waverly.social"],
       },
       androidStatusBar: {
         barStyle: 'dark-content',
@@ -49,7 +49,7 @@ module.exports = function () {
           backgroundColor: '#ffffff',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'social.waverly.ios.app',
         intentFilters: [
           {
             action: 'VIEW',
@@ -103,8 +103,8 @@ module.exports = function () {
           {
             file: 'sentry-expo/upload-sourcemaps',
             config: {
-              organization: 'blueskyweb',
-              project: 'react-native',
+              organization: 'waverly-i0',
+              project: 'w2-client',
             },
           },
         ],

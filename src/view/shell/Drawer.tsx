@@ -28,9 +28,9 @@ import {
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
   UserIconSolid,
-  HashtagIcon,
   HandIcon,
 } from 'lib/icons'
+import {SparkleIcon} from 'lib/icons-w2'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 import {useTheme} from 'lib/ThemeContext'
@@ -42,6 +42,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
+import {Image} from 'expo-image'
 
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
@@ -49,7 +50,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {notifications} = store.me
@@ -87,6 +88,12 @@ export const DrawerContent = observer(function DrawerContentImpl() {
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
 
+  const onPressWaverlyChat = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'WaverlyChat'})
+    navigation.navigate('WaverlyChatScreen')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
+
   const onPressSearch = React.useCallback(
     () => onPressTab('Search'),
     [onPressTab],
@@ -101,11 +108,6 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
-
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
     navigation.navigate('Moderation')
@@ -117,6 +119,11 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     navigation.navigate('Settings')
     store.shell.closeDrawer()
   }, [navigation, track, store.shell])
+
+  const onPressDevMenu = React.useCallback(() => {
+    navigation.navigate('DevScreen')
+    store.shell.closeDrawer()
+  }, [navigation, store.shell])
 
   const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
@@ -185,28 +192,6 @@ export const DrawerContent = observer(function DrawerContentImpl() {
 
           <MenuItem
             icon={
-              isAtSearch ? (
-                <MagnifyingGlassIcon2Solid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size={24}
-                  strokeWidth={1.7}
-                />
-              ) : (
-                <MagnifyingGlassIcon2
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size={24}
-                  strokeWidth={1.7}
-                />
-              )
-            }
-            label="Search"
-            accessibilityLabel="Search"
-            accessibilityHint=""
-            bold={isAtSearch}
-            onPress={onPressSearch}
-          />
-          <MenuItem
-            icon={
               isAtHome ? (
                 <HomeIconSolid
                   style={pal.text as StyleProp<ViewStyle>}
@@ -227,6 +212,29 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             bold={isAtHome}
             onPress={onPressHome}
           />
+          <MenuItem
+            icon={
+              isAtSearch ? (
+                <MagnifyingGlassIcon2Solid
+                  style={pal.text as StyleProp<ViewStyle>}
+                  size={24}
+                  strokeWidth={1.7}
+                />
+              ) : (
+                <MagnifyingGlassIcon2
+                  style={pal.text as StyleProp<ViewStyle>}
+                  size={24}
+                  strokeWidth={1.7}
+                />
+              )
+            }
+            label="Search"
+            accessibilityLabel="Search"
+            accessibilityHint=""
+            bold={isAtSearch}
+            onPress={onPressSearch}
+          />
+
           <MenuItem
             icon={
               isAtNotifications ? (
@@ -254,7 +262,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             bold={isAtNotifications}
             onPress={onPressNotifications}
           />
-          <MenuItem
+          {/* <MenuItem
             icon={
               isAtFeeds ? (
                 <HashtagIcon
@@ -275,7 +283,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             accessibilityHint=""
             bold={isAtFeeds}
             onPress={onPressMyFeeds}
-          />
+          /> */}
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
             label="Moderation"
@@ -306,6 +314,22 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           />
           <MenuItem
             icon={
+              <View style={[pal.viewInvertedLight, styles.waverlyIconRound]}>
+                <Image
+                  accessibilityIgnoresInvertColors
+                  source={require('../../../assets/images/WaverlyCommaInverted.png')}
+                  style={styles.waverlyAvatar}
+                  contentFit="cover"
+                />
+              </View>
+            }
+            label="WaverlyChat"
+            accessibilityLabel="WaverlyChat"
+            accessibilityHint=""
+            onPress={onPressWaverlyChat}
+          />
+          <MenuItem
+            icon={
               <CogIcon
                 style={pal.text as StyleProp<ViewStyle>}
                 size="26"
@@ -317,8 +341,15 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             accessibilityHint=""
             onPress={onPressSettings}
           />
-
-          <View style={styles.smallSpacer} />
+          <MenuItem
+            icon={
+              <SparkleIcon style={pal.text as StyleProp<ViewStyle>} size="26" />
+            }
+            label="Dev"
+            accessibilityLabel="Dev Menu"
+            accessibilityHint=""
+            onPress={onPressDevMenu}
+          />
           <View style={styles.smallSpacer} />
         </ScrollView>
         <View style={styles.footer}>
@@ -554,5 +585,17 @@ const styles = StyleSheet.create({
   },
   footerBtnFeedbackDark: {
     backgroundColor: colors.blue6,
+  },
+  waverlyAvatar: {
+    width: 28,
+    height: 28,
+  },
+  waverlyIconRound: {
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 32 / 2,
+    backgroundColor: colors.waverly1,
   },
 })

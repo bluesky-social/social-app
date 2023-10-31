@@ -17,6 +17,9 @@ import {RadioGroup} from '../com/util/forms/RadioGroup'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
 export const DebugScreen = ({}: NativeStackScreenProps<
@@ -30,12 +33,14 @@ export const DebugScreen = ({}: NativeStackScreenProps<
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
   return (
-    <ThemeProvider theme={colorScheme}>
-      <DebugInner
-        colorScheme={colorScheme}
-        onToggleColorScheme={onToggleColorScheme}
-      />
-    </ThemeProvider>
+    <WaverlyScreenPadding>
+      <ThemeProvider theme={colorScheme}>
+        <DebugInner
+          colorScheme={colorScheme}
+          onToggleColorScheme={onToggleColorScheme}
+        />
+      </ThemeProvider>
+    </WaverlyScreenPadding>
   )
 }
 

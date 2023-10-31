@@ -92,7 +92,9 @@ web-build/
 
 # Android & iOS folders
 android/
-ios/
+ios/*
+!ios/ci_scripts
+
 
 # environment variables
 .env
@@ -103,3 +105,6 @@ google-services.json
 
 # Performance results (Flashlight)
 .perf/
+
+# lib directories are not generated here
+!lib/

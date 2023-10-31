@@ -3,11 +3,13 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "types": ["node"],
+    "baseUrl": ".",
     "paths": {
       "lib/*": ["./src/lib/*"],
       "platform/*": ["./src/platform/*"],
       "state/*": ["./src/state/*"],
-      "view/*": ["./src/view/*"]
-    }
-  }
+      "view/*": ["./src/view/*"],
+      "w2-api/*": ["../news-crawl/waverly-social/w2-api/*"],
+    },
+  },
 }

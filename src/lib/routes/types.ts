@@ -31,6 +31,16 @@ export type CommonNavigatorParams = {
   SavedFeeds: undefined
   PreferencesHomeFeed: undefined
   PreferencesThreads: undefined
+
+  // For Waverly
+  DevScreen: undefined
+  WaverlyPost: {name: string; rkey: string}
+  ReaderView: {name: string; rkey: string}
+  UrlReaderView: {name: string; uri: string}
+  RecReaderView: {recId: string}
+  WaverlyChatScreen: undefined
+  WordDJScreen: undefined
+  ContextCarouselScreen: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

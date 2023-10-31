@@ -31,11 +31,15 @@ export const SplashScreen = ({
           pal.border,
         ]}>
         <ErrorBoundary>
-          <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
-            Bluesky
+          <Text
+            type="title-2xl"
+            style={isMobileWeb ? styles.titleMobile : styles.title}>
+            Waverly
           </Text>
-          <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
-            See what's next
+          <Text
+            type="title-2xl"
+            style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+            Be Curious
           </Text>
           <View testID="signinOrCreateAccount" style={styles.btns}>
             <TouchableOpacity
@@ -57,6 +61,12 @@ export const SplashScreen = ({
               <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
           </View>
+          <Text
+            type="xl"
+            style={[styles.notice, pal.textLight]}
+            lineHeight={1.3}>
+            Waverly will launch soon.
+          </Text>
         </ErrorBoundary>
       </View>
       <Footer styles={styles} />
@@ -84,6 +94,7 @@ function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
         text="Jobs"
         style={[styles.footerLink, pal.link]}
       />
+      <TextLink href="/dev" text="Dev" style={[styles.footerLink, pal.link]} />
     </View>
   )
 }
@@ -107,28 +118,24 @@ const useStyles = () => {
     title: {
       textAlign: 'center',
       color: colors.blue3,
-      fontSize: 68,
-      fontWeight: 'bold',
+      fontSize: 74,
       paddingBottom: 10,
     },
     titleMobile: {
       textAlign: 'center',
       color: colors.blue3,
       fontSize: 58,
-      fontWeight: 'bold',
     },
     subtitle: {
       textAlign: 'center',
-      color: colors.gray5,
-      fontSize: 52,
-      fontWeight: 'bold',
+      color: colors.gray3,
+      fontSize: 42,
       paddingBottom: 30,
     },
     subtitleMobile: {
       textAlign: 'center',
-      color: colors.gray5,
-      fontSize: 42,
-      fontWeight: 'bold',
+      color: colors.gray3,
+      fontSize: 32,
       paddingBottom: 30,
     },
     btns: {

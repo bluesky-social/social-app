@@ -70,6 +70,15 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
+// For Waverly
+import {DevScreen} from './view/screens/w2/DevScreen'
+import {WaverlyPost} from 'view/com/w2/post/WaverlyPost'
+import {ReaderView} from 'view/com/w2/reader/ReaderView'
+import {UrlReaderView} from 'view/com/w2/reader/UrlReaderView'
+import {RecReaderView} from 'view/com/w2/reader/RecReaderView'
+import {WaverlyChatScreen} from 'view/screens/w2/WaverlyChatScreen'
+import {WordDJScreen} from 'view/com/w2/word-dj/WordDj'
+import {ContextCarouselScreen} from 'view/screens/w2/ContextCarousel'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 

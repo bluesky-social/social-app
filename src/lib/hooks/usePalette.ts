@@ -5,6 +5,8 @@ export interface UsePaletteValue {
   colors: PaletteColor
   view: ViewStyle
   viewLight: ViewStyle
+  viewInverted: ViewStyle
+  viewInvertedLight: ViewStyle
   btn: ViewStyle
   border: ViewStyle
   borderDark: ViewStyle
@@ -23,6 +25,12 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
     },
     viewLight: {
       backgroundColor: palette.backgroundLight,
+    },
+    viewInverted: {
+      backgroundColor: palette.backgroundInverted,
+    },
+    viewInvertedLight: {
+      backgroundColor: palette.backgroundInvertedLight,
     },
     btn: {
       backgroundColor: palette.backgroundLight,

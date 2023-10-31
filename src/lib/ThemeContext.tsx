@@ -20,6 +20,9 @@ export type PaletteColorName =
 export type PaletteColor = {
   background: string
   backgroundLight: string
+  backgroundInverted: string
+  backgroundInvertedLight: string
+  highlight: string
   text: string
   textLight: string
   textInverted: string
@@ -35,6 +38,13 @@ export type ShapeName = 'button' | 'bigButton' | 'smallButton'
 export type Shapes = Record<ShapeName, ViewStyle>
 
 export type TypographyVariant =
+  | '4xl'
+  | '3xl-thin'
+  | '3xl'
+  | '3xl-medium'
+  | '3xl-bold'
+  | '3xl-heavy'
+  | '3xl-thin'
   | '2xl-thin'
   | '2xl'
   | '2xl-medium'

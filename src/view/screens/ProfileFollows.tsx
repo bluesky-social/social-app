@@ -7,6 +7,9 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
 import {useStores} from 'state/index'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>
 export const ProfileFollowsScreen = withAuthRequired(({route}: Props) => {
   const store = useStores()
@@ -19,9 +22,11 @@ export const ProfileFollowsScreen = withAuthRequired(({route}: Props) => {
   )
 
   return (
-    <View>
-      <ViewHeader title="Following" />
-      <ProfileFollowsComponent name={name} />
-    </View>
+    <WaverlyScreenPadding>
+      <View>
+        <ViewHeader title="Following" />
+        <ProfileFollowsComponent name={name} />
+      </View>
+    </WaverlyScreenPadding>
   )
 })

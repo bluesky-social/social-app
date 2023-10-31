@@ -31,4 +31,14 @@ export const router = new Router({
   TermsOfService: '/support/tos',
   CommunityGuidelines: '/support/community-guidelines',
   CopyrightPolicy: '/support/copyright',
+
+  // For Waverly
+  DevScreen: '/dev',
+  WaverlyPost: '/profile/:name/w/:rkey',
+  ReaderView: '/profile/:name/reader/:rkey',
+  UrlReaderView: '/profile/:name/url/:url',
+  RecReaderView: '/recommendation/:recId',
+  WaverlyChatScreen: '/chat',
+  ContextCarousel: '/chat/context',
+  WordDJScreen: '/worddj',
 })

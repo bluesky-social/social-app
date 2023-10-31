@@ -30,6 +30,13 @@ import {reset as resetNavigation} from '../../Navigation'
 import {applyDebugHeader} from 'lib/api/debug-appview-proxy-header'
 import {OnboardingModel} from './discovery/onboarding'
 
+// For Waverly
+import {BskyAgent as WaverlyAtAgent} from '@waverlyai/atproto-api'
+import {WaverlyAgent} from './waverly-agent/waverly-agent'
+import {WaverlyChatModel} from './w2/chat/WaverlyChatModel'
+import {WaverlyContextModel} from './w2/chat/WaverlyContextModel'
+import {WordDJModel} from './w2/WordDJModel'
+
 export const appInfo = z.object({
   build: z.string(),
   name: z.string(),
@@ -56,10 +63,20 @@ export class RootStoreModel {
   mutedThreads = new MutedThreads()
   reminders = new Reminders(this)
 
+  // For Waverly
+  watAgent: WaverlyAtAgent
+  waverlyAgent: WaverlyAgent = new WaverlyAgent(this)
+  waverlyChat = new WaverlyChatModel(this)
+  waverlyContext = new WaverlyContextModel(this)
+  wordDJModel = new WordDJModel(this, undefined)
+
   constructor(agent: BskyAgent) {
     this.agent = agent
+    // For Waverly
+    this.watAgent = new WaverlyAtAgent({service: agent.service})
     makeAutoObservable(this, {
       agent: false,
+      watAgent: false,
       serialize: false,
       hydrate: false,
     })
@@ -143,6 +160,7 @@ export class RootStoreModel {
   ) {
     this.log.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
+    this.waverlyAgent.onSessionChange(this.agent.session?.accessJwt)
     applyDebugHeader(this.agent)
     this.me.clear()
     await this.preferences.sync()
@@ -150,6 +168,9 @@ export class RootStoreModel {
     if (!hadSession) {
       await resetNavigation()
     }
+    // For Waverly
+    this.watAgent = new WaverlyAtAgent({service: agent.service})
+    this.watAgent.session = agent.session
     this.emitSessionReady()
   }
 
@@ -158,6 +179,7 @@ export class RootStoreModel {
    */
   async handleSessionDrop() {
     this.log.debug('RootStoreModel:handleSessionDrop')
+    this.waverlyAgent.onSessionChange(undefined)
     resetToTab('HomeTab')
     this.me.clear()
     this.emitSessionDropped()
@@ -168,6 +190,7 @@ export class RootStoreModel {
    */
   clearAllSessionState() {
     this.log.debug('RootStoreModel:clearAllSessionState')
+    this.waverlyAgent.onSessionChange(undefined)
     this.session.clear()
     resetToTab('HomeTab')
     this.me.clear()

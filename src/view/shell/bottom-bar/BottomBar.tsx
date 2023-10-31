@@ -14,9 +14,7 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  HashtagIcon,
-  BellIcon,
-  BellIconSolid,
+  ComposeIcon2,
 } from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
@@ -24,8 +22,10 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {BlurView} from '../../com/util/BlurView'
+import {alphaBg} from 'lib/styles'
 
-type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
+type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile'
 
 export const BottomBar = observer(function BottomBarImpl({
   navigation,
@@ -34,7 +34,7 @@ export const BottomBar = observer(function BottomBarImpl({
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
+  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
   const {footerMinimalShellTransform} = useMinimalShellMode()
@@ -60,153 +60,142 @@ export const BottomBar = observer(function BottomBarImpl({
     () => onPressTab('Search'),
     [onPressTab],
   )
-  const onPressFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
-  const onPressNotifications = React.useCallback(
-    () => onPressTab('Notifications'),
-    [onPressTab],
-  )
-  const onPressProfile = React.useCallback(() => {
-    onPressTab('MyProfile')
-  }, [onPressTab])
-  const onLongPressProfile = React.useCallback(() => {
-    store.shell.openModal({name: 'switch-account'})
-  }, [store])
 
+  const onPressCompose = React.useCallback(() => {
+    store.wordDJModel.clear()
+    store.wordDJModel.setManualPayload("What's on your mind?")
+    store.wordDJModel.updateAuthoritativeStateForMode()
+    navigation.navigate('WordDJScreen')
+  }, [navigation, store.wordDJModel])
+
+  const onOpenDrawer = React.useCallback(() => {
+    store.shell.openDrawer()
+  }, [store])
   return (
     <Animated.View
       style={[
-        styles.bottomBar,
-        pal.view,
-        pal.border,
-        {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
         store.shell.minimalShellMode && styles.disabled,
       ]}>
-      <Btn
-        testID="bottomBarHomeBtn"
-        icon={
-          isAtHome ? (
-            <HomeIconSolid
-              strokeWidth={4}
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-            />
-          ) : (
-            <HomeIcon
-              strokeWidth={4}
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-            />
-          )
-        }
-        onPress={onPressHome}
-        accessibilityRole="tab"
-        accessibilityLabel="Home"
-        accessibilityHint=""
-      />
-      <Btn
-        testID="bottomBarSearchBtn"
-        icon={
-          isAtSearch ? (
-            <MagnifyingGlassIcon2Solid
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
-            />
-          ) : (
-            <MagnifyingGlassIcon2
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
-            />
-          )
-        }
-        onPress={onPressSearch}
-        accessibilityRole="search"
-        accessibilityLabel="Search"
-        accessibilityHint=""
-      />
-      <Btn
-        testID="bottomBarFeedsBtn"
-        icon={
-          isAtFeeds ? (
-            <HashtagIcon
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={4}
-            />
-          ) : (
-            <HashtagIcon
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={2.25}
-            />
-          )
-        }
-        onPress={onPressFeeds}
-        accessibilityRole="tab"
-        accessibilityLabel="Feeds"
-        accessibilityHint=""
-      />
-      <Btn
-        testID="bottomBarNotificationsBtn"
-        icon={
-          isAtNotifications ? (
-            <BellIconSolid
-              size={24}
-              strokeWidth={1.9}
-              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-            />
-          ) : (
-            <BellIcon
-              size={24}
-              strokeWidth={1.9}
-              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-            />
-          )
-        }
-        onPress={onPressNotifications}
-        notificationCount={notifications.unreadCountLabel}
-        accessible={true}
-        accessibilityRole="tab"
-        accessibilityLabel="Notifications"
-        accessibilityHint={
-          notifications.unreadCountLabel === ''
-            ? ''
-            : `${notifications.unreadCountLabel} unread`
-        }
-      />
-      <Btn
-        testID="bottomBarProfileBtn"
-        icon={
-          <View style={styles.ctrlIconSizingWrapper}>
-            {isAtMyProfile ? (
-              <View
-                style={[
-                  styles.ctrlIcon,
-                  pal.text,
-                  styles.profileIcon,
-                  styles.onProfile,
-                  {borderColor: pal.text.color},
-                ]}>
-                <UserAvatar avatar={store.me.avatar} size={27} />
-              </View>
+      <BlurView
+        style={[
+          styles.bottomBar,
+          pal.border,
+          alphaBg(pal.view, 0.3),
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+        ]}
+        blurType="light">
+        <Btn
+          testID="bottomBarHomeBtn"
+          showThumb={isAtHome}
+          icon={
+            isAtHome ? (
+              <HomeIconSolid
+                strokeWidth={4}
+                size={29}
+                style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+              />
             ) : (
+              <HomeIcon
+                strokeWidth={4}
+                size={29}
+                style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+              />
+            )
+          }
+          label="Feed"
+          onPress={onPressHome}
+          accessibilityRole="tab"
+          accessibilityLabel="Home"
+          accessibilityHint=""
+        />
+        <Btn
+          testID="bottomBarSearchBtn"
+          showThumb={isAtSearch}
+          icon={
+            isAtSearch ? (
+              <MagnifyingGlassIcon2Solid
+                size={30}
+                style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                strokeWidth={1.8}
+              />
+            ) : (
+              <MagnifyingGlassIcon2
+                size={30}
+                style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                strokeWidth={1.8}
+              />
+            )
+          }
+          label="Search"
+          onPress={onPressSearch}
+          accessibilityRole="search"
+          accessibilityLabel="Search"
+          accessibilityHint=""
+        />
+        <Btn
+          testID="bottomBarNotificationsBtn"
+          showThumb={isAtNotifications}
+          icon={
+            <ComposeIcon2
+              strokeWidth={1.5}
+              size={34}
+              style={[pal.text, styles.createIcon]}
+            />
+          }
+          label="Create"
+          onPress={onPressCompose}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Compose"
+          accessibilityHint=""
+        />
+        <Btn
+          testID="bottomBarDrawerBtn"
+          showThumb={isAtMyProfile}
+          icon={
+            <View style={styles.ctrlIconSizingWrapper}>
               <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                <UserAvatar avatar={store.me.avatar} size={28} />
+                <UserAvatar avatar={store.me.avatar} size={33} />
               </View>
-            )}
-          </View>
-        }
-        onPress={onPressProfile}
-        onLongPress={onLongPressProfile}
-        accessibilityRole="tab"
-        accessibilityLabel="Profile"
-        accessibilityHint=""
-      />
+            </View>
+          }
+          label="Profile"
+          notificationCount={notifications.unreadCountLabel}
+          onPress={onOpenDrawer}
+          accessibilityRole="tab"
+          accessibilityLabel="Drawer"
+          accessibilityHint=""
+        />
+        <Btn
+          testID="blank"
+          showThumb={false}
+          icon={
+            <View style={styles.ctrlIconSizingWrapper}>
+              {isAtMyProfile ? (
+                <View
+                  style={[
+                    styles.ctrlIcon,
+                    pal.text,
+                    styles.profileIcon,
+                    styles.onProfile,
+                    {borderColor: pal.text.color},
+                  ]}>
+                  {/* <UserAvatar avatar={store.me.avatar} size={32} /> */}
+                </View>
+              ) : (
+                <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                  {/* <UserAvatar avatar={store.me.avatar} size={28} /> */}
+                </View>
+              )}
+            </View>
+          }
+          onPress={() => {}}
+          accessibilityRole="tab"
+          accessibilityLabel="Blank"
+          accessibilityHint=""
+        />
+      </BlurView>
     </Animated.View>
   )
 })
@@ -220,7 +209,9 @@ interface BtnProps
     | 'accessibilityLabel'
   > {
   testID?: string
+  showThumb: boolean
   icon: JSX.Element
+  label?: string
   notificationCount?: string
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
@@ -228,7 +219,9 @@ interface BtnProps
 
 function Btn({
   testID,
+  showThumb,
   icon,
+  label,
   notificationCount,
   onPress,
   onLongPress,
@@ -239,19 +232,34 @@ function Btn({
   return (
     <TouchableOpacity
       testID={testID}
-      style={styles.ctrl}
+      style={styles.ctrlNoTopPadding}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}>
-      {notificationCount ? (
-        <View style={[styles.notificationCount]}>
-          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
-        </View>
-      ) : undefined}
-      {icon}
+      <View style={styles.stack}>
+        {showThumb ? (
+          <View style={styles.thumb} />
+        ) : (
+          <View style={styles.thumbBlank} />
+        )}
+        {notificationCount ? (
+          <View style={[styles.notificationCount]}>
+            <Text style={styles.notificationCountLabel}>
+              {notificationCount}
+            </Text>
+          </View>
+        ) : undefined}
+        {icon}
+      </View>
+      <View style={styles.labelView}>
+        <Text
+          style={showThumb ? styles.labelTextActive : styles.labelTextInactive}>
+          {label}
+        </Text>
+      </View>
     </TouchableOpacity>
   )
 }

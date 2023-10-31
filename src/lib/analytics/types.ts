@@ -92,6 +92,7 @@ interface TrackPropertiesMap {
   'MobileShell:SearchButtonPressed': {}
   'MobileShell:NotificationsButtonPressed': {}
   'MobileShell:FeedsButtonPressed': {}
+  'MobileShell:WaverlyChatButtonPressed': {}
   // NOTIFICATIONS events
   'Notificatons:OpenApp': {}
   // LISTS events

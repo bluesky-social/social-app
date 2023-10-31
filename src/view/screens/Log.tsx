@@ -12,6 +12,9 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ago} from 'lib/strings/time'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 export const LogScreen = observer(function Log({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Log'
@@ -35,55 +38,59 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
   }
 
   return (
-    <View style={[s.flex1]}>
-      <ViewHeader title="Log" />
-      <ScrollView style={s.flex1}>
-        {store.log.entries
-          .slice(0)
-          .reverse()
-          .map(entry => {
-            return (
-              <View key={`entry-${entry.id}`}>
-                <TouchableOpacity
-                  style={[styles.entry, pal.border, pal.view]}
-                  onPress={toggler(entry.id)}
-                  accessibilityLabel="View debug entry"
-                  accessibilityHint="Opens additional details for a debug entry">
-                  {entry.type === 'debug' ? (
-                    <FontAwesomeIcon icon="info" />
-                  ) : (
-                    <FontAwesomeIcon icon="exclamation" style={s.red3} />
-                  )}
-                  <Text type="sm" style={[styles.summary, pal.text]}>
-                    {entry.summary}
-                  </Text>
-                  {entry.details ? (
-                    <FontAwesomeIcon
-                      icon={
-                        expanded.includes(entry.id) ? 'angle-up' : 'angle-down'
-                      }
-                      style={s.mr5}
-                    />
-                  ) : undefined}
-                  <Text type="sm" style={[styles.ts, pal.textLight]}>
-                    {entry.ts ? ago(entry.ts) : ''}
-                  </Text>
-                </TouchableOpacity>
-                {expanded.includes(entry.id) ? (
-                  <View style={[pal.view, s.pl10, s.pr10, s.pb10]}>
-                    <View style={[pal.btn, styles.details]}>
-                      <Text type="mono" style={pal.text}>
-                        {entry.details}
-                      </Text>
+    <WaverlyScreenPadding>
+      <View style={[s.flex1]}>
+        <ViewHeader title="Log" />
+        <ScrollView style={s.flex1}>
+          {store.log.entries
+            .slice(0)
+            .reverse()
+            .map(entry => {
+              return (
+                <View key={`entry-${entry.id}`}>
+                  <TouchableOpacity
+                    style={[styles.entry, pal.border, pal.view]}
+                    onPress={toggler(entry.id)}
+                    accessibilityLabel="View debug entry"
+                    accessibilityHint="Opens additional details for a debug entry">
+                    {entry.type === 'debug' ? (
+                      <FontAwesomeIcon icon="info" />
+                    ) : (
+                      <FontAwesomeIcon icon="exclamation" style={s.red3} />
+                    )}
+                    <Text type="sm" style={[styles.summary, pal.text]}>
+                      {entry.summary}
+                    </Text>
+                    {entry.details ? (
+                      <FontAwesomeIcon
+                        icon={
+                          expanded.includes(entry.id)
+                            ? 'angle-up'
+                            : 'angle-down'
+                        }
+                        style={s.mr5}
+                      />
+                    ) : undefined}
+                    <Text type="sm" style={[styles.ts, pal.textLight]}>
+                      {entry.ts ? ago(entry.ts) : ''}
+                    </Text>
+                  </TouchableOpacity>
+                  {expanded.includes(entry.id) ? (
+                    <View style={[pal.view, s.pl10, s.pr10, s.pb10]}>
+                      <View style={[pal.btn, styles.details]}>
+                        <Text type="mono" style={pal.text}>
+                          {entry.details}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                ) : undefined}
-              </View>
-            )
-          })}
-        <View style={s.footerSpacer} />
-      </ScrollView>
-    </View>
+                  ) : undefined}
+                </View>
+              )
+            })}
+          <View style={s.footerSpacer} />
+        </ScrollView>
+      </View>
+    </WaverlyScreenPadding>
   )
 })
 

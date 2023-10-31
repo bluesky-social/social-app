@@ -36,6 +36,10 @@ import * as ChangeEmailModal from './ChangeEmail'
 import * as SwitchAccountModal from './SwitchAccount'
 import * as LinkWarningModal from './LinkWarning'
 
+// For Waverly
+import * as GroupSelectorModal from './waverly/group-search/GroupSearch'
+import * as WaverlyModal from './waverly/WaverlyButton'
+
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
 
@@ -161,6 +165,14 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'link-warning') {
     snapPoints = LinkWarningModal.snapPoints
     element = <LinkWarningModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'group-selector') {
+    // For Waverly
+    snapPoints = GroupSelectorModal.snapPoints
+    element = <GroupSelectorModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'waverly-button') {
+    // For Waverly
+    snapPoints = WaverlyModal.snapPoints
+    element = <WaverlyModal.Component {...activeModal} />
   } else {
     return null
   }

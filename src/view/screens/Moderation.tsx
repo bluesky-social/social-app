@@ -18,6 +18,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
   observer(function Moderation({}: Props) {
@@ -39,75 +42,77 @@ export const ModerationScreen = withAuthRequired(
     }, [track, store])
 
     return (
-      <CenteredView
-        style={[
-          s.hContentRegion,
-          pal.border,
-          isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
-        ]}
-        testID="moderationScreen">
-        <ViewHeader title="Moderation" showOnDesktop />
-        <View style={styles.spacer} />
-        <TouchableOpacity
-          testID="contentFilteringBtn"
-          style={[styles.linkCard, pal.view]}
-          onPress={onPressContentFiltering}
-          accessibilityRole="tab"
-          accessibilityHint="Content filtering"
-          accessibilityLabel="">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="eye"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            Content filtering
-          </Text>
-        </TouchableOpacity>
-        <Link
-          testID="mutelistsBtn"
-          style={[styles.linkCard, pal.view]}
-          href="/moderation/mute-lists">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="users-slash"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            Mute lists
-          </Text>
-        </Link>
-        <Link
-          testID="mutedAccountsBtn"
-          style={[styles.linkCard, pal.view]}
-          href="/moderation/muted-accounts">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="user-slash"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            Muted accounts
-          </Text>
-        </Link>
-        <Link
-          testID="blockedAccountsBtn"
-          style={[styles.linkCard, pal.view]}
-          href="/moderation/blocked-accounts">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="ban"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            Blocked accounts
-          </Text>
-        </Link>
-      </CenteredView>
+      <WaverlyScreenPadding>
+        <CenteredView
+          style={[
+            s.hContentRegion,
+            pal.border,
+            isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
+          ]}
+          testID="moderationScreen">
+          <ViewHeader title="Moderation" showOnDesktop />
+          <View style={styles.spacer} />
+          <TouchableOpacity
+            testID="contentFilteringBtn"
+            style={[styles.linkCard, pal.view]}
+            onPress={onPressContentFiltering}
+            accessibilityRole="tab"
+            accessibilityHint="Content filtering"
+            accessibilityLabel="">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="eye"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Content filtering
+            </Text>
+          </TouchableOpacity>
+          <Link
+            testID="mutelistsBtn"
+            style={[styles.linkCard, pal.view]}
+            href="/moderation/mute-lists">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="users-slash"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Mute lists
+            </Text>
+          </Link>
+          <Link
+            testID="mutedAccountsBtn"
+            style={[styles.linkCard, pal.view]}
+            href="/moderation/muted-accounts">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="user-slash"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Muted accounts
+            </Text>
+          </Link>
+          <Link
+            testID="blockedAccountsBtn"
+            style={[styles.linkCard, pal.view]}
+            href="/moderation/blocked-accounts">
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="ban"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              Blocked accounts
+            </Text>
+          </Link>
+        </CenteredView>
+      </WaverlyScreenPadding>
     )
   }),
 )

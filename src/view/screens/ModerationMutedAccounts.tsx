@@ -22,6 +22,9 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationMutedAccounts'
@@ -67,64 +70,66 @@ export const ModerationMutedAccounts = withAuthRequired(
       />
     )
     return (
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="mutedAccountsScreen">
-        <ViewHeader title="Muted Accounts" showOnDesktop />
-        <Text
-          type="sm"
+      <WaverlyScreenPadding>
+        <CenteredView
           style={[
-            styles.description,
-            pal.text,
-            isTabletOrDesktop && styles.descriptionDesktop,
-          ]}>
-          Muted accounts have their posts removed from your feed and from your
-          notifications. Mutes are completely private.
-        </Text>
-        {!mutedAccounts.hasContent ? (
-          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
-            <View style={[styles.empty, pal.viewLight]}>
-              <Text type="lg" style={[pal.text, styles.emptyText]}>
-                You have not muted any accounts yet. To mute an account, go to
-                their profile and selected "Mute account" from the menu on their
-                account.
-              </Text>
-            </View>
-          </View>
-        ) : (
-          <FlatList
-            style={[!isTabletOrDesktop && styles.flex1]}
-            data={mutedAccounts.mutes}
-            keyExtractor={item => item.did}
-            refreshControl={
-              <RefreshControl
-                refreshing={mutedAccounts.isRefreshing}
-                onRefresh={onRefresh}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
-              />
-            }
-            onEndReached={onEndReached}
-            renderItem={renderItem}
-            initialNumToRender={15}
-            // FIXME(dan)
-            // eslint-disable-next-line react/no-unstable-nested-components
-            ListFooterComponent={() => (
-              <View style={styles.footer}>
-                {mutedAccounts.isLoading && <ActivityIndicator />}
+            styles.container,
+            isTabletOrDesktop && styles.containerDesktop,
+            pal.view,
+            pal.border,
+          ]}
+          testID="mutedAccountsScreen">
+          <ViewHeader title="Muted Accounts" showOnDesktop />
+          <Text
+            type="sm"
+            style={[
+              styles.description,
+              pal.text,
+              isTabletOrDesktop && styles.descriptionDesktop,
+            ]}>
+            Muted accounts have their posts removed from your feed and from your
+            notifications. Mutes are completely private.
+          </Text>
+          {!mutedAccounts.hasContent ? (
+            <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+              <View style={[styles.empty, pal.viewLight]}>
+                <Text type="lg" style={[pal.text, styles.emptyText]}>
+                  You have not muted any accounts yet. To mute an account, go to
+                  their profile and selected "Mute account" from the menu on
+                  their account.
+                </Text>
               </View>
-            )}
-            extraData={mutedAccounts.isLoading}
-            // @ts-ignore our .web version only -prf
-            desktopFixedHeight
-          />
-        )}
-      </CenteredView>
+            </View>
+          ) : (
+            <FlatList
+              style={[!isTabletOrDesktop && styles.flex1]}
+              data={mutedAccounts.mutes}
+              keyExtractor={item => item.did}
+              refreshControl={
+                <RefreshControl
+                  refreshing={mutedAccounts.isRefreshing}
+                  onRefresh={onRefresh}
+                  tintColor={pal.colors.text}
+                  titleColor={pal.colors.text}
+                />
+              }
+              onEndReached={onEndReached}
+              renderItem={renderItem}
+              initialNumToRender={15}
+              // FIXME(dan)
+              // eslint-disable-next-line react/no-unstable-nested-components
+              ListFooterComponent={() => (
+                <View style={styles.footer}>
+                  {mutedAccounts.isLoading && <ActivityIndicator />}
+                </View>
+              )}
+              extraData={mutedAccounts.isLoading}
+              // @ts-ignore our .web version only -prf
+              desktopFixedHeight
+            />
+          )}
+        </CenteredView>
+      </WaverlyScreenPadding>
     )
   }),
 )

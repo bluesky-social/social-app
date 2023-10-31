@@ -1,4 +1,8 @@
-# Bluesky Social App
+# Waverly 2.0
+
+The readme below is for the bluesky social app, which we forked. For Waverly specific information [look here](./README_WAVERLY.md) or go directly to our own [build instructions](./docs/build_waverly.md).
+
+## Bluesky Social App
 
 Welcome friends! This is the codebase for the Bluesky Social app.
 
@@ -43,7 +47,7 @@ The Bluesky Social application encompases a set of schemas and APIs built in the
 - Stay away from PRs like...
   - Changing "Post" to "Skeet."
   - Refactoring the codebase, eg to replace mobx with redux or something.
-  - Adding entirely new features without prior discussion. 
+  - Adding entirely new features without prior discussion.
 
 Remember, we serve a wide community of users. Our day to day involves us constantly asking "which top priority is our top priority." If you submit well-written PRs that solve problems concisely, that's an awesome contribution. Otherwise, as much as we'd love to accept your ideas and contributions, we really don't have the bandwidth. That's what forking is for!
 

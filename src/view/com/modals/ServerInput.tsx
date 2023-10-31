@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
+import {WAVERLY_TEST_SERVICE, useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -44,6 +44,17 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}
                 accessibilityRole="button">
                 <Text style={styles.btnText}>Local dev server</Text>
+                <FontAwesomeIcon
+                  icon="arrow-right"
+                  style={s.white as FontAwesomeIconStyle}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="waverlyTextServerButton"
+                style={styles.btn}
+                onPress={() => doSelect(WAVERLY_TEST_SERVICE)}
+                accessibilityRole="button">
+                <Text style={styles.btnText}>Waverly test server</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
                   style={s.white as FontAwesomeIconStyle}

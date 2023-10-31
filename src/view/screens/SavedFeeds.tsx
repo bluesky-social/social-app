@@ -32,6 +32,9 @@ import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {Link, TextLink} from 'view/com/util/Link'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 
 export const SavedFeeds = withAuthRequired(
@@ -114,39 +117,41 @@ export const SavedFeeds = withAuthRequired(
     )
 
     return (
-      <CenteredView
-        style={[
-          s.hContentRegion,
-          pal.border,
-          isTabletOrDesktop && styles.desktopContainer,
-        ]}>
-        <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
-        <DraggableFlatList
-          containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
-          data={savedFeeds.all}
-          keyExtractor={item => item.data.uri}
-          refreshing={savedFeeds.isRefreshing}
-          refreshControl={
-            <RefreshControl
-              refreshing={savedFeeds.isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
-          getItemLayout={(data, index) => ({
-            length: 77,
-            offset: 77 * index,
-            index,
-          })}
-          initialNumToRender={10}
-          ListFooterComponent={renderListFooterComponent}
-          ListEmptyComponent={renderListEmptyComponent}
-          extraData={savedFeeds.isLoading}
-          onDragEnd={onDragEnd}
-        />
-      </CenteredView>
+      <WaverlyScreenPadding>
+        <CenteredView
+          style={[
+            s.hContentRegion,
+            pal.border,
+            isTabletOrDesktop && styles.desktopContainer,
+          ]}>
+          <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
+          <DraggableFlatList
+            containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
+            data={savedFeeds.all}
+            keyExtractor={item => item.data.uri}
+            refreshing={savedFeeds.isRefreshing}
+            refreshControl={
+              <RefreshControl
+                refreshing={savedFeeds.isRefreshing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
+              />
+            }
+            renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
+            getItemLayout={(data, index) => ({
+              length: 77,
+              offset: 77 * index,
+              index,
+            })}
+            initialNumToRender={10}
+            ListFooterComponent={renderListFooterComponent}
+            ListEmptyComponent={renderListEmptyComponent}
+            extraData={savedFeeds.isLoading}
+            onDragEnd={onDragEnd}
+          />
+        </CenteredView>
+      </WaverlyScreenPadding>
     )
   }),
 )

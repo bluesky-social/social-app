@@ -22,6 +22,9 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationBlockedAccounts'
@@ -70,65 +73,67 @@ export const ModerationBlockedAccounts = withAuthRequired(
       />
     )
     return (
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="blockedAccountsScreen">
-        <ViewHeader title="Blocked Accounts" showOnDesktop />
-        <Text
-          type="sm"
+      <WaverlyScreenPadding>
+        <CenteredView
           style={[
-            styles.description,
-            pal.text,
-            isTabletOrDesktop && styles.descriptionDesktop,
-          ]}>
-          Blocked accounts cannot reply in your threads, mention you, or
-          otherwise interact with you. You will not see their content and they
-          will be prevented from seeing yours.
-        </Text>
-        {!blockedAccounts.hasContent ? (
-          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
-            <View style={[styles.empty, pal.viewLight]}>
-              <Text type="lg" style={[pal.text, styles.emptyText]}>
-                You have not blocked any accounts yet. To block an account, go
-                to their profile and selected "Block account" from the menu on
-                their account.
-              </Text>
-            </View>
-          </View>
-        ) : (
-          <FlatList
-            style={[!isTabletOrDesktop && styles.flex1]}
-            data={blockedAccounts.blocks}
-            keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-            refreshControl={
-              <RefreshControl
-                refreshing={blockedAccounts.isRefreshing}
-                onRefresh={onRefresh}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
-              />
-            }
-            onEndReached={onEndReached}
-            renderItem={renderItem}
-            initialNumToRender={15}
-            // FIXME(dan)
-            // eslint-disable-next-line react/no-unstable-nested-components
-            ListFooterComponent={() => (
-              <View style={styles.footer}>
-                {blockedAccounts.isLoading && <ActivityIndicator />}
+            styles.container,
+            isTabletOrDesktop && styles.containerDesktop,
+            pal.view,
+            pal.border,
+          ]}
+          testID="blockedAccountsScreen">
+          <ViewHeader title="Blocked Accounts" showOnDesktop />
+          <Text
+            type="sm"
+            style={[
+              styles.description,
+              pal.text,
+              isTabletOrDesktop && styles.descriptionDesktop,
+            ]}>
+            Blocked accounts cannot reply in your threads, mention you, or
+            otherwise interact with you. You will not see their content and they
+            will be prevented from seeing yours.
+          </Text>
+          {!blockedAccounts.hasContent ? (
+            <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+              <View style={[styles.empty, pal.viewLight]}>
+                <Text type="lg" style={[pal.text, styles.emptyText]}>
+                  You have not blocked any accounts yet. To block an account, go
+                  to their profile and selected "Block account" from the menu on
+                  their account.
+                </Text>
               </View>
-            )}
-            extraData={blockedAccounts.isLoading}
-            // @ts-ignore our .web version only -prf
-            desktopFixedHeight
-          />
-        )}
-      </CenteredView>
+            </View>
+          ) : (
+            <FlatList
+              style={[!isTabletOrDesktop && styles.flex1]}
+              data={blockedAccounts.blocks}
+              keyExtractor={(item: ActorDefs.ProfileView) => item.did}
+              refreshControl={
+                <RefreshControl
+                  refreshing={blockedAccounts.isRefreshing}
+                  onRefresh={onRefresh}
+                  tintColor={pal.colors.text}
+                  titleColor={pal.colors.text}
+                />
+              }
+              onEndReached={onEndReached}
+              renderItem={renderItem}
+              initialNumToRender={15}
+              // FIXME(dan)
+              // eslint-disable-next-line react/no-unstable-nested-components
+              ListFooterComponent={() => (
+                <View style={styles.footer}>
+                  {blockedAccounts.isLoading && <ActivityIndicator />}
+                </View>
+              )}
+              extraData={blockedAccounts.isLoading}
+              // @ts-ignore our .web version only -prf
+              desktopFixedHeight
+            />
+          )}
+        </CenteredView>
+      </WaverlyScreenPadding>
     )
   }),
 )

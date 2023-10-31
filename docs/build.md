@@ -1,5 +1,7 @@
 # Build instructions
 
+*IMPORTANT!* The Waverly specific [build instructions are here](./build_waverly.md). Below is for the pure bluesky stuff, you can likely ignore that.
+
 ## App Build
 
 - Setup your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).

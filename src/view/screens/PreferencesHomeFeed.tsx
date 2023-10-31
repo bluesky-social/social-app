@@ -15,6 +15,9 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import debounce from 'lodash.debounce'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
   const pal = usePalette('default')
@@ -69,147 +72,150 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   return (
-    <CenteredView
-      testID="preferencesHomeFeedScreen"
-      style={[
-        pal.view,
-        pal.border,
-        styles.container,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader title="Home Feed Preferences" showOnDesktop />
-      <View
+    <WaverlyScreenPadding>
+      <CenteredView
+        testID="preferencesHomeFeedScreen"
         style={[
-          styles.titleSection,
-          isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
-        ]}>
-        <Text type="xl" style={[pal.textLight, styles.description]}>
-          Fine-tune the content you see on your home screen.
-        </Text>
-      </View>
-
-      <ScrollView>
-        <View style={styles.cardsContainer}>
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Replies
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to hide all replies from your feed.
-            </Text>
-            <ToggleButton
-              testID="toggleRepliesBtn"
-              type="default-light"
-              label={store.preferences.homeFeed.hideReplies ? 'No' : 'Yes'}
-              isSelected={!store.preferences.homeFeed.hideReplies}
-              onPress={store.preferences.toggleHomeFeedHideReplies}
-            />
-          </View>
-          <View
-            style={[
-              pal.viewLight,
-              styles.card,
-              store.preferences.homeFeed.hideReplies && styles.dimmed,
-            ]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Reply Filters
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Enable this setting to only see replies between people you follow.
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label="Followed users only"
-              isSelected={store.preferences.homeFeed.hideRepliesByUnfollowed}
-              onPress={
-                !store.preferences.homeFeed.hideReplies
-                  ? store.preferences.toggleHomeFeedHideRepliesByUnfollowed
-                  : undefined
-              }
-              style={[s.mb10]}
-            />
-            <Text style={[pal.text]}>
-              Adjust the number of likes a reply must have to be shown in your
-              feed.
-            </Text>
-            <RepliesThresholdInput
-              enabled={!store.preferences.homeFeed.hideReplies}
-            />
-          </View>
-
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Reposts
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to hide all reposts from your feed.
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={store.preferences.homeFeed.hideReposts ? 'No' : 'Yes'}
-              isSelected={!store.preferences.homeFeed.hideReposts}
-              onPress={store.preferences.toggleHomeFeedHideReposts}
-            />
-          </View>
-
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Quote Posts
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to hide all quote posts from your feed.
-              Reposts will still be visible.
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={store.preferences.homeFeed.hideQuotePosts ? 'No' : 'Yes'}
-              isSelected={!store.preferences.homeFeed.hideQuotePosts}
-              onPress={store.preferences.toggleHomeFeedHideQuotePosts}
-            />
-          </View>
-
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Show
-              Posts from My Feeds
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              Set this setting to "Yes" to show samples of your saved feeds in
-              your following feed. This is an experimental feature.
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={
-                store.preferences.homeFeed.lab_mergeFeedEnabled ? 'Yes' : 'No'
-              }
-              isSelected={!!store.preferences.homeFeed.lab_mergeFeedEnabled}
-              onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}
-            />
-          </View>
-        </View>
-      </ScrollView>
-
-      <View
-        style={[
-          styles.btnContainer,
-          !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
+          pal.view,
           pal.border,
+          styles.container,
+          isTabletOrDesktop && styles.desktopContainer,
         ]}>
-        <TouchableOpacity
-          testID="confirmBtn"
-          onPress={() => {
-            navigation.canGoBack()
-              ? navigation.goBack()
-              : navigation.navigate('Settings')
-          }}
-          style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
-          accessibilityRole="button"
-          accessibilityLabel="Confirm"
-          accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
-        </TouchableOpacity>
-      </View>
-    </CenteredView>
+        <ViewHeader title="Home Feed Preferences" showOnDesktop />
+        <View
+          style={[
+            styles.titleSection,
+            isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
+          ]}>
+          <Text type="xl" style={[pal.textLight, styles.description]}>
+            Fine-tune the content you see on your home screen.
+          </Text>
+        </View>
+
+        <ScrollView>
+          <View style={styles.cardsContainer}>
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                Show Replies
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Set this setting to "No" to hide all replies from your feed.
+              </Text>
+              <ToggleButton
+                testID="toggleRepliesBtn"
+                type="default-light"
+                label={store.preferences.homeFeed.hideReplies ? 'No' : 'Yes'}
+                isSelected={!store.preferences.homeFeed.hideReplies}
+                onPress={store.preferences.toggleHomeFeedHideReplies}
+              />
+            </View>
+            <View
+              style={[
+                pal.viewLight,
+                styles.card,
+                store.preferences.homeFeed.hideReplies && styles.dimmed,
+              ]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                Reply Filters
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Enable this setting to only see replies between people you
+                follow.
+              </Text>
+              <ToggleButton
+                type="default-light"
+                label="Followed users only"
+                isSelected={store.preferences.homeFeed.hideRepliesByUnfollowed}
+                onPress={
+                  !store.preferences.homeFeed.hideReplies
+                    ? store.preferences.toggleHomeFeedHideRepliesByUnfollowed
+                    : undefined
+                }
+                style={[s.mb10]}
+              />
+              <Text style={[pal.text]}>
+                Adjust the number of likes a reply must have to be shown in your
+                feed.
+              </Text>
+              <RepliesThresholdInput
+                enabled={!store.preferences.homeFeed.hideReplies}
+              />
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                Show Reposts
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Set this setting to "No" to hide all reposts from your feed.
+              </Text>
+              <ToggleButton
+                type="default-light"
+                label={store.preferences.homeFeed.hideReposts ? 'No' : 'Yes'}
+                isSelected={!store.preferences.homeFeed.hideReposts}
+                onPress={store.preferences.toggleHomeFeedHideReposts}
+              />
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                Show Quote Posts
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Set this setting to "No" to hide all quote posts from your feed.
+                Reposts will still be visible.
+              </Text>
+              <ToggleButton
+                type="default-light"
+                label={store.preferences.homeFeed.hideQuotePosts ? 'No' : 'Yes'}
+                isSelected={!store.preferences.homeFeed.hideQuotePosts}
+                onPress={store.preferences.toggleHomeFeedHideQuotePosts}
+              />
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Show
+                Posts from My Feeds
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                Set this setting to "Yes" to show samples of your saved feeds in
+                your following feed. This is an experimental feature.
+              </Text>
+              <ToggleButton
+                type="default-light"
+                label={
+                  store.preferences.homeFeed.lab_mergeFeedEnabled ? 'Yes' : 'No'
+                }
+                isSelected={!!store.preferences.homeFeed.lab_mergeFeedEnabled}
+                onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}
+              />
+            </View>
+          </View>
+        </ScrollView>
+
+        <View
+          style={[
+            styles.btnContainer,
+            !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
+            pal.border,
+          ]}>
+          <TouchableOpacity
+            testID="confirmBtn"
+            onPress={() => {
+              navigation.canGoBack()
+                ? navigation.goBack()
+                : navigation.navigate('Settings')
+            }}
+            style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
+            accessibilityRole="button"
+            accessibilityLabel="Confirm"
+            accessibilityHint="">
+            <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          </TouchableOpacity>
+        </View>
+      </CenteredView>
+    </WaverlyScreenPadding>
   )
 })
 

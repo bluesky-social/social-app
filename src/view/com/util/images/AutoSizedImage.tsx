@@ -1,12 +1,21 @@
 import React from 'react'
-import {StyleProp, StyleSheet, Pressable, View, ViewStyle} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {clamp} from 'lib/numbers'
 import {useStores} from 'state/index'
 import {Dimensions} from 'lib/media/types'
 
+export const DELAY_PRESS_IN = 500
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 5 // 5/1
+
+export type FullAxis = 'width' | 'height' | 'largest' | 'smallest'
 
 interface Props {
   alt?: string
@@ -16,6 +25,9 @@ interface Props {
   onLongPress?: () => void
   onPressIn?: () => void
   style?: StyleProp<ViewStyle>
+  landscapeExtraStyle?: StyleProp<ViewStyle>
+  portraitExtraStyle?: StyleProp<ViewStyle>
+  fullAxis?: FullAxis
   children?: React.ReactNode
 }
 
@@ -27,6 +39,9 @@ export function AutoSizedImage({
   onLongPress,
   onPressIn,
   style,
+  landscapeExtraStyle,
+  portraitExtraStyle,
+  fullAxis,
   children = null,
 }: Props) {
   const store = useStores()
@@ -48,34 +63,47 @@ export function AutoSizedImage({
       setDim(newDim)
       setAspectRatio(calc(newDim))
     })
+    return () => {
+      aborted = true
+    }
   }, [dim, setDim, setAspectRatio, store, uri])
+
+  const isPortrait = aspectRatio < 1
+  const xStyle = isPortrait ? portraitExtraStyle : landscapeExtraStyle
+  const imageStyle =
+    fullAxis === 'height' ||
+    (isPortrait && fullAxis === 'largest') ||
+    (!isPortrait && fullAxis === 'smallest')
+      ? styles.fullHeight
+      : styles.fullWidth
 
   if (onPress || onLongPress || onPressIn) {
     return (
-      // disable a11y rule because in this case we want the tags on the image (#1640)
-      // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
-      <Pressable
+      <TouchableOpacity
         onPress={onPress}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
-        style={[styles.container, style]}>
+        delayPressIn={DELAY_PRESS_IN}
+        style={[styles.container, style, xStyle]}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={alt || 'Image'}
+        accessibilityHint="Tap to view fully">
         <Image
-          style={[styles.image, {aspectRatio}]}
+          style={[imageStyle, {aspectRatio}]}
           source={uri}
-          accessible={true} // Must set for `accessibilityLabel` to work
+          accessible={false} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
-          accessibilityLabel={alt}
-          accessibilityHint="Tap to view fully"
         />
         {children}
-      </Pressable>
+      </TouchableOpacity>
     )
   }
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style, xStyle]}>
       <Image
-        style={[styles.image, {aspectRatio}]}
+        style={[imageStyle, {aspectRatio}]}
         source={{uri}}
         accessible={true} // Must set for `accessibilityLabel` to work
         accessibilityIgnoresInvertColors
@@ -98,7 +126,11 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
   },
-  image: {
+  fullWidth: {
     width: '100%',
   },
+  fullHeight: {
+    height: '100%',
+  },
+  none: {},
 })

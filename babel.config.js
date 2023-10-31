@@ -41,6 +41,7 @@ module.exports = function (api) {
             platform: './src/platform',
             state: './src/state',
             view: './src/view',
+            'w2-api': '../news-crawl/waverly-social/w2-api/dist',
           },
         },
       ],

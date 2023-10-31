@@ -17,6 +17,9 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
   observer(function AppPasswordsImpl({}: Props) {
@@ -39,6 +42,45 @@ export const AppPasswords = withAuthRequired(
     // no app passwords (empty) state
     if (store.me.appPasswords.length === 0) {
       return (
+        <WaverlyScreenPadding>
+          <CenteredView
+            style={[
+              styles.container,
+              isTabletOrDesktop && styles.containerDesktop,
+              pal.view,
+              pal.border,
+            ]}
+            testID="appPasswordsScreen">
+            <AppPasswordsHeader />
+            <View style={[styles.empty, pal.viewLight]}>
+              <Text type="lg" style={[pal.text, styles.emptyText]}>
+                You have not created any app passwords yet. You can create one
+                by pressing the button below.
+              </Text>
+            </View>
+            {!isTabletOrDesktop && <View style={styles.flex1} />}
+            <View
+              style={[
+                styles.btnContainer,
+                isTabletOrDesktop && styles.btnContainerDesktop,
+              ]}>
+              <Button
+                testID="appPasswordBtn"
+                type="primary"
+                label="Add App Password"
+                style={styles.btn}
+                labelStyle={styles.btnLabel}
+                onPress={onAdd}
+              />
+            </View>
+          </CenteredView>
+        </WaverlyScreenPadding>
+      )
+    }
+
+    // has app passwords
+    return (
+      <WaverlyScreenPadding>
         <CenteredView
           style={[
             styles.container,
@@ -48,58 +90,35 @@ export const AppPasswords = withAuthRequired(
           ]}
           testID="appPasswordsScreen">
           <AppPasswordsHeader />
-          <View style={[styles.empty, pal.viewLight]}>
-            <Text type="lg" style={[pal.text, styles.emptyText]}>
-              You have not created any app passwords yet. You can create one by
-              pressing the button below.
-            </Text>
-          </View>
-          {!isTabletOrDesktop && <View style={styles.flex1} />}
-          <View
+          <ScrollView
             style={[
-              styles.btnContainer,
-              isTabletOrDesktop && styles.btnContainerDesktop,
+              styles.scrollContainer,
+              pal.border,
+              !isTabletOrDesktop && styles.flex1,
             ]}>
-            <Button
-              testID="appPasswordBtn"
-              type="primary"
-              label="Add App Password"
-              style={styles.btn}
-              labelStyle={styles.btnLabel}
-              onPress={onAdd}
-            />
-          </View>
-        </CenteredView>
-      )
-    }
-
-    // has app passwords
-    return (
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="appPasswordsScreen">
-        <AppPasswordsHeader />
-        <ScrollView
-          style={[
-            styles.scrollContainer,
-            pal.border,
-            !isTabletOrDesktop && styles.flex1,
-          ]}>
-          {store.me.appPasswords.map((password, i) => (
-            <AppPassword
-              key={password.name}
-              testID={`appPassword-${i}`}
-              name={password.name}
-              createdAt={password.createdAt}
-            />
-          ))}
-          {isTabletOrDesktop && (
-            <View style={[styles.btnContainer, styles.btnContainerDesktop]}>
+            {store.me.appPasswords.map((password, i) => (
+              <AppPassword
+                key={password.name}
+                testID={`appPassword-${i}`}
+                name={password.name}
+                createdAt={password.createdAt}
+              />
+            ))}
+            {isTabletOrDesktop && (
+              <View style={[styles.btnContainer, styles.btnContainerDesktop]}>
+                <Button
+                  testID="appPasswordBtn"
+                  type="primary"
+                  label="Add App Password"
+                  style={styles.btn}
+                  labelStyle={styles.btnLabel}
+                  onPress={onAdd}
+                />
+              </View>
+            )}
+          </ScrollView>
+          {!isTabletOrDesktop && (
+            <View style={styles.btnContainer}>
               <Button
                 testID="appPasswordBtn"
                 type="primary"
@@ -110,20 +129,8 @@ export const AppPasswords = withAuthRequired(
               />
             </View>
           )}
-        </ScrollView>
-        {!isTabletOrDesktop && (
-          <View style={styles.btnContainer}>
-            <Button
-              testID="appPasswordBtn"
-              type="primary"
-              label="Add App Password"
-              style={styles.btn}
-              labelStyle={styles.btnLabel}
-              onPress={onAdd}
-            />
-          </View>
-        )}
-      </CenteredView>
+        </CenteredView>
+      </WaverlyScreenPadding>
     )
   }),
 )

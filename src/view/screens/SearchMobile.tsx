@@ -28,6 +28,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {isAndroid, isIOS} from 'platform/detection'
 
+// For Waverly
+import {WaverlyScreenPadding} from 'view/com/w2/WaverlyScreenPadding'
+
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
   observer<Props>(function SearchScreenImpl({}: Props) {
@@ -122,61 +125,63 @@ export const SearchScreen = withAuthRequired(
     }, [])
 
     return (
-      <TouchableWithoutFeedback onPress={onPress} accessible={false}>
-        <View style={[pal.view, styles.container]}>
-          <HeaderWithInput
-            isInputFocused={isInputFocused}
-            query={query}
-            setIsInputFocused={setIsInputFocused}
-            onChangeQuery={onChangeQuery}
-            onPressClearQuery={onPressClearQuery}
-            onPressCancelSearch={onPressCancelSearch}
-            onSubmitQuery={onSubmitQuery}
-          />
-          {searchUIModel ? (
-            <SearchResults model={searchUIModel} />
-          ) : !isInputFocused && !query ? (
-            <Suggestions
-              ref={flatListRef}
-              foafs={foafs}
-              suggestedActors={suggestedActors}
+      <WaverlyScreenPadding>
+        <TouchableWithoutFeedback onPress={onPress} accessible={false}>
+          <View style={[pal.view, styles.container]}>
+            <HeaderWithInput
+              isInputFocused={isInputFocused}
+              query={query}
+              setIsInputFocused={setIsInputFocused}
+              onChangeQuery={onChangeQuery}
+              onPressClearQuery={onPressClearQuery}
+              onPressCancelSearch={onPressCancelSearch}
+              onSubmitQuery={onSubmitQuery}
             />
-          ) : (
-            <ScrollView
-              ref={scrollViewRef}
-              testID="searchScrollView"
-              style={pal.view}
-              onScroll={onMainScroll}
-              scrollEventThrottle={100}>
-              {query && autocompleteView.suggestions.length ? (
-                <>
-                  {autocompleteView.suggestions.map((suggestion, index) => (
-                    <ProfileCard
-                      key={suggestion.did}
-                      testID={`searchAutoCompleteResult-${suggestion.handle}`}
-                      profile={suggestion}
-                      noBorder={index === 0}
-                    />
-                  ))}
-                </>
-              ) : query && !autocompleteView.suggestions.length ? (
-                <View>
-                  <Text style={[pal.textLight, styles.searchPrompt]}>
-                    No results found for {autocompleteView.prefix}
-                  </Text>
-                </View>
-              ) : isInputFocused ? (
-                <View>
-                  <Text style={[pal.textLight, styles.searchPrompt]}>
-                    Search for users and posts on the network
-                  </Text>
-                </View>
-              ) : null}
-              <View style={s.footerSpacer} />
-            </ScrollView>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+            {searchUIModel ? (
+              <SearchResults model={searchUIModel} />
+            ) : !isInputFocused && !query ? (
+              <Suggestions
+                ref={flatListRef}
+                foafs={foafs}
+                suggestedActors={suggestedActors}
+              />
+            ) : (
+              <ScrollView
+                ref={scrollViewRef}
+                testID="searchScrollView"
+                style={pal.view}
+                onScroll={onMainScroll}
+                scrollEventThrottle={100}>
+                {query && autocompleteView.suggestions.length ? (
+                  <>
+                    {autocompleteView.suggestions.map((suggestion, index) => (
+                      <ProfileCard
+                        key={suggestion.did}
+                        testID={`searchAutoCompleteResult-${suggestion.handle}`}
+                        profile={suggestion}
+                        noBorder={index === 0}
+                      />
+                    ))}
+                  </>
+                ) : query && !autocompleteView.suggestions.length ? (
+                  <View>
+                    <Text style={[pal.textLight, styles.searchPrompt]}>
+                      No results found for {autocompleteView.prefix}
+                    </Text>
+                  </View>
+                ) : isInputFocused ? (
+                  <View>
+                    <Text style={[pal.textLight, styles.searchPrompt]}>
+                      Search for users and posts on the network
+                    </Text>
+                  </View>
+                ) : null}
+                <View style={s.footerSpacer} />
+              </ScrollView>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+      </WaverlyScreenPadding>
     )
   }),
 )
