@@ -221,7 +221,7 @@ export const TextLink = memo(function TextLink({
 /**
  * Only acts as a link on desktop web
  */
-interface DesktopWebTextLinkProps extends TextProps {
+interface TextLinkOnWebOnlyProps extends TextProps {
   testID?: string
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
@@ -234,7 +234,7 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessibilityHint?: string
   title?: string
 }
-export const DesktopWebTextLink = memo(function DesktopWebTextLink({
+export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,
@@ -243,7 +243,7 @@ export const DesktopWebTextLink = memo(function DesktopWebTextLink({
   numberOfLines,
   lineHeight,
   ...props
-}: DesktopWebTextLinkProps) {
+}: TextLinkOnWebOnlyProps) {
   if (isWeb) {
     return (
       <TextLink
