@@ -468,6 +468,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onReady={() => {
         SplashScreen.hideAsync()
         const initMs = Math.round(
+          // @ts-ignore Emitted by Metro in the bundle prelude
           performance.now() - global.__BUNDLE_START_TIME__,
         )
         console.log(`Time to first paint: ${initMs} ms`)
