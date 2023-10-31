@@ -56,16 +56,14 @@ export function AutoSizedImage({
         onPress={onPress}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
-        style={[styles.container, style]}
-        accessible={true}
-        accessibilityRole="button"
-        accessibilityLabel={alt || 'Image'}
-        accessibilityHint="Tap to view fully">
+        style={[styles.container, style]}>
         <Image
           style={[styles.image, {aspectRatio}]}
           source={uri}
-          accessible={false} // Must set for `accessibilityLabel` to work
+          accessible={true} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
+          accessibilityLabel={alt}
+          accessibilityHint="Tap to view fully"
         />
         {children}
       </Pressable>
