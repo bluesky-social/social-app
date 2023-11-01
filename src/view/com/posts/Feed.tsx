@@ -71,6 +71,8 @@ export const Feed = observer(function Feed({
       if (feed.loadMoreError) {
         feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
       }
+    } else {
+      feedItems.push(LOADING_ITEM)
     }
     return feedItems
   }, [
@@ -162,7 +164,7 @@ export const Feed = observer(function Feed({
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={!feed.hasLoaded ? [LOADING_ITEM] : data}
+        data={data}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}

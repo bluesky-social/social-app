@@ -51,11 +51,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const [headerHeight, setHeaderHeight] = React.useState(0)
     const headerTransform = useAnimatedStyle(
       () => ({
-        transform: [
-          {
-            translateY: scrollY.value * -1,
-          },
-        ],
+        transform: [{translateY: scrollY.value * -1}],
       }),
       [scrollY, headerHeight, tabBarHeight],
     )
@@ -150,7 +146,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         renderTabBar={renderTabBar}
         tabBarPosition="top">
         {children.filter(Boolean).map(child => {
-          // TODO- how can keys get passed here?
           if (child) {
             return child(childProps)
           }

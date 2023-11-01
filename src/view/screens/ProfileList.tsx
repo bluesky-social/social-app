@@ -187,6 +187,7 @@ export const ProfileListScreenInner = observer(
           {list.isCuratelist
             ? ({onScroll, headerHeight}) => (
                 <FeedSection
+                  key="1"
                   feed={feed}
                   onScroll={onScroll}
                   headerHeight={headerHeight}
@@ -195,6 +196,7 @@ export const ProfileListScreenInner = observer(
             : null}
           {({onScroll, headerHeight}) => (
             <AboutSection
+              key="2"
               list={list}
               onPressAddUser={onPressAddUser}
               onScroll={onScroll}

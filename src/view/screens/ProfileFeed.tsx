@@ -316,6 +316,7 @@ export const ProfileFeedScreenInner = observer(
         <PagerWithHeader items={['Posts', 'About']} renderHeader={renderHeader}>
           {({onScroll, headerHeight}) => (
             <FeedSection
+              key="1"
               feed={feed}
               onScroll={onScroll}
               headerHeight={headerHeight}
@@ -323,6 +324,7 @@ export const ProfileFeedScreenInner = observer(
           )}
           {({onScroll, headerHeight}) => (
             <ScrollView
+              key="2"
               onScroll={onScroll}
               scrollEventThrottle={1}
               contentContainerStyle={{paddingTop: headerHeight}}>
@@ -391,7 +393,7 @@ const FeedSection = ({
           onScroll(e)
           onMainScroll(e)
         }}
-        scrollEventThrottle={1}
+        scrollEventThrottle={5}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
       />
