@@ -673,7 +673,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
 
     const renderHeader = React.useCallback(() => {
       if (!list.data) {
-        return null
+        return <View />
       }
       return (
         <View>

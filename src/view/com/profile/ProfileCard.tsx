@@ -96,7 +96,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
             {profile.description as string}
           </Text>
         </View>
-      ) : undefined}
+      ) : null}
       <FollowersList followers={followers} />
     </Link>
   )

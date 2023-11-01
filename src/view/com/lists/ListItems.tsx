@@ -22,7 +22,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 
-const HEADER_ITEM = {_reactKey: '__header__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
@@ -60,7 +59,7 @@ export const ListItems = observer(function ListItemsImpl({
   const {isMobile} = useWebMediaQueries()
 
   const data = React.useMemo(() => {
-    let items: any[] = [HEADER_ITEM]
+    let items: any[] = []
     if (list.hasLoaded) {
       if (list.hasError) {
         items = items.concat([ERROR_ITEM])
@@ -156,9 +155,7 @@ export const ListItems = observer(function ListItemsImpl({
 
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
-      if (item === HEADER_ITEM) {
-        return renderHeader()
-      } else if (item === EMPTY_ITEM) {
+      if (item === EMPTY_ITEM) {
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
@@ -190,7 +187,6 @@ export const ListItems = observer(function ListItemsImpl({
     },
     [
       renderMemberButton,
-      renderHeader,
       renderEmptyState,
       list.error,
       onPressTryAgain,
@@ -216,6 +212,7 @@ export const ListItems = observer(function ListItemsImpl({
         data={data}
         keyExtractor={(item: any) => item._reactKey}
         renderItem={renderItem}
+        ListHeaderComponent={renderHeader}
         ListFooterComponent={Footer}
         refreshControl={
           <RefreshControl
