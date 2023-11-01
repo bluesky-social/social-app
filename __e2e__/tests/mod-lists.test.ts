@@ -2,7 +2,7 @@
 
 import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
 
-describe('Mute lists', () => {
+describe('Mod lists', () => {
   beforeAll(async () => {
     await createServer('?users&follows&labels')
     await openApp({
@@ -10,11 +10,11 @@ describe('Mute lists', () => {
     })
   })
 
-  it('Login and view my mutelists', async () => {
+  it('Login and view my modlists', async () => {
     await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
     await element(by.id('e2eGotoModeration')).tap()
-    await element(by.id('mutelistsBtn')).tap()
+    await element(by.id('moderationlistsBtn')).tap()
     await expect(element(by.id('list-Muted Users'))).toBeVisible()
     await element(by.id('list-Muted Users')).tap()
     await expect(
@@ -22,101 +22,128 @@ describe('Mute lists', () => {
     ).toBeVisible()
   })
 
-  it('Toggle subscription', async () => {
-    await element(by.id('unsubscribeListBtn')).tap()
-    await element(by.id('subscribeListBtn')).tap()
+  it('Toggle mute subscription', async () => {
+    await element(by.id('unmuteBtn')).tap()
+    await element(by.id('subscribeBtn')).tap()
+    await element(by.text('Mute accounts')).tap()
+    await element(by.id('confirmBtn')).tap()
   })
 
-  it('Edit display name and description via the edit mutelist modal', async () => {
-    await element(by.id('editListBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
+  it('Edit display name and description via the edit modlist modal', async () => {
+    await element(by.id('headerDropdownBtn')).tap()
+    await element(by.text('Edit List Details')).tap()
+    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editNameInput')).clearText()
     await element(by.id('editNameInput')).typeText('Bad Ppl')
     await element(by.id('editDescriptionInput')).clearText()
     await element(by.id('editDescriptionInput')).typeText('They bad')
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
-    await expect(element(by.id('listName'))).toHaveText('Bad Ppl')
+    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
+    await expect(element(by.id('headerTitle'))).toHaveText('Bad Ppl')
     await expect(element(by.id('listDescription'))).toHaveText('They bad')
     // have to wait for the toast to clear
-    await waitFor(element(by.id('editListBtn')))
+    await waitFor(element(by.id('headerDropdownBtn')))
       .toBeVisible()
       .withTimeout(5000)
   })
 
-  it('Remove description via the edit mutelist modal', async () => {
-    await element(by.id('editListBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
+  it('Remove description via the edit modlist modal', async () => {
+    await element(by.id('headerDropdownBtn')).tap()
+    await element(by.text('Edit List Details')).tap()
+    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editDescriptionInput')).clearText()
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
+    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
     await expect(element(by.id('listDescription'))).not.toBeVisible()
     // have to wait for the toast to clear
-    await waitFor(element(by.id('editListBtn')))
+    await waitFor(element(by.id('headerDropdownBtn')))
       .toBeVisible()
       .withTimeout(5000)
   })
 
-  it('Set avi via the edit mutelist modal', async () => {
+  it('Set avi via the edit modlist modal', async () => {
     await expect(element(by.id('userAvatarFallback'))).toExist()
-    await element(by.id('editListBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
+    await element(by.id('headerDropdownBtn')).tap()
+    await element(by.text('Edit List Details')).tap()
+    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
     await element(by.text('Library')).tap()
     await sleep(3e3)
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
+    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
     await expect(element(by.id('userAvatarImage'))).toExist()
     // have to wait for the toast to clear
-    await waitFor(element(by.id('editListBtn')))
+    await waitFor(element(by.id('headerDropdownBtn')))
       .toBeVisible()
       .withTimeout(5000)
   })
 
-  it('Remove avi via the edit mutelist modal', async () => {
+  it('Remove avi via the edit modlist modal', async () => {
     await expect(element(by.id('userAvatarImage'))).toExist()
-    await element(by.id('editListBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
+    await element(by.id('headerDropdownBtn')).tap()
+    await element(by.text('Edit List Details')).tap()
+    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
     await element(by.text('Remove')).tap()
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
+    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
     await expect(element(by.id('userAvatarFallback'))).toExist()
     // have to wait for the toast to clear
-    await waitFor(element(by.id('editListBtn')))
+    await waitFor(element(by.id('headerDropdownBtn')))
       .toBeVisible()
       .withTimeout(5000)
   })
 
-  it('Delete the mutelist', async () => {
-    await element(by.id('deleteListBtn')).tap()
+  it('Delete the modlist', async () => {
+    await element(by.id('headerDropdownBtn')).tap()
+    await element(by.text('Delete List')).tap()
     await element(by.id('confirmBtn')).tap()
-    await expect(element(by.id('emptyMuteLists'))).toBeVisible()
+    await expect(element(by.id('listsEmpty'))).toBeVisible()
   })
 
-  it('Create a new mutelist', async () => {
-    await element(by.id('emptyMuteLists-button')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).toBeVisible()
+  it('Create a new modlist', async () => {
+    await element(by.id('newModListBtn')).tap()
+    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editNameInput')).typeText('Bad Ppl')
     await element(by.id('editDescriptionInput')).typeText('They bad')
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditMuteListModal'))).not.toBeVisible()
-    await expect(element(by.id('listName'))).toHaveText('Bad Ppl')
+    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
+    await expect(element(by.id('headerTitle'))).toHaveText('Bad Ppl')
     await expect(element(by.id('listDescription'))).toHaveText('They bad')
-    // have to wait for the toast to clear
-    await waitFor(element(by.id('editListBtn')))
-      .toBeVisible()
-      .withTimeout(5000)
   })
 
-  it('Shows the mutelist on my profile', async () => {
+  it('Adds and removes users on modlists from the list', async () => {
+    await element(by.id('addUserBtn')).tap()
+    await expect(element(by.id('listAddUserModal'))).toBeVisible()
+    await waitFor(element(by.id('user-warn-posts.test-addBtn')))
+      .toBeVisible()
+      .withTimeout(5000)
+    await element(by.id('user-warn-posts.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
+    await expect(element(by.id('listAddUserModal'))).not.toBeVisible()
+    await element(by.id('listItems-flatlist')).swipe(
+      'down',
+      'slow',
+      1,
+      0.5,
+      0.5,
+    )
+    await expect(element(by.id('user-warn-posts.test'))).toBeVisible()
+    await element(by.id('user-warn-posts.test-editBtn')).tap()
+    await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
+    await element(by.id('toggleBtn-Bad Ppl')).tap()
+    await element(by.id('saveBtn')).tap()
+    await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
+  })
+
+  it('Shows the modlist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
     await element(by.id('selector')).swipe('left')
     await element(by.id('selector-4')).tap()
     await element(by.id('list-Bad Ppl')).tap()
   })
 
-  it('Adds and removes users on mutelists', async () => {
+  it('Adds and removes users on modlists from the profile', async () => {
     await element(by.id('bottomBarSearchBtn')).tap()
     await element(by.id('searchTextInput')).typeText('bob')
     await element(by.id('searchAutoCompleteResult-bob.test')).tap()
@@ -124,17 +151,17 @@ describe('Mute lists', () => {
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
-    await expect(element(by.id('listAddRemoveUserModal'))).toBeVisible()
+    await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
     await element(by.id('toggleBtn-Bad Ppl')).tap()
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('listAddRemoveUserModal'))).not.toBeVisible()
+    await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
-    await expect(element(by.id('listAddRemoveUserModal'))).toBeVisible()
+    await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
     await element(by.id('toggleBtn-Bad Ppl')).tap()
     await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('listAddRemoveUserModal'))).not.toBeVisible()
+    await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
   it('Can report a mute list', async () => {
@@ -147,7 +174,8 @@ describe('Mute lists', () => {
     await element(by.id('selector')).swipe('left')
     await element(by.id('selector-3')).tap()
     await element(by.id('list-Bad Ppl')).tap()
-    await element(by.id('reportListBtn')).tap()
+    await element(by.id('headerDropdownBtn')).tap()
+    await element(by.text('Report List')).tap()
     await expect(element(by.id('reportModal'))).toBeVisible()
     await expect(element(by.text('Report List'))).toBeVisible()
     await element(

@@ -482,6 +482,8 @@ export class ListModel {
         text: this.data.description,
         facets: (this.data.descriptionFacets || [])?.slice(),
       })
+    } else {
+      this.descriptionRT = null
     }
   }
 }

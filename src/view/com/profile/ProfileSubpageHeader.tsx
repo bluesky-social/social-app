@@ -135,6 +135,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
             />
           ) : (
             <TextLink
+              testID="headerTitle"
               type="title-xl"
               href={href}
               style={[pal.text, {fontWeight: 'bold'}]}

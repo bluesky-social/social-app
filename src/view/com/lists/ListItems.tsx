@@ -144,6 +144,7 @@ export const ListItems = observer(function ListItemsImpl({
       }
       return (
         <Button
+          testID={`user-${profile.handle}-editBtn`}
           type="default"
           label="Edit"
           onPress={() => onPressEditMembership(profile)}

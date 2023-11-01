@@ -11,6 +11,7 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {observer} from 'mobx-react-lite'
+import {RichText as RichTextAPI} from '@atproto/api'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -222,6 +223,10 @@ export const ProfileListScreenInner = observer(
                 key="2"
                 ref={aboutSectionRef}
                 list={list}
+                descriptionRT={list.descriptionRT}
+                creator={list.data ? list.data.creator : undefined}
+                isCurateList={list.isCuratelist}
+                isOwner={list.isOwner}
                 onPressAddUser={onPressAddUser}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
@@ -256,6 +261,10 @@ export const ProfileListScreenInner = observer(
               <AboutSection
                 key="2"
                 list={list}
+                descriptionRT={list.descriptionRT}
+                creator={list.data ? list.data.creator : undefined}
+                isCurateList={list.isCuratelist}
+                isOwner={list.isOwner}
                 onPressAddUser={onPressAddUser}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
@@ -531,9 +540,19 @@ const Header = observer(function HeaderImpl({
         />
       ) : list.isModlist ? (
         list.isBlocking ? (
-          <Button type="default" label="Unblock" onPress={onUnsubscribeBlock} />
+          <Button
+            testID="unblockBtn"
+            type="default"
+            label="Unblock"
+            onPress={onUnsubscribeBlock}
+          />
         ) : list.isMuting ? (
-          <Button type="default" label="Unmute" onPress={onUnsubscribeMute} />
+          <Button
+            testID="unmuteBtn"
+            type="default"
+            label="Unmute"
+            onPress={onUnsubscribeMute}
+          />
         ) : (
           <NativeDropdown
             testID="subscribeBtn"
@@ -614,6 +633,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
 interface AboutSectionProps {
   list: ListModel
+  descriptionRT: RichTextAPI | null
+  creator: {did: string; handle: string} | undefined
+  isCurateList: boolean | undefined
+  isOwner: boolean | undefined
   onPressAddUser: () => void
   onScroll: OnScrollCb
   headerHeight: number
@@ -621,7 +644,17 @@ interface AboutSectionProps {
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
-    {list, onPressAddUser, onScroll, headerHeight, isScrolledDown},
+    {
+      list,
+      descriptionRT,
+      creator,
+      isCurateList,
+      isOwner,
+      onPressAddUser,
+      onScroll,
+      headerHeight,
+      isScrolledDown,
+    },
     ref,
   ) {
     const pal = usePalette('default')
@@ -648,30 +681,29 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
               },
               pal.border,
             ]}>
-            {list.descriptionRT ? (
+            {descriptionRT ? (
               <RichText
                 testID="listDescription"
                 type="lg"
                 style={pal.text}
-                richText={list.descriptionRT}
+                richText={descriptionRT}
               />
             ) : (
-              <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+              <Text
+                testID="listDescriptionEmpty"
+                type="lg"
+                style={[{fontStyle: 'italic'}, pal.textLight]}>
                 No description
               </Text>
             )}
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {list.isCuratelist ? 'User list' : 'Moderation list'} by{' '}
-              {list.isOwner ? (
+              {isCurateList ? 'User list' : 'Moderation list'} by{' '}
+              {isOwner ? (
                 'you'
               ) : (
                 <TextLink
-                  text={sanitizeHandle(list.data?.creator.handle || '', '@')}
-                  href={
-                    list.data?.creator
-                      ? makeProfileLink(list.data?.creator)
-                      : ''
-                  }
+                  text={sanitizeHandle(creator?.handle || '', '@')}
+                  href={creator ? makeProfileLink(creator) : ''}
                   style={pal.textLight}
                 />
               )}
@@ -688,8 +720,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
               },
             ]}>
             <Text type="lg-bold">Users</Text>
-            {list.isOwner && (
+            {isOwner && (
               <Pressable
+                testID="addUserBtn"
                 accessibilityRole="button"
                 accessibilityLabel="Add a user to this list"
                 accessibilityHint=""
@@ -706,7 +739,15 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           </View>
         </View>
       )
-    }, [pal, isMobile, list, onPressAddUser])
+    }, [
+      pal,
+      isMobile,
+      descriptionRT,
+      creator,
+      isCurateList,
+      isOwner,
+      onPressAddUser,
+    ])
 
     const renderEmptyState = useCallback(() => {
       return (
@@ -721,6 +762,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     return (
       <View>
         <ListItems
+          testID="listItems"
           scrollElRef={scrollElRef}
           renderHeader={renderHeader}
           renderEmptyState={renderEmptyState}

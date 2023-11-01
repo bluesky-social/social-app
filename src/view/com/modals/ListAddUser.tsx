@@ -67,7 +67,11 @@ export const Component = observer(function Component({
     <SafeAreaView
       testID="listAddUserModal"
       style={[pal.view, isWeb ? styles.fixedHeight : s.flex1]}>
-      <View style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
+      <View
+        style={[
+          s.flex1,
+          isMobile && {paddingHorizontal: 18, paddingBottom: 40},
+        ]}>
         <View style={styles.titleSection}>
           <Text type="title-lg" style={[pal.text, styles.title]}>
             Add User to List
@@ -180,8 +184,15 @@ function UserResult({
     if (isProcessing) {
       return <ActivityIndicator />
     }
-    return <Button type="default" label="Add" onPress={onPressAdd} />
-  }, [isProcessing, onPressAdd, isAdded])
+    return (
+      <Button
+        testID={`user-${profile.handle}-addBtn`}
+        type="default"
+        label="Add"
+        onPress={onPressAdd}
+      />
+    )
+  }, [profile, isProcessing, onPressAdd, isAdded])
 
   return (
     <ProfileCard

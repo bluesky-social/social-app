@@ -103,7 +103,9 @@ export const ListsList = observer(function ListsListImpl({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <View style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
+          <View
+            testID="listsEmpty"
+            style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
             <Text style={pal.textLight}>You have no lists.</Text>
           </View>
         )

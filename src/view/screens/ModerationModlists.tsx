@@ -70,6 +70,7 @@ export const ModerationModlistsScreen = withAuthRequired(
           </View>
           <View>
             <Button
+              testID="newModListBtn"
               type="default"
               onPress={onPressNewList}
               style={{
