@@ -22,7 +22,7 @@ import {
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
-import {MyFeedsUIModel, MyFeedsItem} from 'state/models/ui/my-feeds'
+import {MyFeedsItem} from 'state/models/ui/my-feeds'
 import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
@@ -34,7 +34,7 @@ export const FeedsScreen = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-    const myFeeds = React.useMemo(() => new MyFeedsUIModel(store), [store])
+    const myFeeds = store.me.myFeeds
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
       () => debounce(q => myFeeds.discovery.search(q), 500), // debounce for 500ms
