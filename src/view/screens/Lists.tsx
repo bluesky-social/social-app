@@ -70,6 +70,7 @@ export const ListsScreen = withAuthRequired(
           </View>
           <View>
             <Button
+              testID="newUserListBtn"
               type="default"
               onPress={onPressNewList}
               style={{

@@ -66,6 +66,12 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
+        testID="e2eGotoLists"
+        onPress={() => navigate('Lists')}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
         testID="e2eToggleMergefeed"
         onPress={() => store.preferences.toggleHomeFeedMergeFeedEnabled()}
         accessibilityRole="button"

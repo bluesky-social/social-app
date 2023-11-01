@@ -534,6 +534,7 @@ const Header = observer(function HeaderImpl({
       avatarType="list">
       {list.isCuratelist ? (
         <Button
+          testID={list.isPinned ? 'unpinBtn' : 'pinBtn'}
           type={list.isPinned ? 'default' : 'inverted'}
           label={list.isPinned ? 'Unpin' : 'Pin to home'}
           onPress={onTogglePinned}
@@ -612,6 +613,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     return (
       <View>
         <Feed
+          testID="listFeed"
           feed={feed}
           scrollElRef={scrollElRef}
           onScroll={onScroll}
