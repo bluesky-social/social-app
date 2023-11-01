@@ -15,6 +15,7 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 import {track} from 'lib/analytics/analytics'
+import {until} from 'lib/async/until'
 
 const PAGE_SIZE = 30
 
@@ -83,6 +84,20 @@ export class ListModel {
         repo: rootStore.me.did,
       },
       record,
+    )
+
+    // wait for the appview to update
+    await until(
+      5, // 5 tries
+      1e3, // 1s delay between tries
+      (v: GetList.Response, _e: any) => {
+        return typeof v?.data?.list.uri === 'string'
+      },
+      () =>
+        rootStore.agent.app.bsky.graph.getList({
+          list: res.uri,
+          limit: 1,
+        }),
     )
     return res
   }
