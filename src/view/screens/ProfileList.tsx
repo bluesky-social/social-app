@@ -289,7 +289,7 @@ export const ProfileListScreenInner = observer(
         </View>
       )
     }
-    return null
+    return <Header rkey={rkey} list={list} />
   },
 )
 
@@ -672,6 +672,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     }))
 
     const renderHeader = React.useCallback(() => {
+      if (!list.data) {
+        return null
+      }
       return (
         <View>
           <View
@@ -743,6 +746,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       )
     }, [
       pal,
+      list.data,
       isMobile,
       descriptionRT,
       creator,

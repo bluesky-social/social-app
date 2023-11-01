@@ -87,8 +87,10 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       () => ({
         transform: [
           {
-            translateY:
+            translateY: Math.min(
               Math.min(scrollY.value, headerHeight - tabBarHeight) * -1,
+              0,
+            ),
           },
         ],
       }),
