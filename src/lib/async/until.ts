@@ -6,7 +6,6 @@ export async function until(
   cond: (v: any, err: any) => boolean,
   fn: () => Promise<any>,
 ): Promise<boolean> {
-  let lastErr
   while (retries > 0) {
     try {
       const v = await fn()
@@ -19,6 +18,7 @@ export async function until(
       }
     }
     await timeout(delay)
+    retries--
   }
-  throw lastErr
+  return false
 }
