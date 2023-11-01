@@ -61,7 +61,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
 
     const onPageScroll = React.useCallback(
       (e: PagerViewOnPageScrollEvent) => {
-        const {offset} = e.nativeEvent
+        const {position, offset} = e.nativeEvent
         if (offset === 0) {
           // offset hits 0 in some awkward spots so we ignore it
           return
@@ -76,13 +76,13 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         // -prf
         if (scrollState.current === 'settling') {
           if (lastDirection.current === -1 && offset < lastOffset.current) {
-            onPageSelecting?.(selectedPage - 1)
+            onPageSelecting?.(position)
             lastDirection.current = 0
           } else if (
             lastDirection.current === 1 &&
             offset > lastOffset.current
           ) {
-            onPageSelecting?.(selectedPage + 1)
+            onPageSelecting?.(position + 1)
             lastDirection.current = 0
           }
         } else {
@@ -94,7 +94,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         }
         lastOffset.current = offset
       },
-      [lastOffset, lastDirection, selectedPage, onPageSelecting],
+      [lastOffset, lastDirection, onPageSelecting],
     )
 
     const onPageScrollStateChanged = React.useCallback(
