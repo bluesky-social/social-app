@@ -12,7 +12,7 @@ import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
-import {ProfileCard} from '../profile/ProfileCard'
+import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
 import {ListModel} from 'state/models/content/list'
@@ -22,6 +22,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 
 export const snapPoints = ['90%']
 
@@ -160,6 +162,7 @@ function UserResult({
   noBorder: boolean
   onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void | undefined
 }) {
+  const pal = usePalette('default')
   const [isProcessing, setIsProcessing] = useState(false)
   const [isAdded, setIsAdded] = useState(list.isMember(profile.did))
 
@@ -177,30 +180,63 @@ function UserResult({
     }
   }, [list, profile, setIsProcessing, setIsAdded, onAdd])
 
-  const renderButton = useCallback(() => {
-    if (isAdded) {
-      return <FontAwesomeIcon icon="check" />
-    }
-    if (isProcessing) {
-      return <ActivityIndicator />
-    }
-    return (
-      <Button
-        testID={`user-${profile.handle}-addBtn`}
-        type="default"
-        label="Add"
-        onPress={onPressAdd}
-      />
-    )
-  }, [profile, isProcessing, onPressAdd, isAdded])
-
   return (
-    <ProfileCard
-      profile={profile}
-      noBorder={noBorder}
-      style={{paddingVertical: 6}}
-      renderButton={renderButton}
-    />
+    <View
+      style={[
+        pal.border,
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderTopWidth: noBorder ? 0 : 1,
+          paddingVertical: 8,
+          paddingHorizontal: 8,
+        },
+      ]}>
+      <View
+        style={{
+          alignSelf: 'baseline',
+          width: 54,
+          paddingLeft: 4,
+          paddingTop: 10,
+        }}>
+        <UserAvatar size={40} avatar={profile.avatar} />
+      </View>
+      <View
+        style={{
+          flex: 1,
+          paddingRight: 10,
+          paddingTop: 10,
+          paddingBottom: 10,
+        }}>
+        <Text
+          type="lg"
+          style={[s.bold, pal.text]}
+          numberOfLines={1}
+          lineHeight={1.2}>
+          {sanitizeDisplayName(
+            profile.displayName || sanitizeHandle(profile.handle),
+          )}
+        </Text>
+        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          {sanitizeHandle(profile.handle, '@')}
+        </Text>
+        {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
+      </View>
+      <View>
+        {isAdded ? (
+          <FontAwesomeIcon icon="check" />
+        ) : isProcessing ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            testID={`user-${profile.handle}-addBtn`}
+            type="default"
+            label="Add"
+            onPress={onPressAdd}
+          />
+        )}
+      </View>
+    </View>
   )
 }
 
