@@ -151,12 +151,15 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const onPageSelecting = React.useCallback(
       (index: number) => {
         setCurrentPage(index)
+        if (scrollY.value > headerHeight) {
+          scrollY.value = headerHeight
+        }
         scrollY.value = withTiming(scrollYs.current[index] || 0, {
           duration: 170,
           easing: Easing.inOut(Easing.quad),
         })
       },
-      [scrollY, setCurrentPage, scrollYs],
+      [scrollY, setCurrentPage, scrollYs, headerHeight],
     )
 
     return (
