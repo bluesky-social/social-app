@@ -1,20 +1,23 @@
 import 'react-native-url-polyfill/auto'
+import 'lib/sentry' // must be near top
+
 import React, {useState, useEffect} from 'react'
-import 'lib/sentry' // must be relatively on top
-import {withSentry} from 'lib/sentry'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {observer} from 'mobx-react-lite'
+import {QueryClientProvider} from '@tanstack/react-query'
+
+import 'view/icons'
+
+import {withSentry} from 'lib/sentry'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
-import * as view from './view/index'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
-import {Shell} from './view/shell'
+import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
 import * as analytics from 'lib/analytics/analytics'
-import * as Toast from './view/com/util/Toast'
-import {QueryClientProvider} from '@tanstack/react-query'
+import * as Toast from 'view/com/util/Toast'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 
@@ -27,7 +30,6 @@ const App = observer(function AppImpl() {
 
   // init
   useEffect(() => {
-    view.setup()
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
