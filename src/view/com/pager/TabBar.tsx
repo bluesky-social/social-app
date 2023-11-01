@@ -13,7 +13,7 @@ export interface TabBarProps {
   items: string[]
   indicatorColor?: string
   onSelect?: (index: number) => void
-  onPressSelected?: () => void
+  onPressSelected?: (index: number) => void
   onLayout?: (evt: LayoutChangeEvent) => void
 }
 
@@ -46,7 +46,7 @@ export function TabBar({
     (index: number) => {
       onSelect?.(index)
       if (index === selectedPage) {
-        onPressSelected?.()
+        onPressSelected?.(index)
       }
     },
     [onSelect, selectedPage, onPressSelected],

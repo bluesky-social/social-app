@@ -43,6 +43,13 @@ import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 
+const SECTION_TITLES_CURATE = ['Posts', 'About']
+const SECTION_TITLES_MOD = ['About']
+
+interface SectionRef {
+  scrollToTop: () => void
+}
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
   observer(function ProfileListScreenImpl(props: Props) {
@@ -138,6 +145,8 @@ export const ProfileListScreenInner = observer(
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
     const {rkey} = route.params
+    const feedSectionRef = React.useRef<SectionRef>(null)
+    const aboutSectionRef = React.useRef<SectionRef>(null)
 
     const list: ListModel = useMemo(() => {
       const model = new ListModel(
@@ -175,6 +184,18 @@ export const ProfileListScreenInner = observer(
       })
     }, [store, list, feed])
 
+    const onCurrentPageSelected = React.useCallback(
+      (index: number) => {
+        if (index === 0) {
+          feedSectionRef.current?.scrollToTop()
+        }
+        if (index === 1) {
+          aboutSectionRef.current?.scrollToTop()
+        }
+      },
+      [feedSectionRef],
+    )
+
     const renderHeader = useCallback(() => {
       return <Header rkey={rkey} list={list} />
     }, [rkey, list])
@@ -183,11 +204,13 @@ export const ProfileListScreenInner = observer(
       return (
         <View style={s.hContentRegion}>
           <PagerWithHeader
-            items={['Posts', 'About']}
-            renderHeader={renderHeader}>
+            items={SECTION_TITLES_CURATE}
+            renderHeader={renderHeader}
+            onCurrentPageSelected={onCurrentPageSelected}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <FeedSection
                 key="1"
+                ref={feedSectionRef}
                 feed={feed}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
@@ -197,6 +220,7 @@ export const ProfileListScreenInner = observer(
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
                 key="2"
+                ref={aboutSectionRef}
                 list={list}
                 onPressAddUser={onPressAddUser}
                 onScroll={onScroll}
@@ -225,7 +249,9 @@ export const ProfileListScreenInner = observer(
     if (list.isModlist) {
       return (
         <View style={s.hContentRegion}>
-          <PagerWithHeader items={['About']} renderHeader={renderHeader}>
+          <PagerWithHeader
+            items={SECTION_TITLES_MOD}
+            renderHeader={renderHeader}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
                 key="2"
@@ -533,176 +559,187 @@ const Header = observer(function HeaderImpl({
   )
 })
 
-const FeedSection = ({
-  feed,
-  onScroll,
-  headerHeight,
-  isScrolledDown,
-}: {
+interface FeedSectionProps {
   feed: PostsFeedModel
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
-}) => {
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
-  const scrollElRef = React.useRef<FlatList>(null)
-
-  const onScrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-  }, [scrollElRef, headerHeight])
-
-  const onPressLoadLatest = React.useCallback(() => {
-    onScrollToTop()
-    feed.refresh()
-  }, [feed, onScrollToTop])
-
-  const renderPostsEmpty = useCallback(() => {
-    return <EmptyState icon="feed" message="This feed is empty!" />
-  }, [])
-
-  return (
-    <View>
-      <Feed
-        feed={feed}
-        scrollElRef={scrollElRef}
-        onScroll={onScroll}
-        scrollEventThrottle={1}
-        renderEmptyState={renderPostsEmpty}
-        headerOffset={headerHeight}
-      />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label="Load new posts"
-          showIndicator={hasNew}
-        />
-      )}
-    </View>
-  )
 }
+const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
+  function FeedSectionImpl(
+    {feed, onScroll, headerHeight, isScrolledDown},
+    ref,
+  ) {
+    const hasNew = feed.hasNewLatest && !feed.isRefreshing
+    const scrollElRef = React.useRef<FlatList>(null)
 
-const AboutSection = observer(function AboutSectionImpl({
-  list,
-  onPressAddUser,
-  onScroll,
-  headerHeight,
-  isScrolledDown,
-}: {
+    const onScrollToTop = useCallback(() => {
+      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+    }, [scrollElRef, headerHeight])
+
+    const onPressLoadLatest = React.useCallback(() => {
+      onScrollToTop()
+      feed.refresh()
+    }, [feed, onScrollToTop])
+
+    React.useImperativeHandle(ref, () => ({
+      scrollToTop: onScrollToTop,
+    }))
+
+    const renderPostsEmpty = useCallback(() => {
+      return <EmptyState icon="feed" message="This feed is empty!" />
+    }, [])
+
+    return (
+      <View>
+        <Feed
+          feed={feed}
+          scrollElRef={scrollElRef}
+          onScroll={onScroll}
+          scrollEventThrottle={1}
+          renderEmptyState={renderPostsEmpty}
+          headerOffset={headerHeight}
+        />
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label="Load new posts"
+            showIndicator={hasNew}
+          />
+        )}
+      </View>
+    )
+  },
+)
+
+interface AboutSectionProps {
   list: ListModel
   onPressAddUser: () => void
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
-}) {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
-  const scrollElRef = React.useRef<FlatList>(null)
+}
+const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
+  function AboutSectionImpl(
+    {list, onPressAddUser, onScroll, headerHeight, isScrolledDown},
+    ref,
+  ) {
+    const pal = usePalette('default')
+    const {isMobile} = useWebMediaQueries()
+    const scrollElRef = React.useRef<FlatList>(null)
 
-  const onScrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-  }, [scrollElRef, headerHeight])
+    const onScrollToTop = useCallback(() => {
+      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+    }, [scrollElRef, headerHeight])
 
-  const renderHeader = React.useCallback(() => {
+    React.useImperativeHandle(ref, () => ({
+      scrollToTop: onScrollToTop,
+    }))
+
+    const renderHeader = React.useCallback(() => {
+      return (
+        <View>
+          <View
+            style={[
+              {
+                borderTopWidth: 1,
+                padding: isMobile ? 14 : 20,
+                gap: 12,
+              },
+              pal.border,
+            ]}>
+            {list.descriptionRT ? (
+              <RichText
+                testID="listDescription"
+                type="lg"
+                style={pal.text}
+                richText={list.descriptionRT}
+              />
+            ) : (
+              <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+                No description
+              </Text>
+            )}
+            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+              {list.isCuratelist ? 'User list' : 'Moderation list'} by{' '}
+              {list.isOwner ? (
+                'you'
+              ) : (
+                <TextLink
+                  text={sanitizeHandle(list.data?.creator.handle || '', '@')}
+                  href={
+                    list.data?.creator
+                      ? makeProfileLink(list.data?.creator)
+                      : ''
+                  }
+                  style={pal.textLight}
+                />
+              )}
+            </Text>
+          </View>
+          <View
+            style={[
+              {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: isMobile ? 14 : 20,
+                paddingBottom: isMobile ? 14 : 18,
+              },
+            ]}>
+            <Text type="lg-bold">Users</Text>
+            {list.isOwner && (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Add a user to this list"
+                accessibilityHint=""
+                onPress={onPressAddUser}
+                style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+                <FontAwesomeIcon
+                  icon="user-plus"
+                  color={pal.colors.link}
+                  size={16}
+                />
+                <Text style={pal.link}>Add</Text>
+              </Pressable>
+            )}
+          </View>
+        </View>
+      )
+    }, [pal, isMobile, list, onPressAddUser])
+
+    const renderEmptyState = useCallback(() => {
+      return (
+        <EmptyState
+          icon="users-slash"
+          message="This list is empty!"
+          style={{paddingTop: 40}}
+        />
+      )
+    }, [])
+
     return (
       <View>
-        <View
-          style={[
-            {
-              borderTopWidth: 1,
-              padding: isMobile ? 14 : 20,
-              gap: 12,
-            },
-            pal.border,
-          ]}>
-          {list.descriptionRT ? (
-            <RichText
-              testID="listDescription"
-              type="lg"
-              style={pal.text}
-              richText={list.descriptionRT}
-            />
-          ) : (
-            <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-              No description
-            </Text>
-          )}
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.isCuratelist ? 'User list' : 'Moderation list'} by{' '}
-            {list.isOwner ? (
-              'you'
-            ) : (
-              <TextLink
-                text={sanitizeHandle(list.data?.creator.handle || '', '@')}
-                href={
-                  list.data?.creator ? makeProfileLink(list.data?.creator) : ''
-                }
-                style={pal.textLight}
-              />
-            )}
-          </Text>
-        </View>
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: isMobile ? 14 : 20,
-              paddingBottom: isMobile ? 14 : 18,
-            },
-          ]}>
-          <Text type="lg-bold">Users</Text>
-          {list.isOwner && (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Add a user to this list"
-              accessibilityHint=""
-              onPress={onPressAddUser}
-              style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-              <FontAwesomeIcon
-                icon="user-plus"
-                color={pal.colors.link}
-                size={16}
-              />
-              <Text style={pal.link}>Add</Text>
-            </Pressable>
-          )}
-        </View>
+        <ListItems
+          scrollElRef={scrollElRef}
+          renderHeader={renderHeader}
+          renderEmptyState={renderEmptyState}
+          list={list}
+          headerOffset={headerHeight}
+          onScroll={onScroll}
+          scrollEventThrottle={1}
+        />
+        {isScrolledDown && (
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label="Scroll to top"
+            showIndicator={false}
+          />
+        )}
       </View>
     )
-  }, [pal, isMobile, list, onPressAddUser])
-
-  const renderEmptyState = useCallback(() => {
-    return (
-      <EmptyState
-        icon="users-slash"
-        message="This list is empty!"
-        style={{paddingTop: 40}}
-      />
-    )
-  }, [])
-
-  return (
-    <View>
-      <ListItems
-        scrollElRef={scrollElRef}
-        renderHeader={renderHeader}
-        renderEmptyState={renderEmptyState}
-        list={list}
-        headerOffset={headerHeight}
-        onScroll={onScroll}
-        scrollEventThrottle={1}
-      />
-      {isScrolledDown && (
-        <LoadLatestBtn
-          onPress={onScrollToTop}
-          label="Scroll to top"
-          showIndicator={false}
-        />
-      )}
-    </View>
-  )
-})
+  },
+)
 
 const styles = StyleSheet.create({
   btn: {

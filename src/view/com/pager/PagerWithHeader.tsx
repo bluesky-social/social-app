@@ -31,7 +31,7 @@ export interface PagerWithHeaderProps {
   renderHeader?: () => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
-  onCurrentPageSelected?: () => void
+  onCurrentPageSelected?: (index: number) => void
 }
 export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(

@@ -41,6 +41,12 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 
+const SECTION_TITLES = ['Posts', 'About']
+
+interface SectionRef {
+  scrollToTop: () => void
+}
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export const ProfileFeedScreen = withAuthRequired(
   observer(function ProfileFeedScreenImpl(props: Props) {
@@ -127,6 +133,7 @@ export const ProfileFeedScreenInner = observer(
     const pal = usePalette('default')
     const store = useStores()
     const {track} = useAnalytics()
+    const feedSectionRef = React.useRef<SectionRef>(null)
     const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
       () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
@@ -202,6 +209,15 @@ export const ProfileFeedScreenInner = observer(
         cid: feedInfo.cid,
       })
     }, [store, feedInfo])
+
+    const onCurrentPageSelected = React.useCallback(
+      (index: number) => {
+        if (index === 0) {
+          feedSectionRef.current?.scrollToTop()
+        }
+      },
+      [feedSectionRef],
+    )
 
     // render
     // =
@@ -313,10 +329,14 @@ export const ProfileFeedScreenInner = observer(
 
     return (
       <View style={s.hContentRegion}>
-        <PagerWithHeader items={['Posts', 'About']} renderHeader={renderHeader}>
+        <PagerWithHeader
+          items={SECTION_TITLES}
+          renderHeader={renderHeader}
+          onCurrentPageSelected={onCurrentPageSelected}>
           {({onScroll, headerHeight, isScrolledDown}) => (
             <FeedSection
               key="1"
+              ref={feedSectionRef}
               feed={feed}
               onScroll={onScroll}
               headerHeight={headerHeight}
@@ -357,53 +377,58 @@ export const ProfileFeedScreenInner = observer(
   },
 )
 
-const FeedSection = ({
-  feed,
-  onScroll,
-  headerHeight,
-  isScrolledDown,
-}: {
+interface FeedSectionProps {
   feed: PostsFeedModel
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
-}) => {
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
-  const scrollElRef = React.useRef<FlatList>(null)
-
-  const onScrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-  }, [scrollElRef, headerHeight])
-
-  const onPressLoadLatest = React.useCallback(() => {
-    onScrollToTop()
-    feed.refresh()
-  }, [feed, onScrollToTop])
-
-  const renderPostsEmpty = useCallback(() => {
-    return <EmptyState icon="feed" message="This feed is empty!" />
-  }, [])
-
-  return (
-    <View>
-      <Feed
-        feed={feed}
-        scrollElRef={scrollElRef}
-        onScroll={onScroll}
-        scrollEventThrottle={5}
-        renderEmptyState={renderPostsEmpty}
-        headerOffset={headerHeight}
-      />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label="Load new posts"
-          showIndicator={hasNew}
-        />
-      )}
-    </View>
-  )
 }
+const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
+  function FeedSectionImpl(
+    {feed, onScroll, headerHeight, isScrolledDown},
+    ref,
+  ) {
+    const hasNew = feed.hasNewLatest && !feed.isRefreshing
+    const scrollElRef = React.useRef<FlatList>(null)
+
+    const onScrollToTop = useCallback(() => {
+      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+    }, [scrollElRef, headerHeight])
+
+    const onPressLoadLatest = React.useCallback(() => {
+      onScrollToTop()
+      feed.refresh()
+    }, [feed, onScrollToTop])
+
+    React.useImperativeHandle(ref, () => ({
+      scrollToTop: onScrollToTop,
+    }))
+
+    const renderPostsEmpty = useCallback(() => {
+      return <EmptyState icon="feed" message="This feed is empty!" />
+    }, [])
+
+    return (
+      <View>
+        <Feed
+          feed={feed}
+          scrollElRef={scrollElRef}
+          onScroll={onScroll}
+          scrollEventThrottle={5}
+          renderEmptyState={renderPostsEmpty}
+          headerOffset={headerHeight}
+        />
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label="Load new posts"
+            showIndicator={hasNew}
+          />
+        )}
+      </View>
+    )
+  },
+)
 
 const AboutSection = observer(function AboutPageImpl({
   feedOwnerDid,
