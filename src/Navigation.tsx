@@ -472,6 +472,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           performance.now() - global.__BUNDLE_START_TIME__,
         )
         console.log(`Time to first paint: ${initMs} ms`)
+        logModuleInitTrace()
 
         // Register the navigation container with the Sentry instrumentation (only works on native)
         if (isNative) {
@@ -585,6 +586,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
 })
+
+function logModuleInitTrace() {
+  if (__DEV__) {
+    // This log is noisy, so keep false committed
+    const shouldLog = false
+    // Relies on our patch to polyfill.js in metro-runtime
+    const initLogs = (global as any).__INIT_LOGS__
+    if (shouldLog && Array.isArray(initLogs)) {
+      console.log(initLogs.join('\n'))
+    }
+  }
+}
 
 export {
   navigate,
