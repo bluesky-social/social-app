@@ -2,11 +2,12 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
+import {RichText} from '../util/text/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
 import {observer} from 'mobx-react-lite'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
@@ -15,14 +16,14 @@ import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
 import {sanitizeHandle} from 'lib/strings/handles'
 
-export const CustomFeed = observer(function CustomFeedImpl({
+export const FeedSourceCard = observer(function FeedSourceCardImpl({
   item,
   style,
   showSaveBtn = false,
   showDescription = false,
   showLikes = false,
 }: {
-  item: CustomFeedModel
+  item: FeedSourceModel
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
@@ -40,7 +41,7 @@ export const CustomFeed = observer(function CustomFeedImpl({
         message: `Remove ${item.displayName} from my feeds?`,
         onPressConfirm: async () => {
           try {
-            await store.me.savedFeeds.unsave(item)
+            await item.unsave()
             Toast.show('Removed from my feeds')
           } catch (e) {
             Toast.show('There was an issue contacting your server')
@@ -50,7 +51,7 @@ export const CustomFeed = observer(function CustomFeedImpl({
       })
     } else {
       try {
-        await store.me.savedFeeds.save(item)
+        await item.save()
         Toast.show('Added to my feeds')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
@@ -65,22 +66,29 @@ export const CustomFeed = observer(function CustomFeedImpl({
       accessibilityRole="button"
       style={[styles.container, pal.border, style]}
       onPress={() => {
-        navigation.push('CustomFeed', {
-          name: item.data.creator.did,
-          rkey: new AtUri(item.data.uri).rkey,
-        })
+        if (item.type === 'feed-generator') {
+          navigation.push('ProfileFeed', {
+            name: item.creatorDid,
+            rkey: new AtUri(item.uri).rkey,
+          })
+        } else if (item.type === 'list') {
+          navigation.push('ProfileList', {
+            name: item.creatorDid,
+            rkey: new AtUri(item.uri).rkey,
+          })
+        }
       }}
-      key={item.data.uri}>
+      key={item.uri}>
       <View style={[styles.headerContainer]}>
         <View style={[s.mr10]}>
-          <UserAvatar type="algo" size={36} avatar={item.data.avatar} />
+          <UserAvatar type="algo" size={36} avatar={item.avatar} />
         </View>
         <View style={[styles.headerTextContainer]}>
           <Text style={[pal.text, s.bold]} numberOfLines={3}>
             {item.displayName}
           </Text>
           <Text style={[pal.textLight]} numberOfLines={3}>
-            by {sanitizeHandle(item.data.creator.handle, '@')}
+            by {sanitizeHandle(item.creatorHandle, '@')}
           </Text>
         </View>
         {showSaveBtn && (
@@ -112,16 +120,18 @@ export const CustomFeed = observer(function CustomFeedImpl({
         )}
       </View>
 
-      {showDescription && item.data.description ? (
-        <Text style={[pal.textLight, styles.description]} numberOfLines={3}>
-          {item.data.description}
-        </Text>
+      {showDescription && item.descriptionRT ? (
+        <RichText
+          style={[pal.textLight, styles.description]}
+          richText={item.descriptionRT}
+          numberOfLines={3}
+        />
       ) : null}
 
       {showLikes ? (
         <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-          Liked by {item.data.likeCount || 0}{' '}
-          {pluralize(item.data.likeCount || 0, 'user')}
+          Liked by {item.likeCount || 0}{' '}
+          {pluralize(item.likeCount || 0, 'user')}
         </Text>
       ) : null}
     </Pressable>

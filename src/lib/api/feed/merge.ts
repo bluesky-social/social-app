@@ -114,13 +114,8 @@ export class MergeFeedAPI implements FeedAPI {
     }
     if (this.customFeeds.length === 0) {
       this.customFeeds = shuffle(
-        this.rootStore.me.savedFeeds.all.map(
-          feed =>
-            new MergeFeedSource_Custom(
-              this.rootStore,
-              feed.uri,
-              feed.displayName,
-            ),
+        this.rootStore.preferences.savedFeeds.map(
+          feedUri => new MergeFeedSource_Custom(this.rootStore, feedUri),
         ),
       )
     }
@@ -213,43 +208,56 @@ class MergeFeedSource_Following extends MergeFeedSource {
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
 
-  constructor(
-    public rootStore: RootStoreModel,
-    public feedUri: string,
-    public feedDisplayName: string,
-  ) {
+  constructor(public rootStore: RootStoreModel, public feedUri: string) {
     super(rootStore)
     this.sourceInfo = {
-      displayName: feedDisplayName,
+      displayName: feedUri.split('/').pop() || '',
       uri: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
+    this.rootStore.agent.app.bsky.feed
+      .getFeedGenerator({
+        feed: feedUri,
+      })
+      .then(
+        res => {
+          if (this.sourceInfo) {
+            this.sourceInfo.displayName = res.data.view.displayName
+          }
+        },
+        _err => {},
+      )
   }
 
   protected async _getFeed(
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeed({
-      cursor,
-      limit,
-      feed: this.feedUri,
-    })
-    // NOTE
-    // some custom feeds fail to enforce the pagination limit
-    // so we manually truncate here
-    // -prf
-    if (limit && res.data.feed.length > limit) {
-      res.data.feed = res.data.feed.slice(0, limit)
+    try {
+      const res = await this.rootStore.agent.app.bsky.feed.getFeed({
+        cursor,
+        limit,
+        feed: this.feedUri,
+      })
+      // NOTE
+      // some custom feeds fail to enforce the pagination limit
+      // so we manually truncate here
+      // -prf
+      if (limit && res.data.feed.length > limit) {
+        res.data.feed = res.data.feed.slice(0, limit)
+      }
+      // filter out older posts
+      res.data.feed = res.data.feed.filter(
+        post => new Date(post.post.indexedAt) > this.minDate,
+      )
+      // attach source info
+      for (const post of res.data.feed) {
+        post.__source = this.sourceInfo
+      }
+      return res
+    } catch {
+      // dont bubble custom-feed errors
+      return {success: false, headers: {}, data: {feed: []}}
     }
-    // filter out older posts
-    res.data.feed = res.data.feed.filter(
-      post => new Date(post.post.indexedAt) > this.minDate,
-    )
-    // attach source info
-    for (const post of res.data.feed) {
-      post.__source = this.sourceInfo
-    }
-    return res
   }
 }

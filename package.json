@@ -157,6 +157,7 @@
     "sentry-expo": "~7.0.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "use-deep-compare": "^1.1.0",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
@@ -236,6 +237,9 @@
       "json",
       "node"
     ],
+    "transform": {
+      "\\.[jt]sx?$": "babel-jest"
+    },
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
     ],

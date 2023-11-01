@@ -17,9 +17,18 @@ export function describeModerationCause(
     }
   }
   if (cause.type === 'blocking') {
-    return {
-      name: 'User Blocked',
-      description: 'You have blocked this user. You cannot view their content.',
+    if (cause.source.type === 'list') {
+      return {
+        name: `User Blocked by "${cause.source.list.name}"`,
+        description:
+          'You have blocked this user. You cannot view their content.',
+      }
+    } else {
+      return {
+        name: 'User Blocked',
+        description:
+          'You have blocked this user. You cannot view their content.',
+      }
     }
   }
   if (cause.type === 'blocked-by') {

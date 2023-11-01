@@ -1,6 +1,7 @@
-import {makeAutoObservable} from 'mobx'
+import {makeAutoObservable, reaction} from 'mobx'
+import {SavedFeedsModel} from './saved-feeds'
 import {FeedsDiscoveryModel} from '../discovery/feeds'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
 import {RootStoreModel} from '../root-store'
 
 export type MyFeedsItem =
@@ -29,7 +30,7 @@ export type MyFeedsItem =
   | {
       _reactKey: string
       type: 'saved-feed'
-      feed: CustomFeedModel
+      feed: FeedSourceModel
     }
   | {
       _reactKey: string
@@ -46,19 +47,17 @@ export type MyFeedsItem =
   | {
       _reactKey: string
       type: 'discover-feed'
-      feed: CustomFeedModel
+      feed: FeedSourceModel
     }
 
 export class MyFeedsUIModel {
+  saved: SavedFeedsModel
   discovery: FeedsDiscoveryModel
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this)
+    this.saved = new SavedFeedsModel(this.rootStore)
     this.discovery = new FeedsDiscoveryModel(this.rootStore)
-  }
-
-  get saved() {
-    return this.rootStore.me.savedFeeds
   }
 
   get isRefreshing() {
@@ -75,6 +74,21 @@ export class MyFeedsUIModel {
     }
     if (!this.discovery.hasLoaded) {
       await this.discovery.refresh()
+    }
+  }
+
+  registerListeners() {
+    const dispose1 = reaction(
+      () => this.rootStore.preferences.savedFeeds,
+      () => this.saved.refresh(),
+    )
+    const dispose2 = reaction(
+      () => this.rootStore.preferences.pinnedFeeds,
+      () => this.saved.refresh(),
+    )
+    return () => {
+      dispose1()
+      dispose2()
     }
   }
 

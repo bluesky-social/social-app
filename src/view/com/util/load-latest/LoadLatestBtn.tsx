@@ -10,6 +10,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
+import {isWeb} from 'platform/detection'
 
 export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
   onPress,
@@ -47,7 +48,8 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
 
 const styles = StyleSheet.create({
   loadLatest: {
-    position: 'absolute',
+    // @ts-ignore 'fixed' is web only -prf
+    position: isWeb ? 'fixed' : 'absolute',
     left: 18,
     bottom: 44,
     borderWidth: 1,

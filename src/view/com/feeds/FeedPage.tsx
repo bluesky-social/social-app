@@ -111,10 +111,6 @@ export const FeedPage = observer(function FeedPageImpl({
     store.shell.openComposer({})
   }, [store, track])
 
-  const onPressTryAgain = React.useCallback(() => {
-    feed.refresh()
-  }, [feed])
-
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
     feed.refresh()
@@ -179,10 +175,8 @@ export const FeedPage = observer(function FeedPageImpl({
     <View testID={testID} style={s.h100pct}>
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
-        key="default"
         feed={feed}
         scrollElRef={scrollElRef}
-        onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
         scrollEventThrottle={100}
         renderEmptyState={renderEmptyState}

@@ -17,10 +17,10 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {UserPreviewLink} from './UserPreviewLink'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 
-type Type = 'user' | 'algo' | 'list'
+export type UserAvatarType = 'user' | 'algo' | 'list'
 
 interface BaseUserAvatarProps {
-  type?: Type
+  type?: UserAvatarType
   size: number
   avatar?: string | null
 }
@@ -41,7 +41,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
-function DefaultAvatar({type, size}: {type: Type; size: number}) {
+function DefaultAvatar({type, size}: {type: UserAvatarType; size: number}) {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
@@ -261,7 +261,7 @@ export function EditableUserAvatar({
               name: 'trash',
             },
             android: 'ic_delete',
-            web: 'trash',
+            web: ['far', 'trash-can'],
           },
           onPress: async () => {
             onSelectNewAvatar(null)

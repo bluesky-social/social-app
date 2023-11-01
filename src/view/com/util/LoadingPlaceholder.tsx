@@ -83,19 +83,14 @@ export function PostLoadingPlaceholder({
 
 export function PostFeedLoadingPlaceholder() {
   return (
-    <>
+    <View>
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
-      <PostLoadingPlaceholder />
-      <PostLoadingPlaceholder />
-      <PostLoadingPlaceholder />
-      <PostLoadingPlaceholder />
-      <PostLoadingPlaceholder />
-    </>
+    </View>
   )
 }
 

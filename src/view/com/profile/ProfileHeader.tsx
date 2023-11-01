@@ -181,7 +181,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const onPressAddRemoveLists = React.useCallback(() => {
     track('ProfileHeader:AddToListsButtonClicked')
     store.shell.openModal({
-      name: 'list-add-remove-user',
+      name: 'user-add-remove-lists',
       subject: view.did,
       displayName: view.displayName || view.handle,
     })
@@ -276,21 +276,20 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         },
       },
     ]
-    if (!isMe) {
-      items.push({label: 'separator'})
-      // Only add "Add to Lists" on other user's profiles, doesn't make sense to mute my own self!
-      items.push({
-        testID: 'profileHeaderDropdownListAddRemoveBtn',
-        label: 'Add to Lists',
-        onPress: onPressAddRemoveLists,
-        icon: {
-          ios: {
-            name: 'list.bullet',
-          },
-          android: 'ic_menu_add',
-          web: 'list',
+    items.push({label: 'separator'})
+    items.push({
+      testID: 'profileHeaderDropdownListAddRemoveBtn',
+      label: 'Add to Lists',
+      onPress: onPressAddRemoveLists,
+      icon: {
+        ios: {
+          name: 'list.bullet',
         },
-      })
+        android: 'ic_menu_add',
+        web: 'list',
+      },
+    })
+    if (!isMe) {
       if (!view.viewer.blocking) {
         items.push({
           testID: 'profileHeaderDropdownMuteBtn',
@@ -307,20 +306,22 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           },
         })
       }
-      items.push({
-        testID: 'profileHeaderDropdownBlockBtn',
-        label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
-        onPress: view.viewer.blocking
-          ? onPressUnblockAccount
-          : onPressBlockAccount,
-        icon: {
-          ios: {
-            name: 'person.fill.xmark',
+      if (!view.viewer.blockingByList) {
+        items.push({
+          testID: 'profileHeaderDropdownBlockBtn',
+          label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
+          onPress: view.viewer.blocking
+            ? onPressUnblockAccount
+            : onPressBlockAccount,
+          icon: {
+            ios: {
+              name: 'person.fill.xmark',
+            },
+            android: 'ic_menu_close_clear_cancel',
+            web: 'user-slash',
           },
-          android: 'ic_menu_close_clear_cancel',
-          web: 'user-slash',
-        },
-      })
+        })
+      }
       items.push({
         testID: 'profileHeaderDropdownReportBtn',
         label: 'Report Account',
@@ -339,6 +340,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     isMe,
     view.viewer.muted,
     view.viewer.blocking,
+    view.viewer.blockingByList,
     onPressShare,
     onPressUnmuteAccount,
     onPressMuteAccount,
@@ -371,17 +373,19 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               </Text>
             </TouchableOpacity>
           ) : view.viewer.blocking ? (
-            <TouchableOpacity
-              testID="unblockBtn"
-              onPress={onPressUnblockAccount}
-              style={[styles.btn, styles.mainBtn, pal.btn]}
-              accessibilityRole="button"
-              accessibilityLabel="Unblock"
-              accessibilityHint="">
-              <Text type="button" style={[pal.text, s.bold]}>
-                Unblock
-              </Text>
-            </TouchableOpacity>
+            view.viewer.blockingByList ? null : (
+              <TouchableOpacity
+                testID="unblockBtn"
+                onPress={onPressUnblockAccount}
+                style={[styles.btn, styles.mainBtn, pal.btn]}
+                accessibilityRole="button"
+                accessibilityLabel="Unblock"
+                accessibilityHint="">
+                <Text type="button" style={[pal.text, s.bold]}>
+                  Unblock
+                </Text>
+              </TouchableOpacity>
+            )
           ) : !view.viewer.blockedBy ? (
             <>
               {!isProfilePreview && (

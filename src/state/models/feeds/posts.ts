@@ -4,6 +4,7 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
   AppBskyFeedGetActorLikes as GetActorLikes,
+  AppBskyFeedGetListFeed as GetListFeed,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -19,6 +20,7 @@ import {FollowingFeedAPI} from 'lib/api/feed/following'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
+import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
 
 const PAGE_SIZE = 30
@@ -36,6 +38,7 @@ type QueryParams =
   | GetAuthorFeed.QueryParams
   | GetActorLikes.QueryParams
   | GetCustomFeed.QueryParams
+  | GetListFeed.QueryParams
 
 export class PostsFeedModel {
   // state
@@ -66,7 +69,13 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
+    public feedType:
+      | 'home'
+      | 'following'
+      | 'author'
+      | 'custom'
+      | 'likes'
+      | 'list',
     params: QueryParams,
     options?: Options,
   ) {
@@ -99,9 +108,24 @@ export class PostsFeedModel {
         rootStore,
         params as GetCustomFeed.QueryParams,
       )
+    } else if (feedType === 'list') {
+      this.api = new ListFeedAPI(rootStore, params as GetListFeed.QueryParams)
     } else {
       this.api = new FollowingFeedAPI(rootStore)
     }
+  }
+
+  get reactKey() {
+    if (this.feedType === 'author') {
+      return (this.params as GetAuthorFeed.QueryParams).actor
+    }
+    if (this.feedType === 'custom') {
+      return (this.params as GetCustomFeed.QueryParams).feed
+    }
+    if (this.feedType === 'list') {
+      return (this.params as GetListFeed.QueryParams).list
+    }
+    return this.feedType
   }
 
   get hasContent() {
@@ -117,7 +141,7 @@ export class PostsFeedModel {
   }
 
   get isLoadingMore() {
-    return this.isLoading && !this.isRefreshing
+    return this.isLoading && !this.isRefreshing && this.hasContent
   }
 
   setHasNewLatest(v: boolean) {

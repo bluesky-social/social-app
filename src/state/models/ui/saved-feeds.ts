@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
 import {track} from 'lib/analytics/analytics'
 
 export class SavedFeedsModel {
@@ -13,7 +13,7 @@ export class SavedFeedsModel {
   error = ''
 
   // data
-  _feedModelCache: Record<string, CustomFeedModel> = {}
+  all: FeedSourceModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -38,20 +38,11 @@ export class SavedFeedsModel {
   }
 
   get pinned() {
-    return this.rootStore.preferences.pinnedFeeds
-      .map(uri => this._feedModelCache[uri] as CustomFeedModel)
-      .filter(Boolean)
+    return this.all.filter(feed => feed.isPinned)
   }
 
   get unpinned() {
-    return this.rootStore.preferences.savedFeeds
-      .filter(uri => !this.isPinned(uri))
-      .map(uri => this._feedModelCache[uri] as CustomFeedModel)
-      .filter(Boolean)
-  }
-
-  get all() {
-    return [...this.pinned, ...this.unpinned]
+    return this.all.filter(feed => !feed.isPinned)
   }
 
   get pinnedFeedNames() {
@@ -62,120 +53,38 @@ export class SavedFeedsModel {
   // =
 
   /**
-   * Syncs the cached models against the current state
-   * - Should only be called by the preferences model after syncing state
-   */
-  updateCache = bundleAsync(async (clearCache?: boolean) => {
-    let newFeedModels: Record<string, CustomFeedModel> = {}
-    if (!clearCache) {
-      newFeedModels = {...this._feedModelCache}
-    }
-
-    // collect the feed URIs that havent been synced yet
-    const neededFeedUris = []
-    for (const feedUri of this.rootStore.preferences.savedFeeds) {
-      if (!(feedUri in newFeedModels)) {
-        neededFeedUris.push(feedUri)
-      }
-    }
-
-    // early exit if no feeds need to be fetched
-    if (!neededFeedUris.length || neededFeedUris.length === 0) {
-      return
-    }
-
-    // fetch the missing models
-    try {
-      for (let i = 0; i < neededFeedUris.length; i += 25) {
-        const res = await this.rootStore.agent.app.bsky.feed.getFeedGenerators({
-          feeds: neededFeedUris.slice(i, 25),
-        })
-        for (const feedInfo of res.data.feeds) {
-          newFeedModels[feedInfo.uri] = new CustomFeedModel(
-            this.rootStore,
-            feedInfo,
-          )
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch feed models', error)
-      this.rootStore.log.error('Failed to fetch feed models', error)
-    }
-
-    // merge into the cache
-    runInAction(() => {
-      this._feedModelCache = newFeedModels
-    })
-  })
-
-  /**
    * Refresh the preferences then reload all feed infos
    */
   refresh = bundleAsync(async () => {
     this._xLoading(true)
     try {
-      await this.rootStore.preferences.sync({clearCache: true})
+      await this.rootStore.preferences.sync()
+      const uris = dedup(
+        this.rootStore.preferences.pinnedFeeds.concat(
+          this.rootStore.preferences.savedFeeds,
+        ),
+      )
+      const feeds = uris.map(uri => new FeedSourceModel(this.rootStore, uri))
+      await Promise.all(feeds.map(f => f.setup()))
+      runInAction(() => {
+        this.all = feeds
+        this._updatePinSortOrder()
+      })
       this._xIdle()
     } catch (e: any) {
       this._xIdle(e)
     }
   })
 
-  async save(feed: CustomFeedModel) {
-    try {
-      await feed.save()
-      await this.updateCache()
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to save feed', e)
-    }
-  }
-
-  async unsave(feed: CustomFeedModel) {
-    const uri = feed.uri
-    try {
-      if (this.isPinned(feed)) {
-        await this.rootStore.preferences.removePinnedFeed(uri)
-      }
-      await feed.unsave()
-    } catch (e: any) {
-      this.rootStore.log.error('Failed to unsave feed', e)
-    }
-  }
-
-  async togglePinnedFeed(feed: CustomFeedModel) {
-    if (!this.isPinned(feed)) {
-      track('CustomFeed:Pin', {
-        name: feed.data.displayName,
-        uri: feed.uri,
-      })
-      return this.rootStore.preferences.addPinnedFeed(feed.uri)
-    } else {
-      track('CustomFeed:Unpin', {
-        name: feed.data.displayName,
-        uri: feed.uri,
-      })
-      return this.rootStore.preferences.removePinnedFeed(feed.uri)
-    }
-  }
-
-  async reorderPinnedFeeds(feeds: CustomFeedModel[]) {
-    return this.rootStore.preferences.setSavedFeeds(
+  async reorderPinnedFeeds(feeds: FeedSourceModel[]) {
+    this._updatePinSortOrder(feeds.map(f => f.uri))
+    await this.rootStore.preferences.setSavedFeeds(
       this.rootStore.preferences.savedFeeds,
-      feeds.filter(feed => this.isPinned(feed)).map(feed => feed.uri),
+      feeds.filter(feed => feed.isPinned).map(feed => feed.uri),
     )
   }
 
-  isPinned(feedOrUri: CustomFeedModel | string) {
-    let uri: string
-    if (typeof feedOrUri === 'string') {
-      uri = feedOrUri
-    } else {
-      uri = feedOrUri.uri
-    }
-    return this.rootStore.preferences.pinnedFeeds.includes(uri)
-  }
-
-  async movePinnedFeed(item: CustomFeedModel, direction: 'up' | 'down') {
+  async movePinnedFeed(item: FeedSourceModel, direction: 'up' | 'down') {
     const pinned = this.rootStore.preferences.pinnedFeeds.slice()
     const index = pinned.indexOf(item.uri)
     if (index === -1) {
@@ -194,8 +103,9 @@ export class SavedFeedsModel {
       this.rootStore.preferences.savedFeeds,
       pinned,
     )
+    this._updatePinSortOrder()
     track('CustomFeed:Reorder', {
-      name: item.data.displayName,
+      name: item.displayName,
       uri: item.uri,
       index: pinned.indexOf(item.uri),
     })
@@ -219,4 +129,20 @@ export class SavedFeedsModel {
       this.rootStore.log.error('Failed to fetch user feeds', err)
     }
   }
+
+  // helpers
+  // =
+
+  _updatePinSortOrder(order?: string[]) {
+    order ??= this.rootStore.preferences.pinnedFeeds.concat(
+      this.rootStore.preferences.savedFeeds,
+    )
+    this.all.sort((a, b) => {
+      return order!.indexOf(a.uri) - order!.indexOf(b.uri)
+    })
+  }
+}
+
+function dedup(strings: string[]): string[] {
+  return Array.from(new Set(strings))
 }
