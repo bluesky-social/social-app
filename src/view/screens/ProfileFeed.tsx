@@ -26,7 +26,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {OnScrollCb, useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -314,12 +314,13 @@ export const ProfileFeedScreenInner = observer(
     return (
       <View style={s.hContentRegion}>
         <PagerWithHeader items={['Posts', 'About']} renderHeader={renderHeader}>
-          {({onScroll, headerHeight}) => (
+          {({onScroll, headerHeight, isScrolledDown}) => (
             <FeedSection
               key="1"
               feed={feed}
               onScroll={onScroll}
               headerHeight={headerHeight}
+              isScrolledDown={isScrolledDown}
             />
           )}
           {({onScroll, headerHeight}) => (
@@ -360,20 +361,19 @@ const FeedSection = ({
   feed,
   onScroll,
   headerHeight,
+  isScrolledDown,
 }: {
   feed: PostsFeedModel
   onScroll: OnScrollCb
   headerHeight: number
+  isScrolledDown: boolean
 }) => {
-  const store = useStores()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
   const hasNew = feed.hasNewLatest && !feed.isRefreshing
   const scrollElRef = React.useRef<FlatList>(null)
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-    resetMainScroll()
-  }, [scrollElRef, resetMainScroll, headerHeight])
+  }, [scrollElRef, headerHeight])
 
   const onPressLoadLatest = React.useCallback(() => {
     onScrollToTop()
@@ -389,10 +389,7 @@ const FeedSection = ({
       <Feed
         feed={feed}
         scrollElRef={scrollElRef}
-        onScroll={e => {
-          onScroll(e)
-          onMainScroll(e)
-        }}
+        onScroll={onScroll}
         scrollEventThrottle={5}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}

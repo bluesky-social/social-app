@@ -14,9 +14,7 @@
 
 import React from 'react'
 import {
-  FlatList as RNFlatList,
   FlatListProps,
-  ScrollView as RNScrollView,
   ScrollViewProps,
   StyleSheet,
   View,
@@ -25,6 +23,7 @@ import {
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import Animated from 'react-native-reanimated'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number
@@ -58,7 +57,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<RNFlatList>,
+  ref: React.Ref<Animated.FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -106,7 +105,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     }
   }
   return (
-    <RNFlatList
+    <Animated.FlatList
       ref={ref}
       contentContainerStyle={[
         contentContainerStyle,
@@ -122,7 +121,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
 
 export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
-  ref: React.Ref<RNScrollView>,
+  ref: React.Ref<Animated.ScrollView>,
 ) {
   const pal = usePalette('default')
 
@@ -134,12 +133,13 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
     )
   }
   return (
-    <RNScrollView
+    <Animated.ScrollView
       contentContainerStyle={[
         contentContainerStyle,
         pal.border,
         styles.contentContainer,
       ]}
+      // @ts-ignore something is wrong with the reanimated types -prf
       ref={ref}
       {...props}
     />

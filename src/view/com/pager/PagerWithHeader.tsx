@@ -1,29 +1,32 @@
 import * as React from 'react'
-import {
-  LayoutChangeEvent,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  StyleSheet,
-} from 'react-native'
+import {LayoutChangeEvent, StyleSheet} from 'react-native'
 import Animated, {
+  Easing,
+  useAnimatedReaction,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Easing,
+  runOnJS,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 
+const SCROLLED_DOWN_LIMIT = 200
+
 interface PagerWithHeaderChildParams {
   headerHeight: number
   onScroll: OnScrollCb
+  isScrolledDown: boolean
 }
 
 export interface PagerWithHeaderProps {
   testID?: string
-  children: (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
+  children:
+    | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
+    | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
   renderHeader?: () => JSX.Element
   initialPage?: number
@@ -44,25 +47,34 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     ref,
   ) {
     const {isMobile} = useWebMediaQueries()
-    const scrollYs = React.useRef<Record<number, number>>({})
     const [currentPage, setCurrentPage] = React.useState(0)
+    const scrollYs = React.useRef<Record<number, number>>({})
     const scrollY = useSharedValue(scrollYs.current[currentPage] || 0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerHeight, setHeaderHeight] = React.useState(0)
-    const headerTransform = useAnimatedStyle(
-      () => ({
-        transform: [{translateY: scrollY.value * -1}],
-      }),
-      [scrollY, headerHeight, tabBarHeight],
+    const [isScrolledDown, setIsScrolledDown] = React.useState(
+      scrollYs.current[currentPage] > SCROLLED_DOWN_LIMIT,
     )
 
+    // react to scroll updates
+    function onScrollUpdate(v: number) {
+      // track each page's current scroll position
+      scrollYs.current[currentPage] = Math.min(v, headerHeight - tabBarHeight)
+      // update the 'is scrolled down' value
+      setIsScrolledDown(v > SCROLLED_DOWN_LIMIT)
+    }
+    useAnimatedReaction(
+      () => scrollY.value,
+      v => runOnJS(onScrollUpdate)(v),
+    )
+
+    // capture the header bar sizing
     const onTabBarLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
         setTabBarHeight(evt.nativeEvent.layout.height)
       },
       [setTabBarHeight],
     )
-
     const onHeaderLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
         setHeaderHeight(evt.nativeEvent.layout.height)
@@ -70,6 +82,18 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [setHeaderHeight],
     )
 
+    // render the the header and tab bar
+    const headerTransform = useAnimatedStyle(
+      () => ({
+        transform: [
+          {
+            translateY:
+              Math.min(scrollY.value, headerHeight - tabBarHeight) * -1,
+          },
+        ],
+      }),
+      [scrollY, headerHeight, tabBarHeight],
+    )
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
@@ -102,20 +126,19 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
+    // props to pass into children render functions
+    const onScroll = useAnimatedScrollHandler({
+      onScroll(e) {
+        scrollY.value = e.contentOffset.y
+      },
+    })
     const childProps = React.useMemo<PagerWithHeaderChildParams>(() => {
       return {
         headerHeight,
-        onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-          const v = clamped(
-            event.nativeEvent.contentOffset.y,
-            headerHeight,
-            tabBarHeight,
-          )
-          scrollY.value = v
-          scrollYs.current[currentPage] = v
-        },
+        onScroll,
+        isScrolledDown,
       }
-    }, [headerHeight, tabBarHeight, scrollY, scrollYs, currentPage])
+    }, [headerHeight, onScroll, isScrolledDown])
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
@@ -145,12 +168,14 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         onPageSelecting={onPageSelecting}
         renderTabBar={renderTabBar}
         tabBarPosition="top">
-        {children.filter(Boolean).map(child => {
-          if (child) {
-            return child(childProps)
-          }
-          return null
-        })}
+        {toArray(children)
+          .filter(Boolean)
+          .map(child => {
+            if (child) {
+              return child(childProps)
+            }
+            return null
+          })}
       </Pager>
     )
   },
@@ -174,6 +199,9 @@ const styles = StyleSheet.create({
   },
 })
 
-function clamped(value: number, headerHeight: number, tabBarHeight: number) {
-  return Math.min(Math.max(value, 0), headerHeight - tabBarHeight)
+function toArray<T>(v: T | T[]): T[] {
+  if (Array.isArray(v)) {
+    return v
+  }
+  return [v]
 }

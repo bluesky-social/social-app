@@ -1,14 +1,13 @@
 import React, {MutableRefObject} from 'react'
 import {
   ActivityIndicator,
-  FlatList as RNFlatList,
   RefreshControl,
   StyleProp,
   View,
   ViewStyle,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {FlatList} from '../util/Views.web'
+import {FlatList} from '../util/Views'
 import {observer} from 'mobx-react-lite'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -44,7 +43,7 @@ export const ListItems = observer(function ListItemsImpl({
 }: {
   list: ListModel
   style?: StyleProp<ViewStyle>
-  scrollElRef?: MutableRefObject<RNFlatList<any> | null>
+  scrollElRef?: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollCb
   onPressTryAgain?: () => void
   renderHeader: () => JSX.Element

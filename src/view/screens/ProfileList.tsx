@@ -32,7 +32,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollCb, useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -179,47 +179,82 @@ export const ProfileListScreenInner = observer(
       return <Header rkey={rkey} list={list} />
     }, [rkey, list])
 
-    return (
-      <View style={s.hContentRegion}>
-        <PagerWithHeader
-          items={list.isCuratelist ? ['Posts', 'About'] : ['About']}
-          renderHeader={renderHeader}>
-          {list.isCuratelist
-            ? ({onScroll, headerHeight}) => (
-                <FeedSection
-                  key="1"
-                  feed={feed}
-                  onScroll={onScroll}
-                  headerHeight={headerHeight}
-                />
-              )
-            : null}
-          {({onScroll, headerHeight}) => (
-            <AboutSection
-              key="2"
-              list={list}
-              onPressAddUser={onPressAddUser}
-              onScroll={onScroll}
-              headerHeight={headerHeight}
-            />
-          )}
-        </PagerWithHeader>
-        <FAB
-          testID="composeFAB"
-          onPress={() => store.shell.openComposer({})}
-          icon={
-            <ComposeIcon2
-              strokeWidth={1.5}
-              size={29}
-              style={{color: 'white'}}
-            />
-          }
-          accessibilityRole="button"
-          accessibilityLabel="New post"
-          accessibilityHint=""
-        />
-      </View>
-    )
+    if (list.isCuratelist) {
+      return (
+        <View style={s.hContentRegion}>
+          <PagerWithHeader
+            items={['Posts', 'About']}
+            renderHeader={renderHeader}>
+            {({onScroll, headerHeight, isScrolledDown}) => (
+              <FeedSection
+                key="1"
+                feed={feed}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isScrolledDown={isScrolledDown}
+              />
+            )}
+            {({onScroll, headerHeight, isScrolledDown}) => (
+              <AboutSection
+                key="2"
+                list={list}
+                onPressAddUser={onPressAddUser}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isScrolledDown={isScrolledDown}
+              />
+            )}
+          </PagerWithHeader>
+          <FAB
+            testID="composeFAB"
+            onPress={() => store.shell.openComposer({})}
+            icon={
+              <ComposeIcon2
+                strokeWidth={1.5}
+                size={29}
+                style={{color: 'white'}}
+              />
+            }
+            accessibilityRole="button"
+            accessibilityLabel="New post"
+            accessibilityHint=""
+          />
+        </View>
+      )
+    }
+    if (list.isModlist) {
+      return (
+        <View style={s.hContentRegion}>
+          <PagerWithHeader items={['About']} renderHeader={renderHeader}>
+            {({onScroll, headerHeight, isScrolledDown}) => (
+              <AboutSection
+                key="2"
+                list={list}
+                onPressAddUser={onPressAddUser}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isScrolledDown={isScrolledDown}
+              />
+            )}
+          </PagerWithHeader>
+          <FAB
+            testID="composeFAB"
+            onPress={() => store.shell.openComposer({})}
+            icon={
+              <ComposeIcon2
+                strokeWidth={1.5}
+                size={29}
+                style={{color: 'white'}}
+              />
+            }
+            accessibilityRole="button"
+            accessibilityLabel="New post"
+            accessibilityHint=""
+          />
+        </View>
+      )
+    }
+    return null
   },
 )
 
@@ -502,20 +537,19 @@ const FeedSection = ({
   feed,
   onScroll,
   headerHeight,
+  isScrolledDown,
 }: {
   feed: PostsFeedModel
   onScroll: OnScrollCb
   headerHeight: number
+  isScrolledDown: boolean
 }) => {
-  const store = useStores()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
   const hasNew = feed.hasNewLatest && !feed.isRefreshing
   const scrollElRef = React.useRef<FlatList>(null)
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-    resetMainScroll()
-  }, [scrollElRef, resetMainScroll, headerHeight])
+  }, [scrollElRef, headerHeight])
 
   const onPressLoadLatest = React.useCallback(() => {
     onScrollToTop()
@@ -531,10 +565,7 @@ const FeedSection = ({
       <Feed
         feed={feed}
         scrollElRef={scrollElRef}
-        onScroll={e => {
-          onScroll(e)
-          onMainScroll(e)
-        }}
+        onScroll={onScroll}
         scrollEventThrottle={1}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
@@ -555,14 +586,21 @@ const AboutSection = observer(function AboutSectionImpl({
   onPressAddUser,
   onScroll,
   headerHeight,
+  isScrolledDown,
 }: {
   list: ListModel
   onPressAddUser: () => void
   onScroll: OnScrollCb
   headerHeight: number
+  isScrolledDown: boolean
 }) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const scrollElRef = React.useRef<FlatList>(null)
+
+  const onScrollToTop = useCallback(() => {
+    scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+  }, [scrollElRef, headerHeight])
 
   const renderHeader = React.useCallback(() => {
     return (
@@ -645,14 +683,24 @@ const AboutSection = observer(function AboutSectionImpl({
   }, [])
 
   return (
-    <ListItems
-      renderHeader={renderHeader}
-      renderEmptyState={renderEmptyState}
-      list={list}
-      headerOffset={headerHeight}
-      onScroll={onScroll}
-      scrollEventThrottle={1}
-    />
+    <View>
+      <ListItems
+        scrollElRef={scrollElRef}
+        renderHeader={renderHeader}
+        renderEmptyState={renderEmptyState}
+        list={list}
+        headerOffset={headerHeight}
+        onScroll={onScroll}
+        scrollEventThrottle={1}
+      />
+      {isScrolledDown && (
+        <LoadLatestBtn
+          onPress={onScrollToTop}
+          label="Scroll to top"
+          showIndicator={false}
+        />
+      )}
+    </View>
   )
 })
 
