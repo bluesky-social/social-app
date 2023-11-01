@@ -29,7 +29,6 @@ export const Feed = observer(function Feed({
   feed,
   style,
   scrollElRef,
-  onPressTryAgain,
   onScroll,
   scrollEventThrottle,
   renderEmptyState,
@@ -43,7 +42,6 @@ export const Feed = observer(function Feed({
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
@@ -107,6 +105,10 @@ export const Feed = observer(function Feed({
       feed.rootStore.log.error('Failed to load more posts', err)
     }
   }, [feed, track])
+
+  const onPressTryAgain = React.useCallback(() => {
+    feed.refresh()
+  }, [feed])
 
   const onPressRetryLoadMore = React.useCallback(() => {
     feed.retryLoadMore()

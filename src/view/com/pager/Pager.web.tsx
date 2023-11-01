@@ -39,16 +39,14 @@ export const Pager = React.forwardRef(function PagerImpl(
   )
 
   return (
-    <View>
+    <View style={s.hContentRegion}>
       {tabBarPosition === 'top' &&
         renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
         })}
       {React.Children.map(children, (child, i) => (
-        <View
-          style={selectedPage === i ? undefined : s.hidden}
-          key={`page-${i}`}>
+        <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
           {child}
         </View>
       ))}

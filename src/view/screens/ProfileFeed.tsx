@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {StyleSheet, View, ActivityIndicator} from 'react-native'
+import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -13,21 +13,20 @@ import {useStores} from 'state/index'
 import {FeedSourceModel} from 'state/models/content/feed-source'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {TabsContainer, Tab, TabsContainerHandle} from 'view/com/tabs/Tabs'
+import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
+import {Feed} from 'view/com/posts/Feed'
 import {TextLink} from 'view/com/util/Link'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import {RichText} from 'view/com/util/text/RichText'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
-import {PostFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {EmptyState} from 'view/com/util/EmptyState'
-import {FeedSlice} from 'view/com/posts/FeedSlice'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {OnScrollCb, useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -36,7 +35,7 @@ import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {resolveName} from 'lib/api'
 import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
@@ -141,29 +140,11 @@ export const ProfileFeedScreenInner = observer(
       model.setup()
       return model
     }, [store, uri])
-    const [onMainScroll, isScrolledDown, resetMainScroll] =
-      useOnMainScroll(store)
-    const tabsContainerRef = React.useRef<TabsContainerHandle>(null)
     const isPinned = store.preferences.isPinnedFeed(uri)
     useSetTitle(feedInfo?.displayName)
 
     // events
     // =
-
-    const onScrollToTop = useCallback(() => {
-      tabsContainerRef.current?.scrollToTop()
-      resetMainScroll()
-    }, [tabsContainerRef, resetMainScroll])
-
-    const onSelectTab = useCallback(
-      (tab: number) => {
-        if (tab === 0) {
-          feed.refresh()
-        }
-        onScrollToTop()
-      },
-      [feed, onScrollToTop],
-    )
 
     const onToggleSaved = React.useCallback(async () => {
       try {
@@ -221,10 +202,6 @@ export const ProfileFeedScreenInner = observer(
         cid: feedInfo.cid,
       })
     }, [store, feedInfo])
-
-    const onPostsRefresh = useCallback(() => feed.refresh(), [feed])
-    const onPostsEndReached = useCallback(() => feed.loadMore(), [feed])
-    const onPostsRetryLoadMore = useCallback(() => feed.retryLoadMore(), [feed])
 
     // render
     // =
@@ -334,63 +311,30 @@ export const ProfileFeedScreenInner = observer(
       dropdownItems,
     ])
 
-    const renderPostsPlaceholder = useCallback(() => {
-      return <PostFeedLoadingPlaceholder />
-    }, [])
-
-    const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message="This feed is empty!" />
-    }, [])
-
-    const renderPostsItem = useCallback(
-      (item: any) => <FeedSlice slice={item} />,
-      [],
-    )
-
-    const renderAboutHeader = useCallback(() => {
-      return (
-        <AboutSection
-          feedOwnerDid={feedOwnerDid}
-          feedRkey={rkey}
-          feedInfo={feedInfo}
-          onToggleLiked={onToggleLiked}
-        />
-      )
-    }, [feedOwnerDid, rkey, feedInfo, onToggleLiked])
-
     return (
       <View style={s.hContentRegion}>
-        <TabsContainer
-          ref={tabsContainerRef}
-          renderHeader={renderHeader}
-          onSelectTab={onSelectTab}
-          onScroll={onMainScroll}>
-          <Tab
-            name="Posts"
-            items={feed.slices}
-            isLoading={feed.isLoading}
-            hasLoaded={feed.hasLoaded}
-            isRefreshing={feed.isRefreshing}
-            isEmpty={feed.isEmpty}
-            hasMore={feed.hasMore}
-            error={feed.error}
-            loadMoreError={feed.loadMoreError}
-            renderItem={renderPostsItem}
-            renderPlaceholder={renderPostsPlaceholder}
-            renderEmpty={renderPostsEmpty}
-            onRefresh={onPostsRefresh}
-            onEndReached={onPostsEndReached}
-            onRetryLoadMore={onPostsRetryLoadMore}
-          />
-          <Tab name="About" renderHeader={renderAboutHeader} />
-        </TabsContainer>
-        {isScrolledDown ? (
-          <LoadLatestBtn
-            onPress={onScrollToTop}
-            label="Scroll to top"
-            showIndicator={false}
-          />
-        ) : null}
+        <PagerWithHeader items={['Posts', 'About']} renderHeader={renderHeader}>
+          {({onScroll, headerHeight}) => (
+            <FeedSection
+              feed={feed}
+              onScroll={onScroll}
+              headerHeight={headerHeight}
+            />
+          )}
+          {({onScroll, headerHeight}) => (
+            <ScrollView
+              onScroll={onScroll}
+              scrollEventThrottle={1}
+              contentContainerStyle={{paddingTop: headerHeight}}>
+              <AboutSection
+                feedOwnerDid={feedOwnerDid}
+                feedRkey={rkey}
+                feedInfo={feedInfo}
+                onToggleLiked={onToggleLiked}
+              />
+            </ScrollView>
+          )}
+        </PagerWithHeader>
         <FAB
           testID="composeFAB"
           onPress={() => store.shell.openComposer({})}
@@ -409,6 +353,58 @@ export const ProfileFeedScreenInner = observer(
     )
   },
 )
+
+const FeedSection = ({
+  feed,
+  onScroll,
+  headerHeight,
+}: {
+  feed: PostsFeedModel
+  onScroll: OnScrollCb
+  headerHeight: number
+}) => {
+  const store = useStores()
+  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
+  const hasNew = feed.hasNewLatest && !feed.isRefreshing
+  const scrollElRef = React.useRef<FlatList>(null)
+
+  const onScrollToTop = useCallback(() => {
+    scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+    resetMainScroll()
+  }, [scrollElRef, resetMainScroll, headerHeight])
+
+  const onPressLoadLatest = React.useCallback(() => {
+    onScrollToTop()
+    feed.refresh()
+  }, [feed, onScrollToTop])
+
+  const renderPostsEmpty = useCallback(() => {
+    return <EmptyState icon="feed" message="This feed is empty!" />
+  }, [])
+
+  return (
+    <View>
+      <Feed
+        feed={feed}
+        scrollElRef={scrollElRef}
+        onScroll={e => {
+          onScroll(e)
+          onMainScroll(e)
+        }}
+        scrollEventThrottle={1}
+        renderEmptyState={renderPostsEmpty}
+        headerOffset={headerHeight}
+      />
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label="Load new posts"
+          showIndicator={hasNew}
+        />
+      )}
+    </View>
+  )
+}
 
 const AboutSection = observer(function AboutPageImpl({
   feedOwnerDid,

@@ -21,6 +21,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
@@ -32,19 +33,25 @@ export const ListItems = observer(function ListItemsImpl({
   list,
   style,
   scrollElRef,
+  onScroll,
   onPressTryAgain,
   renderHeader,
   renderEmptyState,
   testID,
+  scrollEventThrottle,
+  headerOffset = 0,
   desktopFixedHeightOffset,
 }: {
   list: ListModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<RNFlatList<any> | null>
+  onScroll?: OnScrollCb
   onPressTryAgain?: () => void
   renderHeader: () => JSX.Element
   renderEmptyState: () => JSX.Element
   testID?: string
+  scrollEventThrottle?: number
+  headerOffset?: number
   desktopFixedHeightOffset?: number
 }) {
   const pal = usePalette('default')
@@ -203,30 +210,33 @@ export const ListItems = observer(function ListItemsImpl({
 
   return (
     <View testID={testID} style={style}>
-      {data.length > 0 && (
-        <FlatList
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={data}
-          keyExtractor={(item: any) => item._reactKey}
-          renderItem={renderItem}
-          ListFooterComponent={Footer}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          contentContainerStyle={s.contentContainer}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.6}
-          removeClippedSubviews={true}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight={desktopFixedHeightOffset || true}
-        />
-      )}
+      <FlatList
+        testID={testID ? `${testID}-flatlist` : undefined}
+        ref={scrollElRef}
+        data={data}
+        keyExtractor={(item: any) => item._reactKey}
+        renderItem={renderItem}
+        ListFooterComponent={Footer}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            tintColor={pal.colors.text}
+            titleColor={pal.colors.text}
+            progressViewOffset={headerOffset}
+          />
+        }
+        contentContainerStyle={s.contentContainer}
+        style={{paddingTop: headerOffset}}
+        onScroll={onScroll}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.6}
+        scrollEventThrottle={scrollEventThrottle}
+        removeClippedSubviews={true}
+        contentOffset={{x: 0, y: headerOffset * -1}}
+        // @ts-ignore our .web version only -prf
+        desktopFixedHeight={desktopFixedHeightOffset || true}
+      />
     </View>
   )
 })

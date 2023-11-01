@@ -68,7 +68,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   }, [store, avatar])
 
   return (
-    <CenteredView>
+    <CenteredView style={pal.view}>
       {isMobile && (
         <View
           style={[
