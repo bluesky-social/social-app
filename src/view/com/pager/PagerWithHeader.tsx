@@ -9,6 +9,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  Easing,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
@@ -52,11 +53,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       () => ({
         transform: [
           {
-            translateY: clampedInvert(
-              scrollY.value,
-              headerHeight,
-              tabBarHeight,
-            ),
+            translateY: scrollY.value * -1,
           },
         ],
       }),
@@ -89,7 +86,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             {renderHeader?.()}
             <TabBar
               items={items}
-              selectedPage={props.selectedPage}
+              selectedPage={currentPage}
               onSelect={props.onSelect}
               onPressSelected={onCurrentPageSelected}
               onLayout={onTabBarLayout}
@@ -101,6 +98,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         items,
         renderHeader,
         headerTransform,
+        currentPage,
         onCurrentPageSelected,
         isMobile,
         onTabBarLayout,
@@ -112,21 +110,34 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       return {
         headerHeight,
         onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-          scrollY.value = event.nativeEvent.contentOffset.y
-          scrollYs.current[currentPage] = event.nativeEvent.contentOffset.y
+          const v = clamped(
+            event.nativeEvent.contentOffset.y,
+            headerHeight,
+            tabBarHeight,
+          )
+          scrollY.value = v
+          scrollYs.current[currentPage] = v
         },
       }
-    }, [headerHeight, scrollY, scrollYs, currentPage])
+    }, [headerHeight, tabBarHeight, scrollY, scrollYs, currentPage])
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
         setCurrentPage(index)
-        scrollY.value = withTiming(scrollYs.current[index] || 0, {
-          duration: 300,
-        })
         onPageSelected?.(index)
       },
-      [scrollY, onPageSelected, setCurrentPage, scrollYs],
+      [onPageSelected, setCurrentPage],
+    )
+
+    const onPageSelecting = React.useCallback(
+      (index: number) => {
+        setCurrentPage(index)
+        scrollY.value = withTiming(scrollYs.current[index] || 0, {
+          duration: 170,
+          easing: Easing.inOut(Easing.quad),
+        })
+      },
+      [scrollY, setCurrentPage, scrollYs],
     )
 
     return (
@@ -135,6 +146,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         testID={testID}
         initialPage={initialPage}
         onPageSelected={onPageSelectedInner}
+        onPageSelecting={onPageSelecting}
         renderTabBar={renderTabBar}
         tabBarPosition="top">
         {children.filter(Boolean).map(child => {
@@ -167,11 +179,6 @@ const styles = StyleSheet.create({
   },
 })
 
-function clampedInvert(
-  value: number,
-  headerHeight: number,
-  tabBarHeight: number,
-) {
-  'worklet'
-  return Math.min(Math.max(value, 0), headerHeight - tabBarHeight) * -1
+function clamped(value: number, headerHeight: number, tabBarHeight: number) {
+  return Math.min(Math.max(value, 0), headerHeight - tabBarHeight)
 }
