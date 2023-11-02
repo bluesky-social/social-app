@@ -251,7 +251,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   itemContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
