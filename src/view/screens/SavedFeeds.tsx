@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
 import {
-  RefreshControl,
   StyleSheet,
   View,
   ActivityIndicator,
@@ -18,23 +17,30 @@ import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
+import {ScrollView, CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
-import {isWeb} from 'platform/detection'
 import {s, colors} from 'lib/styles'
-import DraggableFlatList, {
-  ShadowDecorator,
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
-import {Link, TextLink} from 'view/com/util/Link'
+import {TextLink} from 'view/com/util/Link'
+
+const HITSLOP_TOP = {
+  top: 20,
+  left: 20,
+  bottom: 5,
+  right: 20,
+}
+const HITSLOP_BOTTOM = {
+  top: 5,
+  left: 20,
+  bottom: 20,
+  right: 20,
+}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
-
 export const SavedFeeds = withAuthRequired(
   observer(function SavedFeedsImpl({}: Props) {
     const pal = usePalette('default')
@@ -55,37 +61,76 @@ export const SavedFeeds = withAuthRequired(
       }, [screen, store, savedFeeds]),
     )
 
-    const renderListEmptyComponent = useCallback(() => {
-      return (
-        <View
-          style={[
-            pal.border,
-            isMobile && s.flex1,
-            pal.viewLight,
-            styles.empty,
-          ]}>
-          <Text type="lg" style={[pal.text]}>
-            You don't have any saved feeds.
-          </Text>
-        </View>
-      )
-    }, [pal, isMobile])
-
-    const renderListFooterComponent = useCallback(() => {
-      return (
-        <>
-          <View style={[styles.footerLinks, pal.border]}>
-            <Link style={styles.footerLink} href="/feeds">
-              <FontAwesomeIcon
-                icon="search"
-                size={18}
-                color={pal.colors.icon}
-              />
-              <Text type="lg-medium" style={pal.textLight}>
-                Discover new feeds
-              </Text>
-            </Link>
+    return (
+      <CenteredView
+        style={[
+          s.hContentRegion,
+          pal.border,
+          isTabletOrDesktop && styles.desktopContainer,
+        ]}>
+        <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
+        <ScrollView style={s.flex1}>
+          <View style={[pal.text, pal.border, styles.title]}>
+            <Text type="title" style={pal.text}>
+              Pinned Feeds
+            </Text>
           </View>
+          {savedFeeds.hasLoaded ? (
+            !savedFeeds.pinned.length ? (
+              <View
+                style={[
+                  pal.border,
+                  isMobile && s.flex1,
+                  pal.viewLight,
+                  styles.empty,
+                ]}>
+                <Text type="lg" style={[pal.text]}>
+                  You don't have any pinned feeds.
+                </Text>
+              </View>
+            ) : (
+              savedFeeds.pinned.map(feed => (
+                <ListItem
+                  key={feed._reactKey}
+                  savedFeeds={savedFeeds}
+                  item={feed}
+                />
+              ))
+            )
+          ) : (
+            <ActivityIndicator style={{marginTop: 20}} />
+          )}
+          <View style={[pal.text, pal.border, styles.title]}>
+            <Text type="title" style={pal.text}>
+              Saved Feeds
+            </Text>
+          </View>
+          {savedFeeds.hasLoaded ? (
+            !savedFeeds.unpinned.length ? (
+              <View
+                style={[
+                  pal.border,
+                  isMobile && s.flex1,
+                  pal.viewLight,
+                  styles.empty,
+                ]}>
+                <Text type="lg" style={[pal.text]}>
+                  You don't have any saved feeds.
+                </Text>
+              </View>
+            ) : (
+              savedFeeds.unpinned.map(feed => (
+                <ListItem
+                  key={feed._reactKey}
+                  savedFeeds={savedFeeds}
+                  item={feed}
+                />
+              ))
+            )
+          ) : (
+            <ActivityIndicator style={{marginTop: 20}} />
+          )}
+
           <View style={styles.footerText}>
             <Text type="sm" style={pal.textLight}>
               Feeds are custom algorithms that users build with a little coding
@@ -99,60 +144,8 @@ export const SavedFeeds = withAuthRequired(
               for more information.
             </Text>
           </View>
-          {savedFeeds.isLoading && <ActivityIndicator />}
-        </>
-      )
-    }, [pal, savedFeeds.isLoading])
-
-    const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
-
-    const onDragEnd = useCallback(
-      async ({data}: {data: FeedSourceModel[]}) => {
-        try {
-          await savedFeeds.reorderPinnedFeeds(data)
-        } catch (e) {
-          Toast.show('There was an issue contacting the server')
-          store.log.error('Failed to save pinned feed order', {e})
-        }
-      },
-      [savedFeeds, store],
-    )
-
-    return (
-      <CenteredView
-        style={[
-          s.hContentRegion,
-          pal.border,
-          isTabletOrDesktop && styles.desktopContainer,
-        ]}>
-        <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
-        <DraggableFlatList
-          containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
-          data={savedFeeds.pinned.concat(savedFeeds.unpinned)}
-          keyExtractor={item => item.uri}
-          refreshing={savedFeeds.isRefreshing}
-          refreshControl={
-            <RefreshControl
-              refreshing={savedFeeds.isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          renderItem={({item, drag}) => (
-            <ListItem savedFeeds={savedFeeds} item={item} drag={drag} />
-          )}
-          getItemLayout={(data, index) => ({
-            length: 77,
-            offset: 77 * index,
-            index,
-          })}
-          initialNumToRender={10}
-          ListFooterComponent={renderListFooterComponent}
-          ListEmptyComponent={renderListEmptyComponent}
-          extraData={savedFeeds.isLoading}
-          onDragEnd={onDragEnd}
-        />
+          <View style={{height: 100}} />
+        </ScrollView>
       </CenteredView>
     )
   }),
@@ -161,11 +154,9 @@ export const SavedFeeds = withAuthRequired(
 const ListItem = observer(function ListItemImpl({
   savedFeeds,
   item,
-  drag,
 }: {
   savedFeeds: SavedFeedsModel
   item: FeedSourceModel
-  drag: () => void
 }) {
   const pal = usePalette('default')
   const store = useStores()
@@ -196,59 +187,46 @@ const ListItem = observer(function ListItemImpl({
   )
 
   return (
-    <ScaleDecorator>
-      <ShadowDecorator>
-        <Pressable
-          accessibilityRole="button"
-          onLongPress={isPinned ? drag : undefined}
-          delayLongPress={200}
-          style={[styles.itemContainer, pal.border]}>
-          {isPinned && isWeb ? (
-            <View style={styles.webArrowButtonsContainer}>
-              <TouchableOpacity accessibilityRole="button" onPress={onPressUp}>
-                <FontAwesomeIcon
-                  icon="arrow-up"
-                  size={12}
-                  style={[pal.text, styles.webArrowUpButton]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                accessibilityRole="button"
-                onPress={onPressDown}>
-                <FontAwesomeIcon
-                  icon="arrow-down"
-                  size={12}
-                  style={[pal.text]}
-                />
-              </TouchableOpacity>
-            </View>
-          ) : isPinned ? (
-            <FontAwesomeIcon
-              icon="bars"
-              size={20}
-              color={pal.colors.text}
-              style={s.ml20}
-            />
-          ) : null}
-          <FeedSourceCard
-            key={item.uri}
-            item={item}
-            showSaveBtn
-            style={styles.noBorder}
-          />
+    <Pressable
+      accessibilityRole="button"
+      style={[styles.itemContainer, pal.border]}>
+      {isPinned ? (
+        <View style={styles.webArrowButtonsContainer}>
           <TouchableOpacity
             accessibilityRole="button"
-            hitSlop={10}
-            onPress={onTogglePinned}>
+            onPress={onPressUp}
+            hitSlop={HITSLOP_TOP}>
             <FontAwesomeIcon
-              icon="thumb-tack"
-              size={20}
-              color={isPinned ? colors.blue3 : pal.colors.icon}
+              icon="arrow-up"
+              size={12}
+              style={[pal.text, styles.webArrowUpButton]}
             />
           </TouchableOpacity>
-        </Pressable>
-      </ShadowDecorator>
-    </ScaleDecorator>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressDown}
+            hitSlop={HITSLOP_BOTTOM}>
+            <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
+          </TouchableOpacity>
+        </View>
+      ) : null}
+      <FeedSourceCard
+        key={item.uri}
+        item={item}
+        showSaveBtn
+        style={styles.noBorder}
+      />
+      <TouchableOpacity
+        accessibilityRole="button"
+        hitSlop={10}
+        onPress={onTogglePinned}>
+        <FontAwesomeIcon
+          icon="thumb-tack"
+          size={20}
+          color={isPinned ? colors.blue3 : pal.colors.icon}
+        />
+      </TouchableOpacity>
+    </Pressable>
   )
 })
 
@@ -262,12 +240,17 @@ const styles = StyleSheet.create({
   empty: {
     paddingHorizontal: 20,
     paddingVertical: 20,
-    borderRadius: 16,
-    marginHorizontal: 24,
+    borderRadius: 8,
+    marginHorizontal: 10,
     marginTop: 10,
   },
+  title: {
+    paddingHorizontal: 14,
+    paddingTop: 20,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+  },
   itemContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
@@ -288,15 +271,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingTop: 22,
     paddingBottom: 100,
-  },
-  footerLinks: {
-    borderBottomWidth: 1,
-    borderTopWidth: 0,
-  },
-  footerLink: {
-    flexDirection: 'row',
-    paddingHorizontal: 26,
-    paddingVertical: 18,
-    gap: 18,
   },
 })

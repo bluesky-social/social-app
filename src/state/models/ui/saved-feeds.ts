@@ -95,19 +95,15 @@ export class SavedFeedsModel {
       return
     }
     if (direction === 'up' && index !== 0) {
-      const temp = pinned[index]
-      pinned[index] = pinned[index - 1]
-      pinned[index - 1] = temp
+      ;[pinned[index], pinned[index - 1]] = [pinned[index - 1], pinned[index]]
     } else if (direction === 'down' && index < pinned.length - 1) {
-      const temp = pinned[index]
-      pinned[index] = pinned[index + 1]
-      pinned[index + 1] = temp
+      ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
     }
+    this._updatePinSortOrder(pinned.concat(this.unpinned.map(f => f.uri)))
     await this.rootStore.preferences.setSavedFeeds(
       this.rootStore.preferences.savedFeeds,
       pinned,
     )
-    this._updatePinSortOrder()
     track('CustomFeed:Reorder', {
       name: item.displayName,
       uri: item.uri,

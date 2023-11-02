@@ -1483,7 +1483,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.22.5"
     "@babel/plugin-transform-react-pure-annotations" "^7.22.5"
 
-"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.0", "@babel/preset-typescript@^7.16.7", "@babel/preset-typescript@^7.17.12":
+"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.0", "@babel/preset-typescript@^7.16.7":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/preset-typescript/-/preset-typescript-7.22.5.tgz#16367d8b01d640e9a507577ed4ee54e0101e51c8"
   integrity sha512-YbPaal9LxztSGhmndR46FmAbkJ/1fAsw293tSU+I5E5h+cnJ3d4GTwyUgGYmOXJYdGA+uNePle4qbaRzj2NISQ==
@@ -15800,13 +15800,6 @@ react-native-dotenv@^3.3.1:
   integrity sha512-dbyd+mcy7SUzxEgmt33TRf1FGcNe6swJhXmB0unKkI49F7+pidog9kPtjxMLTAfmKA8gcN2XHQSKltGfGbGCLQ==
   dependencies:
     dotenv "^16.3.1"
-
-react-native-draggable-flatlist@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-4.0.1.tgz#2f027d387ba4b8f3eb0907340e32cb85e6460df2"
-  integrity sha512-ZO1QUTNx64KZfXGXeXcBfql67l38X7kBcJ3rxUVZzPHt5r035GnGzIC0F8rqSXp6zgnwgUYMfB6zQc5PKmPL9Q==
-  dependencies:
-    "@babel/preset-typescript" "^7.17.12"
 
 react-native-drawer-layout@^3.2.0:
   version "3.2.1"
