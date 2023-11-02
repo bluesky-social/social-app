@@ -6,6 +6,7 @@ import {
 import {RootStoreModel} from './root-store'
 import {PostsFeedModel} from './feeds/posts'
 import {NotificationsFeedModel} from './feeds/notifications'
+import {MyFeedsUIModel} from './ui/my-feeds'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
 
@@ -22,6 +23,7 @@ export class MeModel {
   followersCount: number | undefined
   mainFeed: PostsFeedModel
   notifications: NotificationsFeedModel
+  myFeeds: MyFeedsUIModel
   follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
@@ -42,12 +44,14 @@ export class MeModel {
       algorithm: 'reverse-chronological',
     })
     this.notifications = new NotificationsFeedModel(this.rootStore)
+    this.myFeeds = new MyFeedsUIModel(this.rootStore)
     this.follows = new MyFollowsCache(this.rootStore)
   }
 
   clear() {
     this.mainFeed.clear()
     this.notifications.clear()
+    this.myFeeds.clear()
     this.follows.clear()
     this.rootStore.profiles.cache.clear()
     this.rootStore.posts.cache.clear()
@@ -111,6 +115,11 @@ export class MeModel {
       /* dont await */ this.notifications.setup().catch(e => {
         this.rootStore.log.error('Failed to setup notifications model', e)
       })
+      /* dont await */ this.notifications.setup().catch(e => {
+        this.rootStore.log.error('Failed to setup notifications model', e)
+      })
+      this.myFeeds.clear()
+      /* dont await */ this.myFeeds.saved.refresh()
       this.rootStore.emitSessionLoaded()
       await this.fetchInviteCodes()
       await this.fetchAppPasswords()

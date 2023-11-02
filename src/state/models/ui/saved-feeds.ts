@@ -52,6 +52,10 @@ export class SavedFeedsModel {
   // public api
   // =
 
+  clear() {
+    this.all = []
+  }
+
   /**
    * Refresh the preferences then reload all feed infos
    */

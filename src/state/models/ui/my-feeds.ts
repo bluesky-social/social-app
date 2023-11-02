@@ -77,6 +77,11 @@ export class MyFeedsUIModel {
     }
   }
 
+  clear() {
+    this.saved.clear()
+    this.discovery.clear()
+  }
+
   registerListeners() {
     const dispose1 = reaction(
       () => this.rootStore.preferences.savedFeeds,
@@ -107,7 +112,7 @@ export class MyFeedsUIModel {
       _reactKey: '__saved_feeds_header__',
       type: 'saved-feeds-header',
     })
-    if (this.saved.isLoading) {
+    if (this.saved.isLoading && !this.saved.hasContent) {
       items.push({
         _reactKey: '__saved_feeds_loading__',
         type: 'saved-feeds-loading',
