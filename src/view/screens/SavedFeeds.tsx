@@ -26,10 +26,21 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {TextLink} from 'view/com/util/Link'
-import {HITSLOP_20} from 'lib/constants'
+
+const HITSLOP_TOP = {
+  top: 20,
+  left: 20,
+  bottom: 5,
+  right: 20,
+}
+const HITSLOP_BOTTOM = {
+  top: 5,
+  left: 20,
+  bottom: 20,
+  right: 20,
+}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
-
 export const SavedFeeds = withAuthRequired(
   observer(function SavedFeedsImpl({}: Props) {
     const pal = usePalette('default')
@@ -184,7 +195,7 @@ const ListItem = observer(function ListItemImpl({
           <TouchableOpacity
             accessibilityRole="button"
             onPress={onPressUp}
-            hitSlop={HITSLOP_20}>
+            hitSlop={HITSLOP_TOP}>
             <FontAwesomeIcon
               icon="arrow-up"
               size={12}
@@ -194,7 +205,7 @@ const ListItem = observer(function ListItemImpl({
           <TouchableOpacity
             accessibilityRole="button"
             onPress={onPressDown}
-            hitSlop={HITSLOP_20}>
+            hitSlop={HITSLOP_BOTTOM}>
             <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
           </TouchableOpacity>
         </View>
