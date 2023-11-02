@@ -92,7 +92,7 @@ export function getLikelyType(url: URL | string): LikelyType {
   }
 
   const ext = url.pathname.split('.').pop() || ''
-  if (ext === 'html' || ext === 'htm') {
+  if (ext === 'html' || ext === 'htm' || ext === 'php') {
     return LikelyType.HTML
   }
   const mimeType = EXT_MIME_TYPES[ext]
