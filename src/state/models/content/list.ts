@@ -290,6 +290,7 @@ export class ListModel {
       })
     }
 
+    /* dont await */ this.rootStore.preferences.removeSavedFeed(this.uri)
     this.rootStore.emitListDeleted(this.uri)
   }
 
