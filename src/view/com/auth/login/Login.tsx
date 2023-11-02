@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -202,7 +203,7 @@ const ChooseAccountForm = ({
   }
 
   return (
-    <View testID="chooseAccountForm">
+    <ScrollView testID="chooseAccountForm">
       <Text
         type="2xl-medium"
         style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}>
@@ -267,7 +268,7 @@ const ChooseAccountForm = ({
         <View style={s.flex1} />
         {isProcessing && <ActivityIndicator />}
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
