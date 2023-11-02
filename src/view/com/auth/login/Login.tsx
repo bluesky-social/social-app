@@ -29,6 +29,7 @@ import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
+import {isWeb} from 'platform/detection'
 
 enum Forms {
   Login,
@@ -203,7 +204,7 @@ const ChooseAccountForm = ({
   }
 
   return (
-    <ScrollView testID="chooseAccountForm">
+    <ScrollView testID="chooseAccountForm" style={styles.maxHeight}>
       <Text
         type="2xl-medium"
         style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}>
@@ -991,4 +992,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   dimmed: {opacity: 0.5},
+
+  maxHeight: {
+    // @ts-ignore web only -prf
+    maxHeight: isWeb ? '100vh' : undefined,
+    height: !isWeb ? '100%' : undefined,
+  },
 })
