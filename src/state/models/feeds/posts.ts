@@ -25,6 +25,17 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 
 const PAGE_SIZE = 30
 
+type FeedType = 'home' | 'following' | 'author' | 'custom' | 'likes' | 'list'
+
+export enum KnownError {
+  FeedgenDoesNotExist,
+  FeedgenMisconfigured,
+  FeedgenBadResponse,
+  FeedgenOffline,
+  FeedgenUnknown,
+  Unknown,
+}
+
 type Options = {
   /**
    * Formats the feed in a flat array with no threading of replies, just
@@ -49,6 +60,7 @@ export class PostsFeedModel {
   isBlocking = false
   isBlockedBy = false
   error = ''
+  knownError: KnownError | undefined
   loadMoreError = ''
   params: QueryParams
   hasMore = true
@@ -69,13 +81,7 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType:
-      | 'home'
-      | 'following'
-      | 'author'
-      | 'custom'
-      | 'likes'
-      | 'list',
+    public feedType: FeedType,
     params: QueryParams,
     options?: Options,
   ) {
@@ -305,6 +311,7 @@ export class PostsFeedModel {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
+    this.knownError = undefined
   }
 
   _xIdle(error?: any, loadMoreError?: any) {
@@ -314,6 +321,7 @@ export class PostsFeedModel {
     this.isBlocking = error instanceof GetAuthorFeed.BlockedActorError
     this.isBlockedBy = error instanceof GetAuthorFeed.BlockedByActorError
     this.error = cleanError(error)
+    this.knownError = detectKnownError(this.feedType, error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
       this.rootStore.log.error('Posts feed request failed', error)
@@ -382,4 +390,40 @@ export class PostsFeedModel {
       }
     })
   }
+}
+
+function detectKnownError(
+  feedType: FeedType,
+  error: any,
+): KnownError | undefined {
+  if (!error) {
+    return undefined
+  }
+  if (typeof error !== 'string') {
+    error = error.toString()
+  }
+  if (feedType !== 'custom') {
+    return KnownError.Unknown
+  }
+  if (error.includes('could not find feed')) {
+    return KnownError.FeedgenDoesNotExist
+  }
+  if (error.includes('feed unavailable')) {
+    return KnownError.FeedgenOffline
+  }
+  if (error.includes('invalid did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('could not resolve did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (
+    error.includes('invalid feed generator service details in did document')
+  ) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('feed provided an invalid response')) {
+    return KnownError.FeedgenBadResponse
+  }
+  return KnownError.FeedgenUnknown
 }

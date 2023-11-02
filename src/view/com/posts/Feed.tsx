@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/error/ErrorMessage'
+import {FeedErrorMessage} from './FeedErrorMessage'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -125,10 +125,7 @@ export const Feed = observer(function Feed({
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
-          <ErrorMessage
-            message={feed.error}
-            onPressTryAgain={onPressTryAgain}
-          />
+          <FeedErrorMessage feed={feed} onPressTryAgain={onPressTryAgain} />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
