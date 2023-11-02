@@ -8,8 +8,8 @@ import {PostLikedBy as PostLikedByComponent} from '../com/post-thread/PostLikedB
 import {useStores} from 'state/index'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeedLikedBy'>
-export const CustomFeedLikedByScreen = withAuthRequired(({route}: Props) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>
+export const ProfileFeedLikedByScreen = withAuthRequired(({route}: Props) => {
   const store = useStores()
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)

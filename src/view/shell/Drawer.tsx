@@ -29,6 +29,7 @@ import {
   MagnifyingGlassIcon2Solid,
   UserIconSolid,
   HashtagIcon,
+  ListIcon,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -105,6 +106,12 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     () => onPressTab('Feeds'),
     [onPressTab],
   )
+
+  const onPressLists = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Lists'})
+    navigation.navigate('Lists')
+    store.shell.closeDrawer()
+  }, [navigation, track, store.shell])
 
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
@@ -275,6 +282,13 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             accessibilityHint=""
             bold={isAtFeeds}
             onPress={onPressMyFeeds}
+          />
+          <MenuItem
+            icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
+            label="Lists"
+            accessibilityLabel="Lists"
+            accessibilityHint=""
+            onPress={onPressLists}
           />
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}

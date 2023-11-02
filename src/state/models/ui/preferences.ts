@@ -194,7 +194,7 @@ export class PreferencesModel {
   /**
    * This function fetches preferences and sets defaults for missing items.
    */
-  async sync({clearCache}: {clearCache?: boolean} = {}) {
+  async sync() {
     await this.lock.acquireAsync()
     try {
       // fetch preferences
@@ -252,8 +252,6 @@ export class PreferencesModel {
     } finally {
       this.lock.release()
     }
-
-    await this.rootStore.me.savedFeeds.updateCache(clearCache)
   }
 
   async syncLegacyPreferences() {
@@ -285,6 +283,9 @@ export class PreferencesModel {
       this.lock.release()
     }
   }
+
+  // languages
+  // =
 
   hasContentLanguage(code2: string) {
     return this.contentLanguages.includes(code2)
@@ -358,6 +359,9 @@ export class PreferencesModel {
     return all.join(', ')
   }
 
+  // moderation
+  // =
+
   async setContentLabelPref(
     key: keyof LabelPreferencesModel,
     value: LabelPreference,
@@ -407,6 +411,13 @@ export class PreferencesModel {
         },
       ],
     }
+  }
+
+  // feeds
+  // =
+
+  isPinnedFeed(uri: string) {
+    return this.pinnedFeeds.includes(uri)
   }
 
   async _optimisticUpdateSavedFeeds(
@@ -473,6 +484,9 @@ export class PreferencesModel {
       () => this.rootStore.agent.removePinnedFeed(v),
     )
   }
+
+  // other
+  // =
 
   async setBirthDate(birthDate: Date) {
     this.birthDate = birthDate
@@ -602,13 +616,16 @@ export class PreferencesModel {
   }
 
   getFeedTuners(
-    feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
+    feedType: 'home' | 'following' | 'author' | 'custom' | 'list' | 'likes',
   ) {
     if (feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
         FeedTuner.preferredLangOnly(this.contentLanguages),
       ]
+    }
+    if (feedType === 'list') {
+      return [FeedTuner.dedupReposts]
     }
     if (feedType === 'home' || feedType === 'following') {
       const feedTuners = []

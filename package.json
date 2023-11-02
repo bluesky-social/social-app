@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.55.0",
+  "version": "1.56.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -102,7 +102,6 @@
     "expo-system-ui": "~2.4.0",
     "expo-updates": "~0.18.12",
     "fast-text-encoding": "^1.0.6",
-    "graphemer": "^1.4.0",
     "history": "^5.3.0",
     "js-sha256": "^0.9.0",
     "lande": "^1.0.10",
@@ -158,6 +157,7 @@
     "sentry-expo": "~7.0.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "use-deep-compare": "^1.1.0",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
@@ -237,6 +237,9 @@
       "json",
       "node"
     ],
+    "transform": {
+      "\\.[jt]sx?$": "babel-jest"
+    },
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
     ],

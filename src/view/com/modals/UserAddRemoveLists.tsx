@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {observer} from 'mobx-react-lite'
-import {Pressable, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -11,7 +11,6 @@ import {UserAvatar} from '../util/UserAvatar'
 import {ListsList} from '../lists/ListsList'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListMembershipModel} from 'state/models/content/list-membership'
-import {EmptyStateWithButton} from '../util/EmptyStateWithButton'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'
@@ -24,14 +23,16 @@ import isEqual from 'lodash.isequal'
 
 export const snapPoints = ['fullscreen']
 
-export const Component = observer(function ListAddRemoveUserImpl({
+export const Component = observer(function UserAddRemoveListsImpl({
   subject,
   displayName,
-  onUpdate,
+  onAdd,
+  onRemove,
 }: {
   subject: string
   displayName: string
-  onUpdate?: () => void
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -71,25 +72,22 @@ export const Component = observer(function ListAddRemoveUserImpl({
   }, [store])
 
   const onPressSave = useCallback(async () => {
+    let changes
     try {
-      await memberships.updateTo(selected)
+      changes = await memberships.updateTo(selected)
     } catch (err) {
       store.log.error('Failed to update memberships', {err})
       return
     }
     Toast.show('Lists updated')
-    onUpdate?.()
+    for (const uri of changes.added) {
+      onAdd?.(uri)
+    }
+    for (const uri of changes.removed) {
+      onRemove?.(uri)
+    }
     store.shell.closeModal()
-  }, [store, selected, memberships, onUpdate])
-
-  const onPressNewMuteList = useCallback(() => {
-    store.shell.openModal({
-      name: 'create-or-edit-mute-list',
-      onSave: (_uri: string) => {
-        listsList.refresh()
-      },
-    })
-  }, [store, listsList])
+  }, [store, selected, memberships, onAdd, onRemove])
 
   const onToggleSelected = useCallback(
     (uri: string) => {
@@ -103,7 +101,7 @@ export const Component = observer(function ListAddRemoveUserImpl({
   )
 
   const renderItem = useCallback(
-    (list: GraphDefs.ListView) => {
+    (list: GraphDefs.ListView, index: number) => {
       const isSelected = selected.includes(list.uri)
       return (
         <Pressable
@@ -111,7 +109,10 @@ export const Component = observer(function ListAddRemoveUserImpl({
           style={[
             styles.listItem,
             pal.border,
-            {opacity: membershipsLoaded ? 1 : 0.5},
+            {
+              opacity: membershipsLoaded ? 1 : 0.5,
+              borderTopWidth: index === 0 ? 0 : 1,
+            },
           ]}
           accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
             list.name
@@ -131,7 +132,11 @@ export const Component = observer(function ListAddRemoveUserImpl({
               {sanitizeDisplayName(list.name)}
             </Text>
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'} by{' '}
+              {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+                'User list '}
+              {list.purpose === 'app.bsky.graph.defs#modlist' &&
+                'Moderation list '}
+              by{' '}
               {list.creator.did === store.me.did
                 ? 'you'
                 : sanitizeHandle(list.creator.handle, '@')}
@@ -166,30 +171,19 @@ export const Component = observer(function ListAddRemoveUserImpl({
     ],
   )
 
-  const renderEmptyState = React.useCallback(() => {
-    return (
-      <EmptyStateWithButton
-        icon="users-slash"
-        message="You can subscribe to mute lists to automatically mute all of the users they include. Mute lists are public but your subscription to a mute list is private."
-        buttonLabel="New Mute List"
-        onPress={onPressNewMuteList}
-      />
-    )
-  }, [onPressNewMuteList])
-
   // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
   const canSaveChanges =
     !listsList.isEmpty && !isEqual(selected, originalSelections)
 
   return (
-    <View testID="listAddRemoveUserModal" style={s.hContentRegion}>
-      <Text style={[styles.title, pal.text]}>Add {displayName} to Lists</Text>
+    <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
+      <Text style={[styles.title, pal.text]}>
+        Update {displayName} in Lists
+      </Text>
       <ListsList
         listsList={listsList}
-        showAddBtns
-        onPressCreateNew={onPressNewMuteList}
+        inline
         renderItem={renderItem}
-        renderEmptyState={renderEmptyState}
         style={[styles.list, pal.border]}
       />
       <View style={[styles.btns, pal.border]}>
@@ -258,7 +252,6 @@ const styles = StyleSheet.create({
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderTopWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },

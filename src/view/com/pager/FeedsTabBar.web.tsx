@@ -1,10 +1,11 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {StyleSheet} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
+import {useHomeTabs} from 'lib/hooks/useHomeTabs'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
@@ -27,10 +28,7 @@ const FeedsTabBarTablet = observer(function FeedsTabBarTabletImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const store = useStores()
-  const items = useMemo(
-    () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
-    [store.me.savedFeeds.pinnedFeedNames],
-  )
+  const items = useHomeTabs(store.preferences.pinnedFeeds)
   const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
 

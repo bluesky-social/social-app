@@ -13,3 +13,15 @@ export function makeProfileLink(
     ...segments,
   ].join('/')
 }
+
+export function makeCustomFeedLink(
+  did: string,
+  rkey: string,
+  ...segments: string[]
+) {
+  return [`/profile`, did, 'feed', rkey, ...segments].join('/')
+}
+
+export function makeListLink(did: string, rkey: string, ...segments: string[]) {
+  return [`/profile`, did, 'lists', rkey, ...segments].join('/')
+}

@@ -1,7 +1,6 @@
 import React from 'react'
 import {useWindowDimensions} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
@@ -30,29 +29,29 @@ export const HomeScreen = withAuthRequired(
     >([])
 
     React.useEffect(() => {
-      const {pinned} = store.me.savedFeeds
+      const pinned = store.preferences.pinnedFeeds
 
-      if (
-        isEqual(
-          pinned.map(p => p.uri),
-          requestedCustomFeeds,
-        )
-      ) {
+      if (isEqual(pinned, requestedCustomFeeds)) {
         // no changes
         return
       }
 
       const feeds = []
-      for (const feed of pinned) {
-        const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
-        feeds.push(model)
+      for (const uri of pinned) {
+        if (uri.includes('app.bsky.feed.generator')) {
+          const model = new PostsFeedModel(store, 'custom', {feed: uri})
+          feeds.push(model)
+        } else if (uri.includes('app.bsky.graph.list')) {
+          const model = new PostsFeedModel(store, 'list', {list: uri})
+          feeds.push(model)
+        }
       }
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
-      setRequestedCustomFeeds(pinned.map(p => p.uri))
+      setRequestedCustomFeeds(pinned)
     }, [
       store,
-      store.me.savedFeeds.pinned,
+      store.preferences.pinnedFeeds,
       customFeeds,
       setCustomFeeds,
       pagerRef,
@@ -124,7 +123,7 @@ export const HomeScreen = withAuthRequired(
         {customFeeds.map((f, index) => {
           return (
             <FeedPage
-              key={(f.params as GetCustomFeed.QueryParams).feed}
+              key={f.reactKey}
               testID="customFeedPage"
               isPageFocused={selectedPage === 1 + index}
               feed={f}

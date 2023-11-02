@@ -1,16 +1,17 @@
 import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import {useNavigationState} from '@react-navigation/native'
-import {AtUri} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useDesktopRightNavItems} from 'lib/hooks/useDesktopRightNavItems'
 import {TextLink} from 'view/com/util/Link'
 import {getCurrentRoute} from 'lib/routes/helpers'
 
 export const DesktopFeeds = observer(function DesktopFeeds() {
   const store = useStores()
   const pal = usePalette('default')
+  const items = useDesktopRightNavItems(store.preferences.pinnedFeeds)
 
   const route = useNavigationState(state => {
     if (!state) {
@@ -22,20 +23,22 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
   return (
     <View style={[styles.container, pal.view, pal.border]}>
       <FeedItem href="/" title="Following" current={route.name === 'Home'} />
-      {store.me.savedFeeds.pinned.map(feed => {
+      {items.map(item => {
         try {
-          const {hostname, rkey} = new AtUri(feed.uri)
-          const href = `/profile/${hostname}/feed/${rkey}`
           const params = route.params as Record<string, string>
+          const routeName =
+            item.collection === 'app.bsky.feed.generator'
+              ? 'ProfileFeed'
+              : 'ProfileList'
           return (
             <FeedItem
-              key={feed.uri}
-              href={href}
-              title={feed.displayName}
+              key={item.uri}
+              href={item.href}
+              title={item.displayName}
               current={
-                route.name === 'CustomFeed' &&
-                params.name === hostname &&
-                params.rkey === rkey
+                route.name === routeName &&
+                params.name === item.hostname &&
+                params.rkey === item.rkey
               }
             />
           )

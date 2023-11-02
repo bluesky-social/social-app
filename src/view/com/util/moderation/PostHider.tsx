@@ -74,7 +74,7 @@ export function PostHider({
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />
         </Pressable>
-        <Text type="lg" style={pal.text}>
+        <Text type="lg" style={[{flex: 1}, pal.text]} numberOfLines={1}>
           {desc.name}
         </Text>
         {!moderation.noOverride && (

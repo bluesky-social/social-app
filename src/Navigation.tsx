@@ -42,16 +42,17 @@ import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
 import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {ListsScreen} from './view/screens/Lists'
 import {ModerationScreen} from './view/screens/Moderation'
-import {ModerationMuteListsScreen} from './view/screens/ModerationMuteLists'
+import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
 import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
 import {ProfileScreen} from './view/screens/Profile'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
-import {CustomFeedScreen} from './view/screens/CustomFeed'
-import {CustomFeedLikedByScreen} from './view/screens/CustomFeedLikedBy'
+import {ProfileFeedScreen} from './view/screens/ProfileFeed'
+import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
 import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
@@ -95,14 +96,19 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title('Not Found')}}
       />
       <Stack.Screen
+        name="Lists"
+        component={ListsScreen}
+        options={{title: title('Lists')}}
+      />
+      <Stack.Screen
         name="Moderation"
         getComponent={() => ModerationScreen}
         options={{title: title('Moderation')}}
       />
       <Stack.Screen
-        name="ModerationMuteLists"
-        getComponent={() => ModerationMuteListsScreen}
-        options={{title: title('Mute Lists')}}
+        name="ModerationModlists"
+        getComponent={() => ModerationModlistsScreen}
+        options={{title: title('Moderation Lists')}}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
@@ -149,7 +155,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
-        options={{title: title('Mute List')}}
+        options={{title: title('List')}}
       />
       <Stack.Screen
         name="PostThread"
@@ -167,13 +173,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
       />
       <Stack.Screen
-        name="CustomFeed"
-        getComponent={() => CustomFeedScreen}
+        name="ProfileFeed"
+        getComponent={() => ProfileFeedScreen}
         options={{title: title('Feed')}}
       />
       <Stack.Screen
-        name="CustomFeedLikedBy"
-        getComponent={() => CustomFeedLikedByScreen}
+        name="ProfileFeedLikedBy"
+        getComponent={() => ProfileFeedLikedByScreen}
         options={{title: title('Liked by')}}
       />
       <Stack.Screen
@@ -471,6 +477,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           performance.now() - global.__BUNDLE_START_TIME__,
         )
         console.log(`Time to first paint: ${initMs} ms`)
+        logModuleInitTrace()
       }}>
       {children}
     </NavigationContainer>
@@ -578,6 +585,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
 })
+
+function logModuleInitTrace() {
+  if (__DEV__) {
+    // This log is noisy, so keep false committed
+    const shouldLog = false
+    // Relies on our patch to polyfill.js in metro-runtime
+    const initLogs = (global as any).__INIT_LOGS__
+    if (shouldLog && Array.isArray(initLogs)) {
+      console.log(initLogs.join('\n'))
+    }
+  }
+}
 
 export {
   navigate,

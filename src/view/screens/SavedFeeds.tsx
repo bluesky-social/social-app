@@ -14,6 +14,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
+import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -25,9 +26,9 @@ import DraggableFlatList, {
   ShadowDecorator,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {Link, TextLink} from 'view/com/util/Link'
@@ -41,7 +42,11 @@ export const SavedFeeds = withAuthRequired(
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
 
-    const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
+    const savedFeeds = useMemo(() => {
+      const model = new SavedFeedsModel(store)
+      model.refresh()
+      return model
+    }, [store])
     useFocusEffect(
       useCallback(() => {
         screen('SavedFeeds')
@@ -102,7 +107,7 @@ export const SavedFeeds = withAuthRequired(
     const onRefresh = useCallback(() => savedFeeds.refresh(), [savedFeeds])
 
     const onDragEnd = useCallback(
-      async ({data}: {data: CustomFeedModel[]}) => {
+      async ({data}: {data: FeedSourceModel[]}) => {
         try {
           await savedFeeds.reorderPinnedFeeds(data)
         } catch (e) {
@@ -123,8 +128,8 @@ export const SavedFeeds = withAuthRequired(
         <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
         <DraggableFlatList
           containerStyle={[isTabletOrDesktop ? s.hContentRegion : s.flex1]}
-          data={savedFeeds.all}
-          keyExtractor={item => item.data.uri}
+          data={savedFeeds.pinned.concat(savedFeeds.unpinned)}
+          keyExtractor={item => item.uri}
           refreshing={savedFeeds.isRefreshing}
           refreshControl={
             <RefreshControl
@@ -134,7 +139,9 @@ export const SavedFeeds = withAuthRequired(
               titleColor={pal.colors.text}
             />
           }
-          renderItem={({item, drag}) => <ListItem item={item} drag={drag} />}
+          renderItem={({item, drag}) => (
+            <ListItem savedFeeds={savedFeeds} item={item} drag={drag} />
+          )}
           getItemLayout={(data, index) => ({
             length: 77,
             offset: 77 * index,
@@ -152,24 +159,25 @@ export const SavedFeeds = withAuthRequired(
 )
 
 const ListItem = observer(function ListItemImpl({
+  savedFeeds,
   item,
   drag,
 }: {
-  item: CustomFeedModel
+  savedFeeds: SavedFeedsModel
+  item: FeedSourceModel
   drag: () => void
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const savedFeeds = useMemo(() => store.me.savedFeeds, [store])
-  const isPinned = savedFeeds.isPinned(item)
+  const isPinned = item.isPinned
 
   const onTogglePinned = useCallback(() => {
     Haptics.default()
-    savedFeeds.togglePinnedFeed(item).catch(e => {
+    item.togglePin().catch(e => {
       Toast.show('There was an issue contacting the server')
       store.log.error('Failed to toggle pinned feed', {e})
     })
-  }, [savedFeeds, item, store])
+  }, [item, store])
   const onPressUp = useCallback(
     () =>
       savedFeeds.movePinnedFeed(item, 'up').catch(e => {
@@ -222,8 +230,8 @@ const ListItem = observer(function ListItemImpl({
               style={s.ml20}
             />
           ) : null}
-          <CustomFeed
-            key={item.data.uri}
+          <FeedSourceCard
+            key={item.uri}
             item={item}
             showSaveBtn
             style={styles.noBorder}

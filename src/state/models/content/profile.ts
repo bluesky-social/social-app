@@ -22,7 +22,8 @@ export class ProfileViewerModel {
   following?: string
   followedBy?: string
   blockedBy?: boolean
-  blocking?: string;
+  blocking?: string
+  blockingByList?: AppBskyGraphDefs.ListViewBasic;
   [key: string]: unknown
 
   constructor() {

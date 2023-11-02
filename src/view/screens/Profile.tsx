@@ -25,8 +25,8 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 
@@ -189,9 +189,14 @@ export const ProfileScreen = withAuthRequired(
                 style={styles.emptyState}
               />
             )
-          } else if (item instanceof CustomFeedModel) {
+          } else if (item instanceof FeedSourceModel) {
             return (
-              <CustomFeed item={item} showSaveBtn showLikes showDescription />
+              <FeedSourceCard
+                item={item}
+                showSaveBtn
+                showLikes
+                showDescription
+              />
             )
           }
           // if section is posts or posts & replies

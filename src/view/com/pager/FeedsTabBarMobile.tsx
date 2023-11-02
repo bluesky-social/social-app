@@ -1,9 +1,10 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
+import {useHomeTabs} from 'lib/hooks/useHomeTabs'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Link} from '../util/Link'
@@ -18,24 +19,15 @@ import Animated from 'react-native-reanimated'
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const store = useStores()
   const pal = usePalette('default')
-
+  const store = useStores()
+  const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
     store.shell.openDrawer()
   }, [store])
-
-  const items = useMemo(
-    () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
-    [store.me.savedFeeds.pinnedFeedNames],
-  )
-
-  const tabBarKey = useMemo(() => {
-    return items.join(',')
-  }, [items])
 
   return (
     <Animated.View
@@ -81,7 +73,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         </View>
       </View>
       <TabBar
-        key={tabBarKey}
+        key={items.join(',')}
         onPressSelected={props.onPressSelected}
         selectedPage={props.selectedPage}
         onSelect={props.onSelect}

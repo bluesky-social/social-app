@@ -91,7 +91,7 @@ export function UserBanner({
               name: 'trash',
             },
             android: 'ic_delete',
-            web: 'trash',
+            web: ['far', 'trash-can'],
           },
           onPress: () => {
             onSelectNewBanner?.(null)

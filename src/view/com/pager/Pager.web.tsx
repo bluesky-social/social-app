@@ -13,6 +13,7 @@ interface Props {
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
+  onPageSelecting?: (index: number) => void
 }
 export const Pager = React.forwardRef(function PagerImpl(
   {
@@ -21,6 +22,7 @@ export const Pager = React.forwardRef(function PagerImpl(
     initialPage = 0,
     renderTabBar,
     onPageSelected,
+    onPageSelecting,
   }: React.PropsWithChildren<Props>,
   ref,
 ) {
@@ -34,21 +36,20 @@ export const Pager = React.forwardRef(function PagerImpl(
     (index: number) => {
       setSelectedPage(index)
       onPageSelected?.(index)
+      onPageSelecting?.(index)
     },
-    [setSelectedPage, onPageSelected],
+    [setSelectedPage, onPageSelected, onPageSelecting],
   )
 
   return (
-    <View>
+    <View style={s.hContentRegion}>
       {tabBarPosition === 'top' &&
         renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
         })}
       {React.Children.map(children, (child, i) => (
-        <View
-          style={selectedPage === i ? undefined : s.hidden}
-          key={`page-${i}`}>
+        <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
           {child}
         </View>
       ))}

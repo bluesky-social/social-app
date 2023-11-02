@@ -29,26 +29,26 @@ export const Feed = observer(function Feed({
   feed,
   style,
   scrollElRef,
-  onPressTryAgain,
   onScroll,
   scrollEventThrottle,
   renderEmptyState,
   renderEndOfFeed,
   testID,
   headerOffset = 0,
+  desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
 }: {
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
 }) {
@@ -71,6 +71,8 @@ export const Feed = observer(function Feed({
       if (feed.loadMoreError) {
         feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
       }
+    } else {
+      feedItems.push(LOADING_ITEM)
     }
     return feedItems
   }, [
@@ -105,6 +107,10 @@ export const Feed = observer(function Feed({
       feed.rootStore.log.error('Failed to load more posts', err)
     }
   }, [feed, track])
+
+  const onPressTryAgain = React.useCallback(() => {
+    feed.refresh()
+  }, [feed])
 
   const onPressRetryLoadMore = React.useCallback(() => {
     feed.retryLoadMore()
@@ -158,7 +164,7 @@ export const Feed = observer(function Feed({
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={!feed.hasLoaded ? [LOADING_ITEM] : data}
+        data={data}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
@@ -183,7 +189,9 @@ export const Feed = observer(function Feed({
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
-        desktopFixedHeight
+        desktopFixedHeight={
+          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+        }
       />
     </View>
   )

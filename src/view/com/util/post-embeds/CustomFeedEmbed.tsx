@@ -3,8 +3,8 @@ import {AppBskyFeedDefs} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
 import {StyleSheet} from 'react-native'
 import {useStores} from 'state/index'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {FeedSourceModel} from 'state/models/content/feed-source'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 
 export function CustomFeedEmbed({
   record,
@@ -13,12 +13,13 @@ export function CustomFeedEmbed({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-  const item = useMemo(
-    () => new CustomFeedModel(store, record),
-    [store, record],
-  )
+  const item = useMemo(() => {
+    const model = new FeedSourceModel(store, record.uri)
+    model.hydrateFeedGenerator(record)
+    return model
+  }, [store, record])
   return (
-    <CustomFeed
+    <FeedSourceCard
       item={item}
       style={[pal.view, pal.border, styles.customFeedOuter]}
       showLikes

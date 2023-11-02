@@ -11,8 +11,9 @@ import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportModal from './report/Modal'
-import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
-import * as ListAddRemoveUserModal from './ListAddRemoveUser'
+import * as CreateOrEditListModal from './CreateOrEditList'
+import * as UserAddRemoveLists from './UserAddRemoveLists'
+import * as ListAddUserModal from './ListAddUser'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
@@ -79,10 +80,12 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report') {
     element = <ReportModal.Component {...modal} />
-  } else if (modal.name === 'create-or-edit-mute-list') {
-    element = <CreateOrEditMuteListModal.Component {...modal} />
-  } else if (modal.name === 'list-add-remove-user') {
-    element = <ListAddRemoveUserModal.Component {...modal} />
+  } else if (modal.name === 'create-or-edit-list') {
+    element = <CreateOrEditListModal.Component {...modal} />
+  } else if (modal.name === 'user-add-remove-lists') {
+    element = <UserAddRemoveLists.Component {...modal} />
+  } else if (modal.name === 'list-add-user') {
+    element = <ListAddUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {

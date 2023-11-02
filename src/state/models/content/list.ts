@@ -1,10 +1,12 @@
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
   AtUri,
+  AppBskyActorDefs,
   AppBskyGraphGetList as GetList,
   AppBskyGraphDefs as GraphDefs,
   AppBskyGraphList,
   AppBskyGraphListitem,
+  RichText,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import chunk from 'lodash.chunk'
@@ -13,6 +15,7 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 import {track} from 'lib/analytics/analytics'
+import {until} from 'lib/async/until'
 
 const PAGE_SIZE = 30
 
@@ -37,19 +40,32 @@ export class ListModel {
   loadMoreCursor?: string
 
   // data
-  list: GraphDefs.ListView | null = null
+  data: GraphDefs.ListView | null = null
   items: GraphDefs.ListItemView[] = []
+  descriptionRT: RichText | null = null
 
-  static async createModList(
+  static async createList(
     rootStore: RootStoreModel,
     {
+      purpose,
       name,
       description,
       avatar,
-    }: {name: string; description: string; avatar: RNImage | null | undefined},
+    }: {
+      purpose: string
+      name: string
+      description: string
+      avatar: RNImage | null | undefined
+    },
   ) {
+    if (
+      purpose !== 'app.bsky.graph.defs#curatelist' &&
+      purpose !== 'app.bsky.graph.defs#modlist'
+    ) {
+      throw new Error('Invalid list purpose: must be curatelist or modlist')
+    }
     const record: AppBskyGraphList.Record = {
-      purpose: 'app.bsky.graph.defs#modlist',
+      purpose,
       name,
       description,
       avatar: undefined,
@@ -69,7 +85,20 @@ export class ListModel {
       },
       record,
     )
-    await rootStore.agent.app.bsky.graph.muteActorList({list: res.uri})
+
+    // wait for the appview to update
+    await until(
+      5, // 5 tries
+      1e3, // 1s delay between tries
+      (v: GetList.Response, _e: any) => {
+        return typeof v?.data?.list.uri === 'string'
+      },
+      () =>
+        rootStore.agent.app.bsky.graph.getList({
+          list: res.uri,
+          limit: 1,
+        }),
+    )
     return res
   }
 
@@ -95,16 +124,40 @@ export class ListModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get isOwner() {
-    return this.list?.creator.did === this.rootStore.me.did
+  get isCuratelist() {
+    return this.data?.purpose === 'app.bsky.graph.defs#curatelist'
   }
 
-  get isSubscribed() {
-    return this.list?.viewer?.muted
+  get isModlist() {
+    return this.data?.purpose === 'app.bsky.graph.defs#modlist'
+  }
+
+  get isOwner() {
+    return this.data?.creator.did === this.rootStore.me.did
+  }
+
+  get isBlocking() {
+    return !!this.data?.viewer?.blocked
+  }
+
+  get isMuting() {
+    return !!this.data?.viewer?.muted
+  }
+
+  get isPinned() {
+    return this.rootStore.preferences.isPinnedFeed(this.uri)
   }
 
   get creatorDid() {
-    return this.list?.creator.did
+    return this.data?.creator.did
+  }
+
+  getMembership(did: string) {
+    return this.items.find(item => item.subject.did === did)
+  }
+
+  isMember(did: string) {
+    return !!this.getMembership(did)
   }
 
   // public api
@@ -137,6 +190,15 @@ export class ListModel {
     }
   })
 
+  async loadAll() {
+    for (let i = 0; i < 1000; i++) {
+      if (!this.hasMore) {
+        break
+      }
+      await this.loadMore()
+    }
+  }
+
   async updateMetadata({
     name,
     description,
@@ -146,7 +208,7 @@ export class ListModel {
     description: string
     avatar: RNImage | null | undefined
   }) {
-    if (!this.list) {
+    if (!this.data) {
       return
     }
     if (!this.isOwner) {
@@ -183,7 +245,7 @@ export class ListModel {
   }
 
   async delete() {
-    if (!this.list) {
+    if (!this.data) {
       return
     }
     await this._resolveUri()
@@ -231,28 +293,140 @@ export class ListModel {
     this.rootStore.emitListDeleted(this.uri)
   }
 
-  async subscribe() {
-    if (!this.list) {
+  async addMember(profile: AppBskyActorDefs.ProfileViewBasic) {
+    if (this.isMember(profile.did)) {
       return
     }
-    await this._resolveUri()
-    await this.rootStore.agent.app.bsky.graph.muteActorList({
-      list: this.list.uri,
+    await this.rootStore.agent.app.bsky.graph.listitem.create(
+      {
+        repo: this.rootStore.me.did,
+      },
+      {
+        subject: profile.did,
+        list: this.uri,
+        createdAt: new Date().toISOString(),
+      },
+    )
+    runInAction(() => {
+      this.items = this.items.concat([
+        {_reactKey: profile.did, subject: profile},
+      ])
     })
-    track('Lists:Subscribe')
-    await this.refresh()
   }
 
-  async unsubscribe() {
-    if (!this.list) {
+  /**
+   * Just adds to local cache; used to reflect changes affected elsewhere
+   */
+  cacheAddMember(profile: AppBskyActorDefs.ProfileViewBasic) {
+    if (!this.isMember(profile.did)) {
+      this.items = this.items.concat([
+        {_reactKey: profile.did, subject: profile},
+      ])
+    }
+  }
+
+  /**
+   * Just removes from local cache; used to reflect changes affected elsewhere
+   */
+  cacheRemoveMember(profile: AppBskyActorDefs.ProfileViewBasic) {
+    if (this.isMember(profile.did)) {
+      this.items = this.items.filter(item => item.subject.did !== profile.did)
+    }
+  }
+
+  async pin() {
+    try {
+      await this.rootStore.preferences.addPinnedFeed(this.uri)
+    } catch (error) {
+      this.rootStore.log.error('Failed to pin feed', error)
+    } finally {
+      track('CustomFeed:Pin', {
+        name: this.data?.name || '',
+        uri: this.uri,
+      })
+    }
+  }
+
+  async togglePin() {
+    if (!this.isPinned) {
+      track('CustomFeed:Pin', {
+        name: this.data?.name || '',
+        uri: this.uri,
+      })
+      return this.rootStore.preferences.addPinnedFeed(this.uri)
+    } else {
+      track('CustomFeed:Unpin', {
+        name: this.data?.name || '',
+        uri: this.uri,
+      })
+      // TEMPORARY
+      // lists are temporarily piggybacking on the saved/pinned feeds preferences
+      // we'll eventually replace saved feeds with the bookmarks API
+      // until then, we need to unsave lists instead of just unpin them
+      // -prf
+      // return this.rootStore.preferences.removePinnedFeed(this.uri)
+      return this.rootStore.preferences.removeSavedFeed(this.uri)
+    }
+  }
+
+  async mute() {
+    if (!this.data) {
       return
     }
     await this._resolveUri()
-    await this.rootStore.agent.app.bsky.graph.unmuteActorList({
-      list: this.list.uri,
+    await this.rootStore.agent.muteModList(this.data.uri)
+    track('Lists:Mute')
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), muted: true}}
+      }
     })
-    track('Lists:Unsubscribe')
-    await this.refresh()
+  }
+
+  async unmute() {
+    if (!this.data) {
+      return
+    }
+    await this._resolveUri()
+    await this.rootStore.agent.unmuteModList(this.data.uri)
+    track('Lists:Unmute')
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), muted: false}}
+      }
+    })
+  }
+
+  async block() {
+    if (!this.data) {
+      return
+    }
+    await this._resolveUri()
+    const res = await this.rootStore.agent.blockModList(this.data.uri)
+    track('Lists:Block')
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), blocked: res.uri}}
+      }
+    })
+  }
+
+  async unblock() {
+    if (!this.data || !this.data.viewer?.blocked) {
+      return
+    }
+    await this._resolveUri()
+    await this.rootStore.agent.unblockModList(this.data.uri)
+    track('Lists:Unblock')
+    runInAction(() => {
+      if (this.data) {
+        const d = this.data
+        this.data = {...d, viewer: {...(d.viewer || {}), blocked: undefined}}
+      }
+    })
   }
 
   /**
@@ -314,9 +488,17 @@ export class ListModel {
   _appendAll(res: GetList.Response) {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
-    this.list = res.data.list
+    this.data = res.data.list
     this.items = this.items.concat(
       res.data.items.map(item => ({...item, _reactKey: item.subject.did})),
     )
+    if (this.data.description) {
+      this.descriptionRT = new RichText({
+        text: this.data.description,
+        facets: (this.data.descriptionFacets || [])?.slice(),
+      })
+    } else {
+      this.descriptionRT = null
+    }
   }
 }

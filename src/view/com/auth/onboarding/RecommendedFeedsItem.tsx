@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
+import {RichText} from 'view/com/util/text/RichText'
 import {Button} from 'view/com/util/forms/Button'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -10,12 +11,12 @@ import {HeartIcon} from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 
 export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
   item,
 }: {
-  item: CustomFeedModel
+  item: FeedSourceModel
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -54,7 +55,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           },
         ]}>
         <View style={{marginTop: 2}}>
-          <UserAvatar type="algo" size={42} avatar={item.data.avatar} />
+          <UserAvatar type="algo" size={42} avatar={item.avatar} />
         </View>
         <View style={{flex: isMobile ? 1 : undefined}}>
           <Text
@@ -65,11 +66,11 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           </Text>
 
           <Text style={[pal.textLight, {marginBottom: 8}]} numberOfLines={1}>
-            by {sanitizeHandle(item.data.creator.handle, '@')}
+            by {sanitizeHandle(item.creatorHandle, '@')}
           </Text>
 
-          {item.data.description ? (
-            <Text
+          {item.descriptionRT ? (
+            <RichText
               type="xl"
               style={[
                 pal.text,
@@ -79,9 +80,9 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                   marginBottom: 18,
                 },
               ]}
-              numberOfLines={6}>
-              {item.data.description}
-            </Text>
+              richText={item.descriptionRT}
+              numberOfLines={6}
+            />
           ) : null}
 
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
@@ -129,7 +130,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                 style={[pal.textLight, {position: 'relative', top: 2}]}
               />
               <Text type="lg-medium" style={[pal.text, pal.textLight]}>
-                {item.data.likeCount || 0}
+                {item.likeCount || 0}
               </Text>
             </View>
           </View>
