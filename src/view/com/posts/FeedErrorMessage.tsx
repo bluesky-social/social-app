@@ -96,7 +96,9 @@ function FeedgenErrorMessage({
       ]}>
       <Text style={pal.text}>{msg}</Text>
       <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-        <Button type="inverted" label="Remove feed" onPress={onRemoveFeed} />
+        {knownError === KnownError.FeedgenDoesNotExist && (
+          <Button type="inverted" label="Remove feed" onPress={onRemoveFeed} />
+        )}
         <Button
           type="default-light"
           label="View profile"
