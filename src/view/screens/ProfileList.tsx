@@ -558,13 +558,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-    }, [scrollElRef, headerHeight])
-
-    const onPressLoadLatest = React.useCallback(() => {
-      onScrollToTop()
       feed.refresh()
-    }, [feed, onScrollToTop])
-
+    }, [feed, scrollElRef, headerHeight])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
@@ -586,7 +581,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
-            onPress={onPressLoadLatest}
+            onPress={onScrollToTop}
             label="Load new posts"
             showIndicator={hasNew}
           />
