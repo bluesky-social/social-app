@@ -36,6 +36,7 @@ export const ProfileScreen = withAuthRequired(
     const store = useStores()
     const {screen, track} = useAnalytics()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
+    const name = route.params.name === 'me' ? store.me.did : route.params.name
 
     useEffect(() => {
       screen('Profile')
@@ -43,8 +44,8 @@ export const ProfileScreen = withAuthRequired(
 
     const [hasSetup, setHasSetup] = useState<boolean>(false)
     const uiState = React.useMemo(
-      () => new ProfileUiModel(store, {user: route.params.name}),
-      [route.params.name, store],
+      () => new ProfileUiModel(store, {user: name}),
+      [name, store],
     )
     useSetTitle(combinedDisplayName(uiState.profile))
 
@@ -54,7 +55,7 @@ export const ProfileScreen = withAuthRequired(
 
     useEffect(() => {
       setHasSetup(false)
-    }, [route.params.name])
+    }, [name])
 
     // We don't need this to be reactive, so we can just register the listeners once
     useEffect(() => {

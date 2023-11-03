@@ -349,7 +349,6 @@ function NotificationsTabNavigator() {
 
 const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
-  const store = useStores()
   return (
     <MyProfileTab.Navigator
       screenOptions={{
@@ -364,7 +363,7 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
         getComponent={() => ProfileScreen}
         initialParams={{
-          name: store.me.did,
+          name: 'me',
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
