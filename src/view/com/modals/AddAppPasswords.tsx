@@ -157,7 +157,6 @@ export function Component({}: {}) {
           </View>
         ) : (
           <TouchableOpacity
-            accessibilityRole="button"
             style={[pal.border, styles.passwordContainer, pal.btn]}
             onPress={onCopy}
             role="button"
