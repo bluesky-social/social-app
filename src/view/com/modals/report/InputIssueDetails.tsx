@@ -51,7 +51,7 @@ export function InputIssueDetails({
           autoFocus={true}
           numberOfLines={3}
           multiline={true}
-          textAlignVertical="top"
+          verticalAlign="top"
           maxLength={300}
           style={[styles.detailsInput, pal.text]}
         />

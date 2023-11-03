@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 16,
     height: 100,
-    textAlignVertical: 'top',
+    verticalAlign: 'top',
   },
   button: {
     flexDirection: 'row',

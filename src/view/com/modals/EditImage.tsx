@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 16,
     height: 100,
-    textAlignVertical: 'top',
+    verticalAlign: 'top',
   },
   bottomSection: {
     borderTopWidth: 1,
