@@ -44,7 +44,6 @@ export const DropdownMenuTrigger = DropdownMenu.create(
 
     return (
       <Pressable
-        accessibilityRole="button"
         testID={props.testID}
         role="button"
         aria-label={props.accessibilityLabel}

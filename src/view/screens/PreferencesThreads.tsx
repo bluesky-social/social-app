@@ -110,7 +110,6 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           pal.border,
         ]}>
         <TouchableOpacity
-          accessibilityRole="button"
           testID="confirmBtn"
           onPress={() => {
             navigation.canGoBack()

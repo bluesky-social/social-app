@@ -159,7 +159,6 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
 
               return (
                 <Pressable
-                  accessibilityRole="button"
                   key={item.handle}
                   style={[
                     isSelected ? pal.viewLight : undefined,

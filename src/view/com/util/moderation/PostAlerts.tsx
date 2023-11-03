@@ -26,7 +26,6 @@ export function PostAlerts({
   const desc = describeModerationCause(moderation.cause, 'content')
   return (
     <Pressable
-      accessibilityRole="button"
       onPress={() => {
         store.shell.openModal({
           name: 'moderation-details',

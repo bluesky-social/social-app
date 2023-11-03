@@ -141,7 +141,6 @@ export const Component = observer(function Component({
 
       <View style={[styles.btnContainer, pal.borderDark]}>
         <TouchableOpacity
-          accessibilityRole="button"
           testID="confirmBtn"
           onPress={() => {
             store.shell.closeModal()

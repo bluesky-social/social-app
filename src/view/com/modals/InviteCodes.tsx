@@ -106,7 +106,6 @@ const InviteCode = observer(function InviteCodeImpl({
 
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID={testID}
       style={[styles.inviteCode, pal.border]}
       onPress={onPress}

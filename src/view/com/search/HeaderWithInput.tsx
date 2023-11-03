@@ -60,7 +60,6 @@ export function HeaderWithInput({
       ]}>
       {showMenu && isMobile ? (
         <TouchableOpacity
-          accessibilityRole="button"
           testID="viewHeaderBackOrMenuBtn"
           onPress={onPressMenu}
           hitSlop={HITSLOP_10}
@@ -104,7 +103,6 @@ export function HeaderWithInput({
         />
         {query ? (
           <TouchableOpacity
-            accessibilityRole="button"
             testID="searchTextInputClearBtn"
             onPress={onPressClearQuery}
             role="button"
@@ -120,10 +118,7 @@ export function HeaderWithInput({
       </View>
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressCancelSearchInner}
-            role="button">
+          <TouchableOpacity onPress={onPressCancelSearchInner} role="button">
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>

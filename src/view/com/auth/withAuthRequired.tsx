@@ -50,7 +50,6 @@ function Loading() {
       </Text>
       {isTakingTooLong ? (
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={() => {
             Linking.openURL(STATUS_PAGE_URL)
           }}

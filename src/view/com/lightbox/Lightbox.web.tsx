@@ -99,7 +99,6 @@ function LightboxInner({
   return (
     <View style={styles.mask}>
       <TouchableWithoutFeedback
-        accessibilityRole="button"
         onPress={onClose}
         role="button"
         aria-label="Close image viewer"
@@ -115,7 +114,6 @@ function LightboxInner({
           />
           {canGoLeft && (
             <TouchableOpacity
-              accessibilityRole="button"
               onPress={onPressLeft}
               style={[styles.btn, styles.leftBtn]}
               role="button"
@@ -130,7 +128,6 @@ function LightboxInner({
           )}
           {canGoRight && (
             <TouchableOpacity
-              accessibilityRole="button"
               onPress={onPressRight}
               style={[styles.btn, styles.rightBtn]}
               role="button"
@@ -148,7 +145,6 @@ function LightboxInner({
       {imgs[index].alt ? (
         <View style={styles.footer}>
           <Pressable
-            accessibilityRole="button"
             role="button"
             aria-label="Expand alt text"
             accessibilityHint="If alt text is long, toggles alt text expanded state"

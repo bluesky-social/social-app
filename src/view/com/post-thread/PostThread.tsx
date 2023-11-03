@@ -211,7 +211,6 @@ export const PostThread = observer(function PostThread({
       } else if (item === LOAD_MORE) {
         return (
           <Pressable
-            accessibilityRole="button"
             role="button"
             onPress={() => setMaxVisible(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
@@ -309,7 +308,6 @@ export const PostThread = observer(function PostThread({
               The post may have been deleted.
             </Text>
             <TouchableOpacity
-              accessibilityRole="button"
               onPress={onPressBack}
               role="button"
               aria-label="Back"
@@ -344,7 +342,6 @@ export const PostThread = observer(function PostThread({
             You have blocked the author or you have been blocked by the author.
           </Text>
           <TouchableOpacity
-            accessibilityRole="button"
             onPress={onPressBack}
             role="button"
             aria-label="Back"

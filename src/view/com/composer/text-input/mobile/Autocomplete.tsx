@@ -62,7 +62,6 @@ export const Autocomplete = observer(function AutocompleteImpl({
 
               return (
                 <TouchableOpacity
-                  accessibilityRole="button"
                   role="button"
                   testID="autocompleteButton"
                   key={item.handle}

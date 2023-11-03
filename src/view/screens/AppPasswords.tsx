@@ -179,7 +179,6 @@ function AppPassword({
 
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID={testID}
       style={[styles.item, pal.border]}
       onPress={onDelete}

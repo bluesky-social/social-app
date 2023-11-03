@@ -105,7 +105,6 @@ export function Component({}: {}) {
         ) : (
           <>
             <TouchableOpacity
-              accessibilityRole="button"
               onPress={onPressSignup}
               role="button"
               accessibilityHint={`Confirms signing up ${email} to the waitlist`}>
@@ -120,7 +119,6 @@ export function Component({}: {}) {
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
-              accessibilityRole="button"
               style={[styles.btn, s.mt10]}
               onPress={onCancel}
               role="button"

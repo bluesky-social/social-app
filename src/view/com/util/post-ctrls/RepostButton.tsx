@@ -44,7 +44,6 @@ export const RepostButton = ({
 
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID="repostBtn"
       onPress={onPressToggleRepostWrapper}
       style={[styles.control, !big && styles.controlPad]}

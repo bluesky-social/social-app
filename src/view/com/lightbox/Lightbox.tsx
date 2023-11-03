@@ -100,10 +100,7 @@ const LightboxFooter = observer(function LightboxFooter({
   return (
     <View style={[styles.footer]}>
       {altText ? (
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => setAltExpanded(!isAltExpanded)}
-          role="button">
+        <Pressable onPress={() => setAltExpanded(!isAltExpanded)} role="button">
           <Text
             style={[s.gray3, styles.footerText]}
             numberOfLines={isAltExpanded ? undefined : 3}>

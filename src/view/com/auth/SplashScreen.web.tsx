@@ -39,7 +39,6 @@ export const SplashScreen = ({
           </Text>
           <View testID="signinOrCreateAccount" style={styles.btns}>
             <TouchableOpacity
-              accessibilityRole="button"
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
@@ -50,7 +49,6 @@ export const SplashScreen = ({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              accessibilityRole="button"
               testID="signInButton"
               style={[styles.btn, pal.btn]}
               onPress={onPressSignin}

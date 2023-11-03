@@ -48,7 +48,6 @@ export function PostHider({
   return (
     <>
       <Pressable
-        accessibilityRole="button"
         onPress={() => {
           if (!moderation.noOverride) {
             setOverride(v => !v)
@@ -63,7 +62,6 @@ export function PostHider({
           pal.viewLight,
         ]}>
         <Pressable
-          accessibilityRole="button"
           onPress={() => {
             store.shell.openModal({
               name: 'moderation-details',

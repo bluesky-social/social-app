@@ -45,7 +45,6 @@ export function ErrorMessage({
       </Text>
       {onPressTryAgain && (
         <TouchableOpacity
-          accessibilityRole="button"
           testID="errorMessageTryAgainButton"
           style={styles.btn}
           onPress={onPressTryAgain}

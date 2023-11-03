@@ -154,7 +154,6 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         <ScrollView style={styles.main}>
           <View style={{}}>
             <TouchableOpacity
-              accessibilityRole="button"
               role="button"
               testID="profileCardButton"
               aria-label="Profile"
@@ -339,7 +338,6 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity
-            accessibilityRole="button"
             role="link"
             aria-label="Send feedback"
             accessibilityHint=""
@@ -361,7 +359,6 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="button"
             role="link"
             aria-label="Send feedback"
             accessibilityHint=""
@@ -395,7 +392,6 @@ function MenuItem({
   const pal = usePalette('default')
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID={`menuItemButton-${label}`}
       style={styles.menuItem}
       onPress={onPress}
@@ -446,7 +442,6 @@ const InviteCodes = observer(function InviteCodesImpl({
   }, [store, track])
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID="menuItemInviteCodes"
       style={[styles.inviteCodes, style]}
       onPress={onPress}

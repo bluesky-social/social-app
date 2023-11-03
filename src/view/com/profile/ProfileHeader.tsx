@@ -362,7 +362,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
-              accessibilityRole="button"
               testID="profileHeaderEditProfileButton"
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn, pal.btn]}
@@ -376,7 +375,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           ) : view.viewer.blocking ? (
             view.viewer.blockingByList ? null : (
               <TouchableOpacity
-                accessibilityRole="button"
                 testID="unblockBtn"
                 onPress={onPressUnblockAccount}
                 style={[styles.btn, styles.mainBtn, pal.btn]}
@@ -392,7 +390,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             <>
               {!isProfilePreview && (
                 <TouchableOpacity
-                  accessibilityRole="button"
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
                   style={[
@@ -427,7 +424,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               {store.me.follows.getFollowState(view.did) ===
               FollowState.Following ? (
                 <TouchableOpacity
-                  accessibilityRole="button"
                   testID="unfollowBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}
@@ -445,7 +441,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  accessibilityRole="button"
                   testID="followBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, palInverted.view]}
@@ -570,7 +565,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
 
       {!isDesktop && !hideBackButton && (
         <TouchableWithoutFeedback
-          accessibilityRole="button"
           testID="profileHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
@@ -585,7 +579,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback
-        accessibilityRole="button"
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
         role="img"

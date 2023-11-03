@@ -239,7 +239,6 @@ export const Component = observer(function EditImageImpl({
 
               return (
                 <Pressable
-                  accessibilityRole="button"
                   role="button"
                   key={ratio}
                   onPress={() => {
@@ -271,7 +270,6 @@ export const Component = observer(function EditImageImpl({
           <View style={imgControlStyles}>
             {adjustments.map(({label, name, onPress}) => (
               <Pressable
-                accessibilityRole="button"
                 role="button"
                 key={label}
                 onPress={onPress}
@@ -318,18 +316,12 @@ export const Component = observer(function EditImageImpl({
         />
       </View>
       <View style={styles.btns}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={onPressCancel}
-          role="button">
+        <Pressable onPress={onPressCancel} role="button">
           <Text type="xl" style={pal.link}>
             Cancel
           </Text>
         </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          onPress={onPressSave}
-          role="button">
+        <Pressable onPress={onPressSave} role="button">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

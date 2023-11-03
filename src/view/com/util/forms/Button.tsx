@@ -196,7 +196,6 @@ export function Button({
 
   return (
     <Pressable
-      accessibilityRole="button"
       style={getStyle}
       onPress={onPressWrapped}
       disabled={isLoading}

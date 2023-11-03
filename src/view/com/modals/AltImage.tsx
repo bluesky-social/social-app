@@ -98,7 +98,6 @@ export function Component({image}: Props) {
           />
           <View style={styles.buttonControls}>
             <TouchableOpacity
-              accessibilityRole="button"
               testID="altTextImageSaveBtn"
               onPress={onPressSave}
               aria-label="Save alt text"
@@ -115,7 +114,6 @@ export function Component({image}: Props) {
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
-              accessibilityRole="button"
               testID="altTextImageCancelBtn"
               onPress={onPressCancel}
               role="button"

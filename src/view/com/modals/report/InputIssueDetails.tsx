@@ -31,7 +31,6 @@ export function InputIssueDetails({
         marginTop: isMobile ? 12 : 0,
       }}>
       <TouchableOpacity
-        accessibilityRole="button"
         testID="addDetailsBtn"
         style={[s.mb10, styles.backBtn]}
         onPress={goBack}

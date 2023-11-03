@@ -26,7 +26,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   return (
     <View style={styles.fullWidth}>
       <Pressable
-        accessibilityRole="button"
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}

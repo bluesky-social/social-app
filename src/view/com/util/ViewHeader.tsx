@@ -71,7 +71,6 @@ export const ViewHeader = observer(function ViewHeaderImpl({
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
         {showBackButton ? (
           <TouchableOpacity
-            accessibilityRole="button"
             testID="viewHeaderDrawerBtn"
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}

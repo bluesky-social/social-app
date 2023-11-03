@@ -65,7 +65,6 @@ export function Component({
         </View>
       ) : (
         <TouchableOpacity
-          accessibilityRole="button"
           testID="confirmBtn"
           onPress={onPress}
           style={[styles.btn, confirmBtnStyle]}
@@ -79,7 +78,6 @@ export function Component({
       )}
       {onPressCancel === undefined ? null : (
         <TouchableOpacity
-          accessibilityRole="button"
           testID="cancelBtn"
           onPress={onPressCancel}
           style={[styles.btnCancel, s.mt10]}

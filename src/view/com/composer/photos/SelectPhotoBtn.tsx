@@ -32,7 +32,6 @@ export function SelectPhotoBtn({gallery}: Props) {
 
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
       style={styles.button}

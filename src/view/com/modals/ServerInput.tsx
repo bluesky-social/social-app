@@ -39,7 +39,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           {LOGIN_INCLUDE_DEV_SERVERS ? (
             <>
               <TouchableOpacity
-                accessibilityRole="button"
                 testID="localDevServerButton"
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}
@@ -51,7 +50,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                accessibilityRole="button"
                 style={styles.btn}
                 onPress={() => doSelect(STAGING_SERVICE)}
                 role="button">
@@ -64,7 +62,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             </>
           ) : undefined}
           <TouchableOpacity
-            accessibilityRole="button"
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
             role="button"
@@ -97,7 +94,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               accessibilityHint="Use your domain as your Bluesky client service provider"
             />
             <TouchableOpacity
-              accessibilityRole="button"
               testID="customServerSelectBtn"
               style={[pal.borderDark, pal.text, styles.textInputBtn]}
               onPress={() => doSelect(customUrl)}

@@ -30,7 +30,7 @@ export function AccountDropdownBtn({handle}: {handle: string}) {
     },
   ]
   return (
-    <Pressable accessibilityRole="button" role="button" style={s.pl10}>
+    <Pressable role="button" style={s.pl10}>
       <NativeDropdown
         testID="accountSettingsDropdownBtn"
         items={items}

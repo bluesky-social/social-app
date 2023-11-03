@@ -65,7 +65,6 @@ export const Component = observer(
             pal.borderDark,
           ]}>
           <Pressable
-            accessibilityRole="button"
             testID="sendReportBtn"
             onPress={onPressDone}
             role="button"
@@ -261,7 +260,6 @@ function SelectableBtn({
   const palPrimary = usePalette('inverted')
   return (
     <Pressable
-      accessibilityRole="button"
       style={[
         styles.selectableBtn,
         left && styles.selectableBtnLeft,

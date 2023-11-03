@@ -82,7 +82,6 @@ export const CreateAccount = observer(function CreateAccountImpl({
           </View>
           <View style={[s.flexRow, s.pl20, s.pr20]}>
             <TouchableOpacity
-              accessibilityRole="button"
               onPress={onPressBackInner}
               testID="backBtn"
               role="button">
@@ -93,7 +92,6 @@ export const CreateAccount = observer(function CreateAccountImpl({
             <View style={s.flex1} />
             {model.canNext ? (
               <TouchableOpacity
-                accessibilityRole="button"
                 testID="nextBtn"
                 onPress={onPressNext}
                 role="button">
@@ -107,7 +105,6 @@ export const CreateAccount = observer(function CreateAccountImpl({
               </TouchableOpacity>
             ) : model.didServiceDescriptionFetchFail ? (
               <TouchableOpacity
-                accessibilityRole="button"
                 testID="retryConnectBtn"
                 onPress={onPressRetryConnect}
                 role="button"

@@ -97,7 +97,6 @@ export function Selector({
         const selected = i === selectedIndex
         return (
           <Pressable
-            accessibilityRole="button"
             role="button"
             testID={`selector-${i}`}
             key={item}

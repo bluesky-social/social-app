@@ -30,70 +30,60 @@ export function TestCtrls() {
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
       <Pressable
-        accessibilityRole="button"
         testID="e2eSignInAlice"
         onPress={onPressSignInAlice}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eSignInBob"
         onPress={onPressSignInBob}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eSignOut"
         onPress={() => store.session.logout()}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eGotoHome"
         onPress={() => navigate('Home')}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eGotoSettings"
         onPress={() => navigate('Settings')}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eGotoModeration"
         onPress={() => navigate('Moderation')}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eGotoLists"
         onPress={() => navigate('Lists')}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eToggleMergefeed"
         onPress={() => store.preferences.toggleHomeFeedMergeFeedEnabled()}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eRefreshHome"
         onPress={() => store.me.mainFeed.refresh()}
         role="button"
         style={BTN}
       />
       <Pressable
-        accessibilityRole="button"
         testID="e2eOpenInviteCodesModal"
         onPress={() => store.shell.openModal({name: 'invite-codes'})}
         role="button"

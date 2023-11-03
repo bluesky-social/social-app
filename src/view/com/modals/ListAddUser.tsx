@@ -97,7 +97,6 @@ export const Component = observer(function Component({
           />
           {query ? (
             <Pressable
-              accessibilityRole="button"
               onPress={onPressCancelSearch}
               role="button"
               aria-label="Cancel search"

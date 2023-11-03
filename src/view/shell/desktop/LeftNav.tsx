@@ -82,7 +82,6 @@ function BackBtn() {
   }
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID="viewHeaderBackOrMenuBtn"
       onPress={onPressBack}
       style={styles.backBtn}
@@ -220,7 +219,6 @@ function ComposeBtn() {
   }
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       role="button"

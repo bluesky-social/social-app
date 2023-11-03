@@ -31,7 +31,6 @@ export function SelectableBtn({
   const {isMobile} = useWebMediaQueries()
   return (
     <Pressable
-      accessibilityRole="button"
       testID={testID}
       style={[
         styles.btn,

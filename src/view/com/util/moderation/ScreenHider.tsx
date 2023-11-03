@@ -71,7 +71,6 @@ export function ScreenHider({
         </Text>
         .{' '}
         <TouchableWithoutFeedback
-          accessibilityRole="button"
           onPress={() => {
             store.shell.openModal({
               name: 'moderation-details',

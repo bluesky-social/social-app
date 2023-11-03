@@ -80,7 +80,6 @@ export const Component = observer(function Component({}: {}) {
           </View>
         ) : (
           <TouchableOpacity
-            accessibilityRole="button"
             testID="confirmBtn"
             onPress={onSave}
             style={styles.btn}

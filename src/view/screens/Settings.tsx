@@ -265,7 +265,6 @@ export const SettingsScreen = withAuthRequired(
                   </Text>
                 </View>
                 <TouchableOpacity
-                  accessibilityRole="button"
                   testID="signOutBtn"
                   onPress={isSwitching ? undefined : onPressSignout}
                   role="button"
@@ -280,7 +279,6 @@ export const SettingsScreen = withAuthRequired(
           )}
           {store.session.switchableAccounts.map(account => (
             <TouchableOpacity
-              accessibilityRole="button"
               testID={`switchToAccountBtn-${account.handle}`}
               key={account.did}
               style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
@@ -305,7 +303,6 @@ export const SettingsScreen = withAuthRequired(
             </TouchableOpacity>
           ))}
           <TouchableOpacity
-            accessibilityRole="button"
             testID="switchToNewAccountBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressAddAccount}
@@ -329,7 +326,6 @@ export const SettingsScreen = withAuthRequired(
             Invite a Friend
           </Text>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="inviteFriendBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressInviteCodes}
@@ -408,7 +404,6 @@ export const SettingsScreen = withAuthRequired(
             Basics
           </Text>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openHomeFeedPreferences}
@@ -426,7 +421,6 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="preferencesThreadsButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openThreadsPreferences}
@@ -445,7 +439,6 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="button"
             role="button"
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
@@ -460,7 +453,6 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="languageSettingsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressLanguageSettings}
@@ -478,7 +470,6 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="moderationBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={
@@ -500,7 +491,6 @@ export const SettingsScreen = withAuthRequired(
             Advanced
           </Text>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={onPressAppPasswords}
@@ -518,7 +508,6 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressChangeHandle}
@@ -562,7 +551,6 @@ export const SettingsScreen = withAuthRequired(
             Developer Tools
           </Text>
           <TouchableOpacity
-            accessibilityRole="button"
             style={[pal.view, styles.linkCardNoIcon]}
             onPress={onPressSystemLog}
             role="button"
@@ -583,7 +571,6 @@ export const SettingsScreen = withAuthRequired(
           {__DEV__ ? (
             <>
               <TouchableOpacity
-                accessibilityRole="button"
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressStorybook}
                 role="button"
@@ -594,7 +581,6 @@ export const SettingsScreen = withAuthRequired(
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                accessibilityRole="button"
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetPreferences}
                 role="button"
@@ -605,7 +591,6 @@ export const SettingsScreen = withAuthRequired(
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                accessibilityRole="button"
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetOnboarding}
                 role="button"
@@ -618,10 +603,7 @@ export const SettingsScreen = withAuthRequired(
             </>
           ) : null}
           <View style={[styles.footer]}>
-            <TouchableOpacity
-              accessibilityRole="button"
-              role="button"
-              onPress={onPressBuildInfo}>
+            <TouchableOpacity role="button" onPress={onPressBuildInfo}>
               <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
                 Build version {AppInfo.appVersion} {AppInfo.updateChannel}
               </Text>
@@ -629,10 +611,7 @@ export const SettingsScreen = withAuthRequired(
             <Text type="sm" style={[pal.textLight]}>
               &middot; &nbsp;
             </Text>
-            <TouchableOpacity
-              accessibilityRole="button"
-              role="button"
-              onPress={onPressStatusPage}>
+            <TouchableOpacity role="button" onPress={onPressStatusPage}>
               <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
                 Status page
               </Text>
@@ -671,7 +650,6 @@ const EmailConfirmationNotice = observer(
           ]}>
           <View style={{flexDirection: 'row', marginBottom: 8}}>
             <Pressable
-              accessibilityRole="button"
               style={[
                 palInverted.view,
                 {

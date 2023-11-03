@@ -133,7 +133,6 @@ export function DropdownButton({
   if (type === 'bare') {
     return (
       <TouchableOpacity
-        accessibilityRole="button"
         testID={testID}
         style={style}
         onPress={onPress}
@@ -224,7 +223,6 @@ const DropdownItems = ({
     <>
       {/* This TouchableWithoutFeedback renders the background so if the user clicks outside, the dropdown closes */}
       <TouchableWithoutFeedback
-        accessibilityRole="button"
         onPress={onOuterPress}
         aria-label="Toggle dropdown"
         accessibilityHint="">
@@ -240,7 +238,6 @@ const DropdownItems = ({
           if (isBtn(item)) {
             return (
               <TouchableOpacity
-                accessibilityRole="button"
                 testID={item.testID}
                 key={index}
                 style={[styles.menuItem]}

@@ -261,7 +261,6 @@ export const ComposePost = observer(function ComposePost({
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
           <TouchableOpacity
-            accessibilityRole="button"
             testID="composerDiscardButton"
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
@@ -287,7 +286,6 @@ export const ComposePost = observer(function ComposePost({
               />
               {canPost ? (
                 <TouchableOpacity
-                  accessibilityRole="button"
                   testID="composerPublishBtn"
                   onPress={onPressPublish}
                   role="button"
@@ -404,7 +402,6 @@ export const ComposePost = observer(function ComposePost({
               .slice(0, 3)
               .map(url => (
                 <TouchableOpacity
-                  accessibilityRole="button"
                   key={`suggested-${url}`}
                   testID="addLinkCardBtn"
                   style={[pal.borderDark, styles.addExtLinkBtn]}

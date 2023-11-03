@@ -196,7 +196,6 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
           pal.border,
         ]}>
         <TouchableOpacity
-          accessibilityRole="button"
           testID="confirmBtn"
           onPress={() => {
             navigation.canGoBack()

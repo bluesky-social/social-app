@@ -30,7 +30,6 @@ export function Component({
     <View testID="repostModal" style={[s.flex1, pal.view, styles.container]}>
       <View style={s.pb20}>
         <TouchableOpacity
-          accessibilityRole="button"
           testID="repostBtn"
           style={[styles.actionBtn]}
           onPress={onRepost}
@@ -43,7 +42,6 @@ export function Component({
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          accessibilityRole="button"
           testID="quoteBtn"
           style={[styles.actionBtn]}
           onPress={onQuote}
@@ -57,7 +55,6 @@ export function Component({
         </TouchableOpacity>
       </View>
       <TouchableOpacity
-        accessibilityRole="button"
         testID="cancelBtn"
         onPress={onPress}
         role="button"

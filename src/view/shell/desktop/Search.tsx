@@ -82,7 +82,6 @@ export const DesktopSearch = observer(function DesktopSearch() {
           {query ? (
             <View style={styles.cancelBtn}>
               <TouchableOpacity
-                accessibilityRole="button"
                 onPress={onPressCancelSearch}
                 role="button"
                 aria-label="Cancel search"

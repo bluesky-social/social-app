@@ -39,7 +39,6 @@ export function ContentHider({
   return (
     <View testID={testID} style={[styles.outer, style]}>
       <Pressable
-        accessibilityRole="button"
         onPress={() => {
           if (!moderation.noOverride) {
             setOverride(v => !v)
@@ -62,7 +61,6 @@ export function ContentHider({
             : pal.viewLight,
         ]}>
         <Pressable
-          accessibilityRole="button"
           onPress={() => {
             store.shell.openModal({
               name: 'moderation-details',

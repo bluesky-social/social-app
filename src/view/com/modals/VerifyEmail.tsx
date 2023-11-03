@@ -129,7 +129,6 @@ export const Component = observer(function Component({
               </Text>
             </View>
             <Pressable
-              accessibilityRole="button"
               role="link"
               aria-label="Change my email"
               accessibilityHint=""

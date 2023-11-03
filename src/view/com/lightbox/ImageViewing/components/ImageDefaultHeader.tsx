@@ -19,7 +19,6 @@ const HIT_SLOP = createHitslop(16)
 const ImageDefaultHeader = ({onRequestClose}: Props) => (
   <SafeAreaView style={styles.root}>
     <TouchableOpacity
-      accessibilityRole="button"
       style={styles.closeButton}
       onPress={onRequestClose}
       hitSlop={HIT_SLOP}

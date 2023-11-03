@@ -61,7 +61,6 @@ export const ExternalEmbed = ({
         )}
       </View>
       <TouchableOpacity
-        accessibilityRole="button"
         style={styles.removeBtn}
         onPress={onRemove}
         role="button"

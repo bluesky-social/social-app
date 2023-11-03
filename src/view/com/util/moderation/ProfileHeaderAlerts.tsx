@@ -31,7 +31,6 @@ export function ProfileHeaderAlerts({
         const desc = describeModerationCause(cause, 'account')
         return (
           <Pressable
-            accessibilityRole="button"
             testID="profileHeaderAlert"
             key={desc.name}
             onPress={() => {

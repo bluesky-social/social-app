@@ -149,7 +149,6 @@ function Option({
   return (
     <View style={[styles.option, pal.border]}>
       <TouchableWithoutFeedback
-        accessibilityRole="button"
         onPress={onPress}
         testID={testID}
         role="button"

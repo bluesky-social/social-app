@@ -226,7 +226,6 @@ export function Component({
             </View>
           ) : (
             <TouchableOpacity
-              accessibilityRole="button"
               testID="saveBtn"
               style={s.mt10}
               onPress={onPressSave}
@@ -243,7 +242,6 @@ export function Component({
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            accessibilityRole="button"
             testID="cancelBtn"
             style={s.mt5}
             onPress={onPressCancel}

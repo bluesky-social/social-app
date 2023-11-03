@@ -94,7 +94,6 @@ export function Component({
           containerStyle={styles.slider}
         />
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={doSetAs(AspectRatio.Wide)}
           role="button"
           aria-label="Wide"
@@ -105,7 +104,6 @@ export function Component({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={doSetAs(AspectRatio.Tall)}
           role="button"
           aria-label="Tall"
@@ -116,7 +114,6 @@ export function Component({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={doSetAs(AspectRatio.Square)}
           role="button"
           aria-label="Square"
@@ -129,7 +126,6 @@ export function Component({
       </View>
       <View style={styles.btns}>
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={onPressCancel}
           role="button"
           aria-label="Cancel image crop"
@@ -140,7 +136,6 @@ export function Component({
         </TouchableOpacity>
         <View style={s.flex1} />
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={onPressDone}
           role="button"
           aria-label="Save image crop"

@@ -108,7 +108,6 @@ export function Component({}: {}) {
             ) : (
               <>
                 <TouchableOpacity
-                  accessibilityRole="button"
                   style={styles.mt20}
                   onPress={onPressSendEmail}
                   role="button"
@@ -128,7 +127,6 @@ export function Component({}: {}) {
                   </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  accessibilityRole="button"
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
                   role="button"
@@ -192,7 +190,6 @@ export function Component({}: {}) {
             ) : (
               <>
                 <TouchableOpacity
-                  accessibilityRole="button"
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
                   onPress={onPressConfirmDelete}
                   role="button"
@@ -203,7 +200,6 @@ export function Component({}: {}) {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  accessibilityRole="button"
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
                   role="button"

@@ -62,7 +62,6 @@ export function Component({}: {}) {
               </Text>
             </View>
             <TouchableOpacity
-              accessibilityRole="button"
               testID="signOutBtn"
               onPress={isSwitching ? undefined : onPressSignout}
               role="button"
@@ -77,7 +76,6 @@ export function Component({}: {}) {
       )}
       {store.session.switchableAccounts.map(account => (
         <TouchableOpacity
-          accessibilityRole="button"
           testID={`switchToAccountBtn-${account.handle}`}
           key={account.did}
           style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}

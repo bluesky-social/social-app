@@ -209,7 +209,6 @@ export function Component({
             </View>
           ) : (
             <TouchableOpacity
-              accessibilityRole="button"
               testID="editProfileSaveBtn"
               style={s.mt10}
               onPress={onPressSave}

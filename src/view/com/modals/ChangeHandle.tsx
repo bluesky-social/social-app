@@ -135,7 +135,6 @@ export function Component({onChanged}: {onChanged: () => void}) {
       <View style={[styles.title, pal.border]}>
         <View style={styles.titleLeft}>
           <TouchableOpacity
-            accessibilityRole="button"
             onPress={onPressCancel}
             role="button"
             aria-label="Cancel change handle"
@@ -157,7 +156,6 @@ export function Component({onChanged}: {onChanged: () => void}) {
             <ActivityIndicator />
           ) : error && !serviceDescription ? (
             <TouchableOpacity
-              accessibilityRole="button"
               testID="retryConnectButton"
               onPress={onPressRetryConnect}
               role="button"
@@ -169,7 +167,6 @@ export function Component({onChanged}: {onChanged: () => void}) {
             </TouchableOpacity>
           ) : canSave ? (
             <TouchableOpacity
-              accessibilityRole="button"
               onPress={onPressSave}
               role="button"
               aria-label="Save handle change"
@@ -276,7 +273,6 @@ function ProvidedHandleForm({
         </Text>
       </Text>
       <TouchableOpacity
-        accessibilityRole="button"
         onPress={onToggleCustom}
         role="button"
         accessibilityHint="Hosting provider"
@@ -512,7 +508,6 @@ function CustomHandleForm({
       </Button>
       <View style={styles.spacer} />
       <TouchableOpacity
-        accessibilityRole="button"
         role="button"
         onPress={onToggleCustom}
         aria-label="Use default provider"

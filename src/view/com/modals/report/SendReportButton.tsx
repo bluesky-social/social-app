@@ -27,7 +27,6 @@ export function SendReportButton({
   }
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID="sendReportBtn"
       style={s.mt10}
       onPress={onPress}

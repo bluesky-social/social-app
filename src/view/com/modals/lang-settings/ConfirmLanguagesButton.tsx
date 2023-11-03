@@ -25,7 +25,6 @@ export const ConfirmLanguagesButton = ({
         },
       ]}>
       <Pressable
-        accessibilityRole="button"
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
         role="button"

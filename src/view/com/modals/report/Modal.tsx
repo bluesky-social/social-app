@@ -177,7 +177,6 @@ const SelectIssue = ({
             isProcessing={isProcessing}
           />
           <TouchableOpacity
-            accessibilityRole="button"
             testID="addDetailsBtn"
             style={styles.addDetailsBtn}
             onPress={goToDetails}

@@ -66,7 +66,6 @@ export function SearchInput({
       />
       {query ? (
         <TouchableOpacity
-          accessibilityRole="button"
           onPress={onPressCancelSearchInner}
           role="button"
           aria-label="Clear search query"

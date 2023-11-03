@@ -83,7 +83,6 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
             pal.border,
           ]}>
           <Pressable
-            accessibilityRole="button"
             testID="headerDrawerBtn"
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}
@@ -119,7 +118,6 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
         <Pressable
-          accessibilityRole="button"
           testID="headerAviButton"
           onPress={onPressAvi}
           role="img"

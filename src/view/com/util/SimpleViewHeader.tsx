@@ -51,7 +51,6 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
     <Container style={[styles.header, isMobile && styles.headerMobile, style]}>
       {showBackButton ? (
         <TouchableOpacity
-          accessibilityRole="button"
           testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}

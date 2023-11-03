@@ -50,7 +50,6 @@ export function OpenCameraBtn({gallery}: Props) {
 
   return (
     <TouchableOpacity
-      accessibilityRole="button"
       testID="openCameraButton"
       onPress={onPressTakePicture}
       style={styles.button}

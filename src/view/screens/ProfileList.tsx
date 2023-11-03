@@ -727,7 +727,6 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             <Text type="lg-bold">Users</Text>
             {isOwner && (
               <Pressable
-                accessibilityRole="button"
                 testID="addUserBtn"
                 role="button"
                 aria-label="Add a user to this list"
