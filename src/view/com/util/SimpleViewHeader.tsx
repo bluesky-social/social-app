@@ -55,7 +55,7 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
           accessibilityHint="">
           {canGoBack ? (

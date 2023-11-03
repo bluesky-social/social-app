@@ -244,7 +244,7 @@ export const ProfileListScreenInner = observer(
                 style={{color: 'white'}}
               />
             }
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="New post"
             accessibilityHint=""
           />
@@ -282,7 +282,7 @@ export const ProfileListScreenInner = observer(
                 style={{color: 'white'}}
               />
             }
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="New post"
             accessibilityHint=""
           />
@@ -728,7 +728,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             {isOwner && (
               <Pressable
                 testID="addUserBtn"
-                accessibilityRole="button"
+                role="button"
                 accessibilityLabel="Add a user to this list"
                 accessibilityHint=""
                 onPress={onPressAddUser}

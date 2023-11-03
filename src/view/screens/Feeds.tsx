@@ -85,7 +85,7 @@ export const FeedsScreen = withAuthRequired(
         <Link
           href="/settings/saved-feeds"
           hitSlop={10}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Edit Saved Feeds"
           accessibilityHint="Opens screen to edit Saved Feeds">
           <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
@@ -246,7 +246,7 @@ export const FeedsScreen = withAuthRequired(
           testID="composeFAB"
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="New post"
           accessibilityHint=""
         />

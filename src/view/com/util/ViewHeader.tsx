@@ -75,7 +75,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}
             style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
             accessibilityHint={
               canGoBack ? '' : 'Access navigation links and settings'

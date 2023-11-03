@@ -47,7 +47,7 @@ export const RepostButton = ({
       testID="repostBtn"
       onPress={onPressToggleRepostWrapper}
       style={[styles.control, !big && styles.controlPad]}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={`${
         isReposted ? 'Undo repost' : 'Repost'
       } (${repostCount} ${pluralize(repostCount || 0, 'repost')})`}

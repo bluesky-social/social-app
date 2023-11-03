@@ -82,9 +82,10 @@ export const CreateAccount = observer(function CreateAccountImpl({
           </View>
           <View style={[s.flexRow, s.pl20, s.pr20]}>
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={onPressBackInner}
               testID="backBtn"
-              accessibilityRole="button">
+              role="button">
               <Text type="xl" style={pal.link}>
                 Back
               </Text>
@@ -92,9 +93,10 @@ export const CreateAccount = observer(function CreateAccountImpl({
             <View style={s.flex1} />
             {model.canNext ? (
               <TouchableOpacity
+                accessibilityRole="button"
                 testID="nextBtn"
                 onPress={onPressNext}
-                accessibilityRole="button">
+                role="button">
                 {model.isProcessing ? (
                   <ActivityIndicator />
                 ) : (
@@ -107,7 +109,7 @@ export const CreateAccount = observer(function CreateAccountImpl({
               <TouchableOpacity
                 testID="retryConnectBtn"
                 onPress={onPressRetryConnect}
-                accessibilityRole="button"
+                role="button"
                 accessibilityLabel="Retry"
                 accessibilityHint="Retries account creation"
                 accessibilityLiveRegion="polite">

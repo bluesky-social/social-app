@@ -30,6 +30,7 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
           return (
             <Pressable
               accessibilityRole="button"
+              role="button"
               style={[s.flexRow, s.alignCenter]}
               onPress={skip}>
               <Text style={[pal.link]}>Skip</Text>

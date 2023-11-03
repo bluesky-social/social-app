@@ -53,7 +53,7 @@ export function PostHider({
             setOverride(v => !v)
           }
         }}
-        accessibilityRole="button"
+        role="button"
         accessibilityHint={override ? 'Hide the content' : 'Show the content'}
         accessibilityLabel=""
         style={[
@@ -69,7 +69,7 @@ export function PostHider({
               moderation,
             })
           }}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Learn more about this warning"
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />

@@ -150,7 +150,7 @@ function Option({
       <TouchableWithoutFeedback
         onPress={onPress}
         testID={testID}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel={label}
         accessibilityHint={`Sets hosting provider to ${label}`}>
         <View style={styles.optionHeading}>

@@ -22,7 +22,7 @@ const ImageDefaultHeader = ({onRequestClose}: Props) => (
       style={styles.closeButton}
       onPress={onRequestClose}
       hitSlop={HIT_SLOP}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel="Close image"
       accessibilityHint="Closes viewer for header image"
       onAccessibilityEscape={onRequestClose}>

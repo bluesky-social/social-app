@@ -64,7 +64,7 @@ export function Component({}: {}) {
             <TouchableOpacity
               testID="signOutBtn"
               onPress={isSwitching ? undefined : onPressSignout}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Sign out"
               accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
               <Text type="lg" style={pal.link}>
@@ -82,7 +82,7 @@ export function Component({}: {}) {
           onPress={
             isSwitching ? undefined : () => onPressSwitchAccount(account)
           }
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel={`Switch to ${account.handle}`}
           accessibilityHint="Switches the account you are logged in to">
           <View style={styles.avi}>

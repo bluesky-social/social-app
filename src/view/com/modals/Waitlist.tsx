@@ -105,8 +105,9 @@ export function Component({}: {}) {
         ) : (
           <>
             <TouchableOpacity
-              onPress={onPressSignup}
               accessibilityRole="button"
+              onPress={onPressSignup}
+              role="button"
               accessibilityHint={`Confirms signing up ${email} to the waitlist`}>
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -121,7 +122,7 @@ export function Component({}: {}) {
             <TouchableOpacity
               style={[styles.btn, s.mt10]}
               onPress={onCancel}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Cancel waitlist signup"
               accessibilityHint={`Exits signing up for waitlist with ${email}`}
               onAccessibilityEscape={onCancel}>

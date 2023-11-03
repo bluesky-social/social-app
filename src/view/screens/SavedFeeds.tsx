@@ -189,11 +189,13 @@ const ListItem = observer(function ListItemImpl({
   return (
     <Pressable
       accessibilityRole="button"
+      role="button"
       style={[styles.itemContainer, pal.border]}>
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
           <TouchableOpacity
             accessibilityRole="button"
+            role="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}>
             <FontAwesomeIcon
@@ -204,6 +206,7 @@ const ListItem = observer(function ListItemImpl({
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
+            role="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}>
             <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
@@ -218,6 +221,7 @@ const ListItem = observer(function ListItemImpl({
       />
       <TouchableOpacity
         accessibilityRole="button"
+        role="button"
         hitSlop={10}
         onPress={onTogglePinned}>
         <FontAwesomeIcon

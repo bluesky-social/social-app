@@ -27,7 +27,7 @@ export const ConfirmLanguagesButton = ({
       <Pressable
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel="Confirm content language settings"
         accessibilityHint="">
         <LinearGradient

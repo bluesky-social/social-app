@@ -50,7 +50,7 @@ export function ContentHider({
             })
           }
         }}
-        accessibilityRole="button"
+        role="button"
         accessibilityHint={override ? 'Hide the content' : 'Show the content'}
         accessibilityLabel=""
         style={[
@@ -68,7 +68,7 @@ export function ContentHider({
               moderation,
             })
           }}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Learn more about this warning"
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />

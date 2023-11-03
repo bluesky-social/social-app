@@ -267,7 +267,7 @@ export const SettingsScreen = withAuthRequired(
                 <TouchableOpacity
                   testID="signOutBtn"
                   onPress={isSwitching ? undefined : onPressSignout}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel="Sign out"
                   accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
                   <Text type="lg" style={pal.link}>
@@ -285,7 +285,7 @@ export const SettingsScreen = withAuthRequired(
               onPress={
                 isSwitching ? undefined : () => onPressSwitchAccount(account)
               }
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel={`Switch to ${account.handle}`}
               accessibilityHint="Switches the account you are logged in to">
               <View style={styles.avi}>
@@ -306,7 +306,7 @@ export const SettingsScreen = withAuthRequired(
             testID="switchToNewAccountBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressAddAccount}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Add account"
             accessibilityHint="Create a new Bluesky account">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -329,7 +329,7 @@ export const SettingsScreen = withAuthRequired(
             testID="inviteFriendBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressInviteCodes}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Invite"
             accessibilityHint="Opens invite code list">
             <View
@@ -407,7 +407,7 @@ export const SettingsScreen = withAuthRequired(
             testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openHomeFeedPreferences}
-            accessibilityRole="button"
+            role="button"
             accessibilityHint=""
             accessibilityLabel="Opens the home feed preferences">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -424,7 +424,7 @@ export const SettingsScreen = withAuthRequired(
             testID="preferencesThreadsButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openThreadsPreferences}
-            accessibilityRole="button"
+            role="button"
             accessibilityHint=""
             accessibilityLabel="Opens the threads preferences">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -455,7 +455,7 @@ export const SettingsScreen = withAuthRequired(
             testID="languageSettingsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressLanguageSettings}
-            accessibilityRole="button"
+            role="button"
             accessibilityHint="Language settings"
             accessibilityLabel="Opens configurable language settings">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -474,7 +474,7 @@ export const SettingsScreen = withAuthRequired(
             onPress={
               isSwitching ? undefined : () => navigation.navigate('Moderation')
             }
-            accessibilityRole="button"
+            role="button"
             accessibilityHint=""
             accessibilityLabel="Opens moderation settings">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -493,7 +493,7 @@ export const SettingsScreen = withAuthRequired(
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={onPressAppPasswords}
-            accessibilityRole="button"
+            role="button"
             accessibilityHint="Open app password settings"
             accessibilityLabel="Opens the app password settings page">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -510,7 +510,7 @@ export const SettingsScreen = withAuthRequired(
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressChangeHandle}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Change handle"
             accessibilityHint="Choose a new Bluesky username or create">
             <View style={[styles.iconContainer, pal.btn]}>
@@ -531,7 +531,7 @@ export const SettingsScreen = withAuthRequired(
             style={[pal.view, styles.linkCard]}
             onPress={onPressDeleteAccount}
             accessible={true}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Delete account"
             accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
             <View style={[styles.iconContainer, dangerBg]}>
@@ -552,7 +552,7 @@ export const SettingsScreen = withAuthRequired(
           <TouchableOpacity
             style={[pal.view, styles.linkCardNoIcon]}
             onPress={onPressSystemLog}
-            accessibilityRole="button"
+            role="button"
             accessibilityHint="Open system log"
             accessibilityLabel="Opens the system log page">
             <Text type="lg" style={pal.text}>
@@ -572,7 +572,7 @@ export const SettingsScreen = withAuthRequired(
               <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressStorybook}
-                accessibilityRole="button"
+                role="button"
                 accessibilityHint="Open storybook page"
                 accessibilityLabel="Opens the storybook page">
                 <Text type="lg" style={pal.text}>
@@ -582,7 +582,7 @@ export const SettingsScreen = withAuthRequired(
               <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetPreferences}
-                accessibilityRole="button"
+                role="button"
                 accessibilityHint="Reset preferences"
                 accessibilityLabel="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
@@ -592,7 +592,7 @@ export const SettingsScreen = withAuthRequired(
               <TouchableOpacity
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetOnboarding}
-                accessibilityRole="button"
+                role="button"
                 accessibilityHint="Reset onboarding"
                 accessibilityLabel="Resets the onboarding state">
                 <Text type="lg" style={pal.text}>
@@ -604,6 +604,7 @@ export const SettingsScreen = withAuthRequired(
           <View style={[styles.footer]}>
             <TouchableOpacity
               accessibilityRole="button"
+              role="button"
               onPress={onPressBuildInfo}>
               <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
                 Build version {AppInfo.appVersion} {AppInfo.updateChannel}
@@ -614,6 +615,7 @@ export const SettingsScreen = withAuthRequired(
             </Text>
             <TouchableOpacity
               accessibilityRole="button"
+              role="button"
               onPress={onPressStatusPage}>
               <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
                 Status page
@@ -665,7 +667,7 @@ const EmailConfirmationNotice = observer(
                 },
                 isMobile && {flex: 1},
               ]}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Verify my email"
               accessibilityHint=""
               onPress={() => store.shell.openModal({name: 'verify-email'})}>

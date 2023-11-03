@@ -200,7 +200,7 @@ export function Button({
       onPress={onPressWrapped}
       disabled={isLoading}
       testID={testID}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       accessibilityLabelledBy={accessibilityLabelledBy}

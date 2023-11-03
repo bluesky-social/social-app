@@ -15,7 +15,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
       testID="replyPromptBtn"
       style={[pal.view, pal.border, styles.prompt]}
       onPress={() => onPressCompose()}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel="Compose reply"
       accessibilityHint="Opens composer">
       <UserAvatar avatar={store.me.avatar} size={38} />

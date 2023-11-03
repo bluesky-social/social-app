@@ -78,7 +78,7 @@ export function ScreenHider({
               moderation,
             })
           }}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Learn more about this warning"
           accessibilityHint="">
           <Text type="2xl" style={pal.link}>

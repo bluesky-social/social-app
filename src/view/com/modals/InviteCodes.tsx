@@ -109,7 +109,7 @@ const InviteCode = observer(function InviteCodeImpl({
       testID={testID}
       style={[styles.inviteCode, pal.border]}
       onPress={onPress}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={
         invitesAvailable === 1
           ? 'Invite codes: 1 available'

@@ -110,7 +110,7 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={styles.mt20}
                   onPress={onPressSendEmail}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel="Send email"
                   accessibilityHint="Sends email with confirmation code for account deletion">
                   <LinearGradient
@@ -129,7 +129,7 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel="Cancel account deletion"
                   accessibilityHint=""
                   onAccessibilityEscape={onCancel}>
@@ -190,7 +190,7 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
                   onPress={onPressConfirmDelete}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel="Confirm delete account"
                   accessibilityHint="">
                   <Text type="button-lg" style={[s.white, s.bold]}>
@@ -200,7 +200,7 @@ export function Component({}: {}) {
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel="Cancel account deletion"
                   accessibilityHint="Exits account deletion process"
                   onAccessibilityEscape={onCancel}>

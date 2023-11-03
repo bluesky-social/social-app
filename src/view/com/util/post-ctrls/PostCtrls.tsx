@@ -103,7 +103,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         testID="replyBtn"
         style={[styles.ctrl, !opts.big && styles.ctrlPad, {paddingLeft: 0}]}
         onPress={opts.onPressReply}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel={`Reply (${opts.replyCount} ${
           opts.replyCount === 1 ? 'reply' : 'replies'
         })`}
@@ -125,7 +125,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
         testID="likeBtn"
         style={[styles.ctrl, !opts.big && styles.ctrlPad]}
         onPress={onPressToggleLikeWrapper}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
           opts.likeCount
         } ${pluralize(opts.likeCount || 0, 'like')})`}

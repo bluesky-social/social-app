@@ -368,7 +368,7 @@ export const ProfileFeedScreenInner = observer(
               style={{color: 'white'}}
             />
           }
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="New post"
           accessibilityHint=""
         />

@@ -45,7 +45,7 @@ export const DropdownMenuTrigger = DropdownMenu.create(
     return (
       <Pressable
         testID={props.testID}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
         style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}

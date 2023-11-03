@@ -67,7 +67,7 @@ export const Component = observer(
           <Pressable
             testID="sendReportBtn"
             onPress={onPressDone}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Done"
             accessibilityHint="">
             <LinearGradient
@@ -268,7 +268,7 @@ function SelectableBtn({
         current === value ? palPrimary.view : pal.view,
       ]}
       onPress={() => onChange(value)}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={value}
       accessibilityHint={`Set ${value} for ${group} content moderation policy`}>
       <Text style={current === value ? palPrimary.text : pal.text}>

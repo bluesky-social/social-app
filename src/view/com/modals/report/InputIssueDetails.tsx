@@ -34,7 +34,7 @@ export function InputIssueDetails({
         testID="addDetailsBtn"
         style={[s.mb10, styles.backBtn]}
         onPress={goBack}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel="Add details"
         accessibilityHint="Add more details to your report">
         <FontAwesomeIcon size={18} icon="angle-left" style={[pal.link]} />

@@ -48,7 +48,7 @@ export function ErrorMessage({
           testID="errorMessageTryAgainButton"
           style={styles.btn}
           onPress={onPressTryAgain}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Retry"
           accessibilityHint="Retries the last action, which errored out">
           <FontAwesomeIcon

@@ -203,7 +203,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               : navigation.navigate('Settings')
           }}
           style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>

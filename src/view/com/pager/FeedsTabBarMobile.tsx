@@ -43,7 +43,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
           <TouchableOpacity
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Open navigation"
             accessibilityHint="Access profile and other navigation links"
             hitSlop={HITSLOP_10}>
@@ -62,7 +62,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             testID="viewHeaderHomeFeedPrefsBtn"
             href="/settings/home-feed"
             hitSlop={HITSLOP_10}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Home Feed Preferences"
             accessibilityHint="">
             <FontAwesomeIcon

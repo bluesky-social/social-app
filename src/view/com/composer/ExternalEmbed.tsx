@@ -63,7 +63,7 @@ export const ExternalEmbed = ({
       <TouchableOpacity
         style={styles.removeBtn}
         onPress={onRemove}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel="Remove image preview"
         accessibilityHint={`Removes default thumbnail from ${link.uri}`}
         onAccessibilityEscape={onRemove}>

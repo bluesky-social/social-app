@@ -138,7 +138,7 @@ export function DropdownButton({
         onPress={onPress}
         hitSlop={HITSLOP_10}
         ref={ref1}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel={accessibilityLabel || `Opens ${numItems} options`}
         accessibilityHint="">
         {children}
@@ -242,7 +242,7 @@ const DropdownItems = ({
                 key={index}
                 style={[styles.menuItem]}
                 onPress={() => onPressItem(index)}
-                accessibilityRole="button"
+                role="button"
                 accessibilityLabel={item.label}
                 accessibilityHint={`Option ${index + 1} of ${numItems}`}>
                 {item.icon && (

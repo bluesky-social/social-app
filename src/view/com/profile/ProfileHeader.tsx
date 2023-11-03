@@ -365,7 +365,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               testID="profileHeaderEditProfileButton"
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn, pal.btn]}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Edit profile"
               accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
               <Text type="button" style={pal.text}>
@@ -378,7 +378,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 testID="unblockBtn"
                 onPress={onPressUnblockAccount}
                 style={[styles.btn, styles.mainBtn, pal.btn]}
-                accessibilityRole="button"
+                role="button"
                 accessibilityLabel="Unblock"
                 accessibilityHint="">
                 <Text type="button" style={[pal.text, s.bold]}>
@@ -403,7 +403,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                         : pal.colors.backgroundLight,
                     },
                   ]}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel={`Show follows similar to ${view.handle}`}
                   accessibilityHint={`Shows a list of users similar to this user.`}>
                   <FontAwesomeIcon
@@ -427,7 +427,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                   testID="unfollowBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel={`Unfollow ${view.handle}`}
                   accessibilityHint={`Hides posts from ${view.handle} in your feed`}>
                   <FontAwesomeIcon
@@ -444,7 +444,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                   testID="followBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, palInverted.view]}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel={`Follow ${view.handle}`}
                   accessibilityHint={`Shows posts from ${view.handle} in your feed`}>
                   <FontAwesomeIcon
@@ -568,7 +568,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           testID="profileHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Back"
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
@@ -581,7 +581,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
-        accessibilityRole="image"
+        role="image"
         accessibilityLabel={`View ${view.handle}'s avatar`}
         accessibilityHint="">
         <View

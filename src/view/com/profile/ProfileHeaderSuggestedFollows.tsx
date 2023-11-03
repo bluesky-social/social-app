@@ -118,6 +118,7 @@ export function ProfileHeaderSuggestedFollows({
 
             <Pressable
               accessibilityRole="button"
+              role="button"
               onPress={requestDismiss}
               hitSlop={10}
               style={{padding: INNER_PADDING / 2}}>

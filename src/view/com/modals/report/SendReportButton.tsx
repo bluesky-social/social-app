@@ -30,7 +30,7 @@ export function SendReportButton({
       testID="sendReportBtn"
       style={s.mt10}
       onPress={onPress}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel="Report post"
       accessibilityHint={`Reports post with reason and details`}>
       <LinearGradient

@@ -64,7 +64,7 @@ export function HeaderWithInput({
           onPress={onPressMenu}
           hitSlop={HITSLOP_10}
           style={styles.headerMenuBtn}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Menu"
           accessibilityHint="Access navigation links and settings">
           <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
@@ -94,7 +94,7 @@ export function HeaderWithInput({
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
           autoFocus={false}
-          accessibilityRole="search"
+          role="search"
           accessibilityLabel="Search"
           accessibilityHint=""
           autoCorrect={false}
@@ -104,7 +104,7 @@ export function HeaderWithInput({
           <TouchableOpacity
             testID="searchTextInputClearBtn"
             onPress={onPressClearQuery}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Clear search query"
             accessibilityHint="">
             <FontAwesomeIcon
@@ -118,8 +118,9 @@ export function HeaderWithInput({
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
           <TouchableOpacity
+            accessibilityRole="button"
             onPress={onPressCancelSearchInner}
-            accessibilityRole="button">
+            role="button">
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>

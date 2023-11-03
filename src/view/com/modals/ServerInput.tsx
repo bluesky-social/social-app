@@ -39,10 +39,11 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           {LOGIN_INCLUDE_DEV_SERVERS ? (
             <>
               <TouchableOpacity
+                accessibilityRole="button"
                 testID="localDevServerButton"
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}
-                accessibilityRole="button">
+                role="button">
                 <Text style={styles.btnText}>Local dev server</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
@@ -50,9 +51,10 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                accessibilityRole="button"
                 style={styles.btn}
                 onPress={() => doSelect(STAGING_SERVICE)}
-                accessibilityRole="button">
+                role="button">
                 <Text style={styles.btnText}>Staging</Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
@@ -64,7 +66,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           <TouchableOpacity
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Select Bluesky Social"
             accessibilityHint="Sets Bluesky Social as your service provider">
             <Text style={styles.btnText}>Bluesky.Social</Text>
@@ -96,7 +98,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               testID="customServerSelectBtn"
               style={[pal.borderDark, pal.text, styles.textInputBtn]}
               onPress={() => doSelect(customUrl)}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel={`Confirm service. ${
                 customUrl === ''
                   ? 'Button disabled. Input custom domain to proceed.'

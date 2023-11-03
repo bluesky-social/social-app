@@ -68,7 +68,7 @@ export function Component({
           testID="confirmBtn"
           onPress={onPress}
           style={[styles.btn, confirmBtnStyle]}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
@@ -81,7 +81,7 @@ export function Component({
           testID="cancelBtn"
           onPress={onPressCancel}
           style={[styles.btnCancel, s.mt10]}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Cancel"
           accessibilityHint="">
           <Text type="button-lg" style={pal.textLight}>

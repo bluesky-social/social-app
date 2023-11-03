@@ -129,7 +129,7 @@ export const Component = observer(function Component({
               </Text>
             </View>
             <Pressable
-              accessibilityRole="link"
+              role="link"
               accessibilityLabel="Change my email"
               accessibilityHint=""
               onPress={onEmailIncorrect}

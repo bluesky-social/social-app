@@ -313,12 +313,18 @@ export const Component = observer(function EditImageImpl({
         />
       </View>
       <View style={styles.btns}>
-        <Pressable onPress={onPressCancel} accessibilityRole="button">
+        <Pressable
+          accessibilityRole="button"
+          onPress={onPressCancel}
+          role="button">
           <Text type="xl" style={pal.link}>
             Cancel
           </Text>
         </Pressable>
-        <Pressable onPress={onPressSave} accessibilityRole="button">
+        <Pressable
+          accessibilityRole="button"
+          onPress={onPressSave}
+          role="button">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

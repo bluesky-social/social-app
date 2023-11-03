@@ -212,7 +212,7 @@ export function Component({
               testID="editProfileSaveBtn"
               style={s.mt10}
               onPress={onPressSave}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Save"
               accessibilityHint="Saves any changes to your profile">
               <LinearGradient
@@ -230,7 +230,7 @@ export function Component({
               testID="editProfileCancelBtn"
               style={s.mt5}
               onPress={onPressCancel}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Cancel profile editing"
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>

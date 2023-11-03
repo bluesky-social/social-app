@@ -264,7 +264,7 @@ export const ComposePost = observer(function ComposePost({
             testID="composerDiscardButton"
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Cancel"
             accessibilityHint="Closes post composer and discards post draft">
             <Text style={[pal.link, s.f18]}>Cancel</Text>
@@ -288,7 +288,7 @@ export const ComposePost = observer(function ComposePost({
                 <TouchableOpacity
                   testID="composerPublishBtn"
                   onPress={onPressPublish}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel={
                     replyTo ? 'Publish reply' : 'Publish post'
                   }
@@ -408,7 +408,7 @@ export const ComposePost = observer(function ComposePost({
                   testID="addLinkCardBtn"
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}
-                  accessibilityRole="button"
+                  role="button"
                   accessibilityLabel="Add link card"
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>

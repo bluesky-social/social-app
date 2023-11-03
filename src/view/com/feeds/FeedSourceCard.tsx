@@ -62,8 +62,9 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
 
   return (
     <Pressable
-      testID={`feed-${item.displayName}`}
       accessibilityRole="button"
+      testID={`feed-${item.displayName}`}
+      role="button"
       style={[styles.container, pal.border, style]}
       onPress={() => {
         if (item.type === 'feed-generator') {
@@ -94,7 +95,7 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
         {showSaveBtn && (
           <View>
             <Pressable
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel={
                 item.isSaved ? 'Remove from my feeds' : 'Add to my feeds'
               }

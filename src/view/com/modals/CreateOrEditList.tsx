@@ -229,7 +229,7 @@ export function Component({
               testID="saveBtn"
               style={s.mt10}
               onPress={onPressSave}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Save"
               accessibilityHint="">
               <LinearGradient
@@ -245,7 +245,7 @@ export function Component({
             testID="cancelBtn"
             style={s.mt5}
             onPress={onPressCancel}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Cancel"
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>

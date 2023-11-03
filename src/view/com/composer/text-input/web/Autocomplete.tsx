@@ -159,6 +159,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
 
               return (
                 <Pressable
+                  accessibilityRole="button"
                   key={item.handle}
                   style={[
                     isSelected ? pal.viewLight : undefined,
@@ -173,7 +174,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                   onPress={() => {
                     selectItem(index)
                   }}
-                  accessibilityRole="button">
+                  role="button">
                   <View style={styles.avatarAndDisplayName}>
                     <UserAvatar avatar={item.avatar ?? null} size={26} />
                     <Text style={pal.text} numberOfLines={1}>

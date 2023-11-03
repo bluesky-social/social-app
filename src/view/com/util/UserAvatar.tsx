@@ -288,7 +288,7 @@ export function EditableUserAvatar({
           testID="userAvatarImage"
           style={aviStyle}
           source={{uri: avatar}}
-          accessibilityRole="image"
+          role="image"
         />
       ) : (
         <DefaultAvatar type={type} size={size} />

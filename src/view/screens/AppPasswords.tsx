@@ -182,7 +182,7 @@ function AppPassword({
       testID={testID}
       style={[styles.item, pal.border]}
       onPress={onDelete}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel="Delete app password"
       accessibilityHint="">
       <View>

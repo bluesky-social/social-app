@@ -93,7 +93,7 @@ const InviteCodes = observer(function InviteCodesImpl() {
     <TouchableOpacity
       style={[styles.inviteCodes, pal.border]}
       onPress={onPress}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={
         invitesAvailable === 1
           ? 'Invite codes: 1 available'

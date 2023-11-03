@@ -54,7 +54,7 @@ export function OpenCameraBtn({gallery}: Props) {
       onPress={onPressTakePicture}
       style={styles.button}
       hitSlop={HITSLOP_10}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel="Camera"
       accessibilityHint="Opens camera on device">
       <FontAwesomeIcon

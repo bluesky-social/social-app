@@ -50,10 +50,11 @@ function Loading() {
       </Text>
       {isTakingTooLong ? (
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={() => {
             Linking.openURL(STATUS_PAGE_URL)
           }}
-          accessibilityRole="button">
+          role="button">
           <Text type="2xl" style={[styles.loadingText, pal.link]}>
             Check Bluesky status page
           </Text>

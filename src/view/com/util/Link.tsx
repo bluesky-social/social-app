@@ -84,7 +84,7 @@ export const Link = memo(function Link({
           // @ts-ignore web only -prf
           href={asAnchor ? sanitizeUrl(href) : undefined}
           accessible={accessible}
-          accessibilityRole="link"
+          role="link"
           {...props}>
           <View style={style}>
             {children ? children : <Text>{title || 'link'}</Text>}
@@ -97,7 +97,7 @@ export const Link = memo(function Link({
         testID={testID}
         onPress={onPress}
         accessible={accessible}
-        accessibilityRole="link"
+        role="link"
         {...props}>
         {/* @ts-ignore web only -prf */}
         <View style={style} href={anchorHref}>
@@ -125,7 +125,7 @@ export const Link = memo(function Link({
       style={style}
       onPress={onPress}
       accessible={accessible}
-      accessibilityRole="link"
+      role="link"
       // @ts-ignore web only -prf
       href={anchorHref}
       {...props}>

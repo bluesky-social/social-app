@@ -103,7 +103,7 @@ export const BottomBar = observer(function BottomBarImpl({
           )
         }
         onPress={onPressHome}
-        accessibilityRole="tab"
+        role="tab"
         accessibilityLabel="Home"
         accessibilityHint=""
       />
@@ -125,7 +125,7 @@ export const BottomBar = observer(function BottomBarImpl({
           )
         }
         onPress={onPressSearch}
-        accessibilityRole="search"
+        role="search"
         accessibilityLabel="Search"
         accessibilityHint=""
       />
@@ -147,7 +147,7 @@ export const BottomBar = observer(function BottomBarImpl({
           )
         }
         onPress={onPressFeeds}
-        accessibilityRole="tab"
+        role="tab"
         accessibilityLabel="Feeds"
         accessibilityHint=""
       />
@@ -171,7 +171,7 @@ export const BottomBar = observer(function BottomBarImpl({
         onPress={onPressNotifications}
         notificationCount={notifications.unreadCountLabel}
         accessible={true}
-        accessibilityRole="tab"
+        role="tab"
         accessibilityLabel="Notifications"
         accessibilityHint={
           notifications.unreadCountLabel === ''
@@ -203,7 +203,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressProfile}
         onLongPress={onLongPressProfile}
-        accessibilityRole="tab"
+        role="tab"
         accessibilityLabel="Profile"
         accessibilityHint=""
       />

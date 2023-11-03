@@ -146,7 +146,7 @@ export const Component = observer(function Component({
             store.shell.closeModal()
           }}
           style={styles.btn}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>

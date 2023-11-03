@@ -57,7 +57,7 @@ export function SearchInput({
         onBlur={() => setIsInputFocused?.(false)}
         onChangeText={onChangeQuery}
         onSubmitEditing={onSubmitQuery}
-        accessibilityRole="search"
+        role="search"
         accessibilityLabel="Search"
         accessibilityHint=""
         autoCorrect={false}
@@ -66,7 +66,7 @@ export function SearchInput({
       {query ? (
         <TouchableOpacity
           onPress={onPressCancelSearchInner}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Clear search query"
           accessibilityHint="">
           <FontAwesomeIcon

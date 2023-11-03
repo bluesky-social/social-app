@@ -101,7 +101,7 @@ export function Component({image}: Props) {
               onPress={onPressSave}
               accessibilityLabel="Save alt text"
               accessibilityHint={`Saves alt text, which reads: ${altText}`}
-              accessibilityRole="button">
+              role="button">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
@@ -115,7 +115,7 @@ export function Component({image}: Props) {
             <TouchableOpacity
               testID="altTextImageCancelBtn"
               onPress={onPressCancel}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Cancel add image alt text"
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>

@@ -216,7 +216,7 @@ const ChooseAccountForm = ({
           key={account.did}
           style={[pal.view, pal.border, styles.account]}
           onPress={() => onTryAccount(account)}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel={`Sign in as ${account.handle}`}
           accessibilityHint="Double tap to sign in">
           <View
@@ -244,7 +244,7 @@ const ChooseAccountForm = ({
         testID="chooseNewAccountBtn"
         style={[pal.view, pal.border, styles.account, styles.accountLast]}
         onPress={() => onSelectAccount(undefined)}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel="Login to account that is not listed"
         accessibilityHint="">
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
@@ -261,7 +261,10 @@ const ChooseAccountForm = ({
         </View>
       </TouchableOpacity>
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={onPressBack}
+          role="button">
           <Text type="xl" style={[pal.link, s.pl5]}>
             Back
           </Text>
@@ -381,7 +384,7 @@ const LoginForm = ({
             testID="loginSelectServiceButton"
             style={styles.textBtn}
             onPress={onPressSelectService}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Select service"
             accessibilityHint="Sets server for the Bluesky client">
             <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
@@ -466,7 +469,7 @@ const LoginForm = ({
             testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
             onPress={onPressForgotPassword}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Forgot password"
             accessibilityHint="Opens password reset form">
             <Text style={pal.link}>Forgot</Text>
@@ -484,7 +487,10 @@ const LoginForm = ({
         </View>
       ) : undefined}
       <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={onPressBack}
+          role="button">
           <Text type="xl" style={[pal.link, s.pl5]}>
             Back
           </Text>
@@ -494,7 +500,7 @@ const LoginForm = ({
           <TouchableOpacity
             testID="loginRetryButton"
             onPress={onPressRetryConnect}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Retry"
             accessibilityHint="Retries login">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
@@ -514,7 +520,7 @@ const LoginForm = ({
           <TouchableOpacity
             testID="loginNextButton"
             onPress={onPressNext}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Go to next"
             accessibilityHint="Navigates to the next screen">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
@@ -607,7 +613,7 @@ const ForgotPasswordForm = ({
             testID="forgotPasswordSelectServiceButton"
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
             onPress={onPressSelectService}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Hosting provider"
             accessibilityHint="Sets hosting provider for password reset">
             <FontAwesomeIcon
@@ -658,7 +664,10 @@ const ForgotPasswordForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressBack}
+            role="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>
@@ -674,7 +683,7 @@ const ForgotPasswordForm = ({
             <TouchableOpacity
               testID="newPasswordButton"
               onPress={onPressNext}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Go to next"
               accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
@@ -816,7 +825,10 @@ const SetNewPasswordForm = ({
           </View>
         ) : undefined}
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-          <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressBack}
+            role="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
               Back
             </Text>
@@ -832,7 +844,7 @@ const SetNewPasswordForm = ({
             <TouchableOpacity
               testID="setNewPasswordButton"
               onPress={onPressNext}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Go to next"
               accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
@@ -872,7 +884,7 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
           <View style={s.flex1} />
           <TouchableOpacity
             onPress={onPressNext}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Close alert"
             accessibilityHint="Closes password update alert">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>

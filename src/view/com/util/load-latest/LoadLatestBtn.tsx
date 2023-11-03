@@ -37,7 +37,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={label}
       accessibilityHint="">
       <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />

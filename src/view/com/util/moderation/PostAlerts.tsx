@@ -33,7 +33,7 @@ export function PostAlerts({
           moderation,
         })
       }}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel="Learn more about this warning"
       accessibilityHint=""
       style={[styles.container, pal.viewLight, style]}>

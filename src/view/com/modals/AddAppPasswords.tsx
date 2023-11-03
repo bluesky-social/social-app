@@ -159,7 +159,7 @@ export function Component({}: {}) {
           <TouchableOpacity
             style={[pal.border, styles.passwordContainer, pal.btn]}
             onPress={onCopy}
-            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Copy"
             accessibilityHint="Copies app password">
             <Text type="2xl-bold" style={[pal.text]}>

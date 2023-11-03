@@ -45,7 +45,7 @@ export function SelectableBtn({
         style,
       ]}
       onPress={onSelect}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}>
       <Text style={selected ? palPrimary.text : pal.text}>{label}</Text>

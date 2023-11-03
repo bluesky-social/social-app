@@ -98,7 +98,7 @@ export const Component = observer(function Component({
           {query ? (
             <Pressable
               onPress={onPressCancelSearch}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Cancel search"
               accessibilityHint="Exits inputting search query"
               onAccessibilityEscape={onPressCancelSearch}>

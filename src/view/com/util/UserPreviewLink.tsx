@@ -34,7 +34,7 @@ export function UserPreviewLink(
           did: props.did,
         })
       }
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={props.handle}
       accessibilityHint=""
       style={props.style}>

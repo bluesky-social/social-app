@@ -95,7 +95,7 @@ export function Component({
         />
         <TouchableOpacity
           onPress={doSetAs(AspectRatio.Wide)}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Wide"
           accessibilityHint="Sets image aspect ratio to wide">
           <RectWideIcon
@@ -105,7 +105,7 @@ export function Component({
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doSetAs(AspectRatio.Tall)}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Tall"
           accessibilityHint="Sets image aspect ratio to tall">
           <RectTallIcon
@@ -115,7 +115,7 @@ export function Component({
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doSetAs(AspectRatio.Square)}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Square"
           accessibilityHint="Sets image aspect ratio to square">
           <SquareIcon
@@ -127,7 +127,7 @@ export function Component({
       <View style={styles.btns}>
         <TouchableOpacity
           onPress={onPressCancel}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Cancel image crop"
           accessibilityHint="Exits image cropping process">
           <Text type="xl" style={pal.link}>
@@ -137,7 +137,7 @@ export function Component({
         <View style={s.flex1} />
         <TouchableOpacity
           onPress={onPressDone}
-          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Save image crop"
           accessibilityHint="Saves image crop settings">
           <LinearGradient

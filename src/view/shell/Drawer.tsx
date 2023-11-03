@@ -337,7 +337,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity
-            accessibilityRole="link"
+            role="link"
             accessibilityLabel="Send feedback"
             accessibilityHint=""
             onPress={onPressFeedback}
@@ -358,7 +358,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            accessibilityRole="link"
+            role="link"
             accessibilityLabel="Send feedback"
             accessibilityHint=""
             onPress={onPressHelp}
@@ -394,7 +394,7 @@ function MenuItem({
       testID={`menuItemButton-${label}`}
       style={styles.menuItem}
       onPress={onPress}
-      accessibilityRole="tab"
+      role="tab"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint="">
       <View style={[styles.menuItemIconWrapper]}>
@@ -444,7 +444,7 @@ const InviteCodes = observer(function InviteCodesImpl({
       testID="menuItemInviteCodes"
       style={[styles.inviteCodes, style]}
       onPress={onPress}
-      accessibilityRole="button"
+      role="button"
       accessibilityLabel={
         invitesAvailable === 1
           ? 'Invite codes: 1 available'

@@ -100,7 +100,7 @@ function LightboxInner({
     <View style={styles.mask}>
       <TouchableWithoutFeedback
         onPress={onClose}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel="Close image viewer"
         accessibilityHint="Exits image view"
         onAccessibilityEscape={onClose}>
@@ -116,7 +116,7 @@ function LightboxInner({
             <TouchableOpacity
               onPress={onPressLeft}
               style={[styles.btn, styles.leftBtn]}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Previous image"
               accessibilityHint="">
               <FontAwesomeIcon
@@ -130,7 +130,7 @@ function LightboxInner({
             <TouchableOpacity
               onPress={onPressRight}
               style={[styles.btn, styles.rightBtn]}
-              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Next image"
               accessibilityHint="">
               <FontAwesomeIcon

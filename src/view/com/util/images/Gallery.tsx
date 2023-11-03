@@ -30,7 +30,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={styles.fullWidth}
-        accessibilityRole="button"
+        role="button"
         accessibilityLabel={image.alt || 'Image'}
         accessibilityHint="">
         <Image
