@@ -4,6 +4,7 @@
     "jsx": "react-jsx",
     "types": ["node"],
     "paths": {
+      "#/*": ["./src/*"],
       "lib/*": ["./src/lib/*"],
       "platform/*": ["./src/platform/*"],
       "state/*": ["./src/state/*"],
