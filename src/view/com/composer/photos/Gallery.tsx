@@ -111,9 +111,10 @@ const GalleryInner = observer(function GalleryImpl({
         {gallery.images.map(image => (
           <View key={`selected-image-${image.path}`} style={[imageStyle]}>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="altTextButton"
               role="button"
-              accessibilityLabel="Add alt text"
+              aria-label="Add alt text"
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
@@ -133,9 +134,10 @@ const GalleryInner = observer(function GalleryImpl({
             </TouchableOpacity>
             <View style={imageControlsStyle}>
               <TouchableOpacity
+                accessibilityRole="button"
                 testID="editPhotoButton"
                 role="button"
-                accessibilityLabel="Edit image"
+                aria-label="Edit image"
                 accessibilityHint=""
                 onPress={() => gallery.edit(image)}
                 style={styles.imageControl}>
@@ -146,9 +148,10 @@ const GalleryInner = observer(function GalleryImpl({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                accessibilityRole="button"
                 testID="removePhotoButton"
                 role="button"
-                accessibilityLabel="Remove image"
+                aria-label="Remove image"
                 accessibilityHint=""
                 onPress={() => gallery.remove(image)}
                 style={styles.imageControl}>
@@ -160,8 +163,9 @@ const GalleryInner = observer(function GalleryImpl({
               </TouchableOpacity>
             </View>
             <TouchableOpacity
+              accessibilityRole="button"
               role="button"
-              accessibilityLabel="Add alt text"
+              aria-label="Add alt text"
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()

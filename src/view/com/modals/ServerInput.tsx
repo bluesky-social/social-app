@@ -64,10 +64,11 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             </>
           ) : undefined}
           <TouchableOpacity
+            accessibilityRole="button"
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
             role="button"
-            accessibilityLabel="Select Bluesky Social"
+            aria-label="Select Bluesky Social"
             accessibilityHint="Sets Bluesky Social as your service provider">
             <Text style={styles.btnText}>Bluesky.Social</Text>
             <FontAwesomeIcon
@@ -80,6 +81,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           <Text style={[pal.text, styles.label]}>Other service</Text>
           <View style={s.flexRow}>
             <TextInput
+              accessibilityLabel="Text input field"
               testID="customServerTextInput"
               style={[pal.borderDark, pal.text, styles.textInput]}
               placeholder="e.g. https://bsky.app"
@@ -90,16 +92,17 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               keyboardAppearance={theme.colorScheme}
               value={customUrl}
               onChangeText={setCustomUrl}
-              accessibilityLabel="Custom domain"
+              aria-label="Custom domain"
               // TODO: Simplify this wording further to be understandable by everyone
               accessibilityHint="Use your domain as your Bluesky client service provider"
             />
             <TouchableOpacity
+              accessibilityRole="button"
               testID="customServerSelectBtn"
               style={[pal.borderDark, pal.text, styles.textInputBtn]}
               onPress={() => doSelect(customUrl)}
               role="button"
-              accessibilityLabel={`Confirm service. ${
+              aria-label={`Confirm service. ${
                 customUrl === ''
                   ? 'Button disabled. Input custom domain to proceed.'
                   : ''

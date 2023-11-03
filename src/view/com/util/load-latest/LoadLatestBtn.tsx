@@ -38,7 +38,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
       onPress={onPress}
       hitSlop={HITSLOP_20}
       role="button"
-      accessibilityLabel={label}
+      aria-label={label}
       accessibilityHint="">
       <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
       {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}

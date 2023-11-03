@@ -196,12 +196,13 @@ export function Button({
 
   return (
     <Pressable
+      accessibilityRole="button"
       style={getStyle}
       onPress={onPressWrapped}
       disabled={isLoading}
       testID={testID}
       role="button"
-      accessibilityLabel={accessibilityLabel}
+      aria-label={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       accessibilityLabelledBy={accessibilityLabelledBy}
       onAccessibilityEscape={onAccessibilityEscape}>

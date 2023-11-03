@@ -89,7 +89,7 @@ export const Component = observer(function Component({
             value={query}
             onChangeText={onChangeQuery}
             accessible={true}
-            accessibilityLabel="Search"
+            aria-label="Search"
             accessibilityHint=""
             autoCapitalize="none"
             autoComplete="off"
@@ -97,9 +97,10 @@ export const Component = observer(function Component({
           />
           {query ? (
             <Pressable
+              accessibilityRole="button"
               onPress={onPressCancelSearch}
               role="button"
-              accessibilityLabel="Cancel search"
+              aria-label="Cancel search"
               accessibilityHint="Exits inputting search query"
               onAccessibilityEscape={onPressCancelSearch}>
               <FontAwesomeIcon
@@ -139,7 +140,7 @@ export const Component = observer(function Component({
             testID="doneBtn"
             type="primary"
             onPress={() => store.shell.closeModal()}
-            accessibilityLabel="Done"
+            aria-label="Done"
             accessibilityHint=""
             label="Done"
             labelContainerStyle={{justifyContent: 'center', padding: 4}}

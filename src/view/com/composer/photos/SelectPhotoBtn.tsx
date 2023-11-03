@@ -32,12 +32,13 @@ export function SelectPhotoBtn({gallery}: Props) {
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
       style={styles.button}
       hitSlop={HITSLOP_10}
       role="button"
-      accessibilityLabel="Gallery"
+      aria-label="Gallery"
       accessibilityHint="Opens device photo gallery">
       <FontAwesomeIcon
         icon={['far', 'image']}

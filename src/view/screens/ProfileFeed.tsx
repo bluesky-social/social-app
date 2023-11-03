@@ -99,7 +99,7 @@ export const ProfileFeedScreen = withAuthRequired(
             <View style={{flexDirection: 'row'}}>
               <Button
                 type="default"
-                accessibilityLabel="Go Back"
+                aria-label="Go Back"
                 accessibilityHint="Return to previous page"
                 onPress={onPressBack}
                 style={{flexShrink: 1}}>
@@ -304,7 +304,7 @@ export const ProfileFeedScreenInner = observer(
           <NativeDropdown
             testID="headerDropdownBtn"
             items={dropdownItems}
-            accessibilityLabel="More options"
+            aria-label="More options"
             accessibilityHint="">
             <View style={[pal.viewLight, styles.btn]}>
               <FontAwesomeIcon
@@ -369,7 +369,7 @@ export const ProfileFeedScreenInner = observer(
             />
           }
           role="button"
-          accessibilityLabel="New post"
+          aria-label="New post"
           accessibilityHint=""
         />
       </View>
@@ -473,7 +473,7 @@ const AboutSection = observer(function AboutPageImpl({
         <Button
           type="default"
           testID="toggleLikeBtn"
-          accessibilityLabel="Like this feed"
+          aria-label="Like this feed"
           accessibilityHint=""
           onPress={onToggleLiked}
           style={{paddingHorizontal: 10}}>

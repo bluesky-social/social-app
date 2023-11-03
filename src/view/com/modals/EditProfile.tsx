@@ -183,7 +183,7 @@ export function Component({
                 setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
               }
               accessible={true}
-              accessibilityLabel="Display name"
+              aria-label="Display name"
               accessibilityHint="Edit your display name"
             />
           </View>
@@ -199,7 +199,7 @@ export function Component({
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
-              accessibilityLabel="Description"
+              aria-label="Description"
               accessibilityHint="Edit your profile description"
             />
           </View>
@@ -209,11 +209,12 @@ export function Component({
             </View>
           ) : (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="editProfileSaveBtn"
               style={s.mt10}
               onPress={onPressSave}
               role="button"
-              accessibilityLabel="Save"
+              aria-label="Save"
               accessibilityHint="Saves any changes to your profile">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -231,7 +232,7 @@ export function Component({
               style={s.mt5}
               onPress={onPressCancel}
               role="button"
-              accessibilityLabel="Cancel profile editing"
+              aria-label="Cancel profile editing"
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.btn]}>

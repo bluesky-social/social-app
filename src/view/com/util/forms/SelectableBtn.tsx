@@ -31,6 +31,7 @@ export function SelectableBtn({
   const {isMobile} = useWebMediaQueries()
   return (
     <Pressable
+      accessibilityRole="button"
       testID={testID}
       style={[
         styles.btn,
@@ -46,7 +47,7 @@ export function SelectableBtn({
       ]}
       onPress={onSelect}
       role="button"
-      accessibilityLabel={label}
+      aria-label={label}
       accessibilityHint={accessibilityHint}>
       <Text style={selected ? palPrimary.text : pal.text}>{label}</Text>
     </Pressable>

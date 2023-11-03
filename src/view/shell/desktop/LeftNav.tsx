@@ -82,11 +82,12 @@ function BackBtn() {
   }
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID="viewHeaderBackOrMenuBtn"
       onPress={onPressBack}
       style={styles.backBtn}
       role="button"
-      accessibilityLabel="Go back"
+      aria-label="Go back"
       accessibilityHint="">
       <FontAwesomeIcon
         size={24}
@@ -153,7 +154,7 @@ const NavItem = observer(function NavItemImpl({
       href={href}
       dataSet={{noUnderline: 1}}
       role="tab"
-      accessibilityLabel={label}
+      aria-label={label}
       accessibilityHint="">
       <View
         style={[
@@ -219,10 +220,11 @@ function ComposeBtn() {
   }
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       role="button"
-      accessibilityLabel="New post"
+      aria-label="New post"
       accessibilityHint="">
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2

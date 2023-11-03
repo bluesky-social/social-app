@@ -91,10 +91,11 @@ const InviteCodes = observer(function InviteCodesImpl() {
   }, [store])
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       style={[styles.inviteCodes, pal.border]}
       onPress={onPress}
       role="button"
-      accessibilityLabel={
+      aria-label={
         invitesAvailable === 1
           ? 'Invite codes: 1 available'
           : `Invite codes: ${invitesAvailable} available`

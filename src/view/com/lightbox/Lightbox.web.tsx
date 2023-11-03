@@ -99,9 +99,10 @@ function LightboxInner({
   return (
     <View style={styles.mask}>
       <TouchableWithoutFeedback
+        accessibilityRole="button"
         onPress={onClose}
         role="button"
-        accessibilityLabel="Close image viewer"
+        aria-label="Close image viewer"
         accessibilityHint="Exits image view"
         onAccessibilityEscape={onClose}>
         <View style={styles.imageCenterer}>
@@ -109,15 +110,16 @@ function LightboxInner({
             accessibilityIgnoresInvertColors
             source={imgs[index]}
             style={styles.image}
-            accessibilityLabel={imgs[index].alt}
+            aria-label={imgs[index].alt}
             accessibilityHint=""
           />
           {canGoLeft && (
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={onPressLeft}
               style={[styles.btn, styles.leftBtn]}
               role="button"
-              accessibilityLabel="Previous image"
+              aria-label="Previous image"
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-left"
@@ -128,10 +130,11 @@ function LightboxInner({
           )}
           {canGoRight && (
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={onPressRight}
               style={[styles.btn, styles.rightBtn]}
               role="button"
-              accessibilityLabel="Next image"
+              aria-label="Next image"
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-right"
@@ -145,7 +148,8 @@ function LightboxInner({
       {imgs[index].alt ? (
         <View style={styles.footer}>
           <Pressable
-            accessibilityLabel="Expand alt text"
+            accessibilityRole="button"
+            aria-label="Expand alt text"
             accessibilityHint="If alt text is long, toggles alt text expanded state"
             onPress={() => {
               setAltExpanded(!isAltExpanded)

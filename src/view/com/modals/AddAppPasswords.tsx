@@ -151,16 +151,17 @@ export function Component({}: {}) {
               returnKeyType="done"
               onEndEditing={createAppPassword}
               accessible={true}
-              accessibilityLabel="Name"
+              aria-label="Name"
               accessibilityHint="Input name for app password"
             />
           </View>
         ) : (
           <TouchableOpacity
+            accessibilityRole="button"
             style={[pal.border, styles.passwordContainer, pal.btn]}
             onPress={onCopy}
             role="button"
-            accessibilityLabel="Copy"
+            aria-label="Copy"
             accessibilityHint="Copies app password">
             <Text type="2xl-bold" style={[pal.text]}>
               {appPassword}

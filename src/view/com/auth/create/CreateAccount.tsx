@@ -107,10 +107,11 @@ export const CreateAccount = observer(function CreateAccountImpl({
               </TouchableOpacity>
             ) : model.didServiceDescriptionFetchFail ? (
               <TouchableOpacity
+                accessibilityRole="button"
                 testID="retryConnectBtn"
                 onPress={onPressRetryConnect}
                 role="button"
-                accessibilityLabel="Retry"
+                aria-label="Retry"
                 accessibilityHint="Retries account creation"
                 accessibilityLiveRegion="polite">
                 <Text type="xl-bold" style={[pal.link, s.pr5]}>

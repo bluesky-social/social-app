@@ -27,11 +27,12 @@ export function SendReportButton({
   }
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID="sendReportBtn"
       style={s.mt10}
       onPress={onPress}
       role="button"
-      accessibilityLabel="Report post"
+      aria-label="Report post"
       accessibilityHint={`Reports post with reason and details`}>
       <LinearGradient
         colors={[gradients.blueLight.start, gradients.blueLight.end]}

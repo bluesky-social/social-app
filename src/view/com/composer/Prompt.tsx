@@ -12,11 +12,12 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const {isDesktop} = useWebMediaQueries()
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID="replyPromptBtn"
       style={[pal.view, pal.border, styles.prompt]}
       onPress={() => onPressCompose()}
       role="button"
-      accessibilityLabel="Compose reply"
+      aria-label="Compose reply"
       accessibilityHint="Opens composer">
       <UserAvatar avatar={store.me.avatar} size={38} />
       <Text

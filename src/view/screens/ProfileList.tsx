@@ -113,7 +113,7 @@ export const ProfileListScreen = withAuthRequired(
             <View style={{flexDirection: 'row'}}>
               <Button
                 type="default"
-                accessibilityLabel="Go Back"
+                aria-label="Go Back"
                 accessibilityHint="Return to previous page"
                 onPress={onPressBack}
                 style={{flexShrink: 1}}>
@@ -245,7 +245,7 @@ export const ProfileListScreenInner = observer(
               />
             }
             role="button"
-            accessibilityLabel="New post"
+            aria-label="New post"
             accessibilityHint=""
           />
         </View>
@@ -283,7 +283,7 @@ export const ProfileListScreenInner = observer(
               />
             }
             role="button"
-            accessibilityLabel="New post"
+            aria-label="New post"
             accessibilityHint=""
           />
         </View>
@@ -558,7 +558,7 @@ const Header = observer(function HeaderImpl({
           <NativeDropdown
             testID="subscribeBtn"
             items={subscribeDropdownItems}
-            accessibilityLabel="Subscribe to this list"
+            aria-label="Subscribe to this list"
             accessibilityHint="">
             <View style={[palInverted.view, styles.btn]}>
               <Text style={palInverted.text}>Subscribe</Text>
@@ -569,7 +569,7 @@ const Header = observer(function HeaderImpl({
       <NativeDropdown
         testID="headerDropdownBtn"
         items={dropdownItems}
-        accessibilityLabel="More options"
+        aria-label="More options"
         accessibilityHint="">
         <View style={[pal.viewLight, styles.btn]}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
@@ -727,9 +727,10 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             <Text type="lg-bold">Users</Text>
             {isOwner && (
               <Pressable
+                accessibilityRole="button"
                 testID="addUserBtn"
                 role="button"
-                accessibilityLabel="Add a user to this list"
+                aria-label="Add a user to this list"
                 accessibilityHint=""
                 onPress={onPressAddUser}
                 style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>

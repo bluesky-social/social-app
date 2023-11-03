@@ -45,11 +45,12 @@ export function ErrorMessage({
       </Text>
       {onPressTryAgain && (
         <TouchableOpacity
+          accessibilityRole="button"
           testID="errorMessageTryAgainButton"
           style={styles.btn}
           onPress={onPressTryAgain}
           role="button"
-          accessibilityLabel="Retry"
+          aria-label="Retry"
           accessibilityHint="Retries the last action, which errored out">
           <FontAwesomeIcon
             icon="arrows-rotate"

@@ -71,6 +71,7 @@ export function ScreenHider({
         </Text>
         .{' '}
         <TouchableWithoutFeedback
+          accessibilityRole="button"
           onPress={() => {
             store.shell.openModal({
               name: 'moderation-details',
@@ -79,7 +80,7 @@ export function ScreenHider({
             })
           }}
           role="button"
-          accessibilityLabel="Learn more about this warning"
+          aria-label="Learn more about this warning"
           accessibilityHint="">
           <Text type="2xl" style={pal.link}>
             Learn More

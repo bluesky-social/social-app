@@ -63,7 +63,7 @@ export const RepostButton = ({
     <EventStopper>
       <NativeDropdown
         items={dropdownItems}
-        accessibilityLabel="Repost or quote post"
+        aria-label="Repost or quote post"
         accessibilityHint="">
         <View
           style={[

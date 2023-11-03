@@ -112,7 +112,7 @@ export function UserBanner({
     <NativeDropdown
       testID="changeBannerBtn"
       items={dropdownItems}
-      accessibilityLabel="Image options"
+      aria-label="Image options"
       accessibilityHint="">
       {banner ? (
         <Image

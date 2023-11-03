@@ -28,8 +28,9 @@ export function createCustomBackdrop(
 
     return (
       <TouchableWithoutFeedback
+        accessibilityRole="button"
         onPress={onClose}
-        accessibilityLabel="Close bottom drawer"
+        aria-label="Close bottom drawer"
         accessibilityHint=""
         onAccessibilityEscape={() => {
           if (onClose !== undefined) {

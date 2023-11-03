@@ -53,7 +53,7 @@ export function DateInput(props: Props) {
           type={props.buttonType}
           style={props.buttonStyle}
           onPress={onPress}
-          accessibilityLabel={props.accessibilityLabel}
+          aria-label={props.accessibilityLabel}
           accessibilityHint={props.accessibilityHint}
           accessibilityLabelledBy={props.accessibilityLabelledBy}>
           <View style={styles.button}>
@@ -78,7 +78,7 @@ export function DateInput(props: Props) {
           themeVariant={theme.colorScheme}
           value={props.value}
           onChange={onChangeInternal}
-          accessibilityLabel={props.accessibilityLabel}
+          aria-label={props.accessibilityLabel}
           accessibilityHint={props.accessibilityHint}
           accessibilityLabelledBy={props.accessibilityLabelledBy}
         />

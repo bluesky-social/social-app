@@ -156,7 +156,7 @@ export const FeedPage = observer(function FeedPageImpl({
             type="title-lg"
             href="/settings/home-feed"
             style={{fontWeight: 'bold'}}
-            accessibilityLabel="Feed Preferences"
+            aria-label="Feed Preferences"
             accessibilityHint=""
             text={
               <FontAwesomeIcon
@@ -196,7 +196,7 @@ export const FeedPage = observer(function FeedPageImpl({
         onPress={onPressCompose}
         icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
         role="button"
-        accessibilityLabel="New post"
+        aria-label="New post"
         accessibilityHint=""
       />
     </View>

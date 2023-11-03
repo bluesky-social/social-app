@@ -211,9 +211,10 @@ export const PostThread = observer(function PostThread({
       } else if (item === LOAD_MORE) {
         return (
           <Pressable
+            accessibilityRole="button"
             onPress={() => setMaxVisible(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
-            accessibilityLabel="Load more posts"
+            aria-label="Load more posts"
             accessibilityHint="">
             <View
               style={[
@@ -307,9 +308,10 @@ export const PostThread = observer(function PostThread({
               The post may have been deleted.
             </Text>
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={onPressBack}
               role="button"
-              accessibilityLabel="Back"
+              aria-label="Back"
               accessibilityHint="">
               <Text type="2xl" style={pal.link}>
                 <FontAwesomeIcon
@@ -341,9 +343,10 @@ export const PostThread = observer(function PostThread({
             You have blocked the author or you have been blocked by the author.
           </Text>
           <TouchableOpacity
+            accessibilityRole="button"
             onPress={onPressBack}
             role="button"
-            accessibilityLabel="Back"
+            aria-label="Back"
             accessibilityHint="">
             <Text type="2xl" style={pal.link}>
               <FontAwesomeIcon

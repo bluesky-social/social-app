@@ -49,12 +49,13 @@ export const ModerationScreen = withAuthRequired(
         <ViewHeader title="Moderation" showOnDesktop />
         <View style={styles.spacer} />
         <TouchableOpacity
+          accessibilityRole="button"
           testID="contentFilteringBtn"
           style={[styles.linkCard, pal.view]}
           onPress={onPressContentFiltering}
           role="tab"
           accessibilityHint="Content filtering"
-          accessibilityLabel="">
+          aria-label="">
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="eye"

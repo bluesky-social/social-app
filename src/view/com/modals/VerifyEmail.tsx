@@ -129,8 +129,9 @@ export const Component = observer(function Component({
               </Text>
             </View>
             <Pressable
+              accessibilityRole="button"
               role="link"
-              accessibilityLabel="Change my email"
+              aria-label="Change my email"
               accessibilityHint=""
               onPress={onEmailIncorrect}
               style={styles.changeEmailLink}>
@@ -148,7 +149,7 @@ export const Component = observer(function Component({
             value={confirmationCode}
             onChangeText={setConfirmationCode}
             accessible={true}
-            accessibilityLabel="Confirmation code"
+            aria-label="Confirmation code"
             accessibilityHint=""
             autoCapitalize="none"
             autoComplete="off"
@@ -172,7 +173,7 @@ export const Component = observer(function Component({
                   testID="getStartedBtn"
                   type="primary"
                   onPress={() => setStage(Stages.Email)}
-                  accessibilityLabel="Get Started"
+                  aria-label="Get Started"
                   accessibilityHint=""
                   label="Get Started"
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
@@ -185,7 +186,7 @@ export const Component = observer(function Component({
                     testID="sendEmailBtn"
                     type="primary"
                     onPress={onSendEmail}
-                    accessibilityLabel="Send Confirmation Email"
+                    aria-label="Send Confirmation Email"
                     accessibilityHint=""
                     label="Send Confirmation Email"
                     labelContainerStyle={{
@@ -197,7 +198,7 @@ export const Component = observer(function Component({
                   <Button
                     testID="haveCodeBtn"
                     type="default"
-                    accessibilityLabel="I have a code"
+                    aria-label="I have a code"
                     accessibilityHint=""
                     label="I have a confirmation code"
                     labelContainerStyle={{
@@ -214,7 +215,7 @@ export const Component = observer(function Component({
                   testID="confirmBtn"
                   type="primary"
                   onPress={onConfirm}
-                  accessibilityLabel="Confirm"
+                  aria-label="Confirm"
                   accessibilityHint=""
                   label="Confirm"
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
@@ -225,7 +226,7 @@ export const Component = observer(function Component({
                 testID="cancelBtn"
                 type="default"
                 onPress={() => store.shell.closeModal()}
-                accessibilityLabel={
+                aria-label={
                   stage === Stages.Reminder ? 'Not right now' : 'Cancel'
                 }
                 accessibilityHint=""

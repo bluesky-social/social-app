@@ -26,7 +26,7 @@ export const LabelsBtn = observer(function LabelsBtn({
       type="default-light"
       testID="labelsBtn"
       style={[styles.button, !hasMedia && styles.dimmed]}
-      accessibilityLabel="Content warnings"
+      aria-label="Content warnings"
       accessibilityHint=""
       onPress={() => {
         if (isNative) {

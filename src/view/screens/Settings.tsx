@@ -265,10 +265,11 @@ export const SettingsScreen = withAuthRequired(
                   </Text>
                 </View>
                 <TouchableOpacity
+                  accessibilityRole="button"
                   testID="signOutBtn"
                   onPress={isSwitching ? undefined : onPressSignout}
                   role="button"
-                  accessibilityLabel="Sign out"
+                  aria-label="Sign out"
                   accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
                   <Text type="lg" style={pal.link}>
                     Sign out
@@ -279,6 +280,7 @@ export const SettingsScreen = withAuthRequired(
           )}
           {store.session.switchableAccounts.map(account => (
             <TouchableOpacity
+              accessibilityRole="button"
               testID={`switchToAccountBtn-${account.handle}`}
               key={account.did}
               style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
@@ -286,7 +288,7 @@ export const SettingsScreen = withAuthRequired(
                 isSwitching ? undefined : () => onPressSwitchAccount(account)
               }
               role="button"
-              accessibilityLabel={`Switch to ${account.handle}`}
+              aria-label={`Switch to ${account.handle}`}
               accessibilityHint="Switches the account you are logged in to">
               <View style={styles.avi}>
                 <UserAvatar size={40} avatar={account.aviUrl} />
@@ -303,11 +305,12 @@ export const SettingsScreen = withAuthRequired(
             </TouchableOpacity>
           ))}
           <TouchableOpacity
+            accessibilityRole="button"
             testID="switchToNewAccountBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressAddAccount}
             role="button"
-            accessibilityLabel="Add account"
+            aria-label="Add account"
             accessibilityHint="Create a new Bluesky account">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
@@ -326,11 +329,12 @@ export const SettingsScreen = withAuthRequired(
             Invite a Friend
           </Text>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="inviteFriendBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressInviteCodes}
             role="button"
-            accessibilityLabel="Invite"
+            aria-label="Invite"
             accessibilityHint="Opens invite code list">
             <View
               style={[
@@ -404,12 +408,13 @@ export const SettingsScreen = withAuthRequired(
             Basics
           </Text>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="preferencesHomeFeedButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openHomeFeedPreferences}
             role="button"
             accessibilityHint=""
-            accessibilityLabel="Opens the home feed preferences">
+            aria-label="Opens the home feed preferences">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="sliders"
@@ -421,12 +426,13 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="preferencesThreadsButton"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={openThreadsPreferences}
             role="button"
             accessibilityHint=""
-            accessibilityLabel="Opens the threads preferences">
+            aria-label="Opens the threads preferences">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon={['far', 'comments']}
@@ -439,10 +445,11 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="My Saved Feeds"
-            accessibilityLabel="Opens screen with all saved feeds"
+            aria-label="Opens screen with all saved feeds"
             onPress={onPressSavedFeeds}>
             <View style={[styles.iconContainer, pal.btn]}>
               <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
@@ -452,12 +459,13 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="languageSettingsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressLanguageSettings}
             role="button"
             accessibilityHint="Language settings"
-            accessibilityLabel="Opens configurable language settings">
+            aria-label="Opens configurable language settings">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="language"
@@ -469,6 +477,7 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="moderationBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={
@@ -476,7 +485,7 @@ export const SettingsScreen = withAuthRequired(
             }
             role="button"
             accessibilityHint=""
-            accessibilityLabel="Opens moderation settings">
+            aria-label="Opens moderation settings">
             <View style={[styles.iconContainer, pal.btn]}>
               <HandIcon style={pal.text} size={18} strokeWidth={6} />
             </View>
@@ -490,12 +499,13 @@ export const SettingsScreen = withAuthRequired(
             Advanced
           </Text>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="appPasswordBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={onPressAppPasswords}
             role="button"
             accessibilityHint="Open app password settings"
-            accessibilityLabel="Opens the app password settings page">
+            aria-label="Opens the app password settings page">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="lock"
@@ -507,11 +517,12 @@ export const SettingsScreen = withAuthRequired(
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="changeHandleBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             onPress={isSwitching ? undefined : onPressChangeHandle}
             role="button"
-            accessibilityLabel="Change handle"
+            aria-label="Change handle"
             accessibilityHint="Choose a new Bluesky username or create">
             <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
@@ -532,7 +543,7 @@ export const SettingsScreen = withAuthRequired(
             onPress={onPressDeleteAccount}
             accessible={true}
             role="button"
-            accessibilityLabel="Delete account"
+            aria-label="Delete account"
             accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
             <View style={[styles.iconContainer, dangerBg]}>
               <FontAwesomeIcon
@@ -550,11 +561,12 @@ export const SettingsScreen = withAuthRequired(
             Developer Tools
           </Text>
           <TouchableOpacity
+            accessibilityRole="button"
             style={[pal.view, styles.linkCardNoIcon]}
             onPress={onPressSystemLog}
             role="button"
             accessibilityHint="Open system log"
-            accessibilityLabel="Opens the system log page">
+            aria-label="Opens the system log page">
             <Text type="lg" style={pal.text}>
               System log
             </Text>
@@ -570,31 +582,34 @@ export const SettingsScreen = withAuthRequired(
           {__DEV__ ? (
             <>
               <TouchableOpacity
+                accessibilityRole="button"
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressStorybook}
                 role="button"
                 accessibilityHint="Open storybook page"
-                accessibilityLabel="Opens the storybook page">
+                aria-label="Opens the storybook page">
                 <Text type="lg" style={pal.text}>
                   Storybook
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                accessibilityRole="button"
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetPreferences}
                 role="button"
                 accessibilityHint="Reset preferences"
-                accessibilityLabel="Resets the preferences state">
+                aria-label="Resets the preferences state">
                 <Text type="lg" style={pal.text}>
                   Reset preferences state
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                accessibilityRole="button"
                 style={[pal.view, styles.linkCardNoIcon]}
                 onPress={onPressResetOnboarding}
                 role="button"
                 accessibilityHint="Reset onboarding"
-                accessibilityLabel="Resets the onboarding state">
+                aria-label="Resets the onboarding state">
                 <Text type="lg" style={pal.text}>
                   Reset onboarding state
                 </Text>
@@ -655,6 +670,7 @@ const EmailConfirmationNotice = observer(
           ]}>
           <View style={{flexDirection: 'row', marginBottom: 8}}>
             <Pressable
+              accessibilityRole="button"
               style={[
                 palInverted.view,
                 {
@@ -668,7 +684,7 @@ const EmailConfirmationNotice = observer(
                 isMobile && {flex: 1},
               ]}
               role="button"
-              accessibilityLabel="Verify my email"
+              aria-label="Verify my email"
               accessibilityHint=""
               onPress={() => store.shell.openModal({name: 'verify-email'})}>
               <FontAwesomeIcon

@@ -30,11 +30,12 @@ export function Component({
     <View testID="repostModal" style={[s.flex1, pal.view, styles.container]}>
       <View style={s.pb20}>
         <TouchableOpacity
+          accessibilityRole="button"
           testID="repostBtn"
           style={[styles.actionBtn]}
           onPress={onRepost}
           role="button"
-          accessibilityLabel={isReposted ? 'Undo repost' : 'Repost'}
+          aria-label={isReposted ? 'Undo repost' : 'Repost'}
           accessibilityHint={isReposted ? 'Remove repost' : 'Repost '}>
           <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
@@ -42,11 +43,12 @@ export function Component({
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          accessibilityRole="button"
           testID="quoteBtn"
           style={[styles.actionBtn]}
           onPress={onQuote}
           role="button"
-          accessibilityLabel="Quote post"
+          aria-label="Quote post"
           accessibilityHint="">
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
@@ -55,10 +57,11 @@ export function Component({
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+        accessibilityRole="button"
         testID="cancelBtn"
         onPress={onPress}
         role="button"
-        accessibilityLabel="Cancel quote post"
+        aria-label="Cancel quote post"
         accessibilityHint=""
         onAccessibilityEscape={onPress}>
         <LinearGradient

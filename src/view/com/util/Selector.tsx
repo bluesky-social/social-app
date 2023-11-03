@@ -97,10 +97,11 @@ export function Selector({
         const selected = i === selectedIndex
         return (
           <Pressable
+            accessibilityRole="button"
             testID={`selector-${i}`}
             key={item}
             onPress={() => onPressItem(i)}
-            accessibilityLabel={`Select ${item}`}
+            aria-label={`Select ${item}`}
             accessibilityHint={`Select option ${i} of ${numItems}`}>
             <View style={styles.item} ref={itemRefs[i]}>
               <Text

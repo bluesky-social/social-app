@@ -362,11 +362,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="profileHeaderEditProfileButton"
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn, pal.btn]}
               role="button"
-              accessibilityLabel="Edit profile"
+              aria-label="Edit profile"
               accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
               <Text type="button" style={pal.text}>
                 Edit Profile
@@ -375,11 +376,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           ) : view.viewer.blocking ? (
             view.viewer.blockingByList ? null : (
               <TouchableOpacity
+                accessibilityRole="button"
                 testID="unblockBtn"
                 onPress={onPressUnblockAccount}
                 style={[styles.btn, styles.mainBtn, pal.btn]}
                 role="button"
-                accessibilityLabel="Unblock"
+                aria-label="Unblock"
                 accessibilityHint="">
                 <Text type="button" style={[pal.text, s.bold]}>
                   Unblock
@@ -390,6 +392,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             <>
               {!isProfilePreview && (
                 <TouchableOpacity
+                  accessibilityRole="button"
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
                   style={[
@@ -404,7 +407,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                     },
                   ]}
                   role="button"
-                  accessibilityLabel={`Show follows similar to ${view.handle}`}
+                  aria-label={`Show follows similar to ${view.handle}`}
                   accessibilityHint={`Shows a list of users similar to this user.`}>
                   <FontAwesomeIcon
                     icon="user-plus"
@@ -424,11 +427,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               {store.me.follows.getFollowState(view.did) ===
               FollowState.Following ? (
                 <TouchableOpacity
+                  accessibilityRole="button"
                   testID="unfollowBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}
                   role="button"
-                  accessibilityLabel={`Unfollow ${view.handle}`}
+                  aria-label={`Unfollow ${view.handle}`}
                   accessibilityHint={`Hides posts from ${view.handle} in your feed`}>
                   <FontAwesomeIcon
                     icon="check"
@@ -441,11 +445,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
+                  accessibilityRole="button"
                   testID="followBtn"
                   onPress={onPressToggleFollow}
                   style={[styles.btn, styles.mainBtn, palInverted.view]}
                   role="button"
-                  accessibilityLabel={`Follow ${view.handle}`}
+                  aria-label={`Follow ${view.handle}`}
                   accessibilityHint={`Shows posts from ${view.handle} in your feed`}>
                   <FontAwesomeIcon
                     icon="plus"
@@ -462,7 +467,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             <NativeDropdown
               testID="profileHeaderDropdownBtn"
               items={dropdownItems}
-              accessibilityLabel="More options"
+              aria-label="More options"
               accessibilityHint="">
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                 <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.text]} />
@@ -509,7 +514,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 href={makeProfileLink(view, 'followers')}
                 onPressOut={() => trackPress('Followers')}
                 asAnchor
-                accessibilityLabel={`${followers} ${pluralizedFollowers}`}
+                aria-label={`${followers} ${pluralizedFollowers}`}
                 accessibilityHint={'Opens followers list'}>
                 <Text type="md" style={[s.bold, pal.text]}>
                   {followers}{' '}
@@ -524,7 +529,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 href={makeProfileLink(view, 'follows')}
                 onPressOut={() => trackPress('Follows')}
                 asAnchor
-                accessibilityLabel={`${following} following`}
+                aria-label={`${following} following`}
                 accessibilityHint={'Opens following list'}>
                 <Text type="md" style={[s.bold, pal.text]}>
                   {following}{' '}
@@ -565,11 +570,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
 
       {!isDesktop && !hideBackButton && (
         <TouchableWithoutFeedback
+          accessibilityRole="button"
           testID="profileHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
           role="button"
-          accessibilityLabel="Back"
+          aria-label="Back"
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
             <BlurView style={styles.backBtn} blurType="dark">
@@ -579,10 +585,11 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback
+        accessibilityRole="button"
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
         role="image"
-        accessibilityLabel={`View ${view.handle}'s avatar`}
+        aria-label={`View ${view.handle}'s avatar`}
         accessibilityHint="">
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>

@@ -74,7 +74,7 @@ export const Component = observer(function Component({
             testID="confirmBtn"
             type="primary"
             onPress={onPressVisit}
-            accessibilityLabel="Visit Site"
+            aria-label="Visit Site"
             accessibilityHint=""
             label="Visit Site"
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
@@ -84,7 +84,7 @@ export const Component = observer(function Component({
             testID="cancelBtn"
             type="default"
             onPress={() => store.shell.closeModal()}
-            accessibilityLabel="Cancel"
+            aria-label="Cancel"
             accessibilityHint=""
             label="Cancel"
             labelContainerStyle={{justifyContent: 'center', padding: 4}}

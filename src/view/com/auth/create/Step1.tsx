@@ -84,6 +84,7 @@ export const Step1 = observer(function Step1Impl({
             Enter the address of your provider:
           </Text>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="customServerInput"
             icon="globe"
             placeholder="Hosting provider address"
@@ -91,7 +92,7 @@ export const Step1 = observer(function Step1Impl({
             editable
             onChange={onChangeServiceUrl}
             accessibilityHint="Input hosting provider address"
-            accessibilityLabel="Hosting provider address"
+            aria-label="Hosting provider address"
             accessibilityLabelledBy="addressProvider"
           />
           {LOGIN_INCLUDE_DEV_SERVERS && (
@@ -148,10 +149,11 @@ function Option({
   return (
     <View style={[styles.option, pal.border]}>
       <TouchableWithoutFeedback
+        accessibilityRole="button"
         onPress={onPress}
         testID={testID}
         role="button"
-        accessibilityLabel={label}
+        aria-label={label}
         accessibilityHint={`Sets hosting provider to ${label}`}>
         <View style={styles.optionHeading}>
           <View style={[styles.circle, pal.border]}>

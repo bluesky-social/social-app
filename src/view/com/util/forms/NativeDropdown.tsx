@@ -44,9 +44,10 @@ export const DropdownMenuTrigger = DropdownMenu.create(
 
     return (
       <Pressable
+        accessibilityRole="button"
         testID={props.testID}
         role="button"
-        accessibilityLabel={props.accessibilityLabel}
+        aria-label={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
         style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
         hitSlop={HITSLOP_10}
@@ -176,7 +177,7 @@ export function NativeDropdown({
       <DropdownMenuTrigger
         action="press"
         testID={testID}
-        accessibilityLabel={accessibilityLabel}
+        aria-label={accessibilityLabel}
         accessibilityHint={accessibilityHint}>
         {children}
       </DropdownMenuTrigger>

@@ -110,6 +110,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           pal.border,
         ]}>
         <TouchableOpacity
+          accessibilityRole="button"
           testID="confirmBtn"
           onPress={() => {
             navigation.canGoBack()
@@ -118,7 +119,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           }}
           style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
           role="button"
-          accessibilityLabel="Confirm"
+          aria-label="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>
         </TouchableOpacity>

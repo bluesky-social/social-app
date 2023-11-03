@@ -80,7 +80,7 @@ export function Component({}: {}) {
           onSubmitEditing={onPressSignup}
           enterKeyHint="done"
           accessible={true}
-          accessibilityLabel="Email"
+          aria-label="Email"
           accessibilityHint="Input your email to get on the Bluesky waitlist"
         />
         {error ? (
@@ -120,10 +120,11 @@ export function Component({}: {}) {
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
+              accessibilityRole="button"
               style={[styles.btn, s.mt10]}
               onPress={onCancel}
               role="button"
-              accessibilityLabel="Cancel waitlist signup"
+              aria-label="Cancel waitlist signup"
               accessibilityHint={`Exits signing up for waitlist with ${email}`}
               onAccessibilityEscape={onCancel}>
               <Text type="button-lg" style={pal.textLight}>

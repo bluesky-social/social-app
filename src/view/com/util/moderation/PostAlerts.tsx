@@ -26,6 +26,7 @@ export function PostAlerts({
   const desc = describeModerationCause(moderation.cause, 'content')
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={() => {
         store.shell.openModal({
           name: 'moderation-details',
@@ -34,7 +35,7 @@ export function PostAlerts({
         })
       }}
       role="button"
-      accessibilityLabel="Learn more about this warning"
+      aria-label="Learn more about this warning"
       accessibilityHint=""
       style={[styles.container, pal.viewLight, style]}>
       <ShieldExclamation style={pal.text} size={16} />

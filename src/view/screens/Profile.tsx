@@ -292,7 +292,7 @@ export const ProfileScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           role="button"
-          accessibilityLabel="New post"
+          aria-label="New post"
           accessibilityHint=""
         />
       </ScreenHider>

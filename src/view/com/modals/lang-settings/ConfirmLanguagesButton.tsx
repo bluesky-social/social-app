@@ -25,10 +25,11 @@ export const ConfirmLanguagesButton = ({
         },
       ]}>
       <Pressable
+        accessibilityRole="button"
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
         role="button"
-        accessibilityLabel="Confirm content language settings"
+        aria-label="Confirm content language settings"
         accessibilityHint="">
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}

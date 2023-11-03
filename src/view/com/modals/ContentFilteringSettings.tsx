@@ -65,10 +65,11 @@ export const Component = observer(
             pal.borderDark,
           ]}>
           <Pressable
+            accessibilityRole="button"
             testID="sendReportBtn"
             onPress={onPressDone}
             role="button"
-            accessibilityLabel="Done"
+            aria-label="Done"
             accessibilityHint="">
             <LinearGradient
               colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -260,6 +261,7 @@ function SelectableBtn({
   const palPrimary = usePalette('inverted')
   return (
     <Pressable
+      accessibilityRole="button"
       style={[
         styles.selectableBtn,
         left && styles.selectableBtnLeft,
@@ -269,7 +271,7 @@ function SelectableBtn({
       ]}
       onPress={() => onChange(value)}
       role="button"
-      accessibilityLabel={value}
+      aria-label={value}
       accessibilityHint={`Set ${value} for ${group} content moderation policy`}>
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}

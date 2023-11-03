@@ -31,11 +31,12 @@ export function InputIssueDetails({
         marginTop: isMobile ? 12 : 0,
       }}>
       <TouchableOpacity
+        accessibilityRole="button"
         testID="addDetailsBtn"
         style={[s.mb10, styles.backBtn]}
         onPress={goBack}
         role="button"
-        accessibilityLabel="Add details"
+        aria-label="Add details"
         accessibilityHint="Add more details to your report">
         <FontAwesomeIcon size={18} icon="angle-left" style={[pal.link]} />
         <Text style={[pal.text, s.f18, pal.link]}> Back</Text>
@@ -43,6 +44,7 @@ export function InputIssueDetails({
       <View style={[pal.btn, styles.detailsInputContainer]}>
         <TextInput
           accessibilityLabel="Text input field"
+          aria-label="Text input field"
           accessibilityHint="Enter a reason for reporting this post."
           placeholder="Enter a reason or any other details here."
           placeholderTextColor={pal.textLight.color}

@@ -94,9 +94,10 @@ export function Component({
           containerStyle={styles.slider}
         />
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={doSetAs(AspectRatio.Wide)}
           role="button"
-          accessibilityLabel="Wide"
+          aria-label="Wide"
           accessibilityHint="Sets image aspect ratio to wide">
           <RectWideIcon
             size={24}
@@ -104,9 +105,10 @@ export function Component({
           />
         </TouchableOpacity>
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={doSetAs(AspectRatio.Tall)}
           role="button"
-          accessibilityLabel="Tall"
+          aria-label="Tall"
           accessibilityHint="Sets image aspect ratio to tall">
           <RectTallIcon
             size={24}
@@ -114,9 +116,10 @@ export function Component({
           />
         </TouchableOpacity>
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={doSetAs(AspectRatio.Square)}
           role="button"
-          accessibilityLabel="Square"
+          aria-label="Square"
           accessibilityHint="Sets image aspect ratio to square">
           <SquareIcon
             size={24}
@@ -126,9 +129,10 @@ export function Component({
       </View>
       <View style={styles.btns}>
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={onPressCancel}
           role="button"
-          accessibilityLabel="Cancel image crop"
+          aria-label="Cancel image crop"
           accessibilityHint="Exits image cropping process">
           <Text type="xl" style={pal.link}>
             Cancel
@@ -136,9 +140,10 @@ export function Component({
         </TouchableOpacity>
         <View style={s.flex1} />
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={onPressDone}
           role="button"
-          accessibilityLabel="Save image crop"
+          aria-label="Save image crop"
           accessibilityHint="Saves image crop settings">
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}

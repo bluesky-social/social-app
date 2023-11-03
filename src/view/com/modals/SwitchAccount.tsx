@@ -62,10 +62,11 @@ export function Component({}: {}) {
               </Text>
             </View>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="signOutBtn"
               onPress={isSwitching ? undefined : onPressSignout}
               role="button"
-              accessibilityLabel="Sign out"
+              aria-label="Sign out"
               accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
               <Text type="lg" style={pal.link}>
                 Sign out
@@ -76,6 +77,7 @@ export function Component({}: {}) {
       )}
       {store.session.switchableAccounts.map(account => (
         <TouchableOpacity
+          accessibilityRole="button"
           testID={`switchToAccountBtn-${account.handle}`}
           key={account.did}
           style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
@@ -83,7 +85,7 @@ export function Component({}: {}) {
             isSwitching ? undefined : () => onPressSwitchAccount(account)
           }
           role="button"
-          accessibilityLabel={`Switch to ${account.handle}`}
+          aria-label={`Switch to ${account.handle}`}
           accessibilityHint="Switches the account you are logged in to">
           <View style={styles.avi}>
             <UserAvatar size={40} avatar={account.aviUrl} />

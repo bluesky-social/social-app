@@ -169,10 +169,11 @@ export function Selector({
             const selected = i === selectedIndex
             return (
               <Pressable
+                accessibilityRole="button"
                 testID={`selector-${i}`}
                 key={item}
                 onPress={() => onPressItem(i)}
-                accessibilityLabel={item}
+                aria-label={item}
                 accessibilityHint={`Selects ${item}`}
                 // TODO: Modify the component API such that lint fails
                 // at the invocation site as well

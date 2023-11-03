@@ -34,7 +34,7 @@ export function AccountDropdownBtn({handle}: {handle: string}) {
       <NativeDropdown
         testID="accountSettingsDropdownBtn"
         items={items}
-        accessibilityLabel="Account options"
+        aria-label="Account options"
         accessibilityHint="">
         <FontAwesomeIcon
           icon="ellipsis-h"

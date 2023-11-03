@@ -51,12 +51,13 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
     <Container style={[styles.header, isMobile && styles.headerMobile, style]}>
       {showBackButton ? (
         <TouchableOpacity
+          accessibilityRole="button"
           testID="viewHeaderDrawerBtn"
           onPress={canGoBack ? onPressBack : onPressMenu}
           hitSlop={BACK_HITSLOP}
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
           role="button"
-          accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+          aria-label={canGoBack ? 'Back' : 'Menu'}
           accessibilityHint="">
           {canGoBack ? (
             <FontAwesomeIcon

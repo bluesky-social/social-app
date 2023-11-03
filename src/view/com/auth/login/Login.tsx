@@ -212,12 +212,13 @@ const ChooseAccountForm = ({
       </Text>
       {store.session.accounts.map(account => (
         <TouchableOpacity
+          accessibilityRole="button"
           testID={`chooseAccountBtn-${account.handle}`}
           key={account.did}
           style={[pal.view, pal.border, styles.account]}
           onPress={() => onTryAccount(account)}
           role="button"
-          accessibilityLabel={`Sign in as ${account.handle}`}
+          aria-label={`Sign in as ${account.handle}`}
           accessibilityHint="Double tap to sign in">
           <View
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
@@ -241,11 +242,12 @@ const ChooseAccountForm = ({
         </TouchableOpacity>
       ))}
       <TouchableOpacity
+        accessibilityRole="button"
         testID="chooseNewAccountBtn"
         style={[pal.view, pal.border, styles.account, styles.accountLast]}
         onPress={() => onSelectAccount(undefined)}
         role="button"
-        accessibilityLabel="Login to account that is not listed"
+        aria-label="Login to account that is not listed"
         accessibilityHint="">
         <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
           <Text style={[styles.accountText, styles.accountTextOther]}>
@@ -381,11 +383,12 @@ const LoginForm = ({
             style={[pal.textLight, styles.groupContentIcon]}
           />
           <TouchableOpacity
+            accessibilityRole="button"
             testID="loginSelectServiceButton"
             style={styles.textBtn}
             onPress={onPressSelectService}
             role="button"
-            accessibilityLabel="Select service"
+            aria-label="Select service"
             accessibilityHint="Sets server for the Bluesky client">
             <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
               {toNiceDomain(serviceUrl)}
@@ -410,6 +413,7 @@ const LoginForm = ({
             style={[pal.textLight, styles.groupContentIcon]}
           />
           <TextInput
+            accessibilityLabel="Text input field"
             testID="loginUsernameInput"
             style={[pal.text, styles.textInput]}
             placeholder="Username or email address"
@@ -429,7 +433,7 @@ const LoginForm = ({
               setIdentifier((str || '').toLowerCase().trim())
             }
             editable={!isProcessing}
-            accessibilityLabel="Username or email address"
+            aria-label="Username or email address"
             accessibilityHint="Input the username or email address you used at signup"
           />
         </View>
@@ -439,6 +443,7 @@ const LoginForm = ({
             style={[pal.textLight, styles.groupContentIcon]}
           />
           <TextInput
+            accessibilityLabel="Text input field"
             testID="loginPasswordInput"
             ref={passwordInputRef}
             style={[pal.text, styles.textInput]}
@@ -458,7 +463,7 @@ const LoginForm = ({
             onSubmitEditing={onPressNext}
             blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
             editable={!isProcessing}
-            accessibilityLabel="Password"
+            aria-label="Password"
             accessibilityHint={
               identifier === ''
                 ? 'Input your password'
@@ -466,11 +471,12 @@ const LoginForm = ({
             }
           />
           <TouchableOpacity
+            accessibilityRole="button"
             testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
             onPress={onPressForgotPassword}
             role="button"
-            accessibilityLabel="Forgot password"
+            aria-label="Forgot password"
             accessibilityHint="Opens password reset form">
             <Text style={pal.link}>Forgot</Text>
           </TouchableOpacity>
@@ -498,10 +504,11 @@ const LoginForm = ({
         <View style={s.flex1} />
         {!serviceDescription && error ? (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="loginRetryButton"
             onPress={onPressRetryConnect}
             role="button"
-            accessibilityLabel="Retry"
+            aria-label="Retry"
             accessibilityHint="Retries login">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Retry
@@ -518,10 +525,11 @@ const LoginForm = ({
           <ActivityIndicator />
         ) : isReady ? (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="loginNextButton"
             onPress={onPressNext}
             role="button"
-            accessibilityLabel="Go to next"
+            aria-label="Go to next"
             accessibilityHint="Navigates to the next screen">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Next
@@ -610,11 +618,12 @@ const ForgotPasswordForm = ({
           testID="forgotPasswordView"
           style={[pal.borderDark, pal.view, styles.group]}>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="forgotPasswordSelectServiceButton"
             style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}
             onPress={onPressSelectService}
             role="button"
-            accessibilityLabel="Hosting provider"
+            aria-label="Hosting provider"
             accessibilityHint="Sets hosting provider for password reset">
             <FontAwesomeIcon
               icon="globe"
@@ -637,6 +646,7 @@ const ForgotPasswordForm = ({
               style={[pal.textLight, styles.groupContentIcon]}
             />
             <TextInput
+              accessibilityLabel="Text input field"
               testID="forgotPasswordEmail"
               style={[pal.text, styles.textInput]}
               placeholder="Email address"
@@ -648,7 +658,7 @@ const ForgotPasswordForm = ({
               value={email}
               onChangeText={setEmail}
               editable={!isProcessing}
-              accessibilityLabel="Email"
+              aria-label="Email"
               accessibilityHint="Sets email for password reset"
             />
           </View>
@@ -681,10 +691,11 @@ const ForgotPasswordForm = ({
             </Text>
           ) : (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="newPasswordButton"
               onPress={onPressNext}
               role="button"
-              accessibilityLabel="Go to next"
+              aria-label="Go to next"
               accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
@@ -787,7 +798,7 @@ const SetNewPasswordForm = ({
               onChangeText={setResetCode}
               editable={!isProcessing}
               accessible={true}
-              accessibilityLabel="Reset code"
+              aria-label="Reset code"
               accessibilityHint="Input code sent to your email for password reset"
             />
           </View>
@@ -809,7 +820,7 @@ const SetNewPasswordForm = ({
               onChangeText={setPassword}
               editable={!isProcessing}
               accessible={true}
-              accessibilityLabel="Password"
+              aria-label="Password"
               accessibilityHint="Input new password"
             />
           </View>
@@ -842,10 +853,11 @@ const SetNewPasswordForm = ({
             </Text>
           ) : (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="setNewPasswordButton"
               onPress={onPressNext}
               role="button"
-              accessibilityLabel="Go to next"
+              aria-label="Go to next"
               accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Next
@@ -883,9 +895,10 @@ const PasswordUpdatedForm = ({onPressNext}: {onPressNext: () => void}) => {
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
           <View style={s.flex1} />
           <TouchableOpacity
+            accessibilityRole="button"
             onPress={onPressNext}
             role="button"
-            accessibilityLabel="Close alert"
+            aria-label="Close alert"
             accessibilityHint="Closes password update alert">
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               Okay

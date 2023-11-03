@@ -39,6 +39,7 @@ export function ContentHider({
   return (
     <View testID={testID} style={[styles.outer, style]}>
       <Pressable
+        accessibilityRole="button"
         onPress={() => {
           if (!moderation.noOverride) {
             setOverride(v => !v)
@@ -52,7 +53,7 @@ export function ContentHider({
         }}
         role="button"
         accessibilityHint={override ? 'Hide the content' : 'Show the content'}
-        accessibilityLabel=""
+        aria-label=""
         style={[
           styles.cover,
           {paddingRight: isMobile ? 22 : 18},
@@ -61,6 +62,7 @@ export function ContentHider({
             : pal.viewLight,
         ]}>
         <Pressable
+          accessibilityRole="button"
           onPress={() => {
             store.shell.openModal({
               name: 'moderation-details',
@@ -69,7 +71,7 @@ export function ContentHider({
             })
           }}
           role="button"
-          accessibilityLabel="Learn more about this warning"
+          aria-label="Learn more about this warning"
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />
         </Pressable>

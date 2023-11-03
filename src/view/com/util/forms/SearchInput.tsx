@@ -44,6 +44,7 @@ export function SearchInput({
     <View style={[pal.viewLight, styles.container, style]}>
       <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
       <TextInput
+        accessibilityLabel="Text input field"
         testID="searchTextInput"
         ref={textInput}
         placeholder="Search"
@@ -58,16 +59,17 @@ export function SearchInput({
         onChangeText={onChangeQuery}
         onSubmitEditing={onSubmitQuery}
         role="search"
-        accessibilityLabel="Search"
+        aria-label="Search"
         accessibilityHint=""
         autoCorrect={false}
         autoCapitalize="none"
       />
       {query ? (
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={onPressCancelSearchInner}
           role="button"
-          accessibilityLabel="Clear search query"
+          aria-label="Clear search query"
           accessibilityHint="">
           <FontAwesomeIcon
             icon="xmark"

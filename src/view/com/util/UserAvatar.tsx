@@ -281,7 +281,7 @@ export function EditableUserAvatar({
     <NativeDropdown
       testID="changeAvatarBtn"
       items={dropdownItems}
-      accessibilityLabel="Image options"
+      aria-label="Image options"
       accessibilityHint="">
       {avatar ? (
         <HighPriorityImage

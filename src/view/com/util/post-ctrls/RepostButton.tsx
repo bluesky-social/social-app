@@ -44,11 +44,12 @@ export const RepostButton = ({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID="repostBtn"
       onPress={onPressToggleRepostWrapper}
       style={[styles.control, !big && styles.controlPad]}
       role="button"
-      accessibilityLabel={`${
+      aria-label={`${
         isReposted ? 'Undo repost' : 'Repost'
       } (${repostCount} ${pluralize(repostCount || 0, 'repost')})`}
       accessibilityHint=""

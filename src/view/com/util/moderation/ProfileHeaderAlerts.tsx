@@ -31,6 +31,7 @@ export function ProfileHeaderAlerts({
         const desc = describeModerationCause(cause, 'account')
         return (
           <Pressable
+            accessibilityRole="button"
             testID="profileHeaderAlert"
             key={desc.name}
             onPress={() => {
@@ -41,7 +42,7 @@ export function ProfileHeaderAlerts({
               })
             }}
             role="button"
-            accessibilityLabel="Learn more about this warning"
+            aria-label="Learn more about this warning"
             accessibilityHint=""
             style={[styles.container, pal.viewLight, style]}>
             <ShieldExclamation style={pal.text} size={24} />

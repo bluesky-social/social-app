@@ -82,6 +82,7 @@ export function Component({image}: Props) {
             />
           </View>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="altTextImageInput"
             style={[styles.textArea, pal.border, pal.text]}
             keyboardAppearance={theme.colorScheme}
@@ -90,16 +91,17 @@ export function Component({image}: Props) {
             placeholderTextColor={pal.colors.textLight}
             value={altText}
             onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-            accessibilityLabel="Image alt text"
+            aria-label="Image alt text"
             accessibilityHint=""
             accessibilityLabelledBy="imageAltText"
             autoFocus
           />
           <View style={styles.buttonControls}>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="altTextImageSaveBtn"
               onPress={onPressSave}
-              accessibilityLabel="Save alt text"
+              aria-label="Save alt text"
               accessibilityHint={`Saves alt text, which reads: ${altText}`}
               role="button">
               <LinearGradient
@@ -113,10 +115,11 @@ export function Component({image}: Props) {
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="altTextImageCancelBtn"
               onPress={onPressCancel}
               role="button"
-              accessibilityLabel="Cancel add image alt text"
+              aria-label="Cancel add image alt text"
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.button]}>

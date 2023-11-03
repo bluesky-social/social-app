@@ -100,11 +100,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
   return (
     <View style={[styles.ctrls, opts.style]}>
       <TouchableOpacity
+        accessibilityRole="button"
         testID="replyBtn"
         style={[styles.ctrl, !opts.big && styles.ctrlPad, {paddingLeft: 0}]}
         onPress={opts.onPressReply}
         role="button"
-        accessibilityLabel={`Reply (${opts.replyCount} ${
+        aria-label={`Reply (${opts.replyCount} ${
           opts.replyCount === 1 ? 'reply' : 'replies'
         })`}
         accessibilityHint=""
@@ -122,11 +123,12 @@ export function PostCtrls(opts: PostCtrlsOpts) {
       </TouchableOpacity>
       <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
       <TouchableOpacity
+        accessibilityRole="button"
         testID="likeBtn"
         style={[styles.ctrl, !opts.big && styles.ctrlPad]}
         onPress={onPressToggleLikeWrapper}
         role="button"
-        accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
+        aria-label={`${opts.isLiked ? 'Unlike' : 'Like'} (${
           opts.likeCount
         } ${pluralize(opts.likeCount || 0, 'like')})`}
         accessibilityHint=""

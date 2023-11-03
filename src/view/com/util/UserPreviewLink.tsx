@@ -28,6 +28,7 @@ export function UserPreviewLink(
   }
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={() =>
         store.shell.openModal({
           name: 'profile-preview',
@@ -35,7 +36,7 @@ export function UserPreviewLink(
         })
       }
       role="button"
-      accessibilityLabel={props.handle}
+      aria-label={props.handle}
       accessibilityHint=""
       style={props.style}>
       {props.children}

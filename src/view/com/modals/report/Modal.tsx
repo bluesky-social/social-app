@@ -177,11 +177,12 @@ const SelectIssue = ({
             isProcessing={isProcessing}
           />
           <TouchableOpacity
+            accessibilityRole="button"
             testID="addDetailsBtn"
             style={styles.addDetailsBtn}
             onPress={goToDetails}
             role="button"
-            accessibilityLabel="Add details"
+            aria-label="Add details"
             accessibilityHint="Add more details to your report">
             <Text style={[s.f18, pal.link]}>Add details to report</Text>
           </TouchableOpacity>

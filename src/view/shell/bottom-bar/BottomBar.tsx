@@ -104,7 +104,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressHome}
         role="tab"
-        accessibilityLabel="Home"
+        aria-label="Home"
         accessibilityHint=""
       />
       <Btn
@@ -126,7 +126,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressSearch}
         role="search"
-        accessibilityLabel="Search"
+        aria-label="Search"
         accessibilityHint=""
       />
       <Btn
@@ -148,7 +148,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressFeeds}
         role="tab"
-        accessibilityLabel="Feeds"
+        aria-label="Feeds"
         accessibilityHint=""
       />
       <Btn
@@ -172,7 +172,7 @@ export const BottomBar = observer(function BottomBarImpl({
         notificationCount={notifications.unreadCountLabel}
         accessible={true}
         role="tab"
-        accessibilityLabel="Notifications"
+        aria-label="Notifications"
         accessibilityHint={
           notifications.unreadCountLabel === ''
             ? ''
@@ -204,7 +204,7 @@ export const BottomBar = observer(function BottomBarImpl({
         onPress={onPressProfile}
         onLongPress={onLongPressProfile}
         role="tab"
-        accessibilityLabel="Profile"
+        aria-label="Profile"
         accessibilityHint=""
       />
     </Animated.View>
@@ -244,7 +244,7 @@ function Btn({
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}
       accessible={accessible}
-      accessibilityLabel={accessibilityLabel}
+      aria-label={accessibilityLabel}
       accessibilityHint={accessibilityHint}>
       {notificationCount ? (
         <View style={[styles.notificationCount]}>

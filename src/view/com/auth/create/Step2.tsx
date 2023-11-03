@@ -44,13 +44,14 @@ export const Step2 = observer(function Step2Impl({
             Invite code
           </Text>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="inviteCodeInput"
             icon="ticket"
             placeholder="Required for this provider"
             value={model.inviteCode}
             editable
             onChange={model.setInviteCode}
-            accessibilityLabel="Invite code"
+            aria-label="Invite code"
             accessibilityHint="Input invite code to proceed"
           />
         </View>
@@ -60,8 +61,9 @@ export const Step2 = observer(function Step2Impl({
         <Text style={[s.alignBaseline, pal.text]}>
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
+            accessibilityRole="button"
             onPress={onPressWaitlist}
-            accessibilityLabel="Join the waitlist."
+            aria-label="Join the waitlist."
             accessibilityHint="">
             <View style={styles.touchable}>
               <Text style={pal.link}>Join the waitlist.</Text>
@@ -75,13 +77,14 @@ export const Step2 = observer(function Step2Impl({
               Email address
             </Text>
             <TextInput
+              accessibilityLabel="Text input field"
               testID="emailInput"
               icon="envelope"
               placeholder="Enter your email address"
               value={model.email}
               editable
               onChange={model.setEmail}
-              accessibilityLabel="Email"
+              aria-label="Email"
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
             />
@@ -95,6 +98,7 @@ export const Step2 = observer(function Step2Impl({
               Password
             </Text>
             <TextInput
+              accessibilityLabel="Text input field"
               testID="passwordInput"
               icon="lock"
               placeholder="Choose your password"
@@ -102,7 +106,7 @@ export const Step2 = observer(function Step2Impl({
               editable
               secureTextEntry
               onChange={model.setPassword}
-              accessibilityLabel="Password"
+              aria-label="Password"
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
             />
@@ -122,7 +126,7 @@ export const Step2 = observer(function Step2Impl({
               buttonType="default-light"
               buttonStyle={[pal.border, styles.dateInputButton]}
               buttonLabelType="lg"
-              accessibilityLabel="Birthday"
+              aria-label="Birthday"
               accessibilityHint="Enter your birth date"
               accessibilityLabelledBy="birthDate"
             />

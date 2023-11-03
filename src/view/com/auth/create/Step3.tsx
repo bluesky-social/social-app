@@ -24,6 +24,7 @@ export const Step3 = observer(function Step3Impl({
       <StepHeader step="3" title="Your user handle" />
       <View style={s.pb10}>
         <TextInput
+          accessibilityLabel="Text input field"
           testID="handleInput"
           icon="at"
           placeholder="e.g. alice"
@@ -31,7 +32,7 @@ export const Step3 = observer(function Step3Impl({
           editable
           onChange={model.setHandle}
           // TODO: Add explicit text label
-          accessibilityLabel="User handle"
+          aria-label="User handle"
           accessibilityHint="Input your user handle"
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>

@@ -142,7 +142,7 @@ const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
           // NOTE: Don't pass imageSrc={imageSrc} or MobX will break.
           source={{uri: imageSrc.uri}}
           style={[styles.image, animatedStyle]}
-          accessibilityLabel={imageSrc.alt}
+          aria-label={imageSrc.alt}
           accessibilityHint=""
           onLoad={() => setLoaded(true)}
         />

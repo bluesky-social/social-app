@@ -154,8 +154,9 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         <ScrollView style={styles.main}>
           <View style={{}}>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="profileCardButton"
-              accessibilityLabel="Profile"
+              aria-label="Profile"
               accessibilityHint="Navigates to your profile"
               onPress={onPressProfile}>
               <UserAvatar size={80} avatar={store.me.avatar} />
@@ -207,7 +208,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Search"
-            accessibilityLabel="Search"
+            aria-label="Search"
             accessibilityHint=""
             bold={isAtSearch}
             onPress={onPressSearch}
@@ -229,7 +230,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Home"
-            accessibilityLabel="Home"
+            aria-label="Home"
             accessibilityHint=""
             bold={isAtHome}
             onPress={onPressHome}
@@ -251,7 +252,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Notifications"
-            accessibilityLabel="Notifications"
+            aria-label="Notifications"
             accessibilityHint={
               notifications.unreadCountLabel === ''
                 ? ''
@@ -278,7 +279,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Feeds"
-            accessibilityLabel="Feeds"
+            aria-label="Feeds"
             accessibilityHint=""
             bold={isAtFeeds}
             onPress={onPressMyFeeds}
@@ -286,14 +287,14 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           <MenuItem
             icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
             label="Lists"
-            accessibilityLabel="Lists"
+            aria-label="Lists"
             accessibilityHint=""
             onPress={onPressLists}
           />
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
             label="Moderation"
-            accessibilityLabel="Moderation"
+            aria-label="Moderation"
             accessibilityHint=""
             onPress={onPressModeration}
           />
@@ -314,7 +315,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Profile"
-            accessibilityLabel="Profile"
+            aria-label="Profile"
             accessibilityHint=""
             onPress={onPressProfile}
           />
@@ -327,7 +328,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               />
             }
             label="Settings"
-            accessibilityLabel="Settings"
+            aria-label="Settings"
             accessibilityHint=""
             onPress={onPressSettings}
           />
@@ -337,8 +338,9 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity
+            accessibilityRole="button"
             role="link"
-            accessibilityLabel="Send feedback"
+            aria-label="Send feedback"
             accessibilityHint=""
             onPress={onPressFeedback}
             style={[
@@ -358,8 +360,9 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityRole="button"
             role="link"
-            accessibilityLabel="Send feedback"
+            aria-label="Send feedback"
             accessibilityHint=""
             onPress={onPressHelp}
             style={[styles.footerBtn]}>
@@ -391,11 +394,12 @@ function MenuItem({
   const pal = usePalette('default')
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID={`menuItemButton-${label}`}
       style={styles.menuItem}
       onPress={onPress}
       role="tab"
-      accessibilityLabel={accessibilityLabel}
+      aria-label={accessibilityLabel}
       accessibilityHint="">
       <View style={[styles.menuItemIconWrapper]}>
         {icon}
@@ -441,11 +445,12 @@ const InviteCodes = observer(function InviteCodesImpl({
   }, [store, track])
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID="menuItemInviteCodes"
       style={[styles.inviteCodes, style]}
       onPress={onPress}
       role="button"
-      accessibilityLabel={
+      aria-label={
         invitesAvailable === 1
           ? 'Invite codes: 1 available'
           : `Invite codes: ${invitesAvailable} available`

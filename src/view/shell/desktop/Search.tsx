@@ -62,6 +62,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
             style={[pal.textLight, styles.iconWrapper]}
           />
           <TextInput
+            accessibilityLabel="Text input field"
             testID="searchTextInput"
             ref={textInput}
             placeholder="Search"
@@ -75,15 +76,16 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onChangeText={onChangeQuery}
             onSubmitEditing={onSubmit}
             role="search"
-            accessibilityLabel="Search"
+            aria-label="Search"
             accessibilityHint=""
           />
           {query ? (
             <View style={styles.cancelBtn}>
               <TouchableOpacity
+                accessibilityRole="button"
                 onPress={onPressCancelSearch}
                 role="button"
-                accessibilityLabel="Cancel search"
+                aria-label="Cancel search"
                 accessibilityHint="Exits inputting search query"
                 onAccessibilityEscape={onPressCancelSearch}>
                 <Text type="lg" style={[pal.link]}>

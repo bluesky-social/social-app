@@ -65,11 +65,12 @@ export function Component({
         </View>
       ) : (
         <TouchableOpacity
+          accessibilityRole="button"
           testID="confirmBtn"
           onPress={onPress}
           style={[styles.btn, confirmBtnStyle]}
           role="button"
-          accessibilityLabel="Confirm"
+          aria-label="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
             {confirmBtnText ?? 'Confirm'}
@@ -78,11 +79,12 @@ export function Component({
       )}
       {onPressCancel === undefined ? null : (
         <TouchableOpacity
+          accessibilityRole="button"
           testID="cancelBtn"
           onPress={onPressCancel}
           style={[styles.btnCancel, s.mt10]}
           role="button"
-          accessibilityLabel="Cancel"
+          aria-label="Cancel"
           accessibilityHint="">
           <Text type="button-lg" style={pal.textLight}>
             {cancelBtnText ?? 'Cancel'}

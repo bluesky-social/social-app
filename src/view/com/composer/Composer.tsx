@@ -261,11 +261,12 @@ export const ComposePost = observer(function ComposePost({
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="composerDiscardButton"
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
             role="button"
-            accessibilityLabel="Cancel"
+            aria-label="Cancel"
             accessibilityHint="Closes post composer and discards post draft">
             <Text style={[pal.link, s.f18]}>Cancel</Text>
           </TouchableOpacity>
@@ -286,12 +287,11 @@ export const ComposePost = observer(function ComposePost({
               />
               {canPost ? (
                 <TouchableOpacity
+                  accessibilityRole="button"
                   testID="composerPublishBtn"
                   onPress={onPressPublish}
                   role="button"
-                  accessibilityLabel={
-                    replyTo ? 'Publish reply' : 'Publish post'
-                  }
+                  aria-label={replyTo ? 'Publish reply' : 'Publish post'}
                   accessibilityHint="">
                   <LinearGradient
                     colors={[
@@ -380,7 +380,7 @@ export const ComposePost = observer(function ComposePost({
               onSuggestedLinksChanged={setSuggestedLinks}
               onError={setError}
               accessible={true}
-              accessibilityLabel="Write post"
+              aria-label="Write post"
               accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
             />
           </View>
@@ -404,12 +404,13 @@ export const ComposePost = observer(function ComposePost({
               .slice(0, 3)
               .map(url => (
                 <TouchableOpacity
+                  accessibilityRole="button"
                   key={`suggested-${url}`}
                   testID="addLinkCardBtn"
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}
                   role="button"
-                  accessibilityLabel="Add link card"
+                  aria-label="Add link card"
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
                     Add link card:{' '}

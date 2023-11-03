@@ -62,11 +62,12 @@ export const Autocomplete = observer(function AutocompleteImpl({
 
               return (
                 <TouchableOpacity
+                  accessibilityRole="button"
                   testID="autocompleteButton"
                   key={item.handle}
                   style={[pal.border, styles.item]}
                   onPress={() => onSelect(item.handle)}
-                  accessibilityLabel={`Select ${item.handle}`}
+                  aria-label={`Select ${item.handle}`}
                   accessibilityHint="">
                   <View style={styles.avatarAndHandle}>
                     <UserAvatar avatar={item.avatar ?? null} size={24} />

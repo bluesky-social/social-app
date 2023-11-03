@@ -133,13 +133,14 @@ export function DropdownButton({
   if (type === 'bare') {
     return (
       <TouchableOpacity
+        accessibilityRole="button"
         testID={testID}
         style={style}
         onPress={onPress}
         hitSlop={HITSLOP_10}
         ref={ref1}
         role="button"
-        accessibilityLabel={accessibilityLabel || `Opens ${numItems} options`}
+        aria-label={accessibilityLabel || `Opens ${numItems} options`}
         accessibilityHint="">
         {children}
       </TouchableOpacity>
@@ -223,8 +224,9 @@ const DropdownItems = ({
     <>
       {/* This TouchableWithoutFeedback renders the background so if the user clicks outside, the dropdown closes */}
       <TouchableWithoutFeedback
+        accessibilityRole="button"
         onPress={onOuterPress}
-        accessibilityLabel="Toggle dropdown"
+        aria-label="Toggle dropdown"
         accessibilityHint="">
         <View style={[styles.bg]} />
       </TouchableWithoutFeedback>
@@ -238,12 +240,13 @@ const DropdownItems = ({
           if (isBtn(item)) {
             return (
               <TouchableOpacity
+                accessibilityRole="button"
                 testID={item.testID}
                 key={index}
                 style={[styles.menuItem]}
                 onPress={() => onPressItem(index)}
                 role="button"
-                accessibilityLabel={item.label}
+                aria-label={item.label}
                 accessibilityHint={`Option ${index + 1} of ${numItems}`}>
                 {item.icon && (
                   <FontAwesomeIcon

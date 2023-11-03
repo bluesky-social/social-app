@@ -296,10 +296,11 @@ function CondensedAuthorsList({
     return (
       <View style={styles.avis}>
         <TouchableOpacity
+          accessibilityRole="button"
           style={styles.expandedAuthorsCloseBtn}
           onPress={onToggleAuthorsExpanded}
           role="button"
-          accessibilityLabel="Hide user list"
+          aria-label="Hide user list"
           accessibilityHint="Collapses list of users for a given notification">
           <FontAwesomeIcon
             icon="angle-up"
@@ -328,7 +329,8 @@ function CondensedAuthorsList({
   }
   return (
     <TouchableOpacity
-      accessibilityLabel="Show users"
+      accessibilityRole="button"
+      aria-label="Show users"
       accessibilityHint="Opens an expanded list of users in this notification"
       onPress={onToggleAuthorsExpanded}>
       <View style={styles.avis}>

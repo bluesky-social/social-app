@@ -141,13 +141,14 @@ export const Component = observer(function Component({
 
       <View style={[styles.btnContainer, pal.borderDark]}>
         <TouchableOpacity
+          accessibilityRole="button"
           testID="confirmBtn"
           onPress={() => {
             store.shell.closeModal()
           }}
           style={styles.btn}
           role="button"
-          accessibilityLabel="Confirm"
+          aria-label="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>
         </TouchableOpacity>

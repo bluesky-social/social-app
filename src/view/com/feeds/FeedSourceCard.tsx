@@ -95,8 +95,9 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
         {showSaveBtn && (
           <View>
             <Pressable
+              accessibilityRole="button"
               role="button"
-              accessibilityLabel={
+              aria-label={
                 item.isSaved ? 'Remove from my feeds' : 'Add to my feeds'
               }
               accessibilityHint=""

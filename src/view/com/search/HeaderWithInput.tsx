@@ -60,12 +60,13 @@ export function HeaderWithInput({
       ]}>
       {showMenu && isMobile ? (
         <TouchableOpacity
+          accessibilityRole="button"
           testID="viewHeaderBackOrMenuBtn"
           onPress={onPressMenu}
           hitSlop={HITSLOP_10}
           style={styles.headerMenuBtn}
           role="button"
-          accessibilityLabel="Menu"
+          aria-label="Menu"
           accessibilityHint="Access navigation links and settings">
           <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
         </TouchableOpacity>
@@ -80,6 +81,7 @@ export function HeaderWithInput({
           size={21}
         />
         <TextInput
+          accessibilityLabel="Text input field"
           testID="searchTextInput"
           ref={textInput}
           placeholder="Search"
@@ -95,17 +97,18 @@ export function HeaderWithInput({
           onSubmitEditing={onSubmitQuery}
           autoFocus={false}
           role="search"
-          accessibilityLabel="Search"
+          aria-label="Search"
           accessibilityHint=""
           autoCorrect={false}
           autoCapitalize="none"
         />
         {query ? (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="searchTextInputClearBtn"
             onPress={onPressClearQuery}
             role="button"
-            accessibilityLabel="Clear search query"
+            aria-label="Clear search query"
             accessibilityHint="">
             <FontAwesomeIcon
               icon="xmark"

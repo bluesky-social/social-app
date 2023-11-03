@@ -63,7 +63,7 @@ export const Component = observer(function Component({}: {}) {
           buttonType="default-light"
           buttonStyle={[pal.border, styles.dateInputButton]}
           buttonLabelType="lg"
-          accessibilityLabel="Birthday"
+          aria-label="Birthday"
           accessibilityHint="Enter your birth date"
           accessibilityLabelledBy="birthDate"
         />
@@ -80,11 +80,12 @@ export const Component = observer(function Component({}: {}) {
           </View>
         ) : (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="confirmBtn"
             onPress={onSave}
             style={styles.btn}
             role="button"
-            accessibilityLabel="Save"
+            aria-label="Save"
             accessibilityHint="">
             <Text style={[s.white, s.bold, s.f18]}>Save</Text>
           </TouchableOpacity>

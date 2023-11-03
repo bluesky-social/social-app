@@ -91,7 +91,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
-      accessibilityLabel="Language selection"
+      aria-label="Language selection"
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>

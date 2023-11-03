@@ -105,6 +105,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
       const isSelected = selected.includes(list.uri)
       return (
         <Pressable
+          accessibilityRole="button"
           testID={`toggleBtn-${list.name}`}
           style={[
             styles.listItem,
@@ -114,9 +115,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
               borderTopWidth: index === 0 ? 0 : 1,
             },
           ]}
-          accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
-            list.name
-          }`}
+          aria-label={`${isSelected ? 'Remove from' : 'Add to'} ${list.name}`}
           accessibilityHint=""
           disabled={!membershipsLoaded}
           onPress={() => onToggleSelected(list.uri)}>
@@ -192,7 +191,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
           type="default"
           onPress={onPressCancel}
           style={styles.footerBtn}
-          accessibilityLabel="Cancel"
+          aria-label="Cancel"
           accessibilityHint=""
           onAccessibilityEscape={onPressCancel}
           label="Cancel"
@@ -203,7 +202,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
             type="primary"
             onPress={onPressSave}
             style={styles.footerBtn}
-            accessibilityLabel="Save changes"
+            aria-label="Save changes"
             accessibilityHint=""
             onAccessibilityEscape={onPressSave}
             label="Save Changes"

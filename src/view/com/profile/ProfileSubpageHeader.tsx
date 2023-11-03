@@ -83,12 +83,13 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
             pal.border,
           ]}>
           <Pressable
+            accessibilityRole="button"
             testID="headerDrawerBtn"
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}
             style={canGoBack ? styles.backBtn : styles.backBtnWide}
             role="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+            aria-label={canGoBack ? 'Back' : 'Menu'}
             accessibilityHint="">
             {canGoBack ? (
               <FontAwesomeIcon
@@ -118,10 +119,11 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
         <Pressable
+          accessibilityRole="button"
           testID="headerAviButton"
           onPress={onPressAvi}
           role="image"
-          accessibilityLabel="View the avatar"
+          aria-label="View the avatar"
           accessibilityHint=""
           style={{width: 58}}>
           <UserAvatar type={avatarType} size={58} avatar={avatar} />

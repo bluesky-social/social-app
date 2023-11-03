@@ -86,7 +86,7 @@ export const FeedsScreen = withAuthRequired(
           href="/settings/saved-feeds"
           hitSlop={10}
           role="button"
-          accessibilityLabel="Edit Saved Feeds"
+          aria-label="Edit Saved Feeds"
           accessibilityHint="Opens screen to edit Saved Feeds">
           <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
         </Link>
@@ -126,7 +126,7 @@ export const FeedsScreen = withAuthRequired(
                 </Text>
                 <Link
                   href="/settings/saved-feeds"
-                  accessibilityLabel="Edit My Feeds"
+                  aria-label="Edit My Feeds"
                   accessibilityHint="">
                   <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
                 </Link>
@@ -247,7 +247,7 @@ export const FeedsScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           role="button"
-          accessibilityLabel="New post"
+          aria-label="New post"
           accessibilityHint=""
         />
       </View>
@@ -264,7 +264,7 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
       href={feed.href}
       style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
       hoverStyle={pal.viewLight}
-      accessibilityLabel={feed.displayName}
+      aria-label={feed.displayName}
       accessibilityHint=""
       asAnchor
       anchorNoUnderline>

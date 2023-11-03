@@ -41,10 +41,11 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity
+            accessibilityRole="button"
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
             role="button"
-            accessibilityLabel="Open navigation"
+            aria-label="Open navigation"
             accessibilityHint="Access profile and other navigation links"
             hitSlop={HITSLOP_10}>
             <FontAwesomeIcon
@@ -63,7 +64,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             href="/settings/home-feed"
             hitSlop={HITSLOP_10}
             role="button"
-            accessibilityLabel="Home Feed Preferences"
+            aria-label="Home Feed Preferences"
             accessibilityHint="">
             <FontAwesomeIcon
               icon="sliders"

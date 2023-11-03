@@ -26,22 +26,24 @@ export const SplashScreen = ({
           </View>
           <View testID="signinOrCreateAccount" style={styles.btns}>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
               role="button"
-              accessibilityLabel="Create new account"
+              aria-label="Create new account"
               accessibilityHint="Opens flow to create a new Bluesky account">
               <Text style={[s.white, styles.btnLabel]}>
                 Create a new account
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="signInButton"
               style={[styles.btn, pal.btn]}
               onPress={onPressSignin}
               role="button"
-              accessibilityLabel="Sign in"
+              aria-label="Sign in"
               accessibilityHint="Opens flow to sign into your existing Bluesky account">
               <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>

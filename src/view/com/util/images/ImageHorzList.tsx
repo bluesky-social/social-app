@@ -19,7 +19,7 @@ export function ImageHorzList({images, style}: Props) {
           accessible={true}
           accessibilityIgnoresInvertColors
           accessibilityHint={alt}
-          accessibilityLabel=""
+          aria-label=""
         />
       ))}
     </View>

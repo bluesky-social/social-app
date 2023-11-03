@@ -179,11 +179,12 @@ function AppPassword({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       testID={testID}
       style={[styles.item, pal.border]}
       onPress={onDelete}
       role="button"
-      accessibilityLabel="Delete app password"
+      aria-label="Delete app password"
       accessibilityHint="">
       <View>
         <Text type="md-bold" style={pal.text}>

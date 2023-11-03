@@ -192,7 +192,7 @@ export function Component({
               value={name}
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
               accessible={true}
-              accessibilityLabel="Name"
+              aria-label="Name"
               accessibilityHint=""
               accessibilityLabelledBy="list-name"
             />
@@ -215,7 +215,7 @@ export function Component({
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
-              accessibilityLabel="Description"
+              aria-label="Description"
               accessibilityHint=""
               accessibilityLabelledBy="list-description"
             />
@@ -226,11 +226,12 @@ export function Component({
             </View>
           ) : (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="saveBtn"
               style={s.mt10}
               onPress={onPressSave}
               role="button"
-              accessibilityLabel="Save"
+              aria-label="Save"
               accessibilityHint="">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -242,11 +243,12 @@ export function Component({
             </TouchableOpacity>
           )}
           <TouchableOpacity
+            accessibilityRole="button"
             testID="cancelBtn"
             style={s.mt5}
             onPress={onPressCancel}
             role="button"
-            accessibilityLabel="Cancel"
+            aria-label="Cancel"
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>

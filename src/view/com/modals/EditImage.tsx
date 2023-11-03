@@ -239,11 +239,12 @@ export const Component = observer(function EditImageImpl({
 
               return (
                 <Pressable
+                  accessibilityRole="button"
                   key={ratio}
                   onPress={() => {
                     onSetRatio(ratio)
                   }}
-                  accessibilityLabel={ratio}
+                  aria-label={ratio}
                   accessibilityHint="">
                   <Icon
                     size={labelIconSize}
@@ -269,9 +270,10 @@ export const Component = observer(function EditImageImpl({
           <View style={imgControlStyles}>
             {adjustments.map(({label, name, onPress}) => (
               <Pressable
+                accessibilityRole="button"
                 key={label}
                 onPress={onPress}
-                accessibilityLabel={label}
+                aria-label={label}
                 accessibilityHint=""
                 style={styles.flipBtn}>
                 <MaterialIcons
@@ -294,6 +296,7 @@ export const Component = observer(function EditImageImpl({
           Accessibility
         </Text>
         <TextInput
+          accessibilityLabel="Text input field"
           testID="altTextImageInput"
           style={[
             styles.textArea,
@@ -307,7 +310,7 @@ export const Component = observer(function EditImageImpl({
           multiline
           value={altText}
           onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-          accessibilityLabel="Alt text"
+          aria-label="Alt text"
           accessibilityHint=""
           accessibilityLabelledBy="alt-text"
         />

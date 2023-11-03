@@ -59,9 +59,10 @@ const ShellInner = observer(function ShellInnerImpl() {
       <Lightbox />
       {!isDesktop && store.shell.isDrawerOpen && (
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={() => store.shell.closeDrawer()}
           style={styles.drawerMask}
-          accessibilityLabel="Close navigation footer"
+          aria-label="Close navigation footer"
           accessibilityHint="Closes bottom navigation bar">
           <View style={styles.drawerContainer}>
             <DrawerContent />

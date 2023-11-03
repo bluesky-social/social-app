@@ -196,6 +196,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
           pal.border,
         ]}>
         <TouchableOpacity
+          accessibilityRole="button"
           testID="confirmBtn"
           onPress={() => {
             navigation.canGoBack()
@@ -204,7 +205,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
           }}
           style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
           role="button"
-          accessibilityLabel="Confirm"
+          aria-label="Confirm"
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>Done</Text>
         </TouchableOpacity>

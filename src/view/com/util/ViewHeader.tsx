@@ -71,12 +71,13 @@ export const ViewHeader = observer(function ViewHeaderImpl({
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
         {showBackButton ? (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="viewHeaderDrawerBtn"
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}
             style={canGoBack ? styles.backBtn : styles.backBtnWide}
             role="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+            aria-label={canGoBack ? 'Back' : 'Menu'}
             accessibilityHint={
               canGoBack ? '' : 'Access navigation links and settings'
             }>

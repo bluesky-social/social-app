@@ -64,7 +64,7 @@ export function AutoSizedImage({
           source={uri}
           accessible={true} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
-          accessibilityLabel={alt}
+          aria-label={alt}
           accessibilityHint="Tap to view fully"
         />
         {children}
@@ -79,7 +79,7 @@ export function AutoSizedImage({
         source={{uri}}
         accessible={true} // Must set for `accessibilityLabel` to work
         accessibilityIgnoresInvertColors
-        accessibilityLabel={alt}
+        aria-label={alt}
         accessibilityHint=""
       />
       {children}

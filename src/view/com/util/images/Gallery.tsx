@@ -26,18 +26,19 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   return (
     <View style={styles.fullWidth}>
       <Pressable
+        accessibilityRole="button"
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={styles.fullWidth}
         role="button"
-        accessibilityLabel={image.alt || 'Image'}
+        aria-label={image.alt || 'Image'}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
           style={[styles.image, imageStyle]}
           accessible={true}
-          accessibilityLabel={image.alt}
+          aria-label={image.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
         />
