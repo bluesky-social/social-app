@@ -39,7 +39,7 @@ function Toast({message}: {message: string}) {
 
   const opacityStyle = {opacity: interp}
   return (
-    <View style={styles.container} pointerEvents="none">
+    <View style={styles.container}>
       <Animated.View
         style={[
           pal.view,
@@ -58,6 +58,7 @@ function Toast({message}: {message: string}) {
 
 const styles = StyleSheet.create({
   container: {
+    pointerEvents: 'none',
     position: 'absolute',
     top: 60,
     left: 0,

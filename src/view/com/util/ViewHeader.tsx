@@ -71,6 +71,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
         {showBackButton ? (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="viewHeaderDrawerBtn"
             onPress={canGoBack ? onPressBack : onPressMenu}
             hitSlop={BACK_HITSLOP}
@@ -95,7 +96,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
             ) : null}
           </TouchableOpacity>
         ) : null}
-        <View style={styles.titleContainer} pointerEvents="none">
+        <View style={styles.titleContainer}>
           <Text type="title" style={[pal.text, styles.title]}>
             {title}
           </Text>
@@ -130,7 +131,7 @@ function DesktopWebHeader({
           borderBottomWidth: showBorder ? 1 : 0,
         },
       ]}>
-      <View style={styles.titleContainer} pointerEvents="none">
+      <View style={styles.titleContainer}>
         <Text type="title-lg" style={[pal.text, styles.title]}>
           {title}
         </Text>
@@ -203,6 +204,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   titleContainer: {
+    pointerEvents: 'none',
     marginLeft: 'auto',
     marginRight: 'auto',
     paddingRight: 10,
