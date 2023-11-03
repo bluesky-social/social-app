@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HighPriorityImage} from 'view/com/util/images/Image'
@@ -27,6 +27,7 @@ interface BaseUserAvatarProps {
 
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
+  usePlainRNImage?: boolean
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -110,6 +111,7 @@ export function UserAvatar({
   size,
   avatar,
   moderation,
+  usePlainRNImage = false,
 }: UserAvatarProps) {
   const pal = usePalette('default')
 
@@ -146,13 +148,24 @@ export function UserAvatar({
   return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>
-      <HighPriorityImage
-        testID="userAvatarImage"
-        style={aviStyle}
-        contentFit="cover"
-        source={{uri: avatar}}
-        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-      />
+      {usePlainRNImage ? (
+        <Image
+          accessibilityIgnoresInvertColors
+          testID="userAvatarImage"
+          style={aviStyle}
+          resizeMode="cover"
+          source={{uri: avatar}}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
+      ) : (
+        <HighPriorityImage
+          testID="userAvatarImage"
+          style={aviStyle}
+          contentFit="cover"
+          source={{uri: avatar}}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
+      )}
       {alert}
     </View>
   ) : (

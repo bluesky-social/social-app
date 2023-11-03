@@ -15,7 +15,7 @@ import {InputIssueDetails} from './InputIssueDetails'
 import {ReportReasonOptions} from './ReasonOptions'
 import {CollectionId} from './types'
 
-const DMCA_LINK = 'https://bsky.app/support/copyright'
+const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
 export const snapPoints = [575]
 
@@ -60,6 +60,7 @@ export function Component(content: ReportComponentProps) {
     try {
       if (issue === '__copyright__') {
         Linking.openURL(DMCA_LINK)
+        store.shell.closeModal()
         return
       }
       const $type = !isAccountReport
