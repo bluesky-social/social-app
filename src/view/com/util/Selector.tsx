@@ -98,6 +98,7 @@ export function Selector({
         return (
           <Pressable
             accessibilityRole="button"
+            role="button"
             testID={`selector-${i}`}
             key={item}
             onPress={() => onPressItem(i)}

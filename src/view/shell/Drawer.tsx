@@ -155,6 +155,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           <View style={{}}>
             <TouchableOpacity
               accessibilityRole="button"
+              role="button"
               testID="profileCardButton"
               aria-label="Profile"
               accessibilityHint="Navigates to your profile"

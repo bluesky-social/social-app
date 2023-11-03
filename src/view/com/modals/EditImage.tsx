@@ -240,6 +240,7 @@ export const Component = observer(function EditImageImpl({
               return (
                 <Pressable
                   accessibilityRole="button"
+                  role="button"
                   key={ratio}
                   onPress={() => {
                     onSetRatio(ratio)
@@ -271,6 +272,7 @@ export const Component = observer(function EditImageImpl({
             {adjustments.map(({label, name, onPress}) => (
               <Pressable
                 accessibilityRole="button"
+                role="button"
                 key={label}
                 onPress={onPress}
                 aria-label={label}

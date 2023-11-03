@@ -212,6 +212,7 @@ export const PostThread = observer(function PostThread({
         return (
           <Pressable
             accessibilityRole="button"
+            role="button"
             onPress={() => setMaxVisible(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
             aria-label="Load more posts"

@@ -29,6 +29,7 @@ export function createCustomBackdrop(
     return (
       <TouchableWithoutFeedback
         accessibilityRole="button"
+        role="button"
         onPress={onClose}
         aria-label="Close bottom drawer"
         accessibilityHint=""

@@ -60,6 +60,7 @@ const ShellInner = observer(function ShellInnerImpl() {
       {!isDesktop && store.shell.isDrawerOpen && (
         <TouchableOpacity
           accessibilityRole="button"
+          role="button"
           onPress={() => store.shell.closeDrawer()}
           style={styles.drawerMask}
           aria-label="Close navigation footer"

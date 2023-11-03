@@ -446,6 +446,7 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
+            role="button"
             testID="savedFeedsBtn"
             style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
             accessibilityHint="My Saved Feeds"

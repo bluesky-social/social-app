@@ -149,6 +149,7 @@ function LightboxInner({
         <View style={styles.footer}>
           <Pressable
             accessibilityRole="button"
+            role="button"
             aria-label="Expand alt text"
             accessibilityHint="If alt text is long, toggles alt text expanded state"
             onPress={() => {

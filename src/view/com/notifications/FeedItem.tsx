@@ -330,6 +330,7 @@ function CondensedAuthorsList({
   return (
     <TouchableOpacity
       accessibilityRole="button"
+      role="button"
       aria-label="Show users"
       accessibilityHint="Opens an expanded list of users in this notification"
       onPress={onToggleAuthorsExpanded}>

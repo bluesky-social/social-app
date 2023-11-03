@@ -106,6 +106,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
       return (
         <Pressable
           accessibilityRole="button"
+          role="button"
           testID={`toggleBtn-${list.name}`}
           style={[
             styles.listItem,

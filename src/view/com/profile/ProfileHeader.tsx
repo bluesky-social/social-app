@@ -588,7 +588,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         accessibilityRole="button"
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
-        role="image"
+        role="img"
         aria-label={`View ${view.handle}'s avatar`}
         accessibilityHint="">
         <View

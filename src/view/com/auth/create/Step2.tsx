@@ -62,6 +62,7 @@ export const Step2 = observer(function Step2Impl({
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
             accessibilityRole="button"
+            role="button"
             onPress={onPressWaitlist}
             aria-label="Join the waitlist."
             accessibilityHint="">

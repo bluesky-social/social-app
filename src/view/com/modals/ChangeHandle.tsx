@@ -513,6 +513,7 @@ function CustomHandleForm({
       <View style={styles.spacer} />
       <TouchableOpacity
         accessibilityRole="button"
+        role="button"
         onPress={onToggleCustom}
         aria-label="Use default provider"
         accessibilityHint="Use bsky.social as hosting provider">
