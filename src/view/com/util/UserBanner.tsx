@@ -142,7 +142,7 @@ export function UserBanner({
     <Image
       testID="userBannerImage"
       style={styles.bannerImage}
-      resizeMode="cover"
+      contentFit="cover"
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}
