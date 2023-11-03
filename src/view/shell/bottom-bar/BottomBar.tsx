@@ -214,10 +214,7 @@ export const BottomBar = observer(function BottomBarImpl({
 interface BtnProps
   extends Pick<
     ComponentProps<typeof TouchableOpacity>,
-    | 'accessible'
-    | 'accessibilityRole'
-    | 'accessibilityHint'
-    | 'accessibilityLabel'
+    'accessible' | 'role' | 'accessibilityHint' | 'aria-label'
   > {
   testID?: string
   icon: JSX.Element
@@ -229,22 +226,24 @@ interface BtnProps
 function Btn({
   testID,
   icon,
+  role,
   notificationCount,
   onPress,
   onLongPress,
   accessible,
   accessibilityHint,
-  accessibilityLabel,
+  'aria-label': ariaLabel,
 }: BtnProps) {
   return (
     <TouchableOpacity
+      role={role}
       testID={testID}
       style={styles.ctrl}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}
       accessible={accessible}
-      aria-label={accessibilityLabel}
+      aria-label={ariaLabel}
       accessibilityHint={accessibilityHint}>
       {notificationCount ? (
         <View style={[styles.notificationCount]}>
