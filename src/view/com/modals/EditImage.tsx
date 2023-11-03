@@ -270,7 +270,6 @@ export const Component = observer(function EditImageImpl({
           <View style={imgControlStyles}>
             {adjustments.map(({label, name, onPress}) => (
               <Pressable
-                role="button"
                 key={label}
                 onPress={onPress}
                 aria-label={label}

@@ -169,7 +169,6 @@ export function Selector({
             const selected = i === selectedIndex
             return (
               <Pressable
-                role="button"
                 testID={`selector-${i}`}
                 key={item}
                 onPress={() => onPressItem(i)}

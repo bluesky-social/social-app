@@ -80,7 +80,6 @@ export function HeaderWithInput({
           size={21}
         />
         <TextInput
-          accessibilityLabel="Text input field"
           testID="searchTextInput"
           ref={textInput}
           placeholder="Search"

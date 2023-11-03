@@ -211,7 +211,6 @@ export const PostThread = observer(function PostThread({
       } else if (item === LOAD_MORE) {
         return (
           <Pressable
-            role="button"
             onPress={() => setMaxVisible(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
             aria-label="Load more posts"

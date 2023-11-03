@@ -44,7 +44,6 @@ export function SearchInput({
     <View style={[pal.viewLight, styles.container, style]}>
       <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
       <TextInput
-        accessibilityLabel="Text input field"
         testID="searchTextInput"
         ref={textInput}
         placeholder="Search"

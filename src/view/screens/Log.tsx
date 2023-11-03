@@ -45,7 +45,6 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
             return (
               <View key={`entry-${entry.id}`}>
                 <TouchableOpacity
-                  role="button"
                   style={[styles.entry, pal.border, pal.view]}
                   onPress={toggler(entry.id)}
                   aria-label="View debug entry"
