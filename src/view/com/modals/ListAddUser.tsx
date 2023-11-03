@@ -21,9 +21,11 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {cleanError} from 'lib/strings/errors'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {HITSLOP_20} from '#/lib/constants'
 
 export const snapPoints = ['90%']
 
@@ -42,6 +44,7 @@ export const Component = observer(function Component({
     () => new UserAutocompleteModel(store),
     [store],
   )
+  const [isKeyboardVisible] = useIsKeyboardVisible()
 
   // initial setup
   useEffect(() => {
@@ -69,16 +72,7 @@ export const Component = observer(function Component({
     <SafeAreaView
       testID="listAddUserModal"
       style={[pal.view, isWeb ? styles.fixedHeight : s.flex1]}>
-      <View
-        style={[
-          s.flex1,
-          isMobile && {paddingHorizontal: 18, paddingBottom: 40},
-        ]}>
-        <View style={styles.titleSection}>
-          <Text type="title-lg" style={[pal.text, styles.title]}>
-            Add User to List
-          </Text>
-        </View>
+      <View style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
         <View style={[styles.searchContainer, pal.border]}>
           <FontAwesomeIcon icon="search" size={16} />
           <TextInput
@@ -91,9 +85,11 @@ export const Component = observer(function Component({
             accessible={true}
             accessibilityLabel="Search"
             accessibilityHint=""
+            autoFocus
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect={false}
+            selectTextOnFocus
           />
           {query ? (
             <Pressable
@@ -101,7 +97,8 @@ export const Component = observer(function Component({
               accessibilityRole="button"
               accessibilityLabel="Cancel search"
               accessibilityHint="Exits inputting search query"
-              onAccessibilityEscape={onPressCancelSearch}>
+              onAccessibilityEscape={onPressCancelSearch}
+              hitSlop={HITSLOP_20}>
               <FontAwesomeIcon
                 icon="xmark"
                 size={16}
@@ -110,8 +107,15 @@ export const Component = observer(function Component({
             </Pressable>
           ) : undefined}
         </View>
-        <ScrollView style={[s.flex1]}>
-          {autocompleteView.suggestions.length ? (
+        <ScrollView
+          style={[s.flex1]}
+          keyboardDismissMode="none"
+          keyboardShouldPersistTaps="always">
+          {autocompleteView.isLoading ? (
+            <View style={{marginVertical: 20}}>
+              <ActivityIndicator />
+            </View>
+          ) : autocompleteView.suggestions.length ? (
             <>
               {autocompleteView.suggestions.slice(0, 40).map((item, i) => (
                 <UserResult
@@ -134,10 +138,14 @@ export const Component = observer(function Component({
             </Text>
           )}
         </ScrollView>
-        <View style={[styles.btnContainer]}>
+        <View
+          style={[
+            styles.btnContainer,
+            {paddingBottom: isKeyboardVisible ? 10 : 20},
+          ]}>
           <Button
             testID="doneBtn"
-            type="primary"
+            type="default"
             onPress={() => store.shell.closeModal()}
             accessibilityLabel="Done"
             accessibilityHint=""
@@ -188,16 +196,13 @@ function UserResult({
           flexDirection: 'row',
           alignItems: 'center',
           borderTopWidth: noBorder ? 0 : 1,
-          paddingVertical: 8,
           paddingHorizontal: 8,
         },
       ]}>
       <View
         style={{
-          alignSelf: 'baseline',
           width: 54,
           paddingLeft: 4,
-          paddingTop: 10,
         }}>
         <UserAvatar size={40} avatar={profile.avatar} />
       </View>
@@ -276,6 +281,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue3,
   },
   btnContainer: {
-    paddingTop: 20,
+    paddingTop: 10,
   },
 })
