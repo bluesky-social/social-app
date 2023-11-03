@@ -110,8 +110,15 @@ export const Component = observer(function Component({
             </Pressable>
           ) : undefined}
         </View>
-        <ScrollView style={[s.flex1]}>
-          {autocompleteView.suggestions.length ? (
+        <ScrollView
+          style={[s.flex1]}
+          keyboardDismissMode="none"
+          keyboardShouldPersistTaps="always">
+          {autocompleteView.isLoading ? (
+            <View style={{marginVertical: 20}}>
+              <ActivityIndicator />
+            </View>
+          ) : autocompleteView.suggestions.length ? (
             <>
               {autocompleteView.suggestions.slice(0, 40).map((item, i) => (
                 <UserResult

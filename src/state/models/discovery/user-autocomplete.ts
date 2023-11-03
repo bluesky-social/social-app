@@ -48,6 +48,7 @@ export class UserAutocompleteModel {
   // =
 
   async setup() {
+    this.isLoading = true
     await this.rootStore.me.follows.syncIfNeeded()
     runInAction(() => {
       for (const did in this.rootStore.me.follows.byDid) {
@@ -56,6 +57,7 @@ export class UserAutocompleteModel {
           this.knownHandles.add(info.handle)
         }
       }
+      this.isLoading = false
     })
   }
 
