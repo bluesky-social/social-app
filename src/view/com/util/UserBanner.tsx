@@ -116,7 +116,7 @@ export function UserBanner({
       accessibilityHint="">
       {banner ? (
         <Image
-          testID="userBannerImage"
+          id="userBannerImage"
           style={styles.bannerImage}
           source={{uri: banner}}
           accessible={true}
@@ -140,7 +140,7 @@ export function UserBanner({
   ) : banner &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
-      testID="userBannerImage"
+      id="userBannerImage"
       style={styles.bannerImage}
       contentFit="cover"
       source={{uri: banner}}
