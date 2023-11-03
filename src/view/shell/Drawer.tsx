@@ -158,7 +158,11 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               accessibilityLabel="Profile"
               accessibilityHint="Navigates to your profile"
               onPress={onPressProfile}>
-              <UserAvatar size={80} avatar={store.me.avatar} />
+              <UserAvatar
+                size={80}
+                avatar={store.me.avatar}
+                usePlainRNImage={true}
+              />
               <Text
                 type="title-lg"
                 style={[pal.text, s.bold, styles.profileCardDisplayName]}

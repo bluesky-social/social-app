@@ -192,11 +192,19 @@ export const BottomBar = observer(function BottomBarImpl({
                   styles.onProfile,
                   {borderColor: pal.text.color},
                 ]}>
-                <UserAvatar avatar={store.me.avatar} size={27} />
+                <UserAvatar
+                  avatar={store.me.avatar}
+                  size={27}
+                  usePlainRNImage={true}
+                />
               </View>
             ) : (
               <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                <UserAvatar avatar={store.me.avatar} size={28} />
+                <UserAvatar
+                  avatar={store.me.avatar}
+                  size={28}
+                  usePlainRNImage={true}
+                />
               </View>
             )}
           </View>
