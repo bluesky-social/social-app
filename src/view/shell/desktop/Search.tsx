@@ -62,12 +62,13 @@ export const DesktopSearch = observer(function DesktopSearch() {
             style={[pal.textLight, styles.iconWrapper]}
           />
           <TextInput
+            accessibilityLabel="Text input field"
             testID="searchTextInput"
             ref={textInput}
             placeholder="Search"
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus
-            returnKeyType="search"
+            enterKeyHint="search"
             value={query}
             style={[pal.textLight, styles.input]}
             onFocus={() => setIsInputFocused(true)}
@@ -81,6 +82,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
           {query ? (
             <View style={styles.cancelBtn}>
               <TouchableOpacity
+                accessibilityRole="button"
                 onPress={onPressCancelSearch}
                 role="button"
                 aria-label="Cancel search"

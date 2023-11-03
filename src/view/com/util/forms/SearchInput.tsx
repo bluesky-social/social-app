@@ -44,12 +44,13 @@ export function SearchInput({
     <View style={[pal.viewLight, styles.container, style]}>
       <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
       <TextInput
+        accessibilityLabel="Text input field"
         testID="searchTextInput"
         ref={textInput}
         placeholder="Search"
         placeholderTextColor={pal.colors.textLight}
         selectTextOnFocus
-        returnKeyType="search"
+        enterKeyHint="search"
         value={query}
         style={[pal.text, styles.input]}
         keyboardAppearance={theme.colorScheme}
@@ -65,6 +66,7 @@ export function SearchInput({
       />
       {query ? (
         <TouchableOpacity
+          accessibilityRole="button"
           onPress={onPressCancelSearchInner}
           role="button"
           aria-label="Clear search query"

@@ -148,7 +148,7 @@ export function Component({}: {}) {
               scrollEnabled={false} // hack for multiline so only one line shows (ios)
               blurOnSubmit={true} // hack for multiline so it submits
               editable={!appPassword}
-              returnKeyType="done"
+              enterKeyHint="done"
               onEndEditing={createAppPassword}
               accessible={true}
               aria-label="Name"
@@ -157,6 +157,7 @@ export function Component({}: {}) {
           </View>
         ) : (
           <TouchableOpacity
+            accessibilityRole="button"
             style={[pal.border, styles.passwordContainer, pal.btn]}
             onPress={onCopy}
             role="button"

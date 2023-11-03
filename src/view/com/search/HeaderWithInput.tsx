@@ -60,6 +60,7 @@ export function HeaderWithInput({
       ]}>
       {showMenu && isMobile ? (
         <TouchableOpacity
+          accessibilityRole="button"
           testID="viewHeaderBackOrMenuBtn"
           onPress={onPressMenu}
           hitSlop={HITSLOP_10}
@@ -80,12 +81,13 @@ export function HeaderWithInput({
           size={21}
         />
         <TextInput
+          accessibilityLabel="Text input field"
           testID="searchTextInput"
           ref={textInput}
           placeholder="Search"
           placeholderTextColor={pal.colors.textLight}
           selectTextOnFocus
-          returnKeyType="search"
+          enterKeyHint="search"
           value={query}
           style={[pal.text, styles.headerSearchInput]}
           keyboardAppearance={theme.colorScheme}
@@ -102,6 +104,7 @@ export function HeaderWithInput({
         />
         {query ? (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="searchTextInputClearBtn"
             onPress={onPressClearQuery}
             role="button"
@@ -117,7 +120,10 @@ export function HeaderWithInput({
       </View>
       {query || isInputFocused ? (
         <View style={styles.headerCancelBtn}>
-          <TouchableOpacity onPress={onPressCancelSearchInner} role="button">
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressCancelSearchInner}
+            role="button">
             <Text style={pal.text}>Cancel</Text>
           </TouchableOpacity>
         </View>
