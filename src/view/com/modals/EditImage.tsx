@@ -296,7 +296,6 @@ export const Component = observer(function EditImageImpl({
           Accessibility
         </Text>
         <TextInput
-          accessibilityLabel="Text input field"
           testID="altTextImageInput"
           style={[
             styles.textArea,

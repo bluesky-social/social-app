@@ -84,7 +84,6 @@ export const Step1 = observer(function Step1Impl({
             Enter the address of your provider:
           </Text>
           <TextInput
-            accessibilityLabel="Text input field"
             testID="customServerInput"
             icon="globe"
             placeholder="Hosting provider address"

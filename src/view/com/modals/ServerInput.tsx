@@ -78,7 +78,6 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           <Text style={[pal.text, styles.label]}>Other service</Text>
           <View style={s.flexRow}>
             <TextInput
-              accessibilityLabel="Text input field"
               testID="customServerTextInput"
               style={[pal.borderDark, pal.text, styles.textInput]}
               placeholder="e.g. https://bsky.app"

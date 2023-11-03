@@ -407,7 +407,6 @@ const LoginForm = ({
             style={[pal.textLight, styles.groupContentIcon]}
           />
           <TextInput
-            accessibilityLabel="Text input field"
             testID="loginUsernameInput"
             style={[pal.text, styles.textInput]}
             placeholder="Username or email address"
@@ -437,7 +436,6 @@ const LoginForm = ({
             style={[pal.textLight, styles.groupContentIcon]}
           />
           <TextInput
-            accessibilityLabel="Text input field"
             testID="loginPasswordInput"
             ref={passwordInputRef}
             style={[pal.text, styles.textInput]}
@@ -633,7 +631,6 @@ const ForgotPasswordForm = ({
               style={[pal.textLight, styles.groupContentIcon]}
             />
             <TextInput
-              accessibilityLabel="Text input field"
               testID="forgotPasswordEmail"
               style={[pal.text, styles.textInput]}
               placeholder="Email address"

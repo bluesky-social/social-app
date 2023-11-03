@@ -24,7 +24,6 @@ export const Step3 = observer(function Step3Impl({
       <StepHeader step="3" title="Your user handle" />
       <View style={s.pb10}>
         <TextInput
-          accessibilityLabel="Text input field"
           testID="handleInput"
           icon="at"
           placeholder="e.g. alice"

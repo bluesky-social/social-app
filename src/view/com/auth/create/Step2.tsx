@@ -44,7 +44,6 @@ export const Step2 = observer(function Step2Impl({
             Invite code
           </Text>
           <TextInput
-            accessibilityLabel="Text input field"
             testID="inviteCodeInput"
             icon="ticket"
             placeholder="Required for this provider"
@@ -77,7 +76,6 @@ export const Step2 = observer(function Step2Impl({
               Email address
             </Text>
             <TextInput
-              accessibilityLabel="Text input field"
               testID="emailInput"
               icon="envelope"
               placeholder="Enter your email address"
@@ -98,7 +96,6 @@ export const Step2 = observer(function Step2Impl({
               Password
             </Text>
             <TextInput
-              accessibilityLabel="Text input field"
               testID="passwordInput"
               icon="lock"
               placeholder="Choose your password"

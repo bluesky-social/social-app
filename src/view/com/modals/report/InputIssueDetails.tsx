@@ -42,7 +42,6 @@ export function InputIssueDetails({
       </TouchableOpacity>
       <View style={[pal.btn, styles.detailsInputContainer]}>
         <TextInput
-          accessibilityLabel="Text input field"
           aria-label="Text input field"
           accessibilityHint="Enter a reason for reporting this post."
           placeholder="Enter a reason or any other details here."

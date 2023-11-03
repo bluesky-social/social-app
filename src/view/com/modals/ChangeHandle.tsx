@@ -372,7 +372,6 @@ function CustomHandleForm({
           style={[pal.textLight, styles.textInputIcon]}
         />
         <TextInput
-          accessibilityLabel="Text input field"
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
           placeholder="e.g. alice.com"

@@ -151,7 +151,6 @@ export function Component({}: {}) {
               below:
             </Text>
             <TextInput
-              accessibilityLabel="Text input field"
               style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
               placeholder="Confirmation code"
               placeholderTextColor={pal.textLight.color}
@@ -166,7 +165,6 @@ export function Component({}: {}) {
               Please enter your password as well:
             </Text>
             <TextInput
-              accessibilityLabel="Text input field"
               style={[styles.textInput, pal.borderDark, pal.text]}
               placeholder="Password"
               placeholderTextColor={pal.textLight.color}

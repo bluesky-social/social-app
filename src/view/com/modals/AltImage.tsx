@@ -82,7 +82,6 @@ export function Component({image}: Props) {
             />
           </View>
           <TextInput
-            accessibilityLabel="Text input field"
             testID="altTextImageInput"
             style={[styles.textArea, pal.border, pal.text]}
             keyboardAppearance={theme.colorScheme}

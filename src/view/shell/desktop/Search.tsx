@@ -62,7 +62,6 @@ export const DesktopSearch = observer(function DesktopSearch() {
             style={[pal.textLight, styles.iconWrapper]}
           />
           <TextInput
-            accessibilityLabel="Text input field"
             testID="searchTextInput"
             ref={textInput}
             placeholder="Search"
