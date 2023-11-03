@@ -44,6 +44,7 @@ export const Step2 = observer(function Step2Impl({
             Invite code
           </Text>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="inviteCodeInput"
             icon="ticket"
             placeholder="Required for this provider"
@@ -60,6 +61,7 @@ export const Step2 = observer(function Step2Impl({
         <Text style={[s.alignBaseline, pal.text]}>
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
+            accessibilityRole="button"
             role="button"
             onPress={onPressWaitlist}
             aria-label="Join the waitlist."
@@ -72,10 +74,11 @@ export const Step2 = observer(function Step2Impl({
       ) : (
         <>
           <View style={s.pb20}>
-            <Text type="md-medium" style={[pal.text, s.mb2]} nativeID="email">
+            <Text type="md-medium" style={[pal.text, s.mb2]} id="email">
               Email address
             </Text>
             <TextInput
+              accessibilityLabel="Text input field"
               testID="emailInput"
               icon="envelope"
               placeholder="Enter your email address"
@@ -89,13 +92,11 @@ export const Step2 = observer(function Step2Impl({
           </View>
 
           <View style={s.pb20}>
-            <Text
-              type="md-medium"
-              style={[pal.text, s.mb2]}
-              nativeID="password">
+            <Text type="md-medium" style={[pal.text, s.mb2]} id="password">
               Password
             </Text>
             <TextInput
+              accessibilityLabel="Text input field"
               testID="passwordInput"
               icon="lock"
               placeholder="Choose your password"
@@ -110,10 +111,7 @@ export const Step2 = observer(function Step2Impl({
           </View>
 
           <View style={s.pb20}>
-            <Text
-              type="md-medium"
-              style={[pal.text, s.mb2]}
-              nativeID="birthDate">
+            <Text type="md-medium" style={[pal.text, s.mb2]} id="birthDate">
               Your birth date
             </Text>
             <DateInput

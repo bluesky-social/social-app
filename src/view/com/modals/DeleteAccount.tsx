@@ -108,6 +108,7 @@ export function Component({}: {}) {
             ) : (
               <>
                 <TouchableOpacity
+                  accessibilityRole="button"
                   style={styles.mt20}
                   onPress={onPressSendEmail}
                   role="button"
@@ -127,6 +128,7 @@ export function Component({}: {}) {
                   </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  accessibilityRole="button"
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
                   role="button"
@@ -143,14 +145,12 @@ export function Component({}: {}) {
         ) : (
           <>
             {/* TODO: Update this label to be more concise */}
-            <Text
-              type="lg"
-              style={styles.description}
-              nativeID="confirmationCode">
+            <Text type="lg" style={styles.description} id="confirmationCode">
               Check your inbox for an email with the confirmation code to enter
               below:
             </Text>
             <TextInput
+              accessibilityLabel="Text input field"
               style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
               placeholder="Confirmation code"
               placeholderTextColor={pal.textLight.color}
@@ -161,10 +161,11 @@ export function Component({}: {}) {
               aria-label="Confirmation code"
               accessibilityHint="Input confirmation code for account deletion"
             />
-            <Text type="lg" style={styles.description} nativeID="password">
+            <Text type="lg" style={styles.description} id="password">
               Please enter your password as well:
             </Text>
             <TextInput
+              accessibilityLabel="Text input field"
               style={[styles.textInput, pal.borderDark, pal.text]}
               placeholder="Password"
               placeholderTextColor={pal.textLight.color}
@@ -188,6 +189,7 @@ export function Component({}: {}) {
             ) : (
               <>
                 <TouchableOpacity
+                  accessibilityRole="button"
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
                   onPress={onPressConfirmDelete}
                   role="button"
@@ -198,6 +200,7 @@ export function Component({}: {}) {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  accessibilityRole="button"
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
                   role="button"

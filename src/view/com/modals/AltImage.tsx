@@ -68,7 +68,7 @@ export function Component({image}: Props) {
         testID="altTextImageModal"
         style={styles.scrollContainer}
         keyboardShouldPersistTaps="always"
-        nativeID="imageAltText">
+        id="imageAltText">
         <View style={styles.scrollInner}>
           <View style={[pal.viewLight, styles.imageContainer]}>
             <Image
@@ -82,6 +82,7 @@ export function Component({image}: Props) {
             />
           </View>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="altTextImageInput"
             style={[styles.textArea, pal.border, pal.text]}
             keyboardAppearance={theme.colorScheme}
@@ -97,6 +98,7 @@ export function Component({image}: Props) {
           />
           <View style={styles.buttonControls}>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="altTextImageSaveBtn"
               onPress={onPressSave}
               aria-label="Save alt text"
@@ -113,6 +115,7 @@ export function Component({image}: Props) {
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
+              accessibilityRole="button"
               testID="altTextImageCancelBtn"
               onPress={onPressCancel}
               role="button"

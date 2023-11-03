@@ -135,6 +135,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
       <View style={[styles.title, pal.border]}>
         <View style={styles.titleLeft}>
           <TouchableOpacity
+            accessibilityRole="button"
             onPress={onPressCancel}
             role="button"
             aria-label="Cancel change handle"
@@ -156,6 +157,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
             <ActivityIndicator />
           ) : error && !serviceDescription ? (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="retryConnectButton"
               onPress={onPressRetryConnect}
               role="button"
@@ -167,6 +169,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
             </TouchableOpacity>
           ) : canSave ? (
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={onPressSave}
               role="button"
               aria-label="Save handle change"
@@ -273,6 +276,7 @@ function ProvidedHandleForm({
         </Text>
       </Text>
       <TouchableOpacity
+        accessibilityRole="button"
         onPress={onToggleCustom}
         role="button"
         accessibilityHint="Hosting provider"
@@ -363,7 +367,7 @@ function CustomHandleForm({
   // =
   return (
     <>
-      <Text type="md" style={[pal.text, s.pb5, s.pl5]} nativeID="customDomain">
+      <Text type="md" style={[pal.text, s.pb5, s.pl5]} id="customDomain">
         Enter the domain you want to use
       </Text>
       <View style={[pal.btn, styles.textInputWrapper]}>
@@ -372,6 +376,7 @@ function CustomHandleForm({
           style={[pal.textLight, styles.textInputIcon]}
         />
         <TextInput
+          accessibilityLabel="Text input field"
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
           placeholder="e.g. alice.com"
@@ -507,6 +512,7 @@ function CustomHandleForm({
       </Button>
       <View style={styles.spacer} />
       <TouchableOpacity
+        accessibilityRole="button"
         onPress={onToggleCustom}
         aria-label="Use default provider"
         accessibilityHint="Use bsky.social as hosting provider">

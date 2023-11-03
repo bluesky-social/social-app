@@ -179,7 +179,7 @@ export function Component({
         </View>
         <View style={styles.form}>
           <View>
-            <Text style={[styles.label, pal.text]} nativeID="list-name">
+            <Text style={[styles.label, pal.text]} id="list-name">
               List Name
             </Text>
             <TextInput
@@ -198,7 +198,7 @@ export function Component({
             />
           </View>
           <View style={s.pb10}>
-            <Text style={[styles.label, pal.text]} nativeID="list-description">
+            <Text style={[styles.label, pal.text]} id="list-description">
               Description
             </Text>
             <TextInput
@@ -226,6 +226,7 @@ export function Component({
             </View>
           ) : (
             <TouchableOpacity
+              accessibilityRole="button"
               testID="saveBtn"
               style={s.mt10}
               onPress={onPressSave}
@@ -242,6 +243,7 @@ export function Component({
             </TouchableOpacity>
           )}
           <TouchableOpacity
+            accessibilityRole="button"
             testID="cancelBtn"
             style={s.mt5}
             onPress={onPressCancel}

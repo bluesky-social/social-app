@@ -80,10 +80,11 @@ export const Step1 = observer(function Step1Impl({
         label="Other"
         onPress={onPressOther}>
         <View style={styles.otherForm}>
-          <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>
+          <Text id="addressProvider" style={[pal.text, s.mb5]}>
             Enter the address of your provider:
           </Text>
           <TextInput
+            accessibilityLabel="Text input field"
             testID="customServerInput"
             icon="globe"
             placeholder="Hosting provider address"
@@ -148,6 +149,7 @@ function Option({
   return (
     <View style={[styles.option, pal.border]}>
       <TouchableWithoutFeedback
+        accessibilityRole="button"
         onPress={onPress}
         testID={testID}
         role="button"
