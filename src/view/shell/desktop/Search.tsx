@@ -75,7 +75,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeQuery}
             onSubmitEditing={onSubmit}
-            role="search"
+            role="searchbox"
             aria-label="Search"
             accessibilityHint=""
           />

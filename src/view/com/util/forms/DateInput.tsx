@@ -22,7 +22,7 @@ interface Props {
   buttonStyle?: StyleProp<ViewStyle>
   buttonLabelType?: TypographyVariant
   buttonLabelStyle?: StyleProp<TextStyle>
-  accessibilityLabel: string
+  'aria-label': string
   accessibilityHint: string
   accessibilityLabelledBy?: string
 }
@@ -53,7 +53,7 @@ export function DateInput(props: Props) {
           type={props.buttonType}
           style={props.buttonStyle}
           onPress={onPress}
-          aria-label={props.accessibilityLabel}
+          aria-label={props['aria-label']}
           accessibilityHint={props.accessibilityHint}
           accessibilityLabelledBy={props.accessibilityLabelledBy}>
           <View style={styles.button}>
@@ -78,7 +78,7 @@ export function DateInput(props: Props) {
           themeVariant={theme.colorScheme}
           value={props.value}
           onChange={onChangeInternal}
-          aria-label={props.accessibilityLabel}
+          aria-label={props['aria-label']}
           accessibilityHint={props.accessibilityHint}
           accessibilityLabelledBy={props.accessibilityLabelledBy}
         />
