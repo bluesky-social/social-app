@@ -21,7 +21,7 @@ type TriggerProps = Omit<
 > &
   React.PropsWithChildren<{
     testID?: string
-    accessibilityLabel?: string
+    'aria-label'?: string
     accessibilityHint?: string
   }>
 export const DropdownMenuTrigger = DropdownMenu.create(
@@ -46,7 +46,7 @@ export const DropdownMenuTrigger = DropdownMenu.create(
       <Pressable
         testID={props.testID}
         role="button"
-        aria-label={props.accessibilityLabel}
+        aria-label={props['aria-label']}
         accessibilityHint={props.accessibilityHint}
         style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
         hitSlop={HITSLOP_10}
@@ -149,7 +149,7 @@ export type DropdownItem = {
 type Props = {
   items: DropdownItem[]
   testID?: string
-  accessibilityLabel?: string
+  'aria-label'?: string
   accessibilityHint?: string
 }
 
@@ -163,7 +163,7 @@ export function NativeDropdown({
   items,
   children,
   testID,
-  accessibilityLabel,
+  'aria-label': ariaLabel,
   accessibilityHint,
 }: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
@@ -176,7 +176,7 @@ export function NativeDropdown({
       <DropdownMenuTrigger
         action="press"
         testID={testID}
-        aria-label={accessibilityLabel}
+        aria-label={ariaLabel}
         accessibilityHint={accessibilityHint}>
         {children}
       </DropdownMenuTrigger>

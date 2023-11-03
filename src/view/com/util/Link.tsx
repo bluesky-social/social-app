@@ -97,7 +97,7 @@ export const Link = memo(function Link({
         testID={testID}
         onPress={onPress}
         accessible={accessible}
-        role="link"
+        // role="link" TODO:
         {...props}>
         {/* @ts-ignore web only -prf */}
         <View style={style} href={anchorHref}>
@@ -114,9 +114,9 @@ export const Link = memo(function Link({
     props.dataSet.noUnderline = 1
   }
 
-  if (title && !props.accessibilityLabel) {
-    props.accessibilityLabel = title
-  }
+  // if (title && !props['aria-label']) {
+  //   props['aria-label'] = title
+  // } TODO:
 
   const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
@@ -125,7 +125,7 @@ export const Link = memo(function Link({
       style={style}
       onPress={onPress}
       accessible={accessible}
-      role="link"
+      // role="link" TODO:
       // @ts-ignore web only -prf
       href={anchorHref}
       {...props}>
@@ -230,7 +230,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   numberOfLines?: number
   lineHeight?: number
   accessible?: boolean
-  accessibilityLabel?: string
+  'aria-label'?: string
   accessibilityHint?: string
   title?: string
 }

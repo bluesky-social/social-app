@@ -55,7 +55,7 @@ interface DropdownButtonProps {
   openUpwards?: boolean
   rightOffset?: number
   bottomOffset?: number
-  accessibilityLabel?: string
+  'aria-label'?: string
   accessibilityHint?: string
 }
 
@@ -71,7 +71,7 @@ export function DropdownButton({
   openUpwards = false,
   rightOffset = 0,
   bottomOffset = 0,
-  accessibilityLabel,
+  'aria-label': ariaLabel,
 }: PropsWithChildren<DropdownButtonProps>) {
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
@@ -139,7 +139,7 @@ export function DropdownButton({
         hitSlop={HITSLOP_10}
         ref={ref1}
         role="button"
-        aria-label={accessibilityLabel || `Opens ${numItems} options`}
+        aria-label={ariaLabel || `Opens ${numItems} options`}
         accessibilityHint="">
         {children}
       </TouchableOpacity>

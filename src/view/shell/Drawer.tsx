@@ -384,7 +384,7 @@ interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
 function MenuItem({
   icon,
   label,
-  accessibilityLabel,
+  'aria-label': ariaLabel,
   count,
   bold,
   onPress,
@@ -396,7 +396,7 @@ function MenuItem({
       style={styles.menuItem}
       onPress={onPress}
       role="tab"
-      aria-label={accessibilityLabel}
+      aria-label={ariaLabel}
       accessibilityHint="">
       <View style={[styles.menuItemIconWrapper]}>
         {icon}

@@ -47,7 +47,7 @@ export function Button({
   onPress,
   children,
   testID,
-  accessibilityLabel,
+  'aria-label': ariaLabel,
   accessibilityHint,
   accessibilityLabelledBy,
   onAccessibilityEscape,
@@ -60,7 +60,7 @@ export function Button({
   labelStyle?: StyleProp<TextStyle>
   onPress?: () => void | Promise<void>
   testID?: string
-  accessibilityLabel?: string
+  'aria-label'?: string
   accessibilityHint?: string
   accessibilityLabelledBy?: string
   onAccessibilityEscape?: () => void
@@ -201,7 +201,7 @@ export function Button({
       disabled={isLoading}
       testID={testID}
       role="button"
-      aria-label={accessibilityLabel}
+      aria-label={ariaLabel}
       accessibilityHint={accessibilityHint}
       accessibilityLabelledBy={accessibilityLabelledBy}
       onAccessibilityEscape={onAccessibilityEscape}>
