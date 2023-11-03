@@ -13,8 +13,8 @@ interface Props {
   buttonLabelType?: string
   buttonLabelStyle?: StyleProp<TextStyle>
   'aria-label': string
+  'aria-labelledby'?: string
   accessibilityHint: string
-  accessibilityLabelledBy?: string
 }
 
 export function DateInput(props: Props) {
@@ -42,8 +42,8 @@ export function DateInput(props: Props) {
         style: [pal.text, pal.view, pal.border, styles.textInput],
         placeholderTextColor: pal.colors.textLight,
         'aria-label': props['aria-label'],
+        'aria-labelledby': props['aria-labelledby'],
         accessibilityHint: props.accessibilityHint,
-        accessibilityLabelledBy: props.accessibilityLabelledBy,
       })}
     </View>
   )

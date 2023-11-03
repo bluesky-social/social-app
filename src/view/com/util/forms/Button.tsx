@@ -48,8 +48,8 @@ export function Button({
   children,
   testID,
   'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelleby,
   accessibilityHint,
-  accessibilityLabelledBy,
   onAccessibilityEscape,
   withLoading = false,
 }: React.PropsWithChildren<{
@@ -61,8 +61,8 @@ export function Button({
   onPress?: () => void | Promise<void>
   testID?: string
   'aria-label'?: string
+  'aria-labelledby'?: string
   accessibilityHint?: string
-  accessibilityLabelledBy?: string
   onAccessibilityEscape?: () => void
   withLoading?: boolean
 }>) {
@@ -196,14 +196,15 @@ export function Button({
 
   return (
     <Pressable
+      accessibilityRole="button"
       style={getStyle}
       onPress={onPressWrapped}
       disabled={isLoading}
       testID={testID}
       role="button"
       aria-label={ariaLabel}
+      aria-labelledby={ariaLabelleby}
       accessibilityHint={accessibilityHint}
-      accessibilityLabelledBy={accessibilityLabelledBy}
       onAccessibilityEscape={onAccessibilityEscape}>
       {renderChildern}
     </Pressable>

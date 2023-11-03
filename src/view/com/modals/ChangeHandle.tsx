@@ -386,7 +386,7 @@ function CustomHandleForm({
           value={handle}
           onChangeText={onChangeHandle}
           editable={!isProcessing}
-          accessibilityLabelledBy="customDomain"
+          aria-labelledby="customDomain"
           aria-label="Custom domain"
           accessibilityHint="Input your preferred hosting provider"
         />

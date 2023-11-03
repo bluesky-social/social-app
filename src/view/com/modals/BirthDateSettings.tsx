@@ -65,7 +65,7 @@ export const Component = observer(function Component({}: {}) {
           buttonLabelType="lg"
           aria-label="Birthday"
           accessibilityHint="Enter your birth date"
-          accessibilityLabelledBy="birthDate"
+          aria-labelledby="birthDate"
         />
       </View>
 
@@ -80,6 +80,7 @@ export const Component = observer(function Component({}: {}) {
           </View>
         ) : (
           <TouchableOpacity
+            accessibilityRole="button"
             testID="confirmBtn"
             onPress={onSave}
             style={styles.btn}

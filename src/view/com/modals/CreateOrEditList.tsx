@@ -194,7 +194,7 @@ export function Component({
               accessible={true}
               aria-label="Name"
               accessibilityHint=""
-              accessibilityLabelledBy="list-name"
+              aria-labelledby="list-name"
             />
           </View>
           <View style={s.pb10}>
@@ -217,7 +217,7 @@ export function Component({
               accessible={true}
               aria-label="Description"
               accessibilityHint=""
-              accessibilityLabelledBy="list-description"
+              aria-labelledby="list-description"
             />
           </View>
           {isProcessing ? (

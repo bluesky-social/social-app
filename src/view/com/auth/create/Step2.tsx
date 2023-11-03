@@ -87,7 +87,7 @@ export const Step2 = observer(function Step2Impl({
               onChange={model.setEmail}
               aria-label="Email"
               accessibilityHint="Input email for Bluesky waitlist"
-              accessibilityLabelledBy="email"
+              aria-labelledby="email"
             />
           </View>
 
@@ -106,7 +106,7 @@ export const Step2 = observer(function Step2Impl({
               onChange={model.setPassword}
               aria-label="Password"
               accessibilityHint="Set password"
-              accessibilityLabelledBy="password"
+              aria-labelledby="password"
             />
           </View>
 
@@ -123,7 +123,7 @@ export const Step2 = observer(function Step2Impl({
               buttonLabelType="lg"
               aria-label="Birthday"
               accessibilityHint="Enter your birth date"
-              accessibilityLabelledBy="birthDate"
+              aria-labelledby="birthDate"
             />
           </View>
 

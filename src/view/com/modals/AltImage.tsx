@@ -93,7 +93,7 @@ export function Component({image}: Props) {
             onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
             aria-label="Image alt text"
             accessibilityHint=""
-            accessibilityLabelledBy="imageAltText"
+            aria-labelledby="imageAltText"
             autoFocus
           />
           <View style={styles.buttonControls}>

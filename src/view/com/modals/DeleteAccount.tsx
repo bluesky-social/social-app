@@ -157,7 +157,7 @@ export function Component({}: {}) {
               keyboardAppearance={theme.colorScheme}
               value={confirmCode}
               onChangeText={setConfirmCode}
-              accessibilityLabelledBy="confirmationCode"
+              aria-labelledby="confirmationCode"
               aria-label="Confirmation code"
               accessibilityHint="Input confirmation code for account deletion"
             />
@@ -173,7 +173,7 @@ export function Component({}: {}) {
               secureTextEntry
               value={password}
               onChangeText={setPassword}
-              accessibilityLabelledBy="password"
+              aria-labelledby="password"
               aria-label="Password"
               accessibilityHint="Input password for account deletion"
             />

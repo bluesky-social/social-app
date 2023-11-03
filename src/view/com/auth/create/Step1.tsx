@@ -93,7 +93,7 @@ export const Step1 = observer(function Step1Impl({
             onChange={onChangeServiceUrl}
             accessibilityHint="Input hosting provider address"
             aria-label="Hosting provider address"
-            accessibilityLabelledBy="addressProvider"
+            aria-labelledby="addressProvider"
           />
           {LOGIN_INCLUDE_DEV_SERVERS && (
             <View style={[s.flexRow, s.mt10]}>

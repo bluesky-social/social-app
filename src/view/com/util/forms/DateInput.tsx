@@ -23,8 +23,8 @@ interface Props {
   buttonLabelType?: TypographyVariant
   buttonLabelStyle?: StyleProp<TextStyle>
   'aria-label': string
+  'aria-labelledby'?: string
   accessibilityHint: string
-  accessibilityLabelledBy?: string
 }
 
 export function DateInput(props: Props) {
@@ -54,8 +54,8 @@ export function DateInput(props: Props) {
           style={props.buttonStyle}
           onPress={onPress}
           aria-label={props['aria-label']}
-          accessibilityHint={props.accessibilityHint}
-          accessibilityLabelledBy={props.accessibilityLabelledBy}>
+          aria-labelledby={props['aria-labelledby']}
+          accessibilityHint={props.accessibilityHint}>
           <View style={styles.button}>
             <FontAwesomeIcon
               icon={['far', 'calendar']}
@@ -79,8 +79,8 @@ export function DateInput(props: Props) {
           value={props.value}
           onChange={onChangeInternal}
           aria-label={props['aria-label']}
+          aria-labelledby={props['aria-labelledby']}
           accessibilityHint={props.accessibilityHint}
-          accessibilityLabelledBy={props.accessibilityLabelledBy}
         />
       )}
     </View>

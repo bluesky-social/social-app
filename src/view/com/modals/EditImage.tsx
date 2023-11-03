@@ -313,7 +313,7 @@ export const Component = observer(function EditImageImpl({
           onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
           aria-label="Alt text"
           accessibilityHint=""
-          accessibilityLabelledBy="alt-text"
+          aria-labelledby="alt-text"
         />
       </View>
       <View style={styles.btns}>
