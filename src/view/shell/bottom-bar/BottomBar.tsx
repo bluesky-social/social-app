@@ -192,11 +192,21 @@ export const BottomBar = observer(function BottomBarImpl({
                   styles.onProfile,
                   {borderColor: pal.text.color},
                 ]}>
-                <UserAvatar avatar={store.me.avatar} size={27} />
+                <UserAvatar
+                  avatar={store.me.avatar}
+                  size={27}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
+                  usePlainRNImage={true}
+                />
               </View>
             ) : (
               <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                <UserAvatar avatar={store.me.avatar} size={28} />
+                <UserAvatar
+                  avatar={store.me.avatar}
+                  size={28}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
+                  usePlainRNImage={true}
+                />
               </View>
             )}
           </View>
