@@ -54,22 +54,10 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
   observer(function ProfileListScreenImpl(props: Props) {
-    const pal = usePalette('default')
     const store = useStores()
-    const navigation = useNavigation<NavigationProp>()
-
     const {name: handleOrDid} = props.route.params
-
     const [listOwnerDid, setListOwnerDid] = React.useState<string | undefined>()
     const [error, setError] = React.useState<string | undefined>()
-
-    const onPressBack = useCallback(() => {
-      if (navigation.canGoBack()) {
-        navigation.goBack()
-      } else {
-        navigation.navigate('Home')
-      }
-    }, [navigation])
 
     React.useEffect(() => {
       /*
@@ -92,37 +80,7 @@ export const ProfileListScreen = withAuthRequired(
     if (error) {
       return (
         <CenteredView>
-          <View
-            style={[
-              pal.view,
-              pal.border,
-              {
-                margin: 10,
-                paddingHorizontal: 18,
-                paddingVertical: 14,
-                borderRadius: 6,
-              },
-            ]}>
-            <Text type="title-lg" style={[pal.text, s.mb10]}>
-              Could not load list
-            </Text>
-            <Text type="md" style={[pal.text, s.mb20]}>
-              {error}
-            </Text>
-
-            <View style={{flexDirection: 'row'}}>
-              <Button
-                type="default"
-                accessibilityLabel="Go Back"
-                accessibilityHint="Return to previous page"
-                onPress={onPressBack}
-                style={{flexShrink: 1}}>
-                <Text type="button" style={pal.text}>
-                  Go Back
-                </Text>
-              </Button>
-            </View>
-          </View>
+          <ErrorScreen error={error} />
         </CenteredView>
       )
     }
@@ -289,7 +247,12 @@ export const ProfileListScreenInner = observer(
         </View>
       )
     }
-    return <Header rkey={rkey} list={list} />
+    return (
+      <CenteredView sideBorders style={s.hContentRegion}>
+        <Header rkey={rkey} list={list} />
+        {list.error && <ErrorScreen error={list.error} />}
+      </CenteredView>
+    )
   },
 )
 
@@ -532,7 +495,7 @@ const Header = observer(function HeaderImpl({
       isOwner={list.isOwner}
       creator={list.data?.creator}
       avatarType="list">
-      {list.isCuratelist ? (
+      {list.isCuratelist || list.isPinned ? (
         <Button
           testID={list.isPinned ? 'unpinBtn' : 'pinBtn'}
           type={list.isPinned ? 'default' : 'inverted'}
@@ -788,6 +751,52 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     )
   },
 )
+
+function ErrorScreen({error}: {error: string}) {
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+  const onPressBack = useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
+  }, [navigation])
+
+  return (
+    <View
+      style={[
+        pal.view,
+        pal.border,
+        {
+          marginTop: 10,
+          paddingHorizontal: 18,
+          paddingVertical: 14,
+          borderTopWidth: 1,
+        },
+      ]}>
+      <Text type="title-lg" style={[pal.text, s.mb10]}>
+        Could not load list
+      </Text>
+      <Text type="md" style={[pal.text, s.mb20]}>
+        {error}
+      </Text>
+
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          type="default"
+          accessibilityLabel="Go Back"
+          accessibilityHint="Return to previous page"
+          onPress={onPressBack}
+          style={{flexShrink: 1}}>
+          <Text type="button" style={pal.text}>
+            Go Back
+          </Text>
+        </Button>
+      </View>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   btn: {
