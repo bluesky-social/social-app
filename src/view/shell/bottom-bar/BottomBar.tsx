@@ -125,7 +125,7 @@ export const BottomBar = observer(function BottomBarImpl({
           )
         }
         onPress={onPressSearch}
-        role="search"
+        role="searchbox"
         aria-label="Search"
         accessibilityHint=""
       />

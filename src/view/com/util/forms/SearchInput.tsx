@@ -58,7 +58,7 @@ export function SearchInput({
         onBlur={() => setIsInputFocused?.(false)}
         onChangeText={onChangeQuery}
         onSubmitEditing={onSubmitQuery}
-        role="search"
+        role="searchbox"
         aria-label="Search"
         accessibilityHint=""
         autoCorrect={false}

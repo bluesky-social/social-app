@@ -96,7 +96,7 @@ export function HeaderWithInput({
           onChangeText={onChangeQuery}
           onSubmitEditing={onSubmitQuery}
           autoFocus={false}
-          role="search"
+          role="searchbox"
           aria-label="Search"
           accessibilityHint=""
           autoCorrect={false}
