@@ -195,6 +195,7 @@ export const BottomBar = observer(function BottomBarImpl({
                 <UserAvatar
                   avatar={store.me.avatar}
                   size={27}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
                   usePlainRNImage={true}
                 />
               </View>
@@ -203,6 +204,7 @@ export const BottomBar = observer(function BottomBarImpl({
                 <UserAvatar
                   avatar={store.me.avatar}
                   size={28}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
                   usePlainRNImage={true}
                 />
               </View>

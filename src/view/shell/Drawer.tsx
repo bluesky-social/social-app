@@ -161,6 +161,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               <UserAvatar
                 size={80}
                 avatar={store.me.avatar}
+                // See https://github.com/bluesky-social/social-app/pull/1801:
                 usePlainRNImage={true}
               />
               <Text
