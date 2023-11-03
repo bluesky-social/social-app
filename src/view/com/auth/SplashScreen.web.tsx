@@ -42,7 +42,6 @@ export const SplashScreen = ({
               testID="createAccountButton"
               style={[styles.btn, {backgroundColor: colors.blue3}]}
               onPress={onPressCreateAccount}
-              // TODO: web accessibility
               role="button">
               <Text style={[s.white, styles.btnLabel]}>
                 Create a new account
@@ -52,7 +51,6 @@ export const SplashScreen = ({
               testID="signInButton"
               style={[styles.btn, pal.btn]}
               onPress={onPressSignin}
-              // TODO: web accessibility
               role="button">
               <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
             </TouchableOpacity>
