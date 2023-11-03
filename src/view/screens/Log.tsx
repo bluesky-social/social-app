@@ -10,6 +10,7 @@ import {s} from 'lib/styles'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {getEntries} from '#/logger/logDump'
 import {ago} from 'lib/strings/time'
 
 export const LogScreen = observer(function Log({}: NativeStackScreenProps<
@@ -38,7 +39,7 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
     <View style={[s.flex1]}>
       <ViewHeader title="Log" />
       <ScrollView style={s.flex1}>
-        {store.log.entries
+        {getEntries()
           .slice(0)
           .reverse()
           .map(entry => {
@@ -49,15 +50,15 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
                   onPress={toggler(entry.id)}
                   accessibilityLabel="View debug entry"
                   accessibilityHint="Opens additional details for a debug entry">
-                  {entry.type === 'debug' ? (
+                  {entry.level === 'debug' ? (
                     <FontAwesomeIcon icon="info" />
                   ) : (
                     <FontAwesomeIcon icon="exclamation" style={s.red3} />
                   )}
                   <Text type="sm" style={[styles.summary, pal.text]}>
-                    {entry.summary}
+                    {String(entry.message)}
                   </Text>
-                  {entry.details ? (
+                  {entry.metadata && Object.keys(entry.metadata).length ? (
                     <FontAwesomeIcon
                       icon={
                         expanded.includes(entry.id) ? 'angle-up' : 'angle-down'
@@ -66,14 +67,14 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
                     />
                   ) : undefined}
                   <Text type="sm" style={[styles.ts, pal.textLight]}>
-                    {entry.ts ? ago(entry.ts) : ''}
+                    {ago(entry.timestamp)}
                   </Text>
                 </TouchableOpacity>
                 {expanded.includes(entry.id) ? (
                   <View style={[pal.view, s.pl10, s.pr10, s.pb10]}>
                     <View style={[pal.btn, styles.details]}>
                       <Text type="mono" style={pal.text}>
-                        {entry.details}
+                        {JSON.stringify(entry.metadata, null, 2)}
                       </Text>
                     </View>
                   </View>

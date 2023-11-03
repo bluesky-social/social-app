@@ -8,7 +8,6 @@ import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import {z} from 'zod'
 import {isObj, hasProp} from 'lib/type-guards'
-import {LogModel} from './log'
 import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
 import {HandleResolutionsCache} from './cache/handle-resolutions'
@@ -23,6 +22,7 @@ import {ImageSizesCache} from './cache/image-sizes'
 import {MutedThreads} from './muted-threads'
 import {Reminders} from './ui/reminders'
 import {reset as resetNavigation} from '../../Navigation'
+import {logger} from '#/logger'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -41,7 +41,7 @@ export type AppInfo = z.infer<typeof appInfo>
 export class RootStoreModel {
   agent: BskyAgent
   appInfo?: AppInfo
-  log = new LogModel()
+  log = logger
   session = new SessionModel(this)
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel(this)
