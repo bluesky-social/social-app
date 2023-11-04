@@ -42,10 +42,9 @@ export class PostsFeedItemModel {
       } else {
         this.postRecord = undefined
         this.richText = undefined
-        rootStore.log.warn(
-          'Received an invalid app.bsky.feed.post record',
-          valid.error,
-        )
+        rootStore.log.warn('Received an invalid app.bsky.feed.post record', {
+          error: valid.error,
+        })
       }
     } else {
       this.postRecord = undefined
@@ -133,7 +132,7 @@ export class PostsFeedItemModel {
         track('Post:Like')
       }
     } catch (error) {
-      this.rootStore.log.error('Failed to toggle like', error)
+      this.rootStore.log.error('Failed to toggle like', {error})
     }
   }
 
@@ -168,7 +167,7 @@ export class PostsFeedItemModel {
         track('Post:Repost')
       }
     } catch (error) {
-      this.rootStore.log.error('Failed to toggle repost', error)
+      this.rootStore.log.error('Failed to toggle repost', {error})
     }
   }
 
@@ -182,7 +181,7 @@ export class PostsFeedItemModel {
         track('Post:ThreadMute')
       }
     } catch (error) {
-      this.rootStore.log.error('Failed to toggle thread mute', error)
+      this.rootStore.log.error('Failed to toggle thread mute', {error})
     }
   }
 
@@ -191,7 +190,7 @@ export class PostsFeedItemModel {
       await this.rootStore.agent.deletePost(this.post.uri)
       this.rootStore.emitPostDeleted(this.post.uri)
     } catch (error) {
-      this.rootStore.log.error('Failed to delete post', error)
+      this.rootStore.log.error('Failed to delete post', {error})
     } finally {
       track('Post:Delete')
     }

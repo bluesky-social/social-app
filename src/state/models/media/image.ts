@@ -188,7 +188,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
         this.cropped = cropped
       })
     } catch (err) {
-      this.rootStore.log.error('Failed to crop photo', err)
+      this.rootStore.log.error('Failed to crop photo', {error: err})
     }
   }
 

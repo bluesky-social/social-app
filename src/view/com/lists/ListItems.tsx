@@ -94,7 +94,7 @@ export const ListItems = observer(function ListItemsImpl({
     try {
       await list.refresh()
     } catch (err) {
-      list.rootStore.log.error('Failed to refresh lists', err)
+      list.rootStore.log.error('Failed to refresh lists', {error: err})
     }
     setIsRefreshing(false)
   }, [list, track, setIsRefreshing])
@@ -104,7 +104,7 @@ export const ListItems = observer(function ListItemsImpl({
     try {
       await list.loadMore()
     } catch (err) {
-      list.rootStore.log.error('Failed to load more lists', err)
+      list.rootStore.log.error('Failed to load more lists', {error: err})
     }
   }, [list, track])
 

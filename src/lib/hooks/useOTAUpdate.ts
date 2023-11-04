@@ -34,18 +34,18 @@ export function useOTAUpdate() {
       // show a popup modal
       showUpdatePopup()
     } catch (e) {
-      console.error('useOTAUpdate: Error while checking for update', e)
-      store.log.error('useOTAUpdate: Error while checking for update', e)
+      store.log.error('useOTAUpdate: Error while checking for update', {
+        error: e,
+      })
     }
   }, [showUpdatePopup, store.log])
   const updateEventListener = useCallback(
     (event: Updates.UpdateEvent) => {
       store.log.debug('useOTAUpdate: Listening for update...')
       if (event.type === Updates.UpdateEventType.ERROR) {
-        store.log.error(
-          'useOTAUpdate: Error while listening for update',
-          event.message,
-        )
+        store.log.error('useOTAUpdate: Error while listening for update', {
+          message: event.message,
+        })
       } else if (event.type === Updates.UpdateEventType.NO_UPDATE_AVAILABLE) {
         // Handle no update available
         // do nothing

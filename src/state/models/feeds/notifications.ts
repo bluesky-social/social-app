@@ -220,7 +220,7 @@ export class NotificationsFeedItemModel {
     }
     this.rootStore.log.warn(
       'app.bsky.notifications.list served an unsupported record type',
-      v,
+      {record: v},
     )
   }
 

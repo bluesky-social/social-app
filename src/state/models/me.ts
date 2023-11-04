@@ -110,13 +110,17 @@ export class MeModel {
       await this.fetchProfile()
       this.mainFeed.clear()
       /* dont await */ this.mainFeed.setup().catch(e => {
-        this.rootStore.log.error('Failed to setup main feed model', e)
+        this.rootStore.log.error('Failed to setup main feed model', {error: e})
       })
       /* dont await */ this.notifications.setup().catch(e => {
-        this.rootStore.log.error('Failed to setup notifications model', e)
+        this.rootStore.log.error('Failed to setup notifications model', {
+          error: e,
+        })
       })
       /* dont await */ this.notifications.setup().catch(e => {
-        this.rootStore.log.error('Failed to setup notifications model', e)
+        this.rootStore.log.error('Failed to setup notifications model', {
+          error: e,
+        })
       })
       this.myFeeds.clear()
       /* dont await */ this.myFeeds.saved.refresh()
@@ -184,7 +188,9 @@ export class MeModel {
           })
         })
       } catch (e) {
-        this.rootStore.log.error('Failed to fetch user invite codes', e)
+        this.rootStore.log.error('Failed to fetch user invite codes', {
+          error: e,
+        })
       }
       await this.rootStore.invitedUsers.fetch(this.invites)
     }
@@ -199,7 +205,9 @@ export class MeModel {
           this.appPasswords = res.data.passwords
         })
       } catch (e) {
-        this.rootStore.log.error('Failed to fetch user app passwords', e)
+        this.rootStore.log.error('Failed to fetch user app passwords', {
+          error: e,
+        })
       }
     }
   }
@@ -220,7 +228,7 @@ export class MeModel {
         })
         return res.data
       } catch (e) {
-        this.rootStore.log.error('Failed to create app password', e)
+        this.rootStore.log.error('Failed to create app password', {error: e})
       }
     }
   }
@@ -235,7 +243,7 @@ export class MeModel {
           this.appPasswords = this.appPasswords.filter(p => p.name !== name)
         })
       } catch (e) {
-        this.rootStore.log.error('Failed to delete app password', e)
+        this.rootStore.log.error('Failed to delete app password', {error: e})
       }
     }
   }
