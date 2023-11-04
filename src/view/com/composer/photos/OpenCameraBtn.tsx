@@ -12,6 +12,7 @@ import {useCameraPermission} from 'lib/hooks/usePermissions'
 import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {GalleryModel} from 'state/models/media/gallery'
 import {isMobileWeb, isNative} from 'platform/detection'
+import {logger} from '#/logger'
 
 type Props = {
   gallery: GalleryModel
@@ -39,7 +40,7 @@ export function OpenCameraBtn({gallery}: Props) {
       gallery.add(img)
     } catch (err: any) {
       // ignore
-      store.log.warn('Error using camera', {error: err})
+      logger.warn('Error using camera', {error: err})
     }
   }, [gallery, track, store, requestCameraAccessIfNeeded])
 

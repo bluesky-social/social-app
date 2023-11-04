@@ -17,6 +17,7 @@ import {bundleAsync} from 'lib/async/bundle'
 import {RootStoreModel} from '../root-store'
 import {PostThreadModel} from '../content/post-thread'
 import {cleanError} from 'lib/strings/errors'
+import {logger} from '#/logger'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -210,7 +211,7 @@ export class NotificationsFeedItemModel {
         if (valid.success) {
           return v
         } else {
-          this.rootStore.log.warn('Received an invalid record', {
+          logger.warn('Received an invalid record', {
             record: v,
             error: valid.error,
           })
@@ -218,7 +219,7 @@ export class NotificationsFeedItemModel {
         }
       }
     }
-    this.rootStore.log.warn(
+    logger.warn(
       'app.bsky.notifications.list served an unsupported record type',
       {record: v},
     )
@@ -319,7 +320,7 @@ export class NotificationsFeedModel {
    * Nuke all data
    */
   clear() {
-    this.rootStore.log.debug('NotificationsModel:clear')
+    logger.debug('NotificationsModel:clear')
     this.isLoading = false
     this.isRefreshing = false
     this.hasLoaded = false
@@ -336,7 +337,7 @@ export class NotificationsFeedModel {
    * Load for first render
    */
   setup = bundleAsync(async (isRefreshing: boolean = false) => {
-    this.rootStore.log.debug('NotificationsModel:refresh', {isRefreshing})
+    logger.debug('NotificationsModel:refresh', {isRefreshing})
     await this.lock.acquireAsync()
     try {
       this._xLoading(isRefreshing)
@@ -368,7 +369,7 @@ export class NotificationsFeedModel {
    * Sync the next set of notifications to show
    */
   syncQueue = bundleAsync(async () => {
-    this.rootStore.log.debug('NotificationsModel:syncQueue')
+    logger.debug('NotificationsModel:syncQueue')
     if (this.unreadCount >= MAX_VISIBLE_NOTIFS) {
       return // no need to check
     }
@@ -401,7 +402,7 @@ export class NotificationsFeedModel {
       this._setQueued(this._filterNotifications(queueModels))
       this._countUnread()
     } catch (e) {
-      this.rootStore.log.error('NotificationsModel:syncQueue failed', {
+      logger.error('NotificationsModel:syncQueue failed', {
         error: e,
       })
     } finally {
@@ -463,10 +464,7 @@ export class NotificationsFeedModel {
       }
     }
     await Promise.all(promises).catch(e => {
-      this.rootStore.log.error(
-        'Uncaught failure during notifications update()',
-        e,
-      )
+      logger.error('Uncaught failure during notifications update()', e)
     })
   }
 
@@ -483,7 +481,7 @@ export class NotificationsFeedModel {
         this.lastSync ? this.lastSync.toISOString() : undefined,
       )
     } catch (e: any) {
-      this.rootStore.log.warn('Failed to update notifications read state', {
+      logger.warn('Failed to update notifications read state', {
         error: e,
       })
     }
@@ -505,10 +503,10 @@ export class NotificationsFeedModel {
     this.error = cleanError(error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
-      this.rootStore.log.error('Failed to fetch notifications', {error})
+      logger.error('Failed to fetch notifications', {error})
     }
     if (loadMoreError) {
-      this.rootStore.log.error('Failed to load more notifications', {
+      logger.error('Failed to load more notifications', {
         error: loadMoreError,
       })
     }

@@ -3,6 +3,7 @@ import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -144,7 +145,7 @@ export class SuggestedActorsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch suggested actors', {error: err})
+      logger.error('Failed to fetch suggested actors', {error: err})
     }
   }
 }

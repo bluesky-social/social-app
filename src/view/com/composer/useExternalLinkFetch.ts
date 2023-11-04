@@ -16,6 +16,7 @@ import {
 } from 'lib/strings/url-helpers'
 import {ComposerOpts} from 'state/models/ui/shell'
 import {POST_IMG_MAX} from 'lib/constants'
+import {logger} from '#/logger'
 
 export function useExternalLinkFetch({
   setQuote,
@@ -46,7 +47,7 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
           err => {
-            store.log.error('Failed to fetch post for quote embedding', {
+            logger.error('Failed to fetch post for quote embedding', {
               error: err,
             })
             setExtLink(undefined)
@@ -66,7 +67,7 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            store.log.error('Failed to fetch feed for embedding', {error: err})
+            logger.error('Failed to fetch feed for embedding', {error: err})
             setExtLink(undefined)
           },
         )
@@ -84,7 +85,7 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            store.log.error('Failed to fetch list for embedding', {error: err})
+            logger.error('Failed to fetch list for embedding', {error: err})
             setExtLink(undefined)
           },
         )

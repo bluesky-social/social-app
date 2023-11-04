@@ -20,6 +20,7 @@ import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import useAppState from 'react-native-appstate-hook'
+import {logger} from '#/logger'
 
 export const FeedPage = observer(function FeedPageImpl({
   testID,
@@ -66,10 +67,10 @@ export const FeedPage = observer(function FeedPageImpl({
       if (feed.isLoading) {
         return
       }
-      store.log.debug('HomeScreen: Polling for new posts')
+      logger.debug('HomeScreen: Polling for new posts')
       feed.checkForLatest()
     },
-    [appState, isScreenFocused, isPageFocused, store, feed],
+    [appState, isScreenFocused, isPageFocused, feed],
   )
 
   const scrollToTop = React.useCallback(() => {
@@ -96,7 +97,7 @@ export const FeedPage = observer(function FeedPageImpl({
     const pollInterval = setInterval(doPoll, POLL_FREQ)
 
     screen('Feed')
-    store.log.debug('HomeScreen: Updating feed')
+    logger.debug('HomeScreen: Updating feed')
     feed.checkForLatest()
 
     return () => {

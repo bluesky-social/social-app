@@ -26,6 +26,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {TextLink} from 'view/com/util/Link'
+import {logger} from '#/logger'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -159,31 +160,30 @@ const ListItem = observer(function ListItemImpl({
   item: FeedSourceModel
 }) {
   const pal = usePalette('default')
-  const store = useStores()
   const isPinned = item.isPinned
 
   const onTogglePinned = useCallback(() => {
     Haptics.default()
     item.togglePin().catch(e => {
       Toast.show('There was an issue contacting the server')
-      store.log.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {error: e})
     })
-  }, [item, store])
+  }, [item])
   const onPressUp = useCallback(
     () =>
       savedFeeds.movePinnedFeed(item, 'up').catch(e => {
         Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to set pinned feed order', {error: e})
+        logger.error('Failed to set pinned feed order', {error: e})
       }),
-    [store, savedFeeds, item],
+    [savedFeeds, item],
   )
   const onPressDown = useCallback(
     () =>
       savedFeeds.movePinnedFeed(item, 'down').catch(e => {
         Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to set pinned feed order', {error: e})
+        logger.error('Failed to set pinned feed order', {error: e})
       }),
-    [store, savedFeeds, item],
+    [savedFeeds, item],
   )
 
   return (

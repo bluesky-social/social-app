@@ -40,6 +40,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
+import {logger} from '#/logger'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -165,9 +166,9 @@ export const ProfileFeedScreenInner = observer(
         Toast.show(
           'There was an an issue updating your feeds, please check your internet connection and try again.',
         )
-        store.log.error('Failed up update feeds', {error: err})
+        logger.error('Failed up update feeds', {error: err})
       }
-    }, [store, feedInfo])
+    }, [feedInfo])
 
     const onToggleLiked = React.useCallback(async () => {
       Haptics.default()
@@ -181,19 +182,19 @@ export const ProfileFeedScreenInner = observer(
         Toast.show(
           'There was an an issue contacting the server, please check your internet connection and try again.',
         )
-        store.log.error('Failed up toggle like', {error: err})
+        logger.error('Failed up toggle like', {error: err})
       }
-    }, [store, feedInfo])
+    }, [feedInfo])
 
     const onTogglePinned = React.useCallback(async () => {
       Haptics.default()
       if (feedInfo) {
         feedInfo.togglePin().catch(e => {
           Toast.show('There was an issue contacting the server')
-          store.log.error('Failed to toggle pinned feed', {error: e})
+          logger.error('Failed to toggle pinned feed', {error: e})
         })
       }
-    }, [store, feedInfo])
+    }, [feedInfo])
 
     const onPressShare = React.useCallback(() => {
       const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)

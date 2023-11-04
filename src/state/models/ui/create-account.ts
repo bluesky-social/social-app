@@ -8,6 +8,7 @@ import {createFullHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
 import {getAge} from 'lib/strings/time'
 import {track} from 'lib/analytics/analytics'
+import {logger} from '#/logger'
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
@@ -76,7 +77,7 @@ export class CreateAccountModel {
       this.setServiceDescription(desc)
       this.setUserDomain(desc.availableUserDomains[0])
     } catch (err: any) {
-      this.rootStore.log.warn(
+      logger.warn(
         `Failed to fetch service description for ${this.serviceUrl}`,
         {error: err},
       )
@@ -127,7 +128,7 @@ export class CreateAccountModel {
         errMsg =
           'Invite code not accepted. Check that you input it correctly and try again.'
       }
-      this.rootStore.log.error('Failed to create account', {error: e})
+      logger.error('Failed to create account', {error: e})
       this.setIsProcessing(false)
       this.setError(cleanError(errMsg))
       throw e

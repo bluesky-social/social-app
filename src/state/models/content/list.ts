@@ -16,6 +16,7 @@ import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 import {track} from 'lib/analytics/analytics'
 import {until} from 'lib/async/until'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -339,7 +340,7 @@ export class ListModel {
     try {
       await this.rootStore.preferences.addPinnedFeed(this.uri)
     } catch (error) {
-      this.rootStore.log.error('Failed to pin feed', {error})
+      logger.error('Failed to pin feed', {error})
     } finally {
       track('CustomFeed:Pin', {
         name: this.data?.name || '',
@@ -455,10 +456,10 @@ export class ListModel {
     this.error = cleanError(err)
     this.loadMoreError = cleanError(loadMoreErr)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user items', {error: err})
+      logger.error('Failed to fetch user items', {error: err})
     }
     if (loadMoreErr) {
-      this.rootStore.log.error('Failed to fetch user items', {
+      logger.error('Failed to fetch user items', {
         error: loadMoreErr,
       })
     }

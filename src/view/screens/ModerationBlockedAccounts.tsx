@@ -21,6 +21,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {logger} from '#/logger'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -52,9 +53,9 @@ export const ModerationBlockedAccounts = withAuthRequired(
       blockedAccounts
         .loadMore()
         .catch(err =>
-          store.log.error('Failed to load more blocked accounts', {error: err}),
+          logger.error('Failed to load more blocked accounts', {error: err}),
         )
-    }, [blockedAccounts, store])
+    }, [blockedAccounts])
 
     const renderItem = ({
       item,

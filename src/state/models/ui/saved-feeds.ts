@@ -4,6 +4,7 @@ import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {FeedSourceModel} from '../content/feed-source'
 import {track} from 'lib/analytics/analytics'
+import {logger} from '#/logger'
 
 export class SavedFeedsModel {
   // state
@@ -126,7 +127,7 @@ export class SavedFeedsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user feeds', {err})
+      logger.error('Failed to fetch user feeds', {err})
     }
   }
 

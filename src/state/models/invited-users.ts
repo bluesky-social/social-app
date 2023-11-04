@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {ComAtprotoServerDefs, AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {isObj, hasProp, isStrArray} from 'lib/type-guards'
+import {logger} from '#/logger'
 
 export class InvitedUsers {
   copiedInvites: string[] = []
@@ -63,7 +64,7 @@ export class InvitedUsers {
         })
         this.rootStore.me.follows.hydrateMany(this.profiles)
       } catch (e) {
-        this.rootStore.log.error('Failed to fetch profiles for invited users', {
+        logger.error('Failed to fetch profiles for invited users', {
           error: e,
         })
       }

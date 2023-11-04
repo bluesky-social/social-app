@@ -21,6 +21,7 @@ import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {logger} from '#/logger'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -94,7 +95,7 @@ export const ListItems = observer(function ListItemsImpl({
     try {
       await list.refresh()
     } catch (err) {
-      list.rootStore.log.error('Failed to refresh lists', {error: err})
+      logger.error('Failed to refresh lists', {error: err})
     }
     setIsRefreshing(false)
   }, [list, track, setIsRefreshing])
@@ -104,7 +105,7 @@ export const ListItems = observer(function ListItemsImpl({
     try {
       await list.loadMore()
     } catch (err) {
-      list.rootStore.log.error('Failed to load more lists', {error: err})
+      logger.error('Failed to load more lists', {error: err})
     }
   }, [list, track])
 

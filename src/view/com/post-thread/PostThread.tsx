@@ -30,6 +30,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {logger} from '#/logger'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
@@ -119,7 +120,7 @@ export const PostThread = observer(function PostThread({
     try {
       view?.refresh()
     } catch (err) {
-      view.rootStore.log.error('Failed to refresh posts thread', {error: err})
+      logger.error('Failed to refresh posts thread', {error: err})
     }
     setIsRefreshing(false)
   }, [view, setIsRefreshing])

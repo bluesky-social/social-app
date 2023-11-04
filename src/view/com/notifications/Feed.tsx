@@ -11,6 +11,7 @@ import {EmptyState} from '../util/EmptyState'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {logger} from '#/logger'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -61,7 +62,7 @@ export const Feed = observer(function Feed({
       setIsPTRing(true)
       await view.refresh()
     } catch (err) {
-      view.rootStore.log.error('Failed to refresh notifications feed', {
+      logger.error('Failed to refresh notifications feed', {
         error: err,
       })
     } finally {
@@ -73,7 +74,7 @@ export const Feed = observer(function Feed({
     try {
       await view.loadMore()
     } catch (err) {
-      view.rootStore.log.error('Failed to load more notifications', {
+      logger.error('Failed to load more notifications', {
         error: err,
       })
     }

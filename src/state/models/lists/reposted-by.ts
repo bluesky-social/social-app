@@ -8,6 +8,7 @@ import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import * as apilib from 'lib/api/index'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -100,7 +101,7 @@ export class RepostedByModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch reposted by view', {error: err})
+      logger.error('Failed to fetch reposted by view', {error: err})
     }
   }
 

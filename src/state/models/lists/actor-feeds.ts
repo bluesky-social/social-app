@@ -4,6 +4,7 @@ import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {FeedSourceModel} from '../content/feed-source'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -98,7 +99,7 @@ export class ActorFeedsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user followers', {error: err})
+      logger.error('Failed to fetch user followers', {error: err})
     }
   }
 

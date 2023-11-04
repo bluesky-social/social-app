@@ -11,6 +11,7 @@ import * as apilib from 'lib/api/index'
 import {cleanError} from 'lib/strings/errors'
 import {ThreadViewPreference} from '../ui/preferences'
 import {PostThreadItemModel} from './post-thread-item'
+import {logger} from '#/logger'
 
 export class PostThreadModel {
   // state
@@ -163,7 +164,7 @@ export class PostThreadModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch post thread', {error: err})
+      logger.error('Failed to fetch post thread', {error: err})
     }
     this.notFound = err instanceof GetPostThread.NotFoundError
   }

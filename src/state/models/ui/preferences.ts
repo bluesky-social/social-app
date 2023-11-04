@@ -14,6 +14,7 @@ import {deviceLocales} from 'platform/detection'
 import {getAge} from 'lib/strings/time'
 import {FeedTuner} from 'lib/api/feed-manip'
 import {LANGUAGES} from '../../../locale/languages'
+import {logger} from '#/logger'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
@@ -246,7 +247,7 @@ export class PreferencesModel {
           })
           await this.rootStore.agent.setSavedFeeds(saved, pinned)
         } catch (error) {
-          this.rootStore.log.error('Failed to set default feeds', {error})
+          logger.error('Failed to set default feeds', {error})
         }
       }
     } finally {

@@ -4,6 +4,7 @@ import {BskyAgent} from '@atproto/api'
 import {RootStoreModel} from './models/root-store'
 import * as apiPolyfill from 'lib/api/api-polyfill'
 import * as storage from 'lib/storage'
+import {logger} from '#/logger'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -22,10 +23,10 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
   rootStore = new RootStoreModel(new BskyAgent({service: serviceUri}))
   try {
     data = (await storage.load(ROOT_STATE_STORAGE_KEY)) || {}
-    rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})
+    logger.debug('Initial hydrate', {hasSession: !!data.session})
     rootStore.hydrate(data)
   } catch (e: any) {
-    rootStore.log.error('Failed to load state from storage', {error: e})
+    logger.error('Failed to load state from storage', {error: e})
   }
   rootStore.attemptSessionResumption()
 

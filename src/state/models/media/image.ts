@@ -9,6 +9,7 @@ import {ActionCrop, FlipType, SaveFormat} from 'expo-image-manipulator'
 import {Position} from 'react-avatar-editor'
 import {Dimensions} from 'lib/media/types'
 import {isIOS} from 'platform/detection'
+import {logger} from '#/logger'
 
 export interface ImageManipulationAttributes {
   aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
@@ -188,7 +189,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
         this.cropped = cropped
       })
     } catch (err) {
-      this.rootStore.log.error('Failed to crop photo', {error: err})
+      logger.error('Failed to crop photo', {error: err})
     }
   }
 

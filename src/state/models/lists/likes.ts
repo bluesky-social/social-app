@@ -5,6 +5,7 @@ import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 import * as apilib from 'lib/api/index'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -97,7 +98,7 @@ export class LikesModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch likes', {error: err})
+      logger.error('Failed to fetch likes', {error: err})
     }
   }
 

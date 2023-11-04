@@ -22,6 +22,7 @@ import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -161,7 +162,7 @@ export class PostsFeedModel {
    * Nuke all data
    */
   clear() {
-    this.rootStore.log.debug('FeedModel:clear')
+    logger.debug('FeedModel:clear')
     this.isLoading = false
     this.isRefreshing = false
     this.hasNewLatest = false
@@ -177,7 +178,7 @@ export class PostsFeedModel {
    * Load for first render
    */
   setup = bundleAsync(async (isRefreshing: boolean = false) => {
-    this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
+    logger.debug('FeedModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
@@ -324,10 +325,10 @@ export class PostsFeedModel {
     this.knownError = detectKnownError(this.feedType, error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
-      this.rootStore.log.error('Posts feed request failed', {error})
+      logger.error('Posts feed request failed', {error})
     }
     if (loadMoreError) {
-      this.rootStore.log.error('Posts feed load-more request failed', {
+      logger.error('Posts feed load-more request failed', {
         error: loadMoreError,
       })
     }

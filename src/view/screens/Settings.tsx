@@ -45,6 +45,7 @@ import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {logger} from '#/logger'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -110,10 +111,9 @@ export const SettingsScreen = withAuthRequired(
               Toast.show('Your handle has been updated')
             },
             err => {
-              store.log.error(
-                'Failed to reload from server after handle update',
-                {error: err},
-              )
+              logger.error('Failed to reload from server after handle update', {
+                error: err,
+              })
               setIsSwitching(false)
             },
           )
