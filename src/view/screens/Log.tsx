@@ -41,7 +41,6 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
       <ScrollView style={s.flex1}>
         {getEntries()
           .slice(0)
-          .reverse()
           .map(entry => {
             return (
               <View key={`entry-${entry.id}`}>
