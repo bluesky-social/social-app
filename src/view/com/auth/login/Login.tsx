@@ -83,7 +83,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         }
         store.log.warn(
           `Failed to fetch service description for ${serviceUrl}`,
-          err,
+          {error: err},
         )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
@@ -349,7 +349,7 @@ const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to login', e)
+      store.log.warn('Failed to login', {error: e})
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
@@ -578,7 +578,7 @@ const ForgotPasswordForm = ({
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to request password reset', e)
+      store.log.warn('Failed to request password reset', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -734,7 +734,7 @@ const SetNewPasswordForm = ({
       onPasswordSet()
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to set new password', e)
+      store.log.warn('Failed to set new password', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(

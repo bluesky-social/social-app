@@ -134,7 +134,7 @@ export class FeedSourceModel {
     try {
       await this.rootStore.preferences.addSavedFeed(this.uri)
     } catch (error) {
-      this.rootStore.log.error('Failed to save feed', error)
+      this.rootStore.log.error('Failed to save feed', {error})
     } finally {
       track('CustomFeed:Save')
     }
@@ -147,7 +147,7 @@ export class FeedSourceModel {
     try {
       await this.rootStore.preferences.removeSavedFeed(this.uri)
     } catch (error) {
-      this.rootStore.log.error('Failed to unsave feed', error)
+      this.rootStore.log.error('Failed to unsave feed', {error})
     } finally {
       track('CustomFeed:Unsave')
     }
@@ -157,7 +157,7 @@ export class FeedSourceModel {
     try {
       await this.rootStore.preferences.addPinnedFeed(this.uri)
     } catch (error) {
-      this.rootStore.log.error('Failed to pin feed', error)
+      this.rootStore.log.error('Failed to pin feed', {error})
     } finally {
       track('CustomFeed:Pin', {
         name: this.displayName,
@@ -194,7 +194,7 @@ export class FeedSourceModel {
     } catch (e: any) {
       this.likeUri = undefined
       this.likeCount = (this.likeCount || 1) - 1
-      this.rootStore.log.error('Failed to like feed', e)
+      this.rootStore.log.error('Failed to like feed', {error: e})
     } finally {
       track('CustomFeed:Like')
     }
@@ -215,7 +215,7 @@ export class FeedSourceModel {
     } catch (e: any) {
       this.likeUri = uri
       this.likeCount = (this.likeCount || 0) + 1
-      this.rootStore.log.error('Failed to unlike feed', e)
+      this.rootStore.log.error('Failed to unlike feed', {error: e})
     } finally {
       track('CustomFeed:Unlike')
     }

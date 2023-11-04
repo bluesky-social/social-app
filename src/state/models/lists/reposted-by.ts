@@ -100,7 +100,7 @@ export class RepostedByModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch reposted by view', err)
+      this.rootStore.log.error('Failed to fetch reposted by view', {error: err})
     }
   }
 

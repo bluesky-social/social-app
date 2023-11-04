@@ -339,7 +339,7 @@ export class ListModel {
     try {
       await this.rootStore.preferences.addPinnedFeed(this.uri)
     } catch (error) {
-      this.rootStore.log.error('Failed to pin feed', error)
+      this.rootStore.log.error('Failed to pin feed', {error})
     } finally {
       track('CustomFeed:Pin', {
         name: this.data?.name || '',
@@ -455,10 +455,12 @@ export class ListModel {
     this.error = cleanError(err)
     this.loadMoreError = cleanError(loadMoreErr)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user items', err)
+      this.rootStore.log.error('Failed to fetch user items', {error: err})
     }
     if (loadMoreErr) {
-      this.rootStore.log.error('Failed to fetch user items', loadMoreErr)
+      this.rootStore.log.error('Failed to fetch user items', {
+        error: loadMoreErr,
+      })
     }
   }
 

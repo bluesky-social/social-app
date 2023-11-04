@@ -112,7 +112,7 @@ export const SettingsScreen = withAuthRequired(
             err => {
               store.log.error(
                 'Failed to reload from server after handle update',
-                {err},
+                {error: err},
               )
               setIsSwitching(false)
             },

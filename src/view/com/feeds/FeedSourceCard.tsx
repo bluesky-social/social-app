@@ -45,7 +45,7 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
             Toast.show('Removed from my feeds')
           } catch (e) {
             Toast.show('There was an issue contacting your server')
-            store.log.error('Failed to unsave feed', {e})
+            store.log.error('Failed to unsave feed', {error: e})
           }
         },
       })
@@ -55,7 +55,7 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
         Toast.show('Added to my feeds')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
-        store.log.error('Failed to save feed', {e})
+        store.log.error('Failed to save feed', {error: e})
       }
     }
   }, [store, item])

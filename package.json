@@ -13,21 +13,21 @@
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
-    "test": "jest --forceExit --testTimeout=20000 --bail",
-    "test-watch": "jest --watchAll",
-    "test-ci": "jest --ci --forceExit --reporters=default --reporters=jest-junit",
-    "test-coverage": "jest --coverage",
+    "test": "NODE_ENV=test jest --forceExit --testTimeout=20000 --bail",
+    "test-watch": "NODE_ENV=test jest --watchAll",
+    "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
+    "test-coverage": "NODE_ENV=test jest --coverage",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node __e2e__/mock-server.ts",
     "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build": "detox build -c ios.sim.debug",
     "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all",
-    "perf:test": "maestro test",
-    "perf:test:run": "maestro test __e2e__/maestro/scroll.yaml",
-    "perf:test:measure": "flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
-    "perf:test:results": "flashlight report .perf/results.json",
-    "perf:measure": "flashlight measure",
+    "perf:test": "NODE_ENV=test maestro test",
+    "perf:test:run": "NODE_ENV=test maestro test __e2e__/maestro/scroll.yaml",
+    "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
+    "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
+    "perf:measure": "NODE_ENV=test flashlight measure",
     "build:apk": "eas build -p android --profile dev-android-apk"
   },
   "dependencies": {
@@ -80,6 +80,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "base64-js": "^1.5.1",
     "bcp-47-match": "^2.0.3",
+    "date-fns": "^2.30.0",
     "email-validator": "^2.0.4",
     "emoji-mart": "^5.5.2",
     "eventemitter3": "^5.0.1",
@@ -118,6 +119,7 @@
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
     "mobx-utils": "^6.0.6",
+    "nanoid": "^5.0.2",
     "normalize-url": "^8.0.0",
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0",
@@ -240,7 +242,7 @@
       "\\.[jt]sx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

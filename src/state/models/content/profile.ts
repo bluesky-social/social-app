@@ -235,7 +235,7 @@ export class ProfileModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch profile', err)
+      this.rootStore.log.error('Failed to fetch profile', {error: err})
     }
   }
 

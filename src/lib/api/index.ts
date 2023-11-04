@@ -178,10 +178,9 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         ) {
           encoding = 'image/jpeg'
         } else {
-          store.log.warn(
-            'Unexpected image format for thumbnail, skipping',
-            opts.extLink.localThumb.path,
-          )
+          store.log.warn('Unexpected image format for thumbnail, skipping', {
+            thumbnail: opts.extLink.localThumb.path,
+          })
         }
         if (encoding) {
           const thumbUploadRes = await uploadBlob(

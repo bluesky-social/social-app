@@ -223,10 +223,14 @@ export class ProfileUiModel {
     await Promise.all([
       this.profile
         .setup()
-        .catch(err => this.rootStore.log.error('Failed to fetch profile', err)),
+        .catch(err =>
+          this.rootStore.log.error('Failed to fetch profile', {error: err}),
+        ),
       this.feed
         .setup()
-        .catch(err => this.rootStore.log.error('Failed to fetch feed', err)),
+        .catch(err =>
+          this.rootStore.log.error('Failed to fetch feed', {error: err}),
+        ),
     ])
     runInAction(() => {
       this.isAuthenticatedUser =
@@ -237,7 +241,9 @@ export class ProfileUiModel {
     this.lists.source = this.profile.did
     this.lists
       .loadMore()
-      .catch(err => this.rootStore.log.error('Failed to fetch lists', err))
+      .catch(err =>
+        this.rootStore.log.error('Failed to fetch lists', {error: err}),
+      )
   }
 
   async refresh() {

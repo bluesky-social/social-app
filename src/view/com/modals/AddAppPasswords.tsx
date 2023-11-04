@@ -95,7 +95,7 @@ export function Component({}: {}) {
       }
     } catch (e) {
       Toast.show('Failed to create app password.')
-      store.log.error('Failed to create app password', {e})
+      store.log.error('Failed to create app password', {error: e})
     }
   }
 

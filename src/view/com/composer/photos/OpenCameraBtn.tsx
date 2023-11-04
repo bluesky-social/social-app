@@ -39,7 +39,7 @@ export function OpenCameraBtn({gallery}: Props) {
       gallery.add(img)
     } catch (err: any) {
       // ignore
-      store.log.warn('Error using camera', err)
+      store.log.warn('Error using camera', {error: err})
     }
   }, [gallery, track, store, requestCameraAccessIfNeeded])
 

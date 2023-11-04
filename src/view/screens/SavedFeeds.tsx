@@ -166,14 +166,14 @@ const ListItem = observer(function ListItemImpl({
     Haptics.default()
     item.togglePin().catch(e => {
       Toast.show('There was an issue contacting the server')
-      store.log.error('Failed to toggle pinned feed', {e})
+      store.log.error('Failed to toggle pinned feed', {error: e})
     })
   }, [item, store])
   const onPressUp = useCallback(
     () =>
       savedFeeds.movePinnedFeed(item, 'up').catch(e => {
         Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to set pinned feed order', {e})
+        store.log.error('Failed to set pinned feed order', {error: e})
       }),
     [store, savedFeeds, item],
   )
@@ -181,7 +181,7 @@ const ListItem = observer(function ListItemImpl({
     () =>
       savedFeeds.movePinnedFeed(item, 'down').catch(e => {
         Toast.show('There was an issue contacting the server')
-        store.log.error('Failed to set pinned feed order', {e})
+        store.log.error('Failed to set pinned feed order', {error: e})
       }),
     [store, savedFeeds, item],
   )

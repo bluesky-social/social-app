@@ -38,7 +38,7 @@ export const PostThreadScreen = withAuthRequired(
         InteractionManager.runAfterInteractions(() => {
           if (!view.hasLoaded && !view.isLoading) {
             view.setup().catch(err => {
-              store.log.error('Failed to fetch thread', err)
+              store.log.error('Failed to fetch thread', {error: err})
             })
           }
         })

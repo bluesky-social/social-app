@@ -120,7 +120,7 @@ export class FeedsDiscoveryModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch popular feeds', err)
+      this.rootStore.log.error('Failed to fetch popular feeds', {error: err})
     }
   }
 

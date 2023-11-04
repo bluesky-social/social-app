@@ -272,7 +272,7 @@ const Header = observer(function HeaderImpl({
     Haptics.default()
     list.togglePin().catch(e => {
       Toast.show('There was an issue contacting the server')
-      store.log.error('Failed to toggle pinned list', {e})
+      store.log.error('Failed to toggle pinned list', {error: e})
     })
   }, [store, list])
 

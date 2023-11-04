@@ -119,7 +119,7 @@ export const PostThread = observer(function PostThread({
     try {
       view?.refresh()
     } catch (err) {
-      view.rootStore.log.error('Failed to refresh posts thread', err)
+      view.rootStore.log.error('Failed to refresh posts thread', {error: err})
     }
     setIsRefreshing(false)
   }, [view, setIsRefreshing])

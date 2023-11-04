@@ -324,13 +324,12 @@ export class PostsFeedModel {
     this.knownError = detectKnownError(this.feedType, error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
-      this.rootStore.log.error('Posts feed request failed', error)
+      this.rootStore.log.error('Posts feed request failed', {error})
     }
     if (loadMoreError) {
-      this.rootStore.log.error(
-        'Posts feed load-more request failed',
-        loadMoreError,
-      )
+      this.rootStore.log.error('Posts feed load-more request failed', {
+        error: loadMoreError,
+      })
     }
   }
 

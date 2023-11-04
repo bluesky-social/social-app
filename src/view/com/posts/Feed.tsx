@@ -92,7 +92,7 @@ export const Feed = observer(function Feed({
     try {
       await feed.refresh()
     } catch (err) {
-      feed.rootStore.log.error('Failed to refresh posts feed', err)
+      feed.rootStore.log.error('Failed to refresh posts feed', {error: err})
     }
     setIsRefreshing(false)
   }, [feed, track, setIsRefreshing])
@@ -104,7 +104,7 @@ export const Feed = observer(function Feed({
     try {
       await feed.loadMore()
     } catch (err) {
-      feed.rootStore.log.error('Failed to load more posts', err)
+      feed.rootStore.log.error('Failed to load more posts', {error: err})
     }
   }, [feed, track])
 

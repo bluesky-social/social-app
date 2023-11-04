@@ -61,7 +61,9 @@ export const Feed = observer(function Feed({
       setIsPTRing(true)
       await view.refresh()
     } catch (err) {
-      view.rootStore.log.error('Failed to refresh notifications feed', err)
+      view.rootStore.log.error('Failed to refresh notifications feed', {
+        error: err,
+      })
     } finally {
       setIsPTRing(false)
     }
@@ -71,7 +73,9 @@ export const Feed = observer(function Feed({
     try {
       await view.loadMore()
     } catch (err) {
-      view.rootStore.log.error('Failed to load more notifications', err)
+      view.rootStore.log.error('Failed to load more notifications', {
+        error: err,
+      })
     }
   }, [view])
 

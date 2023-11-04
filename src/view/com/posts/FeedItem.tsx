@@ -94,14 +94,14 @@ export const FeedItem = observer(function FeedItemImpl({
     track('FeedItem:PostRepost')
     return item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
+      .catch(e => store.log.error('Failed to toggle repost', {error: e}))
   }, [track, item, store])
 
   const onPressToggleLike = React.useCallback(() => {
     track('FeedItem:PostLike')
     return item
       .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
+      .catch(e => store.log.error('Failed to toggle like', {error: e}))
   }, [track, item, store])
 
   const onCopyPostText = React.useCallback(() => {
@@ -123,7 +123,7 @@ export const FeedItem = observer(function FeedItemImpl({
         Toast.show('You will now receive notifications for this thread')
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
+      store.log.error('Failed to toggle thread mute', {error: e})
     }
   }, [track, item, store])
 
@@ -135,7 +135,7 @@ export const FeedItem = observer(function FeedItemImpl({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', e)
+        store.log.error('Failed to delete post', {error: e})
         Toast.show('Failed to delete post, please try again')
       },
     )

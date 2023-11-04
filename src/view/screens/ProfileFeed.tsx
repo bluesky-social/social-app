@@ -165,7 +165,7 @@ export const ProfileFeedScreenInner = observer(
         Toast.show(
           'There was an an issue updating your feeds, please check your internet connection and try again.',
         )
-        store.log.error('Failed up update feeds', {err})
+        store.log.error('Failed up update feeds', {error: err})
       }
     }, [store, feedInfo])
 
@@ -181,7 +181,7 @@ export const ProfileFeedScreenInner = observer(
         Toast.show(
           'There was an an issue contacting the server, please check your internet connection and try again.',
         )
-        store.log.error('Failed up toggle like', {err})
+        store.log.error('Failed up toggle like', {error: err})
       }
     }, [store, feedInfo])
 
@@ -190,7 +190,7 @@ export const ProfileFeedScreenInner = observer(
       if (feedInfo) {
         feedInfo.togglePin().catch(e => {
           Toast.show('There was an issue contacting the server')
-          store.log.error('Failed to toggle pinned feed', {e})
+          store.log.error('Failed to toggle pinned feed', {error: e})
         })
       }
     }, [store, feedInfo])

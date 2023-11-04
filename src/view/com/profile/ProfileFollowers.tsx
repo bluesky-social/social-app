@@ -26,18 +26,20 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   useEffect(() => {
     view
       .loadMore()
-      .catch(err => store.log.error('Failed to fetch user followers', err))
+      .catch(err =>
+        store.log.error('Failed to fetch user followers', {error: err}),
+      )
   }, [view, store.log])
 
   const onRefresh = () => {
     view.refresh()
   }
   const onEndReached = () => {
-    view
-      .loadMore()
-      .catch(err =>
-        view?.rootStore.log.error('Failed to load more followers', err),
-      )
+    view.loadMore().catch(err =>
+      view?.rootStore.log.error('Failed to load more followers', {
+        error: err,
+      }),
+    )
   }
 
   if (!view.hasLoaded) {

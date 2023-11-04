@@ -142,13 +142,13 @@ const PostLoaded = observer(function PostLoadedImpl({
   const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
+      .catch(e => store.log.error('Failed to toggle repost', {error: e}))
   }, [item, store])
 
   const onPressToggleLike = React.useCallback(() => {
     return item
       .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
+      .catch(e => store.log.error('Failed to toggle like', {error: e}))
   }, [item, store])
 
   const onCopyPostText = React.useCallback(() => {
@@ -169,7 +169,7 @@ const PostLoaded = observer(function PostLoadedImpl({
         Toast.show('You will now receive notifications for this thread')
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
+      store.log.error('Failed to toggle thread mute', {error: e})
     }
   }, [item, store])
 
@@ -180,7 +180,7 @@ const PostLoaded = observer(function PostLoadedImpl({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', e)
+        store.log.error('Failed to delete post', {error: e})
         Toast.show('Failed to delete post, please try again')
       },
     )

@@ -52,7 +52,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
       blockedAccounts
         .loadMore()
         .catch(err =>
-          store.log.error('Failed to load more blocked accounts', err),
+          store.log.error('Failed to load more blocked accounts', {error: err}),
         )
     }, [blockedAccounts, store])
 

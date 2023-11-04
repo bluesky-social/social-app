@@ -63,10 +63,9 @@ export class InvitedUsers {
         })
         this.rootStore.me.follows.hydrateMany(this.profiles)
       } catch (e) {
-        this.rootStore.log.error(
-          'Failed to fetch profiles for invited users',
-          e,
-        )
+        this.rootStore.log.error('Failed to fetch profiles for invited users', {
+          error: e,
+        })
       }
     }
   }

@@ -22,7 +22,7 @@ export function useFollowProfile(profile: AppBskyActorDefs.ProfileViewBasic) {
             following: false,
           }
         } catch (e: any) {
-          store.log.error('Failed to delete follow', e)
+          store.log.error('Failed to delete follow', {error: e})
           throw e
         }
       } else if (state === FollowState.NotFollowing) {
@@ -40,7 +40,7 @@ export function useFollowProfile(profile: AppBskyActorDefs.ProfileViewBasic) {
             following: true,
           }
         } catch (e: any) {
-          store.log.error('Failed to create follow', e)
+          store.log.error('Failed to create follow', {error: e})
           throw e
         }
       }

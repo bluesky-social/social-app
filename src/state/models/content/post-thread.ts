@@ -163,7 +163,7 @@ export class PostThreadModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch post thread', err)
+      this.rootStore.log.error('Failed to fetch post thread', {error: err})
     }
     this.notFound = err instanceof GetPostThread.NotFoundError
   }
