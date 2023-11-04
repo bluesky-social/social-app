@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {LayoutChangeEvent, StyleSheet} from 'react-native'
+import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedReaction,
@@ -131,7 +131,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     // props to pass into children render functions
     const onScroll = useAnimatedScrollHandler({
       onScroll(e) {
-        scrollY.value = e.contentOffset.y
+        scrollY.value = e.contentOffset.y + (e.contentInset?.top ?? 0)
       },
     })
     const childProps = React.useMemo<PagerWithHeaderChildParams>(() => {
@@ -175,9 +175,17 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         tabBarPosition="top">
         {toArray(children)
           .filter(Boolean)
-          .map(child => {
+          .map((child, i) => {
             if (child) {
-              return child(childProps)
+              return (
+                <View
+                  key={i}
+                  style={{
+                    opacity: headerHeight > 0 ? 1 : 0,
+                  }}>
+                  {child(childProps)}
+                </View>
+              )
             }
             return null
           })}

@@ -2,6 +2,7 @@ import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  Platform,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -177,13 +178,14 @@ export const Feed = observer(function Feed({
           />
         }
         contentContainerStyle={s.contentContainer}
-        style={{paddingTop: headerOffset}}
         onScroll={onScroll}
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
         onEndReachedThreshold={2}
         removeClippedSubviews={true}
+        style={{paddingTop: Platform.OS === 'ios' ? 0 : headerOffset}}
+        contentInset={{top: headerOffset}}
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
