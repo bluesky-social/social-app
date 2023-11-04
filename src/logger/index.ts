@@ -286,5 +286,5 @@ if (env.IS_DEV && !env.IS_TEST) {
    */
   // logger.addTransport(sentryTransport);
 } else if (env.IS_PROD) {
-  logger.addTransport(sentryTransport)
+  // logger.addTransport(sentryTransport)
 }
