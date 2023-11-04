@@ -23,7 +23,7 @@ export const PostRepostedBy = observer(function PostRepostedByImpl({
   useEffect(() => {
     view
       .loadMore()
-      .catch(err => store.log.error('Failed to fetch reposts', err))
+      .catch(err => store.log.error('Failed to fetch reposts', {error: err}))
   }, [view, store.log])
 
   const onRefresh = () => {
@@ -33,7 +33,7 @@ export const PostRepostedBy = observer(function PostRepostedByImpl({
     view
       .loadMore()
       .catch(err =>
-        view?.rootStore.log.error('Failed to load more reposts', err),
+        view?.rootStore.log.error('Failed to load more reposts', {error: err}),
       )
   }
 

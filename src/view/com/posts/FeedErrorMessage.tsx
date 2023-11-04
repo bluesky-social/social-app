@@ -73,7 +73,7 @@ function FeedgenErrorMessage({
           Toast.show(
             'There was an an issue removing this feed. Please check your internet connection and try again.',
           )
-          store.log.error('Failed to remove feed', {err})
+          store.log.error('Failed to remove feed', {error: err})
         }
       },
       onPressCancel() {

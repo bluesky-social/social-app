@@ -144,7 +144,7 @@ export class SuggestedActorsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch suggested actors', err)
+      this.rootStore.log.error('Failed to fetch suggested actors', {error: err})
     }
   }
 }

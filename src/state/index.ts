@@ -25,7 +25,7 @@ export async function setupState(serviceUri = DEFAULT_SERVICE) {
     rootStore.log.debug('Initial hydrate', {hasSession: !!data.session})
     rootStore.hydrate(data)
   } catch (e: any) {
-    rootStore.log.error('Failed to load state from storage', e)
+    rootStore.log.error('Failed to load state from storage', {error: e})
   }
   rootStore.attemptSessionResumption()
 

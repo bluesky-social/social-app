@@ -401,7 +401,9 @@ export class NotificationsFeedModel {
       this._setQueued(this._filterNotifications(queueModels))
       this._countUnread()
     } catch (e) {
-      this.rootStore.log.error('NotificationsModel:syncQueue failed', {e})
+      this.rootStore.log.error('NotificationsModel:syncQueue failed', {
+        error: e,
+      })
     } finally {
       this.lock.release()
     }
@@ -481,7 +483,9 @@ export class NotificationsFeedModel {
         this.lastSync ? this.lastSync.toISOString() : undefined,
       )
     } catch (e: any) {
-      this.rootStore.log.warn('Failed to update notifications read state', e)
+      this.rootStore.log.warn('Failed to update notifications read state', {
+        error: e,
+      })
     }
   }
 
@@ -501,13 +505,12 @@ export class NotificationsFeedModel {
     this.error = cleanError(error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
-      this.rootStore.log.error('Failed to fetch notifications', error)
+      this.rootStore.log.error('Failed to fetch notifications', {error})
     }
     if (loadMoreError) {
-      this.rootStore.log.error(
-        'Failed to load more notifications',
-        loadMoreError,
-      )
+      this.rootStore.log.error('Failed to load more notifications', {
+        error: loadMoreError,
+      })
     }
   }
 

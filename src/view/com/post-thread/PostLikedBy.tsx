@@ -18,7 +18,9 @@ export const PostLikedBy = observer(function PostLikedByImpl({
   const view = React.useMemo(() => new LikesModel(store, {uri}), [store, uri])
 
   useEffect(() => {
-    view.loadMore().catch(err => store.log.error('Failed to fetch likes', err))
+    view
+      .loadMore()
+      .catch(err => store.log.error('Failed to fetch likes', {error: err}))
   }, [view, store.log])
 
   const onRefresh = () => {
@@ -27,7 +29,9 @@ export const PostLikedBy = observer(function PostLikedByImpl({
   const onEndReached = () => {
     view
       .loadMore()
-      .catch(err => view?.rootStore.log.error('Failed to load more likes', err))
+      .catch(err =>
+        view?.rootStore.log.error('Failed to load more likes', {error: err}),
+      )
   }
 
   if (!view.hasLoaded) {

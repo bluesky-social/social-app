@@ -126,7 +126,7 @@ export class SavedFeedsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user feeds', err)
+      this.rootStore.log.error('Failed to fetch user feeds', {err})
     }
   }
 

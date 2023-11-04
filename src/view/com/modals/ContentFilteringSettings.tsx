@@ -103,7 +103,7 @@ const AdultContentEnabledPref = observer(
         Toast.show(
           'There was an issue syncing your preferences with the server',
         )
-        store.log.error('Failed to update preferences with server', {e})
+        store.log.error('Failed to update preferences with server', {error: e})
       }
     }
 
@@ -168,7 +168,7 @@ const ContentLabelPref = observer(function ContentLabelPrefImpl({
         Toast.show(
           'There was an issue syncing your preferences with the server',
         )
-        store.log.error('Failed to update preferences with server', {e})
+        store.log.error('Failed to update preferences with server', {error: e})
       }
     },
     [store, group],

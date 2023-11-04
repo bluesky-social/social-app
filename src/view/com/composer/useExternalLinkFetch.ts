@@ -46,7 +46,9 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
           err => {
-            store.log.error('Failed to fetch post for quote embedding', {err})
+            store.log.error('Failed to fetch post for quote embedding', {
+              error: err,
+            })
             setExtLink(undefined)
           },
         )
@@ -64,7 +66,7 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            store.log.error('Failed to fetch feed for embedding', {err})
+            store.log.error('Failed to fetch feed for embedding', {error: err})
             setExtLink(undefined)
           },
         )
@@ -82,7 +84,7 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            store.log.error('Failed to fetch list for embedding', {err})
+            store.log.error('Failed to fetch list for embedding', {error: err})
             setExtLink(undefined)
           },
         )

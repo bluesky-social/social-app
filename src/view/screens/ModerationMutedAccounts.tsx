@@ -49,7 +49,7 @@ export const ModerationMutedAccounts = withAuthRequired(
       mutedAccounts
         .loadMore()
         .catch(err =>
-          store.log.error('Failed to load more muted accounts', err),
+          store.log.error('Failed to load more muted accounts', {error: err}),
         )
     }, [mutedAccounts, store])
 

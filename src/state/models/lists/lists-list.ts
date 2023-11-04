@@ -204,10 +204,12 @@ export class ListsListModel {
     this.error = cleanError(err)
     this.loadMoreError = cleanError(loadMoreErr)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user lists', err)
+      this.rootStore.log.error('Failed to fetch user lists', {error: err})
     }
     if (loadMoreErr) {
-      this.rootStore.log.error('Failed to fetch user lists', loadMoreErr)
+      this.rootStore.log.error('Failed to fetch user lists', {
+        error: loadMoreErr,
+      })
     }
   }
 

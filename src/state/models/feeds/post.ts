@@ -51,7 +51,7 @@ export class PostsFeedItemModel {
       this.richText = undefined
       rootStore.log.warn(
         'app.bsky.feed.getTimeline or app.bsky.feed.getAuthorFeed served an unexpected record type',
-        this.post.record,
+        {record: this.post.record},
       )
     }
     this.reply = v.reply

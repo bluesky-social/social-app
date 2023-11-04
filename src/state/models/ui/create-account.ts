@@ -78,7 +78,7 @@ export class CreateAccountModel {
     } catch (err: any) {
       this.rootStore.log.warn(
         `Failed to fetch service description for ${this.serviceUrl}`,
-        err,
+        {error: err},
       )
       this.setError(
         'Unable to contact your service. Please check your Internet connection.',
@@ -127,7 +127,7 @@ export class CreateAccountModel {
         errMsg =
           'Invite code not accepted. Check that you input it correctly and try again.'
       }
-      this.rootStore.log.error('Failed to create account', e)
+      this.rootStore.log.error('Failed to create account', {error: e})
       this.setIsProcessing(false)
       this.setError(cleanError(errMsg))
       throw e

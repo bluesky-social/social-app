@@ -62,7 +62,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
         setMembershipsLoaded(true)
       },
       err => {
-        store.log.error('Failed to fetch memberships', {err})
+        store.log.error('Failed to fetch memberships', {error: err})
       },
     )
   }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
@@ -76,7 +76,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
     try {
       changes = await memberships.updateTo(selected)
     } catch (err) {
-      store.log.error('Failed to update memberships', {err})
+      store.log.error('Failed to update memberships', {error: err})
       return
     }
     Toast.show('Lists updated')

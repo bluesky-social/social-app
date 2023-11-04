@@ -108,15 +108,15 @@ export const ProfileScreen = withAuthRequired(
       uiState
         .refresh()
         .catch((err: any) =>
-          store.log.error('Failed to refresh user profile', err),
+          store.log.error('Failed to refresh user profile', {error: err}),
         )
     }, [uiState, store])
     const onEndReached = React.useCallback(() => {
-      uiState
-        .loadMore()
-        .catch((err: any) =>
-          store.log.error('Failed to load more entries in user profile', err),
-        )
+      uiState.loadMore().catch((err: any) =>
+        store.log.error('Failed to load more entries in user profile', {
+          error: err,
+        }),
+      )
     }, [uiState, store])
     const onPressTryAgain = React.useCallback(() => {
       uiState.setup()

@@ -69,7 +69,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           `Failed to fetch service description for ${String(
             store.agent.service,
           )}`,
-          err,
+          {error: err},
         )
         setError(
           'Unable to contact your service. Please check your Internet connection.',
@@ -113,7 +113,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
       onChanged()
     } catch (err: any) {
       setError(cleanError(err))
-      store.log.error('Failed to update handle', {handle, err})
+      store.log.error('Failed to update handle', {handle, error: err})
     } finally {
       setProcessing(false)
     }
@@ -343,7 +343,7 @@ function CustomHandleForm({
       }
     } catch (err: any) {
       setError(cleanError(err))
-      store.log.error('Failed to verify domain', {handle, err})
+      store.log.error('Failed to verify domain', {handle, error: err})
     } finally {
       setIsVerifying(false)
     }

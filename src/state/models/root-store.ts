@@ -130,7 +130,7 @@ export class RootStoreModel {
       })
       this.updateSessionState()
     } catch (e: any) {
-      this.log.warn('Failed to initialize session', e)
+      this.log.warn('Failed to initialize session', {error: e})
     }
   }
 
@@ -184,7 +184,7 @@ export class RootStoreModel {
       await this.me.updateIfNeeded()
       await this.preferences.sync()
     } catch (e: any) {
-      this.log.error('Failed to fetch latest state', e)
+      this.log.error('Failed to fetch latest state', {error: e})
     }
   }
 
