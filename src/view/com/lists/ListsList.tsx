@@ -19,6 +19,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FlatList} from '../util/Views.web'
 import {s} from 'lib/styles'
+import {logger} from '#/logger'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -78,7 +79,7 @@ export const ListsList = observer(function ListsListImpl({
     try {
       await listsList.refresh()
     } catch (err) {
-      listsList.rootStore.log.error('Failed to refresh lists', {error: err})
+      logger.error('Failed to refresh lists', {error: err})
     }
     setIsRefreshing(false)
   }, [listsList, track, setIsRefreshing])
@@ -88,7 +89,7 @@ export const ListsList = observer(function ListsListImpl({
     try {
       await listsList.loadMore()
     } catch (err) {
-      listsList.rootStore.log.error('Failed to load more lists', {error: err})
+      logger.error('Failed to load more lists', {error: err})
     }
   }, [listsList, track])
 

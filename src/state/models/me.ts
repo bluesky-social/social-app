@@ -9,6 +9,7 @@ import {NotificationsFeedModel} from './feeds/notifications'
 import {MyFeedsUIModel} from './ui/my-feeds'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
+import {logger} from '#/logger'
 
 const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
 const NOTIFS_UPDATE_INTERVAL = 30 * 1e3 // 30sec
@@ -104,21 +105,21 @@ export class MeModel {
 
   async load() {
     const sess = this.rootStore.session
-    this.rootStore.log.debug('MeModel:load', {hasSession: sess.hasSession})
+    logger.debug('MeModel:load', {hasSession: sess.hasSession})
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
       await this.fetchProfile()
       this.mainFeed.clear()
       /* dont await */ this.mainFeed.setup().catch(e => {
-        this.rootStore.log.error('Failed to setup main feed model', {error: e})
+        logger.error('Failed to setup main feed model', {error: e})
       })
       /* dont await */ this.notifications.setup().catch(e => {
-        this.rootStore.log.error('Failed to setup notifications model', {
+        logger.error('Failed to setup notifications model', {
           error: e,
         })
       })
       /* dont await */ this.notifications.setup().catch(e => {
-        this.rootStore.log.error('Failed to setup notifications model', {
+        logger.error('Failed to setup notifications model', {
           error: e,
         })
       })
@@ -134,7 +135,7 @@ export class MeModel {
 
   async updateIfNeeded() {
     if (Date.now() - this.lastProfileStateUpdate > PROFILE_UPDATE_INTERVAL) {
-      this.rootStore.log.debug('Updating me profile information')
+      logger.debug('Updating me profile information')
       this.lastProfileStateUpdate = Date.now()
       await this.fetchProfile()
       await this.fetchInviteCodes()
@@ -188,7 +189,7 @@ export class MeModel {
           })
         })
       } catch (e) {
-        this.rootStore.log.error('Failed to fetch user invite codes', {
+        logger.error('Failed to fetch user invite codes', {
           error: e,
         })
       }
@@ -205,7 +206,7 @@ export class MeModel {
           this.appPasswords = res.data.passwords
         })
       } catch (e) {
-        this.rootStore.log.error('Failed to fetch user app passwords', {
+        logger.error('Failed to fetch user app passwords', {
           error: e,
         })
       }
@@ -228,7 +229,7 @@ export class MeModel {
         })
         return res.data
       } catch (e) {
-        this.rootStore.log.error('Failed to create app password', {error: e})
+        logger.error('Failed to create app password', {error: e})
       }
     }
   }
@@ -243,7 +244,7 @@ export class MeModel {
           this.appPasswords = this.appPasswords.filter(p => p.name !== name)
         })
       } catch (e) {
-        this.rootStore.log.error('Failed to delete app password', {error: e})
+        logger.error('Failed to delete app password', {error: e})
       }
     }
   }

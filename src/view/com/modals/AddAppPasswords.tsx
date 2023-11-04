@@ -12,6 +12,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../util/Toast'
+import {logger} from '#/logger'
 
 export const snapPoints = ['70%']
 
@@ -95,7 +96,7 @@ export function Component({}: {}) {
       }
     } catch (e) {
       Toast.show('Failed to create app password.')
-      store.log.error('Failed to create app password', {error: e})
+      logger.error('Failed to create app password', {error: e})
     }
   }
 

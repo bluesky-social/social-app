@@ -32,6 +32,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
+import {logger} from '#/logger'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
@@ -94,15 +95,15 @@ export const FeedItem = observer(function FeedItemImpl({
     track('FeedItem:PostRepost')
     return item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', {error: e}))
-  }, [track, item, store])
+      .catch(e => logger.error('Failed to toggle repost', {error: e}))
+  }, [track, item])
 
   const onPressToggleLike = React.useCallback(() => {
     track('FeedItem:PostLike')
     return item
       .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', {error: e}))
-  }, [track, item, store])
+      .catch(e => logger.error('Failed to toggle like', {error: e}))
+  }, [track, item])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
@@ -123,9 +124,9 @@ export const FeedItem = observer(function FeedItemImpl({
         Toast.show('You will now receive notifications for this thread')
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', {error: e})
+      logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [track, item, store])
+  }, [track, item])
 
   const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
@@ -135,11 +136,11 @@ export const FeedItem = observer(function FeedItemImpl({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', {error: e})
+        logger.error('Failed to delete post', {error: e})
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }, [track, item, setDeleted, store])
+  }, [track, item, setDeleted])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

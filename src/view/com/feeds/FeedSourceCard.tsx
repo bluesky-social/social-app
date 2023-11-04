@@ -15,6 +15,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {logger} from '#/logger'
 
 export const FeedSourceCard = observer(function FeedSourceCardImpl({
   item,
@@ -45,7 +46,7 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
             Toast.show('Removed from my feeds')
           } catch (e) {
             Toast.show('There was an issue contacting your server')
-            store.log.error('Failed to unsave feed', {error: e})
+            logger.error('Failed to unsave feed', {error: e})
           }
         },
       })
@@ -55,7 +56,7 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
         Toast.show('Added to my feeds')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
-        store.log.error('Failed to save feed', {error: e})
+        logger.error('Failed to save feed', {error: e})
       }
     }
   }, [store, item])

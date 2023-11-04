@@ -10,6 +10,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
+import {logger} from '#/logger'
 
 const MESSAGES = {
   [KnownError.Unknown]: '',
@@ -73,7 +74,7 @@ function FeedgenErrorMessage({
           Toast.show(
             'There was an an issue removing this feed. Please check your internet connection and try again.',
           )
-          store.log.error('Failed to remove feed', {error: err})
+          logger.error('Failed to remove feed', {error: err})
         }
       },
       onPressCancel() {

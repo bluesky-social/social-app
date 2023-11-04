@@ -29,6 +29,7 @@ import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
+import {logger} from '#/logger'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -108,16 +109,16 @@ export const ProfileScreen = withAuthRequired(
       uiState
         .refresh()
         .catch((err: any) =>
-          store.log.error('Failed to refresh user profile', {error: err}),
+          logger.error('Failed to refresh user profile', {error: err}),
         )
-    }, [uiState, store])
+    }, [uiState])
     const onEndReached = React.useCallback(() => {
       uiState.loadMore().catch((err: any) =>
-        store.log.error('Failed to load more entries in user profile', {
+        logger.error('Failed to load more entries in user profile', {
           error: err,
         }),
       )
-    }, [uiState, store])
+    }, [uiState])
     const onPressTryAgain = React.useCallback(() => {
       uiState.setup()
     }, [uiState])

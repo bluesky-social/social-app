@@ -4,6 +4,7 @@ import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {FeedSourceModel} from '../content/feed-source'
+import {logger} from '#/logger'
 
 const DEFAULT_LIMIT = 50
 
@@ -120,7 +121,7 @@ export class FeedsDiscoveryModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch popular feeds', {error: err})
+      logger.error('Failed to fetch popular feeds', {error: err})
     }
   }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 import {useStores} from 'state/index'
 import {FollowState} from 'state/models/cache/my-follows'
+import {logger} from '#/logger'
 
 export function useFollowProfile(profile: AppBskyActorDefs.ProfileViewBasic) {
   const store = useStores()
@@ -22,7 +23,7 @@ export function useFollowProfile(profile: AppBskyActorDefs.ProfileViewBasic) {
             following: false,
           }
         } catch (e: any) {
-          store.log.error('Failed to delete follow', {error: e})
+          logger.error('Failed to delete follow', {error: e})
           throw e
         }
       } else if (state === FollowState.NotFollowing) {
@@ -40,7 +41,7 @@ export function useFollowProfile(profile: AppBskyActorDefs.ProfileViewBasic) {
             following: true,
           }
         } catch (e: any) {
-          store.log.error('Failed to create follow', {error: e})
+          logger.error('Failed to create follow', {error: e})
           throw e
         }
       }

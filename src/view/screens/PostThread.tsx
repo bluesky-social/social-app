@@ -14,6 +14,7 @@ import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {logger} from '#/logger'
 
 const SHELL_FOOTER_HEIGHT = 44
 
@@ -38,7 +39,7 @@ export const PostThreadScreen = withAuthRequired(
         InteractionManager.runAfterInteractions(() => {
           if (!view.hasLoaded && !view.isLoading) {
             view.setup().catch(err => {
-              store.log.error('Failed to fetch thread', {error: err})
+              logger.error('Failed to fetch thread', {error: err})
             })
           }
         })

@@ -15,6 +15,7 @@ import {CONFIGURABLE_LABEL_GROUPS} from 'lib/labeling/const'
 import {isIOS} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '../util/Toast'
+import {logger} from '#/logger'
 
 export const snapPoints = ['90%']
 
@@ -103,7 +104,7 @@ const AdultContentEnabledPref = observer(
         Toast.show(
           'There was an issue syncing your preferences with the server',
         )
-        store.log.error('Failed to update preferences with server', {error: e})
+        logger.error('Failed to update preferences with server', {error: e})
       }
     }
 
@@ -168,7 +169,7 @@ const ContentLabelPref = observer(function ContentLabelPrefImpl({
         Toast.show(
           'There was an issue syncing your preferences with the server',
         )
-        store.log.error('Failed to update preferences with server', {error: e})
+        logger.error('Failed to update preferences with server', {error: e})
       }
     },
     [store, group],

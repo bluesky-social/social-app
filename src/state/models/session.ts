@@ -12,6 +12,7 @@ import {z} from 'zod'
 import {RootStoreModel} from './root-store'
 import {IS_PROD} from 'lib/constants'
 import {track} from 'lib/analytics/analytics'
+import {logger} from '#/logger'
 
 export type ServiceDescription = DescribeServer.OutputSchema
 
@@ -56,7 +57,7 @@ export class SessionModel {
       ),
       isResumingSession: this.isResumingSession,
     }
-    this.rootStore.log.debug(message, details)
+    logger.debug(message, details, logger.DebugContext.session)
   }
 
   /**

@@ -19,6 +19,7 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {logger} from '#/logger'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -92,7 +93,7 @@ export const Feed = observer(function Feed({
     try {
       await feed.refresh()
     } catch (err) {
-      feed.rootStore.log.error('Failed to refresh posts feed', {error: err})
+      logger.error('Failed to refresh posts feed', {error: err})
     }
     setIsRefreshing(false)
   }, [feed, track, setIsRefreshing])
@@ -104,7 +105,7 @@ export const Feed = observer(function Feed({
     try {
       await feed.loadMore()
     } catch (err) {
-      feed.rootStore.log.error('Failed to load more posts', {error: err})
+      logger.error('Failed to load more posts', {error: err})
     }
   }, [feed, track])
 

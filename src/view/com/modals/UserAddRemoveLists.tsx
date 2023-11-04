@@ -20,6 +20,7 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import isEqual from 'lodash.isequal'
+import {logger} from '#/logger'
 
 export const snapPoints = ['fullscreen']
 
@@ -62,7 +63,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
         setMembershipsLoaded(true)
       },
       err => {
-        store.log.error('Failed to fetch memberships', {error: err})
+        logger.error('Failed to fetch memberships', {error: err})
       },
     )
   }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
@@ -76,7 +77,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
     try {
       changes = await memberships.updateTo(selected)
     } catch (err) {
-      store.log.error('Failed to update memberships', {error: err})
+      logger.error('Failed to update memberships', {error: err})
       return
     }
     Toast.show('Lists updated')

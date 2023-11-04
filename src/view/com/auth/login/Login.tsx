@@ -30,6 +30,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
 import {isWeb} from 'platform/detection'
+import {logger} from '#/logger'
 
 enum Forms {
   Login,
@@ -81,10 +82,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         if (aborted) {
           return
         }
-        store.log.warn(
-          `Failed to fetch service description for ${serviceUrl}`,
-          {error: err},
-        )
+        logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
+          error: err,
+        })
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -93,7 +93,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [store.session, store.log, serviceUrl, retryDescribeTrigger])
+  }, [store.session, serviceUrl, retryDescribeTrigger])
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
   const onPressForgotPassword = () => {
@@ -349,7 +349,7 @@ const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to login', {error: e})
+      logger.warn('Failed to login', {error: e})
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
@@ -578,7 +578,7 @@ const ForgotPasswordForm = ({
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to request password reset', {error: e})
+      logger.warn('Failed to request password reset', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -694,7 +694,6 @@ const ForgotPasswordForm = ({
 }
 
 const SetNewPasswordForm = ({
-  store,
   error,
   serviceUrl,
   setError,
@@ -734,7 +733,7 @@ const SetNewPasswordForm = ({
       onPasswordSet()
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to set new password', {error: e})
+      logger.warn('Failed to set new password', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(

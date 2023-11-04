@@ -39,6 +39,7 @@ import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
+import {logger} from '#/logger'
 
 interface Props {
   view: ProfileModel
@@ -150,9 +151,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             : 'ProfileHeader:UnfollowButtonClicked',
         )
       },
-      err => store.log.error('Failed to toggle follow', {error: err}),
+      err => logger.error('Failed to toggle follow', {error: err}),
     )
-  }, [track, view, store.log, setShowSuggestedFollows])
+  }, [track, view, setShowSuggestedFollows])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -193,10 +194,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       await view.muteAccount()
       Toast.show('Account muted')
     } catch (e: any) {
-      store.log.error('Failed to mute account', {error: e})
+      logger.error('Failed to mute account', {error: e})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [track, view, store])
+  }, [track, view])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
@@ -204,10 +205,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       await view.unmuteAccount()
       Toast.show('Account unmuted')
     } catch (e: any) {
-      store.log.error('Failed to unmute account', {error: e})
+      logger.error('Failed to unmute account', {error: e})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [track, view, store])
+  }, [track, view])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')
@@ -222,7 +223,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           onRefreshAll()
           Toast.show('Account blocked')
         } catch (e: any) {
-          store.log.error('Failed to block account', {error: e})
+          logger.error('Failed to block account', {error: e})
           Toast.show(`There was an issue! ${e.toString()}`)
         }
       },
@@ -242,7 +243,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           onRefreshAll()
           Toast.show('Account unblocked')
         } catch (e: any) {
-          store.log.error('Failed to unblock account', {error: e})
+          logger.error('Failed to unblock account', {error: e})
           Toast.show(`There was an issue! ${e.toString()}`)
         }
       },

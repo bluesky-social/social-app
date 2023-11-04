@@ -43,6 +43,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
+import {logger} from '#/logger'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -272,9 +273,9 @@ const Header = observer(function HeaderImpl({
     Haptics.default()
     list.togglePin().catch(e => {
       Toast.show('There was an issue contacting the server')
-      store.log.error('Failed to toggle pinned list', {error: e})
+      logger.error('Failed to toggle pinned list', {error: e})
     })
-  }, [store, list])
+  }, [list])
 
   const onSubscribeMute = useCallback(() => {
     store.shell.openModal({

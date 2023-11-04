@@ -21,6 +21,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError} from 'lib/strings/errors'
+import {logger} from '#/logger'
 
 export const snapPoints = ['100%']
 
@@ -65,7 +66,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           return
         }
         setProcessing(false)
-        store.log.warn(
+        logger.warn(
           `Failed to fetch service description for ${String(
             store.agent.service,
           )}`,
@@ -79,7 +80,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
     return () => {
       aborted = true
     }
-  }, [store.agent.service, store.session, store.log, retryDescribeTrigger])
+  }, [store.agent.service, store.session, retryDescribeTrigger])
 
   // events
   // =
@@ -105,7 +106,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
     try {
       track('EditHandle:SetNewHandle')
       const newHandle = isCustom ? handle : createFullHandle(handle, userDomain)
-      store.log.debug(`Updating handle to ${newHandle}`)
+      logger.debug(`Updating handle to ${newHandle}`)
       await store.agent.updateHandle({
         handle: newHandle,
       })
@@ -113,7 +114,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
       onChanged()
     } catch (err: any) {
       setError(cleanError(err))
-      store.log.error('Failed to update handle', {handle, error: err})
+      logger.error('Failed to update handle', {handle, error: err})
     } finally {
       setProcessing(false)
     }
@@ -343,7 +344,7 @@ function CustomHandleForm({
       }
     } catch (err: any) {
       setError(cleanError(err))
-      store.log.error('Failed to verify domain', {handle, error: err})
+      logger.error('Failed to verify domain', {handle, error: err})
     } finally {
       setIsVerifying(false)
     }
@@ -355,7 +356,6 @@ function CustomHandleForm({
     setError,
     canSave,
     onPressSave,
-    store.log,
     store.agent,
   ])
 

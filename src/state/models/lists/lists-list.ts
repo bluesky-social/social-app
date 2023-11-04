@@ -4,6 +4,7 @@ import {RootStoreModel} from '../root-store'
 import {cleanError} from 'lib/strings/errors'
 import {bundleAsync} from 'lib/async/bundle'
 import {accumulate} from 'lib/async/accumulate'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -204,10 +205,10 @@ export class ListsListModel {
     this.error = cleanError(err)
     this.loadMoreError = cleanError(loadMoreErr)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user lists', {error: err})
+      logger.error('Failed to fetch user lists', {error: err})
     }
     if (loadMoreErr) {
-      this.rootStore.log.error('Failed to fetch user lists', {
+      logger.error('Failed to fetch user lists', {
         error: loadMoreErr,
       })
     }

@@ -32,6 +32,7 @@ import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
+import {logger} from '#/logger'
 
 export const Post = observer(function PostImpl({
   view,
@@ -142,14 +143,14 @@ const PostLoaded = observer(function PostLoadedImpl({
   const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', {error: e}))
-  }, [item, store])
+      .catch(e => logger.error('Failed to toggle repost', {error: e}))
+  }, [item])
 
   const onPressToggleLike = React.useCallback(() => {
     return item
       .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', {error: e}))
-  }, [item, store])
+      .catch(e => logger.error('Failed to toggle like', {error: e}))
+  }, [item])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record.text)
@@ -169,9 +170,9 @@ const PostLoaded = observer(function PostLoadedImpl({
         Toast.show('You will now receive notifications for this thread')
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', {error: e})
+      logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [item, store])
+  }, [item])
 
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
@@ -180,11 +181,11 @@ const PostLoaded = observer(function PostLoadedImpl({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', {error: e})
+        logger.error('Failed to delete post', {error: e})
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }, [item, setDeleted, store])
+  }, [item, setDeleted])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
