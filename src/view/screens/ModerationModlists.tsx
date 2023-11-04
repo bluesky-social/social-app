@@ -85,7 +85,7 @@ export const ModerationModlistsScreen = withAuthRequired(
             </Button>
           </View>
         </SimpleViewHeader>
-        <ListsList listsList={mutelists} />
+        <ListsList listsList={mutelists} style={s.flexGrow1} />
       </View>
     )
   }),
