@@ -76,7 +76,7 @@ export function EmojiPicker({close}: {close: () => void}) {
                 return (await import('./EmojiPickerData.json')).default
               }}
               onEmojiSelect={onInsert}
-              autoFocus={false}
+              autoFocus={true}
             />
           </View>
         </TouchableWithoutFeedback>
