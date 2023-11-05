@@ -198,6 +198,7 @@ export const Component = observer(function EditImageImpl({
         s.flex1,
         {
           paddingHorizontal: isMobile ? 16 : undefined,
+          overflowY: 'auto',
         },
       ]}>
       <Text style={[styles.title, pal.text]}>Edit image</Text>
