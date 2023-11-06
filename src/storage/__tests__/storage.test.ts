@@ -14,26 +14,26 @@ afterEach(() => {
 })
 
 test(`gets and sets data synchronously`, async () => {
-  storage.set('shell.colorMode', 'light')
+  storage.set('shell', {colorMode: 'light'})
   expect(AsyncStorage.setItem).toHaveBeenCalledWith(
     storage.STORAGE_ROOT_KEY,
     JSON.stringify({shell: {colorMode: 'light'}}),
   )
-  expect(storage.get('shell.colorMode')).toBe('light')
+  storage.set('shell', {colorMode: 'light'})
   expect(AsyncStorage.getItem).not.toHaveBeenCalled()
 
-  storage.set('shell.colorMode', 'dark')
-  expect(storage.get('shell.colorMode')).toBe('dark')
+  storage.set('shell', {colorMode: 'dark'})
+  expect(storage.get('shell').colorMode).toBe('dark')
 })
 
-test(`set rolls back on error`, async () => {
-  storage.set('shell.colorMode', 'light')
+test(`set ignores error and continues in memory`, async () => {
+  storage.set('shell', {colorMode: 'light'})
 
   jest
     .mocked(AsyncStorage.setItem)
     .mockImplementationOnce(() => Promise.reject(new Error('test error')))
 
-  await storage.set('shell.colorMode', 'system')
+  await storage.set('shell', {colorMode: 'system'})
 
-  expect(storage.get('shell.colorMode')).toBe('light')
+  expect(storage.get('shell').colorMode).toBe('system')
 })

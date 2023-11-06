@@ -1,45 +1,46 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
-import {Schema, PropertyMap} from '#/storage/schema'
+import {Schema, defaultData} from '#/storage/schema'
 
 export const STORAGE_ROOT_KEY = 'root'
 
 /**
  * In memory cache of local storage data. Never export or reference this
  * directly.
+ *
+ * We set it to a default value so that if AsyncStorage entirely fails, the app
+ * will continue to function entirely in memory.
  */
-let data: Schema | undefined
+let data: Schema = defaultData
 
 export async function init() {
-  const raw = await AsyncStorage.getItem(STORAGE_ROOT_KEY)
-  logger.debug(`storage initialized`)
-  // TODO: Add try catch here etc, same in lib/storage.ts
-  data = (raw ? JSON.parse(raw) : {}) as Schema
+  logger.debug(`storage initializing`)
+
+  try {
+    const raw = await AsyncStorage.getItem(STORAGE_ROOT_KEY)
+    data = (raw ? JSON.parse(raw) : {}) as Schema
+  } catch (e) {
+    logger.error(`storage init() failed`)
+  }
 }
 
-export function get<T extends keyof PropertyMap>(key: T): PropertyMap[T] {
+export function get<T extends keyof Schema>(key: T): Schema[T] {
   logger.debug(`storage get(${key})`)
-  if (!data) {
-    throw new Error(`Data is not initialized. Did you forget to call init()`)
-  }
   return data[key]
 }
 
-export async function set<T extends keyof PropertyMap>(
-  key: T,
-  value: PropertyMap[T],
-) {
+export async function set<T extends keyof Schema>(key: T, value: Schema[T]) {
   logger.debug(`storage set(${key}, value)`)
-  if (!data) {
-    throw new Error(`Data is not initialized. Did you forget to call init()`)
-  }
-  data[ley] = value
 
-  // TODO: actual writing should probably be debounced
+  data[key] = value
+
   try {
+    // TODO maybe debounce this in the future
     await AsyncStorage.setItem(STORAGE_ROOT_KEY, JSON.stringify(data))
+    return true
   } catch (err) {
-    logger.error(`storage set(${keypath}, value) failed`)
+    logger.error(`storage set(${key}, value) failed`)
+    return false
   }
 }
