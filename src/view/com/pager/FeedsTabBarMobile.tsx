@@ -15,19 +15,21 @@ import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
+import {useShellState} from '#/state/shell'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
   const store = useStores()
+  const {minimalShellMode, setIsDrawerOpen} = useShellState()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
-    store.shell.openDrawer()
-  }, [store])
+    setIsDrawerOpen(true)
+  }, [setIsDrawerOpen])
 
   return (
     <Animated.View
@@ -36,7 +38,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         pal.border,
         styles.tabBar,
         headerMinimalShellTransform,
-        store.shell.minimalShellMode && styles.disabled,
+        minimalShellMode && styles.disabled,
       ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>

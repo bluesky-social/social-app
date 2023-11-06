@@ -16,20 +16,22 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {useShellState} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
   observer(function AppPasswordsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const {setMinimalShellMode} = useShellState()
     const {screen} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
 
     useFocusEffect(
       React.useCallback(() => {
         screen('AppPasswords')
-        store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
+        setMinimalShellMode(false)
+      }, [screen, setMinimalShellMode]),
     )
 
     const onAdd = React.useCallback(async () => {

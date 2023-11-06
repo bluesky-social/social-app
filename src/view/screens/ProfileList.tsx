@@ -44,6 +44,7 @@ import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
+import {useShellState} from '#/state/shell'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -104,6 +105,7 @@ export const ProfileListScreenInner = observer(
     listOwnerDid,
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
+    const {setMinimalShellMode} = useShellState()
     const {rkey} = route.params
     const feedSectionRef = React.useRef<SectionRef>(null)
     const aboutSectionRef = React.useRef<SectionRef>(null)
@@ -123,13 +125,13 @@ export const ProfileListScreenInner = observer(
 
     useFocusEffect(
       useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         list.loadMore(true).then(() => {
           if (list.isCuratelist) {
             feed.setup()
           }
         })
-      }, [store, list, feed]),
+      }, [setMinimalShellMode, list, feed]),
     )
 
     const onPressAddUser = useCallback(() => {

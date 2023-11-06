@@ -1,6 +1,5 @@
 import React from 'react'
 import {autorun} from 'mobx'
-import {useStores} from 'state/index'
 import {
   Easing,
   interpolate,
@@ -9,8 +8,10 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 
+import {useShellState} from '#/state/shell'
+
 export function useMinimalShellMode() {
-  const store = useStores()
+  const {minimalShellMode} = useShellState()
   const minimalShellInterp = useSharedValue(0)
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
@@ -38,7 +39,7 @@ export function useMinimalShellMode() {
 
   React.useEffect(() => {
     return autorun(() => {
-      if (store.shell.minimalShellMode) {
+      if (minimalShellMode) {
         minimalShellInterp.value = withTiming(1, {
           duration: 125,
           easing: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -50,7 +51,7 @@ export function useMinimalShellMode() {
         })
       }
     })
-  }, [minimalShellInterp, store.shell.minimalShellMode])
+  }, [minimalShellInterp, minimalShellMode])
 
   return {
     footerMinimalShellTransform,

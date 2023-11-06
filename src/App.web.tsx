@@ -14,6 +14,7 @@ import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
+import {Provider as ShellStateProvider} from 'state/shell'
 
 const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -34,20 +35,22 @@ const App = observer(function AppImpl() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={rootStore.shell.colorMode}>
-        <RootSiblingParent>
-          <analytics.Provider>
-            <RootStoreProvider value={rootStore}>
-              <SafeAreaProvider>
-                <Shell />
-              </SafeAreaProvider>
-              <ToastContainer />
-            </RootStoreProvider>
-          </analytics.Provider>
-        </RootSiblingParent>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ShellStateProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={rootStore.shell.colorMode}>
+          <RootSiblingParent>
+            <analytics.Provider>
+              <RootStoreProvider value={rootStore}>
+                <SafeAreaProvider>
+                  <Shell />
+                </SafeAreaProvider>
+                <ToastContainer />
+              </RootStoreProvider>
+            </analytics.Provider>
+          </RootSiblingParent>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ShellStateProvider>
   )
 })
 

@@ -24,6 +24,7 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {useShellState} from '#/state/shell'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -31,6 +32,7 @@ export const BottomBar = observer(function BottomBarImpl({
   navigation,
 }: BottomTabBarProps) {
   const store = useStores()
+  const {minimalShellMode} = useShellState()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
@@ -83,7 +85,7 @@ export const BottomBar = observer(function BottomBarImpl({
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
-        store.shell.minimalShellMode && styles.disabled,
+        minimalShellMode && styles.disabled,
       ]}>
       <Btn
         testID="bottomBarHomeBtn"

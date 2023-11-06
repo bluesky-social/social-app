@@ -6,6 +6,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {AccountData} from 'state/models/session'
 import {reset as resetNavigation} from '../../Navigation'
 import * as Toast from 'view/com/util/Toast'
+import {useShellState} from '#/state/shell'
 
 export function useAccountSwitcher(): [
   boolean,
@@ -13,8 +14,8 @@ export function useAccountSwitcher(): [
   (acct: AccountData) => Promise<void>,
 ] {
   const {track} = useAnalytics()
-
   const store = useStores()
+  const {setIsDrawerOpen} = useShellState()
   const [isSwitching, setIsSwitching] = useState(false)
   const navigation = useNavigation<NavigationProp>()
 
@@ -23,6 +24,7 @@ export function useAccountSwitcher(): [
       track('Settings:SwitchAccountButtonClicked')
       setIsSwitching(true)
       const success = await store.session.resumeSession(acct)
+      setIsDrawerOpen(false)
       store.shell.closeAllActiveElements()
       if (success) {
         resetNavigation()
@@ -34,7 +36,7 @@ export function useAccountSwitcher(): [
         store.session.clear()
       }
     },
-    [track, setIsSwitching, navigation, store],
+    [track, setIsSwitching, navigation, store, setIsDrawerOpen],
   )
 
   return [isSwitching, setIsSwitching, onPressSwitchAccount]
