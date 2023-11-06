@@ -6,3 +6,200 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: cs\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/view/screens/Profile.tsx:210
+msgid "- end of feed -"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:706
+msgid "Add"
+msgstr ""
+
+#: src/view/com/modals/report/Modal.tsx:191
+msgid "Add details to report"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:237
+msgid "and"
+msgstr ""
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:43
+msgid "Back"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:52
+#: src/view/com/auth/SplashScreen.tsx:24
+msgid "Bluesky"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:84
+msgid "Bluesky is flexible."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:73
+msgid "Bluesky is open."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:60
+msgid "Bluesky is public."
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:76
+msgid "Bluesky.Social"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:272
+#: src/view/com/modals/CreateOrEditList.tsx:259
+#: src/view/com/modals/EditProfile.tsx:248
+#: src/view/com/modals/Repost.tsx:71
+#: src/view/com/search/HeaderWithInput.tsx:125
+msgid "Cancel"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:87
+msgid "Choose the algorithms that power your experience with custom feeds."
+msgstr ""
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:40
+msgid "Content Filtering"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:68
+msgid "Content Languages"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:172
+#: src/view/com/modals/InviteCodes.tsx:129
+msgid "Copied"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:197
+msgid "Description"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:179
+msgid "Display Name"
+msgstr ""
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:83
+#: src/view/com/modals/SelfLabel.tsx:154
+#: src/view/screens/PreferencesHomeFeed.tsx:211
+#: src/view/screens/PreferencesThreads.tsx:125
+msgid "Done"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:205
+msgid "Edit image"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:156
+msgid "Edit my profile"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:119
+msgid "Finding similar accounts..."
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:474
+msgid "Forgot"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:69
+msgid "Join the waitlist."
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
+msgid "Leave them all unchecked to see any language."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:173
+msgid "List Avatar"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:48
+msgid "Local dev server"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:76
+msgid "Never lose access to your followers and data."
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:86
+msgid "Other service"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:315
+msgid "Post"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:69
+msgid "Post Languages"
+msgstr ""
+
+#: src/view/com/modals/report/Modal.tsx:163
+msgid "Report {collectionName}"
+msgstr ""
+
+#: src/view/com/modals/BirthDateSettings.tsx:91
+#: src/view/com/modals/CreateOrEditList.tsx:244
+msgid "Save"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:231
+msgid "Save Changes"
+msgstr ""
+
+#: src/view/com/modals/report/SendReportButton.tsx:43
+msgid "Send Report"
+msgstr ""
+
+#: src/view/com/auth/SplashScreen.tsx:50
+#: src/view/com/auth/SplashScreen.web.tsx:59
+msgid "Sign In"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:37
+msgid "Skip"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:60
+msgid "Staging"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:530
+msgid "Subscribe"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:176
+msgid "This post has been deleted."
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:654
+msgid "Translate"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:690
+msgid "Users"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:72
+msgid "Which languages are used in this post?"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:71
+msgid "Which languages would you like to see in your algorithmic feeds?"
+msgstr ""
+
+#: src/view/com/lists/ListsList.tsx:112
+msgid "You have no lists."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:63
+msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr ""
