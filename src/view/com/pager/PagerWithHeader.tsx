@@ -182,7 +182,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         {toArray(children)
           .filter(Boolean)
           .map((child, i) => {
-            if (!isHeaderReady || headerHeight === 0) {
+            if (
+              !isHeaderReady ||
+              headerOnlyHeight === 0 ||
+              tabBarHeight === 0
+            ) {
               // Don't show content yet because it would jump down later otherwise.
               // Pager requires that these are non-null so return an empty view.
               return <View key={i} />
