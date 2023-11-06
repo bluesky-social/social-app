@@ -170,7 +170,6 @@ export const ProfileListScreenInner = observer(
             onCurrentPageSelected={onCurrentPageSelected}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <FeedSection
-                key="1"
                 ref={feedSectionRef}
                 feed={feed}
                 onScroll={onScroll}
@@ -180,7 +179,6 @@ export const ProfileListScreenInner = observer(
             )}
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
-                key="2"
                 ref={aboutSectionRef}
                 list={list}
                 descriptionRT={list.descriptionRT}
@@ -220,7 +218,6 @@ export const ProfileListScreenInner = observer(
             renderHeader={renderHeader}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
-                key="2"
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}

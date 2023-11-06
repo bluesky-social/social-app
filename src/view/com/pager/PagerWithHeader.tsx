@@ -188,19 +188,22 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         {toArray(children)
           .filter(Boolean)
           .map((child, i) => {
+            let output = null
             if (
-              !isHeaderReady ||
-              headerOnlyHeight === 0 ||
-              tabBarHeight === 0
+              child != null &&
+              // Defer showing content until we know it won't jump.
+              isHeaderReady &&
+              headerOnlyHeight > 0 &&
+              tabBarHeight > 0
             ) {
-              // Don't show content yet because it would jump down later otherwise.
-              // Pager requires that these are non-null so return an empty view.
-              return <View key={i} />
+              output = child(childProps)
             }
-            if (child) {
-              return child(childProps)
-            }
-            return null
+            // Pager children must be noncollapsible plain <View>s.
+            return (
+              <View key={i} collapsable={false}>
+                {output}
+              </View>
+            )
           })}
       </Pager>
     )

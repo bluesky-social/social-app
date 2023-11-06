@@ -337,7 +337,6 @@ export const ProfileFeedScreenInner = observer(
           onCurrentPageSelected={onCurrentPageSelected}>
           {({onScroll, headerHeight, isScrolledDown}) => (
             <FeedSection
-              key="1"
               ref={feedSectionRef}
               feed={feed}
               onScroll={onScroll}
@@ -347,7 +346,6 @@ export const ProfileFeedScreenInner = observer(
           )}
           {({onScroll, headerHeight}) => (
             <ScrollView
-              key="2"
               onScroll={onScroll}
               scrollEventThrottle={1}
               contentContainerStyle={{paddingTop: headerHeight}}>
