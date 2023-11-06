@@ -22,7 +22,7 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer(function HomeScreenImpl({}: Props) {
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const {setMinimalShellMode, setIsDrawerSwipeDisabled} = useShellState()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
@@ -64,20 +64,20 @@ export const HomeScreen = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         setMinimalShellMode(false)
-        store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
+        setIsDrawerSwipeDisabled(selectedPage > 0)
         return () => {
-          store.shell.setIsDrawerSwipeDisabled(false)
+          setIsDrawerSwipeDisabled(false)
         }
-      }, [store, selectedPage, setMinimalShellMode]),
+      }, [setIsDrawerSwipeDisabled, selectedPage, setMinimalShellMode]),
     )
 
     const onPageSelected = React.useCallback(
       (index: number) => {
         setMinimalShellMode(false)
         setSelectedPage(index)
-        store.shell.setIsDrawerSwipeDisabled(index > 0)
+        setIsDrawerSwipeDisabled(index > 0)
       },
-      [store, setSelectedPage, setMinimalShellMode],
+      [setIsDrawerSwipeDisabled, setSelectedPage, setMinimalShellMode],
     )
 
     const onPressSelected = React.useCallback(() => {

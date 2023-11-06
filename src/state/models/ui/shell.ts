@@ -266,7 +266,6 @@ export interface ComposerOpts {
 
 export class ShellUiModel {
   colorMode: ColorMode = 'system'
-  isDrawerSwipeDisabled = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
@@ -344,10 +343,6 @@ export class ShellUiModel {
     if (this.isComposerActive) {
       this.closeComposer()
     }
-  }
-
-  setIsDrawerSwipeDisabled(v: boolean) {
-    this.isDrawerSwipeDisabled = v
   }
 
   openModal(modal: Modal) {

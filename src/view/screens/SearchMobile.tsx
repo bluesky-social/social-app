@@ -34,7 +34,7 @@ export const SearchScreen = withAuthRequired(
   observer<Props>(function SearchScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const {setMinimalShellMode, setIsDrawerSwipeDisabled} = useShellState()
     const scrollViewRef = React.useRef<ScrollView>(null)
     const flatListRef = React.useRef<FlatList>(null)
     const [onMainScroll] = useOnMainScroll()
@@ -77,8 +77,8 @@ export const SearchScreen = withAuthRequired(
       setQuery('')
       autocompleteView.setActive(false)
       setSearchUIModel(undefined)
-      store.shell.setIsDrawerSwipeDisabled(false)
-    }, [setQuery, autocompleteView, store])
+      setIsDrawerSwipeDisabled(false)
+    }, [setQuery, autocompleteView, setIsDrawerSwipeDisabled])
 
     const onSubmitQuery = React.useCallback(() => {
       if (query.length === 0) {
@@ -88,8 +88,8 @@ export const SearchScreen = withAuthRequired(
       const model = new SearchUIModel(store)
       model.fetch(query)
       setSearchUIModel(model)
-      store.shell.setIsDrawerSwipeDisabled(true)
-    }, [query, setSearchUIModel, store])
+      setIsDrawerSwipeDisabled(true)
+    }, [query, setSearchUIModel, store, setIsDrawerSwipeDisabled])
 
     const onSoftReset = React.useCallback(() => {
       scrollViewRef.current?.scrollTo({x: 0, y: 0})

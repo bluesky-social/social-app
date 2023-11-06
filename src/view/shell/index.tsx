@@ -31,7 +31,7 @@ import {isAndroid} from 'platform/detection'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
-  const {isDrawerOpen, setIsDrawerOpen} = useShellState()
+  const {isDrawerOpen, isDrawerSwipeDisabled, setIsDrawerOpen} = useShellState()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
@@ -73,9 +73,7 @@ const ShellInner = observer(function ShellInnerImpl() {
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
             swipeEnabled={
-              !canGoBack &&
-              store.session.hasSession &&
-              !store.shell.isDrawerSwipeDisabled
+              !canGoBack && store.session.hasSession && !isDrawerSwipeDisabled
             }>
             <TabsNavigator />
           </Drawer>
