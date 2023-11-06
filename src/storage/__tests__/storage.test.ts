@@ -16,13 +16,14 @@ afterEach(() => {
 test(`gets and sets data synchronously`, async () => {
   storage.set('shell', {colorMode: 'light'})
   expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-    storage.STORAGE_ROOT_KEY,
+    storage.ROOT_STATE_STORAGE_KEY,
     JSON.stringify({shell: {colorMode: 'light'}}),
   )
   storage.set('shell', {colorMode: 'light'})
   expect(AsyncStorage.getItem).not.toHaveBeenCalled()
 
   storage.set('shell', {colorMode: 'dark'})
+  // @ts-expect-error
   expect(storage.get('shell').colorMode).toBe('dark')
 })
 
@@ -35,5 +36,6 @@ test(`set ignores error and continues in memory`, async () => {
 
   await storage.set('shell', {colorMode: 'system'})
 
+  // @ts-expect-error
   expect(storage.get('shell').colorMode).toBe('system')
 })
