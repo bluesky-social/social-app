@@ -53,12 +53,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const scrollYs = React.useRef<Record<number, number>>({})
     const scrollY = useSharedValue(scrollYs.current[currentPage] || 0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
-    const [headerHeight, setHeaderHeight] = React.useState(0)
+    const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
     const [isScrolledDown, setIsScrolledDown] = React.useState(
       scrollYs.current[currentPage] > SCROLLED_DOWN_LIMIT,
     )
 
-    const headerOnlyHeight = headerHeight - tabBarHeight
+    const headerHeight = headerOnlyHeight + tabBarHeight
 
     // react to scroll updates
     function onScrollUpdate(v: number) {
@@ -79,11 +79,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       },
       [setTabBarHeight],
     )
-    const onHeaderLayout = React.useCallback(
+    const onHeaderOnlyLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
-        setHeaderHeight(evt.nativeEvent.layout.height)
+        setHeaderOnlyHeight(evt.nativeEvent.layout.height)
       },
-      [setHeaderHeight],
+      [setHeaderOnlyHeight],
     )
 
     // render the the header and tab bar
@@ -104,12 +104,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       (props: RenderTabBarFnProps) => {
         return (
           <Animated.View
-            onLayout={onHeaderLayout}
             style={[
               isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
               headerTransform,
             ]}>
-            {renderHeader?.()}
+            <View onLayout={onHeaderOnlyLayout}>{renderHeader?.()}</View>
             {isHeaderReady && (
               <TabBar
                 items={items}
@@ -131,7 +130,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         onCurrentPageSelected,
         isMobile,
         onTabBarLayout,
-        onHeaderLayout,
+        onHeaderOnlyLayout,
       ],
     )
 
