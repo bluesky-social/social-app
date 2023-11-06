@@ -11,7 +11,7 @@ When adding a new string, do it as follows:
 // Before
 import { Text } from "react-native";
 
-<Text> Hello World </Text>
+<Text>Hello World</Text>
 ```
 
 ```jsx
@@ -19,7 +19,7 @@ import { Text } from "react-native";
 import { Text } from "react-native";
 import { Trans } from "@lingui/macro";
 
-<Text><Trans> Hello World </Trans></Text>
+<Text><Trans>Hello World</Trans></Text>
 ```
 
 The `<Trans>` macro will extract the string and add it to the catalog. It is not really a component, but a macro. Further reading [here](https://lingui.dev/ref/macro.html)
@@ -30,7 +30,7 @@ However sometimes you will run into this case:
 import { Text } from "react-native";
 
 const text = "Hello World";
-<Text accessibilityLabel="Label is here"> {text} </Text>
+<Text accessibilityLabel="Label is here">{text}</Text>
 ```
 In this case, you cannot use the `useLingui()` hook:
 ```jsx
@@ -38,7 +38,7 @@ import { msg } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
 
 const { _ } = useLingui();
-return <Text accessibilityLabel={_(msg`Label is here`)}> {text} </Text>
+return <Text accessibilityLabel={_(msg`Label is here`)}>{text}</Text>
 ```
 
 If you want to do this outside of a React component, you can use the `t` macro instead (note: this won't react to changes if the locale is switched dynamically within the app):
@@ -61,6 +61,8 @@ So the workflow is as follows:
 6. Enjoy translated app!
 
 ### Common pitfalls
+These pitfalls are memoization pitfalls that will cause the components to not re-render when the locale is changed -- causing for stale translations to be shown.
+
 ```jsx
 import { msg } from "@lingui/macro";
 import { i18n } from "@lingui/core";
