@@ -1,62 +1,39 @@
-import {beforeEach, expect, test} from '@jest/globals'
+import {jest, beforeAll, afterEach, expect, test} from '@jest/globals'
+// has a built-in mock
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {Storage} from '#/storage'
+import * as storage from '#/storage'
 
-type Schema = {
-  boo: boolean
-  str: string | null
-  num: number
-  obj: Record<string, unknown>
-}
-
-const store = new Storage<[], Schema>()
-
-beforeEach(() => {
-  store.removeMany([], ['boo', 'str', 'num', 'obj'])
+beforeAll(async () => {
+  await storage.init()
+  jest.mocked(AsyncStorage.getItem).mockClear()
 })
 
-test(`stores and retrieves data`, async () => {
-  await store.set(['boo'], true)
-  await store.set(['str'], 'string')
-  await store.set(['num'], 1)
-  expect(await store.get(['boo'])).toEqual(true)
-  expect(await store.get(['str'])).toEqual('string')
-  expect(await store.get(['num'])).toEqual(1)
+afterEach(() => {
+  jest.mocked(AsyncStorage.getItem).mockClear()
 })
 
-test(`removes data`, async () => {
-  await store.set(['boo'], true)
-  expect(await store.get(['boo'])).toEqual(true)
-  await store.remove(['boo'])
-  expect(await store.get(['boo'])).toEqual(undefined)
+test(`gets and sets data synchronously`, async () => {
+  storage.set('shell.colorMode', 'light')
+  expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+    storage.STORAGE_ROOT_KEY,
+    JSON.stringify({shell: {colorMode: 'light'}}),
+  )
+  expect(storage.get('shell.colorMode')).toBe('light')
+  expect(AsyncStorage.getItem).not.toHaveBeenCalled()
+
+  storage.set('shell.colorMode', 'dark')
+  expect(storage.get('shell.colorMode')).toBe('dark')
 })
 
-test(`removes multiple keys at once`, async () => {
-  await store.set(['boo'], true)
-  await store.set(['str'], 'string')
-  await store.set(['num'], 1)
-  await store.removeMany([], ['boo', 'str', 'num'])
-  expect(await store.get(['boo'])).toEqual(undefined)
-  expect(await store.get(['str'])).toEqual(undefined)
-  expect(await store.get(['num'])).toEqual(undefined)
-})
+test(`set rolls back on error`, async () => {
+  storage.set('shell.colorMode', 'light')
 
-test(`concatenates keys`, async () => {
-  await store.remove(['str'])
-  await store.set(['str'], 'concat')
-  // @ts-ignore accessing these properties for testing purposes only
-  expect(await store.store.getItem(`str`)).toBeTruthy()
-})
+  jest
+    .mocked(AsyncStorage.setItem)
+    .mockImplementationOnce(() => Promise.reject(new Error('test error')))
 
-test(`can store falsy values`, async () => {
-  await store.set(['str'], null)
-  await store.set(['num'], 0)
-  expect(await store.get(['str'])).toEqual(null)
-  expect(await store.get(['num'])).toEqual(0)
-})
+  await storage.set('shell.colorMode', 'system')
 
-test(`can store objects`, async () => {
-  const obj = {foo: true}
-  await store.set(['obj'], obj)
-  expect(await store.get(['obj'])).toEqual(obj)
+  expect(storage.get('shell.colorMode')).toBe('light')
 })

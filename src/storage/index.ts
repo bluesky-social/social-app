@@ -1,72 +1,48 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import getObj from 'lodash.get'
+import setObj from 'lodash.set'
 
-import {Device} from '#/storage/schemas'
+import {logger} from '#/logger'
+import {Schema, PropertyMap} from '#/storage/schema'
+
+export const STORAGE_ROOT_KEY = 'root'
 
 /**
- * Generic storage class. DO NOT use this directly. Instead, use the exported
- * storage instances below.
+ * In memory cache of local storage data. Never export or reference this
+ * directly.
  */
-export class Storage<Scopes extends unknown[], Schema> {
-  protected sep = ':'
-  protected store: typeof AsyncStorage
+let data: Schema | undefined
 
-  constructor() {
-    this.store = AsyncStorage
-  }
-
-  /**
-   * Store a value in storage based on scopes and/or keys
-   *
-   *   `set([key], value)`
-   *   `set([scope, key], value)`
-   */
-  async set<Key extends keyof Schema>(
-    scopes: [...Scopes, Key],
-    data: Schema[Key],
-  ): Promise<void> {
-    // stored as `{ data: <value> }` structure to ease stringification
-    await this.store.setItem(scopes.join(this.sep), JSON.stringify({data}))
-  }
-
-  /**
-   * Get a value from storage based on scopes and/or keys
-   *
-   *   `get([key])`
-   *   `get([scope, key])`
-   */
-  async get<Key extends keyof Schema>(
-    scopes: [...Scopes, Key],
-  ): Promise<Schema[Key] | undefined> {
-    const res = await this.store.getItem(scopes.join(this.sep))
-    if (!res) return undefined
-    // parsed from storage structure `{ data: <value> }`
-    return JSON.parse(res).data
-  }
-
-  /**
-   * Remove a value from storage based on scopes and/or keys
-   *
-   *   `remove([key])`
-   *   `remove([scope, key])`
-   */
-  async remove<Key extends keyof Schema>(scopes: [...Scopes, Key]) {
-    await this.store.removeItem(scopes.join(this.sep))
-  }
-
-  /**
-   * Remove many values from the same storage scope by keys
-   *
-   *   `removeMany([], [key])`
-   *   `removeMany([scope], [key])`
-   */
-  async removeMany<Key extends keyof Schema>(scopes: [...Scopes], keys: Key[]) {
-    await Promise.all(keys.map(key => this.remove([...scopes, key])))
-  }
+export async function init() {
+  const raw = await AsyncStorage.getItem(STORAGE_ROOT_KEY)
+  logger.debug(`storage initialized`)
+  data = (raw ? JSON.parse(raw) : {}) as Schema
 }
 
-/**
- * Data that's specific to the device
- *
- *   `device.set(['colorScheme'], 'light')`
- */
-export const device = new Storage<[], Device>()
+export function get<T extends keyof PropertyMap>(keypath: T): PropertyMap[T] {
+  logger.debug(`storage get(${keypath})`)
+  if (!data) {
+    throw new Error(`Data is not initialized. Did you forget to call init()`)
+  }
+  return getObj(data, keypath)
+}
+
+export async function set<T extends keyof PropertyMap>(
+  keypath: T,
+  value: PropertyMap[T],
+) {
+  logger.debug(`storage set(${keypath}, value)`)
+  if (!data) {
+    throw new Error(`Data is not initialized. Did you forget to call init()`)
+  }
+
+  const prev = getObj(data, keypath)
+  setObj(data, keypath, value)
+
+  try {
+    await AsyncStorage.setItem(STORAGE_ROOT_KEY, JSON.stringify(data))
+  } catch (err) {
+    logger.error(`storage set(${keypath}, value) failed`)
+    setObj(data, keypath, prev)
+  }
+}
