@@ -109,15 +109,21 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               headerTransform,
             ]}>
             <View onLayout={onHeaderOnlyLayout}>{renderHeader?.()}</View>
-            {isHeaderReady && (
+            <View
+              onLayout={onTabBarLayout}
+              style={{
+                // Render it immediately to measure it early since its size doesn't depend on the content.
+                // However, keep it invisible until the header above stabilizes in order to prevent jumps.
+                opacity: isHeaderReady ? 1 : 0,
+                pointerEvents: isHeaderReady ? 'auto' : 'none',
+              }}>
               <TabBar
                 items={items}
                 selectedPage={currentPage}
                 onSelect={props.onSelect}
                 onPressSelected={onCurrentPageSelected}
-                onLayout={onTabBarLayout}
               />
-            )}
+            </View>
           </Animated.View>
         )
       },
