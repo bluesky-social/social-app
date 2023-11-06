@@ -142,7 +142,8 @@ export class FeedSourceModel {
   }
 
   async unsave() {
-    if (this.type !== 'feed-generator') {
+    // TODO TEMPORARY — see PRF's comment in content/list.ts togglePin
+    if (this.type !== 'feed-generator' && this.type !== 'list') {
       return
     }
     try {
@@ -179,7 +180,13 @@ export class FeedSourceModel {
         name: this.displayName,
         uri: this.uri,
       })
-      return this.rootStore.preferences.removePinnedFeed(this.uri)
+
+      if (this.type === 'list') {
+        // TODO TEMPORARY — see PRF's comment in content/list.ts togglePin
+        return this.unsave()
+      } else {
+        return this.rootStore.preferences.removePinnedFeed(this.uri)
+      }
     }
   }
 
