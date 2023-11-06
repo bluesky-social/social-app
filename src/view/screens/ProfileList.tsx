@@ -165,6 +165,7 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <PagerWithHeader
             items={SECTION_TITLES_CURATE}
+            isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}
             onCurrentPageSelected={onCurrentPageSelected}>
             {({onScroll, headerHeight, isScrolledDown}) => (
@@ -215,6 +216,7 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <PagerWithHeader
             items={SECTION_TITLES_MOD}
+            isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection

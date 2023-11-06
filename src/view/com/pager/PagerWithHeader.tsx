@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {LayoutChangeEvent, StyleSheet} from 'react-native'
+import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedReaction,
@@ -28,6 +28,7 @@ export interface PagerWithHeaderProps {
     | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
     | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
+  isHeaderReady: boolean
   renderHeader?: () => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
@@ -39,6 +40,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       children,
       testID,
       items,
+      isHeaderReady,
       renderHeader,
       initialPage,
       onPageSelected,
@@ -106,18 +108,21 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               headerTransform,
             ]}>
             {renderHeader?.()}
-            <TabBar
-              items={items}
-              selectedPage={currentPage}
-              onSelect={props.onSelect}
-              onPressSelected={onCurrentPageSelected}
-              onLayout={onTabBarLayout}
-            />
+            {isHeaderReady && (
+              <TabBar
+                items={items}
+                selectedPage={currentPage}
+                onSelect={props.onSelect}
+                onPressSelected={onCurrentPageSelected}
+                onLayout={onTabBarLayout}
+              />
+            )}
           </Animated.View>
         )
       },
       [
         items,
+        isHeaderReady,
         renderHeader,
         headerTransform,
         currentPage,
@@ -175,7 +180,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         tabBarPosition="top">
         {toArray(children)
           .filter(Boolean)
-          .map(child => {
+          .map((child, i) => {
+            if (!isHeaderReady || headerHeight === 0) {
+              // Don't show content yet because it would jump down later otherwise.
+              // Pager requires that these are non-null so return an empty view.
+              return <View key={i} />
+            }
             if (child) {
               return child(childProps)
             }
