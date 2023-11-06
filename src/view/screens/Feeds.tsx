@@ -284,13 +284,13 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
         <Text type="lg-medium" style={pal.text} numberOfLines={1}>
           {feed.displayName}
         </Text>
-        {feed.error && (
+        {feed.error ? (
           <View style={[styles.offlineSlug, pal.borderDark]}>
             <Text type="xs" style={pal.textLight}>
               Feed offline
             </Text>
           </View>
-        )}
+        ) : null}
       </View>
       {isMobile && (
         <FontAwesomeIcon

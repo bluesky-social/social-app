@@ -250,7 +250,7 @@ export const ProfileListScreenInner = observer(
     return (
       <CenteredView sideBorders style={s.hContentRegion}>
         <Header rkey={rkey} list={list} />
-        {list.error && <ErrorScreen error={list.error} />}
+        {list.error ? <ErrorScreen error={list.error} /> : null}
       </CenteredView>
     )
   },
