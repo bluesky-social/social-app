@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {LayoutChangeEvent, StyleSheet} from 'react-native'
+import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedReaction,
@@ -28,6 +28,7 @@ export interface PagerWithHeaderProps {
     | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
     | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
+  isHeaderReady: boolean
   renderHeader?: () => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
@@ -39,6 +40,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       children,
       testID,
       items,
+      isHeaderReady,
       renderHeader,
       initialPage,
       onPageSelected,
@@ -51,15 +53,17 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const scrollYs = React.useRef<Record<number, number>>({})
     const scrollY = useSharedValue(scrollYs.current[currentPage] || 0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
-    const [headerHeight, setHeaderHeight] = React.useState(0)
+    const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
     const [isScrolledDown, setIsScrolledDown] = React.useState(
       scrollYs.current[currentPage] > SCROLLED_DOWN_LIMIT,
     )
 
+    const headerHeight = headerOnlyHeight + tabBarHeight
+
     // react to scroll updates
     function onScrollUpdate(v: number) {
       // track each page's current scroll position
-      scrollYs.current[currentPage] = Math.min(v, headerHeight - tabBarHeight)
+      scrollYs.current[currentPage] = Math.min(v, headerOnlyHeight)
       // update the 'is scrolled down' value
       setIsScrolledDown(v > SCROLLED_DOWN_LIMIT)
     }
@@ -75,11 +79,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       },
       [setTabBarHeight],
     )
-    const onHeaderLayout = React.useCallback(
+    const onHeaderOnlyLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
-        setHeaderHeight(evt.nativeEvent.layout.height)
+        setHeaderOnlyHeight(evt.nativeEvent.layout.height)
       },
-      [setHeaderHeight],
+      [setHeaderOnlyHeight],
     )
 
     // render the the header and tab bar
@@ -88,7 +92,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         transform: [
           {
             translateY: Math.min(
-              Math.min(scrollY.value, headerHeight - tabBarHeight) * -1,
+              Math.min(scrollY.value, headerOnlyHeight) * -1,
               0,
             ),
           },
@@ -100,31 +104,39 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       (props: RenderTabBarFnProps) => {
         return (
           <Animated.View
-            onLayout={onHeaderLayout}
             style={[
               isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
               headerTransform,
             ]}>
-            {renderHeader?.()}
-            <TabBar
-              items={items}
-              selectedPage={currentPage}
-              onSelect={props.onSelect}
-              onPressSelected={onCurrentPageSelected}
+            <View onLayout={onHeaderOnlyLayout}>{renderHeader?.()}</View>
+            <View
               onLayout={onTabBarLayout}
-            />
+              style={{
+                // Render it immediately to measure it early since its size doesn't depend on the content.
+                // However, keep it invisible until the header above stabilizes in order to prevent jumps.
+                opacity: isHeaderReady ? 1 : 0,
+                pointerEvents: isHeaderReady ? 'auto' : 'none',
+              }}>
+              <TabBar
+                items={items}
+                selectedPage={currentPage}
+                onSelect={props.onSelect}
+                onPressSelected={onCurrentPageSelected}
+              />
+            </View>
           </Animated.View>
         )
       },
       [
         items,
+        isHeaderReady,
         renderHeader,
         headerTransform,
         currentPage,
         onCurrentPageSelected,
         isMobile,
         onTabBarLayout,
-        onHeaderLayout,
+        onHeaderOnlyLayout,
       ],
     )
 
@@ -175,11 +187,23 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         tabBarPosition="top">
         {toArray(children)
           .filter(Boolean)
-          .map(child => {
-            if (child) {
-              return child(childProps)
+          .map((child, i) => {
+            let output = null
+            if (
+              child != null &&
+              // Defer showing content until we know it won't jump.
+              isHeaderReady &&
+              headerOnlyHeight > 0 &&
+              tabBarHeight > 0
+            ) {
+              output = child(childProps)
             }
-            return null
+            // Pager children must be noncollapsible plain <View>s.
+            return (
+              <View key={i} collapsable={false}>
+                {output}
+              </View>
+            )
           })}
       </Pager>
     )

@@ -332,11 +332,11 @@ export const ProfileFeedScreenInner = observer(
       <View style={s.hContentRegion}>
         <PagerWithHeader
           items={SECTION_TITLES}
+          isHeaderReady={feedInfo?.hasLoaded ?? false}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
           {({onScroll, headerHeight, isScrolledDown}) => (
             <FeedSection
-              key="1"
               ref={feedSectionRef}
               feed={feed}
               onScroll={onScroll}
@@ -346,7 +346,6 @@ export const ProfileFeedScreenInner = observer(
           )}
           {({onScroll, headerHeight}) => (
             <ScrollView
-              key="2"
               onScroll={onScroll}
               scrollEventThrottle={1}
               contentContainerStyle={{paddingTop: headerHeight}}>

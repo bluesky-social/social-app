@@ -165,11 +165,11 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <PagerWithHeader
             items={SECTION_TITLES_CURATE}
+            isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}
             onCurrentPageSelected={onCurrentPageSelected}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <FeedSection
-                key="1"
                 ref={feedSectionRef}
                 feed={feed}
                 onScroll={onScroll}
@@ -179,7 +179,6 @@ export const ProfileListScreenInner = observer(
             )}
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
-                key="2"
                 ref={aboutSectionRef}
                 list={list}
                 descriptionRT={list.descriptionRT}
@@ -215,10 +214,10 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <PagerWithHeader
             items={SECTION_TITLES_MOD}
+            isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
-                key="2"
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
