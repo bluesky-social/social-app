@@ -164,6 +164,7 @@ export const s = StyleSheet.create({
   flexRow: {flexDirection: 'row'},
   flexCol: {flexDirection: 'column'},
   flex1: {flex: 1},
+  flexGrow1: {flexGrow: 1},
   alignCenter: {alignItems: 'center'},
   alignBaseline: {alignItems: 'baseline'},
 

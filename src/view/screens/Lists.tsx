@@ -85,7 +85,7 @@ export const ListsScreen = withAuthRequired(
             </Button>
           </View>
         </SimpleViewHeader>
-        <ListsList listsList={listsLists} />
+        <ListsList listsList={listsLists} style={s.flexGrow1} />
       </View>
     )
   }),

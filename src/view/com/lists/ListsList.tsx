@@ -17,7 +17,7 @@ import {Text} from '../util/text/Text'
 import {ListsListModel} from 'state/models/lists/lists-list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {FlatList} from '../util/Views.web'
+import {FlatList} from '../util/Views'
 import {s} from 'lib/styles'
 import {logger} from '#/logger'
 
