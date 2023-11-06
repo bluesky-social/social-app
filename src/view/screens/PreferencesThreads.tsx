@@ -12,6 +12,7 @@ import {RadioGroup} from 'view/com/util/forms/RadioGroup'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {Trans} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export const PreferencesThreads = observer(function PreferencesThreadsImpl({
@@ -120,7 +121,9 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Done</Trans>
+          </Text>
         </TouchableOpacity>
       </View>
     </CenteredView>

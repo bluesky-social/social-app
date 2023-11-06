@@ -30,6 +30,7 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -204,7 +205,11 @@ export const ProfileScreen = withAuthRequired(
           // if section is posts or posts & replies
         } else {
           if (item === ProfileUiModel.END_ITEM) {
-            return <Text style={styles.endItem}>- end of feed -</Text>
+            return (
+              <Text style={styles.endItem}>
+                <Trans>- end of feed -</Trans>
+              </Text>
+            )
           } else if (item === ProfileUiModel.LOADING_ITEM) {
             return <PostFeedLoadingPlaceholder />
           } else if (item._reactKey === '__error__') {

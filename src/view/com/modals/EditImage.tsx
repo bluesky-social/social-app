@@ -19,6 +19,7 @@ import {Slider} from '@miblanchard/react-native-slider'
 import {MaterialIcons} from '@expo/vector-icons'
 import {observer} from 'mobx-react-lite'
 import {getKeys} from 'lib/type-assertions'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['80%']
 
@@ -200,7 +201,9 @@ export const Component = observer(function EditImageImpl({
           paddingHorizontal: isMobile ? 16 : undefined,
         },
       ]}>
-      <Text style={[styles.title, pal.text]}>Edit image</Text>
+      <Text style={[styles.title, pal.text]}>
+        <Trans>Edit image</Trans>
+      </Text>
       <View style={[styles.gap18, s.flexRow]}>
         <View>
           <View

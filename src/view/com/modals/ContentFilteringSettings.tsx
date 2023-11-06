@@ -16,6 +16,7 @@ import {isIOS} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['90%']
 
@@ -35,7 +36,9 @@ export const Component = observer(
 
     return (
       <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
-        <Text style={[pal.text, styles.title]}>Content Filtering</Text>
+        <Text style={[pal.text, styles.title]}>
+          <Trans>Content Filtering</Trans>
+        </Text>
         <ScrollView style={styles.scrollContainer}>
           <AdultContentEnabledPref />
           <ContentLabelPref
@@ -76,7 +79,9 @@ export const Component = observer(
               start={{x: 0, y: 0}}
               end={{x: 1, y: 1}}
               style={[styles.btn]}>
-              <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+              <Text style={[s.white, s.bold, s.f18]}>
+                <Trans>Done</Trans>
+              </Text>
             </LinearGradient>
           </Pressable>
         </View>

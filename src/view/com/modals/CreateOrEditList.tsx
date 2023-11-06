@@ -24,6 +24,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {Trans} from '@lingui/macro'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -168,7 +169,9 @@ export function Component({
             <ErrorMessage message={error} />
           </View>
         )}
-        <Text style={[styles.label, pal.text]}>List Avatar</Text>
+        <Text style={[styles.label, pal.text]}>
+          <Trans>List Avatar</Trans>
+        </Text>
         <View style={[styles.avi, {borderColor: pal.colors.background}]}>
           <EditableUserAvatar
             type="list"
@@ -237,7 +240,9 @@ export function Component({
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
-                <Text style={[s.white, s.bold]}>Save</Text>
+                <Text style={[s.white, s.bold]}>
+                  <Trans>Save</Trans>
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
@@ -250,7 +255,9 @@ export function Component({
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>
-              <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
+              <Text style={[s.black, s.bold, pal.text]}>
+                <Trans>Cancel</Trans>
+              </Text>
             </View>
           </TouchableOpacity>
         </View>

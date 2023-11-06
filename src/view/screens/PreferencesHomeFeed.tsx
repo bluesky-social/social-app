@@ -14,6 +14,7 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import debounce from 'lodash.debounce'
+import {Trans} from '@lingui/macro'
 
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
@@ -206,7 +207,9 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Done</Trans>
+          </Text>
         </TouchableOpacity>
       </View>
     </CenteredView>

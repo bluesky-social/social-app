@@ -5,6 +5,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
+import {Trans} from '@lingui/macro'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -19,7 +20,9 @@ export const SplashScreen = ({
       <SafeAreaView testID="noSessionView" style={styles.container}>
         <ErrorBoundary>
           <View style={styles.hero}>
-            <Text style={[styles.title, pal.link]}>Bluesky</Text>
+            <Text style={[styles.title, pal.link]}>
+              <Trans>Bluesky</Trans>
+            </Text>
             <Text style={[styles.subtitle, pal.textLight]}>
               See what's next
             </Text>
@@ -43,7 +46,9 @@ export const SplashScreen = ({
               accessibilityRole="button"
               accessibilityLabel="Sign in"
               accessibilityHint="Opens flow to sign into your existing Bluesky account">
-              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
+              <Text style={[pal.text, styles.btnLabel]}>
+                <Trans>Sign In</Trans>
+              </Text>
             </TouchableOpacity>
           </View>
         </ErrorBoundary>

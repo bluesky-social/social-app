@@ -10,6 +10,7 @@ import {isWeb} from 'platform/detection'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ScrollView} from 'view/com/modals/util'
+import {Trans} from '@lingui/macro'
 
 const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
 
@@ -149,7 +150,9 @@ export const Component = observer(function Component({
           accessibilityRole="button"
           accessibilityLabel="Confirm"
           accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Done</Trans>
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

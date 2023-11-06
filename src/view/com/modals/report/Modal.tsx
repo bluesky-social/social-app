@@ -14,6 +14,7 @@ import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 import {ReportReasonOptions} from './ReasonOptions'
 import {CollectionId} from './types'
+import {Trans} from '@lingui/macro'
 
 const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
@@ -158,7 +159,9 @@ const SelectIssue = ({
 
   return (
     <>
-      <Text style={[pal.text, styles.title]}>Report {collectionName}</Text>
+      <Text style={[pal.text, styles.title]}>
+        <Trans>Report {collectionName}</Trans>
+      </Text>
       <Text style={[pal.textLight, styles.description]}>
         What is the issue with this {collectionName}?
       </Text>
@@ -184,7 +187,9 @@ const SelectIssue = ({
             accessibilityRole="button"
             accessibilityLabel="Add details"
             accessibilityHint="Add more details to your report">
-            <Text style={[s.f18, pal.link]}>Add details to report</Text>
+            <Text style={[s.f18, pal.link]}>
+              <Trans>Add details to report</Trans>
+            </Text>
           </TouchableOpacity>
         </>
       ) : undefined}

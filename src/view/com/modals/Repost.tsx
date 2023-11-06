@@ -7,6 +7,7 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {RepostIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = [250]
 
@@ -66,7 +67,9 @@ export function Component({
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.btn]}>
-          <Text style={[s.white, s.bold, s.f18]}>Cancel</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Cancel</Trans>
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>

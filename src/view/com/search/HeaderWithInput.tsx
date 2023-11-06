@@ -12,6 +12,7 @@ import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {HITSLOP_10} from 'lib/constants'
+import {Trans} from '@lingui/macro'
 
 interface Props {
   isInputFocused: boolean
@@ -120,7 +121,9 @@ export function HeaderWithInput({
           <TouchableOpacity
             onPress={onPressCancelSearchInner}
             accessibilityRole="button">
-            <Text style={pal.text}>Cancel</Text>
+            <Text style={pal.text}>
+              <Trans>Cancel</Trans>
+            </Text>
           </TouchableOpacity>
         </View>
       ) : undefined}

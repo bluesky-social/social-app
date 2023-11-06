@@ -12,6 +12,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['80%']
 
@@ -43,7 +44,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}
                 accessibilityRole="button">
-                <Text style={styles.btnText}>Local dev server</Text>
+                <Text style={styles.btnText}>
+                  <Trans>Local dev server</Trans>
+                </Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
                   style={s.white as FontAwesomeIconStyle}
@@ -53,7 +56,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 style={styles.btn}
                 onPress={() => doSelect(STAGING_SERVICE)}
                 accessibilityRole="button">
-                <Text style={styles.btnText}>Staging</Text>
+                <Text style={styles.btnText}>
+                  <Trans>Staging</Trans>
+                </Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
                   style={s.white as FontAwesomeIconStyle}
@@ -67,7 +72,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             accessibilityRole="button"
             accessibilityLabel="Select Bluesky Social"
             accessibilityHint="Sets Bluesky Social as your service provider">
-            <Text style={styles.btnText}>Bluesky.Social</Text>
+            <Text style={styles.btnText}>
+              <Trans>Bluesky.Social</Trans>
+            </Text>
             <FontAwesomeIcon
               icon="arrow-right"
               style={s.white as FontAwesomeIconStyle}
@@ -75,7 +82,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           </TouchableOpacity>
         </View>
         <View style={styles.group}>
-          <Text style={[pal.text, styles.label]}>Other service</Text>
+          <Text style={[pal.text, styles.label]}>
+            <Trans>Other service</Trans>
+          </Text>
           <View style={s.flexRow}>
             <TextInput
               testID="customServerTextInput"

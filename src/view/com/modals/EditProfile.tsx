@@ -27,6 +27,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {isWeb} from 'platform/detection'
+import {Trans} from '@lingui/macro'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -151,7 +152,9 @@ export function Component({
   return (
     <KeyboardAvoidingView style={s.flex1} behavior="height">
       <ScrollView style={[pal.view]} testID="editProfileModal">
-        <Text style={[styles.title, pal.text]}>Edit my profile</Text>
+        <Text style={[styles.title, pal.text]}>
+          <Trans>Edit my profile</Trans>
+        </Text>
         <View style={styles.photos}>
           <UserBanner
             banner={userBanner}
@@ -172,7 +175,9 @@ export function Component({
         )}
         <View style={styles.form}>
           <View>
-            <Text style={[styles.label, pal.text]}>Display Name</Text>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Display Name</Trans>
+            </Text>
             <TextInput
               testID="editProfileDisplayNameInput"
               style={[styles.textInput, pal.border, pal.text]}
@@ -188,7 +193,9 @@ export function Component({
             />
           </View>
           <View style={s.pb10}>
-            <Text style={[styles.label, pal.text]}>Description</Text>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Description</Trans>
+            </Text>
             <TextInput
               testID="editProfileDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
@@ -220,7 +227,9 @@ export function Component({
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
-                <Text style={[s.white, s.bold]}>Save Changes</Text>
+                <Text style={[s.white, s.bold]}>
+                  <Trans>Save Changes</Trans>
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
@@ -235,7 +244,9 @@ export function Component({
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.btn]}>
-                <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
+                <Text style={[s.black, s.bold, pal.text]}>
+                  <Trans>Cancel</Trans>
+                </Text>
               </View>
             </AnimatedTouchableOpacity>
           )}

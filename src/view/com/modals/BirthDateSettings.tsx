@@ -15,6 +15,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['50%']
 
@@ -86,7 +87,9 @@ export const Component = observer(function Component({}: {}) {
             accessibilityRole="button"
             accessibilityLabel="Save"
             accessibilityHint="">
-            <Text style={[s.white, s.bold, s.f18]}>Save</Text>
+            <Text style={[s.white, s.bold, s.f18]}>
+              <Trans>Save</Trans>
+            </Text>
           </TouchableOpacity>
         )}
       </View>

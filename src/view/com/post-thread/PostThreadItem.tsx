@@ -37,6 +37,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -171,7 +172,9 @@ export const PostThreadItem = observer(function PostThreadItem({
           icon={['far', 'trash-can']}
           style={pal.icon as FontAwesomeIconStyle}
         />
-        <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
+        <Text style={[pal.textLight, s.ml10]}>
+          <Trans>This post has been deleted.</Trans>
+        </Text>
       </View>
     )
   }
@@ -645,9 +648,11 @@ function ExpandedPostDetails({
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
-          <Text style={pal.textLight}> • </Text>
+          <Text style={pal.textLight}>•</Text>
           <Link href={translatorUrl} title="Translate">
-            <Text style={pal.link}>Translate</Text>
+            <Text style={pal.link}>
+              <Trans>Translate</Trans>
+            </Text>
           </Link>
         </>
       )}

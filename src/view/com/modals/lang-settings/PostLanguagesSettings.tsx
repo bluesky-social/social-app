@@ -10,6 +10,7 @@ import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['100%']
 
@@ -64,9 +65,11 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
               maxHeight: '90vh',
             },
       ]}>
-      <Text style={[pal.text, styles.title]}>Post Languages</Text>
+      <Text style={[pal.text, styles.title]}>
+        <Trans>Post Languages</Trans>
+      </Text>
       <Text style={[pal.text, styles.description]}>
-        Which languages are used in this post?
+        <Trans>Which languages are used in this post?</Trans>
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => {

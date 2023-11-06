@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {Text} from '../../util/text/Text'
 import {s, gradients, colors} from 'lib/styles'
+import {Trans} from '@lingui/macro'
 
 export function SendReportButton({
   onPress,
@@ -38,7 +39,9 @@ export function SendReportButton({
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
         style={[styles.btn]}>
-        <Text style={[s.white, s.bold, s.f18]}>Send Report</Text>
+        <Text style={[s.white, s.bold, s.f18]}>
+          <Trans>Send Report</Trans>
+        </Text>
       </LinearGradient>
     </TouchableOpacity>
   )

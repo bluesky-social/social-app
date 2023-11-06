@@ -14,6 +14,7 @@ import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['70%']
 
@@ -124,7 +125,9 @@ const InviteCode = observer(function InviteCodeImpl({
       </Text>
       <View style={styles.flex1} />
       {!used && store.invitedUsers.isInviteCopied(code) && (
-        <Text style={[pal.textLight, styles.codeCopied]}>Copied</Text>
+        <Text style={[pal.textLight, styles.codeCopied]}>
+          <Trans>Copied</Trans>
+        </Text>
       )}
       {!used && (
         <FontAwesomeIcon

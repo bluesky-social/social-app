@@ -40,6 +40,7 @@ import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {isWeb} from 'platform/detection'
+import {Trans} from '@lingui/macro'
 
 const MAX_AUTHORS = 5
 
@@ -232,7 +233,9 @@ export const FeedItem = observer(function FeedItemImpl({
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text]}> and </Text>
+                <Text style={[pal.text]}>
+                  <Trans> and </Trans>
+                </Text>
                 <Text style={[pal.text, s.bold]}>
                   {formatCount(authors.length - 1)}{' '}
                   {pluralize(authors.length - 1, 'other')}

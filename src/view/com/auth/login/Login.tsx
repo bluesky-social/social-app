@@ -31,6 +31,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
 import {isWeb} from 'platform/detection'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 enum Forms {
   Login,
@@ -469,7 +470,9 @@ const LoginForm = ({
             accessibilityRole="button"
             accessibilityLabel="Forgot password"
             accessibilityHint="Opens password reset form">
-            <Text style={pal.link}>Forgot</Text>
+            <Text style={pal.link}>
+              <Trans>Forgot</Trans>
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

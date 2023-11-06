@@ -13,6 +13,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 export const snapPoints = ['70%']
 
@@ -167,7 +168,9 @@ export function Component({}: {}) {
               {appPassword}
             </Text>
             {wasCopied ? (
-              <Text style={[pal.textLight]}>Copied</Text>
+              <Text style={[pal.textLight]}>
+                <Trans>Copied</Trans>
+              </Text>
             ) : (
               <FontAwesomeIcon
                 icon={['far', 'clone']}

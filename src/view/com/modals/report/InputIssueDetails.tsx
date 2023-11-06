@@ -8,6 +8,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {SendReportButton} from './SendReportButton'
+import {Trans} from '@lingui/macro'
 
 export function InputIssueDetails({
   details,
@@ -38,7 +39,9 @@ export function InputIssueDetails({
         accessibilityLabel="Add details"
         accessibilityHint="Add more details to your report">
         <FontAwesomeIcon size={18} icon="angle-left" style={[pal.link]} />
-        <Text style={[pal.text, s.f18, pal.link]}> Back</Text>
+        <Text style={[pal.text, s.f18, pal.link]}>
+          <Trans> Back</Trans>
+        </Text>
       </TouchableOpacity>
       <View style={[pal.btn, styles.detailsInputContainer]}>
         <TextInput

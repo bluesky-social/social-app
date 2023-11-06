@@ -49,6 +49,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {Trans} from '@lingui/macro'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -267,7 +268,9 @@ export const ComposePost = observer(function ComposePost({
             accessibilityRole="button"
             accessibilityLabel="Cancel"
             accessibilityHint="Closes post composer and discards post draft">
-            <Text style={[pal.link, s.f18]}>Cancel</Text>
+            <Text style={[pal.link, s.f18]}>
+              <Trans>Cancel</Trans>
+            </Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -308,7 +311,9 @@ export const ComposePost = observer(function ComposePost({
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
-                  <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>
+                    <Trans>Post</Trans>
+                  </Text>
                 </View>
               )}
             </>

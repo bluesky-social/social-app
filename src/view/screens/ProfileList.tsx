@@ -44,6 +44,7 @@ import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -525,7 +526,9 @@ const Header = observer(function HeaderImpl({
             accessibilityLabel="Subscribe to this list"
             accessibilityHint="">
             <View style={[palInverted.view, styles.btn]}>
-              <Text style={palInverted.text}>Subscribe</Text>
+              <Text style={palInverted.text}>
+                <Trans>Subscribe</Trans>
+              </Text>
             </View>
           </NativeDropdown>
         )
@@ -683,7 +686,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 paddingBottom: isMobile ? 14 : 18,
               },
             ]}>
-            <Text type="lg-bold">Users</Text>
+            <Text type="lg-bold">
+              <Trans>Users</Trans>
+            </Text>
             {isOwner && (
               <Pressable
                 testID="addUserBtn"
@@ -697,7 +702,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                   color={pal.colors.link}
                   size={16}
                 />
-                <Text style={pal.link}>Add</Text>
+                <Text style={pal.link}>
+                  <Trans>Add</Trans>
+                </Text>
               </Pressable>
             )}
           </View>

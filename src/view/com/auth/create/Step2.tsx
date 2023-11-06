@@ -12,6 +12,7 @@ import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {useStores} from 'state/index'
 import {isWeb} from 'platform/detection'
+import {Trans} from '@lingui/macro'
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -64,7 +65,9 @@ export const Step2 = observer(function Step2Impl({
             accessibilityLabel="Join the waitlist."
             accessibilityHint="">
             <View style={styles.touchable}>
-              <Text style={pal.link}>Join the waitlist.</Text>
+              <Text style={pal.link}>
+                <Trans>Join the waitlist.</Trans>
+              </Text>
             </View>
           </TouchableWithoutFeedback>
         </Text>
