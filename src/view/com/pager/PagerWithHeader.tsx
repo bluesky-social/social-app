@@ -58,10 +58,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       scrollYs.current[currentPage] > SCROLLED_DOWN_LIMIT,
     )
 
+    const headerOnlyHeight = headerHeight - tabBarHeight
+
     // react to scroll updates
     function onScrollUpdate(v: number) {
       // track each page's current scroll position
-      scrollYs.current[currentPage] = Math.min(v, headerHeight - tabBarHeight)
+      scrollYs.current[currentPage] = Math.min(v, headerOnlyHeight)
       // update the 'is scrolled down' value
       setIsScrolledDown(v > SCROLLED_DOWN_LIMIT)
     }
@@ -90,7 +92,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         transform: [
           {
             translateY: Math.min(
-              Math.min(scrollY.value, headerHeight - tabBarHeight) * -1,
+              Math.min(scrollY.value, headerOnlyHeight) * -1,
               0,
             ),
           },
