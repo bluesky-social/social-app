@@ -45,6 +45,7 @@ module.exports = function (api) {
           },
         },
       ],
+      'macros',
       'react-native-reanimated/plugin', // NOTE: this plugin MUST be last
     ],
     env: {
