@@ -484,13 +484,13 @@ function CustomHandleForm({
           </Text>
         </View>
       )}
-      {error && (
+      {error ? (
         <View style={[styles.message, palError.view]}>
           <Text type="md-medium" style={palError.text}>
             {error}
           </Text>
         </View>
-      )}
+      ) : null}
       <Button
         type="primary"
         style={[s.p20, isVerifying && styles.dimmed]}

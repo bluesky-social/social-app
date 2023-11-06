@@ -51,14 +51,14 @@ export const ExternalEmbed = ({
             {link.meta.description}
           </Text>
         )}
-        {!!link.meta?.error && (
+        {link.meta?.error ? (
           <Text
             type="sm"
             numberOfLines={2}
             style={[{color: palError.colors.background}, styles.description]}>
             {link.meta.error}
           </Text>
-        )}
+        ) : null}
       </View>
       <TouchableOpacity
         style={styles.removeBtn}
