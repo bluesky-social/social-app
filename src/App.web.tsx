@@ -14,6 +14,9 @@ import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
+import {i18n} from '@lingui/core'
+import {I18nProvider} from '@lingui/react'
+import {defaultLocale, dynamicActivate} from './locale/i18n'
 
 const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -26,6 +29,7 @@ const App = observer(function AppImpl() {
       setRootStore(store)
       analytics.init(store)
     })
+    dynamicActivate(defaultLocale) // async import of locale data
   }, [])
 
   // show nothing prior to init
@@ -39,9 +43,11 @@ const App = observer(function AppImpl() {
         <RootSiblingParent>
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
-              <SafeAreaProvider>
-                <Shell />
-              </SafeAreaProvider>
+              <I18nProvider i18n={i18n}>
+                <SafeAreaProvider>
+                  <Shell />
+                </SafeAreaProvider>
+              </I18nProvider>
               <ToastContainer />
             </RootStoreProvider>
           </analytics.Provider>
