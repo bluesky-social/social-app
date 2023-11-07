@@ -20,6 +20,7 @@ import * as Toast from 'view/com/util/Toast'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
+import {Provider as ModalStateProvider} from 'state/modals'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -46,20 +47,22 @@ const App = observer(function AppImpl() {
   }
   return (
     <ShellStateProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={rootStore.shell.colorMode}>
-          <RootSiblingParent>
-            <analytics.Provider>
-              <RootStoreProvider value={rootStore}>
-                <GestureHandlerRootView style={s.h100pct}>
-                  <TestCtrls />
-                  <Shell />
-                </GestureHandlerRootView>
-              </RootStoreProvider>
-            </analytics.Provider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ModalStateProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={rootStore.shell.colorMode}>
+            <RootSiblingParent>
+              <analytics.Provider>
+                <RootStoreProvider value={rootStore}>
+                  <GestureHandlerRootView style={s.h100pct}>
+                    <TestCtrls />
+                    <Shell />
+                  </GestureHandlerRootView>
+                </RootStoreProvider>
+              </analytics.Provider>
+            </RootSiblingParent>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </ModalStateProvider>
     </ShellStateProvider>
   )
 })

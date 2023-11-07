@@ -49,6 +49,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {useModals} from '#/state/modals'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -57,6 +58,7 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
 }: Props) {
+  const {activeModals} = useModals()
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
@@ -108,7 +110,7 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
+      if (activeModals.some(modal => modal.name === 'confirm')) {
         store.shell.closeModal()
       }
       if (Keyboard) {
@@ -128,7 +130,7 @@ export const ComposePost = observer(function ComposePost({
     } else {
       onClose()
     }
-  }, [store, onClose, graphemeLength, gallery])
+  }, [store, activeModals, onClose, graphemeLength, gallery])
   // android back button
   useEffect(() => {
     if (!isAndroid) {

@@ -15,6 +15,7 @@ import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
+import {Provider as ModalStateProvider} from 'state/modals'
 
 const App = observer(function AppImpl() {
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
@@ -36,20 +37,22 @@ const App = observer(function AppImpl() {
 
   return (
     <ShellStateProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={rootStore.shell.colorMode}>
-          <RootSiblingParent>
-            <analytics.Provider>
-              <RootStoreProvider value={rootStore}>
-                <SafeAreaProvider>
-                  <Shell />
-                </SafeAreaProvider>
-                <ToastContainer />
-              </RootStoreProvider>
-            </analytics.Provider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ModalStateProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={rootStore.shell.colorMode}>
+            <RootSiblingParent>
+              <analytics.Provider>
+                <RootStoreProvider value={rootStore}>
+                  <SafeAreaProvider>
+                    <Shell />
+                  </SafeAreaProvider>
+                  <ToastContainer />
+                </RootStoreProvider>
+              </analytics.Provider>
+            </RootSiblingParent>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </ModalStateProvider>
     </ShellStateProvider>
   )
 })
