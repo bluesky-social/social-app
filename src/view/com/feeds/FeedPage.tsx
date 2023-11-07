@@ -20,6 +20,7 @@ import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import useAppState from 'react-native-appstate-hook'
+import {logger} from '#/logger'
 
 export const FeedPage = observer(function FeedPageImpl({
   testID,
@@ -37,7 +38,7 @@ export const FeedPage = observer(function FeedPageImpl({
   const store = useStores()
   const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
+  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
@@ -66,10 +67,10 @@ export const FeedPage = observer(function FeedPageImpl({
       if (feed.isLoading) {
         return
       }
-      store.log.debug('HomeScreen: Polling for new posts')
+      logger.debug('HomeScreen: Polling for new posts')
       feed.checkForLatest()
     },
-    [appState, isScreenFocused, isPageFocused, store, feed],
+    [appState, isScreenFocused, isPageFocused, feed],
   )
 
   const scrollToTop = React.useCallback(() => {
@@ -96,7 +97,7 @@ export const FeedPage = observer(function FeedPageImpl({
     const pollInterval = setInterval(doPoll, POLL_FREQ)
 
     screen('Feed')
-    store.log.debug('HomeScreen: Updating feed')
+    logger.debug('HomeScreen: Updating feed')
     feed.checkForLatest()
 
     return () => {
@@ -110,10 +111,6 @@ export const FeedPage = observer(function FeedPageImpl({
     track('HomeScreen:PressCompose')
     store.shell.openComposer({})
   }, [store, track])
-
-  const onPressTryAgain = React.useCallback(() => {
-    feed.refresh()
-  }, [feed])
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
@@ -179,10 +176,8 @@ export const FeedPage = observer(function FeedPageImpl({
     <View testID={testID} style={s.h100pct}>
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
-        key="default"
         feed={feed}
         scrollElRef={scrollElRef}
-        onPressTryAgain={onPressTryAgain}
         onScroll={onMainScroll}
         scrollEventThrottle={100}
         renderEmptyState={renderEmptyState}

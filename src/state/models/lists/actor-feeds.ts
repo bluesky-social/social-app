@@ -3,7 +3,8 @@ import {AppBskyFeedGetActorFeeds as GetActorFeeds} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
 
@@ -17,7 +18,7 @@ export class ActorFeedsModel {
   loadMoreCursor?: string
 
   // data
-  feeds: CustomFeedModel[] = []
+  feeds: FeedSourceModel[] = []
 
   constructor(
     public rootStore: RootStoreModel,
@@ -98,7 +99,7 @@ export class ActorFeedsModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch user followers', err)
+      logger.error('Failed to fetch user followers', {error: err})
     }
   }
 
@@ -114,7 +115,9 @@ export class ActorFeedsModel {
     this.loadMoreCursor = res.data.cursor
     this.hasMore = !!this.loadMoreCursor
     for (const f of res.data.feeds) {
-      this.feeds.push(new CustomFeedModel(this.rootStore, f))
+      const model = new FeedSourceModel(this.rootStore, f.uri)
+      model.hydrateFeedGenerator(f)
+      this.feeds.push(model)
     }
   }
 }

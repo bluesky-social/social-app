@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useMemo} from 'react'
 import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
@@ -31,9 +31,11 @@ const MAX_DESCRIPTION = 300 // todo
 export const snapPoints = ['fullscreen']
 
 export function Component({
+  purpose,
   onSave,
   list,
 }: {
+  purpose?: string
   onSave?: (uri: string) => void
   list?: ListModel
 }) {
@@ -44,12 +46,24 @@ export function Component({
   const theme = useTheme()
   const {track} = useAnalytics()
 
+  const activePurpose = useMemo(() => {
+    if (list?.data?.purpose) {
+      return list.data.purpose
+    }
+    if (purpose) {
+      return purpose
+    }
+    return 'app.bsky.graph.defs#curatelist'
+  }, [list, purpose])
+  const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
+  const purposeLabel = isCurateList ? 'User' : 'Moderation'
+
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.list?.name || '')
+  const [name, setName] = useState<string>(list?.data?.name || '')
   const [description, setDescription] = useState<string>(
-    list?.list?.description || '',
+    list?.data?.description || '',
   )
-  const [avatar, setAvatar] = useState<string | undefined>(list?.list?.avatar)
+  const [avatar, setAvatar] = useState<string | undefined>(list?.data?.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {
@@ -63,7 +77,7 @@ export function Component({
         setAvatar(undefined)
         return
       }
-      track('CreateMuteList:AvatarSelected')
+      track('CreateList:AvatarSelected')
       try {
         const finalImg = await compressIfNeeded(img, 1000000)
         setNewAvatar(finalImg)
@@ -76,7 +90,11 @@ export function Component({
   )
 
   const onPressSave = useCallback(async () => {
-    track('CreateMuteList:Save')
+    if (isCurateList) {
+      track('CreateList:SaveCurateList')
+    } else {
+      track('CreateList:SaveModList')
+    }
     const nameTrimmed = name.trim()
     if (!nameTrimmed) {
       setError('Name is required')
@@ -93,22 +111,23 @@ export function Component({
           description: description.trim(),
           avatar: newAvatar,
         })
-        Toast.show('Mute list updated')
+        Toast.show(`${purposeLabel} list updated`)
         onSave?.(list.uri)
       } else {
-        const res = await ListModel.createModList(store, {
+        const res = await ListModel.createList(store, {
+          purpose: activePurpose,
           name,
           description,
           avatar: newAvatar,
         })
-        Toast.show('Mute list created')
+        Toast.show(`${purposeLabel} list created`)
         onSave?.(res.uri)
       }
       store.shell.closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
-          'Failed to create the mute list. Check your internet connection and try again.',
+          'Failed to create the list. Check your internet connection and try again.',
         )
       } else {
         setError(cleanError(e))
@@ -122,6 +141,9 @@ export function Component({
     error,
     onSave,
     store,
+    activePurpose,
+    isCurateList,
+    purposeLabel,
     name,
     description,
     newAvatar,
@@ -137,9 +159,9 @@ export function Component({
             paddingHorizontal: isMobile ? 16 : 0,
           },
         ]}
-        testID="createOrEditMuteListModal">
+        testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
-          {list ? 'Edit Mute List' : 'New Mute List'}
+          {list ? 'Edit' : 'New'} {purposeLabel} List
         </Text>
         {error !== '' && (
           <View style={styles.errorContainer}>
@@ -163,7 +185,9 @@ export function Component({
             <TextInput
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
-              placeholder="e.g. spammers"
+              placeholder={
+                isCurateList ? 'e.g. Great Posters' : 'e.g. Spammers'
+              }
               placeholderTextColor={colors.gray4}
               value={name}
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
@@ -180,7 +204,11 @@ export function Component({
             <TextInput
               testID="editDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder="e.g. users that repeatedly reply with ads."
+              placeholder={
+                isCurateList
+                  ? 'e.g. The posters who never miss.'
+                  : 'e.g. Users that repeatedly reply with ads.'
+              }
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline
@@ -203,7 +231,7 @@ export function Component({
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel="Save"
-              accessibilityHint="Creates the mute list">
+              accessibilityHint="">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}

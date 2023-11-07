@@ -13,7 +13,7 @@ export interface TabBarProps {
   items: string[]
   indicatorColor?: string
   onSelect?: (index: number) => void
-  onPressSelected?: () => void
+  onPressSelected?: (index: number) => void
 }
 
 export function TabBar({
@@ -44,7 +44,7 @@ export function TabBar({
     (index: number) => {
       onSelect?.(index)
       if (index === selectedPage) {
-        onPressSelected?.()
+        onPressSelected?.(index)
       }
     },
     [onSelect, selectedPage, onPressSelected],
@@ -118,10 +118,7 @@ const desktopStyles = StyleSheet.create({
 
 const mobileStyles = StyleSheet.create({
   outer: {
-    flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'transparent',
-    maxWidth: '100%',
   },
   contentContainer: {
     columnGap: isWeb ? 0 : 20,

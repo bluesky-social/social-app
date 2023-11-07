@@ -10,6 +10,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {logger} from '#/logger'
 
 export const ProfileFollowers = observer(function ProfileFollowers({
   name,
@@ -26,18 +27,20 @@ export const ProfileFollowers = observer(function ProfileFollowers({
   useEffect(() => {
     view
       .loadMore()
-      .catch(err => store.log.error('Failed to fetch user followers', err))
-  }, [view, store.log])
+      .catch(err =>
+        logger.error('Failed to fetch user followers', {error: err}),
+      )
+  }, [view])
 
   const onRefresh = () => {
     view.refresh()
   }
   const onEndReached = () => {
-    view
-      .loadMore()
-      .catch(err =>
-        view?.rootStore.log.error('Failed to load more followers', err),
-      )
+    view.loadMore().catch(err =>
+      logger.error('Failed to load more followers', {
+        error: err,
+      }),
+    )
   }
 
   if (!view.hasLoaded) {

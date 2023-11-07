@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -28,6 +29,8 @@ import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
+import {isWeb} from 'platform/detection'
+import {logger} from '#/logger'
 
 enum Forms {
   Login,
@@ -79,10 +82,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         if (aborted) {
           return
         }
-        store.log.warn(
-          `Failed to fetch service description for ${serviceUrl}`,
-          err,
-        )
+        logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
+          error: err,
+        })
         setError(
           'Unable to contact your service. Please check your Internet connection.',
         )
@@ -91,7 +93,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     return () => {
       aborted = true
     }
-  }, [store.session, store.log, serviceUrl, retryDescribeTrigger])
+  }, [store.session, serviceUrl, retryDescribeTrigger])
 
   const onPressRetryConnect = () => setRetryDescribeTrigger({})
   const onPressForgotPassword = () => {
@@ -202,7 +204,7 @@ const ChooseAccountForm = ({
   }
 
   return (
-    <View testID="chooseAccountForm">
+    <ScrollView testID="chooseAccountForm" style={styles.maxHeight}>
       <Text
         type="2xl-medium"
         style={[pal.text, styles.groupLabel, s.mt5, s.mb10]}>
@@ -267,7 +269,7 @@ const ChooseAccountForm = ({
         <View style={s.flex1} />
         {isProcessing && <ActivityIndicator />}
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -347,7 +349,7 @@ const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to login', e)
+      logger.warn('Failed to login', {error: e})
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         setError('Invalid username or password')
@@ -576,7 +578,7 @@ const ForgotPasswordForm = ({
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to request password reset', e)
+      logger.warn('Failed to request password reset', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -692,7 +694,6 @@ const ForgotPasswordForm = ({
 }
 
 const SetNewPasswordForm = ({
-  store,
   error,
   serviceUrl,
   setError,
@@ -732,7 +733,7 @@ const SetNewPasswordForm = ({
       onPasswordSet()
     } catch (e: any) {
       const errMsg = e.toString()
-      store.log.warn('Failed to set new password', e)
+      logger.warn('Failed to set new password', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -990,4 +991,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   dimmed: {opacity: 0.5},
+
+  maxHeight: {
+    // @ts-ignore web only -prf
+    maxHeight: isWeb ? '100vh' : undefined,
+    height: !isWeb ? '100%' : undefined,
+  },
 })

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
-import {DesktopWebTextLink} from './Link'
+import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 import {useStores} from 'state/index'
@@ -65,7 +65,7 @@ export function UserInfoText({
     )
   } else if (profile) {
     inner = (
-      <DesktopWebTextLink
+      <TextLinkOnWebOnly
         type={type}
         style={style}
         lineHeight={1.2}

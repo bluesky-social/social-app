@@ -76,7 +76,10 @@ export const ListCard = ({
             {sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'} by{' '}
+            {list.purpose === 'app.bsky.graph.defs#curatelist' && 'User list '}
+            {list.purpose === 'app.bsky.graph.defs#modlist' &&
+              'Moderation list '}
+            by{' '}
             {list.creator.did === store.me.did
               ? 'you'
               : sanitizeHandle(list.creator.handle, '@')}

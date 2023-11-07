@@ -1,7 +1,6 @@
 import React from 'react'
 import {useWindowDimensions} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
@@ -15,6 +14,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedPage} from 'view/com/feeds/FeedPage'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 
 export const POLL_FREQ = 30e3 // 30sec
 
@@ -22,6 +22,8 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer(function HomeScreenImpl({}: Props) {
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
@@ -30,29 +32,29 @@ export const HomeScreen = withAuthRequired(
     >([])
 
     React.useEffect(() => {
-      const {pinned} = store.me.savedFeeds
+      const pinned = store.preferences.pinnedFeeds
 
-      if (
-        isEqual(
-          pinned.map(p => p.uri),
-          requestedCustomFeeds,
-        )
-      ) {
+      if (isEqual(pinned, requestedCustomFeeds)) {
         // no changes
         return
       }
 
       const feeds = []
-      for (const feed of pinned) {
-        const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
-        feeds.push(model)
+      for (const uri of pinned) {
+        if (uri.includes('app.bsky.feed.generator')) {
+          const model = new PostsFeedModel(store, 'custom', {feed: uri})
+          feeds.push(model)
+        } else if (uri.includes('app.bsky.graph.list')) {
+          const model = new PostsFeedModel(store, 'list', {list: uri})
+          feeds.push(model)
+        }
       }
       pagerRef.current?.setPage(0)
       setCustomFeeds(feeds)
-      setRequestedCustomFeeds(pinned.map(p => p.uri))
+      setRequestedCustomFeeds(pinned)
     }, [
       store,
-      store.me.savedFeeds.pinned,
+      store.preferences.pinnedFeeds,
       customFeeds,
       setCustomFeeds,
       pagerRef,
@@ -62,21 +64,21 @@ export const HomeScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
-        store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
+        setMinimalShellMode(false)
+        setDrawerSwipeDisabled(selectedPage > 0)
         return () => {
-          store.shell.setIsDrawerSwipeDisabled(false)
+          setDrawerSwipeDisabled(false)
         }
-      }, [store, selectedPage]),
+      }, [setDrawerSwipeDisabled, selectedPage, setMinimalShellMode]),
     )
 
     const onPageSelected = React.useCallback(
       (index: number) => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         setSelectedPage(index)
-        store.shell.setIsDrawerSwipeDisabled(index > 0)
+        setDrawerSwipeDisabled(index > 0)
       },
-      [store, setSelectedPage],
+      [setDrawerSwipeDisabled, setSelectedPage, setMinimalShellMode],
     )
 
     const onPressSelected = React.useCallback(() => {
@@ -124,7 +126,7 @@ export const HomeScreen = withAuthRequired(
         {customFeeds.map((f, index) => {
           return (
             <FeedPage
-              key={(f.params as GetCustomFeed.QueryParams).feed}
+              key={f.reactKey}
               testID="customFeedPage"
               isPageFocused={selectedPage === 1 + index}
               feed={f}

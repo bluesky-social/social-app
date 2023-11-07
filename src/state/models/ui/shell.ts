@@ -1,4 +1,4 @@
-import {AppBskyEmbedRecord, ModerationUI} from '@atproto/api'
+import {AppBskyEmbedRecord, AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
@@ -60,17 +60,25 @@ export type ReportModal = {
   | {did: string}
 )
 
-export interface CreateOrEditMuteListModal {
-  name: 'create-or-edit-mute-list'
+export interface CreateOrEditListModal {
+  name: 'create-or-edit-list'
+  purpose?: string
   list?: ListModel
   onSave?: (uri: string) => void
 }
 
-export interface ListAddRemoveUserModal {
-  name: 'list-add-remove-user'
+export interface UserAddRemoveListsModal {
+  name: 'user-add-remove-lists'
   subject: string
   displayName: string
-  onUpdate?: () => void
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}
+
+export interface ListAddUserModal {
+  name: 'list-add-user'
+  list: ListModel
+  onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }
 
 export interface EditImageModal {
@@ -180,8 +188,11 @@ export type Modal =
   // Moderation
   | ModerationDetailsModal
   | ReportModal
-  | CreateOrEditMuteListModal
-  | ListAddRemoveUserModal
+
+  // Lists
+  | CreateOrEditListModal
+  | UserAddRemoveListsModal
+  | ListAddUserModal
 
   // Posts
   | AltTextImageModal
@@ -255,9 +266,6 @@ export interface ComposerOpts {
 
 export class ShellUiModel {
   colorMode: ColorMode = 'system'
-  minimalShellMode = false
-  isDrawerOpen = false
-  isDrawerSwipeDisabled = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
@@ -302,10 +310,6 @@ export class ShellUiModel {
     }
   }
 
-  setMinimalShellMode(v: boolean) {
-    this.minimalShellMode = v
-  }
-
   /**
    * returns true if something was closed
    * (used by the android hardware back btn)
@@ -321,10 +325,6 @@ export class ShellUiModel {
     }
     if (this.isComposerActive) {
       this.closeComposer()
-      return true
-    }
-    if (this.isDrawerOpen) {
-      this.closeDrawer()
       return true
     }
     return false
@@ -343,21 +343,6 @@ export class ShellUiModel {
     if (this.isComposerActive) {
       this.closeComposer()
     }
-    if (this.isDrawerOpen) {
-      this.closeDrawer()
-    }
-  }
-
-  openDrawer() {
-    this.isDrawerOpen = true
-  }
-
-  closeDrawer() {
-    this.isDrawerOpen = false
-  }
-
-  setIsDrawerSwipeDisabled(v: boolean) {
-    this.isDrawerSwipeDisabled = v
   }
 
   openModal(modal: Modal) {

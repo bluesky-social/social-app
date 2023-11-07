@@ -15,6 +15,7 @@ import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {logger} from '#/logger'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -178,10 +179,9 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         ) {
           encoding = 'image/jpeg'
         } else {
-          store.log.warn(
-            'Unexpected image format for thumbnail, skipping',
-            opts.extLink.localThumb.path,
-          )
+          logger.warn('Unexpected image format for thumbnail, skipping', {
+            thumbnail: opts.extLink.localThumb.path,
+          })
         }
         if (encoding) {
           const thumbUploadRes = await uploadBlob(

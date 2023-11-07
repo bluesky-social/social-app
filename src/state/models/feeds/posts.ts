@@ -4,6 +4,7 @@ import {
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
   AppBskyFeedGetFeed as GetCustomFeed,
   AppBskyFeedGetActorLikes as GetActorLikes,
+  AppBskyFeedGetListFeed as GetListFeed,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
 import {bundleAsync} from 'lib/async/bundle'
@@ -19,9 +20,22 @@ import {FollowingFeedAPI} from 'lib/api/feed/following'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
+import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
+import {logger} from '#/logger'
 
 const PAGE_SIZE = 30
+
+type FeedType = 'home' | 'following' | 'author' | 'custom' | 'likes' | 'list'
+
+export enum KnownError {
+  FeedgenDoesNotExist,
+  FeedgenMisconfigured,
+  FeedgenBadResponse,
+  FeedgenOffline,
+  FeedgenUnknown,
+  Unknown,
+}
 
 type Options = {
   /**
@@ -36,6 +50,7 @@ type QueryParams =
   | GetAuthorFeed.QueryParams
   | GetActorLikes.QueryParams
   | GetCustomFeed.QueryParams
+  | GetListFeed.QueryParams
 
 export class PostsFeedModel {
   // state
@@ -46,6 +61,7 @@ export class PostsFeedModel {
   isBlocking = false
   isBlockedBy = false
   error = ''
+  knownError: KnownError | undefined
   loadMoreError = ''
   params: QueryParams
   hasMore = true
@@ -66,7 +82,7 @@ export class PostsFeedModel {
 
   constructor(
     public rootStore: RootStoreModel,
-    public feedType: 'home' | 'following' | 'author' | 'custom' | 'likes',
+    public feedType: FeedType,
     params: QueryParams,
     options?: Options,
   ) {
@@ -99,9 +115,24 @@ export class PostsFeedModel {
         rootStore,
         params as GetCustomFeed.QueryParams,
       )
+    } else if (feedType === 'list') {
+      this.api = new ListFeedAPI(rootStore, params as GetListFeed.QueryParams)
     } else {
       this.api = new FollowingFeedAPI(rootStore)
     }
+  }
+
+  get reactKey() {
+    if (this.feedType === 'author') {
+      return (this.params as GetAuthorFeed.QueryParams).actor
+    }
+    if (this.feedType === 'custom') {
+      return (this.params as GetCustomFeed.QueryParams).feed
+    }
+    if (this.feedType === 'list') {
+      return (this.params as GetListFeed.QueryParams).list
+    }
+    return this.feedType
   }
 
   get hasContent() {
@@ -117,7 +148,7 @@ export class PostsFeedModel {
   }
 
   get isLoadingMore() {
-    return this.isLoading && !this.isRefreshing
+    return this.isLoading && !this.isRefreshing && this.hasContent
   }
 
   setHasNewLatest(v: boolean) {
@@ -131,7 +162,7 @@ export class PostsFeedModel {
    * Nuke all data
    */
   clear() {
-    this.rootStore.log.debug('FeedModel:clear')
+    logger.debug('FeedModel:clear')
     this.isLoading = false
     this.isRefreshing = false
     this.hasNewLatest = false
@@ -147,7 +178,7 @@ export class PostsFeedModel {
    * Load for first render
    */
   setup = bundleAsync(async (isRefreshing: boolean = false) => {
-    this.rootStore.log.debug('FeedModel:setup', {isRefreshing})
+    logger.debug('FeedModel:setup', {isRefreshing})
     if (isRefreshing) {
       this.isRefreshing = true // set optimistically for UI
     }
@@ -281,6 +312,7 @@ export class PostsFeedModel {
     this.isLoading = true
     this.isRefreshing = isRefreshing
     this.error = ''
+    this.knownError = undefined
   }
 
   _xIdle(error?: any, loadMoreError?: any) {
@@ -290,15 +322,15 @@ export class PostsFeedModel {
     this.isBlocking = error instanceof GetAuthorFeed.BlockedActorError
     this.isBlockedBy = error instanceof GetAuthorFeed.BlockedByActorError
     this.error = cleanError(error)
+    this.knownError = detectKnownError(this.feedType, error)
     this.loadMoreError = cleanError(loadMoreError)
     if (error) {
-      this.rootStore.log.error('Posts feed request failed', error)
+      logger.error('Posts feed request failed', {error})
     }
     if (loadMoreError) {
-      this.rootStore.log.error(
-        'Posts feed load-more request failed',
-        loadMoreError,
-      )
+      logger.error('Posts feed load-more request failed', {
+        error: loadMoreError,
+      })
     }
   }
 
@@ -358,4 +390,40 @@ export class PostsFeedModel {
       }
     })
   }
+}
+
+function detectKnownError(
+  feedType: FeedType,
+  error: any,
+): KnownError | undefined {
+  if (!error) {
+    return undefined
+  }
+  if (typeof error !== 'string') {
+    error = error.toString()
+  }
+  if (feedType !== 'custom') {
+    return KnownError.Unknown
+  }
+  if (error.includes('could not find feed')) {
+    return KnownError.FeedgenDoesNotExist
+  }
+  if (error.includes('feed unavailable')) {
+    return KnownError.FeedgenOffline
+  }
+  if (error.includes('invalid did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('could not resolve did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (
+    error.includes('invalid feed generator service details in did document')
+  ) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('feed provided an invalid response')) {
+    return KnownError.FeedgenBadResponse
+  }
+  return KnownError.FeedgenUnknown
 }

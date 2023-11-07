@@ -2,7 +2,7 @@
 
 ## App Build
 
-- Setup your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
+- Set up your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
 - Setup your environment [for e2e testing using detox](https://wix.github.io/Detox/docs/introduction/getting-started):
   - yarn global add detox-cli
   - brew tap wix/brew
@@ -20,7 +20,7 @@
   - iOS: `yarn ios`
   - Android: `yarn android`
   - Web: `yarn web`
-- If you are cloning or forking this repo as an open source developer, please check the tips below as well
+- If you are cloning or forking this repo as an open-source developer, please check the tips below as well
 - Run e2e tests
   - Start in various console tabs:
     - `yarn e2e:mock-server`
@@ -28,14 +28,14 @@
   - Run once: `yarn e2e:build`
   - Each test run: `yarn e2e:run`
 - Tips
-  - Make sure to copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
-  - To run on device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
-  - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` as well as `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
+  - Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
+  - To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
+  - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
   - `npx react-native info` Checks what has been installed.
-  - If the android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
-  - The android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
+  - If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
+  - The Android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
     - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
-  - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file which doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
+  - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file that doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
 ### Adding Sentry
 
@@ -81,24 +81,24 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 - Android Device: Shake the device vertically, or if your device is connected via USB, run adb shell input keyevent 82 in your terminal
 - Android Emulator: Either press Cmd ⌘ + m or Ctrl + m or run adb shell input keyevent 82 in your terminal
 - iOS Device: Shake the device, or touch 3 fingers to the screen
-- iOS Simulator: Press Ctrl + Cmd ⌘ + z on a Mac in the emulator to simulate the shake gesture, or press Cmd ⌘ + d
+- iOS Simulator: Press Ctrl + Cmd ⌘ + z on a Mac in the emulator to simulate the shake gesture or press Cmd ⌘ + d
 
 ### Running E2E Tests
 
-- Make sure you've setup your environment following above
+- Make sure you've set your environment following the above
 - Make sure Metro and the dev server are running
 - Run `yarn e2e`
 - Find the artifacts in the `artifact` folder
 
 ### Polyfills
 
-`./platform/polyfills.*.ts` adds polyfills to the environment. Currently this includes:
+`./platform/polyfills.*.ts` adds polyfills to the environment. Currently, this includes:
 
 - TextEncoder / TextDecoder
 
 ### Sentry sourcemaps
 
-Sourcemaps should automatically be updated when a signed build is created using `eas build` and published using `eas submit` due to the postPublish hook setup in `app.json`. However, if an update is created and published OTA using `eas update`, we need to the take the following steps to upload sourcemaps to Sentry:
+Sourcemaps should automatically be updated when a signed build is created using `eas build` and published using `eas submit` due to the postPublish hook setup in `app.json`. However, if an update is created and published OTA using `eas update`, we need to take the following steps to upload sourcemaps to Sentry:
 
 - Run eas update. This will generate a dist folder in your project root, which contains your JavaScript bundles and source maps. This command will also output the 'Android update ID' and 'iOS update ID' that we'll need in the next step.
 - Copy or rename the bundle names in the `dist/bundles` folder to match `index.android.bundle` (Android) or `main.jsbundle` (iOS).
@@ -122,6 +122,6 @@ dist/bundles/main.jsbundle dist/bundles/ios-<hash>.map`
 
 ### OTA updates
 
-To create OTA updates, run `eas update` along with the `--branch` flag to indicate which branch you want to push the update to, and the `--message` flag to indicate a message for yourself and your team that shows up on https://expo.dev. ALl the channels (which make up the options for the `--branch` flag) are given in `eas.json`. [See more here](https://docs.expo.dev/eas-update/getting-started/)
+To create OTA updates, run `eas update` along with the `--branch` flag to indicate which branch you want to push the update to, and the `--message` flag to indicate a message for yourself and your team that shows up on https://expo.dev. All the channels (which make up the options for the `--branch` flag) are given in `eas.json`. [See more here](https://docs.expo.dev/eas-update/getting-started/)
 
-The clients which can receive an OTA update is governed by the `runtimeVersion` property in `app.json`. Right now, it is set so that only apps with the same `appVersion` (same as `version` property in `app.json`) can receive the update and install it. However, we can manually set `"runtimeVersion": "1.34.0"` or anything along those lines as well. This is useful if very little native code changes from update-to-update. If we are manually setting `runtimeVersion`, we should increment the version each time native code is changed. [See more here](https://docs.expo.dev/eas-update/runtime-versions/)
+The clients which can receive an OTA update are governed by the `runtimeVersion` property in `app.json`. Right now, it is set so that only apps with the same `appVersion` (same as `version` property in `app.json`) can receive the update and install it. However, we can manually set `"runtimeVersion": "1.34.0"` or anything along those lines as well. This is useful if very little native code changes from update to update. If we are manually setting `runtimeVersion`, we should increment the version each time the native code is changed. [See more here](https://docs.expo.dev/eas-update/runtime-versions/)

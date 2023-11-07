@@ -8,7 +8,6 @@ import {createContext, useContext} from 'react'
 import {DeviceEventEmitter, EmitterSubscription} from 'react-native'
 import {z} from 'zod'
 import {isObj, hasProp} from 'lib/type-guards'
-import {LogModel} from './log'
 import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
 import {HandleResolutionsCache} from './cache/handle-resolutions'
@@ -23,6 +22,7 @@ import {ImageSizesCache} from './cache/image-sizes'
 import {MutedThreads} from './muted-threads'
 import {Reminders} from './ui/reminders'
 import {reset as resetNavigation} from '../../Navigation'
+import {logger} from '#/logger'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -41,7 +41,6 @@ export type AppInfo = z.infer<typeof appInfo>
 export class RootStoreModel {
   agent: BskyAgent
   appInfo?: AppInfo
-  log = new LogModel()
   session = new SessionModel(this)
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel(this)
@@ -122,15 +121,15 @@ export class RootStoreModel {
    * Called during init to resume any stored session.
    */
   async attemptSessionResumption() {
-    this.log.debug('RootStoreModel:attemptSessionResumption')
+    logger.debug('RootStoreModel:attemptSessionResumption')
     try {
       await this.session.attemptSessionResumption()
-      this.log.debug('Session initialized', {
+      logger.debug('Session initialized', {
         hasSession: this.session.hasSession,
       })
       this.updateSessionState()
     } catch (e: any) {
-      this.log.warn('Failed to initialize session', e)
+      logger.warn('Failed to initialize session', {error: e})
     }
   }
 
@@ -141,7 +140,7 @@ export class RootStoreModel {
     agent: BskyAgent,
     {hadSession}: {hadSession: boolean},
   ) {
-    this.log.debug('RootStoreModel:handleSessionChange')
+    logger.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
     applyDebugHeader(this.agent)
     this.me.clear()
@@ -157,7 +156,7 @@ export class RootStoreModel {
    * Called by the session model. Handles session drops by informing the user.
    */
   async handleSessionDrop() {
-    this.log.debug('RootStoreModel:handleSessionDrop')
+    logger.debug('RootStoreModel:handleSessionDrop')
     resetToTab('HomeTab')
     this.me.clear()
     this.emitSessionDropped()
@@ -167,7 +166,7 @@ export class RootStoreModel {
    * Clears all session-oriented state.
    */
   clearAllSessionState() {
-    this.log.debug('RootStoreModel:clearAllSessionState')
+    logger.debug('RootStoreModel:clearAllSessionState')
     this.session.clear()
     resetToTab('HomeTab')
     this.me.clear()
@@ -184,7 +183,7 @@ export class RootStoreModel {
       await this.me.updateIfNeeded()
       await this.preferences.sync()
     } catch (e: any) {
-      this.log.error('Failed to fetch latest state', e)
+      logger.error('Failed to fetch latest state', {error: e})
     }
   }
 

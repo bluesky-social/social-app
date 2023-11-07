@@ -21,6 +21,8 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {logger} from '#/logger'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -30,6 +32,7 @@ export const ModerationMutedAccounts = withAuthRequired(
   observer(function ModerationMutedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
     const mutedAccounts = useMemo(() => new MutedAccountsModel(store), [store])
@@ -37,9 +40,9 @@ export const ModerationMutedAccounts = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         screen('MutedAccounts')
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         mutedAccounts.refresh()
-      }, [screen, store, mutedAccounts]),
+      }, [screen, setMinimalShellMode, mutedAccounts]),
     )
 
     const onRefresh = React.useCallback(() => {
@@ -49,9 +52,9 @@ export const ModerationMutedAccounts = withAuthRequired(
       mutedAccounts
         .loadMore()
         .catch(err =>
-          store.log.error('Failed to load more muted accounts', err),
+          logger.error('Failed to load more muted accounts', {error: err}),
         )
-    }, [mutedAccounts, store])
+    }, [mutedAccounts])
 
     const renderItem = ({
       item,

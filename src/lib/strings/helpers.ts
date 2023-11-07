@@ -32,3 +32,8 @@ export function toHashCode(str: string, seed = 0): number {
 
   return 4294967296 * (2097151 & h2) + (h1 >>> 0)
 }
+
+export function countLines(str: string | undefined): number {
+  if (!str) return 0
+  return str.match(/\n/g)?.length ?? 0
+}

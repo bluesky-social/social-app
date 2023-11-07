@@ -3,7 +3,8 @@ import {AppBskyUnspeccedGetPopularFeedGenerators} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
-import {CustomFeedModel} from '../feeds/custom-feed'
+import {FeedSourceModel} from '../content/feed-source'
+import {logger} from '#/logger'
 
 const DEFAULT_LIMIT = 50
 
@@ -16,7 +17,7 @@ export class FeedsDiscoveryModel {
   loadMoreCursor: string | undefined = undefined
 
   // data
-  feeds: CustomFeedModel[] = []
+  feeds: FeedSourceModel[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(
@@ -120,7 +121,7 @@ export class FeedsDiscoveryModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch popular feeds', err)
+      logger.error('Failed to fetch popular feeds', {error: err})
     }
   }
 
@@ -137,7 +138,9 @@ export class FeedsDiscoveryModel {
   _append(res: AppBskyUnspeccedGetPopularFeedGenerators.Response) {
     // 1. push data into feeds array
     for (const f of res.data.feeds) {
-      this.feeds.push(new CustomFeedModel(this.rootStore, f))
+      const model = new FeedSourceModel(this.rootStore, f.uri)
+      model.hydrateFeedGenerator(f)
+      this.feeds.push(model)
     }
     // 2. set loadMoreCursor
     this.loadMoreCursor = res.data.cursor

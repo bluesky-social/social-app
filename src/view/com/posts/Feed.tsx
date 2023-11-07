@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/error/ErrorMessage'
+import {FeedErrorMessage} from './FeedErrorMessage'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -19,6 +19,7 @@ import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {logger} from '#/logger'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -29,26 +30,26 @@ export const Feed = observer(function Feed({
   feed,
   style,
   scrollElRef,
-  onPressTryAgain,
   onScroll,
   scrollEventThrottle,
   renderEmptyState,
   renderEndOfFeed,
   testID,
   headerOffset = 0,
+  desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
 }: {
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressTryAgain?: () => void
   onScroll?: OnScrollCb
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
 }) {
@@ -71,6 +72,8 @@ export const Feed = observer(function Feed({
       if (feed.loadMoreError) {
         feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
       }
+    } else {
+      feedItems.push(LOADING_ITEM)
     }
     return feedItems
   }, [
@@ -90,7 +93,7 @@ export const Feed = observer(function Feed({
     try {
       await feed.refresh()
     } catch (err) {
-      feed.rootStore.log.error('Failed to refresh posts feed', err)
+      logger.error('Failed to refresh posts feed', {error: err})
     }
     setIsRefreshing(false)
   }, [feed, track, setIsRefreshing])
@@ -102,9 +105,13 @@ export const Feed = observer(function Feed({
     try {
       await feed.loadMore()
     } catch (err) {
-      feed.rootStore.log.error('Failed to load more posts', err)
+      logger.error('Failed to load more posts', {error: err})
     }
   }, [feed, track])
+
+  const onPressTryAgain = React.useCallback(() => {
+    feed.refresh()
+  }, [feed])
 
   const onPressRetryLoadMore = React.useCallback(() => {
     feed.retryLoadMore()
@@ -119,10 +126,7 @@ export const Feed = observer(function Feed({
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
-          <ErrorMessage
-            message={feed.error}
-            onPressTryAgain={onPressTryAgain}
-          />
+          <FeedErrorMessage feed={feed} onPressTryAgain={onPressTryAgain} />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
@@ -158,7 +162,7 @@ export const Feed = observer(function Feed({
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={!feed.hasLoaded ? [LOADING_ITEM] : data}
+        data={data}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
@@ -183,7 +187,9 @@ export const Feed = observer(function Feed({
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
-        desktopFixedHeight
+        desktopFixedHeight={
+          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+        }
       />
     </View>
   )

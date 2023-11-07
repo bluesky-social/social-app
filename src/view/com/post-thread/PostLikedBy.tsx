@@ -7,6 +7,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {logger} from '#/logger'
 
 export const PostLikedBy = observer(function PostLikedByImpl({
   uri,
@@ -18,8 +19,10 @@ export const PostLikedBy = observer(function PostLikedByImpl({
   const view = React.useMemo(() => new LikesModel(store, {uri}), [store, uri])
 
   useEffect(() => {
-    view.loadMore().catch(err => store.log.error('Failed to fetch likes', err))
-  }, [view, store.log])
+    view
+      .loadMore()
+      .catch(err => logger.error('Failed to fetch likes', {error: err}))
+  }, [view])
 
   const onRefresh = () => {
     view.refresh()
@@ -27,7 +30,7 @@ export const PostLikedBy = observer(function PostLikedByImpl({
   const onEndReached = () => {
     view
       .loadMore()
-      .catch(err => view?.rootStore.log.error('Failed to load more likes', err))
+      .catch(err => logger.error('Failed to load more likes', {error: err}))
   }
 
   if (!view.hasLoaded) {

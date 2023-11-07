@@ -25,7 +25,7 @@ export function AccountDropdownBtn({handle}: {handle: string}) {
           name: 'trash',
         },
         android: 'ic_delete',
-        web: 'trash',
+        web: ['far', 'trash-can'],
       },
     },
   ]

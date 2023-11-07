@@ -20,6 +20,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
+import {logger} from '#/logger'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -28,8 +30,8 @@ type Props = NativeStackScreenProps<
 export const NotificationsScreen = withAuthRequired(
   observer(function NotificationsScreenImpl({}: Props) {
     const store = useStores()
-    const [onMainScroll, isScrolledDown, resetMainScroll] =
-      useOnMainScroll(store)
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()
     const pal = usePalette('default')
@@ -59,8 +61,8 @@ export const NotificationsScreen = withAuthRequired(
     // =
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
-        store.log.debug('NotificationsScreen: Updating feed')
+        setMinimalShellMode(false)
+        logger.debug('NotificationsScreen: Updating feed')
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
         store.me.notifications.update()
         screen('Notifications')
@@ -69,7 +71,7 @@ export const NotificationsScreen = withAuthRequired(
           softResetSub.remove()
           store.me.notifications.markAllRead()
         }
-      }, [store, screen, onPressLoadLatest]),
+      }, [store, screen, onPressLoadLatest, setMinimalShellMode]),
     )
 
     useTabFocusEffect(

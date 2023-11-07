@@ -12,7 +12,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useQuery} from '@tanstack/react-query'
 import {useStores} from 'state/index'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 
 type Props = {
@@ -39,7 +39,9 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
         }
 
         return (feeds.length ? feeds : []).map(feed => {
-          return new CustomFeedModel(store, feed)
+          const model = new FeedSourceModel(store, feed.uri)
+          model.hydrateFeedGenerator(feed)
+          return model
         })
       } catch (e) {
         return []

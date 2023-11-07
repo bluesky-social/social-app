@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HighPriorityImage} from 'view/com/util/images/Image'
@@ -17,16 +17,17 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {UserPreviewLink} from './UserPreviewLink'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 
-type Type = 'user' | 'algo' | 'list'
+export type UserAvatarType = 'user' | 'algo' | 'list'
 
 interface BaseUserAvatarProps {
-  type?: Type
+  type?: UserAvatarType
   size: number
   avatar?: string | null
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
+  usePlainRNImage?: boolean
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -41,7 +42,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
-function DefaultAvatar({type, size}: {type: Type; size: number}) {
+function DefaultAvatar({type, size}: {type: UserAvatarType; size: number}) {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
@@ -110,6 +111,7 @@ export function UserAvatar({
   size,
   avatar,
   moderation,
+  usePlainRNImage = false,
 }: UserAvatarProps) {
   const pal = usePalette('default')
 
@@ -146,13 +148,24 @@ export function UserAvatar({
   return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>
-      <HighPriorityImage
-        testID="userAvatarImage"
-        style={aviStyle}
-        contentFit="cover"
-        source={{uri: avatar}}
-        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-      />
+      {usePlainRNImage ? (
+        <Image
+          accessibilityIgnoresInvertColors
+          testID="userAvatarImage"
+          style={aviStyle}
+          resizeMode="cover"
+          source={{uri: avatar}}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
+      ) : (
+        <HighPriorityImage
+          testID="userAvatarImage"
+          style={aviStyle}
+          contentFit="cover"
+          source={{uri: avatar}}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
+      )}
       {alert}
     </View>
   ) : (
@@ -261,7 +274,7 @@ export function EditableUserAvatar({
               name: 'trash',
             },
             android: 'ic_delete',
-            web: 'trash',
+            web: ['far', 'trash-can'],
           },
           onPress: async () => {
             onSelectNewAvatar(null)

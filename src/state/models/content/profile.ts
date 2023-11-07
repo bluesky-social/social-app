@@ -15,6 +15,7 @@ import {cleanError} from 'lib/strings/errors'
 import {FollowState} from '../cache/my-follows'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {track} from 'lib/analytics/analytics'
+import {logger} from '#/logger'
 
 export class ProfileViewerModel {
   muted?: boolean
@@ -22,7 +23,8 @@ export class ProfileViewerModel {
   following?: string
   followedBy?: string
   blockedBy?: boolean
-  blocking?: string;
+  blocking?: string
+  blockingByList?: AppBskyGraphDefs.ListViewBasic;
   [key: string]: unknown
 
   constructor() {
@@ -234,7 +236,7 @@ export class ProfileModel {
     this.hasLoaded = true
     this.error = cleanError(err)
     if (err) {
-      this.rootStore.log.error('Failed to fetch profile', err)
+      logger.error('Failed to fetch profile', {error: err})
     }
   }
 

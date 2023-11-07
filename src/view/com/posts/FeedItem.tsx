@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {PostsFeedItemModel} from 'state/models/feeds/post'
 import {FeedSourceInfo} from 'lib/api/feed/types'
-import {Link, DesktopWebTextLink} from '../util/Link'
+import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -30,6 +30,9 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
+import {MAX_POST_LINES} from 'lib/constants'
+import {countLines} from 'lib/strings/helpers'
+import {logger} from '#/logger'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
@@ -49,6 +52,9 @@ export const FeedItem = observer(function FeedItemImpl({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const [deleted, setDeleted] = useState(false)
+  const [limitLines, setLimitLines] = useState(
+    countLines(item.richText?.text) >= MAX_POST_LINES,
+  )
   const record = item.postRecord
   const itemUri = item.post.uri
   const itemCid = item.post.cid
@@ -89,15 +95,15 @@ export const FeedItem = observer(function FeedItemImpl({
     track('FeedItem:PostRepost')
     return item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [track, item, store])
+      .catch(e => logger.error('Failed to toggle repost', {error: e}))
+  }, [track, item])
 
   const onPressToggleLike = React.useCallback(() => {
     track('FeedItem:PostLike')
     return item
       .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
-  }, [track, item, store])
+      .catch(e => logger.error('Failed to toggle like', {error: e}))
+  }, [track, item])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
@@ -118,9 +124,9 @@ export const FeedItem = observer(function FeedItemImpl({
         Toast.show('You will now receive notifications for this thread')
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
+      logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [track, item, store])
+  }, [track, item])
 
   const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
@@ -130,11 +136,15 @@ export const FeedItem = observer(function FeedItemImpl({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', e)
+        logger.error('Failed to delete post', {error: e})
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }, [track, item, setDeleted, store])
+  }, [track, item, setDeleted])
+
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
 
   const outerStyles = [
     styles.outer,
@@ -189,7 +199,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 From{' '}
-                <DesktopWebTextLink
+                <TextLinkOnWebOnly
                   type="sm-bold"
                   style={pal.textLight}
                   lineHeight={1.2}
@@ -220,7 +230,7 @@ export const FeedItem = observer(function FeedItemImpl({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 Reposted by{' '}
-                <DesktopWebTextLink
+                <TextLinkOnWebOnly
                   type="sm-bold"
                   style={pal.textLight}
                   lineHeight={1.2}
@@ -307,9 +317,18 @@ export const FeedItem = observer(function FeedItemImpl({
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={s.flex1}
                 />
               </View>
+            ) : undefined}
+            {limitLines ? (
+              <TextLink
+                text="Show More"
+                style={pal.link}
+                onPress={onPressShowMore}
+                href="#"
+              />
             ) : undefined}
             {item.post.embed ? (
               <ContentHider

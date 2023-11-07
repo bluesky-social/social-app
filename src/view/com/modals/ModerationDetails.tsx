@@ -31,8 +31,25 @@ export function Component({
     description =
       'Moderator has chosen to set a general warning on the content.'
   } else if (moderation.cause.type === 'blocking') {
-    name = 'User Blocked'
-    description = 'You have blocked this user. You cannot view their content.'
+    if (moderation.cause.source.type === 'list') {
+      const list = moderation.cause.source.list
+      name = 'User Blocked by List'
+      description = (
+        <>
+          This user is included in the{' '}
+          <TextLink
+            type="2xl"
+            href={listUriToHref(list.uri)}
+            text={list.name}
+            style={pal.link}
+          />{' '}
+          list which you have blocked.
+        </>
+      )
+    } else {
+      name = 'User Blocked'
+      description = 'You have blocked this user. You cannot view their content.'
+    }
   } else if (moderation.cause.type === 'blocked-by') {
     name = 'User Blocks You'
     description = 'This user has blocked you. You cannot view their content.'

@@ -14,6 +14,8 @@ import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {logger} from '#/logger'
+import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
 
 const SHELL_FOOTER_HEIGHT = 44
 
@@ -21,6 +23,8 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
     const store = useStores()
+    const minimalShellMode = useMinimalShellMode()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
     const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
@@ -32,13 +36,13 @@ export const PostThreadScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         const threadCleanup = view.registerListeners()
 
         InteractionManager.runAfterInteractions(() => {
           if (!view.hasLoaded && !view.isLoading) {
             view.setup().catch(err => {
-              store.log.error('Failed to fetch thread', err)
+              logger.error('Failed to fetch thread', {error: err})
             })
           }
         })
@@ -46,7 +50,7 @@ export const PostThreadScreen = withAuthRequired(
         return () => {
           threadCleanup()
         }
-      }, [store, view]),
+      }, [view, setMinimalShellMode]),
     )
 
     const onPressReply = React.useCallback(() => {
@@ -79,7 +83,7 @@ export const PostThreadScreen = withAuthRequired(
             treeView={!!store.preferences.thread.lab_treeViewEnabled}
           />
         </View>
-        {isMobile && !store.shell.minimalShellMode && (
+        {isMobile && !minimalShellMode && (
           <View
             style={[
               styles.prompt,

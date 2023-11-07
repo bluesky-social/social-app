@@ -31,8 +31,9 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
-  HandIcon,
+  ListIcon,
   HashtagIcon,
+  HandIcon,
 } from 'lib/icons'
 import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
@@ -320,12 +321,30 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Notifications"
       />
       <NavItem
+        href="/lists"
+        icon={
+          <ListIcon
+            style={pal.text}
+            size={isDesktop ? 26 : 30}
+            strokeWidth={2}
+          />
+        }
+        iconFilled={
+          <ListIcon
+            style={pal.text}
+            size={isDesktop ? 26 : 30}
+            strokeWidth={3}
+          />
+        }
+        label="Lists"
+      />
+      <NavItem
         href="/moderation"
         icon={
           <HandIcon
-            strokeWidth={5.5}
             style={pal.text}
             size={isDesktop ? 24 : 27}
+            strokeWidth={5.5}
           />
         }
         iconFilled={
@@ -460,18 +479,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 140,
     borderRadius: 24,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 12, // visually aligns the text vertically inside the button
+    paddingLeft: 16,
+    paddingRight: 18, // looks nicer like this
     backgroundColor: colors.blue3,
     marginLeft: 12,
     marginTop: 20,
     marginBottom: 10,
     gap: 8,
   },
-  newPostBtnIconWrapper: {},
+  newPostBtnIconWrapper: {
+    marginTop: 2, // aligns the icon visually with the text
+  },
   newPostBtnLabel: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })

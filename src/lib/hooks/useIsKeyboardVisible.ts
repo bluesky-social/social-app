@@ -10,7 +10,7 @@ export function useIsKeyboardVisible({
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
 
   // NOTE
-  // only iOS suppose the "will" events
+  // only iOS supports the "will" events
   // -prf
   const showEvent =
     isIOS && iosUseWillEvents ? 'keyboardWillShow' : 'keyboardDidShow'

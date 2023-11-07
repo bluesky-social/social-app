@@ -14,7 +14,7 @@ import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadModel} from 'state/models/content/post-thread'
 import {PostThreadItemModel} from 'state/models/content/post-thread-item'
-import {Link} from '../util/Link'
+import {Link, TextLink} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
@@ -30,6 +30,9 @@ import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {MAX_POST_LINES} from 'lib/constants'
+import {countLines} from 'lib/strings/helpers'
+import {logger} from '#/logger'
 
 export const Post = observer(function PostImpl({
   view,
@@ -103,7 +106,9 @@ const PostLoaded = observer(function PostLoadedImpl({
 }) {
   const pal = usePalette('default')
   const store = useStores()
-
+  const [limitLines, setLimitLines] = React.useState(
+    countLines(item.richText?.text) >= MAX_POST_LINES,
+  )
   const itemUri = item.post.uri
   const itemCid = item.post.cid
   const itemUrip = new AtUri(item.post.uri)
@@ -138,14 +143,14 @@ const PostLoaded = observer(function PostLoadedImpl({
   const onPressToggleRepost = React.useCallback(() => {
     return item
       .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [item, store])
+      .catch(e => logger.error('Failed to toggle repost', {error: e}))
+  }, [item])
 
   const onPressToggleLike = React.useCallback(() => {
     return item
       .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
-  }, [item, store])
+      .catch(e => logger.error('Failed to toggle like', {error: e}))
+  }, [item])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record.text)
@@ -165,9 +170,9 @@ const PostLoaded = observer(function PostLoadedImpl({
         Toast.show('You will now receive notifications for this thread')
       }
     } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
+      logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [item, store])
+  }, [item])
 
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
@@ -176,11 +181,15 @@ const PostLoaded = observer(function PostLoadedImpl({
         Toast.show('Post deleted')
       },
       e => {
-        store.log.error('Failed to delete post', e)
+        logger.error('Failed to delete post', {error: e})
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }, [item, setDeleted, store])
+  }, [item, setDeleted])
+
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
 
   return (
     <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
@@ -239,9 +248,18 @@ const PostLoaded = observer(function PostLoadedImpl({
                   type="post-text"
                   richText={item.richText}
                   lineHeight={1.3}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={s.flex1}
                 />
               </View>
+            ) : undefined}
+            {limitLines ? (
+              <TextLink
+                text="Show More"
+                style={pal.link}
+                onPress={onPressShowMore}
+                href="#"
+              />
             ) : undefined}
             {item.post.embed ? (
               <ContentHider

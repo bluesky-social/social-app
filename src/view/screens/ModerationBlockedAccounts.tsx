@@ -21,6 +21,8 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {logger} from '#/logger'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -30,6 +32,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
   observer(function ModerationBlockedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
     const blockedAccounts = useMemo(
@@ -40,9 +43,9 @@ export const ModerationBlockedAccounts = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         screen('BlockedAccounts')
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         blockedAccounts.refresh()
-      }, [screen, store, blockedAccounts]),
+      }, [screen, setMinimalShellMode, blockedAccounts]),
     )
 
     const onRefresh = React.useCallback(() => {
@@ -52,9 +55,9 @@ export const ModerationBlockedAccounts = withAuthRequired(
       blockedAccounts
         .loadMore()
         .catch(err =>
-          store.log.error('Failed to load more blocked accounts', err),
+          logger.error('Failed to load more blocked accounts', {error: err}),
         )
-    }, [blockedAccounts, store])
+    }, [blockedAccounts])
 
     const renderItem = ({
       item,

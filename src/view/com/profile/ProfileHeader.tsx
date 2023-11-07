@@ -39,6 +39,7 @@ import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
+import {logger} from '#/logger'
 
 interface Props {
   view: ProfileModel
@@ -119,7 +120,11 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
 
   const onPressBack = React.useCallback(() => {
-    navigation.goBack()
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
   }, [navigation])
 
   const onPressAvi = React.useCallback(() => {
@@ -146,9 +151,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             : 'ProfileHeader:UnfollowButtonClicked',
         )
       },
-      err => store.log.error('Failed to toggle follow', err),
+      err => logger.error('Failed to toggle follow', {error: err}),
     )
-  }, [track, view, store.log, setShowSuggestedFollows])
+  }, [track, view, setShowSuggestedFollows])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -177,7 +182,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const onPressAddRemoveLists = React.useCallback(() => {
     track('ProfileHeader:AddToListsButtonClicked')
     store.shell.openModal({
-      name: 'list-add-remove-user',
+      name: 'user-add-remove-lists',
       subject: view.did,
       displayName: view.displayName || view.handle,
     })
@@ -189,10 +194,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       await view.muteAccount()
       Toast.show('Account muted')
     } catch (e: any) {
-      store.log.error('Failed to mute account', e)
+      logger.error('Failed to mute account', {error: e})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [track, view, store])
+  }, [track, view])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
@@ -200,10 +205,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       await view.unmuteAccount()
       Toast.show('Account unmuted')
     } catch (e: any) {
-      store.log.error('Failed to unmute account', e)
+      logger.error('Failed to unmute account', {error: e})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [track, view, store])
+  }, [track, view])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')
@@ -218,7 +223,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           onRefreshAll()
           Toast.show('Account blocked')
         } catch (e: any) {
-          store.log.error('Failed to block account', e)
+          logger.error('Failed to block account', {error: e})
           Toast.show(`There was an issue! ${e.toString()}`)
         }
       },
@@ -238,7 +243,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           onRefreshAll()
           Toast.show('Account unblocked')
         } catch (e: any) {
-          store.log.error('Failed to unblock account', e)
+          logger.error('Failed to unblock account', {error: e})
           Toast.show(`There was an issue! ${e.toString()}`)
         }
       },
@@ -272,21 +277,20 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         },
       },
     ]
-    if (!isMe) {
-      items.push({label: 'separator'})
-      // Only add "Add to Lists" on other user's profiles, doesn't make sense to mute my own self!
-      items.push({
-        testID: 'profileHeaderDropdownListAddRemoveBtn',
-        label: 'Add to Lists',
-        onPress: onPressAddRemoveLists,
-        icon: {
-          ios: {
-            name: 'list.bullet',
-          },
-          android: 'ic_menu_add',
-          web: 'list',
+    items.push({label: 'separator'})
+    items.push({
+      testID: 'profileHeaderDropdownListAddRemoveBtn',
+      label: 'Add to Lists',
+      onPress: onPressAddRemoveLists,
+      icon: {
+        ios: {
+          name: 'list.bullet',
         },
-      })
+        android: 'ic_menu_add',
+        web: 'list',
+      },
+    })
+    if (!isMe) {
       if (!view.viewer.blocking) {
         items.push({
           testID: 'profileHeaderDropdownMuteBtn',
@@ -303,20 +307,22 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           },
         })
       }
-      items.push({
-        testID: 'profileHeaderDropdownBlockBtn',
-        label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
-        onPress: view.viewer.blocking
-          ? onPressUnblockAccount
-          : onPressBlockAccount,
-        icon: {
-          ios: {
-            name: 'person.fill.xmark',
+      if (!view.viewer.blockingByList) {
+        items.push({
+          testID: 'profileHeaderDropdownBlockBtn',
+          label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
+          onPress: view.viewer.blocking
+            ? onPressUnblockAccount
+            : onPressBlockAccount,
+          icon: {
+            ios: {
+              name: 'person.fill.xmark',
+            },
+            android: 'ic_menu_close_clear_cancel',
+            web: 'user-slash',
           },
-          android: 'ic_menu_close_clear_cancel',
-          web: 'user-slash',
-        },
-      })
+        })
+      }
       items.push({
         testID: 'profileHeaderDropdownReportBtn',
         label: 'Report Account',
@@ -335,6 +341,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     isMe,
     view.viewer.muted,
     view.viewer.blocking,
+    view.viewer.blockingByList,
     onPressShare,
     onPressUnmuteAccount,
     onPressMuteAccount,
@@ -367,17 +374,19 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               </Text>
             </TouchableOpacity>
           ) : view.viewer.blocking ? (
-            <TouchableOpacity
-              testID="unblockBtn"
-              onPress={onPressUnblockAccount}
-              style={[styles.btn, styles.mainBtn, pal.btn]}
-              accessibilityRole="button"
-              accessibilityLabel="Unblock"
-              accessibilityHint="">
-              <Text type="button" style={[pal.text, s.bold]}>
-                Unblock
-              </Text>
-            </TouchableOpacity>
+            view.viewer.blockingByList ? null : (
+              <TouchableOpacity
+                testID="unblockBtn"
+                onPress={onPressUnblockAccount}
+                style={[styles.btn, styles.mainBtn, pal.btn]}
+                accessibilityRole="button"
+                accessibilityLabel="Unblock"
+                accessibilityHint="">
+                <Text type="button" style={[pal.text, s.bold]}>
+                  Unblock
+                </Text>
+              </TouchableOpacity>
+            )
           ) : !view.viewer.blockedBy ? (
             <>
               {!isProfilePreview && (

@@ -25,17 +25,21 @@ import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
+import {logger} from '#/logger'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
   observer(function ProfileScreenImpl({route}: Props) {
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
+    const name = route.params.name === 'me' ? store.me.did : route.params.name
 
     useEffect(() => {
       screen('Profile')
@@ -43,8 +47,8 @@ export const ProfileScreen = withAuthRequired(
 
     const [hasSetup, setHasSetup] = useState<boolean>(false)
     const uiState = React.useMemo(
-      () => new ProfileUiModel(store, {user: route.params.name}),
-      [route.params.name, store],
+      () => new ProfileUiModel(store, {user: name}),
+      [name, store],
     )
     useSetTitle(combinedDisplayName(uiState.profile))
 
@@ -54,7 +58,7 @@ export const ProfileScreen = withAuthRequired(
 
     useEffect(() => {
       setHasSetup(false)
-    }, [route.params.name])
+    }, [name])
 
     // We don't need this to be reactive, so we can just register the listeners once
     useEffect(() => {
@@ -67,7 +71,7 @@ export const ProfileScreen = withAuthRequired(
       React.useCallback(() => {
         const softResetSub = store.onScreenSoftReset(onSoftReset)
         let aborted = false
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
         if (!hasSetup) {
           uiState.setup().then(() => {
@@ -82,7 +86,7 @@ export const ProfileScreen = withAuthRequired(
           feedCleanup()
           softResetSub.remove()
         }
-      }, [store, onSoftReset, uiState, hasSetup]),
+      }, [store, onSoftReset, uiState, hasSetup, setMinimalShellMode]),
     )
 
     // events
@@ -107,16 +111,16 @@ export const ProfileScreen = withAuthRequired(
       uiState
         .refresh()
         .catch((err: any) =>
-          store.log.error('Failed to refresh user profile', err),
+          logger.error('Failed to refresh user profile', {error: err}),
         )
-    }, [uiState, store])
+    }, [uiState])
     const onEndReached = React.useCallback(() => {
-      uiState
-        .loadMore()
-        .catch((err: any) =>
-          store.log.error('Failed to load more entries in user profile', err),
-        )
-    }, [uiState, store])
+      uiState.loadMore().catch((err: any) =>
+        logger.error('Failed to load more entries in user profile', {
+          error: err,
+        }),
+      )
+    }, [uiState])
     const onPressTryAgain = React.useCallback(() => {
       uiState.setup()
     }, [uiState])
@@ -189,9 +193,14 @@ export const ProfileScreen = withAuthRequired(
                 style={styles.emptyState}
               />
             )
-          } else if (item instanceof CustomFeedModel) {
+          } else if (item instanceof FeedSourceModel) {
             return (
-              <CustomFeed item={item} showSaveBtn showLikes showDescription />
+              <FeedSourceCard
+                item={item}
+                showSaveBtn
+                showLikes
+                showDescription
+              />
             )
           }
           // if section is posts or posts & replies

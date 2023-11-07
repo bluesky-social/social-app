@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {
   AppBskyActorDefs,
@@ -29,6 +29,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
   noBorder,
   followers,
   renderButton,
+  style,
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
@@ -36,6 +37,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
   renderButton?: (profile: AppBskyActorDefs.ProfileViewBasic) => React.ReactNode
+  style?: StyleProp<ViewStyle>
 }) {
   const store = useStores()
   const pal = usePalette('default')
@@ -50,6 +52,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
         pal.border,
         noBorder && styles.outerNoBorder,
         !noBg && pal.view,
+        style,
       ]}
       href={makeProfileLink(profile)}
       title={profile.handle}
@@ -93,7 +96,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
             {profile.description as string}
           </Text>
         </View>
-      ) : undefined}
+      ) : null}
       <FollowersList followers={followers} />
     </Link>
   )
@@ -220,10 +223,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   layoutAvi: {
+    alignSelf: 'baseline',
     width: 54,
     paddingLeft: 4,
-    paddingTop: 8,
-    paddingBottom: 10,
+    paddingTop: 10,
   },
   avi: {
     width: 40,

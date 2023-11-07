@@ -37,7 +37,7 @@ export const BottomBar = observer(function BottomBarImpl({
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const {minimalShellMode, footerMinimalShellTransform} = useMinimalShellMode()
   const {notifications} = store.me
 
   const onPressTab = React.useCallback(
@@ -83,7 +83,7 @@ export const BottomBar = observer(function BottomBarImpl({
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
-        store.shell.minimalShellMode && styles.disabled,
+        minimalShellMode && styles.disabled,
       ]}>
       <Btn
         testID="bottomBarHomeBtn"
@@ -192,11 +192,21 @@ export const BottomBar = observer(function BottomBarImpl({
                   styles.onProfile,
                   {borderColor: pal.text.color},
                 ]}>
-                <UserAvatar avatar={store.me.avatar} size={27} />
+                <UserAvatar
+                  avatar={store.me.avatar}
+                  size={27}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
+                  usePlainRNImage={true}
+                />
               </View>
             ) : (
               <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                <UserAvatar avatar={store.me.avatar} size={28} />
+                <UserAvatar
+                  avatar={store.me.avatar}
+                  size={28}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
+                  usePlainRNImage={true}
+                />
               </View>
             )}
           </View>

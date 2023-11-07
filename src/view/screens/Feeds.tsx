@@ -2,7 +2,6 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, RefreshControl, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {AtUri} from '@atproto/api'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {FAB} from 'view/com/util/fab/FAB'
@@ -23,18 +22,21 @@ import {
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
-import {MyFeedsUIModel, MyFeedsItem} from 'state/models/ui/my-feeds'
+import {MyFeedsItem} from 'state/models/ui/my-feeds'
+import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
-import {CustomFeed} from 'view/com/feeds/CustomFeed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-    const myFeeds = React.useMemo(() => new MyFeedsUIModel(store), [store])
+    const myFeeds = store.me.myFeeds
     const [query, setQuery] = React.useState<string>('')
     const debouncedSearchFeeds = React.useMemo(
       () => debounce(q => myFeeds.discovery.search(q), 500), // debounce for 500ms
@@ -43,15 +45,19 @@ export const FeedsScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         myFeeds.setup()
 
         const softResetSub = store.onScreenSoftReset(() => myFeeds.refresh())
         return () => {
           softResetSub.remove()
         }
-      }, [store, myFeeds]),
+      }, [store, myFeeds, setMinimalShellMode]),
     )
+    React.useEffect(() => {
+      // watch for changes to saved/pinned feeds
+      return myFeeds.registerListeners()
+    }, [myFeeds])
 
     const onPressCompose = React.useCallback(() => {
       store.shell.openComposer({})
@@ -139,13 +145,7 @@ export const FeedsScreen = withAuthRequired(
             </>
           )
         } else if (item.type === 'saved-feed') {
-          return (
-            <SavedFeed
-              uri={item.feed.uri}
-              avatar={item.feed.data.avatar}
-              displayName={item.feed.displayName}
-            />
-          )
+          return <SavedFeed feed={item.feed} />
         } else if (item.type === 'discover-feeds-header') {
           return (
             <>
@@ -187,7 +187,7 @@ export const FeedsScreen = withAuthRequired(
           )
         } else if (item.type === 'discover-feed') {
           return (
-            <CustomFeed
+            <FeedSourceCard
               item={item.feed}
               showSaveBtn
               showDescription
@@ -257,33 +257,43 @@ export const FeedsScreen = withAuthRequired(
   }),
 )
 
-function SavedFeed({
-  uri,
-  avatar,
-  displayName,
-}: {
-  uri: string
-  avatar: string | undefined
-  displayName: string
-}) {
+function SavedFeed({feed}: {feed: FeedSourceModel}) {
   const pal = usePalette('default')
-  const urip = new AtUri(uri)
-  const href = `/profile/${urip.hostname}/feed/${urip.rkey}`
   const {isMobile} = useWebMediaQueries()
   return (
     <Link
-      testID={`saved-feed-${displayName}`}
-      href={href}
+      testID={`saved-feed-${feed.displayName}`}
+      href={feed.href}
       style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
       hoverStyle={pal.viewLight}
-      accessibilityLabel={displayName}
+      accessibilityLabel={feed.displayName}
       accessibilityHint=""
       asAnchor
       anchorNoUnderline>
-      <UserAvatar type="algo" size={28} avatar={avatar} />
-      <Text type="lg-medium" style={[pal.text, s.flex1]} numberOfLines={1}>
-        {displayName}
-      </Text>
+      {feed.error ? (
+        <View
+          style={{width: 28, flexDirection: 'row', justifyContent: 'center'}}>
+          <FontAwesomeIcon
+            icon="exclamation-circle"
+            color={pal.colors.textLight}
+          />
+        </View>
+      ) : (
+        <UserAvatar type="algo" size={28} avatar={feed.avatar} />
+      )}
+      <View
+        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+        <Text type="lg-medium" style={pal.text} numberOfLines={1}>
+          {feed.displayName}
+        </Text>
+        {feed.error ? (
+          <View style={[styles.offlineSlug, pal.borderDark]}>
+            <Text type="xs" style={pal.textLight}>
+              Feed offline
+            </Text>
+          </View>
+        ) : null}
+      </View>
       {isMobile && (
         <FontAwesomeIcon
           icon="chevron-right"
@@ -341,5 +351,11 @@ const styles = StyleSheet.create({
   },
   savedFeedMobile: {
     paddingVertical: 10,
+  },
+  offlineSlug: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
 })

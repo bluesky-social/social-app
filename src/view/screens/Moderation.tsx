@@ -17,20 +17,22 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
   observer(function Moderation({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
 
     useFocusEffect(
       React.useCallback(() => {
         screen('Moderation')
-        store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
+        setMinimalShellMode(false)
+      }, [screen, setMinimalShellMode]),
     )
 
     const onPressContentFiltering = React.useCallback(() => {
@@ -66,9 +68,9 @@ export const ModerationScreen = withAuthRequired(
           </Text>
         </TouchableOpacity>
         <Link
-          testID="mutelistsBtn"
+          testID="moderationlistsBtn"
           style={[styles.linkCard, pal.view]}
-          href="/moderation/mute-lists">
+          href="/moderation/modlists">
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="users-slash"
@@ -76,7 +78,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Mute lists
+            Moderation lists
           </Text>
         </Link>
         <Link

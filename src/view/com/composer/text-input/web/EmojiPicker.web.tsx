@@ -72,8 +72,9 @@ export function EmojiPicker({close}: {close: () => void}) {
               },
             ]}>
             <Picker
-              // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
-              data={window.emojiMartData}
+              data={async () => {
+                return (await import('./EmojiPickerData.json')).default
+              }}
               onEmojiSelect={onInsert}
               autoFocus={false}
             />

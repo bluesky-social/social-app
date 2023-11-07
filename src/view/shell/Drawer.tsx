@@ -29,6 +29,7 @@ import {
   MagnifyingGlassIcon2Solid,
   UserIconSolid,
   HashtagIcon,
+  ListIcon,
   HandIcon,
 } from 'lib/icons'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -42,11 +43,13 @@ import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
+import {useSetDrawerOpen} from '#/state/shell'
 
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
@@ -61,7 +64,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     (tab: string) => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
-      store.shell.closeDrawer()
+      setDrawerOpen(false)
       if (isWeb) {
         // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
         if (tab === 'MyProfile') {
@@ -82,7 +85,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         }
       }
     },
-    [store, track, navigation],
+    [store, track, navigation, setDrawerOpen],
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
@@ -106,17 +109,23 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     [onPressTab],
   )
 
+  const onPressLists = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Lists'})
+    navigation.navigate('Lists')
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
+
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
     navigation.navigate('Moderation')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
 
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
 
   const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
@@ -151,7 +160,12 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               accessibilityLabel="Profile"
               accessibilityHint="Navigates to your profile"
               onPress={onPressProfile}>
-              <UserAvatar size={80} avatar={store.me.avatar} />
+              <UserAvatar
+                size={80}
+                avatar={store.me.avatar}
+                // See https://github.com/bluesky-social/social-app/pull/1801:
+                usePlainRNImage={true}
+              />
               <Text
                 type="title-lg"
                 style={[pal.text, s.bold, styles.profileCardDisplayName]}
@@ -275,6 +289,13 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             accessibilityHint=""
             bold={isAtFeeds}
             onPress={onPressMyFeeds}
+          />
+          <MenuItem
+            icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
+            label="Lists"
+            accessibilityLabel="Lists"
+            accessibilityHint=""
+            onPress={onPressLists}
           />
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
@@ -418,13 +439,14 @@ const InviteCodes = observer(function InviteCodesImpl({
 }) {
   const {track} = useAnalytics()
   const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const pal = usePalette('default')
   const {invitesAvailable} = store.me
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
-    store.shell.closeDrawer()
+    setDrawerOpen(false)
     store.shell.openModal({name: 'invite-codes'})
-  }, [store, track])
+  }, [store, track, setDrawerOpen])
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"
