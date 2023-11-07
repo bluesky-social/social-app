@@ -109,7 +109,7 @@ export function Component({}: {}) {
       setName(text)
     } else {
       Toast.show(
-        'App Password names can only contain letters, numbers, spaces, dashes, and underscores.',
+        'App Password names can only contain English letters, numbers, spaces, dashes, and underscores.',
       )
     }
   }
@@ -185,7 +185,7 @@ export function Component({}: {}) {
         </Text>
       ) : (
         <Text type="xs" style={[pal.textLight, s.mb10, s.mt2]}>
-          Can only contain letters, numbers, spaces, dashes, and underscores.
+          Can only contain English letters, numbers, spaces, dashes, and underscores.
           Must be at least 4 characters long, but no more than 32 characters
           long.
         </Text>
