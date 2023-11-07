@@ -2,13 +2,11 @@ import {AppBskyEmbedRecord, AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
-import {isObj, hasProp} from 'lib/type-guards'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 import {StyleProp, ViewStyle} from 'react-native'
-import {isWeb} from 'platform/detection'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -265,7 +263,6 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
-  colorMode: ColorMode = 'system'
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
@@ -276,38 +273,11 @@ export class ShellUiModel {
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
-      serialize: false,
       rootStore: false,
-      hydrate: false,
     })
 
     this.setupClock()
     this.setupLoginModals()
-  }
-
-  serialize(): unknown {
-    return {
-      colorMode: this.colorMode,
-    }
-  }
-
-  hydrate(v: unknown) {
-    if (isObj(v)) {
-      if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
-        this.setColorMode(v.colorMode)
-      }
-    }
-  }
-
-  setColorMode(mode: ColorMode) {
-    this.colorMode = mode
-
-    if (isWeb && typeof window !== 'undefined') {
-      const html = window.document.documentElement
-      // remove any other color mode classes
-      html.className = html.className.replace(/colorMode--\w+/g, '')
-      html.classList.add(`colorMode--${mode}`)
-    }
   }
 
   /**

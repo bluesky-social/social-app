@@ -46,7 +46,11 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {logger} from '#/logger'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {
+  useSetMinimalShellMode,
+  useColorMode,
+  useSetColorMode,
+} from '#/state/shell'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -57,6 +61,8 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
+    const colorMode = useColorMode()
+    const setColorMode = useSetColorMode()
     const pal = usePalette('default')
     const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
@@ -379,23 +385,23 @@ export const SettingsScreen = withAuthRequired(
           <View>
             <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
               <SelectableBtn
-                selected={store.shell.colorMode === 'system'}
+                selected={colorMode === 'system'}
                 label="System"
                 left
-                onSelect={() => store.shell.setColorMode('system')}
+                onSelect={() => setColorMode('system')}
                 accessibilityHint="Set color theme to system setting"
               />
               <SelectableBtn
-                selected={store.shell.colorMode === 'light'}
+                selected={colorMode === 'light'}
                 label="Light"
-                onSelect={() => store.shell.setColorMode('light')}
+                onSelect={() => setColorMode('light')}
                 accessibilityHint="Set color theme to light"
               />
               <SelectableBtn
-                selected={store.shell.colorMode === 'dark'}
+                selected={colorMode === 'dark'}
                 label="Dark"
                 right
-                onSelect={() => store.shell.setColorMode('dark')}
+                onSelect={() => setColorMode('dark')}
                 accessibilityHint="Set color theme to dark"
               />
             </View>
