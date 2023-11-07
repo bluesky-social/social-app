@@ -27,6 +27,7 @@ import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {TextLink} from 'view/com/util/Link'
 import {logger} from '#/logger'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -48,6 +49,7 @@ export const SavedFeeds = withAuthRequired(
     const store = useStores()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
+    const setMinimalShellMode = useSetMinimalShellMode()
 
     const savedFeeds = useMemo(() => {
       const model = new SavedFeedsModel(store)
@@ -57,9 +59,9 @@ export const SavedFeeds = withAuthRequired(
     useFocusEffect(
       useCallback(() => {
         screen('SavedFeeds')
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         savedFeeds.refresh()
-      }, [screen, store, savedFeeds]),
+      }, [screen, setMinimalShellMode, savedFeeds]),
     )
 
     return (

@@ -27,12 +27,14 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const myFeeds = store.me.myFeeds
     const [query, setQuery] = React.useState<string>('')
@@ -43,14 +45,14 @@ export const FeedsScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         myFeeds.setup()
 
         const softResetSub = store.onScreenSoftReset(() => myFeeds.refresh())
         return () => {
           softResetSub.remove()
         }
-      }, [store, myFeeds]),
+      }, [store, myFeeds, setMinimalShellMode]),
     )
     React.useEffect(() => {
       // watch for changes to saved/pinned feeds

@@ -17,6 +17,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
 import {ImagesLightbox} from 'state/models/ui/shell'
+import {useSetDrawerOpen} from '#/state/shell'
 
 export const ProfileSubpageHeader = observer(function HeaderImpl({
   isLoading,
@@ -42,6 +43,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   avatarType: UserAvatarType
 }>) {
   const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -56,8 +58,8 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   }, [navigation])
 
   const onPressMenu = React.useCallback(() => {
-    store.shell.openDrawer()
-  }, [store])
+    setDrawerOpen(true)
+  }, [setDrawerOpen])
 
   const onPressAvi = React.useCallback(() => {
     if (
