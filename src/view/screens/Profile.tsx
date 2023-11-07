@@ -8,10 +8,12 @@ import {ViewSelector, ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {ProfileUiModel, Sections} from 'state/models/ui/profile'
+import {Feed} from 'view/com/posts/Feed'
 import {useStores} from 'state/index'
 import {PostsFeedSliceModel} from 'state/models/feeds/posts-slice'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {FeedSlice} from '../com/posts/FeedSlice'
+import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ListCard} from 'view/com/lists/ListCard'
 import {
   PostFeedLoadingPlaceholder,
@@ -30,6 +32,8 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
+
+const SECTION_TITLES_PROFILE = ['Posts', 'Posts & Replies'] // TODO: Other sections
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
@@ -99,12 +103,7 @@ export const ProfileScreen = withAuthRequired(
           : uiState.profile.handle
       store.shell.openComposer({mention})
     }, [store, track, uiState])
-    const onSelectView = React.useCallback(
-      (index: number) => {
-        uiState.setSelectedViewIndex(index)
-      },
-      [uiState],
-    )
+
     const onRefresh = React.useCallback(() => {
       uiState
         .refresh()
@@ -112,13 +111,7 @@ export const ProfileScreen = withAuthRequired(
           logger.error('Failed to refresh user profile', {error: err}),
         )
     }, [uiState])
-    const onEndReached = React.useCallback(() => {
-      uiState.loadMore().catch((err: any) =>
-        logger.error('Failed to load more entries in user profile', {
-          error: err,
-        }),
-      )
-    }, [uiState])
+
     const onPressTryAgain = React.useCallback(() => {
       uiState.setup()
     }, [uiState])
@@ -139,126 +132,6 @@ export const ProfileScreen = withAuthRequired(
       )
     }, [uiState, onRefresh, route.params.hideBackButton])
 
-    const Footer = React.useMemo(() => {
-      return uiState.showLoadingMoreFooter ? LoadingMoreFooter : undefined
-    }, [uiState.showLoadingMoreFooter])
-    const renderItem = React.useCallback(
-      (item: any) => {
-        // if section is lists
-        if (uiState.selectedView === Sections.Lists) {
-          if (item === ProfileUiModel.LOADING_ITEM) {
-            return <ProfileCardFeedLoadingPlaceholder />
-          } else if (item._reactKey === '__error__') {
-            return (
-              <View style={s.p5}>
-                <ErrorMessage
-                  message={item.error}
-                  onPressTryAgain={onPressTryAgain}
-                />
-              </View>
-            )
-          } else if (item === ProfileUiModel.EMPTY_ITEM) {
-            return (
-              <EmptyState
-                testID="listsEmpty"
-                icon="list-ul"
-                message="No lists yet!"
-                style={styles.emptyState}
-              />
-            )
-          } else {
-            return <ListCard testID={`list-${item.name}`} list={item} />
-          }
-          // if section is custom algorithms
-        } else if (uiState.selectedView === Sections.CustomAlgorithms) {
-          if (item === ProfileUiModel.LOADING_ITEM) {
-            return <ProfileCardFeedLoadingPlaceholder />
-          } else if (item._reactKey === '__error__') {
-            return (
-              <View style={s.p5}>
-                <ErrorMessage
-                  message={item.error}
-                  onPressTryAgain={onPressTryAgain}
-                />
-              </View>
-            )
-          } else if (item === ProfileUiModel.EMPTY_ITEM) {
-            return (
-              <EmptyState
-                testID="customAlgorithmsEmpty"
-                icon="list-ul"
-                message="No custom algorithms yet!"
-                style={styles.emptyState}
-              />
-            )
-          } else if (item instanceof FeedSourceModel) {
-            return (
-              <FeedSourceCard
-                item={item}
-                showSaveBtn
-                showLikes
-                showDescription
-              />
-            )
-          }
-          // if section is posts or posts & replies
-        } else {
-          if (item === ProfileUiModel.END_ITEM) {
-            return <Text style={styles.endItem}>- end of feed -</Text>
-          } else if (item === ProfileUiModel.LOADING_ITEM) {
-            return <PostFeedLoadingPlaceholder />
-          } else if (item._reactKey === '__error__') {
-            if (uiState.feed.isBlocking) {
-              return (
-                <EmptyState
-                  icon="ban"
-                  message="Posts hidden"
-                  style={styles.emptyState}
-                />
-              )
-            }
-            if (uiState.feed.isBlockedBy) {
-              return (
-                <EmptyState
-                  icon="ban"
-                  message="Posts hidden"
-                  style={styles.emptyState}
-                />
-              )
-            }
-            return (
-              <View style={s.p5}>
-                <ErrorMessage
-                  message={item.error}
-                  onPressTryAgain={onPressTryAgain}
-                />
-              </View>
-            )
-          } else if (item === ProfileUiModel.EMPTY_ITEM) {
-            return (
-              <EmptyState
-                icon={['far', 'message']}
-                message="No posts yet!"
-                style={styles.emptyState}
-              />
-            )
-          } else if (item instanceof PostsFeedSliceModel) {
-            return (
-              <FeedSlice slice={item} ignoreFilterFor={uiState.profile.did} />
-            )
-          }
-        }
-        return <View />
-      },
-      [
-        onPressTryAgain,
-        uiState.selectedView,
-        uiState.profile.did,
-        uiState.feed.isBlocking,
-        uiState.feed.isBlockedBy,
-      ],
-    )
-
     return (
       <ScreenHider
         testID="profileView"
@@ -272,22 +145,35 @@ export const ProfileScreen = withAuthRequired(
             message={uiState.profile.error}
             onPressTryAgain={onPressTryAgain}
           />
-        ) : uiState.profile.hasLoaded ? (
-          <ViewSelector
-            ref={viewSelectorRef}
-            swipeEnabled={false}
-            sections={uiState.selectorItems}
-            items={uiState.uiItems}
-            renderHeader={renderHeader}
-            renderItem={renderItem}
-            ListFooterComponent={Footer}
-            refreshing={uiState.isRefreshing || false}
-            onSelectView={onSelectView}
-            onRefresh={onRefresh}
-            onEndReached={onEndReached}
-          />
         ) : (
-          <CenteredView>{renderHeader()}</CenteredView>
+          <View
+            style={{
+              flex: 1,
+            }}>
+            <PagerWithHeader
+              isHeaderReady={uiState.profile.hasLoaded}
+              items={SECTION_TITLES_PROFILE}
+              renderHeader={renderHeader}>
+              {({onScroll, headerHeight, isScrolledDown}) => (
+                <FeedSection
+                  ref={null}
+                  feed={uiState.feed}
+                  onScroll={onScroll}
+                  headerHeight={headerHeight}
+                  isScrolledDown={isScrolledDown}
+                />
+              )}
+              {({onScroll, headerHeight, isScrolledDown}) => (
+                <FeedSection
+                  ref={null}
+                  feed={uiState.feed}
+                  onScroll={onScroll}
+                  headerHeight={headerHeight}
+                  isScrolledDown={isScrolledDown}
+                />
+              )}
+            </PagerWithHeader>
+          </View>
         )}
         <FAB
           testID="composeFAB"
@@ -300,6 +186,48 @@ export const ProfileScreen = withAuthRequired(
       </ScreenHider>
     )
   }),
+)
+
+interface FeedSectionProps {
+  feed: PostsFeedModel
+  onScroll: OnScrollCb
+  headerHeight: number
+  isScrolledDown: boolean
+}
+const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
+  function FeedSectionImpl(
+    {feed, onScroll, headerHeight, isScrolledDown},
+    ref,
+  ) {
+    const hasNew = feed.hasNewLatest && !feed.isRefreshing
+    const scrollElRef = React.useRef<FlatList>(null)
+
+    const onScrollToTop = React.useCallback(() => {
+      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+      feed.refresh()
+    }, [feed, scrollElRef, headerHeight])
+    React.useImperativeHandle(ref, () => ({
+      scrollToTop: onScrollToTop,
+    }))
+
+    const renderPostsEmpty = React.useCallback(() => {
+      return <EmptyState icon="feed" message="This feed is empty!" />
+    }, [])
+
+    return (
+      <View>
+        <Feed
+          testID="listFeed"
+          feed={feed}
+          scrollElRef={scrollElRef}
+          onScroll={onScroll}
+          scrollEventThrottle={1}
+          renderEmptyState={renderPostsEmpty}
+          headerOffset={headerHeight}
+        />
+      </View>
+    )
+  },
 )
 
 function LoadingMoreFooter() {
