@@ -7,6 +7,10 @@ import {ImageModel} from '../media/image'
 import {ListModel} from '../content/list'
 import {GalleryModel} from '../media/gallery'
 import {StyleProp, ViewStyle} from 'react-native'
+import {
+  shouldRequestEmailConfirmation,
+  setEmailConfirmationRequested,
+} from '#/state/shell/reminders'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -358,9 +362,14 @@ export class ShellUiModel {
 
   setupLoginModals() {
     this.rootStore.onSessionReady(() => {
-      if (this.rootStore.reminders.shouldRequestEmailConfirmation) {
+      if (
+        shouldRequestEmailConfirmation(
+          this.rootStore.session,
+          this.rootStore.onboarding,
+        )
+      ) {
         this.openModal({name: 'verify-email', showReminder: true})
-        this.rootStore.reminders.setEmailConfirmationRequested()
+        setEmailConfirmationRequested()
       }
     })
   }
