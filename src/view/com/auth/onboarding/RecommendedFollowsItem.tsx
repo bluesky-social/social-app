@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
@@ -18,22 +18,19 @@ import {useAnalytics} from 'lib/analytics/analytics'
 type Props = {
   item: SuggestedActor
   index: number
+  insertSuggestionsByActor: (did: string, index: number) => Promise<void>
 }
-export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
+export const RecommendedFollowsItem: React.FC<Props> = ({
+  item,
+  index,
+  insertSuggestionsByActor,
+}) => {
   const pal = usePalette('default')
-  const store = useStores()
   const {isMobile} = useWebMediaQueries()
-  const delay = useMemo(() => {
-    return (
-      50 *
-      (Math.abs(store.onboarding.suggestedActors.lastInsertedAtIndex - index) %
-        5)
-    )
-  }, [index, store.onboarding.suggestedActors.lastInsertedAtIndex])
 
   return (
     <Animated.View
-      entering={FadeInRight.delay(delay).springify()}
+      entering={FadeInRight}
       style={[
         styles.cardContainer,
         pal.view,
@@ -43,7 +40,12 @@ export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
           borderRightWidth: isMobile ? undefined : 1,
         },
       ]}>
-      <ProfileCard key={item.did} profile={item} index={index} />
+      <ProfileCard
+        key={item.did}
+        profile={item}
+        index={index}
+        insertSuggestionsByActor={insertSuggestionsByActor}
+      />
     </Animated.View>
   )
 }
@@ -51,9 +53,11 @@ export const RecommendedFollowsItem: React.FC<Props> = ({item, index}) => {
 export const ProfileCard = observer(function ProfileCardImpl({
   profile,
   index,
+  insertSuggestionsByActor,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   index: number
+  insertSuggestionsByActor: (did: string, index: number) => Promise<void>
 }) {
   const {track} = useAnalytics()
   const store = useStores()
@@ -94,10 +98,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
           onToggleFollow={async isFollow => {
             if (isFollow) {
               setAddingMoreSuggestions(true)
-              await store.onboarding.suggestedActors.insertSuggestionsByActor(
-                profile.did,
-                index,
-              )
+              await insertSuggestionsByActor(profile.did, index)
               setAddingMoreSuggestions(false)
               track('Onboarding:SuggestedFollowFollowed')
             }

@@ -7,9 +7,9 @@ const accountSchema = z.object({
   did: z.string(),
   refreshJwt: z.string().optional(),
   accessJwt: z.string().optional(),
-  handle: z.string(),
-  displayName: z.string(),
-  aviUrl: z.string(),
+  handle: z.string().optional(),
+  displayName: z.string().optional(),
+  aviUrl: z.string().optional(),
 })
 
 export const schema = z.object({

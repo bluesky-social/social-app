@@ -17,12 +17,17 @@ import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
-import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
+import {
+  useIsDrawerOpen,
+  useSetDrawerOpen,
+  useOnboardingState,
+} from '#/state/shell'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
+  const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   useAuxClick()
@@ -34,9 +39,9 @@ const ShellInner = observer(function ShellInnerImpl() {
     })
   }, [navigator, store.shell, setDrawerOpen])
 
-  const showBottomBar = isMobile && !store.onboarding.isActive
+  const showBottomBar = isMobile && !onboardingState.isActive
   const showSideNavs =
-    !isMobile && store.session.hasSession && !store.onboarding.isActive
+    !isMobile && store.session.hasSession && !onboardingState.isActive
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>

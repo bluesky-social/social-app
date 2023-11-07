@@ -13,19 +13,21 @@ import {Onboarding} from './Onboarding'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
+import {useOnboardingState} from '#/state/shell'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
 ): React.FC<P> =>
   observer(function AuthRequired(props: P) {
     const store = useStores()
+    const onboardingState = useOnboardingState()
     if (store.session.isResumingSession) {
       return <Loading />
     }
     if (!store.session.hasSession) {
       return <LoggedOut />
     }
-    if (store.onboarding.isActive) {
+    if (onboardingState.isActive) {
       return <Onboarding />
     }
     return <Component {...props} />

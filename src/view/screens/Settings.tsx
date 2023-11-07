@@ -52,6 +52,7 @@ import {
   useSetColorMode,
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
+  useOnboardingDispatch,
 } from '#/state/shell'
 
 // TEMPORARY (APP-700)
@@ -70,6 +71,7 @@ export const SettingsScreen = withAuthRequired(
     const setMinimalShellMode = useSetMinimalShellMode()
     const requireAltTextEnabled = useRequireAltTextEnabled()
     const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
+    const onboardingDispatch = useOnboardingDispatch()
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
@@ -157,9 +159,9 @@ export const SettingsScreen = withAuthRequired(
     }, [store])
 
     const onPressResetOnboarding = React.useCallback(async () => {
-      store.onboarding.reset()
+      onboardingDispatch({type: 'start'})
       Toast.show('Onboarding reset')
-    }, [store])
+    }, [onboardingDispatch])
 
     const onPressBuildInfo = React.useCallback(() => {
       Clipboard.setString(
