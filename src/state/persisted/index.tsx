@@ -52,17 +52,26 @@ export function Provider({
     broadcast.onmessage = async ({data}) => {
       // validate event
       if (typeof data === 'object' && data.event === UPDATE_EVENT) {
-        // read next state, possibly updated by another tab
-        const next = await store.read()
+        try {
+          // read next state, possibly updated by another tab
+          const next = await store.read()
 
-        if (next) {
-          logger.debug(
-            `persisted state: handling update from broadcast channel`,
-          )
-          setState(next)
-        } else {
+          if (next) {
+            logger.debug(
+              `persisted state: handling update from broadcast channel`,
+            )
+            setState(next)
+          } else {
+            logger.error(
+              `persisted state: handled update update from broadcast channel, but found no data`,
+            )
+          }
+        } catch (e) {
           logger.error(
-            `persisted state: received update but no data found in storage`,
+            `persisted state: failed handling update from broadcast channel`,
+            {
+              error: e,
+            },
           )
         }
       }
@@ -84,7 +93,7 @@ export function Provider({
       setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
       logger.debug(`persisted state: wrote root state to storage`)
     } catch (e) {
-      logger.error(`persisted state: failed to write root state to storage`, {
+      logger.error(`persisted state: failed writing root state to storage`, {
         error: e,
       })
     }

@@ -110,13 +110,13 @@ export async function migrate() {
     const alreadyMigrated = Boolean(await read())
 
     if (!alreadyMigrated && rawLegacyData) {
-      logger.debug('persisted state: migrating legacy store')
+      logger.debug('persisted state: migrating legacy storage')
       const legacyData = JSON.parse(rawLegacyData)
       const newData = transform(legacyData)
       await write(newData)
-      logger.debug('persisted state: migrated legacy store')
+      logger.debug('persisted state: migrated legacy storage')
     }
   } catch (e) {
-    logger.error('persisted state: error migrating legacy store', {error: e})
+    logger.error('persisted state: error migrating legacy storage', {error: e})
   }
 }
