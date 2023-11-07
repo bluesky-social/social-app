@@ -38,12 +38,18 @@ export class SavedFeedsModel {
     return this.hasLoaded && !this.hasContent
   }
 
-  get pinned() {
-    return this.all.filter(feed => feed.isPinned)
+  get pinned(): FeedSourceModel[] {
+    return this.rootStore.preferences.savedFeeds
+      .filter(feed => this.rootStore.preferences.isPinnedFeed(feed))
+      .map(uri => this.all.find(f => f.uri === uri))
+      .filter(Boolean) as FeedSourceModel[]
   }
 
-  get unpinned() {
-    return this.all.filter(feed => !feed.isPinned)
+  get unpinned(): FeedSourceModel[] {
+    return this.rootStore.preferences.savedFeeds
+      .filter(feed => !this.rootStore.preferences.isPinnedFeed(feed))
+      .map(uri => this.all.find(f => f.uri === uri))
+      .filter(Boolean) as FeedSourceModel[]
   }
 
   get pinnedFeedNames() {
