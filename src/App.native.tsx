@@ -10,12 +10,8 @@ import {QueryClientProvider} from '@tanstack/react-query'
 
 import 'view/icons'
 
-import {
-  Schema,
-  Provider as PersistedStateProvider,
-  init as initPersistedState,
-  usePersisted,
-} from '#/state/persisted'
+import {init as initPersistedState} from '#/state/persisted'
+import {useColorMode} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -30,7 +26,7 @@ import {Provider as ShellStateProvider} from 'state/shell'
 SplashScreen.preventAutoHideAsync()
 
 const InnerApp = observer(function AppImpl() {
-  const persisted = usePersisted()
+  const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -53,7 +49,7 @@ const InnerApp = observer(function AppImpl() {
   }
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={persisted.colorMode}>
+      <ThemeProvider theme={colorMode}>
         <RootSiblingParent>
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
@@ -70,22 +66,20 @@ const InnerApp = observer(function AppImpl() {
 })
 
 function App() {
-  const [persistedState, setPersistedState] = useState<Schema>()
+  const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    initPersistedState().then(setPersistedState)
+    initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!persistedState) {
+  if (!isReady) {
     return null
   }
 
   return (
-    <PersistedStateProvider data={persistedState}>
-      <ShellStateProvider>
-        <InnerApp />
-      </ShellStateProvider>
-    </PersistedStateProvider>
+    <ShellStateProvider>
+      <InnerApp />
+    </ShellStateProvider>
   )
 }
 

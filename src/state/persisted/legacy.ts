@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
-import {schema, Schema} from '#/state/persisted/schema'
+import {defaults, Schema} from '#/state/persisted/schema'
 import {write, read} from '#/state/persisted/store'
 
 /**
@@ -68,30 +68,32 @@ const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
 export function transform(legacy: LegacySchema): Schema {
   return {
-    colorMode: legacy.shell.colorMode || schema.colorMode,
-    accounts: legacy.session.accounts || schema.accounts,
+    colorMode: legacy.shell.colorMode || defaults.colorMode,
+    accounts: legacy.session.accounts || defaults.accounts,
     currentAccount:
       legacy.session.accounts.find(a => a.did === legacy.session.data.did) ||
-      schema.currentAccount,
+      defaults.currentAccount,
     lastEmailConfirmReminder:
-      legacy.reminders.lastEmailConfirm || schema.lastEmailConfirmReminder,
+      legacy.reminders.lastEmailConfirm || defaults.lastEmailConfirmReminder,
     primaryLanguage:
-      legacy.preferences.primaryLanguage || schema.primaryLanguage,
+      legacy.preferences.primaryLanguage || defaults.primaryLanguage,
     contentLanguages:
-      legacy.preferences.contentLanguages || schema.contentLanguages,
-    postLanguage: legacy.preferences.postLanguage || schema.postLanguage,
+      legacy.preferences.contentLanguages || defaults.contentLanguages,
+    postLanguage: legacy.preferences.postLanguage || defaults.postLanguage,
     postLanguageHistory:
-      legacy.preferences.postLanguageHistory || schema.postLanguageHistory,
+      legacy.preferences.postLanguageHistory || defaults.postLanguageHistory,
     requireAltTextEnabled:
-      legacy.preferences.requireAltTextEnabled || schema.requireAltTextEnabled,
-    mutedThreads: legacy.mutedThreads.uris || schema.mutedThreads,
+      legacy.preferences.requireAltTextEnabled ||
+      defaults.requireAltTextEnabled,
+    mutedThreads: legacy.mutedThreads.uris || defaults.mutedThreads,
     invitedUsers: {
-      seenDids: legacy.invitedUsers.seenDids || schema.invitedUsers.seenDids,
+      seenDids: legacy.invitedUsers.seenDids || defaults.invitedUsers.seenDids,
       copiedInvites:
-        legacy.invitedUsers.copiedInvites || schema.invitedUsers.copiedInvites,
+        legacy.invitedUsers.copiedInvites ||
+        defaults.invitedUsers.copiedInvites,
     },
     onboarding: {
-      step: legacy.onboarding.step || schema.onboarding.step,
+      step: legacy.onboarding.step || defaults.onboarding.step,
     },
   }
 }

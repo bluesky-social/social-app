@@ -46,8 +46,11 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {logger} from '#/logger'
-import {useColorMode} from '#/state/colorMode'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {
+  useSetMinimalShellMode,
+  useColorMode,
+  useSetColorMode,
+} from '#/state/shell'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -58,7 +61,8 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
-    const {colorMode, setColorMode} = useColorMode()
+    const colorMode = useColorMode()
+    const setColorMode = useSetColorMode()
     const pal = usePalette('default')
     const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()

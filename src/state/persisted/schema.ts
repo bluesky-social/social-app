@@ -1,42 +1,44 @@
+import {z} from 'zod'
 import {deviceLocales} from '#/platform/detection'
 
 // only data needed for rendering account page
-type Account = {
-  service: string
-  did: `did:plc:${string}`
-  refreshJwt: string
-  accessJwt: string
-  handle: string
-  displayName: string
-  aviUrl: string
-}
+const accountSchema = z.object({
+  service: z.string(),
+  did: z.string(),
+  refreshJwt: z.string(),
+  accessJwt: z.string(),
+  handle: z.string(),
+  displayName: z.string(),
+  aviUrl: z.string(),
+})
 
-export type Schema = {
-  colorMode: 'system' | 'light' | 'dark'
-  accounts: Account[]
-  currentAccount: Account | undefined
-  lastEmailConfirmReminder: string | undefined
+export const schema = z.object({
+  colorMode: z.enum(['system', 'light', 'dark']),
+  accounts: z.array(accountSchema),
+  currentAccount: accountSchema.optional(),
+  lastEmailConfirmReminder: z.string().optional(),
 
   // preferences
-  primaryLanguage: string // should move to server
-  contentLanguages: string[] // should move to server
-  postLanguage: string // should move to server
-  postLanguageHistory: string[] // should move to server
-  requireAltTextEnabled: boolean // should move to server
-  mutedThreads: string[] // should move to server
+  primaryLanguage: z.string(), // should move to server
+  contentLanguages: z.array(z.string()), // should move to server
+  postLanguage: z.string(), // should move to server
+  postLanguageHistory: z.array(z.string()),
+  requireAltTextEnabled: z.boolean(), // should move to server
+  mutedThreads: z.array(z.string()), // should move to server
 
   // should move to server?
-  invitedUsers: {
-    seenDids: string[]
-    copiedInvites: string[]
-  }
+  invitedUsers: z.object({
+    seenDids: z.array(z.string()),
+    copiedInvites: z.array(z.string()),
+  }),
 
-  onboarding: {
-    step: string
-  }
-}
+  onboarding: z.object({
+    step: z.string(),
+  }),
+})
+export type Schema = z.infer<typeof schema>
 
-export const schema: Schema = {
+export const defaults: Schema = {
   colorMode: 'system',
   accounts: [],
   currentAccount: undefined,

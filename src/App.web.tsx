@@ -8,12 +8,8 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 
 import 'view/icons'
 
-import {
-  Schema,
-  Provider as PersistedStateProvider,
-  init as initPersistedState,
-  usePersisted,
-} from '#/state/persisted'
+import {init as initPersistedState} from '#/state/persisted'
+import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from 'view/shell/index'
@@ -23,7 +19,7 @@ import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
 
 const InnerApp = observer(function AppImpl() {
-  const persisted = usePersisted()
+  const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -43,7 +39,7 @@ const InnerApp = observer(function AppImpl() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={persisted.colorMode}>
+      <ThemeProvider theme={colorMode}>
         <RootSiblingParent>
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
@@ -60,22 +56,20 @@ const InnerApp = observer(function AppImpl() {
 })
 
 function App() {
-  const [persistedState, setPersistedState] = useState<Schema>()
+  const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    initPersistedState().then(setPersistedState)
+    initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!persistedState) {
+  if (!isReady) {
     return null
   }
 
   return (
-    <PersistedStateProvider data={persistedState}>
-      <ShellStateProvider>
-        <InnerApp />
-      </ShellStateProvider>
-    </PersistedStateProvider>
+    <ShellStateProvider>
+      <InnerApp />
+    </ShellStateProvider>
   )
 }
 
