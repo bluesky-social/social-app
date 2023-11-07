@@ -8,12 +8,12 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {ScrollView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PrivacyPolicy'>
 export const PrivacyPolicyScreen = (_props: Props) => {
   const pal = usePalette('default')
-  const {setMinimalShellMode} = useShellState()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {

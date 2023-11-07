@@ -11,7 +11,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
-import {useShellState} from '#/state/shell'
+import {useSetDrawerOpen} from '#/state/shell'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -33,7 +33,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
-  const {setIsDrawerOpen} = useShellState()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
@@ -48,8 +48,8 @@ export const ViewHeader = observer(function ViewHeaderImpl({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    setIsDrawerOpen(true)
-  }, [track, setIsDrawerOpen])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   if (isDesktop) {
     if (showOnDesktop) {

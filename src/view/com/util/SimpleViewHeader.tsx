@@ -14,7 +14,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {useShellState} from '#/state/shell'
+import {useSetDrawerOpen} from '#/state/shell'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -27,7 +27,7 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
   style?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
-  const {setIsDrawerOpen} = useShellState()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isMobile} = useWebMediaQueries()
@@ -43,8 +43,8 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    setIsDrawerOpen(true)
-  }, [track, setIsDrawerOpen])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   const Container = isMobile ? View : CenteredView
   return (

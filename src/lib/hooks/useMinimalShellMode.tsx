@@ -8,10 +8,10 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 
-import {useShellState} from '#/state/shell'
+import {useMinimalShellMode as useMinimalShellModeState} from '#/state/shell/minimal-mode'
 
 export function useMinimalShellMode() {
-  const {minimalShellMode} = useShellState()
+  const minimalShellMode = useMinimalShellModeState()
   const minimalShellInterp = useSharedValue(0)
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
@@ -54,6 +54,7 @@ export function useMinimalShellMode() {
   }, [minimalShellInterp, minimalShellMode])
 
   return {
+    minimalShellMode,
     footerMinimalShellTransform,
     headerMinimalShellTransform,
     fabMinimalShellTransform,

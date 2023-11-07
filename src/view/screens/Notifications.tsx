@@ -21,7 +21,7 @@ import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 import {logger} from '#/logger'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -30,7 +30,7 @@ type Props = NativeStackScreenProps<
 export const NotificationsScreen = withAuthRequired(
   observer(function NotificationsScreenImpl({}: Props) {
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
     const scrollElRef = React.useRef<FlatList>(null)
     const {screen} = useAnalytics()

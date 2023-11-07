@@ -24,7 +24,6 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useShellState} from '#/state/shell'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -32,14 +31,13 @@ export const BottomBar = observer(function BottomBarImpl({
   navigation,
 }: BottomTabBarProps) {
   const store = useStores()
-  const {minimalShellMode} = useShellState()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const {minimalShellMode, footerMinimalShellTransform} = useMinimalShellMode()
   const {notifications} = store.me
 
   const onPressTab = React.useCallback(

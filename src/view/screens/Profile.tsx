@@ -30,13 +30,13 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
   observer(function ProfileScreenImpl({route}: Props) {
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
     const name = route.params.name === 'me' ? store.me.did : route.params.name

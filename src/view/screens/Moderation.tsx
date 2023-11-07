@@ -17,14 +17,14 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
   observer(function Moderation({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
 

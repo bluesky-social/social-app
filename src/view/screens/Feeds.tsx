@@ -27,14 +27,14 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const myFeeds = store.me.myFeeds
     const [query, setQuery] = React.useState<string>('')

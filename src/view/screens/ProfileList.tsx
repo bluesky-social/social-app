@@ -44,7 +44,7 @@ import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -105,7 +105,7 @@ export const ProfileListScreenInner = observer(
     listOwnerDid,
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {rkey} = route.params
     const feedSectionRef = React.useRef<SectionRef>(null)
     const aboutSectionRef = React.useRef<SectionRef>(null)

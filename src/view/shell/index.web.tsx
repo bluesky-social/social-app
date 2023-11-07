@@ -17,21 +17,22 @@ import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
-import {useShellState} from '#/state/shell'
+import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
-  const {isDrawerOpen, setIsDrawerOpen} = useShellState()
+  const isDrawerOpen = useIsDrawerOpen()
+  const setDrawerOpen = useSetDrawerOpen()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   useAuxClick()
 
   useEffect(() => {
     navigator.addListener('state', () => {
-      setIsDrawerOpen(false)
+      setDrawerOpen(false)
       store.shell.closeAnyActiveElement()
     })
-  }, [navigator, store.shell, setIsDrawerOpen])
+  }, [navigator, store.shell, setDrawerOpen])
 
   const showBottomBar = isMobile && !store.onboarding.isActive
   const showSideNavs =
@@ -62,7 +63,7 @@ const ShellInner = observer(function ShellInnerImpl() {
       <Lightbox />
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
-          onPress={() => setIsDrawerOpen(false)}
+          onPress={() => setDrawerOpen(false)}
           style={styles.drawerMask}
           accessibilityLabel="Close navigation footer"
           accessibilityHint="Closes bottom navigation bar">

@@ -8,12 +8,12 @@ import {useStores} from 'state/index'
 import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
 import {RecommendedFollows} from './onboarding/RecommendedFollows'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 
 export const Onboarding = observer(function OnboardingImpl() {
   const pal = usePalette('default')
   const store = useStores()
-  const {setMinimalShellMode} = useShellState()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   React.useEffect(() => {
     setMinimalShellMode(true)

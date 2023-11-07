@@ -11,14 +11,14 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getEntries} from '#/logger/logDump'
 import {ago} from 'lib/strings/time'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 export const LogScreen = observer(function Log({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Log'
 >) {
   const pal = usePalette('default')
-  const {setMinimalShellMode} = useShellState()
+  const setMinimalShellMode = useSetMinimalShellMode()
   const [expanded, setExpanded] = React.useState<string[]>([])
 
   useFocusEffect(

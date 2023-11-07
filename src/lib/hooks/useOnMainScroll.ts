@@ -2,7 +2,7 @@ import {useState, useCallback, useRef} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {s} from 'lib/styles'
 import {useWebMediaQueries} from './useWebMediaQueries'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 
 const Y_LIMIT = 10
 
@@ -23,7 +23,8 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
   let lastY = useRef(0)
   let [isScrolledDown, setIsScrolledDown] = useState(false)
   const {dyLimitUp, dyLimitDown} = useDeviceLimits()
-  const {minimalShellMode, setMinimalShellMode} = useShellState()
+  const minimalShellMode = useMinimalShellMode()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   return [
     useCallback(

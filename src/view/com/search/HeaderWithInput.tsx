@@ -11,7 +11,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {HITSLOP_10} from 'lib/constants'
-import {useShellState} from '#/state/shell'
+import {useSetDrawerOpen} from '#/state/shell'
 
 interface Props {
   isInputFocused: boolean
@@ -33,7 +33,7 @@ export function HeaderWithInput({
   onSubmitQuery,
   showMenu = true,
 }: Props) {
-  const {setIsDrawerOpen} = useShellState()
+  const setDrawerOpen = useSetDrawerOpen()
   const theme = useTheme()
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -42,8 +42,8 @@ export function HeaderWithInput({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    setIsDrawerOpen(true)
-  }, [track, setIsDrawerOpen])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   const onPressCancelSearchInner = React.useCallback(() => {
     onPressCancelSearch()

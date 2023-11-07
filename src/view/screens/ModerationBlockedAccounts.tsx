@@ -22,7 +22,7 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {logger} from '#/logger'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -32,7 +32,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
   observer(function ModerationBlockedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
     const blockedAccounts = useMemo(

@@ -15,7 +15,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {logger} from '#/logger'
-import {useShellState} from '#/state/shell'
+import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
 
 const SHELL_FOOTER_HEIGHT = 44
 
@@ -23,7 +23,8 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
     const store = useStores()
-    const {minimalShellMode, setMinimalShellMode} = useShellState()
+    const minimalShellMode = useMinimalShellMode()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
     const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)

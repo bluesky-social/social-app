@@ -26,12 +26,18 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
-import {useShellState} from '#/state/shell'
+import {
+  useIsDrawerOpen,
+  useSetDrawerOpen,
+  useIsDrawerSwipeDisabled,
+} from '#/state/shell'
 import {isAndroid} from 'platform/detection'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
-  const {isDrawerOpen, isDrawerSwipeDisabled, setIsDrawerOpen} = useShellState()
+  const isDrawerOpen = useIsDrawerOpen()
+  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
+  const setIsDrawerOpen = useSetDrawerOpen()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()

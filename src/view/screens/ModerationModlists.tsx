@@ -16,14 +16,14 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {s} from 'lib/styles'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export const ModerationModlistsScreen = withAuthRequired(
   observer(function ModerationModlistsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {setMinimalShellMode} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile} = useWebMediaQueries()
     const navigation = useNavigation<NavigationProp>()
 

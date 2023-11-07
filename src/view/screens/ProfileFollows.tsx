@@ -5,12 +5,12 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {ProfileFollows as ProfileFollowsComponent} from '../com/profile/ProfileFollows'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>
 export const ProfileFollowsScreen = withAuthRequired(({route}: Props) => {
   const {name} = route.params
-  const {setMinimalShellMode} = useShellState()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {

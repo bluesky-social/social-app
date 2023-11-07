@@ -27,14 +27,15 @@ import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {isAndroid, isIOS} from 'platform/detection'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
   observer<Props>(function SearchScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
-    const {setMinimalShellMode, setIsDrawerSwipeDisabled} = useShellState()
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const setIsDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
     const scrollViewRef = React.useRef<ScrollView>(null)
     const flatListRef = React.useRef<FlatList>(null)
     const [onMainScroll] = useOnMainScroll()

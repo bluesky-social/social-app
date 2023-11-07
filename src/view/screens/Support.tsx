@@ -9,12 +9,12 @@ import {CenteredView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {HELP_DESK_URL} from 'lib/constants'
-import {useShellState} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
   const pal = usePalette('default')
-  const {setMinimalShellMode} = useShellState()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {
