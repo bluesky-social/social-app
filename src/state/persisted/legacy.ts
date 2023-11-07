@@ -68,20 +68,31 @@ const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
 export function transform(legacy: LegacySchema): Schema {
   return {
-    colorMode: legacy.shell.colorMode || defaults.colorMode,
-    accounts: legacy.session.accounts || defaults.accounts,
-    currentAccount:
-      legacy.session.accounts.find(a => a.did === legacy.session.data.did) ||
-      defaults.currentAccount,
-    lastEmailConfirmReminder:
-      legacy.reminders.lastEmailConfirm || defaults.lastEmailConfirmReminder,
-    primaryLanguage:
-      legacy.preferences.primaryLanguage || defaults.primaryLanguage,
-    contentLanguages:
-      legacy.preferences.contentLanguages || defaults.contentLanguages,
-    postLanguage: legacy.preferences.postLanguage || defaults.postLanguage,
-    postLanguageHistory:
-      legacy.preferences.postLanguageHistory || defaults.postLanguageHistory,
+    colorMode: legacy.shell?.colorMode || defaults.colorMode,
+    session: {
+      accounts: legacy.session.accounts || defaults.session.accounts,
+      currentAccount:
+        legacy.session.accounts.find(a => a.did === legacy.session.data.did) ||
+        defaults.session.currentAccount,
+    },
+    reminders: {
+      lastEmailConfirmReminder:
+        legacy.reminders.lastEmailConfirm ||
+        defaults.reminders.lastEmailConfirmReminder,
+    },
+    languagePrefs: {
+      primaryLanguage:
+        legacy.preferences.primaryLanguage ||
+        defaults.languagePrefs.primaryLanguage,
+      contentLanguages:
+        legacy.preferences.contentLanguages ||
+        defaults.languagePrefs.contentLanguages,
+      postLanguage:
+        legacy.preferences.postLanguage || defaults.languagePrefs.postLanguage,
+      postLanguageHistory:
+        legacy.preferences.postLanguageHistory ||
+        defaults.languagePrefs.postLanguageHistory,
+    },
     requireAltTextEnabled:
       legacy.preferences.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
@@ -119,6 +130,8 @@ export async function migrate() {
       logger.debug('persisted state: migrated legacy storage')
     }
   } catch (e) {
-    logger.error('persisted state: error migrating legacy storage', {error: e})
+    logger.error('persisted state: error migrating legacy storage', {
+      error: String(e),
+    })
   }
 }

@@ -5,6 +5,7 @@ import {Schema, schema} from '#/state/persisted/schema'
 const BSKY_STORAGE = 'BSKY_STORAGE'
 
 export async function write(value: Schema) {
+  schema.parse(value)
   await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
 }
 
