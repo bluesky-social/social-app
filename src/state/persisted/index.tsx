@@ -78,10 +78,16 @@ export function Provider({
    * that an update has occurred.
    */
   const _write = React.useCallback(async (next: Schema) => {
-    await store.write(next)
-    // must happen on next tick, otherwise the tab will read stale storage data
-    setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
-    logger.debug(`persisted state: wrote root state to storage`)
+    try {
+      await store.write(next)
+      // must happen on next tick, otherwise the tab will read stale storage data
+      setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
+      logger.debug(`persisted state: wrote root state to storage`)
+    } catch (e) {
+      logger.error(`persisted state: failed to write root state to storage`, {
+        error: e,
+      })
+    }
   }, [])
 
   /*
