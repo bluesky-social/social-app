@@ -27,15 +27,18 @@ import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {isAndroid, isIOS} from 'platform/detection'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 
 type Props = NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>
 export const SearchScreen = withAuthRequired(
   observer<Props>(function SearchScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const setIsDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
     const scrollViewRef = React.useRef<ScrollView>(null)
     const flatListRef = React.useRef<FlatList>(null)
-    const [onMainScroll] = useOnMainScroll(store)
+    const [onMainScroll] = useOnMainScroll()
     const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
     const [query, setQuery] = React.useState<string>('')
     const autocompleteView = React.useMemo<UserAutocompleteModel>(
@@ -75,8 +78,8 @@ export const SearchScreen = withAuthRequired(
       setQuery('')
       autocompleteView.setActive(false)
       setSearchUIModel(undefined)
-      store.shell.setIsDrawerSwipeDisabled(false)
-    }, [setQuery, autocompleteView, store])
+      setIsDrawerSwipeDisabled(false)
+    }, [setQuery, autocompleteView, setIsDrawerSwipeDisabled])
 
     const onSubmitQuery = React.useCallback(() => {
       if (query.length === 0) {
@@ -86,8 +89,8 @@ export const SearchScreen = withAuthRequired(
       const model = new SearchUIModel(store)
       model.fetch(query)
       setSearchUIModel(model)
-      store.shell.setIsDrawerSwipeDisabled(true)
-    }, [query, setSearchUIModel, store])
+      setIsDrawerSwipeDisabled(true)
+    }, [query, setSearchUIModel, store, setIsDrawerSwipeDisabled])
 
     const onSoftReset = React.useCallback(() => {
       scrollViewRef.current?.scrollTo({x: 0, y: 0})
@@ -102,7 +105,7 @@ export const SearchScreen = withAuthRequired(
           softResetSub.remove()
         }
 
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         autocompleteView.setup()
         if (!foafs.hasData) {
           foafs.fetch()
@@ -112,7 +115,14 @@ export const SearchScreen = withAuthRequired(
         }
 
         return cleanup
-      }, [store, autocompleteView, foafs, suggestedActors, onSoftReset]),
+      }, [
+        store,
+        autocompleteView,
+        foafs,
+        suggestedActors,
+        onSoftReset,
+        setMinimalShellMode,
+      ]),
     )
 
     const onPress = useCallback(() => {

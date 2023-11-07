@@ -266,9 +266,6 @@ export interface ComposerOpts {
 
 export class ShellUiModel {
   colorMode: ColorMode = 'system'
-  minimalShellMode = false
-  isDrawerOpen = false
-  isDrawerSwipeDisabled = false
   isModalActive = false
   activeModals: Modal[] = []
   isLightboxActive = false
@@ -313,10 +310,6 @@ export class ShellUiModel {
     }
   }
 
-  setMinimalShellMode(v: boolean) {
-    this.minimalShellMode = v
-  }
-
   /**
    * returns true if something was closed
    * (used by the android hardware back btn)
@@ -332,10 +325,6 @@ export class ShellUiModel {
     }
     if (this.isComposerActive) {
       this.closeComposer()
-      return true
-    }
-    if (this.isDrawerOpen) {
-      this.closeDrawer()
       return true
     }
     return false
@@ -354,21 +343,6 @@ export class ShellUiModel {
     if (this.isComposerActive) {
       this.closeComposer()
     }
-    if (this.isDrawerOpen) {
-      this.closeDrawer()
-    }
-  }
-
-  openDrawer() {
-    this.isDrawerOpen = true
-  }
-
-  closeDrawer() {
-    this.isDrawerOpen = false
-  }
-
-  setIsDrawerSwipeDisabled(v: boolean) {
-    this.isDrawerSwipeDisabled = v
   }
 
   openModal(modal: Modal) {

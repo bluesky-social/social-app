@@ -14,6 +14,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedPage} from 'view/com/feeds/FeedPage'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 
 export const POLL_FREQ = 30e3 // 30sec
 
@@ -21,6 +22,8 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer(function HomeScreenImpl({}: Props) {
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
@@ -61,21 +64,21 @@ export const HomeScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
-        store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
+        setMinimalShellMode(false)
+        setDrawerSwipeDisabled(selectedPage > 0)
         return () => {
-          store.shell.setIsDrawerSwipeDisabled(false)
+          setDrawerSwipeDisabled(false)
         }
-      }, [store, selectedPage]),
+      }, [setDrawerSwipeDisabled, selectedPage, setMinimalShellMode]),
     )
 
     const onPageSelected = React.useCallback(
       (index: number) => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         setSelectedPage(index)
-        store.shell.setIsDrawerSwipeDisabled(index > 0)
+        setDrawerSwipeDisabled(index > 0)
       },
-      [store, setSelectedPage],
+      [setDrawerSwipeDisabled, setSelectedPage, setMinimalShellMode],
     )
 
     const onPressSelected = React.useCallback(() => {

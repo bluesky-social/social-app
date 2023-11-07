@@ -8,10 +8,10 @@ import {Text} from 'view/com/util/text/Text'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {HITSLOP_10} from 'lib/constants'
+import {useSetDrawerOpen} from '#/state/shell'
 
 interface Props {
   isInputFocused: boolean
@@ -33,7 +33,7 @@ export function HeaderWithInput({
   onSubmitQuery,
   showMenu = true,
 }: Props) {
-  const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const theme = useTheme()
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -42,8 +42,8 @@ export function HeaderWithInput({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.openDrawer()
-  }, [track, store])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   const onPressCancelSearchInner = React.useCallback(() => {
     onPressCancelSearch()

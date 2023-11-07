@@ -16,12 +16,14 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {s} from 'lib/styles'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export const ListsScreen = withAuthRequired(
   observer(function ListsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile} = useWebMediaQueries()
     const navigation = useNavigation<NavigationProp>()
 
@@ -32,9 +34,9 @@ export const ListsScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         listsLists.refresh()
-      }, [store, listsLists]),
+      }, [listsLists, setMinimalShellMode]),
     )
 
     const onPressNewList = React.useCallback(() => {

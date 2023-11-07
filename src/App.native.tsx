@@ -25,6 +25,7 @@ import * as analytics from 'lib/analytics/analytics'
 import * as Toast from 'view/com/util/Toast'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
+import {Provider as ShellStateProvider} from 'state/shell'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -81,7 +82,9 @@ function App() {
 
   return (
     <PersistedStateProvider data={persistedState}>
-      <InnerApp />
+      <ShellStateProvider>
+        <InnerApp />
+      </ShellStateProvider>
     </PersistedStateProvider>
   )
 }

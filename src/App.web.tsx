@@ -20,6 +20,7 @@ import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
+import {Provider as ShellStateProvider} from 'state/shell'
 
 const InnerApp = observer(function AppImpl() {
   const persisted = usePersisted()
@@ -71,7 +72,9 @@ function App() {
 
   return (
     <PersistedStateProvider data={persistedState}>
-      <InnerApp />
+      <ShellStateProvider>
+        <InnerApp />
+      </ShellStateProvider>
     </PersistedStateProvider>
   )
 }

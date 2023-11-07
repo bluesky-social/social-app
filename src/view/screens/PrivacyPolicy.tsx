@@ -5,20 +5,20 @@ import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
-import {useStores} from 'state/index'
 import {ScrollView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PrivacyPolicy'>
 export const PrivacyPolicyScreen = (_props: Props) => {
   const pal = usePalette('default')
-  const store = useStores()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-    }, [store]),
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
   )
 
   return (

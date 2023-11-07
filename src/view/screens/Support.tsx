@@ -3,23 +3,23 @@ import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
-import {useStores} from 'state/index'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {CenteredView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {HELP_DESK_URL} from 'lib/constants'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
-  const store = useStores()
   const pal = usePalette('default')
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-    }, [store]),
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
   )
 
   return (

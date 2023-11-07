@@ -47,6 +47,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {logger} from '#/logger'
 import {usePersisted} from '#/state/persisted'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -60,6 +61,7 @@ export const SettingsScreen = withAuthRequired(
     const persisted = usePersisted()
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
@@ -90,8 +92,8 @@ export const SettingsScreen = withAuthRequired(
     useFocusEffect(
       React.useCallback(() => {
         screen('Settings')
-        store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
+        setMinimalShellMode(false)
+      }, [screen, setMinimalShellMode]),
     )
 
     const onPressAddAccount = React.useCallback(() => {

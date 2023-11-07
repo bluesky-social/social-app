@@ -10,18 +10,18 @@ import {Text} from '../com/util/text/Text'
 import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
-  const store = useStores()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-    }, [store]),
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
   )
 
   const canGoBack = navigation.canGoBack()
