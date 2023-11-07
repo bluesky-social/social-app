@@ -13,6 +13,7 @@ import {
 import {Text} from '../text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
+import {s} from '#/lib/styles'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -42,6 +43,8 @@ export function Button({
   type = 'primary',
   label,
   style,
+  StartIcon,
+  EndIcon,
   labelContainerStyle,
   labelStyle,
   onPress,
@@ -56,6 +59,8 @@ export function Button({
   type?: ButtonType
   label?: string
   style?: StyleProp<ViewStyle>
+  StartIcon?: React.ReactElement
+  EndIcon?: React.ReactElement
   labelContainerStyle?: StyleProp<ViewStyle>
   labelStyle?: StyleProp<TextStyle>
   onPress?: () => void | Promise<void>
@@ -169,29 +174,40 @@ export function Button({
     [typeOuterStyle, style],
   )
 
-  const renderChildern = React.useCallback(() => {
+  const renderChildren = React.useCallback(() => {
     if (!label) {
       return children
     }
 
     return (
       <View style={[styles.labelContainer, labelContainerStyle]}>
+        {React.isValidElement(StartIcon) && !isLoading ? StartIcon : null}
+
         {label && withLoading && isLoading ? (
-          <ActivityIndicator size={12} color={typeLabelStyle.color} />
+          <ActivityIndicator
+            style={s.mr2}
+            size={12}
+            color={typeLabelStyle.color}
+          />
         ) : null}
+
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}
         </Text>
+
+        {React.isValidElement(EndIcon) && !isLoading && EndIcon}
       </View>
     )
   }, [
-    children,
     label,
+    labelContainerStyle,
+    StartIcon,
     withLoading,
     isLoading,
-    labelContainerStyle,
     typeLabelStyle,
     labelStyle,
+    EndIcon,
+    children,
   ])
 
   return (
@@ -205,7 +221,7 @@ export function Button({
       accessibilityHint={accessibilityHint}
       accessibilityLabelledBy={accessibilityLabelledBy}
       onAccessibilityEscape={onAccessibilityEscape}>
-      {renderChildern}
+      {renderChildren}
     </Pressable>
   )
 }
@@ -217,6 +233,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   labelContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
   },
