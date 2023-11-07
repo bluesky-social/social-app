@@ -2,6 +2,7 @@ import React, {useCallback, useMemo} from 'react'
 import {
   ActivityIndicator,
   FlatList,
+  NativeScrollEvent,
   Pressable,
   StyleSheet,
   View,
@@ -10,6 +11,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {RichText as RichTextAPI} from '@atproto/api'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -33,7 +35,6 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -544,7 +545,7 @@ const Header = observer(function HeaderImpl({
 
 interface FeedSectionProps {
   feed: PostsFeedModel
-  onScroll: OnScrollCb
+  onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -568,13 +569,14 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return <EmptyState icon="feed" message="This feed is empty!" />
     }, [])
 
+    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <Feed
           testID="listFeed"
           feed={feed}
           scrollElRef={scrollElRef}
-          onScroll={onScroll}
+          onScroll={scrollHandler}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
@@ -598,7 +600,7 @@ interface AboutSectionProps {
   isCurateList: boolean | undefined
   isOwner: boolean | undefined
   onPressAddUser: () => void
-  onScroll: OnScrollCb
+  onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -723,6 +725,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       )
     }, [])
 
+    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <ListItems
@@ -732,7 +735,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           renderEmptyState={renderEmptyState}
           list={list}
           headerOffset={headerHeight}
-          onScroll={onScroll}
+          onScroll={scrollHandler}
           scrollEventThrottle={1}
         />
         {isScrolledDown && (
