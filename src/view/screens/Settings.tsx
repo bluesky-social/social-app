@@ -46,6 +46,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {logger} from '#/logger'
+import {usePersisted} from '#/state/persisted'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -56,6 +57,7 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
+    const persisted = usePersisted()
     const pal = usePalette('default')
     const store = useStores()
     const navigation = useNavigation<NavigationProp>()
@@ -377,23 +379,23 @@ export const SettingsScreen = withAuthRequired(
           <View>
             <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
               <SelectableBtn
-                selected={store.shell.colorMode === 'system'}
+                selected={persisted.colorMode === 'system'}
                 label="System"
                 left
-                onSelect={() => store.shell.setColorMode('system')}
+                onSelect={() => persisted.setColorMode('system')}
                 accessibilityHint="Set color theme to system setting"
               />
               <SelectableBtn
-                selected={store.shell.colorMode === 'light'}
+                selected={persisted.colorMode === 'light'}
                 label="Light"
-                onSelect={() => store.shell.setColorMode('light')}
+                onSelect={() => persisted.setColorMode('light')}
                 accessibilityHint="Set color theme to light"
               />
               <SelectableBtn
-                selected={store.shell.colorMode === 'dark'}
+                selected={persisted.colorMode === 'dark'}
                 label="Dark"
                 right
-                onSelect={() => store.shell.setColorMode('dark')}
+                onSelect={() => persisted.setColorMode('dark')}
                 accessibilityHint="Set color theme to dark"
               />
             </View>
