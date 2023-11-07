@@ -5,6 +5,7 @@ import {schema, Schema} from '#/state/persisted/schema'
 import {migrate} from '#/state/persisted/legacy'
 import * as store from '#/state/persisted/store'
 import BroadcastChannel from '#/state/persisted/broadcast'
+import {isWeb} from '#/platform/detection'
 
 export type {Schema} from '#/state/persisted/schema'
 export {schema} from '#/state/persisted/schema'
@@ -110,6 +111,13 @@ export function Provider({
         _write(next)
         return next
       })
+
+      if (isWeb && typeof window !== 'undefined') {
+        const html = window.document.documentElement
+        // remove any other color mode classes
+        html.className = html.className.replace(/colorMode--\w+/g, '')
+        html.classList.add(`colorMode--${colorMode}`)
+      }
     },
     [_write, setState],
   )

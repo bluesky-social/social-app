@@ -74,7 +74,6 @@ export class RootStoreModel {
       session: this.session.serialize(),
       me: this.me.serialize(),
       onboarding: this.onboarding.serialize(),
-      shell: this.shell.serialize(),
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
       mutedThreads: this.mutedThreads.serialize(),
@@ -98,9 +97,6 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'session')) {
         this.session.hydrate(v.session)
-      }
-      if (hasProp(v, 'shell')) {
-        this.shell.hydrate(v.shell)
       }
       if (hasProp(v, 'preferences')) {
         this.preferences.hydrate(v.preferences)
