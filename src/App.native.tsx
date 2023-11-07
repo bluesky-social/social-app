@@ -70,7 +70,9 @@ const InnerApp = observer(function AppImpl() {
 })
 
 function App() {
-  const [persistedState, setPersistedState] = useState<Schema>(initialPersistedState)
+  const [persistedState, setPersistedState] = useState<Schema>(
+    initialPersistedState,
+  )
 
   React.useEffect(() => {
     initPersistedState().then(setPersistedState)
