@@ -5,7 +5,6 @@ import {schema, Schema} from '#/state/persisted/schema'
 import {migrate} from '#/state/persisted/legacy'
 import * as store from '#/state/persisted/store'
 import BroadcastChannel from '#/state/persisted/broadcast'
-import {isWeb} from '#/platform/detection'
 
 export type {Schema} from '#/state/persisted/schema'
 export {schema} from '#/state/persisted/schema'
@@ -34,13 +33,11 @@ export async function init() {
   }
 }
 
-const context = React.createContext<
-  Schema & {
-    setColorMode: (colorMode: Schema['colorMode']) => void
-  }
->({
-  ...schema,
-  setColorMode: () => {},
+export const PersistedContext = React.createContext<Schema>(schema)
+export const PersistedSetStateContext = React.createContext<{
+  setState: (fn: (prevState: Schema) => Schema) => void
+}>({
+  setState: () => {},
 })
 
 export function Provider({
@@ -100,36 +97,26 @@ export function Provider({
     }
   }, [])
 
-  /*
-   * Other state methods go below
-   */
-
-  const setColorMode = React.useCallback(
-    (colorMode: Schema['colorMode']) => {
+  const _setState = React.useCallback(
+    (fn: (prevState: Schema) => Schema) => {
       setState(s => {
-        const next = {...s, colorMode}
+        const next = fn(s)
         _write(next)
         return next
       })
-
-      if (isWeb && typeof window !== 'undefined') {
-        const html = window.document.documentElement
-        // remove any other color mode classes
-        html.className = html.className.replace(/colorMode--\w+/g, '')
-        html.classList.add(`colorMode--${colorMode}`)
-      }
     },
     [_write, setState],
   )
 
-  const ctx = {
-    ...state,
-    setColorMode,
-  }
-
-  return <context.Provider value={ctx}>{children}</context.Provider>
+  return (
+    <PersistedContext.Provider value={state}>
+      <PersistedSetStateContext.Provider value={{setState: _setState}}>
+        {children}
+      </PersistedSetStateContext.Provider>
+    </PersistedContext.Provider>
+  )
 }
 
 export function usePersisted() {
-  return React.useContext(context)
+  return React.useContext(PersistedContext)
 }
