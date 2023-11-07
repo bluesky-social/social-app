@@ -10,7 +10,6 @@ import {QueryClientProvider} from '@tanstack/react-query'
 
 import 'view/icons'
 
-import {withSentry} from 'lib/sentry'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -62,4 +61,4 @@ const App = observer(function AppImpl() {
   )
 })
 
-export default withSentry(App)
+export default App
