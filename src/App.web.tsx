@@ -10,7 +10,6 @@ import 'view/icons'
 
 import {
   Schema,
-  schema as initialPersistedState,
   Provider as PersistedStateProvider,
   init as initPersistedState,
   usePersisted,
@@ -60,9 +59,7 @@ const InnerApp = observer(function AppImpl() {
 })
 
 function App() {
-  const [persistedState, setPersistedState] = useState<Schema>(
-    initialPersistedState,
-  )
+  const [persistedState, setPersistedState] = useState<Schema>()
 
   React.useEffect(() => {
     initPersistedState().then(setPersistedState)
