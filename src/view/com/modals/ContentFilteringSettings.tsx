@@ -16,6 +16,7 @@ import {isIOS} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['90%']
 
@@ -24,14 +25,15 @@ export const Component = observer(
     const store = useStores()
     const {isMobile} = useWebMediaQueries()
     const pal = usePalette('default')
+    const {closeModal} = useModalControls()
 
     React.useEffect(() => {
       store.preferences.sync()
     }, [store])
 
     const onPressDone = React.useCallback(() => {
-      store.shell.closeModal()
-    }, [store])
+      closeModal()
+    }, [closeModal])
 
     return (
       <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
@@ -89,8 +91,9 @@ const AdultContentEnabledPref = observer(
   function AdultContentEnabledPrefImpl() {
     const store = useStores()
     const pal = usePalette('default')
+    const {openModal} = useModalControls()
 
-    const onSetAge = () => store.shell.openModal({name: 'birth-date-settings'})
+    const onSetAge = () => openModal({name: 'birth-date-settings'})
 
     const onToggleAdultContent = async () => {
       if (isIOS) {

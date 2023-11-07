@@ -13,6 +13,7 @@ import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
+import {useModalControls} from '#/state/modals'
 
 export const DesktopRightNav = observer(function DesktopRightNavImpl() {
   const store = useStores()
@@ -83,12 +84,13 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
 const InviteCodes = observer(function InviteCodesImpl() {
   const store = useStores()
   const pal = usePalette('default')
+  const {openModal} = useModalControls()
 
   const {invitesAvailable} = store.me
 
   const onPress = React.useCallback(() => {
-    store.shell.openModal({name: 'invite-codes'})
-  }, [store])
+    openModal({name: 'invite-codes'})
+  }, [openModal])
   return (
     <TouchableOpacity
       style={[styles.inviteCodes, pal.border]}

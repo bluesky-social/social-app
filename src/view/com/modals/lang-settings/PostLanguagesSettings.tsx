@@ -10,16 +10,18 @@ import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['100%']
 
 export const Component = observer(function PostLanguagesSettingsImpl() {
   const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const languages = React.useMemo(() => {
     const langs = LANGUAGES.filter(

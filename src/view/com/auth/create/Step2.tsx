@@ -10,8 +10,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
 import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {useStores} from 'state/index'
 import {isWeb} from 'platform/detection'
+import {useModalControls} from '#/state/modals'
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -28,11 +28,11 @@ export const Step2 = observer(function Step2Impl({
   model: CreateAccountModel
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {openModal} = useModalControls()
 
   const onPressWaitlist = React.useCallback(() => {
-    store.shell.openModal({name: 'waitlist'})
-  }, [store])
+    openModal({name: 'waitlist'})
+  }, [openModal])
 
   return (
     <View>

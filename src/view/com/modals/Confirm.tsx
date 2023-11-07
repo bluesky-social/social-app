@@ -6,13 +6,13 @@ import {
   View,
 } from 'react-native'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
-import type {ConfirmModal} from 'state/models/ui/shell'
+import type {ConfirmModal} from '#/state/modals'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
 
@@ -26,7 +26,7 @@ export function Component({
   cancelBtnText,
 }: ConfirmModal) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const onPress = async () => {
@@ -34,7 +34,7 @@ export function Component({
     setIsProcessing(true)
     try {
       await onPressConfirm()
-      store.shell.closeModal()
+      closeModal()
       return
     } catch (e: any) {
       setError(cleanError(e))

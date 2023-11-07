@@ -9,16 +9,18 @@ import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {LanguageToggle} from './LanguageToggle'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['100%']
 
 export function Component({}: {}) {
   const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const languages = React.useMemo(() => {
     const langs = LANGUAGES.filter(

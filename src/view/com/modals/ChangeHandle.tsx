@@ -22,6 +22,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['100%']
 
@@ -30,6 +31,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const {track} = useAnalytics()
+  const {closeModal} = useModalControls()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [retryDescribeTrigger, setRetryDescribeTrigger] = React.useState<any>(
@@ -85,8 +87,8 @@ export function Component({onChanged}: {onChanged: () => void}) {
   // events
   // =
   const onPressCancel = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
   const onPressRetryConnect = React.useCallback(
     () => setRetryDescribeTrigger({}),
     [setRetryDescribeTrigger],
@@ -110,7 +112,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
       await store.agent.updateHandle({
         handle: newHandle,
       })
-      store.shell.closeModal()
+      closeModal()
       onChanged()
     } catch (err: any) {
       setError(cleanError(err))
@@ -127,6 +129,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
     isCustom,
     onChanged,
     track,
+    closeModal,
   ])
 
   // rendering

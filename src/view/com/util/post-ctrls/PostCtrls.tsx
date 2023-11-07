@@ -16,6 +16,7 @@ import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {useModalControls} from '#/state/modals'
 
 interface PostCtrlsOpts {
   itemUri: string
@@ -51,6 +52,7 @@ interface PostCtrlsOpts {
 export function PostCtrls(opts: PostCtrlsOpts) {
   const store = useStores()
   const theme = useTheme()
+  const {closeModal} = useModalControls()
   const defaultCtrlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
@@ -58,17 +60,17 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     [theme],
   ) as StyleProp<ViewStyle>
   const onRepost = useCallback(() => {
-    store.shell.closeModal()
+    closeModal()
     if (!opts.isReposted) {
       Haptics.default()
       opts.onPressToggleRepost().catch(_e => undefined)
     } else {
       opts.onPressToggleRepost().catch(_e => undefined)
     }
-  }, [opts, store.shell])
+  }, [opts, closeModal])
 
   const onQuote = useCallback(() => {
-    store.shell.closeModal()
+    closeModal()
     store.shell.openComposer({
       quote: {
         uri: opts.itemUri,
@@ -86,6 +88,7 @@ export function PostCtrls(opts: PostCtrlsOpts) {
     opts.itemUri,
     opts.text,
     store.shell,
+    closeModal,
   ])
 
   const onPressToggleLikeWrapper = async () => {

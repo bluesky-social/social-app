@@ -17,6 +17,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {s} from 'lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export const ListsScreen = withAuthRequired(
@@ -26,6 +27,7 @@ export const ListsScreen = withAuthRequired(
     const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile} = useWebMediaQueries()
     const navigation = useNavigation<NavigationProp>()
+    const {openModal} = useModalControls()
 
     const listsLists: ListsListModel = React.useMemo(
       () => new ListsListModel(store, 'my-curatelists'),
@@ -40,7 +42,7 @@ export const ListsScreen = withAuthRequired(
     )
 
     const onPressNewList = React.useCallback(() => {
-      store.shell.openModal({
+      openModal({
         name: 'create-or-edit-list',
         purpose: 'app.bsky.graph.defs#curatelist',
         onSave: (uri: string) => {
@@ -53,7 +55,7 @@ export const ListsScreen = withAuthRequired(
           } catch {}
         },
       })
-    }, [store, navigation])
+    }, [openModal, navigation])
 
     return (
       <View style={s.hContentRegion} testID="listsScreen">

@@ -8,7 +8,7 @@ import {
   describeModerationCause,
   getProfileModerationCauses,
 } from 'lib/moderation'
-import {useStores} from 'state/index'
+import {useModalControls} from '#/state/modals'
 
 export function ProfileHeaderAlerts({
   moderation,
@@ -17,8 +17,8 @@ export function ProfileHeaderAlerts({
   moderation: ProfileModeration
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {openModal} = useModalControls()
 
   const causes = getProfileModerationCauses(moderation)
   if (!causes.length) {
@@ -34,7 +34,7 @@ export function ProfileHeaderAlerts({
             testID="profileHeaderAlert"
             key={desc.name}
             onPress={() => {
-              store.shell.openModal({
+              openModal({
                 name: 'moderation-details',
                 context: 'content',
                 moderation: {cause},

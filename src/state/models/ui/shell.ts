@@ -148,8 +148,6 @@ export class ShellUiModel {
 
   openModal() {}
 
-  closeModal() {}
-
   openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {
     this.rootStore.emitNavigation()
     this.isLightboxActive = true

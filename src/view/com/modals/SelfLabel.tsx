@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -10,6 +9,7 @@ import {isWeb} from 'platform/detection'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ScrollView} from 'view/com/modals/util'
+import {useModalControls} from '#/state/modals'
 
 const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
 
@@ -25,7 +25,7 @@ export const Component = observer(function Component({
   onChange: (labels: string[]) => void
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [selected, setSelected] = useState(labels)
 
@@ -143,7 +143,7 @@ export const Component = observer(function Component({
         <TouchableOpacity
           testID="confirmBtn"
           onPress={() => {
-            store.shell.closeModal()
+            closeModal()
           }}
           style={styles.btn}
           accessibilityRole="button"

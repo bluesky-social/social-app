@@ -5,7 +5,7 @@ import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
-import {useStores} from 'state/index'
+import {useModalControls} from '#/state/modals'
 
 export function PostAlerts({
   moderation,
@@ -15,8 +15,8 @@ export function PostAlerts({
   includeMute?: boolean
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {openModal} = useModalControls()
 
   const shouldAlert = !!moderation.cause && moderation.alert
   if (!shouldAlert) {
@@ -27,7 +27,7 @@ export function PostAlerts({
   return (
     <Pressable
       onPress={() => {
-        store.shell.openModal({
+        openModal({
           name: 'moderation-details',
           context: 'content',
           moderation,

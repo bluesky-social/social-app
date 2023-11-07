@@ -14,6 +14,7 @@ import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 import {ReportReasonOptions} from './ReasonOptions'
 import {CollectionId} from './types'
+import {useModalControls} from '#/state/modals'
 
 const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
@@ -37,6 +38,7 @@ type ReportComponentProps =
 
 export function Component(content: ReportComponentProps) {
   const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
@@ -60,7 +62,7 @@ export function Component(content: ReportComponentProps) {
     try {
       if (issue === '__copyright__') {
         Linking.openURL(DMCA_LINK)
-        store.shell.closeModal()
+        closeModal()
         return
       }
       const $type = !isAccountReport
@@ -76,7 +78,7 @@ export function Component(content: ReportComponentProps) {
       })
       Toast.show("Thank you for your report! We'll look into it promptly.")
 
-      store.shell.closeModal()
+      closeModal()
       return
     } catch (e: any) {
       setError(cleanError(e))

@@ -18,7 +18,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {describeModerationCause} from 'lib/moderation'
-import {useStores} from 'state/index'
+import {useModalControls} from '#/state/modals'
 
 export function ScreenHider({
   testID,
@@ -34,12 +34,12 @@ export function ScreenHider({
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
-  const store = useStores()
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
+  const {openModal} = useModalControls()
 
   if (!moderation.blur || override) {
     return (
@@ -72,7 +72,7 @@ export function ScreenHider({
         .{' '}
         <TouchableWithoutFeedback
           onPress={() => {
-            store.shell.openModal({
+            openModal({
               name: 'moderation-details',
               context: 'account',
               moderation,

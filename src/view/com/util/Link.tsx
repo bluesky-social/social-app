@@ -21,7 +21,6 @@ import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
-import {useStores, RootStoreModel} from 'state/index'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
@@ -31,6 +30,7 @@ import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
+import {useModalControls} from '#/state/modals'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -60,17 +60,17 @@ export const Link = memo(function Link({
   anchorNoUnderline,
   ...props
 }: Props) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const navigation = useNavigation<NavigationProp>()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
 
   const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
-        return onPressInner(store, navigation, sanitizeUrl(href), e)
+        return onPressInner(closeModal, navigation, sanitizeUrl(href), e)
       }
     },
-    [store, navigation, href],
+    [closeModal, navigation, href],
   )
 
   if (noFeedback) {
@@ -160,8 +160,8 @@ export const TextLink = memo(function TextLink({
   warnOnMismatchingLabel?: boolean
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
-  const store = useStores()
   const navigation = useNavigation<NavigationProp>()
+  const {openModal, closeModal} = useModalControls()
 
   if (warnOnMismatchingLabel && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
@@ -174,7 +174,7 @@ export const TextLink = memo(function TextLink({
         linkRequiresWarning(href, typeof text === 'string' ? text : '')
       if (requiresWarning) {
         e?.preventDefault?.()
-        store.shell.openModal({
+        openModal({
           name: 'link-warning',
           text: typeof text === 'string' ? text : '',
           href,
@@ -185,9 +185,17 @@ export const TextLink = memo(function TextLink({
         // @ts-ignore function signature differs by platform -prf
         return onPress()
       }
-      return onPressInner(store, navigation, sanitizeUrl(href), e)
+      return onPressInner(closeModal, navigation, sanitizeUrl(href), e)
     },
-    [onPress, store, navigation, href, text, warnOnMismatchingLabel],
+    [
+      onPress,
+      closeModal,
+      openModal,
+      navigation,
+      href,
+      text,
+      warnOnMismatchingLabel,
+    ],
   )
   const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)
@@ -285,7 +293,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
 // needed customizations
 // -prf
 function onPressInner(
-  store: RootStoreModel,
+  closeModal = () => {},
   navigation: NavigationProp,
   href: string,
   e?: Event,
@@ -318,7 +326,7 @@ function onPressInner(
     if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
       Linking.openURL(href)
     } else {
-      store.shell.closeModal() // close any active modals
+      closeModal() // close any active modals
 
       // @ts-ignore we're not able to type check on this one -prf
       navigation.dispatch(StackActions.push(...router.matchPath(href)))

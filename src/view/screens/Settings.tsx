@@ -47,6 +47,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -68,6 +69,7 @@ export const SettingsScreen = withAuthRequired(
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
       store.agent,
     )
+    const {openModal} = useModalControls()
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -103,7 +105,7 @@ export const SettingsScreen = withAuthRequired(
 
     const onPressChangeHandle = React.useCallback(() => {
       track('Settings:ChangeHandleButtonClicked')
-      store.shell.openModal({
+      openModal({
         name: 'change-handle',
         onChanged() {
           setIsSwitching(true)
@@ -121,12 +123,12 @@ export const SettingsScreen = withAuthRequired(
           )
         },
       })
-    }, [track, store, setIsSwitching])
+    }, [track, store, openModal, setIsSwitching])
 
     const onPressInviteCodes = React.useCallback(() => {
       track('Settings:InvitecodesButtonClicked')
-      store.shell.openModal({name: 'invite-codes'})
-    }, [track, store])
+      openModal({name: 'invite-codes'})
+    }, [track, openModal])
 
     const onPressLanguageSettings = React.useCallback(() => {
       navigation.navigate('LanguageSettings')
@@ -138,8 +140,8 @@ export const SettingsScreen = withAuthRequired(
     }, [track, store])
 
     const onPressDeleteAccount = React.useCallback(() => {
-      store.shell.openModal({name: 'delete-account'})
-    }, [store])
+      openModal({name: 'delete-account'})
+    }, [openModal])
 
     const onPressResetPreferences = React.useCallback(async () => {
       await store.preferences.reset()
@@ -215,8 +217,7 @@ export const SettingsScreen = withAuthRequired(
                 <Text type="lg" style={pal.text}>
                   {store.session.currentSession?.email}{' '}
                 </Text>
-                <Link
-                  onPress={() => store.shell.openModal({name: 'change-email'})}>
+                <Link onPress={() => openModal({name: 'change-email'})}>
                   <Text type="lg" style={pal.link}>
                     Change
                   </Text>
@@ -226,10 +227,7 @@ export const SettingsScreen = withAuthRequired(
                 <Text type="lg-medium" style={pal.text}>
                   Birthday:{' '}
                 </Text>
-                <Link
-                  onPress={() =>
-                    store.shell.openModal({name: 'birth-date-settings'})
-                  }>
+                <Link onPress={() => openModal({name: 'birth-date-settings'})}>
                   <Text type="lg" style={pal.link}>
                     Show
                   </Text>
@@ -635,6 +633,7 @@ const EmailConfirmationNotice = observer(
     const palInverted = usePalette('inverted')
     const store = useStores()
     const {isMobile} = useWebMediaQueries()
+    const {openModal} = useModalControls()
 
     if (!store.session.emailNeedsConfirmation) {
       return null
@@ -670,7 +669,7 @@ const EmailConfirmationNotice = observer(
               accessibilityRole="button"
               accessibilityLabel="Verify my email"
               accessibilityHint=""
-              onPress={() => store.shell.openModal({name: 'verify-email'})}>
+              onPress={() => openModal({name: 'verify-email'})}>
               <FontAwesomeIcon
                 icon="envelope"
                 color={palInverted.colors.text}

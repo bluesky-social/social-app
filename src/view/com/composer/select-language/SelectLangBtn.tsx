@@ -15,10 +15,12 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
 import {codeToLanguageName} from '../../../../locale/helpers'
+import {useModalControls} from '#/state/modals'
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
   const store = useStores()
+  const {openModal} = useModalControls()
 
   const onPressMore = useCallback(async () => {
     if (isNative) {
@@ -26,8 +28,8 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         Keyboard.dismiss()
       }
     }
-    store.shell.openModal({name: 'post-languages-settings'})
-  }, [store])
+    openModal({name: 'post-languages-settings'})
+  }, [openModal])
 
   const postLanguagesPref = store.preferences.postLanguages
   const postLanguagePref = store.preferences.postLanguage
