@@ -8,7 +8,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {SendReportButton} from './SendReportButton'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function InputIssueDetails({
   details,
@@ -24,6 +25,7 @@ export function InputIssueDetails({
   isProcessing: boolean
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
 
   return (
@@ -36,7 +38,7 @@ export function InputIssueDetails({
         style={[s.mb10, styles.backBtn]}
         onPress={goBack}
         accessibilityRole="button"
-        accessibilityLabel="Add details"
+        accessibilityLabel={_(msg`Add details`)}
         accessibilityHint="Add more details to your report">
         <FontAwesomeIcon size={18} icon="angle-left" style={[pal.link]} />
         <Text style={[pal.text, s.f18, pal.link]}>
@@ -45,7 +47,7 @@ export function InputIssueDetails({
       </TouchableOpacity>
       <View style={[pal.btn, styles.detailsInputContainer]}>
         <TextInput
-          accessibilityLabel="Text input field"
+          accessibilityLabel={_(msg`Text input field`)}
           accessibilityHint="Enter a reason for reporting this post."
           placeholder="Enter a reason or any other details here."
           placeholderTextColor={pal.textLight.color}

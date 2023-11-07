@@ -16,7 +16,8 @@ import {isIOS} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['90%']
 
@@ -25,6 +26,7 @@ export const Component = observer(
     const store = useStores()
     const {isMobile} = useWebMediaQueries()
     const pal = usePalette('default')
+    const {_} = useLingui()
 
     React.useEffect(() => {
       store.preferences.sync()
@@ -72,7 +74,7 @@ export const Component = observer(
             testID="sendReportBtn"
             onPress={onPressDone}
             accessibilityRole="button"
-            accessibilityLabel="Done"
+            accessibilityLabel={_(msg`Done`)}
             accessibilityHint="">
             <LinearGradient
               colors={[gradients.blueLight.start, gradients.blueLight.end]}

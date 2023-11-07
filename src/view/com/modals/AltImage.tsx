@@ -20,6 +20,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useStores} from 'state/index'
 import {isAndroid, isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 export const snapPoints = ['fullscreen']
 
@@ -31,6 +33,7 @@ export function Component({image}: Props) {
   const pal = usePalette('default')
   const store = useStores()
   const theme = useTheme()
+  const {_} = useLingui()
   const [altText, setAltText] = useState(image.altText)
   const windim = useWindowDimensions()
 
@@ -90,7 +93,7 @@ export function Component({image}: Props) {
             placeholderTextColor={pal.colors.textLight}
             value={altText}
             onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-            accessibilityLabel="Image alt text"
+            accessibilityLabel={_(msg`Image alt text`)}
             accessibilityHint=""
             accessibilityLabelledBy="imageAltText"
             autoFocus
@@ -99,7 +102,7 @@ export function Component({image}: Props) {
             <TouchableOpacity
               testID="altTextImageSaveBtn"
               onPress={onPressSave}
-              accessibilityLabel="Save alt text"
+              accessibilityLabel={_(msg`Save alt text`)}
               accessibilityHint={`Saves alt text, which reads: ${altText}`}
               accessibilityRole="button">
               <LinearGradient
@@ -108,7 +111,7 @@ export function Component({image}: Props) {
                 end={{x: 1, y: 1}}
                 style={[styles.button]}>
                 <Text type="button-lg" style={[s.white, s.bold]}>
-                  Save
+                  <Trans>Save</Trans>
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -116,12 +119,12 @@ export function Component({image}: Props) {
               testID="altTextImageCancelBtn"
               onPress={onPressCancel}
               accessibilityRole="button"
-              accessibilityLabel="Cancel add image alt text"
+              accessibilityLabel={_(msg`Cancel add image alt text`)}
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.button]}>
                 <Text type="button-lg" style={[pal.textLight]}>
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Text>
               </View>
             </TouchableOpacity>

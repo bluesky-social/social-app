@@ -16,6 +16,8 @@ import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {UserPreviewLink} from './UserPreviewLink'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export type UserAvatarType = 'user' | 'algo' | 'list'
 
@@ -184,6 +186,7 @@ export function EditableUserAvatar({
 }: EditableUserAvatarProps) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
@@ -294,7 +297,7 @@ export function EditableUserAvatar({
     <NativeDropdown
       testID="changeAvatarBtn"
       items={dropdownItems}
-      accessibilityLabel="Image options"
+      accessibilityLabel={_(msg`Image options`)}
       accessibilityHint="">
       {avatar ? (
         <HighPriorityImage

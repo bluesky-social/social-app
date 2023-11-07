@@ -15,10 +15,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
 import {codeToLanguageName} from '../../../../locale/helpers'
+import {t, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
 
   const onPressMore = useCallback(async () => {
     if (isNative) {
@@ -74,11 +77,11 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
     }
 
     return [
-      {heading: true, label: 'Post language'},
+      {heading: true, label: t`Post language`},
       ...arr.slice(0, 6),
       {sep: true},
       {
-        label: 'Other...',
+        label: t`Other...`,
         onPress: onPressMore,
       },
     ]
@@ -91,7 +94,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
-      accessibilityLabel="Language selection"
+      accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>

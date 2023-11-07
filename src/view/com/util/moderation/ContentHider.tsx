@@ -7,6 +7,8 @@ import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function ContentHider({
   testID,
@@ -24,6 +26,7 @@ export function ContentHider({
 }>) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
 
@@ -69,7 +72,7 @@ export function ContentHider({
             })
           }}
           accessibilityRole="button"
-          accessibilityLabel="Learn more about this warning"
+          accessibilityLabel={_(msg`Learn more about this warning`)}
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />
         </Pressable>

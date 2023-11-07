@@ -14,7 +14,8 @@ import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 import {ReportReasonOptions} from './ReasonOptions'
 import {CollectionId} from './types'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
@@ -147,6 +148,7 @@ const SelectIssue = ({
   atUri: AtUri | null
 }) => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const collectionName = getCollectionNameForReport(atUri)
   const onSelectIssue = (v: string) => setIssue(v)
   const goToDetails = () => {
@@ -163,7 +165,7 @@ const SelectIssue = ({
         <Trans>Report {collectionName}</Trans>
       </Text>
       <Text style={[pal.textLight, styles.description]}>
-        What is the issue with this {collectionName}?
+        <Trans>What is the issue with this {collectionName}?</Trans>
       </Text>
       <View style={{marginBottom: 10}}>
         <ReportReasonOptions
@@ -185,7 +187,7 @@ const SelectIssue = ({
             style={styles.addDetailsBtn}
             onPress={goToDetails}
             accessibilityRole="button"
-            accessibilityLabel="Add details"
+            accessibilityLabel={_(msg`Add details`)}
             accessibilityHint="Add more details to your report">
             <Text style={[s.f18, pal.link]}>
               <Trans>Add details to report</Trans>

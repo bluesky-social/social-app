@@ -30,13 +30,15 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
   observer(function ProfileScreenImpl({route}: Props) {
     const store = useStores()
     const {screen, track} = useAnalytics()
+    const {_} = useLingui()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
     const name = route.params.name === 'me' ? store.me.did : route.params.name
 
@@ -299,7 +301,7 @@ export const ProfileScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="New post"
+          accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
         />
       </ScreenHider>

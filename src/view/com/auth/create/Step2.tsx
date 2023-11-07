@@ -12,7 +12,8 @@ import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {useStores} from 'state/index'
 import {isWeb} from 'platform/detection'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -30,6 +31,7 @@ export const Step2 = observer(function Step2Impl({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
 
   const onPressWaitlist = React.useCallback(() => {
     store.shell.openModal({name: 'waitlist'})
@@ -37,7 +39,7 @@ export const Step2 = observer(function Step2Impl({
 
   return (
     <View>
-      <StepHeader step="2" title="Your account" />
+      <StepHeader step="2" title={_(msg`Your account`)} />
 
       {model.isInviteCodeRequired && (
         <View style={s.pb20}>
@@ -47,11 +49,11 @@ export const Step2 = observer(function Step2Impl({
           <TextInput
             testID="inviteCodeInput"
             icon="ticket"
-            placeholder="Required for this provider"
+            placeholder={_(msg`Required for this provider`)}
             value={model.inviteCode}
             editable
             onChange={model.setInviteCode}
-            accessibilityLabel="Invite code"
+            accessibilityLabel={_(msg`Invite code`)}
             accessibilityHint="Input invite code to proceed"
           />
         </View>
@@ -62,7 +64,7 @@ export const Step2 = observer(function Step2Impl({
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
-            accessibilityLabel="Join the waitlist."
+            accessibilityLabel={_(msg`Join the waitlist.`)}
             accessibilityHint="">
             <View style={styles.touchable}>
               <Text style={pal.link}>
@@ -75,16 +77,16 @@ export const Step2 = observer(function Step2Impl({
         <>
           <View style={s.pb20}>
             <Text type="md-medium" style={[pal.text, s.mb2]} nativeID="email">
-              Email address
+              <Trans>Email address</Trans>
             </Text>
             <TextInput
               testID="emailInput"
               icon="envelope"
-              placeholder="Enter your email address"
+              placeholder={_(msg`Enter your email address`)}
               value={model.email}
               editable
               onChange={model.setEmail}
-              accessibilityLabel="Email"
+              accessibilityLabel={_(msg`Email`)}
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
             />
@@ -95,17 +97,17 @@ export const Step2 = observer(function Step2Impl({
               type="md-medium"
               style={[pal.text, s.mb2]}
               nativeID="password">
-              Password
+              <Trans>Password</Trans>
             </Text>
             <TextInput
               testID="passwordInput"
               icon="lock"
-              placeholder="Choose your password"
+              placeholder={_(msg`Choose your password`)}
               value={model.password}
               editable
               secureTextEntry
               onChange={model.setPassword}
-              accessibilityLabel="Password"
+              accessibilityLabel={_(msg`Password`)}
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
             />
@@ -116,7 +118,7 @@ export const Step2 = observer(function Step2Impl({
               type="md-medium"
               style={[pal.text, s.mb2]}
               nativeID="birthDate">
-              Your birth date
+              <Trans>Your birth date</Trans>
             </Text>
             <DateInput
               testID="birthdayInput"
@@ -125,7 +127,7 @@ export const Step2 = observer(function Step2Impl({
               buttonType="default-light"
               buttonStyle={[pal.border, styles.dateInputButton]}
               buttonLabelType="lg"
-              accessibilityLabel="Birthday"
+              accessibilityLabel={_(msg`Birthday`)}
               accessibilityHint="Enter your birth date"
               accessibilityLabelledBy="birthDate"
             />

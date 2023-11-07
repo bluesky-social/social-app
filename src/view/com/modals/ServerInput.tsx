@@ -12,7 +12,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['80%']
 
@@ -21,6 +22,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
   const pal = usePalette('default')
   const store = useStores()
   const [customUrl, setCustomUrl] = useState<string>('')
+  const {_} = useLingui()
 
   const doSelect = (url: string) => {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
@@ -33,7 +35,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
   return (
     <View style={[pal.view, s.flex1]} testID="serverInputModal">
       <Text type="2xl-bold" style={[pal.text, s.textCenter]}>
-        Choose Service
+        <Trans>Choose Service</Trans>
       </Text>
       <ScrollView style={styles.inner}>
         <View style={styles.group}>
@@ -70,7 +72,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
             accessibilityRole="button"
-            accessibilityLabel="Select Bluesky Social"
+            accessibilityLabel={_(msg`Select Bluesky Social`)}
             accessibilityHint="Sets Bluesky Social as your service provider">
             <Text style={styles.btnText}>
               <Trans>Bluesky.Social</Trans>
@@ -97,7 +99,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               keyboardAppearance={theme.colorScheme}
               value={customUrl}
               onChangeText={setCustomUrl}
-              accessibilityLabel="Custom domain"
+              accessibilityLabel={_(msg`Custom domain`)}
               // TODO: Simplify this wording further to be understandable by everyone
               accessibilityHint="Use your domain as your Bluesky client service provider"
             />

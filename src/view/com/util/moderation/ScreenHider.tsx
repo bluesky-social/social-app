@@ -19,6 +19,8 @@ import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {describeModerationCause} from 'lib/moderation'
 import {useStores} from 'state/index'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function ScreenHider({
   testID,
@@ -37,6 +39,7 @@ export function ScreenHider({
   const store = useStores()
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
+  const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -62,10 +65,10 @@ export function ScreenHider({
         </View>
       </View>
       <Text type="title-2xl" style={[styles.title, pal.text]}>
-        Content Warning
+        <Trans>Content Warning</Trans>
       </Text>
       <Text type="2xl" style={[styles.description, pal.textLight]}>
-        This {screenDescription} has been flagged:{' '}
+        <Trans>This {screenDescription} has been flagged: </Trans>
         <Text type="2xl-medium" style={pal.text}>
           {desc.name}
         </Text>
@@ -79,10 +82,10 @@ export function ScreenHider({
             })
           }}
           accessibilityRole="button"
-          accessibilityLabel="Learn more about this warning"
+          accessibilityLabel={_(msg`Learn more about this warning`)}
           accessibilityHint="">
           <Text type="2xl" style={pal.link}>
-            Learn More
+            <Trans>Learn More</Trans>
           </Text>
         </TouchableWithoutFeedback>
       </Text>
@@ -99,7 +102,7 @@ export function ScreenHider({
           }}
           style={styles.btn}>
           <Text type="button-lg" style={pal.textInverted}>
-            Go back
+            <Trans>Go back</Trans>
           </Text>
         </Button>
         {!moderation.noOverride && (
@@ -108,7 +111,7 @@ export function ScreenHider({
             onPress={() => setOverride(v => !v)}
             style={styles.btn}>
             <Text type="button-lg" style={pal.text}>
-              Show anyway
+              <Trans>Show anyway</Trans>
             </Text>
           </Button>
         )}

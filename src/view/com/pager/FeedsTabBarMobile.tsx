@@ -15,12 +15,15 @@ import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerMinimalShellTransform} = useMinimalShellMode()
@@ -44,7 +47,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
             accessibilityRole="button"
-            accessibilityLabel="Open navigation"
+            accessibilityLabel={_(msg`Open navigation`)}
             accessibilityHint="Access profile and other navigation links"
             hitSlop={HITSLOP_10}>
             <FontAwesomeIcon
@@ -63,7 +66,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             href="/settings/home-feed"
             hitSlop={HITSLOP_10}
             accessibilityRole="button"
-            accessibilityLabel="Home Feed Preferences"
+            accessibilityLabel={_(msg`Home Feed Preferences`)}
             accessibilityHint="">
             <FontAwesomeIcon
               icon="sliders"

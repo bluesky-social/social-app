@@ -12,6 +12,8 @@ import {HelpTip} from '../util/HelpTip'
 import {TextInput} from '../util/TextInput'
 import {Button} from 'view/com/util/forms/Button'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
@@ -27,6 +29,7 @@ export const Step1 = observer(function Step1Impl({
 }) {
   const pal = usePalette('default')
   const [isDefaultSelected, setIsDefaultSelected] = React.useState(true)
+  const {_} = useLingui()
 
   const onPressDefault = React.useCallback(() => {
     setIsDefaultSelected(true)
@@ -63,9 +66,9 @@ export const Step1 = observer(function Step1Impl({
 
   return (
     <View>
-      <StepHeader step="1" title="Your hosting provider" />
+      <StepHeader step="1" title={_(msg`Your hosting provider`)} />
       <Text style={[pal.text, s.mb10]}>
-        This is the service that keeps you online.
+        <Trans>This is the service that keeps you online.</Trans>
       </Text>
       <Option
         testID="blueskyServerBtn"
@@ -81,17 +84,17 @@ export const Step1 = observer(function Step1Impl({
         onPress={onPressOther}>
         <View style={styles.otherForm}>
           <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>
-            Enter the address of your provider:
+            <Trans>Enter the address of your provider:</Trans>
           </Text>
           <TextInput
             testID="customServerInput"
             icon="globe"
-            placeholder="Hosting provider address"
+            placeholder={_(msg`Hosting provider address`)}
             value={model.serviceUrl}
             editable
             onChange={onChangeServiceUrl}
             accessibilityHint="Input hosting provider address"
-            accessibilityLabel="Hosting provider address"
+            accessibilityLabel={_(msg`Hosting provider address`)}
             accessibilityLabelledBy="addressProvider"
           />
           {LOGIN_INCLUDE_DEV_SERVERS && (
@@ -100,13 +103,13 @@ export const Step1 = observer(function Step1Impl({
                 testID="stagingServerBtn"
                 type="default"
                 style={s.mr5}
-                label="Staging"
+                label={_(msg`Staging`)}
                 onPress={() => onDebugChangeServiceUrl(STAGING_SERVICE)}
               />
               <Button
                 testID="localDevServerBtn"
                 type="default"
-                label="Dev Server"
+                label={_(msg`Dev Server`)}
                 onPress={() => onDebugChangeServiceUrl(LOCAL_DEV_SERVICE)}
               />
             </View>
@@ -116,7 +119,7 @@ export const Step1 = observer(function Step1Impl({
       {model.error ? (
         <ErrorMessage message={model.error} style={styles.error} />
       ) : (
-        <HelpTip text="You can change hosting providers at any time." />
+        <HelpTip text={_(msg`You can change hosting providers at any time.`)} />
       )}
     </View>
   )

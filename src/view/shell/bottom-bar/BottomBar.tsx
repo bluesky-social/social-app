@@ -24,6 +24,8 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -32,6 +34,7 @@ export const BottomBar = observer(function BottomBarImpl({
 }: BottomTabBarProps) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
@@ -104,7 +107,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressHome}
         accessibilityRole="tab"
-        accessibilityLabel="Home"
+        accessibilityLabel={_(msg`Home`)}
         accessibilityHint=""
       />
       <Btn
@@ -126,7 +129,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressSearch}
         accessibilityRole="search"
-        accessibilityLabel="Search"
+        accessibilityLabel={_(msg`Search`)}
         accessibilityHint=""
       />
       <Btn
@@ -148,7 +151,7 @@ export const BottomBar = observer(function BottomBarImpl({
         }
         onPress={onPressFeeds}
         accessibilityRole="tab"
-        accessibilityLabel="Feeds"
+        accessibilityLabel={_(msg`Feeds`)}
         accessibilityHint=""
       />
       <Btn
@@ -172,7 +175,7 @@ export const BottomBar = observer(function BottomBarImpl({
         notificationCount={notifications.unreadCountLabel}
         accessible={true}
         accessibilityRole="tab"
-        accessibilityLabel="Notifications"
+        accessibilityLabel={_(msg`Notifications`)}
         accessibilityHint={
           notifications.unreadCountLabel === ''
             ? ''
@@ -214,7 +217,7 @@ export const BottomBar = observer(function BottomBarImpl({
         onPress={onPressProfile}
         onLongPress={onLongPressProfile}
         accessibilityRole="tab"
-        accessibilityLabel="Profile"
+        accessibilityLabel={_(msg`Profile`)}
         accessibilityHint=""
       />
     </Animated.View>

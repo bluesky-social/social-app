@@ -44,7 +44,8 @@ import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -105,6 +106,7 @@ export const ProfileListScreenInner = observer(
     listOwnerDid,
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
+    const {_} = useLingui()
     const {rkey} = route.params
     const feedSectionRef = React.useRef<SectionRef>(null)
     const aboutSectionRef = React.useRef<SectionRef>(null)
@@ -205,7 +207,7 @@ export const ProfileListScreenInner = observer(
               />
             }
             accessibilityRole="button"
-            accessibilityLabel="New post"
+            accessibilityLabel={_(msg`New post`)}
             accessibilityHint=""
           />
         </View>
@@ -243,7 +245,7 @@ export const ProfileListScreenInner = observer(
               />
             }
             accessibilityRole="button"
-            accessibilityLabel="New post"
+            accessibilityLabel={_(msg`New post`)}
             accessibilityHint=""
           />
         </View>
@@ -268,6 +270,7 @@ const Header = observer(function HeaderImpl({
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const store = useStores()
+  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const onTogglePinned = useCallback(async () => {
@@ -523,7 +526,7 @@ const Header = observer(function HeaderImpl({
           <NativeDropdown
             testID="subscribeBtn"
             items={subscribeDropdownItems}
-            accessibilityLabel="Subscribe to this list"
+            accessibilityLabel={_(msg`Subscribe to this list`)}
             accessibilityHint="">
             <View style={[palInverted.view, styles.btn]}>
               <Text style={palInverted.text}>
@@ -536,7 +539,7 @@ const Header = observer(function HeaderImpl({
       <NativeDropdown
         testID="headerDropdownBtn"
         items={dropdownItems}
-        accessibilityLabel="More options"
+        accessibilityLabel={_(msg`More options`)}
         accessibilityHint="">
         <View style={[pal.viewLight, styles.btn]}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
@@ -622,6 +625,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     ref,
   ) {
     const pal = usePalette('default')
+    const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const scrollElRef = React.useRef<FlatList>(null)
 
@@ -660,7 +664,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 testID="listDescriptionEmpty"
                 type="lg"
                 style={[{fontStyle: 'italic'}, pal.textLight]}>
-                No description
+                <Trans>No description</Trans>
               </Text>
             )}
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
@@ -693,7 +697,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
               <Pressable
                 testID="addUserBtn"
                 accessibilityRole="button"
-                accessibilityLabel="Add a user to this list"
+                accessibilityLabel={_(msg`Add a user to this list`)}
                 accessibilityHint=""
                 onPress={onPressAddUser}
                 style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
@@ -719,6 +723,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       isCurateList,
       isOwner,
       onPressAddUser,
+      _,
     ])
 
     const renderEmptyState = useCallback(() => {
@@ -758,6 +763,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
 function ErrorScreen({error}: {error: string}) {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
@@ -779,7 +785,7 @@ function ErrorScreen({error}: {error: string}) {
         },
       ]}>
       <Text type="title-lg" style={[pal.text, s.mb10]}>
-        Could not load list
+        <Trans>Could not load list</Trans>
       </Text>
       <Text type="md" style={[pal.text, s.mb20]}>
         {error}
@@ -788,12 +794,12 @@ function ErrorScreen({error}: {error: string}) {
       <View style={{flexDirection: 'row'}}>
         <Button
           type="default"
-          accessibilityLabel="Go Back"
+          accessibilityLabel={_(msg`Go Back`)}
           accessibilityHint="Return to previous page"
           onPress={onPressBack}
           style={{flexShrink: 1}}>
           <Text type="button" style={pal.text}>
-            Go Back
+            <Trans>Go Back</Trans>
           </Text>
         </Button>
       </View>

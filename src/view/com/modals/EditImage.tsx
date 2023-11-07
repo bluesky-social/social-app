@@ -19,7 +19,8 @@ import {Slider} from '@miblanchard/react-native-slider'
 import {MaterialIcons} from '@expo/vector-icons'
 import {observer} from 'mobx-react-lite'
 import {getKeys} from 'lib/type-assertions'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['80%']
 
@@ -54,6 +55,7 @@ export const Component = observer(function EditImageImpl({
   const pal = usePalette('default')
   const theme = useTheme()
   const store = useStores()
+  const {_} = useLingui()
   const windowDimensions = useWindowDimensions()
   const {isMobile} = useWebMediaQueries()
 
@@ -231,7 +233,7 @@ export const Component = observer(function EditImageImpl({
         <View>
           {!isMobile ? (
             <Text type="sm-bold" style={pal.text}>
-              Ratios
+              <Trans>Ratios</Trans>
             </Text>
           ) : null}
           <View style={imgControlStyles}>
@@ -266,7 +268,7 @@ export const Component = observer(function EditImageImpl({
           </View>
           {!isMobile ? (
             <Text type="sm-bold" style={[pal.text, styles.subsection]}>
-              Transformations
+              <Trans>Transformations</Trans>
             </Text>
           ) : null}
           <View style={imgControlStyles}>
@@ -294,7 +296,7 @@ export const Component = observer(function EditImageImpl({
       </View>
       <View style={[styles.gap18, styles.bottomSection, pal.border]}>
         <Text type="sm-bold" style={pal.text} nativeID="alt-text">
-          Accessibility
+          <Trans>Accessibility</Trans>
         </Text>
         <TextInput
           testID="altTextImageInput"
@@ -310,7 +312,7 @@ export const Component = observer(function EditImageImpl({
           multiline
           value={altText}
           onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-          accessibilityLabel="Alt text"
+          accessibilityLabel={_(msg`Alt text`)}
           accessibilityHint=""
           accessibilityLabelledBy="alt-text"
         />
@@ -318,7 +320,7 @@ export const Component = observer(function EditImageImpl({
       <View style={styles.btns}>
         <Pressable onPress={onPressCancel} accessibilityRole="button">
           <Text type="xl" style={pal.link}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Text>
         </Pressable>
         <Pressable onPress={onPressSave} accessibilityRole="button">
@@ -328,7 +330,7 @@ export const Component = observer(function EditImageImpl({
             end={{x: 1, y: 1}}
             style={[styles.btn]}>
             <Text type="xl-medium" style={s.white}>
-              Done
+              <Trans>Done</Trans>
             </Text>
           </LinearGradient>
         </Pressable>

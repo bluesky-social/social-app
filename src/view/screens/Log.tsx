@@ -12,6 +12,8 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getEntries} from '#/logger/logDump'
 import {ago} from 'lib/strings/time'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export const LogScreen = observer(function Log({}: NativeStackScreenProps<
   CommonNavigatorParams,
@@ -19,6 +21,7 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
 >) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const [expanded, setExpanded] = React.useState<string[]>([])
 
   useFocusEffect(
@@ -47,7 +50,7 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
                 <TouchableOpacity
                   style={[styles.entry, pal.border, pal.view]}
                   onPress={toggler(entry.id)}
-                  accessibilityLabel="View debug entry"
+                  accessibilityLabel={_(msg`View debug entry`)}
                   accessibilityHint="Opens additional details for a debug entry">
                   {entry.level === 'debug' ? (
                     <FontAwesomeIcon icon="info" />

@@ -8,7 +8,8 @@ import {
 } from 'react-native'
 import {Text} from '../../util/text/Text'
 import {s, gradients, colors} from 'lib/styles'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function SendReportButton({
   onPress,
@@ -17,6 +18,7 @@ export function SendReportButton({
   onPress: () => void
   isProcessing: boolean
 }) {
+  const {_} = useLingui()
   // loading state
   // =
   if (isProcessing) {
@@ -32,7 +34,7 @@ export function SendReportButton({
       style={s.mt10}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel="Report post"
+      accessibilityLabel={_(msg`Report post`)}
       accessibilityHint={`Reports post with reason and details`}>
       <LinearGradient
         colors={[gradients.blueLight.start, gradients.blueLight.end]}

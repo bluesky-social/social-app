@@ -9,10 +9,14 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 import * as Toast from '../../com/util/Toast'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function AccountDropdownBtn({handle}: {handle: string}) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   const items: DropdownItem[] = [
     {
       label: 'Remove account',
@@ -34,7 +38,7 @@ export function AccountDropdownBtn({handle}: {handle: string}) {
       <NativeDropdown
         testID="accountSettingsDropdownBtn"
         items={items}
-        accessibilityLabel="Account options"
+        accessibilityLabel={_(msg`Account options`)}
         accessibilityHint="">
         <FontAwesomeIcon
           icon="ellipsis-h"

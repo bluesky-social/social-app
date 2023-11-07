@@ -9,6 +9,8 @@ import {
   getProfileModerationCauses,
 } from 'lib/moderation'
 import {useStores} from 'state/index'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function ProfileHeaderAlerts({
   moderation,
@@ -19,6 +21,7 @@ export function ProfileHeaderAlerts({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   const causes = getProfileModerationCauses(moderation)
   if (!causes.length) {
@@ -41,7 +44,7 @@ export function ProfileHeaderAlerts({
               })
             }}
             accessibilityRole="button"
-            accessibilityLabel="Learn more about this warning"
+            accessibilityLabel={_(msg`Learn more about this warning`)}
             accessibilityHint=""
             style={[styles.container, pal.viewLight, style]}>
             <ShieldExclamation style={pal.text} size={24} />
@@ -49,7 +52,7 @@ export function ProfileHeaderAlerts({
               {desc.name}
             </Text>
             <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
-              Learn More
+              <Trans>Learn More</Trans>
             </Text>
           </Pressable>
         )

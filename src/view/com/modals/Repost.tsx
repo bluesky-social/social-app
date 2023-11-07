@@ -7,7 +7,8 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {RepostIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = [250]
 
@@ -23,6 +24,8 @@ export function Component({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   const onPress = async () => {
     store.shell.closeModal()
   }
@@ -39,7 +42,7 @@ export function Component({
           accessibilityHint={isReposted ? 'Remove repost' : 'Repost '}>
           <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            {!isReposted ? 'Repost' : 'Undo repost'}
+            <Trans>{!isReposted ? 'Repost' : 'Undo repost'}</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -47,11 +50,11 @@ export function Component({
           style={[styles.actionBtn]}
           onPress={onQuote}
           accessibilityRole="button"
-          accessibilityLabel="Quote post"
+          accessibilityLabel={_(msg`Quote post`)}
           accessibilityHint="">
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            Quote Post
+            <Trans>Quote Post</Trans>
           </Text>
         </TouchableOpacity>
       </View>
@@ -59,7 +62,7 @@ export function Component({
         testID="cancelBtn"
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel="Cancel quote post"
+        accessibilityLabel={_(msg`Cancel quote post`)}
         accessibilityHint=""
         onAccessibilityEscape={onPress}>
         <LinearGradient

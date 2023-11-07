@@ -11,6 +11,8 @@ import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ExternalEmbedDraft} from 'lib/api/index'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export const ExternalEmbed = ({
   link,
@@ -21,6 +23,7 @@ export const ExternalEmbed = ({
 }) => {
   const pal = usePalette('default')
   const palError = usePalette('error')
+  const {_} = useLingui()
   if (!link) {
     return <View />
   }
@@ -64,7 +67,7 @@ export const ExternalEmbed = ({
         style={styles.removeBtn}
         onPress={onRemove}
         accessibilityRole="button"
-        accessibilityLabel="Remove image preview"
+        accessibilityLabel={_(msg`Remove image preview`)}
         accessibilityHint={`Removes default thumbnail from ${link.uri}`}
         onAccessibilityEscape={onRemove}>
         <FontAwesomeIcon size={18} icon="xmark" style={s.white} />

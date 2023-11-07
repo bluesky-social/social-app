@@ -14,6 +14,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function UserBanner({
   banner,
@@ -26,6 +28,7 @@ export function UserBanner({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
@@ -112,7 +115,7 @@ export function UserBanner({
     <NativeDropdown
       testID="changeBannerBtn"
       items={dropdownItems}
-      accessibilityLabel="Image options"
+      accessibilityLabel={_(msg`Image options`)}
       accessibilityHint="">
       {banner ? (
         <Image

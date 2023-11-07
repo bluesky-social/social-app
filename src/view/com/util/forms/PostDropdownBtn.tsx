@@ -10,6 +10,8 @@ import {
   DropdownItem as NativeDropdownItem,
 } from './NativeDropdown'
 import {EventStopper} from '../EventStopper'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function PostDropdownBtn({
   testID,
@@ -39,6 +41,7 @@ export function PostDropdownBtn({
 }) {
   const store = useStores()
   const theme = useTheme()
+  const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
 
   const dropdownItems: NativeDropdownItem[] = [
@@ -152,7 +155,7 @@ export function PostDropdownBtn({
       <NativeDropdown
         testID={testID}
         items={dropdownItems}
-        accessibilityLabel="More post options"
+        accessibilityLabel={_(msg`More post options`)}
         accessibilityHint="">
         <View style={style}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />

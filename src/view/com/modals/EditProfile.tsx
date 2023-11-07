@@ -27,7 +27,8 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {isWeb} from 'platform/detection'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -46,6 +47,7 @@ export function Component({
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
+  const {_} = useLingui()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [displayName, setDisplayName] = useState<string>(
@@ -188,7 +190,7 @@ export function Component({
                 setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
               }
               accessible={true}
-              accessibilityLabel="Display name"
+              accessibilityLabel={_(msg`Display name`)}
               accessibilityHint="Edit your display name"
             />
           </View>
@@ -206,7 +208,7 @@ export function Component({
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
-              accessibilityLabel="Description"
+              accessibilityLabel={_(msg`Description`)}
               accessibilityHint="Edit your profile description"
             />
           </View>
@@ -220,7 +222,7 @@ export function Component({
               style={s.mt10}
               onPress={onPressSave}
               accessibilityRole="button"
-              accessibilityLabel="Save"
+              accessibilityLabel={_(msg`Save`)}
               accessibilityHint="Saves any changes to your profile">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
@@ -240,7 +242,7 @@ export function Component({
               style={s.mt5}
               onPress={onPressCancel}
               accessibilityRole="button"
-              accessibilityLabel="Cancel profile editing"
+              accessibilityLabel={_(msg`Cancel profile editing`)}
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.btn]}>

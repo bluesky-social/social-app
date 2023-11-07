@@ -43,11 +43,14 @@ import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
@@ -155,7 +158,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           <View style={{}}>
             <TouchableOpacity
               testID="profileCardButton"
-              accessibilityLabel="Profile"
+              accessibilityLabel={_(msg`Profile`)}
               accessibilityHint="Navigates to your profile"
               onPress={onPressProfile}>
               <UserAvatar
@@ -212,7 +215,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Search"
-            accessibilityLabel="Search"
+            accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
             bold={isAtSearch}
             onPress={onPressSearch}
@@ -234,7 +237,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Home"
-            accessibilityLabel="Home"
+            accessibilityLabel={_(msg`Home`)}
             accessibilityHint=""
             bold={isAtHome}
             onPress={onPressHome}
@@ -256,7 +259,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Notifications"
-            accessibilityLabel="Notifications"
+            accessibilityLabel={_(msg`Notifications`)}
             accessibilityHint={
               notifications.unreadCountLabel === ''
                 ? ''
@@ -283,7 +286,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Feeds"
-            accessibilityLabel="Feeds"
+            accessibilityLabel={_(msg`Feeds`)}
             accessibilityHint=""
             bold={isAtFeeds}
             onPress={onPressMyFeeds}
@@ -291,14 +294,14 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           <MenuItem
             icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
             label="Lists"
-            accessibilityLabel="Lists"
+            accessibilityLabel={_(msg`Lists`)}
             accessibilityHint=""
             onPress={onPressLists}
           />
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
             label="Moderation"
-            accessibilityLabel="Moderation"
+            accessibilityLabel={_(msg`Moderation`)}
             accessibilityHint=""
             onPress={onPressModeration}
           />
@@ -319,7 +322,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               )
             }
             label="Profile"
-            accessibilityLabel="Profile"
+            accessibilityLabel={_(msg`Profile`)}
             accessibilityHint=""
             onPress={onPressProfile}
           />
@@ -332,7 +335,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               />
             }
             label="Settings"
-            accessibilityLabel="Settings"
+            accessibilityLabel={_(msg`Settings`)}
             accessibilityHint=""
             onPress={onPressSettings}
           />
@@ -343,7 +346,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         <View style={styles.footer}>
           <TouchableOpacity
             accessibilityRole="link"
-            accessibilityLabel="Send feedback"
+            accessibilityLabel={_(msg`Send feedback`)}
             accessibilityHint=""
             onPress={onPressFeedback}
             style={[
@@ -359,17 +362,17 @@ export const DrawerContent = observer(function DrawerContentImpl() {
               icon={['far', 'message']}
             />
             <Text type="lg-medium" style={[pal.link, s.pl10]}>
-              Feedback
+              <Trans>Feedback</Trans>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="link"
-            accessibilityLabel="Send feedback"
+            accessibilityLabel={_(msg`Send feedback`)}
             accessibilityHint=""
             onPress={onPressHelp}
             style={[styles.footerBtn]}>
             <Text type="lg-medium" style={[pal.link, s.pl10]}>
-              Help
+              <Trans>Help</Trans>
             </Text>
           </TouchableOpacity>
         </View>

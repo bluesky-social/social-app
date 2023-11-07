@@ -61,7 +61,7 @@ So the workflow is as follows:
 6. Enjoy translated app!
 
 ### Common pitfalls
-These pitfalls are memoization pitfalls that will cause the components to not re-render when the locale is changed -- causing for stale translations to be shown.
+These pitfalls are memoization pitfalls that will cause the components to not re-render when the locale is changed -- causing stale translations to be shown.
 
 ```jsx
 import { msg } from "@lingui/macro";

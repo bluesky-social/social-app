@@ -26,6 +26,8 @@ import {cleanError} from 'lib/strings/errors'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {HITSLOP_20} from '#/lib/constants'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['90%']
 
@@ -38,6 +40,7 @@ export const Component = observer(function Component({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = useState('')
   const autocompleteView = useMemo<UserAutocompleteModel>(
@@ -83,7 +86,7 @@ export const Component = observer(function Component({
             value={query}
             onChangeText={onChangeQuery}
             accessible={true}
-            accessibilityLabel="Search"
+            accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
             autoFocus
             autoCapitalize="none"
@@ -95,7 +98,7 @@ export const Component = observer(function Component({
             <Pressable
               onPress={onPressCancelSearch}
               accessibilityRole="button"
-              accessibilityLabel="Cancel search"
+              accessibilityLabel={_(msg`Cancel search`)}
               accessibilityHint="Exits inputting search query"
               onAccessibilityEscape={onPressCancelSearch}
               hitSlop={HITSLOP_20}>
@@ -134,7 +137,7 @@ export const Component = observer(function Component({
                 pal.textLight,
                 {paddingHorizontal: 12, paddingVertical: 16},
               ]}>
-              No results found for {autocompleteView.prefix}
+              <Trans>No results found for {autocompleteView.prefix}</Trans>
             </Text>
           )}
         </ScrollView>
@@ -147,7 +150,7 @@ export const Component = observer(function Component({
             testID="doneBtn"
             type="default"
             onPress={() => store.shell.closeModal()}
-            accessibilityLabel="Done"
+            accessibilityLabel={_(msg`Done`)}
             accessibilityHint=""
             label="Done"
             labelContainerStyle={{justifyContent: 'center', padding: 4}}

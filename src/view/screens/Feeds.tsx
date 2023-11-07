@@ -27,12 +27,15 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
   observer<Props>(function FeedsScreenImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const {_} = useLingui()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const myFeeds = store.me.myFeeds
     const [query, setQuery] = React.useState<string>('')
@@ -86,12 +89,12 @@ export const FeedsScreen = withAuthRequired(
           href="/settings/saved-feeds"
           hitSlop={10}
           accessibilityRole="button"
-          accessibilityLabel="Edit Saved Feeds"
+          accessibilityLabel={_(msg`Edit Saved Feeds`)}
           accessibilityHint="Opens screen to edit Saved Feeds">
           <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
         </Link>
       )
-    }, [pal])
+    }, [pal, _])
 
     const onRefresh = React.useCallback(() => {
       myFeeds.refresh()
@@ -122,11 +125,11 @@ export const FeedsScreen = withAuthRequired(
                   },
                 ]}>
                 <Text type="title-lg" style={[pal.text, s.bold]}>
-                  My Feeds
+                  <Trans>My Feeds</Trans>
                 </Text>
                 <Link
                   href="/settings/saved-feeds"
-                  accessibilityLabel="Edit My Feeds"
+                  accessibilityLabel={_(msg`Edit My Feeds`)}
                   accessibilityHint="">
                   <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
                 </Link>
@@ -159,7 +162,7 @@ export const FeedsScreen = withAuthRequired(
                   },
                 ]}>
                 <Text type="title-lg" style={[pal.text, s.bold]}>
-                  Discover new feeds
+                  <Trans>Discover new feeds</Trans>
                 </Text>
                 {!isMobile && (
                   <SearchInput
@@ -201,14 +204,22 @@ export const FeedsScreen = withAuthRequired(
                 paddingBottom: '150%',
               }}>
               <Text type="lg" style={pal.textLight}>
-                No results found for "{query}"
+                <Trans>No results found for "{query}"</Trans>
               </Text>
             </View>
           )
         }
         return null
       },
-      [isMobile, pal, query, onChangeQuery, onPressCancelSearch, onSubmitQuery],
+      [
+        isMobile,
+        pal,
+        query,
+        onChangeQuery,
+        onPressCancelSearch,
+        onSubmitQuery,
+        _,
+      ],
     )
 
     return (
@@ -247,7 +258,7 @@ export const FeedsScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="New post"
+          accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
         />
       </View>
@@ -287,7 +298,7 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
         {feed.error && (
           <View style={[styles.offlineSlug, pal.borderDark]}>
             <Text type="xs" style={pal.textLight}>
-              Feed offline
+              <Trans>Feed offline</Trans>
             </Text>
           </View>
         )}
