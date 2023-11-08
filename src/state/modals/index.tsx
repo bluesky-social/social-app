@@ -218,7 +218,12 @@ const ModalControlContext = React.createContext<{
   closeModal: () => {},
 })
 
-export let unstable__openModal: (modal: Modal) => void
+/**
+ * @deprecated DO NOT USE THIS unless you have no other choice.
+ */
+export let unstable__openModal: (modal: Modal) => void = () => {
+  throw new Error(`ModalContext is not initialized`)
+}
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [isModalActive, setIsModalActive] = React.useState(false)
