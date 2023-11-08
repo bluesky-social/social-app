@@ -482,14 +482,14 @@ const AboutSection = observer(function AboutPageImpl({
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-            No description
+            <Trans>No description</Trans>
           </Text>
         )}
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
           <Button
             type="default"
             testID="toggleLikeBtn"
-            accessibilityLabel="Like this feed"
+            accessibilityLabel={_(msg`Like this feed`)}
             accessibilityHint=""
             onPress={onToggleLiked}
             style={{paddingHorizontal: 10}}>
