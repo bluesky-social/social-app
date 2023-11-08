@@ -3,13 +3,13 @@ import {Keyboard, StyleSheet} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Button} from 'view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {ShieldExclamation} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {isNative} from 'platform/detection'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
 
 export const LabelsBtn = observer(function LabelsBtn({
   labels,
@@ -22,7 +22,7 @@ export const LabelsBtn = observer(function LabelsBtn({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const store = useStores()
+  const {openModal} = useModalControls()
 
   return (
     <Button
@@ -37,7 +37,7 @@ export const LabelsBtn = observer(function LabelsBtn({
             Keyboard.dismiss()
           }
         }
-        store.shell.openModal({name: 'self-label', labels, hasMedia, onChange})
+        openModal({name: 'self-label', labels, hasMedia, onChange})
       }}>
       <ShieldExclamation style={pal.link} size={26} />
       {labels.length > 0 ? (

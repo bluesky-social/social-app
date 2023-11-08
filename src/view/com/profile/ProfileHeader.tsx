@@ -42,6 +42,7 @@ import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 interface Props {
   view: ProfileModel
@@ -116,6 +117,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const palInverted = usePalette('inverted')
   const store = useStores()
   const {_} = useLingui()
+  const {openModal} = useModalControls()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const invalidHandle = isInvalidHandle(view.handle)
@@ -160,12 +162,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'edit-profile',
       profileView: view,
       onUpdate: onRefreshAll,
     })
-  }, [track, store, view, onRefreshAll])
+  }, [track, openModal, view, onRefreshAll])
 
   const trackPress = React.useCallback(
     (f: 'Followers' | 'Follows') => {
@@ -184,12 +186,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
 
   const onPressAddRemoveLists = React.useCallback(() => {
     track('ProfileHeader:AddToListsButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'user-add-remove-lists',
       subject: view.did,
       displayName: view.displayName || view.handle,
     })
-  }, [track, view, store])
+  }, [track, view, openModal])
 
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
@@ -215,7 +217,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Block Account',
       message:
@@ -231,11 +233,11 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         }
       },
     })
-  }, [track, view, store, onRefreshAll])
+  }, [track, view, openModal, onRefreshAll])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Unblock Account',
       message:
@@ -251,15 +253,15 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         }
       },
     })
-  }, [track, view, store, onRefreshAll])
+  }, [track, view, openModal, onRefreshAll])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'report',
       did: view.did,
     })
-  }, [track, store, view])
+  }, [track, openModal, view])
 
   const isMe = React.useMemo(
     () => store.me.did === view.did,

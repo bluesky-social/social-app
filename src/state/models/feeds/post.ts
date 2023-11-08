@@ -75,10 +75,6 @@ export class PostsFeedItemModel {
     return this.post.uri
   }
 
-  get isThreadMuted() {
-    return this.rootStore.mutedThreads.uris.has(this.rootUri)
-  }
-
   get moderation(): PostModeration {
     return moderatePost(this.post, this.rootStore.preferences.moderationOpts)
   }
@@ -169,20 +165,6 @@ export class PostsFeedItemModel {
       }
     } catch (error) {
       logger.error('Failed to toggle repost', {error})
-    }
-  }
-
-  async toggleThreadMute() {
-    try {
-      if (this.isThreadMuted) {
-        this.rootStore.mutedThreads.uris.delete(this.rootUri)
-        track('Post:ThreadUnmute')
-      } else {
-        this.rootStore.mutedThreads.uris.add(this.rootUri)
-        track('Post:ThreadMute')
-      }
-    } catch (error) {
-      logger.error('Failed to toggle thread mute', {error})
     }
   }
 

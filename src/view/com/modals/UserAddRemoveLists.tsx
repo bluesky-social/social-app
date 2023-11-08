@@ -23,6 +23,7 @@ import isEqual from 'lodash.isequal'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['fullscreen']
 
@@ -38,6 +39,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
   onRemove?: (listUri: string) => void
 }) {
   const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {_} = useLingui()
   const palPrimary = usePalette('primary')
@@ -72,8 +74,8 @@ export const Component = observer(function UserAddRemoveListsImpl({
   }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
 
   const onPressCancel = useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const onPressSave = useCallback(async () => {
     let changes
@@ -90,8 +92,8 @@ export const Component = observer(function UserAddRemoveListsImpl({
     for (const uri of changes.removed) {
       onRemove?.(uri)
     }
-    store.shell.closeModal()
-  }, [store, selected, memberships, onAdd, onRemove])
+    closeModal()
+  }, [closeModal, selected, memberships, onAdd, onRemove])
 
   const onToggleSelected = useCallback(
     (uri: string) => {

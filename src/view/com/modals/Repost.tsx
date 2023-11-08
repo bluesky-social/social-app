@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -9,6 +8,7 @@ import {RepostIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = [250]
 
@@ -22,12 +22,11 @@ export function Component({
   isReposted: boolean
   // TODO: Add author into component
 }) {
-  const store = useStores()
   const pal = usePalette('default')
   const {_} = useLingui()
-
+  const {closeModal} = useModalControls()
   const onPress = async () => {
-    store.shell.closeModal()
+    closeModal()
   }
 
   return (

@@ -6,7 +6,6 @@ import {gradients, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../util/text/Text'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import ImageEditor, {Position} from 'react-avatar-editor'
 import {TextInput} from './util'
@@ -21,6 +20,7 @@ import {observer} from 'mobx-react-lite'
 import {getKeys} from 'lib/type-assertions'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['80%']
 
@@ -54,10 +54,10 @@ export const Component = observer(function EditImageImpl({
 }: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const store = useStores()
   const {_} = useLingui()
   const windowDimensions = useWindowDimensions()
   const {isMobile} = useWebMediaQueries()
+  const {closeModal} = useModalControls()
 
   const {
     aspectRatio,
@@ -131,8 +131,8 @@ export const Component = observer(function EditImageImpl({
   }, [image])
 
   const onCloseModal = useCallback(() => {
-    store.shell.closeModal()
-  }, [store.shell])
+    closeModal()
+  }, [closeModal])
 
   const onPressCancel = useCallback(async () => {
     await gallery.previous(image)

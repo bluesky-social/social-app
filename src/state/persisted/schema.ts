@@ -7,9 +7,9 @@ const accountSchema = z.object({
   did: z.string(),
   refreshJwt: z.string().optional(),
   accessJwt: z.string().optional(),
-  handle: z.string(),
-  displayName: z.string(),
-  aviUrl: z.string(),
+  handle: z.string().optional(),
+  displayName: z.string().optional(),
+  aviUrl: z.string().optional(),
 })
 
 export const schema = z.object({
@@ -19,7 +19,7 @@ export const schema = z.object({
     currentAccount: accountSchema.optional(),
   }),
   reminders: z.object({
-    lastEmailConfirmReminder: z.string().optional(),
+    lastEmailConfirm: z.string().optional(),
   }),
   languagePrefs: z.object({
     primaryLanguage: z.string(), // should move to server
@@ -29,8 +29,7 @@ export const schema = z.object({
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
   mutedThreads: z.array(z.string()), // should move to server
-  invitedUsers: z.object({
-    seenDids: z.array(z.string()),
+  invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
   onboarding: z.object({
@@ -46,7 +45,7 @@ export const defaults: Schema = {
     currentAccount: undefined,
   },
   reminders: {
-    lastEmailConfirmReminder: undefined,
+    lastEmailConfirm: undefined,
   },
   languagePrefs: {
     primaryLanguage: deviceLocales[0] || 'en',
@@ -58,8 +57,7 @@ export const defaults: Schema = {
   },
   requireAltTextEnabled: false,
   mutedThreads: [],
-  invitedUsers: {
-    seenDids: [],
+  invites: {
     copiedInvites: [],
   },
   onboarding: {

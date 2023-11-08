@@ -12,7 +12,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import LinearGradient from 'react-native-linear-gradient'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -20,14 +19,15 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['80%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const store = useStores()
   const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const [email, setEmail] = React.useState<string>('')
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
@@ -57,7 +57,7 @@ export function Component({}: {}) {
     setIsProcessing(false)
   }
   const onCancel = () => {
-    store.shell.closeModal()
+    closeModal()
   }
 
   return (

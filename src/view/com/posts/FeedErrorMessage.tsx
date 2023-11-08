@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 const MESSAGES = {
   [KnownError.Unknown]: '',
@@ -57,13 +58,14 @@ function FeedgenErrorMessage({
   const msg = MESSAGES[knownError]
   const uri = (feed.params as GetCustomFeed.QueryParams).feed
   const [ownerDid] = safeParseFeedgenUri(uri)
+  const {openModal, closeModal} = useModalControls()
 
   const onViewProfile = React.useCallback(() => {
     navigation.navigate('Profile', {name: ownerDid})
   }, [navigation, ownerDid])
 
   const onRemoveFeed = React.useCallback(async () => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Remove feed',
       message: 'Remove this feed from your saved feeds?',
@@ -78,10 +80,10 @@ function FeedgenErrorMessage({
         }
       },
       onPressCancel() {
-        store.shell.closeModal()
+        closeModal()
       },
     })
-  }, [store, uri])
+  }, [store, openModal, closeModal, uri])
 
   return (
     <View

@@ -19,6 +19,7 @@ import {cleanError} from 'lib/strings/errors'
 import {resetToTab} from '../../../Navigation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['60%']
 
@@ -27,6 +28,7 @@ export function Component({}: {}) {
   const theme = useTheme()
   const store = useStores()
   const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [confirmCode, setConfirmCode] = React.useState<string>('')
@@ -58,14 +60,14 @@ export function Component({}: {}) {
       Toast.show('Your account has been deleted')
       resetToTab('HomeTab')
       store.session.clear()
-      store.shell.closeModal()
+      closeModal()
     } catch (e: any) {
       setError(cleanError(e))
     }
     setIsProcessing(false)
   }
   const onCancel = () => {
-    store.shell.closeModal()
+    closeModal()
   }
   return (
     <View style={[styles.container, pal.view]}>

@@ -17,6 +17,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
 
@@ -24,6 +25,7 @@ export const Component = observer(function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
   const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const [date, setDate] = useState<Date>(
     store.preferences.birthDate || new Date(),
   )
@@ -36,7 +38,7 @@ export const Component = observer(function Component({}: {}) {
     setIsProcessing(true)
     try {
       await store.preferences.setBirthDate(date)
-      store.shell.closeModal()
+      closeModal()
     } catch (e) {
       setError(cleanError(String(e)))
     } finally {

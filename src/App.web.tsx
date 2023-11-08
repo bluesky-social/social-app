@@ -20,6 +20,10 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {defaultLocale, dynamicActivate} from './locale/i18n'
 import {Provider as ShellStateProvider} from 'state/shell'
+import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as MutedThreadsProvider} from 'state/muted-threads'
+import {Provider as InvitesStateProvider} from 'state/invites'
+import {Provider as PrefsStateProvider} from 'state/preferences'
 
 const InnerApp = observer(function AppImpl() {
   const colorMode = useColorMode()
@@ -74,7 +78,15 @@ function App() {
 
   return (
     <ShellStateProvider>
-      <InnerApp />
+      <PrefsStateProvider>
+        <MutedThreadsProvider>
+          <InvitesStateProvider>
+            <ModalStateProvider>
+              <InnerApp />
+            </ModalStateProvider>
+          </InvitesStateProvider>
+        </MutedThreadsProvider>
+      </PrefsStateProvider>
     </ShellStateProvider>
   )
 }

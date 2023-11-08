@@ -22,12 +22,12 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {styles} from './styles'
+import {useModalControls} from '#/state/modals'
 
 export const ForgotPasswordForm = ({
-  store,
   error,
   serviceUrl,
   serviceDescription,
@@ -51,13 +51,14 @@ export const ForgotPasswordForm = ({
   const [email, setEmail] = useState<string>('')
   const {screen} = useAnalytics()
   const {_} = useLingui()
+  const {openModal} = useModalControls()
 
   useEffect(() => {
     screen('Signin:ForgotPassword')
   }, [screen])
 
   const onPressSelectService = () => {
-    store.shell.openModal({
+    openModal({
       name: 'server-input',
       initialService: serviceUrl,
       onSelect: setServiceUrl,
@@ -94,11 +95,13 @@ export const ForgotPasswordForm = ({
     <>
       <View>
         <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
-          Reset password
+          <Trans>Reset password</Trans>
         </Text>
         <Text type="md" style={[pal.text, styles.instructions]}>
-          Enter the email you used to create your account. We'll send you a
-          "reset code" so you can set a new password.
+          <Trans>
+            Enter the email you used to create your account. We'll send you a
+            "reset code" so you can set a new password.
+          </Trans>
         </Text>
         <View
           testID="forgotPasswordView"
@@ -160,7 +163,7 @@ export const ForgotPasswordForm = ({
         <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
           <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
             <Text type="xl" style={[pal.link, s.pl5]}>
-              Back
+              <Trans>Back</Trans>
             </Text>
           </TouchableOpacity>
           <View style={s.flex1} />
@@ -168,7 +171,7 @@ export const ForgotPasswordForm = ({
             <ActivityIndicator />
           ) : !email ? (
             <Text type="xl-bold" style={[pal.link, s.pr5, styles.dimmed]}>
-              Next
+              <Trans>Next</Trans>
             </Text>
           ) : (
             <TouchableOpacity
@@ -178,13 +181,13 @@ export const ForgotPasswordForm = ({
               accessibilityLabel={_(msg`Go to next`)}
               accessibilityHint="Navigates to the next screen">
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
-                Next
+                <Trans>Next</Trans>
               </Text>
             </TouchableOpacity>
           )}
           {!serviceDescription || isProcessing ? (
             <Text type="xl" style={[pal.textLight, s.pl10]}>
-              Processing...
+              <Trans>Processing...</Trans>
             </Text>
           ) : undefined}
         </View>

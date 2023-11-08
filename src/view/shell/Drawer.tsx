@@ -46,6 +46,7 @@ import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
@@ -445,11 +446,12 @@ const InviteCodes = observer(function InviteCodesImpl({
   const setDrawerOpen = useSetDrawerOpen()
   const pal = usePalette('default')
   const {invitesAvailable} = store.me
+  const {openModal} = useModalControls()
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
     setDrawerOpen(false)
-    store.shell.openModal({name: 'invite-codes'})
-  }, [store, track, setDrawerOpen])
+    openModal({name: 'invite-codes'})
+  }, [openModal, track, setDrawerOpen])
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"

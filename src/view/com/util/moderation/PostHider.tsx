@@ -8,9 +8,9 @@ import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
 import {describeModerationCause} from 'lib/moderation'
 import {ShieldExclamation} from 'lib/icons'
-import {useStores} from 'state/index'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
 
 interface Props extends ComponentProps<typeof Link> {
   // testID?: string
@@ -27,11 +27,11 @@ export function PostHider({
   children,
   ...props
 }: Props) {
-  const store = useStores()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
+  const {openModal} = useModalControls()
 
   if (!moderation.blur) {
     return (
@@ -66,7 +66,7 @@ export function PostHider({
         ]}>
         <Pressable
           onPress={() => {
-            store.shell.openModal({
+            openModal({
               name: 'moderation-details',
               context: 'content',
               moderation,

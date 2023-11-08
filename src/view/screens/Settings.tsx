@@ -46,11 +46,17 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 import {
   useSetMinimalShellMode,
   useColorMode,
   useSetColorMode,
+  useOnboardingDispatch,
 } from '#/state/shell'
+import {
+  useRequireAltTextEnabled,
+  useSetRequireAltTextEnabled,
+} from '#/state/preferences'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -69,6 +75,9 @@ export const SettingsScreen = withAuthRequired(
     const store = useStores()
     const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
+    const requireAltTextEnabled = useRequireAltTextEnabled()
+    const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
+    const onboardingDispatch = useOnboardingDispatch()
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
@@ -77,6 +86,7 @@ export const SettingsScreen = withAuthRequired(
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
       store.agent,
     )
+    const {openModal} = useModalControls()
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -112,7 +122,7 @@ export const SettingsScreen = withAuthRequired(
 
     const onPressChangeHandle = React.useCallback(() => {
       track('Settings:ChangeHandleButtonClicked')
-      store.shell.openModal({
+      openModal({
         name: 'change-handle',
         onChanged() {
           setIsSwitching(true)
@@ -130,12 +140,12 @@ export const SettingsScreen = withAuthRequired(
           )
         },
       })
-    }, [track, store, setIsSwitching])
+    }, [track, store, openModal, setIsSwitching])
 
     const onPressInviteCodes = React.useCallback(() => {
       track('Settings:InvitecodesButtonClicked')
-      store.shell.openModal({name: 'invite-codes'})
-    }, [track, store])
+      openModal({name: 'invite-codes'})
+    }, [track, openModal])
 
     const onPressLanguageSettings = React.useCallback(() => {
       navigation.navigate('LanguageSettings')
@@ -147,8 +157,8 @@ export const SettingsScreen = withAuthRequired(
     }, [track, store])
 
     const onPressDeleteAccount = React.useCallback(() => {
-      store.shell.openModal({name: 'delete-account'})
-    }, [store])
+      openModal({name: 'delete-account'})
+    }, [openModal])
 
     const onPressResetPreferences = React.useCallback(async () => {
       await store.preferences.reset()
@@ -156,9 +166,9 @@ export const SettingsScreen = withAuthRequired(
     }, [store])
 
     const onPressResetOnboarding = React.useCallback(async () => {
-      store.onboarding.reset()
+      onboardingDispatch({type: 'start'})
       Toast.show('Onboarding reset')
-    }, [store])
+    }, [onboardingDispatch])
 
     const onPressBuildInfo = React.useCallback(() => {
       Clipboard.setString(
@@ -224,8 +234,7 @@ export const SettingsScreen = withAuthRequired(
                 <Text type="lg" style={pal.text}>
                   {store.session.currentSession?.email}{' '}
                 </Text>
-                <Link
-                  onPress={() => store.shell.openModal({name: 'change-email'})}>
+                <Link onPress={() => openModal({name: 'change-email'})}>
                   <Text type="lg" style={pal.link}>
                     <Trans>Change</Trans>
                   </Text>
@@ -235,10 +244,7 @@ export const SettingsScreen = withAuthRequired(
                 <Text type="lg-medium" style={pal.text}>
                   <Trans>Birthday: </Trans>
                 </Text>
-                <Link
-                  onPress={() =>
-                    store.shell.openModal({name: 'birth-date-settings'})
-                  }>
+                <Link onPress={() => openModal({name: 'birth-date-settings'})}>
                   <Text type="lg" style={pal.link}>
                     <Trans>Show</Trans>
                   </Text>
@@ -375,8 +381,8 @@ export const SettingsScreen = withAuthRequired(
               type="default-light"
               label="Require alt text before posting"
               labelType="lg"
-              isSelected={store.preferences.requireAltTextEnabled}
-              onPress={store.preferences.toggleRequireAltTextEnabled}
+              isSelected={requireAltTextEnabled}
+              onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
             />
           </View>
 
@@ -647,6 +653,7 @@ const EmailConfirmationNotice = observer(
     const store = useStores()
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
+    const {openModal} = useModalControls()
 
     if (!store.session.emailNeedsConfirmation) {
       return null
@@ -682,7 +689,7 @@ const EmailConfirmationNotice = observer(
               accessibilityRole="button"
               accessibilityLabel={_(msg`Verify my email`)}
               accessibilityHint=""
-              onPress={() => store.shell.openModal({name: 'verify-email'})}>
+              onPress={() => openModal({name: 'verify-email'})}>
               <FontAwesomeIcon
                 icon="envelope"
                 color={palInverted.colors.text}

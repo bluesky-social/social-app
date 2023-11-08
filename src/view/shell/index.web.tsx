@@ -18,12 +18,19 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
-import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
+import {
+  useIsDrawerOpen,
+  useSetDrawerOpen,
+  useOnboardingState,
+} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
+  const {closeModal} = useModalControls()
+  const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   useAuxClick()
@@ -31,13 +38,14 @@ const ShellInner = observer(function ShellInnerImpl() {
   useEffect(() => {
     navigator.addListener('state', () => {
       setDrawerOpen(false)
+      closeModal()
       store.shell.closeAnyActiveElement()
     })
-  }, [navigator, store.shell, setDrawerOpen])
+  }, [navigator, store.shell, setDrawerOpen, closeModal])
 
-  const showBottomBar = isMobile && !store.onboarding.isActive
+  const showBottomBar = isMobile && !onboardingState.isActive
   const showSideNavs =
-    !isMobile && store.session.hasSession && !store.onboarding.isActive
+    !isMobile && store.session.hasSession && !onboardingState.isActive
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>

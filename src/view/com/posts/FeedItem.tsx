@@ -33,6 +33,8 @@ import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {logger} from '#/logger'
+import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
+import {useLanguagePrefs} from '#/state/preferences'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
@@ -49,7 +51,10 @@ export const FeedItem = observer(function FeedItemImpl({
   showReplyLine?: boolean
 }) {
   const store = useStores()
+  const langPrefs = useLanguagePrefs()
   const pal = usePalette('default')
+  const mutedThreads = useMutedThreads()
+  const toggleThreadMute = useToggleThreadMute()
   const {track} = useAnalytics()
   const [deleted, setDeleted] = useState(false)
   const [limitLines, setLimitLines] = useState(
@@ -72,7 +77,7 @@ export const FeedItem = observer(function FeedItemImpl({
   }, [record?.reply])
   const translatorUrl = getTranslatorLink(
     record?.text || '',
-    store.preferences.primaryLanguage,
+    langPrefs.primaryLanguage,
   )
 
   const onPressReply = React.useCallback(() => {
@@ -114,11 +119,11 @@ export const FeedItem = observer(function FeedItemImpl({
     Linking.openURL(translatorUrl)
   }, [translatorUrl])
 
-  const onToggleThreadMute = React.useCallback(async () => {
+  const onToggleThreadMute = React.useCallback(() => {
     track('FeedItem:ThreadMute')
     try {
-      await item.toggleThreadMute()
-      if (item.isThreadMuted) {
+      const muted = toggleThreadMute(item.rootUri)
+      if (muted) {
         Toast.show('You will no longer receive notifications for this thread')
       } else {
         Toast.show('You will now receive notifications for this thread')
@@ -126,7 +131,7 @@ export const FeedItem = observer(function FeedItemImpl({
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [track, item])
+  }, [track, toggleThreadMute, item])
 
   const onDeletePost = React.useCallback(() => {
     track('FeedItem:PostDelete')
@@ -360,7 +365,7 @@ export const FeedItem = observer(function FeedItemImpl({
             likeCount={item.post.likeCount}
             isReposted={!!item.post.viewer?.repost}
             isLiked={!!item.post.viewer?.like}
-            isThreadMuted={item.isThreadMuted}
+            isThreadMuted={mutedThreads.includes(item.rootUri)}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleLike={onPressToggleLike}

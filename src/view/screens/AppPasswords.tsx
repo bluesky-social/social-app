@@ -19,6 +19,8 @@ import {CenteredView} from 'view/com/util/Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
+import {useLanguagePrefs} from '#/state/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
@@ -28,6 +30,7 @@ export const AppPasswords = withAuthRequired(
     const setMinimalShellMode = useSetMinimalShellMode()
     const {screen} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
+    const {openModal} = useModalControls()
 
     useFocusEffect(
       React.useCallback(() => {
@@ -37,8 +40,8 @@ export const AppPasswords = withAuthRequired(
     )
 
     const onAdd = React.useCallback(async () => {
-      store.shell.openModal({name: 'add-app-password'})
-    }, [store])
+      openModal({name: 'add-app-password'})
+    }, [openModal])
 
     // no app passwords (empty) state
     if (store.me.appPasswords.length === 0) {
@@ -168,9 +171,11 @@ function AppPassword({
   const pal = usePalette('default')
   const store = useStores()
   const {_} = useLingui()
+  const {openModal} = useModalControls()
+  const {contentLanguages} = useLanguagePrefs()
 
   const onDelete = React.useCallback(async () => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Delete App Password',
       message: `Are you sure you want to delete the app password "${name}"?`,
@@ -179,9 +184,7 @@ function AppPassword({
         Toast.show('App password deleted')
       },
     })
-  }, [store, name])
-
-  const {contentLanguages} = store.preferences
+  }, [store, openModal, name])
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'

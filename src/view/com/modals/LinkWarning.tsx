@@ -5,7 +5,6 @@ import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -13,6 +12,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
 
@@ -24,13 +24,13 @@ export const Component = observer(function Component({
   href: string
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const potentiallyMisleading = isPossiblyAUrl(text)
 
   const onPressVisit = () => {
-    store.shell.closeModal()
+    closeModal()
     Linking.openURL(href)
   }
 
@@ -86,7 +86,7 @@ export const Component = observer(function Component({
           <Button
             testID="cancelBtn"
             type="default"
-            onPress={() => store.shell.closeModal()}
+            onPress={() => closeModal()}
             accessibilityLabel={_(msg`Cancel`)}
             accessibilityHint=""
             label="Cancel"

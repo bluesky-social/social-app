@@ -15,12 +15,9 @@ import {ProfilesCache} from './cache/profiles-view'
 import {PostsCache} from './cache/posts'
 import {LinkMetasCache} from './cache/link-metas'
 import {MeModel} from './me'
-import {InvitedUsers} from './invited-users'
 import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
-import {MutedThreads} from './muted-threads'
-import {Reminders} from './ui/reminders'
 import {reset as resetNavigation} from '../../Navigation'
 import {logger} from '#/logger'
 
@@ -28,7 +25,6 @@ import {logger} from '#/logger'
 // remove after backend testing finishes
 // -prf
 import {applyDebugHeader} from 'lib/api/debug-appview-proxy-header'
-import {OnboardingModel} from './discovery/onboarding'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -45,15 +41,11 @@ export class RootStoreModel {
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel(this)
   me = new MeModel(this)
-  onboarding = new OnboardingModel(this)
-  invitedUsers = new InvitedUsers(this)
   handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
   posts = new PostsCache(this)
   linkMetas = new LinkMetasCache(this)
   imageSizes = new ImageSizesCache()
-  mutedThreads = new MutedThreads()
-  reminders = new Reminders(this)
 
   constructor(agent: BskyAgent) {
     this.agent = agent
@@ -73,11 +65,7 @@ export class RootStoreModel {
       appInfo: this.appInfo,
       session: this.session.serialize(),
       me: this.me.serialize(),
-      onboarding: this.onboarding.serialize(),
       preferences: this.preferences.serialize(),
-      invitedUsers: this.invitedUsers.serialize(),
-      mutedThreads: this.mutedThreads.serialize(),
-      reminders: this.reminders.serialize(),
     }
   }
 
@@ -92,23 +80,11 @@ export class RootStoreModel {
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)
       }
-      if (hasProp(v, 'onboarding')) {
-        this.onboarding.hydrate(v.onboarding)
-      }
       if (hasProp(v, 'session')) {
         this.session.hydrate(v.session)
       }
       if (hasProp(v, 'preferences')) {
         this.preferences.hydrate(v.preferences)
-      }
-      if (hasProp(v, 'invitedUsers')) {
-        this.invitedUsers.hydrate(v.invitedUsers)
-      }
-      if (hasProp(v, 'mutedThreads')) {
-        this.mutedThreads.hydrate(v.mutedThreads)
-      }
-      if (hasProp(v, 'reminders')) {
-        this.reminders.hydrate(v.reminders)
       }
     }
   }

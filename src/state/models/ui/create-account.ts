@@ -9,6 +9,7 @@ import {cleanError} from 'lib/strings/errors'
 import {getAge} from 'lib/strings/time'
 import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
+import {DispatchContext as OnboardingDispatchContext} from '#/state/shell/onboarding'
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
@@ -90,7 +91,7 @@ export class CreateAccountModel {
     }
   }
 
-  async submit() {
+  async submit(onboardingDispatch: OnboardingDispatchContext) {
     if (!this.email) {
       this.setStep(2)
       return this.setError('Please enter your email.')
@@ -111,7 +112,7 @@ export class CreateAccountModel {
     this.setIsProcessing(true)
 
     try {
-      this.rootStore.onboarding.start() // start now to avoid flashing the wrong view
+      onboardingDispatch({type: 'start'}) // start now to avoid flashing the wrong view
       await this.rootStore.session.createAccount({
         service: this.serviceUrl,
         email: this.email,
@@ -122,7 +123,7 @@ export class CreateAccountModel {
       /* dont await */ this.rootStore.preferences.setBirthDate(this.birthDate)
       track('Create Account')
     } catch (e: any) {
-      this.rootStore.onboarding.skip() // undo starting the onboard
+      onboardingDispatch({type: 'skip'}) // undo starting the onboard
       let errMsg = e.toString()
       if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
         errMsg =

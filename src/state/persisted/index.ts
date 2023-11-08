@@ -6,7 +6,7 @@ import * as store from '#/state/persisted/store'
 import BroadcastChannel from '#/state/persisted/broadcast'
 
 export type {Schema} from '#/state/persisted/schema'
-export {defaults as schema} from '#/state/persisted/schema'
+export {defaults} from '#/state/persisted/schema'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
 const UPDATE_EVENT = 'BSKY_UPDATE'

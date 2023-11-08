@@ -18,9 +18,10 @@ import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {describeModerationCause} from 'lib/moderation'
-import {useStores} from 'state/index'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {s} from '#/lib/styles'
 
 export function ScreenHider({
   testID,
@@ -36,13 +37,13 @@ export function ScreenHider({
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
-  const store = useStores()
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
+  const {openModal} = useModalControls()
 
   if (!moderation.blur || override) {
     return (
@@ -68,14 +69,13 @@ export function ScreenHider({
         <Trans>Content Warning</Trans>
       </Text>
       <Text type="2xl" style={[styles.description, pal.textLight]}>
-        <Trans>This {screenDescription} has been flagged: </Trans>
-        <Text type="2xl-medium" style={pal.text}>
-          {desc.name}
+        <Trans>This {screenDescription} has been flagged:</Trans>
+        <Text type="2xl-medium" style={[pal.text, s.ml5]}>
+          {desc.name}.
         </Text>
-        .{' '}
         <TouchableWithoutFeedback
           onPress={() => {
-            store.shell.openModal({
+            openModal({
               name: 'moderation-details',
               context: 'account',
               moderation,

@@ -2,7 +2,6 @@ import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import {useStores} from 'state/index'
 import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
 import {
@@ -12,6 +11,7 @@ import {
 import {EventStopper} from '../EventStopper'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
 
 export function PostDropdownBtn({
   testID,
@@ -39,10 +39,10 @@ export function PostDropdownBtn({
   onDeletePost: () => void
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
   const theme = useTheme()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
+  const {openModal} = useModalControls()
 
   const dropdownItems: NativeDropdownItem[] = [
     {
@@ -111,7 +111,7 @@ export function PostDropdownBtn({
     !isAuthor && {
       label: 'Report post',
       onPress() {
-        store.shell.openModal({
+        openModal({
           name: 'report',
           uri: itemUri,
           cid: itemCid,
@@ -132,7 +132,7 @@ export function PostDropdownBtn({
     isAuthor && {
       label: 'Delete post',
       onPress() {
-        store.shell.openModal({
+        openModal({
           name: 'confirm',
           title: 'Delete this post?',
           message: 'Are you sure? This can not be undone.',

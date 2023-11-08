@@ -5,8 +5,8 @@ import {s, colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../text/Text'
 import {pluralize} from 'lib/strings/helpers'
-import {useStores} from 'state/index'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {useModalControls} from '#/state/modals'
 
 interface Props {
   isReposted: boolean
@@ -23,8 +23,8 @@ export const RepostButton = ({
   onRepost,
   onQuote,
 }: Props) => {
-  const store = useStores()
   const theme = useTheme()
+  const {openModal} = useModalControls()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -34,13 +34,13 @@ export const RepostButton = ({
   )
 
   const onPressToggleRepostWrapper = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'repost',
       onRepost: onRepost,
       onQuote: onQuote,
       isReposted,
     })
-  }, [onRepost, onQuote, isReposted, store.shell])
+  }, [onRepost, onQuote, isReposted, openModal])
 
   return (
     <TouchableOpacity

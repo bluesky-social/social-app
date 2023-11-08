@@ -17,6 +17,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {s} from 'lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export const ModerationModlistsScreen = withAuthRequired(
@@ -26,6 +27,7 @@ export const ModerationModlistsScreen = withAuthRequired(
     const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile} = useWebMediaQueries()
     const navigation = useNavigation<NavigationProp>()
+    const {openModal} = useModalControls()
 
     const mutelists: ListsListModel = React.useMemo(
       () => new ListsListModel(store, 'my-modlists'),
@@ -40,7 +42,7 @@ export const ModerationModlistsScreen = withAuthRequired(
     )
 
     const onPressNewList = React.useCallback(() => {
-      store.shell.openModal({
+      openModal({
         name: 'create-or-edit-list',
         purpose: 'app.bsky.graph.defs#modlist',
         onSave: (uri: string) => {
@@ -53,7 +55,7 @@ export const ModerationModlistsScreen = withAuthRequired(
           } catch {}
         },
       })
-    }, [store, navigation])
+    }, [openModal, navigation])
 
     return (
       <View style={s.hContentRegion} testID="moderationModlistsScreen">

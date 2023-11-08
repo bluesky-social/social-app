@@ -14,6 +14,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 enum Stages {
   InputEmail,
@@ -35,6 +36,7 @@ export const Component = observer(function Component({}: {}) {
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
+  const {openModal, closeModal} = useModalControls()
 
   const onRequestChange = async () => {
     if (email === store.session.currentSession?.email) {
@@ -95,8 +97,8 @@ export const Component = observer(function Component({}: {}) {
   }
 
   const onVerify = async () => {
-    store.shell.closeModal()
-    store.shell.openModal({name: 'verify-email'})
+    closeModal()
+    openModal({name: 'verify-email'})
   }
 
   return (
@@ -212,7 +214,7 @@ export const Component = observer(function Component({}: {}) {
               <Button
                 testID="cancelBtn"
                 type="default"
-                onPress={() => store.shell.closeModal()}
+                onPress={() => closeModal()}
                 accessibilityLabel={_(msg`Cancel`)}
                 accessibilityHint=""
                 label={_(msg`Cancel`)}

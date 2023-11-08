@@ -7,12 +7,12 @@ import {Text} from 'view/com/util/text/Text'
 import {Dimensions} from 'lib/media/types'
 import {getDataUriSize} from 'lib/media/util'
 import {s, gradients} from 'lib/styles'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {SquareIcon, RectWideIcon, RectTallIcon} from 'lib/icons'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 enum AspectRatio {
   Square = 'square',
@@ -35,7 +35,7 @@ export function Component({
   uri: string
   onSelect: (img?: RNImage) => void
 }) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {_} = useLingui()
   const [as, setAs] = React.useState<AspectRatio>(AspectRatio.Square)
@@ -46,7 +46,7 @@ export function Component({
 
   const onPressCancel = () => {
     onSelect(undefined)
-    store.shell.closeModal()
+    closeModal()
   }
   const onPressDone = () => {
     const canvas = editorRef.current?.getImageScaledToCanvas()
@@ -62,7 +62,7 @@ export function Component({
     } else {
       onSelect(undefined)
     }
-    store.shell.closeModal()
+    closeModal()
   }
 
   let cropperStyle

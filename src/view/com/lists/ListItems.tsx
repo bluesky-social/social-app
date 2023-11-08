@@ -17,11 +17,11 @@ import {Button} from '../util/forms/Button'
 import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -54,10 +54,10 @@ export const ListItems = observer(function ListItemsImpl({
   desktopFixedHeightOffset?: number
 }) {
   const pal = usePalette('default')
-  const store = useStores()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const {isMobile} = useWebMediaQueries()
+  const {openModal} = useModalControls()
 
   const data = React.useMemo(() => {
     let items: any[] = []
@@ -115,7 +115,7 @@ export const ListItems = observer(function ListItemsImpl({
 
   const onPressEditMembership = React.useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      store.shell.openModal({
+      openModal({
         name: 'user-add-remove-lists',
         subject: profile.did,
         displayName: profile.displayName || profile.handle,
@@ -131,7 +131,7 @@ export const ListItems = observer(function ListItemsImpl({
         },
       })
     },
-    [store, list],
+    [openModal, list],
   )
 
   // rendering

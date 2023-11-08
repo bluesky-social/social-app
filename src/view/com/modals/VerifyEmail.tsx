@@ -22,6 +22,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['90%']
 
@@ -46,6 +47,7 @@ export const Component = observer(function Component({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
+  const {openModal, closeModal} = useModalControls()
 
   const onSendEmail = async () => {
     setError('')
@@ -70,7 +72,7 @@ export const Component = observer(function Component({
       })
       store.session.updateLocalAccountData({emailConfirmed: true})
       Toast.show('Email verified')
-      store.shell.closeModal()
+      closeModal()
     } catch (e) {
       setError(cleanError(String(e)))
     } finally {
@@ -79,8 +81,8 @@ export const Component = observer(function Component({
   }
 
   const onEmailIncorrect = () => {
-    store.shell.closeModal()
-    store.shell.openModal({name: 'change-email'})
+    closeModal()
+    openModal({name: 'change-email'})
   }
 
   return (
@@ -227,7 +229,7 @@ export const Component = observer(function Component({
               <Button
                 testID="cancelBtn"
                 type="default"
-                onPress={() => store.shell.closeModal()}
+                onPress={() => closeModal()}
                 accessibilityLabel={
                   stage === Stages.Reminder ? 'Not right now' : 'Cancel'
                 }

@@ -63,10 +63,6 @@ export class PostThreadItemModel {
     return this.post.uri
   }
 
-  get isThreadMuted() {
-    return this.data.isThreadMuted
-  }
-
   get moderation(): PostModeration {
     return this.data.moderation
   }
@@ -127,10 +123,6 @@ export class PostThreadItemModel {
 
   async toggleRepost() {
     this.data.toggleRepost()
-  }
-
-  async toggleThreadMute() {
-    this.data.toggleThreadMute()
   }
 
   async delete() {

@@ -26,6 +26,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -42,6 +43,7 @@ export function Component({
   list?: ListModel
 }) {
   const store = useStores()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
@@ -70,8 +72,8 @@ export function Component({
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
@@ -126,7 +128,7 @@ export function Component({
         Toast.show(`${purposeLabel} list created`)
         onSave?.(res.uri)
       }
-      store.shell.closeModal()
+      closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
@@ -144,6 +146,7 @@ export function Component({
     error,
     onSave,
     store,
+    closeModal,
     activePurpose,
     isCurateList,
     purposeLabel,

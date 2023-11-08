@@ -13,7 +13,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
 import {ProfileModel} from 'state/models/content/profile'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
@@ -29,6 +28,7 @@ import Animated, {FadeOut} from 'react-native-reanimated'
 import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -42,12 +42,12 @@ export function Component({
   profileView: ProfileModel
   onUpdate?: () => void
 }) {
-  const store = useStores()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
   const {_} = useLingui()
+  const {closeModal} = useModalControls()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [displayName, setDisplayName] = useState<string>(
@@ -69,7 +69,7 @@ export function Component({
     RNImage | undefined | null
   >()
   const onPressCancel = () => {
-    store.shell.closeModal()
+    closeModal()
   }
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
@@ -126,7 +126,7 @@ export function Component({
       )
       Toast.show('Profile updated')
       onUpdate?.()
-      store.shell.closeModal()
+      closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
@@ -144,7 +144,7 @@ export function Component({
     error,
     profileView,
     onUpdate,
-    store,
+    closeModal,
     displayName,
     description,
     newUserAvatar,

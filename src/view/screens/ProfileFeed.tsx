@@ -49,6 +49,7 @@ import {ComposeIcon2} from 'lib/icons'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -140,6 +141,7 @@ export const ProfileFeedScreenInner = observer(
     route,
     feedOwnerDid,
   }: Props & {feedOwnerDid: string}) {
+    const {openModal} = useModalControls()
     const pal = usePalette('default')
     const store = useStores()
     const {track} = useAnalytics()
@@ -214,12 +216,12 @@ export const ProfileFeedScreenInner = observer(
 
     const onPressReport = React.useCallback(() => {
       if (!feedInfo) return
-      store.shell.openModal({
+      openModal({
         name: 'report',
         uri: feedInfo.uri,
         cid: feedInfo.cid,
       })
-    }, [store, feedInfo])
+    }, [openModal, feedInfo])
 
     const onCurrentPageSelected = React.useCallback(
       (index: number) => {

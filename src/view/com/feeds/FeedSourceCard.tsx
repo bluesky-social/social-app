@@ -10,12 +10,12 @@ import {observer} from 'mobx-react-lite'
 import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
-import {useStores} from 'state/index'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 export const FeedSourceCard = observer(function FeedSourceCardImpl({
   item,
@@ -30,13 +30,13 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
   showDescription?: boolean
   showLikes?: boolean
 }) {
-  const store = useStores()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
+  const {openModal} = useModalControls()
 
   const onToggleSaved = React.useCallback(async () => {
     if (item.isSaved) {
-      store.shell.openModal({
+      openModal({
         name: 'confirm',
         title: 'Remove from my feeds',
         message: `Remove ${item.displayName} from my feeds?`,
@@ -59,7 +59,7 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
         logger.error('Failed to save feed', {error: e})
       }
     }
-  }, [store, item])
+  }, [openModal, item])
 
   return (
     <Pressable

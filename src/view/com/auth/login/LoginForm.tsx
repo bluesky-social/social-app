@@ -25,6 +25,7 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {styles} from './styles'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const LoginForm = ({
   store,
@@ -57,9 +58,10 @@ export const LoginForm = ({
   const [password, setPassword] = useState<string>('')
   const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
+  const {openModal} = useModalControls()
 
   const onPressSelectService = () => {
-    store.shell.openModal({
+    openModal({
       name: 'server-input',
       initialService: serviceUrl,
       onSelect: setServiceUrl,

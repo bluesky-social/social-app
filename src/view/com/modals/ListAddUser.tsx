@@ -28,6 +28,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {HITSLOP_20} from '#/lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['90%']
 
@@ -41,6 +42,7 @@ export const Component = observer(function Component({
   const pal = usePalette('default')
   const store = useStores()
   const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = useState('')
   const autocompleteView = useMemo<UserAutocompleteModel>(
@@ -149,7 +151,7 @@ export const Component = observer(function Component({
           <Button
             testID="doneBtn"
             type="default"
-            onPress={() => store.shell.closeModal()}
+            onPress={() => closeModal()}
             accessibilityLabel={_(msg`Done`)}
             accessibilityHint=""
             label="Done"

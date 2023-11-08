@@ -51,6 +51,13 @@ import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModals, useModalControls} from '#/state/modals'
+import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+  toPostLanguages,
+} from '#/state/preferences/languages'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -59,11 +66,16 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
 }: Props) {
+  const {activeModals} = useModals()
+  const {openModal, closeModal} = useModalControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
   const store = useStores()
   const {_} = useLingui()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -111,18 +123,18 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
-        store.shell.closeModal()
+      if (activeModals.some(modal => modal.name === 'confirm')) {
+        closeModal()
       }
       if (Keyboard) {
         Keyboard.dismiss()
       }
-      store.shell.openModal({
+      openModal({
         name: 'confirm',
         title: 'Discard draft',
         onPressConfirm: onClose,
         onPressCancel: () => {
-          store.shell.closeModal()
+          closeModal()
         },
         message: "Are you sure you'd like to discard this draft?",
         confirmBtnText: 'Discard',
@@ -131,7 +143,7 @@ export const ComposePost = observer(function ComposePost({
     } else {
       onClose()
     }
-  }, [store, onClose, graphemeLength, gallery])
+  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery])
   // android back button
   useEffect(() => {
     if (!isAndroid) {
@@ -190,7 +202,7 @@ export const ComposePost = observer(function ComposePost({
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
+    if (requireAltTextEnabled && gallery.needsAltText) {
       return
     }
 
@@ -213,7 +225,7 @@ export const ComposePost = observer(function ComposePost({
         labels,
         onStateChange: setProcessingState,
         knownHandles: autocompleteView.knownHandles,
-        langs: store.preferences.postLanguages,
+        langs: toPostLanguages(langPrefs.postLanguage),
       })
     } catch (e: any) {
       if (extLink) {
@@ -235,7 +247,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
-    store.preferences.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
@@ -244,12 +256,8 @@ export const ComposePost = observer(function ComposePost({
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
-      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
-    [
-      graphemeLength,
-      store.preferences.requireAltTextEnabled,
-      gallery.needsAltText,
-    ],
+      (!requireAltTextEnabled || !gallery.needsAltText),
+    [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
@@ -321,7 +329,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           )}
         </View>
-        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+        {requireAltTextEnabled && gallery.needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon
