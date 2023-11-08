@@ -34,6 +34,7 @@ import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {logger} from '#/logger'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
+import {useLanguagePrefs} from '#/state/preferences'
 
 export const Post = observer(function PostImpl({
   view,
@@ -109,6 +110,7 @@ const PostLoaded = observer(function PostLoadedImpl({
   const store = useStores()
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
+  const langPrefs = useLanguagePrefs()
   const [limitLines, setLimitLines] = React.useState(
     countLines(item.richText?.text) >= MAX_POST_LINES,
   )
@@ -125,7 +127,7 @@ const PostLoaded = observer(function PostLoadedImpl({
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
-    store.preferences.primaryLanguage,
+    langPrefs.primaryLanguage,
   )
 
   const onPressReply = React.useCallback(() => {
