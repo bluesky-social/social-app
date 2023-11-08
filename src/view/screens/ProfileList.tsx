@@ -2,6 +2,7 @@ import React, {useCallback, useMemo} from 'react'
 import {
   ActivityIndicator,
   FlatList,
+  NativeScrollEvent,
   Pressable,
   StyleSheet,
   View,
@@ -10,6 +11,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {RichText as RichTextAPI} from '@atproto/api'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -33,7 +35,6 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -46,6 +47,7 @@ import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -107,6 +109,7 @@ export const ProfileListScreenInner = observer(
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
     const {_} = useLingui()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {rkey} = route.params
     const feedSectionRef = React.useRef<SectionRef>(null)
     const aboutSectionRef = React.useRef<SectionRef>(null)
@@ -126,13 +129,13 @@ export const ProfileListScreenInner = observer(
 
     useFocusEffect(
       useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         list.loadMore(true).then(() => {
           if (list.isCuratelist) {
             feed.setup()
           }
         })
-      }, [store, list, feed]),
+      }, [setMinimalShellMode, list, feed]),
     )
 
     const onPressAddUser = useCallback(() => {
@@ -168,11 +171,11 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <PagerWithHeader
             items={SECTION_TITLES_CURATE}
+            isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}
             onCurrentPageSelected={onCurrentPageSelected}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <FeedSection
-                key="1"
                 ref={feedSectionRef}
                 feed={feed}
                 onScroll={onScroll}
@@ -182,7 +185,6 @@ export const ProfileListScreenInner = observer(
             )}
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
-                key="2"
                 ref={aboutSectionRef}
                 list={list}
                 descriptionRT={list.descriptionRT}
@@ -218,10 +220,10 @@ export const ProfileListScreenInner = observer(
         <View style={s.hContentRegion}>
           <PagerWithHeader
             items={SECTION_TITLES_MOD}
+            isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}>
             {({onScroll, headerHeight, isScrolledDown}) => (
               <AboutSection
-                key="2"
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
@@ -254,7 +256,7 @@ export const ProfileListScreenInner = observer(
     return (
       <CenteredView sideBorders style={s.hContentRegion}>
         <Header rkey={rkey} list={list} />
-        {list.error && <ErrorScreen error={list.error} />}
+        {list.error ? <ErrorScreen error={list.error} /> : null}
       </CenteredView>
     )
   },
@@ -551,7 +553,7 @@ const Header = observer(function HeaderImpl({
 
 interface FeedSectionProps {
   feed: PostsFeedModel
-  onScroll: OnScrollCb
+  onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -575,13 +577,14 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return <EmptyState icon="feed" message="This feed is empty!" />
     }, [])
 
+    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <Feed
           testID="listFeed"
           feed={feed}
           scrollElRef={scrollElRef}
-          onScroll={onScroll}
+          onScroll={scrollHandler}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
@@ -605,7 +608,7 @@ interface AboutSectionProps {
   isCurateList: boolean | undefined
   isOwner: boolean | undefined
   onPressAddUser: () => void
-  onScroll: OnScrollCb
+  onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -736,6 +739,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       )
     }, [])
 
+    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <ListItems
@@ -745,7 +749,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           renderEmptyState={renderEmptyState}
           list={list}
           headerOffset={headerHeight}
-          onScroll={onScroll}
+          onScroll={scrollHandler}
           scrollEventThrottle={1}
         />
         {isScrolledDown && (

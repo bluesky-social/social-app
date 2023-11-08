@@ -8,6 +8,8 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 
 import 'view/icons'
 
+import {init as initPersistedState} from '#/state/persisted'
+import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from 'view/shell/index'
@@ -17,8 +19,10 @@ import {queryClient} from 'lib/react-query'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {defaultLocale, dynamicActivate} from './locale/i18n'
+import {Provider as ShellStateProvider} from 'state/shell'
 
-const App = observer(function AppImpl() {
+const InnerApp = observer(function AppImpl() {
+  const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -39,7 +43,7 @@ const App = observer(function AppImpl() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={rootStore.shell.colorMode}>
+      <ThemeProvider theme={colorMode}>
         <RootSiblingParent>
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
@@ -56,5 +60,23 @@ const App = observer(function AppImpl() {
     </QueryClientProvider>
   )
 })
+
+function App() {
+  const [isReady, setReady] = useState(false)
+
+  React.useEffect(() => {
+    initPersistedState().then(() => setReady(true))
+  }, [])
+
+  if (!isReady) {
+    return null
+  }
+
+  return (
+    <ShellStateProvider>
+      <InnerApp />
+    </ShellStateProvider>
+  )
+}
 
 export default App

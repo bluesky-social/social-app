@@ -9,6 +9,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {SplashScreen} from './SplashScreen'
+import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -19,6 +20,7 @@ enum ScreenState {
 export const LoggedOut = observer(function LoggedOutImpl() {
   const pal = usePalette('default')
   const store = useStores()
+  const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const [screenState, setScreenState] = React.useState<ScreenState>(
     ScreenState.S_LoginOrCreateAccount,
@@ -26,8 +28,8 @@ export const LoggedOut = observer(function LoggedOutImpl() {
 
   React.useEffect(() => {
     screen('Login')
-    store.shell.setMinimalShellMode(true)
-  }, [store, screen])
+    setMinimalShellMode(true)
+  }, [screen, setMinimalShellMode])
 
   if (
     store.session.isResumingSession ||

@@ -5,13 +5,13 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {CenteredView} from './Views'
 import {Text} from './text/Text'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
+import {useSetDrawerOpen} from '#/state/shell'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -33,7 +33,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
@@ -48,8 +48,8 @@ export const ViewHeader = observer(function ViewHeaderImpl({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.openDrawer()
-  }, [track, store])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   if (isDesktop) {
     if (showOnDesktop) {

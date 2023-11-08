@@ -13,10 +13,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -24,13 +25,14 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   const pal = usePalette('default')
   const store = useStores()
   const {_} = useLingui()
+  const setDrawerOpen = useSetDrawerOpen()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
-  const {headerMinimalShellTransform} = useMinimalShellMode()
+  const {minimalShellMode, headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
-    store.shell.openDrawer()
-  }, [store])
+    setDrawerOpen(true)
+  }, [setDrawerOpen])
 
   return (
     <Animated.View
@@ -39,7 +41,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         pal.border,
         styles.tabBar,
         headerMinimalShellTransform,
-        store.shell.minimalShellMode && styles.disabled,
+        minimalShellMode && styles.disabled,
       ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>

@@ -45,12 +45,14 @@ import {isWeb} from 'platform/detection'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSetDrawerOpen} from '#/state/shell'
 
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
   const pal = usePalette('default')
   const store = useStores()
   const {_} = useLingui()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
@@ -65,7 +67,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     (tab: string) => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
-      store.shell.closeDrawer()
+      setDrawerOpen(false)
       if (isWeb) {
         // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
         if (tab === 'MyProfile') {
@@ -86,7 +88,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         }
       }
     },
-    [store, track, navigation],
+    [store, track, navigation, setDrawerOpen],
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
@@ -113,20 +115,20 @@ export const DrawerContent = observer(function DrawerContentImpl() {
   const onPressLists = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Lists'})
     navigation.navigate('Lists')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
 
   const onPressModeration = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Moderation'})
     navigation.navigate('Moderation')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
 
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
-    store.shell.closeDrawer()
-  }, [navigation, track, store.shell])
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
 
   const onPressFeedback = React.useCallback(() => {
     track('Menu:FeedbackClicked')
@@ -440,13 +442,14 @@ const InviteCodes = observer(function InviteCodesImpl({
 }) {
   const {track} = useAnalytics()
   const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const pal = usePalette('default')
   const {invitesAvailable} = store.me
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
-    store.shell.closeDrawer()
+    setDrawerOpen(false)
     store.shell.openModal({name: 'invite-codes'})
-  }, [store, track])
+  }, [store, track, setDrawerOpen])
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"

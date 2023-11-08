@@ -18,20 +18,22 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
   observer(function AppPasswordsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {screen} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
 
     useFocusEffect(
       React.useCallback(() => {
         screen('AppPasswords')
-        store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
+        setMinimalShellMode(false)
+      }, [screen, setMinimalShellMode]),
     )
 
     const onAdd = React.useCallback(async () => {

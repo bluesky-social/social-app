@@ -19,6 +19,7 @@ import {isNative} from 'platform/detection'
 import {ImagesLightbox} from 'state/models/ui/shell'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useSetDrawerOpen} from '#/state/shell'
 
 export const ProfileSubpageHeader = observer(function HeaderImpl({
   isLoading,
@@ -44,6 +45,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   avatarType: UserAvatarType
 }>) {
   const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
@@ -59,8 +61,8 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   }, [navigation])
 
   const onPressMenu = React.useCallback(() => {
-    store.shell.openDrawer()
-  }, [store])
+    setDrawerOpen(true)
+  }, [setDrawerOpen])
 
   const onPressAvi = React.useCallback(() => {
     if (

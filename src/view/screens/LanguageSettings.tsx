@@ -18,6 +18,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {LANGUAGES} from 'lib/../locale/languages'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -28,12 +29,13 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
   const store = useStores()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {
       screen('Settings')
-      store.shell.setMinimalShellMode(false)
-    }, [screen, store]),
+      setMinimalShellMode(false)
+    }, [screen, setMinimalShellMode]),
   )
 
   const onPressContentLanguages = React.useCallback(() => {

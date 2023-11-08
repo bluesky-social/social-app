@@ -1,7 +1,14 @@
 import React, {useMemo, useCallback} from 'react'
-import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {
+  FlatList,
+  NativeScrollEvent,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
+import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -26,7 +33,6 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -337,11 +343,11 @@ export const ProfileFeedScreenInner = observer(
       <View style={s.hContentRegion}>
         <PagerWithHeader
           items={SECTION_TITLES}
+          isHeaderReady={feedInfo?.hasLoaded ?? false}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
           {({onScroll, headerHeight, isScrolledDown}) => (
             <FeedSection
-              key="1"
               ref={feedSectionRef}
               feed={feed}
               onScroll={onScroll}
@@ -350,18 +356,14 @@ export const ProfileFeedScreenInner = observer(
             />
           )}
           {({onScroll, headerHeight}) => (
-            <ScrollView
-              key="2"
+            <AboutSection
+              feedOwnerDid={feedOwnerDid}
+              feedRkey={rkey}
+              feedInfo={feedInfo}
+              headerHeight={headerHeight}
+              onToggleLiked={onToggleLiked}
               onScroll={onScroll}
-              scrollEventThrottle={1}
-              contentContainerStyle={{paddingTop: headerHeight}}>
-              <AboutSection
-                feedOwnerDid={feedOwnerDid}
-                feedRkey={rkey}
-                feedInfo={feedInfo}
-                onToggleLiked={onToggleLiked}
-              />
-            </ScrollView>
+            />
           )}
         </PagerWithHeader>
         <FAB
@@ -385,7 +387,7 @@ export const ProfileFeedScreenInner = observer(
 
 interface FeedSectionProps {
   feed: PostsFeedModel
-  onScroll: OnScrollCb
+  onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -410,12 +412,13 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return <EmptyState icon="feed" message="This feed is empty!" />
     }, [])
 
+    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <Feed
           feed={feed}
           scrollElRef={scrollElRef}
-          onScroll={onScroll}
+          onScroll={scrollHandler}
           scrollEventThrottle={5}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
@@ -436,83 +439,94 @@ const AboutSection = observer(function AboutPageImpl({
   feedOwnerDid,
   feedRkey,
   feedInfo,
+  headerHeight,
   onToggleLiked,
+  onScroll,
 }: {
   feedOwnerDid: string
   feedRkey: string
   feedInfo: FeedSourceModel | undefined
+  headerHeight: number
   onToggleLiked: () => void
+  onScroll: (e: NativeScrollEvent) => void
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const scrollHandler = useAnimatedScrollHandler({onScroll})
 
   if (!feedInfo) {
     return <View />
   }
+
   return (
-    <View
-      style={[
-        {
-          borderTopWidth: 1,
-          paddingVertical: 20,
-          paddingHorizontal: 20,
-          gap: 12,
-        },
-        pal.border,
-      ]}>
-      {feedInfo.descriptionRT ? (
-        <RichText
-          testID="listDescription"
-          type="lg"
-          style={pal.text}
-          richText={feedInfo.descriptionRT}
-        />
-      ) : (
-        <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-          <Trans>No description</Trans>
-        </Text>
-      )}
-      <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-        <Button
-          type="default"
-          testID="toggleLikeBtn"
-          accessibilityLabel={_(msg`Like this feed`)}
-          accessibilityHint=""
-          onPress={onToggleLiked}
-          style={{paddingHorizontal: 10}}>
-          {feedInfo?.isLiked ? (
-            <HeartIconSolid size={19} style={styles.liked} />
-          ) : (
-            <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
-          )}
-        </Button>
-        {typeof feedInfo.likeCount === 'number' && (
-          <TextLink
-            href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-            text={`Liked by ${feedInfo.likeCount} ${pluralize(
-              feedInfo.likeCount,
-              'user',
-            )}`}
-            style={[pal.textLight, s.semiBold]}
+    <ScrollView
+      scrollEventThrottle={1}
+      contentContainerStyle={{paddingTop: headerHeight}}
+      onScroll={scrollHandler}>
+      <View
+        style={[
+          {
+            borderTopWidth: 1,
+            paddingVertical: 20,
+            paddingHorizontal: 20,
+            gap: 12,
+          },
+          pal.border,
+        ]}>
+        {feedInfo.descriptionRT ? (
+          <RichText
+            testID="listDescription"
+            type="lg"
+            style={pal.text}
+            richText={feedInfo.descriptionRT}
           />
-        )}
-      </View>
-      <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-        Created by{' '}
-        {feedInfo.isOwner ? (
-          'you'
         ) : (
-          <TextLink
-            text={sanitizeHandle(feedInfo.creatorHandle, '@')}
-            href={makeProfileLink({
-              did: feedInfo.creatorDid,
-              handle: feedInfo.creatorHandle,
-            })}
-            style={pal.textLight}
-          />
+          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+            No description
+          </Text>
         )}
-      </Text>
-    </View>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+          <Button
+            type="default"
+            testID="toggleLikeBtn"
+            accessibilityLabel="Like this feed"
+            accessibilityHint=""
+            onPress={onToggleLiked}
+            style={{paddingHorizontal: 10}}>
+            {feedInfo?.isLiked ? (
+              <HeartIconSolid size={19} style={styles.liked} />
+            ) : (
+              <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
+            )}
+          </Button>
+          {typeof feedInfo.likeCount === 'number' && (
+            <TextLink
+              href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
+              text={`Liked by ${feedInfo.likeCount} ${pluralize(
+                feedInfo.likeCount,
+                'user',
+              )}`}
+              style={[pal.textLight, s.semiBold]}
+            />
+          )}
+        </View>
+        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          Created by{' '}
+          {feedInfo.isOwner ? (
+            'you'
+          ) : (
+            <TextLink
+              text={sanitizeHandle(feedInfo.creatorHandle, '@')}
+              href={makeProfileLink({
+                did: feedInfo.creatorDid,
+                handle: feedInfo.creatorHandle,
+              })}
+              style={pal.textLight}
+            />
+          )}
+        </Text>
+      </View>
+    </ScrollView>
   )
 })
 

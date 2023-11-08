@@ -18,18 +18,22 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
+import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
+  const isDrawerOpen = useIsDrawerOpen()
+  const setDrawerOpen = useSetDrawerOpen()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   useAuxClick()
 
   useEffect(() => {
     navigator.addListener('state', () => {
+      setDrawerOpen(false)
       store.shell.closeAnyActiveElement()
     })
-  }, [navigator, store.shell])
+  }, [navigator, store.shell, setDrawerOpen])
 
   const showBottomBar = isMobile && !store.onboarding.isActive
   const showSideNavs =
@@ -58,9 +62,9 @@ const ShellInner = observer(function ShellInnerImpl() {
       {showBottomBar && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
-      {!isDesktop && store.shell.isDrawerOpen && (
+      {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
-          onPress={() => store.shell.closeDrawer()}
+          onPress={() => setDrawerOpen(false)}
           style={styles.drawerMask}
           accessibilityLabel={t`Close navigation footer`}
           accessibilityHint="Closes bottom navigation bar">

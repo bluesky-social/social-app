@@ -29,6 +29,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 export const FeedsScreen = withAuthRequired(
@@ -36,6 +37,7 @@ export const FeedsScreen = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const {_} = useLingui()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const myFeeds = store.me.myFeeds
     const [query, setQuery] = React.useState<string>('')
@@ -46,14 +48,14 @@ export const FeedsScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         myFeeds.setup()
 
         const softResetSub = store.onScreenSoftReset(() => myFeeds.refresh())
         return () => {
           softResetSub.remove()
         }
-      }, [store, myFeeds]),
+      }, [store, myFeeds, setMinimalShellMode]),
     )
     React.useEffect(() => {
       // watch for changes to saved/pinned feeds
@@ -295,13 +297,13 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
         <Text type="lg-medium" style={pal.text} numberOfLines={1}>
           {feed.displayName}
         </Text>
-        {feed.error && (
+        {feed.error ? (
           <View style={[styles.offlineSlug, pal.borderDark]}>
             <Text type="xs" style={pal.textLight}>
               <Trans>Feed offline</Trans>
             </Text>
           </View>
-        )}
+        ) : null}
       </View>
       {isMobile && (
         <FontAwesomeIcon

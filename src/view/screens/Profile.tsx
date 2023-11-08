@@ -32,11 +32,13 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(
   observer(function ProfileScreenImpl({route}: Props) {
     const store = useStores()
+    const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const {_} = useLingui()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
@@ -72,7 +74,7 @@ export const ProfileScreen = withAuthRequired(
       React.useCallback(() => {
         const softResetSub = store.onScreenSoftReset(onSoftReset)
         let aborted = false
-        store.shell.setMinimalShellMode(false)
+        setMinimalShellMode(false)
         const feedCleanup = uiState.feed.registerListeners()
         if (!hasSetup) {
           uiState.setup().then(() => {
@@ -87,7 +89,7 @@ export const ProfileScreen = withAuthRequired(
           feedCleanup()
           softResetSub.remove()
         }
-      }, [store, onSoftReset, uiState, hasSetup]),
+      }, [store, onSoftReset, uiState, hasSetup, setMinimalShellMode]),
     )
 
     // events

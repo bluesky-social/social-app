@@ -6,6 +6,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   View,
+  BackHandler,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
@@ -18,7 +19,6 @@ import {DrawerContent} from './Drawer'
 import {Composer} from './Composer'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
-import * as backHandler from 'lib/routes/back-handler'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {
@@ -26,9 +26,18 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
+import {
+  useIsDrawerOpen,
+  useSetDrawerOpen,
+  useIsDrawerSwipeDisabled,
+} from '#/state/shell'
+import {isAndroid} from 'platform/detection'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
+  const isDrawerOpen = useIsDrawerOpen()
+  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
+  const setIsDrawerOpen = useSetDrawerOpen()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
@@ -38,20 +47,26 @@ const ShellInner = observer(function ShellInnerImpl() {
   )
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = React.useCallback(
-    () => store.shell.openDrawer(),
-    [store],
+    () => setIsDrawerOpen(true),
+    [setIsDrawerOpen],
   )
   const onCloseDrawer = React.useCallback(
-    () => store.shell.closeDrawer(),
-    [store],
+    () => setIsDrawerOpen(false),
+    [setIsDrawerOpen],
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   React.useEffect(() => {
-    const listener = backHandler.init(store)
-    return () => {
-      listener()
+    let listener = {remove() {}}
+    if (isAndroid) {
+      listener = BackHandler.addEventListener('hardwareBackPress', () => {
+        setIsDrawerOpen(false)
+        return store.shell.closeAnyActiveElement()
+      })
     }
-  }, [store])
+    return () => {
+      listener.remove()
+    }
+  }, [store, setIsDrawerOpen])
 
   return (
     <>
@@ -59,14 +74,12 @@ const ShellInner = observer(function ShellInnerImpl() {
         <ErrorBoundary>
           <Drawer
             renderDrawerContent={renderDrawerContent}
-            open={store.shell.isDrawerOpen}
+            open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
             swipeEnabled={
-              !canGoBack &&
-              store.session.hasSession &&
-              !store.shell.isDrawerSwipeDisabled
+              !canGoBack && store.session.hasSession && !isDrawerSwipeDisabled
             }>
             <TabsNavigator />
           </Drawer>
