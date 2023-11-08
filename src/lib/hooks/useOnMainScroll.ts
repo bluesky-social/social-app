@@ -33,9 +33,12 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
         const dy = y - (lastY.current || 0)
         lastY.current = y
 
-        if (!minimalShellMode && dy > dyLimitDown && y > Y_LIMIT) {
+        if (!minimalShellMode.value && dy > dyLimitDown && y > Y_LIMIT) {
           setMinimalShellMode(true)
-        } else if (minimalShellMode && (dy < dyLimitUp * -1 || y <= Y_LIMIT)) {
+        } else if (
+          minimalShellMode.value &&
+          (dy < dyLimitUp * -1 || y <= Y_LIMIT)
+        ) {
           setMinimalShellMode(false)
         }
 
