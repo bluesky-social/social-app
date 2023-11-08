@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   layoutAvi: {
-    alignSelf: 'baseline',
+    alignSelf: 'flex-start',
     width: 54,
     paddingLeft: 4,
     paddingTop: 10,
@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
+    paddingTop: 15,
   },
   pills: {
     flexDirection: 'row',
