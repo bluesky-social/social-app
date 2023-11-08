@@ -50,6 +50,8 @@ import {
   useSetMinimalShellMode,
   useColorMode,
   useSetColorMode,
+  useRequireAltTextEnabled,
+  useSetRequireAltTextEnabled,
 } from '#/state/shell'
 
 // TEMPORARY (APP-700)
@@ -66,6 +68,8 @@ export const SettingsScreen = withAuthRequired(
     const pal = usePalette('default')
     const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
+    const requireAltTextEnabled = useRequireAltTextEnabled()
+    const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
@@ -372,8 +376,8 @@ export const SettingsScreen = withAuthRequired(
               type="default-light"
               label="Require alt text before posting"
               labelType="lg"
-              isSelected={store.preferences.requireAltTextEnabled}
-              onPress={store.preferences.toggleRequireAltTextEnabled}
+              isSelected={requireAltTextEnabled}
+              onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
             />
           </View>
 
