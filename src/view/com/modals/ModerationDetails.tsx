@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {ModerationUI} from '@atproto/api'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../util/text/Text'
@@ -10,6 +9,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {listUriToHref} from 'lib/strings/url-helpers'
 import {Button} from '../util/forms/Button'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = [300]
 
@@ -20,7 +20,7 @@ export function Component({
   context: 'account' | 'content'
   moderation: ModerationUI
 }) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
 
@@ -99,10 +99,7 @@ export function Component({
         {description}
       </Text>
       <View style={s.flex1} />
-      <Button
-        type="primary"
-        style={styles.btn}
-        onPress={() => store.shell.closeModal()}>
+      <Button type="primary" style={styles.btn} onPress={() => closeModal()}>
         <Text type="button-lg" style={[pal.textLight, s.textCenter, s.white]}>
           Okay
         </Text>

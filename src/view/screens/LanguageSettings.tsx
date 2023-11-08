@@ -2,7 +2,6 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -19,6 +18,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {LANGUAGES} from 'lib/../locale/languages'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useSetLanguagePrefs} from '#/state/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
@@ -27,12 +27,12 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
   _: Props,
 ) {
   const pal = usePalette('default')
-  const store = useStores()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useSetLanguagePrefs()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {openModal} = useModalControls()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -43,8 +43,8 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
 
   const onPressContentLanguages = React.useCallback(() => {
     track('Settings:ContentlanguagesButtonClicked')
-    store.shell.openModal({name: 'content-languages-settings'})
-  }, [track, store])
+    openModal({name: 'content-languages-settings'})
+  }, [track, openModal])
 
   const onChangePrimaryLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {

@@ -6,26 +6,26 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['80%']
 
 export function Component({onSelect}: {onSelect: (url: string) => void}) {
   const theme = useTheme()
   const pal = usePalette('default')
-  const store = useStores()
   const [customUrl, setCustomUrl] = useState<string>('')
+  const {closeModal} = useModalControls()
 
   const doSelect = (url: string) => {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = `https://${url}`
     }
-    store.shell.closeModal()
+    closeModal()
     onSelect(url)
   }
 

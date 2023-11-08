@@ -6,7 +6,7 @@ import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
-import {useStores} from 'state/index'
+import {useModalControls} from '#/state/modals'
 
 export function ContentHider({
   testID,
@@ -22,10 +22,10 @@ export function ContentHider({
   style?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
-  const store = useStores()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
+  const {openModal} = useModalControls()
 
   if (!moderation.blur || (ignoreMute && moderation.cause?.type === 'muted')) {
     return (
@@ -43,7 +43,7 @@ export function ContentHider({
           if (!moderation.noOverride) {
             setOverride(v => !v)
           } else {
-            store.shell.openModal({
+            openModal({
               name: 'moderation-details',
               context: 'content',
               moderation,
@@ -62,7 +62,7 @@ export function ContentHider({
         ]}>
         <Pressable
           onPress={() => {
-            store.shell.openModal({
+            openModal({
               name: 'moderation-details',
               context: 'content',
               moderation,

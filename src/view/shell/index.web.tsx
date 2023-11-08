@@ -22,11 +22,13 @@ import {
   useSetDrawerOpen,
   useOnboardingState,
 } from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
+  const {closeModal} = useModalControls()
   const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
@@ -35,9 +37,10 @@ const ShellInner = observer(function ShellInnerImpl() {
   useEffect(() => {
     navigator.addListener('state', () => {
       setDrawerOpen(false)
+      closeModal()
       store.shell.closeAnyActiveElement()
     })
-  }, [navigator, store.shell, setDrawerOpen])
+  }, [navigator, store.shell, setDrawerOpen, closeModal])
 
   const showBottomBar = isMobile && !onboardingState.isActive
   const showSideNavs =

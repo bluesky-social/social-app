@@ -3,13 +3,13 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
-import {useStores} from 'state/index'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
 import {timeout} from 'lib/async/timeout'
 import {navigate} from '../../../Navigation'
 import once from 'lodash.once'
 
+import {useModals, useModalControls} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
@@ -41,17 +41,17 @@ const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
 
 export const ModalsContainer = observer(function ModalsContainer() {
-  const store = useStores()
+  const {isModalActive, activeModals} = useModals()
+  const {closeModal} = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
 
-  const activeModal =
-    store.shell.activeModals[store.shell.activeModals.length - 1]
+  const activeModal = activeModals[activeModals.length - 1]
 
   const navigateOnce = once(navigate)
 
-  const onBottomSheetAnimate = (fromIndex: number, toIndex: number) => {
+  const onBottomSheetAnimate = (_fromIndex: number, toIndex: number) => {
     if (activeModal?.name === 'profile-preview' && toIndex === 1) {
       // begin loading the profile screen behind the scenes
       navigateOnce('Profile', {name: activeModal.did})
@@ -59,7 +59,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
   }
   const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
-      store.shell.closeModal()
+      closeModal()
     } else if (activeModal?.name === 'profile-preview' && snapPoint === 1) {
       await navigateOnce('Profile', {name: activeModal.did})
       // There is no particular callback for when the view has actually been presented.
@@ -67,21 +67,21 @@ export const ModalsContainer = observer(function ModalsContainer() {
       // It's acceptable because the data is already being fetched + it usually takes longer anyway.
       // TODO: Figure out why avatar/cover don't always show instantly from cache.
       await timeout(200)
-      store.shell.closeModal()
+      closeModal()
     }
   }
   const onClose = () => {
     bottomSheetRef.current?.close()
-    store.shell.closeModal()
+    closeModal()
   }
 
   useEffect(() => {
-    if (store.shell.isModalActive) {
+    if (isModalActive) {
       bottomSheetRef.current?.expand()
     } else {
       bottomSheetRef.current?.close()
     }
-  }, [store.shell.isModalActive, bottomSheetRef, activeModal?.name])
+  }, [isModalActive, bottomSheetRef, activeModal?.name])
 
   let needsSafeTopInset = false
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
@@ -184,12 +184,12 @@ export const ModalsContainer = observer(function ModalsContainer() {
       snapPoints={snapPoints}
       topInset={topInset}
       handleHeight={HANDLE_HEIGHT}
-      index={store.shell.isModalActive ? 0 : -1}
+      index={isModalActive ? 0 : -1}
       enablePanDownToClose
       android_keyboardInputMode="adjustResize"
       keyboardBlurBehavior="restore"
       backdropComponent={
-        store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
+        isModalActive ? createCustomBackdrop(onClose) : undefined
       }
       handleIndicatorStyle={{backgroundColor: pal.text.color}}
       handleStyle={[styles.handle, pal.view]}

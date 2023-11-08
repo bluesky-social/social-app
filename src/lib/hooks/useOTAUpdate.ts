@@ -1,15 +1,15 @@
 import * as Updates from 'expo-updates'
 import {useCallback, useEffect} from 'react'
 import {AppState} from 'react-native'
-import {useStores} from 'state/index'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 export function useOTAUpdate() {
-  const store = useStores()
+  const {openModal} = useModalControls()
 
   // HELPER FUNCTIONS
   const showUpdatePopup = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Update Available',
       message:
@@ -20,7 +20,7 @@ export function useOTAUpdate() {
         })
       },
     })
-  }, [store.shell])
+  }, [openModal])
   const checkForUpdate = useCallback(async () => {
     logger.debug('useOTAUpdate: Checking for update...')
     try {

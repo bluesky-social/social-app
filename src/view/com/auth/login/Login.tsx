@@ -31,6 +31,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
 import {isWeb} from 'platform/detection'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 enum Forms {
   Login,
@@ -303,9 +304,10 @@ const LoginForm = ({
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
   const passwordInputRef = useRef<TextInput>(null)
+  const {openModal} = useModalControls()
 
   const onPressSelectService = () => {
-    store.shell.openModal({
+    openModal({
       name: 'server-input',
       initialService: serviceUrl,
       onSelect: setServiceUrl,
@@ -528,7 +530,6 @@ const LoginForm = ({
 }
 
 const ForgotPasswordForm = ({
-  store,
   error,
   serviceUrl,
   serviceDescription,
@@ -551,13 +552,14 @@ const ForgotPasswordForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const {screen} = useAnalytics()
+  const {openModal} = useModalControls()
 
   useEffect(() => {
     screen('Signin:ForgotPassword')
   }, [screen])
 
   const onPressSelectService = () => {
-    store.shell.openModal({
+    openModal({
       name: 'server-input',
       initialService: serviceUrl,
       onSelect: setServiceUrl,

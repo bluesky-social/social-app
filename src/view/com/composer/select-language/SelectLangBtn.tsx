@@ -12,9 +12,9 @@ import {
   DropdownItemButton,
 } from 'view/com/util/forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
 import {codeToLanguageName} from '../../../../locale/helpers'
+import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
   useSetLanguagePrefs,
@@ -24,7 +24,7 @@ import {
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
-  const store = useStores()
+  const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useSetLanguagePrefs()
 
@@ -34,8 +34,8 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         Keyboard.dismiss()
       }
     }
-    store.shell.openModal({name: 'post-languages-settings'})
-  }, [store])
+    openModal({name: 'post-languages-settings'})
+  }, [openModal])
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
   const items: DropdownItem[] = useMemo(() => {

@@ -7,6 +7,7 @@ import {AccountData} from 'state/models/session'
 import {reset as resetNavigation} from '../../Navigation'
 import * as Toast from 'view/com/util/Toast'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
+import {useModalControls} from '#/state/modals'
 
 export function useAccountSwitcher(): [
   boolean,
@@ -16,6 +17,7 @@ export function useAccountSwitcher(): [
   const {track} = useAnalytics()
   const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
+  const {closeModal} = useModalControls()
   const [isSwitching, setIsSwitching] = useState(false)
   const navigation = useNavigation<NavigationProp>()
 
@@ -25,6 +27,7 @@ export function useAccountSwitcher(): [
       setIsSwitching(true)
       const success = await store.session.resumeSession(acct)
       setDrawerOpen(false)
+      closeModal()
       store.shell.closeAllActiveElements()
       if (success) {
         resetNavigation()
@@ -36,7 +39,7 @@ export function useAccountSwitcher(): [
         store.session.clear()
       }
     },
-    [track, setIsSwitching, navigation, store, setDrawerOpen],
+    [track, setIsSwitching, navigation, store, setDrawerOpen, closeModal],
   )
 
   return [isSwitching, setIsSwitching, onPressSwitchAccount]

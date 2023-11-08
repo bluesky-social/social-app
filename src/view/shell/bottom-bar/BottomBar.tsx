@@ -24,12 +24,14 @@ import {styles} from './BottomBarStyles'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {useModalControls} from '#/state/modals'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
 export const BottomBar = observer(function BottomBarImpl({
   navigation,
 }: BottomTabBarProps) {
+  const {openModal} = useModalControls()
   const store = useStores()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
@@ -72,8 +74,8 @@ export const BottomBar = observer(function BottomBarImpl({
     onPressTab('MyProfile')
   }, [onPressTab])
   const onLongPressProfile = React.useCallback(() => {
-    store.shell.openModal({name: 'switch-account'})
-  }, [store])
+    openModal({name: 'switch-account'})
+  }, [openModal])
 
   return (
     <Animated.View

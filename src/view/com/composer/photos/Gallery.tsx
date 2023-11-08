@@ -7,11 +7,11 @@ import {s, colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
 import {Text} from 'view/com/util/text/Text'
-import {openAltTextModal} from 'lib/media/alt-text'
 import {Dimensions} from 'lib/media/types'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useModalControls} from '#/state/modals'
+import {isNative} from 'platform/detection'
 
 const IMAGE_GAP = 8
 
@@ -47,9 +47,9 @@ const GalleryInner = observer(function GalleryImpl({
   gallery,
   containerInfo,
 }: GalleryInnerProps) {
-  const store = useStores()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const {openModal} = useModalControls()
 
   let side: number
 
@@ -117,7 +117,10 @@ const GalleryInner = observer(function GalleryImpl({
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
-                openAltTextModal(store, image)
+                openModal({
+                  name: 'alt-text-image',
+                  image,
+                })
               }}
               style={[styles.altTextControl, altTextControlStyle]}>
               <Text style={styles.altTextControlLabel} accessible={false}>
@@ -137,7 +140,17 @@ const GalleryInner = observer(function GalleryImpl({
                 accessibilityRole="button"
                 accessibilityLabel="Edit image"
                 accessibilityHint=""
-                onPress={() => gallery.edit(image)}
+                onPress={() => {
+                  if (isNative) {
+                    gallery.crop(image)
+                  } else {
+                    openModal({
+                      name: 'edit-image',
+                      image,
+                      gallery,
+                    })
+                  }
+                }}
                 style={styles.imageControl}>
                 <FontAwesomeIcon
                   icon="pen"
@@ -165,7 +178,10 @@ const GalleryInner = observer(function GalleryImpl({
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
-                openAltTextModal(store, image)
+                openModal({
+                  name: 'alt-text-image',
+                  image,
+                })
               }}
               style={styles.altTextHiddenRegion}
             />

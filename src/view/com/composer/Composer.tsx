@@ -49,6 +49,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {useModals, useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useLanguagePrefs,
@@ -64,6 +65,8 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
 }: Props) {
+  const {activeModals} = useModals()
+  const {openModal, closeModal} = useModalControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
@@ -118,18 +121,18 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
-        store.shell.closeModal()
+      if (activeModals.some(modal => modal.name === 'confirm')) {
+        closeModal()
       }
       if (Keyboard) {
         Keyboard.dismiss()
       }
-      store.shell.openModal({
+      openModal({
         name: 'confirm',
         title: 'Discard draft',
         onPressConfirm: onClose,
         onPressCancel: () => {
-          store.shell.closeModal()
+          closeModal()
         },
         message: "Are you sure you'd like to discard this draft?",
         confirmBtnText: 'Discard',
@@ -138,7 +141,7 @@ export const ComposePost = observer(function ComposePost({
     } else {
       onClose()
     }
-  }, [store, onClose, graphemeLength, gallery])
+  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery])
   // android back button
   useEffect(() => {
     if (!isAndroid) {

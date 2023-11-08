@@ -17,9 +17,9 @@ import {MAX_ALT_TEXT} from 'lib/constants'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../util/text/Text'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from 'state/index'
 import {isAndroid, isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['fullscreen']
 
@@ -29,10 +29,10 @@ interface Props {
 
 export function Component({image}: Props) {
   const pal = usePalette('default')
-  const store = useStores()
   const theme = useTheme()
   const [altText, setAltText] = useState(image.altText)
   const windim = useWindowDimensions()
+  const {closeModal} = useModalControls()
 
   const imageStyles = useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -53,11 +53,11 @@ export function Component({image}: Props) {
 
   const onPressSave = useCallback(() => {
     image.setAltText(altText)
-    store.shell.closeModal()
-  }, [store, image, altText])
+    closeModal()
+  }, [closeModal, image, altText])
 
   const onPressCancel = () => {
-    store.shell.closeModal()
+    closeModal()
   }
 
   return (

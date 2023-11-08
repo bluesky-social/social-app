@@ -15,6 +15,7 @@ import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useModalControls} from '#/state/modals'
 import {useInvitesState, useInvitesAPI} from '#/state/invites'
 import {UserInfoText} from '../util/UserInfoText'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -25,11 +26,12 @@ export const snapPoints = ['70%']
 export function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
+  const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const onClose = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   if (store.me.invites.length === 0) {
     return (

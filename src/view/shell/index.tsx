@@ -32,12 +32,14 @@ import {
   useIsDrawerSwipeDisabled,
 } from '#/state/shell'
 import {isAndroid} from 'platform/detection'
+import {useModalControls} from '#/state/modals'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
+  const {closeModal} = useModalControls()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
@@ -60,13 +62,14 @@ const ShellInner = observer(function ShellInnerImpl() {
     if (isAndroid) {
       listener = BackHandler.addEventListener('hardwareBackPress', () => {
         setIsDrawerOpen(false)
+        closeModal()
         return store.shell.closeAnyActiveElement()
       })
     }
     return () => {
       listener.remove()
     }
-  }, [store, setIsDrawerOpen])
+  }, [store, setIsDrawerOpen, closeModal])
 
   return (
     <>

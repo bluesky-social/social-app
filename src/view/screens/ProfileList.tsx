@@ -46,6 +46,7 @@ import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -110,6 +111,7 @@ export const ProfileListScreenInner = observer(
     const {rkey} = route.params
     const feedSectionRef = React.useRef<SectionRef>(null)
     const aboutSectionRef = React.useRef<SectionRef>(null)
+    const {openModal} = useModalControls()
 
     const list: ListModel = useMemo(() => {
       const model = new ListModel(
@@ -136,7 +138,7 @@ export const ProfileListScreenInner = observer(
     )
 
     const onPressAddUser = useCallback(() => {
-      store.shell.openModal({
+      openModal({
         name: 'list-add-user',
         list,
         onAdd() {
@@ -145,7 +147,7 @@ export const ProfileListScreenInner = observer(
           }
         },
       })
-    }, [store, list, feed])
+    }, [openModal, list, feed])
 
     const onCurrentPageSelected = React.useCallback(
       (index: number) => {
@@ -268,8 +270,8 @@ const Header = observer(function HeaderImpl({
 }) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const store = useStores()
   const navigation = useNavigation<NavigationProp>()
+  const {openModal, closeModal} = useModalControls()
 
   const onTogglePinned = useCallback(async () => {
     Haptics.default()
@@ -280,7 +282,7 @@ const Header = observer(function HeaderImpl({
   }, [list])
 
   const onSubscribeMute = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Mute these accounts?',
       message:
@@ -297,10 +299,10 @@ const Header = observer(function HeaderImpl({
         }
       },
       onPressCancel() {
-        store.shell.closeModal()
+        closeModal()
       },
     })
-  }, [store, list])
+  }, [openModal, closeModal, list])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
@@ -314,7 +316,7 @@ const Header = observer(function HeaderImpl({
   }, [list])
 
   const onSubscribeBlock = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Block these accounts?',
       message:
@@ -331,10 +333,10 @@ const Header = observer(function HeaderImpl({
         }
       },
       onPressCancel() {
-        store.shell.closeModal()
+        closeModal()
       },
     })
-  }, [store, list])
+  }, [openModal, closeModal, list])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
@@ -348,17 +350,17 @@ const Header = observer(function HeaderImpl({
   }, [list])
 
   const onPressEdit = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'create-or-edit-list',
       list,
       onSave() {
         list.refresh()
       },
     })
-  }, [store, list])
+  }, [openModal, list])
 
   const onPressDelete = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
       title: 'Delete List',
       message: 'Are you sure?',
@@ -372,16 +374,16 @@ const Header = observer(function HeaderImpl({
         }
       },
     })
-  }, [store, list, navigation])
+  }, [openModal, list, navigation])
 
   const onPressReport = useCallback(() => {
     if (!list.data) return
-    store.shell.openModal({
+    openModal({
       name: 'report',
       uri: list.uri,
       cid: list.data.cid,
     })
-  }, [store, list])
+  }, [openModal, list])
 
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)

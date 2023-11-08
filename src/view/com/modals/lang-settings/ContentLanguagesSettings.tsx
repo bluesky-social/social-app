@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {ScrollView} from '../util'
-import {useStores} from 'state/index'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -9,6 +8,7 @@ import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {LanguageToggle} from './LanguageToggle'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
+import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
   useSetLanguagePrefs,
@@ -18,14 +18,14 @@ import {
 export const snapPoints = ['100%']
 
 export function Component({}: {}) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useSetLanguagePrefs()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const languages = React.useMemo(() => {
     const langs = LANGUAGES.filter(

@@ -2,6 +2,7 @@ import React from 'react'
 import {Pressable, View} from 'react-native'
 import {useStores} from 'state/index'
 import {navigate} from '../../../Navigation'
+import {useModalControls} from '#/state/modals'
 
 /**
  * This utility component is only included in the test simulator
@@ -13,6 +14,7 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
   const store = useStores()
+  const {openModal} = useModalControls()
   const onPressSignInAlice = async () => {
     await store.session.login({
       service: 'http://localhost:3000',
@@ -85,7 +87,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eOpenInviteCodesModal"
-        onPress={() => store.shell.openModal({name: 'invite-codes'})}
+        onPress={() => openModal({name: 'invite-codes'})}
         accessibilityRole="button"
         style={BTN}
       />

@@ -8,7 +8,6 @@ import {
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {CenteredView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -18,15 +17,16 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
   observer(function Moderation({}: Props) {
     const pal = usePalette('default')
-    const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
+    const {openModal} = useModalControls()
 
     useFocusEffect(
       React.useCallback(() => {
@@ -37,8 +37,8 @@ export const ModerationScreen = withAuthRequired(
 
     const onPressContentFiltering = React.useCallback(() => {
       track('Moderation:ContentfilteringButtonClicked')
-      store.shell.openModal({name: 'content-filtering-settings'})
-    }, [track, store])
+      openModal({name: 'content-filtering-settings'})
+    }, [track, openModal])
 
     return (
       <CenteredView

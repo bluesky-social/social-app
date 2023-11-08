@@ -1,11 +1,11 @@
 import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import type {Modal as ModalIface} from 'state/models/ui/shell'
+import type {Modal as ModalIface} from '#/state/modals'
 
+import {useModals, useModalControls} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
@@ -34,15 +34,15 @@ import * as ChangeEmailModal from './ChangeEmail'
 import * as LinkWarningModal from './LinkWarning'
 
 export const ModalsContainer = observer(function ModalsContainer() {
-  const store = useStores()
+  const {isModalActive, activeModals} = useModals()
 
-  if (!store.shell.isModalActive) {
+  if (!isModalActive) {
     return null
   }
 
   return (
     <>
-      {store.shell.activeModals.map((modal, i) => (
+      {activeModals.map((modal, i) => (
         <Modal key={`modal-${i}`} modal={modal} />
       ))}
     </>
@@ -50,11 +50,12 @@ export const ModalsContainer = observer(function ModalsContainer() {
 })
 
 function Modal({modal}: {modal: ModalIface}) {
-  const store = useStores()
+  const {isModalActive} = useModals()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
-  if (!store.shell.isModalActive) {
+  if (!isModalActive) {
     return null
   }
 
@@ -62,7 +63,7 @@ function Modal({modal}: {modal: ModalIface}) {
     if (modal.name === 'crop-image' || modal.name === 'edit-image') {
       return // dont close on mask presses during crop
     }
-    store.shell.closeModal()
+    closeModal()
   }
   const onInnerPress = () => {
     // TODO: can we use prevent default?

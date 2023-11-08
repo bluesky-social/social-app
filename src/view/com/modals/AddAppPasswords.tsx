@@ -13,6 +13,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['70%']
 
@@ -54,6 +55,7 @@ const shadesOfBlue: string[] = [
 export function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
+  const {closeModal} = useModalControls()
   const [name, setName] = useState(
     shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
   )
@@ -69,8 +71,8 @@ export function Component({}: {}) {
   }, [appPassword])
 
   const onDone = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const createAppPassword = async () => {
     // if name is all whitespace, we don't allow it
