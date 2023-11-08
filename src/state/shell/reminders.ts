@@ -1,12 +1,9 @@
 import * as persisted from '#/state/persisted'
-import {OnboardingModel} from '../models/discovery/onboarding'
 import {SessionModel} from '../models/session'
 import {toHashCode} from 'lib/strings/helpers'
+import {isOnboardingActive} from './onboarding'
 
-export function shouldRequestEmailConfirmation(
-  session: SessionModel,
-  onboarding: OnboardingModel,
-) {
+export function shouldRequestEmailConfirmation(session: SessionModel) {
   const sess = session.currentSession
   if (!sess) {
     return false
@@ -14,7 +11,7 @@ export function shouldRequestEmailConfirmation(
   if (sess.emailConfirmed) {
     return false
   }
-  if (onboarding.isActive) {
+  if (isOnboardingActive()) {
     return false
   }
   // only prompt once
