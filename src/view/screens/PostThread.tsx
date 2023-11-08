@@ -19,13 +19,11 @@ import {logger} from '#/logger'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
 
-const SHELL_FOOTER_HEIGHT = 44
-
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
     const store = useStores()
-    // const {} = useMinimalShellMode()
+    const {fabMinimalShellTransform} = useMinimalShellMode()
     const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
@@ -89,10 +87,9 @@ export const PostThreadScreen = withAuthRequired(
           <Animated.View
             style={[
               styles.prompt,
-              // TODO: minimal shell mode ajustment
+              fabMinimalShellTransform,
               {
-                bottom:
-                  SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30),
+                bottom: clamp(safeAreaInsets.bottom, 15, 30),
               },
             ]}>
             <ComposePrompt onPressCompose={onPressReply} />
