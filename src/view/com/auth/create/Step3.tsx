@@ -38,8 +38,8 @@ export const Step3 = observer(function Step3Impl({
           accessibilityHint="Input your user handle"
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
-          <Trans>Your full handle will be </Trans>
-          <Text type="lg-bold" style={pal.text}>
+          <Trans>Your full handle will be</Trans>
+          <Text type="lg-bold" style={[pal.text, s.ml5]}>
             @{createFullHandle(model.handle, model.userDomain)}
           </Text>
         </Text>

@@ -39,7 +39,7 @@ export const ConfirmLanguagesButton = ({
           end={{x: 1, y: 1}}
           style={[styles.btn]}>
           <Text style={[s.white, s.bold, s.f18]}>
-            <Trans> Done{extraText}</Trans>
+            <Trans>Done{extraText}</Trans>
           </Text>
         </LinearGradient>
       </Pressable>

@@ -132,12 +132,11 @@ export const Component = observer(function Component({
           ) : (
             <View>
               <Text style={[pal.textLight]}>
-                <Text type="md-bold" style={[pal.textLight]}>
-                  <Trans>Not Applicable</Trans>
+                <Text type="md-bold" style={[pal.textLight, s.mr5]}>
+                  <Trans>Not Applicable.</Trans>
                 </Text>
                 <Trans>
-                  . This warning is only available for posts with media
-                  attached.
+                  This warning is only available for posts with media attached.
                 </Trans>
               </Text>
             </View>

@@ -129,10 +129,10 @@ export function Component({}: {}) {
           </Text>
         ) : (
           <Text type="lg" style={[pal.text]}>
+            <Text type="lg-bold" style={[pal.text, s.mr5]}>
+              <Trans>Here is your app password.</Trans>
+            </Text>
             <Trans>
-              <Text type="lg-bold" style={[pal.text]}>
-                Here is your app password.
-              </Text>{' '}
               Use this to sign into the other app along with your handle.
             </Trans>
           </Text>
