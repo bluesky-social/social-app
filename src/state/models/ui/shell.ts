@@ -93,11 +93,6 @@ export class ShellUiModel {
       this.closeLightbox()
       return true
     }
-    // if (this.isModalActive) {
-    //   // TODO
-    //   this.closeModal()
-    //   return true
-    // }
     if (this.isComposerActive) {
       this.closeComposer()
       return true
@@ -112,16 +107,10 @@ export class ShellUiModel {
     if (this.isLightboxActive) {
       this.closeLightbox()
     }
-    // while (this.isModalActive) {
-    //   // TODO
-    //   this.closeModal()
-    // }
     if (this.isComposerActive) {
       this.closeComposer()
     }
   }
-
-  openModal() {}
 
   openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {
     this.rootStore.emitNavigation()
