@@ -304,7 +304,7 @@ export class NotificationsFeedModel {
   }
 
   get unreadCountLabel(): string {
-    const count = this.unreadCount + this.rootStore.invitedUsers.numNotifs
+    const count = this.unreadCount
     if (count >= MAX_VISIBLE_NOTIFS) {
       return `${MAX_VISIBLE_NOTIFS}+`
     }

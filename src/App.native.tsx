@@ -23,6 +23,7 @@ import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
+import {Provider as InvitesStateProvider} from 'state/invites'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -80,7 +81,9 @@ function App() {
   return (
     <ShellStateProvider>
       <MutedThreadsProvider>
-        <InnerApp />
+        <InvitesStateProvider>
+          <InnerApp />
+        </InvitesStateProvider>
       </MutedThreadsProvider>
     </ShellStateProvider>
   )

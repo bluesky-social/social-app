@@ -10,7 +10,6 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
-import {InvitedUsers} from '../com/notifications/InvitedUsers'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
@@ -145,7 +144,6 @@ export const NotificationsScreen = withAuthRequired(
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
-        <InvitedUsers />
         <Feed
           view={store.me.notifications}
           onPressTryAgain={onPressTryAgain}
