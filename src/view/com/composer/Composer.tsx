@@ -55,7 +55,6 @@ import {
   useLanguagePrefs,
   useSetLanguagePrefs,
   toPostLanguages,
-  savePostLanguageToHistory,
 } from '#/state/preferences/languages'
 
 type Props = ComposerOpts
@@ -245,7 +244,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
-    savePostLanguageToHistory(setLangPrefs)
+    setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)

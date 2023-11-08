@@ -12,7 +12,6 @@ import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
   useSetLanguagePrefs,
-  toggleContentLanguage,
 } from '#/state/preferences/languages'
 
 export const snapPoints = ['100%']
@@ -50,9 +49,9 @@ export function Component({}: {}) {
 
   const onPress = React.useCallback(
     (code2: string) => {
-      toggleContentLanguage(langPrefs, setLangPrefs, code2)
+      setLangPrefs.toggleContentLanguage(code2)
     },
-    [langPrefs, setLangPrefs],
+    [setLangPrefs],
   )
 
   return (

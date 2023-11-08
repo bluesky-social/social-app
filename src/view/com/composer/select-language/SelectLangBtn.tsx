@@ -63,7 +63,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
             : ['far', 'circle'],
         label: langName,
         onPress() {
-          setLangPrefs(v => ({...v, postLanguage: commaSeparatedLangCodes}))
+          setLangPrefs.setPostLanguage(commaSeparatedLangCodes)
         },
       })
     }

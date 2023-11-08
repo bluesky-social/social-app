@@ -49,7 +49,7 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
   const onChangePrimaryLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
       if (langPrefs.primaryLanguage !== value) {
-        setLangPrefs(v => ({...v, primaryLanguage: value}))
+        setLangPrefs.setPrimaryLanguage(value)
       }
     },
     [langPrefs, setLangPrefs],

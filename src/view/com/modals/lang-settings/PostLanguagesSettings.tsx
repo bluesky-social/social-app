@@ -14,7 +14,6 @@ import {
   useLanguagePrefs,
   useSetLanguagePrefs,
   hasPostLanguage,
-  togglePostLanguage,
 } from '#/state/preferences/languages'
 
 export const snapPoints = ['100%']
@@ -52,9 +51,9 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
 
   const onPress = React.useCallback(
     (code2: string) => {
-      togglePostLanguage(langPrefs, setLangPrefs, code2)
+      setLangPrefs.togglePostLanguage(code2)
     },
-    [langPrefs, setLangPrefs],
+    [setLangPrefs],
   )
 
   return (
