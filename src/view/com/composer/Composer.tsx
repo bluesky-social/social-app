@@ -49,6 +49,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {useRequireAltTextEnabled} from '#/state/shell'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -61,6 +62,7 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
   const store = useStores()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -187,7 +189,7 @@ export const ComposePost = observer(function ComposePost({
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
+    if (requireAltTextEnabled && gallery.needsAltText) {
       return
     }
 
@@ -241,12 +243,8 @@ export const ComposePost = observer(function ComposePost({
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
-      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
-    [
-      graphemeLength,
-      store.preferences.requireAltTextEnabled,
-      gallery.needsAltText,
-    ],
+      (!requireAltTextEnabled || !gallery.needsAltText),
+    [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
@@ -314,7 +312,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           )}
         </View>
-        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+        {requireAltTextEnabled && gallery.needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon
