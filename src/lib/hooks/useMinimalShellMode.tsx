@@ -1,5 +1,4 @@
 import React from 'react'
-import {autorun} from 'mobx'
 import {
   Easing,
   interpolate,
@@ -15,7 +14,7 @@ export function useMinimalShellMode() {
   const minimalShellInterp = useSharedValue(0)
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: minimalShellMode ? 'none' : 'auto',
+      pointerEvents: minimalShellInterp.value === 0 ? 'auto' : 'none',
       opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
         {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, 25])},
@@ -24,7 +23,7 @@ export function useMinimalShellMode() {
   })
   const headerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: minimalShellMode ? 'none' : 'auto',
+      pointerEvents: minimalShellInterp.value === 0 ? 'auto' : 'none',
       opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
         {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, -25])},
@@ -40,19 +39,17 @@ export function useMinimalShellMode() {
   })
 
   React.useEffect(() => {
-    return autorun(() => {
-      if (minimalShellMode) {
-        minimalShellInterp.value = withTiming(1, {
-          duration: 125,
-          easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-        })
-      } else {
-        minimalShellInterp.value = withTiming(0, {
-          duration: 125,
-          easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-        })
-      }
-    })
+    if (minimalShellMode) {
+      minimalShellInterp.value = withTiming(1, {
+        duration: 125,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      })
+    } else {
+      minimalShellInterp.value = withTiming(0, {
+        duration: 125,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      })
+    }
   }, [minimalShellInterp, minimalShellMode])
 
   return {
