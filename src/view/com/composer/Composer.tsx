@@ -49,7 +49,7 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
-import {useRequireAltTextEnabled} from '#/state/shell'
+import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useLanguagePrefs,
   useSetLanguagePrefs,
