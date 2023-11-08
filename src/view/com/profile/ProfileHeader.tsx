@@ -40,6 +40,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {logger} from '#/logger'
+import {FollowButton} from './FollowButton'
 
 interface Props {
   view: ProfileModel
@@ -111,7 +112,6 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   isProfilePreview,
 }: Props) {
   const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
@@ -355,6 +355,8 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const following = formatCount(view.followsCount)
   const followers = formatCount(view.followersCount)
   const pluralizedFollowers = pluralize(view.followersCount, 'follower')
+  const isFollowing =
+    store.me.follows.getFollowState(view.did) === FollowState.Following
 
   return (
     <View style={pal.view}>
@@ -413,7 +415,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                       pal.text,
                       {
                         color: showSuggestedFollows
-                          ? colors.white
+                          ? pal.textInverted.color
                           : pal.text.color,
                       },
                     ]}
@@ -422,41 +424,22 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 </TouchableOpacity>
               )}
 
-              {store.me.follows.getFollowState(view.did) ===
-              FollowState.Following ? (
-                <TouchableOpacity
-                  testID="unfollowBtn"
-                  onPress={onPressToggleFollow}
-                  style={[styles.btn, styles.mainBtn, pal.btn]}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Unfollow ${view.handle}`}
-                  accessibilityHint={`Hides posts from ${view.handle} in your feed`}>
-                  <FontAwesomeIcon
-                    icon="check"
-                    style={[pal.text, s.mr5]}
-                    size={14}
-                  />
-                  <Text type="button" style={pal.text}>
-                    Following
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  testID="followBtn"
-                  onPress={onPressToggleFollow}
-                  style={[styles.btn, styles.mainBtn, palInverted.view]}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Follow ${view.handle}`}
-                  accessibilityHint={`Shows posts from ${view.handle} in your feed`}>
-                  <FontAwesomeIcon
-                    icon="plus"
-                    style={[palInverted.text, s.mr5]}
-                  />
-                  <Text type="button" style={[palInverted.text, s.bold]}>
-                    Follow
-                  </Text>
-                </TouchableOpacity>
-              )}
+              <FollowButton
+                style={styles.btn}
+                testID={isFollowing ? 'unfollowBtn' : 'followBtn'}
+                unfollowedType="inverted"
+                profile={view}
+                accessibilityHint={
+                  isFollowing
+                    ? `Hides posts from ${view.handle} in your feed`
+                    : `Shows posts from ${view.handle} in your feed`
+                }
+                accessibilityLabel={`${isFollowing ? 'Unfollow' : 'Follow'} ${
+                  view.handle
+                }`}
+                onToggleFollow={onPressToggleFollow}
+                followedType="default"
+              />
             </>
           ) : null}
           {dropdownItems?.length ? (
