@@ -29,8 +29,7 @@ export const schema = z.object({
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
   mutedThreads: z.array(z.string()), // should move to server
-  invitedUsers: z.object({
-    seenDids: z.array(z.string()),
+  invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
   onboarding: z.object({
@@ -58,8 +57,7 @@ export const defaults: Schema = {
   },
   requireAltTextEnabled: false,
   mutedThreads: [],
-  invitedUsers: {
-    seenDids: [],
+  invites: {
     copiedInvites: [],
   },
   onboarding: {

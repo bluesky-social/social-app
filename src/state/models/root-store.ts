@@ -15,7 +15,6 @@ import {ProfilesCache} from './cache/profiles-view'
 import {PostsCache} from './cache/posts'
 import {LinkMetasCache} from './cache/link-metas'
 import {MeModel} from './me'
-import {InvitedUsers} from './invited-users'
 import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
@@ -42,7 +41,6 @@ export class RootStoreModel {
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel(this)
   me = new MeModel(this)
-  invitedUsers = new InvitedUsers(this)
   handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
   posts = new PostsCache(this)
@@ -68,7 +66,6 @@ export class RootStoreModel {
       session: this.session.serialize(),
       me: this.me.serialize(),
       preferences: this.preferences.serialize(),
-      invitedUsers: this.invitedUsers.serialize(),
     }
   }
 
@@ -88,9 +85,6 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'preferences')) {
         this.preferences.hydrate(v.preferences)
-      }
-      if (hasProp(v, 'invitedUsers')) {
-        this.invitedUsers.hydrate(v.invitedUsers)
       }
     }
   }

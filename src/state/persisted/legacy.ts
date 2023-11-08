@@ -97,11 +97,9 @@ export function transform(legacy: LegacySchema): Schema {
       legacy.preferences.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
     mutedThreads: legacy.mutedThreads.uris || defaults.mutedThreads,
-    invitedUsers: {
-      seenDids: legacy.invitedUsers.seenDids || defaults.invitedUsers.seenDids,
+    invites: {
       copiedInvites:
-        legacy.invitedUsers.copiedInvites ||
-        defaults.invitedUsers.copiedInvites,
+        legacy.invitedUsers.copiedInvites || defaults.invites.copiedInvites,
     },
     onboarding: {
       step: legacy.onboarding.step || defaults.onboarding.step,

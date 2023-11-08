@@ -193,7 +193,6 @@ export class MeModel {
           error: e,
         })
       }
-      await this.rootStore.invitedUsers.fetch(this.invites)
     }
   }
 
