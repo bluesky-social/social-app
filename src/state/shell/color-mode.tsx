@@ -27,7 +27,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(persisted.get('colorMode'))
       updateDocument(persisted.get('colorMode'))
     })
-  }, [setStateWrapped])
+  }, [setState])
 
   return (
     <stateContext.Provider value={state}>

@@ -15,6 +15,7 @@ import {s} from 'lib/styles'
 import {useStores} from 'state/index'
 import {CreateAccountModel} from 'state/models/ui/create-account'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useOnboardingDispatch} from '#/state/shell'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
@@ -29,6 +30,7 @@ export const CreateAccount = observer(function CreateAccountImpl({
   const pal = usePalette('default')
   const store = useStores()
   const model = React.useMemo(() => new CreateAccountModel(store), [store])
+  const onboardingDispatch = useOnboardingDispatch()
 
   React.useEffect(() => {
     screen('CreateAccount')
@@ -59,14 +61,14 @@ export const CreateAccount = observer(function CreateAccountImpl({
       model.next()
     } else {
       try {
-        await model.submit()
+        await model.submit(onboardingDispatch)
       } catch {
         // dont need to handle here
       } finally {
         track('Try Create Account')
       }
     }
-  }, [model, track])
+  }, [model, track, onboardingDispatch])
 
   return (
     <LoggedOutLayout

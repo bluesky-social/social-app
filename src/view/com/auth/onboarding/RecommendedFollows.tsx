@@ -11,6 +11,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {RecommendedFollowsItem} from './RecommendedFollowsItem'
+import {SuggestedActorsModel} from '#/state/models/discovery/suggested-actors'
 
 type Props = {
   next: () => void
@@ -21,16 +22,10 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
-
-  React.useEffect(() => {
-    // Load suggested actors if not already loaded
-    // prefetch should happen in the onboarding model
-    if (
-      !store.onboarding.suggestedActors.hasLoaded ||
-      store.onboarding.suggestedActors.isEmpty
-    ) {
-      store.onboarding.suggestedActors.loadMore(true)
-    }
+  const suggestedActors = React.useMemo(() => {
+    const model = new SuggestedActorsModel(store)
+    model.refresh()
+    return model
   }, [store])
 
   const title = (
@@ -98,13 +93,19 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          {store.onboarding.suggestedActors.isLoading ? (
+          {suggestedActors.isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
             <FlatList
-              data={store.onboarding.suggestedActors.suggestions}
+              data={suggestedActors.suggestions}
               renderItem={({item, index}) => (
-                <RecommendedFollowsItem item={item} index={index} />
+                <RecommendedFollowsItem
+                  item={item}
+                  index={index}
+                  insertSuggestionsByActor={suggestedActors.insertSuggestionsByActor.bind(
+                    suggestedActors,
+                  )}
+                />
               )}
               keyExtractor={(item, index) => item.did + index.toString()}
               style={{flex: 1}}
@@ -126,13 +127,19 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
               users.
             </Text>
           </View>
-          {store.onboarding.suggestedActors.isLoading ? (
+          {suggestedActors.isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
             <FlatList
-              data={store.onboarding.suggestedActors.suggestions}
+              data={suggestedActors.suggestions}
               renderItem={({item, index}) => (
-                <RecommendedFollowsItem item={item} index={index} />
+                <RecommendedFollowsItem
+                  item={item}
+                  index={index}
+                  insertSuggestionsByActor={suggestedActors.insertSuggestionsByActor.bind(
+                    suggestedActors,
+                  )}
+                />
               )}
               keyExtractor={(item, index) => item.did + index.toString()}
               style={{flex: 1}}

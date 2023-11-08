@@ -4,6 +4,7 @@ import {Provider as DrawerSwipableProvider} from './drawer-swipe-disabled'
 import {Provider as MinimalModeProvider} from './minimal-mode'
 import {Provider as ColorModeProvider} from './color-mode'
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
+import {Provider as OnboardingProvider} from './onboarding'
 
 export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
 export {
@@ -16,6 +17,7 @@ export {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from './alt-text-required'
+export {useOnboardingState, useOnboardingDispatch} from './onboarding'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
@@ -23,7 +25,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <DrawerSwipableProvider>
         <MinimalModeProvider>
           <ColorModeProvider>
-            <AltTextRequiredProvider>{children}</AltTextRequiredProvider>
+            <OnboardingProvider>
+              <AltTextRequiredProvider>{children}</AltTextRequiredProvider>
+            </OnboardingProvider>
           </ColorModeProvider>
         </MinimalModeProvider>
       </DrawerSwipableProvider>

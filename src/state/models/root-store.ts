@@ -27,7 +27,6 @@ import {logger} from '#/logger'
 // remove after backend testing finishes
 // -prf
 import {applyDebugHeader} from 'lib/api/debug-appview-proxy-header'
-import {OnboardingModel} from './discovery/onboarding'
 
 export const appInfo = z.object({
   build: z.string(),
@@ -44,7 +43,6 @@ export class RootStoreModel {
   shell = new ShellUiModel(this)
   preferences = new PreferencesModel(this)
   me = new MeModel(this)
-  onboarding = new OnboardingModel(this)
   invitedUsers = new InvitedUsers(this)
   handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
@@ -71,7 +69,6 @@ export class RootStoreModel {
       appInfo: this.appInfo,
       session: this.session.serialize(),
       me: this.me.serialize(),
-      onboarding: this.onboarding.serialize(),
       preferences: this.preferences.serialize(),
       invitedUsers: this.invitedUsers.serialize(),
       mutedThreads: this.mutedThreads.serialize(),
@@ -88,9 +85,6 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)
-      }
-      if (hasProp(v, 'onboarding')) {
-        this.onboarding.hydrate(v.onboarding)
       }
       if (hasProp(v, 'session')) {
         this.session.hydrate(v.session)
