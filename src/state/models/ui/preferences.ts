@@ -83,7 +83,6 @@ export class PreferencesModel {
     prioritizeFollowedUsers: true,
     lab_treeViewEnabled: false, // experimental
   }
-  requireAltTextEnabled: boolean = false
 
   // used to help with transitions from device-stored to server-stored preferences
   legacyPreferences: LegacyPreferences | undefined
@@ -111,7 +110,6 @@ export class PreferencesModel {
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
-      requireAltTextEnabled: this.requireAltTextEnabled,
     }
   }
 
@@ -179,13 +177,6 @@ export class PreferencesModel {
         typeof v.pinnedFeeds.every(item => typeof item === 'string')
       ) {
         this.pinnedFeeds = v.pinnedFeeds
-      }
-      // check if requiring alt text is enabled in preferences, then hydrate
-      if (
-        hasProp(v, 'requireAltTextEnabled') &&
-        typeof v.requireAltTextEnabled === 'boolean'
-      ) {
-        this.requireAltTextEnabled = v.requireAltTextEnabled
       }
       // grab legacy values
       this.legacyPreferences = getLegacyPreferences(v)
@@ -606,10 +597,6 @@ export class PreferencesModel {
     } finally {
       this.lock.release()
     }
-  }
-
-  toggleRequireAltTextEnabled() {
-    this.requireAltTextEnabled = !this.requireAltTextEnabled
   }
 
   setPrimaryLanguage(lang: string) {

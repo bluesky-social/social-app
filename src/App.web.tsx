@@ -8,6 +8,8 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 
 import 'view/icons'
 
+import {init as initPersistedState} from '#/state/persisted'
+import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from 'view/shell/index'
@@ -16,8 +18,11 @@ import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as MutedThreadsProvider} from 'state/muted-threads'
+import {Provider as InvitesStateProvider} from 'state/invites'
 
-const App = observer(function AppImpl() {
+const InnerApp = observer(function AppImpl() {
+  const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -36,25 +41,45 @@ const App = observer(function AppImpl() {
   }
 
   return (
-    <ShellStateProvider>
-      <ModalStateProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={rootStore.shell.colorMode}>
-            <RootSiblingParent>
-              <analytics.Provider>
-                <RootStoreProvider value={rootStore}>
-                  <SafeAreaProvider>
-                    <Shell />
-                  </SafeAreaProvider>
-                  <ToastContainer />
-                </RootStoreProvider>
-              </analytics.Provider>
-            </RootSiblingParent>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </ModalStateProvider>
-    </ShellStateProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={colorMode}>
+        <RootSiblingParent>
+          <analytics.Provider>
+            <RootStoreProvider value={rootStore}>
+              <SafeAreaProvider>
+                <Shell />
+              </SafeAreaProvider>
+              <ToastContainer />
+            </RootStoreProvider>
+          </analytics.Provider>
+        </RootSiblingParent>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 })
+
+function App() {
+  const [isReady, setReady] = useState(false)
+
+  React.useEffect(() => {
+    initPersistedState().then(() => setReady(true))
+  }, [])
+
+  if (!isReady) {
+    return null
+  }
+
+  return (
+    <ShellStateProvider>
+      <MutedThreadsProvider>
+        <InvitesStateProvider>
+          <ModalStateProvider>
+            <InnerApp />
+          </ModalStateProvider>
+        </InvitesStateProvider>
+      </MutedThreadsProvider>
+    </ShellStateProvider>
+  )
+}
 
 export default App

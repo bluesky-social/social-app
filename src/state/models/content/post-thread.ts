@@ -74,10 +74,6 @@ export class PostThreadModel {
     return this.resolvedUri
   }
 
-  get isThreadMuted() {
-    return this.rootStore.mutedThreads.uris.has(this.rootUri)
-  }
-
   get isCachedPostAReply() {
     if (AppBskyFeedPost.isRecord(this.thread?.post.record)) {
       return !!this.thread?.post.record.reply
@@ -138,14 +134,6 @@ export class PostThreadModel {
    */
   onPostDeleted(_uri: string) {
     this.refresh()
-  }
-
-  async toggleThreadMute() {
-    if (this.isThreadMuted) {
-      this.rootStore.mutedThreads.uris.delete(this.rootUri)
-    } else {
-      this.rootStore.mutedThreads.uris.add(this.rootUri)
-    }
   }
 
   // state transitions

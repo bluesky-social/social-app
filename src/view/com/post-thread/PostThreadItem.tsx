@@ -37,6 +37,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {logger} from '#/logger'
+import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -51,6 +52,8 @@ export const PostThreadItem = observer(function PostThreadItem({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const mutedThreads = useMutedThreads()
+  const toggleThreadMute = useToggleThreadMute()
   const [deleted, setDeleted] = React.useState(false)
   const [limitLines, setLimitLines] = React.useState(
     countLines(item.richText?.text) >= MAX_POST_LINES,
@@ -130,10 +133,10 @@ export const PostThreadItem = observer(function PostThreadItem({
     Linking.openURL(translatorUrl)
   }, [translatorUrl])
 
-  const onToggleThreadMute = React.useCallback(async () => {
+  const onToggleThreadMute = React.useCallback(() => {
     try {
-      await item.toggleThreadMute()
-      if (item.isThreadMuted) {
+      const muted = toggleThreadMute(item.data.rootUri)
+      if (muted) {
         Toast.show('You will no longer receive notifications for this thread')
       } else {
         Toast.show('You will now receive notifications for this thread')
@@ -141,7 +144,7 @@ export const PostThreadItem = observer(function PostThreadItem({
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [item])
+  }, [item, toggleThreadMute])
 
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
@@ -284,7 +287,7 @@ export const PostThreadItem = observer(function PostThreadItem({
               itemHref={itemHref}
               itemTitle={itemTitle}
               isAuthor={item.post.author.did === store.me.did}
-              isThreadMuted={item.isThreadMuted}
+              isThreadMuted={mutedThreads.includes(item.data.rootUri)}
               onCopyPostText={onCopyPostText}
               onOpenTranslate={onOpenTranslate}
               onToggleThreadMute={onToggleThreadMute}
@@ -391,7 +394,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 isAuthor={item.post.author.did === store.me.did}
                 isReposted={!!item.post.viewer?.repost}
                 isLiked={!!item.post.viewer?.like}
-                isThreadMuted={item.isThreadMuted}
+                isThreadMuted={mutedThreads.includes(item.data.rootUri)}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleLike={onPressToggleLike}
@@ -534,7 +537,7 @@ export const PostThreadItem = observer(function PostThreadItem({
                 likeCount={item.post.likeCount}
                 isReposted={!!item.post.viewer?.repost}
                 isLiked={!!item.post.viewer?.like}
-                isThreadMuted={item.isThreadMuted}
+                isThreadMuted={mutedThreads.includes(item.data.rootUri)}
                 onPressReply={onPressReply}
                 onPressToggleRepost={onPressToggleRepost}
                 onPressToggleLike={onPressToggleLike}

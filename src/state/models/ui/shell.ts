@@ -2,8 +2,10 @@ import {AppBskyEmbedRecord} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {ProfileModel} from '../content/profile'
-import {isObj, hasProp} from 'lib/type-guards'
-import {isWeb} from 'platform/detection'
+import {
+  shouldRequestEmailConfirmation,
+  setEmailConfirmationRequested,
+} from '#/state/shell/reminders'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -66,7 +68,6 @@ export interface ComposerOpts {
 }
 
 export class ShellUiModel {
-  colorMode: ColorMode = 'system'
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
   isComposerActive = false
@@ -75,38 +76,11 @@ export class ShellUiModel {
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
-      serialize: false,
       rootStore: false,
-      hydrate: false,
     })
 
     this.setupClock()
     this.setupLoginModals()
-  }
-
-  serialize(): unknown {
-    return {
-      colorMode: this.colorMode,
-    }
-  }
-
-  hydrate(v: unknown) {
-    if (isObj(v)) {
-      if (hasProp(v, 'colorMode') && isColorMode(v.colorMode)) {
-        this.setColorMode(v.colorMode)
-      }
-    }
-  }
-
-  setColorMode(mode: ColorMode) {
-    this.colorMode = mode
-
-    if (isWeb && typeof window !== 'undefined') {
-      const html = window.document.documentElement
-      // remove any other color mode classes
-      html.className = html.className.replace(/colorMode--\w+/g, '')
-      html.classList.add(`colorMode--${mode}`)
-    }
   }
 
   /**
@@ -180,9 +154,14 @@ export class ShellUiModel {
 
   setupLoginModals() {
     this.rootStore.onSessionReady(() => {
-      if (this.rootStore.reminders.shouldRequestEmailConfirmation) {
+      if (
+        shouldRequestEmailConfirmation(
+          this.rootStore.session,
+          this.rootStore.onboarding,
+        )
+      ) {
         this.openModal({name: 'verify-email', showReminder: true})
-        this.rootStore.reminders.setEmailConfirmationRequested()
+        setEmailConfirmationRequested()
       }
     })
   }

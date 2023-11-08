@@ -10,6 +10,8 @@ import {QueryClientProvider} from '@tanstack/react-query'
 
 import 'view/icons'
 
+import {init as initPersistedState} from '#/state/persisted'
+import {useColorMode} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -21,10 +23,13 @@ import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as MutedThreadsProvider} from 'state/muted-threads'
+import {Provider as InvitesStateProvider} from 'state/invites'
 
 SplashScreen.preventAutoHideAsync()
 
-const App = observer(function AppImpl() {
+const InnerApp = observer(function AppImpl() {
+  const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -46,25 +51,45 @@ const App = observer(function AppImpl() {
     return null
   }
   return (
-    <ShellStateProvider>
-      <ModalStateProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={rootStore.shell.colorMode}>
-            <RootSiblingParent>
-              <analytics.Provider>
-                <RootStoreProvider value={rootStore}>
-                  <GestureHandlerRootView style={s.h100pct}>
-                    <TestCtrls />
-                    <Shell />
-                  </GestureHandlerRootView>
-                </RootStoreProvider>
-              </analytics.Provider>
-            </RootSiblingParent>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </ModalStateProvider>
-    </ShellStateProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={colorMode}>
+        <RootSiblingParent>
+          <analytics.Provider>
+            <RootStoreProvider value={rootStore}>
+              <GestureHandlerRootView style={s.h100pct}>
+                <TestCtrls />
+                <Shell />
+              </GestureHandlerRootView>
+            </RootStoreProvider>
+          </analytics.Provider>
+        </RootSiblingParent>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 })
+
+function App() {
+  const [isReady, setReady] = useState(false)
+
+  React.useEffect(() => {
+    initPersistedState().then(() => setReady(true))
+  }, [])
+
+  if (!isReady) {
+    return null
+  }
+
+  return (
+    <ShellStateProvider>
+      <MutedThreadsProvider>
+        <InvitesStateProvider>
+          <ModalStateProvider>
+            <InnerApp />
+          </ModalStateProvider>
+        </InvitesStateProvider>
+      </MutedThreadsProvider>
+    </ShellStateProvider>
+  )
+}
 
 export default App

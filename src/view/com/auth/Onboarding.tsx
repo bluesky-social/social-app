@@ -4,34 +4,35 @@ import {observer} from 'mobx-react-lite'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
 import {RecommendedFollows} from './onboarding/RecommendedFollows'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useOnboardingState, useOnboardingDispatch} from '#/state/shell'
 
 export const Onboarding = observer(function OnboardingImpl() {
   const pal = usePalette('default')
-  const store = useStores()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const onboardingState = useOnboardingState()
+  const onboardingDispatch = useOnboardingDispatch()
 
   React.useEffect(() => {
     setMinimalShellMode(true)
   }, [setMinimalShellMode])
 
-  const next = () => store.onboarding.next()
-  const skip = () => store.onboarding.skip()
+  const next = () => onboardingDispatch({type: 'next'})
+  const skip = () => onboardingDispatch({type: 'skip'})
 
   return (
     <SafeAreaView testID="onboardingView" style={[s.hContentRegion, pal.view]}>
       <ErrorBoundary>
-        {store.onboarding.step === 'Welcome' && (
+        {onboardingState.step === 'Welcome' && (
           <Welcome skip={skip} next={next} />
         )}
-        {store.onboarding.step === 'RecommendedFeeds' && (
+        {onboardingState.step === 'RecommendedFeeds' && (
           <RecommendedFeeds next={next} />
         )}
-        {store.onboarding.step === 'RecommendedFollows' && (
+        {onboardingState.step === 'RecommendedFollows' && (
           <RecommendedFollows next={next} />
         )}
       </ErrorBoundary>
