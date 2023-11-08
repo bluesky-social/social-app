@@ -1,6 +1,6 @@
 # Internationalization
 
-We want the official Bluesky app to be supported in as many languages as possible. If you want to help us translate the app, please reach out to us at info@blueskyweb.xyz
+We want the official Bluesky app to be supported in as many languages as possible. If you want to help us translate the app, please open a PR or issue on the [Bluesky app repo on GitHub](https://github.com/bluesky-social/social-app)
 
 ## Tools
 We are using Lingui to manage translations. You can find the documentation [here](https://lingui.dev/).
