@@ -22,6 +22,7 @@ import * as Toast from 'view/com/util/Toast'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
+import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -78,7 +79,9 @@ function App() {
 
   return (
     <ShellStateProvider>
-      <InnerApp />
+      <MutedThreadsProvider>
+        <InnerApp />
+      </MutedThreadsProvider>
     </ShellStateProvider>
   )
 }
