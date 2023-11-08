@@ -17,7 +17,7 @@ import {codeToLanguageName} from '../../../../locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
-  useSetLanguagePrefs,
+  useLanguagePrefsApi,
   toPostLanguages,
   hasPostLanguage,
 } from '#/state/preferences/languages'
@@ -26,7 +26,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
   const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useSetLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
 
   const onPressMore = useCallback(async () => {
     if (isNative) {
@@ -63,7 +63,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
             : ['far', 'circle'],
         label: langName,
         onPress() {
-          setLangPrefs(v => ({...v, postLanguage: commaSeparatedLangCodes}))
+          setLangPrefs.setPostLanguage(commaSeparatedLangCodes)
         },
       })
     }

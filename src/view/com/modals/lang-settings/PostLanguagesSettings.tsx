@@ -12,9 +12,8 @@ import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
-  useSetLanguagePrefs,
+  useLanguagePrefsApi,
   hasPostLanguage,
-  togglePostLanguage,
 } from '#/state/preferences/languages'
 
 export const snapPoints = ['100%']
@@ -22,7 +21,7 @@ export const snapPoints = ['100%']
 export const Component = observer(function PostLanguagesSettingsImpl() {
   const {closeModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useSetLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
@@ -52,9 +51,9 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
 
   const onPress = React.useCallback(
     (code2: string) => {
-      togglePostLanguage(langPrefs, setLangPrefs, code2)
+      setLangPrefs.togglePostLanguage(code2)
     },
-    [langPrefs, setLangPrefs],
+    [setLangPrefs],
   )
 
   return (

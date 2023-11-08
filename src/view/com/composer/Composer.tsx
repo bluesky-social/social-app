@@ -53,9 +53,8 @@ import {useModals, useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useLanguagePrefs,
-  useSetLanguagePrefs,
+  useLanguagePrefsApi,
   toPostLanguages,
-  savePostLanguageToHistory,
 } from '#/state/preferences/languages'
 
 type Props = ComposerOpts
@@ -73,7 +72,7 @@ export const ComposePost = observer(function ComposePost({
   const store = useStores()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useSetLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -245,7 +244,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
-    savePostLanguageToHistory(setLangPrefs)
+    setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
