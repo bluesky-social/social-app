@@ -4,7 +4,6 @@ import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {openPicker} from 'lib/media/picker'
 import {getImageDim} from 'lib/media/manip'
-import {isNative} from 'platform/detection'
 
 export class GalleryModel {
   images: ImageModel[] = []
@@ -39,18 +38,6 @@ export class GalleryModel {
       // Initial resize
       image.manipulate({})
       this.images.push(image)
-    }
-  }
-
-  async edit(image: ImageModel) {
-    if (isNative) {
-      this.crop(image)
-    } else {
-      this.rootStore.shell.openModal({
-        name: 'edit-image',
-        image,
-        gallery: this,
-      })
     }
   }
 

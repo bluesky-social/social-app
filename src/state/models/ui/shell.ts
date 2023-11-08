@@ -6,6 +6,7 @@ import {
   shouldRequestEmailConfirmation,
   setEmailConfirmationRequested,
 } from '#/state/shell/reminders'
+import {unstable__openModal} from '#/state/modals'
 
 export type ColorMode = 'system' | 'light' | 'dark'
 
@@ -160,7 +161,7 @@ export class ShellUiModel {
           this.rootStore.onboarding,
         )
       ) {
-        this.openModal({name: 'verify-email', showReminder: true})
+        unstable__openModal({name: 'verify-email', showReminder: true})
         setEmailConfirmationRequested()
       }
     })

@@ -218,6 +218,8 @@ const ModalControlContext = React.createContext<{
   closeModal: () => {},
 })
 
+export let unstable__openModal: (modal: Modal) => void
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [isModalActive, setIsModalActive] = React.useState(false)
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])
@@ -230,6 +232,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [setIsModalActive, setActiveModals],
   )
+
+  unstable__openModal = openModal
 
   const closeModal = React.useCallback(() => {
     let totalActiveModals = 0

@@ -11,6 +11,7 @@ import {Dimensions} from 'lib/media/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useModalControls} from '#/state/modals'
+import {isNative} from 'platform/detection'
 
 const IMAGE_GAP = 8
 
@@ -139,7 +140,17 @@ const GalleryInner = observer(function GalleryImpl({
                 accessibilityRole="button"
                 accessibilityLabel="Edit image"
                 accessibilityHint=""
-                onPress={() => gallery.edit(image)}
+                onPress={() => {
+                  if (isNative) {
+                    gallery.crop(image)
+                  } else {
+                    openModal({
+                      name: 'edit-image',
+                      image,
+                      gallery,
+                    })
+                  }
+                }}
                 style={styles.imageControl}>
                 <FontAwesomeIcon
                   icon="pen"

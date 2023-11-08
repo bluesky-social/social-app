@@ -4,6 +4,7 @@ import {CameraOpts, CropperOptions} from './types'
 import {RootStoreModel} from 'state/index'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 export {openPicker} from './picker.shared'
+import {unstable__openModal} from '#/state/modals'
 
 export async function openCamera(
   _store: RootStoreModel,
@@ -14,12 +15,12 @@ export async function openCamera(
 }
 
 export async function openCropper(
-  store: RootStoreModel,
+  _store: RootStoreModel,
   opts: CropperOptions,
 ): Promise<RNImage> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
-    store.shell.openModal({
+    unstable__openModal({
       name: 'crop-image',
       uri: opts.path,
       onSelect: (img?: RNImage) => {

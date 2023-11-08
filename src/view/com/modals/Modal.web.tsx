@@ -3,7 +3,7 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import type {Modal as ModalIface} from 'state/models/ui/shell'
+import type {Modal as ModalIface} from '#/state/modals'
 
 import {useModals, useModalControls} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
