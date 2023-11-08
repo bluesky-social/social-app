@@ -34,6 +34,7 @@ import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {logger} from '#/logger'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
+import {useLanguagePrefs} from '#/state/preferences'
 
 export const FeedItem = observer(function FeedItemImpl({
   item,
@@ -50,6 +51,7 @@ export const FeedItem = observer(function FeedItemImpl({
   showReplyLine?: boolean
 }) {
   const store = useStores()
+  const langPrefs = useLanguagePrefs()
   const pal = usePalette('default')
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
@@ -75,7 +77,7 @@ export const FeedItem = observer(function FeedItemImpl({
   }, [record?.reply])
   const translatorUrl = getTranslatorLink(
     record?.text || '',
-    store.preferences.primaryLanguage,
+    langPrefs.primaryLanguage,
   )
 
   const onPressReply = React.useCallback(() => {

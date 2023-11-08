@@ -50,6 +50,12 @@ import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {useRequireAltTextEnabled} from '#/state/shell'
+import {
+  useLanguagePrefs,
+  useSetLanguagePrefs,
+  toPostLanguages,
+  savePostLanguageToHistory,
+} from '#/state/preferences/languages'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -63,6 +69,8 @@ export const ComposePost = observer(function ComposePost({
   const {isDesktop, isMobile} = useWebMediaQueries()
   const store = useStores()
   const requireAltTextEnabled = useRequireAltTextEnabled()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useSetLanguagePrefs()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -212,7 +220,7 @@ export const ComposePost = observer(function ComposePost({
         labels,
         onStateChange: setProcessingState,
         knownHandles: autocompleteView.knownHandles,
-        langs: store.preferences.postLanguages,
+        langs: toPostLanguages(langPrefs.postLanguage),
       })
     } catch (e: any) {
       if (extLink) {
@@ -234,7 +242,7 @@ export const ComposePost = observer(function ComposePost({
     if (!replyTo) {
       store.me.mainFeed.onPostCreated()
     }
-    store.preferences.savePostLanguageToHistory()
+    savePostLanguageToHistory(setLangPrefs)
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)

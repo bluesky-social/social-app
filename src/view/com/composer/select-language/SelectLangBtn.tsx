@@ -15,10 +15,18 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
 import {codeToLanguageName} from '../../../../locale/helpers'
+import {
+  useLanguagePrefs,
+  useSetLanguagePrefs,
+  toPostLanguages,
+  hasPostLanguage,
+} from '#/state/preferences/languages'
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
   const store = useStores()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useSetLanguagePrefs()
 
   const onPressMore = useCallback(async () => {
     if (isNative) {
@@ -29,8 +37,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
     store.shell.openModal({name: 'post-languages-settings'})
   }, [store])
 
-  const postLanguagesPref = store.preferences.postLanguages
-  const postLanguagePref = store.preferences.postLanguage
+  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
   const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 
@@ -49,13 +56,14 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
 
       arr.push({
         icon:
-          langCodes.every(code => store.preferences.hasPostLanguage(code)) &&
-          langCodes.length === postLanguagesPref.length
+          langCodes.every(code =>
+            hasPostLanguage(langPrefs.postLanguage, code),
+          ) && langCodes.length === postLanguagesPref.length
             ? ['fas', 'circle-dot']
             : ['far', 'circle'],
         label: langName,
         onPress() {
-          store.preferences.setPostLanguage(commaSeparatedLangCodes)
+          setLangPrefs(v => ({...v, postLanguage: commaSeparatedLangCodes}))
         },
       })
     }
@@ -65,11 +73,11 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
        * Re-join here after sanitization bc postLanguageHistory is an array of
        * comma-separated strings too
        */
-      add(postLanguagePref)
+      add(langPrefs.postLanguage)
     }
 
     // comma-separted strings of lang codes that have been used in the past
-    for (const lang of store.preferences.postLanguageHistory) {
+    for (const lang of langPrefs.postLanguageHistory) {
       add(lang)
     }
 
@@ -82,7 +90,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         onPress: onPressMore,
       },
     ]
-  }, [store.preferences, onPressMore, postLanguagePref, postLanguagesPref])
+  }, [onPressMore, langPrefs, setLangPrefs, postLanguagesPref])
 
   return (
     <DropdownButton

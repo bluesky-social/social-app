@@ -17,6 +17,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useLanguagePrefs} from '#/state/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
@@ -161,6 +162,7 @@ function AppPassword({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {contentLanguages} = useLanguagePrefs()
 
   const onDelete = React.useCallback(async () => {
     store.shell.openModal({
@@ -173,8 +175,6 @@ function AppPassword({
       },
     })
   }, [store, name])
-
-  const {contentLanguages} = store.preferences
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'

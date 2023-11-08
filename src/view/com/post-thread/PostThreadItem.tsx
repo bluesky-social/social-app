@@ -38,6 +38,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {logger} from '#/logger'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
+import {useLanguagePrefs} from '#/state/preferences'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -54,6 +55,7 @@ export const PostThreadItem = observer(function PostThreadItem({
   const store = useStores()
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
+  const langPrefs = useLanguagePrefs()
   const [deleted, setDeleted] = React.useState(false)
   const [limitLines, setLimitLines] = React.useState(
     countLines(item.richText?.text) >= MAX_POST_LINES,
@@ -85,15 +87,15 @@ export const PostThreadItem = observer(function PostThreadItem({
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
-    store.preferences.primaryLanguage,
+    langPrefs.primaryLanguage,
   )
   const needsTranslation = useMemo(
     () =>
       Boolean(
-        store.preferences.primaryLanguage &&
-          !isPostInLanguage(item.post, [store.preferences.primaryLanguage]),
+        langPrefs.primaryLanguage &&
+          !isPostInLanguage(item.post, [langPrefs.primaryLanguage]),
       ),
-    [item.post, store.preferences.primaryLanguage],
+    [item.post, langPrefs.primaryLanguage],
   )
 
   const onPressReply = React.useCallback(() => {
