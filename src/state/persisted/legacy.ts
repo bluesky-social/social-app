@@ -76,9 +76,9 @@ export function transform(legacy: LegacySchema): Schema {
         defaults.session.currentAccount,
     },
     reminders: {
-      lastEmailConfirmReminder:
+      lastEmailConfirm:
         legacy.reminders.lastEmailConfirm ||
-        defaults.reminders.lastEmailConfirmReminder,
+        defaults.reminders.lastEmailConfirm,
     },
     languagePrefs: {
       primaryLanguage:

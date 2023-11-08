@@ -19,7 +19,7 @@ export const schema = z.object({
     currentAccount: accountSchema.optional(),
   }),
   reminders: z.object({
-    lastEmailConfirmReminder: z.string().optional(),
+    lastEmailConfirm: z.string().optional(),
   }),
   languagePrefs: z.object({
     primaryLanguage: z.string(), // should move to server
@@ -46,7 +46,7 @@ export const defaults: Schema = {
     currentAccount: undefined,
   },
   reminders: {
-    lastEmailConfirmReminder: undefined,
+    lastEmailConfirm: undefined,
   },
   languagePrefs: {
     primaryLanguage: deviceLocales[0] || 'en',
