@@ -245,17 +245,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setIsModalActive(totalActiveModals > 0)
   }, [setIsModalActive, setActiveModals])
 
+  const state = React.useMemo(
+    () => ({
+      isModalActive,
+      activeModals,
+    }),
+    [isModalActive, activeModals],
+  )
+
+  const methods = React.useMemo(
+    () => ({
+      openModal,
+      closeModal,
+    }),
+    [openModal, closeModal],
+  )
+
   return (
-    <ModalContext.Provider
-      value={{
-        isModalActive,
-        activeModals,
-      }}>
-      <ModalControlContext.Provider
-        value={{
-          openModal,
-          closeModal,
-        }}>
+    <ModalContext.Provider value={state}>
+      <ModalControlContext.Provider value={methods}>
         {children}
       </ModalControlContext.Provider>
     </ModalContext.Provider>
