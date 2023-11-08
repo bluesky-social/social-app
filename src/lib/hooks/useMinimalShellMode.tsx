@@ -15,6 +15,7 @@ export function useMinimalShellMode() {
   const minimalShellInterp = useSharedValue(0)
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
+      pointerEvents: minimalShellMode ? 'none' : 'auto',
       opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
         {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, 25])},
@@ -23,6 +24,7 @@ export function useMinimalShellMode() {
   })
   const headerMinimalShellTransform = useAnimatedStyle(() => {
     return {
+      pointerEvents: minimalShellMode ? 'none' : 'auto',
       opacity: interpolate(minimalShellInterp.value, [0, 1], [1, 0]),
       transform: [
         {translateY: interpolate(minimalShellInterp.value, [0, 1], [0, -25])},
@@ -54,7 +56,6 @@ export function useMinimalShellMode() {
   }, [minimalShellInterp, minimalShellMode])
 
   return {
-    minimalShellMode,
     footerMinimalShellTransform,
     headerMinimalShellTransform,
     fabMinimalShellTransform,

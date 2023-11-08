@@ -39,7 +39,7 @@ export const BottomBar = observer(function BottomBarImpl({
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
-  const {minimalShellMode, footerMinimalShellTransform} = useMinimalShellMode()
+  const {footerMinimalShellTransform} = useMinimalShellMode()
   const {notifications} = store.me
 
   const onPressTab = React.useCallback(
@@ -85,7 +85,6 @@ export const BottomBar = observer(function BottomBarImpl({
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
-        minimalShellMode && styles.disabled,
       ]}>
       <Btn
         testID="bottomBarHomeBtn"
