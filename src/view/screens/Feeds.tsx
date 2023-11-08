@@ -142,7 +142,7 @@ export const FeedsScreen = withAuthRequired(
         } else if (item.type === 'saved-feeds-loading') {
           return (
             <>
-              {Array.from(Array(item.numItems)).map((_, i) => (
+              {Array.from(Array(item.numItems)).map((_i, i) => (
                 <SavedFeedLoadingPlaceholder key={`placeholder-${i}`} />
               ))}
             </>
