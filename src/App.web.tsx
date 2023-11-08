@@ -17,6 +17,7 @@ import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
+import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 
 const InnerApp = observer(function AppImpl() {
   const colorMode = useColorMode()
@@ -68,7 +69,9 @@ function App() {
 
   return (
     <ShellStateProvider>
-      <InnerApp />
+      <MutedThreadsProvider>
+        <InnerApp />
+      </MutedThreadsProvider>
     </ShellStateProvider>
   )
 }

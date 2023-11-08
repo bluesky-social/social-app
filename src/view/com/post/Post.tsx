@@ -33,6 +33,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {logger} from '#/logger'
+import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 
 export const Post = observer(function PostImpl({
   view,
@@ -106,6 +107,8 @@ const PostLoaded = observer(function PostLoadedImpl({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const mutedThreads = useMutedThreads()
+  const toggleThreadMute = useToggleThreadMute()
   const [limitLines, setLimitLines] = React.useState(
     countLines(item.richText?.text) >= MAX_POST_LINES,
   )
@@ -161,10 +164,10 @@ const PostLoaded = observer(function PostLoadedImpl({
     Linking.openURL(translatorUrl)
   }, [translatorUrl])
 
-  const onToggleThreadMute = React.useCallback(async () => {
+  const onToggleThreadMute = React.useCallback(() => {
     try {
-      await item.toggleThreadMute()
-      if (item.isThreadMuted) {
+      const muted = toggleThreadMute(item.data.rootUri)
+      if (muted) {
         Toast.show('You will no longer receive notifications for this thread')
       } else {
         Toast.show('You will now receive notifications for this thread')
@@ -172,7 +175,7 @@ const PostLoaded = observer(function PostLoadedImpl({
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [item])
+  }, [item, toggleThreadMute])
 
   const onDeletePost = React.useCallback(() => {
     item.delete().then(
@@ -286,7 +289,7 @@ const PostLoaded = observer(function PostLoadedImpl({
             likeCount={item.post.likeCount}
             isReposted={!!item.post.viewer?.repost}
             isLiked={!!item.post.viewer?.like}
-            isThreadMuted={item.isThreadMuted}
+            isThreadMuted={mutedThreads.includes(item.data.rootUri)}
             onPressReply={onPressReply}
             onPressToggleRepost={onPressToggleRepost}
             onPressToggleLike={onPressToggleLike}

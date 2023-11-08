@@ -18,6 +18,7 @@ import {RootStoreModel} from '../root-store'
 import {PostThreadModel} from '../content/post-thread'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
+import {isThreadMuted} from '#/state/muted-threads'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -550,8 +551,7 @@ export class NotificationsFeedModel {
       .filter(item => {
         const hideByLabel = item.shouldFilter
         let mutedThread = !!(
-          item.reasonSubjectRootUri &&
-          this.rootStore.mutedThreads.uris.has(item.reasonSubjectRootUri)
+          item.reasonSubjectRootUri && isThreadMuted(item.reasonSubjectRootUri)
         )
         return !hideByLabel && !mutedThread
       })
