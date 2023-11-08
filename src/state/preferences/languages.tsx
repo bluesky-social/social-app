@@ -5,7 +5,7 @@ type SetStateCb = (
   s: persisted.Schema['languagePrefs'],
 ) => persisted.Schema['languagePrefs']
 type StateContext = persisted.Schema['languagePrefs']
-type SetContext = {
+type ApiContext = {
   setPrimaryLanguage: (code2: string) => void
   setPostLanguage: (commaSeparatedLangCodes: string) => void
   toggleContentLanguage: (code2: string) => void
@@ -16,7 +16,7 @@ type SetContext = {
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.languagePrefs,
 )
-const setContext = React.createContext<SetContext>({
+const apiContext = React.createContext<ApiContext>({
   setPrimaryLanguage: (_: string) => {},
   setPostLanguage: (_: string) => {},
   toggleContentLanguage: (_: string) => {},
@@ -110,7 +110,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   return (
     <stateContext.Provider value={state}>
-      <setContext.Provider value={api}>{children}</setContext.Provider>
+      <apiContext.Provider value={api}>{children}</apiContext.Provider>
     </stateContext.Provider>
   )
 }
@@ -119,8 +119,8 @@ export function useLanguagePrefs() {
   return React.useContext(stateContext)
 }
 
-export function useSetLanguagePrefs() {
-  return React.useContext(setContext)
+export function useLanguagePrefsApi() {
+  return React.useContext(apiContext)
 }
 
 export function getContentLanguages() {

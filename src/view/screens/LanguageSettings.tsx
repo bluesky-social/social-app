@@ -19,7 +19,7 @@ import {LANGUAGES} from 'lib/../locale/languages'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
-import {useLanguagePrefs, useSetLanguagePrefs} from '#/state/preferences'
+import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -28,7 +28,7 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
 ) {
   const pal = usePalette('default')
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useSetLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()

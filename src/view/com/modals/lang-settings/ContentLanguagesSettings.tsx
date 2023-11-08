@@ -11,7 +11,7 @@ import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
-  useSetLanguagePrefs,
+  useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 
 export const snapPoints = ['100%']
@@ -19,7 +19,7 @@ export const snapPoints = ['100%']
 export function Component({}: {}) {
   const {closeModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useSetLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {

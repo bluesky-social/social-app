@@ -53,7 +53,7 @@ import {useModals, useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useLanguagePrefs,
-  useSetLanguagePrefs,
+  useLanguagePrefsApi,
   toPostLanguages,
 } from '#/state/preferences/languages'
 
@@ -72,7 +72,7 @@ export const ComposePost = observer(function ComposePost({
   const store = useStores()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useSetLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
