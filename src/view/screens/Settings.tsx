@@ -51,10 +51,12 @@ import {
   useSetMinimalShellMode,
   useColorMode,
   useSetColorMode,
-  useRequireAltTextEnabled,
-  useSetRequireAltTextEnabled,
   useOnboardingDispatch,
 } from '#/state/shell'
+import {
+  useRequireAltTextEnabled,
+  useSetRequireAltTextEnabled,
+} from '#/state/preferences'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes

@@ -2,7 +2,6 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -20,6 +19,7 @@ import {LANGUAGES} from 'lib/../locale/languages'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {useLanguagePrefs, useSetLanguagePrefs} from '#/state/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -27,7 +27,8 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
   _: Props,
 ) {
   const pal = usePalette('default')
-  const store = useStores()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useSetLanguagePrefs()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -47,21 +48,23 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
 
   const onChangePrimaryLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
-      store.preferences.setPrimaryLanguage(value)
+      if (langPrefs.primaryLanguage !== value) {
+        setLangPrefs(v => ({...v, primaryLanguage: value}))
+      }
     },
-    [store.preferences],
+    [langPrefs, setLangPrefs],
   )
 
   const myLanguages = React.useMemo(() => {
     return (
-      store.preferences.contentLanguages
+      langPrefs.contentLanguages
         .map(lang => LANGUAGES.find(l => l.code2 === lang))
         .filter(Boolean)
         // @ts-ignore
         .map(l => l.name)
         .join(', ')
     )
-  }, [store.preferences.contentLanguages])
+  }, [langPrefs.contentLanguages])
 
   return (
     <CenteredView
@@ -84,7 +87,7 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
 
           <View style={{position: 'relative'}}>
             <RNPickerSelect
-              value={store.preferences.primaryLanguage}
+              value={langPrefs.primaryLanguage}
               onValueChange={onChangePrimaryLanguage}
               items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
                 label: l.name,

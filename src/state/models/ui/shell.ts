@@ -155,12 +155,7 @@ export class ShellUiModel {
 
   setupLoginModals() {
     this.rootStore.onSessionReady(() => {
-      if (
-        shouldRequestEmailConfirmation(
-          this.rootStore.session,
-          this.rootStore.onboarding,
-        )
-      ) {
+      if (shouldRequestEmailConfirmation(this.rootStore.session)) {
         unstable__openModal({name: 'verify-email', showReminder: true})
         setEmailConfirmationRequested()
       }

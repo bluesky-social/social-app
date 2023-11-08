@@ -10,11 +10,10 @@ import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
 import {ModerationOpts} from '@atproto/api'
 import {DEFAULT_FEEDS} from 'lib/constants'
-import {deviceLocales} from 'platform/detection'
 import {getAge} from 'lib/strings/time'
 import {FeedTuner} from 'lib/api/feed-manip'
-import {LANGUAGES} from '../../../locale/languages'
 import {logger} from '#/logger'
+import {getContentLanguages} from '#/state/preferences/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
@@ -34,9 +33,6 @@ const LABEL_GROUPS = [
   'impersonation',
 ]
 const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
-const DEFAULT_LANG_CODES = (deviceLocales || [])
-  .concat(['en', 'ja', 'pt', 'de'])
-  .slice(0, 6)
 const THREAD_SORT_VALUES = ['oldest', 'newest', 'most-likes', 'random']
 
 interface LegacyPreferences {
@@ -62,10 +58,6 @@ export class LabelPreferencesModel {
 
 export class PreferencesModel {
   adultContentEnabled = false
-  primaryLanguage: string = deviceLocales[0] || 'en'
-  contentLanguages: string[] = deviceLocales || []
-  postLanguage: string = deviceLocales[0] || 'en'
-  postLanguageHistory: string[] = DEFAULT_LANG_CODES
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
@@ -103,10 +95,6 @@ export class PreferencesModel {
 
   serialize() {
     return {
-      primaryLanguage: this.primaryLanguage,
-      contentLanguages: this.contentLanguages,
-      postLanguage: this.postLanguage,
-      postLanguageHistory: this.postLanguageHistory,
       contentLabels: this.contentLabels,
       savedFeeds: this.savedFeeds,
       pinnedFeeds: this.pinnedFeeds,
@@ -120,44 +108,6 @@ export class PreferencesModel {
    */
   hydrate(v: unknown) {
     if (isObj(v)) {
-      if (
-        hasProp(v, 'primaryLanguage') &&
-        typeof v.primaryLanguage === 'string'
-      ) {
-        this.primaryLanguage = v.primaryLanguage
-      } else {
-        // default to the device languages
-        this.primaryLanguage = deviceLocales[0] || 'en'
-      }
-      // check if content languages in preferences exist, otherwise default to device languages
-      if (
-        hasProp(v, 'contentLanguages') &&
-        Array.isArray(v.contentLanguages) &&
-        typeof v.contentLanguages.every(item => typeof item === 'string')
-      ) {
-        this.contentLanguages = v.contentLanguages
-      } else {
-        // default to the device languages
-        this.contentLanguages = deviceLocales
-      }
-      if (hasProp(v, 'postLanguage') && typeof v.postLanguage === 'string') {
-        this.postLanguage = v.postLanguage
-      } else {
-        // default to the device languages
-        this.postLanguage = deviceLocales[0] || 'en'
-      }
-      if (
-        hasProp(v, 'postLanguageHistory') &&
-        Array.isArray(v.postLanguageHistory) &&
-        typeof v.postLanguageHistory.every(item => typeof item === 'string')
-      ) {
-        this.postLanguageHistory = v.postLanguageHistory
-          .concat(DEFAULT_LANG_CODES)
-          .slice(0, 6)
-      } else {
-        // default to a starter set
-        this.postLanguageHistory = DEFAULT_LANG_CODES
-      }
       // check if content labels in preferences exist, then hydrate
       if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
         Object.assign(this.contentLabels, v.contentLabels)
@@ -262,9 +212,6 @@ export class PreferencesModel {
     try {
       runInAction(() => {
         this.contentLabels = new LabelPreferencesModel()
-        this.contentLanguages = deviceLocales
-        this.postLanguage = deviceLocales ? deviceLocales.join(',') : 'en'
-        this.postLanguageHistory = DEFAULT_LANG_CODES
         this.savedFeeds = []
         this.pinnedFeeds = []
       })
@@ -274,81 +221,6 @@ export class PreferencesModel {
     } finally {
       this.lock.release()
     }
-  }
-
-  // languages
-  // =
-
-  hasContentLanguage(code2: string) {
-    return this.contentLanguages.includes(code2)
-  }
-
-  toggleContentLanguage(code2: string) {
-    if (this.hasContentLanguage(code2)) {
-      this.contentLanguages = this.contentLanguages.filter(
-        lang => lang !== code2,
-      )
-    } else {
-      this.contentLanguages = this.contentLanguages.concat([code2])
-    }
-  }
-
-  /**
-   * A getter that splits `this.postLanguage` into an array of strings.
-   *
-   * This was previously the main field on this model, but now we're
-   * concatenating lang codes to make multi-selection a little better.
-   */
-  get postLanguages() {
-    // filter out empty strings if exist
-    return this.postLanguage.split(',').filter(Boolean)
-  }
-
-  hasPostLanguage(code2: string) {
-    return this.postLanguages.includes(code2)
-  }
-
-  togglePostLanguage(code2: string) {
-    if (this.hasPostLanguage(code2)) {
-      this.postLanguage = this.postLanguages
-        .filter(lang => lang !== code2)
-        .join(',')
-    } else {
-      // sort alphabetically for deterministic comparison in context menu
-      this.postLanguage = this.postLanguages
-        .concat([code2])
-        .sort((a, b) => a.localeCompare(b))
-        .join(',')
-    }
-  }
-
-  setPostLanguage(commaSeparatedLangCodes: string) {
-    this.postLanguage = commaSeparatedLangCodes
-  }
-
-  /**
-   * Saves whatever language codes are currently selected into a history array,
-   * which is then used to populate the language selector menu.
-   */
-  savePostLanguageToHistory() {
-    // filter out duplicate `this.postLanguage` if exists, and prepend
-    // value to start of array
-    this.postLanguageHistory = [this.postLanguage]
-      .concat(
-        this.postLanguageHistory.filter(
-          commaSeparatedLangCodes =>
-            commaSeparatedLangCodes !== this.postLanguage,
-        ),
-      )
-      .slice(0, 6)
-  }
-
-  getReadablePostLanguages() {
-    const all = this.postLanguages.map(code2 => {
-      const lang = LANGUAGES.find(l => l.code2 === code2)
-      return lang ? lang.name : code2
-    })
-    return all.join(', ')
   }
 
   // moderation
@@ -599,17 +471,13 @@ export class PreferencesModel {
     }
   }
 
-  setPrimaryLanguage(lang: string) {
-    this.primaryLanguage = lang
-  }
-
   getFeedTuners(
     feedType: 'home' | 'following' | 'author' | 'custom' | 'list' | 'likes',
   ) {
     if (feedType === 'custom') {
       return [
         FeedTuner.dedupReposts,
-        FeedTuner.preferredLangOnly(this.contentLanguages),
+        FeedTuner.preferredLangOnly(getContentLanguages()),
       ]
     }
     if (feedType === 'list') {
