@@ -29,6 +29,7 @@ type ApiContext = {
   logout: () => Promise<void>
   initSession: (account: Account) => Promise<void>
   resumeSession: (account?: Account) => Promise<void>
+  removeAccount: (account: Account) => void
 }
 
 export const PUBLIC_BSKY_AGENT = new BskyAgent({
@@ -48,6 +49,7 @@ const ApiContext = React.createContext<ApiContext>({
   logout: async () => {},
   initSession: async () => {},
   resumeSession: async () => {},
+  removeAccount: () => {},
 })
 
 function createPersistSessionHandler(
@@ -269,6 +271,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [initSession],
   )
 
+  const removeAccount = React.useCallback<ApiContext['removeAccount']>(
+    account => {
+      setStateWrapped(s => {
+        return {
+          ...s,
+          accounts: s.accounts.filter(a => a.did !== account.did),
+        }
+      })
+    },
+    [setStateWrapped],
+  )
+
   React.useEffect(() => {
     return persisted.onUpdate(() => {
       const session = persisted.get('session')
@@ -301,9 +315,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [state, logout, initSession])
 
-  // TODO removeAccount
-  // TODO reloadFromServer
-  // TODO updateLocalAccountData
+  // TODO reloadFromServer, RQ?
+  // TODO updateLocalAccountData, RQ?
 
   const api = React.useMemo(
     () => ({
@@ -312,8 +325,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logout,
       initSession,
       resumeSession,
+      removeAccount,
     }),
-    [createAccount, login, logout, initSession, resumeSession],
+    [createAccount, login, logout, initSession, resumeSession, removeAccount],
   )
 
   return (
