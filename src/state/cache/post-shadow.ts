@@ -14,8 +14,6 @@ export interface PostShadow {
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
-export type UpdatePostShadowFn = (cache: Partial<PostShadow>) => void
-
 interface CacheEntry {
   ts: number
   value: PostShadow
