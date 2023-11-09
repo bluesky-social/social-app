@@ -44,7 +44,7 @@ const InnerApp = observer(function AppImpl() {
       setRootStore(store)
       analytics.init(store)
     })
-  }, [resumeSession])
+  }, [])
 
   // show nothing prior to init
   if (!rootStore) {
