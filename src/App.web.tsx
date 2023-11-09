@@ -29,17 +29,12 @@ import {
 import * as persisted from '#/state/persisted'
 
 const InnerApp = observer(function AppImpl() {
-  const {isInitialLoad, currentAccount} = useSession()
+  const {isInitialLoad} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
-
-  console.log('session', {
-    isInitialLoad: isInitialLoad,
-    currentAccount: currentAccount?.handle,
-  })
 
   // init
   useEffect(() => {
