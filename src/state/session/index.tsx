@@ -99,29 +99,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     agent: PUBLIC_BSKY_AGENT,
   })
 
-  const setStateWrapped = React.useCallback(
-    (fn: (prev: StateContext) => StateContext) => {
-      let next: StateContext | undefined
-      setState(s => {
-        next = fn(s)
-        return next
-      })
-
-      // just for TypeScript
-      if (!next) return
-
-      // only some state should be persisted
-      persisted.write('session', {
-        accounts: next.accounts,
-        currentAccount: next.currentAccount,
-      })
-    },
-    [setState],
-  )
-
   const upsertAccount = React.useCallback(
     (account: persisted.PersistedAccount, expired = false) => {
-      setStateWrapped(s => {
+      setState(s => {
         return {
           ...s,
           currentAccount: expired ? undefined : account,
@@ -129,7 +109,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [setStateWrapped],
+    [setState],
   )
 
   // TODO have not connected this yet
@@ -218,7 +198,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
     logger.debug(`session: logout`)
-    setStateWrapped(s => {
+    setState(s => {
       return {
         ...s,
         agent: PUBLIC_BSKY_AGENT,
@@ -230,7 +210,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })),
       }
     })
-  }, [setStateWrapped])
+  }, [setState])
 
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
@@ -283,7 +263,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const removeAccount = React.useCallback<ApiContext['removeAccount']>(
     account => {
-      setStateWrapped(s => {
+      setState(s => {
         return {
           ...s,
           accounts: s.accounts.filter(
@@ -292,14 +272,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [setStateWrapped],
+    [setState],
   )
 
   const updateCurrentAccount = React.useCallback<
     ApiContext['updateCurrentAccount']
   >(
     account => {
-      setStateWrapped(s => {
+      setState(s => {
         const currentAccount = s.currentAccount
 
         // ignore, should never happen
@@ -317,8 +297,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [setStateWrapped],
+    [setState],
   )
+
+  React.useEffect(() => {
+    persisted.write('session', {
+      accounts: state.accounts,
+      currentAccount: state.currentAccount,
+    })
+  }, [state])
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
