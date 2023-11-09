@@ -20,25 +20,23 @@ export function useMinimalShellMode() {
   const mode = useMinimalShellModeState()
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: mode.value ? 'none' : 'auto',
-      opacity: withShellTiming(interpolate(mode.value ? 1 : 0, [0, 1], [1, 0])),
+      pointerEvents: mode.value > 0 ? 'none' : 'auto',
+      opacity: withShellTiming(interpolate(mode.value, [0, 1], [1, 0])),
       transform: [
         {
-          translateY: withShellTiming(
-            interpolate(mode.value ? 1 : 0, [0, 1], [0, 25]),
-          ),
+          translateY: withShellTiming(interpolate(mode.value, [0, 1], [0, 25])),
         },
       ],
     }
   })
   const headerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: mode.value ? 'none' : 'auto',
-      opacity: withShellTiming(interpolate(mode.value ? 1 : 0, [0, 1], [1, 0])),
+      pointerEvents: mode.value > 0 ? 'none' : 'auto',
+      opacity: withShellTiming(interpolate(mode.value, [0, 1], [1, 0])),
       transform: [
         {
           translateY: withShellTiming(
-            interpolate(mode.value ? 1 : 0, [0, 1], [0, -25]),
+            interpolate(mode.value, [0, 1], [0, -25]),
           ),
         },
       ],
@@ -49,7 +47,7 @@ export function useMinimalShellMode() {
       transform: [
         {
           translateY: withShellTiming(
-            interpolate(mode.value ? 1 : 0, [0, 1], [-44, 0]),
+            interpolate(mode.value, [0, 1], [-44, 0]),
           ),
         },
       ],

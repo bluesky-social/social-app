@@ -1,21 +1,21 @@
 import React from 'react'
 import {useSharedValue, SharedValue} from 'react-native-reanimated'
 
-type StateContext = SharedValue<boolean>
-type SetContext = (v: boolean) => void
+type StateContext = SharedValue<number>
+type SetContext = (v: number) => void
 
 const stateContext = React.createContext<StateContext>({
-  value: false,
+  value: 0,
   addListener() {},
   removeListener() {},
   modify() {},
 })
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = React.createContext<SetContext>((_: number) => {})
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const mode = useSharedValue(false)
+  const mode = useSharedValue(0)
   const setMode = React.useCallback(
-    (v: boolean) => {
+    (v: number) => {
       mode.value = v
     },
     [mode],
