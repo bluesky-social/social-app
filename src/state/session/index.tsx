@@ -31,7 +31,7 @@ type ApiContext = {
   resumeSession: (account?: Account) => Promise<void>
 }
 
-export const BSKY_AGENT = new BskyAgent({
+export const PUBLIC_BSKY_AGENT = new BskyAgent({
   service: 'https://api.bsky.app',
 })
 
@@ -39,7 +39,7 @@ const StateContext = React.createContext<StateContext>({
   isInitialLoad: true,
   accounts: [],
   currentAccount: undefined,
-  agent: BSKY_AGENT,
+  agent: PUBLIC_BSKY_AGENT,
 })
 
 const ApiContext = React.createContext<ApiContext>({
@@ -67,7 +67,7 @@ function createPersistSessionHandler(
       accessJwt: session?.accessJwt, // undefined when expired or creation fails
     }
 
-    logger.info(`session: BskyAgent.persistSession`, {
+    logger.debug(`session: BskyAgent.persistSession`, {
       expired,
       did: refreshedAccount.did,
       handle: refreshedAccount.handle,
@@ -82,10 +82,10 @@ function createPersistSessionHandler(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>({
-    isInitialLoad: true,
+    isInitialLoad: true, // try to resume the session first
     accounts: persisted.get('session').accounts,
-    currentAccount: undefined,
-    agent: BSKY_AGENT,
+    currentAccount: undefined, // assume logged out to start
+    agent: PUBLIC_BSKY_AGENT,
   })
 
   const setStateWrapped = React.useCallback(
@@ -121,9 +121,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setStateWrapped],
   )
 
+  // TODO have not connected this yet
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({service, email, password, handle, inviteCode}: any) => {
-      logger.info(`session: creating account`, {
+      logger.debug(`session: creating account`, {
         service,
         handle,
       })
@@ -157,7 +158,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       upsertAccount(account)
 
-      logger.info(`session: created account`, {
+      logger.debug(`session: created account`, {
         service,
         handle,
       })
@@ -167,7 +168,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const login = React.useCallback<ApiContext['login']>(
     async ({service, identifier, password}) => {
-      logger.info(`session: login`, {
+      logger.debug(`session: login`, {
         service,
         identifier,
       })
@@ -196,7 +197,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       upsertAccount(account)
 
-      logger.info(`session: logged in`, {
+      logger.debug(`session: logged in`, {
         service,
         identifier,
       })
@@ -208,7 +209,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setStateWrapped(s => {
       return {
         ...s,
-        agent: BSKY_AGENT,
+        agent: PUBLIC_BSKY_AGENT,
         currentAccount: undefined,
         accounts: s.accounts.map(a => ({
           ...a,
@@ -221,7 +222,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
-      logger.info(`session: initSession`, {
+      logger.debug(`session: initSession`, {
         did: account.did,
         handle: account.handle,
       })
@@ -272,11 +273,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return persisted.onUpdate(() => {
       const session = persisted.get('session')
 
-      logger.info(`session: onUpdate`)
+      logger.debug(`session: onUpdate`)
 
       if (session.currentAccount) {
         if (session.currentAccount?.did !== state.currentAccount?.did) {
-          logger.info(`session: switching account`, {
+          logger.debug(`session: switching account`, {
             from: {
               did: state.currentAccount?.did,
               handle: state.currentAccount?.handle,
@@ -290,7 +291,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           initSession(session.currentAccount)
         }
       } else if (!session.currentAccount && state.currentAccount) {
-        logger.info(`session: logging out`, {
+        logger.debug(`session: logging out`, {
           did: state.currentAccount?.did,
           handle: state.currentAccount?.handle,
         })
