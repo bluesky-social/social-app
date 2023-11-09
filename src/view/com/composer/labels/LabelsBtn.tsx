@@ -7,6 +7,8 @@ import {ShieldExclamation} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {isNative} from 'platform/detection'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
 export const LabelsBtn = observer(function LabelsBtn({
@@ -19,6 +21,7 @@ export const LabelsBtn = observer(function LabelsBtn({
   onChange: (v: string[]) => void
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {openModal} = useModalControls()
 
   return (
@@ -26,7 +29,7 @@ export const LabelsBtn = observer(function LabelsBtn({
       type="default-light"
       testID="labelsBtn"
       style={[styles.button, !hasMedia && styles.dimmed]}
-      accessibilityLabel="Content warnings"
+      accessibilityLabel={_(msg`Content warnings`)}
       accessibilityHint=""
       onPress={() => {
         if (isNative) {

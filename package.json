@@ -28,7 +28,9 @@
     "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
-    "build:apk": "eas build -p android --profile dev-android-apk"
+    "build:apk": "eas build -p android --profile dev-android-apk",
+    "intl:extract": "lingui extract",
+    "intl:compile": "lingui compile"
   },
   "dependencies": {
     "@atproto/api": "^0.6.23",
@@ -42,6 +44,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@gorhom/bottom-sheet": "^4.5.1",
+    "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@react-native-async-storage/async-storage": "1.18.2",
@@ -164,10 +167,12 @@
   },
   "devDependencies": {
     "@atproto/dev-env": "^0.2.5",
-    "@babel/core": "^7.20.0",
+    "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@did-plc/server": "^0.0.1",
+    "@lingui/cli": "^4.5.0",
+    "@lingui/macro": "^4.5.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@react-native-community/eslint-config": "^3.0.0",
     "@testing-library/jest-native": "^5.4.1",
@@ -192,6 +197,7 @@
     "@typescript-eslint/parser": "^5.48.2",
     "babel-jest": "^29.4.2",
     "babel-loader": "^9.1.2",
+    "babel-plugin-macros": "^3.1.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "babel-plugin-react-native-web": "^0.18.12",
     "detox": "^20.13.0",

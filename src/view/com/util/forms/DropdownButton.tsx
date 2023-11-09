@@ -17,6 +17,8 @@ import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {HITSLOP_10} from 'lib/constants'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
@@ -207,6 +209,7 @@ const DropdownItems = ({
 }: DropDownItemProps) => {
   const pal = usePalette('default')
   const theme = useTheme()
+  const {_} = useLingui()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.view
   const separatorColor =
@@ -224,7 +227,7 @@ const DropdownItems = ({
       {/* This TouchableWithoutFeedback renders the background so if the user clicks outside, the dropdown closes */}
       <TouchableWithoutFeedback
         onPress={onOuterPress}
-        accessibilityLabel="Toggle dropdown"
+        accessibilityLabel={_(msg`Toggle dropdown`)}
         accessibilityHint="">
         <View style={[styles.bg]} />
       </TouchableWithoutFeedback>

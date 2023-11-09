@@ -12,6 +12,8 @@ import {RadioGroup} from 'view/com/util/forms/RadioGroup'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export const PreferencesThreads = observer(function PreferencesThreadsImpl({
@@ -19,6 +21,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
 }: Props) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   return (
@@ -37,7 +40,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
         ]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
-          Fine-tune the discussion threads.
+          <Trans>Fine-tune the discussion threads.</Trans>
         </Text>
       </View>
 
@@ -45,10 +48,10 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
         <View style={styles.cardsContainer}>
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Sort Replies
+              <Trans>Sort Replies</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Sort replies to the same post by:
+              <Trans>Sort replies to the same post by:</Trans>
             </Text>
             <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
               <RadioGroup
@@ -67,10 +70,12 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Prioritize Your Follows
+              <Trans>Prioritize Your Follows</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Show replies by people you follow before all other replies.
+              <Trans>
+                Show replies by people you follow before all other replies.
+              </Trans>
             </Text>
             <ToggleButton
               type="default-light"
@@ -84,12 +89,14 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Threaded
-              Mode
+              <FontAwesomeIcon icon="flask" color={pal.colors.text} />{' '}
+              <Trans>Threaded Mode</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "Yes" to show replies in a threaded view. This
-              is an experimental feature.
+              <Trans>
+                Set this setting to "Yes" to show replies in a threaded view.
+                This is an experimental feature.
+              </Trans>
             </Text>
             <ToggleButton
               type="default-light"
@@ -118,9 +125,11 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
           }}
           style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
           accessibilityRole="button"
-          accessibilityLabel="Confirm"
+          accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Done</Trans>
+          </Text>
         </TouchableOpacity>
       </View>
     </CenteredView>

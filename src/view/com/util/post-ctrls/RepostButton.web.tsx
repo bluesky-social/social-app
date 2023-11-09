@@ -10,6 +10,8 @@ import {
   DropdownItem as NativeDropdownItem,
 } from '../forms/NativeDropdown'
 import {EventStopper} from '../EventStopper'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 interface Props {
   isReposted: boolean
@@ -28,6 +30,7 @@ export const RepostButton = ({
   onQuote,
 }: Props) => {
   const theme = useTheme()
+  const {_} = useLingui()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -63,7 +66,7 @@ export const RepostButton = ({
     <EventStopper>
       <NativeDropdown
         items={dropdownItems}
-        accessibilityLabel="Repost or quote post"
+        accessibilityLabel={_(msg`Repost or quote post`)}
         accessibilityHint="">
         <View
           style={[

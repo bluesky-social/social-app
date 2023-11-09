@@ -49,6 +49,8 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModals, useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -70,6 +72,7 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
   const store = useStores()
+  const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -273,9 +276,11 @@ export const ComposePost = observer(function ComposePost({
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel"
+            accessibilityLabel={_(msg`Cancel`)}
             accessibilityHint="Closes post composer and discards post draft">
-            <Text style={[pal.link, s.f18]}>Cancel</Text>
+            <Text style={[pal.link, s.f18]}>
+              <Trans>Cancel</Trans>
+            </Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -316,7 +321,9 @@ export const ComposePost = observer(function ComposePost({
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
-                  <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>
+                    <Trans>Post</Trans>
+                  </Text>
                 </View>
               )}
             </>
@@ -332,7 +339,7 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
             <Text style={[pal.text, s.flex1]}>
-              One or more images is missing alt text.
+              <Trans>One or more images is missing alt text.</Trans>
             </Text>
           </View>
         )}
@@ -388,7 +395,7 @@ export const ComposePost = observer(function ComposePost({
               onSuggestedLinksChanged={setSuggestedLinks}
               onError={setError}
               accessible={true}
-              accessibilityLabel="Write post"
+              accessibilityLabel={_(msg`Write post`)}
               accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
             />
           </View>
@@ -417,11 +424,11 @@ export const ComposePost = observer(function ComposePost({
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}
                   accessibilityRole="button"
-                  accessibilityLabel="Add link card"
+                  accessibilityLabel={_(msg`Add link card`)}
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
-                    Add link card:{' '}
-                    <Text style={pal.link}>{toShortUrl(url)}</Text>
+                    <Trans>Add link card:</Trans>
+                    <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
                   </Text>
                 </TouchableOpacity>
               ))}

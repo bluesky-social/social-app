@@ -16,6 +16,8 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -55,8 +57,10 @@ export const AppPasswords = withAuthRequired(
           <AppPasswordsHeader />
           <View style={[styles.empty, pal.viewLight]}>
             <Text type="lg" style={[pal.text, styles.emptyText]}>
-              You have not created any app passwords yet. You can create one by
-              pressing the button below.
+              <Trans>
+                You have not created any app passwords yet. You can create one
+                by pressing the button below.
+              </Trans>
             </Text>
           </View>
           {!isTabletOrDesktop && <View style={styles.flex1} />}
@@ -146,8 +150,10 @@ function AppPasswordsHeader() {
           pal.text,
           isTabletOrDesktop && styles.descriptionDesktop,
         ]}>
-        Use app passwords to login to other Bluesky clients without giving full
-        access to your account or password.
+        <Trans>
+          Use app passwords to login to other Bluesky clients without giving
+          full access to your account or password.
+        </Trans>
       </Text>
     </>
   )
@@ -164,6 +170,7 @@ function AppPassword({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const {openModal} = useModalControls()
   const {contentLanguages} = useLanguagePrefs()
 
@@ -188,7 +195,7 @@ function AppPassword({
       style={[styles.item, pal.border]}
       onPress={onDelete}
       accessibilityRole="button"
-      accessibilityLabel="Delete app password"
+      accessibilityLabel={_(msg`Delete app password`)}
       accessibilityHint="">
       <View>
         <Text type="md-bold" style={pal.text}>

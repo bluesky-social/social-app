@@ -39,6 +39,8 @@ import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
 import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {makeProfileLink} from 'lib/routes/links'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const store = useStores()
@@ -67,6 +69,7 @@ function BackBtn() {
   const {isTablet} = useWebMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
 
   const onPressBack = React.useCallback(() => {
@@ -86,7 +89,7 @@ function BackBtn() {
       onPress={onPressBack}
       style={styles.backBtn}
       accessibilityRole="button"
-      accessibilityLabel="Go back"
+      accessibilityLabel={_(msg`Go back`)}
       accessibilityHint="">
       <FontAwesomeIcon
         size={24}
@@ -184,6 +187,7 @@ const NavItem = observer(function NavItemImpl({
 function ComposeBtn() {
   const store = useStores()
   const {getState} = useNavigation()
+  const {_} = useLingui()
   const {isTablet} = useWebMediaQueries()
 
   const getProfileHandle = async () => {
@@ -222,7 +226,7 @@ function ComposeBtn() {
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       accessibilityRole="button"
-      accessibilityLabel="New post"
+      accessibilityLabel={_(msg`New post`)}
       accessibilityHint="">
       <View style={styles.newPostBtnIconWrapper}>
         <ComposeIcon2
@@ -232,7 +236,7 @@ function ComposeBtn() {
         />
       </View>
       <Text type="button" style={styles.newPostBtnLabel}>
-        New Post
+        <Trans>New Post</Trans>
       </Text>
     </TouchableOpacity>
   )

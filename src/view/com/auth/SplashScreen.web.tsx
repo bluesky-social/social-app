@@ -8,6 +8,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans} from '@lingui/macro'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -54,7 +55,9 @@ export const SplashScreen = ({
               onPress={onPressSignin}
               // TODO: web accessibility
               accessibilityRole="button">
-              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
+              <Text style={[pal.text, styles.btnLabel]}>
+                <Trans>Sign In</Trans>
+              </Text>
             </TouchableOpacity>
           </View>
         </ErrorBoundary>

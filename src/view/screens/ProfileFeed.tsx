@@ -47,6 +47,8 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 const SECTION_TITLES = ['Posts', 'About']
@@ -60,6 +62,7 @@ export const ProfileFeedScreen = withAuthRequired(
   observer(function ProfileFeedScreenImpl(props: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const {_} = useLingui()
     const navigation = useNavigation<NavigationProp>()
 
     const {name: handleOrDid} = props.route.params
@@ -98,7 +101,7 @@ export const ProfileFeedScreen = withAuthRequired(
         <CenteredView>
           <View style={[pal.view, pal.border, styles.notFoundContainer]}>
             <Text type="title-lg" style={[pal.text, s.mb10]}>
-              Could not load feed
+              <Trans>Could not load feed</Trans>
             </Text>
             <Text type="md" style={[pal.text, s.mb20]}>
               {error}
@@ -107,12 +110,12 @@ export const ProfileFeedScreen = withAuthRequired(
             <View style={{flexDirection: 'row'}}>
               <Button
                 type="default"
-                accessibilityLabel="Go Back"
+                accessibilityLabel={_(msg`Go Back`)}
                 accessibilityHint="Return to previous page"
                 onPress={onPressBack}
                 style={{flexShrink: 1}}>
                 <Text type="button" style={pal.text}>
-                  Go Back
+                  <Trans>Go Back</Trans>
                 </Text>
               </Button>
             </View>
@@ -142,6 +145,7 @@ export const ProfileFeedScreenInner = observer(
     const pal = usePalette('default')
     const store = useStores()
     const {track} = useAnalytics()
+    const {_} = useLingui()
     const feedSectionRef = React.useRef<SectionRef>(null)
     const {rkey, name: handleOrDid} = route.params
     const uri = useMemo(
@@ -313,7 +317,7 @@ export const ProfileFeedScreenInner = observer(
           <NativeDropdown
             testID="headerDropdownBtn"
             items={dropdownItems}
-            accessibilityLabel="More options"
+            accessibilityLabel={_(msg`More options`)}
             accessibilityHint="">
             <View style={[pal.viewLight, styles.btn]}>
               <FontAwesomeIcon
@@ -334,6 +338,7 @@ export const ProfileFeedScreenInner = observer(
       onTogglePinned,
       onToggleSaved,
       dropdownItems,
+      _,
     ])
 
     return (
@@ -374,7 +379,7 @@ export const ProfileFeedScreenInner = observer(
             />
           }
           accessibilityRole="button"
-          accessibilityLabel="New post"
+          accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
         />
       </View>
@@ -448,6 +453,7 @@ const AboutSection = observer(function AboutPageImpl({
   onScroll: (e: NativeScrollEvent) => void
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const scrollHandler = useAnimatedScrollHandler({onScroll})
 
   if (!feedInfo) {
@@ -478,14 +484,14 @@ const AboutSection = observer(function AboutPageImpl({
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-            No description
+            <Trans>No description</Trans>
           </Text>
         )}
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
           <Button
             type="default"
             testID="toggleLikeBtn"
-            accessibilityLabel="Like this feed"
+            accessibilityLabel={_(msg`Like this feed`)}
             accessibilityHint=""
             onPress={onToggleLiked}
             style={{paddingHorizontal: 10}}>

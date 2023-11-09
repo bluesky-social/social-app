@@ -16,6 +16,8 @@ import {isIOS} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['90%']
@@ -25,6 +27,7 @@ export const Component = observer(
     const store = useStores()
     const {isMobile} = useWebMediaQueries()
     const pal = usePalette('default')
+    const {_} = useLingui()
     const {closeModal} = useModalControls()
 
     React.useEffect(() => {
@@ -37,7 +40,9 @@ export const Component = observer(
 
     return (
       <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
-        <Text style={[pal.text, styles.title]}>Content Filtering</Text>
+        <Text style={[pal.text, styles.title]}>
+          <Trans>Content Filtering</Trans>
+        </Text>
         <ScrollView style={styles.scrollContainer}>
           <AdultContentEnabledPref />
           <ContentLabelPref
@@ -71,14 +76,16 @@ export const Component = observer(
             testID="sendReportBtn"
             onPress={onPressDone}
             accessibilityRole="button"
-            accessibilityLabel="Done"
+            accessibilityLabel={_(msg`Done`)}
             accessibilityHint="">
             <LinearGradient
               colors={[gradients.blueLight.start, gradients.blueLight.end]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 1}}
               style={[styles.btn]}>
-              <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+              <Text style={[s.white, s.bold, s.f18]}>
+                <Trans>Done</Trans>
+              </Text>
             </LinearGradient>
           </Pressable>
         </View>

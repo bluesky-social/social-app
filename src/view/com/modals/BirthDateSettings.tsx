@@ -15,6 +15,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
@@ -22,6 +24,7 @@ export const snapPoints = ['50%']
 export const Component = observer(function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const [date, setDate] = useState<Date>(
     store.preferences.birthDate || new Date(),
@@ -49,12 +52,12 @@ export const Component = observer(function Component({}: {}) {
       style={[pal.view, styles.container, isMobile && {paddingHorizontal: 18}]}>
       <View style={styles.titleSection}>
         <Text type="title-lg" style={[pal.text, styles.title]}>
-          My Birthday
+          <Trans>My Birthday</Trans>
         </Text>
       </View>
 
       <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-        This information is not shared with other users.
+        <Trans>This information is not shared with other users.</Trans>
       </Text>
 
       <View>
@@ -65,7 +68,7 @@ export const Component = observer(function Component({}: {}) {
           buttonType="default-light"
           buttonStyle={[pal.border, styles.dateInputButton]}
           buttonLabelType="lg"
-          accessibilityLabel="Birthday"
+          accessibilityLabel={_(msg`Birthday`)}
           accessibilityHint="Enter your birth date"
           accessibilityLabelledBy="birthDate"
         />
@@ -86,9 +89,11 @@ export const Component = observer(function Component({}: {}) {
             onPress={onSave}
             style={styles.btn}
             accessibilityRole="button"
-            accessibilityLabel="Save"
+            accessibilityLabel={_(msg`Save`)}
             accessibilityHint="">
-            <Text style={[s.white, s.bold, s.f18]}>Save</Text>
+            <Text style={[s.white, s.bold, s.f18]}>
+              <Trans>Save</Trans>
+            </Text>
           </TouchableOpacity>
         )}
       </View>

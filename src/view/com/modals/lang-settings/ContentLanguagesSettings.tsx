@@ -8,6 +8,7 @@ import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {LanguageToggle} from './LanguageToggle'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
+import {Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
@@ -69,12 +70,16 @@ export function Component({}: {}) {
               maxHeight: '90vh',
             },
       ]}>
-      <Text style={[pal.text, styles.title]}>Content Languages</Text>
+      <Text style={[pal.text, styles.title]}>
+        <Trans>Content Languages</Trans>
+      </Text>
       <Text style={[pal.text, styles.description]}>
-        Which languages would you like to see in your algorithmic feeds?
+        <Trans>
+          Which languages would you like to see in your algorithmic feeds?
+        </Trans>
       </Text>
       <Text style={[pal.textLight, styles.description]}>
-        Leave them all unchecked to see any language.
+        <Trans>Leave them all unchecked to see any language.</Trans>
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (

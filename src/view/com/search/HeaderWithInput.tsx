@@ -11,6 +11,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {HITSLOP_10} from 'lib/constants'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
 
 interface Props {
@@ -36,6 +38,7 @@ export function HeaderWithInput({
   const setDrawerOpen = useSetDrawerOpen()
   const theme = useTheme()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {track} = useAnalytics()
   const textInput = React.useRef<TextInput>(null)
   const {isMobile} = useWebMediaQueries()
@@ -65,7 +68,7 @@ export function HeaderWithInput({
           hitSlop={HITSLOP_10}
           style={styles.headerMenuBtn}
           accessibilityRole="button"
-          accessibilityLabel="Menu"
+          accessibilityLabel={_(msg`Menu`)}
           accessibilityHint="Access navigation links and settings">
           <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
         </TouchableOpacity>
@@ -95,7 +98,7 @@ export function HeaderWithInput({
           onSubmitEditing={onSubmitQuery}
           autoFocus={false}
           accessibilityRole="search"
-          accessibilityLabel="Search"
+          accessibilityLabel={_(msg`Search`)}
           accessibilityHint=""
           autoCorrect={false}
           autoCapitalize="none"
@@ -105,7 +108,7 @@ export function HeaderWithInput({
             testID="searchTextInputClearBtn"
             onPress={onPressClearQuery}
             accessibilityRole="button"
-            accessibilityLabel="Clear search query"
+            accessibilityLabel={_(msg`Clear search query`)}
             accessibilityHint="">
             <FontAwesomeIcon
               icon="xmark"
@@ -120,7 +123,9 @@ export function HeaderWithInput({
           <TouchableOpacity
             onPress={onPressCancelSearchInner}
             accessibilityRole="button">
-            <Text style={pal.text}>Cancel</Text>
+            <Text style={pal.text}>
+              <Trans>Cancel</Trans>
+            </Text>
           </TouchableOpacity>
         </View>
       ) : undefined}

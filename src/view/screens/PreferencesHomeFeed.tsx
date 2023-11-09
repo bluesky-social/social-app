@@ -14,6 +14,8 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import debounce from 'lodash.debounce'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 function RepliesThresholdInput({enabled}: {enabled: boolean}) {
   const store = useStores()
@@ -66,6 +68,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
 }: Props) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   return (
@@ -84,7 +87,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
           isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
         ]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
-          Fine-tune the content you see on your home screen.
+          <Trans>Fine-tune the content you see on your home screen.</Trans>
         </Text>
       </View>
 
@@ -92,10 +95,12 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
         <View style={styles.cardsContainer}>
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Replies
+              <Trans>Show Replies</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to hide all replies from your feed.
+              <Trans>
+                Set this setting to "No" to hide all replies from your feed.
+              </Trans>
             </Text>
             <ToggleButton
               testID="toggleRepliesBtn"
@@ -112,10 +117,13 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               store.preferences.homeFeed.hideReplies && styles.dimmed,
             ]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Reply Filters
+              <Trans>Reply Filters</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Enable this setting to only see replies between people you follow.
+              <Trans>
+                Enable this setting to only see replies between people you
+                follow.
+              </Trans>
             </Text>
             <ToggleButton
               type="default-light"
@@ -129,8 +137,10 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               style={[s.mb10]}
             />
             <Text style={[pal.text]}>
-              Adjust the number of likes a reply must have to be shown in your
-              feed.
+              <Trans>
+                Adjust the number of likes a reply must have to be shown in your
+                feed.
+              </Trans>
             </Text>
             <RepliesThresholdInput
               enabled={!store.preferences.homeFeed.hideReplies}
@@ -139,10 +149,12 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Reposts
+              <Trans>Show Reposts</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to hide all reposts from your feed.
+              <Trans>
+                Set this setting to "No" to hide all reposts from your feed.
+              </Trans>
             </Text>
             <ToggleButton
               type="default-light"
@@ -154,11 +166,13 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              Show Quote Posts
+              <Trans>Show Quote Posts</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "No" to hide all quote posts from your feed.
-              Reposts will still be visible.
+              <Trans>
+                Set this setting to "No" to hide all quote posts from your feed.
+                Reposts will still be visible.
+              </Trans>
             </Text>
             <ToggleButton
               type="default-light"
@@ -170,12 +184,14 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <FontAwesomeIcon icon="flask" color={pal.colors.text} /> Show
-              Posts from My Feeds
+              <FontAwesomeIcon icon="flask" color={pal.colors.text} />
+              <Trans>Show Posts from My Feeds</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
-              Set this setting to "Yes" to show samples of your saved feeds in
-              your following feed. This is an experimental feature.
+              <Trans>
+                Set this setting to "Yes" to show samples of your saved feeds in
+                your following feed. This is an experimental feature.
+              </Trans>
             </Text>
             <ToggleButton
               type="default-light"
@@ -204,9 +220,11 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
           }}
           style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
           accessibilityRole="button"
-          accessibilityLabel="Confirm"
+          accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>Done</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Done</Trans>
+          </Text>
         </TouchableOpacity>
       </View>
     </CenteredView>

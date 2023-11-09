@@ -20,6 +20,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['90%']
@@ -37,6 +39,7 @@ export const Component = observer(function Component({
 }) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
   )
@@ -98,21 +101,21 @@ export const Component = observer(function Component({
 
         <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
           {stage === Stages.Reminder ? (
-            <>
+            <Trans>
               Your email has not yet been verified. This is an important
               security step which we recommend.
-            </>
+            </Trans>
           ) : stage === Stages.Email ? (
-            <>
+            <Trans>
               This is important in case you ever need to change your email or
               reset your password.
-            </>
+            </Trans>
           ) : stage === Stages.ConfirmCode ? (
-            <>
+            <Trans>
               An email has been sent to{' '}
               {store.session.currentSession?.email || ''}. It includes a
               confirmation code which you can enter below.
-            </>
+            </Trans>
           ) : (
             ''
           )}
@@ -132,7 +135,7 @@ export const Component = observer(function Component({
             </View>
             <Pressable
               accessibilityRole="link"
-              accessibilityLabel="Change my email"
+              accessibilityLabel={_(msg`Change my email`)}
               accessibilityHint=""
               onPress={onEmailIncorrect}
               style={styles.changeEmailLink}>
@@ -150,7 +153,7 @@ export const Component = observer(function Component({
             value={confirmationCode}
             onChangeText={setConfirmationCode}
             accessible={true}
-            accessibilityLabel="Confirmation code"
+            accessibilityLabel={_(msg`Confirmation code`)}
             accessibilityHint=""
             autoCapitalize="none"
             autoComplete="off"
@@ -174,7 +177,7 @@ export const Component = observer(function Component({
                   testID="getStartedBtn"
                   type="primary"
                   onPress={() => setStage(Stages.Email)}
-                  accessibilityLabel="Get Started"
+                  accessibilityLabel={_(msg`Get Started`)}
                   accessibilityHint=""
                   label="Get Started"
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
@@ -187,7 +190,7 @@ export const Component = observer(function Component({
                     testID="sendEmailBtn"
                     type="primary"
                     onPress={onSendEmail}
-                    accessibilityLabel="Send Confirmation Email"
+                    accessibilityLabel={_(msg`Send Confirmation Email`)}
                     accessibilityHint=""
                     label="Send Confirmation Email"
                     labelContainerStyle={{
@@ -199,7 +202,7 @@ export const Component = observer(function Component({
                   <Button
                     testID="haveCodeBtn"
                     type="default"
-                    accessibilityLabel="I have a code"
+                    accessibilityLabel={_(msg`I have a code`)}
                     accessibilityHint=""
                     label="I have a confirmation code"
                     labelContainerStyle={{
@@ -216,7 +219,7 @@ export const Component = observer(function Component({
                   testID="confirmBtn"
                   type="primary"
                   onPress={onConfirm}
-                  accessibilityLabel="Confirm"
+                  accessibilityLabel={_(msg`Confirm`)}
                   accessibilityHint=""
                   label="Confirm"
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}

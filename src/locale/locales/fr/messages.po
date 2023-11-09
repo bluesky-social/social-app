@@ -1,0 +1,1544 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2023-11-05 16:01-0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: fr\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/view/screens/Profile.tsx:212
+msgid "- end of feed -"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:138
+msgid ". This warning is only available for posts with media attached."
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:45
+msgid "{0}"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:167
+msgid "{0} {purposeLabel} List"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:132
+msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:299
+#: src/view/screens/Settings.tsx:363
+msgid "Accessibility"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:157
+#: src/view/screens/Settings.tsx:201
+msgid "Account"
+msgstr ""
+
+#: src/view/com/util/AccountDropdownBtn.tsx:41
+msgid "Account options"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:710
+msgid "Add"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:57
+msgid "Add a content warning"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:700
+msgid "Add a user to this list"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:313
+#: src/view/screens/Settings.tsx:322
+msgid "Add account"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:119
+#: src/view/com/composer/photos/Gallery.tsx:167
+msgid "Add alt text"
+msgstr ""
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:41
+#: src/view/com/modals/report/Modal.tsx:190
+msgid "Add details"
+msgstr ""
+
+#: src/view/com/modals/report/Modal.tsx:193
+msgid "Add details to report"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:419
+msgid "Add link card"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:422
+msgid "Add link card:"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:418
+msgid "Add the following DNS record to your domain:"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:140
+msgid "Adjust the number of likes a reply must have to be shown in your feed."
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:76
+msgid "Adult Content"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:493
+msgid "Advanced"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:127
+msgid "ALT"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:315
+msgid "Alt text"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:193
+msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:112
+msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:119
+msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:238
+msgid "and"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:509
+msgid "App passwords"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:378
+msgid "Appearance"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:124
+msgid "Artistic or non-erotic nudity."
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:92
+#: src/view/com/auth/login/ChooseAccountForm.tsx:111
+#: src/view/com/auth/login/LoginForm.tsx:247
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:150
+#: src/view/com/modals/report/InputIssueDetails.tsx:45
+#: src/view/com/post-thread/PostThread.tsx:317
+#: src/view/com/post-thread/PostThread.tsx:325
+#: src/view/com/post-thread/PostThread.tsx:354
+#: src/view/com/post-thread/PostThread.tsx:362
+#: src/view/com/profile/ProfileHeader.tsx:576
+msgid "Back"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:407
+msgid "Basics"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:130
+#: src/view/com/modals/BirthDateSettings.tsx:69
+msgid "Birthday"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:228
+msgid "Birthday:"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:211
+msgid "Blocked post."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:52
+#: src/view/com/auth/SplashScreen.tsx:27
+msgid "Bluesky"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:84
+msgid "Bluesky is flexible."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:73
+msgid "Bluesky is open."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:60
+msgid "Bluesky is public."
+msgstr ""
+
+#: src/view/com/modals/Waitlist.tsx:70
+msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:78
+msgid "Bluesky.Social"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:612
+msgid "Build version {0} {1}"
+msgstr ""
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:62
+msgid "Camera"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:199
+msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:271
+#: src/view/com/composer/Composer.tsx:274
+#: src/view/com/modals/AltImage.tsx:127
+#: src/view/com/modals/ChangeEmail.tsx:216
+#: src/view/com/modals/ChangeEmail.tsx:218
+#: src/view/com/modals/Confirm.tsx:89
+#: src/view/com/modals/CreateOrEditList.tsx:258
+#: src/view/com/modals/CreateOrEditList.tsx:263
+#: src/view/com/modals/DeleteAccount.tsx:142
+#: src/view/com/modals/DeleteAccount.tsx:215
+#: src/view/com/modals/EditImage.tsx:323
+#: src/view/com/modals/EditProfile.tsx:250
+#: src/view/com/modals/LinkWarning.tsx:90
+#: src/view/com/modals/Repost.tsx:74
+#: src/view/com/modals/UserAddRemoveLists.tsx:199
+#: src/view/com/modals/Waitlist.tsx:136
+#: src/view/com/search/HeaderWithInput.tsx:127
+#: src/view/shell/desktop/Search.tsx:93
+msgid "Cancel"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:138
+#: src/view/com/modals/DeleteAccount.tsx:211
+msgid "Cancel account deletion"
+msgstr ""
+
+#: src/view/com/modals/AltImage.tsx:122
+msgid "Cancel add image alt text"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:144
+msgid "Cancel change handle"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:134
+msgid "Cancel image crop"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:245
+msgid "Cancel profile editing"
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:65
+msgid "Cancel quote post"
+msgstr ""
+
+#: src/view/com/modals/ListAddUser.tsx:101
+#: src/view/shell/desktop/Search.tsx:89
+msgid "Cancel search"
+msgstr ""
+
+#: src/view/com/modals/Waitlist.tsx:132
+msgid "Cancel waitlist signup"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:222
+msgid "Change"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:517
+#: src/view/screens/Settings.tsx:526
+msgid "Change handle"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:156
+msgid "Change Handle"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:136
+msgid "Change my email"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:109
+msgid "Change Your Email"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:155
+msgid "Check your inbox for an email with the confirmation code to enter below:"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:38
+msgid "Choose Service"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:87
+msgid "Choose the algorithms that power your experience with custom feeds."
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:105
+msgid "Choose your password"
+msgstr ""
+
+#: src/view/com/search/HeaderWithInput.tsx:111
+#: src/view/com/util/forms/SearchInput.tsx:73
+msgid "Clear search query"
+msgstr ""
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
+msgid "Close alert"
+msgstr ""
+
+#: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
+msgid "Close bottom drawer"
+msgstr ""
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:26
+msgid "Close image"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:107
+msgid "Close image viewer"
+msgstr ""
+
+#: src/view/shell/index.web.tsx:65
+msgid "Close navigation footer"
+msgstr ""
+
+#: src/view/com/composer/Prompt.tsx:22
+msgid "Compose reply"
+msgstr ""
+
+#: src/view/com/modals/Confirm.tsx:76
+#: src/view/com/modals/SelfLabel.tsx:156
+#: src/view/com/modals/VerifyEmail.tsx:220
+#: src/view/screens/PreferencesHomeFeed.tsx:223
+#: src/view/screens/PreferencesThreads.tsx:128
+msgid "Confirm"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:193
+#: src/view/com/modals/ChangeEmail.tsx:195
+msgid "Confirm Change"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
+msgid "Confirm content language settings"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:201
+msgid "Confirm delete account"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:157
+#: src/view/com/modals/DeleteAccount.tsx:168
+#: src/view/com/modals/VerifyEmail.tsx:154
+msgid "Confirmation code"
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:125
+#: src/view/com/auth/login/LoginForm.tsx:266
+msgid "Connecting..."
+msgstr ""
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:42
+msgid "Content Filtering"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:68
+msgid "Content Languages"
+msgstr ""
+
+#: src/view/com/util/moderation/ScreenHider.tsx:68
+msgid "Content Warning"
+msgstr ""
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:32
+msgid "Content warnings"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:178
+#: src/view/com/modals/InviteCodes.tsx:129
+msgid "Copied"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:171
+msgid "Copy"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:97
+msgid "Could not load feed"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:788
+msgid "Could not load list"
+msgstr ""
+
+#: src/view/com/auth/SplashScreen.tsx:42
+msgid "Create a new account"
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:77
+msgid "Create Account"
+msgstr ""
+
+#: src/view/com/auth/SplashScreen.tsx:39
+msgid "Create new account"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:390
+#: src/view/com/modals/ServerInput.tsx:102
+msgid "Custom domain"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:531
+msgid "Danger Zone"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:538
+msgid "Delete account"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:75
+msgid "Delete Account"
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:193
+msgid "Delete app password"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:204
+msgid "Delete my account"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:548
+msgid "Delete my account…"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:203
+msgid "Deleted post."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:209
+#: src/view/com/modals/CreateOrEditList.tsx:225
+#: src/view/com/modals/EditProfile.tsx:199
+#: src/view/com/modals/EditProfile.tsx:211
+msgid "Description"
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:112
+msgid "Dev Server"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:553
+msgid "Developer Tools"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:165
+msgid "Discover new feeds"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:193
+msgid "Display name"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:181
+msgid "Display Name"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:488
+msgid "Domain verified!"
+msgstr ""
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:77
+#: src/view/com/modals/ContentFilteringSettings.tsx:85
+#: src/view/com/modals/crop-image/CropImage.web.tsx:152
+#: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/ListAddUser.tsx:153
+#: src/view/com/modals/SelfLabel.tsx:159
+#: src/view/screens/PreferencesHomeFeed.tsx:226
+#: src/view/screens/PreferencesThreads.tsx:131
+msgid "Done"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
+msgid "Done{extraText}"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:141
+#: src/view/com/modals/EditImage.tsx:207
+msgid "Edit image"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:132
+msgid "Edit My Feeds"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:158
+msgid "Edit my profile"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:373
+msgid "Edit profile"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:376
+msgid "Edit Profile"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:92
+msgid "Edit Saved Feeds"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:89
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:145
+#: src/view/com/modals/ChangeEmail.tsx:141
+#: src/view/com/modals/Waitlist.tsx:88
+msgid "Email"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:80
+msgid "Email address"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:111
+msgid "Email Updated"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:123
+msgid "Enable this setting to only see replies between people you follow."
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:87
+msgid "Enter the address of your provider:"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:372
+msgid "Enter the domain you want to use"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:85
+msgid "Enter your email address"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:117
+msgid "Enter your new email address below."
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:96
+msgid "Enter your username and password"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:151
+msgid "Expand alt text"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:301
+msgid "Feed offline"
+msgstr ""
+
+#: src/view/com/feeds/FeedPage.tsx:163
+msgid "Feed Preferences"
+msgstr ""
+
+#: src/view/shell/Drawer.tsx:365
+msgid "Feedback"
+msgstr ""
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:154
+#: src/view/shell/Drawer.tsx:289
+msgid "Feeds"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:119
+msgid "Finding similar accounts..."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:90
+msgid "Fine-tune the content you see on your home screen."
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:43
+msgid "Fine-tune the discussion threads."
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:459
+msgid "Follow"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:537
+msgid "following"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:443
+msgid "Following"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:492
+msgid "Follows you"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:99
+msgid "For security reasons, we'll need to send a confirmation code to your email address."
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:192
+msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:229
+msgid "Forgot"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:226
+msgid "Forgot password"
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:126
+#: src/view/com/auth/login/Login.tsx:143
+msgid "Forgot Password"
+msgstr ""
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
+msgid "Gallery"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:178
+msgid "Get Started"
+msgstr ""
+
+#: src/view/com/util/moderation/ScreenHider.tsx:105
+#: src/view/shell/desktop/LeftNav.tsx:92
+msgid "Go back"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:106
+#: src/view/screens/ProfileFeed.tsx:111
+#: src/view/screens/ProfileList.tsx:797
+#: src/view/screens/ProfileList.tsx:802
+msgid "Go Back"
+msgstr ""
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:178
+#: src/view/com/auth/login/LoginForm.tsx:276
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:165
+msgid "Go to next"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:270
+msgid "Handle"
+msgstr ""
+
+#: src/view/shell/Drawer.tsx:375
+msgid "Help"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:316
+msgid "Hide"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:308
+msgid "Hide user list"
+msgstr ""
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:110
+#: src/view/shell/Drawer.tsx:240
+msgid "Home"
+msgstr ""
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:69
+#: src/view/screens/Settings.tsx:423
+msgid "Home Feed Preferences"
+msgstr ""
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:111
+msgid "Hosting provider"
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:92
+#: src/view/com/auth/create/Step1.tsx:97
+msgid "Hosting provider address"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:203
+msgid "I have a code"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:286
+msgid "I have my own domain"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:128
+msgid "If none are selected, suitable for all ages."
+msgstr ""
+
+#: src/view/com/modals/AltImage.tsx:96
+msgid "Image alt text"
+msgstr ""
+
+#: src/view/com/util/UserAvatar.tsx:300
+#: src/view/com/util/UserBanner.tsx:118
+msgid "Image options"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:109
+msgid "Invalid username or password"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:336
+msgid "Invite"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:329
+msgid "Invite a Friend"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:56
+msgid "Invite code"
+msgstr ""
+
+#: src/view/com/modals/Waitlist.tsx:67
+msgid "Join the waitlist"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:67
+#: src/view/com/auth/create/Step2.tsx:71
+msgid "Join the waitlist."
+msgstr ""
+
+#: src/view/com/modals/Waitlist.tsx:124
+msgid "Join Waitlist"
+msgstr ""
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:97
+msgid "Language selection"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:471
+msgid "Languages"
+msgstr ""
+
+#: src/view/com/util/moderation/PostAlerts.tsx:47
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:55
+#: src/view/com/util/moderation/ScreenHider.tsx:88
+msgid "Learn More"
+msgstr ""
+
+#: src/view/com/util/moderation/ContentHider.tsx:75
+#: src/view/com/util/moderation/PostAlerts.tsx:40
+#: src/view/com/util/moderation/PostHider.tsx:76
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:47
+#: src/view/com/util/moderation/ScreenHider.tsx:85
+msgid "Learn more about this warning"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
+msgid "Leave them all unchecked to see any language."
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:56
+msgid "Leaving Bluesky"
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:127
+#: src/view/com/auth/login/Login.tsx:144
+msgid "Let's get your password reset!"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:479
+msgid "Like this feed"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:177
+msgid "List Avatar"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:190
+msgid "List Name"
+msgstr ""
+
+#: src/view/shell/Drawer.tsx:297
+msgid "Lists"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:228
+msgid "Load more posts"
+msgstr ""
+
+#: src/view/com/feeds/FeedPage.tsx:194
+msgid "Load new posts"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:50
+msgid "Local dev server"
+msgstr ""
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:93
+msgid "Login to account that is not listed"
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:70
+msgid "Make sure this is where you intend to go!"
+msgstr ""
+
+#: src/view/com/search/HeaderWithInput.tsx:71
+msgid "Menu"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:487
+#: src/view/shell/Drawer.tsx:304
+msgid "Moderation"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:469
+#: src/view/screens/ProfileFeed.tsx:312
+#: src/view/screens/ProfileList.tsx:542
+msgid "More options"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:158
+msgid "More post options"
+msgstr ""
+
+#: src/view/com/modals/BirthDateSettings.tsx:53
+msgid "My Birthday"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:128
+msgid "My Feeds"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:454
+msgid "My Saved Feeds"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:162
+#: src/view/com/modals/CreateOrEditList.tsx:202
+msgid "Name"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:76
+msgid "Never lose access to your followers and data."
+msgstr ""
+
+#: src/view/com/feeds/FeedPage.tsx:203
+#: src/view/screens/Feeds.tsx:261
+#: src/view/screens/Profile.tsx:304
+#: src/view/screens/ProfileFeed.tsx:378
+#: src/view/screens/ProfileList.tsx:210
+#: src/view/screens/ProfileList.tsx:248
+#: src/view/shell/desktop/LeftNav.tsx:229
+msgid "New post"
+msgstr ""
+
+#: src/view/shell/desktop/LeftNav.tsx:239
+msgid "New Post"
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:105
+#: src/view/com/auth/login/LoginForm.tsx:279
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:158
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:168
+msgid "Next"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:137
+msgid "Next image"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:472
+#: src/view/screens/ProfileList.tsx:667
+msgid "No description"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:207
+msgid "No results found for \"{query}\""
+msgstr ""
+
+#: src/view/com/modals/ListAddUser.tsx:140
+#: src/view/shell/desktop/Search.tsx:112
+msgid "No results found for {0}"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:136
+msgid "Not Applicable"
+msgstr ""
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:178
+#: src/view/shell/Drawer.tsx:262
+msgid "Notifications"
+msgstr ""
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
+msgid "Okay"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:334
+msgid "One or more images is missing alt text."
+msgstr ""
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:50
+msgid "Open navigation"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:463
+msgid "Opens configurable language settings"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:284
+msgid "Opens modal for using custom domain"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:482
+msgid "Opens moderation settings"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:448
+msgid "Opens screen with all saved feeds"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:501
+msgid "Opens the app password settings page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:415
+msgid "Opens the home feed preferences"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:580
+msgid "Opens the storybook page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:560
+msgid "Opens the system log page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:432
+msgid "Opens the threads preferences"
+msgstr ""
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:98
+msgid "Other account"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:88
+msgid "Other service"
+msgstr ""
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:84
+msgid "Other..."
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:100
+#: src/view/com/auth/create/Step2.tsx:110
+#: src/view/com/auth/login/LoginForm.tsx:214
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:132
+#: src/view/com/modals/DeleteAccount.tsx:183
+msgid "Password"
+msgstr ""
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
+msgid "Password updated!"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:122
+msgid "Pictures meant for adults."
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:67
+msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:125
+msgid "Please enter a unique name for this App Password or use our randomly generated one."
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:172
+msgid "Please enter your password as well:"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:317
+msgid "Post"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:343
+msgid "Post hidden"
+msgstr ""
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:80
+msgid "Post language"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:69
+msgid "Post Languages"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:309
+msgid "Post not found"
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:51
+msgid "Potentially Misleading Link"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:123
+msgid "Previous image"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:73
+msgid "Prioritize Your Follows"
+msgstr ""
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:220
+#: src/view/shell/Drawer.tsx:161
+#: src/view/shell/Drawer.tsx:325
+msgid "Profile"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:689
+msgid "Protect your account by verifying your email."
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:53
+msgid "Quote post"
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:57
+msgid "Quote Post"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:236
+msgid "Ratios"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:84
+msgid "Remove"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:154
+msgid "Remove image"
+msgstr ""
+
+#: src/view/com/composer/ExternalEmbed.tsx:70
+msgid "Remove image preview"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:120
+msgid "Reply Filters"
+msgstr ""
+
+#: src/view/com/modals/report/Modal.tsx:165
+msgid "Report {collectionName}"
+msgstr ""
+
+#: src/view/com/modals/report/SendReportButton.tsx:37
+msgid "Report post"
+msgstr ""
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
+msgid "Repost or quote post"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:181
+#: src/view/com/modals/ChangeEmail.tsx:183
+msgid "Request Change"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:52
+msgid "Required for this provider"
+msgstr ""
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:110
+msgid "Reset code"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:602
+msgid "Reset onboarding state"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:592
+msgid "Reset preferences state"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:600
+msgid "Resets the onboarding state"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:590
+msgid "Resets the preferences state"
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:114
+#: src/view/com/auth/create/CreateAccount.tsx:118
+#: src/view/com/auth/login/LoginForm.tsx:256
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/util/error/ErrorMessage.tsx:55
+#: src/view/com/util/error/ErrorScreen.tsx:65
+msgid "Retry"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:166
+msgid "Retry change handle"
+msgstr ""
+
+#: src/view/com/modals/AltImage.tsx:114
+#: src/view/com/modals/BirthDateSettings.tsx:90
+#: src/view/com/modals/BirthDateSettings.tsx:93
+#: src/view/com/modals/ChangeHandle.tsx:179
+#: src/view/com/modals/CreateOrEditList.tsx:240
+#: src/view/com/modals/CreateOrEditList.tsx:248
+#: src/view/com/modals/EditProfile.tsx:225
+msgid "Save"
+msgstr ""
+
+#: src/view/com/modals/AltImage.tsx:105
+msgid "Save alt text"
+msgstr ""
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:210
+msgid "Save changes"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:233
+msgid "Save Changes"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:176
+msgid "Save handle change"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:144
+msgid "Save image crop"
+msgstr ""
+
+#: src/view/com/modals/ListAddUser.tsx:89
+#: src/view/com/search/HeaderWithInput.tsx:101
+#: src/view/com/util/forms/SearchInput.tsx:64
+#: src/view/shell/bottom-bar/BottomBar.tsx:132
+#: src/view/shell/desktop/Search.tsx:81
+#: src/view/shell/Drawer.tsx:218
+msgid "Search"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:110
+msgid "Security Step Required"
+msgstr ""
+
+#: src/view/com/auth/SplashScreen.tsx:30
+msgid "See what's next"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:75
+msgid "Select Bluesky Social"
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:115
+msgid "Select from an existing account"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:141
+msgid "Select service"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:191
+msgid "Send Confirmation Email"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:119
+msgid "Send email"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:130
+msgid "Send Email"
+msgstr ""
+
+#: src/view/shell/Drawer.tsx:349
+#: src/view/shell/Drawer.tsx:370
+msgid "Send feedback"
+msgstr ""
+
+#: src/view/com/modals/report/SendReportButton.tsx:45
+msgid "Send Report"
+msgstr ""
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:80
+msgid "Set new password"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:172
+msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:101
+msgid "Set this setting to \"No\" to hide all replies from your feed."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:155
+msgid "Set this setting to \"No\" to hide all reposts from your feed."
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:96
+msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:191
+msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
+msgstr ""
+
+#: src/view/shell/Drawer.tsx:338
+msgid "Settings"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:126
+msgid "Sexual activity or erotic nudity."
+msgstr ""
+
+#: src/view/screens/Settings.tsx:235
+msgid "Show"
+msgstr ""
+
+#: src/view/com/util/moderation/ScreenHider.tsx:114
+msgid "Show anyway"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:188
+msgid "Show Posts from My Feeds"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:169
+msgid "Show Quote Posts"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:98
+msgid "Show Replies"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:76
+msgid "Show replies by people you follow before all other replies."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:152
+msgid "Show Reposts"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:337
+msgid "Show users"
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:95
+#: src/view/com/auth/SplashScreen.tsx:50
+msgid "Sign in"
+msgstr ""
+
+#: src/view/com/auth/SplashScreen.tsx:53
+#: src/view/com/auth/SplashScreen.web.tsx:59
+msgid "Sign In"
+msgstr ""
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:65
+msgid "Sign in as {0}"
+msgstr ""
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:56
+#: src/view/com/auth/login/Login.tsx:114
+msgid "Sign in as..."
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:128
+msgid "Sign into"
+msgstr ""
+
+#: src/view/com/modals/SwitchAccount.tsx:71
+#: src/view/com/modals/SwitchAccount.tsx:74
+#: src/view/screens/Settings.tsx:274
+#: src/view/screens/Settings.tsx:277
+msgid "Sign out"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:245
+msgid "Signed in as"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:37
+msgid "Skip"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:51
+msgid "Sort Replies"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:54
+msgid "Sort replies to the same post by:"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:122
+msgid "Square"
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:106
+#: src/view/com/modals/ServerInput.tsx:62
+msgid "Staging"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:624
+msgid "Status page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:582
+msgid "Storybook"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:533
+msgid "Subscribe"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:529
+msgid "Subscribe to this list"
+msgstr ""
+
+#: src/view/com/modals/SwitchAccount.tsx:47
+msgid "Switch Account"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:562
+msgid "System log"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:112
+msgid "Tall"
+msgstr ""
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:50
+msgid "Text input field"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:312
+msgid "The post may have been deleted."
+msgstr ""
+
+#: src/view/com/util/moderation/ScreenHider.tsx:71
+msgid "This {screenDescription} has been flagged:"
+msgstr ""
+
+#: src/view/com/modals/BirthDateSettings.tsx:58
+msgid "This information is not shared with other users."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:107
+msgid "This is important in case you ever need to change your email or reset your password."
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:71
+msgid "This is the service that keeps you online."
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:63
+msgid "This link is taking you to the following website:"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:176
+msgid "This post has been deleted."
+msgstr ""
+
+#: src/view/screens/Settings.tsx:441
+msgid "Thread Preferences"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:93
+msgid "Threaded Mode"
+msgstr ""
+
+#: src/view/com/util/forms/DropdownButton.tsx:230
+msgid "Toggle dropdown"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:271
+msgid "Transformations"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:654
+msgid "Translate"
+msgstr ""
+
+#: src/view/com/util/error/ErrorScreen.tsx:73
+msgid "Try again"
+msgstr ""
+
+#: src/view/com/auth/login/Login.tsx:74
+#: src/view/com/auth/login/LoginForm.tsx:113
+msgid "Unable to contact your service. Please check your Internet connection."
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:386
+#: src/view/com/profile/ProfileHeader.tsx:389
+msgid "Unblock"
+msgstr ""
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:185
+msgid "Update {displayName} in Lists"
+msgstr ""
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:174
+msgid "Updating..."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:456
+msgid "Upload a text file to:"
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:148
+msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:516
+msgid "Use default provider"
+msgstr ""
+
+#: src/view/com/auth/create/Step3.tsx:37
+msgid "User handle"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:168
+#: src/view/com/auth/login/LoginForm.tsx:185
+msgid "Username or email address"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:694
+msgid "Users"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:650
+msgid "Verify email"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:675
+msgid "Verify my email"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:684
+msgid "Verify My Email"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:205
+#: src/view/com/modals/ChangeEmail.tsx:207
+msgid "Verify New Email"
+msgstr ""
+
+#: src/view/screens/Log.tsx:53
+msgid "View debug entry"
+msgstr ""
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:127
+msgid "View the avatar"
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:80
+msgid "Visit Site"
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:78
+msgid "We're so excited to have you join us!"
+msgstr ""
+
+#: src/view/com/modals/report/Modal.tsx:168
+msgid "What is the issue with this {collectionName}?"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:72
+msgid "Which languages are used in this post?"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:71
+msgid "Which languages would you like to see in your algorithmic feeds?"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:102
+msgid "Wide"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:390
+msgid "Write post"
+msgstr ""
+
+#: src/view/com/composer/Prompt.tsx:31
+msgid "Write your reply"
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:122
+msgid "You can change hosting providers at any time."
+msgstr ""
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
+msgid "You can now sign in with your new password."
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:346
+msgid "You have blocked the author or you have been blocked by the author."
+msgstr ""
+
+#: src/view/com/lists/ListsList.tsx:112
+msgid "You have no lists."
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:55
+msgid "You have not created any app passwords yet. You can create one by pressing the button below."
+msgstr ""
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:83
+msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:42
+msgid "Your account"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:121
+msgid "Your birth date"
+msgstr ""
+
+#: src/view/com/modals/Waitlist.tsx:107
+msgid "Your email has been saved! We'll be in touch soon."
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:125
+msgid "Your email has been updated but not verified. As a next step, please verify your new email."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:102
+msgid "Your email has not yet been verified. This is an important security step which we recommend."
+msgstr ""
+
+#: src/view/com/auth/create/Step3.tsx:41
+#: src/view/com/modals/ChangeHandle.tsx:275
+msgid "Your full handle will be"
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:69
+msgid "Your hosting provider"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:63
+msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr ""
+
+#: src/view/com/auth/create/Step3.tsx:27
+msgid "Your user handle"
+msgstr ""

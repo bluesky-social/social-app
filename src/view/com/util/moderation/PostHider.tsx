@@ -8,6 +8,8 @@ import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
 import {describeModerationCause} from 'lib/moderation'
 import {ShieldExclamation} from 'lib/icons'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
 interface Props extends ComponentProps<typeof Link> {
@@ -26,6 +28,7 @@ export function PostHider({
   ...props
 }: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
   const {openModal} = useModalControls()
@@ -70,7 +73,7 @@ export function PostHider({
             })
           }}
           accessibilityRole="button"
-          accessibilityLabel="Learn more about this warning"
+          accessibilityLabel={_(msg`Learn more about this warning`)}
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />
         </Pressable>

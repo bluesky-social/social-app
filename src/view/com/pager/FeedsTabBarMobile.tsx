@@ -14,6 +14,8 @@ import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 import Animated from 'react-native-reanimated'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 
@@ -22,6 +24,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
 ) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
@@ -45,7 +48,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
             accessibilityRole="button"
-            accessibilityLabel="Open navigation"
+            accessibilityLabel={_(msg`Open navigation`)}
             accessibilityHint="Access profile and other navigation links"
             hitSlop={HITSLOP_10}>
             <FontAwesomeIcon
@@ -64,7 +67,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             href="/settings/home-feed"
             hitSlop={HITSLOP_10}
             accessibilityRole="button"
-            accessibilityLabel="Home Feed Preferences"
+            accessibilityLabel={_(msg`Home Feed Preferences`)}
             accessibilityHint="">
             <FontAwesomeIcon
               icon="sliders"

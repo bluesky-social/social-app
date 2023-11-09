@@ -24,6 +24,8 @@ import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 const MAX_NAME = 64 // todo
@@ -47,6 +49,7 @@ export function Component({
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
+  const {_} = useLingui()
 
   const activePurpose = useMemo(() => {
     if (list?.data?.purpose) {
@@ -164,14 +167,18 @@ export function Component({
         ]}
         testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
-          {list ? 'Edit' : 'New'} {purposeLabel} List
+          <Trans>
+            {list ? 'Edit' : 'New'} {purposeLabel} List
+          </Trans>
         </Text>
         {error !== '' && (
           <View style={styles.errorContainer}>
             <ErrorMessage message={error} />
           </View>
         )}
-        <Text style={[styles.label, pal.text]}>List Avatar</Text>
+        <Text style={[styles.label, pal.text]}>
+          <Trans>List Avatar</Trans>
+        </Text>
         <View style={[styles.avi, {borderColor: pal.colors.background}]}>
           <EditableUserAvatar
             type="list"
@@ -183,7 +190,7 @@ export function Component({
         <View style={styles.form}>
           <View>
             <Text style={[styles.label, pal.text]} nativeID="list-name">
-              List Name
+              <Trans>List Name</Trans>
             </Text>
             <TextInput
               testID="editNameInput"
@@ -195,14 +202,14 @@ export function Component({
               value={name}
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
               accessible={true}
-              accessibilityLabel="Name"
+              accessibilityLabel={_(msg`Name`)}
               accessibilityHint=""
               accessibilityLabelledBy="list-name"
             />
           </View>
           <View style={s.pb10}>
             <Text style={[styles.label, pal.text]} nativeID="list-description">
-              Description
+              <Trans>Description</Trans>
             </Text>
             <TextInput
               testID="editDescriptionInput"
@@ -218,7 +225,7 @@ export function Component({
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
-              accessibilityLabel="Description"
+              accessibilityLabel={_(msg`Description`)}
               accessibilityHint=""
               accessibilityLabelledBy="list-description"
             />
@@ -233,14 +240,16 @@ export function Component({
               style={s.mt10}
               onPress={onPressSave}
               accessibilityRole="button"
-              accessibilityLabel="Save"
+              accessibilityLabel={_(msg`Save`)}
               accessibilityHint="">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
-                <Text style={[s.white, s.bold]}>Save</Text>
+                <Text style={[s.white, s.bold]}>
+                  <Trans>Save</Trans>
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
@@ -249,11 +258,13 @@ export function Component({
             style={s.mt5}
             onPress={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel"
+            accessibilityLabel={_(msg`Cancel`)}
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>
-              <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
+              <Text style={[s.black, s.bold, pal.text]}>
+                <Trans>Cancel</Trans>
+              </Text>
             </View>
           </TouchableOpacity>
         </View>

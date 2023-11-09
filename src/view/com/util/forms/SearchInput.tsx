@@ -14,6 +14,8 @@ import {
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 interface Props {
   query: string
@@ -33,6 +35,7 @@ export function SearchInput({
 }: Props) {
   const theme = useTheme()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const textInput = React.useRef<TextInput>(null)
 
   const onPressCancelSearchInner = React.useCallback(() => {
@@ -58,7 +61,7 @@ export function SearchInput({
         onChangeText={onChangeQuery}
         onSubmitEditing={onSubmitQuery}
         accessibilityRole="search"
-        accessibilityLabel="Search"
+        accessibilityLabel={_(msg`Search`)}
         accessibilityHint=""
         autoCorrect={false}
         autoCapitalize="none"
@@ -67,7 +70,7 @@ export function SearchInput({
         <TouchableOpacity
           onPress={onPressCancelSearchInner}
           accessibilityRole="button"
-          accessibilityLabel="Clear search query"
+          accessibilityLabel={_(msg`Clear search query`)}
           accessibilityHint="">
           <FontAwesomeIcon
             icon="xmark"

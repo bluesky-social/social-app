@@ -6,6 +6,8 @@ import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
 export function ContentHider({
@@ -23,6 +25,7 @@ export function ContentHider({
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
   const {openModal} = useModalControls()
@@ -69,7 +72,7 @@ export function ContentHider({
             })
           }}
           accessibilityRole="button"
-          accessibilityLabel="Learn more about this warning"
+          accessibilityLabel={_(msg`Learn more about this warning`)}
           accessibilityHint="">
           <ShieldExclamation size={18} style={pal.text} />
         </Pressable>

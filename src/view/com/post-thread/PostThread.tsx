@@ -31,6 +31,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
@@ -79,6 +81,7 @@ export const PostThread = observer(function PostThread({
   treeView: boolean
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isTablet, isDesktop} = useWebMediaQueries()
   const ref = useRef<FlatList>(null)
   const hasScrolledIntoView = useRef<boolean>(false)
@@ -197,7 +200,7 @@ export const PostThread = observer(function PostThread({
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
-              Deleted post.
+              <Trans>Deleted post.</Trans>
             </Text>
           </View>
         )
@@ -205,7 +208,7 @@ export const PostThread = observer(function PostThread({
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
-              Blocked post.
+              <Trans>Blocked post.</Trans>
             </Text>
           </View>
         )
@@ -214,7 +217,7 @@ export const PostThread = observer(function PostThread({
           <Pressable
             onPress={() => setMaxVisible(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
-            accessibilityLabel="Load more posts"
+            accessibilityLabel={_(msg`Load more posts`)}
             accessibilityHint="">
             <View
               style={[
@@ -222,7 +225,7 @@ export const PostThread = observer(function PostThread({
                 {paddingHorizontal: 18, paddingVertical: 14, borderRadius: 6},
               ]}>
               <Text type="lg-medium" style={pal.text}>
-                Load more posts
+                <Trans>Load more posts</Trans>
               </Text>
             </View>
           </Pressable>
@@ -275,6 +278,7 @@ export const PostThread = observer(function PostThread({
       posts,
       onRefresh,
       treeView,
+      _,
     ],
   )
 
@@ -302,15 +306,15 @@ export const PostThread = observer(function PostThread({
         <CenteredView>
           <View style={[pal.view, pal.border, styles.notFoundContainer]}>
             <Text type="title-lg" style={[pal.text, s.mb5]}>
-              Post not found
+              <Trans>Post not found</Trans>
             </Text>
             <Text type="md" style={[pal.text, s.mb10]}>
-              The post may have been deleted.
+              <Trans>The post may have been deleted.</Trans>
             </Text>
             <TouchableOpacity
               onPress={onPressBack}
               accessibilityRole="button"
-              accessibilityLabel="Back"
+              accessibilityLabel={_(msg`Back`)}
               accessibilityHint="">
               <Text type="2xl" style={pal.link}>
                 <FontAwesomeIcon
@@ -318,7 +322,7 @@ export const PostThread = observer(function PostThread({
                   style={[pal.link as FontAwesomeIconStyle, s.mr5]}
                   size={14}
                 />
-                Back
+                <Trans>Back</Trans>
               </Text>
             </TouchableOpacity>
           </View>
@@ -336,15 +340,18 @@ export const PostThread = observer(function PostThread({
       <CenteredView>
         <View style={[pal.view, pal.border, styles.notFoundContainer]}>
           <Text type="title-lg" style={[pal.text, s.mb5]}>
-            Post hidden
+            <Trans>Post hidden</Trans>
           </Text>
           <Text type="md" style={[pal.text, s.mb10]}>
-            You have blocked the author or you have been blocked by the author.
+            <Trans>
+              You have blocked the author or you have been blocked by the
+              author.
+            </Trans>
           </Text>
           <TouchableOpacity
             onPress={onPressBack}
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel={_(msg`Back`)}
             accessibilityHint="">
             <Text type="2xl" style={pal.link}>
               <FontAwesomeIcon
@@ -352,7 +359,7 @@ export const PostThread = observer(function PostThread({
                 style={[pal.link as FontAwesomeIconStyle, s.mr5]}
                 size={14}
               />
-              Back
+              <Trans>Back</Trans>
             </Text>
           </TouchableOpacity>
         </View>

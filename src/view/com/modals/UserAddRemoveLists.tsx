@@ -21,6 +21,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import isEqual from 'lodash.isequal'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['fullscreen']
@@ -39,6 +41,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
   const store = useStores()
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const palPrimary = usePalette('primary')
   const palInverted = usePalette('inverted')
   const [originalSelections, setOriginalSelections] = React.useState<string[]>(
@@ -181,7 +184,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
       <Text style={[styles.title, pal.text]}>
-        Update {displayName} in Lists
+        <Trans>Update {displayName} in Lists</Trans>
       </Text>
       <ListsList
         listsList={listsList}
@@ -195,7 +198,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
           type="default"
           onPress={onPressCancel}
           style={styles.footerBtn}
-          accessibilityLabel="Cancel"
+          accessibilityLabel={_(msg`Cancel`)}
           accessibilityHint=""
           onAccessibilityEscape={onPressCancel}
           label="Cancel"
@@ -206,7 +209,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
             type="primary"
             onPress={onPressSave}
             style={styles.footerBtn}
-            accessibilityLabel="Save changes"
+            accessibilityLabel={_(msg`Save changes`)}
             accessibilityHint=""
             onAccessibilityEscape={onPressSave}
             label="Save Changes"

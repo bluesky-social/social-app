@@ -21,6 +21,8 @@ import {FAB} from '../util/fab/FAB'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import useAppState from 'react-native-appstate-hook'
 import {logger} from '#/logger'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const FeedPage = observer(function FeedPageImpl({
   testID,
@@ -37,6 +39,7 @@ export const FeedPage = observer(function FeedPageImpl({
 }) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
@@ -157,7 +160,7 @@ export const FeedPage = observer(function FeedPageImpl({
             type="title-lg"
             href="/settings/home-feed"
             style={{fontWeight: 'bold'}}
-            accessibilityLabel="Feed Preferences"
+            accessibilityLabel={_(msg`Feed Preferences`)}
             accessibilityHint=""
             text={
               <FontAwesomeIcon
@@ -170,7 +173,7 @@ export const FeedPage = observer(function FeedPageImpl({
       )
     }
     return <></>
-  }, [isDesktop, pal, store, hasNew])
+  }, [isDesktop, pal.view, pal.text, pal.textLight, store, hasNew, _])
 
   return (
     <View testID={testID} style={s.h100pct}>
@@ -188,7 +191,7 @@ export const FeedPage = observer(function FeedPageImpl({
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
-          label="Load new posts"
+          label={_(msg`Load new posts`)}
           showIndicator={hasNew}
         />
       )}
@@ -197,7 +200,7 @@ export const FeedPage = observer(function FeedPageImpl({
         onPress={onPressCompose}
         icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
         accessibilityRole="button"
-        accessibilityLabel="New post"
+        accessibilityLabel={_(msg`New post`)}
         accessibilityHint=""
       />
     </View>
