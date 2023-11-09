@@ -52,6 +52,8 @@ const InnerApp = observer(function AppImpl() {
     const account = persisted.get('session').currentAccount
     if (account) {
       initSession(account).then(() => setSessionReady(true))
+    } else {
+      setSessionReady(true)
     }
   }, [initSession, setSessionReady])
 
