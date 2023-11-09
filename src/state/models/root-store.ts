@@ -21,6 +21,8 @@ import {ImageSizesCache} from './cache/image-sizes'
 import {reset as resetNavigation} from '../../Navigation'
 import {logger} from '#/logger'
 
+import {unstable_setAgent} from '../session'
+
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
@@ -49,6 +51,7 @@ export class RootStoreModel {
 
   constructor(agent: BskyAgent) {
     this.agent = agent
+    unstable_setAgent(agent)
     makeAutoObservable(this, {
       agent: false,
       serialize: false,
@@ -114,6 +117,7 @@ export class RootStoreModel {
   ) {
     logger.debug('RootStoreModel:handleSessionChange')
     this.agent = agent
+    unstable_setAgent(agent)
     applyDebugHeader(this.agent)
     this.me.clear()
     await this.preferences.sync()
