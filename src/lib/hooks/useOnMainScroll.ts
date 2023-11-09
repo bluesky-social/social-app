@@ -37,10 +37,12 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
     onEndDrag(e) {
       startDragOffset.value = null
       startMode.value = null
-      if (e.contentOffset.y > headerHeight.value / 2) {
-        setMode(Math.round(mode.value) === 1)
-      } else {
+      if (e.contentOffset.y < headerHeight.value / 2) {
+        // If we're close to the top, show the shell.
         setMode(false)
+      } else {
+        // Snap to whichever state is the closest.
+        setMode(Math.round(mode.value) === 1)
       }
     },
     onScroll(e) {
