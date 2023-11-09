@@ -18,6 +18,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
+import {useShellLayout} from '#/state/shell/shell-layout'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -28,6 +29,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   const setDrawerOpen = useSetDrawerOpen()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
+  const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
@@ -36,12 +38,10 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
 
   return (
     <Animated.View
-      style={[
-        pal.view,
-        pal.border,
-        styles.tabBar,
-        headerMinimalShellTransform,
-      ]}>
+      style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
+      onLayout={e => {
+        headerHeight.value = e.nativeEvent.layout.height
+      }}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity

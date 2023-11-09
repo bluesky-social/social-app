@@ -1,45 +1,29 @@
-import {
-  AnimatableValue,
-  interpolate,
-  useAnimatedStyle,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated'
-
+import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
 import {useMinimalShellMode as useMinimalShellModeState} from '#/state/shell/minimal-mode'
-
-function withShellTiming<T extends AnimatableValue>(value: T): T {
-  'worklet'
-  return withTiming(value, {
-    duration: 125,
-    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-  })
-}
+import {useShellLayout} from '#/state/shell/shell-layout'
 
 export function useMinimalShellMode() {
   const mode = useMinimalShellModeState()
+  const {footerHeight, headerHeight} = useShellLayout()
+
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: mode.value ? 'none' : 'auto',
-      opacity: withShellTiming(interpolate(mode.value ? 1 : 0, [0, 1], [1, 0])),
+      pointerEvents: mode.value === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - mode.value, 2),
       transform: [
         {
-          translateY: withShellTiming(
-            interpolate(mode.value ? 1 : 0, [0, 1], [0, 25]),
-          ),
+          translateY: interpolate(mode.value, [0, 1], [0, footerHeight.value]),
         },
       ],
     }
   })
   const headerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: mode.value ? 'none' : 'auto',
-      opacity: withShellTiming(interpolate(mode.value ? 1 : 0, [0, 1], [1, 0])),
+      pointerEvents: mode.value === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - mode.value, 2),
       transform: [
         {
-          translateY: withShellTiming(
-            interpolate(mode.value ? 1 : 0, [0, 1], [0, -25]),
-          ),
+          translateY: interpolate(mode.value, [0, 1], [0, -headerHeight.value]),
         },
       ],
     }
@@ -48,9 +32,7 @@ export function useMinimalShellMode() {
     return {
       transform: [
         {
-          translateY: withShellTiming(
-            interpolate(mode.value ? 1 : 0, [0, 1], [-44, 0]),
-          ),
+          translateY: interpolate(mode.value, [0, 1], [-44, 0]),
         },
       ],
     }
