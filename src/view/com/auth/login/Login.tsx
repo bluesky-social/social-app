@@ -32,6 +32,7 @@ import {cleanError} from 'lib/strings/errors'
 import {isWeb} from 'platform/detection'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {useSessionApi} from '#/state/session'
 
 enum Forms {
   Login,
@@ -305,6 +306,7 @@ const LoginForm = ({
   const [password, setPassword] = useState<string>('')
   const passwordInputRef = useRef<TextInput>(null)
   const {openModal} = useModalControls()
+  const {login} = useSessionApi()
 
   const onPressSelectService = () => {
     openModal({
@@ -344,6 +346,11 @@ const LoginForm = ({
         }
       }
 
+      await login({
+        service: serviceUrl,
+        identifier: fullIdent,
+        password,
+      })
       await store.session.login({
         service: serviceUrl,
         identifier: fullIdent,

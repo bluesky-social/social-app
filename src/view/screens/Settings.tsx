@@ -57,6 +57,7 @@ import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
+import {useSessionApi} from '#/state/session'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -84,6 +85,7 @@ export const SettingsScreen = withAuthRequired(
       store.agent,
     )
     const {openModal} = useModalControls()
+    const {logout} = useSessionApi()
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -150,8 +152,9 @@ export const SettingsScreen = withAuthRequired(
 
     const onPressSignout = React.useCallback(() => {
       track('Settings:SignOutButtonClicked')
+      logout()
       store.session.logout()
-    }, [track, store])
+    }, [track, store, logout])
 
     const onPressDeleteAccount = React.useCallback(() => {
       openModal({name: 'delete-account'})

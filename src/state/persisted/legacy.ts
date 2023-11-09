@@ -35,7 +35,7 @@ type LegacySchema = {
     description: string
     avatar: string
   }
-  onboarding: {
+  onboarding?: {
     step: string
   }
   preferences: {
@@ -56,12 +56,12 @@ type LegacySchema = {
     pinnedFeeds: string[]
     requireAltTextEnabled: boolean
   }
-  invitedUsers: {
+  invitedUsers?: {
     seenDids: string[]
     copiedInvites: string[]
   }
-  mutedThreads: {uris: string[]}
-  reminders: {lastEmailConfirm: string}
+  mutedThreads?: {uris: string[]}
+  reminders?: {lastEmailConfirm: string}
 }
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
@@ -77,7 +77,7 @@ export function transform(legacy: LegacySchema): Schema {
     },
     reminders: {
       lastEmailConfirm:
-        legacy.reminders.lastEmailConfirm ||
+        legacy.reminders?.lastEmailConfirm ||
         defaults.reminders.lastEmailConfirm,
     },
     languagePrefs: {
@@ -96,13 +96,13 @@ export function transform(legacy: LegacySchema): Schema {
     requireAltTextEnabled:
       legacy.preferences.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
-    mutedThreads: legacy.mutedThreads.uris || defaults.mutedThreads,
+    mutedThreads: legacy.mutedThreads?.uris || defaults.mutedThreads,
     invites: {
       copiedInvites:
-        legacy.invitedUsers.copiedInvites || defaults.invites.copiedInvites,
+        legacy.invitedUsers?.copiedInvites || defaults.invites.copiedInvites,
     },
     onboarding: {
-      step: legacy.onboarding.step || defaults.onboarding.step,
+      step: legacy.onboarding?.step || defaults.onboarding.step,
     },
   }
 }

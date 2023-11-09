@@ -2,14 +2,15 @@ import {z} from 'zod'
 import {deviceLocales} from '#/platform/detection'
 
 // only data needed for rendering account page
+// TODO agent.resumeSession requires the following fields
 const accountSchema = z.object({
   service: z.string(),
   did: z.string(),
-  refreshJwt: z.string().optional(),
-  accessJwt: z.string().optional(),
-  handle: z.string().optional(),
-  displayName: z.string().optional(),
-  aviUrl: z.string().optional(),
+  handle: z.string(),
+  refreshJwt: z.string().optional(), // optional because it can expire
+  accessJwt: z.string().optional(), // optional because it can expire
+  // displayName: z.string().optional(),
+  // aviUrl: z.string().optional(),
 })
 
 export const schema = z.object({
