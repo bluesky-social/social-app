@@ -22,6 +22,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
+import {CenteredView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
@@ -34,7 +36,7 @@ export const PostThreadScreen = withAuthRequired(
     const {name, rkey} = route.params
     const {isMobile} = useWebMediaQueries()
     const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-    const {data: resolvedUri} = useResolveUriQuery(uri)
+    const {data: resolvedUri, error: uriError} = useResolveUriQuery(uri)
 
     useFocusEffect(
       React.useCallback(() => {
@@ -74,11 +76,17 @@ export const PostThreadScreen = withAuthRequired(
       <View style={s.hContentRegion}>
         {isMobile && <ViewHeader title="Post" />}
         <View style={s.flex1}>
-          <PostThreadComponent
-            uri={resolvedUri}
-            onPressReply={onPressReply}
-            treeView={!!store.preferences.thread.lab_treeViewEnabled}
-          />
+          {uriError ? (
+            <CenteredView>
+              <ErrorMessage message={String(uriError)} />
+            </CenteredView>
+          ) : (
+            <PostThreadComponent
+              uri={resolvedUri}
+              onPressReply={onPressReply}
+              treeView={!!store.preferences.thread.lab_treeViewEnabled}
+            />
+          )}
         </View>
         {isMobile && (
           <Animated.View
