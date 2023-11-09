@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
@@ -9,13 +10,16 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
 import {useStores} from 'state/index'
-import {useQueryClient} from '@tanstack/react-query'
-import {getCachedPost} from '#/state/queries/post'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  RQKEY as POST_THREAD_RQKEY,
+  ThreadNode,
+} from '#/state/queries/post-thread'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 
 const SHELL_FOOTER_HEIGHT = 44
 
@@ -28,8 +32,9 @@ export const PostThreadScreen = withAuthRequired(
     const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
-    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
     const {isMobile} = useWebMediaQueries()
+    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+    const {data: resolvedUri} = useResolveUriQuery(uri)
 
     useFocusEffect(
       React.useCallback(() => {
@@ -38,34 +43,39 @@ export const PostThreadScreen = withAuthRequired(
     )
 
     const onPressReply = React.useCallback(() => {
-      const post = getCachedPost(queryClient, uri)
-      if (!post) {
+      if (!resolvedUri) {
+        return
+      }
+      const thread = queryClient.getQueryData<ThreadNode>(
+        POST_THREAD_RQKEY(resolvedUri),
+      )
+      if (thread?.type !== 'post') {
         return
       }
       store.shell.openComposer({
         replyTo: {
-          uri: post.uri,
-          cid: post.cid,
-          text:
-            'text' in post.record && typeof post.record.text === 'string'
-              ? post.record.text
-              : '',
+          uri: thread.post.uri,
+          cid: thread.post.cid,
+          text: thread.record.text,
           author: {
-            handle: post.author.handle,
-            displayName: post.author.displayName,
-            avatar: post.author.avatar,
+            handle: thread.post.author.handle,
+            displayName: thread.post.author.displayName,
+            avatar: thread.post.author.avatar,
           },
         },
-        // onPost: () => view.refresh(), TODO need to trigger this elsewhere
+        onPost: () =>
+          queryClient.invalidateQueries({
+            queryKey: POST_THREAD_RQKEY(resolvedUri || ''),
+          }),
       })
-    }, [store, queryClient, uri])
+    }, [store, queryClient, resolvedUri])
 
     return (
       <View style={s.hContentRegion}>
         {isMobile && <ViewHeader title="Post" />}
         <View style={s.flex1}>
           <PostThreadComponent
-            uri={uri}
+            uri={resolvedUri}
             onPressReply={onPressReply}
             treeView={!!store.preferences.thread.lab_treeViewEnabled}
           />

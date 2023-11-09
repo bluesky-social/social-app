@@ -1,13 +1,16 @@
-import {AppBskyFeedDefs, AppBskyFeedGetPostThread} from '@atproto/api'
-import {useQuery, QueryClient, useQueryClient} from '@tanstack/react-query'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyFeedGetPostThread,
+} from '@atproto/api'
+import {useQuery} from '@tanstack/react-query'
 import {useSession} from '../session'
-import {RQKEY as POST_RQKEY, getCachedPost} from './post'
 import {ThreadViewPreference} from '../models/ui/preferences'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
-export interface PostThreadSkeletonCtx {
+export interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
   hasMore?: boolean
@@ -15,51 +18,51 @@ export interface PostThreadSkeletonCtx {
   showParentReplyLine?: boolean
 }
 
-export type PostThreadSkeletonPost = {
+export type ThreadPost = {
   type: 'post'
   _reactKey: string
   uri: string
-  parent?: PostThreadSkeletonNode
-  replies?: PostThreadSkeletonNode[]
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
+  parent?: ThreadNode
+  replies?: ThreadNode[]
   viewer?: AppBskyFeedDefs.ViewerThreadState
-  ctx: PostThreadSkeletonCtx
+  ctx: ThreadCtx
 }
 
-export type PostThreadSkeletonNotFound = {
+export type ThreadNotFound = {
   type: 'not-found'
   _reactKey: string
   uri: string
-  ctx: PostThreadSkeletonCtx
+  ctx: ThreadCtx
 }
 
-export type PostThreadSkeletonBlocked = {
+export type ThreadBlocked = {
   type: 'blocked'
   _reactKey: string
   uri: string
-  ctx: PostThreadSkeletonCtx
+  ctx: ThreadCtx
 }
 
-export type PostThreadSkeletonUnknown = {
+export type ThreadUnknown = {
   type: 'unknown'
   uri: string
 }
 
-export type PostThreadSkeletonNode =
-  | PostThreadSkeletonPost
-  | PostThreadSkeletonNotFound
-  | PostThreadSkeletonBlocked
-  | PostThreadSkeletonUnknown
+export type ThreadNode =
+  | ThreadPost
+  | ThreadNotFound
+  | ThreadBlocked
+  | ThreadUnknown
 
 export function usePostThreadQuery(uri: string | undefined) {
   const {agent} = useSession()
-  const queryClient = useQueryClient()
-  return useQuery<PostThreadSkeletonNode, Error>(
+  return useQuery<ThreadNode, Error>(
     RQKEY(uri || ''),
     async () => {
       const res = await agent.getPostThread({uri: uri!})
       if (res.success) {
-        hydrateCache(queryClient, res.data.thread)
-        return threadViewToSkeleton(res.data.thread)
+        return responseToThreadNodes(res.data.thread)
       }
       return {type: 'unknown', uri: uri!}
     },
@@ -67,69 +70,56 @@ export function usePostThreadQuery(uri: string | undefined) {
   )
 }
 
-export function sortThreadSkeleton(
-  queryClient: QueryClient,
-  node: PostThreadSkeletonNode,
+export function sortThread(
+  node: ThreadNode,
   opts: ThreadViewPreference,
-): PostThreadSkeletonNode {
+): ThreadNode {
   if (node.type !== 'post') {
     return node
   }
   if (node.replies) {
-    const post = getCachedPost(queryClient, node.uri)
-    node.replies.sort(
-      (a: PostThreadSkeletonNode, b: PostThreadSkeletonNode) => {
-        if (a.type !== 'post') {
+    node.replies.sort((a: ThreadNode, b: ThreadNode) => {
+      if (a.type !== 'post') {
+        return 1
+      }
+      if (b.type !== 'post') {
+        return -1
+      }
+
+      const aIsByOp = a.post.author.did === node.post?.author.did
+      const bIsByOp = b.post.author.did === node.post?.author.did
+      if (aIsByOp && bIsByOp) {
+        return a.post.indexedAt.localeCompare(b.post.indexedAt) // oldest
+      } else if (aIsByOp) {
+        return -1 // op's own reply
+      } else if (bIsByOp) {
+        return 1 // op's own reply
+      }
+      if (opts.prioritizeFollowedUsers) {
+        const af = a.post.author.viewer?.following
+        const bf = b.post.author.viewer?.following
+        if (af && !bf) {
+          return -1
+        } else if (!af && bf) {
           return 1
         }
-        if (b.type !== 'post') {
-          return -1
+      }
+      if (opts.sort === 'oldest') {
+        return a.post.indexedAt.localeCompare(b.post.indexedAt)
+      } else if (opts.sort === 'newest') {
+        return b.post.indexedAt.localeCompare(a.post.indexedAt)
+      } else if (opts.sort === 'most-likes') {
+        if (a.post.likeCount === b.post.likeCount) {
+          return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
+        } else {
+          return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
-
-        const postA = getCachedPost(queryClient, a.uri)
-        const postB = getCachedPost(queryClient, b.uri)
-        if (!postA) {
-          return 1
-        }
-        if (!postB) {
-          return -1
-        }
-
-        const aIsByOp = postA.author.did === post?.author.did
-        const bIsByOp = postB.author.did === post?.author.did
-        if (aIsByOp && bIsByOp) {
-          return postA.indexedAt.localeCompare(postB.indexedAt) // oldest
-        } else if (aIsByOp) {
-          return -1 // op's own reply
-        } else if (bIsByOp) {
-          return 1 // op's own reply
-        }
-        if (opts.prioritizeFollowedUsers) {
-          const af = postA.author.viewer?.following
-          const bf = postB.author.viewer?.following
-          if (af && !bf) {
-            return -1
-          } else if (!af && bf) {
-            return 1
-          }
-        }
-        if (opts.sort === 'oldest') {
-          return postA.indexedAt.localeCompare(postB.indexedAt)
-        } else if (opts.sort === 'newest') {
-          return postB.indexedAt.localeCompare(postA.indexedAt)
-        } else if (opts.sort === 'most-likes') {
-          if (postA.likeCount === postB.likeCount) {
-            return postB.indexedAt.localeCompare(postA.indexedAt) // newest
-          } else {
-            return (postB.likeCount || 0) - (postA.likeCount || 0) // most likes
-          }
-        } else if (opts.sort === 'random') {
-          return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
-        }
-        return postB.indexedAt.localeCompare(postA.indexedAt)
-      },
-    )
-    node.replies.forEach(reply => sortThreadSkeleton(queryClient, reply, opts))
+      } else if (opts.sort === 'random') {
+        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+      }
+      return b.post.indexedAt.localeCompare(a.post.indexedAt)
+    })
+    node.replies.forEach(reply => sortThread(reply, opts))
   }
   return node
 }
@@ -137,24 +127,30 @@ export function sortThreadSkeleton(
 // internal methods
 // =
 
-function threadViewToSkeleton(
+function responseToThreadNodes(
   node: ThreadViewNode,
   depth = 0,
   direction: 'up' | 'down' | 'start' = 'start',
-): PostThreadSkeletonNode {
-  if (AppBskyFeedDefs.isThreadViewPost(node)) {
+): ThreadNode {
+  if (
+    AppBskyFeedDefs.isThreadViewPost(node) &&
+    AppBskyFeedPost.isRecord(node.post.record) &&
+    AppBskyFeedPost.validateRecord(node.post.record).success
+  ) {
     return {
       type: 'post',
       _reactKey: node.post.uri,
       uri: node.post.uri,
+      post: node.post,
+      record: node.post.record,
       parent:
         node.parent && direction !== 'down'
-          ? threadViewToSkeleton(node.parent, depth - 1, 'up')
+          ? responseToThreadNodes(node.parent, depth - 1, 'up')
           : undefined,
       replies:
         node.replies?.length && direction !== 'up'
           ? node.replies.map(reply =>
-              threadViewToSkeleton(reply, depth + 1, 'down'),
+              responseToThreadNodes(reply, depth + 1, 'down'),
             )
           : undefined,
       viewer: node.viewer,
@@ -177,24 +173,5 @@ function threadViewToSkeleton(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
-  }
-}
-
-function hydrateCache(queryClient: QueryClient, node: ThreadViewNode) {
-  if (AppBskyFeedDefs.isThreadViewPost(node)) {
-    queryClient.setQueryData(POST_RQKEY(node.post.uri), node.post)
-    if (node.parent) {
-      hydrateCache(queryClient, node.parent)
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        hydrateCache(queryClient, reply)
-      }
-    }
-  } else if (
-    AppBskyFeedDefs.isBlockedPost(node) ||
-    AppBskyFeedDefs.isNotFoundPost(node)
-  ) {
-    queryClient.setQueryData(POST_RQKEY(node.uri), undefined)
   }
 }

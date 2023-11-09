@@ -24,23 +24,29 @@ import {
   usePostRepostMutation,
   usePostUnrepostMutation,
 } from '#/state/queries/post'
+import {PostShadow} from '#/state/cache/post-shadow'
 
 export function PostCtrls({
   big,
   post,
   record,
+  postShadow,
   style,
   onPressReply,
 }: {
   big?: boolean
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
+  postShadow: PostShadow
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
 }) {
   const store = useStores()
   const theme = useTheme()
   const {closeModal} = useModalControls()
+  const {likeUri, likeCount, repostUri, repostCount} = postShadow
+  const isLiked = !!likeUri
+  const isReposted = !!repostUri
   const postLikeMutation = usePostLikeMutation()
   const postUnlikeMutation = usePostUnlikeMutation()
   const postRepostMutation = usePostRepostMutation()
@@ -54,26 +60,46 @@ export function PostCtrls({
   ) as StyleProp<ViewStyle>
 
   const onPressToggleLike = React.useCallback(async () => {
-    if (!post.viewer?.like) {
+    if (!likeUri) {
       Haptics.default()
-      postLikeMutation.mutate({uri: post.uri, cid: post.cid})
+      postLikeMutation.mutate({
+        uri: post.uri,
+        cid: post.cid,
+        likeCount: likeCount || 0,
+      })
     } else {
-      postUnlikeMutation.mutate({postUri: post.uri, likeUri: post.viewer.like})
+      postUnlikeMutation.mutate({
+        postUri: post.uri,
+        likeUri,
+        likeCount: likeCount || 0,
+      })
     }
-  }, [post, postLikeMutation, postUnlikeMutation])
+  }, [post, likeUri, likeCount, postLikeMutation, postUnlikeMutation])
 
   const onRepost = useCallback(() => {
     closeModal()
-    if (!post.viewer?.repost) {
+    if (!repostUri) {
       Haptics.default()
-      postRepostMutation.mutate({uri: post.uri, cid: post.cid})
+      postRepostMutation.mutate({
+        uri: post.uri,
+        cid: post.cid,
+        repostCount: repostCount || 0,
+      })
     } else {
       postUnrepostMutation.mutate({
         postUri: post.uri,
-        repostUri: post.viewer.repost,
+        repostUri: repostUri,
+        repostCount: repostCount || 0,
       })
     }
-  }, [post, closeModal, postRepostMutation, postUnrepostMutation])
+  }, [
+    post,
+    repostUri,
+    repostCount,
+    closeModal,
+    postRepostMutation,
+    postUnrepostMutation,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -88,7 +114,6 @@ export function PostCtrls({
     })
     Haptics.default()
   }, [post, record, store.shell, closeModal])
-
   return (
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
@@ -114,8 +139,8 @@ export function PostCtrls({
       </TouchableOpacity>
       <RepostButton
         big={big}
-        isReposted={!!post.viewer?.repost}
-        repostCount={post.repostCount}
+        isReposted={isReposted}
+        repostCount={repostCount}
         onRepost={onRepost}
         onQuote={onQuote}
       />
@@ -124,12 +149,12 @@ export function PostCtrls({
         style={[styles.ctrl, !big && styles.ctrlPad]}
         onPress={onPressToggleLike}
         accessibilityRole="button"
-        accessibilityLabel={`${post.isLiked ? 'Unlike' : 'Like'} (${
-          post.likeCount
-        } ${pluralize(post.likeCount || 0, 'like')})`}
+        accessibilityLabel={`${
+          isLiked ? 'Unlike' : 'Like'
+        } (${likeCount} ${pluralize(likeCount || 0, 'like')})`}
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-        {post.viewer?.like ? (
+        {isLiked ? (
           <HeartIconSolid style={styles.ctrlIconLiked} size={big ? 22 : 16} />
         ) : (
           <HeartIcon
@@ -138,15 +163,15 @@ export function PostCtrls({
             size={big ? 20 : 16}
           />
         )}
-        {typeof post.likeCount !== 'undefined' ? (
+        {typeof likeCount !== 'undefined' ? (
           <Text
             testID="likeCount"
             style={
-              post.viewer?.like
+              isLiked
                 ? [s.bold, s.red3, s.f15, s.ml5]
                 : [defaultCtrlColor, s.f15, s.ml5]
             }>
-            {post.likeCount}
+            {likeCount}
           </Text>
         ) : undefined}
       </TouchableOpacity>

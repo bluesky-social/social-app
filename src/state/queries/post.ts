@@ -1,20 +1,9 @@
 import {AppBskyFeedDefs} from '@atproto/api'
-import {
-  useQuery,
-  useQueryClient,
-  useMutation,
-  QueryClient,
-} from '@tanstack/react-query'
+import {useQuery, useMutation} from '@tanstack/react-query'
 import {useSession} from '../session'
+import {updatePostShadow} from '../cache/post-shadow'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
-
-export function getCachedPost(
-  queryClient: QueryClient,
-  uri: string,
-): AppBskyFeedDefs.PostView | undefined {
-  return queryClient.getQueryData(RQKEY(uri))
-}
 
 export function usePostQuery(uri: string | undefined) {
   const {agent} = useSession()
@@ -36,43 +25,29 @@ export function usePostQuery(uri: string | undefined) {
 
 export function usePostLikeMutation() {
   const {agent} = useSession()
-  const queryClient = useQueryClient()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
-    {uri: string; cid: string}, // the post's uri and cid
-    {likeCount: number}
+    {uri: string; cid: string; likeCount: number} // the post's uri, cid, and likes
   >(post => agent.like(post.uri, post.cid), {
     onMutate(variables) {
-      // optimistically update the post-cache
-      let likeCount = 0
-      updatePostCache(queryClient, variables.uri, post => {
-        likeCount = post.likeCount || 0
-        return {
-          ...post,
-          likeCount: (post.likeCount || 0) + 1,
-          viewer: {...(post.viewer || {}), like: 'pending'},
-        }
+      // optimistically update the post-shadow
+      updatePostShadow(variables.uri, {
+        likeCount: variables.likeCount + 1,
+        likeUri: 'pending',
       })
-      return {likeCount}
     },
     onSuccess(data, variables) {
-      // finalize the post-cache with the like URI
-      updatePostCache(queryClient, variables.uri, post => {
-        return {
-          ...post,
-          viewer: {...(post.viewer || {}), like: data.uri},
-        }
+      // finalize the post-shadow with the like URI
+      updatePostShadow(variables.uri, {
+        likeUri: data.uri,
       })
     },
-    onError(error, variables, context) {
+    onError(error, variables) {
       // revert the optimistic update
-      updatePostCache(queryClient, variables.uri, post => {
-        return {
-          ...post,
-          likeCount: context?.likeCount,
-          viewer: {...(post.viewer || {}), like: undefined},
-        }
+      updatePostShadow(variables.uri, {
+        likeCount: variables.likeCount,
+        likeUri: undefined,
       })
     },
   })
@@ -80,38 +55,27 @@ export function usePostLikeMutation() {
 
 export function usePostUnlikeMutation() {
   const {agent} = useSession()
-  const queryClient = useQueryClient()
   return useMutation<
     void,
     Error,
-    {postUri: string; likeUri: string},
-    {likeCount: number}
+    {postUri: string; likeUri: string; likeCount: number}
   >(
     async ({likeUri}) => {
       await agent.deleteLike(likeUri)
     },
     {
       onMutate(variables) {
-        // optimistically update the post-cache
-        let likeCount = 0
-        updatePostCache(queryClient, variables.postUri, post => {
-          likeCount = post.likeCount || 0
-          return {
-            ...post,
-            likeCount: (post.likeCount || 0) - 1,
-            viewer: {...(post.viewer || {}), like: undefined},
-          }
+        // optimistically update the post-shadow
+        updatePostShadow(variables.postUri, {
+          likeCount: variables.likeCount - 1,
+          likeUri: undefined,
         })
-        return {likeCount}
       },
-      onError(error, variables, context) {
+      onError(error, variables) {
         // revert the optimistic update
-        updatePostCache(queryClient, variables.postUri, post => {
-          return {
-            ...post,
-            likeCount: context?.likeCount,
-            viewer: {...(post.viewer || {}), like: variables.likeUri},
-          }
+        updatePostShadow(variables.postUri, {
+          likeCount: variables.likeCount,
+          likeUri: variables.likeUri,
         })
       },
     },
@@ -120,43 +84,29 @@ export function usePostUnlikeMutation() {
 
 export function usePostRepostMutation() {
   const {agent} = useSession()
-  const queryClient = useQueryClient()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
-    {uri: string; cid: string}, // the post's uri and cid
-    {repostCount: number}
+    {uri: string; cid: string; repostCount: number} // the post's uri, cid, and reposts
   >(post => agent.repost(post.uri, post.cid), {
     onMutate(variables) {
-      // optimistically update the post-cache
-      let repostCount = 0
-      updatePostCache(queryClient, variables.uri, post => {
-        repostCount = post.repostCount || 0
-        return {
-          ...post,
-          repostCount: (post.repostCount || 0) + 1,
-          viewer: {...(post.viewer || {}), repost: 'pending'},
-        }
+      // optimistically update the post-shadow
+      updatePostShadow(variables.uri, {
+        repostCount: variables.repostCount + 1,
+        repostUri: 'pending',
       })
-      return {repostCount}
     },
     onSuccess(data, variables) {
-      // finalize the post-cache with the repost URI
-      updatePostCache(queryClient, variables.uri, post => {
-        return {
-          ...post,
-          viewer: {...(post.viewer || {}), repost: data.uri},
-        }
+      // finalize the post-shadow with the repost URI
+      updatePostShadow(variables.uri, {
+        repostUri: data.uri,
       })
     },
-    onError(error, variables, context) {
+    onError(error, variables) {
       // revert the optimistic update
-      updatePostCache(queryClient, variables.uri, post => {
-        return {
-          ...post,
-          repostCount: context?.repostCount,
-          viewer: {...(post.viewer || {}), repost: undefined},
-        }
+      updatePostShadow(variables.uri, {
+        repostCount: variables.repostCount,
+        repostUri: undefined,
       })
     },
   })
@@ -164,38 +114,27 @@ export function usePostRepostMutation() {
 
 export function usePostUnrepostMutation() {
   const {agent} = useSession()
-  const queryClient = useQueryClient()
   return useMutation<
     void,
     Error,
-    {postUri: string; repostUri: string},
-    {repostCount: number}
+    {postUri: string; repostUri: string; repostCount: number}
   >(
     async ({repostUri}) => {
       await agent.deleteRepost(repostUri)
     },
     {
       onMutate(variables) {
-        // optimistically update the post-cache
-        let repostCount = 0
-        updatePostCache(queryClient, variables.postUri, post => {
-          repostCount = post.repostCount || 0
-          return {
-            ...post,
-            repostCount: (post.repostCount || 0) - 1,
-            viewer: {...(post.viewer || {}), like: undefined},
-          }
+        // optimistically update the post-shadow
+        updatePostShadow(variables.postUri, {
+          repostCount: variables.repostCount - 1,
+          repostUri: undefined,
         })
-        return {repostCount}
       },
-      onError(error, variables, context) {
+      onError(error, variables) {
         // revert the optimistic update
-        updatePostCache(queryClient, variables.postUri, post => {
-          return {
-            ...post,
-            repostCount: context?.repostCount,
-            viewer: {...(post.viewer || {}), like: variables.repostUri},
-          }
+        updatePostShadow(variables.postUri, {
+          repostCount: variables.repostCount,
+          repostUri: variables.repostUri,
         })
       },
     },
@@ -204,33 +143,14 @@ export function usePostUnrepostMutation() {
 
 export function usePostDeleteMutation() {
   const {agent} = useSession()
-  const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string}>(
     async ({uri}) => {
       await agent.deletePost(uri)
     },
     {
       onSuccess(data, variables) {
-        queryClient.setQueryData(RQKEY(variables.uri), undefined)
+        updatePostShadow(variables.uri, {isDeleted: true})
       },
-    },
-  )
-}
-
-// internal methods
-// =
-
-function updatePostCache(
-  queryClient: QueryClient,
-  postUri: string,
-  fn: (post: AppBskyFeedDefs.PostView) => AppBskyFeedDefs.PostView,
-) {
-  queryClient.setQueryData(
-    RQKEY(postUri),
-    (post: AppBskyFeedDefs.PostView | undefined) => {
-      if (post) {
-        return fn(post)
-      }
     },
   )
 }

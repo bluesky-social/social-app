@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView, FlatList} from '../util/Views'
 import {
   FontAwesomeIcon,
@@ -21,20 +21,17 @@ import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {useQueryClient} from '@tanstack/react-query'
 import {
-  PostThreadSkeletonNode,
-  PostThreadSkeletonPost,
+  ThreadNode,
+  ThreadPost,
   usePostThreadQuery,
-  sortThreadSkeleton,
+  sortThread,
 } from '#/state/queries/post-thread'
 import {useNavigation} from '@react-navigation/native'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {usePostQuery} from '#/state/queries/post'
 import {cleanError} from '#/lib/strings/errors'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useStores} from '#/state'
 
 // const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
@@ -49,7 +46,7 @@ const LOAD_MORE = {_reactKey: '__load_more__'}
 const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
 type YieldedItem =
-  | PostThreadSkeletonPost
+  | ThreadPost
   | typeof TOP_COMPONENT
   | typeof PARENT_SPINNER
   | typeof REPLY_PROMPT
@@ -62,24 +59,21 @@ export function PostThread({
   onPressReply,
   treeView,
 }: {
-  uri: string
+  uri: string | undefined
   onPressReply: () => void
   treeView: boolean
 }) {
-  const {data: resolvedUri} = useResolveUriQuery(uri)
   const {
     isLoading,
     isError,
     error,
     refetch,
     isRefetching,
-    data: threadSkeleton,
-  } = usePostThreadQuery(resolvedUri)
-  const {data: rootPost} = usePostQuery(threadSkeleton?.uri)
-  const rootPostRecord =
-    rootPost && AppBskyFeedPost.isRecord(rootPost.record)
-      ? rootPost.record
-      : undefined
+    data: thread,
+    dataUpdatedAt,
+  } = usePostThreadQuery(uri)
+  const rootPost = thread?.type === 'post' ? thread.post : undefined
+  const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
   useSetTitle(
     rootPost &&
@@ -88,19 +82,19 @@ export function PostThread({
       )}: "${rootPostRecord?.text}"`,
   )
 
-  if (isError || AppBskyFeedDefs.isNotFoundPost(threadSkeleton)) {
+  if (isError || AppBskyFeedDefs.isNotFoundPost(thread)) {
     return (
       <PostThreadError
         error={error}
-        notFound={AppBskyFeedDefs.isNotFoundPost(threadSkeleton)}
+        notFound={AppBskyFeedDefs.isNotFoundPost(thread)}
         onRefresh={refetch}
       />
     )
   }
-  if (AppBskyFeedDefs.isBlockedPost(threadSkeleton)) {
+  if (AppBskyFeedDefs.isBlockedPost(thread)) {
     return <PostThreadBlocked />
   }
-  if (!threadSkeleton || isLoading) {
+  if (!thread || isLoading) {
     return (
       <CenteredView>
         <View style={s.p20}>
@@ -111,8 +105,9 @@ export function PostThread({
   }
   return (
     <PostThreadLoaded
-      threadSkeleton={threadSkeleton}
+      thread={thread}
       isRefetching={isRefetching}
+      dataUpdatedAt={dataUpdatedAt}
       treeView={treeView}
       onRefresh={refetch}
       onPressReply={onPressReply}
@@ -121,20 +116,21 @@ export function PostThread({
 }
 
 function PostThreadLoaded({
-  threadSkeleton,
+  thread,
   isRefetching,
+  dataUpdatedAt,
   treeView,
   onRefresh,
   onPressReply,
 }: {
-  threadSkeleton: PostThreadSkeletonNode
+  thread: ThreadNode
   isRefetching: boolean
+  dataUpdatedAt: number
   treeView: boolean
   onRefresh: () => void
   onPressReply: () => void
 }) {
   const pal = usePalette('default')
-  const queryClient = useQueryClient()
   const store = useStores()
   const {isTablet, isDesktop} = useWebMediaQueries()
   const ref = useRef<FlatList>(null)
@@ -164,13 +160,7 @@ function PostThreadLoaded({
   const posts = React.useMemo(() => {
     let arr = [TOP_COMPONENT].concat(
       Array.from(
-        flattenThreadSkeleton(
-          sortThreadSkeleton(
-            queryClient,
-            threadSkeleton,
-            store.preferences.thread,
-          ),
-        ),
+        flattenThreadSkeleton(sortThread(thread, store.preferences.thread)),
       ),
     )
     if (arr.length > maxVisible) {
@@ -178,7 +168,7 @@ function PostThreadLoaded({
     }
     arr.push(BOTTOM_COMPONENT)
     return arr
-  }, [threadSkeleton, maxVisible, queryClient, store.preferences.thread])
+  }, [thread, maxVisible, store.preferences.thread])
 
   // TODO
   /*const onContentSizeChange = React.useCallback(() => {
@@ -297,11 +287,13 @@ function PostThreadLoaded({
         )
       } else if (isSkeletonPost(item)) {
         const prev = isSkeletonPost(posts[index - 1])
-          ? (posts[index - 1] as PostThreadSkeletonPost)
+          ? (posts[index - 1] as ThreadPost)
           : undefined
         return (
           <PostThreadItem
-            uri={item.uri}
+            post={item.post}
+            record={item.record}
+            dataUpdatedAt={dataUpdatedAt}
             treeView={treeView}
             depth={item.ctx.depth}
             isHighlightedPost={item.ctx.isHighlightedPost}
@@ -313,7 +305,7 @@ function PostThreadLoaded({
           />
         )
       }
-      return <></>
+      return null
     },
     [
       isTablet,
@@ -328,6 +320,7 @@ function PostThreadLoaded({
       posts,
       onRefresh,
       treeView,
+      dataUpdatedAt,
     ],
   )
 
@@ -458,12 +451,12 @@ function PostThreadError({
   )
 }
 
-function isSkeletonPost(v: unknown): v is PostThreadSkeletonPost {
+function isSkeletonPost(v: unknown): v is ThreadPost {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'post'
 }
 
 function* flattenThreadSkeleton(
-  node: PostThreadSkeletonNode,
+  node: ThreadNode,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
     if (node.parent) {

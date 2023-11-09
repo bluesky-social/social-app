@@ -15,6 +15,7 @@ import {EventStopper} from '../EventStopper'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
 import {getTranslatorLink} from '#/locale/helpers'
+import {useStores} from '#/state'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -31,6 +32,7 @@ export function PostDropdownBtn({
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
 }) {
+  const store = useStores()
   const theme = useTheme()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const {openModal} = useModalControls()
@@ -41,7 +43,7 @@ export function PostDropdownBtn({
 
   const rootUri = record.reply?.root?.uri || post.uri
   const isThreadMuted = mutedThreads.includes(rootUri)
-  const isAuthor = false // TODO
+  const isAuthor = post.author.did === store.me.did
   const href = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)

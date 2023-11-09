@@ -37,10 +37,12 @@ import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {useLanguagePrefs} from '#/state/preferences'
-import {usePostQuery} from '#/state/queries/post'
+import {usePostShadow, PostShadow} from '#/state/cache/post-shadow'
 
 export function PostThreadItem({
-  uri,
+  post,
+  record,
+  dataUpdatedAt,
   treeView,
   depth,
   isHighlightedPost,
@@ -50,7 +52,9 @@ export function PostThreadItem({
   hasPrecedingItem,
   onPostReply,
 }: {
-  uri: string
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
+  dataUpdatedAt: number
   treeView: boolean
   depth: number
   isHighlightedPost?: boolean
@@ -61,7 +65,7 @@ export function PostThreadItem({
   onPostReply: () => void
 }) {
   const store = useStores()
-  const {data: post} = usePostQuery(uri)
+  const postShadow = usePostShadow(post, dataUpdatedAt)
   const richText = useMemo(
     () =>
       post &&
@@ -79,13 +83,17 @@ export function PostThreadItem({
       post ? moderatePost(post, store.preferences.moderationOpts) : undefined,
     [post, store],
   )
-  if (post && AppBskyFeedPost.isRecord(post.record) && richText && moderation) {
+  if (postShadow.isDeleted) {
+    return <PostThreadItemDeleted />
+  }
+  if (richText && moderation) {
     return (
       <PostThreadItemLoaded
         post={post}
-        record={post.record}
+        record={record}
         richText={richText}
         moderation={moderation}
+        postShadow={postShadow}
         treeView={treeView}
         depth={depth}
         isHighlightedPost={isHighlightedPost}
@@ -97,6 +105,18 @@ export function PostThreadItem({
       />
     )
   }
+  return null
+}
+
+function PostThreadItemDeleted() {
+  const styles = useStyles()
+  const pal = usePalette('default')
+  return (
+    <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
+      <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
+      <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
+    </View>
+  )
 }
 
 function PostThreadItemLoaded({
@@ -104,6 +124,7 @@ function PostThreadItemLoaded({
   record,
   richText,
   moderation,
+  postShadow,
   treeView,
   depth,
   isHighlightedPost,
@@ -117,6 +138,7 @@ function PostThreadItemLoaded({
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   moderation: PostModeration
+  postShadow: PostShadow
   treeView: boolean
   depth: number
   isHighlightedPost?: boolean
@@ -133,7 +155,7 @@ function PostThreadItemLoaded({
     countLines(richText?.text) >= MAX_POST_LINES,
   )
   const styles = useStyles()
-  const hasEngagement = post.likeCount || post.repostCount
+  const hasEngagement = postShadow.likeCount || postShadow.repostCount
 
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
@@ -349,31 +371,31 @@ function PostThreadItemLoaded({
             />
             {hasEngagement ? (
               <View style={[styles.expandedInfo, pal.border]}>
-                {post.repostCount ? (
+                {postShadow.repostCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
                     <Text testID="repostCount" type="lg" style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.repostCount)}
+                        {formatCount(postShadow.repostCount)}
                       </Text>{' '}
-                      {pluralize(post.repostCount, 'repost')}
+                      {pluralize(postShadow.repostCount, 'repost')}
                     </Text>
                   </Link>
                 ) : (
                   <></>
                 )}
-                {post.likeCount ? (
+                {postShadow.likeCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={likesHref}
                     title={likesTitle}>
                     <Text testID="likeCount" type="lg" style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
+                        {formatCount(postShadow.likeCount)}
                       </Text>{' '}
-                      {pluralize(post.likeCount, 'like')}
+                      {pluralize(postShadow.likeCount, 'like')}
                     </Text>
                   </Link>
                 ) : (
@@ -388,6 +410,7 @@ function PostThreadItemLoaded({
                 big
                 post={post}
                 record={record}
+                postShadow={postShadow}
                 onPressReply={onPressReply}
               />
             </View>
@@ -514,6 +537,7 @@ function PostThreadItemLoaded({
               <PostCtrls
                 post={post}
                 record={record}
+                postShadow={postShadow}
                 onPressReply={onPressReply}
               />
             </View>
