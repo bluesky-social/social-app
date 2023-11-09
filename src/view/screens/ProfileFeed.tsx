@@ -1,14 +1,7 @@
 import React, {useMemo, useCallback} from 'react'
-import {
-  FlatList,
-  NativeScrollEvent,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-} from 'react-native'
+import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
-import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -33,6 +26,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -389,7 +383,7 @@ export const ProfileFeedScreenInner = observer(
 
 interface FeedSectionProps {
   feed: PostsFeedModel
-  onScroll: (e: NativeScrollEvent) => void
+  onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -414,13 +408,12 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return <EmptyState icon="feed" message="This feed is empty!" />
     }, [])
 
-    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <Feed
           feed={feed}
           scrollElRef={scrollElRef}
-          onScroll={scrollHandler}
+          onScroll={onScroll}
           scrollEventThrottle={5}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
@@ -450,11 +443,10 @@ const AboutSection = observer(function AboutPageImpl({
   feedInfo: FeedSourceModel | undefined
   headerHeight: number
   onToggleLiked: () => void
-  onScroll: (e: NativeScrollEvent) => void
+  onScroll: OnScrollCb
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const scrollHandler = useAnimatedScrollHandler({onScroll})
 
   if (!feedInfo) {
     return <View />
@@ -464,7 +456,7 @@ const AboutSection = observer(function AboutPageImpl({
     <ScrollView
       scrollEventThrottle={1}
       contentContainerStyle={{paddingTop: headerHeight}}
-      onScroll={scrollHandler}>
+      onScroll={onScroll}>
       <View
         style={[
           {

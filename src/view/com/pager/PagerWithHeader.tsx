@@ -1,13 +1,9 @@
 import * as React from 'react'
-import {
-  LayoutChangeEvent,
-  NativeScrollEvent,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedReaction,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -16,12 +12,13 @@ import Animated, {
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 
 const SCROLLED_DOWN_LIMIT = 200
 
 interface PagerWithHeaderChildParams {
   headerHeight: number
-  onScroll: (e: NativeScrollEvent) => void
+  onScroll: OnScrollCb
   isScrolledDown: boolean
 }
 
@@ -143,18 +140,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
-    // Ideally we'd call useAnimatedScrollHandler here but we can't safely do that
-    // due to https://github.com/software-mansion/react-native-reanimated/issues/5345.
-    // So instead we pass down a worklet, and individual pages will have to call it.
-    const onScroll = React.useCallback(
-      (e: NativeScrollEvent) => {
-        'worklet'
+    // props to pass into children render functions
+    const onScroll = useAnimatedScrollHandler({
+      onScroll(e) {
         scrollY.value = e.contentOffset.y
       },
-      [scrollY],
-    )
-
-    // props to pass into children render functions
+    })
     const childProps = React.useMemo<PagerWithHeaderChildParams>(() => {
       return {
         headerHeight,
