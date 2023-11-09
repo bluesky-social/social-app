@@ -66,43 +66,45 @@ type LegacySchema = {
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
-export function transform(legacy: LegacySchema): Schema {
+// TODO remove, assume that partial data may be here during our refactor
+export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
     session: {
-      accounts: legacy.session.accounts || defaults.session.accounts,
+      accounts: legacy.session?.accounts || defaults.session.accounts,
       currentAccount:
-        legacy.session.accounts.find(a => a.did === legacy.session.data.did) ||
-        defaults.session.currentAccount,
+        legacy.session?.accounts?.find(
+          a => a.did === legacy.session?.data?.did,
+        ) || defaults.session.currentAccount,
     },
     reminders: {
       lastEmailConfirm:
-        legacy.reminders.lastEmailConfirm ||
+        legacy.reminders?.lastEmailConfirm ||
         defaults.reminders.lastEmailConfirm,
     },
     languagePrefs: {
       primaryLanguage:
-        legacy.preferences.primaryLanguage ||
+        legacy.preferences?.primaryLanguage ||
         defaults.languagePrefs.primaryLanguage,
       contentLanguages:
-        legacy.preferences.contentLanguages ||
+        legacy.preferences?.contentLanguages ||
         defaults.languagePrefs.contentLanguages,
       postLanguage:
-        legacy.preferences.postLanguage || defaults.languagePrefs.postLanguage,
+        legacy.preferences?.postLanguage || defaults.languagePrefs.postLanguage,
       postLanguageHistory:
-        legacy.preferences.postLanguageHistory ||
+        legacy.preferences?.postLanguageHistory ||
         defaults.languagePrefs.postLanguageHistory,
     },
     requireAltTextEnabled:
-      legacy.preferences.requireAltTextEnabled ||
+      legacy.preferences?.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
-    mutedThreads: legacy.mutedThreads.uris || defaults.mutedThreads,
+    mutedThreads: legacy.mutedThreads?.uris || defaults.mutedThreads,
     invites: {
       copiedInvites:
-        legacy.invitedUsers.copiedInvites || defaults.invites.copiedInvites,
+        legacy.invitedUsers?.copiedInvites || defaults.invites.copiedInvites,
     },
     onboarding: {
-      step: legacy.onboarding.step || defaults.onboarding.step,
+      step: legacy.onboarding?.step || defaults.onboarding.step,
     },
   }
 }
