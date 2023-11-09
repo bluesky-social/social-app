@@ -25,6 +25,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useModalControls} from '#/state/modals'
+import {useShellLayout} from '#/state/shell/shell-layout'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -36,6 +37,7 @@ export const BottomBar = observer(function BottomBarImpl({
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
+  const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
 
@@ -85,7 +87,10 @@ export const BottomBar = observer(function BottomBarImpl({
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
-      ]}>
+      ]}
+      onLayout={e => {
+        footerHeight.value = e.nativeEvent.layout.height
+      }}>
       <Btn
         testID="bottomBarHomeBtn"
         icon={

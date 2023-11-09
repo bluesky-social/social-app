@@ -3,6 +3,7 @@ import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {s} from 'lib/styles'
 import {useWebMediaQueries} from './useWebMediaQueries'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -33,14 +34,14 @@ export type OnScrollCb = (
 export type ResetCb = () => void
 
 export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
+  const {headerHeight} = useShellLayout()
+
   let [isScrolledDown, setIsScrolledDown] = useState(false)
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
 
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
-
-  const headerHeight = 80 // TODO
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag(e) {
@@ -50,7 +51,7 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
     onEndDrag(e) {
       startDragOffset.value = null
       startMode.value = null
-      if (e.contentOffset.y > headerHeight / 2) {
+      if (e.contentOffset.y > headerHeight.value / 2) {
         setMode(Math.round(mode.value))
       } else {
         setMode(0)
@@ -59,13 +60,17 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
     onScroll(e) {
       if (startDragOffset.value === null || startMode.value === null) {
         // TODO: web
-        if (mode.value !== 0 && e.contentOffset.y < headerHeight) {
+        if (mode.value !== 0 && e.contentOffset.y < headerHeight.value) {
           setMode(0)
         }
         return
       }
       const dy = e.contentOffset.y - startDragOffset.value
-      const dProgress = interpolate(dy, [-headerHeight, headerHeight], [-1, 1])
+      const dProgress = interpolate(
+        dy,
+        [-headerHeight.value, headerHeight.value],
+        [-1, 1],
+      )
       const newValue = clamp(startMode.value + dProgress, 0, 1)
       if (newValue !== mode.value) {
         mode.value = newValue
@@ -77,7 +82,6 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
     scrollHandler,
     isScrolledDown,
     useCallback(() => {
-      console.log('reset?')
       setIsScrolledDown(false)
       setMode(0)
     }, [setMode]),
