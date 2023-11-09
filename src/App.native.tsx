@@ -50,7 +50,6 @@ const InnerApp = observer(function AppImpl() {
         Toast.show('Sorry! Your session expired. Please log in again.')
       })
     })
-    // dynamicActivate(defaultLocale) // async import of locale data
   }, [])
 
   // show nothing prior to init
