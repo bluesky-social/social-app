@@ -8,36 +8,28 @@ import {
 
 import {useMinimalShellMode as useMinimalShellModeState} from '#/state/shell/minimal-mode'
 
-function withShellTiming<T extends AnimatableValue>(value: T): T {
-  'worklet'
-  return withTiming(value, {
-    duration: 125,
-    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-  })
-}
-
 export function useMinimalShellMode() {
   const mode = useMinimalShellModeState()
+  const footerHeight = 80 // TODO
   const footerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: mode.value > 0 ? 'none' : 'auto',
-      opacity: withShellTiming(interpolate(mode.value, [0, 1], [1, 0])),
+      pointerEvents: mode.value === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - mode.value, 2),
       transform: [
         {
-          translateY: withShellTiming(interpolate(mode.value, [0, 1], [0, 25])),
+          translateY: interpolate(mode.value, [0, 1], [0, footerHeight]),
         },
       ],
     }
   })
+  const headerHeight = 80 // TODO
   const headerMinimalShellTransform = useAnimatedStyle(() => {
     return {
-      pointerEvents: mode.value > 0 ? 'none' : 'auto',
-      opacity: withShellTiming(interpolate(mode.value, [0, 1], [1, 0])),
+      pointerEvents: mode.value === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - mode.value, 2),
       transform: [
         {
-          translateY: withShellTiming(
-            interpolate(mode.value, [0, 1], [0, -25]),
-          ),
+          translateY: interpolate(mode.value, [0, 1], [0, -headerHeight]),
         },
       ],
     }
@@ -46,9 +38,8 @@ export function useMinimalShellMode() {
     return {
       transform: [
         {
-          translateY: withShellTiming(
-            interpolate(mode.value, [0, 1], [-44, 0]),
-          ),
+          // TODO
+          translateY: 0,
         },
       ],
     }

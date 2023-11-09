@@ -3,6 +3,14 @@ import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {s} from 'lib/styles'
 import {useWebMediaQueries} from './useWebMediaQueries'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
+import {
+  useAnimatedScrollHandler,
+  useSharedValue,
+  interpolate,
+  Easing,
+  withTiming,
+} from 'react-native-reanimated'
+import {arDZ} from 'date-fns/esm/locale'
 
 const Y_LIMIT = 10
 
@@ -14,63 +22,64 @@ const useDeviceLimits = () => {
   }
 }
 
+function clamp(num: number, min: number, max: number) {
+  'worklet'
+  return Math.min(Math.max(num, min), max)
+}
+
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
 ) => void
 export type ResetCb = () => void
 
 export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
-  let lastY = useRef(0)
   let [isScrolledDown, setIsScrolledDown] = useState(false)
-  const {dyLimitUp, dyLimitDown} = useDeviceLimits()
-  const minimalShellMode = useMinimalShellMode()
-  const setMinimalShellMode = useSetMinimalShellMode()
+  const mode = useMinimalShellMode()
+  const setMode = useSetMinimalShellMode()
+
+  const startDragOffset = useSharedValue<number | null>(null)
+  const startMode = useSharedValue<number | null>(null)
+
+  const headerHeight = 80 // TODO
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag(e) {
+      startDragOffset.value = e.contentOffset.y
+      startMode.value = mode.value
+    },
+    onEndDrag(e) {
+      startDragOffset.value = null
+      startMode.value = null
+      if (e.contentOffset.y > headerHeight / 2) {
+        setMode(Math.round(mode.value))
+      } else {
+        setMode(0)
+      }
+    },
+    onScroll(e) {
+      if (startDragOffset.value === null || startMode.value === null) {
+        // TODO: web
+        if (mode.value !== 0 && e.contentOffset.y < headerHeight) {
+          setMode(0)
+        }
+        return
+      }
+      const dy = e.contentOffset.y - startDragOffset.value
+      const dProgress = interpolate(dy, [-headerHeight, headerHeight], [-1, 1])
+      const newValue = clamp(startMode.value + dProgress, 0, 1)
+      if (newValue !== mode.value) {
+        mode.value = newValue
+      }
+    },
+  })
 
   return [
-    useCallback(
-      (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        // const y = event.nativeEvent.contentOffset.y
-        // const dy = y - (lastY.current || 0)
-        // lastY.current = y
-        // if (!minimalShellMode.value && dy > dyLimitDown && y > Y_LIMIT) {
-        //   setMinimalShellMode(true)
-        // } else if (
-        //   minimalShellMode.value &&
-        //   (dy < dyLimitUp * -1 || y <= Y_LIMIT)
-        // ) {
-        //   setMinimalShellMode(false)
-        // }
-        // if (
-        //   !isScrolledDown &&
-        //   event.nativeEvent.contentOffset.y > s.window.height
-        // ) {
-        //   setIsScrolledDown(true)
-        // } else if (
-        //   isScrolledDown &&
-        //   event.nativeEvent.contentOffset.y < s.window.height
-        // ) {
-        //   setIsScrolledDown(false)
-        // }
-      },
-      [
-        // dyLimitDown,
-        // dyLimitUp,
-        // isScrolledDown,
-        // minimalShellMode,
-        // setMinimalShellMode,
-      ],
-    ),
+    scrollHandler,
     isScrolledDown,
-    useCallback(
-      () => {
-        // setIsScrolledDown(false)
-        // setMinimalShellMode(false)
-        // lastY.current = 1e8 // NOTE we set this very high so that the onScroll logic works right -prf
-      },
-      [
-        // setIsScrolledDown,
-        // setMinimalShellMode
-      ],
-    ),
+    useCallback(() => {
+      console.log('reset?')
+      setIsScrolledDown(false)
+      setMode(0)
+    }, [setMode]),
   ]
 }

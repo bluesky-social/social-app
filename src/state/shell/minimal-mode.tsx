@@ -1,5 +1,10 @@
 import React from 'react'
-import {useSharedValue, SharedValue} from 'react-native-reanimated'
+import {
+  Easing,
+  SharedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 type StateContext = SharedValue<number>
 type SetContext = (v: number) => void
@@ -16,7 +21,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const mode = useSharedValue(0)
   const setMode = React.useCallback(
     (v: number) => {
-      mode.value = v
+      'worklet'
+      mode.value = withTiming(Math.round(v), {
+        duration: 400,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      })
     },
     [mode],
   )
