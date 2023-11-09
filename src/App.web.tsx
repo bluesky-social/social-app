@@ -24,15 +24,20 @@ import {Provider as PrefsStateProvider} from 'state/preferences'
 import {
   Provider as SessionProvider,
   useSession,
+  useSessionApi,
 } from 'state/session'
+import * as persisted from '#/state/persisted'
 
 const InnerApp = observer(function AppImpl() {
   const session = useSession()
-  console.log('session', session)
+  const {initSession} = useSessionApi()
   const colorMode = useColorMode()
+  const [sessionReady, setSessionReady] = useState(false)
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
+
+  console.log('session', session)
 
   // init
   useEffect(() => {
@@ -41,10 +46,17 @@ const InnerApp = observer(function AppImpl() {
       setRootStore(store)
       analytics.init(store)
     })
-  }, [])
+  }, [initSession])
+
+  useEffect(() => {
+    const account = persisted.get('session').currentAccount
+    if (account) {
+      initSession(account).then(() => setSessionReady(true))
+    }
+  }, [initSession, setSessionReady])
 
   // show nothing prior to init
-  if (!rootStore) {
+  if (!rootStore || !sessionReady) {
     return null
   }
 

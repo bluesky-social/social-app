@@ -26,6 +26,7 @@ type ApiContext = {
     password: string
   }) => Promise<void>
   logout: () => Promise<void>
+  initSession: (account: Account) => Promise<void>
 }
 
 export const BSKY_AGENT = new BskyAgent({
@@ -42,6 +43,7 @@ const ApiContext = React.createContext<ApiContext>({
   createAccount: async () => {},
   login: async () => {},
   logout: async () => {},
+  initSession: async () => {},
 })
 
 function createPersistSessionHandler(
@@ -75,19 +77,10 @@ function createPersistSessionHandler(
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const initialSession = React.useMemo(() => persisted.get('session'), [])
-  const [state, setState] = React.useState({
-    accounts: initialSession.accounts,
-    currentAccount: initialSession.currentAccount,
-    agent: initialSession.currentAccount ? new BskyAgent({
-      service: 'https://api.bsky.app',
-      persistSession: createPersistSessionHandler(
-        initialSession.currentAccount,
-        ({expired, refreshedAccount}) => {
-          upsertAccount(refreshedAccount, expired)
-        },
-      ),
-    }) : BSKY_AGENT
+  const [state, setState] = React.useState<StateContext>({
+    accounts: persisted.get('session').accounts,
+    currentAccount: undefined,
+    agent: BSKY_AGENT
   })
 
   const setStateWrapped = React.useCallback(
@@ -297,8 +290,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       createAccount,
       login,
       logout,
+      initSession,
     }),
-    [createAccount, login, logout],
+    [createAccount, login, logout, initSession],
   )
 
   return (
