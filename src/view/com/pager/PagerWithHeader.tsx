@@ -146,13 +146,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         scrollY.value = e.contentOffset.y
       },
     })
-    const childProps = React.useMemo<PagerWithHeaderChildParams>(() => {
-      return {
-        headerHeight,
-        onScroll,
-        isScrolledDown,
-      }
-    }, [headerHeight, onScroll, isScrolledDown])
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
@@ -196,7 +189,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               headerOnlyHeight > 0 &&
               tabBarHeight > 0
             ) {
-              output = child(childProps)
+              output = child({
+                headerHeight,
+                isScrolledDown,
+                onScroll: i === currentPage ? onScroll : noop,
+              })
             }
             // Pager children must be noncollapsible plain <View>s.
             return (
@@ -227,6 +224,8 @@ const styles = StyleSheet.create({
     width: 598,
   },
 })
+
+function noop() {}
 
 function toArray<T>(v: T | T[]): T[] {
   if (Array.isArray(v)) {
