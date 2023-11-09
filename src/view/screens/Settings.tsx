@@ -57,7 +57,7 @@ import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -86,6 +86,7 @@ export const SettingsScreen = withAuthRequired(
     )
     const {openModal} = useModalControls()
     const {logout} = useSessionApi()
+    const {accounts} = useSession()
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -294,7 +295,7 @@ export const SettingsScreen = withAuthRequired(
               </View>
             </Link>
           )}
-          {store.session.switchableAccounts.map(account => (
+          {accounts.map(account => (
             <TouchableOpacity
               testID={`switchToAccountBtn-${account.handle}`}
               key={account.did}
@@ -306,10 +307,11 @@ export const SettingsScreen = withAuthRequired(
               accessibilityLabel={`Switch to ${account.handle}`}
               accessibilityHint="Switches the account you are logged in to">
               <View style={styles.avi}>
-                <UserAvatar size={40} avatar={account.aviUrl} />
+                {/*<UserAvatar size={40} avatar={account.aviUrl} />*/}
               </View>
               <View style={[s.flex1]}>
                 <Text type="md-bold" style={pal.text}>
+                  {/* @ts-ignore */}
                   {account.displayName || account.handle}
                 </Text>
                 <Text type="sm" style={pal.textLight}>

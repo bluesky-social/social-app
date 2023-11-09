@@ -280,7 +280,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setStateWrapped(s => {
         return {
           ...s,
-          accounts: s.accounts.filter(a => a.did !== account.did),
+          accounts: s.accounts.filter(
+            a => !(a.did === account.did || a.handle === account.handle),
+          ),
         }
       })
     },
