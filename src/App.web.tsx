@@ -38,6 +38,7 @@ const InnerApp = observer(function AppImpl() {
 
   // init
   useEffect(() => {
+    // TODO maybe something high level watching for failures, redirect to login
     resumeSession()
     setupState().then(store => {
       setRootStore(store)

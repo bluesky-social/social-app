@@ -264,6 +264,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setState(s => ({...s, isResumingSession: false}))
   }, [state, setState, upsertAccount])
 
+  // TODO handle cross-tab
   // TODO removeAccount
   // TODO reloadFromServer
   // TODO updateLocalAccountData
