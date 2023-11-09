@@ -21,11 +21,9 @@ export type ResetCb = () => void
 
 export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
   const {headerHeight} = useShellLayout()
-
-  let [isScrolledDown, setIsScrolledDown] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
-
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
 
@@ -38,15 +36,15 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
       startDragOffset.value = null
       startMode.value = null
       if (e.contentOffset.y > headerHeight.value / 2) {
-        setMode(Math.round(mode.value))
+        setMode(Math.round(mode.value) === 1)
       } else {
-        setMode(0)
+        setMode(false)
       }
     },
     onScroll(e) {
       if (startDragOffset.value === null || startMode.value === null) {
         if (mode.value !== 0 && e.contentOffset.y < headerHeight.value) {
-          setMode(0)
+          setMode(false)
           return
         }
         if (isWeb) {
@@ -77,7 +75,7 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
     isScrolledDown,
     useCallback(() => {
       setIsScrolledDown(false)
-      setMode(0)
+      setMode(false)
     }, [setMode]),
   ]
 }

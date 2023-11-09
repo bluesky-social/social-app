@@ -7,7 +7,7 @@ import {
 } from 'react-native-reanimated'
 
 type StateContext = SharedValue<number>
-type SetContext = (v: number) => void
+type SetContext = (v: boolean) => void
 
 const stateContext = React.createContext<StateContext>({
   value: 0,
@@ -15,14 +15,14 @@ const stateContext = React.createContext<StateContext>({
   removeListener() {},
   modify() {},
 })
-const setContext = React.createContext<SetContext>((_: number) => {})
+const setContext = React.createContext<SetContext>((_: boolean) => {})
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const mode = useSharedValue(0)
   const setMode = React.useCallback(
-    (v: number) => {
+    (v: boolean) => {
       'worklet'
-      mode.value = withTiming(Math.round(v), {
+      mode.value = withTiming(v ? 1 : 0, {
         duration: 400,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       })
