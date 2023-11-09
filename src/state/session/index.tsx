@@ -5,13 +5,13 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 
-type Account = Exclude<StateContext['currentAccount'], undefined>
+type Account = Exclude<persisted.Schema['session']['currentAccount'], undefined>
 
 type StateContext = {
   isInitialLoad: boolean
   agent: BskyAgent
-  accounts: persisted.Schema['session']['accounts']
-  currentAccount: persisted.Schema['session']['currentAccount']
+  accounts: Account[]
+  currentAccount: Account | undefined
 }
 type ApiContext = {
   createAccount: (props: {
@@ -30,6 +30,7 @@ type ApiContext = {
   initSession: (account: Account) => Promise<void>
   resumeSession: (account?: Account) => Promise<void>
   removeAccount: (account: Account) => void
+  updateCurrentAccount: (account: Pick<Account, 'handle'>) => void
 }
 
 export const PUBLIC_BSKY_AGENT = new BskyAgent({
@@ -50,6 +51,7 @@ const ApiContext = React.createContext<ApiContext>({
   initSession: async () => {},
   resumeSession: async () => {},
   removeAccount: () => {},
+  updateCurrentAccount: () => {},
 })
 
 function createPersistSessionHandler(
@@ -283,6 +285,31 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setStateWrapped],
   )
 
+  const updateCurrentAccount = React.useCallback<
+    ApiContext['updateCurrentAccount']
+  >(
+    account => {
+      setStateWrapped(s => {
+        const currentAccount = s.currentAccount
+
+        // ignore, should never happen
+        if (!currentAccount) return s
+
+        const updatedAccount = {
+          ...currentAccount,
+          handle: account.handle, // only update handle rn
+        }
+
+        return {
+          ...s,
+          currentAccount: updatedAccount,
+          accounts: s.accounts.filter(a => a.did !== currentAccount.did),
+        }
+      })
+    },
+    [setStateWrapped],
+  )
+
   React.useEffect(() => {
     return persisted.onUpdate(() => {
       const session = persisted.get('session')
@@ -315,9 +342,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [state, logout, initSession])
 
-  // TODO reloadFromServer, RQ?
-  // TODO updateLocalAccountData, RQ?
-
   const api = React.useMemo(
     () => ({
       createAccount,
@@ -326,8 +350,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       initSession,
       resumeSession,
       removeAccount,
+      updateCurrentAccount,
     }),
-    [createAccount, login, logout, initSession, resumeSession, removeAccount],
+    [
+      createAccount,
+      login,
+      logout,
+      initSession,
+      resumeSession,
+      removeAccount,
+      updateCurrentAccount,
+    ],
   )
 
   return (
