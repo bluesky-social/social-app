@@ -1,27 +1,13 @@
-import {useState, useCallback, useRef} from 'react'
+import {useState, useCallback} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
-import {s} from 'lib/styles'
-import {useWebMediaQueries} from './useWebMediaQueries'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {isWeb} from 'platform/detection'
 import {
   useAnimatedScrollHandler,
   useSharedValue,
   interpolate,
-  Easing,
-  withTiming,
 } from 'react-native-reanimated'
-import {arDZ} from 'date-fns/esm/locale'
-
-const Y_LIMIT = 10
-
-const useDeviceLimits = () => {
-  const {isDesktop} = useWebMediaQueries()
-  return {
-    dyLimitUp: isDesktop ? 30 : 10,
-    dyLimitDown: isDesktop ? 150 : 10,
-  }
-}
 
 function clamp(num: number, min: number, max: number) {
   'worklet'
@@ -59,9 +45,13 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
     },
     onScroll(e) {
       if (startDragOffset.value === null || startMode.value === null) {
-        // TODO: web
         if (mode.value !== 0 && e.contentOffset.y < headerHeight.value) {
           setMode(0)
+          return
+        }
+        if (isWeb) {
+          startDragOffset.value = e.contentOffset.y
+          startMode.value = mode.value
         }
         return
       }
@@ -74,6 +64,10 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
       const newValue = clamp(startMode.value + dProgress, 0, 1)
       if (newValue !== mode.value) {
         mode.value = newValue
+      }
+      if (isWeb) {
+        startDragOffset.value = e.contentOffset.y
+        startMode.value = mode.value
       }
     },
   })
