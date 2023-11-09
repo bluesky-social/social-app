@@ -38,7 +38,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {Trans} from '@lingui/macro'
 import {useLanguagePrefs} from '#/state/preferences'
-import {usePostShadow, PostShadow} from '#/state/cache/post-shadow'
+import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 
 export function PostThreadItem({
   post,
@@ -66,7 +66,7 @@ export function PostThreadItem({
   onPostReply: () => void
 }) {
   const store = useStores()
-  const postShadow = usePostShadow(post, dataUpdatedAt)
+  const postShadowed = usePostShadow(post, dataUpdatedAt)
   const richText = useMemo(
     () =>
       post &&
@@ -84,17 +84,16 @@ export function PostThreadItem({
       post ? moderatePost(post, store.preferences.moderationOpts) : undefined,
     [post, store],
   )
-  if (postShadow.isDeleted) {
+  if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted />
   }
   if (richText && moderation) {
     return (
       <PostThreadItemLoaded
-        post={post}
+        post={postShadowed}
         record={record}
         richText={richText}
         moderation={moderation}
-        postShadow={postShadow}
         treeView={treeView}
         depth={depth}
         isHighlightedPost={isHighlightedPost}
@@ -127,7 +126,6 @@ function PostThreadItemLoaded({
   record,
   richText,
   moderation,
-  postShadow,
   treeView,
   depth,
   isHighlightedPost,
@@ -141,7 +139,6 @@ function PostThreadItemLoaded({
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   moderation: PostModeration
-  postShadow: PostShadow
   treeView: boolean
   depth: number
   isHighlightedPost?: boolean
@@ -158,7 +155,7 @@ function PostThreadItemLoaded({
     countLines(richText?.text) >= MAX_POST_LINES,
   )
   const styles = useStyles()
-  const hasEngagement = postShadow.likeCount || postShadow.repostCount
+  const hasEngagement = post.likeCount || post.repostCount
 
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
@@ -374,31 +371,31 @@ function PostThreadItemLoaded({
             />
             {hasEngagement ? (
               <View style={[styles.expandedInfo, pal.border]}>
-                {postShadow.repostCount ? (
+                {post.repostCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
                     <Text testID="repostCount" type="lg" style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(postShadow.repostCount)}
+                        {formatCount(post.repostCount)}
                       </Text>{' '}
-                      {pluralize(postShadow.repostCount, 'repost')}
+                      {pluralize(post.repostCount, 'repost')}
                     </Text>
                   </Link>
                 ) : (
                   <></>
                 )}
-                {postShadow.likeCount ? (
+                {post.likeCount ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={likesHref}
                     title={likesTitle}>
                     <Text testID="likeCount" type="lg" style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(postShadow.likeCount)}
+                        {formatCount(post.likeCount)}
                       </Text>{' '}
-                      {pluralize(postShadow.likeCount, 'like')}
+                      {pluralize(post.likeCount, 'like')}
                     </Text>
                   </Link>
                 ) : (
@@ -413,7 +410,6 @@ function PostThreadItemLoaded({
                 big
                 post={post}
                 record={record}
-                postShadow={postShadow}
                 onPressReply={onPressReply}
               />
             </View>
@@ -540,7 +536,6 @@ function PostThreadItemLoaded({
               <PostCtrls
                 post={post}
                 record={record}
-                postShadow={postShadow}
                 onPressReply={onPressReply}
               />
             </View>

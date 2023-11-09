@@ -24,29 +24,23 @@ import {
   usePostRepostMutation,
   usePostUnrepostMutation,
 } from '#/state/queries/post'
-import {PostShadow} from '#/state/cache/post-shadow'
 
 export function PostCtrls({
   big,
   post,
   record,
-  postShadow,
   style,
   onPressReply,
 }: {
   big?: boolean
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  postShadow: PostShadow
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
 }) {
   const store = useStores()
   const theme = useTheme()
   const {closeModal} = useModalControls()
-  const {likeUri, likeCount, repostUri, repostCount} = postShadow
-  const isLiked = !!likeUri
-  const isReposted = !!repostUri
   const postLikeMutation = usePostLikeMutation()
   const postUnlikeMutation = usePostUnlikeMutation()
   const postRepostMutation = usePostRepostMutation()
@@ -60,46 +54,39 @@ export function PostCtrls({
   ) as StyleProp<ViewStyle>
 
   const onPressToggleLike = React.useCallback(async () => {
-    if (!likeUri) {
+    if (!post.viewer?.like) {
       Haptics.default()
       postLikeMutation.mutate({
         uri: post.uri,
         cid: post.cid,
-        likeCount: likeCount || 0,
+        likeCount: post.likeCount || 0,
       })
     } else {
       postUnlikeMutation.mutate({
         postUri: post.uri,
-        likeUri,
-        likeCount: likeCount || 0,
+        likeUri: post.viewer.like,
+        likeCount: post.likeCount || 0,
       })
     }
-  }, [post, likeUri, likeCount, postLikeMutation, postUnlikeMutation])
+  }, [post, postLikeMutation, postUnlikeMutation])
 
   const onRepost = useCallback(() => {
     closeModal()
-    if (!repostUri) {
+    if (!post.viewer?.repost) {
       Haptics.default()
       postRepostMutation.mutate({
         uri: post.uri,
         cid: post.cid,
-        repostCount: repostCount || 0,
+        repostCount: post.repostCount || 0,
       })
     } else {
       postUnrepostMutation.mutate({
         postUri: post.uri,
-        repostUri: repostUri,
-        repostCount: repostCount || 0,
+        repostUri: post.viewer.repost,
+        repostCount: post.repostCount || 0,
       })
     }
-  }, [
-    post,
-    repostUri,
-    repostCount,
-    closeModal,
-    postRepostMutation,
-    postUnrepostMutation,
-  ])
+  }, [post, closeModal, postRepostMutation, postUnrepostMutation])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -139,8 +126,8 @@ export function PostCtrls({
       </TouchableOpacity>
       <RepostButton
         big={big}
-        isReposted={isReposted}
-        repostCount={repostCount}
+        isReposted={!!post.viewer?.repost}
+        repostCount={post.repostCount}
         onRepost={onRepost}
         onQuote={onQuote}
       />
@@ -149,12 +136,12 @@ export function PostCtrls({
         style={[styles.ctrl, !big && styles.ctrlPad]}
         onPress={onPressToggleLike}
         accessibilityRole="button"
-        accessibilityLabel={`${
-          isLiked ? 'Unlike' : 'Like'
-        } (${likeCount} ${pluralize(likeCount || 0, 'like')})`}
+        accessibilityLabel={`${post.viewer?.like ? 'Unlike' : 'Like'} (${
+          post.likeCount
+        } ${pluralize(post.likeCount || 0, 'like')})`}
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-        {isLiked ? (
+        {post.viewer?.like ? (
           <HeartIconSolid style={styles.ctrlIconLiked} size={big ? 22 : 16} />
         ) : (
           <HeartIcon
@@ -163,15 +150,15 @@ export function PostCtrls({
             size={big ? 20 : 16}
           />
         )}
-        {typeof likeCount !== 'undefined' ? (
+        {typeof post.likeCount !== 'undefined' ? (
           <Text
             testID="likeCount"
             style={
-              isLiked
+              post.viewer?.like
                 ? [s.bold, s.red3, s.f15, s.ml5]
                 : [defaultCtrlColor, s.f15, s.ml5]
             }>
-            {likeCount}
+            {post.likeCount}
           </Text>
         ) : undefined}
       </TouchableOpacity>

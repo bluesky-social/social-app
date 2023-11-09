@@ -12,6 +12,8 @@ export interface PostShadow {
   isDeleted: boolean
 }
 
+export const POST_TOMBSTONE = Symbol('PostTombstone')
+
 export type UpdatePostShadowFn = (cache: Partial<PostShadow>) => void
 
 interface CacheEntry {
@@ -22,7 +24,7 @@ interface CacheEntry {
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
   ifAfterTS: number,
-): PostShadow {
+): AppBskyFeedDefs.PostView | typeof POST_TOMBSTONE {
   const [state, setState] = useState<CacheEntry>({
     ts: Date.now(),
     value: fromPost(post),
@@ -53,7 +55,7 @@ export function usePostShadow(
     firstRun.current = false
   }, [post])
 
-  return state.ts > ifAfterTS ? state.value : fromPost(post)
+  return state.ts > ifAfterTS ? mergeShadow(post, state.value) : post
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
@@ -67,5 +69,24 @@ function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
     repostUri: post.viewer?.repost,
     repostCount: post.repostCount,
     isDeleted: false,
+  }
+}
+
+function mergeShadow(
+  post: AppBskyFeedDefs.PostView,
+  shadow: PostShadow,
+): AppBskyFeedDefs.PostView | typeof POST_TOMBSTONE {
+  if (shadow.isDeleted) {
+    return POST_TOMBSTONE
+  }
+  return {
+    ...post,
+    likeCount: shadow.likeCount,
+    repostCount: shadow.repostCount,
+    viewer: {
+      ...(post.viewer || {}),
+      like: shadow.likeUri,
+      repost: shadow.repostUri,
+    },
   }
 }
