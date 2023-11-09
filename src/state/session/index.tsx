@@ -252,14 +252,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
     async account => {
-      if (account) {
-        await initSession(account)
+      try {
+        if (account) {
+          await initSession(account)
+        }
+      } catch (e) {
+        logger.error(`session: resumeSession failed`, {error: e})
+      } finally {
+        setState(s => ({
+          ...s,
+          isInitialLoad: false,
+        }))
       }
-
-      setState(s => ({
-        ...s,
-        isInitialLoad: false,
-      }))
     },
     [initSession],
   )
