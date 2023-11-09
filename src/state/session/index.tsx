@@ -5,11 +5,14 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 
+export type SessionAccount = persisted.PersistedAccount
+
 export type StateContext = {
   isInitialLoad: boolean
   agent: BskyAgent
   accounts: persisted.PersistedAccount[]
   currentAccount: persisted.PersistedAccount | undefined
+  hasSession: boolean
 }
 export type ApiContext = {
   createAccount: (props: {
@@ -40,6 +43,7 @@ export const PUBLIC_BSKY_AGENT = new BskyAgent({
 })
 
 const StateContext = React.createContext<StateContext>({
+  hasSession: false,
   isInitialLoad: true,
   accounts: [],
   currentAccount: undefined,
@@ -88,6 +92,7 @@ function createPersistSessionHandler(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>({
+    hasSession: false,
     isInitialLoad: true, // try to resume the session first
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
@@ -212,6 +217,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
+    logger.debug(`session: logout`)
     setStateWrapped(s => {
       return {
         ...s,
@@ -346,6 +352,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [state, logout, initSession])
 
+  const stateContext = React.useMemo(
+    () => ({
+      ...state,
+      hasSession: !!state.currentAccount,
+    }),
+    [state],
+  )
+
   const api = React.useMemo(
     () => ({
       createAccount,
@@ -368,7 +382,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   return (
-    <StateContext.Provider value={state}>
+    <StateContext.Provider value={stateContext}>
       <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
     </StateContext.Provider>
   )
