@@ -29,36 +29,34 @@ import {
 import * as persisted from '#/state/persisted'
 
 const InnerApp = observer(function AppImpl() {
-  const session = useSession()
-  const {initSession} = useSessionApi()
+  const {isInitialLoad, currentAccount} = useSession()
+  const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
-  const [sessionReady, setSessionReady] = useState(false)
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
 
-  console.log('session', session)
+  console.log('session', {
+    isInitialLoad: isInitialLoad,
+    currentAccount: currentAccount?.handle,
+  })
 
   // init
   useEffect(() => {
-    // TODO maybe something high level watching for failures, redirect to login
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
     })
-  }, [initSession])
+  }, [resumeSession])
 
   useEffect(() => {
     const account = persisted.get('session').currentAccount
-    if (account) {
-      initSession(account).then(() => setSessionReady(true))
-    } else {
-      setSessionReady(true)
-    }
-  }, [initSession, setSessionReady])
+    resumeSession(account)
+  }, [resumeSession])
 
   // show nothing prior to init
-  if (!rootStore || !sessionReady) {
+  if (!rootStore || isInitialLoad) {
+    // TODO add a loading state
     return null
   }
 

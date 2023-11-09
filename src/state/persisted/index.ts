@@ -50,7 +50,9 @@ export async function write<K extends keyof Schema>(
     await store.write(_state)
     // must happen on next tick, otherwise the tab will read stale storage data
     setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
-    logger.debug(`persisted state: wrote root state to storage`)
+    logger.debug(`persisted state: wrote root state to storage`, {
+      updatedKey: key,
+    })
   } catch (e) {
     logger.error(`persisted state: failed writing root state to storage`, {
       error: e,

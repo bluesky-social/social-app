@@ -8,6 +8,7 @@ import * as persisted from '#/state/persisted'
 type Account = Exclude<StateContext['currentAccount'], undefined>
 
 type StateContext = {
+  isInitialLoad: boolean
   agent: BskyAgent
   accounts: persisted.Schema['session']['accounts']
   currentAccount: persisted.Schema['session']['currentAccount']
@@ -27,6 +28,7 @@ type ApiContext = {
   }) => Promise<void>
   logout: () => Promise<void>
   initSession: (account: Account) => Promise<void>
+  resumeSession: (account?: Account) => Promise<void>
 }
 
 export const BSKY_AGENT = new BskyAgent({
@@ -34,6 +36,7 @@ export const BSKY_AGENT = new BskyAgent({
 })
 
 const StateContext = React.createContext<StateContext>({
+  isInitialLoad: true,
   accounts: [],
   currentAccount: undefined,
   agent: BSKY_AGENT,
@@ -44,6 +47,7 @@ const ApiContext = React.createContext<ApiContext>({
   login: async () => {},
   logout: async () => {},
   initSession: async () => {},
+  resumeSession: async () => {},
 })
 
 function createPersistSessionHandler(
@@ -78,9 +82,10 @@ function createPersistSessionHandler(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>({
+    isInitialLoad: true,
     accounts: persisted.get('session').accounts,
     currentAccount: undefined,
-    agent: BSKY_AGENT
+    agent: BSKY_AGENT,
   })
 
   const setStateWrapped = React.useCallback(
@@ -214,45 +219,56 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [setStateWrapped])
 
-  const initSession = React.useCallback<
-    (account: Account) => Promise<void>
-  >(async (account) => {
-    logger.info(`session: initSession`, {
-      did: account.did,
-      handle: account.handle,
-    })
-
-    const agent = new BskyAgent({
-      service: account.service,
-      persistSession: createPersistSessionHandler(
-        account,
-        ({expired, refreshedAccount}) => {
-          upsertAccount(refreshedAccount, expired)
-        },
-      ),
-    })
-
-    await networkRetry(3, () =>
-      agent.resumeSession({
-        accessJwt: account.accessJwt || '',
-        refreshJwt: account.refreshJwt || '',
+  const initSession = React.useCallback<ApiContext['initSession']>(
+    async account => {
+      logger.info(`session: initSession`, {
         did: account.did,
         handle: account.handle,
-      }),
-    )
+      })
 
-    upsertAccount(account)
-  }, [upsertAccount])
+      const agent = new BskyAgent({
+        service: account.service,
+        persistSession: createPersistSessionHandler(
+          account,
+          ({expired, refreshedAccount}) => {
+            upsertAccount(refreshedAccount, expired)
+          },
+        ),
+      })
+
+      await networkRetry(3, () =>
+        agent.resumeSession({
+          accessJwt: account.accessJwt || '',
+          refreshJwt: account.refreshJwt || '',
+          did: account.did,
+          handle: account.handle,
+        }),
+      )
+
+      upsertAccount(account)
+    },
+    [upsertAccount],
+  )
+
+  const resumeSession = React.useCallback<ApiContext['resumeSession']>(
+    async account => {
+      if (account) {
+        await initSession(account)
+      }
+
+      setState(s => ({
+        ...s,
+        isInitialLoad: false,
+      }))
+    },
+    [initSession],
+  )
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
       const session = persisted.get('session')
 
       logger.info(`session: onUpdate`)
-
-      // TODO this gets called a ton, something is off
-      // maybe debounce?
-      return
 
       if (session.currentAccount) {
         if (session.currentAccount?.did !== state.currentAccount?.did) {
@@ -264,7 +280,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             to: {
               did: session.currentAccount.did,
               handle: session.currentAccount.handle,
-            }
+            },
           })
 
           initSession(session.currentAccount)
@@ -280,7 +296,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [state, logout, initSession])
 
-  // TODO handle cross-tab
   // TODO removeAccount
   // TODO reloadFromServer
   // TODO updateLocalAccountData
@@ -291,8 +306,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       login,
       logout,
       initSession,
+      resumeSession,
     }),
-    [createAccount, login, logout, initSession],
+    [createAccount, login, logout, initSession, resumeSession],
   )
 
   return (
