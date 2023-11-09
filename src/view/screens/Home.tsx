@@ -24,7 +24,6 @@ export const HomeScreen = withAuthRequired(
     const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
