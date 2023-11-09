@@ -36,6 +36,7 @@ import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
+import {Trans} from '@lingui/macro'
 import {useLanguagePrefs} from '#/state/preferences'
 import {usePostShadow, PostShadow} from '#/state/cache/post-shadow'
 
@@ -114,7 +115,9 @@ function PostThreadItemDeleted() {
   return (
     <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
       <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
-      <Text style={[pal.textLight, s.ml10]}>This post has been deleted.</Text>
+      <Text style={[pal.textLight, s.ml10]}>
+        <Trans>This post has been deleted.</Trans>
+      </Text>
     </View>
   )
 }
@@ -646,9 +649,11 @@ function ExpandedPostDetails({
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
-          <Text style={pal.textLight}> • </Text>
+          <Text style={[pal.textLight, s.ml5, s.mr5]}>•</Text>
           <Link href={translatorUrl} title="Translate">
-            <Text style={pal.link}>Translate</Text>
+            <Text style={pal.link}>
+              <Trans>Translate</Trans>
+            </Text>
           </Link>
         </>
       )}

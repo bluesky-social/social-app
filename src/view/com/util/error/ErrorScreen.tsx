@@ -9,6 +9,8 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Button} from '../forms/Button'
 import {CenteredView} from '../Views'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function ErrorScreen({
   title,
@@ -25,6 +27,8 @@ export function ErrorScreen({
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   return (
     <CenteredView testID={testID} style={[styles.outer, pal.view]}>
       <View style={styles.errorIconContainer}>
@@ -58,7 +62,7 @@ export function ErrorScreen({
             type="default"
             style={[styles.btn]}
             onPress={onPressTryAgain}
-            accessibilityLabel="Retry"
+            accessibilityLabel={_(msg`Retry`)}
             accessibilityHint="Retries the last action, which errored out">
             <FontAwesomeIcon
               icon="arrows-rotate"
@@ -66,7 +70,7 @@ export function ErrorScreen({
               size={16}
             />
             <Text type="button" style={[styles.btnText, pal.link]}>
-              Try again
+              <Trans>Try again</Trans>
             </Text>
           </Button>
         </View>

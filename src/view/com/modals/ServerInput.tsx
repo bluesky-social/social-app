@@ -11,6 +11,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['80%']
@@ -19,6 +21,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
   const theme = useTheme()
   const pal = usePalette('default')
   const [customUrl, setCustomUrl] = useState<string>('')
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
 
   const doSelect = (url: string) => {
@@ -32,7 +35,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
   return (
     <View style={[pal.view, s.flex1]} testID="serverInputModal">
       <Text type="2xl-bold" style={[pal.text, s.textCenter]}>
-        Choose Service
+        <Trans>Choose Service</Trans>
       </Text>
       <ScrollView style={styles.inner}>
         <View style={styles.group}>
@@ -43,7 +46,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 style={styles.btn}
                 onPress={() => doSelect(LOCAL_DEV_SERVICE)}
                 accessibilityRole="button">
-                <Text style={styles.btnText}>Local dev server</Text>
+                <Text style={styles.btnText}>
+                  <Trans>Local dev server</Trans>
+                </Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
                   style={s.white as FontAwesomeIconStyle}
@@ -53,7 +58,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
                 style={styles.btn}
                 onPress={() => doSelect(STAGING_SERVICE)}
                 accessibilityRole="button">
-                <Text style={styles.btnText}>Staging</Text>
+                <Text style={styles.btnText}>
+                  <Trans>Staging</Trans>
+                </Text>
                 <FontAwesomeIcon
                   icon="arrow-right"
                   style={s.white as FontAwesomeIconStyle}
@@ -65,9 +72,11 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             style={styles.btn}
             onPress={() => doSelect(PROD_SERVICE)}
             accessibilityRole="button"
-            accessibilityLabel="Select Bluesky Social"
+            accessibilityLabel={_(msg`Select Bluesky Social`)}
             accessibilityHint="Sets Bluesky Social as your service provider">
-            <Text style={styles.btnText}>Bluesky.Social</Text>
+            <Text style={styles.btnText}>
+              <Trans>Bluesky.Social</Trans>
+            </Text>
             <FontAwesomeIcon
               icon="arrow-right"
               style={s.white as FontAwesomeIconStyle}
@@ -75,7 +84,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
           </TouchableOpacity>
         </View>
         <View style={styles.group}>
-          <Text style={[pal.text, styles.label]}>Other service</Text>
+          <Text style={[pal.text, styles.label]}>
+            <Trans>Other service</Trans>
+          </Text>
           <View style={s.flexRow}>
             <TextInput
               testID="customServerTextInput"
@@ -88,7 +99,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               keyboardAppearance={theme.colorScheme}
               value={customUrl}
               onChangeText={setCustomUrl}
-              accessibilityLabel="Custom domain"
+              accessibilityLabel={_(msg`Custom domain`)}
               // TODO: Simplify this wording further to be understandable by everyone
               accessibilityHint="Use your domain as your Bluesky client service provider"
             />

@@ -33,6 +33,8 @@ import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {useStores} from '#/state'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 // const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
 
@@ -130,6 +132,7 @@ function PostThreadLoaded({
   onRefresh: () => void
   onPressReply: () => void
 }) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const store = useStores()
   const {isTablet, isDesktop} = useWebMediaQueries()
@@ -235,7 +238,7 @@ function PostThreadLoaded({
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
-              Deleted post.
+              <Trans>Deleted post.</Trans>
             </Text>
           </View>
         )
@@ -243,7 +246,7 @@ function PostThreadLoaded({
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
-              Blocked post.
+              <Trans>Blocked post.</Trans>
             </Text>
           </View>
         )
@@ -252,7 +255,7 @@ function PostThreadLoaded({
           <Pressable
             onPress={() => setMaxVisible(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
-            accessibilityLabel="Load more posts"
+            accessibilityLabel={_(msg`Load more posts`)}
             accessibilityHint="">
             <View
               style={[
@@ -260,7 +263,7 @@ function PostThreadLoaded({
                 {paddingHorizontal: 18, paddingVertical: 14, borderRadius: 6},
               ]}>
               <Text type="lg-medium" style={pal.text}>
-                Load more posts
+                <Trans>Load more posts</Trans>
               </Text>
             </View>
           </Pressable>
@@ -285,8 +288,8 @@ function PostThreadLoaded({
             <ActivityIndicator />
           </View>
         )
-      } else if (isSkeletonPost(item)) {
-        const prev = isSkeletonPost(posts[index - 1])
+      } else if (isThreadPost(item)) {
+        const prev = isThreadPost(posts[index - 1])
           ? (posts[index - 1] as ThreadPost)
           : undefined
         return (
@@ -321,6 +324,7 @@ function PostThreadLoaded({
       onRefresh,
       treeView,
       dataUpdatedAt,
+      _,
     ],
   )
 
@@ -357,6 +361,7 @@ function PostThreadLoaded({
 }
 
 function PostThreadBlocked() {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
 
@@ -372,15 +377,17 @@ function PostThreadBlocked() {
     <CenteredView>
       <View style={[pal.view, pal.border, styles.notFoundContainer]}>
         <Text type="title-lg" style={[pal.text, s.mb5]}>
-          Post hidden
+          <Trans>Post hidden</Trans>
         </Text>
         <Text type="md" style={[pal.text, s.mb10]}>
-          You have blocked the author or you have been blocked by the author.
+          <Trans>
+            You have blocked the author or you have been blocked by the author.
+          </Trans>
         </Text>
         <TouchableOpacity
           onPress={onPressBack}
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <Text type="2xl" style={pal.link}>
             <FontAwesomeIcon
@@ -405,6 +412,7 @@ function PostThreadError({
   notFound: boolean
   error: Error | null
 }) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
 
@@ -421,15 +429,15 @@ function PostThreadError({
       <CenteredView>
         <View style={[pal.view, pal.border, styles.notFoundContainer]}>
           <Text type="title-lg" style={[pal.text, s.mb5]}>
-            Post not found
+            <Trans>Post not found</Trans>
           </Text>
           <Text type="md" style={[pal.text, s.mb10]}>
-            The post may have been deleted.
+            <Trans>The post may have been deleted.</Trans>
           </Text>
           <TouchableOpacity
             onPress={onPressBack}
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel={_(msg`Back`)}
             accessibilityHint="">
             <Text type="2xl" style={pal.link}>
               <FontAwesomeIcon
@@ -437,7 +445,7 @@ function PostThreadError({
                 style={[pal.link as FontAwesomeIconStyle, s.mr5]}
                 size={14}
               />
-              Back
+              <Trans>Back</Trans>
             </Text>
           </TouchableOpacity>
         </View>
@@ -451,7 +459,7 @@ function PostThreadError({
   )
 }
 
-function isSkeletonPost(v: unknown): v is ThreadPost {
+function isThreadPost(v: unknown): v is ThreadPost {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'post'
 }
 

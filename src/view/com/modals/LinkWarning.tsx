@@ -10,6 +10,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
@@ -24,6 +26,7 @@ export const Component = observer(function Component({
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
+  const {_} = useLingui()
   const potentiallyMisleading = isPossiblyAUrl(text)
 
   const onPressVisit = () => {
@@ -45,26 +48,26 @@ export const Component = observer(function Component({
                 size={18}
               />
               <Text type="title-lg" style={[pal.text, styles.title]}>
-                Potentially Misleading Link
+                <Trans>Potentially Misleading Link</Trans>
               </Text>
             </>
           ) : (
             <Text type="title-lg" style={[pal.text, styles.title]}>
-              Leaving Bluesky
+              <Trans>Leaving Bluesky</Trans>
             </Text>
           )}
         </View>
 
         <View style={{gap: 10}}>
           <Text type="lg" style={pal.text}>
-            This link is taking you to the following website:
+            <Trans>This link is taking you to the following website:</Trans>
           </Text>
 
           <LinkBox href={href} />
 
           {potentiallyMisleading && (
             <Text type="lg" style={pal.text}>
-              Make sure this is where you intend to go!
+              <Trans>Make sure this is where you intend to go!</Trans>
             </Text>
           )}
         </View>
@@ -74,7 +77,7 @@ export const Component = observer(function Component({
             testID="confirmBtn"
             type="primary"
             onPress={onPressVisit}
-            accessibilityLabel="Visit Site"
+            accessibilityLabel={_(msg`Visit Site`)}
             accessibilityHint=""
             label="Visit Site"
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
@@ -84,7 +87,7 @@ export const Component = observer(function Component({
             testID="cancelBtn"
             type="default"
             onPress={() => closeModal()}
-            accessibilityLabel="Cancel"
+            accessibilityLabel={_(msg`Cancel`)}
             accessibilityHint=""
             label="Cancel"
             labelContainerStyle={{justifyContent: 'center', padding: 4}}

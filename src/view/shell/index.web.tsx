@@ -17,6 +17,7 @@ import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
+import {t} from '@lingui/macro'
 import {
   useIsDrawerOpen,
   useSetDrawerOpen,
@@ -73,7 +74,7 @@ const ShellInner = observer(function ShellInnerImpl() {
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}
           style={styles.drawerMask}
-          accessibilityLabel="Close navigation footer"
+          accessibilityLabel={t`Close navigation footer`}
           accessibilityHint="Closes bottom navigation bar">
           <View style={styles.drawerContainer}>
             <DrawerContent />

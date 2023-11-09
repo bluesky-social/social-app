@@ -12,6 +12,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 enum Stages {
@@ -25,6 +27,7 @@ export const snapPoints = ['90%']
 export const Component = observer(function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
   const [email, setEmail] = useState<string>(
     store.session.currentSession?.email || '',
@@ -62,7 +65,9 @@ export const Component = observer(function Component({}: {}) {
       // you can remove this any time after Oct2023
       // -prf
       if (err === 'email must be confirmed (temporary)') {
-        err = `Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed.`
+        err = _(
+          msg`Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed.`,
+        )
       }
       setError(err)
     } finally {
@@ -103,26 +108,26 @@ export const Component = observer(function Component({}: {}) {
         style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
         <View style={styles.titleSection}>
           <Text type="title-lg" style={[pal.text, styles.title]}>
-            {stage === Stages.InputEmail ? 'Change Your Email' : ''}
-            {stage === Stages.ConfirmCode ? 'Security Step Required' : ''}
-            {stage === Stages.Done ? 'Email Updated' : ''}
+            {stage === Stages.InputEmail ? _(msg`Change Your Email`) : ''}
+            {stage === Stages.ConfirmCode ? _(msg`Security Step Required`) : ''}
+            {stage === Stages.Done ? _(msg`Email Updated`) : ''}
           </Text>
         </View>
 
         <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
           {stage === Stages.InputEmail ? (
-            <>Enter your new email address below.</>
+            <Trans>Enter your new email address below.</Trans>
           ) : stage === Stages.ConfirmCode ? (
-            <>
+            <Trans>
               An email has been sent to your previous address,{' '}
               {store.session.currentSession?.email || ''}. It includes a
               confirmation code which you can enter below.
-            </>
+            </Trans>
           ) : (
-            <>
+            <Trans>
               Your email has been updated but not verified. As a next step,
               please verify your new email.
-            </>
+            </Trans>
           )}
         </Text>
 
@@ -135,7 +140,7 @@ export const Component = observer(function Component({}: {}) {
             value={email}
             onChangeText={setEmail}
             accessible={true}
-            accessibilityLabel="Email"
+            accessibilityLabel={_(msg`Email`)}
             accessibilityHint=""
             autoCapitalize="none"
             autoComplete="email"
@@ -151,7 +156,7 @@ export const Component = observer(function Component({}: {}) {
             value={confirmationCode}
             onChangeText={setConfirmationCode}
             accessible={true}
-            accessibilityLabel="Confirmation code"
+            accessibilityLabel={_(msg`Confirmation code`)}
             accessibilityHint=""
             autoCapitalize="none"
             autoComplete="off"
@@ -175,9 +180,9 @@ export const Component = observer(function Component({}: {}) {
                   testID="requestChangeBtn"
                   type="primary"
                   onPress={onRequestChange}
-                  accessibilityLabel="Request Change"
+                  accessibilityLabel={_(msg`Request Change`)}
                   accessibilityHint=""
-                  label="Request Change"
+                  label={_(msg`Request Change`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
@@ -187,9 +192,9 @@ export const Component = observer(function Component({}: {}) {
                   testID="confirmBtn"
                   type="primary"
                   onPress={onConfirm}
-                  accessibilityLabel="Confirm Change"
+                  accessibilityLabel={_(msg`Confirm Change`)}
                   accessibilityHint=""
-                  label="Confirm Change"
+                  label={_(msg`Confirm Change`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
@@ -199,9 +204,9 @@ export const Component = observer(function Component({}: {}) {
                   testID="verifyBtn"
                   type="primary"
                   onPress={onVerify}
-                  accessibilityLabel="Verify New Email"
+                  accessibilityLabel={_(msg`Verify New Email`)}
                   accessibilityHint=""
-                  label="Verify New Email"
+                  label={_(msg`Verify New Email`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
@@ -210,9 +215,9 @@ export const Component = observer(function Component({}: {}) {
                 testID="cancelBtn"
                 type="default"
                 onPress={() => closeModal()}
-                accessibilityLabel="Cancel"
+                accessibilityLabel={_(msg`Cancel`)}
                 accessibilityHint=""
-                label="Cancel"
+                label={_(msg`Cancel`)}
                 labelContainerStyle={{justifyContent: 'center', padding: 4}}
                 labelStyle={[s.f18]}
               />

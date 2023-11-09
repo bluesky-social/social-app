@@ -162,7 +162,7 @@ export const Feed = observer(function Feed({
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
           onScroll={onScroll}
-          scrollEventThrottle={100}
+          scrollEventThrottle={1}
           contentContainerStyle={s.contentContainer}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight

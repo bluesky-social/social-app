@@ -26,6 +26,11 @@ import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
+import {i18n} from '@lingui/core'
+import {I18nProvider} from '@lingui/react'
+import {messages} from './locale/locales/en/messages'
+i18n.load('en', messages)
+i18n.activate('en')
 
 SplashScreen.preventAutoHideAsync()
 
@@ -57,10 +62,12 @@ const InnerApp = observer(function AppImpl() {
         <RootSiblingParent>
           <analytics.Provider>
             <RootStoreProvider value={rootStore}>
-              <GestureHandlerRootView style={s.h100pct}>
-                <TestCtrls />
-                <Shell />
-              </GestureHandlerRootView>
+              <I18nProvider i18n={i18n}>
+                <GestureHandlerRootView style={s.h100pct}>
+                  <TestCtrls />
+                  <Shell />
+                </GestureHandlerRootView>
+              </I18nProvider>
             </RootStoreProvider>
           </analytics.Provider>
         </RootSiblingParent>

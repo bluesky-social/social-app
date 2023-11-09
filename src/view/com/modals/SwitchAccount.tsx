@@ -17,12 +17,15 @@ import {Link} from '../util/Link'
 import {makeProfileLink} from 'lib/routes/links'
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet'
 import {Haptics} from 'lib/haptics'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['40%', '90%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
+  const {_: _lingui} = useLingui()
 
   const store = useStores()
   const [isSwitching, _, onPressSwitchAccount] = useAccountSwitcher()
@@ -41,7 +44,7 @@ export function Component({}: {}) {
       style={[styles.container, pal.view]}
       contentContainerStyle={[styles.innerContainer, pal.view]}>
       <Text type="title-xl" style={[styles.title, pal.text]}>
-        Switch Account
+        <Trans>Switch Account</Trans>
       </Text>
       {isSwitching ? (
         <View style={[pal.view, styles.linkCard]}>
@@ -65,10 +68,10 @@ export function Component({}: {}) {
               testID="signOutBtn"
               onPress={isSwitching ? undefined : onPressSignout}
               accessibilityRole="button"
-              accessibilityLabel="Sign out"
+              accessibilityLabel={_lingui(msg`Sign out`)}
               accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
               <Text type="lg" style={pal.link}>
-                Sign out
+                <Trans>Sign out</Trans>
               </Text>
             </TouchableOpacity>
           </View>

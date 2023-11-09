@@ -26,6 +26,8 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {isWeb} from 'platform/detection'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 const AnimatedTouchableOpacity =
@@ -44,6 +46,7 @@ export function Component({
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
@@ -151,7 +154,9 @@ export function Component({
   return (
     <KeyboardAvoidingView style={s.flex1} behavior="height">
       <ScrollView style={[pal.view]} testID="editProfileModal">
-        <Text style={[styles.title, pal.text]}>Edit my profile</Text>
+        <Text style={[styles.title, pal.text]}>
+          <Trans>Edit my profile</Trans>
+        </Text>
         <View style={styles.photos}>
           <UserBanner
             banner={userBanner}
@@ -172,7 +177,9 @@ export function Component({
         )}
         <View style={styles.form}>
           <View>
-            <Text style={[styles.label, pal.text]}>Display Name</Text>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Display Name</Trans>
+            </Text>
             <TextInput
               testID="editProfileDisplayNameInput"
               style={[styles.textInput, pal.border, pal.text]}
@@ -183,12 +190,14 @@ export function Component({
                 setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
               }
               accessible={true}
-              accessibilityLabel="Display name"
+              accessibilityLabel={_(msg`Display name`)}
               accessibilityHint="Edit your display name"
             />
           </View>
           <View style={s.pb10}>
-            <Text style={[styles.label, pal.text]}>Description</Text>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Description</Trans>
+            </Text>
             <TextInput
               testID="editProfileDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
@@ -199,7 +208,7 @@ export function Component({
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
-              accessibilityLabel="Description"
+              accessibilityLabel={_(msg`Description`)}
               accessibilityHint="Edit your profile description"
             />
           </View>
@@ -213,14 +222,16 @@ export function Component({
               style={s.mt10}
               onPress={onPressSave}
               accessibilityRole="button"
-              accessibilityLabel="Save"
+              accessibilityLabel={_(msg`Save`)}
               accessibilityHint="Saves any changes to your profile">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
-                <Text style={[s.white, s.bold]}>Save Changes</Text>
+                <Text style={[s.white, s.bold]}>
+                  <Trans>Save Changes</Trans>
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
@@ -231,11 +242,13 @@ export function Component({
               style={s.mt5}
               onPress={onPressCancel}
               accessibilityRole="button"
-              accessibilityLabel="Cancel profile editing"
+              accessibilityLabel={_(msg`Cancel profile editing`)}
               accessibilityHint=""
               onAccessibilityEscape={onPressCancel}>
               <View style={[styles.btn]}>
-                <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
+                <Text style={[s.black, s.bold, pal.text]}>
+                  <Trans>Cancel</Trans>
+                </Text>
               </View>
             </AnimatedTouchableOpacity>
           )}

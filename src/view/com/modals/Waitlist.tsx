@@ -17,6 +17,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['80%']
@@ -24,6 +26,7 @@ export const snapPoints = ['80%']
 export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const [email, setEmail] = React.useState<string>('')
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
@@ -61,12 +64,14 @@ export function Component({}: {}) {
     <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
         <Text type="title-xl" style={[styles.title, pal.text]}>
-          Join the waitlist
+          <Trans>Join the waitlist</Trans>
         </Text>
         <Text type="lg" style={[styles.description, pal.text]}>
-          Bluesky uses invites to build a healthier community. If you don't know
-          anybody with an invite, you can sign up for the waitlist and we'll
-          send one soon.
+          <Trans>
+            Bluesky uses invites to build a healthier community. If you don't
+            know anybody with an invite, you can sign up for the waitlist and
+            we'll send one soon.
+          </Trans>
         </Text>
         <TextInput
           style={[styles.textInput, pal.borderDark, pal.text, s.mb10, s.mt10]}
@@ -80,7 +85,7 @@ export function Component({}: {}) {
           onSubmitEditing={onPressSignup}
           enterKeyHint="done"
           accessible={true}
-          accessibilityLabel="Email"
+          accessibilityLabel={_(msg`Email`)}
           accessibilityHint="Input your email to get on the Bluesky waitlist"
         />
         {error ? (
@@ -99,7 +104,9 @@ export function Component({}: {}) {
               style={pal.text as FontAwesomeIconStyle}
             />
             <Text style={[s.ml10, pal.text]}>
-              Your email has been saved! We&apos;ll be in touch soon.
+              <Trans>
+                Your email has been saved! We&apos;ll be in touch soon.
+              </Trans>
             </Text>
           </View>
         ) : (
@@ -114,7 +121,7 @@ export function Component({}: {}) {
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
                 <Text type="button-lg" style={[s.white, s.bold]}>
-                  Join Waitlist
+                  <Trans>Join Waitlist</Trans>
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -122,11 +129,11 @@ export function Component({}: {}) {
               style={[styles.btn, s.mt10]}
               onPress={onCancel}
               accessibilityRole="button"
-              accessibilityLabel="Cancel waitlist signup"
+              accessibilityLabel={_(msg`Cancel waitlist signup`)}
               accessibilityHint={`Exits signing up for waitlist with ${email}`}
               onAccessibilityEscape={onCancel}>
               <Text type="button-lg" style={pal.textLight}>
-                Cancel
+                <Trans>Cancel</Trans>
               </Text>
             </TouchableOpacity>
           </>

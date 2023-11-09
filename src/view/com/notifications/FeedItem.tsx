@@ -40,6 +40,8 @@ import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {isWeb} from 'platform/detection'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const MAX_AUTHORS = 5
 
@@ -232,7 +234,9 @@ export const FeedItem = observer(function FeedItemImpl({
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text]}> and </Text>
+                <Text style={[pal.text, s.mr5, s.ml5]}>
+                  <Trans>and</Trans>
+                </Text>
                 <Text style={[pal.text, s.bold]}>
                   {formatCount(authors.length - 1)}{' '}
                   {pluralize(authors.length - 1, 'other')}
@@ -292,6 +296,8 @@ function CondensedAuthorsList({
   onToggleAuthorsExpanded: () => void
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   if (!visible) {
     return (
       <View style={styles.avis}>
@@ -299,7 +305,7 @@ function CondensedAuthorsList({
           style={styles.expandedAuthorsCloseBtn}
           onPress={onToggleAuthorsExpanded}
           accessibilityRole="button"
-          accessibilityLabel="Hide user list"
+          accessibilityLabel={_(msg`Hide user list`)}
           accessibilityHint="Collapses list of users for a given notification">
           <FontAwesomeIcon
             icon="angle-up"
@@ -307,7 +313,7 @@ function CondensedAuthorsList({
             style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
           />
           <Text type="sm-medium" style={pal.text}>
-            Hide
+            <Trans>Hide</Trans>
           </Text>
         </TouchableOpacity>
       </View>
@@ -328,7 +334,7 @@ function CondensedAuthorsList({
   }
   return (
     <TouchableOpacity
-      accessibilityLabel="Show users"
+      accessibilityLabel={_(msg`Show users`)}
       accessibilityHint="Opens an expanded list of users in this notification"
       onPress={onToggleAuthorsExpanded}>
       <View style={styles.avis}>
