@@ -82,12 +82,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      dispatch({
-        type: 'set',
-        step: persisted.get('onboarding').step as OnboardingStep,
-      })
+      const next = persisted.get('onboarding').step
+      // TODO we've introduced a footgun
+      if (state.step !== next) {
+        dispatch({
+          type: 'set',
+          step: persisted.get('onboarding').step as OnboardingStep,
+        })
+      }
     })
-  }, [dispatch])
+  }, [state, dispatch])
 
   return (
     <stateContext.Provider value={state}>

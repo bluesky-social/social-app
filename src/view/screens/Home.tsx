@@ -85,6 +85,15 @@ export const HomeScreen = withAuthRequired(
       store.emitScreenSoftReset()
     }, [store])
 
+    const onPageScrollStateChanged = React.useCallback(
+      (state: 'idle' | 'dragging' | 'settling') => {
+        if (state === 'dragging') {
+          setMinimalShellMode(false)
+        }
+      },
+      [setMinimalShellMode],
+    )
+
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
@@ -113,6 +122,7 @@ export const HomeScreen = withAuthRequired(
         ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
+        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={renderTabBar}
         tabBarPosition="top">
         <FeedPage
