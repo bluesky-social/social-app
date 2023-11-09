@@ -24,13 +24,11 @@ import {Provider as PrefsStateProvider} from 'state/preferences'
 import {
   Provider as SessionProvider,
   useSession,
-  useSessionApi,
 } from 'state/session'
 
 const InnerApp = observer(function AppImpl() {
   const session = useSession()
   console.log('session', session)
-  const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
@@ -39,7 +37,6 @@ const InnerApp = observer(function AppImpl() {
   // init
   useEffect(() => {
     // TODO maybe something high level watching for failures, redirect to login
-    resumeSession()
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
