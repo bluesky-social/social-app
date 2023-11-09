@@ -1,16 +1,28 @@
 import React from 'react'
+import {useSharedValue, SharedValue} from 'react-native-reanimated'
 
-type StateContext = boolean
+type StateContext = SharedValue<boolean>
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(false)
+const stateContext = React.createContext<StateContext>({
+  value: false,
+  addListener() {},
+  removeListener() {},
+  modify() {},
+})
 const setContext = React.createContext<SetContext>((_: boolean) => {})
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(false)
+  const mode = useSharedValue(false)
+  const setMode = React.useCallback(
+    (v: boolean) => {
+      mode.value = v
+    },
+    [mode],
+  )
   return (
-    <stateContext.Provider value={state}>
-      <setContext.Provider value={setState}>{children}</setContext.Provider>
+    <stateContext.Provider value={mode}>
+      <setContext.Provider value={setMode}>{children}</setContext.Provider>
     </stateContext.Provider>
   )
 }

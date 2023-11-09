@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react'
 import {InteractionManager, StyleSheet, View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
@@ -15,15 +16,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {logger} from '#/logger'
-import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
-
-const SHELL_FOOTER_HEIGHT = 44
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
     const store = useStores()
-    const minimalShellMode = useMinimalShellMode()
+    const {fabMinimalShellTransform} = useMinimalShellMode()
     const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
@@ -83,17 +83,17 @@ export const PostThreadScreen = withAuthRequired(
             treeView={!!store.preferences.thread.lab_treeViewEnabled}
           />
         </View>
-        {isMobile && !minimalShellMode && (
-          <View
+        {isMobile && (
+          <Animated.View
             style={[
               styles.prompt,
+              fabMinimalShellTransform,
               {
-                bottom:
-                  SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30),
+                bottom: clamp(safeAreaInsets.bottom, 15, 30),
               },
             ]}>
             <ComposePrompt onPressCompose={onPressReply} />
-          </View>
+          </Animated.View>
         )}
       </View>
     )

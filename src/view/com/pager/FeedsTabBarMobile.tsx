@@ -25,7 +25,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   const setDrawerOpen = useSetDrawerOpen()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
-  const {minimalShellMode, headerMinimalShellTransform} = useMinimalShellMode()
+  const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -38,7 +38,6 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
         pal.border,
         styles.tabBar,
         headerMinimalShellTransform,
-        minimalShellMode && styles.disabled,
       ]}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
@@ -109,8 +108,5 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 21,
-  },
-  disabled: {
-    pointerEvents: 'none',
   },
 })
