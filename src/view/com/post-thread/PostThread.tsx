@@ -1,6 +1,4 @@
 import React, {useRef} from 'react'
-import {runInAction} from 'mobx'
-import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   Pressable,
@@ -11,8 +9,6 @@ import {
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView, FlatList} from '../util/Views'
-import {PostThreadModel} from 'state/models/content/post-thread'
-import {PostThreadItemModel} from 'state/models/content/post-thread-item'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -23,45 +19,36 @@ import {ViewHeader} from '../util/ViewHeader'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {s} from 'lib/styles'
-import {isNative} from 'platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {
+  ThreadNode,
+  ThreadPost,
+  usePostThreadQuery,
+  sortThread,
+} from '#/state/queries/post-thread'
 import {useNavigation} from '@react-navigation/native'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {logger} from '#/logger'
+import {cleanError} from '#/lib/strings/errors'
+import {useStores} from '#/state'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
+// const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
 
-const TOP_COMPONENT = {
-  _reactKey: '__top_component__',
-  _isHighlightedPost: false,
-}
-const PARENT_SPINNER = {
-  _reactKey: '__parent_spinner__',
-  _isHighlightedPost: false,
-}
-const REPLY_PROMPT = {_reactKey: '__reply__', _isHighlightedPost: false}
-const DELETED = {_reactKey: '__deleted__', _isHighlightedPost: false}
-const BLOCKED = {_reactKey: '__blocked__', _isHighlightedPost: false}
-const CHILD_SPINNER = {
-  _reactKey: '__child_spinner__',
-  _isHighlightedPost: false,
-}
-const LOAD_MORE = {
-  _reactKey: '__load_more__',
-  _isHighlightedPost: false,
-}
-const BOTTOM_COMPONENT = {
-  _reactKey: '__bottom_component__',
-  _isHighlightedPost: false,
-  _showBorder: true,
-}
+const TOP_COMPONENT = {_reactKey: '__top_component__'}
+const PARENT_SPINNER = {_reactKey: '__parent_spinner__'}
+const REPLY_PROMPT = {_reactKey: '__reply__'}
+const DELETED = {_reactKey: '__deleted__'}
+const BLOCKED = {_reactKey: '__blocked__'}
+const CHILD_SPINNER = {_reactKey: '__child_spinner__'}
+const LOAD_MORE = {_reactKey: '__load_more__'}
+const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
+
 type YieldedItem =
-  | PostThreadItemModel
+  | ThreadPost
   | typeof TOP_COMPONENT
   | typeof PARENT_SPINNER
   | typeof REPLY_PROMPT
@@ -69,66 +56,125 @@ type YieldedItem =
   | typeof BLOCKED
   | typeof PARENT_SPINNER
 
-export const PostThread = observer(function PostThread({
+export function PostThread({
   uri,
-  view,
   onPressReply,
   treeView,
 }: {
-  uri: string
-  view: PostThreadModel
+  uri: string | undefined
   onPressReply: () => void
   treeView: boolean
 }) {
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const {isTablet, isDesktop} = useWebMediaQueries()
-  const ref = useRef<FlatList>(null)
-  const hasScrolledIntoView = useRef<boolean>(false)
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const [maxVisible, setMaxVisible] = React.useState(100)
-  const navigation = useNavigation<NavigationProp>()
-  const posts = React.useMemo(() => {
-    if (view.thread) {
-      let arr = [TOP_COMPONENT].concat(Array.from(flattenThread(view.thread)))
-      if (arr.length > maxVisible) {
-        arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-      }
-      if (view.isLoadingFromCache) {
-        if (view.thread?.postRecord?.reply) {
-          arr.unshift(PARENT_SPINNER)
-        }
-        arr.push(CHILD_SPINNER)
-      } else {
-        arr.push(BOTTOM_COMPONENT)
-      }
-      return arr
-    }
-    return []
-  }, [view.isLoadingFromCache, view.thread, maxVisible])
-  const highlightedPostIndex = posts.findIndex(post => post._isHighlightedPost)
+  const {
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isRefetching,
+    data: thread,
+    dataUpdatedAt,
+  } = usePostThreadQuery(uri)
+  const rootPost = thread?.type === 'post' ? thread.post : undefined
+  const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
+
   useSetTitle(
-    view.thread?.postRecord &&
+    rootPost &&
       `${sanitizeDisplayName(
-        view.thread.post.author.displayName ||
-          `@${view.thread.post.author.handle}`,
-      )}: "${view.thread?.postRecord?.text}"`,
+        rootPost.author.displayName || `@${rootPost.author.handle}`,
+      )}: "${rootPostRecord?.text}"`,
   )
 
-  // events
-  // =
+  if (isError || AppBskyFeedDefs.isNotFoundPost(thread)) {
+    return (
+      <PostThreadError
+        error={error}
+        notFound={AppBskyFeedDefs.isNotFoundPost(thread)}
+        onRefresh={refetch}
+      />
+    )
+  }
+  if (AppBskyFeedDefs.isBlockedPost(thread)) {
+    return <PostThreadBlocked />
+  }
+  if (!thread || isLoading) {
+    return (
+      <CenteredView>
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
+      </CenteredView>
+    )
+  }
+  return (
+    <PostThreadLoaded
+      thread={thread}
+      isRefetching={isRefetching}
+      dataUpdatedAt={dataUpdatedAt}
+      treeView={treeView}
+      onRefresh={refetch}
+      onPressReply={onPressReply}
+    />
+  )
+}
 
-  const onRefresh = React.useCallback(async () => {
-    setIsRefreshing(true)
-    try {
-      view?.refresh()
-    } catch (err) {
-      logger.error('Failed to refresh posts thread', {error: err})
+function PostThreadLoaded({
+  thread,
+  isRefetching,
+  dataUpdatedAt,
+  treeView,
+  onRefresh,
+  onPressReply,
+}: {
+  thread: ThreadNode
+  isRefetching: boolean
+  dataUpdatedAt: number
+  treeView: boolean
+  onRefresh: () => void
+  onPressReply: () => void
+}) {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const store = useStores()
+  const {isTablet, isDesktop} = useWebMediaQueries()
+  const ref = useRef<FlatList>(null)
+  // const hasScrolledIntoView = useRef<boolean>(false) TODO
+  const [maxVisible, setMaxVisible] = React.useState(100)
+
+  // TODO
+  // const posts = React.useMemo(() => {
+  //   if (view.thread) {
+  //     let arr = [TOP_COMPONENT].concat(Array.from(flattenThread(view.thread)))
+  //     if (arr.length > maxVisible) {
+  //       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
+  //     }
+  //     if (view.isLoadingFromCache) {
+  //       if (view.thread?.postRecord?.reply) {
+  //         arr.unshift(PARENT_SPINNER)
+  //       }
+  //       arr.push(CHILD_SPINNER)
+  //     } else {
+  //       arr.push(BOTTOM_COMPONENT)
+  //     }
+  //     return arr
+  //   }
+  //   return []
+  // }, [view.isLoadingFromCache, view.thread, maxVisible])
+  // const highlightedPostIndex = posts.findIndex(post => post._isHighlightedPost)
+  const posts = React.useMemo(() => {
+    let arr = [TOP_COMPONENT].concat(
+      Array.from(
+        flattenThreadSkeleton(sortThread(thread, store.preferences.thread)),
+      ),
+    )
+    if (arr.length > maxVisible) {
+      arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
     }
-    setIsRefreshing(false)
-  }, [view, setIsRefreshing])
+    arr.push(BOTTOM_COMPONENT)
+    return arr
+  }, [thread, maxVisible, store.preferences.thread])
 
-  const onContentSizeChange = React.useCallback(() => {
+  // TODO
+  /*const onContentSizeChange = React.useCallback(() => {
     // only run once
     if (hasScrolledIntoView.current) {
       return
@@ -157,7 +203,7 @@ export const PostThread = observer(function PostThread({
     view.isFromCache,
     view.isLoadingFromCache,
     view.isLoading,
-  ])
+  ])*/
   const onScrollToIndexFailed = React.useCallback(
     (info: {
       index: number
@@ -171,14 +217,6 @@ export const PostThread = observer(function PostThread({
     },
     [ref],
   )
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
@@ -250,20 +288,27 @@ export const PostThread = observer(function PostThread({
             <ActivityIndicator />
           </View>
         )
-      } else if (item instanceof PostThreadItemModel) {
-        const prev = (
-          index - 1 >= 0 ? posts[index - 1] : undefined
-        ) as PostThreadItemModel
+      } else if (isThreadPost(item)) {
+        const prev = isThreadPost(posts[index - 1])
+          ? (posts[index - 1] as ThreadPost)
+          : undefined
         return (
           <PostThreadItem
-            item={item}
-            onPostReply={onRefresh}
-            hasPrecedingItem={prev?._showChildReplyLine}
+            post={item.post}
+            record={item.record}
+            dataUpdatedAt={dataUpdatedAt}
             treeView={treeView}
+            depth={item.ctx.depth}
+            isHighlightedPost={item.ctx.isHighlightedPost}
+            hasMore={item.ctx.hasMore}
+            showChildReplyLine={item.ctx.showChildReplyLine}
+            showParentReplyLine={item.ctx.showParentReplyLine}
+            hasPrecedingItem={!!prev?.ctx.showChildReplyLine}
+            onPostReply={onRefresh}
           />
         )
       }
-      return <></>
+      return null
     },
     [
       isTablet,
@@ -278,75 +323,116 @@ export const PostThread = observer(function PostThread({
       posts,
       onRefresh,
       treeView,
+      dataUpdatedAt,
       _,
     ],
   )
 
-  // loading
-  // =
-  if (
-    !view.hasLoaded ||
-    (view.isLoading && !view.isRefreshing) ||
-    view.params.uri !== uri
-  ) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
-  }
+  return (
+    <FlatList
+      ref={ref}
+      data={posts}
+      initialNumToRender={posts.length}
+      maintainVisibleContentPosition={
+        undefined // TODO
+        // isNative && view.isFromCache && view.isCachedPostAReply
+        //   ? MAINTAIN_VISIBLE_CONTENT_POSITION
+        //   : undefined
+      }
+      keyExtractor={item => item._reactKey}
+      renderItem={renderItem}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetching}
+          onRefresh={onRefresh}
+          tintColor={pal.colors.text}
+          titleColor={pal.colors.text}
+        />
+      }
+      onContentSizeChange={
+        undefined //TODOisNative && view.isFromCache ? undefined : onContentSizeChange
+      }
+      onScrollToIndexFailed={onScrollToIndexFailed}
+      style={s.hContentRegion}
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
+    />
+  )
+}
 
-  // error
-  // =
-  if (view.hasError) {
-    if (view.notFound) {
-      return (
-        <CenteredView>
-          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-            <Text type="title-lg" style={[pal.text, s.mb5]}>
-              <Trans>Post not found</Trans>
-            </Text>
-            <Text type="md" style={[pal.text, s.mb10]}>
-              <Trans>The post may have been deleted.</Trans>
-            </Text>
-            <TouchableOpacity
-              onPress={onPressBack}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Back`)}
-              accessibilityHint="">
-              <Text type="2xl" style={pal.link}>
-                <FontAwesomeIcon
-                  icon="angle-left"
-                  style={[pal.link as FontAwesomeIconStyle, s.mr5]}
-                  size={14}
-                />
-                <Trans>Back</Trans>
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </CenteredView>
-      )
+function PostThreadBlocked() {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
     }
-    return (
-      <CenteredView>
-        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
-      </CenteredView>
-    )
-  }
-  if (view.isBlocked) {
+  }, [navigation])
+
+  return (
+    <CenteredView>
+      <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+        <Text type="title-lg" style={[pal.text, s.mb5]}>
+          <Trans>Post hidden</Trans>
+        </Text>
+        <Text type="md" style={[pal.text, s.mb10]}>
+          <Trans>
+            You have blocked the author or you have been blocked by the author.
+          </Trans>
+        </Text>
+        <TouchableOpacity
+          onPress={onPressBack}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Back`)}
+          accessibilityHint="">
+          <Text type="2xl" style={pal.link}>
+            <FontAwesomeIcon
+              icon="angle-left"
+              style={[pal.link as FontAwesomeIconStyle, s.mr5]}
+              size={14}
+            />
+            Back
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </CenteredView>
+  )
+}
+
+function PostThreadError({
+  onRefresh,
+  notFound,
+  error,
+}: {
+  onRefresh: () => void
+  notFound: boolean
+  error: Error | null
+}) {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
+  }, [navigation])
+
+  if (notFound) {
     return (
       <CenteredView>
         <View style={[pal.view, pal.border, styles.notFoundContainer]}>
           <Text type="title-lg" style={[pal.text, s.mb5]}>
-            <Trans>Post hidden</Trans>
+            <Trans>Post not found</Trans>
           </Text>
           <Text type="md" style={[pal.text, s.mb10]}>
-            <Trans>
-              You have blocked the author or you have been blocked by the
-              author.
-            </Trans>
+            <Trans>The post may have been deleted.</Trans>
           </Text>
           <TouchableOpacity
             onPress={onPressBack}
@@ -366,69 +452,37 @@ export const PostThread = observer(function PostThread({
       </CenteredView>
     )
   }
-
-  // loaded
-  // =
   return (
-    <FlatList
-      ref={ref}
-      data={posts}
-      initialNumToRender={posts.length}
-      maintainVisibleContentPosition={
-        isNative && view.isFromCache && view.isCachedPostAReply
-          ? MAINTAIN_VISIBLE_CONTENT_POSITION
-          : undefined
-      }
-      keyExtractor={item => item._reactKey}
-      renderItem={renderItem}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefreshing}
-          onRefresh={onRefresh}
-          tintColor={pal.colors.text}
-          titleColor={pal.colors.text}
-        />
-      }
-      onContentSizeChange={
-        isNative && view.isFromCache ? undefined : onContentSizeChange
-      }
-      onScrollToIndexFailed={onScrollToIndexFailed}
-      style={s.hContentRegion}
-      // @ts-ignore our .web version only -prf
-      desktopFixedHeight
-    />
+    <CenteredView>
+      <ErrorMessage message={cleanError(error)} onPressTryAgain={onRefresh} />
+    </CenteredView>
   )
-})
+}
 
-function* flattenThread(
-  post: PostThreadItemModel,
-  isAscending = false,
+function isThreadPost(v: unknown): v is ThreadPost {
+  return !!v && typeof v === 'object' && 'type' in v && v.type === 'post'
+}
+
+function* flattenThreadSkeleton(
+  node: ThreadNode,
 ): Generator<YieldedItem, void> {
-  if (post.parent) {
-    if (AppBskyFeedDefs.isNotFoundPost(post.parent)) {
-      yield DELETED
-    } else if (AppBskyFeedDefs.isBlockedPost(post.parent)) {
-      yield BLOCKED
-    } else {
-      yield* flattenThread(post.parent as PostThreadItemModel, true)
+  if (node.type === 'post') {
+    if (node.parent) {
+      yield* flattenThreadSkeleton(node.parent)
     }
-  }
-  yield post
-  if (post._isHighlightedPost) {
-    yield REPLY_PROMPT
-  }
-  if (post.replies?.length) {
-    for (const reply of post.replies) {
-      if (AppBskyFeedDefs.isNotFoundPost(reply)) {
-        yield DELETED
-      } else {
-        yield* flattenThread(reply as PostThreadItemModel)
+    yield node
+    if (node.ctx.isHighlightedPost) {
+      yield REPLY_PROMPT
+    }
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        yield* flattenThreadSkeleton(reply)
       }
     }
-  } else if (!isAscending && !post.parent && post.post.replyCount) {
-    runInAction(() => {
-      post._hasMore = true
-    })
+  } else if (node.type === 'not-found') {
+    yield DELETED
+  } else if (node.type === 'blocked') {
+    yield BLOCKED
   }
 }
 

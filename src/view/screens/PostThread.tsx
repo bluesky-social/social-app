@@ -1,7 +1,8 @@
-import React, {useMemo} from 'react'
-import {InteractionManager, StyleSheet, View} from 'react-native'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
@@ -9,79 +10,83 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
-import {PostThreadModel} from 'state/models/content/post-thread'
 import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  RQKEY as POST_THREAD_RQKEY,
+  ThreadNode,
+} from '#/state/queries/post-thread'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {logger} from '#/logger'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
+import {CenteredView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
     const store = useStores()
+    const queryClient = useQueryClient()
     const {fabMinimalShellTransform} = useMinimalShellMode()
     const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
-    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-    const view = useMemo<PostThreadModel>(
-      () => new PostThreadModel(store, {uri}),
-      [store, uri],
-    )
     const {isMobile} = useWebMediaQueries()
+    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+    const {data: resolvedUri, error: uriError} = useResolveUriQuery(uri)
 
     useFocusEffect(
       React.useCallback(() => {
         setMinimalShellMode(false)
-        const threadCleanup = view.registerListeners()
-
-        InteractionManager.runAfterInteractions(() => {
-          if (!view.hasLoaded && !view.isLoading) {
-            view.setup().catch(err => {
-              logger.error('Failed to fetch thread', {error: err})
-            })
-          }
-        })
-
-        return () => {
-          threadCleanup()
-        }
-      }, [view, setMinimalShellMode]),
+      }, [setMinimalShellMode]),
     )
 
     const onPressReply = React.useCallback(() => {
-      if (!view.thread) {
+      if (!resolvedUri) {
+        return
+      }
+      const thread = queryClient.getQueryData<ThreadNode>(
+        POST_THREAD_RQKEY(resolvedUri),
+      )
+      if (thread?.type !== 'post') {
         return
       }
       store.shell.openComposer({
         replyTo: {
-          uri: view.thread.post.uri,
-          cid: view.thread.post.cid,
-          text: view.thread.postRecord?.text as string,
+          uri: thread.post.uri,
+          cid: thread.post.cid,
+          text: thread.record.text,
           author: {
-            handle: view.thread.post.author.handle,
-            displayName: view.thread.post.author.displayName,
-            avatar: view.thread.post.author.avatar,
+            handle: thread.post.author.handle,
+            displayName: thread.post.author.displayName,
+            avatar: thread.post.author.avatar,
           },
         },
-        onPost: () => view.refresh(),
+        onPost: () =>
+          queryClient.invalidateQueries({
+            queryKey: POST_THREAD_RQKEY(resolvedUri || ''),
+          }),
       })
-    }, [view, store])
+    }, [store, queryClient, resolvedUri])
 
     return (
       <View style={s.hContentRegion}>
         {isMobile && <ViewHeader title="Post" />}
         <View style={s.flex1}>
-          <PostThreadComponent
-            uri={uri}
-            view={view}
-            onPressReply={onPressReply}
-            treeView={!!store.preferences.thread.lab_treeViewEnabled}
-          />
+          {uriError ? (
+            <CenteredView>
+              <ErrorMessage message={String(uriError)} />
+            </CenteredView>
+          ) : (
+            <PostThreadComponent
+              uri={resolvedUri}
+              onPressReply={onPressReply}
+              treeView={!!store.preferences.thread.lab_treeViewEnabled}
+            />
+          )}
         </View>
         {isMobile && (
           <Animated.View

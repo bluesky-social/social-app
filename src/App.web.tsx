@@ -46,7 +46,7 @@ const InnerApp = observer(function AppImpl() {
       analytics.init(store)
     })
     dynamicActivate(defaultLocale) // async import of locale data
-  }, [resumeSession])
+  }, [])
 
   useEffect(() => {
     const account = persisted.get('session').currentAccount

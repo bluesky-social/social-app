@@ -20,6 +20,7 @@ import {ServiceDescription} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {useSessionApi} from '#/state/session'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
@@ -59,6 +60,7 @@ export const LoginForm = ({
   const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const {login} = useSessionApi()
 
   const onPressSelectService = () => {
     openModal({
@@ -98,6 +100,12 @@ export const LoginForm = ({
         }
       }
 
+      // TODO remove double login
+      await login({
+        service: serviceUrl,
+        identifier: fullIdent,
+        password,
+      })
       await store.session.login({
         service: serviceUrl,
         identifier: fullIdent,

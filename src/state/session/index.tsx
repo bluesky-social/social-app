@@ -186,6 +186,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
+      setState(s => ({...s, agent}))
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {
@@ -238,6 +239,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
+      setState(s => ({...s, agent}))
       upsertAccount(account)
     },
     [upsertAccount],
