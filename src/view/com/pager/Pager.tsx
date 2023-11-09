@@ -26,6 +26,9 @@ interface Props {
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
   onPageSelecting?: (index: number) => void
+  onPageScrollStateChanged?: (
+    scrollState: 'idle' | 'dragging' | 'settling',
+  ) => void
   testID?: string
 }
 export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
@@ -35,6 +38,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       tabBarPosition = 'top',
       initialPage = 0,
       renderTabBar,
+      onPageScrollStateChanged,
       onPageSelected,
       onPageSelecting,
       testID,
@@ -97,11 +101,12 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [lastOffset, lastDirection, onPageSelecting],
     )
 
-    const onPageScrollStateChanged = React.useCallback(
+    const handlePageScrollStateChanged = React.useCallback(
       (e: PageScrollStateChangedNativeEvent) => {
         scrollState.current = e.nativeEvent.pageScrollState
+        onPageScrollStateChanged?.(e.nativeEvent.pageScrollState)
       },
-      [scrollState],
+      [scrollState, onPageScrollStateChanged],
     )
 
     const onTabBarSelect = React.useCallback(
@@ -123,7 +128,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           ref={pagerView}
           style={s.flex1}
           initialPage={initialPage}
-          onPageScrollStateChanged={onPageScrollStateChanged}
+          onPageScrollStateChanged={handlePageScrollStateChanged}
           onPageSelected={onPageSelectedInner}
           onPageScroll={onPageScroll}>
           {children}
