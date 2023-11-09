@@ -35,7 +35,7 @@ type LegacySchema = {
     description: string
     avatar: string
   }
-  onboarding?: {
+  onboarding: {
     step: string
   }
   preferences: {
@@ -56,24 +56,26 @@ type LegacySchema = {
     pinnedFeeds: string[]
     requireAltTextEnabled: boolean
   }
-  invitedUsers?: {
+  invitedUsers: {
     seenDids: string[]
     copiedInvites: string[]
   }
-  mutedThreads?: {uris: string[]}
-  reminders?: {lastEmailConfirm: string}
+  mutedThreads: {uris: string[]}
+  reminders: {lastEmailConfirm: string}
 }
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
-export function transform(legacy: LegacySchema): Schema {
+// TODO remove, assume that partial data may be here during our refactor
+export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
     session: {
-      accounts: legacy.session.accounts || defaults.session.accounts,
+      accounts: legacy.session?.accounts || defaults.session.accounts,
       currentAccount:
-        legacy.session.accounts.find(a => a.did === legacy.session.data.did) ||
-        defaults.session.currentAccount,
+        legacy.session?.accounts?.find(
+          a => a.did === legacy.session?.data?.did,
+        ) || defaults.session.currentAccount,
     },
     reminders: {
       lastEmailConfirm:
@@ -82,19 +84,19 @@ export function transform(legacy: LegacySchema): Schema {
     },
     languagePrefs: {
       primaryLanguage:
-        legacy.preferences.primaryLanguage ||
+        legacy.preferences?.primaryLanguage ||
         defaults.languagePrefs.primaryLanguage,
       contentLanguages:
-        legacy.preferences.contentLanguages ||
+        legacy.preferences?.contentLanguages ||
         defaults.languagePrefs.contentLanguages,
       postLanguage:
-        legacy.preferences.postLanguage || defaults.languagePrefs.postLanguage,
+        legacy.preferences?.postLanguage || defaults.languagePrefs.postLanguage,
       postLanguageHistory:
-        legacy.preferences.postLanguageHistory ||
+        legacy.preferences?.postLanguageHistory ||
         defaults.languagePrefs.postLanguageHistory,
     },
     requireAltTextEnabled:
-      legacy.preferences.requireAltTextEnabled ||
+      legacy.preferences?.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
     mutedThreads: legacy.mutedThreads?.uris || defaults.mutedThreads,
     invites: {

@@ -26,11 +26,19 @@ import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
+import {
+  Provider as SessionProvider,
+  useSession,
+  useSessionApi,
+} from 'state/session'
+import * as persisted from '#/state/persisted'
 
 SplashScreen.preventAutoHideAsync()
 
 const InnerApp = observer(function AppImpl() {
   const colorMode = useColorMode()
+  const {isInitialLoad} = useSession()
+  const {resumeSession} = useSessionApi()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -47,10 +55,17 @@ const InnerApp = observer(function AppImpl() {
     })
   }, [])
 
+  useEffect(() => {
+    const account = persisted.get('session').currentAccount
+    resumeSession(account)
+  }, [resumeSession])
+
   // show nothing prior to init
-  if (!rootStore) {
+  if (!rootStore || isInitialLoad) {
+    // TODO add a loading state
     return null
   }
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={colorMode}>
@@ -81,17 +96,19 @@ function App() {
   }
 
   return (
-    <ShellStateProvider>
-      <PrefsStateProvider>
-        <MutedThreadsProvider>
-          <InvitesStateProvider>
-            <ModalStateProvider>
-              <InnerApp />
-            </ModalStateProvider>
-          </InvitesStateProvider>
-        </MutedThreadsProvider>
-      </PrefsStateProvider>
-    </ShellStateProvider>
+    <SessionProvider>
+      <ShellStateProvider>
+        <PrefsStateProvider>
+          <MutedThreadsProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <InnerApp />
+              </ModalStateProvider>
+            </InvitesStateProvider>
+          </MutedThreadsProvider>
+        </PrefsStateProvider>
+      </ShellStateProvider>
+    </SessionProvider>
   )
 }
 
