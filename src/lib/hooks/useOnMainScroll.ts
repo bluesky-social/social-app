@@ -29,44 +29,48 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
   return [
     useCallback(
       (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const y = event.nativeEvent.contentOffset.y
-        const dy = y - (lastY.current || 0)
-        lastY.current = y
-
-        if (!minimalShellMode.value && dy > dyLimitDown && y > Y_LIMIT) {
-          setMinimalShellMode(true)
-        } else if (
-          minimalShellMode.value &&
-          (dy < dyLimitUp * -1 || y <= Y_LIMIT)
-        ) {
-          setMinimalShellMode(false)
-        }
-
-        if (
-          !isScrolledDown &&
-          event.nativeEvent.contentOffset.y > s.window.height
-        ) {
-          setIsScrolledDown(true)
-        } else if (
-          isScrolledDown &&
-          event.nativeEvent.contentOffset.y < s.window.height
-        ) {
-          setIsScrolledDown(false)
-        }
+        // const y = event.nativeEvent.contentOffset.y
+        // const dy = y - (lastY.current || 0)
+        // lastY.current = y
+        // if (!minimalShellMode.value && dy > dyLimitDown && y > Y_LIMIT) {
+        //   setMinimalShellMode(true)
+        // } else if (
+        //   minimalShellMode.value &&
+        //   (dy < dyLimitUp * -1 || y <= Y_LIMIT)
+        // ) {
+        //   setMinimalShellMode(false)
+        // }
+        // if (
+        //   !isScrolledDown &&
+        //   event.nativeEvent.contentOffset.y > s.window.height
+        // ) {
+        //   setIsScrolledDown(true)
+        // } else if (
+        //   isScrolledDown &&
+        //   event.nativeEvent.contentOffset.y < s.window.height
+        // ) {
+        //   setIsScrolledDown(false)
+        // }
       },
       [
-        dyLimitDown,
-        dyLimitUp,
-        isScrolledDown,
-        minimalShellMode,
-        setMinimalShellMode,
+        // dyLimitDown,
+        // dyLimitUp,
+        // isScrolledDown,
+        // minimalShellMode,
+        // setMinimalShellMode,
       ],
     ),
     isScrolledDown,
-    useCallback(() => {
-      setIsScrolledDown(false)
-      setMinimalShellMode(false)
-      lastY.current = 1e8 // NOTE we set this very high so that the onScroll logic works right -prf
-    }, [setIsScrolledDown, setMinimalShellMode]),
+    useCallback(
+      () => {
+        // setIsScrolledDown(false)
+        // setMinimalShellMode(false)
+        // lastY.current = 1e8 // NOTE we set this very high so that the onScroll logic works right -prf
+      },
+      [
+        // setIsScrolledDown,
+        // setMinimalShellMode
+      ],
+    ),
   ]
 }
