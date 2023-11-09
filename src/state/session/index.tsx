@@ -5,15 +5,13 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 
-type Account = Exclude<persisted.Schema['session']['currentAccount'], undefined>
-
-type StateContext = {
+export type StateContext = {
   isInitialLoad: boolean
   agent: BskyAgent
-  accounts: Account[]
-  currentAccount: Account | undefined
+  accounts: persisted.PersistedAccount[]
+  currentAccount: persisted.PersistedAccount | undefined
 }
-type ApiContext = {
+export type ApiContext = {
   createAccount: (props: {
     service: string
     email: string
@@ -27,10 +25,14 @@ type ApiContext = {
     password: string
   }) => Promise<void>
   logout: () => Promise<void>
-  initSession: (account: Account) => Promise<void>
-  resumeSession: (account?: Account) => Promise<void>
-  removeAccount: (account: Account) => void
-  updateCurrentAccount: (account: Pick<Account, 'handle'>) => void
+  initSession: (account: persisted.PersistedAccount) => Promise<void>
+  resumeSession: (account?: persisted.PersistedAccount) => Promise<void>
+  removeAccount: (
+    account: Partial<Pick<persisted.PersistedAccount, 'handle' | 'did'>>,
+  ) => void
+  updateCurrentAccount: (
+    account: Pick<persisted.PersistedAccount, 'handle'>,
+  ) => void
 }
 
 export const PUBLIC_BSKY_AGENT = new BskyAgent({
@@ -55,10 +57,10 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 function createPersistSessionHandler(
-  account: Account,
+  account: persisted.PersistedAccount,
   persistSessionCallback: (props: {
     expired: boolean
-    refreshedAccount: Account
+    refreshedAccount: persisted.PersistedAccount
   }) => void,
 ): AtpPersistSessionHandler {
   return function persistSession(event, session) {
@@ -113,7 +115,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const upsertAccount = React.useCallback(
-    (account: Account, expired = false) => {
+    (account: persisted.PersistedAccount, expired = false) => {
       setStateWrapped(s => {
         return {
           ...s,
@@ -146,7 +148,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
 
-      const account: Account = {
+      const account: persisted.PersistedAccount = {
         service,
         did: agent.session.did,
         refreshJwt: agent.session.refreshJwt,
@@ -185,7 +187,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         throw new Error(`session: login failed to establish a session`)
       }
 
-      const account: Account = {
+      const account: persisted.PersistedAccount = {
         service,
         did: agent.session.did,
         refreshJwt: agent.session.refreshJwt,

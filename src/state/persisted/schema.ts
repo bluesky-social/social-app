@@ -12,6 +12,7 @@ const accountSchema = z.object({
   // displayName: z.string().optional(),
   // aviUrl: z.string().optional(),
 })
+export type PersistedAccount = z.infer<typeof accountSchema>
 
 export const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
