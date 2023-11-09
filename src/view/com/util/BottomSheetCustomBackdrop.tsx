@@ -6,6 +6,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import {t} from '@lingui/macro'
 
 export function createCustomBackdrop(
   onClose?: (() => void) | undefined,
@@ -29,7 +30,7 @@ export function createCustomBackdrop(
     return (
       <TouchableWithoutFeedback
         onPress={onClose}
-        accessibilityLabel="Close bottom drawer"
+        accessibilityLabel={t`Close bottom drawer`}
         accessibilityHint=""
         onAccessibilityEscape={() => {
           if (onClose !== undefined) {

@@ -13,6 +13,8 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['70%']
@@ -55,6 +57,7 @@ const shadesOfBlue: string[] = [
 export function Component({}: {}) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const [name, setName] = useState(
     shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
@@ -121,15 +124,19 @@ export function Component({}: {}) {
       <View>
         {!appPassword ? (
           <Text type="lg" style={[pal.text]}>
-            Please enter a unique name for this App Password or use our randomly
-            generated one.
+            <Trans>
+              Please enter a unique name for this App Password or use our
+              randomly generated one.
+            </Trans>
           </Text>
         ) : (
           <Text type="lg" style={[pal.text]}>
-            <Text type="lg-bold" style={[pal.text]}>
-              Here is your app password.
-            </Text>{' '}
-            Use this to sign into the other app along with your handle.
+            <Text type="lg-bold" style={[pal.text, s.mr5]}>
+              <Trans>Here is your app password.</Trans>
+            </Text>
+            <Trans>
+              Use this to sign into the other app along with your handle.
+            </Trans>
           </Text>
         )}
         {!appPassword ? (
@@ -154,7 +161,7 @@ export function Component({}: {}) {
               returnKeyType="done"
               onEndEditing={createAppPassword}
               accessible={true}
-              accessibilityLabel="Name"
+              accessibilityLabel={_(msg`Name`)}
               accessibilityHint="Input name for app password"
             />
           </View>
@@ -163,13 +170,15 @@ export function Component({}: {}) {
             style={[pal.border, styles.passwordContainer, pal.btn]}
             onPress={onCopy}
             accessibilityRole="button"
-            accessibilityLabel="Copy"
+            accessibilityLabel={_(msg`Copy`)}
             accessibilityHint="Copies app password">
             <Text type="2xl-bold" style={[pal.text]}>
               {appPassword}
             </Text>
             {wasCopied ? (
-              <Text style={[pal.textLight]}>Copied</Text>
+              <Text style={[pal.textLight]}>
+                <Trans>Copied</Trans>
+              </Text>
             ) : (
               <FontAwesomeIcon
                 icon={['far', 'clone']}
@@ -182,14 +191,18 @@ export function Component({}: {}) {
       </View>
       {appPassword ? (
         <Text type="lg" style={[pal.textLight, s.mb10]}>
-          For security reasons, you won't be able to view this again. If you
-          lose this password, you'll need to generate a new one.
+          <Trans>
+            For security reasons, you won't be able to view this again. If you
+            lose this password, you'll need to generate a new one.
+          </Trans>
         </Text>
       ) : (
         <Text type="xs" style={[pal.textLight, s.mb10, s.mt2]}>
-          Can only contain letters, numbers, spaces, dashes, and underscores.
-          Must be at least 4 characters long, but no more than 32 characters
-          long.
+          <Trans>
+            Can only contain letters, numbers, spaces, dashes, and underscores.
+            Must be at least 4 characters long, but no more than 32 characters
+            long.
+          </Trans>
         </Text>
       )}
       <View style={styles.btnContainer}>

@@ -9,10 +9,13 @@ import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {Text} from 'view/com/util/text/Text'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const DesktopSearch = observer(function DesktopSearch() {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const textInput = React.useRef<TextInput>(null)
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
@@ -75,7 +78,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
             onChangeText={onChangeQuery}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
-            accessibilityLabel="Search"
+            accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
           />
           {query ? (
@@ -83,11 +86,11 @@ export const DesktopSearch = observer(function DesktopSearch() {
               <TouchableOpacity
                 onPress={onPressCancelSearch}
                 accessibilityRole="button"
-                accessibilityLabel="Cancel search"
+                accessibilityLabel={_(msg`Cancel search`)}
                 accessibilityHint="Exits inputting search query"
                 onAccessibilityEscape={onPressCancelSearch}>
                 <Text type="lg" style={[pal.link]}>
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -106,7 +109,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
           ) : (
             <View>
               <Text style={[pal.textLight, styles.noResults]}>
-                No results found for {autocompleteView.prefix}
+                <Trans>No results found for {autocompleteView.prefix}</Trans>
               </Text>
             </View>
           )}

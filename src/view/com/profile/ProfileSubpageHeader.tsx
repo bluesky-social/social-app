@@ -17,6 +17,8 @@ import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
 import {ImagesLightbox} from 'state/models/ui/shell'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 
 export const ProfileSubpageHeader = observer(function HeaderImpl({
@@ -45,6 +47,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
   const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
@@ -123,7 +126,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
           testID="headerAviButton"
           onPress={onPressAvi}
           accessibilityRole="image"
-          accessibilityLabel="View the avatar"
+          accessibilityLabel={_(msg`View the avatar`)}
           accessibilityHint=""
           style={{width: 58}}>
           <UserAvatar type={avatarType} size={58} avatar={avatar} />

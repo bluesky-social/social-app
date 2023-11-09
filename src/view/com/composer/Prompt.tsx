@@ -5,10 +5,13 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
   return (
     <TouchableOpacity
@@ -16,7 +19,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
       style={[pal.view, pal.border, styles.prompt]}
       onPress={() => onPressCompose()}
       accessibilityRole="button"
-      accessibilityLabel="Compose reply"
+      accessibilityLabel={_(msg`Compose reply`)}
       accessibilityHint="Opens composer">
       <UserAvatar avatar={store.me.avatar} size={38} />
       <Text
@@ -25,7 +28,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
           pal.text,
           isDesktop ? styles.labelDesktopWeb : styles.labelMobile,
         ]}>
-        Write your reply
+        <Trans>Write your reply</Trans>
       </Text>
     </TouchableOpacity>
   )

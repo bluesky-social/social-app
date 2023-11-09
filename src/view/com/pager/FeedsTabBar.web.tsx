@@ -10,6 +10,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useShellLayout} from '#/state/shell/shell-layout'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -31,11 +32,15 @@ const FeedsTabBarTablet = observer(function FeedsTabBarTabletImpl(
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
+  const {headerHeight} = useShellLayout()
 
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
     <Animated.View
-      style={[pal.view, styles.tabBar, headerMinimalShellTransform]}>
+      style={[pal.view, styles.tabBar, headerMinimalShellTransform]}
+      onLayout={e => {
+        headerHeight.value = e.nativeEvent.layout.height
+      }}>
       <TabBar
         key={items.join(',')}
         {...props}

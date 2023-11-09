@@ -22,6 +22,8 @@ import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['100%']
@@ -31,6 +33,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const {track} = useAnalytics()
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
@@ -141,7 +144,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           <TouchableOpacity
             onPress={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel change handle"
+            accessibilityLabel={_(msg`Cancel change handle`)}
             accessibilityHint="Exits handle change process"
             onAccessibilityEscape={onPressCancel}>
             <Text type="lg" style={pal.textLight}>
@@ -153,7 +156,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           type="2xl-bold"
           style={[styles.titleMiddle, pal.text]}
           numberOfLines={1}>
-          Change Handle
+          <Trans>Change Handle</Trans>
         </Text>
         <View style={styles.titleRight}>
           {isProcessing ? (
@@ -163,7 +166,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
               testID="retryConnectButton"
               onPress={onPressRetryConnect}
               accessibilityRole="button"
-              accessibilityLabel="Retry change handle"
+              accessibilityLabel={_(msg`Retry change handle`)}
               accessibilityHint={`Retries handle change to ${handle}`}>
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 Retry
@@ -173,10 +176,10 @@ export function Component({onChanged}: {onChanged: () => void}) {
             <TouchableOpacity
               onPress={onPressSave}
               accessibilityRole="button"
-              accessibilityLabel="Save handle change"
+              accessibilityLabel={_(msg`Save handle change`)}
               accessibilityHint={`Saves handle change to ${handle}`}>
               <Text type="2xl-medium" style={pal.link}>
-                Save
+                <Trans>Save</Trans>
               </Text>
             </TouchableOpacity>
           ) : undefined}
@@ -234,6 +237,7 @@ function ProvidedHandleForm({
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const {_} = useLingui()
 
   // events
   // =
@@ -266,12 +270,12 @@ function ProvidedHandleForm({
           onChangeText={onChangeHandle}
           editable={!isProcessing}
           accessible={true}
-          accessibilityLabel="Handle"
+          accessibilityLabel={_(msg`Handle`)}
           accessibilityHint="Sets Bluesky username"
         />
       </View>
       <Text type="md" style={[pal.textLight, s.pl10, s.pt10]}>
-        Your full handle will be{' '}
+        <Trans>Your full handle will be </Trans>
         <Text type="md-bold" style={pal.textLight}>
           @{createFullHandle(handle, userDomain)}
         </Text>
@@ -280,9 +284,9 @@ function ProvidedHandleForm({
         onPress={onToggleCustom}
         accessibilityRole="button"
         accessibilityHint="Hosting provider"
-        accessibilityLabel="Opens modal for using custom domain">
+        accessibilityLabel={_(msg`Opens modal for using custom domain`)}>
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
-          I have my own domain
+          <Trans>I have my own domain</Trans>
         </Text>
       </TouchableOpacity>
     </>
@@ -314,6 +318,7 @@ function CustomHandleForm({
   const palSecondary = usePalette('secondary')
   const palError = usePalette('error')
   const theme = useTheme()
+  const {_} = useLingui()
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [error, setError] = React.useState<string>('')
   const [isDNSForm, setDNSForm] = React.useState<boolean>(true)
@@ -367,7 +372,7 @@ function CustomHandleForm({
   return (
     <>
       <Text type="md" style={[pal.text, s.pb5, s.pl5]} nativeID="customDomain">
-        Enter the domain you want to use
+        <Trans>Enter the domain you want to use</Trans>
       </Text>
       <View style={[pal.btn, styles.textInputWrapper]}>
         <FontAwesomeIcon
@@ -385,7 +390,7 @@ function CustomHandleForm({
           onChangeText={onChangeHandle}
           editable={!isProcessing}
           accessibilityLabelledBy="customDomain"
-          accessibilityLabel="Custom domain"
+          accessibilityLabel={_(msg`Custom domain`)}
           accessibilityHint="Input your preferred hosting provider"
         />
       </View>
@@ -413,7 +418,7 @@ function CustomHandleForm({
       {isDNSForm ? (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Add the following DNS record to your domain:
+            <Trans>Add the following DNS record to your domain:</Trans>
           </Text>
           <View style={[styles.dnsTable, pal.btn]}>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
@@ -451,7 +456,7 @@ function CustomHandleForm({
       ) : (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Upload a text file to:
+            <Trans>Upload a text file to:</Trans>
           </Text>
           <View style={[styles.valueContainer, pal.btn]}>
             <View style={[styles.dnsValue]}>
@@ -483,7 +488,7 @@ function CustomHandleForm({
       {canSave === true && (
         <View style={[styles.message, palSecondary.view]}>
           <Text type="md-medium" style={palSecondary.text}>
-            Domain verified!
+            <Trans>Domain verified!</Trans>
           </Text>
         </View>
       )}
@@ -511,7 +516,7 @@ function CustomHandleForm({
       <View style={styles.spacer} />
       <TouchableOpacity
         onPress={onToggleCustom}
-        accessibilityLabel="Use default provider"
+        accessibilityLabel={_(msg`Use default provider`)}
         accessibilityHint="Use bsky.social as hosting provider">
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
           Nevermind, create a handle for me

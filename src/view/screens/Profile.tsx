@@ -30,6 +30,8 @@ import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
@@ -38,6 +40,7 @@ export const ProfileScreen = withAuthRequired(
     const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
+    const {_} = useLingui()
     const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
     const name = route.params.name === 'me' ? store.me.did : route.params.name
 
@@ -206,7 +209,11 @@ export const ProfileScreen = withAuthRequired(
           // if section is posts or posts & replies
         } else {
           if (item === ProfileUiModel.END_ITEM) {
-            return <Text style={styles.endItem}>- end of feed -</Text>
+            return (
+              <Text style={styles.endItem}>
+                <Trans>- end of feed -</Trans>
+              </Text>
+            )
           } else if (item === ProfileUiModel.LOADING_ITEM) {
             return <PostFeedLoadingPlaceholder />
           } else if (item._reactKey === '__error__') {
@@ -296,7 +303,7 @@ export const ProfileScreen = withAuthRequired(
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel="New post"
+          accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
         />
       </ScreenHider>

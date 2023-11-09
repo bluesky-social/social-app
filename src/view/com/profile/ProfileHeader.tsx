@@ -40,6 +40,8 @@ import {makeProfileLink} from 'lib/routes/links'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 interface Props {
@@ -114,6 +116,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const store = useStores()
+  const {_} = useLingui()
   const {openModal} = useModalControls()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
@@ -369,10 +372,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn, pal.btn]}
               accessibilityRole="button"
-              accessibilityLabel="Edit profile"
+              accessibilityLabel={_(msg`Edit profile`)}
               accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
               <Text type="button" style={pal.text}>
-                Edit Profile
+                <Trans>Edit Profile</Trans>
               </Text>
             </TouchableOpacity>
           ) : view.viewer.blocking ? (
@@ -382,10 +385,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 onPress={onPressUnblockAccount}
                 style={[styles.btn, styles.mainBtn, pal.btn]}
                 accessibilityRole="button"
-                accessibilityLabel="Unblock"
+                accessibilityLabel={_(msg`Unblock`)}
                 accessibilityHint="">
                 <Text type="button" style={[pal.text, s.bold]}>
-                  Unblock
+                  <Trans>Unblock</Trans>
                 </Text>
               </TouchableOpacity>
             )
@@ -439,7 +442,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                     size={14}
                   />
                   <Text type="button" style={pal.text}>
-                    Following
+                    <Trans>Following</Trans>
                   </Text>
                 </TouchableOpacity>
               ) : (
@@ -455,7 +458,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                     style={[palInverted.text, s.mr5]}
                   />
                   <Text type="button" style={[palInverted.text, s.bold]}>
-                    Follow
+                    <Trans>Follow</Trans>
                   </Text>
                 </TouchableOpacity>
               )}
@@ -465,7 +468,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             <NativeDropdown
               testID="profileHeaderDropdownBtn"
               items={dropdownItems}
-              accessibilityLabel="More options"
+              accessibilityLabel={_(msg`More options`)}
               accessibilityHint="">
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                 <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.text]} />
@@ -488,7 +491,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           {view.viewer.followedBy && !blockHide ? (
             <View style={[styles.pill, pal.btn, s.mr5]}>
               <Text type="xs" style={[pal.text]}>
-                Follows you
+                <Trans>Follows you</Trans>
               </Text>
             </View>
           ) : undefined}
@@ -533,7 +536,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                   {following}{' '}
                 </Text>
                 <Text type="md" style={[pal.textLight]}>
-                  following
+                  <Trans>following</Trans>
                 </Text>
               </Link>
               <Text type="md" style={[s.bold, pal.text]}>
@@ -572,7 +575,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
             <BlurView style={styles.backBtn} blurType="dark">

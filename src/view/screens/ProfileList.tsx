@@ -45,6 +45,8 @@ import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {ListItems} from 'view/com/lists/ListItems'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 
@@ -107,6 +109,7 @@ export const ProfileListScreenInner = observer(
     listOwnerDid,
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
+    const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {rkey} = route.params
     const feedSectionRef = React.useRef<SectionRef>(null)
@@ -208,7 +211,7 @@ export const ProfileListScreenInner = observer(
               />
             }
             accessibilityRole="button"
-            accessibilityLabel="New post"
+            accessibilityLabel={_(msg`New post`)}
             accessibilityHint=""
           />
         </View>
@@ -246,7 +249,7 @@ export const ProfileListScreenInner = observer(
               />
             }
             accessibilityRole="button"
-            accessibilityLabel="New post"
+            accessibilityLabel={_(msg`New post`)}
             accessibilityHint=""
           />
         </View>
@@ -270,6 +273,7 @@ const Header = observer(function HeaderImpl({
 }) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
+  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {openModal, closeModal} = useModalControls()
 
@@ -526,10 +530,12 @@ const Header = observer(function HeaderImpl({
           <NativeDropdown
             testID="subscribeBtn"
             items={subscribeDropdownItems}
-            accessibilityLabel="Subscribe to this list"
+            accessibilityLabel={_(msg`Subscribe to this list`)}
             accessibilityHint="">
             <View style={[palInverted.view, styles.btn]}>
-              <Text style={palInverted.text}>Subscribe</Text>
+              <Text style={palInverted.text}>
+                <Trans>Subscribe</Trans>
+              </Text>
             </View>
           </NativeDropdown>
         )
@@ -537,7 +543,7 @@ const Header = observer(function HeaderImpl({
       <NativeDropdown
         testID="headerDropdownBtn"
         items={dropdownItems}
-        accessibilityLabel="More options"
+        accessibilityLabel={_(msg`More options`)}
         accessibilityHint="">
         <View style={[pal.viewLight, styles.btn]}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
@@ -624,6 +630,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     ref,
   ) {
     const pal = usePalette('default')
+    const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const scrollElRef = React.useRef<FlatList>(null)
 
@@ -662,7 +669,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 testID="listDescriptionEmpty"
                 type="lg"
                 style={[{fontStyle: 'italic'}, pal.textLight]}>
-                No description
+                <Trans>No description</Trans>
               </Text>
             )}
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
@@ -688,12 +695,14 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 paddingBottom: isMobile ? 14 : 18,
               },
             ]}>
-            <Text type="lg-bold">Users</Text>
+            <Text type="lg-bold">
+              <Trans>Users</Trans>
+            </Text>
             {isOwner && (
               <Pressable
                 testID="addUserBtn"
                 accessibilityRole="button"
-                accessibilityLabel="Add a user to this list"
+                accessibilityLabel={_(msg`Add a user to this list`)}
                 accessibilityHint=""
                 onPress={onPressAddUser}
                 style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
@@ -702,7 +711,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                   color={pal.colors.link}
                   size={16}
                 />
-                <Text style={pal.link}>Add</Text>
+                <Text style={pal.link}>
+                  <Trans>Add</Trans>
+                </Text>
               </Pressable>
             )}
           </View>
@@ -717,6 +728,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       isCurateList,
       isOwner,
       onPressAddUser,
+      _,
     ])
 
     const renderEmptyState = useCallback(() => {
@@ -757,6 +769,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
 function ErrorScreen({error}: {error: string}) {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
@@ -778,7 +791,7 @@ function ErrorScreen({error}: {error: string}) {
         },
       ]}>
       <Text type="title-lg" style={[pal.text, s.mb10]}>
-        Could not load list
+        <Trans>Could not load list</Trans>
       </Text>
       <Text type="md" style={[pal.text, s.mb20]}>
         {error}
@@ -787,12 +800,12 @@ function ErrorScreen({error}: {error: string}) {
       <View style={{flexDirection: 'row'}}>
         <Button
           type="default"
-          accessibilityLabel="Go Back"
+          accessibilityLabel={_(msg`Go Back`)}
           accessibilityHint="Return to previous page"
           onPress={onPressBack}
           style={{flexShrink: 1}}>
           <Text type="button" style={pal.text}>
-            Go Back
+            <Trans>Go Back</Trans>
           </Text>
         </Button>
       </View>

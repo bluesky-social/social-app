@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const ConfirmLanguagesButton = ({
   onPress,
@@ -13,6 +15,7 @@ export const ConfirmLanguagesButton = ({
   extraText?: string
 }) => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   return (
     <View
@@ -28,14 +31,16 @@ export const ConfirmLanguagesButton = ({
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel="Confirm content language settings"
+        accessibilityLabel={_(msg`Confirm content language settings`)}
         accessibilityHint="">
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.btn]}>
-          <Text style={[s.white, s.bold, s.f18]}>Done{extraText}</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Done{extraText}</Trans>
+          </Text>
         </LinearGradient>
       </Pressable>
     </View>

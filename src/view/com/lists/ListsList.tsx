@@ -20,6 +20,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {FlatList} from '../util/Views'
 import {s} from 'lib/styles'
 import {logger} from '#/logger'
+import {Trans} from '@lingui/macro'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -107,7 +108,9 @@ export const ListsList = observer(function ListsListImpl({
           <View
             testID="listsEmpty"
             style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
-            <Text style={pal.textLight}>You have no lists.</Text>
+            <Text style={pal.textLight}>
+              <Trans>You have no lists.</Trans>
+            </Text>
           </View>
         )
       } else if (item === ERROR_ITEM) {

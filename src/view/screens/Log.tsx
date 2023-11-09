@@ -11,6 +11,8 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getEntries} from '#/logger/logDump'
 import {ago} from 'lib/strings/time'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useSetMinimalShellMode} from '#/state/shell'
 
 export const LogScreen = observer(function Log({}: NativeStackScreenProps<
@@ -18,6 +20,7 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
   'Log'
 >) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [expanded, setExpanded] = React.useState<string[]>([])
 
@@ -47,7 +50,7 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
                 <TouchableOpacity
                   style={[styles.entry, pal.border, pal.view]}
                   onPress={toggler(entry.id)}
-                  accessibilityLabel="View debug entry"
+                  accessibilityLabel={_(msg`View debug entry`)}
                   accessibilityHint="Opens additional details for a debug entry">
                   {entry.level === 'debug' ? (
                     <FontAwesomeIcon icon="info" />

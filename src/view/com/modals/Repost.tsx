@@ -6,6 +6,8 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {RepostIcon} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const snapPoints = [250]
@@ -21,6 +23,7 @@ export function Component({
   // TODO: Add author into component
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const onPress = async () => {
     closeModal()
@@ -38,7 +41,7 @@ export function Component({
           accessibilityHint={isReposted ? 'Remove repost' : 'Repost '}>
           <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            {!isReposted ? 'Repost' : 'Undo repost'}
+            <Trans>{!isReposted ? 'Repost' : 'Undo repost'}</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -46,11 +49,11 @@ export function Component({
           style={[styles.actionBtn]}
           onPress={onQuote}
           accessibilityRole="button"
-          accessibilityLabel="Quote post"
+          accessibilityLabel={_(msg`Quote post`)}
           accessibilityHint="">
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            Quote Post
+            <Trans>Quote Post</Trans>
           </Text>
         </TouchableOpacity>
       </View>
@@ -58,7 +61,7 @@ export function Component({
         testID="cancelBtn"
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel="Cancel quote post"
+        accessibilityLabel={_(msg`Cancel quote post`)}
         accessibilityHint=""
         onAccessibilityEscape={onPress}>
         <LinearGradient
@@ -66,7 +69,9 @@ export function Component({
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.btn]}>
-          <Text style={[s.white, s.bold, s.f18]}>Cancel</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Cancel</Trans>
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>

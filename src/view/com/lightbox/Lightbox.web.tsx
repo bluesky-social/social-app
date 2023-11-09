@@ -14,6 +14,8 @@ import * as models from 'state/models/ui/shell'
 import {colors, s} from 'lib/styles'
 import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 import {Text} from '../util/text/Text'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 interface Img {
   uri: string
@@ -62,6 +64,7 @@ function LightboxInner({
   initialIndex: number
   onClose: () => void
 }) {
+  const {_} = useLingui()
   const [index, setIndex] = useState<number>(initialIndex)
   const [isAltExpanded, setAltExpanded] = useState(false)
 
@@ -101,7 +104,7 @@ function LightboxInner({
       <TouchableWithoutFeedback
         onPress={onClose}
         accessibilityRole="button"
-        accessibilityLabel="Close image viewer"
+        accessibilityLabel={_(msg`Close image viewer`)}
         accessibilityHint="Exits image view"
         onAccessibilityEscape={onClose}>
         <View style={styles.imageCenterer}>
@@ -117,7 +120,7 @@ function LightboxInner({
               onPress={onPressLeft}
               style={[styles.btn, styles.leftBtn]}
               accessibilityRole="button"
-              accessibilityLabel="Previous image"
+              accessibilityLabel={_(msg`Previous image`)}
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-left"
@@ -131,7 +134,7 @@ function LightboxInner({
               onPress={onPressRight}
               style={[styles.btn, styles.rightBtn]}
               accessibilityRole="button"
-              accessibilityLabel="Next image"
+              accessibilityLabel={_(msg`Next image`)}
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-right"
@@ -145,7 +148,7 @@ function LightboxInner({
       {imgs[index].alt ? (
         <View style={styles.footer}>
           <Pressable
-            accessibilityLabel="Expand alt text"
+            accessibilityLabel={_(msg`Expand alt text`)}
             accessibilityHint="If alt text is long, toggles alt text expanded state"
             onPress={() => {
               setAltExpanded(!isAltExpanded)

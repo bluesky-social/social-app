@@ -14,6 +14,7 @@ import {Text} from 'view/com/util/text/Text'
 import Animated, {FadeInRight} from 'react-native-reanimated'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {Trans} from '@lingui/macro'
 
 type Props = {
   item: SuggestedActor
@@ -115,7 +116,9 @@ export const ProfileCard = observer(function ProfileCardImpl({
       {addingMoreSuggestions ? (
         <View style={styles.addingMoreContainer}>
           <ActivityIndicator size="small" color={pal.colors.text} />
-          <Text style={[pal.text]}>Finding similar accounts...</Text>
+          <Text style={[pal.text]}>
+            <Trans>Finding similar accounts...</Trans>
+          </Text>
         </View>
       ) : null}
     </View>

@@ -21,9 +21,12 @@ import {
   toPostLanguages,
   hasPostLanguage,
 } from '#/state/preferences/languages'
+import {t, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const SelectLangBtn = observer(function SelectLangBtn() {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -82,11 +85,11 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
     }
 
     return [
-      {heading: true, label: 'Post language'},
+      {heading: true, label: t`Post language`},
       ...arr.slice(0, 6),
       {sep: true},
       {
-        label: 'Other...',
+        label: t`Other...`,
         onPress: onPressMore,
       },
     ]
@@ -99,7 +102,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
-      accessibilityLabel="Language selection"
+      accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>

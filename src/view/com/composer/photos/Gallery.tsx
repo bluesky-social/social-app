@@ -10,6 +10,8 @@ import {Text} from 'view/com/util/text/Text'
 import {Dimensions} from 'lib/media/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {isNative} from 'platform/detection'
 
@@ -48,6 +50,7 @@ const GalleryInner = observer(function GalleryImpl({
   containerInfo,
 }: GalleryInnerProps) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
 
@@ -113,7 +116,7 @@ const GalleryInner = observer(function GalleryImpl({
             <TouchableOpacity
               testID="altTextButton"
               accessibilityRole="button"
-              accessibilityLabel="Add alt text"
+              accessibilityLabel={_(msg`Add alt text`)}
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
@@ -124,7 +127,7 @@ const GalleryInner = observer(function GalleryImpl({
               }}
               style={[styles.altTextControl, altTextControlStyle]}>
               <Text style={styles.altTextControlLabel} accessible={false}>
-                ALT
+                <Trans>ALT</Trans>
               </Text>
               {image.altText.length > 0 ? (
                 <FontAwesomeIcon
@@ -138,7 +141,7 @@ const GalleryInner = observer(function GalleryImpl({
               <TouchableOpacity
                 testID="editPhotoButton"
                 accessibilityRole="button"
-                accessibilityLabel="Edit image"
+                accessibilityLabel={_(msg`Edit image`)}
                 accessibilityHint=""
                 onPress={() => {
                   if (isNative) {
@@ -161,7 +164,7 @@ const GalleryInner = observer(function GalleryImpl({
               <TouchableOpacity
                 testID="removePhotoButton"
                 accessibilityRole="button"
-                accessibilityLabel="Remove image"
+                accessibilityLabel={_(msg`Remove image`)}
                 accessibilityHint=""
                 onPress={() => gallery.remove(image)}
                 style={styles.imageControl}>
@@ -174,7 +177,7 @@ const GalleryInner = observer(function GalleryImpl({
             </View>
             <TouchableOpacity
               accessibilityRole="button"
-              accessibilityLabel="Add alt text"
+              accessibilityLabel={_(msg`Add alt text`)}
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
@@ -203,8 +206,10 @@ const GalleryInner = observer(function GalleryImpl({
           <FontAwesomeIcon icon="info" size={12} color={pal.colors.text} />
         </View>
         <Text type="sm" style={[pal.textLight, s.flex1]}>
-          Alt text describes images for blind and low-vision users, and helps
-          give context to everyone.
+          <Trans>
+            Alt text describes images for blind and low-vision users, and helps
+            give context to everyone.
+          </Trans>
         </Text>
       </View>
     </>

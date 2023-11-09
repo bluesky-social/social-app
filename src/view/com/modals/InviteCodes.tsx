@@ -15,6 +15,7 @@ import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {useInvitesState, useInvitesAPI} from '#/state/invites'
 import {UserInfoText} from '../util/UserInfoText'
@@ -38,8 +39,10 @@ export function Component({}: {}) {
       <View style={[styles.container, pal.view]} testID="inviteCodesModal">
         <View style={[styles.empty, pal.viewLight]}>
           <Text type="lg" style={[pal.text, styles.emptyText]}>
-            You don't have any invite codes yet! We'll send you some when you've
-            been on Bluesky for a little longer.
+            <Trans>
+              You don't have any invite codes yet! We'll send you some when
+              you've been on Bluesky for a little longer.
+            </Trans>
           </Text>
         </View>
         <View style={styles.flex1} />
@@ -63,10 +66,12 @@ export function Component({}: {}) {
   return (
     <View style={[styles.container, pal.view]} testID="inviteCodesModal">
       <Text type="title-xl" style={[styles.title, pal.text]}>
-        Invite a Friend
+        <Trans>Invite a Friend</Trans>
       </Text>
       <Text type="lg" style={[styles.description, pal.text]}>
-        Each code works once. You'll receive more invite codes periodically.
+        <Trans>
+          Each code works once. You'll receive more invite codes periodically.
+        </Trans>
       </Text>
       <ScrollView style={[styles.scrollContainer, pal.border]}>
         {store.me.invites.map((invite, i) => (
@@ -138,7 +143,9 @@ const InviteCode = observer(function InviteCodeImpl({
         </Text>
         <View style={styles.flex1} />
         {!used && invitesState.copiedInvites.includes(invite.code) && (
-          <Text style={[pal.textLight, styles.codeCopied]}>Copied</Text>
+          <Text style={[pal.textLight, styles.codeCopied]}>
+            <Trans>Copied</Trans>
+          </Text>
         )}
         {!used && (
           <FontAwesomeIcon
@@ -154,7 +161,9 @@ const InviteCode = observer(function InviteCodeImpl({
             gap: 8,
             paddingTop: 6,
           }}>
-          <Text style={pal.text}>Used by:</Text>
+          <Text style={pal.text}>
+            <Trans>Used by:</Trans>
+          </Text>
           {invite.uses.map(use => (
             <Link
               key={use.usedBy}

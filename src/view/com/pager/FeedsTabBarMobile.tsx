@@ -14,18 +14,23 @@ import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
 import Animated from 'react-native-reanimated'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
+import {useShellLayout} from '#/state/shell/shell-layout'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
   const store = useStores()
+  const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
-  const {minimalShellMode, headerMinimalShellTransform} = useMinimalShellMode()
+  const {headerHeight} = useShellLayout()
+  const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -33,20 +38,17 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
 
   return (
     <Animated.View
-      style={[
-        pal.view,
-        pal.border,
-        styles.tabBar,
-        headerMinimalShellTransform,
-        minimalShellMode && styles.disabled,
-      ]}>
+      style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
+      onLayout={e => {
+        headerHeight.value = e.nativeEvent.layout.height
+      }}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
             accessibilityRole="button"
-            accessibilityLabel="Open navigation"
+            accessibilityLabel={_(msg`Open navigation`)}
             accessibilityHint="Access profile and other navigation links"
             hitSlop={HITSLOP_10}>
             <FontAwesomeIcon
@@ -65,7 +67,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             href="/settings/home-feed"
             hitSlop={HITSLOP_10}
             accessibilityRole="button"
-            accessibilityLabel="Home Feed Preferences"
+            accessibilityLabel={_(msg`Home Feed Preferences`)}
             accessibilityHint="">
             <FontAwesomeIcon
               icon="sliders"
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     flexDirection: 'column',
-    alignItems: 'center',
     borderBottomWidth: 1,
   },
   topBar: {
@@ -109,8 +110,5 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 21,
-  },
-  disabled: {
-    pointerEvents: 'none',
   },
 })
