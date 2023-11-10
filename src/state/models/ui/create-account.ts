@@ -10,6 +10,7 @@ import {getAge} from 'lib/strings/time'
 import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {DispatchContext as OnboardingDispatchContext} from '#/state/shell/onboarding'
+import {ApiContext as SessionApiContext} from '#/state/session'
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
@@ -91,7 +92,13 @@ export class CreateAccountModel {
     }
   }
 
-  async submit(onboardingDispatch: OnboardingDispatchContext) {
+  async submit({
+    createAccount,
+    onboardingDispatch,
+  }: {
+    createAccount: SessionApiContext['createAccount']
+    onboardingDispatch: OnboardingDispatchContext
+  }) {
     if (!this.email) {
       this.setStep(2)
       return this.setError('Please enter your email.')
@@ -113,7 +120,7 @@ export class CreateAccountModel {
 
     try {
       onboardingDispatch({type: 'start'}) // start now to avoid flashing the wrong view
-      await this.rootStore.session.createAccount({
+      await createAccount({
         service: this.serviceUrl,
         email: this.email,
         handle: createFullHandle(this.handle, this.userDomain),

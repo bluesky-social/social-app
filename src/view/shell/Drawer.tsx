@@ -47,6 +47,57 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {useSession, SessionAccount} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+
+export function DrawerProfileCard({
+  account,
+  onPressProfile,
+}: {
+  account: SessionAccount
+  onPressProfile: () => void
+}) {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const {data: profile} = useProfileQuery({did: account.did})
+
+  return (
+    <TouchableOpacity
+      testID="profileCardButton"
+      accessibilityLabel={_(msg`Profile`)}
+      accessibilityHint="Navigates to your profile"
+      onPress={onPressProfile}>
+      <UserAvatar
+        size={80}
+        avatar={profile?.avatar}
+        // See https://github.com/bluesky-social/social-app/pull/1801:
+        usePlainRNImage={true}
+      />
+      <Text
+        type="title-lg"
+        style={[pal.text, s.bold, styles.profileCardDisplayName]}
+        numberOfLines={1}>
+        {profile?.displayName || account.handle}
+      </Text>
+      <Text
+        type="2xl"
+        style={[pal.textLight, styles.profileCardHandle]}
+        numberOfLines={1}>
+        @{account.handle}
+      </Text>
+      <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
+        <Text type="xl-medium" style={pal.text}>
+          {formatCountShortOnly(profile?.followersCount ?? 0)}
+        </Text>{' '}
+        {pluralize(profile?.followersCount || 0, 'follower')} &middot;{' '}
+        <Text type="xl-medium" style={pal.text}>
+          {formatCountShortOnly(profile?.followsCount ?? 0)}
+        </Text>{' '}
+        following
+      </Text>
+    </TouchableOpacity>
+  )
+}
 
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
@@ -58,6 +109,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
+  const {currentAccount} = useSession()
 
   const {notifications} = store.me
 
@@ -135,11 +187,11 @@ export const DrawerContent = observer(function DrawerContentImpl() {
     track('Menu:FeedbackClicked')
     Linking.openURL(
       FEEDBACK_FORM_URL({
-        email: store.session.currentSession?.email,
-        handle: store.session.currentSession?.handle,
+        email: currentAccount?.email,
+        handle: currentAccount?.handle,
       }),
     )
-  }, [track, store.session.currentSession])
+  }, [track, currentAccount])
 
   const onPressHelp = React.useCallback(() => {
     track('Menu:HelpClicked')
@@ -159,42 +211,12 @@ export const DrawerContent = observer(function DrawerContentImpl() {
       <SafeAreaView style={s.flex1}>
         <ScrollView style={styles.main}>
           <View style={{}}>
-            <TouchableOpacity
-              testID="profileCardButton"
-              accessibilityLabel={_(msg`Profile`)}
-              accessibilityHint="Navigates to your profile"
-              onPress={onPressProfile}>
-              <UserAvatar
-                size={80}
-                avatar={store.me.avatar}
-                // See https://github.com/bluesky-social/social-app/pull/1801:
-                usePlainRNImage={true}
+            {currentAccount && (
+              <DrawerProfileCard
+                account={currentAccount}
+                onPressProfile={onPressProfile}
               />
-              <Text
-                type="title-lg"
-                style={[pal.text, s.bold, styles.profileCardDisplayName]}
-                numberOfLines={1}>
-                {store.me.displayName || store.me.handle}
-              </Text>
-              <Text
-                type="2xl"
-                style={[pal.textLight, styles.profileCardHandle]}
-                numberOfLines={1}>
-                @{store.me.handle}
-              </Text>
-              <Text
-                type="xl"
-                style={[pal.textLight, styles.profileCardFollowers]}>
-                <Text type="xl-medium" style={pal.text}>
-                  {formatCountShortOnly(store.me.followersCount ?? 0)}
-                </Text>{' '}
-                {pluralize(store.me.followersCount || 0, 'follower')} &middot;{' '}
-                <Text type="xl-medium" style={pal.text}>
-                  {formatCountShortOnly(store.me.followsCount ?? 0)}
-                </Text>{' '}
-                following
-              </Text>
-            </TouchableOpacity>
+            )}
           </View>
 
           <InviteCodes style={{paddingLeft: 0}} />

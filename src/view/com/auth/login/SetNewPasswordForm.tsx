@@ -10,7 +10,6 @@ import {BskyAgent} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
-import {RootStoreModel} from 'state/index'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -27,7 +26,6 @@ export const SetNewPasswordForm = ({
   onPressBack,
   onPasswordSet,
 }: {
-  store: RootStoreModel
   error: string
   serviceUrl: string
   setError: (v: string) => void

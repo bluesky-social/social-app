@@ -18,6 +18,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useOnboardingDispatch} from '#/state/shell'
+import {useSessionApi} from '#/state/session'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
@@ -34,6 +35,7 @@ export const CreateAccount = observer(function CreateAccountImpl({
   const model = React.useMemo(() => new CreateAccountModel(store), [store])
   const {_} = useLingui()
   const onboardingDispatch = useOnboardingDispatch()
+  const {createAccount} = useSessionApi()
 
   React.useEffect(() => {
     screen('CreateAccount')
@@ -64,14 +66,17 @@ export const CreateAccount = observer(function CreateAccountImpl({
       model.next()
     } else {
       try {
-        await model.submit(onboardingDispatch)
+        await model.submit({
+          onboardingDispatch,
+          createAccount,
+        })
       } catch {
         // dont need to handle here
       } finally {
         track('Try Create Account')
       }
     }
-  }, [model, track, onboardingDispatch])
+  }, [model, track, onboardingDispatch, createAccount])
 
   return (
     <LoggedOutLayout

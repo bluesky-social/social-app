@@ -23,6 +23,7 @@ import useAppState from 'react-native-appstate-hook'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSession} from '#/state/session'
 
 export const FeedPage = observer(function FeedPageImpl({
   testID,
@@ -38,6 +39,7 @@ export const FeedPage = observer(function FeedPageImpl({
   renderEndOfFeed?: () => JSX.Element
 }) {
   const store = useStores()
+  const {isSandbox} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
@@ -140,7 +142,7 @@ export const FeedPage = observer(function FeedPageImpl({
             style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
-                {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+                {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
                 {hasNew && (
                   <View
                     style={{
@@ -173,7 +175,16 @@ export const FeedPage = observer(function FeedPageImpl({
       )
     }
     return <></>
-  }, [isDesktop, pal.view, pal.text, pal.textLight, store, hasNew, _])
+  }, [
+    isDesktop,
+    pal.view,
+    pal.text,
+    pal.textLight,
+    store,
+    hasNew,
+    _,
+    isSandbox,
+  ])
 
   return (
     <View testID={testID} style={s.h100pct}>

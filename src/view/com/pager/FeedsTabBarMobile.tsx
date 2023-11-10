@@ -19,12 +19,14 @@ import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useSession} from '#/state/session'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
   const store = useStores()
+  const {isSandbox} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const items = useHomeTabs(store.preferences.pinnedFeeds)
@@ -59,7 +61,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
           </TouchableOpacity>
         </View>
         <Text style={[brandBlue, s.bold, styles.title]}>
-          {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
+          {isSandbox ? 'SANDBOX' : 'Bluesky'}
         </Text>
         <View style={[pal.view]}>
           <Link

@@ -3,6 +3,7 @@ import {Pressable, View} from 'react-native'
 import {useStores} from 'state/index'
 import {navigate} from '../../../Navigation'
 import {useModalControls} from '#/state/modals'
+import {useSessionApi} from '#/state/session'
 
 /**
  * This utility component is only included in the test simulator
@@ -14,16 +15,17 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
   const store = useStores()
+  const {logout, login} = useSessionApi()
   const {openModal} = useModalControls()
   const onPressSignInAlice = async () => {
-    await store.session.login({
+    await login({
       service: 'http://localhost:3000',
       identifier: 'alice.test',
       password: 'hunter2',
     })
   }
   const onPressSignInBob = async () => {
-    await store.session.login({
+    await login({
       service: 'http://localhost:3000',
       identifier: 'bob.test',
       password: 'hunter2',
@@ -45,7 +47,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => store.session.logout()}
+        onPress={() => logout()}
         accessibilityRole="button"
         style={BTN}
       />

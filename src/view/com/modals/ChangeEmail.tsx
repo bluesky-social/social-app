@@ -6,7 +6,6 @@ import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -15,6 +14,7 @@ import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useSession, useSessionApi} from '#/state/session'
 
 enum Stages {
   InputEmail,
@@ -26,12 +26,11 @@ export const snapPoints = ['90%']
 
 export const Component = observer(function Component({}: {}) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {agent, currentAccount} = useSession()
+  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
-  const [email, setEmail] = useState<string>(
-    store.session.currentSession?.email || '',
-  )
+  const [email, setEmail] = useState<string>(currentAccount?.email || '')
   const [confirmationCode, setConfirmationCode] = useState<string>('')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -39,19 +38,19 @@ export const Component = observer(function Component({}: {}) {
   const {openModal, closeModal} = useModalControls()
 
   const onRequestChange = async () => {
-    if (email === store.session.currentSession?.email) {
+    if (email === currentAccount?.email) {
       setError('Enter your new email above')
       return
     }
     setError('')
     setIsProcessing(true)
     try {
-      const res = await store.agent.com.atproto.server.requestEmailUpdate()
+      const res = await agent.com.atproto.server.requestEmailUpdate()
       if (res.data.tokenRequired) {
         setStage(Stages.ConfirmCode)
       } else {
-        await store.agent.com.atproto.server.updateEmail({email: email.trim()})
-        store.session.updateLocalAccountData({
+        await agent.com.atproto.server.updateEmail({email: email.trim()})
+        updateCurrentAccount({
           email: email.trim(),
           emailConfirmed: false,
         })
@@ -79,11 +78,11 @@ export const Component = observer(function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.updateEmail({
+      await agent.com.atproto.server.updateEmail({
         email: email.trim(),
         token: confirmationCode.trim(),
       })
-      store.session.updateLocalAccountData({
+      updateCurrentAccount({
         email: email.trim(),
         emailConfirmed: false,
       })
@@ -120,8 +119,8 @@ export const Component = observer(function Component({}: {}) {
           ) : stage === Stages.ConfirmCode ? (
             <Trans>
               An email has been sent to your previous address,{' '}
-              {store.session.currentSession?.email || ''}. It includes a
-              confirmation code which you can enter below.
+              {currentAccount?.email || ''}. It includes a confirmation code
+              which you can enter below.
             </Trans>
           ) : (
             <Trans>

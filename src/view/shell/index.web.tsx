@@ -24,6 +24,7 @@ import {
   useOnboardingState,
 } from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {useSession} from '#/state/session'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
@@ -33,6 +34,8 @@ const ShellInner = observer(function ShellInnerImpl() {
   const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
+  const {hasSession} = useSession()
+
   useAuxClick()
 
   useEffect(() => {
@@ -44,8 +47,7 @@ const ShellInner = observer(function ShellInnerImpl() {
   }, [navigator, store.shell, setDrawerOpen, closeModal])
 
   const showBottomBar = isMobile && !onboardingState.isActive
-  const showSideNavs =
-    !isMobile && store.session.hasSession && !onboardingState.isActive
+  const showSideNavs = !isMobile && hasSession && !onboardingState.isActive
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
