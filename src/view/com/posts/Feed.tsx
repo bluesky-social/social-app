@@ -147,7 +147,7 @@ export function Feed({
   }, [refetch, track, setIsRefreshing, onHasNew])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage) return
+    if (isFetching || !hasNextPage || isError) return
 
     track('Feed:onEndReached')
     try {
@@ -155,7 +155,7 @@ export function Feed({
     } catch (err) {
       logger.error('Failed to load more posts', {error: err})
     }
-  }, [isFetching, hasNextPage, fetchNextPage, track])
+  }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 
   const onPressTryAgain = React.useCallback(() => {
     refetch()
