@@ -1,6 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {
   ActivityIndicator,
+  Dimensions,
   RefreshControl,
   StyleProp,
   View,
@@ -18,7 +19,6 @@ import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
@@ -224,7 +224,9 @@ export const ListItems = observer(function ListItemsImpl({
             progressViewOffset={headerOffset}
           />
         }
-        contentContainerStyle={s.contentContainer}
+        contentContainerStyle={{
+          paddingBottom: Dimensions.get('window').height - headerOffset,
+        }}
         style={{paddingTop: headerOffset}}
         onScroll={onScroll}
         onEndReached={onEndReached}

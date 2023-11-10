@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {StyleSheet, View, ActivityIndicator} from 'react-native'
+import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -460,7 +460,10 @@ const AboutSection = observer(function AboutPageImpl({
     <ScrollView
       ref={scrollElRef}
       scrollEventThrottle={1}
-      contentContainerStyle={{paddingTop: headerHeight}}
+      contentContainerStyle={{
+        paddingTop: headerHeight,
+        paddingBottom: Dimensions.get('window').height - headerHeight,
+      }}
       onScroll={onScroll}>
       <View
         style={[
