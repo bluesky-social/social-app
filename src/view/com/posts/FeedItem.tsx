@@ -68,7 +68,7 @@ export function FeedItem({
   }
   if (richText && moderation) {
     return (
-      <FeedItemLoaded
+      <FeedItemInner
         post={postShadowed}
         record={record}
         reason={reason}
@@ -83,7 +83,7 @@ export function FeedItem({
   return null
 }
 
-function FeedItemLoaded({
+function FeedItemInner({
   post,
   record,
   reason,
