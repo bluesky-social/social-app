@@ -181,24 +181,18 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         {toArray(children)
           .filter(Boolean)
           .map((child, i) => {
-            let output = null
-            if (
-              child != null &&
-              // Defer showing content until we know it won't jump.
-              isHeaderReady &&
-              headerOnlyHeight > 0 &&
-              tabBarHeight > 0
-            ) {
-              output = child({
-                headerHeight,
-                isScrolledDown,
-                onScroll: i === currentPage ? onScroll : noop,
-              })
-            }
-            // Pager children must be noncollapsible plain <View>s.
             return (
               <View key={i} collapsable={false}>
-                {output}
+                <PagerItem
+                  headerHeight={headerHeight}
+                  isScrolledDown={isScrolledDown}
+                  onScroll={i === currentPage ? onScroll : noop}
+                  renderTab={
+                    isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
+                      ? child
+                      : null
+                  }
+                />
               </View>
             )
           })}
@@ -206,6 +200,19 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
   },
 )
+
+function PagerItem(
+  {headerHeight, isScrolledDown, onScroll, renderTab}: any /* TODO */,
+) {
+  if (renderTab == null) {
+    return null
+  }
+  return renderTab({
+    headerHeight,
+    isScrolledDown,
+    onScroll,
+  })
+}
 
 const styles = StyleSheet.create({
   tabBarMobile: {
