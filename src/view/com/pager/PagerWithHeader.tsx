@@ -6,14 +6,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   runOnJS,
+  scrollTo,
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
-
-const SCROLLED_DOWN_LIMIT = 200
 
 interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -50,20 +49,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   ) {
     const {isMobile} = useWebMediaQueries()
     const [currentPage, setCurrentPage] = React.useState(0)
-    const scrollY = useSharedValue(0)
+    const clampedScrollY = useSharedValue(0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
 
     const headerHeight = headerOnlyHeight + tabBarHeight
-
-    function onScrollUpdate(v: number) {
-      setIsScrolledDown(v > SCROLLED_DOWN_LIMIT)
-    }
-    useAnimatedReaction(
-      () => scrollY.value,
-      v => runOnJS(onScrollUpdate)(v),
-    )
 
     // capture the header bar sizing
     const onTabBarLayout = React.useCallback(
@@ -84,14 +75,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       () => ({
         transform: [
           {
-            translateY: Math.min(
-              Math.min(scrollY.value, headerOnlyHeight) * -1,
-              0,
-            ),
+            translateY: Math.min(-clampedScrollY.value, 0),
           },
         ],
       }),
-      [scrollY, headerHeight, tabBarHeight],
+      [clampedScrollY, headerHeight, tabBarHeight],
     )
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
@@ -136,9 +124,17 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     // props to pass into children render functions
     const onScroll = useAnimatedScrollHandler({
       onScroll(e) {
-        scrollY.value = e.contentOffset.y
+        clampedScrollY.value = Math.min(e.contentOffset.y, headerOnlyHeight)
       },
     })
+    useAnimatedReaction(
+      () => clampedScrollY.value === headerOnlyHeight,
+      (nextIsScrolledDown, prevIsScrolledDown) => {
+        if (nextIsScrolledDown !== prevIsScrolledDown) {
+          runOnJS(setIsScrolledDown)(nextIsScrolledDown)
+        }
+      },
+    )
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
@@ -170,6 +166,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                   headerHeight={headerHeight}
                   isScrolledDown={isScrolledDown}
                   onScroll={i === currentPage ? onScroll : noop}
+                  forcedScrollY={i === currentPage ? null : clampedScrollY}
                   renderTab={
                     isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
                       ? child
@@ -185,9 +182,41 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 )
 
 function PagerItem(
-  {headerHeight, isScrolledDown, onScroll, renderTab}: any /* TODO */,
+  {
+    headerHeight,
+    isScrolledDown,
+    onScroll,
+    renderTab,
+    forcedScrollY,
+  }: any /* TODO */,
 ) {
   const scrollElRef = useAnimatedRef()
+  useAnimatedReaction(
+    () => {
+      if (forcedScrollY) {
+        return forcedScrollY.value
+      } else {
+        // Active tab doesn't get synced.
+        return null
+      }
+    },
+    (nextForcedY, prevForcedY) => {
+      if (nextForcedY === prevForcedY) {
+        return
+      }
+      if (nextForcedY == null) {
+        // This tab just became active. It was already being synced before.
+        // So we don't need to do anything.
+        return
+      }
+      if (prevForcedY == null) {
+        // This tab just became inactive, so it used to be the source of truth.
+        // There is no need to sync it until we get more scroll events.
+        return
+      }
+      scrollTo(scrollElRef, 0, nextForcedY, false)
+    },
+  )
   if (renderTab == null) {
     return null
   }
