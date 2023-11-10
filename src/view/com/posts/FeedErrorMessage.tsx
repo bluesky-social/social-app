@@ -12,6 +12,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 
 const MESSAGES = {
   [KnownError.Unknown]: '',
@@ -27,22 +28,28 @@ const MESSAGES = {
 }
 
 export function FeedErrorMessage({
-  feed,
+  feedDesc,
+  error,
   onPressTryAgain,
 }: {
-  feed: PostsFeedModel
+  feedDesc: FeedDescriptor
+  error: any
   onPressTryAgain: () => void
 }) {
+  const knownError = React.useMemo(
+    () => detectKnownError(feedDesc, error),
+    [feedDesc, error],
+  )
   if (
-    typeof feed.knownError === 'undefined' ||
-    feed.knownError === KnownError.Unknown
+    typeof knownError === 'undefined' ||
+    knownError === KnownError.Unknown ||
+    true /*TODO*/
   ) {
-    return (
-      <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
-    )
+    return <ErrorMessage message={error} onPressTryAgain={onPressTryAgain} />
   }
 
-  return <FeedgenErrorMessage feed={feed} knownError={feed.knownError} />
+  // TODO
+  // return <FeedgenErrorMessage feed={feed} knownError={feed.knownError} />
 }
 
 function FeedgenErrorMessage({
@@ -119,4 +126,40 @@ function safeParseFeedgenUri(uri: string): [string, string] {
   } catch {
     return ['', '']
   }
+}
+
+function detectKnownError(
+  feedDesc: FeedDescriptor,
+  error: any,
+): KnownError | undefined {
+  if (!error) {
+    return undefined
+  }
+  if (typeof error !== 'string') {
+    error = error.toString()
+  }
+  if (!feedDesc.startsWith('feedgen')) {
+    return KnownError.Unknown
+  }
+  if (error.includes('could not find feed')) {
+    return KnownError.FeedgenDoesNotExist
+  }
+  if (error.includes('feed unavailable')) {
+    return KnownError.FeedgenOffline
+  }
+  if (error.includes('invalid did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('could not resolve did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (
+    error.includes('invalid feed generator service details in did document')
+  ) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('feed provided an invalid response')) {
+    return KnownError.FeedgenBadResponse
+  }
+  return KnownError.FeedgenUnknown
 }

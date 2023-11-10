@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
-import {PostsFeedModel} from 'state/models/feeds/posts'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
@@ -26,7 +26,7 @@ export const HomeScreen = withAuthRequired(
     const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
-    const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
+    const [customFeeds, setCustomFeeds] = React.useState<FeedDescriptor[]>([])
     const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
       string[]
     >([])
@@ -39,14 +39,12 @@ export const HomeScreen = withAuthRequired(
         return
       }
 
-      const feeds = []
+      const feeds: FeedDescriptor[] = []
       for (const uri of pinned) {
         if (uri.includes('app.bsky.feed.generator')) {
-          const model = new PostsFeedModel(store, 'custom', {feed: uri})
-          feeds.push(model)
+          feeds.push(`feedgen|${uri}`)
         } else if (uri.includes('app.bsky.graph.list')) {
-          const model = new PostsFeedModel(store, 'list', {list: uri})
-          feeds.push(model)
+          feeds.push(`list|${uri}`)
         }
       }
       pagerRef.current?.setPage(0)
@@ -129,14 +127,14 @@ export const HomeScreen = withAuthRequired(
           key="1"
           testID="followingFeedPage"
           isPageFocused={selectedPage === 0}
-          feed={store.me.mainFeed}
+          feed="following"
           renderEmptyState={renderFollowingEmptyState}
           renderEndOfFeed={FollowingEndOfFeed}
         />
         {customFeeds.map((f, index) => {
           return (
             <FeedPage
-              key={f.reactKey}
+              key={f}
               testID="customFeedPage"
               isPageFocused={selectedPage === 1 + index}
               feed={f}

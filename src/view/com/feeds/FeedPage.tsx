@@ -7,13 +7,12 @@ import {useAnalytics} from '@segment/analytics-react-native'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
-import {observer} from 'mobx-react-lite'
 import React from 'react'
 import {FlatList, View} from 'react-native'
 import {useStores} from 'state/index'
-import {PostsFeedModel} from 'state/models/feeds/posts'
 import {useHeaderOffset, POLL_FREQ} from 'view/screens/Home'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
@@ -24,7 +23,7 @@ import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-export const FeedPage = observer(function FeedPageImpl({
+export function FeedPage({
   testID,
   isPageFocused,
   feed,
@@ -32,7 +31,7 @@ export const FeedPage = observer(function FeedPageImpl({
   renderEndOfFeed,
 }: {
   testID?: string
-  feed: PostsFeedModel
+  feed: FeedDescriptor
   isPageFocused: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
@@ -45,36 +44,30 @@ export const FeedPage = observer(function FeedPageImpl({
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
-  const {appState} = useAppState({
-    onForeground: () => doPoll(true),
-  })
+  // const {appState} = useAppState({ TODO
+  //   onForeground: () => doPoll(true),
+  // })
   const isScreenFocused = useIsFocused()
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
+  const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
 
-  React.useEffect(() => {
-    // called on first load
-    if (!feed.hasLoaded && isPageFocused) {
-      feed.setup()
-    }
-  }, [isPageFocused, feed])
-
-  const doPoll = React.useCallback(
-    (knownActive = false) => {
-      if (
-        (!knownActive && appState !== 'active') ||
-        !isScreenFocused ||
-        !isPageFocused
-      ) {
-        return
-      }
-      if (feed.isLoading) {
-        return
-      }
-      logger.debug('HomeScreen: Polling for new posts')
-      feed.checkForLatest()
-    },
-    [appState, isScreenFocused, isPageFocused, feed],
-  )
+  // TODO
+  // const doPoll = React.useCallback(
+  //   (knownActive = false) => {
+  //     if (
+  //       (!knownActive && appState !== 'active') ||
+  //       !isScreenFocused ||
+  //       !isPageFocused
+  //     ) {
+  //       return
+  //     }
+  //     if (feed.isLoading) {
+  //       return
+  //     }
+  //     logger.debug('HomeScreen: Polling for new posts')
+  //     feed.checkForLatest()
+  //   },
+  //   [appState, isScreenFocused, isPageFocused, feed],
+  // )
 
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({offset: -headerOffset})
@@ -84,9 +77,9 @@ export const FeedPage = observer(function FeedPageImpl({
   const onSoftReset = React.useCallback(() => {
     if (isPageFocused) {
       scrollToTop()
-      feed.refresh()
+      // feed.refresh() TODO
     }
-  }, [isPageFocused, scrollToTop, feed])
+  }, [isPageFocused, scrollToTop])
 
   // fires when page within screen is activated/deactivated
   // - check for latest
@@ -96,19 +89,17 @@ export const FeedPage = observer(function FeedPageImpl({
     }
 
     const softResetSub = store.onScreenSoftReset(onSoftReset)
-    const feedCleanup = feed.registerListeners()
-    const pollInterval = setInterval(doPoll, POLL_FREQ)
+    // const pollInterval = setInterval(doPoll, POLL_FREQ) TODO
 
     screen('Feed')
     logger.debug('HomeScreen: Updating feed')
-    feed.checkForLatest()
+    // feed.checkForLatest() TODO
 
     return () => {
-      clearInterval(pollInterval)
+      // clearInterval(pollInterval) TODO
       softResetSub.remove()
-      feedCleanup()
     }
-  }, [store, doPoll, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
+  }, [store, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
 
   const onPressCompose = React.useCallback(() => {
     track('HomeScreen:PressCompose')
@@ -117,8 +108,8 @@ export const FeedPage = observer(function FeedPageImpl({
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    feed.refresh()
-  }, [feed, scrollToTop])
+    // feed.refresh() TODO
+  }, [scrollToTop])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {
@@ -205,4 +196,4 @@ export const FeedPage = observer(function FeedPageImpl({
       />
     </View>
   )
-})
+}

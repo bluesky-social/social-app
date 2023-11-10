@@ -30,7 +30,7 @@ import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {Haptics} from 'lib/haptics'
 import {ListModel} from 'state/models/content/list'
-import {PostsFeedModel} from 'state/models/feeds/posts'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -112,32 +112,22 @@ export const ProfileListScreenInner = observer(
     const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {rkey} = route.params
+    const listUri = `at://${listOwnerDid}/app.bsky.graph.list/${rkey}`
     const feedSectionRef = React.useRef<SectionRef>(null)
     const aboutSectionRef = React.useRef<SectionRef>(null)
     const {openModal} = useModalControls()
 
     const list: ListModel = useMemo(() => {
-      const model = new ListModel(
-        store,
-        `at://${listOwnerDid}/app.bsky.graph.list/${rkey}`,
-      )
+      const model = new ListModel(store, listUri)
       return model
-    }, [store, listOwnerDid, rkey])
-    const feed = useMemo(
-      () => new PostsFeedModel(store, 'list', {list: list.uri}),
-      [store, list],
-    )
+    }, [store, listUri])
     useSetTitle(list.data?.name)
 
     useFocusEffect(
       useCallback(() => {
         setMinimalShellMode(false)
-        list.loadMore(true).then(() => {
-          if (list.isCuratelist) {
-            feed.setup()
-          }
-        })
-      }, [setMinimalShellMode, list, feed]),
+        list.loadMore(true)
+      }, [setMinimalShellMode, list]),
     )
 
     const onPressAddUser = useCallback(() => {
@@ -146,11 +136,11 @@ export const ProfileListScreenInner = observer(
         list,
         onAdd() {
           if (list.isCuratelist) {
-            feed.refresh()
+            // feed.refresh() TODO
           }
         },
       })
-    }, [openModal, list, feed])
+    }, [openModal, list])
 
     const onCurrentPageSelected = React.useCallback(
       (index: number) => {
@@ -179,7 +169,7 @@ export const ProfileListScreenInner = observer(
             {({onScroll, headerHeight, isScrolledDown}) => (
               <FeedSection
                 ref={feedSectionRef}
-                feed={feed}
+                feed={`list|${listUri}`}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
                 isScrolledDown={isScrolledDown}
@@ -554,7 +544,7 @@ const Header = observer(function HeaderImpl({
 })
 
 interface FeedSectionProps {
-  feed: PostsFeedModel
+  feed: FeedDescriptor
   onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
@@ -564,13 +554,13 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     {feed, onScroll, headerHeight, isScrolledDown},
     ref,
   ) {
-    const hasNew = feed.hasNewLatest && !feed.isRefreshing
+    const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
     const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      feed.refresh()
-    }, [feed, scrollElRef, headerHeight])
+      // feed.refresh() TODO
+    }, [scrollElRef, headerHeight])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))

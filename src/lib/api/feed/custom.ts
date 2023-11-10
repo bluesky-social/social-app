@@ -1,38 +1,37 @@
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
+  BskyAgent,
 } from '@atproto/api'
-import {RootStoreModel} from 'state/index'
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class CustomFeedAPI implements FeedAPI {
-  cursor: string | undefined
-
   constructor(
-    public rootStore: RootStoreModel,
+    public agent: BskyAgent,
     public params: GetCustomFeed.QueryParams,
   ) {}
 
-  reset() {
-    this.cursor = undefined
-  }
-
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeed({
+    const res = await this.agent.app.bsky.feed.getFeed({
       ...this.params,
       limit: 1,
     })
     return res.data.feed[0]
   }
 
-  async fetchNext({limit}: {limit: number}): Promise<FeedAPIResponse> {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeed({
+  async fetch({
+    cursor,
+    limit,
+  }: {
+    cursor: string | undefined
+    limit: number
+  }): Promise<FeedAPIResponse> {
+    const res = await this.agent.app.bsky.feed.getFeed({
       ...this.params,
-      cursor: this.cursor,
+      cursor,
       limit,
     })
     if (res.success) {
-      this.cursor = res.data.cursor
       // NOTE
       // some custom feeds fail to enforce the pagination limit
       // so we manually truncate here

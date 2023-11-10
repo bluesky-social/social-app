@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {PostsFeedSliceModel} from 'state/models/feeds/posts-slice'
+import {FeedPostSlice} from '#/state/queries/post-feed'
 import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -12,14 +12,17 @@ import {makeProfileLink} from 'lib/routes/links'
 
 export const FeedSlice = observer(function FeedSliceImpl({
   slice,
+  dataUpdatedAt,
   ignoreFilterFor,
 }: {
-  slice: PostsFeedSliceModel
+  slice: FeedPostSlice
+  dataUpdatedAt: number
   ignoreFilterFor?: string
 }) {
-  if (slice.shouldFilter(ignoreFilterFor)) {
-    return null
-  }
+  // TODO
+  // if (slice.shouldFilter(ignoreFilterFor)) {
+  //   return null
+  // }
 
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
@@ -27,23 +30,32 @@ export const FeedSlice = observer(function FeedSliceImpl({
       <>
         <FeedItem
           key={slice.items[0]._reactKey}
-          item={slice.items[0]}
+          post={slice.items[0].post}
+          record={slice.items[0].record}
+          reason={slice.items[0].reason}
+          dataUpdatedAt={dataUpdatedAt}
           source={slice.source}
-          isThreadParent={slice.isThreadParentAt(0)}
-          isThreadChild={slice.isThreadChildAt(0)}
+          isThreadParent={isThreadParentAt(slice.items, 0)}
+          isThreadChild={isThreadChildAt(slice.items, 0)}
         />
         <FeedItem
           key={slice.items[1]._reactKey}
-          item={slice.items[1]}
-          isThreadParent={slice.isThreadParentAt(1)}
-          isThreadChild={slice.isThreadChildAt(1)}
+          post={slice.items[1].post}
+          record={slice.items[1].record}
+          reason={slice.items[1].reason}
+          dataUpdatedAt={dataUpdatedAt}
+          isThreadParent={isThreadParentAt(slice.items, 1)}
+          isThreadChild={isThreadChildAt(slice.items, 1)}
         />
         <ViewFullThread slice={slice} />
         <FeedItem
           key={slice.items[last]._reactKey}
-          item={slice.items[last]}
-          isThreadParent={slice.isThreadParentAt(last)}
-          isThreadChild={slice.isThreadChildAt(last)}
+          post={slice.items[last].post}
+          record={slice.items[last].record}
+          reason={slice.items[last].reason}
+          dataUpdatedAt={dataUpdatedAt}
+          isThreadParent={isThreadParentAt(slice.items, last)}
+          isThreadChild={isThreadChildAt(slice.items, last)}
           isThreadLastChild
         />
       </>
@@ -55,12 +67,15 @@ export const FeedSlice = observer(function FeedSliceImpl({
       {slice.items.map((item, i) => (
         <FeedItem
           key={item._reactKey}
-          item={item}
+          post={slice.items[i].post}
+          record={slice.items[i].record}
+          reason={slice.items[i].reason}
+          dataUpdatedAt={dataUpdatedAt}
           source={i === 0 ? slice.source : undefined}
-          isThreadParent={slice.isThreadParentAt(i)}
-          isThreadChild={slice.isThreadChildAt(i)}
+          isThreadParent={isThreadParentAt(slice.items, i)}
+          isThreadChild={isThreadChildAt(slice.items, i)}
           isThreadLastChild={
-            slice.isThreadChildAt(i) && slice.items.length === i + 1
+            isThreadChildAt(slice.items, i) && slice.items.length === i + 1
           }
         />
       ))}
@@ -68,12 +83,12 @@ export const FeedSlice = observer(function FeedSliceImpl({
   )
 })
 
-function ViewFullThread({slice}: {slice: PostsFeedSliceModel}) {
+function ViewFullThread({slice}: {slice: FeedPostSlice}) {
   const pal = usePalette('default')
   const itemHref = React.useMemo(() => {
-    const urip = new AtUri(slice.rootItem.post.uri)
-    return makeProfileLink(slice.rootItem.post.author, 'post', urip.rkey)
-  }, [slice.rootItem.post.uri, slice.rootItem.post.author])
+    const urip = new AtUri(slice.rootUri)
+    return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
+  }, [slice.rootUri])
 
   return (
     <Link
@@ -115,3 +130,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
+
+function isThreadParentAt<T>(arr: Array<T>, i: number) {
+  if (arr.length === 1) {
+    return false
+  }
+  return i < arr.length - 1
+}
+
+function isThreadChildAt<T>(arr: Array<T>, i: number) {
+  if (arr.length === 1) {
+    return false
+  }
+  return i > 0
+}

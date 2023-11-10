@@ -1,5 +1,4 @@
 import React, {MutableRefObject} from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   RefreshControl,
@@ -11,7 +10,6 @@ import {
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
-import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
@@ -21,12 +19,14 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 
+import {FeedDescriptor, usePostFeedQuery} from '#/state/queries/post-feed'
+
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export const Feed = observer(function Feed({
+export function Feed({
   feed,
   style,
   scrollElRef,
@@ -40,7 +40,7 @@ export const Feed = observer(function Feed({
   ListHeaderComponent,
   extraData,
 }: {
-  feed: PostsFeedModel
+  feed: FeedDescriptor
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollCb
@@ -58,31 +58,41 @@ export const Feed = observer(function Feed({
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
-  const data = React.useMemo(() => {
-    let feedItems: any[] = []
-    if (feed.hasLoaded) {
-      if (feed.hasError) {
-        feedItems = feedItems.concat([ERROR_ITEM])
+  const {
+    data,
+    dataUpdatedAt,
+    isFetching,
+    isFetched,
+    isError,
+    error,
+    refetch,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = usePostFeedQuery(feed)
+  const isEmpty = isFetched && data?.pages[0]?.slices.length === 0
+
+  const feedItems = React.useMemo(() => {
+    let arr: any[] = []
+    if (isFetched) {
+      if (isError && isEmpty) {
+        arr = arr.concat([ERROR_ITEM])
       }
-      if (feed.isEmpty) {
-        feedItems = feedItems.concat([EMPTY_FEED_ITEM])
-      } else {
-        feedItems = feedItems.concat(feed.slices)
+      if (isEmpty) {
+        arr = arr.concat([EMPTY_FEED_ITEM])
+      } else if (data) {
+        for (const page of data?.pages) {
+          arr = arr.concat(page.slices)
+        }
       }
-      if (feed.loadMoreError) {
-        feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
+      if (isError && !isEmpty) {
+        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
       }
     } else {
-      feedItems.push(LOADING_ITEM)
+      arr.push(LOADING_ITEM)
     }
-    return feedItems
-  }, [
-    feed.hasError,
-    feed.hasLoaded,
-    feed.isEmpty,
-    feed.slices,
-    feed.loadMoreError,
-  ])
+    return arr
+  }, [isFetched, isError, isEmpty, data])
 
   // events
   // =
@@ -91,31 +101,31 @@ export const Feed = observer(function Feed({
     track('Feed:onRefresh')
     setIsRefreshing(true)
     try {
-      await feed.refresh()
+      await refetch()
     } catch (err) {
       logger.error('Failed to refresh posts feed', {error: err})
     }
     setIsRefreshing(false)
-  }, [feed, track, setIsRefreshing])
+  }, [refetch, track, setIsRefreshing])
 
   const onEndReached = React.useCallback(async () => {
-    if (!feed.hasLoaded || !feed.hasMore) return
+    if (isFetching || !hasNextPage) return
 
     track('Feed:onEndReached')
     try {
-      await feed.loadMore()
+      await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more posts', {error: err})
     }
-  }, [feed, track])
+  }, [isFetching, hasNextPage, fetchNextPage, track])
 
   const onPressTryAgain = React.useCallback(() => {
-    feed.refresh()
-  }, [feed])
+    refetch()
+  }, [refetch])
 
   const onPressRetryLoadMore = React.useCallback(() => {
-    feed.retryLoadMore()
-  }, [feed])
+    fetchNextPage()
+  }, [fetchNextPage])
 
   // rendering
   // =
@@ -126,7 +136,11 @@ export const Feed = observer(function Feed({
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
-          <FeedErrorMessage feed={feed} onPressTryAgain={onPressTryAgain} />
+          <FeedErrorMessage
+            feedDesc={feed}
+            error={error}
+            onPressTryAgain={onPressTryAgain}
+          />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
@@ -138,23 +152,30 @@ export const Feed = observer(function Feed({
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
-      return <FeedSlice slice={item} />
+      return <FeedSlice slice={item} dataUpdatedAt={dataUpdatedAt} />
     },
-    [feed, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
+    [
+      feed,
+      dataUpdatedAt,
+      error,
+      onPressTryAgain,
+      onPressRetryLoadMore,
+      renderEmptyState,
+    ],
   )
 
   const FeedFooter = React.useCallback(
     () =>
-      feed.isLoadingMore ? (
+      isFetchingNextPage ? (
         <View style={styles.feedFooter}>
           <ActivityIndicator />
         </View>
-      ) : !feed.hasMore && !feed.isEmpty && renderEndOfFeed ? (
+      ) : !hasNextPage && !isEmpty && renderEndOfFeed ? (
         renderEndOfFeed()
       ) : (
         <View />
       ),
-    [feed.isLoadingMore, feed.hasMore, feed.isEmpty, renderEndOfFeed],
+    [isFetchingNextPage, hasNextPage, isEmpty, renderEndOfFeed],
   )
 
   return (
@@ -162,7 +183,7 @@ export const Feed = observer(function Feed({
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={data}
+        data={feedItems}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
@@ -193,7 +214,7 @@ export const Feed = observer(function Feed({
       />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},

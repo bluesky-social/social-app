@@ -18,7 +18,7 @@ import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {FeedSourceModel} from 'state/models/content/feed-source'
-import {PostsFeedModel} from 'state/models/feeds/posts'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -153,13 +153,6 @@ export const ProfileFeedScreenInner = observer(
       [rkey, feedOwnerDid],
     )
     const feedInfo = useCustomFeed(uri)
-    const feed: PostsFeedModel = useMemo(() => {
-      const model = new PostsFeedModel(store, 'custom', {
-        feed: uri,
-      })
-      model.setup()
-      return model
-    }, [store, uri])
     const isPinned = store.preferences.isPinnedFeed(uri)
     useSetTitle(feedInfo?.displayName)
 
@@ -351,7 +344,7 @@ export const ProfileFeedScreenInner = observer(
           {({onScroll, headerHeight, isScrolledDown}) => (
             <FeedSection
               ref={feedSectionRef}
-              feed={feed}
+              feed={`feedgen|${uri}`}
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
@@ -388,7 +381,7 @@ export const ProfileFeedScreenInner = observer(
 )
 
 interface FeedSectionProps {
-  feed: PostsFeedModel
+  feed: FeedDescriptor
   onScroll: (e: NativeScrollEvent) => void
   headerHeight: number
   isScrolledDown: boolean
@@ -398,13 +391,13 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     {feed, onScroll, headerHeight, isScrolledDown},
     ref,
   ) {
-    const hasNew = feed.hasNewLatest && !feed.isRefreshing
+    const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
     const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      feed.refresh()
-    }, [feed, scrollElRef, headerHeight])
+      // feed.refresh() TODO
+    }, [scrollElRef, headerHeight])
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
