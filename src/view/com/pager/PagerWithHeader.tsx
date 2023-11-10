@@ -56,12 +56,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   ) {
     const {isMobile} = useWebMediaQueries()
     const [currentPage, setCurrentPage] = React.useState(0)
-    const clampedScrollY = useSharedValue(0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const scrollY = useSharedValue(0)
     const headerHeight = headerOnlyHeight + tabBarHeight
-    const headerOnlyHeightShared = useSharedValue(0)
 
     // capture the header bar sizing
     const onTabBarLayout = React.useCallback(
@@ -73,9 +72,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const onHeaderOnlyLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
         setHeaderOnlyHeight(evt.nativeEvent.layout.height)
-        headerOnlyHeightShared.value = evt.nativeEvent.layout.height
       },
-      [setHeaderOnlyHeight, headerOnlyHeightShared],
+      [setHeaderOnlyHeight],
     )
 
     // render the the header and tab bar
@@ -83,11 +81,14 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       () => ({
         transform: [
           {
-            translateY: Math.min(-clampedScrollY.value, 0),
+            translateY: Math.min(
+              Math.min(scrollY.value, headerOnlyHeight) * -1,
+              0,
+            ),
           },
         ],
       }),
-      [clampedScrollY, headerHeight, tabBarHeight],
+      [scrollY, headerOnlyHeight],
     )
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
@@ -131,7 +132,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 
     const scrollRefs = useSharedValue([])
     const registerRef = (ref, index) => {
-      lolWut()
       scrollRefs.modify(refs => {
         'worklet'
         refs[index] = ref
@@ -142,29 +142,16 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     // props to pass into children render functions
     const onScroll = useAnimatedScrollHandler({
       onScroll(e) {
-        // TODO: We should be able to use headerOnlyHeight directly here, but on the web
-        // there seems is a bug in Reanimated causing state inside this function to be stale.
-        clampedScrollY.value = Math.min(
-          e.contentOffset.y,
-          headerOnlyHeightShared.value,
-        )
-
-        if (e.contentOffset.y < headerOnlyHeightShared.value) {
+        const nextScrollY = e.contentOffset.y
+        scrollY.value = nextScrollY
+        if (nextScrollY < headerOnlyHeight) {
           const refs = scrollRefs.value
           for (let i = 0; i < refs.length; i++) {
-            scrollTo(refs[i], 0, e.contentOffset.y, false)
+            scrollTo(refs[i], 0, nextScrollY, false)
           }
         }
       },
     })
-    useAnimatedReaction(
-      () => clampedScrollY.value === headerOnlyHeight,
-      (nextIsScrolledDown, prevIsScrolledDown) => {
-        if (nextIsScrolledDown !== prevIsScrolledDown) {
-          runOnJS(setIsScrolledDown)(nextIsScrolledDown)
-        }
-      },
-    )
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
@@ -194,17 +181,13 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               <View key={i} collapsable={false}>
                 <PagerItem
                   headerHeight={headerHeight}
+                  isReady={
+                    isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
+                  }
                   isScrolledDown={isScrolledDown}
                   onScroll={i === currentPage ? onScroll : noop}
-                  registerRef={ref => {
-                    lolWut()
-                    registerRef(ref, i)
-                  }}
-                  renderTab={
-                    isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
-                      ? child
-                      : null
-                  }
+                  registerRef={ref => registerRef(ref, i)}
+                  renderTab={child}
                 />
               </View>
             )
@@ -214,12 +197,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   },
 )
 
-function lolWut() {
-  console.log('hi')
-}
-
 function PagerItem({
   headerHeight,
+  isReady,
   isScrolledDown,
   onScroll,
   renderTab,
@@ -231,10 +211,9 @@ function PagerItem({
   onScroll: OnScrollCb
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
 }) {
-  lolWut()
   const scrollElRef = useAnimatedRef()
   registerRef(scrollElRef)
-  if (renderTab == null) {
+  if (!isReady || renderTab == null) {
     return null
   }
   return renderTab({
