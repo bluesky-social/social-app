@@ -219,9 +219,10 @@ export const ProfileListScreenInner = observer(
             items={SECTION_TITLES_MOD}
             isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}>
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 list={list}
+                scrollElRef={scrollElRef}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
                 isCurateList={list.isCuratelist}

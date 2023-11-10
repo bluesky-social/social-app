@@ -352,7 +352,7 @@ export const ProfileFeedScreenInner = observer(
               scrollElRef={scrollElRef}
             />
           )}
-          {({onScroll, headerHeight}) => (
+          {({onScroll, headerHeight, scrollElRef}) => (
             <AboutSection
               feedOwnerDid={feedOwnerDid}
               feedRkey={rkey}
