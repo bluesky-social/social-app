@@ -84,7 +84,7 @@ export function Feed({
     fetchNextPage,
     pollLatest,
   } = usePostFeedQuery(feed, feedParams, opts)
-  const isEmpty = isFetched && data?.pages[0]?.slices.length === 0
+  const isEmpty = !isFetching && !data?.pages[0]?.slices.length
 
   const checkForNew = React.useCallback(async () => {
     if (!isFetched || isFetching || !onHasNew) {
@@ -203,18 +203,20 @@ export function Feed({
     ],
   )
 
+  const shouldRenderEndOfFeed =
+    !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
   const FeedFooter = React.useCallback(
     () =>
       isFetchingNextPage ? (
         <View style={styles.feedFooter}>
           <ActivityIndicator />
         </View>
-      ) : !hasNextPage && !isEmpty && renderEndOfFeed ? (
+      ) : shouldRenderEndOfFeed ? (
         renderEndOfFeed()
       ) : (
         <View />
       ),
-    [isFetchingNextPage, hasNextPage, isEmpty, renderEndOfFeed],
+    [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed],
   )
 
   return (
