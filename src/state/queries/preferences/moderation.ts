@@ -1,28 +1,57 @@
-import {LabelPreferencesModel} from 'state/models/ui/preferences'
-import {LabelValGroup} from './types'
+import {ComAtprotoLabelDefs} from '@atproto/api'
 
-export const ILLEGAL_LABEL_GROUP: LabelValGroup = {
+import {
+  LabelGroup,
+  ConfigurableLabelGroup,
+  LabelPreference,
+} from '#/state/queries/preferences/types'
+
+export type Label = ComAtprotoLabelDefs.Label
+
+export type LabelGroupConfig = {
+  id: LabelGroup
+  title: string
+  isAdultImagery?: boolean
+  subtitle?: string
+  warning: string
+  values: string[]
+}
+
+export const DEFAULT_LABEL_PREFERENCES: Record<
+  ConfigurableLabelGroup,
+  LabelPreference
+> = {
+  nsfw: 'hide',
+  nudity: 'warn',
+  suggestive: 'warn',
+  gore: 'warn',
+  hate: 'hide',
+  spam: 'hide',
+  impersonation: 'hide',
+}
+
+export const ILLEGAL_LABEL_GROUP: LabelGroupConfig = {
   id: 'illegal',
   title: 'Illegal Content',
   warning: 'Illegal Content',
   values: ['csam', 'dmca-violation', 'nudity-nonconsensual'],
 }
 
-export const ALWAYS_FILTER_LABEL_GROUP: LabelValGroup = {
+export const ALWAYS_FILTER_LABEL_GROUP: LabelGroupConfig = {
   id: 'always-filter',
   title: 'Content Warning',
   warning: 'Content Warning',
   values: ['!filter'],
 }
 
-export const ALWAYS_WARN_LABEL_GROUP: LabelValGroup = {
+export const ALWAYS_WARN_LABEL_GROUP: LabelGroupConfig = {
   id: 'always-warn',
   title: 'Content Warning',
   warning: 'Content Warning',
   values: ['!warn', 'account-security'],
 }
 
-export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
+export const UNKNOWN_LABEL_GROUP: LabelGroupConfig = {
   id: 'unknown',
   title: 'Unknown Label',
   warning: 'Content Warning',
@@ -30,8 +59,8 @@ export const UNKNOWN_LABEL_GROUP: LabelValGroup = {
 }
 
 export const CONFIGURABLE_LABEL_GROUPS: Record<
-  keyof LabelPreferencesModel,
-  LabelValGroup
+  ConfigurableLabelGroup,
+  LabelGroupConfig
 > = {
   nsfw: {
     id: 'nsfw',

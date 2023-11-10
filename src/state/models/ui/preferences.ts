@@ -226,19 +226,6 @@ export class PreferencesModel {
   // moderation
   // =
 
-  async setContentLabelPref(
-    key: keyof LabelPreferencesModel,
-    value: LabelPreference,
-  ) {
-    this.contentLabels[key] = value
-    await this.rootStore.agent.setContentLabelPref(key, value)
-  }
-
-  async setAdultContentEnabled(v: boolean) {
-    this.adultContentEnabled = v
-    await this.rootStore.agent.setAdultContentEnabled(v)
-  }
-
   get moderationOpts(): ModerationOpts {
     return {
       userDid: this.rootStore.session.currentSession?.did || '',
