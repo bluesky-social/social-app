@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -17,7 +18,7 @@ import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {FeedSourceModel} from 'state/models/content/feed-source'
-import {PostsFeedModel} from 'state/models/feeds/posts'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -32,6 +33,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -154,13 +156,6 @@ export const ProfileFeedScreenInner = observer(
       [rkey, feedOwnerDid],
     )
     const feedInfo = useCustomFeed(uri)
-    const feed: PostsFeedModel = useMemo(() => {
-      const model = new PostsFeedModel(store, 'custom', {
-        feed: uri,
-      })
-      model.setup()
-      return model
-    }, [store, uri])
     const isPinned = store.preferences.isPinnedFeed(uri)
     useSetTitle(feedInfo?.displayName)
 
@@ -352,7 +347,7 @@ export const ProfileFeedScreenInner = observer(
           {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
             <FeedSection
               ref={feedSectionRef}
-              feed={feed}
+              feed={`feedgen|${uri}`}
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
@@ -395,7 +390,7 @@ export const ProfileFeedScreenInner = observer(
 )
 
 interface FeedSectionProps {
-  feed: PostsFeedModel
+  feed: FeedDescriptor
   onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
@@ -406,12 +401,14 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
     ref,
   ) {
-    const hasNew = feed.hasNewLatest && !feed.isRefreshing
+    const [hasNew, setHasNew] = React.useState(false)
+    const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      feed.refresh()
-    }, [feed, scrollElRef, headerHeight])
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      setHasNew(false)
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
@@ -425,7 +422,9 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       <View>
         <Feed
           feed={feed}
+          pollInterval={30e3}
           scrollElRef={scrollElRef}
+          onHasNew={setHasNew}
           onScroll={onScroll}
           scrollEventThrottle={5}
           renderEmptyState={renderPostsEmpty}

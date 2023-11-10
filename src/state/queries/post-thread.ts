@@ -57,17 +57,17 @@ export type ThreadNode =
 
 export function usePostThreadQuery(uri: string | undefined) {
   const {agent} = useSession()
-  return useQuery<ThreadNode, Error>(
-    RQKEY(uri || ''),
-    async () => {
+  return useQuery<ThreadNode, Error>({
+    queryKey: RQKEY(uri || ''),
+    async queryFn() {
       const res = await agent.getPostThread({uri: uri!})
       if (res.success) {
         return responseToThreadNodes(res.data.thread)
       }
       return {type: 'unknown', uri: uri!}
     },
-    {enabled: !!uri},
-  )
+    enabled: !!uri,
+  })
 }
 
 export function sortThread(

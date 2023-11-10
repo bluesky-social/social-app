@@ -63,7 +63,7 @@
     "@segment/analytics-react-native": "^2.10.1",
     "@segment/sovran-react-native": "^0.4.5",
     "@sentry/react-native": "5.10.0",
-    "@tanstack/react-query": "^4.33.0",
+    "@tanstack/react-query": "^5.8.1",
     "@tiptap/core": "^2.0.0-beta.220",
     "@tiptap/extension-document": "^2.0.0-beta.220",
     "@tiptap/extension-hard-break": "^2.0.3",

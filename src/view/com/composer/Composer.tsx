@@ -245,7 +245,7 @@ export const ComposePost = observer(function ComposePost({
       if (replyTo && replyTo.uri) track('Post:Reply')
     }
     if (!replyTo) {
-      store.me.mainFeed.onPostCreated()
+      // TODO onPostCreated
     }
     setLangPrefs.savePostLanguageToHistory()
     onPost?.()

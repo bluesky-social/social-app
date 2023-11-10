@@ -7,9 +7,9 @@ export const RQKEY = (postUri: string) => ['post', postUri]
 
 export function usePostQuery(uri: string | undefined) {
   const {agent} = useSession()
-  return useQuery<AppBskyFeedDefs.PostView>(
-    RQKEY(uri || ''),
-    async () => {
+  return useQuery<AppBskyFeedDefs.PostView>({
+    queryKey: RQKEY(uri || ''),
+    async queryFn() {
       const res = await agent.getPosts({uris: [uri!]})
       if (res.success && res.data.posts[0]) {
         return res.data.posts[0]
@@ -17,10 +17,8 @@ export function usePostQuery(uri: string | undefined) {
 
       throw new Error('No data')
     },
-    {
-      enabled: !!uri,
-    },
-  )
+    enabled: !!uri,
+  })
 }
 
 export function usePostLikeMutation() {
@@ -29,7 +27,8 @@ export function usePostLikeMutation() {
     {uri: string}, // responds with the uri of the like
     Error,
     {uri: string; cid: string; likeCount: number} // the post's uri, cid, and likes
-  >(post => agent.like(post.uri, post.cid), {
+  >({
+    mutationFn: post => agent.like(post.uri, post.cid),
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.uri, {
@@ -59,27 +58,25 @@ export function usePostUnlikeMutation() {
     void,
     Error,
     {postUri: string; likeUri: string; likeCount: number}
-  >(
-    async ({likeUri}) => {
+  >({
+    mutationFn: async ({likeUri}) => {
       await agent.deleteLike(likeUri)
     },
-    {
-      onMutate(variables) {
-        // optimistically update the post-shadow
-        updatePostShadow(variables.postUri, {
-          likeCount: variables.likeCount - 1,
-          likeUri: undefined,
-        })
-      },
-      onError(error, variables) {
-        // revert the optimistic update
-        updatePostShadow(variables.postUri, {
-          likeCount: variables.likeCount,
-          likeUri: variables.likeUri,
-        })
-      },
+    onMutate(variables) {
+      // optimistically update the post-shadow
+      updatePostShadow(variables.postUri, {
+        likeCount: variables.likeCount - 1,
+        likeUri: undefined,
+      })
     },
-  )
+    onError(error, variables) {
+      // revert the optimistic update
+      updatePostShadow(variables.postUri, {
+        likeCount: variables.likeCount,
+        likeUri: variables.likeUri,
+      })
+    },
+  })
 }
 
 export function usePostRepostMutation() {
@@ -88,7 +85,8 @@ export function usePostRepostMutation() {
     {uri: string}, // responds with the uri of the repost
     Error,
     {uri: string; cid: string; repostCount: number} // the post's uri, cid, and reposts
-  >(post => agent.repost(post.uri, post.cid), {
+  >({
+    mutationFn: post => agent.repost(post.uri, post.cid),
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.uri, {
@@ -118,39 +116,35 @@ export function usePostUnrepostMutation() {
     void,
     Error,
     {postUri: string; repostUri: string; repostCount: number}
-  >(
-    async ({repostUri}) => {
+  >({
+    mutationFn: async ({repostUri}) => {
       await agent.deleteRepost(repostUri)
     },
-    {
-      onMutate(variables) {
-        // optimistically update the post-shadow
-        updatePostShadow(variables.postUri, {
-          repostCount: variables.repostCount - 1,
-          repostUri: undefined,
-        })
-      },
-      onError(error, variables) {
-        // revert the optimistic update
-        updatePostShadow(variables.postUri, {
-          repostCount: variables.repostCount,
-          repostUri: variables.repostUri,
-        })
-      },
+    onMutate(variables) {
+      // optimistically update the post-shadow
+      updatePostShadow(variables.postUri, {
+        repostCount: variables.repostCount - 1,
+        repostUri: undefined,
+      })
     },
-  )
+    onError(error, variables) {
+      // revert the optimistic update
+      updatePostShadow(variables.postUri, {
+        repostCount: variables.repostCount,
+        repostUri: variables.repostUri,
+      })
+    },
+  })
 }
 
 export function usePostDeleteMutation() {
   const {agent} = useSession()
-  return useMutation<void, Error, {uri: string}>(
-    async ({uri}) => {
+  return useMutation<void, Error, {uri: string}>({
+    mutationFn: async ({uri}) => {
       await agent.deletePost(uri)
     },
-    {
-      onSuccess(data, variables) {
-        updatePostShadow(variables.uri, {isDeleted: true})
-      },
+    onSuccess(data, variables) {
+      updatePostShadow(variables.uri, {isDeleted: true})
     },
-  )
+  })
 }
