@@ -2,6 +2,7 @@ import React, {MutableRefObject} from 'react'
 import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  Dimensions,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -15,7 +16,6 @@ import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
-import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
@@ -178,7 +178,9 @@ export const Feed = observer(function Feed({
             progressViewOffset={headerOffset}
           />
         }
-        contentContainerStyle={s.contentContainer}
+        contentContainerStyle={{
+          paddingBottom: Dimensions.get('window').height - headerOffset,
+        }}
         style={{paddingTop: headerOffset}}
         onScroll={onScroll != null ? scrollHandler : undefined}
         scrollEventThrottle={scrollEventThrottle}

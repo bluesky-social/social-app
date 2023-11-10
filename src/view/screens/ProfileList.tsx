@@ -175,18 +175,24 @@ export const ProfileListScreenInner = observer(
             isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}
             onCurrentPageSelected={onCurrentPageSelected}>
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <FeedSection
                 ref={feedSectionRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 feed={feed}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
                 isScrolledDown={isScrolledDown}
               />
             )}
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 ref={aboutSectionRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
@@ -223,9 +229,12 @@ export const ProfileListScreenInner = observer(
             items={SECTION_TITLES_MOD}
             isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}>
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 list={list}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
                 isCurateList={list.isCuratelist}
@@ -557,14 +566,14 @@ interface FeedSectionProps {
   onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown},
+    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown},
     ref,
   ) {
     const hasNew = feed.hasNewLatest && !feed.isRefreshing
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
@@ -611,6 +620,7 @@ interface AboutSectionProps {
   onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
@@ -624,13 +634,13 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       onScroll,
       headerHeight,
       isScrolledDown,
+      scrollElRef,
     },
     ref,
   ) {
     const pal = usePalette('default')
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
