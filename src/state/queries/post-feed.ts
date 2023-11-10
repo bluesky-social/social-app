@@ -3,7 +3,7 @@ import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
 import {useSession} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
-import {FeedTuner} from 'lib/api/feed-manip'
+import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI} from 'lib/api/feed/types'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
@@ -57,7 +57,7 @@ export interface FeedPage {
 
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
-  opts?: {enabled?: boolean},
+  opts?: {enabled?: boolean; disableTuner?: boolean},
 ) {
   const {agent} = useSession()
   const feedTuners = useFeedTuners(feedDesc)
@@ -86,7 +86,10 @@ export function usePostFeedQuery(
       return new FollowingFeedAPI(agent)
     }
   }, [feedDesc, agent])
-  const tuner = useMemo(() => new FeedTuner(), [])
+  const tuner = useMemo(
+    () => (opts?.disableTuner ? new NoopFeedTuner() : new FeedTuner()),
+    [opts?.disableTuner],
+  )
 
   const pollLatest = useCallback(async () => {
     if (!enabled) {
