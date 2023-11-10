@@ -4,6 +4,7 @@ import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
+import {PUBLIC_BSKY_AGENT} from '#/data'
 
 export type SessionAccount = persisted.PersistedAccount
 
@@ -42,10 +43,6 @@ export type ApiContext = {
   ) => void
   clearCurrentAccount: () => void
 }
-
-export const PUBLIC_BSKY_AGENT = new BskyAgent({
-  service: 'https://api.bsky.app',
-})
 
 const StateContext = React.createContext<StateContext>({
   agent: PUBLIC_BSKY_AGENT,
