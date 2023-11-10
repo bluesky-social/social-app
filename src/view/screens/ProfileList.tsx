@@ -1,11 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
@@ -175,18 +169,20 @@ export const ProfileListScreenInner = observer(
             isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}
             onCurrentPageSelected={onCurrentPageSelected}>
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <FeedSection
                 ref={feedSectionRef}
+                scrollElRef={scrollElRef}
                 feed={feed}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
                 isScrolledDown={isScrolledDown}
               />
             )}
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 ref={aboutSectionRef}
+                scrollElRef={scrollElRef}
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
@@ -557,14 +553,14 @@ interface FeedSectionProps {
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: any /* TODO */
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown},
+    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown},
     ref,
   ) {
     const hasNew = feed.hasNewLatest && !feed.isRefreshing
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
@@ -611,6 +607,7 @@ interface AboutSectionProps {
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: any /* TODO */
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
@@ -624,13 +621,13 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       onScroll,
       headerHeight,
       isScrolledDown,
+      scrollElRef,
     },
     ref,
   ) {
     const pal = usePalette('default')
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})

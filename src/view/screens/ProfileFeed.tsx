@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -342,13 +342,14 @@ export const ProfileFeedScreenInner = observer(
           isHeaderReady={feedInfo?.hasLoaded ?? false}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({onScroll, headerHeight, isScrolledDown}) => (
+          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
             <FeedSection
               ref={feedSectionRef}
               feed={feed}
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
+              scrollElRef={scrollElRef}
             />
           )}
           {({onScroll, headerHeight}) => (
@@ -359,6 +360,7 @@ export const ProfileFeedScreenInner = observer(
               headerHeight={headerHeight}
               onToggleLiked={onToggleLiked}
               onScroll={onScroll}
+              scrollElRef={scrollElRef}
             />
           )}
         </PagerWithHeader>
@@ -386,14 +388,14 @@ interface FeedSectionProps {
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: any /* TODO */
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown},
+    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
     ref,
   ) {
     const hasNew = feed.hasNewLatest && !feed.isRefreshing
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
@@ -437,6 +439,7 @@ const AboutSection = observer(function AboutPageImpl({
   headerHeight,
   onToggleLiked,
   onScroll,
+  scrollElRef,
 }: {
   feedOwnerDid: string
   feedRkey: string
@@ -444,6 +447,7 @@ const AboutSection = observer(function AboutPageImpl({
   headerHeight: number
   onToggleLiked: () => void
   onScroll: OnScrollCb
+  scrollElRef: any /* TODO */
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -454,6 +458,7 @@ const AboutSection = observer(function AboutPageImpl({
 
   return (
     <ScrollView
+      ref={scrollElRef}
       scrollEventThrottle={1}
       contentContainerStyle={{paddingTop: headerHeight}}
       onScroll={onScroll}>

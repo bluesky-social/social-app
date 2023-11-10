@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   runOnJS,
+  useAnimatedRef,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
@@ -20,6 +21,7 @@ interface PagerWithHeaderChildParams {
   headerHeight: number
   onScroll: OnScrollCb
   isScrolledDown: boolean
+  scrollElRef: any /* TODO */
 }
 
 export interface PagerWithHeaderProps {
@@ -204,6 +206,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 function PagerItem(
   {headerHeight, isScrolledDown, onScroll, renderTab}: any /* TODO */,
 ) {
+  const scrollElRef = useAnimatedRef()
   if (renderTab == null) {
     return null
   }
@@ -211,6 +214,7 @@ function PagerItem(
     headerHeight,
     isScrolledDown,
     onScroll,
+    scrollElRef,
   })
 }
 
