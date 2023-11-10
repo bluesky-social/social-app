@@ -1,6 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AtUri, AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
+import {
+  AppBskyFeedGetAuthorFeed,
+  AtUri,
+  AppBskyFeedGetFeed as GetCustomFeed,
+} from '@atproto/api'
 import {PostsFeedModel, KnownError} from 'state/models/feeds/posts'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
@@ -13,6 +17,7 @@ import {useStores} from 'state/index'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {FeedDescriptor} from '#/state/queries/post-feed'
+import {EmptyState} from '../util/EmptyState'
 
 const MESSAGES = {
   [KnownError.Unknown]: '',
@@ -46,6 +51,16 @@ export function FeedErrorMessage({
     true /*TODO*/
   ) {
     return <ErrorMessage message={error} onPressTryAgain={onPressTryAgain} />
+  }
+
+  if (knownError === KnownError.Block) {
+    return (
+      <EmptyState
+        icon="ban"
+        message="Posts hidden"
+        style={{paddingVertical: 40}}
+      />
+    )
   }
 
   // TODO
@@ -134,6 +149,12 @@ function detectKnownError(
 ): KnownError | undefined {
   if (!error) {
     return undefined
+  }
+  if (
+    error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
+    error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+  ) {
+    return KnownError.Block
   }
   if (typeof error !== 'string') {
     error = error.toString()

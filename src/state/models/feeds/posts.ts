@@ -29,6 +29,7 @@ const PAGE_SIZE = 30
 type FeedType = 'home' | 'following' | 'author' | 'custom' | 'likes' | 'list'
 
 export enum KnownError {
+  Block,
   FeedgenDoesNotExist,
   FeedgenMisconfigured,
   FeedgenBadResponse,
