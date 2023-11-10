@@ -3,7 +3,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
@@ -54,6 +54,19 @@ export const HomeScreen = withAuthRequired(
       pagerRef,
       requestedCustomFeeds,
       setRequestedCustomFeeds,
+    ])
+
+    const homeFeedParams = React.useMemo<FeedParams>(() => {
+      if (!store.preferences.homeFeed.lab_mergeFeedEnabled) {
+        return {}
+      }
+      return {
+        mergeFeedEnabled: true,
+        mergeFeedSources: store.preferences.savedFeeds,
+      }
+    }, [
+      store.preferences.homeFeed.lab_mergeFeedEnabled,
+      store.preferences.savedFeeds,
     ])
 
     useFocusEffect(
@@ -123,7 +136,8 @@ export const HomeScreen = withAuthRequired(
           key="1"
           testID="followingFeedPage"
           isPageFocused={selectedPage === 0}
-          feed="following"
+          feed="home"
+          feedParams={homeFeedParams}
           renderEmptyState={renderFollowingEmptyState}
           renderEndOfFeed={FollowingEndOfFeed}
         />

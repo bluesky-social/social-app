@@ -4,7 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
 } from '@atproto/api'
-import {FeedSourceInfo} from './feed/types'
+import {ReasonFeedSource} from './feed/types'
 import {isPostInLanguage} from '../../locale/helpers'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
@@ -65,9 +65,9 @@ export class FeedViewPostsSlice {
     )
   }
 
-  get source(): FeedSourceInfo | undefined {
+  get source(): ReasonFeedSource | undefined {
     return this.items.find(item => '__source' in item && !!item.__source)
-      ?.__source as FeedSourceInfo
+      ?.__source as ReasonFeedSource
   }
 
   containsUri(uri: string) {

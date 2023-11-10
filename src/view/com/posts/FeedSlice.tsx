@@ -48,7 +48,6 @@ export const FeedSlice = observer(function FeedSliceImpl({
           reason={slice.items[0].reason}
           moderation={moderations[0]}
           dataUpdatedAt={dataUpdatedAt}
-          source={slice.source}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
         />
@@ -88,7 +87,6 @@ export const FeedSlice = observer(function FeedSliceImpl({
           reason={slice.items[i].reason}
           moderation={moderations[i]}
           dataUpdatedAt={dataUpdatedAt}
-          source={i === 0 ? slice.source : undefined}
           isThreadParent={isThreadParentAt(slice.items, i)}
           isThreadChild={isThreadChildAt(slice.items, i)}
           isThreadLastChild={

@@ -18,8 +18,11 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
-
-import {FeedDescriptor, usePostFeedQuery} from '#/state/queries/post-feed'
+import {
+  FeedDescriptor,
+  FeedParams,
+  usePostFeedQuery,
+} from '#/state/queries/post-feed'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -28,6 +31,7 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 export function Feed({
   feed,
+  feedParams,
   style,
   enabled,
   pollInterval,
@@ -44,6 +48,7 @@ export function Feed({
   extraData,
 }: {
   feed: FeedDescriptor
+  feedParams?: FeedParams
   style?: StyleProp<ViewStyle>
   enabled?: boolean
   pollInterval?: number
@@ -63,7 +68,9 @@ export function Feed({
   const theme = useTheme()
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const checkForNewRef = React.useRef<(() => void) | null>(null)
 
+  const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
     dataUpdatedAt,
@@ -76,7 +83,7 @@ export function Feed({
     isFetchingNextPage,
     fetchNextPage,
     pollLatest,
-  } = usePostFeedQuery(feed, {enabled})
+  } = usePostFeedQuery(feed, feedParams, opts)
   const isEmpty = isFetched && data?.pages[0]?.slices.length === 0
 
   const checkForNew = React.useCallback(async () => {
@@ -93,11 +100,14 @@ export function Feed({
   }, [feed, isFetched, isFetching, pollLatest, onHasNew])
 
   React.useEffect(() => {
-    const i = setInterval(checkForNew, pollInterval)
-    return () => {
-      clearInterval(i)
-    }
-  })
+    // we store the interval handler in a ref to avoid needless
+    // reassignments of the interval
+    checkForNewRef.current = checkForNew
+  }, [checkForNew])
+  React.useEffect(() => {
+    const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
+    return () => clearInterval(i)
+  }, [pollInterval])
 
   const feedItems = React.useMemo(() => {
     let arr: any[] = []

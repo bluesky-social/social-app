@@ -4,7 +4,7 @@ import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
 import {useSession} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
-import {FeedAPI} from 'lib/api/feed/types'
+import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {LikesFeedAPI} from 'lib/api/feed/likes'
@@ -27,11 +27,16 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+export interface FeedParams {
+  disableTuner?: boolean
+  mergeFeedEnabled?: boolean
+  mergeFeedSources?: string[]
+}
 
 type RQPageParam = string | undefined
 
-export function RQKEY(feedDesc: FeedDescriptor) {
-  return ['post-feed', feedDesc]
+export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
+  return ['post-feed', feedDesc, params || {}]
 }
 
 export interface FeedPostSliceItem {
@@ -39,14 +44,13 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason?: AppBskyFeedDefs.ReasonRepost
+  reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
 }
 
 export interface FeedPostSlice {
   _reactKey: string
   rootUri: string
   isThread: boolean
-  source: undefined // TODO
   items: FeedPostSliceItem[]
 }
 
@@ -57,7 +61,8 @@ export interface FeedPage {
 
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
-  opts?: {enabled?: boolean; disableTuner?: boolean},
+  params?: FeedParams,
+  opts?: {enabled?: boolean},
 ) {
   const {agent} = useSession()
   const feedTuners = useFeedTuners(feedDesc)
@@ -66,7 +71,7 @@ export function usePostFeedQuery(
 
   const api: FeedAPI = useMemo(() => {
     if (feedDesc === 'home') {
-      return new MergeFeedAPI(agent)
+      return new MergeFeedAPI(agent, params || {}, feedTuners)
     } else if (feedDesc === 'following') {
       return new FollowingFeedAPI(agent)
     } else if (feedDesc.startsWith('author')) {
@@ -85,17 +90,17 @@ export function usePostFeedQuery(
       // shouldnt happen
       return new FollowingFeedAPI(agent)
     }
-  }, [feedDesc, agent])
+  }, [feedDesc, params, feedTuners, agent])
   const tuner = useMemo(
-    () => (opts?.disableTuner ? new NoopFeedTuner() : new FeedTuner()),
-    [opts?.disableTuner],
+    () => (params?.disableTuner ? new NoopFeedTuner() : new FeedTuner()),
+    [params],
   )
 
   const pollLatest = useCallback(async () => {
     if (!enabled) {
       return false
     }
-    console.log('polling')
+    console.log('poll')
     const post = await api.peekLatest()
     if (post) {
       const slices = tuner.tune([post], feedTuners, {
@@ -123,7 +128,7 @@ export function usePostFeedQuery(
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(feedDesc),
+    queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       console.log('fetch', feedDesc, pageParam)
       if (!pageParam) {
@@ -153,7 +158,7 @@ export function usePostFeedQuery(
                   uri: item.post.uri,
                   post: item.post,
                   record: item.post.record,
-                  reason: item.reason,
+                  reason: i === 0 && slice.source ? slice.source : item.reason,
                 }
               }
               return undefined

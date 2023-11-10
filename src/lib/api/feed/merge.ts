@@ -4,7 +4,9 @@ import {timeout} from 'lib/async/timeout'
 import {bundleAsync} from 'lib/async/bundle'
 import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
-import {FeedAPI, FeedAPIResponse, FeedSourceInfo} from './types'
+import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
+import {FeedParams} from '#/state/queries/post-feed'
+import {FeedTunerFn} from '../feed-manip'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -16,16 +18,30 @@ export class MergeFeedAPI implements FeedAPI {
   itemCursor = 0
   sampleCursor = 0
 
-  constructor(public agent: BskyAgent) {
-    this.following = new MergeFeedSource_Following(this.agent)
+  constructor(
+    public agent: BskyAgent,
+    public params: FeedParams,
+    public feedTuners: FeedTunerFn[],
+  ) {
+    this.following = new MergeFeedSource_Following(this.agent, this.feedTuners)
   }
 
   reset() {
-    this.following = new MergeFeedSource_Following(this.agent)
+    this.following = new MergeFeedSource_Following(this.agent, this.feedTuners)
     this.customFeeds = [] // just empty the array, they will be captured in _fetchNext()
     this.feedCursor = 0
     this.itemCursor = 0
     this.sampleCursor = 0
+    if (this.params.mergeFeedEnabled && this.params.mergeFeedSources) {
+      this.customFeeds = shuffle(
+        this.params.mergeFeedSources.map(
+          feedUri =>
+            new MergeFeedSource_Custom(this.agent, feedUri, this.feedTuners),
+        ),
+      )
+    } else {
+      this.customFeeds = []
+    }
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
@@ -45,9 +61,6 @@ export class MergeFeedAPI implements FeedAPI {
     if (!cursor) {
       this.reset()
     }
-
-    // we capture here to ensure the data has loaded
-    this._captureFeedsIfNeeded()
 
     const promises = []
 
@@ -85,7 +98,7 @@ export class MergeFeedAPI implements FeedAPI {
     }
 
     return {
-      cursor: posts.length ? 'fake' : undefined,
+      cursor: posts.length ? String(this.itemCursor) : undefined,
       feed: posts,
     }
   }
@@ -116,29 +129,15 @@ export class MergeFeedAPI implements FeedAPI {
     // provide follow
     return this.following.take(1)
   }
-
-  _captureFeedsIfNeeded() {
-    // TODO
-    // if (!this.agent.preferences.homeFeed.lab_mergeFeedEnabled) {
-    //   return
-    // }
-    // if (this.customFeeds.length === 0) {
-    //   this.customFeeds = shuffle(
-    //     this.agent.preferences.savedFeeds.map(
-    //       feedUri => new MergeFeedSource_Custom(this.agent, feedUri),
-    //     ),
-    //   )
-    // }
-  }
 }
 
 class MergeFeedSource {
-  sourceInfo: FeedSourceInfo | undefined
+  sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
   queue: AppBskyFeedDefs.FeedViewPost[] = []
   hasMore = true
 
-  constructor(public agent: BskyAgent) {}
+  constructor(public agent: BskyAgent, public feedTuners: FeedTunerFn[]) {}
 
   get numReady() {
     return this.queue.length
@@ -202,14 +201,10 @@ class MergeFeedSource_Following extends MergeFeedSource {
   ): Promise<AppBskyFeedGetTimeline.Response> {
     const res = await this.agent.getTimeline({cursor, limit})
     // run the tuner pre-emptively to ensure better mixing
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.agent.preferences.getFeedTuners('home'),
-      {
-        dryRun: false,
-        maintainOrder: true,
-      },
-    )
+    const slices = this.tuner.tune(res.data.feed, this.feedTuners, {
+      dryRun: false,
+      maintainOrder: true,
+    })
     res.data.feed = slices.map(slice => slice.rootItem)
     return res
   }
@@ -218,9 +213,14 @@ class MergeFeedSource_Following extends MergeFeedSource {
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
 
-  constructor(public agent: BskyAgent, public feedUri: string) {
-    super(agent)
+  constructor(
+    public agent: BskyAgent,
+    public feedUri: string,
+    public feedTuners: FeedTunerFn[],
+  ) {
+    super(agent, feedTuners)
     this.sourceInfo = {
+      $type: 'reasonFeedSource',
       displayName: feedUri.split('/').pop() || '',
       uri: feedUriToHref(feedUri),
     }

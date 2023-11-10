@@ -11,7 +11,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {FeedSourceInfo} from 'lib/api/feed/types'
+import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
 import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
@@ -41,17 +41,15 @@ export function FeedItem({
   reason,
   moderation,
   dataUpdatedAt,
-  source,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | undefined
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   moderation: PostModeration
   dataUpdatedAt: number
-  source?: FeedSourceInfo
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -76,7 +74,6 @@ export function FeedItem({
         reason={reason}
         richText={richText}
         moderation={moderation}
-        source={source}
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
@@ -92,17 +89,15 @@ function FeedItemLoaded({
   reason,
   richText,
   moderation,
-  source,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | undefined
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   richText: RichTextAPI
   moderation: PostModeration
-  source?: FeedSourceInfo
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -186,10 +181,10 @@ function FeedItemLoaded({
         </View>
 
         <View style={{paddingTop: 12, flexShrink: 1}}>
-          {source ? (
+          {isReasonFeedSource(reason) ? (
             <Link
-              title={sanitizeDisplayName(source.displayName)}
-              href={source.uri}>
+              title={sanitizeDisplayName(reason.displayName)}
+              href={reason.uri}>
               <Text
                 type="sm-bold"
                 style={pal.textLight}
@@ -201,8 +196,8 @@ function FeedItemLoaded({
                   style={pal.textLight}
                   lineHeight={1.2}
                   numberOfLines={1}
-                  text={sanitizeDisplayName(source.displayName)}
-                  href={source.uri}
+                  text={sanitizeDisplayName(reason.displayName)}
+                  href={reason.uri}
                 />
               </Text>
             </Link>

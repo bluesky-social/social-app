@@ -16,7 +16,17 @@ export interface FeedAPI {
   }): Promise<FeedAPIResponse>
 }
 
-export interface FeedSourceInfo {
+export interface ReasonFeedSource {
+  $type: 'reasonFeedSource'
   uri: string
   displayName: string
+}
+
+export function isReasonFeedSource(v: unknown): v is ReasonFeedSource {
+  return (
+    !!v &&
+    typeof v === 'object' &&
+    '$type' in v &&
+    v.$type === 'reasonFeedSource'
+  )
 }

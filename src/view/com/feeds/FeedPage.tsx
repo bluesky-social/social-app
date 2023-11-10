@@ -9,7 +9,7 @@ import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
 import React from 'react'
@@ -28,11 +28,13 @@ export function FeedPage({
   testID,
   isPageFocused,
   feed,
+  feedParams,
   renderEmptyState,
   renderEndOfFeed,
 }: {
   testID?: string
   feed: FeedDescriptor
+  feedParams?: FeedParams
   isPageFocused: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
@@ -145,6 +147,7 @@ export function FeedPage({
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
         feed={feed}
+        feedParams={feedParams}
         enabled={isPageFocused}
         pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
