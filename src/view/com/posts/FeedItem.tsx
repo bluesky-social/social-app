@@ -4,7 +4,6 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  moderatePost,
   PostModeration,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -40,6 +39,7 @@ export function FeedItem({
   post,
   record,
   reason,
+  moderation,
   dataUpdatedAt,
   source,
   isThreadChild,
@@ -49,13 +49,13 @@ export function FeedItem({
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | undefined
+  moderation: PostModeration
   dataUpdatedAt: number
   source?: FeedSourceInfo
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
 }) {
-  const store = useStores()
   const postShadowed = usePostShadow(post, dataUpdatedAt)
   const richText = useMemo(
     () =>
@@ -64,11 +64,6 @@ export function FeedItem({
         facets: record.facets,
       }),
     [record],
-  )
-  const moderation = useMemo(
-    () =>
-      post ? moderatePost(post, store.preferences.moderationOpts) : undefined,
-    [post, store],
   )
   if (postShadowed === POST_TOMBSTONE) {
     return null

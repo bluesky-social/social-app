@@ -2,13 +2,14 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FeedPostSlice} from '#/state/queries/post-feed'
-import {AtUri} from '@atproto/api'
+import {AtUri, moderatePost} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
+import {useStores} from '#/state'
 
 export const FeedSlice = observer(function FeedSliceImpl({
   slice,
@@ -19,10 +20,22 @@ export const FeedSlice = observer(function FeedSliceImpl({
   dataUpdatedAt: number
   ignoreFilterFor?: string
 }) {
-  // TODO
-  // if (slice.shouldFilter(ignoreFilterFor)) {
-  //   return null
-  // }
+  const store = useStores()
+  const moderations = React.useMemo(() => {
+    return slice.items.map(item =>
+      moderatePost(item.post, store.preferences.moderationOpts),
+    )
+  }, [slice, store.preferences.moderationOpts])
+
+  // apply moderation filter
+  for (let i = 0; i < slice.items.length; i++) {
+    if (
+      moderations[i]?.content.filter &&
+      slice.items[i].post.author.did !== ignoreFilterFor
+    ) {
+      return null
+    }
+  }
 
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
@@ -33,6 +46,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
           post={slice.items[0].post}
           record={slice.items[0].record}
           reason={slice.items[0].reason}
+          moderation={moderations[0]}
           dataUpdatedAt={dataUpdatedAt}
           source={slice.source}
           isThreadParent={isThreadParentAt(slice.items, 0)}
@@ -43,6 +57,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
           post={slice.items[1].post}
           record={slice.items[1].record}
           reason={slice.items[1].reason}
+          moderation={moderations[1]}
           dataUpdatedAt={dataUpdatedAt}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
@@ -53,6 +68,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
           post={slice.items[last].post}
           record={slice.items[last].record}
           reason={slice.items[last].reason}
+          moderation={moderations[last]}
           dataUpdatedAt={dataUpdatedAt}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
@@ -70,6 +86,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
           post={slice.items[i].post}
           record={slice.items[i].record}
           reason={slice.items[i].reason}
+          moderation={moderations[i]}
           dataUpdatedAt={dataUpdatedAt}
           source={i === 0 ? slice.source : undefined}
           isThreadParent={isThreadParentAt(slice.items, i)}
