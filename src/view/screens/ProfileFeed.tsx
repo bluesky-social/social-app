@@ -474,7 +474,7 @@ const AboutSection = observer(function AboutPageImpl({
       scrollEventThrottle={1}
       contentContainerStyle={{
         paddingTop: headerHeight,
-        paddingBottom: Dimensions.get('window').height - headerHeight,
+        minHeight: Dimensions.get('window').height * 1.5,
       }}
       onScroll={scrollHandler}>
       <View

@@ -227,7 +227,7 @@ export const ListItems = observer(function ListItemsImpl({
           />
         }
         contentContainerStyle={{
-          paddingBottom: Dimensions.get('window').height - headerOffset,
+          minHeight: Dimensions.get('window').height * 1.5,
         }}
         style={{paddingTop: headerOffset}}
         onScroll={scrollHandler}

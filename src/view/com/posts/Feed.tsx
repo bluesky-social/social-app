@@ -179,7 +179,7 @@ export const Feed = observer(function Feed({
           />
         }
         contentContainerStyle={{
-          paddingBottom: Dimensions.get('window').height - headerOffset,
+          minHeight: Dimensions.get('window').height * 1.5,
         }}
         style={{paddingTop: headerOffset}}
         onScroll={onScroll != null ? scrollHandler : undefined}
