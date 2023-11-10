@@ -3,6 +3,7 @@ import {Pressable, View} from 'react-native'
 import {useStores} from 'state/index'
 import {navigate} from '../../../Navigation'
 import {useModalControls} from '#/state/modals'
+import {useQueryClient} from '@tanstack/react-query'
 
 /**
  * This utility component is only included in the test simulator
@@ -14,6 +15,7 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
   const store = useStores()
+  const queryClient = useQueryClient()
   const {openModal} = useModalControls()
   const onPressSignInAlice = async () => {
     await store.session.login({
@@ -81,7 +83,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eRefreshHome"
-        onPress={() => store.me.mainFeed.refresh()}
+        onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
         accessibilityRole="button"
         style={BTN}
       />
