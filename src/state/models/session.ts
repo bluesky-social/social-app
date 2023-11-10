@@ -8,6 +8,8 @@ import {RootStoreModel} from './root-store'
 export type ServiceDescription = DescribeServer.OutputSchema
 
 export class SessionModel {
+  data: any = {}
+
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
       rootStore: false,
@@ -22,6 +24,8 @@ export class SessionModel {
   get hasSession() {
     return false
   }
+
+  clear() {}
 
   /**
    * Helper to fetch the accounts config settings from an account.
