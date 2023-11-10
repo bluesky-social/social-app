@@ -1,6 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {
   ActivityIndicator,
+  Dimensions,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -12,10 +13,10 @@ import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
-import {s} from 'lib/styles'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
@@ -53,8 +54,8 @@ export function Feed({
   enabled?: boolean
   pollInterval?: number
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onScroll?: OnScrollCb
   onHasNew?: (v: boolean) => void
+  onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
@@ -219,6 +220,7 @@ export function Feed({
     [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed],
   )
 
+  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
       <FlatList
@@ -238,9 +240,11 @@ export function Feed({
             progressViewOffset={headerOffset}
           />
         }
-        contentContainerStyle={s.contentContainer}
+        contentContainerStyle={{
+          minHeight: Dimensions.get('window').height * 1.5,
+        }}
         style={{paddingTop: headerOffset}}
-        onScroll={onScroll}
+        onScroll={onScroll != null ? scrollHandler : undefined}
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}

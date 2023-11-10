@@ -6,7 +6,6 @@ import {
   View,
 } from 'react-native'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -19,25 +18,90 @@ import {BottomSheetScrollView} from '@gorhom/bottom-sheet'
 import {Haptics} from 'lib/haptics'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSession, useSessionApi, SessionAccount} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
 
 export const snapPoints = ['40%', '90%']
 
+function SwitchAccountCard({account}: {account: SessionAccount}) {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const {track} = useAnalytics()
+  const {isSwitchingAccounts, currentAccount} = useSession()
+  const {logout} = useSessionApi()
+  const {data: profile} = useProfileQuery({did: account.did})
+  const isCurrentAccount = account.did === currentAccount?.did
+  const {onPressSwitchAccount} = useAccountSwitcher()
+
+  const onPressSignout = React.useCallback(() => {
+    track('Settings:SignOutButtonClicked')
+    logout()
+  }, [track, logout])
+
+  const contents = (
+    <View style={[pal.view, styles.linkCard]}>
+      <View style={styles.avi}>
+        <UserAvatar size={40} avatar={profile?.avatar} />
+      </View>
+      <View style={[s.flex1]}>
+        <Text type="md-bold" style={pal.text} numberOfLines={1}>
+          {profile?.displayName || currentAccount?.handle}
+        </Text>
+        <Text type="sm" style={pal.textLight} numberOfLines={1}>
+          {currentAccount?.handle}
+        </Text>
+      </View>
+
+      {isCurrentAccount ? (
+        <TouchableOpacity
+          testID="signOutBtn"
+          onPress={isSwitchingAccounts ? undefined : onPressSignout}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Sign out`)}
+          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
+          <Text type="lg" style={pal.link}>
+            <Trans>Sign out</Trans>
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <AccountDropdownBtn account={account} />
+      )}
+    </View>
+  )
+
+  return isCurrentAccount ? (
+    <Link
+      href={makeProfileLink({
+        did: currentAccount.did,
+        handle: currentAccount.handle,
+      })}
+      title="Your profile"
+      noFeedback>
+      {contents}
+    </Link>
+  ) : (
+    <TouchableOpacity
+      testID={`switchToAccountBtn-${account.handle}`}
+      key={account.did}
+      style={[isSwitchingAccounts && styles.dimmed]}
+      onPress={
+        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+      }
+      accessibilityRole="button"
+      accessibilityLabel={`Switch to ${account.handle}`}
+      accessibilityHint="Switches the account you are logged in to">
+      {contents}
+    </TouchableOpacity>
+  )
+}
+
 export function Component({}: {}) {
   const pal = usePalette('default')
-  const {track} = useAnalytics()
-  const {_: _lingui} = useLingui()
-
-  const store = useStores()
-  const [isSwitching, _, onPressSwitchAccount] = useAccountSwitcher()
+  const {isSwitchingAccounts, currentAccount, accounts} = useSession()
 
   React.useEffect(() => {
     Haptics.default()
   })
-
-  const onPressSignout = React.useCallback(() => {
-    track('Settings:SignOutButtonClicked')
-    store.session.logout()
-  }, [track, store])
 
   return (
     <BottomSheetScrollView
@@ -46,62 +110,20 @@ export function Component({}: {}) {
       <Text type="title-xl" style={[styles.title, pal.text]}>
         <Trans>Switch Account</Trans>
       </Text>
-      {isSwitching ? (
+
+      {isSwitchingAccounts || !currentAccount ? (
         <View style={[pal.view, styles.linkCard]}>
           <ActivityIndicator />
         </View>
       ) : (
-        <Link href={makeProfileLink(store.me)} title="Your profile" noFeedback>
-          <View style={[pal.view, styles.linkCard]}>
-            <View style={styles.avi}>
-              <UserAvatar size={40} avatar={store.me.avatar} />
-            </View>
-            <View style={[s.flex1]}>
-              <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                {store.me.displayName || store.me.handle}
-              </Text>
-              <Text type="sm" style={pal.textLight} numberOfLines={1}>
-                {store.me.handle}
-              </Text>
-            </View>
-            <TouchableOpacity
-              testID="signOutBtn"
-              onPress={isSwitching ? undefined : onPressSignout}
-              accessibilityRole="button"
-              accessibilityLabel={_lingui(msg`Sign out`)}
-              accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
-              <Text type="lg" style={pal.link}>
-                <Trans>Sign out</Trans>
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Link>
+        <SwitchAccountCard account={currentAccount} />
       )}
-      {store.session.switchableAccounts.map(account => (
-        <TouchableOpacity
-          testID={`switchToAccountBtn-${account.handle}`}
-          key={account.did}
-          style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
-          onPress={
-            isSwitching ? undefined : () => onPressSwitchAccount(account)
-          }
-          accessibilityRole="button"
-          accessibilityLabel={`Switch to ${account.handle}`}
-          accessibilityHint="Switches the account you are logged in to">
-          <View style={styles.avi}>
-            <UserAvatar size={40} avatar={account.aviUrl} />
-          </View>
-          <View style={[s.flex1]}>
-            <Text type="md-bold" style={pal.text}>
-              {account.displayName || account.handle}
-            </Text>
-            <Text type="sm" style={pal.textLight}>
-              {account.handle}
-            </Text>
-          </View>
-          <AccountDropdownBtn handle={account.handle} />
-        </TouchableOpacity>
-      ))}
+
+      {accounts
+        .filter(a => a.did !== currentAccount?.did)
+        .map(account => (
+          <SwitchAccountCard key={account.did} account={account} />
+        ))}
     </BottomSheetScrollView>
   )
 }

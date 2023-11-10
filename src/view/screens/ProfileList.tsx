@@ -2,7 +2,6 @@ import React, {useCallback, useMemo} from 'react'
 import {
   ActivityIndicator,
   FlatList,
-  NativeScrollEvent,
   Pressable,
   StyleSheet,
   View,
@@ -11,7 +10,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {RichText as RichTextAPI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
@@ -37,6 +35,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -171,18 +170,24 @@ export const ProfileListScreenInner = observer(
             isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}
             onCurrentPageSelected={onCurrentPageSelected}>
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <FeedSection
                 ref={feedSectionRef}
                 feed={`list|${listUri}`}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 onScroll={onScroll}
                 headerHeight={headerHeight}
                 isScrolledDown={isScrolledDown}
               />
             )}
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 ref={aboutSectionRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
@@ -219,9 +224,12 @@ export const ProfileListScreenInner = observer(
             items={SECTION_TITLES_MOD}
             isHeaderReady={list.hasLoaded}
             renderHeader={renderHeader}>
-            {({onScroll, headerHeight, isScrolledDown}) => (
+            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 list={list}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
                 isCurateList={list.isCuratelist}
@@ -550,18 +558,18 @@ const Header = observer(function HeaderImpl({
 
 interface FeedSectionProps {
   feed: FeedDescriptor
-  onScroll: (e: NativeScrollEvent) => void
+  onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown},
+    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown},
     ref,
   ) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
@@ -576,7 +584,6 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return <EmptyState icon="feed" message="This feed is empty!" />
     }, [])
 
-    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <Feed
@@ -584,8 +591,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}
-          onScroll={scrollHandler}
           onHasNew={setHasNew}
+          onScroll={onScroll}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
@@ -609,9 +616,10 @@ interface AboutSectionProps {
   isCurateList: boolean | undefined
   isOwner: boolean | undefined
   onPressAddUser: () => void
-  onScroll: (e: NativeScrollEvent) => void
+  onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
@@ -625,13 +633,13 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       onScroll,
       headerHeight,
       isScrolledDown,
+      scrollElRef,
     },
     ref,
   ) {
     const pal = usePalette('default')
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
-    const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
@@ -740,7 +748,6 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       )
     }, [])
 
-    const scrollHandler = useAnimatedScrollHandler({onScroll})
     return (
       <View>
         <ListItems
@@ -750,7 +757,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           renderEmptyState={renderEmptyState}
           list={list}
           headerOffset={headerHeight}
-          onScroll={scrollHandler}
+          onScroll={onScroll}
           scrollEventThrottle={1}
         />
         {isScrolledDown && (

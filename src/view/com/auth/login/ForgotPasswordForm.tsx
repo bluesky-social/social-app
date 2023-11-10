@@ -15,7 +15,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {RootStoreModel} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -36,7 +35,6 @@ export const ForgotPasswordForm = ({
   onPressBack,
   onEmailSent,
 }: {
-  store: RootStoreModel
   error: string
   serviceUrl: string
   serviceDescription: ServiceDescription | undefined

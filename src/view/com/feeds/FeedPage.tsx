@@ -21,6 +21,7 @@ import {FAB} from '../util/fab/FAB'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSession} from '#/state/session'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -40,6 +41,7 @@ export function FeedPage({
   renderEndOfFeed?: () => JSX.Element
 }) {
   const store = useStores()
+  const {isSandbox} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
@@ -107,7 +109,7 @@ export function FeedPage({
             style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
-                {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+                {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
                 {hasNew && (
                   <View
                     style={{
@@ -140,7 +142,16 @@ export function FeedPage({
       )
     }
     return <></>
-  }, [isDesktop, pal.view, pal.text, pal.textLight, store, hasNew, _])
+  }, [
+    isDesktop,
+    pal.view,
+    pal.text,
+    pal.textLight,
+    store,
+    hasNew,
+    _,
+    isSandbox,
+  ])
 
   return (
     <View testID={testID} style={s.h100pct}>

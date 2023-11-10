@@ -1,28 +1,32 @@
 import * as React from 'react'
 import {
   LayoutChangeEvent,
-  NativeScrollEvent,
+  FlatList,
+  ScrollView,
   StyleSheet,
   View,
+  NativeScrollEvent,
 } from 'react-native'
 import Animated, {
-  Easing,
-  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
   runOnJS,
+  scrollTo,
+  useAnimatedRef,
+  AnimatedRef,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 
 const SCROLLED_DOWN_LIMIT = 200
 
 interface PagerWithHeaderChildParams {
   headerHeight: number
-  onScroll: (e: NativeScrollEvent) => void
+  onScroll: OnScrollHandler
   isScrolledDown: boolean
+  scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {
@@ -53,27 +57,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   ) {
     const {isMobile} = useWebMediaQueries()
     const [currentPage, setCurrentPage] = React.useState(0)
-    const scrollYs = React.useRef<Record<number, number>>({})
-    const scrollY = useSharedValue(scrollYs.current[currentPage] || 0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(
-      scrollYs.current[currentPage] > SCROLLED_DOWN_LIMIT,
-    )
-
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const scrollY = useSharedValue(0)
     const headerHeight = headerOnlyHeight + tabBarHeight
-
-    // react to scroll updates
-    function onScrollUpdate(v: number) {
-      // track each page's current scroll position
-      scrollYs.current[currentPage] = Math.min(v, headerOnlyHeight)
-      // update the 'is scrolled down' value
-      setIsScrolledDown(v > SCROLLED_DOWN_LIMIT)
-    }
-    useAnimatedReaction(
-      () => scrollY.value,
-      v => runOnJS(onScrollUpdate)(v),
-    )
 
     // capture the header bar sizing
     const onTabBarLayout = React.useCallback(
@@ -90,19 +78,17 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
 
     // render the the header and tab bar
-    const headerTransform = useAnimatedStyle(
-      () => ({
-        transform: [
-          {
-            translateY: Math.min(
-              Math.min(scrollY.value, headerOnlyHeight) * -1,
-              0,
-            ),
-          },
-        ],
-      }),
-      [scrollY, headerHeight, tabBarHeight],
-    )
+    const headerTransform = useAnimatedStyle(() => ({
+      transform: [
+        {
+          translateY: Math.min(
+            Math.min(scrollY.value, headerOnlyHeight) * -1,
+            0,
+          ),
+        },
+      ],
+    }))
+
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
@@ -143,25 +129,47 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
-    // Ideally we'd call useAnimatedScrollHandler here but we can't safely do that
-    // due to https://github.com/software-mansion/react-native-reanimated/issues/5345.
-    // So instead we pass down a worklet, and individual pages will have to call it.
-    const onScroll = React.useCallback(
+    const scrollRefs = useSharedValue<AnimatedRef<any>[]>([])
+    const registerRef = (scrollRef: AnimatedRef<any>, index: number) => {
+      scrollRefs.modify(refs => {
+        'worklet'
+        refs[index] = scrollRef
+        return refs
+      })
+    }
+
+    const lastForcedScrollY = useSharedValue(0)
+    const onScrollWorklet = React.useCallback(
       (e: NativeScrollEvent) => {
         'worklet'
-        scrollY.value = e.contentOffset.y
-      },
-      [scrollY],
-    )
+        const nextScrollY = e.contentOffset.y
+        scrollY.value = nextScrollY
 
-    // props to pass into children render functions
-    const childProps = React.useMemo<PagerWithHeaderChildParams>(() => {
-      return {
-        headerHeight,
-        onScroll,
+        const forcedScrollY = Math.min(nextScrollY, headerOnlyHeight)
+        if (lastForcedScrollY.value !== forcedScrollY) {
+          lastForcedScrollY.value = forcedScrollY
+          const refs = scrollRefs.value
+          for (let i = 0; i < refs.length; i++) {
+            if (i !== currentPage) {
+              scrollTo(refs[i], 0, forcedScrollY, false)
+            }
+          }
+        }
+
+        const nextIsScrolledDown = nextScrollY > SCROLLED_DOWN_LIMIT
+        if (isScrolledDown !== nextIsScrolledDown) {
+          runOnJS(setIsScrolledDown)(nextIsScrolledDown)
+        }
+      },
+      [
+        currentPage,
+        headerOnlyHeight,
         isScrolledDown,
-      }
-    }, [headerHeight, onScroll, isScrolledDown])
+        scrollRefs,
+        scrollY,
+        lastForcedScrollY,
+      ],
+    )
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
@@ -171,19 +179,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
-    const onPageSelecting = React.useCallback(
-      (index: number) => {
-        setCurrentPage(index)
-        if (scrollY.value > headerHeight) {
-          scrollY.value = headerHeight
-        }
-        scrollY.value = withTiming(scrollYs.current[index] || 0, {
-          duration: 170,
-          easing: Easing.inOut(Easing.quad),
-        })
-      },
-      [scrollY, setCurrentPage, scrollYs, headerHeight],
-    )
+    const onPageSelecting = React.useCallback((index: number) => {
+      setCurrentPage(index)
+    }, [])
 
     return (
       <Pager
@@ -197,20 +195,18 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         {toArray(children)
           .filter(Boolean)
           .map((child, i) => {
-            let output = null
-            if (
-              child != null &&
-              // Defer showing content until we know it won't jump.
-              isHeaderReady &&
-              headerOnlyHeight > 0 &&
-              tabBarHeight > 0
-            ) {
-              output = child(childProps)
-            }
-            // Pager children must be noncollapsible plain <View>s.
+            const isReady =
+              isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
             return (
               <View key={i} collapsable={false}>
-                {output}
+                <PagerItem
+                  headerHeight={headerHeight}
+                  isReady={isReady}
+                  isScrolledDown={isScrolledDown}
+                  onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
+                  registerRef={(r: AnimatedRef<any>) => registerRef(r, i)}
+                  renderTab={child}
+                />
               </View>
             )
           })}
@@ -218,6 +214,43 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
   },
 )
+
+function PagerItem({
+  headerHeight,
+  isReady,
+  isScrolledDown,
+  onScrollWorklet,
+  renderTab,
+  registerRef,
+}: {
+  headerHeight: number
+  isReady: boolean
+  isScrolledDown: boolean
+  registerRef: (scrollRef: AnimatedRef<any>) => void
+  onScrollWorklet: (e: NativeScrollEvent) => void
+  renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
+}) {
+  const scrollElRef = useAnimatedRef()
+  registerRef(scrollElRef)
+
+  const scrollHandler = React.useMemo(
+    () => ({onScroll: onScrollWorklet}),
+    [onScrollWorklet],
+  )
+
+  if (!isReady || renderTab == null) {
+    return null
+  }
+
+  return renderTab({
+    headerHeight,
+    isScrolledDown,
+    onScroll: scrollHandler,
+    scrollElRef: scrollElRef as React.MutableRefObject<
+      FlatList<any> | ScrollView | null
+    >,
+  })
+}
 
 const styles = StyleSheet.create({
   tabBarMobile: {
@@ -236,6 +269,10 @@ const styles = StyleSheet.create({
     width: 598,
   },
 })
+
+function noop() {
+  'worklet'
+}
 
 function toArray<T>(v: T | T[]): T[] {
   if (Array.isArray(v)) {

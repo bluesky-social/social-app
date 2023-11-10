@@ -15,7 +15,6 @@ import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
 import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {RootStoreModel} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -29,7 +28,6 @@ import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const LoginForm = ({
-  store,
   error,
   serviceUrl,
   serviceDescription,
@@ -40,7 +38,6 @@ export const LoginForm = ({
   onPressBack,
   onPressForgotPassword,
 }: {
-  store: RootStoreModel
   error: string
   serviceUrl: string
   serviceDescription: ServiceDescription | undefined
@@ -102,11 +99,6 @@ export const LoginForm = ({
 
       // TODO remove double login
       await login({
-        service: serviceUrl,
-        identifier: fullIdent,
-        password,
-      })
-      await store.session.login({
         service: serviceUrl,
         identifier: fullIdent,
         password,
