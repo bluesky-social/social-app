@@ -14,10 +14,11 @@ import {FeedErrorMessage} from './FeedErrorMessage'
 import {PostsFeedModel} from 'state/models/feeds/posts'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {s} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 
@@ -43,7 +44,7 @@ export const Feed = observer(function Feed({
   feed: PostsFeedModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onScroll?: OnScrollCb
+  onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
@@ -157,6 +158,7 @@ export const Feed = observer(function Feed({
     [feed.isLoadingMore, feed.hasMore, feed.isEmpty, renderEndOfFeed],
   )
 
+  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
       <FlatList
@@ -178,7 +180,7 @@ export const Feed = observer(function Feed({
         }
         contentContainerStyle={s.contentContainer}
         style={{paddingTop: headerOffset}}
-        onScroll={onScroll}
+        onScroll={onScroll != null ? scrollHandler : undefined}
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}

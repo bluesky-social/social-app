@@ -8,7 +8,8 @@ import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {EmptyState} from '../util/EmptyState'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
@@ -27,7 +28,7 @@ export const Feed = observer(function Feed({
   view: NotificationsFeedModel
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onPressTryAgain?: () => void
-  onScroll?: OnScrollCb
+  onScroll?: OnScrollHandler
   ListHeaderComponent?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -129,6 +130,7 @@ export const Feed = observer(function Feed({
     [view],
   )
 
+  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View style={s.hContentRegion}>
       <CenteredView>
@@ -161,7 +163,7 @@ export const Feed = observer(function Feed({
           }
           onEndReached={onEndReached}
           onEndReachedThreshold={0.6}
-          onScroll={onScroll}
+          onScroll={scrollHandler}
           scrollEventThrottle={1}
           contentContainerStyle={s.contentContainer}
           // @ts-ignore our .web version only -prf

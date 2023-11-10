@@ -26,7 +26,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -44,6 +44,7 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -383,7 +384,7 @@ export const ProfileFeedScreenInner = observer(
 
 interface FeedSectionProps {
   feed: PostsFeedModel
-  onScroll: OnScrollCb
+  onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -443,10 +444,11 @@ const AboutSection = observer(function AboutPageImpl({
   feedInfo: FeedSourceModel | undefined
   headerHeight: number
   onToggleLiked: () => void
-  onScroll: OnScrollCb
+  onScroll: OnScrollHandler
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const scrollHandler = useAnimatedScrollHandler(onScroll)
 
   if (!feedInfo) {
     return <View />
@@ -456,7 +458,7 @@ const AboutSection = observer(function AboutPageImpl({
     <ScrollView
       scrollEventThrottle={1}
       contentContainerStyle={{paddingTop: headerHeight}}
-      onScroll={onScroll}>
+      onScroll={scrollHandler}>
       <View
         style={[
           {

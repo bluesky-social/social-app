@@ -33,7 +33,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -554,7 +554,7 @@ const Header = observer(function HeaderImpl({
 
 interface FeedSectionProps {
   feed: PostsFeedModel
-  onScroll: OnScrollCb
+  onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
 }
@@ -608,7 +608,7 @@ interface AboutSectionProps {
   isCurateList: boolean | undefined
   isOwner: boolean | undefined
   onPressAddUser: () => void
-  onScroll: OnScrollCb
+  onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
 }

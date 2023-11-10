@@ -1,5 +1,10 @@
 import * as React from 'react'
-import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedReaction,
@@ -11,14 +16,13 @@ import Animated, {
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
-import {useAnimatedScrollHandler} from 'lib/hooks/useAnimatedScrollHandler_FIXED'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 
 const SCROLLED_DOWN_LIMIT = 200
 
 interface PagerWithHeaderChildParams {
   headerHeight: number
-  onScroll: OnScrollCb
+  onScroll: OnScrollHandler
   isScrolledDown: boolean
 }
 
@@ -141,11 +145,10 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
 
     // props to pass into children render functions
-    const onScroll = useAnimatedScrollHandler({
-      onScroll(e) {
-        scrollY.value = e.contentOffset.y
-      },
-    })
+    function onScrollWorklet(e: NativeScrollEvent) {
+      'worklet'
+      scrollY.value = e.contentOffset.y
+    }
 
     const onPageSelectedInner = React.useCallback(
       (index: number) => {
@@ -192,7 +195,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               output = child({
                 headerHeight,
                 isScrolledDown,
-                onScroll: i === currentPage ? onScroll : noop,
+                onScroll: {
+                  onScroll: i === currentPage ? onScrollWorklet : noop,
+                },
               })
             }
             // Pager children must be noncollapsible plain <View>s.
@@ -225,7 +230,9 @@ const styles = StyleSheet.create({
   },
 })
 
-function noop() {}
+function noop() {
+  'worklet'
+}
 
 function toArray<T>(v: T | T[]): T[] {
   if (Array.isArray(v)) {
