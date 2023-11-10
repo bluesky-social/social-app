@@ -1,11 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {
-  AppBskyFeedGetAuthorFeed,
-  AtUri,
-  AppBskyFeedGetFeed as GetCustomFeed,
-} from '@atproto/api'
-import {PostsFeedModel, KnownError} from 'state/models/feeds/posts'
+import {AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
@@ -19,8 +14,19 @@ import {useModalControls} from '#/state/modals'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {EmptyState} from '../util/EmptyState'
 
+enum KnownError {
+  Block,
+  FeedgenDoesNotExist,
+  FeedgenMisconfigured,
+  FeedgenBadResponse,
+  FeedgenOffline,
+  FeedgenUnknown,
+  Unknown,
+}
+
 const MESSAGES = {
   [KnownError.Unknown]: '',
+  [KnownError.Block]: '',
   [KnownError.FeedgenDoesNotExist]: `Hmmm, we're having trouble finding this feed. It may have been deleted.`,
   [KnownError.FeedgenMisconfigured]:
     'Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue.',
@@ -46,11 +52,11 @@ export function FeedErrorMessage({
     [feedDesc, error],
   )
   if (
-    typeof knownError === 'undefined' ||
-    knownError === KnownError.Unknown ||
-    true /*TODO*/
+    typeof knownError !== 'undefined' &&
+    knownError !== KnownError.Unknown &&
+    feedDesc.startsWith('feedgen')
   ) {
-    return <ErrorMessage message={error} onPressTryAgain={onPressTryAgain} />
+    return <FeedgenErrorMessage feedDesc={feedDesc} knownError={knownError} />
   }
 
   if (knownError === KnownError.Block) {
@@ -63,22 +69,21 @@ export function FeedErrorMessage({
     )
   }
 
-  // TODO
-  // return <FeedgenErrorMessage feed={feed} knownError={feed.knownError} />
+  return <ErrorMessage message={error} onPressTryAgain={onPressTryAgain} />
 }
 
 function FeedgenErrorMessage({
-  feed,
+  feedDesc,
   knownError,
 }: {
-  feed: PostsFeedModel
+  feedDesc: FeedDescriptor
   knownError: KnownError
 }) {
   const pal = usePalette('default')
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const msg = MESSAGES[knownError]
-  const uri = (feed.params as GetCustomFeed.QueryParams).feed
+  const [_, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
   const {openModal, closeModal} = useModalControls()
 
