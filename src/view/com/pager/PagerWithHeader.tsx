@@ -129,6 +129,16 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
+    const scrollRefs = useSharedValue([])
+    const registerRef = (ref, index) => {
+      lolWut()
+      scrollRefs.modify(refs => {
+        'worklet'
+        refs[index] = ref
+        return refs
+      })
+    }
+
     // props to pass into children render functions
     const onScroll = useAnimatedScrollHandler({
       onScroll(e) {
@@ -138,6 +148,13 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
           e.contentOffset.y,
           headerOnlyHeightShared.value,
         )
+
+        if (e.contentOffset.y < headerOnlyHeightShared.value) {
+          const refs = scrollRefs.value
+          for (let i = 0; i < refs.length; i++) {
+            scrollTo(refs[i], 0, e.contentOffset.y, false)
+          }
+        }
       },
     })
     useAnimatedReaction(
@@ -179,7 +196,10 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                   headerHeight={headerHeight}
                   isScrolledDown={isScrolledDown}
                   onScroll={i === currentPage ? onScroll : noop}
-                  forcedScrollY={i === currentPage ? null : clampedScrollY}
+                  registerRef={ref => {
+                    lolWut()
+                    registerRef(ref, i)
+                  }}
                   renderTab={
                     isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
                       ? child
@@ -194,12 +214,16 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   },
 )
 
+function lolWut() {
+  console.log('hi')
+}
+
 function PagerItem({
   headerHeight,
   isScrolledDown,
   onScroll,
   renderTab,
-  forcedScrollY,
+  registerRef,
 }: {
   headerHeight: number
   isScrolledDown: boolean
@@ -207,33 +231,9 @@ function PagerItem({
   onScroll: OnScrollCb
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
 }) {
+  lolWut()
   const scrollElRef = useAnimatedRef()
-  useAnimatedReaction(
-    () => {
-      if (forcedScrollY) {
-        return forcedScrollY.value
-      } else {
-        // Active tab doesn't get synced.
-        return null
-      }
-    },
-    (nextForcedY, prevForcedY) => {
-      if (nextForcedY === prevForcedY) {
-        return
-      }
-      if (nextForcedY == null) {
-        // This tab just became active. It was already being synced before.
-        // So we don't need to do anything.
-        return
-      }
-      if (prevForcedY == null) {
-        // This tab just became inactive, so it used to be the source of truth.
-        // There is no need to sync it until we get more scroll events.
-        return
-      }
-      scrollTo(scrollElRef, 0, nextForcedY, false)
-    },
-  )
+  registerRef(scrollElRef)
   if (renderTab == null) {
     return null
   }
