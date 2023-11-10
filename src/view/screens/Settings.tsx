@@ -58,7 +58,7 @@ import {
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
-import {useGetProfile} from '#/data/useGetProfile'
+import {useProfileQuery} from '#/state/queries/profile'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -72,7 +72,7 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
   const {isSwitchingAccounts, currentAccount} = useSession()
   const {logout} = useSessionApi()
-  const {isError, data} = useGetProfile({did: account.did})
+  const {isError, data} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
   const {onPressSwitchAccount} = useAccountSwitcher()
 

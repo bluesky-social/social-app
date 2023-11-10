@@ -1,8 +1,8 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {PUBLIC_BSKY_AGENT} from '#/data'
+import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 
-export function useGetProfile({did}: {did: string}) {
+export function useProfileQuery({did}: {did: string}) {
   return useQuery({
     queryKey: ['getProfile', did],
     queryFn: async () => {

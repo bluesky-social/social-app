@@ -11,7 +11,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {styles} from './styles'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
-import {useGetProfile} from '#/data/useGetProfile'
+import {useProfileQuery} from '#/state/queries/profile'
 
 function AccountItem({
   account,
@@ -22,7 +22,7 @@ function AccountItem({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isError, data} = useGetProfile({did: account.did})
+  const {isError, data} = useProfileQuery({did: account.did})
 
   const onPress = React.useCallback(() => {
     onSelect(account)

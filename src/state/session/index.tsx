@@ -4,7 +4,7 @@ import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
-import {PUBLIC_BSKY_AGENT} from '#/data'
+import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 
 export type SessionAccount = persisted.PersistedAccount
 
@@ -102,6 +102,7 @@ function createPersistSessionHandler(
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const isDirty = React.useRef(false)
   const [state, setState] = React.useState<StateContext>({
     agent: PUBLIC_BSKY_AGENT,
     hasSession: false,
@@ -113,6 +114,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const upsertAccount = React.useCallback(
     (account: persisted.PersistedAccount, expired = false) => {
+      isDirty.current = true
       setState(s => {
         return {
           ...s,
@@ -124,7 +126,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  // TODO have not connected this yet
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({service, email, password, handle, inviteCode}: any) => {
       logger.debug(
@@ -231,6 +232,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
     logger.debug(`session: logout`, {}, logger.DebugContext.session)
+    isDirty.current = true
     setState(s => {
       return {
         ...s,
@@ -301,6 +303,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const removeAccount = React.useCallback<ApiContext['removeAccount']>(
     account => {
+      isDirty.current = true
       setState(s => {
         return {
           ...s,
@@ -317,6 +320,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     ApiContext['updateCurrentAccount']
   >(
     account => {
+      isDirty.current = true
       setState(s => {
         const currentAccount = s.currentAccount
 
@@ -363,6 +367,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const clearCurrentAccount = React.useCallback(() => {
+    isDirty.current = true
     setState(s => ({
       ...s,
       currentAccount: undefined,
@@ -370,10 +375,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [setState])
 
   React.useEffect(() => {
-    persisted.write('session', {
-      accounts: state.accounts,
-      currentAccount: state.currentAccount,
-    })
+    if (isDirty.current) {
+      persisted.write('session', {
+        accounts: state.accounts,
+        currentAccount: state.currentAccount,
+      })
+      isDirty.current = false
+    }
   }, [state])
 
   React.useEffect(() => {

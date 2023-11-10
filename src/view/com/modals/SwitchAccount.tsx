@@ -19,7 +19,7 @@ import {Haptics} from 'lib/haptics'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
-import {useGetProfile} from '#/data/useGetProfile'
+import {useProfileQuery} from '#/state/queries/profile'
 
 export const snapPoints = ['40%', '90%']
 
@@ -29,7 +29,7 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
   const {track} = useAnalytics()
   const {isSwitchingAccounts, currentAccount} = useSession()
   const {logout} = useSessionApi()
-  const {isError, data: profile} = useGetProfile({did: account.did})
+  const {isError, data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
   const {onPressSwitchAccount} = useAccountSwitcher()
 

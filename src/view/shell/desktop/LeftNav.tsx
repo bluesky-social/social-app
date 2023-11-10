@@ -41,7 +41,7 @@ import {router} from '../../../routes'
 import {makeProfileLink} from 'lib/routes/links'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
-import {useGetProfile} from '#/data/useGetProfile'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 
 const ProfileCard = observer(function ProfileCardImpl() {
@@ -50,7 +50,7 @@ const ProfileCard = observer(function ProfileCardImpl() {
     isLoading,
     isError,
     data: profile,
-  } = useGetProfile({did: currentAccount!.did})
+  } = useProfileQuery({did: currentAccount!.did})
   const {isDesktop} = useWebMediaQueries()
   const size = 48
 
