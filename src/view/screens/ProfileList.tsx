@@ -14,6 +14,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {RichText as RichTextAPI} from '@atproto/api'
+import {useQueryClient} from '@tanstack/react-query'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -35,6 +36,7 @@ import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -110,6 +112,7 @@ export const ProfileListScreenInner = observer(
   }: Props & {listOwnerDid: string}) {
     const store = useStores()
     const {_} = useLingui()
+    const queryClient = useQueryClient()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {rkey} = route.params
     const listUri = `at://${listOwnerDid}/app.bsky.graph.list/${rkey}`
@@ -136,11 +139,13 @@ export const ProfileListScreenInner = observer(
         list,
         onAdd() {
           if (list.isCuratelist) {
-            // feed.refresh() TODO
+            queryClient.invalidateQueries({
+              queryKey: FEED_RQKEY(`list|${listUri}`),
+            })
           }
         },
       })
-    }, [openModal, list])
+    }, [openModal, list, queryClient, listUri])
 
     const onCurrentPageSelected = React.useCallback(
       (index: number) => {
@@ -554,13 +559,14 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     {feed, onScroll, headerHeight, isScrolledDown},
     ref,
   ) {
+    const queryClient = useQueryClient()
     const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
     const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      // feed.refresh() TODO
-    }, [scrollElRef, headerHeight])
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+    }, [scrollElRef, headerHeight, queryClient, feed])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))

@@ -4,6 +4,8 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {useIsFocused} from '@react-navigation/native'
 import {useAnalytics} from '@segment/analytics-react-native'
+import {useQueryClient} from '@tanstack/react-query'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -40,6 +42,7 @@ export function FeedPage({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
+  const queryClient = useQueryClient()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
@@ -77,9 +80,9 @@ export function FeedPage({
   const onSoftReset = React.useCallback(() => {
     if (isPageFocused) {
       scrollToTop()
-      // feed.refresh() TODO
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
     }
-  }, [isPageFocused, scrollToTop])
+  }, [isPageFocused, scrollToTop, queryClient, feed])
 
   // fires when page within screen is activated/deactivated
   // - check for latest
@@ -108,8 +111,8 @@ export function FeedPage({
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    // feed.refresh() TODO
-  }, [scrollToTop])
+    queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+  }, [scrollToTop, feed, queryClient])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {

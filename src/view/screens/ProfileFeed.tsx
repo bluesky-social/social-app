@@ -9,6 +9,7 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {useAnimatedScrollHandler} from 'react-native-reanimated'
+import {useQueryClient} from '@tanstack/react-query'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -33,6 +34,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -393,11 +395,12 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   ) {
     const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
     const scrollElRef = React.useRef<FlatList>(null)
+    const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      // feed.refresh() TODO
-    }, [scrollElRef, headerHeight])
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+    }, [scrollElRef, headerHeight, queryClient, feed])
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
