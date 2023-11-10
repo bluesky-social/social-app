@@ -112,10 +112,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     currentAccount: undefined, // assume logged out to start
   })
 
+  const setStateAndPersist = React.useCallback(
+    (fn: (prev: StateContext) => StateContext) => {
+      isDirty.current = true
+      setState(fn)
+    },
+    [setState],
+  )
+
   const upsertAccount = React.useCallback(
     (account: persisted.PersistedAccount, expired = false) => {
-      isDirty.current = true
-      setState(s => {
+      setStateAndPersist(s => {
         return {
           ...s,
           currentAccount: expired ? undefined : account,
@@ -123,7 +130,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [setState],
+    [setStateAndPersist],
   )
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
@@ -232,8 +239,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
     logger.debug(`session: logout`, {}, logger.DebugContext.session)
-    isDirty.current = true
-    setState(s => {
+    setStateAndPersist(s => {
       return {
         ...s,
         agent: PUBLIC_BSKY_AGENT,
@@ -245,7 +251,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })),
       }
     })
-  }, [setState])
+  }, [setStateAndPersist])
 
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
@@ -303,8 +309,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const removeAccount = React.useCallback<ApiContext['removeAccount']>(
     account => {
-      isDirty.current = true
-      setState(s => {
+      setStateAndPersist(s => {
         return {
           ...s,
           accounts: s.accounts.filter(
@@ -313,15 +318,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [setState],
+    [setStateAndPersist],
   )
 
   const updateCurrentAccount = React.useCallback<
     ApiContext['updateCurrentAccount']
   >(
     account => {
-      isDirty.current = true
-      setState(s => {
+      setStateAndPersist(s => {
         const currentAccount = s.currentAccount
 
         // ignore, should never happen
@@ -347,7 +351,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [setState],
+    [setStateAndPersist],
   )
 
   const selectAccount = React.useCallback<ApiContext['selectAccount']>(
@@ -367,12 +371,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const clearCurrentAccount = React.useCallback(() => {
-    isDirty.current = true
-    setState(s => ({
+    setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,
     }))
-  }, [setState])
+  }, [setStateAndPersist])
 
   React.useEffect(() => {
     if (isDirty.current) {
