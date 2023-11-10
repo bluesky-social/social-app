@@ -72,21 +72,18 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
   const {isSwitchingAccounts, currentAccount} = useSession()
   const {logout} = useSessionApi()
-  const {isError, data} = useProfileQuery({did: account.did})
+  const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
   const {onPressSwitchAccount} = useAccountSwitcher()
-
-  // TODO
-  if (isError || !currentAccount) return null
 
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
       <View style={styles.avi}>
-        <UserAvatar size={40} avatar={data?.avatar} />
+        <UserAvatar size={40} avatar={profile?.avatar} />
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text}>
-          {data?.displayName || account.handle}
+          {profile?.displayName || account.handle}
         </Text>
         <Text type="sm" style={pal.textLight}>
           {account.handle}
@@ -99,7 +96,7 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
           onPress={logout}
           accessibilityRole="button"
           accessibilityLabel="Sign out"
-          accessibilityHint={`Signs ${data?.displayName} out of Bluesky`}>
+          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
           <Text type="lg" style={pal.link}>
             Sign out
           </Text>

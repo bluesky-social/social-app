@@ -29,7 +29,7 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
   const {track} = useAnalytics()
   const {isSwitchingAccounts, currentAccount} = useSession()
   const {logout} = useSessionApi()
-  const {isError, data: profile} = useProfileQuery({did: account.did})
+  const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
   const {onPressSwitchAccount} = useAccountSwitcher()
 
@@ -38,9 +38,6 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
     logout()
   }, [track, logout])
 
-  // TODO
-  if (isError || !currentAccount) return null
-
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
       <View style={styles.avi}>
@@ -48,10 +45,10 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text} numberOfLines={1}>
-          {profile?.displayName || currentAccount.handle}
+          {profile?.displayName || currentAccount?.handle}
         </Text>
         <Text type="sm" style={pal.textLight} numberOfLines={1}>
-          {currentAccount.handle}
+          {currentAccount?.handle}
         </Text>
       </View>
 

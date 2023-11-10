@@ -46,21 +46,15 @@ import {useSession} from '#/state/session'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const {currentAccount} = useSession()
-  const {
-    isLoading,
-    isError,
-    data: profile,
-  } = useProfileQuery({did: currentAccount!.did})
+  const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
   const {isDesktop} = useWebMediaQueries()
   const size = 48
 
-  if (isError || !profile || !currentAccount) return null
-
-  return !isLoading ? (
+  return !isLoading && profile ? (
     <Link
       href={makeProfileLink({
-        did: currentAccount.did,
-        handle: currentAccount.handle,
+        did: currentAccount!.did,
+        handle: currentAccount!.handle,
       })}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
       title="My Profile"

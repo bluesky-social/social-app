@@ -22,14 +22,11 @@ function AccountItem({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isError, data} = useProfileQuery({did: account.did})
+  const {data: profile} = useProfileQuery({did: account.did})
 
   const onPress = React.useCallback(() => {
     onSelect(account)
   }, [account, onSelect])
-
-  // TODO
-  if (isError) return null
 
   return (
     <TouchableOpacity
@@ -42,11 +39,11 @@ function AccountItem({
       accessibilityHint="Double tap to sign in">
       <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
         <View style={s.p10}>
-          <UserAvatar avatar={data?.avatar} size={30} />
+          <UserAvatar avatar={profile?.avatar} size={30} />
         </View>
         <Text style={styles.accountText}>
           <Text type="lg-bold" style={pal.text}>
-            {data?.displayName || account.handle}{' '}
+            {profile?.displayName || account.handle}{' '}
           </Text>
           <Text type="lg" style={[pal.textLight]}>
             {account.handle}
