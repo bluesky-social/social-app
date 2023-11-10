@@ -1,12 +1,10 @@
 import * as React from 'react'
 import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
-  Easing,
   useAnimatedReaction,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
   runOnJS,
   useAnimatedRef,
 } from 'react-native-reanimated'
@@ -52,21 +50,14 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   ) {
     const {isMobile} = useWebMediaQueries()
     const [currentPage, setCurrentPage] = React.useState(0)
-    const scrollYs = React.useRef<Record<number, number>>({})
-    const scrollY = useSharedValue(scrollYs.current[currentPage] || 0)
+    const scrollY = useSharedValue(0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(
-      scrollYs.current[currentPage] > SCROLLED_DOWN_LIMIT,
-    )
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
 
     const headerHeight = headerOnlyHeight + tabBarHeight
 
-    // react to scroll updates
     function onScrollUpdate(v: number) {
-      // track each page's current scroll position
-      scrollYs.current[currentPage] = Math.min(v, headerOnlyHeight)
-      // update the 'is scrolled down' value
       setIsScrolledDown(v > SCROLLED_DOWN_LIMIT)
     }
     useAnimatedReaction(
@@ -157,19 +148,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
-    const onPageSelecting = React.useCallback(
-      (index: number) => {
-        setCurrentPage(index)
-        if (scrollY.value > headerHeight) {
-          scrollY.value = headerHeight
-        }
-        scrollY.value = withTiming(scrollYs.current[index] || 0, {
-          duration: 170,
-          easing: Easing.inOut(Easing.quad),
-        })
-      },
-      [scrollY, setCurrentPage, scrollYs, headerHeight],
-    )
+    const onPageSelecting = React.useCallback((index: number) => {
+      setCurrentPage(index)
+    }, [])
 
     return (
       <Pager
