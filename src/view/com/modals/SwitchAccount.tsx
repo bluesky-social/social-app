@@ -64,7 +64,7 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
           </Text>
         </TouchableOpacity>
       ) : (
-        <AccountDropdownBtn handle={account.handle} />
+        <AccountDropdownBtn account={account} />
       )}
     </View>
   )

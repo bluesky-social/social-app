@@ -4,7 +4,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
 import {useStores, DEFAULT_SERVICE} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
-import {AccountData} from 'state/models/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
 import {ChooseAccountForm} from './ChooseAccountForm'
@@ -14,7 +13,7 @@ import {SetNewPasswordForm} from './SetNewPasswordForm'
 import {PasswordUpdatedForm} from './PasswordUpdatedForm'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {useSession} from '#/state/session'
+import {useSession, SessionAccount} from '#/state/session'
 
 enum Forms {
   Login,
@@ -41,7 +40,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     accounts.length ? Forms.ChooseAccount : Forms.Login,
   )
 
-  const onSelectAccount = (account?: AccountData) => {
+  const onSelectAccount = (account?: SessionAccount) => {
     if (account?.service) {
       setServiceUrl(account.service)
     }

@@ -1,20 +1,25 @@
 import React from 'react'
+import {DeviceEventEmitter} from 'react-native'
 import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
+import {IS_PROD} from '#/lib/constants'
 
 export type SessionAccount = persisted.PersistedAccount
 
-export type StateContext = {
+export type SessionState = {
   agent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
   accounts: persisted.PersistedAccount[]
   currentAccount: persisted.PersistedAccount | undefined
+}
+export type StateContext = SessionState & {
   hasSession: boolean
+  isSandbox: boolean
 }
 export type ApiContext = {
   createAccount: (props: {
@@ -30,15 +35,13 @@ export type ApiContext = {
     password: string
   }) => Promise<void>
   logout: () => Promise<void>
-  initSession: (account: persisted.PersistedAccount) => Promise<void>
-  resumeSession: (account?: persisted.PersistedAccount) => Promise<void>
-  removeAccount: (
-    account: Partial<Pick<persisted.PersistedAccount, 'handle' | 'did'>>,
-  ) => void
-  selectAccount: (account: persisted.PersistedAccount) => Promise<void>
+  initSession: (account: SessionAccount) => Promise<void>
+  resumeSession: (account?: SessionAccount) => Promise<void>
+  removeAccount: (account: SessionAccount) => void
+  selectAccount: (account: SessionAccount) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
-      Pick<persisted.PersistedAccount, 'handle' | 'email' | 'emailConfirmed'>
+      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
     >,
   ) => void
   clearCurrentAccount: () => void
@@ -46,11 +49,12 @@ export type ApiContext = {
 
 const StateContext = React.createContext<StateContext>({
   agent: PUBLIC_BSKY_AGENT,
-  hasSession: false,
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
   currentAccount: undefined,
+  hasSession: false,
+  isSandbox: false,
 })
 
 const ApiContext = React.createContext<ApiContext>({
@@ -94,6 +98,8 @@ function createPersistSessionHandler(
       logger.DebugContext.session,
     )
 
+    if (expired) DeviceEventEmitter.emit('session-dropped')
+
     persistSessionCallback({
       expired,
       refreshedAccount,
@@ -103,9 +109,8 @@ function createPersistSessionHandler(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const isDirty = React.useRef(false)
-  const [state, setState] = React.useState<StateContext>({
+  const [state, setState] = React.useState<SessionState>({
     agent: PUBLIC_BSKY_AGENT,
-    hasSession: false,
     isInitialLoad: true, // try to resume the session first
     isSwitchingAccounts: false,
     accounts: persisted.get('session').accounts,
@@ -113,7 +118,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const setStateAndPersist = React.useCallback(
-    (fn: (prev: StateContext) => StateContext) => {
+    (fn: (prev: SessionState) => SessionState) => {
       isDirty.current = true
       setState(fn)
     },
@@ -312,9 +317,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setStateAndPersist(s => {
         return {
           ...s,
-          accounts: s.accounts.filter(
-            a => !(a.did === account.did || a.handle === account.handle),
-          ),
+          accounts: s.accounts.filter(a => a.did !== account.did),
         }
       })
     },
@@ -431,6 +434,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       ...state,
       hasSession: !!state.currentAccount,
+      isSandbox: state.currentAccount
+        ? !IS_PROD(state.currentAccount?.service)
+        : false,
     }),
     [state],
   )

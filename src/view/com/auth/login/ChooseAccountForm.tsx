@@ -5,7 +5,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
 import {s} from 'lib/styles'
-import {AccountData} from 'state/models/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -62,7 +61,7 @@ export const ChooseAccountForm = ({
   onSelectAccount,
   onPressBack,
 }: {
-  onSelectAccount: (account?: AccountData) => void
+  onSelectAccount: (account?: SessionAccount) => void
   onPressBack: () => void
 }) => {
   const {track, screen} = useAnalytics()

@@ -1,13 +1,13 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useSession} from '#/state/session'
 
 export function PostSandboxWarning() {
-  const store = useStores()
+  const {isSandbox} = useSession()
   const pal = usePalette('default')
-  if (store.session.isSandbox) {
+  if (isSandbox) {
     return (
       <View style={styles.container}>
         <Text

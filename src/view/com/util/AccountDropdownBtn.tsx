@@ -8,11 +8,11 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 import * as Toast from '../../com/util/Toast'
-import {useSessionApi} from '#/state/session'
+import {useSessionApi, SessionAccount} from '#/state/session'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-export function AccountDropdownBtn({handle}: {handle: string}) {
+export function AccountDropdownBtn({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
   const {removeAccount} = useSessionApi()
   const {_} = useLingui()
@@ -21,7 +21,7 @@ export function AccountDropdownBtn({handle}: {handle: string}) {
     {
       label: 'Remove account',
       onPress: () => {
-        removeAccount({handle})
+        removeAccount(account)
         Toast.show('Account removed from quick access')
       },
       icon: {
