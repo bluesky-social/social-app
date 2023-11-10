@@ -66,7 +66,6 @@ export const CreateAccount = observer(function CreateAccountImpl({
       model.next()
     } else {
       try {
-        console.log('BEFORE')
         await model.submit({
           onboardingDispatch,
           createAccount,

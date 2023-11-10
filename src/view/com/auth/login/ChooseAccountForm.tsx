@@ -28,6 +28,7 @@ function AccountItem({
     onSelect(account)
   }, [account, onSelect])
 
+  // TODO
   if (isError) return null
 
   return (
