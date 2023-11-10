@@ -1,5 +1,11 @@
 import * as React from 'react'
-import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import {
+  FlatList,
+  LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, {
   useAnimatedReaction,
   useAnimatedScrollHandler,
@@ -18,7 +24,7 @@ interface PagerWithHeaderChildParams {
   headerHeight: number
   onScroll: OnScrollCb
   isScrolledDown: boolean
-  scrollElRef: any /* TODO */
+  scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {

@@ -1,5 +1,11 @@
 import React, {useMemo, useCallback} from 'react'
-import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -349,7 +355,9 @@ export const ProfileFeedScreenInner = observer(
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
-              scrollElRef={scrollElRef}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<FlatList<any> | null>
+              }
             />
           )}
           {({onScroll, headerHeight, scrollElRef}) => (
@@ -360,7 +368,9 @@ export const ProfileFeedScreenInner = observer(
               headerHeight={headerHeight}
               onToggleLiked={onToggleLiked}
               onScroll={onScroll}
-              scrollElRef={scrollElRef}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<ScrollView | null>
+              }
             />
           )}
         </PagerWithHeader>
@@ -388,7 +398,7 @@ interface FeedSectionProps {
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
-  scrollElRef: any /* TODO */
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
@@ -447,7 +457,7 @@ const AboutSection = observer(function AboutPageImpl({
   headerHeight: number
   onToggleLiked: () => void
   onScroll: OnScrollCb
-  scrollElRef: any /* TODO */
+  scrollElRef: React.MutableRefObject<ScrollView | null>
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()

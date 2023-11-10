@@ -1,5 +1,11 @@
 import React, {useCallback, useMemo} from 'react'
-import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
@@ -172,7 +178,9 @@ export const ProfileListScreenInner = observer(
             {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <FeedSection
                 ref={feedSectionRef}
-                scrollElRef={scrollElRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 feed={feed}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
@@ -182,7 +190,9 @@ export const ProfileListScreenInner = observer(
             {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 ref={aboutSectionRef}
-                scrollElRef={scrollElRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 list={list}
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
@@ -222,7 +232,9 @@ export const ProfileListScreenInner = observer(
             {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
               <AboutSection
                 list={list}
-                scrollElRef={scrollElRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 descriptionRT={list.descriptionRT}
                 creator={list.data ? list.data.creator : undefined}
                 isCurateList={list.isCuratelist}
@@ -554,7 +566,7 @@ interface FeedSectionProps {
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
-  scrollElRef: any /* TODO */
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
@@ -608,7 +620,7 @@ interface AboutSectionProps {
   onScroll: OnScrollCb
   headerHeight: number
   isScrolledDown: boolean
-  scrollElRef: any /* TODO */
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
