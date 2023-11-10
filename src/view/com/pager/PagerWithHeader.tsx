@@ -60,8 +60,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-
     const headerHeight = headerOnlyHeight + tabBarHeight
+    const headerOnlyHeightShared = useSharedValue(0)
 
     // capture the header bar sizing
     const onTabBarLayout = React.useCallback(
@@ -73,8 +73,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const onHeaderOnlyLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
         setHeaderOnlyHeight(evt.nativeEvent.layout.height)
+        headerOnlyHeightShared.value = evt.nativeEvent.layout.height
       },
-      [setHeaderOnlyHeight],
+      [setHeaderOnlyHeight, headerOnlyHeightShared],
     )
 
     // render the the header and tab bar
@@ -131,7 +132,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     // props to pass into children render functions
     const onScroll = useAnimatedScrollHandler({
       onScroll(e) {
-        clampedScrollY.value = Math.min(e.contentOffset.y, headerOnlyHeight)
+        // TODO: We should be able to use headerOnlyHeight directly here, but on the web
+        // there seems is a bug in Reanimated causing state inside this function to be stale.
+        clampedScrollY.value = Math.min(
+          e.contentOffset.y,
+          headerOnlyHeightShared.value,
+        )
       },
     })
     useAnimatedReaction(
