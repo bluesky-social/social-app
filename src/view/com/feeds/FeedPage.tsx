@@ -174,6 +174,7 @@ export function FeedPage({
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
         feed={feed}
+        enabled={isPageFocused}
         scrollElRef={scrollElRef}
         onScroll={onMainScroll}
         scrollEventThrottle={1}

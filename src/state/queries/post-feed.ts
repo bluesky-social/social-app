@@ -53,7 +53,10 @@ export interface FeedPage {
   slices: FeedPostSlice[]
 }
 
-export function usePostFeedQuery(feedDesc: FeedDescriptor) {
+export function usePostFeedQuery(
+  feedDesc: FeedDescriptor,
+  opts?: {enabled?: boolean},
+) {
   const {agent} = useSession()
   const feedTuners = useFeedTuners(feedDesc)
 
@@ -122,5 +125,6 @@ export function usePostFeedQuery(feedDesc: FeedDescriptor) {
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled: opts?.enabled === false ? false : true,
   })
 }

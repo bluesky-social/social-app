@@ -29,6 +29,7 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 export function Feed({
   feed,
   style,
+  enabled,
   scrollElRef,
   onScroll,
   scrollEventThrottle,
@@ -41,6 +42,7 @@ export function Feed({
   extraData,
 }: {
   feed: FeedDescriptor
+  enabled?: boolean
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollCb
@@ -69,7 +71,7 @@ export function Feed({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = usePostFeedQuery(feed)
+  } = usePostFeedQuery(feed, {enabled})
   const isEmpty = isFetched && data?.pages[0]?.slices.length === 0
 
   const feedItems = React.useMemo(() => {
