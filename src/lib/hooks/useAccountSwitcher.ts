@@ -1,46 +1,43 @@
-import {useCallback, useState} from 'react'
-import {useStores} from 'state/index'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {StackActions, useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
-import {AccountData} from 'state/models/session'
-import {reset as resetNavigation} from '../../Navigation'
-import * as Toast from 'view/com/util/Toast'
+import {useCallback} from 'react'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {useStores} from '#/state/index'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useModalControls} from '#/state/modals'
+import {useSessionApi, SessionAccount} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
 
-export function useAccountSwitcher(): [
-  boolean,
-  (v: boolean) => void,
-  (acct: AccountData) => Promise<void>,
-] {
+export function useAccountSwitcher() {
   const {track} = useAnalytics()
   const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
   const {closeModal} = useModalControls()
-  const [isSwitching, setIsSwitching] = useState(false)
-  const navigation = useNavigation<NavigationProp>()
+  const {selectAccount, clearCurrentAccount} = useSessionApi()
 
   const onPressSwitchAccount = useCallback(
-    async (acct: AccountData) => {
+    async (acct: SessionAccount) => {
       track('Settings:SwitchAccountButtonClicked')
-      setIsSwitching(true)
-      const success = await store.session.resumeSession(acct)
-      setDrawerOpen(false)
-      closeModal()
-      store.shell.closeAllActiveElements()
-      if (success) {
-        resetNavigation()
-        Toast.show(`Signed in as ${acct.displayName || acct.handle}`)
-      } else {
+
+      try {
+        await selectAccount(acct)
+        setDrawerOpen(false)
+        closeModal()
+        store.shell.closeAllActiveElements()
+        Toast.show(`Signed in as ${acct.handle}`)
+      } catch (e) {
         Toast.show('Sorry! We need you to enter your password.')
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-        store.session.clear()
+        clearCurrentAccount() // back user out to login
       }
     },
-    [track, setIsSwitching, navigation, store, setDrawerOpen, closeModal],
+    [
+      track,
+      store,
+      setDrawerOpen,
+      closeModal,
+      clearCurrentAccount,
+      selectAccount,
+    ],
   )
 
-  return [isSwitching, setIsSwitching, onPressSwitchAccount]
+  return {onPressSwitchAccount}
 }

@@ -57,7 +57,8 @@ import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {useSession, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi, SessionAccount} from '#/state/session'
+import {useGetProfile} from '#/data/useGetProfile'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -66,6 +67,73 @@ import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+function SettingsAccountCard({account}: {account: SessionAccount}) {
+  const pal = usePalette('default')
+  const {isSwitchingAccounts, currentAccount} = useSession()
+  const {logout} = useSessionApi()
+  const {isError, data} = useGetProfile({did: account.did})
+  const isCurrentAccount = account.did === currentAccount?.did
+  const {onPressSwitchAccount} = useAccountSwitcher()
+
+  // TODO
+  if (isError || !currentAccount) return null
+
+  const contents = (
+    <View style={[pal.view, styles.linkCard]}>
+      <View style={styles.avi}>
+        <UserAvatar size={40} avatar={data?.avatar} />
+      </View>
+      <View style={[s.flex1]}>
+        <Text type="md-bold" style={pal.text}>
+          {data?.displayName || account.handle}
+        </Text>
+        <Text type="sm" style={pal.textLight}>
+          {account.handle}
+        </Text>
+      </View>
+
+      {isCurrentAccount ? (
+        <TouchableOpacity
+          testID="signOutBtn"
+          onPress={logout}
+          accessibilityRole="button"
+          accessibilityLabel="Sign out"
+          accessibilityHint={`Signs ${data?.displayName} out of Bluesky`}>
+          <Text type="lg" style={pal.link}>
+            Sign out
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <AccountDropdownBtn handle={account.handle} />
+      )}
+    </View>
+  )
+
+  return isCurrentAccount ? (
+    <Link
+      href={makeProfileLink({
+        did: currentAccount?.did,
+        handle: currentAccount?.handle,
+      })}
+      title="Your profile"
+      noFeedback>
+      {contents}
+    </Link>
+  ) : (
+    <TouchableOpacity
+      testID={`switchToAccountBtn-${account.handle}`}
+      key={account.did}
+      onPress={
+        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+      }
+      accessibilityRole="button"
+      accessibilityLabel={`Switch to ${account.handle}`}
+      accessibilityHint="Switches the account you are logged in to">
+      {contents}
+    </TouchableOpacity>
+  )
+}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
@@ -82,14 +150,12 @@ export const SettingsScreen = withAuthRequired(
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
-    const [isSwitching, setIsSwitching, onPressSwitchAccount] =
-      useAccountSwitcher()
     const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
       store.agent,
     )
     const {openModal} = useModalControls()
-    const {logout} = useSessionApi()
-    const {accounts} = useSession()
+    const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+    const {clearCurrentAccount} = useSessionApi()
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -120,30 +186,27 @@ export const SettingsScreen = withAuthRequired(
       track('Settings:AddAccountButtonClicked')
       navigation.navigate('HomeTab')
       navigation.dispatch(StackActions.popToTop())
-      store.session.clear()
-    }, [track, navigation, store])
+      clearCurrentAccount()
+    }, [track, navigation, clearCurrentAccount])
 
     const onPressChangeHandle = React.useCallback(() => {
       track('Settings:ChangeHandleButtonClicked')
       openModal({
         name: 'change-handle',
         onChanged() {
-          setIsSwitching(true)
           store.session.reloadFromServer().then(
             () => {
-              setIsSwitching(false)
               Toast.show('Your handle has been updated')
             },
             err => {
               logger.error('Failed to reload from server after handle update', {
                 error: err,
               })
-              setIsSwitching(false)
             },
           )
         },
       })
-    }, [track, store, openModal, setIsSwitching])
+    }, [track, store, openModal])
 
     const onPressInviteCodes = React.useCallback(() => {
       track('Settings:InvitecodesButtonClicked')
@@ -153,12 +216,6 @@ export const SettingsScreen = withAuthRequired(
     const onPressLanguageSettings = React.useCallback(() => {
       navigation.navigate('LanguageSettings')
     }, [navigation])
-
-    const onPressSignout = React.useCallback(() => {
-      track('Settings:SignOutButtonClicked')
-      logout()
-      store.session.logout()
-    }, [track, store, logout])
 
     const onPressDeleteAccount = React.useCallback(() => {
       openModal({name: 'delete-account'})
@@ -217,7 +274,7 @@ export const SettingsScreen = withAuthRequired(
           contentContainerStyle={isMobile && pal.viewLight}
           scrollIndicatorInsets={{right: 1}}>
           <View style={styles.spacer20} />
-          {store.session.currentSession !== undefined ? (
+          {currentAccount ? (
             <>
               <Text type="xl-bold" style={[pal.text, styles.heading]}>
                 <Trans>Account</Trans>
@@ -226,7 +283,7 @@ export const SettingsScreen = withAuthRequired(
                 <Text type="lg-medium" style={pal.text}>
                   Email:{' '}
                 </Text>
-                {!store.session.emailNeedsConfirmation && (
+                {currentAccount.emailConfirmed && (
                   <>
                     <FontAwesomeIcon
                       icon="check"
@@ -236,7 +293,7 @@ export const SettingsScreen = withAuthRequired(
                   </>
                 )}
                 <Text type="lg" style={pal.text}>
-                  {store.session.currentSession?.email}{' '}
+                  {currentAccount.email}{' '}
                 </Text>
                 <Link onPress={() => openModal({name: 'change-email'})}>
                   <Text type="lg" style={pal.link}>
@@ -255,7 +312,8 @@ export const SettingsScreen = withAuthRequired(
                 </Link>
               </View>
               <View style={styles.spacer20} />
-              <EmailConfirmationNotice />
+
+              {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
             </>
           ) : null}
           <View style={[s.flexRow, styles.heading]}>
@@ -264,70 +322,29 @@ export const SettingsScreen = withAuthRequired(
             </Text>
             <View style={s.flex1} />
           </View>
-          {isSwitching ? (
+
+          {isSwitchingAccounts ? (
             <View style={[pal.view, styles.linkCard]}>
               <ActivityIndicator />
             </View>
           ) : (
-            <Link
-              href={makeProfileLink(store.me)}
-              title="Your profile"
-              noFeedback>
-              <View style={[pal.view, styles.linkCard]}>
-                <View style={styles.avi}>
-                  <UserAvatar size={40} avatar={store.me.avatar} />
-                </View>
-                <View style={[s.flex1]}>
-                  <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                    {store.me.displayName || store.me.handle}
-                  </Text>
-                  <Text type="sm" style={pal.textLight} numberOfLines={1}>
-                    {store.me.handle}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  testID="signOutBtn"
-                  onPress={isSwitching ? undefined : onPressSignout}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(msg`Sign out`)}
-                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
-                  <Text type="lg" style={pal.link}>
-                    <Trans>Sign out</Trans>
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Link>
+            <SettingsAccountCard account={currentAccount!} />
           )}
-          {accounts.map(account => (
-            <TouchableOpacity
-              testID={`switchToAccountBtn-${account.handle}`}
-              key={account.did}
-              style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
-              onPress={
-                isSwitching ? undefined : () => onPressSwitchAccount(account)
-              }
-              accessibilityRole="button"
-              accessibilityLabel={`Switch to ${account.handle}`}
-              accessibilityHint="Switches the account you are logged in to">
-              <View style={styles.avi}>
-                {/*<UserAvatar size={40} avatar={account.aviUrl} />*/}
-              </View>
-              <View style={[s.flex1]}>
-                <Text type="md-bold" style={pal.text}>
-                  {/* @ts-ignore */}
-                  {account.displayName || account.handle}
-                </Text>
-                <Text type="sm" style={pal.textLight}>
-                  {account.handle}
-                </Text>
-              </View>
-              <AccountDropdownBtn handle={account.handle} />
-            </TouchableOpacity>
-          ))}
+
+          {accounts
+            .filter(a => a.did !== currentAccount?.did)
+            .map(account => (
+              <SettingsAccountCard key={account.did} account={account} />
+            ))}
+
           <TouchableOpacity
             testID="switchToNewAccountBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressAddAccount}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
+            onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Add account`)}
             accessibilityHint="Create a new Bluesky account">
@@ -349,8 +366,12 @@ export const SettingsScreen = withAuthRequired(
           </Text>
           <TouchableOpacity
             testID="inviteFriendBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressInviteCodes}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
+            onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Invite`)}
             accessibilityHint="Opens invite code list">
@@ -427,7 +448,11 @@ export const SettingsScreen = withAuthRequired(
           </Text>
           <TouchableOpacity
             testID="preferencesHomeFeedButton"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
             onPress={openHomeFeedPreferences}
             accessibilityRole="button"
             accessibilityHint=""
@@ -444,7 +469,11 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <TouchableOpacity
             testID="preferencesThreadsButton"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
             onPress={openThreadsPreferences}
             accessibilityRole="button"
             accessibilityHint=""
@@ -462,7 +491,11 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <TouchableOpacity
             testID="savedFeedsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
             accessibilityHint="My Saved Feeds"
             accessibilityLabel={_(msg`Opens screen with all saved feeds`)}
             onPress={onPressSavedFeeds}>
@@ -475,8 +508,12 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <TouchableOpacity
             testID="languageSettingsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressLanguageSettings}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
+            onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
             accessibilityRole="button"
             accessibilityHint="Language settings"
             accessibilityLabel={_(msg`Opens configurable language settings`)}>
@@ -492,9 +529,15 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <TouchableOpacity
             testID="moderationBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
             onPress={
-              isSwitching ? undefined : () => navigation.navigate('Moderation')
+              isSwitchingAccounts
+                ? undefined
+                : () => navigation.navigate('Moderation')
             }
             accessibilityRole="button"
             accessibilityHint=""
@@ -513,7 +556,11 @@ export const SettingsScreen = withAuthRequired(
           </Text>
           <TouchableOpacity
             testID="appPasswordBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
             onPress={onPressAppPasswords}
             accessibilityRole="button"
             accessibilityHint="Open app password settings"
@@ -530,8 +577,12 @@ export const SettingsScreen = withAuthRequired(
           </TouchableOpacity>
           <TouchableOpacity
             testID="changeHandleBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressChangeHandle}
+            style={[
+              styles.linkCard,
+              pal.view,
+              isSwitchingAccounts && styles.dimmed,
+            ]}
+            onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Change handle`)}
             accessibilityHint="Choose a new Bluesky username or create">
@@ -655,14 +706,9 @@ const EmailConfirmationNotice = observer(
   function EmailConfirmationNoticeImpl() {
     const pal = usePalette('default')
     const palInverted = usePalette('inverted')
-    const store = useStores()
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {openModal} = useModalControls()
-
-    if (!store.session.emailNeedsConfirmation) {
-      return null
-    }
 
     return (
       <View style={{marginBottom: 20}}>

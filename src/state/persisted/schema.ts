@@ -7,6 +7,8 @@ const accountSchema = z.object({
   service: z.string(),
   did: z.string(),
   handle: z.string(),
+  email: z.string(),
+  emailConfirmed: z.boolean(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
   // displayName: z.string().optional(),

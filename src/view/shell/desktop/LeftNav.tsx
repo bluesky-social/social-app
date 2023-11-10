@@ -41,18 +41,31 @@ import {router} from '../../../routes'
 import {makeProfileLink} from 'lib/routes/links'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
+import {useGetProfile} from '#/data/useGetProfile'
+import {useSession} from '#/state/session'
 
 const ProfileCard = observer(function ProfileCardImpl() {
-  const store = useStores()
+  const {currentAccount} = useSession()
+  const {
+    isLoading,
+    isError,
+    data: profile,
+  } = useGetProfile({did: currentAccount!.did})
   const {isDesktop} = useWebMediaQueries()
   const size = 48
-  return store.me.handle ? (
+
+  if (isError || !profile || !currentAccount) return null
+
+  return !isLoading ? (
     <Link
-      href={makeProfileLink(store.me)}
+      href={makeProfileLink({
+        did: currentAccount.did,
+        handle: currentAccount.handle,
+      })}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
       title="My Profile"
       asAnchor>
-      <UserAvatar avatar={store.me.avatar} size={size} />
+      <UserAvatar avatar={profile.avatar} size={size} />
     </Link>
   ) : (
     <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
@@ -255,7 +268,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         pal.view,
         pal.border,
       ]}>
-      {store.session.hasSession && <ProfileCard />}
+      <ProfileCard />
       <BackBtn />
       <NavItem
         href="/"
@@ -360,26 +373,24 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Moderation"
       />
-      {store.session.hasSession && (
-        <NavItem
-          href={makeProfileLink(store.me)}
-          icon={
-            <UserIcon
-              strokeWidth={1.75}
-              size={isDesktop ? 28 : 30}
-              style={pal.text}
-            />
-          }
-          iconFilled={
-            <UserIconSolid
-              strokeWidth={1.75}
-              size={isDesktop ? 28 : 30}
-              style={pal.text}
-            />
-          }
-          label="Profile"
-        />
-      )}
+      <NavItem
+        href={makeProfileLink(store.me)}
+        icon={
+          <UserIcon
+            strokeWidth={1.75}
+            size={isDesktop ? 28 : 30}
+            style={pal.text}
+          />
+        }
+        iconFilled={
+          <UserIconSolid
+            strokeWidth={1.75}
+            size={isDesktop ? 28 : 30}
+            style={pal.text}
+          />
+        }
+        label="Profile"
+      />
       <NavItem
         href="/settings"
         icon={
@@ -398,7 +409,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         }
         label="Settings"
       />
-      {store.session.hasSession && <ComposeBtn />}
+      <ComposeBtn />
     </View>
   )
 })

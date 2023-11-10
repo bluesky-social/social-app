@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
 import {CenteredView} from '../util/Views'
 import {LoggedOut} from './LoggedOut'
 import {Onboarding} from './Onboarding'
@@ -14,17 +13,18 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useOnboardingState} from '#/state/shell'
+import {useSession} from '#/state/session'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
 ): React.FC<P> =>
   observer(function AuthRequired(props: P) {
-    const store = useStores()
+    const {isInitialLoad, hasSession} = useSession()
     const onboardingState = useOnboardingState()
-    if (store.session.isResumingSession) {
+    if (isInitialLoad) {
       return <Loading />
     }
-    if (!store.session.hasSession) {
+    if (!hasSession) {
       return <LoggedOut />
     }
     if (onboardingState.isActive) {
