@@ -4,12 +4,8 @@ import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {
-  useAnimatedScrollHandler,
-  useSharedValue,
-  interpolate,
-  runOnJS,
-} from 'react-native-reanimated'
+import {useSharedValue, interpolate, runOnJS} from 'react-native-reanimated'
+import {useAnimatedScrollHandler} from './useAnimatedScrollHandler_FIXED'
 
 function clamp(num: number, min: number, max: number) {
   'worklet'

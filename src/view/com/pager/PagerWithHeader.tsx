@@ -3,7 +3,6 @@ import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedReaction,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -13,6 +12,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {useAnimatedScrollHandler} from 'lib/hooks/useAnimatedScrollHandler_FIXED'
 
 const SCROLLED_DOWN_LIMIT = 200
 
