@@ -13,17 +13,16 @@ import {FeedDescriptor} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, View, useWindowDimensions} from 'react-native'
 import {useStores} from 'state/index'
-import {useHeaderOffset, POLL_FREQ} from 'view/screens/Home'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
-import useAppState from 'react-native-appstate-hook'
-import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+const POLL_FREQ = 30e3 // 30sec
 
 export function FeedPage({
   testID,
@@ -47,30 +46,8 @@ export function FeedPage({
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
-  // const {appState} = useAppState({ TODO
-  //   onForeground: () => doPoll(true),
-  // })
   const isScreenFocused = useIsFocused()
-  const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
-
-  // TODO
-  // const doPoll = React.useCallback(
-  //   (knownActive = false) => {
-  //     if (
-  //       (!knownActive && appState !== 'active') ||
-  //       !isScreenFocused ||
-  //       !isPageFocused
-  //     ) {
-  //       return
-  //     }
-  //     if (feed.isLoading) {
-  //       return
-  //     }
-  //     logger.debug('HomeScreen: Polling for new posts')
-  //     feed.checkForLatest()
-  //   },
-  //   [appState, isScreenFocused, isPageFocused, feed],
-  // )
+  const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({offset: -headerOffset})
@@ -81,25 +58,18 @@ export function FeedPage({
     if (isPageFocused) {
       scrollToTop()
       queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      setHasNew(false)
     }
-  }, [isPageFocused, scrollToTop, queryClient, feed])
+  }, [isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
   // fires when page within screen is activated/deactivated
-  // - check for latest
   React.useEffect(() => {
     if (!isPageFocused || !isScreenFocused) {
       return
     }
-
     const softResetSub = store.onScreenSoftReset(onSoftReset)
-    // const pollInterval = setInterval(doPoll, POLL_FREQ) TODO
-
     screen('Feed')
-    logger.debug('HomeScreen: Updating feed')
-    // feed.checkForLatest() TODO
-
     return () => {
-      // clearInterval(pollInterval) TODO
       softResetSub.remove()
     }
   }, [store, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
@@ -112,7 +82,8 @@ export function FeedPage({
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
     queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
-  }, [scrollToTop, feed, queryClient])
+    setHasNew(false)
+  }, [scrollToTop, feed, queryClient, setHasNew])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {
@@ -175,8 +146,10 @@ export function FeedPage({
         testID={testID ? `${testID}-feed` : undefined}
         feed={feed}
         enabled={isPageFocused}
+        pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
         onScroll={onMainScroll}
+        onHasNew={setHasNew}
         scrollEventThrottle={1}
         renderEmptyState={renderEmptyState}
         renderEndOfFeed={renderEndOfFeed}
@@ -200,4 +173,18 @@ export function FeedPage({
       />
     </View>
   )
+}
+
+function useHeaderOffset() {
+  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {fontScale} = useWindowDimensions()
+  if (isDesktop) {
+    return 0
+  }
+  if (isTablet) {
+    return 50
+  }
+  // default text takes 44px, plus 34px of pad
+  // scale the 44px by the font scale
+  return 34 + 44 * fontScale
 }

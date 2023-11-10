@@ -560,13 +560,14 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     ref,
   ) {
     const queryClient = useQueryClient()
-    const hasNew = false // TODOfeed.hasNewLatest && !feed.isRefreshing
+    const [hasNew, setHasNew] = React.useState(false)
     const scrollElRef = React.useRef<FlatList>(null)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
       queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
-    }, [scrollElRef, headerHeight, queryClient, feed])
+      setHasNew(false)
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
@@ -581,8 +582,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         <Feed
           testID="listFeed"
           feed={feed}
+          pollInterval={30e3}
           scrollElRef={scrollElRef}
           onScroll={scrollHandler}
+          onHasNew={setHasNew}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}

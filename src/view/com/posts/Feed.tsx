@@ -30,8 +30,10 @@ export function Feed({
   feed,
   style,
   enabled,
+  pollInterval,
   scrollElRef,
   onScroll,
+  onHasNew,
   scrollEventThrottle,
   renderEmptyState,
   renderEndOfFeed,
@@ -42,10 +44,12 @@ export function Feed({
   extraData,
 }: {
   feed: FeedDescriptor
-  enabled?: boolean
   style?: StyleProp<ViewStyle>
+  enabled?: boolean
+  pollInterval?: number
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollCb
+  onHasNew?: (v: boolean) => void
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
@@ -71,8 +75,29 @@ export function Feed({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    pollLatest,
   } = usePostFeedQuery(feed, {enabled})
   const isEmpty = isFetched && data?.pages[0]?.slices.length === 0
+
+  const checkForNew = React.useCallback(async () => {
+    if (!isFetched || isFetching || !onHasNew) {
+      return
+    }
+    try {
+      if (await pollLatest()) {
+        onHasNew(true)
+      }
+    } catch (e) {
+      logger.error('Poll latest failed', {feed, error: String(e)})
+    }
+  }, [feed, isFetched, isFetching, pollLatest, onHasNew])
+
+  React.useEffect(() => {
+    const i = setInterval(checkForNew, pollInterval)
+    return () => {
+      clearInterval(i)
+    }
+  })
 
   const feedItems = React.useMemo(() => {
     let arr: any[] = []
@@ -104,11 +129,12 @@ export function Feed({
     setIsRefreshing(true)
     try {
       await refetch()
+      onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {error: err})
     }
     setIsRefreshing(false)
-  }, [refetch, track, setIsRefreshing])
+  }, [refetch, track, setIsRefreshing, onHasNew])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage) return
@@ -123,7 +149,8 @@ export function Feed({
 
   const onPressTryAgain = React.useCallback(() => {
     refetch()
-  }, [refetch])
+    onHasNew?.(false)
+  }, [refetch, onHasNew])
 
   const onPressRetryLoadMore = React.useCallback(() => {
     fetchNextPage()

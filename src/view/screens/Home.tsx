@@ -1,5 +1,4 @@
 import React from 'react'
-import {useWindowDimensions} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
 import isEqual from 'lodash.isequal'
@@ -12,11 +11,8 @@ import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-
-export const POLL_FREQ = 30e3 // 30sec
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
@@ -146,17 +142,3 @@ export const HomeScreen = withAuthRequired(
     )
   }),
 )
-
-export function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const {fontScale} = useWindowDimensions()
-  if (isDesktop) {
-    return 0
-  }
-  if (isTablet) {
-    return 50
-  }
-  // default text takes 44px, plus 34px of pad
-  // scale the 44px by the font scale
-  return 34 + 44 * fontScale
-}
