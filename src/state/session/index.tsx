@@ -376,11 +376,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   React.useEffect(() => {
     if (isDirty.current) {
+      isDirty.current = false
       persisted.write('session', {
         accounts: state.accounts,
         currentAccount: state.currentAccount,
       })
-      isDirty.current = false
     }
   }, [state])
 
