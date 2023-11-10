@@ -138,17 +138,20 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       })
     }
 
+    const lastForcedScrollY = useSharedValue(0)
     const onScrollWorklet = React.useCallback(
       (e: NativeScrollEvent) => {
         'worklet'
         const nextScrollY = e.contentOffset.y
         scrollY.value = nextScrollY
 
-        if (nextScrollY < headerOnlyHeight) {
+        const forcedScrollY = Math.min(nextScrollY, headerOnlyHeight)
+        if (lastForcedScrollY.value !== forcedScrollY) {
+          lastForcedScrollY.value = forcedScrollY
           const refs = scrollRefs.value
           for (let i = 0; i < refs.length; i++) {
             if (i !== currentPage) {
-              scrollTo(refs[i], 0, nextScrollY, false)
+              scrollTo(refs[i], 0, forcedScrollY, false)
             }
           }
         }
@@ -158,7 +161,14 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
           runOnJS(setIsScrolledDown)(nextIsScrolledDown)
         }
       },
-      [currentPage, headerOnlyHeight, isScrolledDown, scrollRefs, scrollY],
+      [
+        currentPage,
+        headerOnlyHeight,
+        isScrolledDown,
+        scrollRefs,
+        scrollY,
+        lastForcedScrollY,
+      ],
     )
 
     const onPageSelectedInner = React.useCallback(
