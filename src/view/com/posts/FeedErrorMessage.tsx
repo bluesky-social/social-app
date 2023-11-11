@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AtUri, AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
-import {PostsFeedModel, KnownError} from 'state/models/feeds/posts'
+import {AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
@@ -12,9 +11,22 @@ import {NavigationProp} from 'lib/routes/types'
 import {useStores} from 'state/index'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {FeedDescriptor} from '#/state/queries/post-feed'
+import {EmptyState} from '../util/EmptyState'
+
+enum KnownError {
+  Block,
+  FeedgenDoesNotExist,
+  FeedgenMisconfigured,
+  FeedgenBadResponse,
+  FeedgenOffline,
+  FeedgenUnknown,
+  Unknown,
+}
 
 const MESSAGES = {
   [KnownError.Unknown]: '',
+  [KnownError.Block]: '',
   [KnownError.FeedgenDoesNotExist]: `Hmmm, we're having trouble finding this feed. It may have been deleted.`,
   [KnownError.FeedgenMisconfigured]:
     'Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue.',
@@ -27,36 +39,51 @@ const MESSAGES = {
 }
 
 export function FeedErrorMessage({
-  feed,
+  feedDesc,
+  error,
   onPressTryAgain,
 }: {
-  feed: PostsFeedModel
+  feedDesc: FeedDescriptor
+  error: any
   onPressTryAgain: () => void
 }) {
+  const knownError = React.useMemo(
+    () => detectKnownError(feedDesc, error),
+    [feedDesc, error],
+  )
   if (
-    typeof feed.knownError === 'undefined' ||
-    feed.knownError === KnownError.Unknown
+    typeof knownError !== 'undefined' &&
+    knownError !== KnownError.Unknown &&
+    feedDesc.startsWith('feedgen')
   ) {
+    return <FeedgenErrorMessage feedDesc={feedDesc} knownError={knownError} />
+  }
+
+  if (knownError === KnownError.Block) {
     return (
-      <ErrorMessage message={feed.error} onPressTryAgain={onPressTryAgain} />
+      <EmptyState
+        icon="ban"
+        message="Posts hidden"
+        style={{paddingVertical: 40}}
+      />
     )
   }
 
-  return <FeedgenErrorMessage feed={feed} knownError={feed.knownError} />
+  return <ErrorMessage message={error} onPressTryAgain={onPressTryAgain} />
 }
 
 function FeedgenErrorMessage({
-  feed,
+  feedDesc,
   knownError,
 }: {
-  feed: PostsFeedModel
+  feedDesc: FeedDescriptor
   knownError: KnownError
 }) {
   const pal = usePalette('default')
   const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const msg = MESSAGES[knownError]
-  const uri = (feed.params as GetCustomFeed.QueryParams).feed
+  const [_, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
   const {openModal, closeModal} = useModalControls()
 
@@ -119,4 +146,46 @@ function safeParseFeedgenUri(uri: string): [string, string] {
   } catch {
     return ['', '']
   }
+}
+
+function detectKnownError(
+  feedDesc: FeedDescriptor,
+  error: any,
+): KnownError | undefined {
+  if (!error) {
+    return undefined
+  }
+  if (
+    error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
+    error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+  ) {
+    return KnownError.Block
+  }
+  if (typeof error !== 'string') {
+    error = error.toString()
+  }
+  if (!feedDesc.startsWith('feedgen')) {
+    return KnownError.Unknown
+  }
+  if (error.includes('could not find feed')) {
+    return KnownError.FeedgenDoesNotExist
+  }
+  if (error.includes('feed unavailable')) {
+    return KnownError.FeedgenOffline
+  }
+  if (error.includes('invalid did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('could not resolve did document')) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (
+    error.includes('invalid feed generator service details in did document')
+  ) {
+    return KnownError.FeedgenMisconfigured
+  }
+  if (error.includes('feed provided an invalid response')) {
+    return KnownError.FeedgenBadResponse
+  }
+  return KnownError.FeedgenUnknown
 }

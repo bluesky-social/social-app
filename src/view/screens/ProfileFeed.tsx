@@ -1,7 +1,14 @@
 import React, {useMemo, useCallback} from 'react'
-import {FlatList, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -11,7 +18,7 @@ import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
 import {FeedSourceModel} from 'state/models/content/feed-source'
-import {PostsFeedModel} from 'state/models/feeds/posts'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -26,7 +33,8 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useCustomFeed} from 'lib/hooks/useCustomFeed'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -44,6 +52,7 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -147,13 +156,6 @@ export const ProfileFeedScreenInner = observer(
       [rkey, feedOwnerDid],
     )
     const feedInfo = useCustomFeed(uri)
-    const feed: PostsFeedModel = useMemo(() => {
-      const model = new PostsFeedModel(store, 'custom', {
-        feed: uri,
-      })
-      model.setup()
-      return model
-    }, [store, uri])
     const isPinned = store.preferences.isPinnedFeed(uri)
     useSetTitle(feedInfo?.displayName)
 
@@ -342,16 +344,19 @@ export const ProfileFeedScreenInner = observer(
           isHeaderReady={feedInfo?.hasLoaded ?? false}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({onScroll, headerHeight, isScrolledDown}) => (
+          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
             <FeedSection
               ref={feedSectionRef}
-              feed={feed}
+              feed={`feedgen|${uri}`}
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<FlatList<any> | null>
+              }
             />
           )}
-          {({onScroll, headerHeight}) => (
+          {({onScroll, headerHeight, scrollElRef}) => (
             <AboutSection
               feedOwnerDid={feedOwnerDid}
               feedRkey={rkey}
@@ -359,6 +364,9 @@ export const ProfileFeedScreenInner = observer(
               headerHeight={headerHeight}
               onToggleLiked={onToggleLiked}
               onScroll={onScroll}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<ScrollView | null>
+              }
             />
           )}
         </PagerWithHeader>
@@ -382,23 +390,25 @@ export const ProfileFeedScreenInner = observer(
 )
 
 interface FeedSectionProps {
-  feed: PostsFeedModel
-  onScroll: OnScrollCb
+  feed: FeedDescriptor
+  onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown},
+    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
     ref,
   ) {
-    const hasNew = feed.hasNewLatest && !feed.isRefreshing
-    const scrollElRef = React.useRef<FlatList>(null)
+    const [hasNew, setHasNew] = React.useState(false)
+    const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      feed.refresh()
-    }, [feed, scrollElRef, headerHeight])
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      setHasNew(false)
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
@@ -412,7 +422,9 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       <View>
         <Feed
           feed={feed}
+          pollInterval={30e3}
           scrollElRef={scrollElRef}
+          onHasNew={setHasNew}
           onScroll={onScroll}
           scrollEventThrottle={5}
           renderEmptyState={renderPostsEmpty}
@@ -437,16 +449,19 @@ const AboutSection = observer(function AboutPageImpl({
   headerHeight,
   onToggleLiked,
   onScroll,
+  scrollElRef,
 }: {
   feedOwnerDid: string
   feedRkey: string
   feedInfo: FeedSourceModel | undefined
   headerHeight: number
   onToggleLiked: () => void
-  onScroll: OnScrollCb
+  onScroll: OnScrollHandler
+  scrollElRef: React.MutableRefObject<ScrollView | null>
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const scrollHandler = useAnimatedScrollHandler(onScroll)
 
   if (!feedInfo) {
     return <View />
@@ -454,9 +469,13 @@ const AboutSection = observer(function AboutPageImpl({
 
   return (
     <ScrollView
+      ref={scrollElRef}
       scrollEventThrottle={1}
-      contentContainerStyle={{paddingTop: headerHeight}}
-      onScroll={onScroll}>
+      contentContainerStyle={{
+        paddingTop: headerHeight,
+        minHeight: Dimensions.get('window').height * 1.5,
+      }}
+      onScroll={scrollHandler}>
       <View
         style={[
           {

@@ -1,6 +1,7 @@
 import React, {MutableRefObject} from 'react'
 import {
   ActivityIndicator,
+  Dimensions,
   RefreshControl,
   StyleProp,
   View,
@@ -18,10 +19,10 @@ import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -44,7 +45,7 @@ export const ListItems = observer(function ListItemsImpl({
   list: ListModel
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onScroll?: OnScrollCb
+  onScroll: OnScrollHandler
   onPressTryAgain?: () => void
   renderHeader: () => JSX.Element
   renderEmptyState: () => JSX.Element
@@ -205,6 +206,7 @@ export const ListItems = observer(function ListItemsImpl({
     [list.isLoading],
   )
 
+  const scrollHandler = useAnimatedScrollHandler(onScroll)
   return (
     <View testID={testID} style={style}>
       <FlatList
@@ -224,9 +226,11 @@ export const ListItems = observer(function ListItemsImpl({
             progressViewOffset={headerOffset}
           />
         }
-        contentContainerStyle={s.contentContainer}
+        contentContainerStyle={{
+          minHeight: Dimensions.get('window').height * 1.5,
+        }}
         style={{paddingTop: headerOffset}}
-        onScroll={onScroll}
+        onScroll={scrollHandler}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         scrollEventThrottle={scrollEventThrottle}

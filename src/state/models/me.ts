@@ -4,7 +4,6 @@ import {
   ComAtprotoServerListAppPasswords,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
-import {PostsFeedModel} from './feeds/posts'
 import {NotificationsFeedModel} from './feeds/notifications'
 import {MyFeedsUIModel} from './ui/my-feeds'
 import {MyFollowsCache} from './cache/my-follows'
@@ -22,7 +21,6 @@ export class MeModel {
   avatar: string = ''
   followsCount: number | undefined
   followersCount: number | undefined
-  mainFeed: PostsFeedModel
   notifications: NotificationsFeedModel
   myFeeds: MyFeedsUIModel
   follows: MyFollowsCache
@@ -41,16 +39,12 @@ export class MeModel {
       {rootStore: false, serialize: false, hydrate: false},
       {autoBind: true},
     )
-    this.mainFeed = new PostsFeedModel(this.rootStore, 'home', {
-      algorithm: 'reverse-chronological',
-    })
     this.notifications = new NotificationsFeedModel(this.rootStore)
     this.myFeeds = new MyFeedsUIModel(this.rootStore)
     this.follows = new MyFollowsCache(this.rootStore)
   }
 
   clear() {
-    this.mainFeed.clear()
     this.notifications.clear()
     this.myFeeds.clear()
     this.follows.clear()
@@ -109,10 +103,6 @@ export class MeModel {
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
       await this.fetchProfile()
-      this.mainFeed.clear()
-      /* dont await */ this.mainFeed.setup().catch(e => {
-        logger.error('Failed to setup main feed model', {error: e})
-      })
       /* dont await */ this.notifications.setup().catch(e => {
         logger.error('Failed to setup notifications model', {
           error: e,

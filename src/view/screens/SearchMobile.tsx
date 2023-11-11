@@ -14,6 +14,7 @@ import {
 } from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useStores} from 'state/index'
 import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {SearchUIModel} from 'state/models/ui/search'
@@ -131,6 +132,7 @@ export const SearchScreen = withAuthRequired(
       }
     }, [])
 
+    const scrollHandler = useAnimatedScrollHandler(onMainScroll)
     return (
       <TouchableWithoutFeedback onPress={onPress} accessible={false}>
         <View style={[pal.view, styles.container]}>
@@ -156,8 +158,8 @@ export const SearchScreen = withAuthRequired(
               ref={scrollViewRef}
               testID="searchScrollView"
               style={pal.view}
-              onScroll={onMainScroll}
-              scrollEventThrottle={100}>
+              onScroll={scrollHandler}
+              scrollEventThrottle={1}>
               {query && autocompleteView.suggestions.length ? (
                 <>
                   {autocompleteView.suggestions.map((suggestion, index) => (

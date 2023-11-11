@@ -1,25 +1,27 @@
 import React, {useMemo, useState} from 'react'
-import {observer} from 'mobx-react-lite'
-import {Linking, StyleSheet, View} from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri} from '@atproto/api'
+import {StyleSheet, View} from 'react-native'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  PostModeration,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/post'
-import {FeedSourceInfo} from 'lib/api/feed/types'
+import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
 import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls2'
 import {PostEmbeds} from '../util/post-embeds'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
-import * as Toast from '../util/Toast'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {useStores} from 'state/index'
@@ -27,47 +29,91 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
-import {logger} from '#/logger'
-import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
-import {useLanguagePrefs} from '#/state/preferences'
+import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 
-export const FeedItem = observer(function FeedItemImpl({
-  item,
-  source,
+export function FeedItem({
+  post,
+  record,
+  reason,
+  moderation,
+  dataUpdatedAt,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
 }: {
-  item: PostsFeedItemModel
-  source?: FeedSourceInfo
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  moderation: PostModeration
+  dataUpdatedAt: number
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
-  showReplyLine?: boolean
+}) {
+  const postShadowed = usePostShadow(post, dataUpdatedAt)
+  const richText = useMemo(
+    () =>
+      new RichTextAPI({
+        text: record.text,
+        facets: record.facets,
+      }),
+    [record],
+  )
+  if (postShadowed === POST_TOMBSTONE) {
+    return null
+  }
+  if (richText && moderation) {
+    return (
+      <FeedItemInner
+        post={postShadowed}
+        record={record}
+        reason={reason}
+        richText={richText}
+        moderation={moderation}
+        isThreadChild={isThreadChild}
+        isThreadLastChild={isThreadLastChild}
+        isThreadParent={isThreadParent}
+      />
+    )
+  }
+  return null
+}
+
+function FeedItemInner({
+  post,
+  record,
+  reason,
+  richText,
+  moderation,
+  isThreadChild,
+  isThreadLastChild,
+  isThreadParent,
+}: {
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  richText: RichTextAPI
+  moderation: PostModeration
+  isThreadChild?: boolean
+  isThreadLastChild?: boolean
+  isThreadParent?: boolean
 }) {
   const store = useStores()
-  const langPrefs = useLanguagePrefs()
   const pal = usePalette('default')
-  const mutedThreads = useMutedThreads()
-  const toggleThreadMute = useToggleThreadMute()
   const {track} = useAnalytics()
-  const [deleted, setDeleted] = useState(false)
   const [limitLines, setLimitLines] = useState(
-    countLines(item.richText?.text) >= MAX_POST_LINES,
+    countLines(richText.text) >= MAX_POST_LINES,
   )
-  const record = item.postRecord
-  const itemUri = item.post.uri
-  const itemCid = item.post.cid
-  const itemHref = useMemo(() => {
-    const urip = new AtUri(item.post.uri)
-    return makeProfileLink(item.post.author, 'post', urip.rkey)
-  }, [item.post.uri, item.post.author])
-  const itemTitle = `Post by ${item.post.author.handle}`
+
+  const href = useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey)
+  }, [post.uri, post.author])
+
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
       return ''
@@ -75,77 +121,22 @@ export const FeedItem = observer(function FeedItemImpl({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const translatorUrl = getTranslatorLink(
-    record?.text || '',
-    langPrefs.primaryLanguage,
-  )
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
     store.shell.openComposer({
       replyTo: {
-        uri: item.post.uri,
-        cid: item.post.cid,
-        text: record?.text || '',
+        uri: post.uri,
+        cid: post.cid,
+        text: record.text || '',
         author: {
-          handle: item.post.author.handle,
-          displayName: item.post.author.displayName,
-          avatar: item.post.author.avatar,
+          handle: post.author.handle,
+          displayName: post.author.displayName,
+          avatar: post.author.avatar,
         },
       },
     })
-  }, [item, track, record, store])
-
-  const onPressToggleRepost = React.useCallback(() => {
-    track('FeedItem:PostRepost')
-    return item
-      .toggleRepost()
-      .catch(e => logger.error('Failed to toggle repost', {error: e}))
-  }, [track, item])
-
-  const onPressToggleLike = React.useCallback(() => {
-    track('FeedItem:PostLike')
-    return item
-      .toggleLike()
-      .catch(e => logger.error('Failed to toggle like', {error: e}))
-  }, [track, item])
-
-  const onCopyPostText = React.useCallback(() => {
-    Clipboard.setString(record?.text || '')
-    Toast.show('Copied to clipboard')
-  }, [record])
-
-  const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
-
-  const onToggleThreadMute = React.useCallback(() => {
-    track('FeedItem:ThreadMute')
-    try {
-      const muted = toggleThreadMute(item.rootUri)
-      if (muted) {
-        Toast.show('You will no longer receive notifications for this thread')
-      } else {
-        Toast.show('You will now receive notifications for this thread')
-      }
-    } catch (e) {
-      logger.error('Failed to toggle thread mute', {error: e})
-    }
-  }, [track, toggleThreadMute, item])
-
-  const onDeletePost = React.useCallback(() => {
-    track('FeedItem:PostDelete')
-    item.delete().then(
-      () => {
-        setDeleted(true)
-        Toast.show('Post deleted')
-      },
-      e => {
-        logger.error('Failed to delete post', {error: e})
-        Toast.show('Failed to delete post, please try again')
-      },
-    )
-  }, [track, item, setDeleted])
+  }, [post, record, track, store])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
@@ -164,15 +155,11 @@ export const FeedItem = observer(function FeedItemImpl({
     isThreadChild ? styles.outerSmallTop : undefined,
   ]
 
-  if (!record || deleted) {
-    return <View />
-  }
-
   return (
     <Link
-      testID={`feedItem-by-${item.post.author.handle}`}
+      testID={`feedItem-by-${post.author.handle}`}
       style={outerStyles}
-      href={itemHref}
+      href={href}
       noFeedback
       accessible={false}>
       <PostSandboxWarning />
@@ -194,10 +181,10 @@ export const FeedItem = observer(function FeedItemImpl({
         </View>
 
         <View style={{paddingTop: 12, flexShrink: 1}}>
-          {source ? (
+          {isReasonFeedSource(reason) ? (
             <Link
-              title={sanitizeDisplayName(source.displayName)}
-              href={source.uri}>
+              title={sanitizeDisplayName(reason.displayName)}
+              href={reason.uri}>
               <Text
                 type="sm-bold"
                 style={pal.textLight}
@@ -209,17 +196,17 @@ export const FeedItem = observer(function FeedItemImpl({
                   style={pal.textLight}
                   lineHeight={1.2}
                   numberOfLines={1}
-                  text={sanitizeDisplayName(source.displayName)}
-                  href={source.uri}
+                  text={sanitizeDisplayName(reason.displayName)}
+                  href={reason.uri}
                 />
               </Text>
             </Link>
-          ) : item.reasonRepost ? (
+          ) : AppBskyFeedDefs.isReasonRepost(reason) ? (
             <Link
               style={styles.includeReason}
-              href={makeProfileLink(item.reasonRepost.by)}
+              href={makeProfileLink(reason.by)}
               title={`Reposted by ${sanitizeDisplayName(
-                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+                reason.by.displayName || reason.by.handle,
               )}`}>
               <FontAwesomeIcon
                 icon="retweet"
@@ -241,10 +228,9 @@ export const FeedItem = observer(function FeedItemImpl({
                   lineHeight={1.2}
                   numberOfLines={1}
                   text={sanitizeDisplayName(
-                    item.reasonRepost.by.displayName ||
-                      sanitizeHandle(item.reasonRepost.by.handle),
+                    reason.by.displayName || sanitizeHandle(reason.by.handle),
                   )}
-                  href={makeProfileLink(item.reasonRepost.by)}
+                  href={makeProfileLink(reason.by)}
                 />
               </Text>
             </Link>
@@ -256,10 +242,10 @@ export const FeedItem = observer(function FeedItemImpl({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={item.post.author.did}
-            handle={item.post.author.handle}
-            avatar={item.post.author.avatar}
-            moderation={item.moderation.avatar}
+            did={post.author.did}
+            handle={post.author.handle}
+            avatar={post.author.avatar}
+            moderation={moderation.avatar}
           />
           {isThreadParent && (
             <View
@@ -276,10 +262,10 @@ export const FeedItem = observer(function FeedItemImpl({
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            author={item.post.author}
-            authorHasWarning={!!item.post.author.labels?.length}
-            timestamp={item.post.indexedAt}
-            postHref={itemHref}
+            author={post.author}
+            authorHasWarning={!!post.author.labels?.length}
+            timestamp={post.indexedAt}
+            postHref={href}
           />
           {!isThreadChild && replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -308,19 +294,16 @@ export const FeedItem = observer(function FeedItemImpl({
           )}
           <ContentHider
             testID="contentHider-post"
-            moderation={item.moderation.content}
+            moderation={moderation.content}
             ignoreMute
             childContainerStyle={styles.contentHiderChild}>
-            <PostAlerts
-              moderation={item.moderation.content}
-              style={styles.alert}
-            />
-            {item.richText?.text ? (
+            <PostAlerts moderation={moderation.content} style={styles.alert} />
+            {richText.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
                   testID="postText"
                   type="post-text"
-                  richText={item.richText}
+                  richText={richText}
                   lineHeight={1.3}
                   numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={s.flex1}
@@ -335,50 +318,22 @@ export const FeedItem = observer(function FeedItemImpl({
                 href="#"
               />
             ) : undefined}
-            {item.post.embed ? (
+            {post.embed ? (
               <ContentHider
                 testID="contentHider-embed"
-                moderation={item.moderation.embed}
-                ignoreMute={isEmbedByEmbedder(
-                  item.post.embed,
-                  item.post.author.did,
-                )}
+                moderation={moderation.embed}
+                ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
                 style={styles.embed}>
-                <PostEmbeds
-                  embed={item.post.embed}
-                  moderation={item.moderation.embed}
-                />
+                <PostEmbeds embed={post.embed} moderation={moderation.embed} />
               </ContentHider>
             ) : null}
           </ContentHider>
-          <PostCtrls
-            itemUri={itemUri}
-            itemCid={itemCid}
-            itemHref={itemHref}
-            itemTitle={itemTitle}
-            author={item.post.author}
-            text={item.richText?.text || record.text}
-            indexedAt={item.post.indexedAt}
-            isAuthor={item.post.author.did === store.me.did}
-            replyCount={item.post.replyCount}
-            repostCount={item.post.repostCount}
-            likeCount={item.post.likeCount}
-            isReposted={!!item.post.viewer?.repost}
-            isLiked={!!item.post.viewer?.like}
-            isThreadMuted={mutedThreads.includes(item.rootUri)}
-            onPressReply={onPressReply}
-            onPressToggleRepost={onPressToggleRepost}
-            onPressToggleLike={onPressToggleLike}
-            onCopyPostText={onCopyPostText}
-            onOpenTranslate={onOpenTranslate}
-            onToggleThreadMute={onToggleThreadMute}
-            onDeletePost={onDeletePost}
-          />
+          <PostCtrls post={post} record={record} onPressReply={onPressReply} />
         </View>
       </View>
     </Link>
   )
-})
+}
 
 const styles = StyleSheet.create({
   outer: {

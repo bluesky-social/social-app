@@ -1,11 +1,15 @@
-import {useState, useCallback} from 'react'
+import {useState, useCallback, useMemo} from 'react'
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {useSharedValue, interpolate, runOnJS} from 'react-native-reanimated'
-import {useAnimatedScrollHandler} from './useAnimatedScrollHandler_FIXED'
+import {
+  useSharedValue,
+  interpolate,
+  runOnJS,
+  ScrollHandlers,
+} from 'react-native-reanimated'
 
 function clamp(num: number, min: number, max: number) {
   'worklet'
@@ -15,9 +19,10 @@ function clamp(num: number, min: number, max: number) {
 export type OnScrollCb = (
   event: NativeSyntheticEvent<NativeScrollEvent>,
 ) => void
+export type OnScrollHandler = ScrollHandlers<any>
 export type ResetCb = () => void
 
-export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
+export function useOnMainScroll(): [OnScrollHandler, boolean, ResetCb] {
   const {headerHeight} = useShellLayout()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const mode = useMinimalShellMode()
@@ -25,12 +30,18 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag(e) {
+  const onBeginDrag = useCallback(
+    (e: NativeScrollEvent) => {
+      'worklet'
       startDragOffset.value = e.contentOffset.y
       startMode.value = mode.value
     },
-    onEndDrag(e) {
+    [mode, startDragOffset, startMode],
+  )
+
+  const onEndDrag = useCallback(
+    (e: NativeScrollEvent) => {
+      'worklet'
       startDragOffset.value = null
       startMode.value = null
       if (e.contentOffset.y < headerHeight.value / 2) {
@@ -41,7 +52,12 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
         setMode(Math.round(mode.value) === 1)
       }
     },
-    onScroll(e) {
+    [startDragOffset, startMode, setMode, mode, headerHeight],
+  )
+
+  const onScroll = useCallback(
+    (e: NativeScrollEvent) => {
+      'worklet'
       // Keep track of whether we want to show "scroll to top".
       if (!isScrolledDown && e.contentOffset.y > s.window.height) {
         runOnJS(setIsScrolledDown)(true)
@@ -86,7 +102,17 @@ export function useOnMainScroll(): [OnScrollCb, boolean, ResetCb] {
         startMode.value = mode.value
       }
     },
-  })
+    [headerHeight, mode, setMode, isScrolledDown, startDragOffset, startMode],
+  )
+
+  const scrollHandler: ScrollHandlers<any> = useMemo(
+    () => ({
+      onBeginDrag,
+      onEndDrag,
+      onScroll,
+    }),
+    [onBeginDrag, onEndDrag, onScroll],
+  )
 
   return [
     scrollHandler,

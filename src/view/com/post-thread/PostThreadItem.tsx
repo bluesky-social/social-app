@@ -69,15 +69,11 @@ export function PostThreadItem({
   const postShadowed = usePostShadow(post, dataUpdatedAt)
   const richText = useMemo(
     () =>
-      post &&
-      AppBskyFeedPost.isRecord(post?.record) &&
-      AppBskyFeedPost.validateRecord(post?.record).success
-        ? new RichTextAPI({
-            text: post.record.text,
-            facets: post.record.facets,
-          })
-        : undefined,
-    [post],
+      new RichTextAPI({
+        text: record.text,
+        facets: record.facets,
+      }),
+    [record],
   )
   const moderation = useMemo(
     () =>
