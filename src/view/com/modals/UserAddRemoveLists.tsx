@@ -9,7 +9,6 @@ import {
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ListsList} from '../lists/ListsList'
-import {ListsListModel} from 'state/models/lists/lists-list'
 import {ListMembershipModel} from 'state/models/content/list-membership'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
@@ -50,16 +49,11 @@ export const Component = observer(function UserAddRemoveListsImpl({
   const [selected, setSelected] = React.useState<string[]>([])
   const [membershipsLoaded, setMembershipsLoaded] = React.useState(false)
 
-  const listsList: ListsListModel = React.useMemo(
-    () => new ListsListModel(store, store.me.did),
-    [store],
-  )
   const memberships: ListMembershipModel = React.useMemo(
     () => new ListMembershipModel(store, subject),
     [store, subject],
   )
   React.useEffect(() => {
-    listsList.refresh()
     memberships.fetch().then(
       () => {
         const ids = memberships.memberships.map(m => m.value.list)
@@ -71,7 +65,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
         logger.error('Failed to fetch memberships', {error: err})
       },
     )
-  }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
+  }, [memberships, store, setSelected, setMembershipsLoaded])
 
   const onPressCancel = useCallback(() => {
     closeModal()
@@ -177,9 +171,8 @@ export const Component = observer(function UserAddRemoveListsImpl({
     ],
   )
 
-  // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
-  const canSaveChanges =
-    !listsList.isEmpty && !isEqual(selected, originalSelections)
+  // Only show changes button if the user has made changes in selection
+  const canSaveChanges = !isEqual(selected, originalSelections)
 
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
@@ -187,7 +180,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
         <Trans>Update {displayName} in Lists</Trans>
       </Text>
       <ListsList
-        listsList={listsList}
+        filter="all"
         inline
         renderItem={renderItem}
         style={[styles.list, pal.border]}
@@ -216,7 +209,7 @@ export const Component = observer(function UserAddRemoveListsImpl({
           />
         )}
 
-        {(listsList.isLoading || !membershipsLoaded) && (
+        {!membershipsLoaded && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator />
           </View>
