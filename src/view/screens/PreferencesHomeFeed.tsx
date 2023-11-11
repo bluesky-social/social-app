@@ -83,7 +83,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
     useSetFeedViewPreferencesMutation()
 
   const showReplies = !(
-    variables?.hideReplies ?? preferences?.homeFeed?.hideReplies
+    variables?.hideReplies ?? preferences?.feedViewPrefs?.hideReplies
   )
 
   return (
@@ -125,7 +125,8 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               onPress={() =>
                 setFeedViewPref({
                   hideReplies: !(
-                    variables?.hideReplies ?? preferences?.homeFeed?.hideReplies
+                    variables?.hideReplies ??
+                    preferences?.feedViewPrefs?.hideReplies
                   ),
                 })
               }
@@ -147,7 +148,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               label="Followed users only"
               isSelected={Boolean(
                 variables?.hideRepliesByUnfollowed ??
-                  preferences?.homeFeed?.hideRepliesByUnfollowed,
+                  preferences?.feedViewPrefs?.hideRepliesByUnfollowed,
               )}
               onPress={
                 showReplies
@@ -155,7 +156,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
                       setFeedViewPref({
                         hideRepliesByUnfollowed: !(
                           variables?.hideRepliesByUnfollowed ??
-                          preferences?.homeFeed?.hideRepliesByUnfollowed
+                          preferences?.feedViewPrefs?.hideRepliesByUnfollowed
                         ),
                       })
                   : undefined
@@ -171,7 +172,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             {preferences && (
               <RepliesThresholdInput
                 enabled={showReplies}
-                initialValue={preferences.homeFeed.hideRepliesByLikeCount}
+                initialValue={preferences.feedViewPrefs.hideRepliesByLikeCount}
               />
             )}
           </View>
@@ -188,17 +189,22 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               type="default-light"
               label={
-                variables?.hideReposts ?? preferences?.homeFeed?.hideReposts
+                variables?.hideReposts ??
+                preferences?.feedViewPrefs?.hideReposts
                   ? 'No'
                   : 'Yes'
               }
               isSelected={
-                !(variables?.hideReposts ?? preferences?.homeFeed?.hideReposts)
+                !(
+                  variables?.hideReposts ??
+                  preferences?.feedViewPrefs?.hideReposts
+                )
               }
               onPress={() =>
                 setFeedViewPref({
                   hideReposts: !(
-                    variables?.hideReposts ?? preferences?.homeFeed?.hideReposts
+                    variables?.hideReposts ??
+                    preferences?.feedViewPrefs?.hideReposts
                   ),
                 })
               }
@@ -219,21 +225,21 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               type="default-light"
               label={
                 variables?.hideQuotePosts ??
-                preferences?.homeFeed?.hideQuotePosts
+                preferences?.feedViewPrefs?.hideQuotePosts
                   ? 'No'
                   : 'Yes'
               }
               isSelected={
                 !(
                   variables?.hideQuotePosts ??
-                  preferences?.homeFeed?.hideQuotePosts
+                  preferences?.feedViewPrefs?.hideQuotePosts
                 )
               }
               onPress={() =>
                 setFeedViewPref({
                   hideQuotePosts: !(
                     variables?.hideQuotePosts ??
-                    preferences?.homeFeed?.hideQuotePosts
+                    preferences?.feedViewPrefs?.hideQuotePosts
                   ),
                 })
               }
@@ -255,21 +261,21 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
               type="default-light"
               label={
                 variables?.lab_mergeFeedEnabled ??
-                preferences?.homeFeed?.lab_mergeFeedEnabled
+                preferences?.feedViewPrefs?.lab_mergeFeedEnabled
                   ? 'Yes'
                   : 'No'
               }
               isSelected={
                 !!(
                   variables?.lab_mergeFeedEnabled ??
-                  preferences?.homeFeed?.lab_mergeFeedEnabled
+                  preferences?.feedViewPrefs?.lab_mergeFeedEnabled
                 )
               }
               onPress={() =>
                 setFeedViewPref({
                   lab_mergeFeedEnabled: !(
                     variables?.lab_mergeFeedEnabled ??
-                    preferences?.homeFeed?.lab_mergeFeedEnabled
+                    preferences?.feedViewPrefs?.lab_mergeFeedEnabled
                   ),
                 })
               }

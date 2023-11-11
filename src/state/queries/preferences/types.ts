@@ -21,7 +21,7 @@ export type LabelGroup =
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
-  'contentLabels'
+  'contentLabels' | 'feedViewPrefs'
 > & {
   /*
    * Content labels previously included 'show', which has been deprecated in
@@ -29,7 +29,7 @@ export type UsePreferencesQueryResponse = Omit<
    * we clean up the data in `usePreferencesQuery`.
    */
   contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
-  homeFeed: BskyPreferences['feedViewPrefs']['home']
+  feedViewPrefs: BskyPreferences['feedViewPrefs']['home']
   /**
    * User thread-view prefs, including newer fields that may not be typed yet.
    */

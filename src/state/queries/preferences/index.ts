@@ -54,8 +54,10 @@ export function usePreferencesQuery() {
               DEFAULT_LABEL_PREFERENCES.impersonation,
           ),
         },
-        // TODO migrate this
-        homeFeed: res.feedViewPrefs.home ?? DEFAULT_HOME_FEED_PREFS,
+        feedViewPrefs: {
+          ...DEFAULT_HOME_FEED_PREFS,
+          ...(res.feedViewPrefs.home || {}),
+        },
         threadViewPrefs: {
           ...DEFAULT_THREAD_VIEW_PREFS,
           ...(res.threadViewPrefs ?? {}),

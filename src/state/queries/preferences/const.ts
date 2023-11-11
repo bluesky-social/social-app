@@ -3,7 +3,7 @@ import {
   ThreadViewPreferences,
 } from '#/state/queries/preferences/types'
 
-export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['homeFeed'] =
+export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {
     hideReplies: false,
     hideRepliesByUnfollowed: false,
