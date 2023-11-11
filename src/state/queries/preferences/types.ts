@@ -25,5 +25,6 @@ export type UsePreferencesQueryResponse = Omit<
    * we clean up the data in `usePreferencesQuery`.
    */
   contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
+  homeFeed: BskyPreferences['feedViewPrefs']['home']
   userAge: number | undefined
 }

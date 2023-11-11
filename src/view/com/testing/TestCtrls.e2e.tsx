@@ -1,10 +1,10 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {useStores} from 'state/index'
 import {navigate} from '../../../Navigation'
 import {useModalControls} from '#/state/modals'
 import {useQueryClient} from '@tanstack/react-query'
 import {useSessionApi} from '#/state/session'
+import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
 
 /**
  * This utility component is only included in the test simulator
@@ -15,10 +15,10 @@ import {useSessionApi} from '#/state/session'
 const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
-  const store = useStores()
   const queryClient = useQueryClient()
   const {logout, login} = useSessionApi()
   const {openModal} = useModalControls()
+  const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const onPressSignInAlice = async () => {
     await login({
       service: 'http://localhost:3000',
@@ -79,7 +79,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eToggleMergefeed"
-        onPress={() => store.preferences.toggleHomeFeedMergeFeedEnabled()}
+        onPress={() => setFeedViewPref({lab_mergeFeedEnabled: true})}
         accessibilityRole="button"
         style={BTN}
       />

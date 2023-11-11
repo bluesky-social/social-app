@@ -1,5 +1,5 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference} from '@atproto/api'
+import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
@@ -9,6 +9,7 @@ import {
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
+import {DEFAULT_HOME_FEED_PREFS} from '#/state/queries/preferences/const'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -49,6 +50,7 @@ export function usePreferencesQuery() {
               DEFAULT_LABEL_PREFERENCES.impersonation,
           ),
         },
+        homeFeed: res.feedViewPrefs.home ?? DEFAULT_HOME_FEED_PREFS,
         userAge: res.birthDate ? getAge(res.birthDate) : undefined,
       }
       return preferences
@@ -97,6 +99,21 @@ export function usePreferencesSetBirthDateMutation() {
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
       await agent.setPersonalDetails({birthDate})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetFeedViewPreferencesMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
+    mutationFn: async prefs => {
+      await agent.setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,

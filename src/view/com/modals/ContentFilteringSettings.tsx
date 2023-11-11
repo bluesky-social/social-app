@@ -153,7 +153,7 @@ function AdultContentEnabledPref() {
         <ToggleButton
           type="default-light"
           label="Enable Adult Content"
-          isSelected={preferences?.adultContentEnabled}
+          isSelected={variables?.enabled ?? preferences?.adultContentEnabled}
           onPress={onToggleAdultContent}
           style={styles.toggleBtn}
         />

@@ -200,7 +200,7 @@ export class PreferencesModel {
     if (this.legacyPreferences) {
       this.homeFeed = {...this.homeFeed, ...this.legacyPreferences}
       this.legacyPreferences = undefined
-      await this.rootStore.agent.setFeedViewPrefs('home', this.homeFeed)
+      // await this.rootStore.agent.setFeedViewPrefs('home', this.homeFeed)
     }
   }
 
@@ -341,79 +341,6 @@ export class PreferencesModel {
 
   // other
   // =
-
-  async toggleHomeFeedHideReplies() {
-    this.homeFeed.hideReplies = !this.homeFeed.hideReplies
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setFeedViewPrefs('home', {
-        hideReplies: this.homeFeed.hideReplies,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async toggleHomeFeedHideRepliesByUnfollowed() {
-    this.homeFeed.hideRepliesByUnfollowed =
-      !this.homeFeed.hideRepliesByUnfollowed
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setFeedViewPrefs('home', {
-        hideRepliesByUnfollowed: this.homeFeed.hideRepliesByUnfollowed,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async setHomeFeedHideRepliesByLikeCount(threshold: number) {
-    this.homeFeed.hideRepliesByLikeCount = threshold
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setFeedViewPrefs('home', {
-        hideRepliesByLikeCount: this.homeFeed.hideRepliesByLikeCount,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async toggleHomeFeedHideReposts() {
-    this.homeFeed.hideReposts = !this.homeFeed.hideReposts
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setFeedViewPrefs('home', {
-        hideReposts: this.homeFeed.hideReposts,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async toggleHomeFeedHideQuotePosts() {
-    this.homeFeed.hideQuotePosts = !this.homeFeed.hideQuotePosts
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setFeedViewPrefs('home', {
-        hideQuotePosts: this.homeFeed.hideQuotePosts,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async toggleHomeFeedMergeFeedEnabled() {
-    this.homeFeed.lab_mergeFeedEnabled = !this.homeFeed.lab_mergeFeedEnabled
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setFeedViewPrefs('home', {
-        lab_mergeFeedEnabled: this.homeFeed.lab_mergeFeedEnabled,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
 
   async setThreadSort(v: string) {
     if (THREAD_SORT_VALUES.includes(v)) {
