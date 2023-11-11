@@ -18,6 +18,7 @@ import {
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
+export * from '#/state/queries/preferences/const'
 
 export const usePreferencesQueryKey = ['getPreferences']
 
@@ -30,9 +31,8 @@ export function usePreferencesQuery() {
       const preferences: UsePreferencesQueryResponse = {
         ...res,
         feeds: {
-          saved: [],
-          pinned: [],
-          ...res.feeds,
+          saved: res.feeds?.saved || [],
+          pinned: res.feeds?.pinned || [],
           unpinned:
             res.feeds.saved?.filter(f => {
               return !res.feeds.pinned?.includes(f)
@@ -75,6 +75,21 @@ export function usePreferencesQuery() {
         userAge: res.birthDate ? getAge(res.birthDate) : undefined,
       }
       return preferences
+    },
+  })
+}
+
+export function useClearPreferencesMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      await agent.app.bsky.actor.putPreferences({preferences: []})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
     },
   })
 }

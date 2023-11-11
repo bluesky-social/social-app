@@ -68,7 +68,6 @@ export class SavedFeedsModel {
   refresh = bundleAsync(async () => {
     this._xLoading(true)
     try {
-      await this.rootStore.preferences.sync()
       const uris = dedup(
         this.rootStore.preferences.pinnedFeeds.concat(
           this.rootStore.preferences.savedFeeds,

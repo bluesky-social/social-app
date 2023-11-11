@@ -101,7 +101,6 @@ export class RootStoreModel {
     this.agent = agent
     applyDebugHeader(this.agent)
     this.me.clear()
-    await this.preferences.sync()
     await this.me.load()
     if (!hadSession) {
       await resetNavigation()
@@ -137,7 +136,6 @@ export class RootStoreModel {
     }
     try {
       await this.me.updateIfNeeded()
-      await this.preferences.sync()
     } catch (e: any) {
       logger.error('Failed to fetch latest state', {error: e})
     }

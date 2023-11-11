@@ -59,6 +59,7 @@ import {
 } from '#/state/preferences'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useClearPreferencesMutation} from '#/state/queries/preferences'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -153,6 +154,7 @@ export const SettingsScreen = withAuthRequired(
     const {openModal} = useModalControls()
     const {isSwitchingAccounts, accounts, currentAccount} = useSession()
     const {clearCurrentAccount} = useSessionApi()
+    const {mutate: clearPreferences} = useClearPreferencesMutation()
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -219,9 +221,8 @@ export const SettingsScreen = withAuthRequired(
     }, [openModal])
 
     const onPressResetPreferences = React.useCallback(async () => {
-      await store.preferences.reset()
-      Toast.show('Preferences reset')
-    }, [store])
+      clearPreferences()
+    }, [clearPreferences])
 
     const onPressResetOnboarding = React.useCallback(async () => {
       onboardingDispatch({type: 'start'})

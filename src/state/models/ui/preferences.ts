@@ -1,19 +1,13 @@
-import {makeAutoObservable, runInAction} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {
   LabelPreference as APILabelPreference,
   BskyFeedViewPreference,
   BskyThreadViewPreference,
 } from '@atproto/api'
 import AwaitLock from 'await-lock'
-import isEqual from 'lodash.isequal'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
 import {ModerationOpts} from '@atproto/api'
-import {DEFAULT_FEEDS} from 'lib/constants'
-import {getAge} from 'lib/strings/time'
-import {FeedTuner} from 'lib/api/feed-manip'
-import {logger} from '#/logger'
-import {getContentLanguages} from '#/state/preferences/languages'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
@@ -22,23 +16,6 @@ export type FeedViewPreference = BskyFeedViewPreference & {
 }
 export type ThreadViewPreference = BskyThreadViewPreference & {
   lab_treeViewEnabled?: boolean | undefined
-}
-const LABEL_GROUPS = [
-  'nsfw',
-  'nudity',
-  'suggestive',
-  'gore',
-  'hate',
-  'spam',
-  'impersonation',
-]
-const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
-
-interface LegacyPreferences {
-  hideReplies?: boolean
-  hideRepliesByLikeCount?: number
-  hideReposts?: boolean
-  hideQuotePosts?: boolean
 }
 
 export class LabelPreferencesModel {
@@ -75,21 +52,11 @@ export class PreferencesModel {
     lab_treeViewEnabled: false, // experimental
   }
 
-  // used to help with transitions from device-stored to server-stored preferences
-  legacyPreferences: LegacyPreferences | undefined
-
   // used to linearize async modifications to state
   lock = new AwaitLock()
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {lock: false}, {autoBind: true})
-  }
-
-  get userAge(): number | undefined {
-    if (!this.birthDate) {
-      return undefined
-    }
-    return getAge(this.birthDate)
   }
 
   serialize() {
@@ -127,98 +94,6 @@ export class PreferencesModel {
       ) {
         this.pinnedFeeds = v.pinnedFeeds
       }
-      // grab legacy values
-      this.legacyPreferences = getLegacyPreferences(v)
-    }
-  }
-
-  /**
-   * This function fetches preferences and sets defaults for missing items.
-   */
-  async sync() {
-    await this.lock.acquireAsync()
-    try {
-      // fetch preferences
-      const prefs = await this.rootStore.agent.getPreferences()
-
-      runInAction(() => {
-        if (prefs.feedViewPrefs.home) {
-          this.homeFeed = prefs.feedViewPrefs.home
-        }
-        this.thread = prefs.threadViewPrefs
-        this.adultContentEnabled = prefs.adultContentEnabled
-        for (const label in prefs.contentLabels) {
-          if (
-            LABEL_GROUPS.includes(label) &&
-            VISIBILITY_VALUES.includes(prefs.contentLabels[label])
-          ) {
-            this.contentLabels[label as keyof LabelPreferencesModel] =
-              prefs.contentLabels[label]
-          }
-        }
-        if (prefs.feeds.saved && !isEqual(this.savedFeeds, prefs.feeds.saved)) {
-          this.savedFeeds = prefs.feeds.saved
-        }
-        if (
-          prefs.feeds.pinned &&
-          !isEqual(this.pinnedFeeds, prefs.feeds.pinned)
-        ) {
-          this.pinnedFeeds = prefs.feeds.pinned
-        }
-        this.birthDate = prefs.birthDate
-      })
-
-      // sync legacy values if needed
-      await this.syncLegacyPreferences()
-
-      // set defaults on missing items
-      if (typeof prefs.feeds.saved === 'undefined') {
-        try {
-          const {saved, pinned} = await DEFAULT_FEEDS(
-            this.rootStore.agent.service.toString(),
-            (handle: string) =>
-              this.rootStore.agent
-                .resolveHandle({handle})
-                .then(({data}) => data.did),
-          )
-          runInAction(() => {
-            this.savedFeeds = saved
-            this.pinnedFeeds = pinned
-          })
-          await this.rootStore.agent.setSavedFeeds(saved, pinned)
-        } catch (error) {
-          logger.error('Failed to set default feeds', {error})
-        }
-      }
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async syncLegacyPreferences() {
-    if (this.legacyPreferences) {
-      this.homeFeed = {...this.homeFeed, ...this.legacyPreferences}
-      this.legacyPreferences = undefined
-      // await this.rootStore.agent.setFeedViewPrefs('home', this.homeFeed)
-    }
-  }
-
-  /**
-   * This function resets the preferences to an empty array of no preferences.
-   */
-  async reset() {
-    await this.lock.acquireAsync()
-    try {
-      runInAction(() => {
-        this.contentLabels = new LabelPreferencesModel()
-        this.savedFeeds = []
-        this.pinnedFeeds = []
-      })
-      await this.rootStore.agent.app.bsky.actor.putPreferences({
-        preferences: [],
-      })
-    } finally {
-      this.lock.release()
     }
   }
 
@@ -273,115 +148,25 @@ export class PreferencesModel {
     return this.pinnedFeeds.includes(uri)
   }
 
-  async _optimisticUpdateSavedFeeds(
-    saved: string[],
-    pinned: string[],
-    cb: () => Promise<{saved: string[]; pinned: string[]}>,
-  ) {
-    const oldSaved = this.savedFeeds
-    const oldPinned = this.pinnedFeeds
-    this.savedFeeds = saved
-    this.pinnedFeeds = pinned
-    await this.lock.acquireAsync()
-    try {
-      const res = await cb()
-      runInAction(() => {
-        this.savedFeeds = res.saved
-        this.pinnedFeeds = res.pinned
-      })
-    } catch (e) {
-      runInAction(() => {
-        this.savedFeeds = oldSaved
-        this.pinnedFeeds = oldPinned
-      })
-      throw e
-    } finally {
-      this.lock.release()
-    }
-  }
+  /**
+   * @deprecated use `useAddSavedFeedMutation` from `#/state/queries/preferences` instead
+   */
+  async addSavedFeed(_v: string) {}
 
-  async setSavedFeeds(saved: string[], pinned: string[]) {
-    return this._optimisticUpdateSavedFeeds(saved, pinned, () =>
-      this.rootStore.agent.setSavedFeeds(saved, pinned),
-    )
-  }
+  /**
+   * @deprecated use `useRemoveSavedFeedMutation` from `#/state/queries/preferences` instead
+   */
+  async removeSavedFeed(_v: string) {}
 
-  async addSavedFeed(v: string) {
-    return this._optimisticUpdateSavedFeeds(
-      [...this.savedFeeds.filter(uri => uri !== v), v],
-      this.pinnedFeeds,
-      () => this.rootStore.agent.addSavedFeed(v),
-    )
-  }
+  /**
+   * @deprecated use `usePinFeedMutation` from `#/state/queries/preferences` instead
+   */
+  async addPinnedFeed(_v: string) {}
 
-  async removeSavedFeed(v: string) {
-    return this._optimisticUpdateSavedFeeds(
-      this.savedFeeds.filter(uri => uri !== v),
-      this.pinnedFeeds.filter(uri => uri !== v),
-      () => this.rootStore.agent.removeSavedFeed(v),
-    )
-  }
-
-  async addPinnedFeed(v: string) {
-    return this._optimisticUpdateSavedFeeds(
-      [...this.savedFeeds.filter(uri => uri !== v), v],
-      [...this.pinnedFeeds.filter(uri => uri !== v), v],
-      () => this.rootStore.agent.addPinnedFeed(v),
-    )
-  }
-
-  async removePinnedFeed(v: string) {
-    return this._optimisticUpdateSavedFeeds(
-      this.savedFeeds,
-      this.pinnedFeeds.filter(uri => uri !== v),
-      () => this.rootStore.agent.removePinnedFeed(v),
-    )
-  }
-
-  // other
-  // =
-
-  getFeedTuners(
-    feedType: 'home' | 'following' | 'author' | 'custom' | 'list' | 'likes',
-  ) {
-    if (feedType === 'custom') {
-      return [
-        FeedTuner.dedupReposts,
-        FeedTuner.preferredLangOnly(getContentLanguages()),
-      ]
-    }
-    if (feedType === 'list') {
-      return [FeedTuner.dedupReposts]
-    }
-    if (feedType === 'home' || feedType === 'following') {
-      const feedTuners = []
-
-      if (this.homeFeed.hideReposts) {
-        feedTuners.push(FeedTuner.removeReposts)
-      } else {
-        feedTuners.push(FeedTuner.dedupReposts)
-      }
-
-      if (this.homeFeed.hideReplies) {
-        feedTuners.push(FeedTuner.removeReplies)
-      } else {
-        feedTuners.push(
-          FeedTuner.thresholdRepliesOnly({
-            userDid: this.rootStore.session.data?.did || '',
-            minLikes: this.homeFeed.hideRepliesByLikeCount,
-            followedOnly: !!this.homeFeed.hideRepliesByUnfollowed,
-          }),
-        )
-      }
-
-      if (this.homeFeed.hideQuotePosts) {
-        feedTuners.push(FeedTuner.removeQuotePosts)
-      }
-
-      return feedTuners
-    }
-    return []
-  }
+  /**
+   * @deprecated use `useUnpinFeedMutation` from `#/state/queries/preferences` instead
+   */
+  async removePinnedFeed(_v: string) {}
 }
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
@@ -391,38 +176,4 @@ function tempfixLabelPref(pref: LabelPreference): APILabelPreference {
     return 'ignore'
   }
   return pref
-}
-
-function getLegacyPreferences(
-  v: Record<string, unknown>,
-): LegacyPreferences | undefined {
-  const legacyPreferences: LegacyPreferences = {}
-  if (
-    hasProp(v, 'homeFeedRepliesEnabled') &&
-    typeof v.homeFeedRepliesEnabled === 'boolean'
-  ) {
-    legacyPreferences.hideReplies = !v.homeFeedRepliesEnabled
-  }
-  if (
-    hasProp(v, 'homeFeedRepliesThreshold') &&
-    typeof v.homeFeedRepliesThreshold === 'number'
-  ) {
-    legacyPreferences.hideRepliesByLikeCount = v.homeFeedRepliesThreshold
-  }
-  if (
-    hasProp(v, 'homeFeedRepostsEnabled') &&
-    typeof v.homeFeedRepostsEnabled === 'boolean'
-  ) {
-    legacyPreferences.hideReposts = !v.homeFeedRepostsEnabled
-  }
-  if (
-    hasProp(v, 'homeFeedQuotePostsEnabled') &&
-    typeof v.homeFeedQuotePostsEnabled === 'boolean'
-  ) {
-    legacyPreferences.hideQuotePosts = !v.homeFeedQuotePostsEnabled
-  }
-  if (Object.keys(legacyPreferences).length) {
-    return legacyPreferences
-  }
-  return undefined
 }

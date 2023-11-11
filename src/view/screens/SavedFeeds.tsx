@@ -79,7 +79,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
             Pinned Feeds
           </Text>
         </View>
-        {preferences ? (
+        {preferences?.feeds ? (
           !preferences.feeds.pinned.length ? (
             <View
               style={[
@@ -93,7 +93,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
               </Text>
             </View>
           ) : (
-            preferences.feeds.pinned.map(uri => (
+            preferences?.feeds?.pinned?.map(uri => (
               <ListItem key={uri} feedUri={uri} isPinned />
             ))
           )
@@ -105,7 +105,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
             Saved Feeds
           </Text>
         </View>
-        {preferences ? (
+        {preferences?.feeds ? (
           !preferences.feeds.unpinned.length ? (
             <View
               style={[
