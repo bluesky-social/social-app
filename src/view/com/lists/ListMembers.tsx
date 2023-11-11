@@ -132,17 +132,6 @@ export function ListMembers({
         name: 'user-add-remove-lists',
         subject: profile.did,
         displayName: profile.displayName || profile.handle,
-        // TODO
-        // onAdd(listUri: string) {
-        //   if (listUri === list.uri) {
-        //     list.cacheAddMember(profile)
-        //   }
-        // },
-        // onRemove(listUri: string) {
-        //   if (listUri === list.uri) {
-        //     list.cacheRemoveMember(profile)
-        //   }
-        // },
       })
     },
     [openModal],
