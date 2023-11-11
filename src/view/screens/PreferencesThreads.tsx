@@ -3,7 +3,6 @@ import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -14,15 +13,30 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {
+  usePreferencesQuery,
+  useSetThreadViewPreferencesMutation,
+} from '#/state/queries/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export const PreferencesThreads = observer(function PreferencesThreadsImpl({
   navigation,
 }: Props) {
   const pal = usePalette('default')
-  const store = useStores()
   const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const {data: preferences} = usePreferencesQuery()
+  const {mutate: setThreadViewPrefs, variables} =
+    useSetThreadViewPreferencesMutation()
+
+  const prioritizeFollowedUsers = Boolean(
+    variables?.prioritizeFollowedUsers ??
+      preferences?.threadViewPrefs?.prioritizeFollowedUsers,
+  )
+  const treeViewEnabled = Boolean(
+    variables?.lab_treeViewEnabled ??
+      preferences?.threadViewPrefs?.lab_treeViewEnabled,
+  )
 
   return (
     <CenteredView
@@ -62,8 +76,8 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
                   {key: 'most-likes', label: 'Most-liked replies first'},
                   {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
                 ]}
-                onSelect={store.preferences.setThreadSort}
-                initialSelection={store.preferences.thread.sort}
+                onSelect={key => setThreadViewPrefs({sort: key})}
+                initialSelection={preferences?.threadViewPrefs?.sort}
               />
             </View>
           </View>
@@ -79,11 +93,13 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={
-                store.preferences.thread.prioritizeFollowedUsers ? 'Yes' : 'No'
+              label={prioritizeFollowedUsers ? 'Yes' : 'No'}
+              isSelected={prioritizeFollowedUsers}
+              onPress={() =>
+                setThreadViewPrefs({
+                  prioritizeFollowedUsers: !prioritizeFollowedUsers,
+                })
               }
-              isSelected={store.preferences.thread.prioritizeFollowedUsers}
-              onPress={store.preferences.togglePrioritizedFollowedUsers}
             />
           </View>
 
@@ -100,11 +116,13 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={
-                store.preferences.thread.lab_treeViewEnabled ? 'Yes' : 'No'
+              label={treeViewEnabled ? 'Yes' : 'No'}
+              isSelected={treeViewEnabled}
+              onPress={() =>
+                setThreadViewPrefs({
+                  lab_treeViewEnabled: !treeViewEnabled,
+                })
               }
-              isSelected={!!store.preferences.thread.lab_treeViewEnabled}
-              onPress={store.preferences.toggleThreadTreeViewEnabled}
             />
           </View>
         </View>

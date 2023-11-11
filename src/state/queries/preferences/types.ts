@@ -1,4 +1,8 @@
-import {BskyPreferences, LabelPreference} from '@atproto/api'
+import {
+  BskyPreferences,
+  LabelPreference,
+  BskyThreadViewPreference,
+} from '@atproto/api'
 
 export type ConfigurableLabelGroup =
   | 'nsfw'
@@ -26,5 +30,14 @@ export type UsePreferencesQueryResponse = Omit<
    */
   contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
   homeFeed: BskyPreferences['feedViewPrefs']['home']
+  /**
+   * User thread-view prefs, including newer fields that may not be typed yet.
+   */
+  threadViewPrefs: ThreadViewPreferences
   userAge: number | undefined
+}
+
+export type ThreadViewPreferences = Omit<BskyThreadViewPreference, 'sort'> & {
+  sort: 'oldest' | 'newest' | 'most-likes' | 'random' | string
+  lab_treeViewEnabled: boolean
 }

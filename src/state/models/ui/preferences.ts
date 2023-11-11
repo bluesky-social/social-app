@@ -33,7 +33,6 @@ const LABEL_GROUPS = [
   'impersonation',
 ]
 const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
-const THREAD_SORT_VALUES = ['oldest', 'newest', 'most-likes', 'random']
 
 interface LegacyPreferences {
   hideReplies?: boolean
@@ -341,42 +340,6 @@ export class PreferencesModel {
 
   // other
   // =
-
-  async setThreadSort(v: string) {
-    if (THREAD_SORT_VALUES.includes(v)) {
-      this.thread.sort = v
-      await this.lock.acquireAsync()
-      try {
-        await this.rootStore.agent.setThreadViewPrefs({sort: v})
-      } finally {
-        this.lock.release()
-      }
-    }
-  }
-
-  async togglePrioritizedFollowedUsers() {
-    this.thread.prioritizeFollowedUsers = !this.thread.prioritizeFollowedUsers
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setThreadViewPrefs({
-        prioritizeFollowedUsers: this.thread.prioritizeFollowedUsers,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
-
-  async toggleThreadTreeViewEnabled() {
-    this.thread.lab_treeViewEnabled = !this.thread.lab_treeViewEnabled
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setThreadViewPrefs({
-        lab_treeViewEnabled: this.thread.lab_treeViewEnabled,
-      })
-    } finally {
-      this.lock.release()
-    }
-  }
 
   getFeedTuners(
     feedType: 'home' | 'following' | 'author' | 'custom' | 'list' | 'likes',

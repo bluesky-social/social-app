@@ -7,9 +7,13 @@ import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   ConfigurableLabelGroup,
   UsePreferencesQueryResponse,
+  ThreadViewPreferences,
 } from '#/state/queries/preferences/types'
 import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
-import {DEFAULT_HOME_FEED_PREFS} from '#/state/queries/preferences/const'
+import {
+  DEFAULT_HOME_FEED_PREFS,
+  DEFAULT_THREAD_VIEW_PREFS,
+} from '#/state/queries/preferences/const'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -50,7 +54,12 @@ export function usePreferencesQuery() {
               DEFAULT_LABEL_PREFERENCES.impersonation,
           ),
         },
+        // TODO migrate this
         homeFeed: res.feedViewPrefs.home ?? DEFAULT_HOME_FEED_PREFS,
+        threadViewPrefs: {
+          ...DEFAULT_THREAD_VIEW_PREFS,
+          ...(res.threadViewPrefs ?? {}),
+        },
         userAge: res.birthDate ? getAge(res.birthDate) : undefined,
       }
       return preferences
@@ -114,6 +123,21 @@ export function useSetFeedViewPreferencesMutation() {
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
       await agent.setFeedViewPrefs('home', prefs)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetThreadViewPreferencesMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
+    mutationFn: async prefs => {
+      await agent.setThreadViewPrefs(prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
