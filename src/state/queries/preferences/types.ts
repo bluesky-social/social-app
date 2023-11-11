@@ -15,15 +15,3 @@ export type LabelGroup =
   | 'always-filter'
   | 'always-warn'
   | 'unknown'
-
-export const LABEL_GROUPS: LabelGroup[] = [
-  'nsfw',
-  'nudity',
-  'suggestive',
-  'gore',
-  'hate',
-  'spam',
-  'impersonation',
-]
-
-export const VISIBILITY_VALUES = ['ignore', 'warn', 'hide']
