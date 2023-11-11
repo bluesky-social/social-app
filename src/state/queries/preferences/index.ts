@@ -28,6 +28,15 @@ export function usePreferencesQuery() {
       const res = await agent.getPreferences()
       const preferences: UsePreferencesQueryResponse = {
         ...res,
+        feeds: {
+          saved: [],
+          pinned: [],
+          ...res.feeds,
+          unpinned:
+            res.feeds.saved?.filter(f => {
+              return !res.feeds.pinned?.includes(f)
+            }) || [],
+        },
         // labels are undefined until set by user
         contentLabels: {
           nsfw: temp__migrateLabelPref(

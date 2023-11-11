@@ -21,7 +21,7 @@ export type LabelGroup =
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
-  'contentLabels' | 'feedViewPrefs'
+  'contentLabels' | 'feedViewPrefs' | 'feeds'
 > & {
   /*
    * Content labels previously included 'show', which has been deprecated in
@@ -35,6 +35,9 @@ export type UsePreferencesQueryResponse = Omit<
    */
   threadViewPrefs: ThreadViewPreferences
   userAge: number | undefined
+  feeds: Required<BskyPreferences['feeds']> & {
+    unpinned: string[]
+  }
 }
 
 export type ThreadViewPreferences = Omit<BskyThreadViewPreference, 'sort'> & {
