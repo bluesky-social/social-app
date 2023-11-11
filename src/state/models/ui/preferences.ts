@@ -226,6 +226,9 @@ export class PreferencesModel {
   // moderation
   // =
 
+  /**
+   * @deprecated use `getModerationOpts` from '#/state/queries/preferences/moderation' instead
+   */
   get moderationOpts(): ModerationOpts {
     return {
       userDid: this.rootStore.session.currentSession?.did || '',
@@ -338,16 +341,6 @@ export class PreferencesModel {
 
   // other
   // =
-
-  async setBirthDate(birthDate: Date) {
-    this.birthDate = birthDate
-    await this.lock.acquireAsync()
-    try {
-      await this.rootStore.agent.setPersonalDetails({birthDate})
-    } finally {
-      this.lock.release()
-    }
-  }
 
   async toggleHomeFeedHideReplies() {
     this.homeFeed.hideReplies = !this.homeFeed.hideReplies

@@ -89,3 +89,18 @@ export function usePreferencesSetAdultContentMutation() {
     },
   })
 }
+
+export function usePreferencesSetBirthDateMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, {birthDate: Date}>({
+    mutationFn: async ({birthDate}: {birthDate: Date}) => {
+      await agent.setPersonalDetails({birthDate})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}

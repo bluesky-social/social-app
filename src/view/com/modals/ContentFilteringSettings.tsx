@@ -1,5 +1,5 @@
 import React from 'react'
-import {BskyPreferences} from '@atproto/api'
+import {BskyPreferences, LabelPreference} from '@atproto/api'
 import {StyleSheet, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
@@ -21,7 +21,6 @@ import {
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
   usePreferencesSetAdultContentMutation,
-  LabelPreference,
   ConfigurableLabelGroup,
   CONFIGURABLE_LABEL_GROUPS,
 } from '#/state/queries/preferences'
@@ -111,7 +110,10 @@ function AdultContentEnabledPref() {
   const {mutate, variables} = usePreferencesSetAdultContentMutation()
   const {openModal} = useModalControls()
 
-  const onSetAge = () => openModal({name: 'birth-date-settings'})
+  const onSetAge = React.useCallback(
+    () => openModal({name: 'birth-date-settings'}),
+    [openModal],
+  )
 
   const onToggleAdultContent = React.useCallback(async () => {
     if (isIOS) return
