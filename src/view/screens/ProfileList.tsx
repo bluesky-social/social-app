@@ -126,17 +126,17 @@ function ProfileListScreenLoaded({
 
   const onPressAddUser = useCallback(() => {
     openModal({
-      name: 'list-add-user',
-      list: uri,
-      onAdd() {
+      name: 'list-add-remove-users',
+      list,
+      onChange() {
         if (isCurateList) {
           queryClient.invalidateQueries({
-            queryKey: FEED_RQKEY(`list|${uri}`),
+            queryKey: FEED_RQKEY(`list|${list.uri}`),
           })
         }
       },
     })
-  }, [openModal, uri, isCurateList, queryClient])
+  }, [openModal, list, isCurateList, queryClient])
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {

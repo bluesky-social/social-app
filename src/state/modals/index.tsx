@@ -66,10 +66,13 @@ export interface UserAddRemoveListsModal {
   onRemove?: (listUri: string) => void
 }
 
-export interface ListAddUserModal {
-  name: 'list-add-user'
-  list: string
-  onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+export interface ListAddRemoveUsersModal {
+  name: 'list-add-remove-users'
+  list: AppBskyGraphDefs.ListView
+  onChange?: (
+    type: 'add' | 'remove',
+    profile: AppBskyActorDefs.ProfileViewBasic,
+  ) => void
 }
 
 export interface EditImageModal {
@@ -183,7 +186,7 @@ export type Modal =
   // Lists
   | CreateOrEditListModal
   | UserAddRemoveListsModal
-  | ListAddUserModal
+  | ListAddRemoveUsersModal
 
   // Posts
   | AltTextImageModal

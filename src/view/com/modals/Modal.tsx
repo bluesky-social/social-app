@@ -18,7 +18,7 @@ import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
-import * as ListAddUserModal from './ListAddUser'
+import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as AltImageModal from './AltImage'
 import * as EditImageModal from './AltImage'
 import * as ReportModal from './report/Modal'
@@ -108,7 +108,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'user-add-remove-lists') {
     snapPoints = UserAddRemoveListsModal.snapPoints
     element = <UserAddRemoveListsModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'list-add-user') {
+  } else if (activeModal?.name === 'list-add-remove-users') {
     snapPoints = ListAddUserModal.snapPoints
     element = <ListAddUserModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
