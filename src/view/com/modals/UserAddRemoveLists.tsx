@@ -9,7 +9,6 @@ import {
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ListsList} from '../lists/ListsList'
-import {ListMembershipModel} from 'state/models/content/list-membership'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 import {useStores} from 'state/index'

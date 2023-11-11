@@ -158,7 +158,7 @@ export class ProfileModel {
       existing.description = updates.description
       if (newUserAvatar) {
         const res = await apilib.uploadBlob(
-          this.rootStore,
+          this.rootStore.agent,
           newUserAvatar.path,
           newUserAvatar.mime,
         )
@@ -168,7 +168,7 @@ export class ProfileModel {
       }
       if (newUserBanner) {
         const res = await apilib.uploadBlob(
-          this.rootStore,
+          this.rootStore.agent,
           newUserBanner.path,
           newUserBanner.mime,
         )

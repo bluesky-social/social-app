@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyRichtextFacet,
+  BskyAgent,
   ComAtprotoLabelDefs,
   ComAtprotoRepoUploadBlob,
   RichText,
@@ -53,18 +54,18 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
 }
 
 export async function uploadBlob(
-  store: RootStoreModel,
+  agent: BskyAgent,
   blob: string,
   encoding: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (isWeb) {
     // `blob` should be a data uri
-    return store.agent.uploadBlob(convertDataURIToUint8Array(blob), {
+    return agent.uploadBlob(convertDataURIToUint8Array(blob), {
       encoding,
     })
   } else {
     // `blob` should be a path to a file in the local FS
-    return store.agent.uploadBlob(
+    return agent.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
@@ -135,7 +136,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       await image.compress()
       const path = image.compressed?.path ?? image.path
       const {width, height} = image.compressed || image
-      const res = await uploadBlob(store, path, 'image/jpeg')
+      const res = await uploadBlob(store.agent, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
         alt: image.altText ?? '',
@@ -185,7 +186,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         }
         if (encoding) {
           const thumbUploadRes = await uploadBlob(
-            store,
+            store.agent,
             opts.extLink.localThumb.path,
             encoding,
           )

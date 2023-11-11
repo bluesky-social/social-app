@@ -5,7 +5,6 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {ProfileModel} from '#/state/models/content/profile'
 import {ImageModel} from '#/state/models/media/image'
-import {ListModel} from '#/state/models/content/list'
 import {GalleryModel} from '#/state/models/media/gallery'
 
 export interface ConfirmModal {
@@ -55,7 +54,7 @@ export type ReportModal = {
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
-  list?: ListModel
+  list?: string
   onSave?: (uri: string) => void
 }
 
@@ -69,7 +68,7 @@ export interface UserAddRemoveListsModal {
 
 export interface ListAddUserModal {
   name: 'list-add-user'
-  list: ListModel
+  list: string
   onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }
 

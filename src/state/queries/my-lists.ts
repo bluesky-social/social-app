@@ -1,5 +1,5 @@
 import {AppBskyGraphDefs} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, QueryClient} from '@tanstack/react-query'
 import {accumulate} from 'lib/async/accumulate'
 import {useSession} from '../session'
 
@@ -78,4 +78,12 @@ export function useMyListsQuery(filter: MyListsFilter) {
     },
     enabled: !!currentAccount,
   })
+}
+
+export function invalidate(qc: QueryClient, filter?: MyListsFilter) {
+  if (filter) {
+    qc.invalidateQueries({queryKey: RQKEY(filter)})
+  } else {
+    qc.invalidateQueries({queryKey: ['my-lists']})
+  }
 }
