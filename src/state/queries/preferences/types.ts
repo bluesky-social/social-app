@@ -1,6 +1,5 @@
-import {LabelPreference as APILabelPreference} from '@atproto/api'
+import {BskyPreferences, LabelPreference} from '@atproto/api'
 
-export type LabelPreference = APILabelPreference | 'show'
 export type ConfigurableLabelGroup =
   | 'nsfw'
   | 'nudity'
@@ -15,3 +14,16 @@ export type LabelGroup =
   | 'always-filter'
   | 'always-warn'
   | 'unknown'
+
+export type UsePreferencesQueryResponse = Omit<
+  BskyPreferences,
+  'contentLabels'
+> & {
+  /*
+   * Content labels previously included 'show', which has been deprecated in
+   * favor of 'ignore'. The API can return legacy data from the database, and
+   * we clean up the data in `usePreferencesQuery`.
+   */
+  contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
+  userAge: number | undefined
+}

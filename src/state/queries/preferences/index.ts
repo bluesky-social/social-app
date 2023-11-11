@@ -1,13 +1,14 @@
-import {BskyPreferences} from '@atproto/api'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {LabelPreference} from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
-  LabelPreference,
   ConfigurableLabelGroup,
+  UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
+import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -20,23 +21,33 @@ export function usePreferencesQuery() {
     queryKey: usePreferencesQueryKey,
     queryFn: async () => {
       const res = await agent.getPreferences()
-      const preferences: BskyPreferences & {
-        userAge: number | undefined
-      } = {
+      const preferences: UsePreferencesQueryResponse = {
         ...res,
         // labels are undefined until set by user
         contentLabels: {
-          nsfw: res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
-          nudity: res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
-          suggestive:
+          nsfw: temp__migrateLabelPref(
+            res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
+          ),
+          nudity: temp__migrateLabelPref(
+            res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
+          ),
+          suggestive: temp__migrateLabelPref(
             res.contentLabels?.suggestive ||
-            DEFAULT_LABEL_PREFERENCES.suggestive,
-          gore: res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
-          hate: res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
-          spam: res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
-          impersonation:
+              DEFAULT_LABEL_PREFERENCES.suggestive,
+          ),
+          gore: temp__migrateLabelPref(
+            res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
+          ),
+          hate: temp__migrateLabelPref(
+            res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
+          ),
+          spam: temp__migrateLabelPref(
+            res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
+          ),
+          impersonation: temp__migrateLabelPref(
             res.contentLabels?.impersonation ||
-            DEFAULT_LABEL_PREFERENCES.impersonation,
+              DEFAULT_LABEL_PREFERENCES.impersonation,
+          ),
         },
         userAge: res.birthDate ? getAge(res.birthDate) : undefined,
       }

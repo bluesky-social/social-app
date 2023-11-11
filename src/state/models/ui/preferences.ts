@@ -502,6 +502,7 @@ export class PreferencesModel {
 }
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
+// TODO do we need this?
 function tempfixLabelPref(pref: LabelPreference): APILabelPreference {
   if (pref === 'show') {
     return 'ignore'
