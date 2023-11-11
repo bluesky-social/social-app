@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
 import {StyleProp, ViewStyle, DeviceEventEmitter} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 
@@ -54,7 +54,7 @@ export type ReportModal = {
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
-  list?: string
+  list?: AppBskyGraphDefs.ListView
   onSave?: (uri: string) => void
 }
 

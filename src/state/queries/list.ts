@@ -3,6 +3,7 @@ import {
   AppBskyGraphGetList,
   AppBskyGraphList,
   AppBskyGraphDefs,
+  BskyAgent,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
@@ -73,17 +74,12 @@ export function useListCreateMutation() {
         )
 
         // wait for the appview to update
-        await until(
-          5, // 5 tries
-          1e3, // 1s delay between tries
-          (v: AppBskyGraphGetList.Response, _e: any) => {
+        await whenAppViewReady(
+          agent,
+          res.uri,
+          (v: AppBskyGraphGetList.Response) => {
             return typeof v?.data?.list.uri === 'string'
           },
-          () =>
-            agent.app.bsky.graph.getList({
-              list: res.uri,
-              limit: 1,
-            }),
         )
         return res
       },
@@ -135,7 +131,7 @@ export function useListMetadataMutation() {
       } else if (avatar === null) {
         record.avatar = undefined
       }
-      return (
+      const res = (
         await agent.com.atproto.repo.putRecord({
           repo: currentAccount.did,
           collection: 'app.bsky.graph.list',
@@ -143,11 +139,27 @@ export function useListMetadataMutation() {
           record,
         })
       ).data
+
+      // wait for the appview to update
+      await whenAppViewReady(
+        agent,
+        res.uri,
+        (v: AppBskyGraphGetList.Response) => {
+          const list = v.data.list
+          return (
+            list.name === record.name && list.description === record.description
+          )
+        },
+      )
+      return res
     },
-    onSuccess() {
+    onSuccess(data, variables) {
       invalidateMyLists(queryClient)
       queryClient.invalidateQueries({
         queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
+      })
+      queryClient.invalidateQueries({
+        queryKey: RQKEY(variables.uri),
       })
     },
   })
@@ -201,6 +213,11 @@ export function useListDeleteMutation() {
           writes: writesChunk,
         })
       }
+
+      // wait for the appview to update
+      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+        return !v?.success
+      })
     },
     onSuccess() {
       invalidateMyLists(queryClient)
@@ -248,4 +265,21 @@ export function useListBlockMutation() {
       })
     },
   })
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res: AppBskyGraphGetList.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      agent.app.bsky.graph.getList({
+        list: uri,
+        limit: 1,
+      }),
+  )
 }

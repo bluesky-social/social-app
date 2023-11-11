@@ -253,6 +253,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isPinned = false // TODO
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
+  const isOwner = list.creator.did === currentAccount?.did
 
   const onTogglePinned = useCallback(async () => {
     Haptics.default()
@@ -356,7 +357,6 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   }, [openModal, list, listDeleteMutation, navigation])
 
   const onPressReport = useCallback(() => {
-    if (!list.data) return
     openModal({
       name: 'report',
       uri: list.uri,
@@ -370,9 +370,6 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   }, [list, rkey])
 
   const dropdownItems: DropdownItem[] = useMemo(() => {
-    if (!list.hasLoaded) {
-      return []
-    }
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
@@ -387,7 +384,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       },
     ]
-    if (list.isOwner) {
+    if (isOwner) {
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownEditBtn',
@@ -429,14 +426,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       })
     }
     return items
-  }, [
-    list.hasLoaded,
-    list.isOwner,
-    onPressShare,
-    onPressEdit,
-    onPressDelete,
-    onPressReport,
-  ])
+  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
