@@ -1,7 +1,14 @@
-import React, {MutableRefObject} from 'react'
+import React, {MutableRefObject, PropsWithChildren} from 'react'
 import {observer} from 'mobx-react-lite'
 import {CenteredView, FlatList} from '../util/Views'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  RefreshControl,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {NotificationsFeedModel} from 'state/models/feeds/notifications'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -118,6 +125,27 @@ export const Feed = observer(function Feed({
     [onPressRetryLoadMore],
   )
 
+  // Ref: https://github.com/hossein-zare/react-native-dropdown-picker/issues/376#issuecomment-1717443831
+  const renderCell = React.useCallback(
+    ({
+      children,
+      index,
+      style,
+      ...props
+    }: PropsWithChildren<{
+      style: StyleProp<ViewStyle>
+      [key: string]: any
+    }>) => {
+      return (
+        // static value didn't work, somehow using the dynamic index makes it work
+        <View style={[style, {zIndex: -1 * index}]} {...props}>
+          {children}
+        </View>
+      )
+    },
+    [],
+  )
+
   const FeedFooter = React.useCallback(
     () =>
       view.isLoading ? (
@@ -151,6 +179,7 @@ export const Feed = observer(function Feed({
           data={data}
           keyExtractor={item => item._reactKey}
           renderItem={renderItem}
+          CellRendererComponent={renderCell}
           ListHeaderComponent={ListHeaderComponent}
           ListFooterComponent={FeedFooter}
           refreshControl={
