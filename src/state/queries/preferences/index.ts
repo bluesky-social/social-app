@@ -1,6 +1,7 @@
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
 
+import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
@@ -18,7 +19,7 @@ import {
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
 
-const usePreferencesQueryKey = ['getPreferences']
+export const usePreferencesQueryKey = ['getPreferences']
 
 export function usePreferencesQuery() {
   const {agent} = useSession()
@@ -149,6 +150,89 @@ export function useSetThreadViewPreferencesMutation() {
   return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
     mutationFn: async prefs => {
       await agent.setThreadViewPrefs(prefs)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetSaveFeedsMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<
+    void,
+    unknown,
+    Pick<UsePreferencesQueryResponse['feeds'], 'saved' | 'pinned'>
+  >({
+    mutationFn: async ({saved, pinned}) => {
+      await agent.setSavedFeeds(saved, pinned)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSaveFeedMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, {uri: string}>({
+    mutationFn: async ({uri}) => {
+      await agent.addSavedFeed(uri)
+      track('CustomFeed:Save')
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useRemoveFeedMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, {uri: string}>({
+    mutationFn: async ({uri}) => {
+      await agent.removeSavedFeed(uri)
+      track('CustomFeed:Unsave')
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function usePinFeedMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, {uri: string}>({
+    mutationFn: async ({uri}) => {
+      await agent.addPinnedFeed(uri)
+      track('CustomFeed:Pin', {uri})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: usePreferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUnpinFeedMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, unknown, {uri: string}>({
+    mutationFn: async ({uri}) => {
+      await agent.removePinnedFeed(uri)
+      track('CustomFeed:Unpin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
