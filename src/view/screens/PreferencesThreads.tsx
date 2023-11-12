@@ -1,5 +1,11 @@
 import React from 'react'
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../com/util/text/Text'
@@ -58,75 +64,79 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
         </Text>
       </View>
 
-      <ScrollView>
-        <View style={styles.cardsContainer}>
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <Trans>Sort Replies</Trans>
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              <Trans>Sort replies to the same post by:</Trans>
-            </Text>
-            <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
-              <RadioGroup
+      {preferences ? (
+        <ScrollView>
+          <View style={styles.cardsContainer}>
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                <Trans>Sort Replies</Trans>
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                <Trans>Sort replies to the same post by:</Trans>
+              </Text>
+              <View style={[pal.view, {borderRadius: 8, paddingVertical: 6}]}>
+                <RadioGroup
+                  type="default-light"
+                  items={[
+                    {key: 'oldest', label: 'Oldest replies first'},
+                    {key: 'newest', label: 'Newest replies first'},
+                    {key: 'most-likes', label: 'Most-liked replies first'},
+                    {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
+                  ]}
+                  onSelect={key => setThreadViewPrefs({sort: key})}
+                  initialSelection={preferences?.threadViewPrefs?.sort}
+                />
+              </View>
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                <Trans>Prioritize Your Follows</Trans>
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                <Trans>
+                  Show replies by people you follow before all other replies.
+                </Trans>
+              </Text>
+              <ToggleButton
                 type="default-light"
-                items={[
-                  {key: 'oldest', label: 'Oldest replies first'},
-                  {key: 'newest', label: 'Newest replies first'},
-                  {key: 'most-likes', label: 'Most-liked replies first'},
-                  {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
-                ]}
-                onSelect={key => setThreadViewPrefs({sort: key})}
-                initialSelection={preferences?.threadViewPrefs?.sort}
+                label={prioritizeFollowedUsers ? 'Yes' : 'No'}
+                isSelected={prioritizeFollowedUsers}
+                onPress={() =>
+                  setThreadViewPrefs({
+                    prioritizeFollowedUsers: !prioritizeFollowedUsers,
+                  })
+                }
+              />
+            </View>
+
+            <View style={[pal.viewLight, styles.card]}>
+              <Text type="title-sm" style={[pal.text, s.pb5]}>
+                <FontAwesomeIcon icon="flask" color={pal.colors.text} />{' '}
+                <Trans>Threaded Mode</Trans>
+              </Text>
+              <Text style={[pal.text, s.pb10]}>
+                <Trans>
+                  Set this setting to "Yes" to show replies in a threaded view.
+                  This is an experimental feature.
+                </Trans>
+              </Text>
+              <ToggleButton
+                type="default-light"
+                label={treeViewEnabled ? 'Yes' : 'No'}
+                isSelected={treeViewEnabled}
+                onPress={() =>
+                  setThreadViewPrefs({
+                    lab_treeViewEnabled: !treeViewEnabled,
+                  })
+                }
               />
             </View>
           </View>
-
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <Trans>Prioritize Your Follows</Trans>
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              <Trans>
-                Show replies by people you follow before all other replies.
-              </Trans>
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={prioritizeFollowedUsers ? 'Yes' : 'No'}
-              isSelected={prioritizeFollowedUsers}
-              onPress={() =>
-                setThreadViewPrefs({
-                  prioritizeFollowedUsers: !prioritizeFollowedUsers,
-                })
-              }
-            />
-          </View>
-
-          <View style={[pal.viewLight, styles.card]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <FontAwesomeIcon icon="flask" color={pal.colors.text} />{' '}
-              <Trans>Threaded Mode</Trans>
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              <Trans>
-                Set this setting to "Yes" to show replies in a threaded view.
-                This is an experimental feature.
-              </Trans>
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={treeViewEnabled ? 'Yes' : 'No'}
-              isSelected={treeViewEnabled}
-              onPress={() =>
-                setThreadViewPrefs({
-                  lab_treeViewEnabled: !treeViewEnabled,
-                })
-              }
-            />
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <ActivityIndicator />
+      )}
 
       <View
         style={[
