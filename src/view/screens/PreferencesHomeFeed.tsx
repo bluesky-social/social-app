@@ -4,7 +4,6 @@ import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Slider} from '@miblanchard/react-native-slider'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -16,21 +15,31 @@ import {CenteredView} from 'view/com/util/Views'
 import debounce from 'lodash.debounce'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {
+  usePreferencesQuery,
+  useSetFeedViewPreferencesMutation,
+} from '#/state/queries/preferences'
 
-function RepliesThresholdInput({enabled}: {enabled: boolean}) {
-  const store = useStores()
+function RepliesThresholdInput({
+  enabled,
+  initialValue,
+}: {
+  enabled: boolean
+  initialValue: number
+}) {
   const pal = usePalette('default')
-  const [value, setValue] = useState(
-    store.preferences.homeFeed.hideRepliesByLikeCount,
-  )
+  const [value, setValue] = useState(initialValue)
+  const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const save = React.useMemo(
     () =>
       debounce(
         threshold =>
-          store.preferences.setHomeFeedHideRepliesByLikeCount(threshold),
+          setFeedViewPref({
+            hideRepliesByLikeCount: threshold,
+          }),
         500,
       ), // debouce for 500ms
-    [store],
+    [setFeedViewPref],
   )
 
   return (
@@ -67,9 +76,15 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
   navigation,
 }: Props) {
   const pal = usePalette('default')
-  const store = useStores()
   const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const {data: preferences} = usePreferencesQuery()
+  const {mutate: setFeedViewPref, variables} =
+    useSetFeedViewPreferencesMutation()
+
+  const showReplies = !(
+    variables?.hideReplies ?? preferences?.feedViewPrefs?.hideReplies
+  )
 
   return (
     <CenteredView
@@ -105,17 +120,20 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               testID="toggleRepliesBtn"
               type="default-light"
-              label={store.preferences.homeFeed.hideReplies ? 'No' : 'Yes'}
-              isSelected={!store.preferences.homeFeed.hideReplies}
-              onPress={store.preferences.toggleHomeFeedHideReplies}
+              label={showReplies ? 'Yes' : 'No'}
+              isSelected={showReplies}
+              onPress={() =>
+                setFeedViewPref({
+                  hideReplies: !(
+                    variables?.hideReplies ??
+                    preferences?.feedViewPrefs?.hideReplies
+                  ),
+                })
+              }
             />
           </View>
           <View
-            style={[
-              pal.viewLight,
-              styles.card,
-              store.preferences.homeFeed.hideReplies && styles.dimmed,
-            ]}>
+            style={[pal.viewLight, styles.card, !showReplies && styles.dimmed]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
               <Trans>Reply Filters</Trans>
             </Text>
@@ -128,10 +146,19 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               type="default-light"
               label="Followed users only"
-              isSelected={store.preferences.homeFeed.hideRepliesByUnfollowed}
+              isSelected={Boolean(
+                variables?.hideRepliesByUnfollowed ??
+                  preferences?.feedViewPrefs?.hideRepliesByUnfollowed,
+              )}
               onPress={
-                !store.preferences.homeFeed.hideReplies
-                  ? store.preferences.toggleHomeFeedHideRepliesByUnfollowed
+                showReplies
+                  ? () =>
+                      setFeedViewPref({
+                        hideRepliesByUnfollowed: !(
+                          variables?.hideRepliesByUnfollowed ??
+                          preferences?.feedViewPrefs?.hideRepliesByUnfollowed
+                        ),
+                      })
                   : undefined
               }
               style={[s.mb10]}
@@ -142,9 +169,12 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
                 feed.
               </Trans>
             </Text>
-            <RepliesThresholdInput
-              enabled={!store.preferences.homeFeed.hideReplies}
-            />
+            {preferences && (
+              <RepliesThresholdInput
+                enabled={showReplies}
+                initialValue={preferences.feedViewPrefs.hideRepliesByLikeCount}
+              />
+            )}
           </View>
 
           <View style={[pal.viewLight, styles.card]}>
@@ -158,9 +188,26 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeed.hideReposts ? 'No' : 'Yes'}
-              isSelected={!store.preferences.homeFeed.hideReposts}
-              onPress={store.preferences.toggleHomeFeedHideReposts}
+              label={
+                variables?.hideReposts ??
+                preferences?.feedViewPrefs?.hideReposts
+                  ? 'No'
+                  : 'Yes'
+              }
+              isSelected={
+                !(
+                  variables?.hideReposts ??
+                  preferences?.feedViewPrefs?.hideReposts
+                )
+              }
+              onPress={() =>
+                setFeedViewPref({
+                  hideReposts: !(
+                    variables?.hideReposts ??
+                    preferences?.feedViewPrefs?.hideReposts
+                  ),
+                })
+              }
             />
           </View>
 
@@ -176,9 +223,26 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeed.hideQuotePosts ? 'No' : 'Yes'}
-              isSelected={!store.preferences.homeFeed.hideQuotePosts}
-              onPress={store.preferences.toggleHomeFeedHideQuotePosts}
+              label={
+                variables?.hideQuotePosts ??
+                preferences?.feedViewPrefs?.hideQuotePosts
+                  ? 'No'
+                  : 'Yes'
+              }
+              isSelected={
+                !(
+                  variables?.hideQuotePosts ??
+                  preferences?.feedViewPrefs?.hideQuotePosts
+                )
+              }
+              onPress={() =>
+                setFeedViewPref({
+                  hideQuotePosts: !(
+                    variables?.hideQuotePosts ??
+                    preferences?.feedViewPrefs?.hideQuotePosts
+                  ),
+                })
+              }
             />
           </View>
 
@@ -196,10 +260,25 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               type="default-light"
               label={
-                store.preferences.homeFeed.lab_mergeFeedEnabled ? 'Yes' : 'No'
+                variables?.lab_mergeFeedEnabled ??
+                preferences?.feedViewPrefs?.lab_mergeFeedEnabled
+                  ? 'Yes'
+                  : 'No'
               }
-              isSelected={!!store.preferences.homeFeed.lab_mergeFeedEnabled}
-              onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}
+              isSelected={
+                !!(
+                  variables?.lab_mergeFeedEnabled ??
+                  preferences?.feedViewPrefs?.lab_mergeFeedEnabled
+                )
+              }
+              onPress={() =>
+                setFeedViewPref({
+                  lab_mergeFeedEnabled: !(
+                    variables?.lab_mergeFeedEnabled ??
+                    preferences?.feedViewPrefs?.lab_mergeFeedEnabled
+                  ),
+                })
+              }
             />
           </View>
         </View>

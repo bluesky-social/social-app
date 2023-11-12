@@ -3,7 +3,6 @@ import {RootStoreModel} from '../root-store'
 import {bundleAsync} from 'lib/async/bundle'
 import {cleanError} from 'lib/strings/errors'
 import {FeedSourceModel} from '../content/feed-source'
-import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 
 export class SavedFeedsModel {
@@ -69,7 +68,6 @@ export class SavedFeedsModel {
   refresh = bundleAsync(async () => {
     this._xLoading(true)
     try {
-      await this.rootStore.preferences.sync()
       const uris = dedup(
         this.rootStore.preferences.pinnedFeeds.concat(
           this.rootStore.preferences.savedFeeds,
@@ -86,37 +84,6 @@ export class SavedFeedsModel {
       this._xIdle(e)
     }
   })
-
-  async reorderPinnedFeeds(feeds: FeedSourceModel[]) {
-    this._updatePinSortOrder(feeds.map(f => f.uri))
-    await this.rootStore.preferences.setSavedFeeds(
-      this.rootStore.preferences.savedFeeds,
-      feeds.filter(feed => feed.isPinned).map(feed => feed.uri),
-    )
-  }
-
-  async movePinnedFeed(item: FeedSourceModel, direction: 'up' | 'down') {
-    const pinned = this.rootStore.preferences.pinnedFeeds.slice()
-    const index = pinned.indexOf(item.uri)
-    if (index === -1) {
-      return
-    }
-    if (direction === 'up' && index !== 0) {
-      ;[pinned[index], pinned[index - 1]] = [pinned[index - 1], pinned[index]]
-    } else if (direction === 'down' && index < pinned.length - 1) {
-      ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
-    }
-    this._updatePinSortOrder(pinned.concat(this.unpinned.map(f => f.uri)))
-    await this.rootStore.preferences.setSavedFeeds(
-      this.rootStore.preferences.savedFeeds,
-      pinned,
-    )
-    track('CustomFeed:Reorder', {
-      name: item.displayName,
-      uri: item.uri,
-      index: pinned.indexOf(item.uri),
-    })
-  }
 
   // state transitions
   // =

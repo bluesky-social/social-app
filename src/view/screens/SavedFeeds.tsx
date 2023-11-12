@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React from 'react'
 import {
   StyleSheet,
   View,
@@ -8,26 +8,34 @@ import {
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {track} from '#/lib/analytics/analytics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
-import {SavedFeedsModel} from 'state/models/ui/saved-feeds'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {ScrollView, CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {s, colors} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {FeedSourceModel} from 'state/models/content/feed-source'
+import {NewFeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
 import {TextLink} from 'view/com/util/Link'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {
+  usePreferencesQuery,
+  usePinFeedMutation,
+  useUnpinFeedMutation,
+  useSetSaveFeedsMutation,
+  usePreferencesQueryKey,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -43,150 +51,178 @@ const HITSLOP_BOTTOM = {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
-export const SavedFeeds = withAuthRequired(
-  observer(function SavedFeedsImpl({}: Props) {
-    const pal = usePalette('default')
-    const store = useStores()
-    const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-    const {screen} = useAnalytics()
-    const setMinimalShellMode = useSetMinimalShellMode()
+export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
+  const pal = usePalette('default')
+  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const {screen} = useAnalytics()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {data: preferences} = usePreferencesQuery()
 
-    const savedFeeds = useMemo(() => {
-      const model = new SavedFeedsModel(store)
-      model.refresh()
-      return model
-    }, [store])
-    useFocusEffect(
-      useCallback(() => {
-        screen('SavedFeeds')
-        setMinimalShellMode(false)
-        savedFeeds.refresh()
-      }, [screen, setMinimalShellMode, savedFeeds]),
-    )
+  useFocusEffect(
+    React.useCallback(() => {
+      screen('SavedFeeds')
+      setMinimalShellMode(false)
+    }, [screen, setMinimalShellMode]),
+  )
 
-    return (
-      <CenteredView
-        style={[
-          s.hContentRegion,
-          pal.border,
-          isTabletOrDesktop && styles.desktopContainer,
-        ]}>
-        <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
-        <ScrollView style={s.flex1}>
-          <View style={[pal.text, pal.border, styles.title]}>
-            <Text type="title" style={pal.text}>
-              Pinned Feeds
-            </Text>
-          </View>
-          {savedFeeds.hasLoaded ? (
-            !savedFeeds.pinned.length ? (
-              <View
-                style={[
-                  pal.border,
-                  isMobile && s.flex1,
-                  pal.viewLight,
-                  styles.empty,
-                ]}>
-                <Text type="lg" style={[pal.text]}>
-                  You don't have any pinned feeds.
-                </Text>
-              </View>
-            ) : (
-              savedFeeds.pinned.map(feed => (
-                <ListItem
-                  key={feed._reactKey}
-                  savedFeeds={savedFeeds}
-                  item={feed}
-                />
-              ))
-            )
+  return (
+    <CenteredView
+      style={[
+        s.hContentRegion,
+        pal.border,
+        isTabletOrDesktop && styles.desktopContainer,
+      ]}>
+      <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
+      <ScrollView style={s.flex1}>
+        <View style={[pal.text, pal.border, styles.title]}>
+          <Text type="title" style={pal.text}>
+            Pinned Feeds
+          </Text>
+        </View>
+        {preferences?.feeds ? (
+          !preferences.feeds.pinned.length ? (
+            <View
+              style={[
+                pal.border,
+                isMobile && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
+              <Text type="lg" style={[pal.text]}>
+                You don't have any pinned feeds.
+              </Text>
+            </View>
           ) : (
-            <ActivityIndicator style={{marginTop: 20}} />
-          )}
-          <View style={[pal.text, pal.border, styles.title]}>
-            <Text type="title" style={pal.text}>
-              Saved Feeds
-            </Text>
-          </View>
-          {savedFeeds.hasLoaded ? (
-            !savedFeeds.unpinned.length ? (
-              <View
-                style={[
-                  pal.border,
-                  isMobile && s.flex1,
-                  pal.viewLight,
-                  styles.empty,
-                ]}>
-                <Text type="lg" style={[pal.text]}>
-                  You don't have any saved feeds.
-                </Text>
-              </View>
-            ) : (
-              savedFeeds.unpinned.map(feed => (
-                <ListItem
-                  key={feed._reactKey}
-                  savedFeeds={savedFeeds}
-                  item={feed}
-                />
-              ))
-            )
+            preferences?.feeds?.pinned?.map(uri => (
+              <ListItem key={uri} feedUri={uri} isPinned />
+            ))
+          )
+        ) : (
+          <ActivityIndicator style={{marginTop: 20}} />
+        )}
+        <View style={[pal.text, pal.border, styles.title]}>
+          <Text type="title" style={pal.text}>
+            Saved Feeds
+          </Text>
+        </View>
+        {preferences?.feeds ? (
+          !preferences.feeds.unpinned.length ? (
+            <View
+              style={[
+                pal.border,
+                isMobile && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
+              <Text type="lg" style={[pal.text]}>
+                You don't have any saved feeds.
+              </Text>
+            </View>
           ) : (
-            <ActivityIndicator style={{marginTop: 20}} />
-          )}
+            preferences.feeds.unpinned.map(uri => (
+              <ListItem key={uri} feedUri={uri} isPinned={false} />
+            ))
+          )
+        ) : (
+          <ActivityIndicator style={{marginTop: 20}} />
+        )}
 
-          <View style={styles.footerText}>
-            <Text type="sm" style={pal.textLight}>
-              Feeds are custom algorithms that users build with a little coding
-              expertise.{' '}
-              <TextLink
-                type="sm"
-                style={pal.link}
-                href="https://github.com/bluesky-social/feed-generator"
-                text="See this guide"
-              />{' '}
-              for more information.
-            </Text>
-          </View>
-          <View style={{height: 100}} />
-        </ScrollView>
-      </CenteredView>
-    )
-  }),
-)
+        <View style={styles.footerText}>
+          <Text type="sm" style={pal.textLight}>
+            Feeds are custom algorithms that users build with a little coding
+            expertise.{' '}
+            <TextLink
+              type="sm"
+              style={pal.link}
+              href="https://github.com/bluesky-social/feed-generator"
+              text="See this guide"
+            />{' '}
+            for more information.
+          </Text>
+        </View>
+        <View style={{height: 100}} />
+      </ScrollView>
+    </CenteredView>
+  )
+})
 
 const ListItem = observer(function ListItemImpl({
-  savedFeeds,
-  item,
+  feedUri,
+  isPinned,
 }: {
-  savedFeeds: SavedFeedsModel
-  item: FeedSourceModel
+  feedUri: string // uri
+  isPinned: boolean
 }) {
   const pal = usePalette('default')
-  const isPinned = item.isPinned
+  const queryClient = useQueryClient()
+  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
+  const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
+    useUnpinFeedMutation()
+  const {isPending: isMovePending, mutateAsync: setSavedFeeds} =
+    useSetSaveFeedsMutation()
 
-  const onTogglePinned = useCallback(() => {
+  const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
-    item.togglePin().catch(e => {
+
+    try {
+      if (isPinned) {
+        await unpinFeed({uri: feedUri})
+      } else {
+        await pinFeed({uri: feedUri})
+      }
+    } catch (e) {
       Toast.show('There was an issue contacting the server')
       logger.error('Failed to toggle pinned feed', {error: e})
-    })
-  }, [item])
-  const onPressUp = useCallback(
-    () =>
-      savedFeeds.movePinnedFeed(item, 'up').catch(e => {
-        Toast.show('There was an issue contacting the server')
-        logger.error('Failed to set pinned feed order', {error: e})
-      }),
-    [savedFeeds, item],
-  )
-  const onPressDown = useCallback(
-    () =>
-      savedFeeds.movePinnedFeed(item, 'down').catch(e => {
-        Toast.show('There was an issue contacting the server')
-        logger.error('Failed to set pinned feed order', {error: e})
-      }),
-    [savedFeeds, item],
-  )
+    }
+  }, [feedUri, isPinned, pinFeed, unpinFeed])
+
+  const onPressUp = React.useCallback(async () => {
+    if (!isPinned) return
+
+    const feeds = queryClient.getQueryData<UsePreferencesQueryResponse>(
+      usePreferencesQueryKey,
+    )?.feeds
+    const pinned = feeds?.pinned ?? []
+    const index = pinned.indexOf(feedUri)
+
+    if (index === -1 || index === 0) return
+    ;[pinned[index], pinned[index - 1]] = [pinned[index - 1], pinned[index]]
+
+    try {
+      await setSavedFeeds({saved: feeds?.saved ?? [], pinned})
+      track('CustomFeed:Reorder', {
+        uri: feedUri,
+        index: pinned.indexOf(feedUri),
+      })
+    } catch (e) {
+      Toast.show('There was an issue contacting the server')
+      logger.error('Failed to set pinned feed order', {error: e})
+    }
+  }, [feedUri, isPinned, queryClient, setSavedFeeds])
+
+  const onPressDown = React.useCallback(async () => {
+    if (!isPinned) return
+
+    const feeds = queryClient.getQueryData<UsePreferencesQueryResponse>(
+      usePreferencesQueryKey,
+    )?.feeds
+    const pinned = feeds?.pinned ?? []
+    const index = pinned.indexOf(feedUri)
+
+    if (index === -1 || index >= pinned.length - 1) return
+    ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
+
+    try {
+      await setSavedFeeds({saved: feeds?.saved ?? [], pinned})
+      track('CustomFeed:Reorder', {
+        uri: feedUri,
+        index: pinned.indexOf(feedUri),
+      })
+    } catch (e) {
+      Toast.show('There was an issue contacting the server')
+      logger.error('Failed to set pinned feed order', {error: e})
+    }
+  }, [feedUri, isPinned, queryClient, setSavedFeeds])
 
   return (
     <Pressable
@@ -195,6 +231,7 @@ const ListItem = observer(function ListItemImpl({
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
           <TouchableOpacity
+            disabled={isMovePending}
             accessibilityRole="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}>
@@ -205,6 +242,7 @@ const ListItem = observer(function ListItemImpl({
             />
           </TouchableOpacity>
           <TouchableOpacity
+            disabled={isMovePending}
             accessibilityRole="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}>
@@ -212,13 +250,14 @@ const ListItem = observer(function ListItemImpl({
           </TouchableOpacity>
         </View>
       ) : null}
-      <FeedSourceCard
-        key={item.uri}
-        item={item}
-        showSaveBtn
+      <NewFeedSourceCard
+        key={feedUri}
+        feedUri={feedUri}
         style={styles.noBorder}
+        showSaveBtn
       />
       <TouchableOpacity
+        disabled={isPinPending || isUnpinPending}
         accessibilityRole="button"
         hitSlop={10}
         onPress={onTogglePinned}>
