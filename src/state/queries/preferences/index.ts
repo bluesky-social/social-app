@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
 
@@ -15,6 +16,7 @@ import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
+import {getModerationOpts} from '#/state/queries/preferences/moderation'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -77,6 +79,19 @@ export function usePreferencesQuery() {
       return preferences
     },
   })
+}
+
+export function useModerationOpts() {
+  const {currentAccount} = useSession()
+  const prefs = usePreferencesQuery()
+  return useMemo(() => {
+    return prefs?.data
+      ? getModerationOpts({
+          userDid: currentAccount?.did || '',
+          preferences: prefs.data,
+        })
+      : undefined
+  }, [currentAccount, prefs.data])
 }
 
 export function useClearPreferencesMutation() {
