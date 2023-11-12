@@ -131,6 +131,7 @@ function ProfileListScreenLoaded({
       onChange() {
         if (isCurateList) {
           queryClient.invalidateQueries({
+            // TODO(eric) should construct these strings with a fn too
             queryKey: FEED_RQKEY(`list|${list.uri}`),
           })
         }
