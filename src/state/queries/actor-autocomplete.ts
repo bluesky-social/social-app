@@ -17,7 +17,7 @@ export function useActorAutocompleteQuery(prefix: string) {
       })
       return computeSuggestions(prefix, follows, res.data.actors)
     },
-    enabled: !isFetching,
+    enabled: !isFetching && !!prefix,
   })
 }
 

@@ -39,20 +39,20 @@ export function useMyListsQuery(filter: MyListsFilter) {
                 items: res.data.lists,
               })),
           ),
-        ),
-          promises.push(
-            accumulate(cursor =>
-              agent.app.bsky.graph
-                .getListBlocks({
-                  cursor,
-                  limit: 50,
-                })
-                .then(res => ({
-                  cursor: res.data.cursor,
-                  items: res.data.lists,
-                })),
-            ),
-          )
+        )
+        promises.push(
+          accumulate(cursor =>
+            agent.app.bsky.graph
+              .getListBlocks({
+                cursor,
+                limit: 50,
+              })
+              .then(res => ({
+                cursor: res.data.cursor,
+                items: res.data.lists,
+              })),
+          ),
+        )
       }
       const resultset = await Promise.all(promises)
       for (const res of resultset) {
