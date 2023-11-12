@@ -57,7 +57,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      console.log('fetch notifs', pageParam)
       const res = await agent.listNotifications({
         limit: PAGE_SIZE,
         cursor: pageParam,

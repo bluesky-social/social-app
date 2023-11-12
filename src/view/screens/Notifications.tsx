@@ -1,6 +1,7 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {
   NativeStackScreenProps,
   NotificationsTabNavigatorParams,
@@ -18,6 +19,8 @@ import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -32,8 +35,9 @@ export const NotificationsScreen = withAuthRequired(
     const {screen} = useAnalytics()
     const pal = usePalette('default')
     const {isDesktop} = useWebMediaQueries()
-
-    const hasNew = false // TODO
+    const unreadNotifs = useUnreadNotifications()
+    const queryClient = useQueryClient()
+    const hasNew = !!unreadNotifs
 
     // event handlers
     // =
@@ -44,8 +48,8 @@ export const NotificationsScreen = withAuthRequired(
 
     const onPressLoadLatest = React.useCallback(() => {
       scrollToTop()
-      // store.me.notifications.refresh() TODO
-    }, [scrollToTop])
+      queryClient.invalidateQueries({queryKey: NOTIFS_RQKEY()})
+    }, [scrollToTop, queryClient])
 
     // on-visible setup
     // =
@@ -58,37 +62,9 @@ export const NotificationsScreen = withAuthRequired(
 
         return () => {
           softResetSub.remove()
-          // store.me.notifications.markAllRead() TODO
         }
       }, [store, screen, onPressLoadLatest, setMinimalShellMode]),
     )
-
-    /* TODO
-    useTabFocusEffect(
-      'Notifications',
-      React.useCallback(
-        isInside => {
-          // on mobile:
-          // fires with `isInside=true` when the user navigates to the root tab
-          // but not when the user goes back to the screen by pressing back
-          // on web:
-          // essentially equivalent to useFocusEffect because we dont used tabbed
-          // navigation
-          if (isInside) {
-            if (isWeb) {
-              store.me.notifications.syncQueue()
-            } else {
-              if (store.me.notifications.unreadCount > 0) {
-                store.me.notifications.refresh()
-              } else {
-                store.me.notifications.syncQueue()
-              }
-            }
-          }
-        },
-        [store],
-      ),
-    )*/
 
     const ListHeaderComponent = React.useCallback(() => {
       if (isDesktop) {

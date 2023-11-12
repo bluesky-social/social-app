@@ -11,6 +11,7 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
+import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/queries/preferences'
@@ -34,6 +35,7 @@ export function Feed({
   const [isPTRing, setIsPTRing] = React.useState(false)
 
   const moderationOpts = useModerationOpts()
+  const {markAllRead} = useUnreadNotificationsApi()
   const {
     data,
     dataUpdatedAt,
@@ -47,6 +49,14 @@ export function Feed({
     fetchNextPage,
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
+  const firstItem = data?.pages[0]?.items[0]
+
+  // mark all read on fresh data
+  React.useEffect(() => {
+    if (firstItem) {
+      markAllRead()
+    }
+  }, [firstItem, markAllRead])
 
   const items = React.useMemo(() => {
     let arr: any[] = []

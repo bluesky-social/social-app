@@ -4,14 +4,12 @@ import {
   ComAtprotoServerListAppPasswords,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
-import {NotificationsFeedModel} from './feeds/notifications'
 import {MyFeedsUIModel} from './ui/my-feeds'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
 import {logger} from '#/logger'
 
 const PROFILE_UPDATE_INTERVAL = 10 * 60 * 1e3 // 10min
-const NOTIFS_UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
 export class MeModel {
   did: string = ''
@@ -21,13 +19,11 @@ export class MeModel {
   avatar: string = ''
   followsCount: number | undefined
   followersCount: number | undefined
-  notifications: NotificationsFeedModel
   myFeeds: MyFeedsUIModel
   follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
   lastProfileStateUpdate = Date.now()
-  lastNotifsUpdate = Date.now()
 
   get invitesAvailable() {
     return this.invites.filter(isInviteAvailable).length
@@ -39,13 +35,11 @@ export class MeModel {
       {rootStore: false, serialize: false, hydrate: false},
       {autoBind: true},
     )
-    this.notifications = new NotificationsFeedModel(this.rootStore)
     this.myFeeds = new MyFeedsUIModel(this.rootStore)
     this.follows = new MyFollowsCache(this.rootStore)
   }
 
   clear() {
-    this.notifications.clear()
     this.myFeeds.clear()
     this.follows.clear()
     this.rootStore.profiles.cache.clear()
@@ -103,16 +97,6 @@ export class MeModel {
     if (sess.hasSession) {
       this.did = sess.currentSession?.did || ''
       await this.fetchProfile()
-      /* dont await */ this.notifications.setup().catch(e => {
-        logger.error('Failed to setup notifications model', {
-          error: e,
-        })
-      })
-      /* dont await */ this.notifications.setup().catch(e => {
-        logger.error('Failed to setup notifications model', {
-          error: e,
-        })
-      })
       this.myFeeds.clear()
       /* dont await */ this.myFeeds.saved.refresh()
       this.rootStore.emitSessionLoaded()
@@ -130,10 +114,6 @@ export class MeModel {
       await this.fetchProfile()
       await this.fetchInviteCodes()
       await this.fetchAppPasswords()
-    }
-    if (Date.now() - this.lastNotifsUpdate > NOTIFS_UPDATE_INTERVAL) {
-      this.lastNotifsUpdate = Date.now()
-      await this.notifications.syncQueue()
     }
   }
 

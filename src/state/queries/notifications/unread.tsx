@@ -1,40 +1,56 @@
 import React from 'react'
+import {
+  AppBskyNotificationListNotifications,
+  ModerationOpts,
+  moderateProfile,
+  moderatePost,
+} from '@atproto/api'
 import BroadcastChannel from '#/lib/broadcast'
+import {useSession} from '#/state/session'
+import {useModerationOpts} from '../preferences'
+
+const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
 const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL')
 
-interface Context {
-  numUnread: number
-  setNumUnread: (num: number) => void
+type StateContext = string
+
+interface ApiContext {
+  markAllRead: () => Promise<void>
+  checkUnread: () => Promise<void>
 }
 
-const context = React.createContext<Context>({
-  numUnread: 0,
-  setNumUnread() {},
+const stateContext = React.createContext<StateContext>('')
+
+const apiContext = React.createContext<ApiContext>({
+  async markAllRead() {},
+  async checkUnread() {},
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [numUnread, setNumUnread] = React.useState(0)
-  const state = React.useMemo<Context>(
-    () => ({
-      numUnread,
-      setNumUnread(num: number) {
-        setNumUnread(num)
-        console.log('notifs broadcasting', num)
-        broadcast.postMessage({event: String(num)})
-      },
-    }),
-    [numUnread, setNumUnread],
-  )
+  const {hasSession, agent} = useSession()
+  const moderationOpts = useModerationOpts()
+
+  const [numUnread, setNumUnread] = React.useState('')
+
+  const checkUnreadRef = React.useRef<(() => Promise<void>) | null>(null)
+  const lastSyncRef = React.useRef<Date>(new Date())
+
+  // periodic sync
+  React.useEffect(() => {
+    if (!hasSession || !checkUnreadRef.current) {
+      return
+    }
+    checkUnreadRef.current() // fire on init
+    const interval = setInterval(checkUnreadRef.current, UPDATE_INTERVAL)
+    return () => clearInterval(interval)
+  }, [hasSession])
 
   // listen for broadcasts
   React.useEffect(() => {
     const listener = ({data}: MessageEvent) => {
-      const count = parseInt(data.event, 10)
-      console.log('notifs broadcast got', count, data.event)
-      if (typeof count === 'number') {
-        setNumUnread(count)
-      }
+      lastSyncRef.current = new Date()
+      setNumUnread(data.event)
     }
     broadcast.addEventListener('message', listener)
     return () => {
@@ -42,9 +58,88 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [setNumUnread])
 
-  return <context.Provider value={state}>{children}</context.Provider>
+  // create API
+  const api = React.useMemo<ApiContext>(() => {
+    return {
+      async markAllRead() {
+        // update server
+        await agent.updateSeenNotifications(lastSyncRef.current.toISOString())
+
+        // update & broadcast
+        setNumUnread('')
+        broadcast.postMessage({event: ''})
+      },
+
+      async checkUnread() {
+        // count
+        const res = await agent.listNotifications({limit: 40})
+        const filtered = res.data.notifications.filter(
+          notif => !notif.isRead && !shouldFilter(notif, moderationOpts),
+        )
+        const num =
+          filtered.length >= 30
+            ? '30+'
+            : filtered.length === 0
+            ? ''
+            : String(filtered.length)
+
+        // track last sync
+        const now = new Date()
+        const lastIndexed = filtered[0] && new Date(filtered[0].indexedAt)
+        lastSyncRef.current =
+          !lastIndexed || now > lastIndexed ? now : lastIndexed
+
+        // update & broadcast
+        setNumUnread(num)
+        broadcast.postMessage({event: num})
+      },
+    }
+  }, [setNumUnread, agent, moderationOpts])
+  checkUnreadRef.current = api.checkUnread
+
+  return (
+    <stateContext.Provider value={numUnread}>
+      <apiContext.Provider value={api}>{children}</apiContext.Provider>
+    </stateContext.Provider>
+  )
 }
 
 export function useUnreadNotifications() {
-  return React.useContext(context)
+  return React.useContext(stateContext)
+}
+
+export function useUnreadNotificationsApi() {
+  return React.useContext(apiContext)
+}
+
+// TODO this should be in the sdk as moderateNotification -prf
+function shouldFilter(
+  notif: AppBskyNotificationListNotifications.Notification,
+  moderationOpts: ModerationOpts | undefined,
+): boolean {
+  if (!moderationOpts) {
+    return false
+  }
+  const profile = moderateProfile(notif.author, moderationOpts)
+  if (
+    profile.account.filter ||
+    profile.profile.filter ||
+    notif.author.viewer?.muted
+  ) {
+    return true
+  }
+  if (
+    notif.type === 'reply' ||
+    notif.type === 'quote' ||
+    notif.type === 'mention'
+  ) {
+    // NOTE: the notification overlaps the post enough for this to work
+    const post = moderatePost(notif, moderationOpts)
+    if (post.content.filter) {
+      return true
+    }
+  }
+  // TODO: thread muting is not being applied
+  // (this requires fetching the post)
+  return false
 }

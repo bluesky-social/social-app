@@ -83,7 +83,7 @@ export function init(store: RootStoreModel) {
     )
     if (event.request.trigger.type === 'push') {
       // refresh notifications in the background
-      store.me.notifications.syncQueue()
+      // store.me.notifications.syncQueue() TODO
       // handle payload-based deeplinks
       let payload
       if (isIOS) {
@@ -121,7 +121,7 @@ export function init(store: RootStoreModel) {
           logger.DebugContext.notifications,
         )
         track('Notificatons:OpenApp')
-        store.me.notifications.refresh() // refresh notifications
+        // store.me.notifications.refresh() // refresh notifications TODO
         resetToTab('NotificationsTab') // open notifications tab
       }
     },

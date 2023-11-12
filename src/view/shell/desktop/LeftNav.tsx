@@ -43,6 +43,7 @@ import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const {currentAccount} = useSession()
@@ -253,6 +254,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores()
   const pal = usePalette('default')
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const numUnread = useUnreadNotifications()
 
   return (
     <View
@@ -314,7 +316,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       />
       <NavItem
         href="/notifications"
-        count={store.me.notifications.unreadCountLabel}
+        count={numUnread}
         icon={
           <BellIcon
             strokeWidth={2}
