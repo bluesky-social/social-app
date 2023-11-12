@@ -243,7 +243,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const closeModal = React.useCallback(() => {
     let totalActiveModals = 0
     setActiveModals(activeModals => {
-      activeModals.pop()
+      activeModals = activeModals.slice(0, -1)
       totalActiveModals = activeModals.length
       return activeModals
     })
