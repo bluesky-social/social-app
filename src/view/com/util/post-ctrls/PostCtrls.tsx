@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
@@ -17,160 +18,155 @@ import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 import {useModalControls} from '#/state/modals'
+import {
+  usePostLikeMutation,
+  usePostUnlikeMutation,
+  usePostRepostMutation,
+  usePostUnrepostMutation,
+} from '#/state/queries/post'
 
-interface PostCtrlsOpts {
-  itemUri: string
-  itemCid: string
-  itemHref: string
-  itemTitle: string
-  isAuthor: boolean
-  author: {
-    did: string
-    handle: string
-    displayName?: string | undefined
-    avatar?: string | undefined
-  }
-  text: string
-  indexedAt: string
+export function PostCtrls({
+  big,
+  post,
+  record,
+  style,
+  onPressReply,
+}: {
   big?: boolean
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
-  replyCount?: number
-  repostCount?: number
-  likeCount?: number
-  isReposted: boolean
-  isLiked: boolean
-  isThreadMuted: boolean
   onPressReply: () => void
-  onPressToggleRepost: () => Promise<void>
-  onPressToggleLike: () => Promise<void>
-  onCopyPostText: () => void
-  onOpenTranslate: () => void
-  onToggleThreadMute: () => void
-  onDeletePost: () => void
-}
-
-export function PostCtrls(opts: PostCtrlsOpts) {
+}) {
   const store = useStores()
   const theme = useTheme()
   const {closeModal} = useModalControls()
+  const postLikeMutation = usePostLikeMutation()
+  const postUnlikeMutation = usePostUnlikeMutation()
+  const postRepostMutation = usePostRepostMutation()
+  const postUnrepostMutation = usePostUnrepostMutation()
+
   const defaultCtrlColor = React.useMemo(
     () => ({
       color: theme.palette.default.postCtrl,
     }),
     [theme],
   ) as StyleProp<ViewStyle>
+
+  const onPressToggleLike = React.useCallback(async () => {
+    if (!post.viewer?.like) {
+      Haptics.default()
+      postLikeMutation.mutate({
+        uri: post.uri,
+        cid: post.cid,
+        likeCount: post.likeCount || 0,
+      })
+    } else {
+      postUnlikeMutation.mutate({
+        postUri: post.uri,
+        likeUri: post.viewer.like,
+        likeCount: post.likeCount || 0,
+      })
+    }
+  }, [post, postLikeMutation, postUnlikeMutation])
+
   const onRepost = useCallback(() => {
     closeModal()
-    if (!opts.isReposted) {
+    if (!post.viewer?.repost) {
       Haptics.default()
-      opts.onPressToggleRepost().catch(_e => undefined)
+      postRepostMutation.mutate({
+        uri: post.uri,
+        cid: post.cid,
+        repostCount: post.repostCount || 0,
+      })
     } else {
-      opts.onPressToggleRepost().catch(_e => undefined)
+      postUnrepostMutation.mutate({
+        postUri: post.uri,
+        repostUri: post.viewer.repost,
+        repostCount: post.repostCount || 0,
+      })
     }
-  }, [opts, closeModal])
+  }, [post, closeModal, postRepostMutation, postUnrepostMutation])
 
   const onQuote = useCallback(() => {
     closeModal()
     store.shell.openComposer({
       quote: {
-        uri: opts.itemUri,
-        cid: opts.itemCid,
-        text: opts.text,
-        author: opts.author,
-        indexedAt: opts.indexedAt,
+        uri: post.uri,
+        cid: post.cid,
+        text: record.text,
+        author: post.author,
+        indexedAt: post.indexedAt,
       },
     })
     Haptics.default()
-  }, [
-    opts.author,
-    opts.indexedAt,
-    opts.itemCid,
-    opts.itemUri,
-    opts.text,
-    store.shell,
-    closeModal,
-  ])
-
-  const onPressToggleLikeWrapper = async () => {
-    if (!opts.isLiked) {
-      Haptics.default()
-      await opts.onPressToggleLike().catch(_e => undefined)
-    } else {
-      await opts.onPressToggleLike().catch(_e => undefined)
-    }
-  }
-
+  }, [post, record, store.shell, closeModal])
   return (
-    <View style={[styles.ctrls, opts.style]}>
+    <View style={[styles.ctrls, style]}>
       <TouchableOpacity
         testID="replyBtn"
-        style={[styles.ctrl, !opts.big && styles.ctrlPad, {paddingLeft: 0}]}
-        onPress={opts.onPressReply}
+        style={[styles.ctrl, !big && styles.ctrlPad, {paddingLeft: 0}]}
+        onPress={onPressReply}
         accessibilityRole="button"
-        accessibilityLabel={`Reply (${opts.replyCount} ${
-          opts.replyCount === 1 ? 'reply' : 'replies'
+        accessibilityLabel={`Reply (${post.replyCount} ${
+          post.replyCount === 1 ? 'reply' : 'replies'
         })`}
         accessibilityHint=""
-        hitSlop={opts.big ? HITSLOP_20 : HITSLOP_10}>
+        hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         <CommentBottomArrow
-          style={[defaultCtrlColor, opts.big ? s.mt2 : styles.mt1]}
+          style={[defaultCtrlColor, big ? s.mt2 : styles.mt1]}
           strokeWidth={3}
-          size={opts.big ? 20 : 15}
+          size={big ? 20 : 15}
         />
-        {typeof opts.replyCount !== 'undefined' ? (
+        {typeof post.replyCount !== 'undefined' ? (
           <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
-            {opts.replyCount}
+            {post.replyCount}
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      <RepostButton {...opts} onRepost={onRepost} onQuote={onQuote} />
+      <RepostButton
+        big={big}
+        isReposted={!!post.viewer?.repost}
+        repostCount={post.repostCount}
+        onRepost={onRepost}
+        onQuote={onQuote}
+      />
       <TouchableOpacity
         testID="likeBtn"
-        style={[styles.ctrl, !opts.big && styles.ctrlPad]}
-        onPress={onPressToggleLikeWrapper}
+        style={[styles.ctrl, !big && styles.ctrlPad]}
+        onPress={onPressToggleLike}
         accessibilityRole="button"
-        accessibilityLabel={`${opts.isLiked ? 'Unlike' : 'Like'} (${
-          opts.likeCount
-        } ${pluralize(opts.likeCount || 0, 'like')})`}
+        accessibilityLabel={`${post.viewer?.like ? 'Unlike' : 'Like'} (${
+          post.likeCount
+        } ${pluralize(post.likeCount || 0, 'like')})`}
         accessibilityHint=""
-        hitSlop={opts.big ? HITSLOP_20 : HITSLOP_10}>
-        {opts.isLiked ? (
-          <HeartIconSolid
-            style={styles.ctrlIconLiked}
-            size={opts.big ? 22 : 16}
-          />
+        hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+        {post.viewer?.like ? (
+          <HeartIconSolid style={styles.ctrlIconLiked} size={big ? 22 : 16} />
         ) : (
           <HeartIcon
-            style={[defaultCtrlColor, opts.big ? styles.mt1 : undefined]}
+            style={[defaultCtrlColor, big ? styles.mt1 : undefined]}
             strokeWidth={3}
-            size={opts.big ? 20 : 16}
+            size={big ? 20 : 16}
           />
         )}
-        {typeof opts.likeCount !== 'undefined' ? (
+        {typeof post.likeCount !== 'undefined' ? (
           <Text
             testID="likeCount"
             style={
-              opts.isLiked
+              post.viewer?.like
                 ? [s.bold, s.red3, s.f15, s.ml5]
                 : [defaultCtrlColor, s.f15, s.ml5]
             }>
-            {opts.likeCount}
+            {post.likeCount}
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      {opts.big ? undefined : (
+      {big ? undefined : (
         <PostDropdownBtn
           testID="postDropdownBtn"
-          itemUri={opts.itemUri}
-          itemCid={opts.itemCid}
-          itemHref={opts.itemHref}
-          itemTitle={opts.itemTitle}
-          isAuthor={opts.isAuthor}
-          isThreadMuted={opts.isThreadMuted}
-          onCopyPostText={opts.onCopyPostText}
-          onOpenTranslate={opts.onOpenTranslate}
-          onToggleThreadMute={opts.onToggleThreadMute}
-          onDeletePost={opts.onDeletePost}
+          post={post}
+          record={record}
           style={styles.ctrlPad}
         />
       )}
