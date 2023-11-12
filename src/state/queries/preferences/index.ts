@@ -1,6 +1,11 @@
-import {useMemo} from 'react'
+import {useEffect, useState} from 'react'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
+import {
+  LabelPreference,
+  BskyFeedViewPreference,
+  ModerationOpts,
+} from '@atproto/api'
+import isEqual from 'lodash.isequal'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
@@ -25,7 +30,7 @@ export * from '#/state/queries/preferences/const'
 export const usePreferencesQueryKey = ['getPreferences']
 
 export function usePreferencesQuery() {
-  const {agent} = useSession()
+  const {agent, hasSession} = useSession()
   return useQuery({
     queryKey: usePreferencesQueryKey,
     queryFn: async () => {
@@ -78,20 +83,28 @@ export function usePreferencesQuery() {
       }
       return preferences
     },
+    enabled: hasSession,
   })
 }
 
 export function useModerationOpts() {
   const {currentAccount} = useSession()
+  const [opts, setOpts] = useState<ModerationOpts | undefined>()
   const prefs = usePreferencesQuery()
-  return useMemo(() => {
-    return prefs?.data
-      ? getModerationOpts({
-          userDid: currentAccount?.did || '',
-          preferences: prefs.data,
-        })
-      : undefined
-  }, [currentAccount, prefs.data])
+  useEffect(() => {
+    if (!prefs.data) {
+      return
+    }
+    // only update this hook when the moderation options change
+    const newOpts = getModerationOpts({
+      userDid: currentAccount?.did || '',
+      preferences: prefs.data,
+    })
+    if (!isEqual(opts, newOpts)) {
+      setOpts(newOpts)
+    }
+  }, [prefs.data, currentAccount, opts, setOpts])
+  return opts
 }
 
 export function useClearPreferencesMutation() {
