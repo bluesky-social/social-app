@@ -1,7 +1,6 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
 import {
   NativeStackScreenProps,
   NotificationsTabNavigatorParams,
@@ -13,12 +12,10 @@ import {TextLink} from 'view/com/util/Link'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {isWeb} from 'platform/detection'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
 
@@ -27,7 +24,7 @@ type Props = NativeStackScreenProps<
   'Notifications'
 >
 export const NotificationsScreen = withAuthRequired(
-  observer(function NotificationsScreenImpl({}: Props) {
+  function NotificationsScreenImpl({}: Props) {
     const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
@@ -36,16 +33,10 @@ export const NotificationsScreen = withAuthRequired(
     const pal = usePalette('default')
     const {isDesktop} = useWebMediaQueries()
 
-    const hasNew =
-      store.me.notifications.hasNewLatest &&
-      !store.me.notifications.isRefreshing
+    const hasNew = false // TODO
 
     // event handlers
     // =
-    const onPressTryAgain = React.useCallback(() => {
-      store.me.notifications.refresh()
-    }, [store])
-
     const scrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: 0})
       resetMainScroll()
@@ -53,8 +44,8 @@ export const NotificationsScreen = withAuthRequired(
 
     const onPressLoadLatest = React.useCallback(() => {
       scrollToTop()
-      store.me.notifications.refresh()
-    }, [store, scrollToTop])
+      // store.me.notifications.refresh() TODO
+    }, [scrollToTop])
 
     // on-visible setup
     // =
@@ -63,16 +54,16 @@ export const NotificationsScreen = withAuthRequired(
         setMinimalShellMode(false)
         logger.debug('NotificationsScreen: Updating feed')
         const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
-        store.me.notifications.update()
         screen('Notifications')
 
         return () => {
           softResetSub.remove()
-          store.me.notifications.markAllRead()
+          // store.me.notifications.markAllRead() TODO
         }
       }, [store, screen, onPressLoadLatest, setMinimalShellMode]),
     )
 
+    /* TODO
     useTabFocusEffect(
       'Notifications',
       React.useCallback(
@@ -97,7 +88,7 @@ export const NotificationsScreen = withAuthRequired(
         },
         [store],
       ),
-    )
+    )*/
 
     const ListHeaderComponent = React.useCallback(() => {
       if (isDesktop) {
@@ -145,8 +136,6 @@ export const NotificationsScreen = withAuthRequired(
       <View testID="notificationsScreen" style={s.hContentRegion}>
         <ViewHeader title="Notifications" canGoBack={false} />
         <Feed
-          view={store.me.notifications}
-          onPressTryAgain={onPressTryAgain}
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
           ListHeaderComponent={ListHeaderComponent}
@@ -160,5 +149,5 @@ export const NotificationsScreen = withAuthRequired(
         )}
       </View>
     )
-  }),
+  },
 )
