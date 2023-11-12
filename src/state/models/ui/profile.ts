@@ -2,7 +2,6 @@ import {makeAutoObservable, runInAction} from 'mobx'
 import {RootStoreModel} from '../root-store'
 import {ProfileModel} from '../content/profile'
 import {ActorFeedsModel} from '../lists/actor-feeds'
-import {ListsListModel} from '../lists/lists-list'
 import {logger} from '#/logger'
 
 export enum Sections {

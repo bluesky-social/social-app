@@ -9,27 +9,28 @@ import {
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {FlatList} from '../util/Views'
-import {observer} from 'mobx-react-lite'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {ProfileCard} from '../profile/ProfileCard'
 import {Button} from '../util/forms/Button'
-import {ListModel} from 'state/models/content/list'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useListMembersQuery} from '#/state/queries/list-members'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useSession} from '#/state/session'
+import {cleanError} from '#/lib/strings/errors'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export const ListItems = observer(function ListItemsImpl({
+export function ListMembers({
   list,
   style,
   scrollElRef,
@@ -42,7 +43,7 @@ export const ListItems = observer(function ListItemsImpl({
   headerOffset = 0,
   desktopFixedHeightOffset,
 }: {
-  list: ListModel
+  list: string
   style?: StyleProp<ViewStyle>
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onScroll: OnScrollHandler
@@ -59,33 +60,43 @@ export const ListItems = observer(function ListItemsImpl({
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
+  const {currentAccount} = useSession()
 
-  const data = React.useMemo(() => {
+  const {
+    data,
+    isFetching,
+    isFetched,
+    isError,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+  } = useListMembersQuery(list)
+  const isEmpty = !isFetching && !data?.pages[0].items.length
+  const isOwner =
+    currentAccount && data?.pages[0].list.creator.did === currentAccount.did
+
+  const items = React.useMemo(() => {
     let items: any[] = []
-    if (list.hasLoaded) {
-      if (list.hasError) {
+    if (isFetched) {
+      if (isEmpty && isError) {
         items = items.concat([ERROR_ITEM])
       }
-      if (list.isEmpty) {
+      if (isEmpty) {
         items = items.concat([EMPTY_ITEM])
-      } else {
-        items = items.concat(list.items)
+      } else if (data) {
+        for (const page of data.pages) {
+          items = items.concat(page.items)
+        }
       }
-      if (list.loadMoreError) {
+      if (!isEmpty && isError) {
         items = items.concat([LOAD_MORE_ERROR_ITEM])
       }
-    } else if (list.isLoading) {
+    } else if (isFetching) {
       items = items.concat([LOADING_ITEM])
     }
     return items
-  }, [
-    list.hasError,
-    list.hasLoaded,
-    list.isLoading,
-    list.isEmpty,
-    list.items,
-    list.loadMoreError,
-  ])
+  }, [isFetched, isEmpty, isError, data, isFetching])
 
   // events
   // =
@@ -94,25 +105,26 @@ export const ListItems = observer(function ListItemsImpl({
     track('Lists:onRefresh')
     setIsRefreshing(true)
     try {
-      await list.refresh()
+      await refetch()
     } catch (err) {
       logger.error('Failed to refresh lists', {error: err})
     }
     setIsRefreshing(false)
-  }, [list, track, setIsRefreshing])
+  }, [refetch, track, setIsRefreshing])
 
   const onEndReached = React.useCallback(async () => {
+    if (isFetching || !hasNextPage || isError) return
     track('Lists:onEndReached')
     try {
-      await list.loadMore()
+      await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more lists', {error: err})
     }
-  }, [list, track])
+  }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 
   const onPressRetryLoadMore = React.useCallback(() => {
-    list.retryLoadMore()
-  }, [list])
+    fetchNextPage()
+  }, [fetchNextPage])
 
   const onPressEditMembership = React.useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
@@ -120,19 +132,9 @@ export const ListItems = observer(function ListItemsImpl({
         name: 'user-add-remove-lists',
         subject: profile.did,
         displayName: profile.displayName || profile.handle,
-        onAdd(listUri: string) {
-          if (listUri === list.uri) {
-            list.cacheAddMember(profile)
-          }
-        },
-        onRemove(listUri: string) {
-          if (listUri === list.uri) {
-            list.cacheRemoveMember(profile)
-          }
-        },
       })
     },
-    [openModal, list],
+    [openModal],
   )
 
   // rendering
@@ -140,7 +142,7 @@ export const ListItems = observer(function ListItemsImpl({
 
   const renderMemberButton = React.useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      if (!list.isOwner) {
+      if (!isOwner) {
         return null
       }
       return (
@@ -152,7 +154,7 @@ export const ListItems = observer(function ListItemsImpl({
         />
       )
     },
-    [list, onPressEditMembership],
+    [isOwner, onPressEditMembership],
   )
 
   const renderItem = React.useCallback(
@@ -162,7 +164,7 @@ export const ListItems = observer(function ListItemsImpl({
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
-            message={list.error}
+            message={cleanError(error)}
             onPressTryAgain={onPressTryAgain}
           />
         )
@@ -190,7 +192,7 @@ export const ListItems = observer(function ListItemsImpl({
     [
       renderMemberButton,
       renderEmptyState,
-      list.error,
+      error,
       onPressTryAgain,
       onPressRetryLoadMore,
       isMobile,
@@ -200,10 +202,10 @@ export const ListItems = observer(function ListItemsImpl({
   const Footer = React.useCallback(
     () => (
       <View style={{paddingTop: 20, paddingBottom: 200}}>
-        {list.isLoading && <ActivityIndicator />}
+        {isFetching && <ActivityIndicator />}
       </View>
     ),
-    [list.isLoading],
+    [isFetching],
   )
 
   const scrollHandler = useAnimatedScrollHandler(onScroll)
@@ -212,8 +214,8 @@ export const ListItems = observer(function ListItemsImpl({
       <FlatList
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={data}
-        keyExtractor={(item: any) => item._reactKey}
+        data={items}
+        keyExtractor={(item: any) => item.uri || item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={Footer}
@@ -241,4 +243,4 @@ export const ListItems = observer(function ListItemsImpl({
       />
     </View>
   )
-})
+}

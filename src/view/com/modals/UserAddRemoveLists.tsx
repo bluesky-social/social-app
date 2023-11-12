@@ -1,33 +1,32 @@
 import React, {useCallback} from 'react'
-import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {ListsList} from '../lists/ListsList'
-import {ListsListModel} from 'state/models/lists/lists-list'
-import {ListMembershipModel} from 'state/models/content/list-membership'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
-import isEqual from 'lodash.isequal'
-import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {
+  useDangerousListMembershipsQuery,
+  getMembership,
+  ListMembersip,
+  useListMembershipAddMutation,
+  useListMembershipRemoveMutation,
+} from '#/state/queries/list-memberships'
+import {cleanError} from '#/lib/strings/errors'
+import {useSession} from '#/state/session'
 
 export const snapPoints = ['fullscreen']
 
-export const Component = observer(function UserAddRemoveListsImpl({
+export function Component({
   subject,
   displayName,
   onAdd,
@@ -38,148 +37,14 @@ export const Component = observer(function UserAddRemoveListsImpl({
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
-  const store = useStores()
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const palPrimary = usePalette('primary')
-  const palInverted = usePalette('inverted')
-  const [originalSelections, setOriginalSelections] = React.useState<string[]>(
-    [],
-  )
-  const [selected, setSelected] = React.useState<string[]>([])
-  const [membershipsLoaded, setMembershipsLoaded] = React.useState(false)
+  const {data: memberships} = useDangerousListMembershipsQuery()
 
-  const listsList: ListsListModel = React.useMemo(
-    () => new ListsListModel(store, store.me.did),
-    [store],
-  )
-  const memberships: ListMembershipModel = React.useMemo(
-    () => new ListMembershipModel(store, subject),
-    [store, subject],
-  )
-  React.useEffect(() => {
-    listsList.refresh()
-    memberships.fetch().then(
-      () => {
-        const ids = memberships.memberships.map(m => m.value.list)
-        setOriginalSelections(ids)
-        setSelected(ids)
-        setMembershipsLoaded(true)
-      },
-      err => {
-        logger.error('Failed to fetch memberships', {error: err})
-      },
-    )
-  }, [memberships, listsList, store, setSelected, setMembershipsLoaded])
-
-  const onPressCancel = useCallback(() => {
+  const onPressDone = useCallback(() => {
     closeModal()
   }, [closeModal])
-
-  const onPressSave = useCallback(async () => {
-    let changes
-    try {
-      changes = await memberships.updateTo(selected)
-    } catch (err) {
-      logger.error('Failed to update memberships', {error: err})
-      return
-    }
-    Toast.show('Lists updated')
-    for (const uri of changes.added) {
-      onAdd?.(uri)
-    }
-    for (const uri of changes.removed) {
-      onRemove?.(uri)
-    }
-    closeModal()
-  }, [closeModal, selected, memberships, onAdd, onRemove])
-
-  const onToggleSelected = useCallback(
-    (uri: string) => {
-      if (selected.includes(uri)) {
-        setSelected(selected.filter(uri2 => uri2 !== uri))
-      } else {
-        setSelected([...selected, uri])
-      }
-    },
-    [selected, setSelected],
-  )
-
-  const renderItem = useCallback(
-    (list: GraphDefs.ListView, index: number) => {
-      const isSelected = selected.includes(list.uri)
-      return (
-        <Pressable
-          testID={`toggleBtn-${list.name}`}
-          style={[
-            styles.listItem,
-            pal.border,
-            {
-              opacity: membershipsLoaded ? 1 : 0.5,
-              borderTopWidth: index === 0 ? 0 : 1,
-            },
-          ]}
-          accessibilityLabel={`${isSelected ? 'Remove from' : 'Add to'} ${
-            list.name
-          }`}
-          accessibilityHint=""
-          disabled={!membershipsLoaded}
-          onPress={() => onToggleSelected(list.uri)}>
-          <View style={styles.listItemAvi}>
-            <UserAvatar size={40} avatar={list.avatar} />
-          </View>
-          <View style={styles.listItemContent}>
-            <Text
-              type="lg"
-              style={[s.bold, pal.text]}
-              numberOfLines={1}
-              lineHeight={1.2}>
-              {sanitizeDisplayName(list.name)}
-            </Text>
-            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {list.purpose === 'app.bsky.graph.defs#curatelist' &&
-                'User list '}
-              {list.purpose === 'app.bsky.graph.defs#modlist' &&
-                'Moderation list '}
-              by{' '}
-              {list.creator.did === store.me.did
-                ? 'you'
-                : sanitizeHandle(list.creator.handle, '@')}
-            </Text>
-          </View>
-          {membershipsLoaded && (
-            <View
-              style={
-                isSelected
-                  ? [styles.checkbox, palPrimary.border, palPrimary.view]
-                  : [styles.checkbox, pal.borderDark]
-              }>
-              {isSelected && (
-                <FontAwesomeIcon
-                  icon="check"
-                  style={palInverted.text as FontAwesomeIconStyle}
-                />
-              )}
-            </View>
-          )}
-        </Pressable>
-      )
-    },
-    [
-      pal,
-      palPrimary,
-      palInverted,
-      onToggleSelected,
-      selected,
-      store.me.did,
-      membershipsLoaded,
-    ],
-  )
-
-  // Only show changes button if there are some items on the list to choose from AND user has made changes in selection
-  const canSaveChanges =
-    !listsList.isEmpty && !isEqual(selected, originalSelections)
 
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
@@ -187,44 +52,146 @@ export const Component = observer(function UserAddRemoveListsImpl({
         <Trans>Update {displayName} in Lists</Trans>
       </Text>
       <ListsList
-        listsList={listsList}
+        filter="all"
         inline
-        renderItem={renderItem}
+        renderItem={(list, index) => (
+          <ListItem
+            index={index}
+            list={list}
+            memberships={memberships}
+            subject={subject}
+            onAdd={onAdd}
+            onRemove={onRemove}
+          />
+        )}
         style={[styles.list, pal.border]}
       />
       <View style={[styles.btns, pal.border]}>
         <Button
-          testID="cancelBtn"
+          testID="doneBtn"
           type="default"
-          onPress={onPressCancel}
+          onPress={onPressDone}
           style={styles.footerBtn}
-          accessibilityLabel={_(msg`Cancel`)}
+          accessibilityLabel={_(msg`Done`)}
           accessibilityHint=""
-          onAccessibilityEscape={onPressCancel}
-          label="Cancel"
+          onAccessibilityEscape={onPressDone}
+          label="Done"
         />
-        {canSaveChanges && (
-          <Button
-            testID="saveBtn"
-            type="primary"
-            onPress={onPressSave}
-            style={styles.footerBtn}
-            accessibilityLabel={_(msg`Save changes`)}
-            accessibilityHint=""
-            onAccessibilityEscape={onPressSave}
-            label="Save Changes"
-          />
-        )}
+      </View>
+    </View>
+  )
+}
 
-        {(listsList.isLoading || !membershipsLoaded) && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator />
-          </View>
+function ListItem({
+  index,
+  list,
+  memberships,
+  subject,
+  onAdd,
+  onRemove,
+}: {
+  index: number
+  list: GraphDefs.ListView
+  memberships: ListMembersip[] | undefined
+  subject: string
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}) {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const [isProcessing, setIsProcessing] = React.useState(false)
+  const membership = React.useMemo(
+    () => getMembership(memberships, list.uri, subject),
+    [memberships, list.uri, subject],
+  )
+  const listMembershipAddMutation = useListMembershipAddMutation()
+  const listMembershipRemoveMutation = useListMembershipRemoveMutation()
+
+  const onToggleMembership = useCallback(async () => {
+    if (typeof membership === 'undefined') {
+      return
+    }
+    setIsProcessing(true)
+    try {
+      if (membership === false) {
+        await listMembershipAddMutation.mutateAsync({
+          listUri: list.uri,
+          actorDid: subject,
+        })
+        Toast.show(_(msg`Added to list`))
+        onAdd?.(list.uri)
+      } else {
+        await listMembershipRemoveMutation.mutateAsync({
+          listUri: list.uri,
+          actorDid: subject,
+          membershipUri: membership,
+        })
+        Toast.show(_(msg`Removed from list`))
+        onRemove?.(list.uri)
+      }
+    } catch (e) {
+      Toast.show(cleanError(e))
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [
+    _,
+    list,
+    subject,
+    membership,
+    setIsProcessing,
+    onAdd,
+    onRemove,
+    listMembershipAddMutation,
+    listMembershipRemoveMutation,
+  ])
+
+  return (
+    <View
+      testID={`toggleBtn-${list.name}`}
+      style={[
+        styles.listItem,
+        pal.border,
+        {
+          borderTopWidth: index === 0 ? 0 : 1,
+        },
+      ]}>
+      <View style={styles.listItemAvi}>
+        <UserAvatar size={40} avatar={list.avatar} />
+      </View>
+      <View style={styles.listItemContent}>
+        <Text
+          type="lg"
+          style={[s.bold, pal.text]}
+          numberOfLines={1}
+          lineHeight={1.2}>
+          {sanitizeDisplayName(list.name)}
+        </Text>
+        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          {list.purpose === 'app.bsky.graph.defs#curatelist' && 'User list '}
+          {list.purpose === 'app.bsky.graph.defs#modlist' && 'Moderation list '}
+          by{' '}
+          {list.creator.did === currentAccount?.did
+            ? 'you'
+            : sanitizeHandle(list.creator.handle, '@')}
+        </Text>
+      </View>
+      <View>
+        {isProcessing || typeof membership === 'undefined' ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            testID={`user-${subject}-addBtn`}
+            type="default"
+            label={membership === false ? _(msg`Add`) : _(msg`Remove`)}
+            onPress={onToggleMembership}
+          />
         )}
       </View>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

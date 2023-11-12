@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState, useMemo} from 'react'
+import React, {useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -6,17 +6,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {ScrollView, TextInput} from './util'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {UserAvatar} from '../util/UserAvatar'
 import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
-import {ListModel} from 'state/models/content/list'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -29,49 +25,37 @@ import {HITSLOP_20} from '#/lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {
+  useDangerousListMembershipsQuery,
+  getMembership,
+  ListMembersip,
+  useListMembershipAddMutation,
+  useListMembershipRemoveMutation,
+} from '#/state/queries/list-memberships'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 
 export const snapPoints = ['90%']
 
-export const Component = observer(function Component({
+export function Component({
   list,
-  onAdd,
+  onChange,
 }: {
-  list: ListModel
-  onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  list: AppBskyGraphDefs.ListView
+  onChange?: (
+    type: 'add' | 'remove',
+    profile: AppBskyActorDefs.ProfileViewBasic,
+  ) => void
 }) {
   const pal = usePalette('default')
-  const store = useStores()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = useState('')
-  const autocompleteView = useMemo<UserAutocompleteModel>(
-    () => new UserAutocompleteModel(store),
-    [store],
-  )
+  const autocomplete = useActorAutocompleteQuery(query)
+  const {data: memberships} = useDangerousListMembershipsQuery()
   const [isKeyboardVisible] = useIsKeyboardVisible()
 
-  // initial setup
-  useEffect(() => {
-    autocompleteView.setup().then(() => {
-      autocompleteView.setPrefix('')
-    })
-    autocompleteView.setActive(true)
-    list.loadAll()
-  }, [autocompleteView, list])
-
-  const onChangeQuery = useCallback(
-    (text: string) => {
-      setQuery(text)
-      autocompleteView.setPrefix(text)
-    },
-    [setQuery, autocompleteView],
-  )
-
-  const onPressCancelSearch = useCallback(
-    () => onChangeQuery(''),
-    [onChangeQuery],
-  )
+  const onPressCancelSearch = useCallback(() => setQuery(''), [setQuery])
 
   return (
     <SafeAreaView
@@ -86,7 +70,7 @@ export const Component = observer(function Component({
             placeholder="Search for users"
             placeholderTextColor={pal.colors.textLight}
             value={query}
-            onChangeText={onChangeQuery}
+            onChangeText={setQuery}
             accessible={true}
             accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
@@ -116,19 +100,20 @@ export const Component = observer(function Component({
           style={[s.flex1]}
           keyboardDismissMode="none"
           keyboardShouldPersistTaps="always">
-          {autocompleteView.isLoading ? (
+          {autocomplete.isLoading ? (
             <View style={{marginVertical: 20}}>
               <ActivityIndicator />
             </View>
-          ) : autocompleteView.suggestions.length ? (
+          ) : autocomplete.data?.length ? (
             <>
-              {autocompleteView.suggestions.slice(0, 40).map((item, i) => (
+              {autocomplete.data.slice(0, 40).map((item, i) => (
                 <UserResult
                   key={item.did}
                   list={list}
                   profile={item}
+                  memberships={memberships}
                   noBorder={i === 0}
-                  onAdd={onAdd}
+                  onChange={onChange}
                 />
               ))}
             </>
@@ -139,7 +124,7 @@ export const Component = observer(function Component({
                 pal.textLight,
                 {paddingHorizontal: 12, paddingVertical: 16},
               ]}>
-              <Trans>No results found for {autocompleteView.prefix}</Trans>
+              <Trans>No results found for {query}</Trans>
             </Text>
           )}
         </ScrollView>
@@ -162,36 +147,71 @@ export const Component = observer(function Component({
       </View>
     </SafeAreaView>
   )
-})
+}
 
 function UserResult({
   profile,
   list,
+  memberships,
   noBorder,
-  onAdd,
+  onChange,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
-  list: ListModel
+  list: AppBskyGraphDefs.ListView
+  memberships: ListMembersip[] | undefined
   noBorder: boolean
-  onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void | undefined
+  onChange?: (
+    type: 'add' | 'remove',
+    profile: AppBskyActorDefs.ProfileViewBasic,
+  ) => void | undefined
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [isProcessing, setIsProcessing] = useState(false)
-  const [isAdded, setIsAdded] = useState(list.isMember(profile.did))
+  const membership = React.useMemo(
+    () => getMembership(memberships, list.uri, profile.did),
+    [memberships, list.uri, profile.did],
+  )
+  const listMembershipAddMutation = useListMembershipAddMutation()
+  const listMembershipRemoveMutation = useListMembershipRemoveMutation()
 
-  const onPressAdd = useCallback(async () => {
+  const onToggleMembership = useCallback(async () => {
+    if (typeof membership === 'undefined') {
+      return
+    }
     setIsProcessing(true)
     try {
-      await list.addMember(profile)
-      Toast.show('Added to list')
-      setIsAdded(true)
-      onAdd?.(profile)
+      if (membership === false) {
+        await listMembershipAddMutation.mutateAsync({
+          listUri: list.uri,
+          actorDid: profile.did,
+        })
+        Toast.show(_(msg`Added to list`))
+        onChange?.('add', profile)
+      } else {
+        await listMembershipRemoveMutation.mutateAsync({
+          listUri: list.uri,
+          actorDid: profile.did,
+          membershipUri: membership,
+        })
+        Toast.show(_(msg`Removed from list`))
+        onChange?.('remove', profile)
+      }
     } catch (e) {
       Toast.show(cleanError(e))
     } finally {
       setIsProcessing(false)
     }
-  }, [list, profile, setIsProcessing, setIsAdded, onAdd])
+  }, [
+    _,
+    list,
+    profile,
+    membership,
+    setIsProcessing,
+    onChange,
+    listMembershipAddMutation,
+    listMembershipRemoveMutation,
+  ])
 
   return (
     <View
@@ -233,16 +253,14 @@ function UserResult({
         {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
       </View>
       <View>
-        {isAdded ? (
-          <FontAwesomeIcon icon="check" />
-        ) : isProcessing ? (
+        {isProcessing || typeof membership === 'undefined' ? (
           <ActivityIndicator />
         ) : (
           <Button
             testID={`user-${profile.handle}-addBtn`}
             type="default"
-            label="Add"
-            onPress={onPressAdd}
+            label={membership === false ? _(msg`Add`) : _(msg`Remove`)}
+            onPress={onToggleMembership}
           />
         )}
       </View>
