@@ -114,8 +114,6 @@ export function FeedItem({
     ]
   }, [item, moderationOpts])
 
-  // TODO: apply moderation filter
-
   if (item.subjectUri && !item.subject) {
     // don't render anything if the target post was deleted or unfindable
     return <View />

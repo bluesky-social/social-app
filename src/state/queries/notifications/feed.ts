@@ -6,9 +6,12 @@ import {
   AppBskyNotificationListNotifications,
   BskyAgent,
 } from '@atproto/api'
+import chunk from 'lodash.chunk'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
 import {useSession} from '../../session'
-import chunk from 'lodash.chunk'
+import {useModerationOpts} from '../preferences'
+import {shouldFilterNotif} from './util'
+import {useMutedThreads} from '#/state/muted-threads'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -46,6 +49,8 @@ export interface FeedPage {
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const {agent} = useSession()
+  const moderationOpts = useModerationOpts()
+  const threadMutes = useMutedThreads()
   const enabled = opts?.enabled !== false
 
   return useInfiniteQuery<
@@ -62,8 +67,13 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
         cursor: pageParam,
       })
 
+      // filter out notifs by mod rules
+      const notifs = res.data.notifications.filter(
+        notif => !shouldFilterNotif(notif, moderationOpts),
+      )
+
       // group notifications which are essentially similar (follows, likes on a post)
-      const notifsGrouped = groupNotifications(res.data.notifications)
+      let notifsGrouped = groupNotifications(notifs)
 
       // we fetch subjects of notifications (usually posts) now instead of lazily
       // in the UI to avoid relayouts
@@ -73,6 +83,11 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
           notif.subject = subjects.get(notif.subjectUri)
         }
       }
+
+      // apply thread muting
+      notifsGrouped = notifsGrouped.filter(
+        notif => !isThreadMuted(notif, threadMutes),
+      )
 
       return {
         cursor: res.data.cursor,
@@ -186,4 +201,12 @@ function getSubjectUri(
         : undefined
     }
   }
+}
+
+function isThreadMuted(notif: FeedNotification, mutes: string[]): boolean {
+  if (!notif.subject) {
+    return false
+  }
+  const record = notif.subject.record as AppBskyFeedPost.Record // assured in fetchSubjects()
+  return mutes.includes(record.reply?.root.uri || notif.subject.uri)
 }
