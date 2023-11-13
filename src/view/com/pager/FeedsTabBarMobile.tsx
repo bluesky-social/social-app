@@ -3,7 +3,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useStores} from 'state/index'
 import {useHomeTabs} from 'lib/hooks/useHomeTabs'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -25,11 +24,10 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
-  const store = useStores()
   const {isSandbox} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
-  const items = useHomeTabs(store.preferences.pinnedFeeds)
+  const items = useHomeTabs()
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()

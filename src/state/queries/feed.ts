@@ -17,7 +17,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
 
-type FeedSourceInfo =
+export type FeedSourceInfo =
   | {
       type: 'feed'
       uri: string
@@ -53,7 +53,7 @@ const feedSourceNSIDs = {
   list: 'app.bsky.graph.list',
 }
 
-function hydrateFeedGenerator(
+export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
@@ -81,7 +81,7 @@ function hydrateFeedGenerator(
   }
 }
 
-function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -105,10 +105,14 @@ function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   }
 }
 
+export function getFeedTypeFromUri(uri: string) {
+  const {pathname} = new AtUri(uri)
+  return pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list'
+}
+
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const {agent} = useSession()
-  const {pathname} = new AtUri(uri)
-  const type = pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list'
+  const type = getFeedTypeFromUri(uri)
 
   return useQuery({
     queryKey: useFeedSourceInfoQueryKey({uri}),
