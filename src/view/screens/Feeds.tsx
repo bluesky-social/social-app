@@ -23,7 +23,7 @@ import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
-import {NewFeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -412,7 +412,7 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
         return <FeedFeedLoadingPlaceholder />
       } else if (item.type === 'popularFeed') {
         return (
-          <NewFeedSourceCard
+          <FeedSourceCard
             feedUri={item.feedUri}
             showSaveBtn
             showDescription

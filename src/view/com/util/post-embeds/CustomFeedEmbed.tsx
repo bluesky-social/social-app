@@ -20,7 +20,7 @@ export function CustomFeedEmbed({
   }, [store, record])
   return (
     <FeedSourceCard
-      item={item}
+      feedUri={item.uri}
       style={[pal.view, pal.border, styles.customFeedOuter]}
       showLikes
     />
