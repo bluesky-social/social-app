@@ -84,7 +84,6 @@ export const PostThreadScreen = withAuthRequired(
             <PostThreadComponent
               uri={resolvedUri?.uri}
               onPressReply={onPressReply}
-              treeView={!!store.preferences.thread.lab_treeViewEnabled}
             />
           )}
         </View>

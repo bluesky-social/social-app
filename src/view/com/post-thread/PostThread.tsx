@@ -35,6 +35,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {useStores} from '#/state'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
 // const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
 
@@ -59,11 +60,9 @@ type YieldedItem =
 export function PostThread({
   uri,
   onPressReply,
-  treeView,
 }: {
   uri: string | undefined
   onPressReply: () => void
-  treeView: boolean
 }) {
   const {
     isLoading,
@@ -74,6 +73,7 @@ export function PostThread({
     data: thread,
     dataUpdatedAt,
   } = usePostThreadQuery(uri)
+  const {data: preferences} = usePreferencesQuery()
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
@@ -96,7 +96,7 @@ export function PostThread({
   if (AppBskyFeedDefs.isBlockedPost(thread)) {
     return <PostThreadBlocked />
   }
-  if (!thread || isLoading) {
+  if (!thread || isLoading || !preferences) {
     return (
       <CenteredView>
         <View style={s.p20}>
@@ -110,7 +110,7 @@ export function PostThread({
       thread={thread}
       isRefetching={isRefetching}
       dataUpdatedAt={dataUpdatedAt}
-      treeView={treeView}
+      treeView={preferences.threadViewPrefs.lab_treeViewEnabled}
       onRefresh={refetch}
       onPressReply={onPressReply}
     />
