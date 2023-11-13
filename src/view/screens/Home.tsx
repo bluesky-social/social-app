@@ -1,7 +1,6 @@
 import React from 'react'
 import {useFocusEffect} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
-import isEqual from 'lodash.isequal'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -13,6 +12,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {useStores} from 'state/index'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
@@ -23,19 +23,15 @@ export const HomeScreen = withAuthRequired(
     const pagerRef = React.useRef<PagerRef>(null)
     const [selectedPage, setSelectedPage] = React.useState(0)
     const [customFeeds, setCustomFeeds] = React.useState<FeedDescriptor[]>([])
-    const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
-      string[]
-    >([])
+    const {data: preferences} = usePreferencesQuery()
 
     React.useEffect(() => {
-      const pinned = store.preferences.pinnedFeeds
+      if (!preferences?.feeds?.pinned) return
 
-      if (isEqual(pinned, requestedCustomFeeds)) {
-        // no changes
-        return
-      }
+      const pinned = preferences.feeds.pinned
 
       const feeds: FeedDescriptor[] = []
+
       for (const uri of pinned) {
         if (uri.includes('app.bsky.feed.generator')) {
           feeds.push(`feedgen|${uri}`)
@@ -43,31 +39,20 @@ export const HomeScreen = withAuthRequired(
           feeds.push(`list|${uri}`)
         }
       }
-      pagerRef.current?.setPage(0)
+
       setCustomFeeds(feeds)
-      setRequestedCustomFeeds(pinned)
-    }, [
-      store,
-      store.preferences.pinnedFeeds,
-      customFeeds,
-      setCustomFeeds,
-      pagerRef,
-      requestedCustomFeeds,
-      setRequestedCustomFeeds,
-    ])
+
+      pagerRef.current?.setPage(0)
+    }, [preferences?.feeds?.pinned, setCustomFeeds, pagerRef])
 
     const homeFeedParams = React.useMemo<FeedParams>(() => {
-      if (!store.preferences.homeFeed.lab_mergeFeedEnabled) {
-        return {}
-      }
+      if (!preferences) return {}
+
       return {
-        mergeFeedEnabled: true,
-        mergeFeedSources: store.preferences.savedFeeds,
+        mergeFeedEnabled: preferences.feedViewPrefs.lab_mergeFeedEnabled,
+        mergeFeedSources: preferences.feeds.saved,
       }
-    }, [
-      store.preferences.homeFeed.lab_mergeFeedEnabled,
-      store.preferences.savedFeeds,
-    ])
+    }, [preferences])
 
     useFocusEffect(
       React.useCallback(() => {

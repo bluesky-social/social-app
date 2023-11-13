@@ -508,7 +508,7 @@ function SavedFeed({feedUri}: {feedUri: string}) {
   return (
     <Link
       testID={`saved-feed-${info.displayName}`}
-      href={info.href}
+      href={info.route.href}
       style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
       hoverStyle={pal.viewLight}
       accessibilityLabel={info.displayName}

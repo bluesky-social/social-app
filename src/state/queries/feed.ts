@@ -1,9 +1,11 @@
+import React from 'react'
 import {
   useQuery,
   useInfiniteQuery,
   InfiniteData,
   QueryKey,
   useMutation,
+  useQueryClient,
 } from '@tanstack/react-query'
 import {
   AtUri,
@@ -13,16 +15,22 @@ import {
   AppBskyUnspeccedGetPopularFeedGenerators,
 } from '@atproto/api'
 
+import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
-type FeedSourceInfo =
+export type FeedSourceInfo =
   | {
       type: 'feed'
       uri: string
+      route: {
+        href: string
+        name: string
+        params: Record<string, string>
+      }
       cid: string
-      href: string
       avatar: string | undefined
       displayName: string
       description: RichText
@@ -34,8 +42,12 @@ type FeedSourceInfo =
   | {
       type: 'list'
       uri: string
+      route: {
+        href: string
+        name: string
+        params: Record<string, string>
+      }
       cid: string
-      href: string
       avatar: string | undefined
       displayName: string
       description: RichText
@@ -43,7 +55,7 @@ type FeedSourceInfo =
       creatorHandle: string
     }
 
-export const useFeedSourceInfoQueryKey = ({uri}: {uri: string}) => [
+export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
   'getFeedSourceInfo',
   uri,
 ]
@@ -53,19 +65,24 @@ const feedSourceNSIDs = {
   list: 'app.bsky.graph.list',
 }
 
-function hydrateFeedGenerator(
+export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+  const route = router.matchPath(href)
 
   return {
     type: 'feed',
     uri: view.uri,
     cid: view.cid,
-    href,
+    route: {
+      href,
+      name: route[0],
+      params: route[1],
+    },
     avatar: view.avatar,
     displayName: view.displayName
       ? sanitizeDisplayName(view.displayName)
@@ -81,17 +98,22 @@ function hydrateFeedGenerator(
   }
 }
 
-function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+  const route = router.matchPath(href)
 
   return {
     type: 'list',
     uri: view.uri,
+    route: {
+      href,
+      name: route[0],
+      params: route[1],
+    },
     cid: view.cid,
-    href,
     avatar: view.avatar,
     description: new RichText({
       text: view.description || '',
@@ -105,13 +127,17 @@ function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   }
 }
 
+export function getFeedTypeFromUri(uri: string) {
+  const {pathname} = new AtUri(uri)
+  return pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list'
+}
+
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const {agent} = useSession()
-  const {pathname} = new AtUri(uri)
-  const type = pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list'
+  const type = getFeedTypeFromUri(uri)
 
   return useQuery({
-    queryKey: useFeedSourceInfoQueryKey({uri}),
+    queryKey: feedSourceInfoQueryKey({uri}),
     queryFn: async () => {
       let view: FeedSourceInfo
 
@@ -169,4 +195,88 @@ export function useSearchPopularFeedsMutation() {
       return res.data.feeds
     },
   })
+}
+
+const FOLLOWING_FEED_STUB: FeedSourceInfo = {
+  type: 'feed',
+  displayName: 'Following',
+  uri: '',
+  route: {
+    href: '/',
+    name: 'Home',
+    params: {},
+  },
+  cid: '',
+  avatar: '',
+  description: new RichText({text: ''}),
+  creatorDid: '',
+  creatorHandle: '',
+  likeCount: 0,
+  likeUri: '',
+}
+
+export function usePinnedFeedsInfos(): FeedSourceInfo[] {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+  const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
+    FOLLOWING_FEED_STUB,
+  ])
+  const {data: preferences} = usePreferencesQuery()
+  const pinnedFeedsKey = JSON.stringify(preferences?.feeds?.pinned)
+
+  React.useEffect(() => {
+    if (!preferences?.feeds?.pinned) return
+    const uris = preferences.feeds.pinned
+
+    async function fetchFeedInfo() {
+      const reqs = []
+
+      for (const uri of uris) {
+        const cached = queryClient.getQueryData<FeedSourceInfo>(
+          feedSourceInfoQueryKey({uri}),
+        )
+
+        if (cached) {
+          reqs.push(cached)
+        } else {
+          reqs.push(
+            queryClient.fetchQuery({
+              queryKey: feedSourceInfoQueryKey({uri}),
+              queryFn: async () => {
+                const type = getFeedTypeFromUri(uri)
+
+                if (type === 'feed') {
+                  const res = await agent.app.bsky.feed.getFeedGenerator({
+                    feed: uri,
+                  })
+                  return hydrateFeedGenerator(res.data.view)
+                } else {
+                  const res = await agent.app.bsky.graph.getList({
+                    list: uri,
+                    limit: 1,
+                  })
+                  return hydrateList(res.data.list)
+                }
+              },
+            }),
+          )
+        }
+      }
+
+      const views = await Promise.all(reqs)
+
+      setTabs([FOLLOWING_FEED_STUB].concat(views))
+    }
+
+    fetchFeedInfo()
+  }, [
+    agent,
+    queryClient,
+    setTabs,
+    preferences?.feeds?.pinned,
+    // ensure we react to re-ordering
+    pinnedFeedsKey,
+  ])
+
+  return tabs
 }

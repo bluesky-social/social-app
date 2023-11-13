@@ -1,5 +1,5 @@
 import React from 'react'
-import {BskyPreferences, LabelPreference} from '@atproto/api'
+import {LabelPreference} from '@atproto/api'
 import {StyleSheet, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {observer} from 'mobx-react-lite'
@@ -23,6 +23,7 @@ import {
   usePreferencesSetAdultContentMutation,
   ConfigurableLabelGroup,
   CONFIGURABLE_LABEL_GROUPS,
+  UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 
 export const snapPoints = ['90%']
@@ -175,7 +176,7 @@ const ContentLabelPref = observer(function ContentLabelPrefImpl({
   labelGroup,
   disabled,
 }: {
-  preferences?: BskyPreferences
+  preferences?: UsePreferencesQueryResponse
   labelGroup: ConfigurableLabelGroup
   disabled?: boolean
 }) {

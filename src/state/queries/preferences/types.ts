@@ -2,6 +2,7 @@ import {
   BskyPreferences,
   LabelPreference,
   BskyThreadViewPreference,
+  BskyFeedViewPreference,
 } from '@atproto/api'
 
 export type ConfigurableLabelGroup =
@@ -29,7 +30,9 @@ export type UsePreferencesQueryResponse = Omit<
    * we clean up the data in `usePreferencesQuery`.
    */
   contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
-  feedViewPrefs: BskyPreferences['feedViewPrefs']['home']
+  feedViewPrefs: BskyFeedViewPreference & {
+    lab_mergeFeedEnabled: boolean
+  }
   /**
    * User thread-view prefs, including newer fields that may not be typed yet.
    */

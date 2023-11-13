@@ -4,7 +4,6 @@ import {
   BskyFeedViewPreference,
   BskyThreadViewPreference,
 } from '@atproto/api'
-import AwaitLock from 'await-lock'
 import {isObj, hasProp} from 'lib/type-guards'
 import {RootStoreModel} from '../root-store'
 import {ModerationOpts} from '@atproto/api'
@@ -33,30 +32,17 @@ export class LabelPreferencesModel {
 }
 
 export class PreferencesModel {
-  adultContentEnabled = false
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
-  birthDate: Date | undefined = undefined
-  homeFeed: FeedViewPreference = {
-    hideReplies: false,
-    hideRepliesByUnfollowed: false,
-    hideRepliesByLikeCount: 0,
-    hideReposts: false,
-    hideQuotePosts: false,
-    lab_mergeFeedEnabled: false, // experimental
-  }
   thread: ThreadViewPreference = {
     sort: 'oldest',
     prioritizeFollowedUsers: true,
     lab_treeViewEnabled: false, // experimental
   }
 
-  // used to linearize async modifications to state
-  lock = new AwaitLock()
-
   constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {lock: false}, {autoBind: true})
+    makeAutoObservable(this, {}, {autoBind: true})
   }
 
   serialize() {
@@ -106,7 +92,7 @@ export class PreferencesModel {
   get moderationOpts(): ModerationOpts {
     return {
       userDid: this.rootStore.session.currentSession?.did || '',
-      adultContentEnabled: this.adultContentEnabled,
+      adultContentEnabled: false,
       labels: {
         // TEMP translate old settings until this UI can be migrated -prf
         porn: tempfixLabelPref(this.contentLabels.nsfw),
