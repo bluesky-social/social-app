@@ -269,15 +269,21 @@ interface FeedSectionProps {
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
+    {
+      feed,
+      onScroll,
+      headerHeight,
+      // isScrolledDown,
+      scrollElRef,
+    },
     ref,
   ) {
-    const hasNew = false //TODO feed.hasNewLatest && !feed.isRefreshing
+    // const hasNew = false //TODO feed.hasNewLatest && !feed.isRefreshing
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
       // feed.refresh() TODO
-    }, [feed, scrollElRef, headerHeight])
+    }, [scrollElRef, headerHeight])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
