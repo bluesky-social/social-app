@@ -7,8 +7,12 @@ type RQPageParam = string | undefined
 
 export const RQKEY = (did: string) => ['profile-feedgens', did]
 
-export function useProfileFeedgensQuery(did: string) {
+export function useProfileFeedgensQuery(
+  did: string,
+  opts?: {enabled?: boolean},
+) {
   const {agent} = useSession()
+  const enabled = opts?.enabled !== false
   return useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
     Error,
@@ -27,5 +31,6 @@ export function useProfileFeedgensQuery(did: string) {
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled,
   })
 }

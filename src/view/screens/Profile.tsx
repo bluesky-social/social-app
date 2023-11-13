@@ -224,67 +224,79 @@ function ProfileScreenLoaded({
         items={sectionTitles}
         onPageSelected={onPageSelected}
         renderHeader={renderHeader}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={null}
             feed={`author|${profile.did}|posts_no_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
+            isFocused={isFocused}
             isScrolledDown={isScrolledDown}
             scrollElRef={scrollElRef}
           />
         )}
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={null}
             feed={`author|${profile.did}|posts_with_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
+            isFocused={isFocused}
             isScrolledDown={isScrolledDown}
             scrollElRef={scrollElRef}
           />
         )}
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={null}
             feed={`author|${profile.did}|posts_with_media`}
             onScroll={onScroll}
             headerHeight={headerHeight}
+            isFocused={isFocused}
             isScrolledDown={isScrolledDown}
             scrollElRef={scrollElRef}
           />
         )}
         {showLikesTab
-          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          ? ({
+              onScroll,
+              headerHeight,
+              isFocused,
+              isScrolledDown,
+              scrollElRef,
+            }) => (
               <FeedSection
                 ref={null}
                 feed={`likes|${profile.did}`}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
+                isFocused={isFocused}
                 isScrolledDown={isScrolledDown}
                 scrollElRef={scrollElRef}
               />
             )
           : null}
         {showFeedsTab
-          ? ({onScroll, headerHeight, scrollElRef}) => (
+          ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
                 did={profile.did}
                 scrollElRef={scrollElRef}
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
+                enabled={isFocused}
               />
             )
           : null}
         {showListsTab
-          ? ({onScroll, headerHeight, scrollElRef}) => (
+          ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 did={profile.did}
                 scrollElRef={scrollElRef}
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
+                enabled={isFocused}
               />
             )
           : null}
@@ -305,6 +317,7 @@ interface FeedSectionProps {
   feed: FeedDescriptor
   onScroll: OnScrollHandler
   headerHeight: number
+  isFocused: boolean
   isScrolledDown: boolean
   scrollElRef: any /* TODO */
 }
@@ -314,6 +327,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       feed,
       onScroll,
       headerHeight,
+      isFocused,
       // isScrolledDown,
       scrollElRef,
     },
@@ -343,6 +357,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
+          enabled={isFocused}
         />
       </View>
     )
