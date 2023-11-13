@@ -10,10 +10,8 @@ import {Button} from 'view/com/util/forms/Button'
 import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useQuery} from '@tanstack/react-query'
-import {useStores} from 'state/index'
-import {FeedSourceModel} from 'state/models/content/feed-source'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {useSuggestedFeedsQuery} from '#/state/queries/suggested-feeds'
 
 type Props = {
   next: () => void
@@ -21,35 +19,11 @@ type Props = {
 export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
   next,
 }: Props) {
-  const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
-  const {isLoading, data: recommendedFeeds} = useQuery({
-    staleTime: Infinity, // fixed list rn, never refetch
-    queryKey: ['onboarding', 'recommended_feeds'],
-    async queryFn() {
-      try {
-        const {
-          data: {feeds},
-          success,
-        } = await store.agent.app.bsky.feed.getSuggestedFeeds()
+  const {isLoading, data} = useSuggestedFeedsQuery()
 
-        if (!success) {
-          return []
-        }
-
-        return (feeds.length ? feeds : []).map(feed => {
-          const model = new FeedSourceModel(store, feed.uri)
-          model.hydrateFeedGenerator(feed)
-          return model
-        })
-      } catch (e) {
-        return []
-      }
-    },
-  })
-
-  const hasFeeds = recommendedFeeds && recommendedFeeds.length
+  const hasFeeds = data && data?.pages?.[0]?.feeds?.length
 
   const title = (
     <>
@@ -118,7 +92,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           contentStyle={{paddingHorizontal: 0}}>
           {hasFeeds ? (
             <FlatList
-              data={recommendedFeeds}
+              data={data.pages[0].feeds}
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
@@ -146,7 +120,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
 
           {hasFeeds ? (
             <FlatList
-              data={recommendedFeeds}
+              data={data.pages[0].feeds}
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
