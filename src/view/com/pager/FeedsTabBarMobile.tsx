@@ -3,7 +3,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useHomeTabs} from 'lib/hooks/useHomeTabs'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Link} from '../util/Link'
@@ -19,6 +18,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useSession} from '#/state/session'
+import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -27,10 +27,11 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   const {isSandbox} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
-  const items = useHomeTabs()
+  const feeds = usePinnedFeedsInfos()
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
+  const items = feeds.map(f => f.displayName)
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)

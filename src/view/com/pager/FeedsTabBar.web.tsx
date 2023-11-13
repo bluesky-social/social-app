@@ -4,12 +4,12 @@ import Animated from 'react-native-reanimated'
 import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useHomeTabs} from 'lib/hooks/useHomeTabs'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
 export const FeedsTabBar = observer(function FeedsTabBarImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -27,10 +27,11 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
 const FeedsTabBarTablet = observer(function FeedsTabBarTabletImpl(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const items = useHomeTabs()
+  const feeds = usePinnedFeedsInfos()
   const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
+  const items = feeds.map(f => f.displayName)
 
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
