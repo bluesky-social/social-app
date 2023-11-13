@@ -5,7 +5,6 @@ import {
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {NotificationsFeedModel} from './feeds/notifications'
-import {MyFeedsUIModel} from './ui/my-feeds'
 import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
 import {logger} from '#/logger'
@@ -22,7 +21,6 @@ export class MeModel {
   followsCount: number | undefined
   followersCount: number | undefined
   notifications: NotificationsFeedModel
-  myFeeds: MyFeedsUIModel
   follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
@@ -40,13 +38,11 @@ export class MeModel {
       {autoBind: true},
     )
     this.notifications = new NotificationsFeedModel(this.rootStore)
-    this.myFeeds = new MyFeedsUIModel(this.rootStore)
     this.follows = new MyFollowsCache(this.rootStore)
   }
 
   clear() {
     this.notifications.clear()
-    this.myFeeds.clear()
     this.follows.clear()
     this.rootStore.profiles.cache.clear()
     this.rootStore.posts.cache.clear()
@@ -113,8 +109,6 @@ export class MeModel {
           error: e,
         })
       })
-      this.myFeeds.clear()
-      /* dont await */ this.myFeeds.saved.refresh()
       this.rootStore.emitSessionLoaded()
       await this.fetchInviteCodes()
       await this.fetchAppPasswords()

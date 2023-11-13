@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, RefreshControl, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View, RefreshControl} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -7,7 +7,6 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {FAB} from 'view/com/util/fab/FAB'
 import {Link} from 'view/com/util/Link'
 import {NativeStackScreenProps, FeedsTabNavigatorParams} from 'lib/routes/types'
-import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -22,266 +21,501 @@ import {
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
-import {MyFeedsItem} from 'state/models/ui/my-feeds'
-import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FlatList} from 'view/com/util/Views'
 import {useFocusEffect} from '@react-navigation/native'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {NewFeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {
+  useFeedSourceInfoQuery,
+  useGetPopularFeedsQuery,
+  useSearchPopularFeedsMutation,
+} from '#/state/queries/feed'
+import {cleanError} from 'lib/strings/errors'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
-export const FeedsScreen = withAuthRequired(
-  observer<Props>(function FeedsScreenImpl({}: Props) {
-    const pal = usePalette('default')
-    const store = useStores()
-    const {_} = useLingui()
-    const setMinimalShellMode = useSetMinimalShellMode()
-    const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-    const myFeeds = store.me.myFeeds
-    const [query, setQuery] = React.useState<string>('')
-    const debouncedSearchFeeds = React.useMemo(
-      () => debounce(q => myFeeds.discovery.search(q), 500), // debounce for 500ms
-      [myFeeds],
-    )
 
-    useFocusEffect(
-      React.useCallback(() => {
-        setMinimalShellMode(false)
-        myFeeds.setup()
+type FlatlistSlice =
+  | {
+      type: 'error'
+      key: string
+      error: string
+    }
+  | {
+      type: 'savedFeedsHeader'
+      key: string
+    }
+  | {
+      type: 'savedFeedsLoading'
+      key: string
+      // pendingItems: number,
+    }
+  | {
+      type: 'savedFeedNoResults'
+      key: string
+    }
+  | {
+      type: 'savedFeed'
+      key: string
+      feedUri: string
+    }
+  | {
+      type: 'savedFeedsLoadMore'
+      key: string
+    }
+  | {
+      type: 'popularFeedsHeader'
+      key: string
+    }
+  | {
+      type: 'popularFeedsLoading'
+      key: string
+    }
+  | {
+      type: 'popularFeedsNoResults'
+      key: string
+    }
+  | {
+      type: 'popularFeed'
+      key: string
+      feedUri: string
+    }
+  | {
+      type: 'popularFeedsLoadingMore'
+      key: string
+    }
 
-        const softResetSub = store.onScreenSoftReset(() => myFeeds.refresh())
-        return () => {
-          softResetSub.remove()
-        }
-      }, [store, myFeeds, setMinimalShellMode]),
-    )
-    React.useEffect(() => {
-      // watch for changes to saved/pinned feeds
-      return myFeeds.registerListeners()
-    }, [myFeeds])
+export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
+  _props: Props,
+) {
+  const store = useStores()
+  const pal = usePalette('default')
+  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const [query, setQuery] = React.useState('')
+  const [isPTR, setIsPTR] = React.useState(false)
+  const {
+    data: preferences,
+    isLoading: isPreferencesLoading,
+    error: preferencesError,
+  } = usePreferencesQuery()
+  const {
+    data: popularFeeds,
+    isFetching: isPopularFeedsFetching,
+    error: popularFeedsError,
+    refetch: refetchPopularFeeds,
+    fetchNextPage: fetchNextPopularFeedsPage,
+    isFetchingNextPage: isPopularFeedsFetchingNextPage,
+  } = useGetPopularFeedsQuery()
+  const {_} = useLingui()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {
+    data: searchResults,
+    mutate: search,
+    reset: resetSearch,
+    isPending: isSearchPending,
+    error: searchError,
+  } = useSearchPopularFeedsMutation()
 
-    const onPressCompose = React.useCallback(() => {
-      store.shell.openComposer({})
-    }, [store])
-    const onChangeQuery = React.useCallback(
-      (text: string) => {
-        setQuery(text)
-        if (text.length > 1) {
-          debouncedSearchFeeds(text)
+  /**
+   * A search query is present. We may not have search results yet.
+   */
+  const isUserSearching = query.length > 1
+  const debouncedSearch = React.useMemo(
+    () => debounce(q => search(q), 500), // debounce for 500ms
+    [search],
+  )
+  const onPressCompose = React.useCallback(() => {
+    store.shell.openComposer({})
+  }, [store])
+  const onChangeQuery = React.useCallback(
+    (text: string) => {
+      setQuery(text)
+      if (text.length > 1) {
+        debouncedSearch(text)
+      } else {
+        refetchPopularFeeds()
+        resetSearch()
+      }
+    },
+    [setQuery, refetchPopularFeeds, debouncedSearch, resetSearch],
+  )
+  const onPressCancelSearch = React.useCallback(() => {
+    setQuery('')
+    refetchPopularFeeds()
+    resetSearch()
+  }, [refetchPopularFeeds, setQuery, resetSearch])
+  const onSubmitQuery = React.useCallback(() => {
+    debouncedSearch(query)
+  }, [query, debouncedSearch])
+  const onPullToRefresh = React.useCallback(async () => {
+    setIsPTR(true)
+    await refetchPopularFeeds()
+    setIsPTR(false)
+  }, [setIsPTR, refetchPopularFeeds])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
+
+  const items = React.useMemo(() => {
+    let slices: FlatlistSlice[] = []
+
+    slices.push({
+      key: 'savedFeedsHeader',
+      type: 'savedFeedsHeader',
+    })
+
+    if (preferencesError) {
+      slices.push({
+        key: 'savedFeedsError',
+        type: 'error',
+        error: cleanError(preferencesError.toString()),
+      })
+    } else {
+      if (isPreferencesLoading || !preferences?.feeds?.saved) {
+        slices.push({
+          key: 'savedFeedsLoading',
+          type: 'savedFeedsLoading',
+          // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
+        })
+      } else {
+        if (preferences?.feeds?.saved.length === 0) {
+          slices.push({
+            key: 'savedFeedNoResults',
+            type: 'savedFeedNoResults',
+          })
         } else {
-          myFeeds.discovery.refresh()
-        }
-      },
-      [debouncedSearchFeeds, myFeeds.discovery],
-    )
-    const onPressCancelSearch = React.useCallback(() => {
-      setQuery('')
-      myFeeds.discovery.refresh()
-    }, [myFeeds])
-    const onSubmitQuery = React.useCallback(() => {
-      debouncedSearchFeeds(query)
-      debouncedSearchFeeds.flush()
-    }, [debouncedSearchFeeds, query])
+          const {saved, pinned} = preferences.feeds
 
-    const renderHeaderBtn = React.useCallback(() => {
-      return (
-        <Link
-          href="/settings/saved-feeds"
-          hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit Saved Feeds`)}
-          accessibilityHint="Opens screen to edit Saved Feeds">
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-        </Link>
-      )
-    }, [pal, _])
-
-    const onRefresh = React.useCallback(() => {
-      myFeeds.refresh()
-    }, [myFeeds])
-
-    const renderItem = React.useCallback(
-      ({item}: {item: MyFeedsItem}) => {
-        if (item.type === 'discover-feeds-loading') {
-          return <FeedFeedLoadingPlaceholder />
-        } else if (item.type === 'spinner') {
-          return (
-            <View style={s.p10}>
-              <ActivityIndicator />
-            </View>
+          slices = slices.concat(
+            pinned.map(uri => ({
+              key: `savedFeed:${uri}`,
+              type: 'savedFeed',
+              feedUri: uri,
+            })),
           )
-        } else if (item.type === 'error') {
-          return <ErrorMessage message={item.error} />
-        } else if (item.type === 'saved-feeds-header') {
-          if (!isMobile) {
-            return (
-              <View
-                style={[
-                  pal.view,
-                  styles.header,
-                  pal.border,
-                  {
-                    borderBottomWidth: 1,
-                  },
-                ]}>
-                <Text type="title-lg" style={[pal.text, s.bold]}>
-                  <Trans>My Feeds</Trans>
-                </Text>
-                <Link
-                  href="/settings/saved-feeds"
-                  accessibilityLabel={_(msg`Edit My Feeds`)}
-                  accessibilityHint="">
-                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-                </Link>
-              </View>
+
+          slices = slices.concat(
+            saved
+              .filter(uri => !pinned.includes(uri))
+              .map(uri => ({
+                key: `savedFeed:${uri}`,
+                type: 'savedFeed',
+                feedUri: uri,
+              })),
+          )
+        }
+      }
+    }
+
+    slices.push({
+      key: 'popularFeedsHeader',
+      type: 'popularFeedsHeader',
+    })
+
+    if (popularFeedsError || searchError) {
+      slices.push({
+        key: 'popularFeedsError',
+        type: 'error',
+        error: cleanError(
+          popularFeedsError?.toString() ?? searchError?.toString() ?? '',
+        ),
+      })
+    } else {
+      if (isUserSearching) {
+        if (isSearchPending || !searchResults) {
+          slices.push({
+            key: 'popularFeedsLoading',
+            type: 'popularFeedsLoading',
+          })
+        } else {
+          if (!searchResults || searchResults?.length === 0) {
+            slices.push({
+              key: 'popularFeedsNoResults',
+              type: 'popularFeedsNoResults',
+            })
+          } else {
+            slices = slices.concat(
+              searchResults.map(feed => ({
+                key: `popularFeed:${feed.uri}`,
+                type: 'popularFeed',
+                feedUri: feed.uri,
+              })),
             )
           }
-          return <View />
-        } else if (item.type === 'saved-feeds-loading') {
-          return (
-            <>
-              {Array.from(Array(item.numItems)).map((_i, i) => (
-                <SavedFeedLoadingPlaceholder key={`placeholder-${i}`} />
-              ))}
-            </>
-          )
-        } else if (item.type === 'saved-feed') {
-          return <SavedFeed feed={item.feed} />
-        } else if (item.type === 'discover-feeds-header') {
-          return (
-            <>
-              <View
-                style={[
-                  pal.view,
-                  styles.header,
-                  {
-                    marginTop: 16,
-                    paddingLeft: isMobile ? 12 : undefined,
-                    paddingRight: 10,
-                    paddingBottom: isMobile ? 6 : undefined,
-                  },
-                ]}>
-                <Text type="title-lg" style={[pal.text, s.bold]}>
-                  <Trans>Discover new feeds</Trans>
-                </Text>
-                {!isMobile && (
-                  <SearchInput
-                    query={query}
-                    onChangeQuery={onChangeQuery}
-                    onPressCancelSearch={onPressCancelSearch}
-                    onSubmitQuery={onSubmitQuery}
-                    style={{flex: 1, maxWidth: 250}}
-                  />
-                )}
-              </View>
-              {isMobile && (
-                <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
-                  <SearchInput
-                    query={query}
-                    onChangeQuery={onChangeQuery}
-                    onPressCancelSearch={onPressCancelSearch}
-                    onSubmitQuery={onSubmitQuery}
-                  />
-                </View>
-              )}
-            </>
-          )
-        } else if (item.type === 'discover-feed') {
-          return (
-            <FeedSourceCard
-              item={item.feed}
-              showSaveBtn
-              showDescription
-              showLikes
-            />
-          )
-        } else if (item.type === 'discover-feeds-no-results') {
+        }
+      } else {
+        if (isPopularFeedsFetching && !popularFeeds?.pages) {
+          slices.push({
+            key: 'popularFeedsLoading',
+            type: 'popularFeedsLoading',
+          })
+        } else {
+          if (
+            !popularFeeds?.pages ||
+            popularFeeds?.pages[0]?.feeds?.length === 0
+          ) {
+            slices.push({
+              key: 'popularFeedsNoResults',
+              type: 'popularFeedsNoResults',
+            })
+          } else {
+            for (const page of popularFeeds.pages || []) {
+              slices = slices.concat(
+                page.feeds
+                  .filter(feed => !preferences?.feeds?.saved.includes(feed.uri))
+                  .map(feed => ({
+                    key: `popularFeed:${feed.uri}`,
+                    type: 'popularFeed',
+                    feedUri: feed.uri,
+                  })),
+              )
+            }
+
+            if (isPopularFeedsFetchingNextPage) {
+              slices.push({
+                key: 'popularFeedsLoadingMore',
+                type: 'popularFeedsLoadingMore',
+              })
+            }
+          }
+        }
+      }
+    }
+
+    return slices
+  }, [
+    preferences,
+    isPreferencesLoading,
+    preferencesError,
+    popularFeeds,
+    isPopularFeedsFetching,
+    popularFeedsError,
+    isPopularFeedsFetchingNextPage,
+    searchResults,
+    isSearchPending,
+    searchError,
+    isUserSearching,
+  ])
+
+  const renderHeaderBtn = React.useCallback(() => {
+    return (
+      <Link
+        href="/settings/saved-feeds"
+        hitSlop={10}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Edit Saved Feeds`)}
+        accessibilityHint="Opens screen to edit Saved Feeds">
+        <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+      </Link>
+    )
+  }, [pal, _])
+
+  const renderItem = React.useCallback(
+    ({item}: {item: FlatlistSlice}) => {
+      if (item.type === 'error') {
+        return <ErrorMessage message={item.error} />
+      } else if (
+        item.type === 'popularFeedsLoadingMore' ||
+        item.type === 'savedFeedsLoading'
+      ) {
+        return (
+          <View style={s.p10}>
+            <ActivityIndicator />
+          </View>
+        )
+      } else if (item.type === 'savedFeedsHeader') {
+        if (!isMobile) {
           return (
             <View
-              style={{
-                paddingHorizontal: 16,
-                paddingTop: 10,
-                paddingBottom: '150%',
-              }}>
-              <Text type="lg" style={pal.textLight}>
-                <Trans>No results found for "{query}"</Trans>
+              style={[
+                pal.view,
+                styles.header,
+                pal.border,
+                {
+                  borderBottomWidth: 1,
+                },
+              ]}>
+              <Text type="title-lg" style={[pal.text, s.bold]}>
+                <Trans>My Feeds</Trans>
               </Text>
+              <Link
+                href="/settings/saved-feeds"
+                accessibilityLabel={_(msg`Edit My Feeds`)}
+                accessibilityHint="">
+                <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+              </Link>
             </View>
           )
         }
-        return null
-      },
-      [
-        isMobile,
-        pal,
-        query,
-        onChangeQuery,
-        onPressCancelSearch,
-        onSubmitQuery,
-        _,
-      ],
-    )
+        return <View />
+      } else if (item.type === 'savedFeedNoResults') {
+        return (
+          <View
+            style={{
+              paddingHorizontal: 16,
+              paddingTop: 10,
+            }}>
+            <Text type="lg" style={pal.textLight}>
+              <Trans>You don't have any saved feeds!</Trans>
+            </Text>
+          </View>
+        )
+      } else if (item.type === 'savedFeed') {
+        return <SavedFeed feedUri={item.feedUri} />
+      } else if (item.type === 'popularFeedsHeader') {
+        return (
+          <>
+            <View
+              style={[
+                pal.view,
+                styles.header,
+                {
+                  marginTop: 16,
+                  paddingLeft: isMobile ? 12 : undefined,
+                  paddingRight: 10,
+                  paddingBottom: isMobile ? 6 : undefined,
+                },
+              ]}>
+              <Text type="title-lg" style={[pal.text, s.bold]}>
+                <Trans>Discover new feeds</Trans>
+              </Text>
 
-    return (
-      <View style={[pal.view, styles.container]}>
-        {isMobile && (
-          <ViewHeader
-            title="Feeds"
-            canGoBack={false}
-            renderButton={renderHeaderBtn}
-            showBorder
+              {!isMobile && (
+                <SearchInput
+                  query={query}
+                  onChangeQuery={onChangeQuery}
+                  onPressCancelSearch={onPressCancelSearch}
+                  onSubmitQuery={onSubmitQuery}
+                  style={{flex: 1, maxWidth: 250}}
+                />
+              )}
+            </View>
+
+            {isMobile && (
+              <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
+                <SearchInput
+                  query={query}
+                  onChangeQuery={onChangeQuery}
+                  onPressCancelSearch={onPressCancelSearch}
+                  onSubmitQuery={onSubmitQuery}
+                />
+              </View>
+            )}
+          </>
+        )
+      } else if (item.type === 'popularFeedsLoading') {
+        return <FeedFeedLoadingPlaceholder />
+      } else if (item.type === 'popularFeed') {
+        return (
+          <NewFeedSourceCard
+            feedUri={item.feedUri}
+            showSaveBtn
+            showDescription
+            showLikes
           />
-        )}
+        )
+      } else if (item.type === 'popularFeedsNoResults') {
+        return (
+          <View
+            style={{
+              paddingHorizontal: 16,
+              paddingTop: 10,
+              paddingBottom: '150%',
+            }}>
+            <Text type="lg" style={pal.textLight}>
+              <Trans>No results found for "{query}"</Trans>
+            </Text>
+          </View>
+        )
+      }
+      return null
+    },
+    [
+      _,
+      isMobile,
+      pal,
+      query,
+      onChangeQuery,
+      onPressCancelSearch,
+      onSubmitQuery,
+    ],
+  )
 
-        <FlatList
-          style={[!isTabletOrDesktop && s.flex1, styles.list]}
-          data={myFeeds.items}
-          keyExtractor={item => item._reactKey}
-          contentContainerStyle={styles.contentContainer}
-          refreshControl={
-            <RefreshControl
-              refreshing={myFeeds.isRefreshing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          renderItem={renderItem}
-          initialNumToRender={10}
-          onEndReached={() => myFeeds.loadMore()}
-          extraData={myFeeds.isLoading}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
+  return (
+    <View style={[pal.view, styles.container]}>
+      {isMobile && (
+        <ViewHeader
+          title="Feeds"
+          canGoBack={false}
+          renderButton={renderHeaderBtn}
+          showBorder
         />
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
-        />
-      </View>
-    )
-  }),
-)
+      )}
 
-function SavedFeed({feed}: {feed: FeedSourceModel}) {
+      {preferences ? <View /> : <ActivityIndicator />}
+
+      <FlatList
+        style={[!isTabletOrDesktop && s.flex1, styles.list]}
+        data={items}
+        keyExtractor={item => item.key}
+        contentContainerStyle={styles.contentContainer}
+        renderItem={renderItem}
+        refreshControl={
+          <RefreshControl
+            refreshing={isPTR}
+            onRefresh={isUserSearching ? undefined : onPullToRefresh}
+            tintColor={pal.colors.text}
+            titleColor={pal.colors.text}
+          />
+        }
+        initialNumToRender={10}
+        onEndReached={() =>
+          isUserSearching ? undefined : fetchNextPopularFeedsPage()
+        }
+        // @ts-ignore our .web version only -prf
+        desktopFixedHeight
+      />
+
+      <FAB
+        testID="composeFAB"
+        onPress={onPressCompose}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
+    </View>
+  )
+})
+
+function SavedFeed({feedUri}: {feedUri: string}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
+
+  if (!info)
+    return (
+      <SavedFeedLoadingPlaceholder
+        key={`savedFeedLoadingPlaceholder:${feedUri}`}
+      />
+    )
+
   return (
     <Link
-      testID={`saved-feed-${feed.displayName}`}
-      href={feed.href}
+      testID={`saved-feed-${info.displayName}`}
+      href={info.href}
       style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
       hoverStyle={pal.viewLight}
-      accessibilityLabel={feed.displayName}
+      accessibilityLabel={info.displayName}
       accessibilityHint=""
       asAnchor
       anchorNoUnderline>
-      {feed.error ? (
+      {error ? (
         <View
           style={{width: 28, flexDirection: 'row', justifyContent: 'center'}}>
           <FontAwesomeIcon
@@ -290,14 +524,14 @@ function SavedFeed({feed}: {feed: FeedSourceModel}) {
           />
         </View>
       ) : (
-        <UserAvatar type="algo" size={28} avatar={feed.avatar} />
+        <UserAvatar type="algo" size={28} avatar={info.avatar} />
       )}
       <View
         style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
         <Text type="lg-medium" style={pal.text} numberOfLines={1}>
-          {feed.displayName}
+          {info.displayName}
         </Text>
-        {feed.error ? (
+        {error ? (
           <View style={[styles.offlineSlug, pal.borderDark]}>
             <Text type="xs" style={pal.textLight}>
               <Trans>Feed offline</Trans>
