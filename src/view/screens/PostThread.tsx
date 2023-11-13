@@ -49,7 +49,7 @@ export const PostThreadScreen = withAuthRequired(
         return
       }
       const thread = queryClient.getQueryData<ThreadNode>(
-        POST_THREAD_RQKEY(resolvedUri),
+        POST_THREAD_RQKEY(resolvedUri.uri),
       )
       if (thread?.type !== 'post') {
         return
@@ -67,7 +67,7 @@ export const PostThreadScreen = withAuthRequired(
         },
         onPost: () =>
           queryClient.invalidateQueries({
-            queryKey: POST_THREAD_RQKEY(resolvedUri || ''),
+            queryKey: POST_THREAD_RQKEY(resolvedUri.uri || ''),
           }),
       })
     }, [store, queryClient, resolvedUri])
@@ -82,7 +82,7 @@ export const PostThreadScreen = withAuthRequired(
             </CenteredView>
           ) : (
             <PostThreadComponent
-              uri={resolvedUri}
+              uri={resolvedUri?.uri}
               onPressReply={onPressReply}
               treeView={!!store.preferences.thread.lab_treeViewEnabled}
             />
