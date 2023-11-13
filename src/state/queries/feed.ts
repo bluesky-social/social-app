@@ -21,39 +21,41 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 
-export type FeedSourceInfo =
-  | {
-      type: 'feed'
-      uri: string
-      route: {
-        href: string
-        name: string
-        params: Record<string, string>
-      }
-      cid: string
-      avatar: string | undefined
-      displayName: string
-      description: RichText
-      creatorDid: string
-      creatorHandle: string
-      likeCount: number | undefined
-      likeUri: string | undefined
-    }
-  | {
-      type: 'list'
-      uri: string
-      route: {
-        href: string
-        name: string
-        params: Record<string, string>
-      }
-      cid: string
-      avatar: string | undefined
-      displayName: string
-      description: RichText
-      creatorDid: string
-      creatorHandle: string
-    }
+export type FeedSourceFeedInfo = {
+  type: 'feed'
+  uri: string
+  route: {
+    href: string
+    name: string
+    params: Record<string, string>
+  }
+  cid: string
+  avatar: string | undefined
+  displayName: string
+  description: RichText
+  creatorDid: string
+  creatorHandle: string
+  likeCount: number | undefined
+  likeUri: string | undefined
+}
+
+export type FeedSourceListInfo = {
+  type: 'list'
+  uri: string
+  route: {
+    href: string
+    name: string
+    params: Record<string, string>
+  }
+  cid: string
+  avatar: string | undefined
+  displayName: string
+  description: RichText
+  creatorDid: string
+  creatorHandle: string
+}
+
+export type FeedSourceInfo = FeedSourceFeedInfo | FeedSourceListInfo
 
 export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
   'getFeedSourceInfo',

@@ -52,6 +52,7 @@ export function Button({
   accessibilityLabelledBy,
   onAccessibilityEscape,
   withLoading = false,
+  disabled = false,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
@@ -65,6 +66,7 @@ export function Button({
   accessibilityLabelledBy?: string
   onAccessibilityEscape?: () => void
   withLoading?: boolean
+  disabled?: boolean
 }>) {
   const theme = useTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
@@ -198,7 +200,7 @@ export function Button({
     <Pressable
       style={getStyle}
       onPress={onPressWrapped}
-      disabled={isLoading}
+      disabled={disabled || isLoading}
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}

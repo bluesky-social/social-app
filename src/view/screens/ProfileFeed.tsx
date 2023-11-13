@@ -17,7 +17,6 @@ import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
 import {useStores} from 'state/index'
-import {FeedSourceModel} from 'state/models/content/feed-source'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -32,7 +31,6 @@ import {FAB} from 'view/com/util/fab/FAB'
 import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {useCustomFeed} from 'lib/hooks/useCustomFeed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
@@ -40,7 +38,6 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
-import {resolveName} from 'lib/api'
 import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
@@ -53,6 +50,18 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {
+  UsePreferencesQueryResponse,
+  usePreferencesQuery,
+  useSaveFeedMutation,
+  useRemoveFeedMutation,
+  usePinFeedMutation,
+  useUnpinFeedMutation,
+} from '#/state/queries/preferences'
+import {useSession} from '#/state/session'
+import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -63,15 +72,17 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export const ProfileFeedScreen = withAuthRequired(
   observer(function ProfileFeedScreenImpl(props: Props) {
+    const {rkey, name: handleOrDid} = props.route.params
+
     const pal = usePalette('default')
-    const store = useStores()
     const {_} = useLingui()
     const navigation = useNavigation<NavigationProp>()
 
-    const {name: handleOrDid} = props.route.params
-
-    const [feedOwnerDid, setFeedOwnerDid] = React.useState<string | undefined>()
-    const [error, setError] = React.useState<string | undefined>()
+    const uri = useMemo(
+      () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
+      [rkey, handleOrDid],
+    )
+    const {error, data: resolvedUri} = useResolveUriQuery(uri)
 
     const onPressBack = React.useCallback(() => {
       if (navigation.canGoBack()) {
@@ -81,24 +92,6 @@ export const ProfileFeedScreen = withAuthRequired(
       }
     }, [navigation])
 
-    React.useEffect(() => {
-      /*
-       * We must resolve the DID of the feed owner before we can fetch the feed.
-       */
-      async function fetchDid() {
-        try {
-          const did = await resolveName(store, handleOrDid)
-          setFeedOwnerDid(did)
-        } catch (e) {
-          setError(
-            `We're sorry, but we were unable to resolve this feed. If this persists, please contact the feed creator, @${handleOrDid}.`,
-          )
-        }
-      }
-
-      fetchDid()
-    }, [store, handleOrDid, setFeedOwnerDid])
-
     if (error) {
       return (
         <CenteredView>
@@ -107,7 +100,7 @@ export const ProfileFeedScreen = withAuthRequired(
               <Trans>Could not load feed</Trans>
             </Text>
             <Text type="md" style={[pal.text, s.mb20]}>
-              {error}
+              {error.toString()}
             </Text>
 
             <View style={{flexDirection: 'row'}}>
@@ -127,8 +120,8 @@ export const ProfileFeedScreen = withAuthRequired(
       )
     }
 
-    return feedOwnerDid ? (
-      <ProfileFeedScreenInner {...props} feedOwnerDid={feedOwnerDid} />
+    return resolvedUri ? (
+      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
     ) : (
       <CenteredView>
         <View style={s.p20}>
@@ -139,255 +132,305 @@ export const ProfileFeedScreen = withAuthRequired(
   }),
 )
 
-export const ProfileFeedScreenInner = observer(
-  function ProfileFeedScreenInnerImpl({
-    route,
-    feedOwnerDid,
-  }: Props & {feedOwnerDid: string}) {
-    const {openModal} = useModalControls()
-    const pal = usePalette('default')
-    const store = useStores()
-    const {track} = useAnalytics()
-    const {_} = useLingui()
-    const feedSectionRef = React.useRef<SectionRef>(null)
-    const {rkey, name: handleOrDid} = route.params
-    const uri = useMemo(
-      () => makeRecordUri(feedOwnerDid, 'app.bsky.feed.generator', rkey),
-      [rkey, feedOwnerDid],
-    )
-    const feedInfo = useCustomFeed(uri)
-    const isPinned = store.preferences.isPinnedFeed(uri)
-    useSetTitle(feedInfo?.displayName)
+function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
+  const {data: preferences} = usePreferencesQuery()
+  const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
 
-    // events
-    // =
-
-    const onToggleSaved = React.useCallback(async () => {
-      try {
-        Haptics.default()
-        if (feedInfo?.isSaved) {
-          await feedInfo?.unsave()
-        } else {
-          await feedInfo?.save()
-        }
-      } catch (err) {
-        Toast.show(
-          'There was an an issue updating your feeds, please check your internet connection and try again.',
-        )
-        logger.error('Failed up update feeds', {error: err})
-      }
-    }, [feedInfo])
-
-    const onToggleLiked = React.useCallback(async () => {
-      Haptics.default()
-      try {
-        if (feedInfo?.isLiked) {
-          await feedInfo?.unlike()
-        } else {
-          await feedInfo?.like()
-        }
-      } catch (err) {
-        Toast.show(
-          'There was an an issue contacting the server, please check your internet connection and try again.',
-        )
-        logger.error('Failed up toggle like', {error: err})
-      }
-    }, [feedInfo])
-
-    const onTogglePinned = React.useCallback(async () => {
-      Haptics.default()
-      if (feedInfo) {
-        feedInfo.togglePin().catch(e => {
-          Toast.show('There was an issue contacting the server')
-          logger.error('Failed to toggle pinned feed', {error: e})
-        })
-      }
-    }, [feedInfo])
-
-    const onPressShare = React.useCallback(() => {
-      const url = toShareUrl(`/profile/${handleOrDid}/feed/${rkey}`)
-      shareUrl(url)
-      track('CustomFeed:Share')
-    }, [handleOrDid, rkey, track])
-
-    const onPressReport = React.useCallback(() => {
-      if (!feedInfo) return
-      openModal({
-        name: 'report',
-        uri: feedInfo.uri,
-        cid: feedInfo.cid,
-      })
-    }, [openModal, feedInfo])
-
-    const onCurrentPageSelected = React.useCallback(
-      (index: number) => {
-        if (index === 0) {
-          feedSectionRef.current?.scrollToTop()
-        }
-      },
-      [feedSectionRef],
-    )
-
-    // render
-    // =
-
-    const dropdownItems: DropdownItem[] = React.useMemo(() => {
-      return [
-        {
-          testID: 'feedHeaderDropdownToggleSavedBtn',
-          label: feedInfo?.isSaved ? 'Remove from my feeds' : 'Add to my feeds',
-          onPress: onToggleSaved,
-          icon: feedInfo?.isSaved
-            ? {
-                ios: {
-                  name: 'trash',
-                },
-                android: 'ic_delete',
-                web: ['far', 'trash-can'],
-              }
-            : {
-                ios: {
-                  name: 'plus',
-                },
-                android: '',
-                web: 'plus',
-              },
-        },
-        {
-          testID: 'feedHeaderDropdownReportBtn',
-          label: 'Report feed',
-          onPress: onPressReport,
-          icon: {
-            ios: {
-              name: 'exclamationmark.triangle',
-            },
-            android: 'ic_menu_report_image',
-            web: 'circle-exclamation',
-          },
-        },
-        {
-          testID: 'feedHeaderDropdownShareBtn',
-          label: 'Share link',
-          onPress: onPressShare,
-          icon: {
-            ios: {
-              name: 'square.and.arrow.up',
-            },
-            android: 'ic_menu_share',
-            web: 'share',
-          },
-        },
-      ] as DropdownItem[]
-    }, [feedInfo, onToggleSaved, onPressReport, onPressShare])
-
-    const renderHeader = useCallback(() => {
-      return (
-        <ProfileSubpageHeader
-          isLoading={!feedInfo?.hasLoaded}
-          href={makeCustomFeedLink(feedOwnerDid, rkey)}
-          title={feedInfo?.displayName}
-          avatar={feedInfo?.avatar}
-          isOwner={feedInfo?.isOwner}
-          creator={
-            feedInfo
-              ? {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle}
-              : undefined
-          }
-          avatarType="algo">
-          {feedInfo && (
-            <>
-              <Button
-                type="default"
-                label={feedInfo?.isSaved ? 'Unsave' : 'Save'}
-                onPress={onToggleSaved}
-                style={styles.btn}
-              />
-              <Button
-                type={isPinned ? 'default' : 'inverted'}
-                label={isPinned ? 'Unpin' : 'Pin to home'}
-                onPress={onTogglePinned}
-                style={styles.btn}
-              />
-            </>
-          )}
-          <NativeDropdown
-            testID="headerDropdownBtn"
-            items={dropdownItems}
-            accessibilityLabel={_(msg`More options`)}
-            accessibilityHint="">
-            <View style={[pal.viewLight, styles.btn]}>
-              <FontAwesomeIcon
-                icon="ellipsis"
-                size={20}
-                color={pal.colors.text}
-              />
-            </View>
-          </NativeDropdown>
-        </ProfileSubpageHeader>
-      )
-    }, [
-      pal,
-      feedOwnerDid,
-      rkey,
-      feedInfo,
-      isPinned,
-      onTogglePinned,
-      onToggleSaved,
-      dropdownItems,
-      _,
-    ])
-
+  if (!preferences || !info) {
     return (
-      <View style={s.hContentRegion}>
-        <PagerWithHeader
-          items={SECTION_TITLES}
-          isHeaderReady={feedInfo?.hasLoaded ?? false}
-          renderHeader={renderHeader}
-          onCurrentPageSelected={onCurrentPageSelected}>
-          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-            <FeedSection
-              ref={feedSectionRef}
-              feed={`feedgen|${uri}`}
-              onScroll={onScroll}
-              headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
-              scrollElRef={
-                scrollElRef as React.MutableRefObject<FlatList<any> | null>
-              }
-            />
-          )}
-          {({onScroll, headerHeight, scrollElRef}) => (
-            <AboutSection
-              feedOwnerDid={feedOwnerDid}
-              feedRkey={rkey}
-              feedInfo={feedInfo}
-              headerHeight={headerHeight}
-              onToggleLiked={onToggleLiked}
-              onScroll={onScroll}
-              scrollElRef={
-                scrollElRef as React.MutableRefObject<ScrollView | null>
-              }
-            />
-          )}
-        </PagerWithHeader>
-        <FAB
-          testID="composeFAB"
-          onPress={() => store.shell.openComposer({})}
-          icon={
-            <ComposeIcon2
-              strokeWidth={1.5}
-              size={29}
-              style={{color: 'white'}}
-            />
-          }
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
-        />
-      </View>
+      <CenteredView>
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
+      </CenteredView>
     )
-  },
-)
+  }
+
+  return (
+    <ProfileFeedScreenInner
+      preferences={preferences}
+      feedInfo={info as FeedSourceFeedInfo}
+    />
+  )
+}
+
+export const ProfileFeedScreenInner = function ProfileFeedScreenInnerImpl({
+  preferences,
+  feedInfo,
+}: {
+  preferences: UsePreferencesQueryResponse
+  feedInfo: FeedSourceFeedInfo
+}) {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const store = useStores()
+  const {currentAccount} = useSession()
+  const {openModal} = useModalControls()
+  const {track} = useAnalytics()
+  const feedSectionRef = React.useRef<SectionRef>(null)
+
+  const {
+    mutateAsync: saveFeed,
+    variables: savedFeed,
+    reset: resetSaveFeed,
+    isPending: isSavePending,
+  } = useSaveFeedMutation()
+  const {
+    mutateAsync: removeFeed,
+    variables: removedFeed,
+    reset: resetRemoveFeed,
+    isPending: isRemovePending,
+  } = useRemoveFeedMutation()
+  const {
+    mutateAsync: pinFeed,
+    variables: pinnedFeed,
+    reset: resetPinFeed,
+    isPending: isPinPending,
+  } = usePinFeedMutation()
+  const {
+    mutateAsync: unpinFeed,
+    variables: unpinnedFeed,
+    reset: resetUnpinFeed,
+    isPending: isUnpinPending,
+  } = useUnpinFeedMutation()
+
+  const isSaved =
+    !removedFeed &&
+    (!!savedFeed || preferences.feeds.saved.includes(feedInfo.uri))
+  const isPinned =
+    !unpinnedFeed &&
+    (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
+
+  useSetTitle(feedInfo?.displayName)
+
+  const onToggleSaved = React.useCallback(async () => {
+    try {
+      Haptics.default()
+
+      if (isSaved) {
+        await removeFeed({uri: feedInfo.uri})
+        resetRemoveFeed()
+      } else {
+        await saveFeed({uri: feedInfo.uri})
+        resetSaveFeed()
+      }
+    } catch (err) {
+      Toast.show(
+        'There was an an issue updating your feeds, please check your internet connection and try again.',
+      )
+      logger.error('Failed up update feeds', {error: err})
+    }
+  }, [feedInfo, isSaved, saveFeed, removeFeed, resetSaveFeed, resetRemoveFeed])
+
+  const onTogglePinned = React.useCallback(async () => {
+    try {
+      Haptics.default()
+
+      if (isPinned) {
+        await unpinFeed({uri: feedInfo.uri})
+        resetUnpinFeed()
+      } else {
+        await pinFeed({uri: feedInfo.uri})
+        resetPinFeed()
+      }
+    } catch (e) {
+      Toast.show('There was an issue contacting the server')
+      logger.error('Failed to toggle pinned feed', {error: e})
+    }
+  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed])
+
+  const onPressShare = React.useCallback(() => {
+    const url = toShareUrl(feedInfo.route.href)
+    shareUrl(url)
+    track('CustomFeed:Share')
+  }, [feedInfo, track])
+
+  const onPressReport = React.useCallback(() => {
+    if (!feedInfo) return
+    openModal({
+      name: 'report',
+      uri: feedInfo.uri,
+      cid: feedInfo.cid,
+    })
+  }, [openModal, feedInfo])
+
+  const onCurrentPageSelected = React.useCallback(
+    (index: number) => {
+      if (index === 0) {
+        feedSectionRef.current?.scrollToTop()
+      }
+    },
+    [feedSectionRef],
+  )
+
+  // render
+  // =
+
+  const dropdownItems: DropdownItem[] = React.useMemo(() => {
+    return [
+      {
+        testID: 'feedHeaderDropdownToggleSavedBtn',
+        label: isSaved ? 'Remove from my feeds' : 'Add to my feeds',
+        onPress: isSavePending || isRemovePending ? undefined : onToggleSaved,
+        icon: isSaved
+          ? {
+              ios: {
+                name: 'trash',
+              },
+              android: 'ic_delete',
+              web: ['far', 'trash-can'],
+            }
+          : {
+              ios: {
+                name: 'plus',
+              },
+              android: '',
+              web: 'plus',
+            },
+      },
+      {
+        testID: 'feedHeaderDropdownReportBtn',
+        label: 'Report feed',
+        onPress: onPressReport,
+        icon: {
+          ios: {
+            name: 'exclamationmark.triangle',
+          },
+          android: 'ic_menu_report_image',
+          web: 'circle-exclamation',
+        },
+      },
+      {
+        testID: 'feedHeaderDropdownShareBtn',
+        label: 'Share link',
+        onPress: onPressShare,
+        icon: {
+          ios: {
+            name: 'square.and.arrow.up',
+          },
+          android: 'ic_menu_share',
+          web: 'share',
+        },
+      },
+    ] as DropdownItem[]
+  }, [
+    onToggleSaved,
+    onPressReport,
+    onPressShare,
+    isSaved,
+    isSavePending,
+    isRemovePending,
+  ])
+
+  const renderHeader = useCallback(() => {
+    return (
+      <ProfileSubpageHeader
+        isLoading={false}
+        href={feedInfo.route.href}
+        title={feedInfo?.displayName}
+        avatar={feedInfo?.avatar}
+        isOwner={feedInfo.creatorDid === currentAccount?.did}
+        creator={
+          feedInfo
+            ? {did: feedInfo.creatorDid, handle: feedInfo.creatorHandle}
+            : undefined
+        }
+        avatarType="algo">
+        {feedInfo && (
+          <>
+            <Button
+              disabled={isSavePending || isRemovePending}
+              type="default"
+              label={isSaved ? 'Unsave' : 'Save'}
+              onPress={onToggleSaved}
+              style={styles.btn}
+            />
+            <Button
+              disabled={isPinPending || isUnpinPending}
+              type={isPinned ? 'default' : 'inverted'}
+              label={isPinned ? 'Unpin' : 'Pin to home'}
+              onPress={onTogglePinned}
+              style={styles.btn}
+            />
+          </>
+        )}
+        <NativeDropdown
+          testID="headerDropdownBtn"
+          items={dropdownItems}
+          accessibilityLabel={_(msg`More options`)}
+          accessibilityHint="">
+          <View style={[pal.viewLight, styles.btn]}>
+            <FontAwesomeIcon
+              icon="ellipsis"
+              size={20}
+              color={pal.colors.text}
+            />
+          </View>
+        </NativeDropdown>
+      </ProfileSubpageHeader>
+    )
+  }, [
+    _,
+    pal,
+    feedInfo,
+    isPinned,
+    onTogglePinned,
+    onToggleSaved,
+    dropdownItems,
+    currentAccount?.did,
+    isPinPending,
+    isRemovePending,
+    isSavePending,
+    isSaved,
+    isUnpinPending,
+  ])
+
+  return (
+    <View style={s.hContentRegion}>
+      <PagerWithHeader
+        items={SECTION_TITLES}
+        isHeaderReady={true}
+        renderHeader={renderHeader}
+        onCurrentPageSelected={onCurrentPageSelected}>
+        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          <FeedSection
+            ref={feedSectionRef}
+            feed={`feedgen|${feedInfo.uri}`}
+            onScroll={onScroll}
+            headerHeight={headerHeight}
+            isScrolledDown={isScrolledDown}
+            scrollElRef={
+              scrollElRef as React.MutableRefObject<FlatList<any> | null>
+            }
+          />
+        )}
+        {({onScroll, headerHeight, scrollElRef}) => (
+          <AboutSection
+            feedOwnerDid={feedInfo.creatorDid}
+            feedRkey={feedInfo.route.params.rkey}
+            feedInfo={feedInfo}
+            headerHeight={headerHeight}
+            onScroll={onScroll}
+            scrollElRef={
+              scrollElRef as React.MutableRefObject<ScrollView | null>
+            }
+            isOwner={feedInfo.creatorDid === currentAccount?.did}
+          />
+        )}
+      </PagerWithHeader>
+      <FAB
+        testID="composeFAB"
+        onPress={() => store.shell.openComposer({})}
+        icon={
+          <ComposeIcon2 strokeWidth={1.5} size={29} style={{color: 'white'}} />
+        }
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
+    </View>
+  )
+}
 
 interface FeedSectionProps {
   feed: FeedDescriptor
@@ -447,25 +490,49 @@ const AboutSection = observer(function AboutPageImpl({
   feedRkey,
   feedInfo,
   headerHeight,
-  onToggleLiked,
   onScroll,
   scrollElRef,
+  isOwner,
 }: {
   feedOwnerDid: string
   feedRkey: string
-  feedInfo: FeedSourceModel | undefined
+  feedInfo: FeedSourceFeedInfo
   headerHeight: number
-  onToggleLiked: () => void
   onScroll: OnScrollHandler
   scrollElRef: React.MutableRefObject<ScrollView | null>
+  isOwner: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const scrollHandler = useAnimatedScrollHandler(onScroll)
+  const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
 
-  if (!feedInfo) {
-    return <View />
-  }
+  const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
+  const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
+    useUnlikeMutation()
+
+  const isLiked = !!likeUri
+  const likeCount =
+    isLiked && likeUri ? (feedInfo.likeCount || 0) + 1 : feedInfo.likeCount
+
+  const onToggleLiked = React.useCallback(async () => {
+    try {
+      Haptics.default()
+
+      if (isLiked && likeUri) {
+        await unlikeFeed({uri: likeUri})
+        setLikeUri('')
+      } else {
+        const res = await likeFeed({uri: feedInfo.uri, cid: feedInfo.cid})
+        setLikeUri(res.uri)
+      }
+    } catch (err) {
+      Toast.show(
+        'There was an an issue contacting the server, please check your internet connection and try again.',
+      )
+      logger.error('Failed up toggle like', {error: err})
+    }
+  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed])
 
   return (
     <ScrollView
@@ -486,12 +553,12 @@ const AboutSection = observer(function AboutPageImpl({
           },
           pal.border,
         ]}>
-        {feedInfo.descriptionRT ? (
+        {feedInfo.description ? (
           <RichText
             testID="listDescription"
             type="lg"
             style={pal.text}
-            richText={feedInfo.descriptionRT}
+            richText={feedInfo.description}
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
@@ -504,28 +571,26 @@ const AboutSection = observer(function AboutPageImpl({
             testID="toggleLikeBtn"
             accessibilityLabel={_(msg`Like this feed`)}
             accessibilityHint=""
+            disabled={isLikePending || isUnlikePending}
             onPress={onToggleLiked}
             style={{paddingHorizontal: 10}}>
-            {feedInfo?.isLiked ? (
+            {isLiked ? (
               <HeartIconSolid size={19} style={styles.liked} />
             ) : (
               <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
             )}
           </Button>
-          {typeof feedInfo.likeCount === 'number' && (
+          {typeof likeCount === 'number' && (
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-              text={`Liked by ${feedInfo.likeCount} ${pluralize(
-                feedInfo.likeCount,
-                'user',
-              )}`}
+              text={`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`}
               style={[pal.textLight, s.semiBold]}
             />
           )}
         </View>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
           Created by{' '}
-          {feedInfo.isOwner ? (
+          {isOwner ? (
             'you'
           ) : (
             <TextLink
