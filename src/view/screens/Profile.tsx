@@ -28,6 +28,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
 
@@ -127,6 +128,7 @@ function ProfileScreenLoaded({
   const {_} = useLingui()
   const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -135,15 +137,20 @@ function ProfileScreenLoaded({
     [profile, moderationOpts],
   )
 
-  const showLikesTab = profile.did === currentAccount?.did
+  const isMe = profile.did === currentAccount?.did
+  const showLikesTab = isMe
+  const showFeedsTab = isMe || extraInfoQuery.data?.hasFeeds
+  const showListsTab = isMe || extraInfoQuery.data?.hasLists
   const sectionTitles = useMemo<string[]>(() => {
     return [
       'Posts',
       'Posts & Replies',
       'Media',
       showLikesTab ? 'Likes' : undefined,
+      showFeedsTab ? 'Feeds' : undefined,
+      showListsTab ? 'Lists' : undefined,
     ].filter(Boolean) as string[]
-  }, [showLikesTab])
+  }, [showLikesTab, showFeedsTab, showListsTab])
 
   /*
     - todo
@@ -255,6 +262,16 @@ function ProfileScreenLoaded({
                 isScrolledDown={isScrolledDown}
                 scrollElRef={scrollElRef}
               />
+            )
+          : null}
+        {showListsTab
+          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+              <View /> // TODO
+            )
+          : null}
+        {showFeedsTab
+          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+              <View /> // TODO
             )
           : null}
       </PagerWithHeader>
