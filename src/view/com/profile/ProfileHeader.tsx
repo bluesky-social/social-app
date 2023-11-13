@@ -31,7 +31,6 @@ import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useStores} from 'state/index'
-import {FollowState} from 'state/models/cache/my-follows'
 import {useModalControls} from '#/state/modals'
 import {
   useProfileFollowMutation,
@@ -59,7 +58,6 @@ import {useSession} from '#/state/session'
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderation: ProfileModeration
-  onRefreshAll: () => void
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
@@ -67,7 +65,6 @@ interface Props {
 export function ProfileHeader({
   profile,
   moderation,
-  onRefreshAll,
   hideBackButton = false,
   isProfilePreview,
 }: Props) {
@@ -103,7 +100,6 @@ export function ProfileHeader({
     <ProfileHeaderLoaded
       profile={profile}
       moderation={moderation}
-      onRefreshAll={onRefreshAll}
       hideBackButton={hideBackButton}
       isProfilePreview={isProfilePreview}
     />
@@ -113,7 +109,6 @@ export function ProfileHeader({
 function ProfileHeaderLoaded({
   profile,
   moderation,
-  onRefreshAll,
   hideBackButton = false,
   isProfilePreview,
 }: Props) {
@@ -203,9 +198,8 @@ function ProfileHeaderLoaded({
     openModal({
       name: 'edit-profile',
       profileView: profile,
-      onUpdate: onRefreshAll,
     })
-  }, [track, openModal, profile, onRefreshAll])
+  }, [track, openModal, profile])
 
   const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
@@ -256,7 +250,6 @@ function ProfileHeaderLoaded({
         }
         try {
           await blockMutation.mutateAsync({did: profile.did})
-          onRefreshAll()
           Toast.show('Account blocked')
         } catch (e: any) {
           logger.error('Failed to block account', {error: e})
@@ -264,7 +257,7 @@ function ProfileHeaderLoaded({
         }
       },
     })
-  }, [track, blockMutation, profile, openModal, onRefreshAll])
+  }, [track, blockMutation, profile, openModal])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
@@ -282,7 +275,6 @@ function ProfileHeaderLoaded({
             did: profile.did,
             blockUri: profile.viewer.blocking,
           })
-          onRefreshAll()
           Toast.show('Account unblocked')
         } catch (e: any) {
           logger.error('Failed to unblock account', {error: e})
@@ -290,7 +282,7 @@ function ProfileHeaderLoaded({
         }
       },
     })
-  }, [track, unblockMutation, profile, openModal, onRefreshAll])
+  }, [track, unblockMutation, profile, openModal])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')

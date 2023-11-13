@@ -1,38 +1,26 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useMemo} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewSelector, ViewSelectorHandle} from '../com/util/ViewSelector'
+import {ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
-import {ProfileUiModel, Sections} from 'state/models/ui/profile'
 import {Feed} from 'view/com/posts/Feed'
 import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
-import {FeedSlice} from '../com/posts/FeedSlice'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
-import {ListCard} from 'view/com/lists/ListCard'
-import {
-  PostFeedLoadingPlaceholder,
-  ProfileCardFeedLoadingPlaceholder,
-} from '../com/util/LoadingPlaceholder'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {EmptyState} from '../com/util/EmptyState'
-import {Text} from '../com/util/text/Text'
 import {FAB} from '../com/util/fab/FAB'
 import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {FeedSourceModel} from 'state/models/content/feed-source'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
-import {logger} from '#/logger'
 import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
@@ -53,14 +41,39 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
   const name =
     route.params.name === 'me' ? currentAccount?.did : route.params.name
   const moderationOpts = useModerationOpts()
-  const {data: resolvedDid, error: resolveError} = useResolveDidQuery(name)
+  const {
+    data: resolvedDid,
+    error: resolveError,
+    refetch: refetchDid,
+    isFetching: isFetchingDid,
+  } = useResolveDidQuery(name)
   const {
     data: profile,
     dataUpdatedAt,
     error: profileError,
+    refetch: refetchProfile,
+    isFetching: isFetchingProfile,
   } = useProfileQuery({
     did: resolvedDid?.did,
   })
+
+  const onPressTryAgain = React.useCallback(() => {
+    if (resolveError) {
+      refetchDid()
+    } else {
+      refetchProfile()
+    }
+  }, [resolveError, refetchDid, refetchProfile])
+
+  if (isFetchingDid || isFetchingProfile) {
+    return (
+      <CenteredView>
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
+      </CenteredView>
+    )
+  }
   if (resolveError || profileError) {
     return (
       <CenteredView>
@@ -68,6 +81,7 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
           testID="profileErrorScreen"
           title="Oops!"
           message={cleanError(resolveError || profileError)}
+          onPressTryAgain={onPressTryAgain}
         />
       </CenteredView>
     )
@@ -82,11 +96,15 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
       />
     )
   }
+  // should never happen
   return (
     <CenteredView>
-      <View style={s.p20}>
-        <ActivityIndicator size="large" />
-      </View>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+      />
     </CenteredView>
   )
 })
@@ -112,6 +130,8 @@ function ProfileScreenLoaded({
   const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
+  useSetTitle(combinedDisplayName(profile))
+
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -126,11 +146,12 @@ function ProfileScreenLoaded({
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
+      screen('Profile')
       const softResetSub = store.onScreenSoftReset(() => {
         viewSelectorRef.current?.scrollToTop()
       })
       return () => softResetSub.remove()
-    }, [store, viewSelectorRef, setMinimalShellMode]),
+    }, [store, viewSelectorRef, setMinimalShellMode, screen]),
   )
 
   useFocusEffect(
@@ -155,14 +176,6 @@ function ProfileScreenLoaded({
     store.shell.openComposer({mention})
   }, [store, currentAccount, track, profile])
 
-  const onRefresh = React.useCallback(() => {
-    // TODO
-  }, [])
-
-  const onPressTryAgain = React.useCallback(() => {
-    // TODO
-  }, [])
-
   const onPageSelected = React.useCallback(
     i => {
       setCurrentPage(i)
@@ -178,11 +191,10 @@ function ProfileScreenLoaded({
       <ProfileHeader
         profile={profile}
         moderation={moderation}
-        onRefreshAll={onRefresh}
         hideBackButton={hideBackButton}
       />
     )
-  }, [profile, moderation, onRefresh, hideBackButton])
+  }, [profile, moderation, hideBackButton])
 
   return (
     <ScreenHider
@@ -277,7 +289,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     return (
       <View>
         <Feed
-          testID="listFeed"
+          testID="postsFeed"
           feed={feed}
           scrollElRef={scrollElRef}
           onScroll={onScroll}
@@ -289,14 +301,6 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     )
   },
 )
-
-function LoadingMoreFooter() {
-  return (
-    <View style={styles.loadingMoreFooter}>
-      <ActivityIndicator />
-    </View>
-  )
-}
 
 const styles = StyleSheet.create({
   container: {

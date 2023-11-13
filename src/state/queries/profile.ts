@@ -3,10 +3,12 @@ import {useQuery, useMutation} from '@tanstack/react-query'
 import {useSession} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
 
+export const RQKEY = (did: string) => ['profile', did]
+
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {agent} = useSession()
   return useQuery({
-    queryKey: ['profile', did],
+    queryKey: RQKEY(did),
     queryFn: async () => {
       const res = await agent.getProfile({actor: did || ''})
       return res.data
