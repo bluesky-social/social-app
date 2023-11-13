@@ -24,7 +24,7 @@ export function useProfileExtraInfoQuery(did: string) {
       ])
       return {
         hasLists: listsRes.data.lists.length > 0,
-        hasFeeds: feedsRes.data.feeds.length > 0,
+        hasFeedgens: feedsRes.data.feeds.length > 0,
       }
     },
   })

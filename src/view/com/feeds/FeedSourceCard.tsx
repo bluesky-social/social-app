@@ -6,7 +6,6 @@ import {RichText} from '../util/text/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
-import {observer} from 'mobx-react-lite'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
@@ -16,13 +15,14 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {
+  UsePreferencesQueryResponse,
   usePreferencesQuery,
   useSaveFeedMutation,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {useFeedSourceInfoQuery} from '#/state/queries/feed'
+import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 
-export const FeedSourceCard = observer(function FeedSourceCardImpl({
+export function FeedSourceCard({
   feedUri,
   style,
   showSaveBtn = false,
@@ -35,30 +35,61 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
   showDescription?: boolean
   showLikes?: boolean
 }) {
+  const {data: preferences} = usePreferencesQuery()
+  const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
+
+  if (!feed || !preferences) return null
+
+  return (
+    <FeedSourceCardLoaded
+      feed={feed}
+      preferences={preferences}
+      style={style}
+      showSaveBtn={showSaveBtn}
+      showDescription={showDescription}
+      showLikes={showLikes}
+    />
+  )
+}
+
+export function FeedSourceCardLoaded({
+  feed,
+  preferences,
+  style,
+  showSaveBtn = false,
+  showDescription = false,
+  showLikes = false,
+}: {
+  feed: FeedSourceInfo
+  preferences: UsePreferencesQueryResponse
+  style?: StyleProp<ViewStyle>
+  showSaveBtn?: boolean
+  showDescription?: boolean
+  showLikes?: boolean
+}) {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {openModal} = useModalControls()
-  const {data: preferences} = usePreferencesQuery()
-  const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
+
   const {isPending: isSavePending, mutateAsync: saveFeed} =
     useSaveFeedMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
 
-  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feedUri))
+  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed.uri))
 
   const onToggleSaved = React.useCallback(async () => {
     // Only feeds can be un/saved, lists are handled elsewhere
-    if (info?.type !== 'feed') return
+    if (feed?.type !== 'feed') return
 
     if (isSaved) {
       openModal({
         name: 'confirm',
         title: 'Remove from my feeds',
-        message: `Remove ${info?.displayName} from my feeds?`,
+        message: `Remove ${feed?.displayName} from my feeds?`,
         onPressConfirm: async () => {
           try {
-            await removeFeed({uri: feedUri})
+            await removeFeed({uri: feed.uri})
             // await item.unsave()
             Toast.show('Removed from my feeds')
           } catch (e) {
@@ -69,51 +100,51 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
       })
     } else {
       try {
-        await saveFeed({uri: feedUri})
+        await saveFeed({uri: feed.uri})
         Toast.show('Added to my feeds')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
         logger.error('Failed to save feed', {error: e})
       }
     }
-  }, [isSaved, openModal, info, feedUri, removeFeed, saveFeed])
+  }, [isSaved, openModal, feed, removeFeed, saveFeed])
 
-  if (!info || !preferences) return null
+  if (!feed || !preferences) return null
 
   return (
     <Pressable
-      testID={`feed-${info.displayName}`}
+      testID={`feed-${feed.displayName}`}
       accessibilityRole="button"
       style={[styles.container, pal.border, style]}
       onPress={() => {
-        if (info.type === 'feed') {
+        if (feed.type === 'feed') {
           navigation.push('ProfileFeed', {
-            name: info.creatorDid,
-            rkey: new AtUri(info.uri).rkey,
+            name: feed.creatorDid,
+            rkey: new AtUri(feed.uri).rkey,
           })
-        } else if (info.type === 'list') {
+        } else if (feed.type === 'list') {
           navigation.push('ProfileList', {
-            name: info.creatorDid,
-            rkey: new AtUri(info.uri).rkey,
+            name: feed.creatorDid,
+            rkey: new AtUri(feed.uri).rkey,
           })
         }
       }}
-      key={info.uri}>
+      key={feed.uri}>
       <View style={[styles.headerContainer]}>
         <View style={[s.mr10]}>
-          <UserAvatar type="algo" size={36} avatar={info.avatar} />
+          <UserAvatar type="algo" size={36} avatar={feed.avatar} />
         </View>
         <View style={[styles.headerTextContainer]}>
           <Text style={[pal.text, s.bold]} numberOfLines={3}>
-            {info.displayName}
+            {feed.displayName}
           </Text>
           <Text style={[pal.textLight]} numberOfLines={3}>
-            {info.type === 'feed' ? 'Feed' : 'List'} by{' '}
-            {sanitizeHandle(info.creatorHandle, '@')}
+            {feed.type === 'feed' ? 'Feed' : 'List'} by{' '}
+            {sanitizeHandle(feed.creatorHandle, '@')}
           </Text>
         </View>
 
-        {showSaveBtn && info.type === 'feed' && (
+        {showSaveBtn && feed.type === 'feed' && (
           <View>
             <Pressable
               disabled={isSavePending || isRemovePending}
@@ -143,23 +174,23 @@ export const FeedSourceCard = observer(function FeedSourceCardImpl({
         )}
       </View>
 
-      {showDescription && info.description ? (
+      {showDescription && feed.description ? (
         <RichText
           style={[pal.textLight, styles.description]}
-          richText={info.description}
+          richText={feed.description}
           numberOfLines={3}
         />
       ) : null}
 
-      {showLikes && info.type === 'feed' ? (
+      {showLikes && feed.type === 'feed' ? (
         <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-          Liked by {info.likeCount || 0}{' '}
-          {pluralize(info.likeCount || 0, 'user')}
+          Liked by {feed.likeCount || 0}{' '}
+          {pluralize(feed.likeCount || 0, 'user')}
         </Text>
       ) : null}
     </Pressable>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

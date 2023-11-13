@@ -11,6 +11,7 @@ import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileLists} from '../com/lists/ProfileLists'
+import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
 import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -140,7 +141,7 @@ function ProfileScreenLoaded({
 
   const isMe = profile.did === currentAccount?.did
   const showLikesTab = isMe
-  const showFeedsTab = isMe || extraInfoQuery.data?.hasFeeds
+  const showFeedsTab = isMe || extraInfoQuery.data?.hasFeedgens
   const showListsTab = isMe || extraInfoQuery.data?.hasLists
   const sectionTitles = useMemo<string[]>(() => {
     return [
@@ -267,7 +268,7 @@ function ProfileScreenLoaded({
           : null}
         {showFeedsTab
           ? ({onScroll, headerHeight, scrollElRef}) => (
-              <ProfileLists // TODO put feeds here, using this temporarily to avoid bugs
+              <ProfileFeedgens
                 did={profile.did}
                 scrollElRef={scrollElRef}
                 onScroll={onScroll}
