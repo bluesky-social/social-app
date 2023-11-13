@@ -126,33 +126,6 @@ export class PreferencesModel {
       ],
     }
   }
-
-  // feeds
-  // =
-
-  isPinnedFeed(uri: string) {
-    return this.pinnedFeeds.includes(uri)
-  }
-
-  /**
-   * @deprecated use `useAddSavedFeedMutation` from `#/state/queries/preferences` instead
-   */
-  async addSavedFeed(_v: string) {}
-
-  /**
-   * @deprecated use `useRemoveSavedFeedMutation` from `#/state/queries/preferences` instead
-   */
-  async removeSavedFeed(_v: string) {}
-
-  /**
-   * @deprecated use `usePinFeedMutation` from `#/state/queries/preferences` instead
-   */
-  async addPinnedFeed(_v: string) {}
-
-  /**
-   * @deprecated use `useUnpinFeedMutation` from `#/state/queries/preferences` instead
-   */
-  async removePinnedFeed(_v: string) {}
 }
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf

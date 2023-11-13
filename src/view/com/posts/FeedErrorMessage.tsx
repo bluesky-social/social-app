@@ -8,12 +8,12 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
-import {useStores} from 'state/index'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {EmptyState} from '../util/EmptyState'
 import {cleanError} from '#/lib/strings/errors'
+import {useRemoveFeedMutation} from '#/state/queries/preferences'
 
 enum KnownError {
   Block,
@@ -86,12 +86,12 @@ function FeedgenErrorMessage({
   knownError: KnownError
 }) {
   const pal = usePalette('default')
-  const store = useStores()
   const navigation = useNavigation<NavigationProp>()
   const msg = MESSAGES[knownError]
   const [_, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
   const {openModal, closeModal} = useModalControls()
+  const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 
   const onViewProfile = React.useCallback(() => {
     navigation.navigate('Profile', {name: ownerDid})
@@ -104,7 +104,7 @@ function FeedgenErrorMessage({
       message: 'Remove this feed from your saved feeds?',
       async onPressConfirm() {
         try {
-          await store.preferences.removeSavedFeed(uri)
+          await removeFeed({uri})
         } catch (err) {
           Toast.show(
             'There was an an issue removing this feed. Please check your internet connection and try again.',
@@ -116,7 +116,7 @@ function FeedgenErrorMessage({
         closeModal()
       },
     })
-  }, [store, openModal, closeModal, uri])
+  }, [openModal, closeModal, uri, removeFeed])
 
   return (
     <View
