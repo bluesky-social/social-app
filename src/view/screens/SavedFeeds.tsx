@@ -21,7 +21,7 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {ScrollView, CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
 import {s, colors} from 'lib/styles'
-import {NewFeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
@@ -250,7 +250,7 @@ const ListItem = observer(function ListItemImpl({
           </TouchableOpacity>
         </View>
       ) : null}
-      <NewFeedSourceCard
+      <FeedSourceCard
         key={feedUri}
         feedUri={feedUri}
         style={styles.noBorder}
