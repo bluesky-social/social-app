@@ -54,7 +54,7 @@ const InnerApp = observer(function AppImpl() {
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
-      notifications.init(store)
+      notifications.init(store, queryClient)
       store.onSessionDropped(() => {
         Toast.show('Sorry! Your session expired. Please log in again.')
       })

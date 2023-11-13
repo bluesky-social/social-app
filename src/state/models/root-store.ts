@@ -203,14 +203,6 @@ export class RootStoreModel {
   emitScreenSoftReset() {
     DeviceEventEmitter.emit('screen-soft-reset')
   }
-
-  // the unread notifications count has changed
-  onUnreadNotifications(handler: (count: number) => void): EmitterSubscription {
-    return DeviceEventEmitter.addListener('unread-notifications', handler)
-  }
-  emitUnreadNotifications(count: number) {
-    DeviceEventEmitter.emit('unread-notifications', count)
-  }
 }
 
 const throwawayInst = new RootStoreModel(

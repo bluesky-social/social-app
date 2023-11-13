@@ -1,8 +1,10 @@
 import React from 'react'
+import * as Notifications from 'expo-notifications'
 import BroadcastChannel from '#/lib/broadcast'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '../preferences'
 import {shouldFilterNotif} from './util'
+import {isNative} from '#/platform/detection'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -77,6 +79,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             : filtered.length === 0
             ? ''
             : String(filtered.length)
+        if (isNative) {
+          Notifications.setBadgeCountAsync(Math.min(filtered.length, 30))
+        }
 
         // track last sync
         const now = new Date()
