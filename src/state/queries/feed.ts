@@ -1,5 +1,17 @@
-import {useQuery} from '@tanstack/react-query'
-import {AtUri, RichText, AppBskyFeedDefs, AppBskyGraphDefs} from '@atproto/api'
+import {
+  useQuery,
+  useInfiniteQuery,
+  InfiniteData,
+  QueryKey,
+  useMutation,
+} from '@tanstack/react-query'
+import {
+  AtUri,
+  RichText,
+  AppBskyFeedDefs,
+  AppBskyGraphDefs,
+  AppBskyUnspeccedGetPopularFeedGenerators,
+} from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -10,6 +22,7 @@ type FeedSourceInfo =
       type: 'feed'
       uri: string
       cid: string
+      href: string
       avatar: string | undefined
       displayName: string
       description: RichText
@@ -22,6 +35,7 @@ type FeedSourceInfo =
       type: 'list'
       uri: string
       cid: string
+      href: string
       avatar: string | undefined
       displayName: string
       description: RichText
@@ -42,10 +56,16 @@ const feedSourceNSIDs = {
 function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
 ): FeedSourceInfo {
+  const urip = new AtUri(view.uri)
+  const collection =
+    urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
+  const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+
   return {
     type: 'feed',
     uri: view.uri,
     cid: view.cid,
+    href,
     avatar: view.avatar,
     displayName: view.displayName
       ? sanitizeDisplayName(view.displayName)
@@ -62,10 +82,16 @@ function hydrateFeedGenerator(
 }
 
 function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+  const urip = new AtUri(view.uri)
+  const collection =
+    urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
+  const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+
   return {
     type: 'list',
     uri: view.uri,
     cid: view.cid,
+    href,
     avatar: view.avatar,
     description: new RichText({
       text: view.description || '',
@@ -101,6 +127,46 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       }
 
       return view
+    },
+  })
+}
+
+export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
+
+export function useGetPopularFeedsQuery() {
+  const {agent} = useSession()
+
+  return useInfiniteQuery<
+    AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
+    Error,
+    InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
+    QueryKey,
+    string | undefined
+  >({
+    queryKey: useGetPopularFeedsQueryKey,
+    queryFn: async ({pageParam}) => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 10,
+        cursor: pageParam,
+      })
+      return res.data
+    },
+    initialPageParam: undefined,
+    getNextPageParam: lastPage => lastPage.cursor,
+  })
+}
+
+export function useSearchPopularFeedsMutation() {
+  const {agent} = useSession()
+
+  return useMutation({
+    mutationFn: async (query: string) => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 10,
+        query: query,
+      })
+
+      return res.data.feeds
     },
   })
 }

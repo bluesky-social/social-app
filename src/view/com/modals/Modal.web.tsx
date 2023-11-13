@@ -13,7 +13,7 @@ import * as ServerInputModal from './ServerInput'
 import * as ReportModal from './report/Modal'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
-import * as ListAddUserModal from './ListAddUser'
+import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
@@ -85,7 +85,7 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <CreateOrEditListModal.Component {...modal} />
   } else if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />
-  } else if (modal.name === 'list-add-user') {
+  } else if (modal.name === 'list-add-remove-users') {
     element = <ListAddUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />

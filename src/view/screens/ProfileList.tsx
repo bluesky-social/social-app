@@ -10,8 +10,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {observer} from 'mobx-react-lite'
-import {RichText as RichTextAPI} from '@atproto/api'
+import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -28,7 +27,6 @@ import * as Toast from 'view/com/util/Toast'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {Haptics} from 'lib/haptics'
-import {ListModel} from 'state/models/content/list'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -39,17 +37,24 @@ import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
-import {resolveName} from 'lib/api'
 import {s} from 'lib/styles'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
-import {ListItems} from 'view/com/lists/ListItems'
-import {logger} from '#/logger'
+import {ListMembers} from '#/view/com/lists/ListMembers'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {
+  useListQuery,
+  useListMuteMutation,
+  useListBlockMutation,
+  useListDeleteMutation,
+} from '#/state/queries/list'
+import {cleanError} from '#/lib/strings/errors'
+import {useSession} from '#/state/session'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -60,40 +65,32 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export const ProfileListScreen = withAuthRequired(
-  observer(function ProfileListScreenImpl(props: Props) {
-    const store = useStores()
-    const {name: handleOrDid} = props.route.params
-    const [listOwnerDid, setListOwnerDid] = React.useState<string | undefined>()
-    const [error, setError] = React.useState<string | undefined>()
+  function ProfileListScreenImpl(props: Props) {
+    const {name: handleOrDid, rkey} = props.route.params
+    const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
+      AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+    )
+    const {data: list, error: listError} = useListQuery(resolvedUri)
 
-    React.useEffect(() => {
-      /*
-       * We must resolve the DID of the list owner before we can fetch the list.
-       */
-      async function fetchDid() {
-        try {
-          const did = await resolveName(store, handleOrDid)
-          setListOwnerDid(did)
-        } catch (e) {
-          setError(
-            `We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
-          )
-        }
-      }
-
-      fetchDid()
-    }, [store, handleOrDid, setListOwnerDid])
-
-    if (error) {
+    if (resolveError) {
       return (
         <CenteredView>
-          <ErrorScreen error={error} />
+          <ErrorScreen
+            error={`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
+          />
+        </CenteredView>
+      )
+    }
+    if (listError) {
+      return (
+        <CenteredView>
+          <ErrorScreen error={cleanError(listError)} />
         </CenteredView>
       )
     }
 
-    return listOwnerDid ? (
-      <ProfileListScreenInner {...props} listOwnerDid={listOwnerDid} />
+    return resolvedUri && list ? (
+      <ProfileListScreenLoaded {...props} uri={resolvedUri} list={list} />
     ) : (
       <CenteredView>
         <View style={s.p20}>
@@ -101,192 +98,172 @@ export const ProfileListScreen = withAuthRequired(
         </View>
       </CenteredView>
     )
-  }),
-)
-
-export const ProfileListScreenInner = observer(
-  function ProfileListScreenInnerImpl({
-    route,
-    listOwnerDid,
-  }: Props & {listOwnerDid: string}) {
-    const store = useStores()
-    const {_} = useLingui()
-    const queryClient = useQueryClient()
-    const setMinimalShellMode = useSetMinimalShellMode()
-    const {rkey} = route.params
-    const listUri = `at://${listOwnerDid}/app.bsky.graph.list/${rkey}`
-    const feedSectionRef = React.useRef<SectionRef>(null)
-    const aboutSectionRef = React.useRef<SectionRef>(null)
-    const {openModal} = useModalControls()
-
-    const list: ListModel = useMemo(() => {
-      const model = new ListModel(store, listUri)
-      return model
-    }, [store, listUri])
-    useSetTitle(list.data?.name)
-
-    useFocusEffect(
-      useCallback(() => {
-        setMinimalShellMode(false)
-        list.loadMore(true)
-      }, [setMinimalShellMode, list]),
-    )
-
-    const onPressAddUser = useCallback(() => {
-      openModal({
-        name: 'list-add-user',
-        list,
-        onAdd() {
-          if (list.isCuratelist) {
-            queryClient.invalidateQueries({
-              queryKey: FEED_RQKEY(`list|${listUri}`),
-            })
-          }
-        },
-      })
-    }, [openModal, list, queryClient, listUri])
-
-    const onCurrentPageSelected = React.useCallback(
-      (index: number) => {
-        if (index === 0) {
-          feedSectionRef.current?.scrollToTop()
-        }
-        if (index === 1) {
-          aboutSectionRef.current?.scrollToTop()
-        }
-      },
-      [feedSectionRef],
-    )
-
-    const renderHeader = useCallback(() => {
-      return <Header rkey={rkey} list={list} />
-    }, [rkey, list])
-
-    if (list.isCuratelist) {
-      return (
-        <View style={s.hContentRegion}>
-          <PagerWithHeader
-            items={SECTION_TITLES_CURATE}
-            isHeaderReady={list.hasLoaded}
-            renderHeader={renderHeader}
-            onCurrentPageSelected={onCurrentPageSelected}>
-            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-              <FeedSection
-                ref={feedSectionRef}
-                feed={`list|${listUri}`}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
-                onScroll={onScroll}
-                headerHeight={headerHeight}
-                isScrolledDown={isScrolledDown}
-              />
-            )}
-            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-              <AboutSection
-                ref={aboutSectionRef}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
-                list={list}
-                descriptionRT={list.descriptionRT}
-                creator={list.data ? list.data.creator : undefined}
-                isCurateList={list.isCuratelist}
-                isOwner={list.isOwner}
-                onPressAddUser={onPressAddUser}
-                onScroll={onScroll}
-                headerHeight={headerHeight}
-                isScrolledDown={isScrolledDown}
-              />
-            )}
-          </PagerWithHeader>
-          <FAB
-            testID="composeFAB"
-            onPress={() => store.shell.openComposer({})}
-            icon={
-              <ComposeIcon2
-                strokeWidth={1.5}
-                size={29}
-                style={{color: 'white'}}
-              />
-            }
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`New post`)}
-            accessibilityHint=""
-          />
-        </View>
-      )
-    }
-    if (list.isModlist) {
-      return (
-        <View style={s.hContentRegion}>
-          <PagerWithHeader
-            items={SECTION_TITLES_MOD}
-            isHeaderReady={list.hasLoaded}
-            renderHeader={renderHeader}>
-            {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-              <AboutSection
-                list={list}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
-                descriptionRT={list.descriptionRT}
-                creator={list.data ? list.data.creator : undefined}
-                isCurateList={list.isCuratelist}
-                isOwner={list.isOwner}
-                onPressAddUser={onPressAddUser}
-                onScroll={onScroll}
-                headerHeight={headerHeight}
-                isScrolledDown={isScrolledDown}
-              />
-            )}
-          </PagerWithHeader>
-          <FAB
-            testID="composeFAB"
-            onPress={() => store.shell.openComposer({})}
-            icon={
-              <ComposeIcon2
-                strokeWidth={1.5}
-                size={29}
-                style={{color: 'white'}}
-              />
-            }
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`New post`)}
-            accessibilityHint=""
-          />
-        </View>
-      )
-    }
-    return (
-      <CenteredView sideBorders style={s.hContentRegion}>
-        <Header rkey={rkey} list={list} />
-        {list.error ? <ErrorScreen error={list.error} /> : null}
-      </CenteredView>
-    )
   },
 )
 
-const Header = observer(function HeaderImpl({
-  rkey,
+function ProfileListScreenLoaded({
+  route,
+  uri,
   list,
-}: {
-  rkey: string
-  list: ListModel
-}) {
+}: Props & {uri: string; list: AppBskyGraphDefs.ListView}) {
+  const store = useStores()
+  const {_} = useLingui()
+  const queryClient = useQueryClient()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {rkey} = route.params
+  const feedSectionRef = React.useRef<SectionRef>(null)
+  const aboutSectionRef = React.useRef<SectionRef>(null)
+  const {openModal} = useModalControls()
+  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+
+  useSetTitle(list.name)
+
+  useFocusEffect(
+    useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
+
+  const onPressAddUser = useCallback(() => {
+    openModal({
+      name: 'list-add-remove-users',
+      list,
+      onChange() {
+        if (isCurateList) {
+          queryClient.invalidateQueries({
+            // TODO(eric) should construct these strings with a fn too
+            queryKey: FEED_RQKEY(`list|${list.uri}`),
+          })
+        }
+      },
+    })
+  }, [openModal, list, isCurateList, queryClient])
+
+  const onCurrentPageSelected = React.useCallback(
+    (index: number) => {
+      if (index === 0) {
+        feedSectionRef.current?.scrollToTop()
+      }
+      if (index === 1) {
+        aboutSectionRef.current?.scrollToTop()
+      }
+    },
+    [feedSectionRef],
+  )
+
+  const renderHeader = useCallback(() => {
+    return <Header rkey={rkey} list={list} />
+  }, [rkey, list])
+
+  if (isCurateList) {
+    return (
+      <View style={s.hContentRegion}>
+        <PagerWithHeader
+          items={SECTION_TITLES_CURATE}
+          isHeaderReady={true}
+          renderHeader={renderHeader}
+          onCurrentPageSelected={onCurrentPageSelected}>
+          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+            <FeedSection
+              ref={feedSectionRef}
+              feed={`list|${uri}`}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<FlatList<any> | null>
+              }
+              onScroll={onScroll}
+              headerHeight={headerHeight}
+              isScrolledDown={isScrolledDown}
+            />
+          )}
+          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+            <AboutSection
+              ref={aboutSectionRef}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<FlatList<any> | null>
+              }
+              list={list}
+              onPressAddUser={onPressAddUser}
+              onScroll={onScroll}
+              headerHeight={headerHeight}
+              isScrolledDown={isScrolledDown}
+            />
+          )}
+        </PagerWithHeader>
+        <FAB
+          testID="composeFAB"
+          onPress={() => store.shell.openComposer({})}
+          icon={
+            <ComposeIcon2
+              strokeWidth={1.5}
+              size={29}
+              style={{color: 'white'}}
+            />
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      </View>
+    )
+  }
+  return (
+    <View style={s.hContentRegion}>
+      <PagerWithHeader
+        items={SECTION_TITLES_MOD}
+        isHeaderReady={true}
+        renderHeader={renderHeader}>
+        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          <AboutSection
+            list={list}
+            scrollElRef={
+              scrollElRef as React.MutableRefObject<FlatList<any> | null>
+            }
+            onPressAddUser={onPressAddUser}
+            onScroll={onScroll}
+            headerHeight={headerHeight}
+            isScrolledDown={isScrolledDown}
+          />
+        )}
+      </PagerWithHeader>
+      <FAB
+        testID="composeFAB"
+        onPress={() => store.shell.openComposer({})}
+        icon={
+          <ComposeIcon2 strokeWidth={1.5} size={29} style={{color: 'white'}} />
+        }
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
+    </View>
+  )
+}
+
+function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
+  const {currentAccount} = useSession()
   const {openModal, closeModal} = useModalControls()
+  const listMuteMutation = useListMuteMutation()
+  const listBlockMutation = useListBlockMutation()
+  const listDeleteMutation = useListDeleteMutation()
+  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
+  const isPinned = false // TODO
+  const isBlocking = !!list.viewer?.blocked
+  const isMuting = !!list.viewer?.muted
+  const isOwner = list.creator.did === currentAccount?.did
 
   const onTogglePinned = useCallback(async () => {
     Haptics.default()
-    list.togglePin().catch(e => {
-      Toast.show('There was an issue contacting the server')
-      logger.error('Failed to toggle pinned list', {error: e})
-    })
-  }, [list])
+    // TODO
+    // list.togglePin().catch(e => {
+    //   Toast.show('There was an issue contacting the server')
+    //   logger.error('Failed to toggle pinned list', {error: e})
+    // })
+  }, [])
 
   const onSubscribeMute = useCallback(() => {
     openModal({
@@ -297,7 +274,7 @@ const Header = observer(function HeaderImpl({
       confirmBtnText: 'Mute this List',
       async onPressConfirm() {
         try {
-          await list.mute()
+          await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
           Toast.show('List muted')
         } catch {
           Toast.show(
@@ -309,18 +286,18 @@ const Header = observer(function HeaderImpl({
         closeModal()
       },
     })
-  }, [openModal, closeModal, list])
+  }, [openModal, closeModal, list, listMuteMutation])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
-      await list.unmute()
+      await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
       Toast.show('List unmuted')
     } catch {
       Toast.show(
         'There was an issue. Please check your internet connection and try again.',
       )
     }
-  }, [list])
+  }, [list, listMuteMutation])
 
   const onSubscribeBlock = useCallback(() => {
     openModal({
@@ -331,7 +308,7 @@ const Header = observer(function HeaderImpl({
       confirmBtnText: 'Block this List',
       async onPressConfirm() {
         try {
-          await list.block()
+          await listBlockMutation.mutateAsync({uri: list.uri, block: true})
           Toast.show('List blocked')
         } catch {
           Toast.show(
@@ -343,26 +320,23 @@ const Header = observer(function HeaderImpl({
         closeModal()
       },
     })
-  }, [openModal, closeModal, list])
+  }, [openModal, closeModal, list, listBlockMutation])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
-      await list.unblock()
+      await listBlockMutation.mutateAsync({uri: list.uri, block: false})
       Toast.show('List unblocked')
     } catch {
       Toast.show(
         'There was an issue. Please check your internet connection and try again.',
       )
     }
-  }, [list])
+  }, [list, listBlockMutation])
 
   const onPressEdit = useCallback(() => {
     openModal({
       name: 'create-or-edit-list',
       list,
-      onSave() {
-        list.refresh()
-      },
     })
   }, [openModal, list])
 
@@ -372,7 +346,7 @@ const Header = observer(function HeaderImpl({
       title: 'Delete List',
       message: 'Are you sure?',
       async onPressConfirm() {
-        await list.delete()
+        await listDeleteMutation.mutateAsync({uri: list.uri})
         Toast.show('List deleted')
         if (navigation.canGoBack()) {
           navigation.goBack()
@@ -381,26 +355,22 @@ const Header = observer(function HeaderImpl({
         }
       },
     })
-  }, [openModal, list, navigation])
+  }, [openModal, list, listDeleteMutation, navigation])
 
   const onPressReport = useCallback(() => {
-    if (!list.data) return
     openModal({
       name: 'report',
       uri: list.uri,
-      cid: list.data.cid,
+      cid: list.cid,
     })
   }, [openModal, list])
 
   const onPressShare = useCallback(() => {
-    const url = toShareUrl(`/profile/${list.creatorDid}/lists/${rkey}`)
+    const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
     shareUrl(url)
-  }, [list.creatorDid, rkey])
+  }, [list, rkey])
 
   const dropdownItems: DropdownItem[] = useMemo(() => {
-    if (!list.hasLoaded) {
-      return []
-    }
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
@@ -415,7 +385,7 @@ const Header = observer(function HeaderImpl({
         },
       },
     ]
-    if (list.isOwner) {
+    if (isOwner) {
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownEditBtn',
@@ -457,14 +427,7 @@ const Header = observer(function HeaderImpl({
       })
     }
     return items
-  }, [
-    list.hasLoaded,
-    list.isOwner,
-    onPressShare,
-    onPressEdit,
-    onPressDelete,
-    onPressReport,
-  ])
+  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
@@ -497,32 +460,28 @@ const Header = observer(function HeaderImpl({
 
   return (
     <ProfileSubpageHeader
-      isLoading={!list.hasLoaded}
-      href={makeListLink(
-        list.data?.creator.handle || list.data?.creator.did || '',
-        rkey,
-      )}
-      title={list.data?.name || 'User list'}
-      avatar={list.data?.avatar}
-      isOwner={list.isOwner}
-      creator={list.data?.creator}
+      href={makeListLink(list.creator.handle || list.creator.did || '', rkey)}
+      title={list.name}
+      avatar={list.avatar}
+      isOwner={list.creator.did === currentAccount?.did}
+      creator={list.creator}
       avatarType="list">
-      {list.isCuratelist || list.isPinned ? (
+      {isCurateList || isPinned ? (
         <Button
           testID={list.isPinned ? 'unpinBtn' : 'pinBtn'}
           type={list.isPinned ? 'default' : 'inverted'}
           label={list.isPinned ? 'Unpin' : 'Pin to home'}
           onPress={onTogglePinned}
         />
-      ) : list.isModlist ? (
-        list.isBlocking ? (
+      ) : isModList ? (
+        isBlocking ? (
           <Button
             testID="unblockBtn"
             type="default"
             label="Unblock"
             onPress={onUnsubscribeBlock}
           />
-        ) : list.isMuting ? (
+        ) : isMuting ? (
           <Button
             testID="unmuteBtn"
             type="default"
@@ -554,7 +513,7 @@ const Header = observer(function HeaderImpl({
       </NativeDropdown>
     </ProfileSubpageHeader>
   )
-})
+}
 
 interface FeedSectionProps {
   feed: FeedDescriptor
@@ -610,11 +569,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 )
 
 interface AboutSectionProps {
-  list: ListModel
-  descriptionRT: RichTextAPI | null
-  creator: {did: string; handle: string} | undefined
-  isCurateList: boolean | undefined
-  isOwner: boolean | undefined
+  list: AppBskyGraphDefs.ListView
   onPressAddUser: () => void
   onScroll: OnScrollHandler
   headerHeight: number
@@ -623,23 +578,26 @@ interface AboutSectionProps {
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
-    {
-      list,
-      descriptionRT,
-      creator,
-      isCurateList,
-      isOwner,
-      onPressAddUser,
-      onScroll,
-      headerHeight,
-      isScrolledDown,
-      scrollElRef,
-    },
+    {list, onPressAddUser, onScroll, headerHeight, isScrolledDown, scrollElRef},
     ref,
   ) {
     const pal = usePalette('default')
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
+    const {currentAccount} = useSession()
+    const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+    const isOwner = list.creator.did === currentAccount?.did
+
+    const descriptionRT = useMemo(
+      () =>
+        list.description
+          ? new RichTextAPI({
+              text: list.description,
+              facets: list.descriptionFacets,
+            })
+          : undefined,
+      [list],
+    )
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
@@ -650,9 +608,6 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     }))
 
     const renderHeader = React.useCallback(() => {
-      if (!list.data) {
-        return <View />
-      }
       return (
         <View>
           <View
@@ -685,8 +640,8 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 'you'
               ) : (
                 <TextLink
-                  text={sanitizeHandle(creator?.handle || '', '@')}
-                  href={creator ? makeProfileLink(creator) : ''}
+                  text={sanitizeHandle(list.creator.handle || '', '@')}
+                  href={makeProfileLink(list.creator)}
                   style={pal.textLight}
                 />
               )}
@@ -728,10 +683,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       )
     }, [
       pal,
-      list.data,
+      list,
       isMobile,
       descriptionRT,
-      creator,
       isCurateList,
       isOwner,
       onPressAddUser,
@@ -750,12 +704,12 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
 
     return (
       <View>
-        <ListItems
+        <ListMembers
           testID="listItems"
+          list={list.uri}
           scrollElRef={scrollElRef}
           renderHeader={renderHeader}
           renderEmptyState={renderEmptyState}
-          list={list}
           headerOffset={headerHeight}
           onScroll={onScroll}
           scrollEventThrottle={1}
