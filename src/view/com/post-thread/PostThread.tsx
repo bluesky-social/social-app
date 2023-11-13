@@ -32,10 +32,12 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
-import {useStores} from '#/state'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {usePreferencesQuery} from '#/state/queries/preferences'
+import {
+  UsePreferencesQueryResponse,
+  usePreferencesQuery,
+} from '#/state/queries/preferences'
 
 // const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
 
@@ -110,7 +112,7 @@ export function PostThread({
       thread={thread}
       isRefetching={isRefetching}
       dataUpdatedAt={dataUpdatedAt}
-      treeView={preferences.threadViewPrefs.lab_treeViewEnabled}
+      threadViewPrefs={preferences.threadViewPrefs}
       onRefresh={refetch}
       onPressReply={onPressReply}
     />
@@ -121,20 +123,19 @@ function PostThreadLoaded({
   thread,
   isRefetching,
   dataUpdatedAt,
-  treeView,
+  threadViewPrefs,
   onRefresh,
   onPressReply,
 }: {
   thread: ThreadNode
   isRefetching: boolean
   dataUpdatedAt: number
-  treeView: boolean
+  threadViewPrefs: UsePreferencesQueryResponse['threadViewPrefs']
   onRefresh: () => void
   onPressReply: () => void
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
-  const store = useStores()
   const {isTablet, isDesktop} = useWebMediaQueries()
   const ref = useRef<FlatList>(null)
   // const hasScrolledIntoView = useRef<boolean>(false) TODO
@@ -162,16 +163,14 @@ function PostThreadLoaded({
   // const highlightedPostIndex = posts.findIndex(post => post._isHighlightedPost)
   const posts = React.useMemo(() => {
     let arr = [TOP_COMPONENT].concat(
-      Array.from(
-        flattenThreadSkeleton(sortThread(thread, store.preferences.thread)),
-      ),
+      Array.from(flattenThreadSkeleton(sortThread(thread, threadViewPrefs))),
     )
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
     }
     arr.push(BOTTOM_COMPONENT)
     return arr
-  }, [thread, maxVisible, store.preferences.thread])
+  }, [thread, maxVisible, threadViewPrefs])
 
   // TODO
   /*const onContentSizeChange = React.useCallback(() => {
@@ -297,7 +296,7 @@ function PostThreadLoaded({
             post={item.post}
             record={item.record}
             dataUpdatedAt={dataUpdatedAt}
-            treeView={treeView}
+            treeView={threadViewPrefs.lab_treeViewEnabled}
             depth={item.ctx.depth}
             isHighlightedPost={item.ctx.isHighlightedPost}
             hasMore={item.ctx.hasMore}
@@ -322,7 +321,7 @@ function PostThreadLoaded({
       pal.colors.border,
       posts,
       onRefresh,
-      treeView,
+      threadViewPrefs.lab_treeViewEnabled,
       dataUpdatedAt,
       _,
     ],
