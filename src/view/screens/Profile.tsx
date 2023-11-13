@@ -65,7 +65,7 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
     }
   }, [resolveError, refetchDid, refetchProfile])
 
-  if (isFetchingDid || isFetchingProfile) {
+  if (isFetchingDid || isFetchingProfile || !moderationOpts) {
     return (
       <CenteredView>
         <View style={s.p20}>
