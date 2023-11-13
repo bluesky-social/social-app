@@ -61,7 +61,7 @@ export class FeedSourceModel {
   }
 
   get isPinned() {
-    return this.rootStore.preferences.isPinnedFeed(this.uri)
+    return false
   }
 
   get isLiked() {
