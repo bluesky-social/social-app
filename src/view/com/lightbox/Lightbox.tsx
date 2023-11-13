@@ -25,7 +25,7 @@ export const Lightbox = observer(function Lightbox() {
     const opts = store.shell.activeLightbox as models.ProfileImageLightbox
     return (
       <ImageView
-        images={[{uri: opts.profileView.avatar || ''}]}
+        images={[{uri: opts.profile.avatar || ''}]}
         initialImageIndex={0}
         visible
         onRequestClose={onClose}

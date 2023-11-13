@@ -3,7 +3,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import {ListsList} from '../lists/ListsList'
+import {MyLists} from '../lists/MyLists'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -51,7 +51,7 @@ export function Component({
       <Text style={[styles.title, pal.text]}>
         <Trans>Update {displayName} in Lists</Trans>
       </Text>
-      <ListsList
+      <MyLists
         filter="all"
         inline
         renderItem={(list, index) => (

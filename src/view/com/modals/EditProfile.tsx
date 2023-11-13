@@ -11,9 +11,9 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ProfileModel} from 'state/models/content/profile'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
@@ -23,12 +23,14 @@ import {EditableUserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {cleanError} from 'lib/strings/errors'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useProfileUpdateMutation} from '#/state/queries/profile'
+import {logger} from '#/logger'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -36,31 +38,30 @@ const AnimatedTouchableOpacity =
 export const snapPoints = ['fullscreen']
 
 export function Component({
-  profileView,
+  profile,
   onUpdate,
 }: {
-  profileView: ProfileModel
+  profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }) {
-  const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
-
-  const [isProcessing, setProcessing] = useState<boolean>(false)
+  const updateMutation = useProfileUpdateMutation()
+  const [imageError, setImageError] = useState<string>('')
   const [displayName, setDisplayName] = useState<string>(
-    profileView.displayName || '',
+    profile.displayName || '',
   )
   const [description, setDescription] = useState<string>(
-    profileView.description || '',
+    profile.description || '',
   )
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
-    profileView.banner,
+    profile.banner,
   )
   const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
-    profileView.avatar,
+    profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
     RNImage | undefined | null
@@ -73,6 +74,7 @@ export function Component({
   }
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
+      setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
         setUserAvatar(null)
@@ -84,14 +86,15 @@ export function Component({
         setNewUserAvatar(finalImg)
         setUserAvatar(finalImg.path)
       } catch (e: any) {
-        setError(cleanError(e))
+        setImageError(cleanError(e))
       }
     },
-    [track, setNewUserAvatar, setUserAvatar, setError],
+    [track, setNewUserAvatar, setUserAvatar, setImageError],
   )
 
   const onSelectNewBanner = useCallback(
     async (img: RNImage | null) => {
+      setImageError('')
       if (!img) {
         setNewUserBanner(null)
         setUserBanner(null)
@@ -103,52 +106,42 @@ export function Component({
         setNewUserBanner(finalImg)
         setUserBanner(finalImg.path)
       } catch (e: any) {
-        setError(cleanError(e))
+        setImageError(cleanError(e))
       }
     },
-    [track, setNewUserBanner, setUserBanner, setError],
+    [track, setNewUserBanner, setUserBanner, setImageError],
   )
 
   const onPressSave = useCallback(async () => {
     track('EditProfile:Save')
-    setProcessing(true)
-    if (error) {
-      setError('')
-    }
+    setImageError('')
     try {
-      await profileView.updateProfile(
-        {
+      await updateMutation.mutateAsync({
+        profile,
+        updates: {
           displayName,
           description,
         },
         newUserAvatar,
         newUserBanner,
-      )
+      })
       Toast.show('Profile updated')
       onUpdate?.()
       closeModal()
     } catch (e: any) {
-      if (isNetworkError(e)) {
-        setError(
-          'Failed to save your profile. Check your internet connection and try again.',
-        )
-      } else {
-        setError(cleanError(e))
-      }
+      logger.error('Failed to update user profile', {error: String(e)})
     }
-    setProcessing(false)
   }, [
     track,
-    setProcessing,
-    setError,
-    error,
-    profileView,
+    updateMutation,
+    profile,
     onUpdate,
     closeModal,
     displayName,
     description,
     newUserAvatar,
     newUserBanner,
+    setImageError,
   ])
 
   return (
@@ -170,9 +163,14 @@ export function Component({
             />
           </View>
         </View>
-        {error !== '' && (
+        {updateMutation.isError && (
           <View style={styles.errorContainer}>
-            <ErrorMessage message={error} />
+            <ErrorMessage message={cleanError(updateMutation.error)} />
+          </View>
+        )}
+        {imageError !== '' && (
+          <View style={styles.errorContainer}>
+            <ErrorMessage message={imageError} />
           </View>
         )}
         <View style={styles.form}>
@@ -212,7 +210,7 @@ export function Component({
               accessibilityHint="Edit your profile description"
             />
           </View>
-          {isProcessing ? (
+          {updateMutation.isPending ? (
             <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
               <ActivityIndicator />
             </View>
@@ -235,7 +233,7 @@ export function Component({
               </LinearGradient>
             </TouchableOpacity>
           )}
-          {!isProcessing && (
+          {!updateMutation.isPending && (
             <AnimatedTouchableOpacity
               exiting={!isWeb ? FadeOut : undefined}
               testID="editProfileCancelBtn"

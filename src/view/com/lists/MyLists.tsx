@@ -12,7 +12,6 @@ import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {ListCard} from './ListCard'
 import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Text} from '../util/text/Text'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -25,9 +24,8 @@ import {cleanError} from '#/lib/strings/errors'
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export function ListsList({
+export function MyLists({
   filter,
   inline,
   style,
@@ -42,7 +40,7 @@ export function ListsList({
 }) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
     useMyListsQuery(filter)
   const isEmpty = !isFetching && !data?.length
@@ -67,14 +65,14 @@ export function ListsList({
 
   const onRefresh = React.useCallback(async () => {
     track('Lists:onRefresh')
-    setIsRefreshing(true)
+    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh lists', {error: err})
     }
-    setIsRefreshing(false)
-  }, [refetch, track, setIsRefreshing])
+    setIsPTRing(false)
+  }, [refetch, track, setIsPTRing])
 
   // rendering
   // =
@@ -96,13 +94,6 @@ export function ListsList({
           <ErrorMessage
             message={cleanError(error)}
             onPressTryAgain={onRefresh}
-          />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label="There was an issue fetching your lists. Tap here to try again."
-            onPress={onRefresh}
           />
         )
       } else if (item === LOADING) {
@@ -136,7 +127,7 @@ export function ListsList({
           renderItem={renderItemInner}
           refreshControl={
             <RefreshControl
-              refreshing={isRefreshing}
+              refreshing={isPTRing}
               onRefresh={onRefresh}
               tintColor={pal.colors.text}
               titleColor={pal.colors.text}

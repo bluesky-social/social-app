@@ -10,6 +10,7 @@ import {ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
+import {ProfileLists} from '../com/lists/ProfileLists'
 import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -28,10 +29,9 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
-
-const SECTION_TITLES_PROFILE = ['Posts', 'Posts & Replies', 'Media', 'Likes']
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
@@ -129,6 +129,7 @@ function ProfileScreenLoaded({
   const {_} = useLingui()
   const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -136,6 +137,21 @@ function ProfileScreenLoaded({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
+
+  const isMe = profile.did === currentAccount?.did
+  const showLikesTab = isMe
+  const showFeedsTab = isMe || extraInfoQuery.data?.hasFeeds
+  const showListsTab = isMe || extraInfoQuery.data?.hasLists
+  const sectionTitles = useMemo<string[]>(() => {
+    return [
+      'Posts',
+      'Posts & Replies',
+      'Media',
+      showLikesTab ? 'Likes' : undefined,
+      showFeedsTab ? 'Feeds' : undefined,
+      showListsTab ? 'Lists' : undefined,
+    ].filter(Boolean) as string[]
+  }, [showLikesTab, showFeedsTab, showListsTab])
 
   /*
     - todo
@@ -204,7 +220,7 @@ function ProfileScreenLoaded({
       moderation={moderation.account}>
       <PagerWithHeader
         isHeaderReady={true}
-        items={SECTION_TITLES_PROFILE}
+        items={sectionTitles}
         onPageSelected={onPageSelected}
         renderHeader={renderHeader}>
         {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
@@ -237,16 +253,40 @@ function ProfileScreenLoaded({
             scrollElRef={scrollElRef}
           />
         )}
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-          <FeedSection
-            ref={null}
-            feed={`likes|${profile.did}`}
-            onScroll={onScroll}
-            headerHeight={headerHeight}
-            isScrolledDown={isScrolledDown}
-            scrollElRef={scrollElRef}
-          />
-        )}
+        {showLikesTab
+          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+              <FeedSection
+                ref={null}
+                feed={`likes|${profile.did}`}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isScrolledDown={isScrolledDown}
+                scrollElRef={scrollElRef}
+              />
+            )
+          : null}
+        {showFeedsTab
+          ? ({onScroll, headerHeight, scrollElRef}) => (
+              <ProfileLists // TODO put feeds here, using this temporarily to avoid bugs
+                did={profile.did}
+                scrollElRef={scrollElRef}
+                onScroll={onScroll}
+                scrollEventThrottle={1}
+                headerOffset={headerHeight}
+              />
+            )
+          : null}
+        {showListsTab
+          ? ({onScroll, headerHeight, scrollElRef}) => (
+              <ProfileLists
+                did={profile.did}
+                scrollElRef={scrollElRef}
+                onScroll={onScroll}
+                scrollEventThrottle={1}
+                headerOffset={headerHeight}
+              />
+            )
+          : null}
       </PagerWithHeader>
       <FAB
         testID="composeFAB"

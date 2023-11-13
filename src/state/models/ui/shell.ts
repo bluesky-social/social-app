@@ -1,7 +1,6 @@
-import {AppBskyEmbedRecord} from '@atproto/api'
+import {AppBskyEmbedRecord, AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
-import {ProfileModel} from '../content/profile'
 import {
   shouldRequestEmailConfirmation,
   setEmailConfirmationRequested,
@@ -18,7 +17,7 @@ interface LightboxModel {}
 
 export class ProfileImageLightbox implements LightboxModel {
   name = 'profile-image'
-  constructor(public profileView: ProfileModel) {
+  constructor(public profile: AppBskyActorDefs.ProfileViewDetailed) {
     makeAutoObservable(this)
   }
 }

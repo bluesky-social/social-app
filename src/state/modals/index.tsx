@@ -3,7 +3,6 @@ import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
 import {StyleProp, ViewStyle, DeviceEventEmitter} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 
-import {ProfileModel} from '#/state/models/content/profile'
 import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
 
@@ -20,7 +19,7 @@ export interface ConfirmModal {
 
 export interface EditProfileModal {
   name: 'edit-profile'
-  profileView: ProfileModel
+  profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }
 
