@@ -178,6 +178,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
+      setState(s => ({...s, agent}))
       upsertAccount(account)
 
       logger.debug(
@@ -373,9 +374,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState, initSession],
   )
 
+  /**
+   * Clears the `currentAccount` from session. Typically used to drop the user
+   * back to the sign-in page.
+   */
   const clearCurrentAccount = React.useCallback(() => {
     setStateAndPersist(s => ({
       ...s,
+      agent: PUBLIC_BSKY_AGENT,
       currentAccount: undefined,
     }))
   }, [setStateAndPersist])
@@ -425,10 +431,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           logger.DebugContext.session,
         )
 
-        logout()
+        clearCurrentAccount()
       }
     })
-  }, [state, logout, initSession])
+  }, [state, clearCurrentAccount, initSession])
 
   const stateContext = React.useMemo(
     () => ({
