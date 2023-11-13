@@ -24,6 +24,7 @@ const SCROLLED_DOWN_LIMIT = 200
 
 interface PagerWithHeaderChildParams {
   headerHeight: number
+  isFocused: boolean
   onScroll: OnScrollHandler
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
@@ -202,6 +203,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                 <PagerItem
                   headerHeight={headerHeight}
                   isReady={isReady}
+                  isFocused={i === currentPage}
                   isScrolledDown={isScrolledDown}
                   onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
                   registerRef={(r: AnimatedRef<any>) => registerRef(r, i)}
@@ -218,12 +220,14 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 function PagerItem({
   headerHeight,
   isReady,
+  isFocused,
   isScrolledDown,
   onScrollWorklet,
   renderTab,
   registerRef,
 }: {
   headerHeight: number
+  isFocused: boolean
   isReady: boolean
   isScrolledDown: boolean
   registerRef: (scrollRef: AnimatedRef<any>) => void
@@ -244,6 +248,7 @@ function PagerItem({
 
   return renderTab({
     headerHeight,
+    isFocused,
     isScrolledDown,
     onScroll: scrollHandler,
     scrollElRef: scrollElRef as React.MutableRefObject<

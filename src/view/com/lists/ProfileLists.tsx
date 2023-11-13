@@ -34,6 +34,7 @@ export function ProfileLists({
   onScroll,
   scrollEventThrottle,
   headerOffset,
+  enabled,
   style,
   testID,
 }: {
@@ -42,6 +43,7 @@ export function ProfileLists({
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   headerOffset: number
+  enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
 }) {
@@ -49,6 +51,7 @@ export function ProfileLists({
   const theme = useTheme()
   const {track} = useAnalytics()
   const [isPTRing, setIsPTRing] = React.useState(false)
+  const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
     isFetching,
@@ -58,7 +61,7 @@ export function ProfileLists({
     isError,
     error,
     refetch,
-  } = useProfileListsQuery(did)
+  } = useProfileListsQuery(did, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.lists.length
 
   const items = React.useMemo(() => {

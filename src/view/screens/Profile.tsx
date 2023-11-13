@@ -31,8 +31,11 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
+import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
+import {useQueryClient} from '@tanstack/react-query'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
@@ -224,67 +227,79 @@ function ProfileScreenLoaded({
         items={sectionTitles}
         onPageSelected={onPageSelected}
         renderHeader={renderHeader}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={null}
             feed={`author|${profile.did}|posts_no_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
+            isFocused={isFocused}
             isScrolledDown={isScrolledDown}
             scrollElRef={scrollElRef}
           />
         )}
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={null}
             feed={`author|${profile.did}|posts_with_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
+            isFocused={isFocused}
             isScrolledDown={isScrolledDown}
             scrollElRef={scrollElRef}
           />
         )}
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={null}
             feed={`author|${profile.did}|posts_with_media`}
             onScroll={onScroll}
             headerHeight={headerHeight}
+            isFocused={isFocused}
             isScrolledDown={isScrolledDown}
             scrollElRef={scrollElRef}
           />
         )}
         {showLikesTab
-          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          ? ({
+              onScroll,
+              headerHeight,
+              isFocused,
+              isScrolledDown,
+              scrollElRef,
+            }) => (
               <FeedSection
                 ref={null}
                 feed={`likes|${profile.did}`}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
+                isFocused={isFocused}
                 isScrolledDown={isScrolledDown}
                 scrollElRef={scrollElRef}
               />
             )
           : null}
         {showFeedsTab
-          ? ({onScroll, headerHeight, scrollElRef}) => (
+          ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
                 did={profile.did}
                 scrollElRef={scrollElRef}
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
+                enabled={isFocused}
               />
             )
           : null}
         {showListsTab
-          ? ({onScroll, headerHeight, scrollElRef}) => (
+          ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 did={profile.did}
                 scrollElRef={scrollElRef}
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
+                enabled={isFocused}
               />
             )
           : null}
@@ -305,26 +320,23 @@ interface FeedSectionProps {
   feed: FeedDescriptor
   onScroll: OnScrollHandler
   headerHeight: number
+  isFocused: boolean
   isScrolledDown: boolean
   scrollElRef: any /* TODO */
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {
-      feed,
-      onScroll,
-      headerHeight,
-      // isScrolledDown,
-      scrollElRef,
-    },
+    {feed, onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef},
     ref,
   ) {
-    // const hasNew = false //TODO feed.hasNewLatest && !feed.isRefreshing
+    const queryClient = useQueryClient()
+    const [hasNew, setHasNew] = React.useState(false)
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      // feed.refresh() TODO
-    }, [scrollElRef, headerHeight])
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      setHasNew(false)
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
@@ -339,11 +351,20 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           testID="postsFeed"
           feed={feed}
           scrollElRef={scrollElRef}
+          onHasNew={setHasNew}
           onScroll={onScroll}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
+          enabled={isFocused}
         />
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label="Load new posts"
+            showIndicator={hasNew}
+          />
+        )}
       </View>
     )
   },

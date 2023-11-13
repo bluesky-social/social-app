@@ -35,6 +35,7 @@ export function ProfileFeedgens({
   onScroll,
   scrollEventThrottle,
   headerOffset,
+  enabled,
   style,
   testID,
 }: {
@@ -43,12 +44,14 @@ export function ProfileFeedgens({
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   headerOffset: number
+  enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
+  const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
     isFetching,
@@ -58,7 +61,7 @@ export function ProfileFeedgens({
     isError,
     error,
     refetch,
-  } = useProfileFeedgensQuery(did)
+  } = useProfileFeedgensQuery(did, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.feeds.length
   const {data: preferences} = usePreferencesQuery()
 
@@ -163,7 +166,7 @@ export function ProfileFeedgens({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item._reactKey}
+        keyExtractor={(item: any) => item._reactKey || item.uri}
         renderItem={renderItemInner}
         refreshControl={
           <RefreshControl

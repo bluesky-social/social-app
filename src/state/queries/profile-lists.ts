@@ -7,8 +7,9 @@ type RQPageParam = string | undefined
 
 export const RQKEY = (did: string) => ['profile-lists', did]
 
-export function useProfileListsQuery(did: string) {
+export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const {agent} = useSession()
+  const enabled = opts?.enabled !== false
   return useInfiniteQuery<
     AppBskyGraphGetLists.OutputSchema,
     Error,
@@ -27,5 +28,6 @@ export function useProfileListsQuery(did: string) {
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled,
   })
 }
