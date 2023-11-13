@@ -38,8 +38,8 @@ export const Lightbox = observer(function Lightbox() {
   let imgs: Img[] | undefined
   if (activeLightbox instanceof models.ProfileImageLightbox) {
     const opts = activeLightbox
-    if (opts.profileView.avatar) {
-      imgs = [{uri: opts.profileView.avatar}]
+    if (opts.profile.avatar) {
+      imgs = [{uri: opts.profile.avatar}]
     }
   } else if (activeLightbox instanceof models.ImagesLightbox) {
     const opts = activeLightbox
