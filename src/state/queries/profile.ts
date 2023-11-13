@@ -1,19 +1,99 @@
-import {AtUri} from '@atproto/api'
-import {useQuery, useMutation} from '@tanstack/react-query'
+import {
+  AtUri,
+  AppBskyActorDefs,
+  AppBskyActorProfile,
+  AppBskyActorGetProfile,
+  BskyAgent,
+} from '@atproto/api'
+import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {useSession} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
+import {uploadBlob} from '#/lib/api'
+import {until} from '#/lib/async/until'
 
 export const RQKEY = (did: string) => ['profile', did]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {agent} = useSession()
   return useQuery({
-    queryKey: RQKEY(did),
+    queryKey: RQKEY(did || ''),
     queryFn: async () => {
       const res = await agent.getProfile({actor: did || ''})
       return res.data
     },
     enabled: !!did,
+  })
+}
+
+interface ProfileUpdateParams {
+  profile: AppBskyActorDefs.ProfileView
+  updates: AppBskyActorProfile.Record
+  newUserAvatar: RNImage | undefined | null
+  newUserBanner: RNImage | undefined | null
+}
+export function useProfileUpdateMutation() {
+  const {agent} = useSession()
+  const queryClient = useQueryClient()
+  return useMutation<void, Error, ProfileUpdateParams>({
+    mutationFn: async ({profile, updates, newUserAvatar, newUserBanner}) => {
+      await agent.upsertProfile(async existing => {
+        existing = existing || {}
+        existing.displayName = updates.displayName
+        existing.description = updates.description
+        if (newUserAvatar) {
+          const res = await uploadBlob(
+            agent,
+            newUserAvatar.path,
+            newUserAvatar.mime,
+          )
+          existing.avatar = res.data.blob
+        } else if (newUserAvatar === null) {
+          existing.avatar = undefined
+        }
+        if (newUserBanner) {
+          const res = await uploadBlob(
+            agent,
+            newUserBanner.path,
+            newUserBanner.mime,
+          )
+          existing.banner = res.data.blob
+        } else if (newUserBanner === null) {
+          existing.banner = undefined
+        }
+        return existing
+      })
+      await whenAppViewReady(agent, profile.did, res => {
+        if (typeof newUserAvatar !== 'undefined') {
+          if (newUserAvatar === null && res.data.avatar) {
+            // url hasnt cleared yet
+            return false
+          } else if (res.data.avatar === profile.avatar) {
+            // url hasnt changed yet
+            return false
+          }
+        }
+        if (typeof newUserBanner !== 'undefined') {
+          if (newUserBanner === null && res.data.banner) {
+            // url hasnt cleared yet
+            return false
+          } else if (res.data.banner === profile.banner) {
+            // url hasnt changed yet
+            return false
+          }
+        }
+        return (
+          res.data.displayName === updates.displayName &&
+          res.data.description === updates.description
+        )
+      })
+    },
+    onSuccess(data, variables) {
+      // invalidate cache
+      queryClient.invalidateQueries({
+        queryKey: RQKEY(variables.profile.did),
+      })
+    },
   })
 }
 
@@ -166,4 +246,17 @@ export function useProfileUnblockMutation() {
       })
     },
   })
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  actor: string,
+  fn: (res: AppBskyActorGetProfile.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () => agent.app.bsky.actor.getProfile({actor}),
+  )
 }

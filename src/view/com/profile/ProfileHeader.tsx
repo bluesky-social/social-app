@@ -197,7 +197,7 @@ function ProfileHeaderLoaded({
     track('ProfileHeader:EditProfileButtonClicked')
     openModal({
       name: 'edit-profile',
-      profileView: profile,
+      profile,
     })
   }, [track, openModal, profile])
 
