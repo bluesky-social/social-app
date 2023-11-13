@@ -33,28 +33,27 @@ export function useHomeTabs(): string[] {
         if (cached) {
           reqs.push(cached)
         } else {
-          const type = getFeedTypeFromUri(uri)
+          reqs.push(
+            queryClient.fetchQuery({
+              queryKey: feedSourceInfoQueryKey({uri}),
+              queryFn: async () => {
+                const type = getFeedTypeFromUri(uri)
 
-          if (type === 'feed') {
-            reqs.push(
-              (async () => {
-                const res = await agent.app.bsky.feed.getFeedGenerator({
-                  feed: uri,
-                })
-                return hydrateFeedGenerator(res.data.view)
-              })(),
-            )
-          } else {
-            reqs.push(
-              (async () => {
-                const res = await agent.app.bsky.graph.getList({
-                  list: uri,
-                  limit: 1,
-                })
-                return hydrateList(res.data.list)
-              })(),
-            )
-          }
+                if (type === 'feed') {
+                  const res = await agent.app.bsky.feed.getFeedGenerator({
+                    feed: uri,
+                  })
+                  return hydrateFeedGenerator(res.data.view)
+                } else {
+                  const res = await agent.app.bsky.graph.getList({
+                    list: uri,
+                    limit: 1,
+                  })
+                  return hydrateList(res.data.list)
+                }
+              },
+            }),
+          )
         }
       }
 
