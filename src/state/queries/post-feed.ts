@@ -11,7 +11,8 @@ import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
-import {useStores} from '../models/root-store'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {logger} from '#/logger'
 
 type ActorDid = string
 type AuthorFilter =
@@ -66,8 +67,8 @@ export function usePostFeedQuery(
 ) {
   const {agent} = useSession()
   const feedTuners = useFeedTuners(feedDesc)
-  const store = useStores()
   const enabled = opts?.enabled !== false
+  const moderationOpts = useModerationOpts()
 
   const api: FeedAPI = useMemo(() => {
     if (feedDesc === 'home') {
@@ -100,26 +101,27 @@ export function usePostFeedQuery(
     if (!enabled) {
       return false
     }
-    console.log('poll')
+
+    logger.debug('usePostFeedQuery: pollLatest')
+
     const post = await api.peekLatest()
-    if (post) {
+
+    if (post && moderationOpts) {
       const slices = tuner.tune([post], feedTuners, {
         dryRun: true,
         maintainOrder: true,
       })
       if (slices[0]) {
         if (
-          !moderatePost(
-            slices[0].items[0].post,
-            store.preferences.moderationOpts,
-          ).content.filter
+          !moderatePost(slices[0].items[0].post, moderationOpts).content.filter
         ) {
           return true
         }
       }
     }
+
     return false
-  }, [api, tuner, feedTuners, store.preferences.moderationOpts, enabled])
+  }, [api, tuner, feedTuners, moderationOpts, enabled])
 
   const out = useInfiniteQuery<
     FeedPage,
