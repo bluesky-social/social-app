@@ -31,8 +31,11 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
+import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
+import {useQueryClient} from '@tanstack/react-query'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
@@ -323,22 +326,17 @@ interface FeedSectionProps {
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {
-      feed,
-      onScroll,
-      headerHeight,
-      isFocused,
-      // isScrolledDown,
-      scrollElRef,
-    },
+    {feed, onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef},
     ref,
   ) {
-    // const hasNew = false //TODO feed.hasNewLatest && !feed.isRefreshing
+    const queryClient = useQueryClient()
+    const [hasNew, setHasNew] = React.useState(false)
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      // feed.refresh() TODO
-    }, [scrollElRef, headerHeight])
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      setHasNew(false)
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
@@ -353,12 +351,20 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           testID="postsFeed"
           feed={feed}
           scrollElRef={scrollElRef}
+          onHasNew={setHasNew}
           onScroll={onScroll}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
           enabled={isFocused}
         />
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label="Load new posts"
+            showIndicator={hasNew}
+          />
+        )}
       </View>
     )
   },
