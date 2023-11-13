@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View, RefreshControl} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
@@ -94,6 +94,7 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
   const pal = usePalette('default')
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
+  const [isPTR, setIsPTR] = React.useState(false)
   const {
     data: preferences,
     isLoading: isPreferencesLoading,
@@ -148,6 +149,11 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
   const onSubmitQuery = React.useCallback(() => {
     debouncedSearch(query)
   }, [query, debouncedSearch])
+  const onPullToRefresh = React.useCallback(async () => {
+    setIsPTR(true)
+    await refetchPopularFeeds()
+    setIsPTR(false)
+  }, [setIsPTR, refetchPopularFeeds])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -459,6 +465,14 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
         keyExtractor={item => item.key}
         contentContainerStyle={styles.contentContainer}
         renderItem={renderItem}
+        refreshControl={
+          <RefreshControl
+            refreshing={isPTR}
+            onRefresh={isUserSearching ? undefined : onPullToRefresh}
+            tintColor={pal.colors.text}
+            titleColor={pal.colors.text}
+          />
+        }
         initialNumToRender={10}
         onEndReached={() =>
           isUserSearching ? undefined : fetchNextPopularFeedsPage()
