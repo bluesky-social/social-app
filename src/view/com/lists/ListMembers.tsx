@@ -64,6 +64,7 @@ export function ListMembers({
 
   const {
     data,
+    dataUpdatedAt,
     isFetching,
     isFetched,
     isError,
@@ -184,6 +185,7 @@ export function ListMembers({
             (item as AppBskyGraphDefs.ListItemView).subject.handle
           }`}
           profile={(item as AppBskyGraphDefs.ListItemView).subject}
+          dataUpdatedAt={dataUpdatedAt}
           renderButton={renderMemberButton}
           style={{paddingHorizontal: isMobile ? 8 : 14, paddingVertical: 4}}
         />
@@ -196,6 +198,7 @@ export function ListMembers({
       onPressTryAgain,
       onPressRetryLoadMore,
       isMobile,
+      dataUpdatedAt,
     ],
   )
 
