@@ -166,7 +166,7 @@ export function ProfileFeedgens({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item._reactKey}
+        keyExtractor={(item: any) => item._reactKey || item.uri}
         renderItem={renderItemInner}
         refreshControl={
           <RefreshControl
