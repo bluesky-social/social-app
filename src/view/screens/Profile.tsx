@@ -31,8 +31,6 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
 
-const SECTION_TITLES_PROFILE = ['Posts', 'Posts & Replies', 'Media', 'Likes']
-
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
   route,
@@ -137,6 +135,16 @@ function ProfileScreenLoaded({
     [profile, moderationOpts],
   )
 
+  const showLikesTab = profile.did === currentAccount?.did
+  const sectionTitles = useMemo<string[]>(() => {
+    return [
+      'Posts',
+      'Posts & Replies',
+      'Media',
+      showLikesTab ? 'Likes' : undefined,
+    ].filter(Boolean) as string[]
+  }, [showLikesTab])
+
   /*
     - todo
         - feeds
@@ -204,7 +212,7 @@ function ProfileScreenLoaded({
       moderation={moderation.account}>
       <PagerWithHeader
         isHeaderReady={true}
-        items={SECTION_TITLES_PROFILE}
+        items={sectionTitles}
         onPageSelected={onPageSelected}
         renderHeader={renderHeader}>
         {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
@@ -237,16 +245,18 @@ function ProfileScreenLoaded({
             scrollElRef={scrollElRef}
           />
         )}
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-          <FeedSection
-            ref={null}
-            feed={`likes|${profile.did}`}
-            onScroll={onScroll}
-            headerHeight={headerHeight}
-            isScrolledDown={isScrolledDown}
-            scrollElRef={scrollElRef}
-          />
-        )}
+        {showLikesTab
+          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+              <FeedSection
+                ref={null}
+                feed={`likes|${profile.did}`}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isScrolledDown={isScrolledDown}
+                scrollElRef={scrollElRef}
+              />
+            )
+          : null}
       </PagerWithHeader>
       <FAB
         testID="composeFAB"
