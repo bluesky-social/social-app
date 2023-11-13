@@ -10,6 +10,7 @@ import {ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
+import {ProfileLists} from '../com/lists/ProfileLists'
 import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -264,14 +265,26 @@ function ProfileScreenLoaded({
               />
             )
           : null}
-        {showListsTab
-          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-              <View /> // TODO
+        {showFeedsTab
+          ? ({onScroll, headerHeight, scrollElRef}) => (
+              <ProfileLists // TODO put feeds here, using this temporarily to avoid bugs
+                did={profile.did}
+                scrollElRef={scrollElRef}
+                onScroll={onScroll}
+                scrollEventThrottle={1}
+                headerOffset={headerHeight}
+              />
             )
           : null}
-        {showFeedsTab
-          ? ({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-              <View /> // TODO
+        {showListsTab
+          ? ({onScroll, headerHeight, scrollElRef}) => (
+              <ProfileLists
+                did={profile.did}
+                scrollElRef={scrollElRef}
+                onScroll={onScroll}
+                scrollEventThrottle={1}
+                headerOffset={headerHeight}
+              />
             )
           : null}
       </PagerWithHeader>

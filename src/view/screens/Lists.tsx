@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ListsList} from 'view/com/lists/ListsList'
+import {MyLists} from '#/view/com/lists/MyLists'
 import {Text} from 'view/com/util/text/Text'
 import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
@@ -79,7 +79,7 @@ export const ListsScreen = withAuthRequired(
             </Button>
           </View>
         </SimpleViewHeader>
-        <ListsList filter="curate" style={s.flexGrow1} />
+        <MyLists filter="curate" style={s.flexGrow1} />
       </View>
     )
   },
