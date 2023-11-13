@@ -251,7 +251,7 @@ function ComposeBtn() {
 }
 
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
-  const store = useStores()
+  const {currentAccount} = useSession()
   const pal = usePalette('default')
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
@@ -370,7 +370,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Moderation"
       />
       <NavItem
-        href={makeProfileLink(store.me)}
+        href={makeProfileLink(currentAccount)}
         icon={
           <UserIcon
             strokeWidth={1.75}

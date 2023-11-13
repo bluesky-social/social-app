@@ -37,6 +37,7 @@ import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
@@ -53,7 +54,11 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
     route.params.name === 'me' ? currentAccount?.did : route.params.name
   const moderationOpts = useModerationOpts()
   const {data: resolvedDid, error: resolveError} = useResolveDidQuery(name)
-  const {data: profile, error: profileError} = useProfileQuery({
+  const {
+    data: profile,
+    dataUpdatedAt,
+    error: profileError,
+  } = useProfileQuery({
     did: resolvedDid?.did,
   })
   if (resolveError || profileError) {
@@ -71,6 +76,7 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
     return (
       <ProfileScreenLoaded
         profile={profile}
+        dataUpdatedAt={dataUpdatedAt}
         moderationOpts={moderationOpts}
         hideBackButton={!!route.params.hideBackButton}
       />
@@ -86,14 +92,17 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
 })
 
 function ProfileScreenLoaded({
-  profile,
+  profile: profileUnshadowed,
+  dataUpdatedAt,
   moderationOpts,
   hideBackButton,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  dataUpdatedAt: number
   moderationOpts: ModerationOpts
   hideBackButton: boolean
 }) {
+  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
   const store = useStores()
   const {currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -251,7 +260,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
     ref,
   ) {
-    const hasNew = TODO //feed.hasNewLatest && !feed.isRefreshing
+    const hasNew = false //TODO feed.hasNewLatest && !feed.isRefreshing
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})

@@ -54,7 +54,6 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
-import {UseMutationResult} from '@tanstack/react-query'
 import {useSession} from '#/state/session'
 
 interface Props {
@@ -143,31 +142,6 @@ function ProfileHeaderLoaded({
   const blockMutation = useProfileBlockMutation()
   const unblockMutation = useProfileUnblockMutation()
 
-  const optimistic = (
-    setMutation: {isPending: boolean},
-    unsetMutation: {isPending: boolean},
-    v: boolean,
-  ) => {
-    if (setMutation.isPending) return true
-    if (unsetMutation.isPending) return false
-    return v
-  }
-  const isFollowing = optimistic(
-    followMutation,
-    unfollowMutation,
-    !!profile.viewer?.following,
-  )
-  const isMuting = optimistic(
-    muteMutation,
-    unmuteMutation,
-    !!profile.viewer?.muted,
-  )
-  const isBlocking = optimistic(
-    blockMutation,
-    unblockMutation,
-    !!profile.viewer?.blocking,
-  )
-
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
@@ -197,7 +171,7 @@ function ProfileHeaderLoaded({
           profile.displayName || profile.handle,
         )}`,
       )
-    } catch (e) {
+    } catch (e: any) {
       logger.error('Failed to follow', {error: String(e)})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
@@ -218,7 +192,7 @@ function ProfileHeaderLoaded({
           profile.displayName || profile.handle,
         )}`,
       )
-    } catch (e) {
+    } catch (e: any) {
       logger.error('Failed to unfollow', {error: String(e)})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
@@ -359,11 +333,13 @@ function ProfileHeaderLoaded({
       },
     })
     if (!isMe) {
-      if (!isBlocking) {
+      if (!profile.viewer?.blocking) {
         items.push({
           testID: 'profileHeaderDropdownMuteBtn',
-          label: isMuting ? 'Unmute Account' : 'Mute Account',
-          onPress: isMuting ? onPressUnmuteAccount : onPressMuteAccount,
+          label: profile.viewer?.muted ? 'Unmute Account' : 'Mute Account',
+          onPress: profile.viewer?.muted
+            ? onPressUnmuteAccount
+            : onPressMuteAccount,
           icon: {
             ios: {
               name: 'speaker.slash',
@@ -376,8 +352,10 @@ function ProfileHeaderLoaded({
       if (!profile.viewer?.blockingByList) {
         items.push({
           testID: 'profileHeaderDropdownBlockBtn',
-          label: isBlocking ? 'Unblock Account' : 'Block Account',
-          onPress: isBlocking ? onPressUnblockAccount : onPressBlockAccount,
+          label: profile.viewer?.blocking ? 'Unblock Account' : 'Block Account',
+          onPress: profile.viewer?.blocking
+            ? onPressUnblockAccount
+            : onPressBlockAccount,
           icon: {
             ios: {
               name: 'person.fill.xmark',
@@ -403,8 +381,8 @@ function ProfileHeaderLoaded({
     return items
   }, [
     isMe,
-    isMuting,
-    isBlocking,
+    profile.viewer?.muted,
+    profile.viewer?.blocking,
     profile.viewer?.blockingByList,
     onPressShare,
     onPressUnmuteAccount,
@@ -415,7 +393,8 @@ function ProfileHeaderLoaded({
     onPressAddRemoveLists,
   ])
 
-  const blockHide = !isMe && (isBlocking || profile.viewer?.blockedBy)
+  const blockHide =
+    !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
@@ -437,7 +416,7 @@ function ProfileHeaderLoaded({
                 <Trans>Edit Profile</Trans>
               </Text>
             </TouchableOpacity>
-          ) : isBlocking ? (
+          ) : profile.viewer?.blocking ? (
             profile.viewer?.blockingByList ? null : (
               <TouchableOpacity
                 testID="unblockBtn"
@@ -486,7 +465,7 @@ function ProfileHeaderLoaded({
                 </TouchableOpacity>
               )}
 
-              {isFollowing ? (
+              {profile.viewer?.following ? (
                 <TouchableOpacity
                   testID="unfollowBtn"
                   onPress={onPressUnfollow}
