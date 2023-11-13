@@ -1,18 +1,18 @@
 import * as Notifications from 'expo-notifications'
+import {QueryClient} from '@tanstack/react-query'
 import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
 import {devicePlatform, isIOS} from 'platform/detection'
 import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
+import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-export function init(store: RootStoreModel) {
-  store.onUnreadNotifications(count => Notifications.setBadgeCountAsync(count))
-
+export function init(store: RootStoreModel, queryClient: QueryClient) {
   store.onSessionLoaded(async () => {
     // request notifications permission once the user has logged in
     const perms = await Notifications.getPermissionsAsync()
@@ -83,7 +83,7 @@ export function init(store: RootStoreModel) {
     )
     if (event.request.trigger.type === 'push') {
       // refresh notifications in the background
-      store.me.notifications.syncQueue()
+      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
       // handle payload-based deeplinks
       let payload
       if (isIOS) {
@@ -121,7 +121,7 @@ export function init(store: RootStoreModel) {
           logger.DebugContext.notifications,
         )
         track('Notificatons:OpenApp')
-        store.me.notifications.refresh() // refresh notifications
+        queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
         resetToTab('NotificationsTab') // open notifications tab
       }
     },

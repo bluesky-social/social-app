@@ -31,6 +31,7 @@ import {
   useSession,
   useSessionApi,
 } from 'state/session'
+import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
@@ -53,7 +54,7 @@ const InnerApp = observer(function AppImpl() {
     setupState().then(store => {
       setRootStore(store)
       analytics.init(store)
-      notifications.init(store)
+      notifications.init(store, queryClient)
       store.onSessionDropped(() => {
         Toast.show('Sorry! Your session expired. Please log in again.')
       })
@@ -72,22 +73,20 @@ const InnerApp = observer(function AppImpl() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={colorMode}>
-        <RootSiblingParent>
-          <analytics.Provider>
-            <RootStoreProvider value={rootStore}>
-              <I18nProvider i18n={i18n}>
-                <GestureHandlerRootView style={s.h100pct}>
-                  <TestCtrls />
-                  <Shell />
-                </GestureHandlerRootView>
-              </I18nProvider>
-            </RootStoreProvider>
-          </analytics.Provider>
-        </RootSiblingParent>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ThemeProvider theme={colorMode}>
+      <RootSiblingParent>
+        <analytics.Provider>
+          <RootStoreProvider value={rootStore}>
+            <I18nProvider i18n={i18n}>
+              <GestureHandlerRootView style={s.h100pct}>
+                <TestCtrls />
+                <Shell />
+              </GestureHandlerRootView>
+            </I18nProvider>
+          </RootStoreProvider>
+        </analytics.Provider>
+      </RootSiblingParent>
+    </ThemeProvider>
   )
 })
 
@@ -103,19 +102,23 @@ function App() {
   }
 
   return (
-    <SessionProvider>
-      <ShellStateProvider>
-        <PrefsStateProvider>
-          <MutedThreadsProvider>
-            <InvitesStateProvider>
-              <ModalStateProvider>
-                <InnerApp />
-              </ModalStateProvider>
-            </InvitesStateProvider>
-          </MutedThreadsProvider>
-        </PrefsStateProvider>
-      </ShellStateProvider>
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <MutedThreadsProvider>
+              <UnreadNotifsProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <InnerApp />
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </UnreadNotifsProvider>
+            </MutedThreadsProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   )
 }
 

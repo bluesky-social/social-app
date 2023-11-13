@@ -49,6 +49,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {useSession, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 
 export function DrawerProfileCard({
   account,
@@ -110,8 +111,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
   const {currentAccount} = useSession()
-
-  const {notifications} = store.me
+  const numUnreadNotifications = useUnreadNotifications()
 
   // events
   // =
@@ -286,11 +286,11 @@ export const DrawerContent = observer(function DrawerContentImpl() {
             label="Notifications"
             accessibilityLabel={_(msg`Notifications`)}
             accessibilityHint={
-              notifications.unreadCountLabel === ''
+              numUnreadNotifications === ''
                 ? ''
-                : `${notifications.unreadCountLabel} unread`
+                : `${numUnreadNotifications} unread`
             }
-            count={notifications.unreadCountLabel}
+            count={numUnreadNotifications}
             bold={isAtNotifications}
             onPress={onPressNotifications}
           />

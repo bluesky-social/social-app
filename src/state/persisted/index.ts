@@ -3,7 +3,7 @@ import {logger} from '#/logger'
 import {defaults, Schema} from '#/state/persisted/schema'
 import {migrate} from '#/state/persisted/legacy'
 import * as store from '#/state/persisted/store'
-import BroadcastChannel from '#/state/persisted/broadcast'
+import BroadcastChannel from '#/lib/broadcast'
 
 export type {Schema, PersistedAccount} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'

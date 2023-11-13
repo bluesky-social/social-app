@@ -68,7 +68,7 @@ export function Feed({
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
 
   const opts = React.useMemo(() => ({enabled}), [enabled])
@@ -137,15 +137,15 @@ export function Feed({
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
-    setIsRefreshing(true)
+    setIsPTRing(true)
     try {
       await refetch()
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {error: err})
     }
-    setIsRefreshing(false)
-  }, [refetch, track, setIsRefreshing, onHasNew])
+    setIsPTRing(false)
+  }, [refetch, track, setIsPTRing, onHasNew])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -233,7 +233,7 @@ export function Feed({
         ListHeaderComponent={ListHeaderComponent}
         refreshControl={
           <RefreshControl
-            refreshing={isRefreshing}
+            refreshing={isPTRing}
             onRefresh={onRefresh}
             tintColor={pal.colors.text}
             titleColor={pal.colors.text}

@@ -1,6 +1,8 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {Linking, StyleProp, View, ViewStyle} from 'react-native'
+import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AppBskyFeedDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
@@ -8,41 +10,83 @@ import {
   NativeDropdown,
   DropdownItem as NativeDropdownItem,
 } from './NativeDropdown'
+import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
+import {makeProfileLink} from '#/lib/routes/links'
+import {getTranslatorLink} from '#/locale/helpers'
+import {useStores} from '#/state'
+import {usePostDeleteMutation} from '#/state/queries/post'
+import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
+import {useLanguagePrefs} from '#/state/preferences'
+import {logger} from '#/logger'
 
 export function PostDropdownBtn({
   testID,
-  itemUri,
-  itemCid,
-  itemHref,
-  isAuthor,
-  isThreadMuted,
-  onCopyPostText,
-  onOpenTranslate,
-  onToggleThreadMute,
-  onDeletePost,
+  post,
+  record,
   style,
 }: {
   testID: string
-  itemUri: string
-  itemCid: string
-  itemHref: string
-  itemTitle: string
-  isAuthor: boolean
-  isThreadMuted: boolean
-  onCopyPostText: () => void
-  onOpenTranslate: () => void
-  onToggleThreadMute: () => void
-  onDeletePost: () => void
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
 }) {
+  const store = useStores()
   const theme = useTheme()
-  const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const {openModal} = useModalControls()
+  const langPrefs = useLanguagePrefs()
+  const mutedThreads = useMutedThreads()
+  const toggleThreadMute = useToggleThreadMute()
+  const postDeleteMutation = usePostDeleteMutation()
+
+  const rootUri = record.reply?.root?.uri || post.uri
+  const isThreadMuted = mutedThreads.includes(rootUri)
+  const isAuthor = post.author.did === store.me.did
+  const href = React.useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey)
+  }, [post.uri, post.author])
+
+  const translatorUrl = getTranslatorLink(
+    record.text,
+    langPrefs.primaryLanguage,
+  )
+
+  const onDeletePost = React.useCallback(() => {
+    postDeleteMutation.mutateAsync({uri: post.uri}).then(
+      () => {
+        Toast.show('Post deleted')
+      },
+      e => {
+        logger.error('Failed to delete post', {error: e})
+        Toast.show('Failed to delete post, please try again')
+      },
+    )
+  }, [post, postDeleteMutation])
+
+  const onToggleThreadMute = React.useCallback(() => {
+    try {
+      const muted = toggleThreadMute(rootUri)
+      if (muted) {
+        Toast.show('You will no longer receive notifications for this thread')
+      } else {
+        Toast.show('You will now receive notifications for this thread')
+      }
+    } catch (e) {
+      logger.error('Failed to toggle thread mute', {error: e})
+    }
+  }, [rootUri, toggleThreadMute])
+
+  const onCopyPostText = React.useCallback(() => {
+    Clipboard.setString(record?.text || '')
+    Toast.show('Copied to clipboard')
+  }, [record])
+
+  const onOpenTranslate = React.useCallback(() => {
+    Linking.openURL(translatorUrl)
+  }, [translatorUrl])
 
   const dropdownItems: NativeDropdownItem[] = [
     {
@@ -76,7 +120,7 @@ export function PostDropdownBtn({
     {
       label: 'Share',
       onPress() {
-        const url = toShareUrl(itemHref)
+        const url = toShareUrl(href)
         shareUrl(url)
       },
       testID: 'postDropdownShareBtn',
@@ -113,8 +157,8 @@ export function PostDropdownBtn({
       onPress() {
         openModal({
           name: 'report',
-          uri: itemUri,
-          cid: itemCid,
+          uri: post.uri,
+          cid: post.cid,
         })
       },
       testID: 'postDropdownReportBtn',
@@ -155,7 +199,7 @@ export function PostDropdownBtn({
       <NativeDropdown
         testID={testID}
         items={dropdownItems}
-        accessibilityLabel={_(msg`More post options`)}
+        accessibilityLabel="More post options"
         accessibilityHint="">
         <View style={style}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
