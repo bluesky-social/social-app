@@ -13,6 +13,7 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {EmptyState} from '../util/EmptyState'
+import {cleanError} from '#/lib/strings/errors'
 
 enum KnownError {
   Block,
@@ -69,7 +70,12 @@ export function FeedErrorMessage({
     )
   }
 
-  return <ErrorMessage message={error} onPressTryAgain={onPressTryAgain} />
+  return (
+    <ErrorMessage
+      message={cleanError(error)}
+      onPressTryAgain={onPressTryAgain}
+    />
+  )
 }
 
 function FeedgenErrorMessage({

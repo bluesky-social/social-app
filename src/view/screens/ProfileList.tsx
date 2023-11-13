@@ -70,7 +70,7 @@ export const ProfileListScreen = withAuthRequired(
     const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
       AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
     )
-    const {data: list, error: listError} = useListQuery(resolvedUri)
+    const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
 
     if (resolveError) {
       return (
