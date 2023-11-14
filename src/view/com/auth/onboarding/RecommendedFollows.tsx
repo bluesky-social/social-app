@@ -92,13 +92,7 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
     if (!suggestedFollows) return []
 
     const additional = Object.entries(additionalSuggestions)
-    const items = []
-
-    for (const page of suggestedFollows.pages) {
-      for (const actor of page.actors) {
-        items.push(actor)
-      }
-    }
+    const items = suggestedFollows.pages.flatMap(page => page.actors)
 
     outer: while (additional.length) {
       const additionalAccount = additional.shift()
