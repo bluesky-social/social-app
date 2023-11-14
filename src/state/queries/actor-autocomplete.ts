@@ -1,8 +1,12 @@
+import React from 'react'
 import {AppBskyActorDefs, BskyAgent} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
-import {useSession} from '../session'
-import {useMyFollowsQuery} from './my-follows'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 import AwaitLock from 'await-lock'
+import Fuse from 'fuse.js'
+
+import {logger} from '#/logger'
+import {useSession} from '#/state/session'
+import {useMyFollowsQuery} from '#/state/queries/my-follows'
 
 export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
 
@@ -20,6 +24,58 @@ export function useActorAutocompleteQuery(prefix: string) {
     },
     enabled: !isFetching && !!prefix,
   })
+}
+
+export function useActorSearch() {
+  const queryClient = useQueryClient()
+  const {agent} = useSession()
+  const {data: follows} = useMyFollowsQuery()
+
+  const followsSearch = React.useMemo(() => {
+    if (!follows) return undefined
+
+    return new Fuse(follows, {
+      includeScore: true,
+      keys: ['displayName', 'handle'],
+    })
+  }, [follows])
+
+  return React.useCallback(
+    async ({query}: {query: string}) => {
+      let searchResults: AppBskyActorDefs.ProfileViewBasic[] = []
+
+      if (followsSearch) {
+        const results = followsSearch.search(query)
+        searchResults = results.map(({item}) => item)
+      }
+
+      try {
+        const res = await queryClient.fetchQuery({
+          // cached for 1 min
+          staleTime: 60 * 1000,
+          queryKey: ['search', query],
+          queryFn: () =>
+            agent.searchActorsTypeahead({
+              term: query,
+              limit: 8,
+            }),
+        })
+
+        if (res.data.actors) {
+          for (const actor of res.data.actors) {
+            if (!searchResults.find(item => item.handle === actor.handle)) {
+              searchResults.push(actor)
+            }
+          }
+        }
+      } catch (e) {
+        logger.error('useActorSearch: searchActorsTypeahead failed', {error: e})
+      }
+
+      return searchResults
+    },
+    [agent, followsSearch, queryClient],
+  )
 }
 
 export class ActorAutocomplete {

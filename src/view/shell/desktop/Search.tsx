@@ -1,9 +1,9 @@
 import React from 'react'
 import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {AppBskyActorDefs} from '@atproto/api'
+
 import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
@@ -11,49 +11,54 @@ import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {Text} from 'view/com/util/text/Text'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useActorSearch} from '#/state/queries/actor-autocomplete'
 
 export const DesktopSearch = observer(function DesktopSearch() {
-  const store = useStores()
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const textInput = React.useRef<TextInput>(null)
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
+    undefined,
+  )
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
-  const autocompleteView = React.useMemo<UserAutocompleteModel>(
-    () => new UserAutocompleteModel(store),
-    [store],
-  )
-  const navigation = useNavigation<NavigationProp>()
+  const [searchResults, setSearchResults] = React.useState<
+    AppBskyActorDefs.ProfileViewBasic[]
+  >([])
 
-  // initial setup
-  React.useEffect(() => {
-    if (store.me.did) {
-      autocompleteView.setup()
-    }
-  }, [autocompleteView, store.me.did])
+  const search = useActorSearch()
 
-  const onChangeQuery = React.useCallback(
-    (text: string) => {
+  const onChangeText = React.useCallback(
+    async (text: string) => {
       setQuery(text)
+
       if (text.length > 0 && isInputFocused) {
-        autocompleteView.setActive(true)
-        autocompleteView.setPrefix(text)
+        if (searchDebounceTimeout.current)
+          clearTimeout(searchDebounceTimeout.current)
+
+        searchDebounceTimeout.current = setTimeout(async () => {
+          const results = await search({query: text})
+
+          if (results) {
+            setSearchResults(results)
+          }
+        }, 300)
       } else {
-        autocompleteView.setActive(false)
+        if (searchDebounceTimeout.current)
+          clearTimeout(searchDebounceTimeout.current)
+        setSearchResults([])
       }
     },
-    [setQuery, autocompleteView, isInputFocused],
+    [setQuery, isInputFocused, search, setSearchResults],
   )
 
   const onPressCancelSearch = React.useCallback(() => {
-    setQuery('')
-    autocompleteView.setActive(false)
-  }, [setQuery, autocompleteView])
+    onChangeText('')
+  }, [onChangeText])
 
   const onSubmit = React.useCallback(() => {
     navigation.dispatch(StackActions.push('Search', {q: query}))
-    autocompleteView.setActive(false)
-  }, [query, navigation, autocompleteView])
+  }, [query, navigation])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -66,7 +71,6 @@ export const DesktopSearch = observer(function DesktopSearch() {
           />
           <TextInput
             testID="searchTextInput"
-            ref={textInput}
             placeholder="Search"
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus
@@ -75,7 +79,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
             style={[pal.textLight, styles.input]}
             onFocus={() => setIsInputFocused(true)}
             onBlur={() => setIsInputFocused(false)}
-            onChangeText={onChangeQuery}
+            onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
             accessibilityLabel={_(msg`Search`)}
@@ -100,16 +104,16 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
       {query !== '' && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {autocompleteView.suggestions.length ? (
+          {searchResults.length ? (
             <>
-              {autocompleteView.suggestions.map((item, i) => (
+              {searchResults.map((item, i) => (
                 <ProfileCard key={item.did} profile={item} noBorder={i === 0} />
               ))}
             </>
           ) : (
             <View>
               <Text style={[pal.textLight, styles.noResults]}>
-                <Trans>No results found for {autocompleteView.prefix}</Trans>
+                <Trans>No results found for {query}</Trans>
               </Text>
             </View>
           )}
