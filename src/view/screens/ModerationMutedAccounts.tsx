@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   FlatList,
@@ -8,53 +8,78 @@ import {
 } from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Text} from '../com/util/text/Text'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {MutedAccountsModel} from 'state/models/lists/muted-accounts'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
+import {cleanError} from '#/lib/strings/errors'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationMutedAccounts'
 >
 export const ModerationMutedAccounts = withAuthRequired(
-  observer(function ModerationMutedAccountsImpl({}: Props) {
+  function ModerationMutedAccountsImpl({}: Props) {
     const pal = usePalette('default')
-    const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
-    const mutedAccounts = useMemo(() => new MutedAccountsModel(store), [store])
+    const [isPTRing, setIsPTRing] = React.useState(false)
+    const {
+      data,
+      dataUpdatedAt,
+      isFetching,
+      isError,
+      error,
+      refetch,
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+    } = useMyMutedAccountsQuery()
+    const isEmpty = !isFetching && !data?.pages[0]?.mutes.length
+    const profiles = React.useMemo(() => {
+      if (data?.pages) {
+        return data.pages.flatMap(page => page.mutes)
+      }
+      return []
+    }, [data])
 
     useFocusEffect(
       React.useCallback(() => {
         screen('MutedAccounts')
         setMinimalShellMode(false)
-        mutedAccounts.refresh()
-      }, [screen, setMinimalShellMode, mutedAccounts]),
+      }, [screen, setMinimalShellMode]),
     )
 
-    const onRefresh = React.useCallback(() => {
-      mutedAccounts.refresh()
-    }, [mutedAccounts])
-    const onEndReached = React.useCallback(() => {
-      mutedAccounts
-        .loadMore()
-        .catch(err =>
-          logger.error('Failed to load more muted accounts', {error: err}),
-        )
-    }, [mutedAccounts])
+    const onRefresh = React.useCallback(async () => {
+      setIsPTRing(true)
+      try {
+        await refetch()
+      } catch (err) {
+        logger.error('Failed to refresh my muted accounts', {error: err})
+      }
+      setIsPTRing(false)
+    }, [refetch, setIsPTRing])
+
+    const onEndReached = React.useCallback(async () => {
+      if (isFetching || !hasNextPage || isError) return
+
+      try {
+        await fetchNextPage()
+      } catch (err) {
+        logger.error('Failed to load more of my muted accounts', {error: err})
+      }
+    }, [isFetching, hasNextPage, isError, fetchNextPage])
 
     const renderItem = ({
       item,
@@ -67,6 +92,7 @@ export const ModerationMutedAccounts = withAuthRequired(
         testID={`mutedAccount-${index}`}
         key={item.did}
         profile={item}
+        dataUpdatedAt={dataUpdatedAt}
       />
     )
     return (
@@ -89,24 +115,32 @@ export const ModerationMutedAccounts = withAuthRequired(
           Muted accounts have their posts removed from your feed and from your
           notifications. Mutes are completely private.
         </Text>
-        {!mutedAccounts.hasContent ? (
+        {isEmpty ? (
           <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
-            <View style={[styles.empty, pal.viewLight]}>
-              <Text type="lg" style={[pal.text, styles.emptyText]}>
-                You have not muted any accounts yet. To mute an account, go to
-                their profile and selected "Mute account" from the menu on their
-                account.
-              </Text>
-            </View>
+            {isError ? (
+              <ErrorScreen
+                title="Oops!"
+                message={cleanError(error)}
+                onPressTryAgain={refetch}
+              />
+            ) : (
+              <View style={[styles.empty, pal.viewLight]}>
+                <Text type="lg" style={[pal.text, styles.emptyText]}>
+                  You have not muted any accounts yet. To mute an account, go to
+                  their profile and selected "Mute account" from the menu on
+                  their account.
+                </Text>
+              </View>
+            )}
           </View>
         ) : (
           <FlatList
             style={[!isTabletOrDesktop && styles.flex1]}
-            data={mutedAccounts.mutes}
+            data={profiles}
             keyExtractor={item => item.did}
             refreshControl={
               <RefreshControl
-                refreshing={mutedAccounts.isRefreshing}
+                refreshing={isPTRing}
                 onRefresh={onRefresh}
                 tintColor={pal.colors.text}
                 titleColor={pal.colors.text}
@@ -116,20 +150,19 @@ export const ModerationMutedAccounts = withAuthRequired(
             renderItem={renderItem}
             initialNumToRender={15}
             // FIXME(dan)
-            // eslint-disable-next-line react/no-unstable-nested-components
+
             ListFooterComponent={() => (
               <View style={styles.footer}>
-                {mutedAccounts.isLoading && <ActivityIndicator />}
+                {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
               </View>
             )}
-            extraData={mutedAccounts.isLoading}
             // @ts-ignore our .web version only -prf
             desktopFixedHeight
           />
         )}
       </CenteredView>
     )
-  }),
+  },
 )
 
 const styles = StyleSheet.create({
