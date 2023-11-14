@@ -5,7 +5,7 @@ import {useSession} from '../session'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-export const RQKEY = (did: string) => ['profile-followers', did]
+export const RQKEY = (did: string) => ['profile-follows', did]
 
 export function useProfileFollowsQuery(did: string | undefined) {
   const {agent} = useSession()
