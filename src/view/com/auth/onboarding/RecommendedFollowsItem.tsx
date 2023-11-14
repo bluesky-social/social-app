@@ -41,7 +41,6 @@ export function RecommendedFollowsItem({
   const shadowedProfile = useProfileShadow(profile, dataUpdatedAt)
 
   return (
-    // TODO refactor not working
     <Animated.View
       entering={FadeInRight}
       style={[
