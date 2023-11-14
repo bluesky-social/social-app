@@ -106,6 +106,9 @@ export function Feed({
     checkForNewRef.current = checkForNew
   }, [checkForNew])
   React.useEffect(() => {
+    if (!pollInterval) {
+      return
+    }
     const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
     return () => clearInterval(i)
   }, [pollInterval])

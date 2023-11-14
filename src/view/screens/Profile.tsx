@@ -350,6 +350,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         <Feed
           testID="postsFeed"
           feed={feed}
+          pollInterval={30e3}
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
           onScroll={onScroll}
