@@ -20,6 +20,7 @@ import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {logger} from '#/logger'
+import {Shadow} from '#/state/cache/types'
 
 export function PostDropdownBtn({
   testID,
@@ -28,7 +29,7 @@ export function PostDropdownBtn({
   style,
 }: {
   testID: string
-  post: AppBskyFeedDefs.PostView
+  post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
 }) {

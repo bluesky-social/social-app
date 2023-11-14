@@ -1,6 +1,8 @@
 import {useEffect, useState, useCallback, useRef} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
+import {Shadow} from './types'
+export type {Shadow} from './types'
 
 const emitter = new EventEmitter()
 
@@ -20,10 +22,10 @@ type ProfileView =
   | AppBskyActorDefs.ProfileViewBasic
   | AppBskyActorDefs.ProfileViewDetailed
 
-export function useProfileShadow<T extends ProfileView>(
-  profile: T,
+export function useProfileShadow(
+  profile: ProfileView,
   ifAfterTS: number,
-): T {
+): Shadow<ProfileView> {
   const [state, setState] = useState<CacheEntry>({
     ts: Date.now(),
     value: fromProfile(profile),
@@ -54,7 +56,9 @@ export function useProfileShadow<T extends ProfileView>(
     firstRun.current = false
   }, [profile])
 
-  return state.ts > ifAfterTS ? mergeShadow(profile, state.value) : profile
+  return state.ts > ifAfterTS
+    ? mergeShadow(profile, state.value)
+    : {...profile, isShadowed: true}
 }
 
 export function updateProfileShadow(
@@ -62,6 +66,12 @@ export function updateProfileShadow(
   value: Partial<ProfileShadow>,
 ) {
   emitter.emit(uri, value)
+}
+
+export function isProfileShadowed<T extends ProfileView>(
+  v: T | Shadow<T>,
+): v is Shadow<T> {
+  return 'isShadowed' in v && !!v.isShadowed
 }
 
 function fromProfile(profile: ProfileView): ProfileShadow {
@@ -72,10 +82,10 @@ function fromProfile(profile: ProfileView): ProfileShadow {
   }
 }
 
-function mergeShadow<T extends ProfileView>(
-  profile: T,
+function mergeShadow(
+  profile: ProfileView,
   shadow: ProfileShadow,
-): T {
+): Shadow<ProfileView> {
   return {
     ...profile,
     viewer: {
@@ -84,5 +94,6 @@ function mergeShadow<T extends ProfileView>(
       muted: shadow.muted,
       blocking: shadow.blockingUri,
     },
+    isShadowed: true,
   }
 }

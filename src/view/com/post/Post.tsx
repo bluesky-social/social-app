@@ -25,8 +25,8 @@ import {makeProfileLink} from 'lib/routes/links'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {useComposerControls} from '#/state/shell/composer'
+import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 
 export function Post({
   post,
@@ -89,7 +89,7 @@ function PostInner({
   showReplyLine,
   style,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   moderation: PostModeration

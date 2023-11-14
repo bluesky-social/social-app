@@ -32,8 +32,8 @@ import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
-import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {useComposerControls} from '#/state/shell/composer'
+import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 
 export function FeedItem({
   post,
@@ -93,7 +93,7 @@ function FeedItemInner({
   isThreadLastChild,
   isThreadParent,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   richText: RichTextAPI

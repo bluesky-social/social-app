@@ -37,9 +37,9 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {Trans} from '@lingui/macro'
 import {useLanguagePrefs} from '#/state/preferences'
-import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 
 export function PostThreadItem({
   post,
@@ -132,7 +132,7 @@ function PostThreadItemLoaded({
   hasPrecedingItem,
   onPostReply,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   moderation: PostModeration
