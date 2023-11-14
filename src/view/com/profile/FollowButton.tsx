@@ -13,13 +13,11 @@ export function FollowButton({
   unfollowedType = 'inverted',
   followedType = 'default',
   profile,
-  onToggleFollow,
   labelStyle,
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
-  onToggleFollow?: (v: boolean) => void
   labelStyle?: StyleProp<TextStyle>
 }) {
   const followMutation = useProfileFollowMutation()
@@ -31,7 +29,6 @@ export function FollowButton({
     }
     try {
       await followMutation.mutateAsync({did: profile.did})
-      onToggleFollow?.(false)
     } catch (e: any) {
       Toast.show(`An issue occurred, please try again.`)
     }
@@ -46,7 +43,6 @@ export function FollowButton({
         did: profile.did,
         followUri: profile.viewer?.following,
       })
-      onToggleFollow?.(true)
     } catch (e: any) {
       Toast.show(`An issue occurred, please try again.`)
     }
