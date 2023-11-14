@@ -40,7 +40,13 @@ import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
+import {
+  isWeb,
+  isNative,
+  isAndroid,
+  isIOS,
+  isMobileWeb,
+} from 'platform/detection'
 import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
@@ -264,6 +270,8 @@ export const ComposePost = observer(function ComposePost({
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
 
+  const shouldShowEmojiPicker = isWeb && !isMobileWeb
+
   return (
     <KeyboardAvoidingView
       testID="composePostView"
@@ -441,7 +449,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {isDesktop ? <EmojiPickerButton /> : null}
+          {shouldShowEmojiPicker ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
