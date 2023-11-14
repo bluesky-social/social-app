@@ -13,8 +13,6 @@ export function useFetchHandle() {
     async (handleOrDid: string) => {
       if (handleOrDid.startsWith('did:')) {
         const res = await queryClient.fetchQuery({
-          // cache in memory forever, page reload clears
-          staleTime: Infinity,
           queryKey: fetchHandleQueryKey(handleOrDid),
           queryFn: () => agent.getProfile({actor: handleOrDid}),
         })
