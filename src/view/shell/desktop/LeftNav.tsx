@@ -45,6 +45,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useComposerControls} from '#/state/shell/composer'
+import {useFetchHandle} from '#/state/queries/handle'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const {currentAccount} = useSession()
@@ -124,6 +125,7 @@ const NavItem = observer(function NavItemImpl({
   label,
 }: NavItemProps) {
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
   const store = useStores()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
@@ -137,7 +139,7 @@ const NavItem = observer(function NavItemImpl({
     currentRouteInfo.name === 'Profile'
       ? isTab(currentRouteInfo.name, pathName) &&
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          store.me.handle
+          currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
   const {onPress} = useLinkProps({to: href})
   const onPressWrapped = React.useCallback(
@@ -194,11 +196,13 @@ const NavItem = observer(function NavItemImpl({
 })
 
 function ComposeBtn() {
-  const store = useStores()
+  const {currentAccount} = useSession()
   const {getState} = useNavigation()
   const {openComposer} = useComposerControls()
   const {_} = useLingui()
   const {isTablet} = useWebMediaQueries()
+  const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
+  const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {
     const {routes} = getState()
@@ -210,13 +214,21 @@ function ComposeBtn() {
       ).name
 
       if (handle.startsWith('did:')) {
-        const cached = await store.profiles.cache.get(handle)
-        const profile = cached ? cached.data : undefined
-        // if we can't resolve handle, set to undefined
-        handle = profile?.handle || undefined
+        try {
+          setIsFetchingHandle(true)
+          handle = await fetchHandle(handle)
+        } catch (e) {
+          handle = undefined
+        } finally {
+          setIsFetchingHandle(false)
+        }
       }
 
-      if (!handle || handle === store.me.handle || handle === 'handle.invalid')
+      if (
+        !handle ||
+        handle === currentAccount?.handle ||
+        handle === 'handle.invalid'
+      )
         return undefined
 
       return handle
@@ -233,6 +245,7 @@ function ComposeBtn() {
   }
   return (
     <TouchableOpacity
+      disabled={isFetchingHandle}
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       accessibilityRole="button"
@@ -372,7 +385,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Moderation"
       />
       <NavItem
-        href={makeProfileLink(currentAccount)}
+        href={currentAccount ? makeProfileLink(currentAccount) : '/'}
         icon={
           <UserIcon
             strokeWidth={1.75}
