@@ -91,6 +91,7 @@ export function useModerationOpts() {
   const {currentAccount} = useSession()
   const [opts, setOpts] = useState<ModerationOpts | undefined>()
   const prefs = usePreferencesQuery()
+  console.log({preferences: prefs.data})
   useEffect(() => {
     if (!prefs.data) {
       return
