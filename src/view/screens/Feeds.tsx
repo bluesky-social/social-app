@@ -8,7 +8,6 @@ import {FAB} from 'view/com/util/fab/FAB'
 import {Link} from 'view/com/util/Link'
 import {NativeStackScreenProps, FeedsTabNavigatorParams} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2, CogIcon} from 'lib/icons'
 import {s} from 'lib/styles'
@@ -34,6 +33,7 @@ import {
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
 import {cleanError} from 'lib/strings/errors'
+import {useComposerControls} from '#/state/shell/composer'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -90,8 +90,8 @@ type FlatlistSlice =
 export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
   _props: Props,
 ) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {openComposer} = useComposerControls()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
   const [isPTR, setIsPTR] = React.useState(false)
@@ -128,8 +128,8 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
     [search],
   )
   const onPressCompose = React.useCallback(() => {
-    store.shell.openComposer({})
-  }, [store])
+    openComposer({})
+  }, [openComposer])
   const onChangeQuery = React.useCallback(
     (text: string) => {
       setQuery(text)

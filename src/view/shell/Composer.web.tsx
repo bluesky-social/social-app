@@ -1,34 +1,21 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
 import {ComposePost} from '../com/composer/Composer'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export const Composer = observer(function ComposerImpl({
-  active,
-  replyTo,
-  quote,
-  onPost,
-  mention,
-}: {
-  active: boolean
-  winHeight: number
-  replyTo?: ComposerOpts['replyTo']
-  quote: ComposerOpts['quote']
-  onPost?: ComposerOpts['onPost']
-  mention?: ComposerOpts['mention']
-}) {
+export function Composer({}: {winHeight: number}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const state = useComposerState()
 
   // rendering
   // =
 
-  if (!active) {
+  if (!state) {
     return <View />
   }
 
@@ -42,15 +29,15 @@ export const Composer = observer(function ComposerImpl({
           pal.border,
         ]}>
         <ComposePost
-          replyTo={replyTo}
-          quote={quote}
-          onPost={onPost}
-          mention={mention}
+          replyTo={state.replyTo}
+          quote={state.quote}
+          onPost={state.onPost}
+          mention={state.mention}
         />
       </View>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   mask: {

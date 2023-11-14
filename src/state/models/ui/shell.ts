@@ -1,4 +1,4 @@
-import {AppBskyEmbedRecord, AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {
@@ -37,41 +37,9 @@ export class ImagesLightbox implements LightboxModel {
   }
 }
 
-export interface ComposerOptsPostRef {
-  uri: string
-  cid: string
-  text: string
-  author: {
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
-}
-export interface ComposerOptsQuote {
-  uri: string
-  cid: string
-  text: string
-  indexedAt: string
-  author: {
-    did: string
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
-  embeds?: AppBskyEmbedRecord.ViewRecord['embeds']
-}
-export interface ComposerOpts {
-  replyTo?: ComposerOptsPostRef
-  onPost?: () => void
-  quote?: ComposerOptsQuote
-  mention?: string // handle of user to mention
-}
-
 export class ShellUiModel {
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
-  isComposerActive = false
-  composerOpts: ComposerOpts | undefined
   tickEveryMinute = Date.now()
 
   constructor(public rootStore: RootStoreModel) {
@@ -92,10 +60,6 @@ export class ShellUiModel {
       this.closeLightbox()
       return true
     }
-    if (this.isComposerActive) {
-      this.closeComposer()
-      return true
-    }
     return false
   }
 
@@ -105,9 +69,6 @@ export class ShellUiModel {
   closeAllActiveElements() {
     if (this.isLightboxActive) {
       this.closeLightbox()
-    }
-    if (this.isComposerActive) {
-      this.closeComposer()
     }
   }
 
@@ -120,17 +81,6 @@ export class ShellUiModel {
   closeLightbox() {
     this.isLightboxActive = false
     this.activeLightbox = null
-  }
-
-  openComposer(opts: ComposerOpts) {
-    this.rootStore.emitNavigation()
-    this.isComposerActive = true
-    this.composerOpts = opts
-  }
-
-  closeComposer() {
-    this.isComposerActive = false
-    this.composerOpts = undefined
   }
 
   setupClock() {

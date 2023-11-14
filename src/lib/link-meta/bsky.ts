@@ -4,7 +4,7 @@ import {LikelyType, LinkMeta} from './link-meta'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 import {RootStoreModel} from 'state/index'
 import {PostThreadModel} from 'state/models/content/post-thread'
-import {ComposerOptsQuote} from 'state/models/ui/shell'
+import {ComposerOptsQuote} from 'state/shell/composer'
 
 // TODO
 // import {Home} from 'view/screens/Home'

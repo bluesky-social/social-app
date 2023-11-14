@@ -20,7 +20,6 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines, pluralize} from 'lib/strings/helpers'
 import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {useStores} from 'state/index'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
@@ -39,6 +38,8 @@ import {MAX_POST_LINES} from 'lib/constants'
 import {Trans} from '@lingui/macro'
 import {useLanguagePrefs} from '#/state/preferences'
 import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {useComposerControls} from '#/state/shell/composer'
+import {useModerationOpts} from '#/state/queries/preferences'
 
 export function PostThreadItem({
   post,
@@ -65,7 +66,7 @@ export function PostThreadItem({
   hasPrecedingItem: boolean
   onPostReply: () => void
 }) {
-  const store = useStores()
+  const moderationOpts = useModerationOpts()
   const postShadowed = usePostShadow(post, dataUpdatedAt)
   const richText = useMemo(
     () =>
@@ -77,8 +78,8 @@ export function PostThreadItem({
   )
   const moderation = useMemo(
     () =>
-      post ? moderatePost(post, store.preferences.moderationOpts) : undefined,
-    [post, store],
+      post && moderationOpts ? moderatePost(post, moderationOpts) : undefined,
+    [post, moderationOpts],
   )
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted />
@@ -145,8 +146,8 @@ function PostThreadItemLoaded({
   onPostReply: () => void
 }) {
   const pal = usePalette('default')
-  const store = useStores()
   const langPrefs = useLanguagePrefs()
+  const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
     countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -187,7 +188,7 @@ function PostThreadItemLoaded({
   )
 
   const onPressReply = React.useCallback(() => {
-    store.shell.openComposer({
+    openComposer({
       replyTo: {
         uri: post.uri,
         cid: post.cid,
@@ -200,7 +201,7 @@ function PostThreadItemLoaded({
       },
       onPost: onPostReply,
     })
-  }, [store, post, record, onPostReply])
+  }, [openComposer, post, record, onPostReply])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

@@ -24,7 +24,6 @@ import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -34,6 +33,7 @@ import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {useComposerControls} from '#/state/shell/composer'
 
 export function FeedItem({
   post,
@@ -102,7 +102,7 @@ function FeedItemInner({
   isThreadLastChild?: boolean
   isThreadParent?: boolean
 }) {
-  const store = useStores()
+  const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const [limitLines, setLimitLines] = useState(
@@ -124,7 +124,7 @@ function FeedItemInner({
 
   const onPressReply = React.useCallback(() => {
     track('FeedItem:PostReply')
-    store.shell.openComposer({
+    openComposer({
       replyTo: {
         uri: post.uri,
         cid: post.cid,
@@ -136,7 +136,7 @@ function FeedItemInner({
         },
       },
     })
-  }, [post, record, track, store])
+  }, [post, record, track, openComposer])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

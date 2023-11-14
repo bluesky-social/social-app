@@ -22,6 +22,7 @@ import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -46,6 +47,7 @@ export function FeedPage({
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
+  const {openComposer} = useComposerControls()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
@@ -80,8 +82,8 @@ export function FeedPage({
 
   const onPressCompose = React.useCallback(() => {
     track('HomeScreen:PressCompose')
-    store.shell.openComposer({})
-  }, [store, track])
+    openComposer({})
+  }, [openComposer, track])
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()

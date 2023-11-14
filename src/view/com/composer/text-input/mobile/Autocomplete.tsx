@@ -1,31 +1,33 @@
 import React, {useEffect} from 'react'
 import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 
 export const Autocomplete = observer(function AutocompleteImpl({
-  view,
+  prefix,
   onSelect,
 }: {
-  view: UserAutocompleteModel
+  prefix: string
   onSelect: (item: string) => void
 }) {
   const pal = usePalette('default')
   const positionInterp = useAnimatedValue(0)
   const {getGraphemeString} = useGrapheme()
+  const isActive = !!prefix
+  const {data: suggestions} = useActorAutocompleteQuery(prefix)
 
   useEffect(() => {
     Animated.timing(positionInterp, {
-      toValue: view.isActive ? 1 : 0,
+      toValue: isActive ? 1 : 0,
       duration: 200,
       useNativeDriver: true,
     }).start()
-  }, [positionInterp, view.isActive])
+  }, [positionInterp, isActive])
 
   const topAnimStyle = {
     transform: [
@@ -40,10 +42,10 @@ export const Autocomplete = observer(function AutocompleteImpl({
 
   return (
     <Animated.View style={topAnimStyle}>
-      {view.isActive ? (
+      {isActive ? (
         <View style={[pal.view, styles.container, pal.border]}>
-          {view.suggestions.length > 0 ? (
-            view.suggestions.slice(0, 5).map(item => {
+          {suggestions?.length ? (
+            suggestions.slice(0, 5).map(item => {
               // Eventually use an average length
               const MAX_CHARS = 40
               const MAX_HANDLE_CHARS = 20

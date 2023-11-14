@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useRef,
   useMemo,
+  useState,
   ComponentProps,
 } from 'react'
 import {
@@ -18,7 +19,6 @@ import PasteInput, {
 } from '@mattermost/react-native-paste-input'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {Autocomplete} from './mobile/Autocomplete'
 import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
@@ -38,7 +38,6 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
-  autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -56,7 +55,6 @@ export const TextInput = forwardRef(function TextInputImpl(
     richtext,
     placeholder,
     suggestedLinks,
-    autocompleteView,
     setRichText,
     onPhotoPasted,
     onSuggestedLinksChanged,
@@ -69,6 +67,7 @@ export const TextInput = forwardRef(function TextInputImpl(
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
+  const [autocompletePrefix, setAutocompletePrefix] = useState('')
 
   React.useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
@@ -99,10 +98,9 @@ export const TextInput = forwardRef(function TextInputImpl(
           textInputSelection.current?.start || 0,
         )
         if (prefix) {
-          autocompleteView.setActive(true)
-          autocompleteView.setPrefix(prefix.value)
-        } else {
-          autocompleteView.setActive(false)
+          setAutocompletePrefix(prefix.value)
+        } else if (autocompletePrefix) {
+          setAutocompletePrefix('')
         }
 
         const set: Set<string> = new Set()
@@ -139,7 +137,8 @@ export const TextInput = forwardRef(function TextInputImpl(
     },
     [
       setRichText,
-      autocompleteView,
+      autocompletePrefix,
+      setAutocompletePrefix,
       suggestedLinks,
       onSuggestedLinksChanged,
       onPhotoPasted,
@@ -179,9 +178,9 @@ export const TextInput = forwardRef(function TextInputImpl(
           item,
         ),
       )
-      autocompleteView.setActive(false)
+      setAutocompletePrefix('')
     },
-    [onChangeText, richtext, autocompleteView],
+    [onChangeText, richtext, setAutocompletePrefix],
   )
 
   const textDecorated = useMemo(() => {
@@ -221,7 +220,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         {textDecorated}
       </PasteInput>
       <Autocomplete
-        view={autocompleteView}
+        prefix={autocompletePrefix}
         onSelect={onSelectAutocompleteItem}
       />
     </View>

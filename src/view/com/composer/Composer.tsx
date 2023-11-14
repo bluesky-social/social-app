@@ -16,7 +16,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
@@ -26,9 +25,8 @@ import * as Toast from '../util/Toast'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {CharProgress} from './char-progress/CharProgress'
 import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {ComposerOpts} from 'state/shell/composer'
 import {s, colors, gradients} from 'lib/styles'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -58,6 +56,9 @@ import {
   useLanguagePrefsApi,
   toPostLanguages,
 } from '#/state/preferences/languages'
+import {useSession} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useComposerControls} from '#/state/shell/composer'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -66,12 +67,14 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
 }: Props) {
+  const {agent, currentAccount} = useSession()
+  const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {activeModals} = useModals()
   const {openModal, closeModal} = useModalControls()
+  const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
-  const store = useStores()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -101,15 +104,10 @@ export const ComposePost = observer(function ComposePost({
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [labels, setLabels] = useState<string[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const gallery = useMemo(() => new GalleryModel(store), [store])
+  const gallery = useMemo(() => new GalleryModel(), [])
   const onClose = useCallback(() => {
-    store.shell.closeComposer()
-  }, [store])
-
-  const autocompleteView = useMemo<UserAutocompleteModel>(
-    () => new UserAutocompleteModel(store),
-    [store],
-  )
+    closeComposer()
+  }, [closeComposer])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -162,11 +160,6 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [onPressCancel])
 
-  // initial setup
-  useEffect(() => {
-    autocompleteView.setup()
-  }, [autocompleteView])
-
   // listen to escape key on desktop web
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -216,7 +209,7 @@ export const ComposePost = observer(function ComposePost({
     setIsProcessing(true)
 
     try {
-      await apilib.post(store, {
+      await apilib.post(agent, {
         rawText: richtext.text,
         replyTo: replyTo?.uri,
         images: gallery.images,
@@ -224,7 +217,6 @@ export const ComposePost = observer(function ComposePost({
         extLink,
         labels,
         onStateChange: setProcessingState,
-        knownHandles: autocompleteView.knownHandles,
         langs: toPostLanguages(langPrefs.postLanguage),
       })
     } catch (e: any) {
@@ -381,13 +373,12 @@ export const ComposePost = observer(function ComposePost({
               styles.textInputLayout,
               isNative && styles.textInputLayoutMobile,
             ]}>
-            <UserAvatar avatar={store.me.avatar} size={50} />
+            <UserAvatar avatar={currentProfile?.avatar} size={50} />
             <TextInput
               ref={textInput}
               richtext={richtext}
               placeholder={selectTextInputPlaceholder}
               suggestedLinks={suggestedLinks}
-              autocompleteView={autocompleteView}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}

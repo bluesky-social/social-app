@@ -19,7 +19,6 @@ import {PostAlerts} from '../util/moderation/PostAlerts'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
@@ -27,6 +26,7 @@ import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {useComposerControls} from '#/state/shell/composer'
 
 export function Post({
   post,
@@ -97,7 +97,7 @@ function PostInner({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = useState(
     countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -110,7 +110,7 @@ function PostInner({
   }
 
   const onPressReply = React.useCallback(() => {
-    store.shell.openComposer({
+    openComposer({
       replyTo: {
         uri: post.uri,
         cid: post.cid,
@@ -122,7 +122,7 @@ function PostInner({
         },
       },
     })
-  }, [store, post, record])
+  }, [openComposer, post, record])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

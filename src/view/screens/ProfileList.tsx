@@ -28,7 +28,6 @@ import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {Haptics} from 'lib/haptics'
 import {FeedDescriptor} from '#/state/queries/post-feed'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -55,6 +54,7 @@ import {
 } from '#/state/queries/list'
 import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -106,9 +106,9 @@ function ProfileListScreenLoaded({
   uri,
   list,
 }: Props & {uri: string; list: AppBskyGraphDefs.ListView}) {
-  const store = useStores()
   const {_} = useLingui()
   const queryClient = useQueryClient()
+  const {openComposer} = useComposerControls()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {rkey} = route.params
   const feedSectionRef = React.useRef<SectionRef>(null)
@@ -191,7 +191,7 @@ function ProfileListScreenLoaded({
         </PagerWithHeader>
         <FAB
           testID="composeFAB"
-          onPress={() => store.shell.openComposer({})}
+          onPress={() => openComposer({})}
           icon={
             <ComposeIcon2
               strokeWidth={1.5}
@@ -227,7 +227,7 @@ function ProfileListScreenLoaded({
       </PagerWithHeader>
       <FAB
         testID="composeFAB"
-        onPress={() => store.shell.openComposer({})}
+        onPress={() => openComposer({})}
         icon={
           <ComposeIcon2 strokeWidth={1.5} size={29} style={{color: 'white'}} />
         }

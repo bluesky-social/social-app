@@ -44,6 +44,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useComposerControls} from '#/state/shell/composer'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const {currentAccount} = useSession()
@@ -195,6 +196,7 @@ const NavItem = observer(function NavItemImpl({
 function ComposeBtn() {
   const store = useStores()
   const {getState} = useNavigation()
+  const {openComposer} = useComposerControls()
   const {_} = useLingui()
   const {isTablet} = useWebMediaQueries()
 
@@ -224,7 +226,7 @@ function ComposeBtn() {
   }
 
   const onPressCompose = async () =>
-    store.shell.openComposer({mention: await getProfileHandle()})
+    openComposer({mention: await getProfileHandle()})
 
   if (isTablet) {
     return null

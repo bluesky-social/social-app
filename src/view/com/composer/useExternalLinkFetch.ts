@@ -14,7 +14,7 @@ import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
 } from 'lib/strings/url-helpers'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {ComposerOpts} from 'state/shell/composer'
 import {POST_IMG_MAX} from 'lib/constants'
 import {logger} from '#/logger'
 

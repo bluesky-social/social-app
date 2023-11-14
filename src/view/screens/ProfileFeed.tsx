@@ -16,7 +16,6 @@ import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -62,6 +61,7 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
+import {useComposerControls} from '#/state/shell/composer'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -163,9 +163,9 @@ export const ProfileFeedScreenInner = function ProfileFeedScreenInnerImpl({
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
-  const store = useStores()
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
+  const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
   const feedSectionRef = React.useRef<SectionRef>(null)
 
@@ -420,7 +420,7 @@ export const ProfileFeedScreenInner = function ProfileFeedScreenInnerImpl({
       </PagerWithHeader>
       <FAB
         testID="composeFAB"
-        onPress={() => store.shell.openComposer({})}
+        onPress={() => openComposer({})}
         icon={
           <ComposeIcon2 strokeWidth={1.5} size={29} style={{color: 'white'}} />
         }

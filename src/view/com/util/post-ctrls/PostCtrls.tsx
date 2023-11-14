@@ -13,7 +13,6 @@ import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {pluralize} from 'lib/strings/helpers'
 import {useTheme} from 'lib/ThemeContext'
-import {useStores} from 'state/index'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
@@ -24,6 +23,7 @@ import {
   usePostRepostMutation,
   usePostUnrepostMutation,
 } from '#/state/queries/post'
+import {useComposerControls} from '#/state/shell/composer'
 
 export function PostCtrls({
   big,
@@ -38,8 +38,8 @@ export function PostCtrls({
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
 }) {
-  const store = useStores()
   const theme = useTheme()
+  const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
   const postLikeMutation = usePostLikeMutation()
   const postUnlikeMutation = usePostUnlikeMutation()
@@ -90,7 +90,7 @@ export function PostCtrls({
 
   const onQuote = useCallback(() => {
     closeModal()
-    store.shell.openComposer({
+    openComposer({
       quote: {
         uri: post.uri,
         cid: post.cid,
@@ -100,7 +100,7 @@ export function PostCtrls({
       },
     })
     Haptics.default()
-  }, [post, record, store.shell, closeModal])
+  }, [post, record, openComposer, closeModal])
   return (
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
