@@ -45,7 +45,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useComposerControls} from '#/state/shell/composer'
-import {useGetHandleMutation} from '#/state/queries/handle'
+import {useFetchHandle} from '#/state/queries/handle'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const {currentAccount} = useSession()
@@ -201,8 +201,8 @@ function ComposeBtn() {
   const {openComposer} = useComposerControls()
   const {_} = useLingui()
   const {isTablet} = useWebMediaQueries()
-  const {mutateAsync: getHandle, isPending: isGetHandlePending} =
-    useGetHandleMutation()
+  const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
+  const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {
     const {routes} = getState()
@@ -215,9 +215,12 @@ function ComposeBtn() {
 
       if (handle.startsWith('did:')) {
         try {
-          handle = await getHandle(handle)
+          setIsFetchingHandle(true)
+          handle = await fetchHandle(handle)
         } catch (e) {
           handle = undefined
+        } finally {
+          setIsFetchingHandle(false)
         }
       }
 
@@ -242,7 +245,7 @@ function ComposeBtn() {
   }
   return (
     <TouchableOpacity
-      disabled={isGetHandlePending}
+      disabled={isFetchingHandle}
       style={[styles.newPostBtn]}
       onPress={onPressCompose}
       accessibilityRole="button"
