@@ -385,7 +385,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         label="Moderation"
       />
       <NavItem
-        href={makeProfileLink(currentAccount)}
+        href={currentAccount ? makeProfileLink(currentAccount) : '/'}
         icon={
           <UserIcon
             strokeWidth={1.75}
