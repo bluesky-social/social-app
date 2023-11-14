@@ -2,6 +2,7 @@ import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
 import {Text} from 'view/com/util/text/Text'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -9,9 +10,10 @@ import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Button} from 'view/com/util/forms/Button'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {RecommendedFollowsItem} from './RecommendedFollowsItem'
-import {SuggestedActorsModel} from '#/state/models/discovery/suggested-actors'
+import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
+import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
+import {useModerationOpts} from '#/state/queries/preferences'
 
 type Props = {
   next: () => void
@@ -19,14 +21,16 @@ type Props = {
 export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   next,
 }: Props) {
-  const store = useStores()
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
-  const suggestedActors = React.useMemo(() => {
-    const model = new SuggestedActorsModel(store)
-    model.refresh()
-    return model
-  }, [store])
+  const {data: suggestedFollows, dataUpdatedAt} = useSuggestedFollowsQuery()
+  const {mutateAsync: getSuggestedFollowsByActor} =
+    useGetSuggestedFollowersByActor()
+  const [additionalSuggestions, setAdditionalSuggestions] = React.useState<{
+    [did: string]: AppBskyActorDefs.ProfileView[]
+  }>({})
+  const existingDids = React.useRef<string[]>([])
+  const moderationOpts = useModerationOpts()
 
   const title = (
     <>
@@ -84,6 +88,59 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
     </>
   )
 
+  const suggestions = React.useMemo(() => {
+    if (!suggestedFollows) return []
+
+    const additional = Object.entries(additionalSuggestions)
+    const items = []
+
+    for (const page of suggestedFollows.pages) {
+      for (const actor of page.actors) {
+        items.push(actor)
+      }
+    }
+
+    outer: while (additional.length) {
+      const additionalAccount = additional.shift()
+
+      if (!additionalAccount) break
+
+      const [followedUser, relatedAccounts] = additionalAccount
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].did === followedUser) {
+          items.splice(i + 1, 0, ...relatedAccounts)
+          continue outer
+        }
+      }
+    }
+
+    existingDids.current = items.map(i => i.did)
+
+    return items
+  }, [suggestedFollows, additionalSuggestions])
+
+  const onFollowStateChange = React.useCallback(
+    async ({following, did}: {following: boolean; did: string}) => {
+      if (following) {
+        const {suggestions: results} = await getSuggestedFollowsByActor(did)
+
+        if (results.length) {
+          const deduped = results.filter(
+            r => !existingDids.current.find(did => did === r.did),
+          )
+          setAdditionalSuggestions(s => ({
+            ...s,
+            [did]: deduped.slice(0, 3),
+          }))
+        }
+      }
+
+      // not handling the unfollow case
+    },
+    [existingDids, getSuggestedFollowsByActor, setAdditionalSuggestions],
+  )
+
   return (
     <>
       <TabletOrDesktop>
@@ -93,21 +150,20 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           horizontal
           titleStyle={isTabletOrMobile ? undefined : {minWidth: 470}}
           contentStyle={{paddingHorizontal: 0}}>
-          {suggestedActors.isLoading ? (
+          {!suggestedFollows || !moderationOpts ? (
             <ActivityIndicator size="large" />
           ) : (
             <FlatList
-              data={suggestedActors.suggestions}
-              renderItem={({item, index}) => (
+              data={suggestions}
+              renderItem={({item}) => (
                 <RecommendedFollowsItem
-                  item={item}
-                  index={index}
-                  insertSuggestionsByActor={suggestedActors.insertSuggestionsByActor.bind(
-                    suggestedActors,
-                  )}
+                  profile={item}
+                  dataUpdatedAt={dataUpdatedAt}
+                  onFollowStateChange={onFollowStateChange}
+                  moderation={moderateProfile(item, moderationOpts)}
                 />
               )}
-              keyExtractor={(item, index) => item.did + index.toString()}
+              keyExtractor={item => item.did}
               style={{flex: 1}}
             />
           )}
@@ -127,21 +183,20 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
               users.
             </Text>
           </View>
-          {suggestedActors.isLoading ? (
+          {!suggestedFollows || !moderationOpts ? (
             <ActivityIndicator size="large" />
           ) : (
             <FlatList
-              data={suggestedActors.suggestions}
-              renderItem={({item, index}) => (
+              data={suggestions}
+              renderItem={({item}) => (
                 <RecommendedFollowsItem
-                  item={item}
-                  index={index}
-                  insertSuggestionsByActor={suggestedActors.insertSuggestionsByActor.bind(
-                    suggestedActors,
-                  )}
+                  profile={item}
+                  dataUpdatedAt={dataUpdatedAt}
+                  onFollowStateChange={onFollowStateChange}
+                  moderation={moderateProfile(item, moderationOpts)}
                 />
               )}
-              keyExtractor={(item, index) => item.did + index.toString()}
+              keyExtractor={item => item.did}
               style={{flex: 1}}
             />
           )}
