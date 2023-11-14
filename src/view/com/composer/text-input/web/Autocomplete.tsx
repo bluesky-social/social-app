@@ -12,7 +12,7 @@ import {
   SuggestionProps,
   SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import {ActorAutocomplete} from '#/state/queries/actor-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -23,15 +23,14 @@ interface MentionListRef {
 }
 
 export function createSuggestion({
-  autocompleteView,
+  autocomplete,
 }: {
-  autocompleteView: UserAutocompleteModel
+  autocomplete: ActorAutocomplete
 }): Omit<SuggestionOptions, 'editor'> {
   return {
     async items({query}) {
-      autocompleteView.setActive(true)
-      await autocompleteView.setPrefix(query)
-      return autocompleteView.suggestions.slice(0, 8)
+      await autocomplete.query(query)
+      return autocomplete.suggestions.slice(0, 8)
     },
 
     render: () => {

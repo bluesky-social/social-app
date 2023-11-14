@@ -1,5 +1,4 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {RootStoreModel} from 'state/index'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {POST_IMG_MAX} from 'lib/constants'
 import * as ImageManipulator from 'expo-image-manipulator'
@@ -42,10 +41,8 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   }
   prevAttributes: ImageManipulationAttributes = {}
 
-  constructor(public rootStore: RootStoreModel, image: Omit<RNImage, 'size'>) {
-    makeAutoObservable(this, {
-      rootStore: false,
-    })
+  constructor(image: Omit<RNImage, 'size'>) {
+    makeAutoObservable(this)
 
     this.path = image.path
     this.width = image.width
@@ -178,7 +175,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
         height: this.height,
       })
 
-      const cropped = await openCropper(this.rootStore, {
+      const cropped = await openCropper({
         mediaType: 'photo',
         path: this.path,
         freeStyleCropEnabled: true,
