@@ -51,7 +51,7 @@ export function FollowButton({
     }
   }
 
-  if (!profile.viewer) {
+  if (!profile.viewer || profile.viewer.following === 'pending') {
     return <View />
   }
 
