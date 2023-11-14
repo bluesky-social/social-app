@@ -14,6 +14,7 @@ import {RecommendedFollowsItem} from './RecommendedFollowsItem'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {logger} from '#/logger'
 
 type Props = {
   next: () => void
@@ -117,16 +118,22 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   const onFollowStateChange = React.useCallback(
     async ({following, did}: {following: boolean; did: string}) => {
       if (following) {
-        const {suggestions: results} = await getSuggestedFollowsByActor(did)
+        try {
+          const {suggestions: results} = await getSuggestedFollowsByActor(did)
 
-        if (results.length) {
-          const deduped = results.filter(
-            r => !existingDids.current.find(did => did === r.did),
-          )
-          setAdditionalSuggestions(s => ({
-            ...s,
-            [did]: deduped.slice(0, 3),
-          }))
+          if (results.length) {
+            const deduped = results.filter(
+              r => !existingDids.current.find(did => did === r.did),
+            )
+            setAdditionalSuggestions(s => ({
+              ...s,
+              [did]: deduped.slice(0, 3),
+            }))
+          }
+        } catch (e) {
+          logger.error('RecommendedFollows: failed to get suggestions', {
+            error: e,
+          })
         }
       }
 
