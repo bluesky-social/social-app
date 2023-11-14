@@ -36,6 +36,7 @@ import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {useQueryClient} from '@tanstack/react-query'
+import {useComposerControls} from '#/state/shell/composer'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
@@ -128,6 +129,7 @@ function ProfileScreenLoaded({
   const store = useStores()
   const {currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
@@ -193,8 +195,8 @@ function ProfileScreenLoaded({
       profile.handle === 'handle.invalid'
         ? undefined
         : profile.handle
-    store.shell.openComposer({mention})
-  }, [store, currentAccount, track, profile])
+    openComposer({mention})
+  }, [openComposer, currentAccount, track, profile])
 
   const onPageSelected = React.useCallback(
     i => {

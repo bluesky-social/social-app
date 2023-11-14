@@ -10,7 +10,6 @@ import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
@@ -24,14 +23,15 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {CenteredView} from '../com/util/Views'
+import {useComposerControls} from '#/state/shell/composer'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
-    const store = useStores()
     const queryClient = useQueryClient()
     const {fabMinimalShellTransform} = useMinimalShellMode()
     const setMinimalShellMode = useSetMinimalShellMode()
+    const {openComposer} = useComposerControls()
     const safeAreaInsets = useSafeAreaInsets()
     const {name, rkey} = route.params
     const {isMobile} = useWebMediaQueries()
@@ -54,7 +54,7 @@ export const PostThreadScreen = withAuthRequired(
       if (thread?.type !== 'post') {
         return
       }
-      store.shell.openComposer({
+      openComposer({
         replyTo: {
           uri: thread.post.uri,
           cid: thread.post.cid,
@@ -70,7 +70,7 @@ export const PostThreadScreen = withAuthRequired(
             queryKey: POST_THREAD_RQKEY(resolvedUri.uri || ''),
           }),
       })
-    }, [store, queryClient, resolvedUri])
+    }, [openComposer, queryClient, resolvedUri])
 
     return (
       <View style={s.hContentRegion}>

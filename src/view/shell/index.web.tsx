@@ -61,14 +61,7 @@ const ShellInner = observer(function ShellInnerImpl() {
           <DesktopRightNav />
         </>
       )}
-      <Composer
-        active={store.shell.isComposerActive}
-        winHeight={0}
-        replyTo={store.shell.composerOpts?.replyTo}
-        quote={store.shell.composerOpts?.quote}
-        onPost={store.shell.composerOpts?.onPost}
-        mention={store.shell.composerOpts?.mention}
-      />
+      <Composer winHeight={0} />
       {showBottomBar && <BottomBarWeb />}
       <ModalsContainer />
       <Lightbox />
