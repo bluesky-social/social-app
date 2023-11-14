@@ -32,6 +32,7 @@ export const usePreferencesQueryKey = ['getPreferences']
 export function usePreferencesQuery() {
   const {agent, hasSession} = useSession()
   return useQuery({
+    enabled: hasSession,
     queryKey: usePreferencesQueryKey,
     queryFn: async () => {
       const res = await agent.getPreferences()
@@ -83,7 +84,6 @@ export function usePreferencesQuery() {
       }
       return preferences
     },
-    enabled: hasSession,
   })
 }
 
@@ -91,6 +91,7 @@ export function useModerationOpts() {
   const {currentAccount} = useSession()
   const [opts, setOpts] = useState<ModerationOpts | undefined>()
   const prefs = usePreferencesQuery()
+  console.log({preferences: prefs.data})
   useEffect(() => {
     if (!prefs.data) {
       return

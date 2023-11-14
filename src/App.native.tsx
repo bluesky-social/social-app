@@ -72,22 +72,28 @@ const InnerApp = observer(function AppImpl() {
     return null
   }
 
+  /*
+   * Session and initial state should be loaded prior to rendering below.
+   */
+
   return (
-    <ThemeProvider theme={colorMode}>
-      <analytics.Provider>
-        <RootStoreProvider value={rootStore}>
-          <I18nProvider i18n={i18n}>
-            {/* All components should be within this provider */}
-            <RootSiblingParent>
-              <GestureHandlerRootView style={s.h100pct}>
-                <TestCtrls />
-                <Shell />
-              </GestureHandlerRootView>
-            </RootSiblingParent>
-          </I18nProvider>
-        </RootStoreProvider>
-      </analytics.Provider>
-    </ThemeProvider>
+    <UnreadNotifsProvider>
+      <ThemeProvider theme={colorMode}>
+        <analytics.Provider>
+          <RootStoreProvider value={rootStore}>
+            <I18nProvider i18n={i18n}>
+              {/* All components should be within this provider */}
+              <RootSiblingParent>
+                <GestureHandlerRootView style={s.h100pct}>
+                  <TestCtrls />
+                  <Shell />
+                </GestureHandlerRootView>
+              </RootSiblingParent>
+            </I18nProvider>
+          </RootStoreProvider>
+        </analytics.Provider>
+      </ThemeProvider>
+    </UnreadNotifsProvider>
   )
 })
 
@@ -102,19 +108,21 @@ function App() {
     return null
   }
 
+  /*
+   * NOTE: only nothing here can depend on other data or session state, since
+   * that is set up in the InnerApp component above.
+   */
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
             <MutedThreadsProvider>
-              <UnreadNotifsProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <InnerApp />
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </UnreadNotifsProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <InnerApp />
+                </ModalStateProvider>
+              </InvitesStateProvider>
             </MutedThreadsProvider>
           </PrefsStateProvider>
         </ShellStateProvider>
