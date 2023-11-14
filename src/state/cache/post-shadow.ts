@@ -1,6 +1,8 @@
 import {useEffect, useState, useCallback, useRef} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
+import {Shadow} from './types'
+export type {Shadow} from './types'
 
 const emitter = new EventEmitter()
 
@@ -22,7 +24,7 @@ interface CacheEntry {
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
   ifAfterTS: number,
-): AppBskyFeedDefs.PostView | typeof POST_TOMBSTONE {
+): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   const [state, setState] = useState<CacheEntry>({
     ts: Date.now(),
     value: fromPost(post),
@@ -53,11 +55,19 @@ export function usePostShadow(
     firstRun.current = false
   }, [post])
 
-  return state.ts > ifAfterTS ? mergeShadow(post, state.value) : post
+  return state.ts > ifAfterTS
+    ? mergeShadow(post, state.value)
+    : {...post, isShadowed: true}
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   emitter.emit(uri, value)
+}
+
+export function isPostShadowed(
+  v: AppBskyFeedDefs.PostView | Shadow<AppBskyFeedDefs.PostView>,
+): v is Shadow<AppBskyFeedDefs.PostView> {
+  return 'isShadowed' in v && !!v.isShadowed
 }
 
 function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
@@ -73,7 +83,7 @@ function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
 function mergeShadow(
   post: AppBskyFeedDefs.PostView,
   shadow: PostShadow,
-): AppBskyFeedDefs.PostView | typeof POST_TOMBSTONE {
+): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   if (shadow.isDeleted) {
     return POST_TOMBSTONE
   }
@@ -86,5 +96,6 @@ function mergeShadow(
       like: shadow.likeUri,
       repost: shadow.repostUri,
     },
+    isShadowed: true,
   }
 }

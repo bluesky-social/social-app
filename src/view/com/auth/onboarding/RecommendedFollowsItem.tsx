@@ -13,7 +13,7 @@ import Animated, {FadeInRight} from 'react-native-reanimated'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Trans} from '@lingui/macro'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileFollowMutation,
   useProfileUnfollowMutation,
@@ -66,7 +66,14 @@ export function ProfileCard({
   profile,
   onFollowStateChange,
   moderation,
-}: Omit<Props, 'dataUpdatedAt'>) {
+}: {
+  profile: Shadow<SuggestedActor>
+  moderation: ProfileModeration
+  onFollowStateChange: (props: {
+    did: string
+    following: boolean
+  }) => Promise<void>
+}) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const [addingMoreSuggestions, setAddingMoreSuggestions] =

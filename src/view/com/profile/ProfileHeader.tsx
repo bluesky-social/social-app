@@ -54,9 +54,10 @@ import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
+import {Shadow} from '#/state/cache/types'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ProfileModeration
   hideBackButton?: boolean
   isProfilePreview?: boolean

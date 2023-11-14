@@ -24,6 +24,7 @@ import {
   usePostUnrepostMutation,
 } from '#/state/queries/post'
 import {useComposerControls} from '#/state/shell/composer'
+import {Shadow} from '#/state/cache/types'
 
 export function PostCtrls({
   big,
@@ -33,7 +34,7 @@ export function PostCtrls({
   onPressReply,
 }: {
   big?: boolean
-  post: AppBskyFeedDefs.PostView
+  post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
