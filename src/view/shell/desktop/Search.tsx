@@ -1,17 +1,90 @@
 import React from 'react'
-import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native'
+import {
+  ViewStyle,
+  TextInput,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
-import {AppBskyActorDefs} from '@atproto/api'
-
+import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {s} from '#/lib/styles'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {makeProfileLink} from '#/lib/routes/links'
+import {Link} from '#/view/com/util/Link'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {Text} from 'view/com/util/text/Text'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useActorSearch} from '#/state/queries/actor-autocomplete'
+import {useModerationOpts} from '#/state/queries/preferences'
+
+export function SearchResultCard({
+  profile,
+  style,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  style: ViewStyle
+}) {
+  const pal = usePalette('default')
+  const moderationOpts = useModerationOpts()
+
+  if (!moderationOpts) {
+    // TODO
+    return null
+  }
+
+  const moderation = moderateProfile(profile, moderationOpts)
+
+  return (
+    <Link
+      href={makeProfileLink(profile)}
+      title={profile.handle}
+      asAnchor
+      anchorNoUnderline>
+      <View
+        style={[
+          pal.border,
+          style,
+          {
+            borderTopWidth: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+          },
+        ]}>
+        <UserAvatar
+          size={40}
+          avatar={profile.avatar}
+          moderation={moderation.avatar}
+        />
+        <View style={{flex: 1}}>
+          <Text
+            type="lg"
+            style={[s.bold, pal.text]}
+            numberOfLines={1}
+            lineHeight={1.2}>
+            {sanitizeDisplayName(
+              profile.displayName || sanitizeHandle(profile.handle),
+              moderation.profile,
+            )}
+          </Text>
+          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+            {sanitizeHandle(profile.handle, '@')}
+          </Text>
+        </View>
+      </View>
+    </Link>
+  )
+}
 
 export const DesktopSearch = observer(function DesktopSearch() {
   const {_} = useLingui()
@@ -107,7 +180,11 @@ export const DesktopSearch = observer(function DesktopSearch() {
           {searchResults.length ? (
             <>
               {searchResults.map((item, i) => (
-                <ProfileCard key={item.did} profile={item} noBorder={i === 0} />
+                <SearchResultCard
+                  key={item.did}
+                  profile={item}
+                  style={i === 0 ? {borderTopWidth: 0} : {}}
+                />
               ))}
             </>
           ) : (
@@ -157,15 +234,11 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   resultsContainer: {
-    // @ts-ignore supported by web
-    // position: 'fixed',
     marginTop: 10,
-
     flexDirection: 'column',
     width: 300,
     borderWidth: 1,
     borderRadius: 6,
-    paddingVertical: 4,
   },
   noResults: {
     textAlign: 'center',
