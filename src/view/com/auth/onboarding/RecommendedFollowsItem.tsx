@@ -90,11 +90,12 @@ export function ProfileCard({
         await follow({did: profile.did})
         await onFollowStateChange({did: profile.did, following: true})
         setAddingMoreSuggestions(false)
+        track('Onboarding:SuggestedFollowFollowed')
       }
-
-      track('Onboarding:SuggestedFollowFollowed')
     } catch (e) {
       logger.error('RecommendedFollows: failed to toggle following', {error: e})
+    } finally {
+      setAddingMoreSuggestions(false)
     }
   }, [
     profile,
