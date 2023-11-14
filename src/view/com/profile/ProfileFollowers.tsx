@@ -1,49 +1,73 @@
-import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
+import React from 'react'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
-import {
-  UserFollowersModel,
-  FollowerItem,
-} from 'state/models/lists/user-followers'
+import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView, FlatList} from '../util/Views'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
+import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {logger} from '#/logger'
+import {cleanError} from '#/lib/strings/errors'
 
-export const ProfileFollowers = observer(function ProfileFollowers({
-  name,
-}: {
-  name: string
-}) {
+export function ProfileFollowers({name}: {name: string}) {
   const pal = usePalette('default')
-  const store = useStores()
-  const view = React.useMemo(
-    () => new UserFollowersModel(store, {actor: name}),
-    [store, name],
+  const [isPTRing, setIsPTRing] = React.useState(false)
+  const {
+    data: resolvedDid,
+    error: resolveError,
+    isFetching: isFetchingDid,
+  } = useResolveDidQuery(name)
+  const {
+    data,
+    dataUpdatedAt,
+    isFetching,
+    isFetched,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isError,
+    error,
+    refetch,
+  } = useProfileFollowersQuery(resolvedDid?.did)
+
+  const followers = React.useMemo(() => {
+    if (data?.pages) {
+      return data.pages.flatMap(page => page.followers)
+    }
+  }, [data])
+
+  const onRefresh = React.useCallback(async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh followers', {error: err})
+    }
+    setIsPTRing(false)
+  }, [refetch, setIsPTRing])
+
+  const onEndReached = async () => {
+    if (isFetching || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more followers', {error: err})
+    }
+  }
+
+  const renderItem = React.useCallback(
+    ({item}: {item: ActorDefs.ProfileViewBasic}) => (
+      <ProfileCardWithFollowBtn
+        key={item.did}
+        profile={item}
+        dataUpdatedAt={dataUpdatedAt}
+      />
+    ),
+    [dataUpdatedAt],
   )
 
-  useEffect(() => {
-    view
-      .loadMore()
-      .catch(err =>
-        logger.error('Failed to fetch user followers', {error: err}),
-      )
-  }, [view])
-
-  const onRefresh = () => {
-    view.refresh()
-  }
-  const onEndReached = () => {
-    view.loadMore().catch(err =>
-      logger.error('Failed to load more followers', {
-        error: err,
-      }),
-    )
-  }
-
-  if (!view.hasLoaded) {
+  if (isFetchingDid || !isFetched) {
     return (
       <CenteredView>
         <ActivityIndicator />
@@ -53,26 +77,26 @@ export const ProfileFollowers = observer(function ProfileFollowers({
 
   // error
   // =
-  if (view.hasError) {
+  if (resolveError || isError) {
     return (
       <CenteredView>
-        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
+        <ErrorMessage
+          message={cleanError(resolveError || error)}
+          onPressTryAgain={onRefresh}
+        />
       </CenteredView>
     )
   }
 
   // loaded
   // =
-  const renderItem = ({item}: {item: FollowerItem}) => (
-    <ProfileCardWithFollowBtn key={item.did} profile={item} />
-  )
   return (
     <FlatList
-      data={view.followers}
+      data={followers}
       keyExtractor={item => item.did}
       refreshControl={
         <RefreshControl
-          refreshing={view.isRefreshing}
+          refreshing={isPTRing}
           onRefresh={onRefresh}
           tintColor={pal.colors.text}
           titleColor={pal.colors.text}
@@ -85,15 +109,14 @@ export const ProfileFollowers = observer(function ProfileFollowers({
       // eslint-disable-next-line react/no-unstable-nested-components
       ListFooterComponent={() => (
         <View style={styles.footer}>
-          {view.isLoading && <ActivityIndicator />}
+          {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
         </View>
       )}
-      extraData={view.isLoading}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
     />
   )
-})
+}
 
 const styles = StyleSheet.create({
   footer: {
