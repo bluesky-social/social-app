@@ -53,8 +53,6 @@ export function useSuggestedFollowsQuery() {
           return true
         })
 
-      // TODO refactor — hydrate follow cache here?
-
       return res.data
     },
     initialPageParam: undefined,
