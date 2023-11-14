@@ -7,7 +7,11 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ProfileModeration,
+} from '@atproto/api'
 import {observer} from 'mobx-react-lite'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -28,19 +32,13 @@ import {useModerationOpts} from '#/state/queries/preferences'
 export function SearchResultCard({
   profile,
   style,
+  moderation,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   style: ViewStyle
+  moderation: ProfileModeration
 }) {
   const pal = usePalette('default')
-  const moderationOpts = useModerationOpts()
-
-  if (!moderationOpts) {
-    // TODO
-    return null
-  }
-
-  const moderation = moderateProfile(profile, moderationOpts)
 
   return (
     <Link
@@ -99,6 +97,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
 
+  const moderationOpts = useModerationOpts()
   const search = useActorSearch()
 
   const onChangeText = React.useCallback(
@@ -177,16 +176,15 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
       {query !== '' && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {searchResults.length ? (
-            <>
-              {searchResults.map((item, i) => (
-                <SearchResultCard
-                  key={item.did}
-                  profile={item}
-                  style={i === 0 ? {borderTopWidth: 0} : {}}
-                />
-              ))}
-            </>
+          {searchResults.length && moderationOpts ? (
+            searchResults.map((item, i) => (
+              <SearchResultCard
+                key={item.did}
+                profile={item}
+                moderation={moderateProfile(item, moderationOpts)}
+                style={i === 0 ? {borderTopWidth: 0} : {}}
+              />
+            ))
           ) : (
             <View>
               <Text style={[pal.textLight, styles.noResults]}>
