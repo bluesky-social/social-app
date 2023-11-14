@@ -94,7 +94,7 @@ const LightboxFooter = observer(function LightboxFooter({
     altText = opts.images[imageIndex].alt || ''
   } else if (lightbox.name === 'profile-image') {
     const opts = lightbox as models.ProfileImageLightbox
-    uri = opts.profileView.avatar || ''
+    uri = opts.profile.avatar || ''
   }
 
   return (

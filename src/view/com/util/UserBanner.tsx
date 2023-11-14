@@ -5,7 +5,6 @@ import {ModerationUI} from '@atproto/api'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {useStores} from 'state/index'
 import {
   usePhotoLibraryPermission,
   useCameraPermission,
@@ -26,7 +25,6 @@ export function UserBanner({
   moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
 }) {
-  const store = useStores()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -50,7 +48,7 @@ export function UserBanner({
               return
             }
             onSelectNewBanner?.(
-              await openCamera(store, {
+              await openCamera({
                 width: 3000,
                 height: 1000,
               }),
@@ -77,7 +75,7 @@ export function UserBanner({
             }
 
             onSelectNewBanner?.(
-              await openCropper(store, {
+              await openCropper({
                 mediaType: 'photo',
                 path: items[0].path,
                 width: 3000,
@@ -106,7 +104,6 @@ export function UserBanner({
       onSelectNewBanner,
       requestCameraAccessIfNeeded,
       requestPhotoAccessIfNeeded,
-      store,
     ],
   )
 

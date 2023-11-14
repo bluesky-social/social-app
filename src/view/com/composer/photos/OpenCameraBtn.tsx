@@ -6,7 +6,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {useStores} from 'state/index'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
 import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
@@ -23,7 +22,6 @@ type Props = {
 export function OpenCameraBtn({gallery}: Props) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const store = useStores()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
 
@@ -34,7 +32,7 @@ export function OpenCameraBtn({gallery}: Props) {
         return
       }
 
-      const img = await openCamera(store, {
+      const img = await openCamera({
         width: POST_IMG_MAX.width,
         height: POST_IMG_MAX.height,
         freeStyleCropEnabled: true,
@@ -45,7 +43,7 @@ export function OpenCameraBtn({gallery}: Props) {
       // ignore
       logger.warn('Error using camera', {error: err})
     }
-  }, [gallery, track, store, requestCameraAccessIfNeeded])
+  }, [gallery, track, requestCameraAccessIfNeeded])
 
   const shouldShowCameraButton = isNative || isMobileWeb
   if (!shouldShowCameraButton) {
