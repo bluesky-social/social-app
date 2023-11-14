@@ -69,12 +69,12 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               <GalleryItem {...props} index={0} imageStyle={styles.image} />
             </View>
             <View style={styles.smallItem}>
-              <GalleryItem {...props} index={2} imageStyle={styles.image} />
+              <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
           </View>
           <View style={styles.flexRow}>
             <View style={styles.smallItem}>
-              <GalleryItem {...props} index={1} imageStyle={styles.image} />
+              <GalleryItem {...props} index={2} imageStyle={styles.image} />
             </View>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={3} imageStyle={styles.image} />
