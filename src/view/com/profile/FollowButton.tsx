@@ -7,6 +7,7 @@ import {
   useProfileFollowMutation,
   useProfileUnfollowMutation,
 } from '#/state/queries/profile'
+import {Shadow} from '#/state/cache/types'
 
 export function FollowButton({
   unfollowedType = 'inverted',
@@ -17,7 +18,7 @@ export function FollowButton({
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   onToggleFollow?: (v: boolean) => void
   labelStyle?: StyleProp<TextStyle>
 }) {
@@ -51,7 +52,7 @@ export function FollowButton({
     }
   }
 
-  if (!profile.viewer || profile.viewer.following === 'pending') {
+  if (!profile.viewer) {
     return <View />
   }
 
