@@ -156,9 +156,16 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
     setIsPTR(false)
   }, [setIsPTR, refetchPopularFeeds])
   const onEndReached = React.useCallback(() => {
-    if (isUserSearching || !hasNextPopularFeedsPage || popularFeedsError) return
+    if (
+      isPopularFeedsFetching ||
+      isUserSearching ||
+      !hasNextPopularFeedsPage ||
+      popularFeedsError
+    )
+      return
     fetchNextPopularFeedsPage()
   }, [
+    isPopularFeedsFetching,
     isUserSearching,
     popularFeedsError,
     hasNextPopularFeedsPage,
