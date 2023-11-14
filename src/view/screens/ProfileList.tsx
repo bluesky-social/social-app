@@ -90,7 +90,7 @@ export const ProfileListScreen = withAuthRequired(
     }
 
     return resolvedUri && list ? (
-      <ProfileListScreenLoaded {...props} uri={resolvedUri} list={list} />
+      <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
     ) : (
       <CenteredView>
         <View style={s.p20}>
