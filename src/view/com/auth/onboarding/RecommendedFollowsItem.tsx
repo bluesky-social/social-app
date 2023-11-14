@@ -1,9 +1,7 @@
 import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
-import {FollowButton} from 'view/com/profile/FollowButton'
+import {ProfileModeration} from '@atproto/api'
+import {Button} from '#/view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {SuggestedActor} from 'state/models/discovery/suggested-actors'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -15,19 +13,32 @@ import Animated, {FadeInRight} from 'react-native-reanimated'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Trans} from '@lingui/macro'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  useProfileFollowMutation,
+  useProfileUnfollowMutation,
+} from '#/state/queries/profile'
+import {logger} from '#/logger'
 
 type Props = {
-  item: SuggestedActor
-  index: number
-  insertSuggestionsByActor: (did: string, index: number) => Promise<void>
+  profile: SuggestedActor
+  dataUpdatedAt: number
+  moderation: ProfileModeration
+  onFollowStateChange: (props: {
+    did: string
+    following: boolean
+  }) => Promise<void>
 }
-export const RecommendedFollowsItem: React.FC<Props> = ({
-  item,
-  index,
-  insertSuggestionsByActor,
-}) => {
+
+export function RecommendedFollowsItem({
+  profile,
+  dataUpdatedAt,
+  moderation,
+  onFollowStateChange,
+}: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const shadowedProfile = useProfileShadow(profile, dataUpdatedAt)
 
   return (
     <Animated.View
@@ -42,30 +53,57 @@ export const RecommendedFollowsItem: React.FC<Props> = ({
         },
       ]}>
       <ProfileCard
-        key={item.did}
-        profile={item}
-        index={index}
-        insertSuggestionsByActor={insertSuggestionsByActor}
+        key={profile.did}
+        profile={shadowedProfile}
+        onFollowStateChange={onFollowStateChange}
+        moderation={moderation}
       />
     </Animated.View>
   )
 }
 
-export const ProfileCard = observer(function ProfileCardImpl({
+export function ProfileCard({
   profile,
-  index,
-  insertSuggestionsByActor,
-}: {
-  profile: AppBskyActorDefs.ProfileViewBasic
-  index: number
-  insertSuggestionsByActor: (did: string, index: number) => Promise<void>
-}) {
+  onFollowStateChange,
+  moderation,
+}: Omit<Props, 'dataUpdatedAt'>) {
   const {track} = useAnalytics()
-  const store = useStores()
   const pal = usePalette('default')
-  const moderation = moderateProfile(profile, store.preferences.moderationOpts)
   const [addingMoreSuggestions, setAddingMoreSuggestions] =
     React.useState(false)
+  const {mutateAsync: follow} = useProfileFollowMutation()
+  const {mutateAsync: unfollow} = useProfileUnfollowMutation()
+
+  const onToggleFollow = React.useCallback(async () => {
+    try {
+      if (
+        profile.viewer?.following &&
+        profile.viewer?.following !== 'pending'
+      ) {
+        await unfollow({did: profile.did, followUri: profile.viewer.following})
+      } else if (
+        !profile.viewer?.following &&
+        profile.viewer?.following !== 'pending'
+      ) {
+        setAddingMoreSuggestions(true)
+        await follow({did: profile.did})
+        await onFollowStateChange({did: profile.did, following: true})
+        setAddingMoreSuggestions(false)
+        track('Onboarding:SuggestedFollowFollowed')
+      }
+    } catch (e) {
+      logger.error('RecommendedFollows: failed to toggle following', {error: e})
+    } finally {
+      setAddingMoreSuggestions(false)
+    }
+  }, [
+    profile,
+    follow,
+    unfollow,
+    setAddingMoreSuggestions,
+    track,
+    onFollowStateChange,
+  ])
 
   return (
     <View style={styles.card}>
@@ -93,17 +131,12 @@ export const ProfileCard = observer(function ProfileCardImpl({
           </Text>
         </View>
 
-        <FollowButton
-          profile={profile}
+        <Button
+          type={profile.viewer?.following ? 'default' : 'inverted'}
           labelStyle={styles.followButton}
-          onToggleFollow={async isFollow => {
-            if (isFollow) {
-              setAddingMoreSuggestions(true)
-              await insertSuggestionsByActor(profile.did, index)
-              setAddingMoreSuggestions(false)
-              track('Onboarding:SuggestedFollowFollowed')
-            }
-          }}
+          onPress={onToggleFollow}
+          label={profile.viewer?.following ? 'Unfollow' : 'Follow'}
+          withLoading={true}
         />
       </View>
       {profile.description ? (
@@ -123,7 +156,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
       ) : null}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   cardContainer: {

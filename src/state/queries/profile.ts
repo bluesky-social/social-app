@@ -11,6 +11,8 @@ import {useSession} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
+import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
+import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 
 export const RQKEY = (did: string) => ['profile', did]
 
@@ -147,6 +149,7 @@ export function useProfileUnfollowMutation() {
 
 export function useProfileMuteMutation() {
   const {agent} = useSession()
+  const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await agent.mute(did)
@@ -156,6 +159,9 @@ export function useProfileMuteMutation() {
       updateProfileShadow(variables.did, {
         muted: true,
       })
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
     },
     onError(error, variables) {
       // revert the optimistic update
@@ -189,6 +195,7 @@ export function useProfileUnmuteMutation() {
 
 export function useProfileBlockMutation() {
   const {agent, currentAccount} = useSession()
+  const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
@@ -210,6 +217,7 @@ export function useProfileBlockMutation() {
       updateProfileShadow(variables.did, {
         blockingUri: data.uri,
       })
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
     },
     onError(error, variables) {
       // revert the optimistic update

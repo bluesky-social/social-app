@@ -107,6 +107,7 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
     refetch: refetchPopularFeeds,
     fetchNextPage: fetchNextPopularFeedsPage,
     isFetchingNextPage: isPopularFeedsFetchingNextPage,
+    hasNextPage: hasNextPopularFeedsPage,
   } = useGetPopularFeedsQuery()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -154,6 +155,22 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
     await refetchPopularFeeds()
     setIsPTR(false)
   }, [setIsPTR, refetchPopularFeeds])
+  const onEndReached = React.useCallback(() => {
+    if (
+      isPopularFeedsFetching ||
+      isUserSearching ||
+      !hasNextPopularFeedsPage ||
+      popularFeedsError
+    )
+      return
+    fetchNextPopularFeedsPage()
+  }, [
+    isPopularFeedsFetching,
+    isUserSearching,
+    popularFeedsError,
+    hasNextPopularFeedsPage,
+    fetchNextPopularFeedsPage,
+  ])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -474,9 +491,7 @@ export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
           />
         }
         initialNumToRender={10}
-        onEndReached={() =>
-          isUserSearching ? undefined : fetchNextPopularFeedsPage()
-        }
+        onEndReached={onEndReached}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
       />

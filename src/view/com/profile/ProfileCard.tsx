@@ -21,10 +21,13 @@ import {
   getProfileModerationCauses,
   getModerationCauseKey,
 } from 'lib/moderation'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 
-export const ProfileCard = observer(function ProfileCardImpl({
+export function ProfileCard({
   testID,
-  profile,
+  profile: profileUnshadowed,
+  dataUpdatedAt,
   noBg,
   noBorder,
   followers,
@@ -33,16 +36,20 @@ export const ProfileCard = observer(function ProfileCardImpl({
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
+  dataUpdatedAt: number
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
   renderButton?: (profile: AppBskyActorDefs.ProfileViewBasic) => React.ReactNode
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
   const pal = usePalette('default')
-
-  const moderation = moderateProfile(profile, store.preferences.moderationOpts)
+  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const moderationOpts = useModerationOpts()
+  if (!moderationOpts) {
+    return null
+  }
+  const moderation = moderateProfile(profile, moderationOpts)
 
   return (
     <Link
@@ -100,7 +107,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
       <FollowersList followers={followers} />
     </Link>
   )
-})
+}
 
 function ProfileCardPills({
   followedBy,
