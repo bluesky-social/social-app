@@ -74,18 +74,19 @@ const InnerApp = observer(function AppImpl() {
 
   return (
     <ThemeProvider theme={colorMode}>
-      <RootSiblingParent>
-        <analytics.Provider>
-          <RootStoreProvider value={rootStore}>
-            <I18nProvider i18n={i18n}>
+      <analytics.Provider>
+        <RootStoreProvider value={rootStore}>
+          <I18nProvider i18n={i18n}>
+            {/* All components should be within this provider */}
+            <RootSiblingParent>
               <GestureHandlerRootView style={s.h100pct}>
                 <TestCtrls />
                 <Shell />
               </GestureHandlerRootView>
-            </I18nProvider>
-          </RootStoreProvider>
-        </analytics.Provider>
-      </RootSiblingParent>
+            </RootSiblingParent>
+          </I18nProvider>
+        </RootStoreProvider>
+      </analytics.Provider>
     </ThemeProvider>
   )
 })
