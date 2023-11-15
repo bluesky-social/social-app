@@ -3,11 +3,11 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  FlatList,
   RefreshControl,
   TextInput,
   Pressable,
 } from 'react-native'
+import {FlatList, ScrollView, CenteredView} from '#/view/com/util/Views'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,7 +22,6 @@ import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
-import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {Text} from '#/view/com/util/text/Text'
 import {NotificationFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
@@ -45,49 +44,74 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {SearchResultCard} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {useStores} from '#/state'
+import {isWeb} from '#/platform/detection'
 
 function Loader() {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   return (
-    <View style={{padding: 18}}>
+    <CenteredView
+      style={[
+        // @ts-ignore web only -prf
+        {
+          padding: 18,
+          height: isWeb ? '100vh' : undefined,
+        },
+        pal.border,
+      ]}
+      sideBorders={!isMobile}>
       <ActivityIndicator />
-    </View>
+    </CenteredView>
   )
 }
 
 // TODO refactor how to translate?
 function EmptyState({message, error}: {message: string; error?: string}) {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
 
   return (
-    <View style={[pal.viewLight, {padding: 18, borderRadius: 8}]}>
-      <Text style={[pal.text]}>
-        <Trans>{message}</Trans>
-      </Text>
+    <CenteredView
+      sideBorders={!isMobile}
+      style={[
+        pal.border,
+        // @ts-ignore web only -prf
+        {
+          padding: 18,
+          height: isWeb ? '100vh' : undefined,
+        },
+      ]}>
+      <View style={[pal.viewLight, {padding: 18, borderRadius: 8}]}>
+        <Text style={[pal.text]}>
+          <Trans>{message}</Trans>
+        </Text>
 
-      {error && (
-        <>
-          <View
-            style={[
-              {
-                marginVertical: 12,
-                height: 1,
-                width: '100%',
-                backgroundColor: pal.text.color,
-                opacity: 0.2,
-              },
-            ]}
-          />
+        {error && (
+          <>
+            <View
+              style={[
+                {
+                  marginVertical: 12,
+                  height: 1,
+                  width: '100%',
+                  backgroundColor: pal.text.color,
+                  opacity: 0.2,
+                },
+              ]}
+            />
 
-          <Text style={[pal.textLight]}>
-            <Trans>Error:</Trans> {error}
-          </Text>
-        </>
-      )}
-    </View>
+            <Text style={[pal.textLight]}>
+              <Trans>Error:</Trans> {error}
+            </Text>
+          </>
+        )}
+      </View>
+    </CenteredView>
   )
 }
 
 function SearchScreenSuggestedFollows() {
+  const pal = usePalette('default')
   const {currentAccount} = useSession()
   const [dataUpdatedAt, setDataUpdatedAt] = React.useState(0)
   const [suggestions, setSuggestions] = React.useState<
@@ -138,22 +162,25 @@ function SearchScreenSuggestedFollows() {
   ])
 
   return suggestions.length ? (
-    <View style={styles.scrollContainer}>
-      <FlatList
-        data={suggestions}
-        renderItem={({item}) => (
-          <ProfileCardWithFollowBtn
-            profile={item}
-            noBg
-            dataUpdatedAt={dataUpdatedAt}
-          />
-        )}
-        keyExtractor={item => item.did}
-        style={{flex: 1}}
-      />
-    </View>
+    <FlatList
+      data={suggestions}
+      renderItem={({item}) => (
+        <ProfileCardWithFollowBtn
+          profile={item}
+          noBg
+          dataUpdatedAt={dataUpdatedAt}
+        />
+      )}
+      keyExtractor={item => item.did}
+      // @ts-ignore web only -prf
+      desktopFixedHeight
+      contentContainerStyle={{paddingBottom: 1200}}
+    />
   ) : (
-    <NotificationFeedLoadingPlaceholder />
+    <CenteredView
+      style={[pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]}>
+      <NotificationFeedLoadingPlaceholder />
+    </CenteredView>
   )
 }
 
@@ -218,12 +245,10 @@ function SearchScreenPostResults({query}: {query: string}) {
   }, [posts, isFetchingNextPage])
 
   return error ? (
-    <View style={{paddingHorizontal: 18}}>
-      <EmptyState
-        message="We're sorry, but your search could not be completed. Please try again in a few minutes."
-        error={error.toString()}
-      />
-    </View>
+    <EmptyState
+      message="We're sorry, but your search could not be completed. Please try again in a few minutes."
+      error={error.toString()}
+    />
   ) : (
     <>
       {isFetched ? (
@@ -239,7 +264,6 @@ function SearchScreenPostResults({query}: {query: string}) {
                 }
               }}
               keyExtractor={item => item.key}
-              style={{flex: 1}}
               refreshControl={
                 <RefreshControl
                   refreshing={isPTR}
@@ -249,11 +273,12 @@ function SearchScreenPostResults({query}: {query: string}) {
                 />
               }
               onEndReached={onEndReached}
+              // @ts-ignore web only -prf
+              desktopFixedHeight
+              contentContainerStyle={{paddingBottom: 100}}
             />
           ) : (
-            <View style={{padding: 18}}>
-              <EmptyState message={`No results found for ${query}`} />
-            </View>
+            <EmptyState message={`No results found for ${query}`} />
           )}
         </>
       ) : (
@@ -305,12 +330,12 @@ function SearchScreenUserResults({query}: {query: string}) {
             />
           )}
           keyExtractor={item => item.did}
-          style={{flex: 1}}
+          // @ts-ignore web only -prf
+          desktopFixedHeight
+          contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <View style={{padding: 18}}>
-          <EmptyState message={`No results found for ${query}`} />
-        </View>
+        <EmptyState message={`No results found for ${query}`} />
       )}
     </>
   ) : (
@@ -318,6 +343,7 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
+const SECTIONS = ['Posts', 'Users']
 export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -332,60 +358,54 @@ export function SearchScreenInner({query}: {query?: string}) {
   )
 
   return query ? (
-    <View style={[styles.scrollContainer]}>
-      <Pager
-        onPageSelected={onPageSelected}
-        renderTabBar={props => (
-          <TabBar items={['Posts', 'Users']} {...props} />
-        )}>
-        <View>
-          <SearchScreenPostResults query={query} />
-        </View>
-        <View>
-          <SearchScreenUserResults query={query} />
-        </View>
-      </Pager>
-    </View>
+    <Pager
+      tabBarPosition="top"
+      onPageSelected={onPageSelected}
+      renderTabBar={props => (
+        <CenteredView sideBorders style={pal.border}>
+          <TabBar items={SECTIONS} {...props} />
+        </CenteredView>
+      )}
+      initialPage={0}>
+      <View>
+        <SearchScreenPostResults query={query} />
+      </View>
+      <View>
+        <SearchScreenUserResults query={query} />
+      </View>
+    </Pager>
   ) : (
-    <>
-      <Text
-        type="title"
-        style={[
-          pal.text,
-          pal.border,
-          {
-            display: 'flex',
-            paddingVertical: 12,
-            paddingHorizontal: 18,
-            fontWeight: 'bold',
-          },
-        ]}>
-        <Trans>Suggested Follows</Trans>
-      </Text>
+    <View>
+      <CenteredView sideBorders style={pal.border}>
+        <Text
+          type="title"
+          style={[
+            pal.text,
+            pal.border,
+            {
+              display: 'flex',
+              paddingVertical: 12,
+              paddingHorizontal: 18,
+              fontWeight: 'bold',
+            },
+          ]}>
+          <Trans>Suggested Follows</Trans>
+        </Text>
+      </CenteredView>
       <SearchScreenSuggestedFollows />
-    </>
+    </View>
   )
 }
 
 export function SearchScreenDesktop(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
-  const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
 
-  return (
-    <CenteredView
-      style={[
-        pal.border,
-        styles.scrollContainer,
-        {borderLeftWidth: 1, borderRightWidth: 1},
-      ]}>
-      {isDesktop ? (
-        <SearchScreenInner query={props.route.params?.q} />
-      ) : (
-        <SearchScreenMobile {...props} />
-      )}
-    </CenteredView>
+  return isDesktop ? (
+    <SearchScreenInner query={props.route.params?.q} />
+  ) : (
+    <SearchScreenMobile {...props} />
   )
 }
 
@@ -402,6 +422,7 @@ export function SearchScreenMobile(
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
   const store = useStores()
+  const {isTablet} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -480,8 +501,8 @@ export function SearchScreenMobile(
   )
 
   return (
-    <View>
-      <View style={[styles.header]}>
+    <View style={{flex: 1}}>
+      <CenteredView style={[styles.header, pal.border]} sideBorders={isTablet}>
         <Pressable
           testID="viewHeaderBackOrMenuBtn"
           onPress={onPressMenu}
@@ -548,14 +569,12 @@ export function SearchScreenMobile(
             </Pressable>
           </View>
         ) : undefined}
-      </View>
+      </CenteredView>
 
       {showAutocompleteResults && moderationOpts ? (
         <>
           {isFetching ? (
-            <View style={{padding: 8}}>
-              <ActivityIndicator />
-            </View>
+            <Loader />
           ) : (
             <ScrollView style={{height: '100%'}}>
               {searchResults.length ? (
@@ -568,11 +587,7 @@ export function SearchScreenMobile(
                   />
                 ))
               ) : (
-                <View>
-                  <Text style={[pal.textLight, styles.noResults]}>
-                    <Trans>No results found for {query}</Trans>
-                  </Text>
-                </View>
+                <EmptyState message={`No results found for ${query}`} />
               )}
 
               <View style={{height: 200}} />
@@ -587,10 +602,6 @@ export function SearchScreenMobile(
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    height: '100%',
-    overflowY: 'auto',
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -624,9 +635,5 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
-  },
-  noResults: {
-    textAlign: 'center',
-    paddingVertical: 10,
   },
 })
