@@ -1,1 +1,1 @@
-export {SearchScreen} from '#/view/screens/Search/Search'
+export {SearchScreenDesktop as SearchScreen} from '#/view/screens/Search/Search'

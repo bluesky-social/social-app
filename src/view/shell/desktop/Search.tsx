@@ -92,8 +92,8 @@ export const DesktopSearch = observer(function DesktopSearch() {
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
   )
+  const [isActive, setIsActive] = React.useState<boolean>(false)
   const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const [searchResults, setSearchResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
@@ -108,6 +108,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
       if (text.length > 0) {
         setIsFetching(true)
+        setIsActive(true)
 
         if (searchDebounceTimeout.current)
           clearTimeout(searchDebounceTimeout.current)
@@ -125,28 +126,26 @@ export const DesktopSearch = observer(function DesktopSearch() {
           clearTimeout(searchDebounceTimeout.current)
         setSearchResults([])
         setIsFetching(false)
+        setIsActive(false)
       }
     },
     [setQuery, search, setSearchResults],
   )
 
   const onPressCancelSearch = React.useCallback(() => {
-    onChangeText('')
+    setQuery('')
+    setIsActive(false)
     if (searchDebounceTimeout.current)
       clearTimeout(searchDebounceTimeout.current)
-  }, [onChangeText])
+  }, [setQuery])
   const onSubmit = React.useCallback(() => {
+    setIsActive(false)
+    if (!query.length) return
     setSearchResults([])
     if (searchDebounceTimeout.current)
       clearTimeout(searchDebounceTimeout.current)
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }, [query, navigation, setSearchResults])
-  const onFocus = React.useCallback(() => {
-    setIsInputFocused(true)
-    if (query.length > 0) {
-      onChangeText(query)
-    }
-  }, [setIsInputFocused, onChangeText, query])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -165,8 +164,6 @@ export const DesktopSearch = observer(function DesktopSearch() {
             returnKeyType="search"
             value={query}
             style={[pal.textLight, styles.input]}
-            onFocus={onFocus}
-            onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
@@ -190,7 +187,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
         </View>
       </View>
 
-      {query !== '' && isInputFocused && moderationOpts && (
+      {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
           {isFetching ? (
             <View style={{padding: 8}}>
