@@ -414,6 +414,13 @@ export function SearchScreenMobile(
 ) {
   const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const {track} = useAnalytics()
+  const setDrawerOpen = useSetDrawerOpen()
+  const moderationOpts = useModerationOpts()
+  const search = useActorSearch()
+
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
   )
@@ -425,14 +432,6 @@ export function SearchScreenMobile(
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [showAutocompleteResults, setShowAutocompleteResults] =
     React.useState(false)
-
-  const {_} = useLingui()
-  const pal = usePalette('default')
-  const {track} = useAnalytics()
-  const setDrawerOpen = useSetDrawerOpen()
-
-  const moderationOpts = useModerationOpts()
-  const search = useActorSearch()
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
