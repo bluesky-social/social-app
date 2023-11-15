@@ -101,6 +101,7 @@ export const SearchScreen = withAuthRequired(
 
     useFocusEffect(
       React.useCallback(() => {
+        // TODO
         const softResetSub = store.onScreenSoftReset(onSoftReset)
         const cleanup = () => {
           softResetSub.remove()

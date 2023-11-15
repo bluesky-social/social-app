@@ -87,6 +87,7 @@ function SearchScreenSuggestedFollows() {
 
       if (!friends) return // :(
 
+      // TODO dedupe
       const friendsOfFriends = (
         await Promise.all(
           friends
@@ -326,6 +327,51 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
+export function SearchScreenInner({query}: {query?: string}) {
+  const pal = usePalette('default')
+
+  return query ? (
+    <>
+      <PagerWithHeader
+        items={['Posts', 'Users']}
+        isHeaderReady={true}
+        // must be positive height?
+        renderHeader={() => <View style={{height: 1}} />}>
+        {({headerHeight}) => (
+          // TODO how do I use this
+          <View style={{paddingTop: headerHeight}}>
+            <SearchScreenPostResults query={query} />
+          </View>
+        )}
+        {({headerHeight}) => (
+          <View style={{paddingTop: headerHeight}}>
+            <SearchScreenUserResults query={query} />
+          </View>
+        )}
+      </PagerWithHeader>
+    </>
+  ) : (
+    <>
+      <Text
+        type="title"
+        style={[
+          styles.heading,
+          pal.text,
+          pal.border,
+          {
+            display: 'flex',
+            paddingVertical: 12,
+            paddingHorizontal: 18,
+            fontWeight: 'bold',
+          },
+        ]}>
+        <Trans>Suggested Follows</Trans>
+      </Text>
+      <SearchScreenSuggestedFollows />
+    </>
+  )
+}
+
 export function SearchScreen({
   route,
 }: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>) {
@@ -339,46 +385,7 @@ export function SearchScreen({
         styles.scrollContainer,
         {borderLeftWidth: 1, borderRightWidth: 1},
       ]}>
-      {q ? (
-        <>
-          <PagerWithHeader
-            items={['Posts', 'Users']}
-            isHeaderReady={true}
-            // must be positive height?
-            renderHeader={() => <View style={{height: 1}} />}>
-            {({headerHeight}) => (
-              // TODO how do I use this
-              <View style={{paddingTop: headerHeight}}>
-                <SearchScreenPostResults query={q} />
-              </View>
-            )}
-            {({headerHeight}) => (
-              <View style={{paddingTop: headerHeight}}>
-                <SearchScreenUserResults query={q} />
-              </View>
-            )}
-          </PagerWithHeader>
-        </>
-      ) : (
-        <>
-          <Text
-            type="title"
-            style={[
-              styles.heading,
-              pal.text,
-              pal.border,
-              {
-                display: 'flex',
-                paddingVertical: 12,
-                paddingHorizontal: 18,
-                fontWeight: 'bold',
-              },
-            ]}>
-            <Trans>Suggested Follows</Trans>
-          </Text>
-          <SearchScreenSuggestedFollows />
-        </>
-      )}
+      <SearchScreenInner query={q} />
     </CenteredView>
   )
 }
