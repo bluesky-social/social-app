@@ -24,7 +24,7 @@ import {
 } from 'lib/routes/types'
 import {CenteredView} from 'view/com/util/Views'
 import {Text} from '#/view/com/util/text/Text'
-import {ProfileCardLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {NotificationFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Post} from '#/view/com/post/Post'
 import {Pager} from '#/view/com/pager/Pager'
@@ -44,6 +44,7 @@ import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {SearchResultCard} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
+import {useStores} from '#/state'
 
 function Loader() {
   return (
@@ -152,36 +153,7 @@ function SearchScreenSuggestedFollows() {
       />
     </View>
   ) : (
-    <>
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-      <ProfileCardLoadingPlaceholder />
-    </>
+    <NotificationFeedLoadingPlaceholder />
   )
 }
 
@@ -429,6 +401,7 @@ export function SearchScreenMobile(
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const store = useStores()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -446,7 +419,7 @@ export function SearchScreenMobile(
     track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
-  const onPressCancelSearchInner = React.useCallback(() => {
+  const onPressCancelSearch = React.useCallback(() => {
     textInput.current?.blur()
     setQuery('')
     setShowAutocompleteResults(false)
@@ -490,22 +463,20 @@ export function SearchScreenMobile(
     setShowAutocompleteResults(false)
   }, [setShowAutocompleteResults])
 
-  // const onSoftReset = React.useCallback(() => {
-  //   scrollViewRef.current?.scrollTo({x: 0, y: 0})
-  //   flatListRef.current?.scrollToOffset({offset: 0})
-  //   onPressCancelSearch()
-  // }, [scrollViewRef, flatListRef, onPressCancelSearch])
+  const onSoftReset = React.useCallback(() => {
+    onPressCancelSearch()
+  }, [onPressCancelSearch])
 
   useFocusEffect(
     React.useCallback(() => {
-      // TODO
-      // const softResetSub = store.onScreenSoftReset(onSoftReset)
-      // const cleanup = () => {
-      //   softResetSub.remove()
-      // }
+      const softResetSub = store.onScreenSoftReset(onSoftReset)
 
       setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
+
+      return () => {
+        softResetSub.remove()
+      }
+    }, [store, onSoftReset, setMinimalShellMode]),
   )
 
   return (
@@ -570,9 +541,7 @@ export function SearchScreenMobile(
 
         {query || inputIsFocused ? (
           <View style={styles.headerCancelBtn}>
-            <Pressable
-              onPress={onPressCancelSearchInner}
-              accessibilityRole="button">
+            <Pressable onPress={onPressCancelSearch} accessibilityRole="button">
               <Text style={[pal.text]}>
                 <Trans>Cancel</Trans>
               </Text>
