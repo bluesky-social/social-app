@@ -16,7 +16,6 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s, colors} from 'lib/styles'
 import {
@@ -46,6 +45,7 @@ import {useSession} from '#/state/session'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useComposerControls} from '#/state/shell/composer'
 import {useFetchHandle} from '#/state/queries/handle'
+import {emitSoftReset} from '#/state/events'
 
 const ProfileCard = observer(function ProfileCardImpl() {
   const {currentAccount} = useSession()
@@ -126,7 +126,6 @@ const NavItem = observer(function NavItemImpl({
 }: NavItemProps) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const store = useStores()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
@@ -149,12 +148,12 @@ const NavItem = observer(function NavItemImpl({
       }
       e.preventDefault()
       if (isCurrent) {
-        store.emitScreenSoftReset()
+        emitSoftReset()
       } else {
         onPress()
       }
     },
-    [onPress, isCurrent, store],
+    [onPress, isCurrent],
   )
 
   return (

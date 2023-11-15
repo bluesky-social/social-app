@@ -9,15 +9,14 @@ import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useStores} from 'state/index'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {emitSoftReset} from '#/state/events'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export const HomeScreen = withAuthRequired(
   observer(function HomeScreenImpl({}: Props) {
-    const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
     const pagerRef = React.useRef<PagerRef>(null)
@@ -74,8 +73,8 @@ export const HomeScreen = withAuthRequired(
     )
 
     const onPressSelected = React.useCallback(() => {
-      store.emitScreenSoftReset()
-    }, [store])
+      emitSoftReset()
+    }, [])
 
     const onPageScrollStateChanged = React.useCallback(
       (state: 'idle' | 'dragging' | 'settling') => {

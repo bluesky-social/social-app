@@ -1,6 +1,6 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {makeAutoObservable, runInAction} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {
   shouldRequestEmailConfirmation,
   setEmailConfirmationRequested,

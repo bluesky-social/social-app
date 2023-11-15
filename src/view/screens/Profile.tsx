@@ -12,7 +12,6 @@ import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileLists} from '../com/lists/ProfileLists'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
-import {useStores} from 'state/index'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
@@ -37,6 +36,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {useQueryClient} from '@tanstack/react-query'
 import {useComposerControls} from '#/state/shell/composer'
+import {listenSoftReset} from '#/state/events'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
@@ -126,7 +126,6 @@ function ProfileScreenLoaded({
   hideBackButton: boolean
 }) {
   const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
-  const store = useStores()
   const {currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
@@ -169,11 +168,10 @@ function ProfileScreenLoaded({
     React.useCallback(() => {
       setMinimalShellMode(false)
       screen('Profile')
-      const softResetSub = store.onScreenSoftReset(() => {
+      return listenSoftReset(() => {
         viewSelectorRef.current?.scrollToTop()
       })
-      return () => softResetSub.remove()
-    }, [store, viewSelectorRef, setMinimalShellMode, screen]),
+    }, [viewSelectorRef, setMinimalShellMode, screen]),
   )
 
   useFocusEffect(
