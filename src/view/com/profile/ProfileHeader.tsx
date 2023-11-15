@@ -271,7 +271,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     let items: DropdownItem[] = [
       {
         testID: 'profileHeaderDropdownShareBtn',
-        label: 'Share',
+        label: _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -285,7 +285,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     items.push({label: 'separator'})
     items.push({
       testID: 'profileHeaderDropdownListAddRemoveBtn',
-      label: 'Add to Lists',
+      label: _(msg`Add to Lists`),
       onPress: onPressAddRemoveLists,
       icon: {
         ios: {
@@ -299,7 +299,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       if (!view.viewer.blocking) {
         items.push({
           testID: 'profileHeaderDropdownMuteBtn',
-          label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
+          label: view.viewer.muted
+            ? _(msg`Unmute Account`)
+            : _(msg`Mute Account`),
           onPress: view.viewer.muted
             ? onPressUnmuteAccount
             : onPressMuteAccount,
@@ -315,7 +317,9 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       if (!view.viewer.blockingByList) {
         items.push({
           testID: 'profileHeaderDropdownBlockBtn',
-          label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
+          label: view.viewer.blocking
+            ? _(msg`Unblock Account`)
+            : _(msg`Block Account`),
           onPress: view.viewer.blocking
             ? onPressUnblockAccount
             : onPressBlockAccount,
@@ -330,7 +334,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
       }
       items.push({
         testID: 'profileHeaderDropdownReportBtn',
-        label: 'Report Account',
+        label: _(msg`Report Account`),
         onPress: onPressReportAccount,
         icon: {
           ios: {
@@ -354,6 +358,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     onPressBlockAccount,
     onPressReportAccount,
     onPressAddRemoveLists,
+    _,
   ])
 
   const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)

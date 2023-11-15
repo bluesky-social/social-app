@@ -217,7 +217,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
                 />
               )
             }
-            label="Search"
+            label={_(msg`Search`)}
             accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
             bold={isAtSearch}
@@ -239,7 +239,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
                 />
               )
             }
-            label="Home"
+            label={_(msg`Home`)}
             accessibilityLabel={_(msg`Home`)}
             accessibilityHint=""
             bold={isAtHome}
@@ -261,7 +261,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
                 />
               )
             }
-            label="Notifications"
+            label={_(msg`Notifications`)}
             accessibilityLabel={_(msg`Notifications`)}
             accessibilityHint={
               notifications.unreadCountLabel === ''
@@ -288,7 +288,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
                 />
               )
             }
-            label="Feeds"
+            label={_(msg`Feeds`)}
             accessibilityLabel={_(msg`Feeds`)}
             accessibilityHint=""
             bold={isAtFeeds}
@@ -296,14 +296,14 @@ export const DrawerContent = observer(function DrawerContentImpl() {
           />
           <MenuItem
             icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
-            label="Lists"
+            label={_(msg`Lists`)}
             accessibilityLabel={_(msg`Lists`)}
             accessibilityHint=""
             onPress={onPressLists}
           />
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
-            label="Moderation"
+            label={_(msg`Moderation`)}
             accessibilityLabel={_(msg`Moderation`)}
             accessibilityHint=""
             onPress={onPressModeration}
@@ -324,7 +324,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
                 />
               )
             }
-            label="Profile"
+            label={_(msg`Profile`)}
             accessibilityLabel={_(msg`Profile`)}
             accessibilityHint=""
             onPress={onPressProfile}
@@ -337,7 +337,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
                 strokeWidth={1.75}
               />
             }
-            label="Settings"
+            label={_(msg`Settings`)}
             accessibilityLabel={_(msg`Settings`)}
             accessibilityHint=""
             onPress={onPressSettings}
