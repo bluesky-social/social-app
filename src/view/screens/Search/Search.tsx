@@ -37,7 +37,7 @@ import {useSession} from '#/state/session'
 import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useActorSearch} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {MagnifyingGlassIcon} from '#/lib/icons'
@@ -297,7 +297,7 @@ function SearchScreenUserResults({query}: {query: string}) {
   const [results, setResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
-  const search = useActorSearch()
+  const search = useActorAutocompleteFn()
   // fuzzy search relies on followers
   const {isFetched: isFollowsFetched} = useMyFollowsQuery()
 
@@ -427,7 +427,7 @@ export function SearchScreenMobile(
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const moderationOpts = useModerationOpts()
-  const search = useActorSearch()
+  const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
@@ -469,7 +469,7 @@ export function SearchScreenMobile(
           clearTimeout(searchDebounceTimeout.current)
 
         searchDebounceTimeout.current = setTimeout(async () => {
-          const results = await search({query: text})
+          const results = await search({query: text, limit: 30})
 
           if (results) {
             setSearchResults(results)

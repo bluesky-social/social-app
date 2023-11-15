@@ -36,7 +36,7 @@ export function useActorAutocompleteFn() {
   const {data: follows} = useMyFollowsQuery()
 
   return React.useCallback(
-    async ({query}: {query: string}) => {
+    async ({query, limit = 8}: {query: string; limit?: number}) => {
       let res
       if (query) {
         try {
@@ -47,7 +47,7 @@ export function useActorAutocompleteFn() {
             queryFn: () =>
               agent.searchActorsTypeahead({
                 term: query,
-                limit: 8,
+                limit,
               }),
           })
         } catch (e) {
