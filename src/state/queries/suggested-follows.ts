@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   AppBskyActorGetSuggestions,
   AppBskyGraphGetSuggestedFollowsByActor,
@@ -5,7 +6,7 @@ import {
 } from '@atproto/api'
 import {
   useInfiniteQuery,
-  useMutation,
+  useQueryClient,
   useQuery,
   InfiniteData,
   QueryKey,
@@ -15,7 +16,7 @@ import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 
 const suggestedFollowsQueryKey = ['suggested-follows']
-const suggestedFollowsByActorQuery = (did: string) => [
+const suggestedFollowsByActorQueryKey = (did: string) => [
   'suggested-follows-by-actor',
   did,
 ]
@@ -73,7 +74,7 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
   const {agent} = useSession()
 
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
-    queryKey: suggestedFollowsByActorQuery(did),
+    queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
       const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: did,
@@ -83,17 +84,26 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
   })
 }
 
-// TODO: Delete and replace usages with the one above.
+// TODO refactor onboarding to use above, but this is still used
 export function useGetSuggestedFollowersByActor() {
   const {agent} = useSession()
+  const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: async (actor: string) => {
-      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
-        actor: actor,
+  return React.useCallback(
+    async (actor: string) => {
+      const res = await queryClient.fetchQuery({
+        staleTime: 60 * 1000,
+        queryKey: suggestedFollowsByActorQueryKey(actor),
+        queryFn: async () => {
+          const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
+            actor: actor,
+          })
+          return res.data
+        },
       })
 
-      return res.data
+      return res
     },
-  })
+    [agent, queryClient],
+  )
 }

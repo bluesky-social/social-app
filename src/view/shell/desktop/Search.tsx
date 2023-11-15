@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
 import {
@@ -12,7 +13,6 @@ import {
   moderateProfile,
   ProfileModeration,
 } from '@atproto/api'
-import {observer} from 'mobx-react-lite'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -84,14 +84,15 @@ export function SearchResultCard({
   )
 }
 
-export const DesktopSearch = observer(function DesktopSearch() {
+export function DesktopSearch() {
   const {_} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
   )
-  const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
+  const [isActive, setIsActive] = React.useState<boolean>(false)
+  const [isFetching, setIsFetching] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const [searchResults, setSearchResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
@@ -104,7 +105,10 @@ export const DesktopSearch = observer(function DesktopSearch() {
     async (text: string) => {
       setQuery(text)
 
-      if (text.length > 0 && isInputFocused) {
+      if (text.length > 0) {
+        setIsFetching(true)
+        setIsActive(true)
+
         if (searchDebounceTimeout.current)
           clearTimeout(searchDebounceTimeout.current)
 
@@ -113,24 +117,34 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
           if (results) {
             setSearchResults(results)
+            setIsFetching(false)
           }
         }, 300)
       } else {
         if (searchDebounceTimeout.current)
           clearTimeout(searchDebounceTimeout.current)
         setSearchResults([])
+        setIsFetching(false)
+        setIsActive(false)
       }
     },
-    [setQuery, isInputFocused, search, setSearchResults],
+    [setQuery, search, setSearchResults],
   )
 
   const onPressCancelSearch = React.useCallback(() => {
-    onChangeText('')
-  }, [onChangeText])
-
+    setQuery('')
+    setIsActive(false)
+    if (searchDebounceTimeout.current)
+      clearTimeout(searchDebounceTimeout.current)
+  }, [setQuery])
   const onSubmit = React.useCallback(() => {
+    setIsActive(false)
+    if (!query.length) return
+    setSearchResults([])
+    if (searchDebounceTimeout.current)
+      clearTimeout(searchDebounceTimeout.current)
     navigation.dispatch(StackActions.push('Search', {q: query}))
-  }, [query, navigation])
+  }, [query, navigation, setSearchResults])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -149,8 +163,6 @@ export const DesktopSearch = observer(function DesktopSearch() {
             returnKeyType="search"
             value={query}
             style={[pal.textLight, styles.input]}
-            onFocus={() => setIsInputFocused(true)}
-            onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
@@ -174,29 +186,37 @@ export const DesktopSearch = observer(function DesktopSearch() {
         </View>
       </View>
 
-      {query !== '' && (
+      {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {searchResults.length && moderationOpts ? (
-            searchResults.map((item, i) => (
-              <SearchResultCard
-                key={item.did}
-                profile={item}
-                moderation={moderateProfile(item, moderationOpts)}
-                style={i === 0 ? {borderTopWidth: 0} : {}}
-              />
-            ))
-          ) : (
-            <View>
-              <Text style={[pal.textLight, styles.noResults]}>
-                <Trans>No results found for {query}</Trans>
-              </Text>
+          {isFetching ? (
+            <View style={{padding: 8}}>
+              <ActivityIndicator />
             </View>
+          ) : (
+            <>
+              {searchResults.length ? (
+                searchResults.map((item, i) => (
+                  <SearchResultCard
+                    key={item.did}
+                    profile={item}
+                    moderation={moderateProfile(item, moderationOpts)}
+                    style={i === 0 ? {borderTopWidth: 0} : {}}
+                  />
+                ))
+              ) : (
+                <View>
+                  <Text style={[pal.textLight, styles.noResults]}>
+                    <Trans>No results found for {query}</Trans>
+                  </Text>
+                </View>
+              )}
+            </>
           )}
         </View>
       )}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {
