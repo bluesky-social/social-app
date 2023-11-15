@@ -16,6 +16,8 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {RefWithInfoAndFollowers} from 'state/models/discovery/foafs'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 interface Heading {
   _reactKey: string
@@ -63,6 +65,7 @@ export const Suggestions = observer(
     flatListRef: ForwardedRef<FlatList>,
   ) {
     const pal = usePalette('default')
+    const {_} = useLingui()
     const [refreshing, setRefreshing] = React.useState(false)
     const data = React.useMemo(() => {
       let items: Item[] = []
@@ -73,7 +76,7 @@ export const Suggestions = observer(
             {
               _reactKey: '__suggested_heading__',
               type: 'heading',
-              title: 'Suggested Follows',
+              title: _(msg`Suggested Follows`),
             },
           ])
           .concat(
@@ -88,7 +91,7 @@ export const Suggestions = observer(
           {
             _reactKey: '__suggested_heading__',
             type: 'heading',
-            title: 'Suggested Follows',
+            title: _(msg`Suggested Follows`),
           },
           {_reactKey: '__suggested_loading__', type: 'loading-placeholder'},
         ])
@@ -98,7 +101,7 @@ export const Suggestions = observer(
           {
             _reactKey: '__popular_heading__',
             type: 'heading',
-            title: 'In Your Network',
+            title: _(msg`In Your Network`),
           },
           {_reactKey: '__foafs_loading__', type: 'loading-placeholder'},
         ])
@@ -109,7 +112,7 @@ export const Suggestions = observer(
               {
                 _reactKey: '__popular_heading__',
                 type: 'heading',
-                title: 'In Your Network',
+                title: _(msg`In Your Network`),
               },
             ])
             .concat(
@@ -154,6 +157,7 @@ export const Suggestions = observer(
       suggestedActors.suggestions,
       foafs.sources,
       foafs.foafs,
+      _,
     ])
 
     const onRefresh = React.useCallback(async () => {

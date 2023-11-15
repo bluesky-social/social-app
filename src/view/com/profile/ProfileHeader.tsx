@@ -219,9 +219,10 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     track('ProfileHeader:BlockAccountButtonClicked')
     openModal({
       name: 'confirm',
-      title: 'Block Account',
-      message:
-        'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
+      title: _(msg`Block Account`),
+      message: _(
+        msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+      ),
       onPressConfirm: async () => {
         try {
           await view.blockAccount()
@@ -233,15 +234,16 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         }
       },
     })
-  }, [track, view, openModal, onRefreshAll])
+  }, [track, view, openModal, onRefreshAll, _])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
     openModal({
       name: 'confirm',
-      title: 'Unblock Account',
-      message:
-        'The account will be able to interact with you after unblocking.',
+      title: _(msg`Unblock Account`),
+      message: _(
+        msg`The account will be able to interact with you after unblocking.`,
+      ),
       onPressConfirm: async () => {
         try {
           await view.unblockAccount()
@@ -253,7 +255,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         }
       },
     })
-  }, [track, view, openModal, onRefreshAll])
+  }, [track, view, openModal, onRefreshAll, _])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')

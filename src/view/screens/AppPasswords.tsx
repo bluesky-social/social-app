@@ -178,14 +178,16 @@ function AppPassword({
   const onDelete = React.useCallback(async () => {
     openModal({
       name: 'confirm',
-      title: 'Delete App Password',
-      message: `Are you sure you want to delete the app password "${name}"?`,
+      title: _(msg`Delete app password`),
+      message: _(
+        msg`Are you sure you want to delete the app password "${name}"?`,
+      ),
       async onPressConfirm() {
         await store.me.deleteAppPassword(name)
         Toast.show('App password deleted')
       },
     })
-  }, [store, openModal, name])
+  }, [store, openModal, name, _])
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
@@ -203,15 +205,17 @@ function AppPassword({
           {name}
         </Text>
         <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
-          Created{' '}
-          {Intl.DateTimeFormat(primaryLocale, {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }).format(new Date(createdAt))}
+          <Trans>
+            Created{' '}
+            {Intl.DateTimeFormat(primaryLocale, {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            }).format(new Date(createdAt))}
+          </Trans>
         </Text>
       </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />

@@ -239,7 +239,9 @@ export const ProfileFeedScreenInner = observer(
       return [
         {
           testID: 'feedHeaderDropdownToggleSavedBtn',
-          label: feedInfo?.isSaved ? 'Remove from my feeds' : 'Add to my feeds',
+          label: feedInfo?.isSaved
+            ? _(msg`Remove from my feeds`)
+            : _(msg`Add to my feeds`),
           onPress: onToggleSaved,
           icon: feedInfo?.isSaved
             ? {
@@ -259,7 +261,7 @@ export const ProfileFeedScreenInner = observer(
         },
         {
           testID: 'feedHeaderDropdownReportBtn',
-          label: 'Report feed',
+          label: _(msg`Report feed`),
           onPress: onPressReport,
           icon: {
             ios: {
@@ -271,7 +273,7 @@ export const ProfileFeedScreenInner = observer(
         },
         {
           testID: 'feedHeaderDropdownShareBtn',
-          label: 'Share link',
+          label: _(msg`Share link`),
           onPress: onPressShare,
           icon: {
             ios: {
@@ -282,7 +284,7 @@ export const ProfileFeedScreenInner = observer(
           },
         },
       ] as DropdownItem[]
-    }, [feedInfo, onToggleSaved, onPressReport, onPressShare])
+    }, [feedInfo, onToggleSaved, onPressReport, onPressShare, _])
 
     const renderHeader = useCallback(() => {
       return (

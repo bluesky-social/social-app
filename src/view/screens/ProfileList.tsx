@@ -288,9 +288,10 @@ const Header = observer(function HeaderImpl({
   const onSubscribeMute = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Mute these accounts?',
-      message:
-        'Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.',
+      title: _(msg`Mute these accounts?`),
+      message: _(
+        msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
+      ),
       confirmBtnText: 'Mute this List',
       async onPressConfirm() {
         try {
@@ -306,7 +307,7 @@ const Header = observer(function HeaderImpl({
         closeModal()
       },
     })
-  }, [openModal, closeModal, list])
+  }, [openModal, closeModal, list, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
@@ -322,9 +323,10 @@ const Header = observer(function HeaderImpl({
   const onSubscribeBlock = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Block these accounts?',
-      message:
-        'Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
+      title: _(msg`Block these accounts?`),
+      message: _(
+        msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+      ),
       confirmBtnText: 'Block this List',
       async onPressConfirm() {
         try {
@@ -340,7 +342,7 @@ const Header = observer(function HeaderImpl({
         closeModal()
       },
     })
-  }, [openModal, closeModal, list])
+  }, [openModal, closeModal, list, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
@@ -366,8 +368,8 @@ const Header = observer(function HeaderImpl({
   const onPressDelete = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Delete List',
-      message: 'Are you sure?',
+      title: _(msg`Delete List`),
+      message: _(msg`Are you sure?`),
       async onPressConfirm() {
         await list.delete()
         Toast.show('List deleted')
@@ -378,7 +380,7 @@ const Header = observer(function HeaderImpl({
         }
       },
     })
-  }, [openModal, list, navigation])
+  }, [openModal, list, navigation, _])
 
   const onPressReport = useCallback(() => {
     if (!list.data) return
@@ -401,7 +403,7 @@ const Header = observer(function HeaderImpl({
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
-        label: 'Share',
+        label: _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -416,7 +418,7 @@ const Header = observer(function HeaderImpl({
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownEditBtn',
-        label: 'Edit List Details',
+        label: _(msg`Edit list details`),
         onPress: onPressEdit,
         icon: {
           ios: {
@@ -428,7 +430,7 @@ const Header = observer(function HeaderImpl({
       })
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
-        label: 'Delete List',
+        label: _(msg`Delete List`),
         onPress: onPressDelete,
         icon: {
           ios: {
@@ -442,7 +444,7 @@ const Header = observer(function HeaderImpl({
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownReportBtn',
-        label: 'Report List',
+        label: _(msg`Report List`),
         onPress: onPressReport,
         icon: {
           ios: {
@@ -461,13 +463,14 @@ const Header = observer(function HeaderImpl({
     onPressEdit,
     onPressDelete,
     onPressReport,
+    _,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
       {
         testID: 'subscribeDropdownMuteBtn',
-        label: 'Mute accounts',
+        label: _(msg`Mute accounts`),
         onPress: onSubscribeMute,
         icon: {
           ios: {
@@ -479,7 +482,7 @@ const Header = observer(function HeaderImpl({
       },
       {
         testID: 'subscribeDropdownBlockBtn',
-        label: 'Block accounts',
+        label: _(msg`Block accounts`),
         onPress: onSubscribeBlock,
         icon: {
           ios: {
@@ -490,7 +493,7 @@ const Header = observer(function HeaderImpl({
         },
       },
     ]
-  }, [onSubscribeMute, onSubscribeBlock])
+  }, [onSubscribeMute, onSubscribeBlock, _])
 
   return (
     <ProfileSubpageHeader
