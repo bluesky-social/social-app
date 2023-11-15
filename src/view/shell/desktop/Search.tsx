@@ -26,7 +26,7 @@ import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {useActorSearch} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useModerationOpts} from '#/state/queries/preferences'
 
 export function SearchResultCard({
@@ -98,7 +98,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
   >([])
 
   const moderationOpts = useModerationOpts()
-  const search = useActorSearch()
+  const search = useActorAutocompleteFn()
 
   const onChangeText = React.useCallback(
     async (text: string) => {
