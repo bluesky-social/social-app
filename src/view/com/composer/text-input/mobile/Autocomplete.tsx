@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -7,6 +7,8 @@ import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {Trans} from '@lingui/macro'
+import {AppBskyActorDefs} from '@atproto/api'
 
 export const Autocomplete = observer(function AutocompleteImpl({
   prefix,
@@ -19,7 +21,13 @@ export const Autocomplete = observer(function AutocompleteImpl({
   const positionInterp = useAnimatedValue(0)
   const {getGraphemeString} = useGrapheme()
   const isActive = !!prefix
-  const {data: suggestions} = useActorAutocompleteQuery(prefix)
+  const {data: suggestions, isFetching} = useActorAutocompleteQuery(prefix)
+  const suggestionsRef = useRef<
+    AppBskyActorDefs.ProfileViewBasic[] | undefined
+  >(undefined)
+  if (suggestions) {
+    suggestionsRef.current = suggestions
+  }
 
   useEffect(() => {
     Animated.timing(positionInterp, {
@@ -44,8 +52,8 @@ export const Autocomplete = observer(function AutocompleteImpl({
     <Animated.View style={topAnimStyle}>
       {isActive ? (
         <View style={[pal.view, styles.container, pal.border]}>
-          {suggestions?.length ? (
-            suggestions.slice(0, 5).map(item => {
+          {suggestionsRef.current?.length ? (
+            suggestionsRef.current.slice(0, 5).map(item => {
               // Eventually use an average length
               const MAX_CHARS = 40
               const MAX_HANDLE_CHARS = 20
@@ -84,7 +92,11 @@ export const Autocomplete = observer(function AutocompleteImpl({
             })
           ) : (
             <Text type="sm" style={[pal.text, pal.border, styles.noResults]}>
-              No result
+              {isFetching ? (
+                <Trans>Loading...</Trans>
+              ) : (
+                <Trans>No result</Trans>
+              )}
             </Text>
           )}
         </View>

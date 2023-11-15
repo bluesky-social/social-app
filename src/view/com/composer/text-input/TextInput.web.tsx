@@ -17,9 +17,7 @@ import {isUriImage, blobToDataUri} from 'lib/media/util'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
-import {ActorAutocomplete} from '#/state/queries/actor-autocomplete'
-import {useSession} from '#/state/session'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 
 export interface TextInputRef {
   focus: () => void
@@ -52,15 +50,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
-  const {agent} = useSession()
-  const autocomplete = React.useMemo(
-    () => new ActorAutocomplete(agent),
-    [agent],
-  )
-  const {data: follows} = useMyFollowsQuery()
-  if (follows) {
-    autocomplete.setFollows(follows)
-  }
+  const autocomplete = useActorAutocompleteFn()
 
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
   const extensions = React.useMemo(
