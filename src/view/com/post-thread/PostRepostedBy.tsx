@@ -1,42 +1,74 @@
-import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
+import React, {useMemo, useCallback, useState} from 'react'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView, FlatList} from '../util/Views'
-import {RepostedByModel, RepostedByItem} from 'state/models/lists/reposted-by'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
+import {cleanError} from '#/lib/strings/errors'
 
-export const PostRepostedBy = observer(function PostRepostedByImpl({
-  uri,
-}: {
-  uri: string
-}) {
+export function PostRepostedBy({uri}: {uri: string}) {
   const pal = usePalette('default')
-  const store = useStores()
-  const view = React.useMemo(
-    () => new RepostedByModel(store, {uri}),
-    [store, uri],
+  const [isPTRing, setIsPTRing] = useState(false)
+  const {
+    data: resolvedUri,
+    error: resolveError,
+    isFetching: isFetchingResolvedUri,
+  } = useResolveUriQuery(uri)
+  const {
+    data,
+    dataUpdatedAt,
+    isFetching,
+    isFetched,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isError,
+    error,
+    refetch,
+  } = usePostRepostedByQuery(resolvedUri?.uri)
+  const repostedBy = useMemo(() => {
+    if (data?.pages) {
+      return data.pages.flatMap(page => page.repostedBy)
+    }
+  }, [data])
+
+  const onRefresh = useCallback(async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh reposts', {error: err})
+    }
+    setIsPTRing(false)
+  }, [refetch, setIsPTRing])
+
+  const onEndReached = useCallback(async () => {
+    if (isFetching || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more reposts', {error: err})
+    }
+  }, [isFetching, hasNextPage, isError, fetchNextPage])
+
+  const renderItem = useCallback(
+    ({item}: {item: ActorDefs.ProfileViewBasic}) => {
+      return (
+        <ProfileCardWithFollowBtn
+          key={item.did}
+          profile={item}
+          dataUpdatedAt={dataUpdatedAt}
+        />
+      )
+    },
+    [dataUpdatedAt],
   )
 
-  useEffect(() => {
-    view
-      .loadMore()
-      .catch(err => logger.error('Failed to fetch reposts', {error: err}))
-  }, [view])
-
-  const onRefresh = () => {
-    view.refresh()
-  }
-  const onEndReached = () => {
-    view
-      .loadMore()
-      .catch(err => logger.error('Failed to load more reposts', {error: err}))
-  }
-
-  if (!view.hasLoaded) {
+  if (isFetchingResolvedUri || !isFetched) {
     return (
       <CenteredView>
         <ActivityIndicator />
@@ -46,26 +78,26 @@ export const PostRepostedBy = observer(function PostRepostedByImpl({
 
   // error
   // =
-  if (view.hasError) {
+  if (resolveError || isError) {
     return (
       <CenteredView>
-        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
+        <ErrorMessage
+          message={cleanError(resolveError || error)}
+          onPressTryAgain={onRefresh}
+        />
       </CenteredView>
     )
   }
 
   // loaded
   // =
-  const renderItem = ({item}: {item: RepostedByItem}) => (
-    <ProfileCardWithFollowBtn key={item.did} profile={item} />
-  )
   return (
     <FlatList
-      data={view.repostedBy}
+      data={repostedBy}
       keyExtractor={item => item.did}
       refreshControl={
         <RefreshControl
-          refreshing={view.isRefreshing}
+          refreshing={isPTRing}
           onRefresh={onRefresh}
           tintColor={pal.colors.text}
           titleColor={pal.colors.text}
@@ -78,15 +110,14 @@ export const PostRepostedBy = observer(function PostRepostedByImpl({
       // eslint-disable-next-line react/no-unstable-nested-components
       ListFooterComponent={() => (
         <View style={styles.footer}>
-          {view.isLoading && <ActivityIndicator />}
+          {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
         </View>
       )}
-      extraData={view.isLoading}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
     />
   )
-})
+}
 
 const styles = StyleSheet.create({
   footer: {
