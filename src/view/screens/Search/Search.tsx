@@ -15,6 +15,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {logger} from '#/logger'
 import {
@@ -41,6 +42,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {SearchResultCard} from '#/view/shell/desktop/Search'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 function Loader() {
   return (
@@ -420,6 +422,7 @@ export function SearchScreenMobile(
   const setDrawerOpen = useSetDrawerOpen()
   const moderationOpts = useModerationOpts()
   const search = useActorSearch()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -480,6 +483,24 @@ export function SearchScreenMobile(
   const onSubmit = React.useCallback(() => {
     setShowAutocompleteResults(false)
   }, [setShowAutocompleteResults])
+
+  // const onSoftReset = React.useCallback(() => {
+  //   scrollViewRef.current?.scrollTo({x: 0, y: 0})
+  //   flatListRef.current?.scrollToOffset({offset: 0})
+  //   onPressCancelSearch()
+  // }, [scrollViewRef, flatListRef, onPressCancelSearch])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // TODO
+      // const softResetSub = store.onScreenSoftReset(onSoftReset)
+      // const cleanup = () => {
+      //   softResetSub.remove()
+      // }
+
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
 
   return (
     <View>
