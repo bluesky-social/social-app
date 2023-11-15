@@ -242,7 +242,7 @@ export const SettingsScreen = withAuthRequired(
               </View>
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
-                  <Trans>Birthday: </Trans>
+                  <Trans>Birthday:</Trans>{' '}
                 </Text>
                 <Link onPress={() => openModal({name: 'birth-date-settings'})}>
                   <Text type="lg" style={pal.link}>

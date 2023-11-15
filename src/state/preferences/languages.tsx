@@ -11,6 +11,7 @@ type ApiContext = {
   toggleContentLanguage: (code2: string) => void
   togglePostLanguage: (code2: string) => void
   savePostLanguageToHistory: () => void
+  setAppLanguage: (code2: string) => void
 }
 
 const stateContext = React.createContext<StateContext>(
@@ -22,6 +23,7 @@ const apiContext = React.createContext<ApiContext>({
   toggleContentLanguage: (_: string) => {},
   togglePostLanguage: (_: string) => {},
   savePostLanguageToHistory: () => {},
+  setAppLanguage: (_: string) => {},
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -103,6 +105,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             )
             .slice(0, 6),
         }))
+      },
+      setAppLanguage(code2: string) {
+        setStateWrapped(s => ({...s, appLanguage: code2}))
       },
     }),
     [state, setStateWrapped],

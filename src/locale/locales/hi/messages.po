@@ -126,7 +126,7 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:239
 msgid "and"
 msgstr "और"
 
@@ -372,6 +372,7 @@ msgid "Content Filtering"
 msgstr "सामग्री फ़िल्टरिंग"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
+#: src/view/screens/LanguageSettings.tsx:172
 msgid "Content Languages"
 msgstr "सामग्री भाषा"
 
@@ -580,6 +581,7 @@ msgid "Feedback"
 msgstr "प्रतिक्रिया"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:155
+#: src/view/shell/Drawer.tsx:291
 #: src/view/shell/Drawer.tsx:292
 msgid "Feeds"
 msgstr "सभी फ़ीड"
@@ -671,15 +673,16 @@ msgstr "सहायता"
 msgid "Here is your app password."
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:317
 msgid "Hide"
 msgstr "इसे छिपाएं"
 
-#: src/view/com/notifications/FeedItem.tsx:308
+#: src/view/com/notifications/FeedItem.tsx:309
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:111
+#: src/view/shell/Drawer.tsx:242
 #: src/view/shell/Drawer.tsx:243
 msgid "Home"
 msgstr "होम फीड"
@@ -796,6 +799,7 @@ msgstr "सूची अवतार"
 msgid "List Name"
 msgstr "सूची का नाम"
 
+#: src/view/shell/Drawer.tsx:299
 #: src/view/shell/Drawer.tsx:300
 msgid "Lists"
 msgstr "सूची"
@@ -826,6 +830,7 @@ msgid "Menu"
 msgstr "मेनू"
 
 #: src/view/screens/Settings.tsx:501
+#: src/view/shell/Drawer.tsx:306
 #: src/view/shell/Drawer.tsx:307
 msgid "Moderation"
 msgstr "मॉडरेशन"
@@ -915,6 +920,7 @@ msgid "Not Applicable."
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
+#: src/view/shell/Drawer.tsx:264
 #: src/view/shell/Drawer.tsx:265
 msgid "Notifications"
 msgstr "सूचनाएं"
@@ -1035,6 +1041,10 @@ msgstr "शायद एक भ्रामक लिंक"
 msgid "Previous image"
 msgstr "पिछली छवि"
 
+#: src/view/screens/LanguageSettings.tsx:83
+msgid "Primary Language"
+msgstr ""
+
 #: src/view/screens/PreferencesThreads.tsx:73
 msgid "Prioritize Your Follows"
 msgstr "अपने फ़ॉलोअर्स को प्राथमिकता दें"
@@ -1045,6 +1055,7 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/Drawer.tsx:164
+#: src/view/shell/Drawer.tsx:327
 #: src/view/shell/Drawer.tsx:328
 msgid "Profile"
 msgstr "प्रोफ़ाइल"
@@ -1178,6 +1189,7 @@ msgstr "फोटो बदलाव सेव करो"
 #: src/view/com/util/forms/SearchInput.tsx:64
 #: src/view/shell/bottom-bar/BottomBar.tsx:133
 #: src/view/shell/desktop/Search.tsx:81
+#: src/view/shell/Drawer.tsx:220
 #: src/view/shell/Drawer.tsx:221
 msgid "Search"
 msgstr "खोज"
@@ -1201,6 +1213,14 @@ msgstr "मौजूदा खाते से चुनें"
 #: src/view/com/auth/login/LoginForm.tsx:143
 msgid "Select service"
 msgstr "सेवा चुनें"
+
+#: src/view/screens/LanguageSettings.tsx:175
+msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:86
+msgid "Select your preferred language for translations in your feed."
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:193
 msgid "Send Confirmation Email"
@@ -1247,6 +1267,7 @@ msgstr "इस सेटिंग को \"हाँ\" में सेट क�
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr "इस सेटिंग को अपने निम्नलिखित फ़ीड में अपने सहेजे गए फ़ीड के नमूने दिखाने के लिए \"हाँ\" पर सेट करें। यह एक प्रयोगात्मक विशेषता है।।"
 
+#: src/view/shell/Drawer.tsx:340
 #: src/view/shell/Drawer.tsx:341
 msgid "Settings"
 msgstr "सेटिंग्स"
@@ -1287,7 +1308,7 @@ msgstr "अन्य सभी उत्तरों से पहले उन 
 msgid "Show Reposts"
 msgstr "रीपोस्ट दिखाएँ"
 
-#: src/view/com/notifications/FeedItem.tsx:337
+#: src/view/com/notifications/FeedItem.tsx:338
 msgid "Show users"
 msgstr "लोग दिखाएँ"
 

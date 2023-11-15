@@ -126,7 +126,7 @@ msgstr ""
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:239
 msgid "and"
 msgstr ""
 
@@ -372,6 +372,7 @@ msgid "Content Filtering"
 msgstr ""
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
+#: src/view/screens/LanguageSettings.tsx:172
 msgid "Content Languages"
 msgstr ""
 
@@ -580,6 +581,7 @@ msgid "Feedback"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:155
+#: src/view/shell/Drawer.tsx:291
 #: src/view/shell/Drawer.tsx:292
 msgid "Feeds"
 msgstr ""
@@ -671,15 +673,16 @@ msgstr ""
 msgid "Here is your app password."
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:317
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:308
+#: src/view/com/notifications/FeedItem.tsx:309
 msgid "Hide user list"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:111
+#: src/view/shell/Drawer.tsx:242
 #: src/view/shell/Drawer.tsx:243
 msgid "Home"
 msgstr ""
@@ -796,6 +799,7 @@ msgstr ""
 msgid "List Name"
 msgstr ""
 
+#: src/view/shell/Drawer.tsx:299
 #: src/view/shell/Drawer.tsx:300
 msgid "Lists"
 msgstr ""
@@ -826,6 +830,7 @@ msgid "Menu"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:501
+#: src/view/shell/Drawer.tsx:306
 #: src/view/shell/Drawer.tsx:307
 msgid "Moderation"
 msgstr ""
@@ -915,6 +920,7 @@ msgid "Not Applicable."
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
+#: src/view/shell/Drawer.tsx:264
 #: src/view/shell/Drawer.tsx:265
 msgid "Notifications"
 msgstr ""
@@ -1035,6 +1041,10 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
+#: src/view/screens/LanguageSettings.tsx:83
+msgid "Primary Language"
+msgstr ""
+
 #: src/view/screens/PreferencesThreads.tsx:73
 msgid "Prioritize Your Follows"
 msgstr ""
@@ -1045,6 +1055,7 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/Drawer.tsx:164
+#: src/view/shell/Drawer.tsx:327
 #: src/view/shell/Drawer.tsx:328
 msgid "Profile"
 msgstr ""
@@ -1178,6 +1189,7 @@ msgstr ""
 #: src/view/com/util/forms/SearchInput.tsx:64
 #: src/view/shell/bottom-bar/BottomBar.tsx:133
 #: src/view/shell/desktop/Search.tsx:81
+#: src/view/shell/Drawer.tsx:220
 #: src/view/shell/Drawer.tsx:221
 msgid "Search"
 msgstr ""
@@ -1200,6 +1212,14 @@ msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:143
 msgid "Select service"
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:175
+msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:86
+msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:193
@@ -1247,6 +1267,7 @@ msgstr ""
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr ""
 
+#: src/view/shell/Drawer.tsx:340
 #: src/view/shell/Drawer.tsx:341
 msgid "Settings"
 msgstr ""
@@ -1287,7 +1308,7 @@ msgstr ""
 msgid "Show Reposts"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:337
+#: src/view/com/notifications/FeedItem.tsx:338
 msgid "Show users"
 msgstr ""
 

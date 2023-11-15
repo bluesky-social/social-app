@@ -18,7 +18,7 @@ import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {defaultLocale, dynamicActivate} from './locale/i18n'
+import {useLocaleLanguage} from './locale/i18n'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
@@ -27,6 +27,7 @@ import {Provider as PrefsStateProvider} from 'state/preferences'
 
 const InnerApp = observer(function AppImpl() {
   const colorMode = useColorMode()
+  useLocaleLanguage()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
   )
@@ -37,7 +38,7 @@ const InnerApp = observer(function AppImpl() {
       setRootStore(store)
       analytics.init(store)
     })
-    dynamicActivate(defaultLocale) // async import of locale data
+    // dynamicActivate(defaultLocale) // async import of locale data
   }, [])
 
   // show nothing prior to init
