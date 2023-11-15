@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
 import {
@@ -91,6 +92,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
   )
+  const [isFetching, setIsFetching] = React.useState<boolean>(false)
   const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const [searchResults, setSearchResults] = React.useState<
@@ -104,7 +106,9 @@ export const DesktopSearch = observer(function DesktopSearch() {
     async (text: string) => {
       setQuery(text)
 
-      if (text.length > 0 && isInputFocused) {
+      if (text.length > 0) {
+        setIsFetching(true)
+
         if (searchDebounceTimeout.current)
           clearTimeout(searchDebounceTimeout.current)
 
@@ -113,24 +117,36 @@ export const DesktopSearch = observer(function DesktopSearch() {
 
           if (results) {
             setSearchResults(results)
+            setIsFetching(false)
           }
         }, 300)
       } else {
         if (searchDebounceTimeout.current)
           clearTimeout(searchDebounceTimeout.current)
         setSearchResults([])
+        setIsFetching(false)
       }
     },
-    [setQuery, isInputFocused, search, setSearchResults],
+    [setQuery, search, setSearchResults],
   )
 
   const onPressCancelSearch = React.useCallback(() => {
     onChangeText('')
+    if (searchDebounceTimeout.current)
+      clearTimeout(searchDebounceTimeout.current)
   }, [onChangeText])
-
   const onSubmit = React.useCallback(() => {
+    setSearchResults([])
+    if (searchDebounceTimeout.current)
+      clearTimeout(searchDebounceTimeout.current)
     navigation.dispatch(StackActions.push('Search', {q: query}))
-  }, [query, navigation])
+  }, [query, navigation, setSearchResults])
+  const onFocus = React.useCallback(() => {
+    setIsInputFocused(true)
+    if (query.length > 0) {
+      onChangeText(query)
+    }
+  }, [setIsInputFocused, onChangeText, query])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -149,7 +165,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
             returnKeyType="search"
             value={query}
             style={[pal.textLight, styles.input]}
-            onFocus={() => setIsInputFocused(true)}
+            onFocus={onFocus}
             onBlur={() => setIsInputFocused(false)}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
@@ -174,23 +190,31 @@ export const DesktopSearch = observer(function DesktopSearch() {
         </View>
       </View>
 
-      {query !== '' && (
+      {query !== '' && isInputFocused && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {searchResults.length && moderationOpts ? (
-            searchResults.map((item, i) => (
-              <SearchResultCard
-                key={item.did}
-                profile={item}
-                moderation={moderateProfile(item, moderationOpts)}
-                style={i === 0 ? {borderTopWidth: 0} : {}}
-              />
-            ))
-          ) : (
-            <View>
-              <Text style={[pal.textLight, styles.noResults]}>
-                <Trans>No results found for {query}</Trans>
-              </Text>
+          {isFetching ? (
+            <View style={{padding: 8}}>
+              <ActivityIndicator />
             </View>
+          ) : (
+            <>
+              {searchResults.length ? (
+                searchResults.map((item, i) => (
+                  <SearchResultCard
+                    key={item.did}
+                    profile={item}
+                    moderation={moderateProfile(item, moderationOpts)}
+                    style={i === 0 ? {borderTopWidth: 0} : {}}
+                  />
+                ))
+              ) : (
+                <View>
+                  <Text style={[pal.textLight, styles.noResults]}>
+                    <Trans>No results found for {query}</Trans>
+                  </Text>
+                </View>
+              )}
+            </>
           )}
         </View>
       )}
