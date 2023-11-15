@@ -13,7 +13,6 @@ import {
   moderateProfile,
   ProfileModeration,
 } from '@atproto/api'
-import {observer} from 'mobx-react-lite'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -85,7 +84,7 @@ export function SearchResultCard({
   )
 }
 
-export const DesktopSearch = observer(function DesktopSearch() {
+export function DesktopSearch() {
   const {_} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
@@ -217,7 +216,7 @@ export const DesktopSearch = observer(function DesktopSearch() {
       )}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

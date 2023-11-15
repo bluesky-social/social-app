@@ -7,6 +7,7 @@ import {
   RefreshControl,
   TextInput,
   Pressable,
+  ScrollView,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -557,7 +558,7 @@ export function SearchScreenMobile(
               <ActivityIndicator />
             </View>
           ) : (
-            <>
+            <ScrollView style={{height: '100%'}}>
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
@@ -574,7 +575,9 @@ export function SearchScreenMobile(
                   </Text>
                 </View>
               )}
-            </>
+
+              <View style={{height: 200}} />
+            </ScrollView>
           )}
         </>
       ) : (
