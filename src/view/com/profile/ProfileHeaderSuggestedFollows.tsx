@@ -6,20 +6,16 @@ import Animated, {
   useAnimatedStyle,
   Easing,
 } from 'react-native-reanimated'
-import {useQuery} from '@tanstack/react-query'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
 import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useFollowProfile} from 'lib/hooks/useFollowProfile'
 import {Button} from 'view/com/util/forms/Button'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -27,6 +23,13 @@ import {makeProfileLink} from 'lib/routes/links'
 import {Link} from 'view/com/util/Link'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  useProfileFollowMutation,
+  useProfileUnfollowMutation,
+} from '#/state/queries/profile'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -43,7 +46,6 @@ export function ProfileHeaderSuggestedFollows({
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const store = useStores()
   const animatedHeight = useSharedValue(0)
   const animatedStyles = useAnimatedStyle(() => ({
     opacity: animatedHeight.value / TOTAL_HEIGHT,
@@ -66,31 +68,8 @@ export function ProfileHeaderSuggestedFollows({
     }
   }, [active, animatedHeight, track])
 
-  const {isLoading, data: suggestedFollows} = useQuery({
-    enabled: active,
-    cacheTime: 0,
-    staleTime: 0,
-    queryKey: ['suggested_follows_by_actor', actorDid],
-    async queryFn() {
-      try {
-        const {
-          data: {suggestions},
-          success,
-        } = await store.agent.app.bsky.graph.getSuggestedFollowsByActor({
-          actor: actorDid,
-        })
-
-        if (!success) {
-          return []
-        }
-
-        store.me.follows.hydrateMany(suggestions)
-
-        return suggestions
-      } catch (e) {
-        return []
-      }
-    },
+  const {isLoading, data, dataUpdatedAt} = useSuggestedFollowsByActorQuery({
+    did: actorDid,
   })
 
   return (
@@ -149,9 +128,13 @@ export function ProfileHeaderSuggestedFollows({
                 <SuggestedFollowSkeleton />
                 <SuggestedFollowSkeleton />
               </>
-            ) : suggestedFollows ? (
-              suggestedFollows.map(profile => (
-                <SuggestedFollow key={profile.did} profile={profile} />
+            ) : data ? (
+              data.suggestions.map(profile => (
+                <SuggestedFollow
+                  key={profile.did}
+                  profile={profile}
+                  dataUpdatedAt={dataUpdatedAt}
+                />
               ))
             ) : (
               <View />
@@ -214,29 +197,51 @@ function SuggestedFollowSkeleton() {
   )
 }
 
-const SuggestedFollow = observer(function SuggestedFollowImpl({
-  profile,
+function SuggestedFollow({
+  profile: profileUnshadowed,
+  dataUpdatedAt,
 }: {
   profile: AppBskyActorDefs.ProfileView
+  dataUpdatedAt: number
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const store = useStores()
-  const {following, toggle} = useFollowProfile(profile)
-  const moderation = moderateProfile(profile, store.preferences.moderationOpts)
+  const moderationOpts = useModerationOpts()
+  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const followMutation = useProfileFollowMutation()
+  const unfollowMutation = useProfileUnfollowMutation()
 
-  const onPress = React.useCallback(async () => {
+  const onPressFollow = React.useCallback(async () => {
+    if (profile.viewer?.following) {
+      return
+    }
     try {
-      const {following: isFollowing} = await toggle()
-
-      if (isFollowing) {
-        track('ProfileHeader:SuggestedFollowFollowed')
-      }
+      track('ProfileHeader:SuggestedFollowFollowed')
+      await followMutation.mutateAsync({did: profile.did})
     } catch (e: any) {
       Toast.show('An issue occurred, please try again.')
     }
-  }, [toggle, track])
+  }, [followMutation, profile, track])
 
+  const onPressUnfollow = React.useCallback(async () => {
+    if (!profile.viewer?.following) {
+      return
+    }
+    try {
+      await unfollowMutation.mutateAsync({
+        did: profile.did,
+        followUri: profile.viewer?.following,
+      })
+    } catch (e: any) {
+      Toast.show('An issue occurred, please try again.')
+    }
+  }, [unfollowMutation, profile])
+
+  if (!moderationOpts) {
+    return null
+  }
+  const moderation = moderateProfile(profile, moderationOpts)
+  const following = profile.viewer?.following
   return (
     <Link
       href={makeProfileLink(profile)}
@@ -278,13 +283,13 @@ const SuggestedFollow = observer(function SuggestedFollowImpl({
           label={following ? 'Unfollow' : 'Follow'}
           type="inverted"
           labelStyle={{textAlign: 'center'}}
-          onPress={onPress}
+          onPress={following ? onPressUnfollow : onPressFollow}
           withLoading
         />
       </View>
     </Link>
   )
-})
+}
 
 const styles = StyleSheet.create({
   suggestedFollowCardOuter: {
