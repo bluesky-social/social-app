@@ -87,7 +87,6 @@ function SearchScreenSuggestedFollows() {
 
       if (!friends) return // :(
 
-      // TODO dedupe
       const friendsOfFriends = (
         await Promise.all(
           friends
@@ -100,7 +99,10 @@ function SearchScreenSuggestedFollows() {
         )
       ).flat()
 
-      setSuggestions(friendsOfFriends)
+      setSuggestions(
+        // dedupe
+        friendsOfFriends.filter(f => !friends.find(f2 => f.did === f2.did)),
+      )
       setDataUpdatedAt(Date.now())
     }
 
@@ -305,7 +307,6 @@ function SearchScreenUserResults({query}: {query: string}) {
       {results.length ? (
         <FlatList
           data={results}
-          // TODO dataUpdatedAt will vary by user?
           renderItem={({item}) => (
             <ProfileCardWithFollowBtn
               profile={item}
