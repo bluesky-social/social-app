@@ -6,6 +6,7 @@ import {Provider as MinimalModeProvider} from './minimal-mode'
 import {Provider as ColorModeProvider} from './color-mode'
 import {Provider as OnboardingProvider} from './onboarding'
 import {Provider as ComposerProvider} from './composer'
+import {Provider as TickEveryMinuteProvider} from './tick-every-minute'
 
 export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
 export {
@@ -15,6 +16,8 @@ export {
 export {useMinimalShellMode, useSetMinimalShellMode} from './minimal-mode'
 export {useColorMode, useSetColorMode} from './color-mode'
 export {useOnboardingState, useOnboardingDispatch} from './onboarding'
+export {useComposerState, useComposerControls} from './composer'
+export {useTickEveryMinute} from './tick-every-minute'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
@@ -24,7 +27,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           <MinimalModeProvider>
             <ColorModeProvider>
               <OnboardingProvider>
-                <ComposerProvider>{children}</ComposerProvider>
+                <ComposerProvider>
+                  <TickEveryMinuteProvider>{children}</TickEveryMinuteProvider>
+                </ComposerProvider>
               </OnboardingProvider>
             </ColorModeProvider>
           </MinimalModeProvider>
