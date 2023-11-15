@@ -27,7 +27,8 @@ import {Text} from '#/view/com/util/text/Text'
 import {ProfileCardLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Post} from '#/view/com/post/Post'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
+import {Pager} from '#/view/com/pager/Pager'
+import {TabBar} from '#/view/com/pager/TabBar'
 import {HITSLOP_10} from '#/lib/constants'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -42,7 +43,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {SearchResultCard} from '#/view/shell/desktop/Search'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 
 function Loader() {
   return (
@@ -347,27 +348,32 @@ function SearchScreenUserResults({query}: {query: string}) {
 
 export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+
+  const onPageSelected = React.useCallback(
+    (index: number) => {
+      setMinimalShellMode(false)
+      setDrawerSwipeDisabled(index > 0)
+    },
+    [setDrawerSwipeDisabled, setMinimalShellMode],
+  )
 
   return query ? (
-    <>
-      <PagerWithHeader
-        items={['Posts', 'Users']}
-        isHeaderReady={true}
-        // must be positive height?
-        renderHeader={() => <View style={{height: 1}} />}>
-        {({headerHeight}) => (
-          // TODO how do I use this
-          <View style={{paddingTop: headerHeight}}>
-            <SearchScreenPostResults query={query} />
-          </View>
-        )}
-        {({headerHeight}) => (
-          <View style={{paddingTop: headerHeight}}>
-            <SearchScreenUserResults query={query} />
-          </View>
-        )}
-      </PagerWithHeader>
-    </>
+    <View style={[styles.scrollContainer]}>
+      <Pager
+        onPageSelected={onPageSelected}
+        renderTabBar={props => (
+          <TabBar items={['Posts', 'Users']} {...props} />
+        )}>
+        <View>
+          <SearchScreenPostResults query={query} />
+        </View>
+        <View>
+          <SearchScreenUserResults query={query} />
+        </View>
+      </Pager>
+    </View>
   ) : (
     <>
       <Text
