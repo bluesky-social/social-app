@@ -120,9 +120,7 @@ export function useExternalLinkFetch({
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb: localThumb
-              ? new ImageModel(store, localThumb)
-              : undefined,
+            localThumb: localThumb ? new ImageModel(localThumb) : undefined,
           })
         })
       return cleanup

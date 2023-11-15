@@ -9,7 +9,6 @@ import {
   usePhotoLibraryPermission,
   useCameraPermission,
 } from 'lib/hooks/usePermissions'
-import {useStores} from 'state/index'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
@@ -184,7 +183,6 @@ export function EditableUserAvatar({
   avatar,
   onSelectNewAvatar,
 }: EditableUserAvatarProps) {
-  const store = useStores()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -224,7 +222,7 @@ export function EditableUserAvatar({
             }
 
             onSelectNewAvatar(
-              await openCamera(store, {
+              await openCamera({
                 width: 1000,
                 height: 1000,
                 cropperCircleOverlay: true,
@@ -255,7 +253,7 @@ export function EditableUserAvatar({
               return
             }
 
-            const croppedImage = await openCropper(store, {
+            const croppedImage = await openCropper({
               mediaType: 'photo',
               cropperCircleOverlay: true,
               height: item.height,
@@ -289,7 +287,6 @@ export function EditableUserAvatar({
       onSelectNewAvatar,
       requestCameraAccessIfNeeded,
       requestPhotoAccessIfNeeded,
-      store,
     ],
   )
 

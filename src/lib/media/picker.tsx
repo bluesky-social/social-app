@@ -6,15 +6,6 @@ import {
 import {CameraOpts, CropperOptions} from './types'
 export {openPicker} from './picker.shared'
 
-/**
- * NOTE
- * These methods all include the RootStoreModel as the first param
- * because the web versions require it. The signatures have to remain
- * equivalent between the different forms, but the store param is not
- * used here.
- * -prf
- */
-
 export async function openCamera(opts: CameraOpts): Promise<RNImage> {
   const item = await openCameraFn({
     width: opts.width,
