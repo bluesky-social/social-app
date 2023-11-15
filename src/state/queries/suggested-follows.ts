@@ -1,7 +1,12 @@
-import {AppBskyActorGetSuggestions, moderateProfile} from '@atproto/api'
+import {
+  AppBskyActorGetSuggestions,
+  AppBskyGraphGetSuggestedFollowsByActor,
+  moderateProfile,
+} from '@atproto/api'
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   InfiniteData,
   QueryKey,
 } from '@tanstack/react-query'
@@ -9,7 +14,11 @@ import {
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 
-export const suggestedFollowsQueryKey = ['suggested-follows']
+const suggestedFollowsQueryKey = ['suggested-follows']
+const suggestedFollowsByActorQuery = (did: string) => [
+  'suggested-follows-by-actor',
+  did,
+]
 
 export function useSuggestedFollowsQuery() {
   const {agent, currentAccount} = useSession()
@@ -60,6 +69,21 @@ export function useSuggestedFollowsQuery() {
   })
 }
 
+export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
+  const {agent} = useSession()
+
+  return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
+    queryKey: suggestedFollowsByActorQuery(did),
+    queryFn: async () => {
+      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
+        actor: did,
+      })
+      return res.data
+    },
+  })
+}
+
+// TODO: Delete and replace usages with the one above.
 export function useGetSuggestedFollowersByActor() {
   const {agent} = useSession()
 
