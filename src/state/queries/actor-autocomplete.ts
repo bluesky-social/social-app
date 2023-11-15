@@ -29,11 +29,7 @@ export function useActorAutocompleteQuery(prefix: string) {
   })
 }
 
-export type ActorAutocompleteFn = ({
-  query,
-}: {
-  query: string
-}) => Promise<AppBskyActorDefs.ProfileViewBasic[]>
+export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>
 export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
   const {agent} = useSession()
