@@ -7,7 +7,6 @@ import {
   RefreshControl,
   TextInput,
   Pressable,
-  ScrollView,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -23,7 +22,7 @@ import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {Text} from '#/view/com/util/text/Text'
 import {NotificationFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
