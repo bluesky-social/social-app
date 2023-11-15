@@ -33,7 +33,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
         styles.container,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title="Thread Preferences" showOnDesktop />
+      <ViewHeader title={_(msg`Thread Preferences`)} showOnDesktop />
       <View
         style={[
           styles.titleSection,

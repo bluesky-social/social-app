@@ -37,9 +37,10 @@ import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
 import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
+import {useLingui} from '@lingui/react'
 
 export const PostThreadItem = observer(function PostThreadItem({
   item,
@@ -648,13 +649,14 @@ function ExpandedPostDetails({
   translatorUrl: string
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={[pal.textLight, s.ml5, s.mr5]}>•</Text>
-          <Link href={translatorUrl} title="Translate">
+          <Link href={translatorUrl} title={_(msg`Translate`)}>
             <Text style={pal.link}>
               <Trans>Translate</Trans>
             </Text>

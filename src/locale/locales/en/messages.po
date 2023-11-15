@@ -29,6 +29,14 @@ msgstr ""
 msgid "{0} {purposeLabel} List"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:59
+msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:36
+msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
+msgstr ""
+
 #: src/view/com/modals/AddAppPasswords.tsx:132
 #~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
 #~ msgstr ""
@@ -130,8 +138,16 @@ msgstr ""
 msgid "and"
 msgstr ""
 
+#: src/view/screens/LanguageSettings.tsx:95
+msgid "App Language"
+msgstr ""
+
 #: src/view/screens/Settings.tsx:523
 msgid "App passwords"
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:146
+msgid "App Passwords"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:392
@@ -173,11 +189,22 @@ msgstr ""
 msgid "Block Account"
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:112
+msgid "Blocked accounts"
+msgstr ""
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:87
+msgid "Blocked Accounts"
+msgstr ""
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:95
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:211
 msgid "Blocked post."
 msgstr ""
 
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:52
 #: src/view/com/auth/SplashScreen.tsx:27
 msgid "Bluesky"
 msgstr ""
@@ -290,6 +317,14 @@ msgstr ""
 msgid "Change Your Email"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:150
+msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:133
+msgid "Check out some recommended users. Follow them to see similar users."
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:157
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr ""
@@ -301,6 +336,10 @@ msgstr ""
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:87
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65
+#~ msgid "Choose your"
+#~ msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:105
 msgid "Choose your password"
@@ -331,6 +370,10 @@ msgstr ""
 msgid "Close navigation footer"
 msgstr ""
 
+#: src/view/screens/CommunityGuidelines.tsx:32
+msgid "Community Guidelines"
+msgstr ""
+
 #: src/view/com/composer/Prompt.tsx:22
 msgid "Compose reply"
 msgstr ""
@@ -338,7 +381,7 @@ msgstr ""
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:222
-#: src/view/screens/PreferencesHomeFeed.tsx:223
+#: src/view/screens/PreferencesHomeFeed.tsx:233
 #: src/view/screens/PreferencesThreads.tsx:128
 msgid "Confirm"
 msgstr ""
@@ -367,12 +410,16 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:70
+msgid "Content filtering"
+msgstr ""
+
 #: src/view/com/modals/ContentFilteringSettings.tsx:44
 msgid "Content Filtering"
 msgstr ""
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
-#: src/view/screens/LanguageSettings.tsx:172
+#: src/view/screens/LanguageSettings.tsx:276
 msgid "Content Languages"
 msgstr ""
 
@@ -384,6 +431,11 @@ msgstr ""
 msgid "Content warnings"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:177
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:159
+msgid "Continue"
+msgstr ""
+
 #: src/view/com/modals/AddAppPasswords.tsx:180
 #: src/view/com/modals/InviteCodes.tsx:147
 msgid "Copied"
@@ -391,6 +443,10 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:173
 msgid "Copy"
+msgstr ""
+
+#: src/view/screens/CopyrightPolicy.tsx:29
+msgid "Copyright Policy"
 msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:104
@@ -422,6 +478,10 @@ msgstr ""
 msgid "Danger Zone"
 msgstr ""
 
+#: src/view/screens/Settings.tsx:411
+msgid "Dark"
+msgstr ""
+
 #: src/view/screens/Settings.tsx:552
 msgid "Delete account"
 msgstr ""
@@ -430,7 +490,7 @@ msgstr ""
 msgid "Delete Account"
 msgstr ""
 
-#: src/view/screens/AppPasswords.tsx:198
+#: src/view/screens/AppPasswords.tsx:199
 msgid "Delete app password"
 msgstr ""
 
@@ -477,13 +537,14 @@ msgstr ""
 msgid "Domain verified!"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:85
 #: src/view/com/modals/ContentFilteringSettings.tsx:79
 #: src/view/com/modals/ContentFilteringSettings.tsx:87
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
 #: src/view/com/modals/EditImage.tsx:333
 #: src/view/com/modals/ListAddUser.tsx:155
 #: src/view/com/modals/SelfLabel.tsx:158
-#: src/view/screens/PreferencesHomeFeed.tsx:226
+#: src/view/screens/PreferencesHomeFeed.tsx:236
 #: src/view/screens/PreferencesThreads.tsx:131
 msgid "Done"
 msgstr ""
@@ -502,6 +563,7 @@ msgid "Edit image"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:134
+#: src/view/screens/SavedFeeds.tsx:77
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -536,6 +598,10 @@ msgstr ""
 msgid "Email Updated"
 msgstr ""
 
+#: src/view/screens/Settings.tsx:223
+msgid "Email:"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:123
 msgid "Enable this setting to only see replies between people you follow."
 msgstr ""
@@ -568,6 +634,11 @@ msgstr ""
 msgid "Expand alt text"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:138
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:170
+msgid "Failed to load recommended feeds"
+msgstr ""
+
 #: src/view/screens/Feeds.tsx:303
 msgid "Feed offline"
 msgstr ""
@@ -576,14 +647,25 @@ msgstr ""
 msgid "Feed Preferences"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:51
 #: src/view/shell/Drawer.tsx:368
 msgid "Feedback"
 msgstr ""
 
+#: src/view/screens/Feeds.tsx:231
 #: src/view/shell/bottom-bar/BottomBar.tsx:155
+#: src/view/shell/desktop/LeftNav.tsx:308
 #: src/view/shell/Drawer.tsx:291
 #: src/view/shell/Drawer.tsx:292
 msgid "Feeds"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:86
+msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
+msgstr ""
+
+#: src/view/screens/SavedFeeds.tsx:142
+msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:120
@@ -602,11 +684,28 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:42
+#~ msgid "Follow some"
+#~ msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:63
+msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:130
+msgid "Followed users only"
+msgstr ""
+
+#: src/view/screens/ProfileFollowers.tsx:26
+msgid "Followers"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:544
 msgid "following"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:450
+#: src/view/screens/ProfileFollows.tsx:26
 msgid "Following"
 msgstr ""
 
@@ -644,7 +743,7 @@ msgid "Get Started"
 msgstr ""
 
 #: src/view/com/util/moderation/ScreenHider.tsx:105
-#: src/view/shell/desktop/LeftNav.tsx:92
+#: src/view/shell/desktop/LeftNav.tsx:93
 msgid "Go back"
 msgstr ""
 
@@ -665,6 +764,7 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:78
 #: src/view/shell/Drawer.tsx:378
 msgid "Help"
 msgstr ""
@@ -682,12 +782,14 @@ msgid "Hide user list"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:111
+#: src/view/shell/desktop/LeftNav.tsx:272
 #: src/view/shell/Drawer.tsx:242
 #: src/view/shell/Drawer.tsx:243
 msgid "Home"
 msgstr ""
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:70
+#: src/view/screens/PreferencesHomeFeed.tsx:83
 #: src/view/screens/Settings.tsx:437
 msgid "Home Feed Preferences"
 msgstr ""
@@ -756,6 +858,10 @@ msgstr ""
 msgid "Language selection"
 msgstr ""
 
+#: src/view/screens/LanguageSettings.tsx:89
+msgid "Language Settings"
+msgstr ""
+
 #: src/view/screens/Settings.tsx:485
 msgid "Languages"
 msgstr ""
@@ -787,8 +893,17 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
+#: src/view/screens/Settings.tsx:405
+msgid "Light"
+msgstr ""
+
 #: src/view/screens/ProfileFeed.tsx:494
 msgid "Like this feed"
+msgstr ""
+
+#: src/view/screens/PostLikedBy.tsx:28
+#: src/view/screens/ProfileFeedLikedBy.tsx:28
+msgid "Liked by"
 msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:180
@@ -799,6 +914,7 @@ msgstr ""
 msgid "List Name"
 msgstr ""
 
+#: src/view/shell/desktop/LeftNav.tsx:345
 #: src/view/shell/Drawer.tsx:299
 #: src/view/shell/Drawer.tsx:300
 msgid "Lists"
@@ -807,6 +923,10 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:220
 #: src/view/com/post-thread/PostThread.tsx:228
 msgid "Load more posts"
+msgstr ""
+
+#: src/view/screens/Notifications.tsx:160
+msgid "Load new notifications"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:194
@@ -829,10 +949,20 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:54
 #: src/view/screens/Settings.tsx:501
+#: src/view/shell/desktop/LeftNav.tsx:363
 #: src/view/shell/Drawer.tsx:306
 #: src/view/shell/Drawer.tsx:307
 msgid "Moderation"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:84
+msgid "Moderation lists"
+msgstr ""
+
+#: src/view/shell/desktop/Feeds.tsx:56
+msgid "More feeds"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:476
@@ -849,12 +979,28 @@ msgstr ""
 msgid "Mute Account"
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:98
+msgid "Muted accounts"
+msgstr ""
+
+#: src/view/screens/ModerationMutedAccounts.tsx:84
+msgid "Muted Accounts"
+msgstr ""
+
+#: src/view/screens/ModerationMutedAccounts.tsx:92
+msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
+msgstr ""
+
 #: src/view/com/modals/BirthDateSettings.tsx:55
 msgid "My Birthday"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:130
 msgid "My Feeds"
+msgstr ""
+
+#: src/view/shell/desktop/LeftNav.tsx:54
+msgid "My Profile"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:468
@@ -870,17 +1016,21 @@ msgstr ""
 msgid "Never lose access to your followers and data."
 msgstr ""
 
+#: src/view/screens/Lists.tsx:88
+msgid "New"
+msgstr ""
+
 #: src/view/com/feeds/FeedPage.tsx:203
 #: src/view/screens/Feeds.tsx:263
 #: src/view/screens/Profile.tsx:306
 #: src/view/screens/ProfileFeed.tsx:382
 #: src/view/screens/ProfileList.tsx:214
 #: src/view/screens/ProfileList.tsx:252
-#: src/view/shell/desktop/LeftNav.tsx:229
+#: src/view/shell/desktop/LeftNav.tsx:230
 msgid "New post"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:239
+#: src/view/shell/desktop/LeftNav.tsx:240
 msgid "New Post"
 msgstr ""
 
@@ -890,11 +1040,18 @@ msgstr ""
 #: src/view/com/auth/login/LoginForm.tsx:281
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:158
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:168
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:108
 msgid "Next"
 msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:137
 msgid "Next image"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:163
+#: src/view/screens/PreferencesHomeFeed.tsx:185
+#: src/view/screens/PreferencesHomeFeed.tsx:208
+msgid "No"
 msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:487
@@ -919,10 +1076,17 @@ msgstr ""
 msgid "Not Applicable."
 msgstr ""
 
+#: src/view/screens/Notifications.tsx:125
+#: src/view/screens/Notifications.tsx:149
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
+#: src/view/shell/desktop/LeftNav.tsx:327
 #: src/view/shell/Drawer.tsx:264
 #: src/view/shell/Drawer.tsx:265
 msgid "Notifications"
+msgstr ""
+
+#: src/view/com/util/ErrorBoundary.tsx:34
+msgid "Oh no!"
 msgstr ""
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
@@ -985,6 +1149,11 @@ msgstr ""
 msgid "Other..."
 msgstr ""
 
+#: src/view/screens/NotFound.tsx:42
+#: src/view/screens/NotFound.tsx:45
+msgid "Page not found"
+msgstr ""
+
 #: src/view/com/auth/create/Step2.tsx:100
 #: src/view/com/auth/create/Step2.tsx:110
 #: src/view/com/auth/login/LoginForm.tsx:216
@@ -1001,6 +1170,10 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
+#: src/view/screens/SavedFeeds.tsx:81
+msgid "Pinned Feeds"
+msgstr ""
+
 #: src/view/com/modals/ChangeEmail.tsx:69
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr ""
@@ -1014,6 +1187,8 @@ msgid "Please enter your password as well:"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:325
+#: src/view/com/post-thread/PostThread.tsx:186
+#: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr ""
 
@@ -1041,7 +1216,7 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:83
+#: src/view/screens/LanguageSettings.tsx:186
 msgid "Primary Language"
 msgstr ""
 
@@ -1049,11 +1224,20 @@ msgstr ""
 msgid "Prioritize Your Follows"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:60
+msgid "Privacy"
+msgstr ""
+
+#: src/view/screens/PrivacyPolicy.tsx:29
+msgid "Privacy Policy"
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 msgid "Processing..."
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
+#: src/view/shell/desktop/LeftNav.tsx:382
 #: src/view/shell/Drawer.tsx:164
 #: src/view/shell/Drawer.tsx:327
 #: src/view/shell/Drawer.tsx:328
@@ -1062,6 +1246,10 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:704
 msgid "Protect your account by verifying your email."
+msgstr ""
+
+#: src/view/screens/Lists.tsx:73
+msgid "Public, shareable lists which can drive feeds."
 msgstr ""
 
 #: src/view/com/modals/Repost.tsx:52
@@ -1074,6 +1262,19 @@ msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:50
+#~ msgid "Recommended"
+#~ msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:145
+msgid "Recommended Feeds"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:128
+msgid "Recommended Users"
 msgstr ""
 
 #: src/view/com/modals/SelfLabel.tsx:84
@@ -1108,9 +1309,17 @@ msgstr ""
 msgid "Repost or quote post"
 msgstr ""
 
+#: src/view/screens/PostRepostedBy.tsx:28
+msgid "Reposted by"
+msgstr ""
+
 #: src/view/com/modals/ChangeEmail.tsx:183
 #: src/view/com/modals/ChangeEmail.tsx:185
 msgid "Request Change"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:382
+msgid "Require alt text before posting"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:52
@@ -1184,10 +1393,15 @@ msgstr ""
 msgid "Save image crop"
 msgstr ""
 
+#: src/view/screens/SavedFeeds.tsx:111
+msgid "Saved Feeds"
+msgstr ""
+
 #: src/view/com/modals/ListAddUser.tsx:91
 #: src/view/com/search/HeaderWithInput.tsx:101
 #: src/view/com/util/forms/SearchInput.tsx:64
 #: src/view/shell/bottom-bar/BottomBar.tsx:133
+#: src/view/shell/desktop/LeftNav.tsx:290
 #: src/view/shell/desktop/Search.tsx:81
 #: src/view/shell/Drawer.tsx:220
 #: src/view/shell/Drawer.tsx:221
@@ -1214,11 +1428,15 @@ msgstr ""
 msgid "Select service"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:175
+#: src/view/screens/LanguageSettings.tsx:279
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:86
+#: src/view/screens/LanguageSettings.tsx:98
+msgid "Select your app language for the default text to display in the app"
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:189
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
@@ -1247,7 +1465,7 @@ msgstr ""
 msgid "Set new password"
 msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:172
+#: src/view/screens/PreferencesHomeFeed.tsx:176
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr ""
 
@@ -1263,10 +1481,12 @@ msgstr ""
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:191
+#: src/view/screens/PreferencesHomeFeed.tsx:199
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr ""
 
+#: src/view/screens/Settings.tsx:210
+#: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:340
 #: src/view/shell/Drawer.tsx:341
 msgid "Settings"
@@ -1288,11 +1508,11 @@ msgstr ""
 msgid "Show anyway"
 msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:188
+#: src/view/screens/PreferencesHomeFeed.tsx:196
 msgid "Show Posts from My Feeds"
 msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:169
+#: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Show Quote Posts"
 msgstr ""
 
@@ -1335,8 +1555,8 @@ msgstr ""
 msgid "Sign into"
 msgstr ""
 
-#: src/view/com/modals/SwitchAccount.tsx:71
 #: src/view/com/modals/SwitchAccount.tsx:74
+#: src/view/com/modals/SwitchAccount.tsx:77
 #: src/view/screens/Settings.tsx:288
 #: src/view/screens/Settings.tsx:291
 msgid "Sign out"
@@ -1383,8 +1603,17 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr ""
 
+#: src/view/screens/Support.tsx:30
+#: src/view/screens/Support.tsx:33
+msgid "Support"
+msgstr ""
+
 #: src/view/com/modals/SwitchAccount.tsx:47
 msgid "Switch Account"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:398
+msgid "System"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:576
@@ -1395,12 +1624,44 @@ msgstr ""
 msgid "Tall"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:69
+msgid "Terms"
+msgstr ""
+
+#: src/view/screens/TermsOfService.tsx:29
+msgid "Terms of Service"
+msgstr ""
+
 #: src/view/com/modals/report/InputIssueDetails.tsx:50
 msgid "Text input field"
 msgstr ""
 
+#: src/view/screens/CommunityGuidelines.tsx:36
+msgid "The Community Guidelines have been moved to <0/>"
+msgstr ""
+
+#: src/view/screens/CopyrightPolicy.tsx:33
+msgid "The Copyright Policy has been moved to <0/>"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:312
 msgid "The post may have been deleted."
+msgstr ""
+
+#: src/view/screens/PrivacyPolicy.tsx:33
+msgid "The Privacy Policy has been moved to <0/>"
+msgstr ""
+
+#: src/view/screens/Support.tsx:36
+msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
+msgstr ""
+
+#: src/view/screens/TermsOfService.tsx:33
+msgid "The Terms of Service have been moved to"
+msgstr ""
+
+#: src/view/com/util/ErrorBoundary.tsx:35
+msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
 
 #: src/view/com/util/moderation/ScreenHider.tsx:72
@@ -1423,7 +1684,7 @@ msgstr ""
 msgid "This link is taking you to the following website:"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:181
+#: src/view/com/post-thread/PostThreadItem.tsx:182
 msgid "This post has been deleted."
 msgstr ""
 
@@ -1431,6 +1692,7 @@ msgstr ""
 msgid "This warning is only available for posts with media attached."
 msgstr ""
 
+#: src/view/screens/PreferencesThreads.tsx:36
 #: src/view/screens/Settings.tsx:455
 msgid "Thread Preferences"
 msgstr ""
@@ -1448,6 +1710,7 @@ msgid "Transformations"
 msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:659
+#: src/view/com/post-thread/PostThreadItem.tsx:661
 msgid "Translate"
 msgstr ""
 
@@ -1485,7 +1748,7 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/screens/AppPasswords.tsx:153
+#: src/view/screens/AppPasswords.tsx:154
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr ""
 
@@ -1503,6 +1766,10 @@ msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:37
 msgid "User handle"
+msgstr ""
+
+#: src/view/screens/Lists.tsx:70
+msgid "User Lists"
 msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:170
@@ -1547,6 +1814,14 @@ msgstr ""
 msgid "We're so excited to have you join us!"
 msgstr ""
 
+#: src/view/screens/NotFound.tsx:48
+msgid "We're sorry! We can't find the page you were looking for."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:50
+msgid "Welcome to <0>Bluesky</0>"
+msgstr ""
+
 #: src/view/com/modals/report/Modal.tsx:170
 msgid "What is the issue with this {collectionName}?"
 msgstr ""
@@ -1571,6 +1846,12 @@ msgstr ""
 msgid "Write your reply"
 msgstr ""
 
+#: src/view/screens/PreferencesHomeFeed.tsx:164
+#: src/view/screens/PreferencesHomeFeed.tsx:186
+#: src/view/screens/PreferencesHomeFeed.tsx:209
+msgid "Yes"
+msgstr ""
+
 #: src/view/com/auth/create/Step1.tsx:122
 msgid "You can change hosting providers at any time."
 msgstr ""
@@ -1583,6 +1864,14 @@ msgstr ""
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr ""
 
+#: src/view/screens/SavedFeeds.tsx:94
+msgid "You don't have any pinned feeds."
+msgstr ""
+
+#: src/view/screens/SavedFeeds.tsx:124
+msgid "You don't have any saved feeds."
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:346
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr ""
@@ -1591,8 +1880,16 @@ msgstr ""
 msgid "You have no lists."
 msgstr ""
 
+#: src/view/screens/ModerationBlockedAccounts.tsx:105
+msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
+msgstr ""
+
 #: src/view/screens/AppPasswords.tsx:60
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
+msgstr ""
+
+#: src/view/screens/ModerationMutedAccounts.tsx:101
+msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr ""
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:83
@@ -1630,6 +1927,10 @@ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:63
 msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr ""
+
+#: src/view/com/modals/SwitchAccount.tsx:56
+msgid "Your profile"
 msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:27

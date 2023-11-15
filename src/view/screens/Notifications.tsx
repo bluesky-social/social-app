@@ -21,6 +21,8 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -29,6 +31,7 @@ type Props = NativeStackScreenProps<
 export const NotificationsScreen = withAuthRequired(
   observer(function NotificationsScreenImpl({}: Props) {
     const store = useStores()
+    const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
     const scrollElRef = React.useRef<FlatList>(null)
@@ -119,7 +122,7 @@ export const NotificationsScreen = withAuthRequired(
               style={[pal.text, {fontWeight: 'bold'}]}
               text={
                 <>
-                  Notifications{' '}
+                  <Trans>Notifications</Trans>{' '}
                   {hasNew && (
                     <View
                       style={{
@@ -143,7 +146,7 @@ export const NotificationsScreen = withAuthRequired(
 
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title="Notifications" canGoBack={false} />
+        <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
         <Feed
           view={store.me.notifications}
           onPressTryAgain={onPressTryAgain}
@@ -154,7 +157,7 @@ export const NotificationsScreen = withAuthRequired(
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onPressLoadLatest}
-            label="Load new notifications"
+            label={_(msg`Load new notifications`)}
             showIndicator={hasNew}
           />
         )}

@@ -45,12 +45,13 @@ import {Trans, msg} from '@lingui/macro'
 const ProfileCard = observer(function ProfileCardImpl() {
   const store = useStores()
   const {isDesktop} = useWebMediaQueries()
+  const {_} = useLingui()
   const size = 48
   return store.me.handle ? (
     <Link
       href={makeProfileLink(store.me)}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
-      title="My Profile"
+      title={_(msg`My Profile`)}
       asAnchor>
       <UserAvatar avatar={store.me.avatar} size={size} />
     </Link>
@@ -245,6 +246,7 @@ function ComposeBtn() {
 export const DesktopLeftNav = observer(function DesktopLeftNav() {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
 
   return (
@@ -267,7 +269,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Home"
+        label={_(msg`Home`)}
       />
       <NavItem
         href="/search"
@@ -285,7 +287,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Search"
+        label={_(msg`Search`)}
       />
       <NavItem
         href="/feeds"
@@ -303,7 +305,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             size={isDesktop ? 24 : 28}
           />
         }
-        label="Feeds"
+        label={_(msg`Feeds`)}
       />
       <NavItem
         href="/notifications"
@@ -322,7 +324,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Notifications"
+        label={_(msg`Notifications`)}
       />
       <NavItem
         href="/lists"
@@ -340,7 +342,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             strokeWidth={3}
           />
         }
-        label="Lists"
+        label={_(msg`Lists`)}
       />
       <NavItem
         href="/moderation"
@@ -358,7 +360,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             size={isDesktop ? 20 : 26}
           />
         }
-        label="Moderation"
+        label={_(msg`Moderation`)}
       />
       {store.session.hasSession && (
         <NavItem
@@ -377,7 +379,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
               style={pal.text}
             />
           }
-          label="Profile"
+          label={_(msg`Profile`)}
         />
       )}
       <NavItem
@@ -396,7 +398,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Settings"
+        label={_(msg`Settings`)}
       />
       {store.session.hasSession && <ComposeBtn />}
     </View>

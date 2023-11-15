@@ -18,11 +18,14 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {logger} from '#/logger'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   observer(function PostThreadScreenImpl({route}: Props) {
     const store = useStores()
+    const {_} = useLingui()
     const {fabMinimalShellTransform} = useMinimalShellMode()
     const setMinimalShellMode = useSetMinimalShellMode()
     const safeAreaInsets = useSafeAreaInsets()
@@ -74,7 +77,7 @@ export const PostThreadScreen = withAuthRequired(
 
     return (
       <View style={s.hContentRegion}>
-        {isMobile && <ViewHeader title="Post" />}
+        {isMobile && <ViewHeader title={_(msg`Post`)} />}
         <View style={s.flex1}>
           <PostThreadComponent
             uri={uri}

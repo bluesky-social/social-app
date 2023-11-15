@@ -23,6 +23,8 @@ import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -32,6 +34,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
   observer(function ModerationBlockedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
@@ -81,7 +84,7 @@ export const ModerationBlockedAccounts = withAuthRequired(
           pal.border,
         ]}
         testID="blockedAccountsScreen">
-        <ViewHeader title="Blocked Accounts" showOnDesktop />
+        <ViewHeader title={_(msg`Blocked Accounts`)} showOnDesktop />
         <Text
           type="sm"
           style={[
@@ -89,17 +92,21 @@ export const ModerationBlockedAccounts = withAuthRequired(
             pal.text,
             isTabletOrDesktop && styles.descriptionDesktop,
           ]}>
-          Blocked accounts cannot reply in your threads, mention you, or
-          otherwise interact with you. You will not see their content and they
-          will be prevented from seeing yours.
+          <Trans>
+            Blocked accounts cannot reply in your threads, mention you, or
+            otherwise interact with you. You will not see their content and they
+            will be prevented from seeing yours.
+          </Trans>
         </Text>
         {!blockedAccounts.hasContent ? (
           <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
             <View style={[styles.empty, pal.viewLight]}>
               <Text type="lg" style={[pal.text, styles.emptyText]}>
-                You have not blocked any accounts yet. To block an account, go
-                to their profile and selected "Block account" from the menu on
-                their account.
+                <Trans>
+                  You have not blocked any accounts yet. To block an account, go
+                  to their profile and selected "Block account" from the menu on
+                  their account.
+                </Trans>
               </Text>
             </View>
           </View>

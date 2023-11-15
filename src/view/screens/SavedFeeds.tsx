@@ -28,6 +28,8 @@ import {Haptics} from 'lib/haptics'
 import {TextLink} from 'view/com/util/Link'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -47,6 +49,7 @@ export const SavedFeeds = withAuthRequired(
   observer(function SavedFeedsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const {_} = useLingui()
     const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
     const setMinimalShellMode = useSetMinimalShellMode()
@@ -71,11 +74,11 @@ export const SavedFeeds = withAuthRequired(
           pal.border,
           isTabletOrDesktop && styles.desktopContainer,
         ]}>
-        <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
+        <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
         <ScrollView style={s.flex1}>
           <View style={[pal.text, pal.border, styles.title]}>
             <Text type="title" style={pal.text}>
-              Pinned Feeds
+              <Trans>Pinned Feeds</Trans>
             </Text>
           </View>
           {savedFeeds.hasLoaded ? (
@@ -88,7 +91,7 @@ export const SavedFeeds = withAuthRequired(
                   styles.empty,
                 ]}>
                 <Text type="lg" style={[pal.text]}>
-                  You don't have any pinned feeds.
+                  <Trans>You don't have any pinned feeds.</Trans>
                 </Text>
               </View>
             ) : (
@@ -105,7 +108,7 @@ export const SavedFeeds = withAuthRequired(
           )}
           <View style={[pal.text, pal.border, styles.title]}>
             <Text type="title" style={pal.text}>
-              Saved Feeds
+              <Trans>Saved Feeds</Trans>
             </Text>
           </View>
           {savedFeeds.hasLoaded ? (
@@ -118,7 +121,7 @@ export const SavedFeeds = withAuthRequired(
                   styles.empty,
                 ]}>
                 <Text type="lg" style={[pal.text]}>
-                  You don't have any saved feeds.
+                  <Trans>You don't have any saved feeds.</Trans>
                 </Text>
               </View>
             ) : (
@@ -136,15 +139,17 @@ export const SavedFeeds = withAuthRequired(
 
           <View style={styles.footerText}>
             <Text type="sm" style={pal.textLight}>
-              Feeds are custom algorithms that users build with a little coding
-              expertise.{' '}
-              <TextLink
-                type="sm"
-                style={pal.link}
-                href="https://github.com/bluesky-social/feed-generator"
-                text="See this guide"
-              />{' '}
-              for more information.
+              <Trans>
+                Feeds are custom algorithms that users build with a little
+                coding expertise.{' '}
+                <TextLink
+                  type="sm"
+                  style={pal.link}
+                  href="https://github.com/bluesky-social/feed-generator"
+                  text="See this guide"
+                />{' '}
+                for more information.
+              </Trans>
             </Text>
           </View>
           <View style={{height: 100}} />

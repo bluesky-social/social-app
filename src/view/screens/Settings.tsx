@@ -207,7 +207,7 @@ export const SettingsScreen = withAuthRequired(
 
     return (
       <View style={[s.hContentRegion]} testID="settingsScreen">
-        <ViewHeader title="Settings" />
+        <ViewHeader title={_(msg`Settings`)} />
         <ScrollView
           style={[s.hContentRegion]}
           contentContainerStyle={isMobile && pal.viewLight}
@@ -220,7 +220,7 @@ export const SettingsScreen = withAuthRequired(
               </Text>
               <View style={[styles.infoLine]}>
                 <Text type="lg-medium" style={pal.text}>
-                  Email:{' '}
+                  <Trans>Email:</Trans>{' '}
                 </Text>
                 {!store.session.emailNeedsConfirmation && (
                   <>
@@ -379,7 +379,7 @@ export const SettingsScreen = withAuthRequired(
           <View style={[pal.view, styles.toggleCard]}>
             <ToggleButton
               type="default-light"
-              label="Require alt text before posting"
+              label={_(msg`Require alt text before posting`)}
               labelType="lg"
               isSelected={requireAltTextEnabled}
               onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
@@ -395,20 +395,20 @@ export const SettingsScreen = withAuthRequired(
             <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
               <SelectableBtn
                 selected={colorMode === 'system'}
-                label="System"
+                label={_(msg`System`)}
                 left
                 onSelect={() => setColorMode('system')}
                 accessibilityHint="Set color theme to system setting"
               />
               <SelectableBtn
                 selected={colorMode === 'light'}
-                label="Light"
+                label={_(msg`Light`)}
                 onSelect={() => setColorMode('light')}
                 accessibilityHint="Set color theme to light"
               />
               <SelectableBtn
                 selected={colorMode === 'dark'}
-                label="Dark"
+                label={_(msg`Dark`)}
                 right
                 onSelect={() => setColorMode('dark')}
                 accessibilityHint="Set color theme to dark"

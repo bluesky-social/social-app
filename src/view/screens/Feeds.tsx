@@ -228,7 +228,7 @@ export const FeedsScreen = withAuthRequired(
       <View style={[pal.view, styles.container]}>
         {isMobile && (
           <ViewHeader
-            title="Feeds"
+            title={_(msg`Feeds`)}
             canGoBack={false}
             renderButton={renderHeaderBtn}
             showBorder

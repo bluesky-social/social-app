@@ -7,10 +7,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useDesktopRightNavItems} from 'lib/hooks/useDesktopRightNavItems'
 import {TextLink} from 'view/com/util/Link'
 import {getCurrentRoute} from 'lib/routes/helpers'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export const DesktopFeeds = observer(function DesktopFeeds() {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const items = useDesktopRightNavItems(store.preferences.pinnedFeeds)
 
   const route = useNavigationState(state => {
@@ -50,7 +53,7 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
         <TextLink
           type="lg"
           href="/feeds"
-          text="More feeds"
+          text={_(msg`More feeds`)}
           style={[pal.link]}
         />
       </View>

@@ -80,7 +80,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
         styles.container,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title="Home Feed Preferences" showOnDesktop />
+      <ViewHeader title={_(msg`Home Feed Preferences`)} showOnDesktop />
       <View
         style={[
           styles.titleSection,
@@ -127,7 +127,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label="Followed users only"
+              label={_(msg`Followed users only`)}
               isSelected={store.preferences.homeFeed.hideRepliesByUnfollowed}
               onPress={
                 !store.preferences.homeFeed.hideReplies
@@ -158,7 +158,11 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeed.hideReposts ? 'No' : 'Yes'}
+              label={
+                store.preferences.homeFeed.hideReposts
+                  ? _(msg`No`)
+                  : _(msg`Yes`)
+              }
               isSelected={!store.preferences.homeFeed.hideReposts}
               onPress={store.preferences.toggleHomeFeedHideReposts}
             />
@@ -176,7 +180,11 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             </Text>
             <ToggleButton
               type="default-light"
-              label={store.preferences.homeFeed.hideQuotePosts ? 'No' : 'Yes'}
+              label={
+                store.preferences.homeFeed.hideQuotePosts
+                  ? _(msg`No`)
+                  : _(msg`Yes`)
+              }
               isSelected={!store.preferences.homeFeed.hideQuotePosts}
               onPress={store.preferences.toggleHomeFeedHideQuotePosts}
             />
@@ -196,7 +204,9 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
             <ToggleButton
               type="default-light"
               label={
-                store.preferences.homeFeed.lab_mergeFeedEnabled ? 'Yes' : 'No'
+                store.preferences.homeFeed.lab_mergeFeedEnabled
+                  ? _(msg`No`)
+                  : _(msg`Yes`)
               }
               isSelected={!!store.preferences.homeFeed.lab_mergeFeedEnabled}
               onPress={store.preferences.toggleHomeFeedMergeFeedEnabled}

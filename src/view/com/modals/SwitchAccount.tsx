@@ -51,7 +51,10 @@ export function Component({}: {}) {
           <ActivityIndicator />
         </View>
       ) : (
-        <Link href={makeProfileLink(store.me)} title="Your profile" noFeedback>
+        <Link
+          href={makeProfileLink(store.me)}
+          title={_lingui(msg`Your profile`)}
+          noFeedback>
           <View style={[pal.view, styles.linkCard]}>
             <View style={styles.avi}>
               <UserAvatar size={40} avatar={store.me.avatar} />

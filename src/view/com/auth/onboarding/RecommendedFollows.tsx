@@ -12,6 +12,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useStores} from 'state/index'
 import {RecommendedFollowsItem} from './RecommendedFollowsItem'
 import {SuggestedActorsModel} from '#/state/models/discovery/suggested-actors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = {
   next: () => void
@@ -21,6 +23,7 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
 }: Props) {
   const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
   const suggestedActors = React.useMemo(() => {
     const model = new SuggestedActorsModel(store)
@@ -30,33 +33,37 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
 
   const title = (
     <>
-      <Text
-        style={[
-          pal.textLight,
-          tdStyles.title1,
-          isTabletOrMobile && tdStyles.title1Small,
-        ]}>
-        Follow some
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          tdStyles.title2,
-          isTabletOrMobile && tdStyles.title2Small,
-        ]}>
-        Recommended
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          tdStyles.title2,
-          isTabletOrMobile && tdStyles.title2Small,
-        ]}>
-        Users
-      </Text>
+      <Trans>
+        <Text
+          style={[
+            pal.textLight,
+            tdStyles.title1,
+            isTabletOrMobile && tdStyles.title1Small,
+          ]}>
+          Follow some
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            tdStyles.title2,
+            isTabletOrMobile && tdStyles.title2Small,
+          ]}>
+          Recommended
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            tdStyles.title2,
+            isTabletOrMobile && tdStyles.title2Small,
+          ]}>
+          Users
+        </Text>
+      </Trans>
       <Text type="2xl-medium" style={[pal.textLight, tdStyles.description]}>
-        Follow some users to get started. We can recommend you more users based
-        on who you find interesting.
+        <Trans>
+          Follow some users to get started. We can recommend you more users
+          based on who you find interesting.
+        </Trans>
       </Text>
       <View
         style={{
@@ -75,7 +82,7 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Done
+              <Trans>Done</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -118,13 +125,15 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
         <View style={[mStyles.container]} testID="recommendedFollowsOnboarding">
           <View>
             <ViewHeader
-              title="Recommended Follows"
+              title={_(msg`Recommended Users`)}
               showBackButton={false}
               showOnDesktop
             />
             <Text type="lg-medium" style={[pal.text, mStyles.header]}>
-              Check out some recommended users. Follow them to see similar
-              users.
+              <Trans>
+                Check out some recommended users. Follow them to see similar
+                users.
+              </Trans>
             </Text>
           </View>
           {suggestedActors.isLoading ? (
@@ -147,7 +156,7 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
           )}
           <Button
             onPress={next}
-            label="Continue"
+            label={_(msg`Continue`)}
             testID="continueBtn"
             style={mStyles.button}
             labelStyle={mStyles.buttonText}

@@ -140,9 +140,10 @@ export const AppPasswords = withAuthRequired(
 function AppPasswordsHeader() {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
   return (
     <>
-      <ViewHeader title="App Passwords" showOnDesktop />
+      <ViewHeader title={_(msg`App Passwords`)} showOnDesktop />
       <Text
         type="sm"
         style={[

@@ -23,6 +23,8 @@ import {CenteredView} from 'view/com/util/Views'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -32,6 +34,7 @@ export const ModerationMutedAccounts = withAuthRequired(
   observer(function ModerationMutedAccountsImpl({}: Props) {
     const pal = usePalette('default')
     const store = useStores()
+    const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {screen} = useAnalytics()
@@ -78,7 +81,7 @@ export const ModerationMutedAccounts = withAuthRequired(
           pal.border,
         ]}
         testID="mutedAccountsScreen">
-        <ViewHeader title="Muted Accounts" showOnDesktop />
+        <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
         <Text
           type="sm"
           style={[
@@ -86,16 +89,20 @@ export const ModerationMutedAccounts = withAuthRequired(
             pal.text,
             isTabletOrDesktop && styles.descriptionDesktop,
           ]}>
-          Muted accounts have their posts removed from your feed and from your
-          notifications. Mutes are completely private.
+          <Trans>
+            Muted accounts have their posts removed from your feed and from your
+            notifications. Mutes are completely private.
+          </Trans>
         </Text>
         {!mutedAccounts.hasContent ? (
           <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
             <View style={[styles.empty, pal.viewLight]}>
               <Text type="lg" style={[pal.text, styles.emptyText]}>
-                You have not muted any accounts yet. To mute an account, go to
-                their profile and selected "Mute account" from the menu on their
-                account.
+                <Trans>
+                  You have not muted any accounts yet. To mute an account, go to
+                  their profile and selected "Mute account" from the menu on
+                  their account.
+                </Trans>
               </Text>
             </View>
           </View>
