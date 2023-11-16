@@ -108,6 +108,7 @@ export function useProfileFollowMutationQueue(profile) {
   const followingUri = profile.viewer?.following
 
   const [queue] = useState({
+    confirmedState: null,
     currentAction: null,
     pendingAction: null,
   })
@@ -142,12 +143,15 @@ export function useProfileFollowMutationQueue(profile) {
         const action = queue.pendingAction
         queue.currentAction = action
         queue.pendingAction = null
-        const result = await runAction(action)
+        queue.confirmedState = await runAction(action)
       }
-      // commit success
     } catch {
       // rollback?
     } finally {
+      if (queue.confirmedState) {
+        updateProfileShadow(did, queue.confirmedState)
+      }
+      queue.confirmedState = null
       queue.currentAction = null
       queue.pendingAction = null
     }
@@ -155,9 +159,11 @@ export function useProfileFollowMutationQueue(profile) {
 
   async function runAction(action) {
     if (action === 'follow') {
-      await followMutation.mutateAsync({did})
+      const {uri} = await followMutation.mutateAsync({did})
+      return {followingUri: uri}
     } else if (action === 'unfollow') {
       await unfollowMutation.mutateAsync({did, followUri: followingUri})
+      return {followingUri: undefined}
     }
   }
 
