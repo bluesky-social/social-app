@@ -10,12 +10,12 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
 import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {ServiceDescription} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -26,6 +26,8 @@ import {Trans, msg} from '@lingui/macro'
 import {styles} from './styles'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+
+type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
 export const LoginForm = ({
   error,

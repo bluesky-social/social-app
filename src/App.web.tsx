@@ -12,7 +12,6 @@ import {init as initPersistedState} from '#/state/persisted'
 import {init as initReminders} from '#/state/shell/reminders'
 import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
-import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -38,17 +37,8 @@ const InnerApp = observer(function AppImpl() {
   const {isInitialLoad} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
-  const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
-    undefined,
-  )
 
   // init
-  useEffect(() => {
-    setupState().then(store => {
-      setRootStore(store)
-    })
-  }, [])
-
   useEffect(() => {
     initReminders()
     analytics.init()
@@ -59,7 +49,7 @@ const InnerApp = observer(function AppImpl() {
   }, [resumeSession])
 
   // show nothing prior to init
-  if (!rootStore || isInitialLoad) {
+  if (isInitialLoad) {
     // TODO add a loading state
     return null
   }
@@ -72,17 +62,15 @@ const InnerApp = observer(function AppImpl() {
     <UnreadNotifsProvider>
       <ThemeProvider theme={colorMode}>
         <analytics.Provider>
-          <RootStoreProvider value={rootStore}>
-            <I18nProvider i18n={i18n}>
-              {/* All components should be within this provider */}
-              <RootSiblingParent>
-                <SafeAreaProvider>
-                  <Shell />
-                </SafeAreaProvider>
-              </RootSiblingParent>
-            </I18nProvider>
-            <ToastContainer />
-          </RootStoreProvider>
+          <I18nProvider i18n={i18n}>
+            {/* All components should be within this provider */}
+            <RootSiblingParent>
+              <SafeAreaProvider>
+                <Shell />
+              </SafeAreaProvider>
+            </RootSiblingParent>
+          </I18nProvider>
+          <ToastContainer />
         </analytics.Provider>
       </ThemeProvider>
     </UnreadNotifsProvider>
