@@ -99,29 +99,88 @@ export function useProfileUpdateMutation() {
   })
 }
 
+import {useState} from 'react'
+
+export function useProfileFollowMutationQueue(profile) {
+  const followMutation = useProfileFollowMutation()
+  const unfollowMutation = useProfileUnfollowMutation()
+  const did = profile.did
+  const followingUri = profile.viewer?.following
+
+  const [queue] = useState({
+    nextAction: null,
+    isBusy: false,
+  })
+
+  function queueFollow() {
+    queue.nextAction = {type: 'follow'}
+    updateProfileShadow(did, {followingUri: 'pending'})
+    processQueue()
+  }
+
+  function queueUnfollow() {
+    queue.nextAction = {type: 'unfollow'}
+    updateProfileShadow(did, {followingUri: undefined})
+    processQueue()
+  }
+
+  async function processQueue() {
+    if (queue.isBusy) {
+      return
+    }
+    queue.isBusy = true
+    try {
+      while (queue.nextAction) {
+        const action = queue.nextAction
+        queue.nextAction = null
+        const result = await runAction(action)
+      }
+      // commit success
+    } catch {
+      // rollback?
+    } finally {
+      queue.isBusy = false
+    }
+  }
+
+  async function runAction(action) {
+    if (action.type === 'follow') {
+      await followMutation.mutateAsync({did})
+    } else if (action.type === 'unfollow') {
+      await unfollowMutation.mutateAsync({did, followUri: followingUri})
+    }
+  }
+
+  return [queueFollow, queueUnfollow]
+}
+
 export function useProfileFollowMutation() {
   const {agent} = useSession()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
+      await new Promise(resolve => setTimeout(resolve, 3000))
       return await agent.follow(did)
     },
     onMutate(variables) {
+      console.log('follow:mutate')
       // optimstically update
-      updateProfileShadow(variables.did, {
-        followingUri: 'pending',
-      })
+      // updateProfileShadow(variables.did, {
+      //   followingUri: 'pending',
+      // })
     },
     onSuccess(data, variables) {
+      console.log('follow:success')
       // finalize
-      updateProfileShadow(variables.did, {
-        followingUri: data.uri,
-      })
+      // updateProfileShadow(variables.did, {
+      //   followingUri: data.uri,
+      // })
     },
     onError(error, variables) {
+      console.log('follow:error')
       // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        followingUri: undefined,
-      })
+      // updateProfileShadow(variables.did, {
+      //   followingUri: undefined,
+      // })
     },
   })
 }
@@ -130,19 +189,25 @@ export function useProfileUnfollowMutation() {
   const {agent} = useSession()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
+      await new Promise(resolve => setTimeout(resolve, 3000))
       return await agent.deleteFollow(followUri)
     },
     onMutate(variables) {
+      console.log('unfollow:mutate')
       // optimstically update
-      updateProfileShadow(variables.did, {
-        followingUri: undefined,
-      })
+      // updateProfileShadow(variables.did, {
+      //   followingUri: undefined,
+      // })
+    },
+    onSuccess() {
+      console.log('unfollow:success')
     },
     onError(error, variables) {
+      console.log('unfollow:error')
       // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        followingUri: variables.followUri,
-      })
+      // updateProfileShadow(variables.did, {
+      //   followingUri: variables.followUri,
+      // })
     },
   })
 }

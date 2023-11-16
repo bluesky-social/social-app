@@ -38,6 +38,7 @@ import {
   useProfileUnmuteMutation,
   useProfileBlockMutation,
   useProfileUnblockMutation,
+  useProfileFollowMutationQueue,
 } from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -154,13 +155,12 @@ function ProfileHeaderLoaded({
     }
   }, [openLightbox, profile, moderation])
 
-  const onPressFollow = React.useCallback(async () => {
-    if (profile.viewer?.following) {
-      return
-    }
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+
+  const onPressFollow = async () => {
     try {
       track('ProfileHeader:FollowButtonClicked')
-      await followMutation.mutateAsync({did: profile.did})
+      await queueFollow()
       Toast.show(
         `Following ${sanitizeDisplayName(
           profile.displayName || profile.handle,
@@ -170,18 +170,12 @@ function ProfileHeaderLoaded({
       logger.error('Failed to follow', {error: String(e)})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [followMutation, profile, track])
+  }
 
-  const onPressUnfollow = React.useCallback(async () => {
-    if (!profile.viewer?.following) {
-      return
-    }
+  const onPressUnfollow = async () => {
     try {
       track('ProfileHeader:UnfollowButtonClicked')
-      await unfollowMutation.mutateAsync({
-        did: profile.did,
-        followUri: profile.viewer?.following,
-      })
+      await queueUnfollow()
       Toast.show(
         `No longer following ${sanitizeDisplayName(
           profile.displayName || profile.handle,
@@ -191,7 +185,7 @@ function ProfileHeaderLoaded({
       logger.error('Failed to unfollow', {error: String(e)})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [unfollowMutation, profile, track])
+  }
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
