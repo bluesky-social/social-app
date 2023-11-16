@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {Svg, Circle, Path} from 'react-native-svg'
 import {ScrollView, TextInput} from './util'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
@@ -32,11 +31,7 @@ enum Stages {
   ConfirmCode,
 }
 
-export const Component = observer(function Component({
-  showReminder,
-}: {
-  showReminder?: boolean
-}) {
+export function Component({showReminder}: {showReminder?: boolean}) {
   const pal = usePalette('default')
   const {agent, currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
@@ -244,7 +239,7 @@ export const Component = observer(function Component({
       </ScrollView>
     </SafeAreaView>
   )
-})
+}
 
 function ReminderIllustration() {
   const pal = usePalette('default')

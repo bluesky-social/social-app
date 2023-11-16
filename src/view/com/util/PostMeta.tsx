@@ -6,7 +6,6 @@ import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {UserAvatar} from './UserAvatar'
-import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
@@ -30,7 +29,7 @@ interface PostMetaOpts {
   style?: StyleProp<ViewStyle>
 }
 
-export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
+export function PostMeta(opts: PostMetaOpts) {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
@@ -92,7 +91,7 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
       </TimeElapsed>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

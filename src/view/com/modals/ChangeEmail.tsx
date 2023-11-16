@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
 import {ScrollView, TextInput} from './util'
-import {observer} from 'mobx-react-lite'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -24,7 +23,7 @@ enum Stages {
 
 export const snapPoints = ['90%']
 
-export const Component = observer(function Component({}: {}) {
+export function Component() {
   const pal = usePalette('default')
   const {agent, currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
@@ -226,7 +225,7 @@ export const Component = observer(function Component({}: {}) {
       </ScrollView>
     </SafeAreaView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   titleSection: {

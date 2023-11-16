@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Text} from '../util/text/Text'
 import {DateInput} from '../util/forms/DateInput'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -103,7 +102,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   )
 }
 
-export const Component = observer(function Component({}: {}) {
+export function Component({}: {}) {
   const {data: preferences} = usePreferencesQuery()
 
   return !preferences ? (
@@ -111,7 +110,7 @@ export const Component = observer(function Component({}: {}) {
   ) : (
     <Inner preferences={preferences} />
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

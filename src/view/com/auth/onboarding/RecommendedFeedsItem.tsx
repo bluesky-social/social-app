@@ -1,6 +1,5 @@
 import React from 'react'
 import {View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyFeedDefs, RichText as BskRichText} from '@atproto/api'
 import {Text} from 'view/com/util/text/Text'
@@ -19,7 +18,7 @@ import {
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 
-export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
+export function RecommendedFeedsItem({
   item,
 }: {
   item: AppBskyFeedDefs.GeneratorView
@@ -164,4 +163,4 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
       </View>
     </View>
   )
-})
+}

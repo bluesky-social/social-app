@@ -1,6 +1,5 @@
 import React from 'react'
 import {SafeAreaView} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -10,7 +9,7 @@ import {RecommendedFollows} from './onboarding/RecommendedFollows'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useOnboardingState, useOnboardingDispatch} from '#/state/shell'
 
-export const Onboarding = observer(function OnboardingImpl() {
+export function Onboarding() {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const onboardingState = useOnboardingState()
@@ -38,4 +37,4 @@ export const Onboarding = observer(function OnboardingImpl() {
       </ErrorBoundary>
     </SafeAreaView>
   )
-})
+}

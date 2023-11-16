@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react'
-import {useStores} from 'state/index'
 import {ImageModel} from 'state/models/media/image'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
@@ -17,6 +16,7 @@ import {
 import {ComposerOpts} from 'state/shell/composer'
 import {POST_IMG_MAX} from 'lib/constants'
 import {logger} from '#/logger'
+import {useSession} from '#/state/session'
 import {useGetPost} from '#/state/queries/post'
 
 export function useExternalLinkFetch({
@@ -24,7 +24,7 @@ export function useExternalLinkFetch({
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
-  const store = useStores()
+  const {agent} = useSession()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -56,7 +56,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(store, extLink.uri).then(
+        getFeedAsEmbed(agent, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -74,7 +74,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(store, extLink.uri).then(
+        getListAsEmbed(agent, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -92,7 +92,7 @@ export function useExternalLinkFetch({
           },
         )
       } else {
-        getLinkMeta(store, extLink.uri).then(meta => {
+        getLinkMeta(agent, extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -134,7 +134,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [store, extLink, setQuote, getPost])
+  }, [agent, extLink, setQuote, getPost])
 
   return {extLink, setExtLink}
 }

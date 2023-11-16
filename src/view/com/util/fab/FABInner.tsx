@@ -1,5 +1,4 @@
 import React, {ComponentProps} from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
@@ -15,11 +14,7 @@ export interface FABProps
   icon: JSX.Element
 }
 
-export const FABInner = observer(function FABInnerImpl({
-  testID,
-  icon,
-  ...props
-}: FABProps) {
+export function FABInner({testID, icon, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
@@ -55,7 +50,7 @@ export const FABInner = observer(function FABInnerImpl({
       </Animated.View>
     </TouchableWithoutFeedback>
   )
-})
+}
 
 const styles = StyleSheet.create({
   sizeRegular: {

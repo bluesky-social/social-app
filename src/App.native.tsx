@@ -5,7 +5,6 @@ import React, {useState, useEffect} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {observer} from 'mobx-react-lite'
 import {QueryClientProvider} from '@tanstack/react-query'
 
 import 'view/icons'
@@ -16,7 +15,6 @@ import {listenSessionDropped} from './state/events'
 import {useColorMode} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
-import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
 import * as analytics from 'lib/analytics/analytics'
@@ -44,21 +42,12 @@ i18n.activate('en')
 
 SplashScreen.preventAutoHideAsync()
 
-const InnerApp = observer(function AppImpl() {
+function InnerApp() {
   const colorMode = useColorMode()
   const {isInitialLoad} = useSession()
   const {resumeSession} = useSessionApi()
-  const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
-    undefined,
-  )
 
   // init
-  useEffect(() => {
-    setupState().then(store => {
-      setRootStore(store)
-    })
-  }, [])
-
   useEffect(() => {
     initReminders()
     analytics.init()
@@ -72,7 +61,7 @@ const InnerApp = observer(function AppImpl() {
   }, [resumeSession])
 
   // show nothing prior to init
-  if (!rootStore || isInitialLoad) {
+  if (isInitialLoad) {
     // TODO add a loading state
     return null
   }
@@ -85,22 +74,20 @@ const InnerApp = observer(function AppImpl() {
     <UnreadNotifsProvider>
       <ThemeProvider theme={colorMode}>
         <analytics.Provider>
-          <RootStoreProvider value={rootStore}>
-            <I18nProvider i18n={i18n}>
-              {/* All components should be within this provider */}
-              <RootSiblingParent>
-                <GestureHandlerRootView style={s.h100pct}>
-                  <TestCtrls />
-                  <Shell />
-                </GestureHandlerRootView>
-              </RootSiblingParent>
-            </I18nProvider>
-          </RootStoreProvider>
+          <I18nProvider i18n={i18n}>
+            {/* All components should be within this provider */}
+            <RootSiblingParent>
+              <GestureHandlerRootView style={s.h100pct}>
+                <TestCtrls />
+                <Shell />
+              </GestureHandlerRootView>
+            </RootSiblingParent>
+          </I18nProvider>
         </analytics.Provider>
       </ThemeProvider>
     </UnreadNotifsProvider>
   )
-})
+}
 
 function App() {
   const [isReady, setReady] = useState(false)

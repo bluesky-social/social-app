@@ -7,12 +7,20 @@ import {
   useAnalytics as useAnalyticsOrig,
   ClientMethods,
 } from '@segment/analytics-react-native'
-import {AppInfo} from 'state/models/root-store'
+import {z} from 'zod'
 import {useSession} from '#/state/session'
 import {sha256} from 'js-sha256'
 import {ScreenEvent, TrackEvent} from './types'
 import {logger} from '#/logger'
 import {listenSessionLoaded} from '#/state/events'
+
+export const appInfo = z.object({
+  build: z.string().optional(),
+  name: z.string().optional(),
+  namespace: z.string().optional(),
+  version: z.string().optional(),
+})
+export type AppInfo = z.infer<typeof appInfo>
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
@@ -128,7 +136,11 @@ async function writeAppInfo(value: AppInfo) {
   await AsyncStorage.setItem('BSKY_APP_INFO', JSON.stringify(value))
 }
 
-async function readAppInfo(): Promise<Partial<AppInfo> | undefined> {
+async function readAppInfo(): Promise<AppInfo | undefined> {
   const rawData = await AsyncStorage.getItem('BSKY_APP_INFO')
-  return rawData ? JSON.parse(rawData) : undefined
+  const obj = rawData ? JSON.parse(rawData) : undefined
+  if (!obj || typeof obj !== 'object') {
+    return undefined
+  }
+  return obj
 }

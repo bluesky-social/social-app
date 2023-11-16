@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
-import {useStores, DEFAULT_SERVICE} from 'state/index'
-import {ServiceDescription} from 'state/models/session'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
 import {ChooseAccountForm} from './ChooseAccountForm'
@@ -14,6 +13,7 @@ import {PasswordUpdatedForm} from './PasswordUpdatedForm'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSession, SessionAccount} from '#/state/session'
+import {useServiceQuery} from '#/state/queries/service'
 
 enum Forms {
   Login,
@@ -25,20 +25,20 @@ enum Forms {
 
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const pal = usePalette('default')
-  const store = useStores()
   const {accounts} = useSession()
   const {track} = useAnalytics()
   const {_} = useLingui()
   const [error, setError] = useState<string>('')
-  const [retryDescribeTrigger, setRetryDescribeTrigger] = useState<any>({})
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
-  const [serviceDescription, setServiceDescription] = useState<
-    ServiceDescription | undefined
-  >(undefined)
   const [initialHandle, setInitialHandle] = useState<string>('')
   const [currentForm, setCurrentForm] = useState<Forms>(
     accounts.length ? Forms.ChooseAccount : Forms.Login,
   )
+  const {
+    data: serviceDescription,
+    error: serviceError,
+    refetch: refetchService,
+  } = useServiceQuery(serviceUrl)
 
   const onSelectAccount = (account?: SessionAccount) => {
     if (account?.service) {
@@ -54,35 +54,21 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   useEffect(() => {
-    let aborted = false
-    setError('')
-    store.session.describeService(serviceUrl).then(
-      desc => {
-        if (aborted) {
-          return
-        }
-        setServiceDescription(desc)
-      },
-      err => {
-        if (aborted) {
-          return
-        }
-        logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
-          error: err,
-        })
-        setError(
-          _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
-          ),
-        )
-      },
-    )
-    return () => {
-      aborted = true
+    if (serviceError) {
+      setError(
+        _(
+          msg`Unable to contact your service. Please check your Internet connection.`,
+        ),
+      )
+      logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
+        error: String(serviceError),
+      })
+    } else {
+      setError('')
     }
-  }, [store.session, serviceUrl, retryDescribeTrigger, _])
+  }, [serviceError, serviceUrl, _])
 
-  const onPressRetryConnect = () => setRetryDescribeTrigger({})
+  const onPressRetryConnect = () => refetchService()
   const onPressForgotPassword = () => {
     track('Signin:PressedForgotPassword')
     setCurrentForm(Forms.ForgotPassword)

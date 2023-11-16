@@ -1,7 +1,6 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
-import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -40,7 +39,7 @@ import * as LinkWarningModal from './LinkWarning'
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
 
-export const ModalsContainer = observer(function ModalsContainer() {
+export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
   const {closeModal} = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -198,7 +197,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       {element}
     </BottomSheet>
   )
-})
+}
 
 const styles = StyleSheet.create({
   handle: {

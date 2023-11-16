@@ -15,7 +15,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
-import {observer} from 'mobx-react-lite'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -71,7 +70,7 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export const ProfileFeedScreen = withAuthRequired(
-  observer(function ProfileFeedScreenImpl(props: Props) {
+  function ProfileFeedScreenImpl(props: Props) {
     const {rkey, name: handleOrDid} = props.route.params
 
     const pal = usePalette('default')
@@ -129,7 +128,7 @@ export const ProfileFeedScreen = withAuthRequired(
         </View>
       </CenteredView>
     )
-  }),
+  },
 )
 
 function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
@@ -154,7 +153,7 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   )
 }
 
-export const ProfileFeedScreenInner = function ProfileFeedScreenInnerImpl({
+export function ProfileFeedScreenInner({
   preferences,
   feedInfo,
 }: {
@@ -485,7 +484,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   },
 )
 
-const AboutSection = observer(function AboutPageImpl({
+function AboutSection({
   feedOwnerDid,
   feedRkey,
   feedInfo,
@@ -606,7 +605,7 @@ const AboutSection = observer(function AboutPageImpl({
       </View>
     </ScrollView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   btn: {

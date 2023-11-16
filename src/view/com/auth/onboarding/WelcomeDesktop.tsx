@@ -7,16 +7,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Button} from 'view/com/util/forms/Button'
-import {observer} from 'mobx-react-lite'
 
 type Props = {
   next: () => void
   skip: () => void
 }
 
-export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
-  next,
-}: Props) {
+export function WelcomeDesktop({next}: Props) {
   const pal = usePalette('default')
   const horizontal = useMediaQuery({minWidth: 1300})
   const title = (
@@ -105,7 +102,7 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
       </View>
     </TitleColumnLayout>
   )
-})
+}
 
 const styles = StyleSheet.create({
   row: {

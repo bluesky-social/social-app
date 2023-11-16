@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -16,7 +15,7 @@ import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 
-export const DesktopRightNav = observer(function DesktopRightNavImpl() {
+export function DesktopRightNav() {
   const pal = usePalette('default')
   const palError = usePalette('error')
   const {isSandbox, hasSession, currentAccount} = useSession()
@@ -80,9 +79,9 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
       <InviteCodes />
     </View>
   )
-})
+}
 
-const InviteCodes = observer(function InviteCodesImpl() {
+function InviteCodes() {
   const pal = usePalette('default')
   const {openModal} = useModalControls()
   const {data: invites} = useInviteCodesQuery()
@@ -118,7 +117,7 @@ const InviteCodes = observer(function InviteCodesImpl() {
       </Text>
     </TouchableOpacity>
   )
-})
+}
 
 const styles = StyleSheet.create({
   rightNav: {

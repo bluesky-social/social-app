@@ -5,7 +5,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {s} from 'lib/styles'
@@ -21,7 +20,7 @@ import {useModalControls} from '#/state/modals'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
-  observer(function Moderation({}: Props) {
+  function Moderation({}: Props) {
     const pal = usePalette('default')
     const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
@@ -111,7 +110,7 @@ export const ModerationScreen = withAuthRequired(
         </Link>
       </CenteredView>
     )
-  }),
+  },
 )
 
 const styles = StyleSheet.create({

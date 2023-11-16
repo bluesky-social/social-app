@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ScrollView} from '../com/util/Views'
@@ -15,7 +14,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSetMinimalShellMode} from '#/state/shell'
 
-export const LogScreen = observer(function Log({}: NativeStackScreenProps<
+export function LogScreen({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Log'
 >) {
@@ -88,7 +87,7 @@ export const LogScreen = observer(function Log({}: NativeStackScreenProps<
       </ScrollView>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   entry: {

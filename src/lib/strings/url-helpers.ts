@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import {PROD_SERVICE} from 'state/index'
+import {PROD_SERVICE} from 'lib/constants'
 import TLDs from 'tlds'
 import psl from 'psl'
 
