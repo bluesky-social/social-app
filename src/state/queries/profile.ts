@@ -358,7 +358,7 @@ export function useProfileBlockMutationQueue(
     onSuccess(finalBlockingUri) {
       // finalize
       updateProfileShadow(did, {
-        followingUri: finalBlockingUri,
+        blockingUri: finalBlockingUri,
       })
     },
   })
