@@ -53,8 +53,8 @@ import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 
 interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ProfileModeration
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
+  moderation: ProfileModeration | null
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
@@ -69,7 +69,7 @@ export function ProfileHeader({
 
   // loading
   // =
-  if (!profile) {
+  if (!profile || !moderation) {
     return (
       <View style={pal.view}>
         <LoadingPlaceholder width="100%" height={153} />
@@ -80,11 +80,6 @@ export function ProfileHeader({
         <View style={styles.content}>
           <View style={[styles.buttonsLine]}>
             <LoadingPlaceholder width={167} height={31} style={styles.br50} />
-          </View>
-          <View>
-            <Text type="title-2xl" style={[pal.text, styles.title]}>
-              <Trans>Loading...</Trans>
-            </Text>
           </View>
         </View>
       </View>
@@ -103,12 +98,19 @@ export function ProfileHeader({
   )
 }
 
+interface LoadedProps {
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  moderation: ProfileModeration
+  hideBackButton?: boolean
+  isProfilePreview?: boolean
+}
+
 function ProfileHeaderLoaded({
   profile,
   moderation,
   hideBackButton = false,
   isProfilePreview,
-}: Props) {
+}: LoadedProps) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {currentAccount} = useSession()
