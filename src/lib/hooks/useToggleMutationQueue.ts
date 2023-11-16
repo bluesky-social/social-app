@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useRef, useEffect, useCallback} from 'react'
 
 type Task<TServerState> = {
   isOn: boolean
@@ -73,5 +73,16 @@ export function useToggleMutationQueue<TServerState>({
     })
   }
 
-  return queueToggle
+  const queueToggleRef = useRef(queueToggle)
+  useEffect(() => {
+    queueToggleRef.current = queueToggle
+  })
+  const queueToggleStable = useCallback(
+    (isOn: boolean): Promise<TServerState> => {
+      const queueToggleLatest = queueToggleRef.current
+      return queueToggleLatest(isOn)
+    },
+    [],
+  )
+  return queueToggleStable
 }

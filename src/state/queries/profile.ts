@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {
   AtUri,
   AppBskyActorDefs,
@@ -136,15 +137,15 @@ export function useProfileFollowMutationQueue(
     },
   })
 
-  async function queueFollow() {
+  const queueFollow = useCallback(() => {
     updateProfileShadow(did, {followingUri: 'pending'})
     return queueToggle(true)
-  }
+  }, [did, queueToggle])
 
-  async function queueUnfollow() {
+  const queueUnfollow = useCallback(() => {
     updateProfileShadow(did, {followingUri: undefined})
     return queueToggle(false)
-  }
+  }, [did, queueToggle])
 
   return [queueFollow, queueUnfollow]
 }
