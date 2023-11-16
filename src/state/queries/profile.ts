@@ -108,38 +108,38 @@ export function useProfileFollowMutationQueue(profile) {
   const followingUri = profile.viewer?.following
 
   const [queue] = useState({
-    nextAction: null,
-    isBusy: false,
+    currentAction: null,
+    pendingAction: null,
   })
 
   function queueFollow() {
-    queue.nextAction = {type: 'follow'}
+    queue.pendingAction = {type: 'follow'}
     updateProfileShadow(did, {followingUri: 'pending'})
     processQueue()
   }
 
   function queueUnfollow() {
-    queue.nextAction = {type: 'unfollow'}
+    queue.pendingAction = {type: 'unfollow'}
     updateProfileShadow(did, {followingUri: undefined})
     processQueue()
   }
 
   async function processQueue() {
-    if (queue.isBusy) {
+    if (queue.currentAction) {
       return
     }
-    queue.isBusy = true
     try {
-      while (queue.nextAction) {
-        const action = queue.nextAction
-        queue.nextAction = null
+      while (queue.pendingAction) {
+        const action = queue.pendingAction
+        queue.pendingAction = null
+        queue.currentAction = action
         const result = await runAction(action)
       }
       // commit success
     } catch {
       // rollback?
     } finally {
-      queue.isBusy = false
+      queue.currentAction = null
     }
   }
 
