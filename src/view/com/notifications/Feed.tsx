@@ -143,12 +143,12 @@ export function Feed({
   const FeedHeader = React.useCallback(
     () => (
       <View>
+        {ListHeaderComponent ? <ListHeaderComponent /> : null}
         {showHeaderSpinner ? (
           <View style={{padding: 10}}>
             <ActivityIndicator />
           </View>
         ) : null}
-        {ListHeaderComponent ? <ListHeaderComponent /> : null}
       </View>
     ),
     [ListHeaderComponent, showHeaderSpinner],
