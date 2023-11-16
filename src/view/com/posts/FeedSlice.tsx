@@ -2,30 +2,28 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {FeedPostSlice} from '#/state/queries/post-feed'
-import {AtUri, moderatePost} from '@atproto/api'
+import {AtUri, moderatePost, ModerationOpts} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
-import {useStores} from '#/state'
 
 export const FeedSlice = observer(function FeedSliceImpl({
   slice,
   dataUpdatedAt,
   ignoreFilterFor,
+  moderationOpts,
 }: {
   slice: FeedPostSlice
   dataUpdatedAt: number
   ignoreFilterFor?: string
+  moderationOpts: ModerationOpts
 }) {
-  const store = useStores()
   const moderations = React.useMemo(() => {
-    return slice.items.map(item =>
-      moderatePost(item.post, store.preferences.moderationOpts),
-    )
-  }, [slice, store.preferences.moderationOpts])
+    return slice.items.map(item => moderatePost(item.post, moderationOpts))
+  }, [slice, moderationOpts])
 
   // apply moderation filter
   for (let i = 0; i < slice.items.length; i++) {
