@@ -22,6 +22,7 @@ import {I18nProvider} from '@lingui/react'
 import {defaultLocale, dynamicActivate} from './locale/i18n'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
@@ -111,7 +112,9 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <InnerApp />
+                  <LightboxStateProvider>
+                    <InnerApp />
+                  </LightboxStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>

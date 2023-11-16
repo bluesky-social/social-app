@@ -19,8 +19,7 @@ import {
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {ImagesLightbox} from 'state/models/ui/shell'
-import {useStores} from 'state/index'
+import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {YoutubeEmbed} from './YoutubeEmbed'
@@ -49,7 +48,7 @@ export function PostEmbeds({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {openLightbox} = useLightboxControls()
   const {isMobile} = useWebMediaQueries()
 
   // quote post with media
@@ -104,8 +103,8 @@ export function PostEmbeds({
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
-      const openLightbox = (index: number) => {
-        store.shell.openLightbox(new ImagesLightbox(items, index))
+      const _openLightbox = (index: number) => {
+        openLightbox(new ImagesLightbox(items, index))
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {
@@ -121,7 +120,7 @@ export function PostEmbeds({
               alt={alt}
               uri={thumb}
               dimensionsHint={aspectRatio}
-              onPress={() => openLightbox(0)}
+              onPress={() => _openLightbox(0)}
               onPressIn={() => onPressIn(0)}
               style={[
                 styles.singleImage,
@@ -143,7 +142,7 @@ export function PostEmbeds({
         <View style={[styles.imagesContainer, style]}>
           <ImageLayoutGrid
             images={embed.images}
-            onPress={openLightbox}
+            onPress={_openLightbox}
             onPressIn={onPressIn}
             style={
               embed.images.length === 1

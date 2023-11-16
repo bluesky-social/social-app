@@ -1,4 +1,3 @@
-import {AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
 import {makeAutoObservable} from 'mobx'
 import {
@@ -13,34 +12,7 @@ export function isColorMode(v: unknown): v is ColorMode {
   return v === 'system' || v === 'light' || v === 'dark'
 }
 
-interface LightboxModel {}
-
-export class ProfileImageLightbox implements LightboxModel {
-  name = 'profile-image'
-  constructor(public profile: AppBskyActorDefs.ProfileViewDetailed) {
-    makeAutoObservable(this)
-  }
-}
-
-interface ImagesLightboxItem {
-  uri: string
-  alt?: string
-}
-
-export class ImagesLightbox implements LightboxModel {
-  name = 'images'
-  constructor(public images: ImagesLightboxItem[], public index: number) {
-    makeAutoObservable(this)
-  }
-  setIndex(index: number) {
-    this.index = index
-  }
-}
-
 export class ShellUiModel {
-  isLightboxActive = false
-  activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
-
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
       rootStore: false,
@@ -54,32 +26,13 @@ export class ShellUiModel {
    * (used by the android hardware back btn)
    */
   closeAnyActiveElement(): boolean {
-    if (this.isLightboxActive) {
-      this.closeLightbox()
-      return true
-    }
     return false
   }
 
   /**
    * used to clear out any modals, eg for a navigation
    */
-  closeAllActiveElements() {
-    if (this.isLightboxActive) {
-      this.closeLightbox()
-    }
-  }
-
-  openLightbox(lightbox: ProfileImageLightbox | ImagesLightbox) {
-    this.rootStore.emitNavigation()
-    this.isLightboxActive = true
-    this.activeLightbox = lightbox
-  }
-
-  closeLightbox() {
-    this.isLightboxActive = false
-    this.activeLightbox = null
-  }
+  closeAllActiveElements() {}
 
   setupLoginModals() {
     this.rootStore.onSessionReady(() => {
