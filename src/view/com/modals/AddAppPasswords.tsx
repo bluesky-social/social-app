@@ -3,7 +3,6 @@ import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from 'platform/detection'
 import {
@@ -16,6 +15,10 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {
+  useAppPasswordsQuery,
+  useAppPasswordCreateMutation,
+} from '#/state/queries/app-passwords'
 
 export const snapPoints = ['70%']
 
@@ -56,9 +59,10 @@ const shadesOfBlue: string[] = [
 
 export function Component({}: {}) {
   const pal = usePalette('default')
-  const store = useStores()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
+  const {data: passwords} = useAppPasswordsQuery()
+  const createMutation = useAppPasswordCreateMutation()
   const [name, setName] = useState(
     shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
   )
@@ -82,25 +86,34 @@ export function Component({}: {}) {
     if (!name || !name.trim()) {
       Toast.show(
         'Please enter a name for your app password. All spaces is not allowed.',
+        'times',
       )
       return
     }
     // if name is too short (under 4 chars), we don't allow it
     if (name.length < 4) {
-      Toast.show('App Password names must be at least 4 characters long.')
+      Toast.show(
+        'App Password names must be at least 4 characters long.',
+        'times',
+      )
+      return
+    }
+
+    if (passwords?.find(p => p.name === name)) {
+      Toast.show('This name is already in use', 'times')
       return
     }
 
     try {
-      const newPassword = await store.me.createAppPassword(name)
+      const newPassword = await createMutation.mutateAsync({name})
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
-        Toast.show('Failed to create app password.')
+        Toast.show('Failed to create app password.', 'times')
         // TODO: better error handling (?)
       }
     } catch (e) {
-      Toast.show('Failed to create app password.')
+      Toast.show('Failed to create app password.', 'times')
       logger.error('Failed to create app password', {error: e})
     }
   }

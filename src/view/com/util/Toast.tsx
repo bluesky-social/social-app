@@ -1,6 +1,7 @@
 import RootSiblings from 'react-native-root-siblings'
 import React from 'react'
 import {Animated, StyleSheet, View} from 'react-native'
+import {Props as FontAwesomeProps} from '@fortawesome/react-native-fontawesome'
 import {Text} from './text/Text'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
@@ -9,7 +10,10 @@ import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 const TIMEOUT = 4e3
 
-export function show(message: string) {
+export function show(
+  message: string,
+  _icon: FontAwesomeProps['icon'] = 'check',
+) {
   const item = new RootSiblings(<Toast message={message} />)
   setTimeout(() => {
     item.destroy()
