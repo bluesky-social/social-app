@@ -85,7 +85,13 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
       uiDispatch({type: 'next'})
     } else {
       try {
-        await submit({onboardingDispatch, createAccount, uiState, uiDispatch})
+        await submit({
+          onboardingDispatch,
+          createAccount,
+          uiState,
+          uiDispatch,
+          _,
+        })
         track('Create Account')
         setBirthDate({birthDate: uiState.birthDate})
         if (IS_PROD(uiState.serviceUrl)) {
@@ -105,6 +111,7 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
     createAccount,
     setBirthDate,
     setSavedFeeds,
+    _,
   ])
 
   // rendering
