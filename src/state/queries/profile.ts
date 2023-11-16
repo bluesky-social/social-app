@@ -13,14 +13,18 @@ import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 
 export const RQKEY = (did: string) => ['profile', did]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
-  const {agent} = useSession()
+  const {agent: currentAgent, currentAccount} = useSession()
   return useQuery({
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
+      // If we have a session, use that agent, otherwise use the public API
+      const agent =
+        did === currentAccount?.did ? currentAgent : PUBLIC_BSKY_AGENT
       const res = await agent.getProfile({actor: did || ''})
       return res.data
     },
