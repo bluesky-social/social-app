@@ -48,7 +48,7 @@ export const BottomBar = observer(function BottomBarImpl({
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const {footerMinimalShellTransform} = useMinimalShellMode()
-  const {data: profile} = useProfileQuery({did: currentAccount!.did})
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
