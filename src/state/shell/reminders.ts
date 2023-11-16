@@ -1,14 +1,24 @@
 import * as persisted from '#/state/persisted'
-import {SessionModel} from '../models/session'
 import {toHashCode} from 'lib/strings/helpers'
 import {isOnboardingActive} from './onboarding'
+import {SessionAccount} from '../session'
+import {listenSessionLoaded} from '../events'
+import {unstable__openModal} from '../modals'
 
-export function shouldRequestEmailConfirmation(session: SessionModel) {
-  const sess = session.currentSession
-  if (!sess) {
+export function init() {
+  listenSessionLoaded(account => {
+    if (shouldRequestEmailConfirmation(account)) {
+      unstable__openModal({name: 'verify-email', showReminder: true})
+      setEmailConfirmationRequested()
+    }
+  })
+}
+
+export function shouldRequestEmailConfirmation(account: SessionAccount) {
+  if (!account) {
     return false
   }
-  if (sess.emailConfirmed) {
+  if (account.emailConfirmed) {
     return false
   }
   if (isOnboardingActive()) {
@@ -22,7 +32,7 @@ export function shouldRequestEmailConfirmation(session: SessionModel) {
   // shard the users into 2 day of the week buckets
   // (this is to avoid a sudden influx of email updates when
   // this feature rolls out)
-  const code = toHashCode(sess.did) % 7
+  const code = toHashCode(account.did) % 7
   if (code !== today.getDay() && code !== (today.getDay() + 1) % 7) {
     return false
   }

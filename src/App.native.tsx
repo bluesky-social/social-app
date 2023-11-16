@@ -11,6 +11,8 @@ import {QueryClientProvider} from '@tanstack/react-query'
 import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
+import {init as initReminders} from '#/state/shell/reminders'
+import {listenSessionDropped} from './state/events'
 import {useColorMode} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
@@ -53,15 +55,17 @@ const InnerApp = observer(function AppImpl() {
   useEffect(() => {
     setupState().then(store => {
       setRootStore(store)
-      analytics.init(store)
-      notifications.init(store, queryClient)
-      store.onSessionDropped(() => {
-        Toast.show('Sorry! Your session expired. Please log in again.')
-      })
     })
   }, [])
 
   useEffect(() => {
+    initReminders()
+    analytics.init()
+    notifications.init(queryClient)
+    listenSessionDropped(() => {
+      Toast.show('Sorry! Your session expired. Please log in again.')
+    })
+
     const account = persisted.get('session').currentAccount
     resumeSession(account)
   }, [resumeSession])

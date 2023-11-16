@@ -42,8 +42,8 @@ import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {SearchResultCard} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {useStores} from '#/state'
 import {isWeb} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
 
 function Loader() {
   const pal = usePalette('default')
@@ -421,7 +421,6 @@ export function SearchScreenMobile(
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const store = useStores()
   const {isTablet} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
@@ -490,14 +489,9 @@ export function SearchScreenMobile(
 
   useFocusEffect(
     React.useCallback(() => {
-      const softResetSub = store.onScreenSoftReset(onSoftReset)
-
       setMinimalShellMode(false)
-
-      return () => {
-        softResetSub.remove()
-      }
-    }, [store, onSoftReset, setMinimalShellMode]),
+      return listenSoftReset(onSoftReset)
+    }, [onSoftReset, setMinimalShellMode]),
   )
 
   return (

@@ -14,7 +14,6 @@ import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
 import React from 'react'
 import {FlatList, View, useWindowDimensions} from 'react-native'
-import {useStores} from 'state/index'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
@@ -23,6 +22,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {listenSoftReset, emitSoftReset} from '#/state/events'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -41,7 +41,6 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
 }) {
-  const store = useStores()
   const {isSandbox} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -73,12 +72,9 @@ export function FeedPage({
     if (!isPageFocused || !isScreenFocused) {
       return
     }
-    const softResetSub = store.onScreenSoftReset(onSoftReset)
     screen('Feed')
-    return () => {
-      softResetSub.remove()
-    }
-  }, [store, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
+    return listenSoftReset(onSoftReset)
+  }, [onSoftReset, screen, isPageFocused, isScreenFocused])
 
   const onPressCompose = React.useCallback(() => {
     track('HomeScreen:PressCompose')
@@ -125,7 +121,7 @@ export function FeedPage({
                 )}
               </>
             }
-            onPress={() => store.emitScreenSoftReset()}
+            onPress={emitSoftReset}
           />
           <TextLink
             type="title-lg"
@@ -144,16 +140,7 @@ export function FeedPage({
       )
     }
     return <></>
-  }, [
-    isDesktop,
-    pal.view,
-    pal.text,
-    pal.textLight,
-    store,
-    hasNew,
-    _,
-    isSandbox,
-  ])
+  }, [isDesktop, pal.view, pal.text, pal.textLight, hasNew, _, isSandbox])
 
   return (
     <View testID={testID} style={s.h100pct}>

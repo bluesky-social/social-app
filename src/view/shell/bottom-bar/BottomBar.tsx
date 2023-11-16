@@ -29,6 +29,7 @@ import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {emitSoftReset} from '#/state/events'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -53,14 +54,14 @@ export const BottomBar = observer(function BottomBarImpl({
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
-        store.emitScreenSoftReset()
+        emitSoftReset()
       } else if (tabState === TabState.Inside) {
         navigation.dispatch(StackActions.popToTop())
       } else {
         navigation.navigate(`${tab}Tab`)
       }
     },
-    [store, track, navigation],
+    [track, navigation],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(

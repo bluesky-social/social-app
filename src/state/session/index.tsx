@@ -1,5 +1,4 @@
 import React from 'react'
-import {DeviceEventEmitter} from 'react-native'
 import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -7,6 +6,7 @@ import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {IS_PROD} from '#/lib/constants'
+import {emitSessionLoaded, emitSessionDropped} from '../events'
 
 export type SessionAccount = persisted.PersistedAccount
 
@@ -98,7 +98,9 @@ function createPersistSessionHandler(
       logger.DebugContext.session,
     )
 
-    if (expired) DeviceEventEmitter.emit('session-dropped')
+    if (expired) {
+      emitSessionDropped()
+    }
 
     persistSessionCallback({
       expired,
@@ -180,6 +182,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({...s, agent}))
       upsertAccount(account)
+      emitSessionLoaded(account, agent)
 
       logger.debug(
         `session: created account`,
@@ -230,6 +233,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({...s, agent}))
       upsertAccount(account)
+      emitSessionLoaded(account, agent)
 
       logger.debug(
         `session: logged in`,
@@ -291,6 +295,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({...s, agent}))
       upsertAccount(account)
+      emitSessionLoaded(account, agent)
     },
     [upsertAccount],
   )
