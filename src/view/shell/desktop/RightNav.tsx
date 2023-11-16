@@ -9,12 +9,12 @@ import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {useInviteCodesQuery} from '#/state/queries/invites'
 
 export const DesktopRightNav = observer(function DesktopRightNavImpl() {
   const pal = usePalette('default')
@@ -83,11 +83,10 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
 })
 
 const InviteCodes = observer(function InviteCodesImpl() {
-  const store = useStores()
   const pal = usePalette('default')
   const {openModal} = useModalControls()
-
-  const {invitesAvailable} = store.me
+  const {data: invites} = useInviteCodesQuery()
+  const invitesAvailable = invites?.available?.length ?? 0
 
   const onPress = React.useCallback(() => {
     openModal({name: 'invite-codes'})
@@ -107,15 +106,15 @@ const InviteCodes = observer(function InviteCodesImpl() {
         icon="ticket"
         style={[
           styles.inviteCodesIcon,
-          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
+          invitesAvailable > 0 ? pal.link : pal.textLight,
         ]}
         size={16}
       />
       <Text
         type="md-medium"
-        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {formatCount(store.me.invitesAvailable)} invite{' '}
-        {pluralize(store.me.invitesAvailable, 'code')} available
+        style={invitesAvailable > 0 ? pal.link : pal.textLight}>
+        {formatCount(invitesAvailable)} invite{' '}
+        {pluralize(invitesAvailable, 'code')} available
       </Text>
     </TouchableOpacity>
   )

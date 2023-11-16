@@ -17,7 +17,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {s, colors} from 'lib/styles'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {useStores} from 'state/index'
 import {
   HomeIcon,
   HomeIconSolid,
@@ -51,6 +50,7 @@ import {useSession, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
+import {useInviteCodesQuery} from '#/state/queries/invites'
 
 export function DrawerProfileCard({
   account,
@@ -464,10 +464,10 @@ const InviteCodes = observer(function InviteCodesImpl({
   style?: StyleProp<ViewStyle>
 }) {
   const {track} = useAnalytics()
-  const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
   const pal = usePalette('default')
-  const {invitesAvailable} = store.me
+  const {data: invites} = useInviteCodesQuery()
+  const invitesAvailable = invites?.available?.length ?? 0
   const {openModal} = useModalControls()
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
@@ -490,15 +490,15 @@ const InviteCodes = observer(function InviteCodesImpl({
         icon="ticket"
         style={[
           styles.inviteCodesIcon,
-          store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
+          invitesAvailable > 0 ? pal.link : pal.textLight,
         ]}
         size={18}
       />
       <Text
         type="lg-medium"
-        style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {formatCount(store.me.invitesAvailable)} invite{' '}
-        {pluralize(store.me.invitesAvailable, 'code')}
+        style={invitesAvailable > 0 ? pal.link : pal.textLight}>
+        {formatCount(invitesAvailable)} invite{' '}
+        {pluralize(invitesAvailable, 'code')}
       </Text>
     </TouchableOpacity>
   )
