@@ -77,12 +77,7 @@ export function Inner({
   const [handle, setHandle] = React.useState<string>('')
   const [canSave, setCanSave] = React.useState<boolean>(false)
 
-  // TODO refactor verify logic
   const userDomain = serviceInfo.availableUserDomains?.[0]
-    ? serviceInfo.availableUserDomains[0].includes('bsky.network')
-      ? 'bsky.social'
-      : serviceInfo.availableUserDomains[0]
-    : 'bsky.social'
 
   // events
   // =
