@@ -1,4 +1,5 @@
 import {unstable__closeModal} from './modals'
+import {unstable__closeLightbox} from './lightbox'
 import {unstable__closeComposer} from './shell/composer'
 import {unstable__closeDrawer} from './shell/drawer-open'
 
