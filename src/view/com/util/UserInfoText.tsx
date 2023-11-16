@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
-import {useStores} from 'state/index'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {useProfileQuery} from '#/state/queries/profile'
 
 export function UserInfoText({
   type = 'md',
@@ -29,35 +29,10 @@ export function UserInfoText({
   attr = attr || 'handle'
   failed = failed || 'user'
 
-  const store = useStores()
-  const [profile, setProfile] = useState<undefined | GetProfile.OutputSchema>(
-    undefined,
-  )
-  const [didFail, setFailed] = useState<boolean>(false)
-
-  useEffect(() => {
-    let aborted = false
-    store.profiles.getProfile(did).then(
-      v => {
-        if (aborted) {
-          return
-        }
-        setProfile(v.data)
-      },
-      _err => {
-        if (aborted) {
-          return
-        }
-        setFailed(true)
-      },
-    )
-    return () => {
-      aborted = true
-    }
-  }, [did, store.profiles])
+  const {data: profile, isError} = useProfileQuery({did})
 
   let inner
-  if (didFail) {
+  if (isError) {
     inner = (
       <Text type={type} style={style} numberOfLines={1}>
         {failed}
