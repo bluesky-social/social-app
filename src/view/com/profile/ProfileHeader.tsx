@@ -32,8 +32,6 @@ import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
-  useProfileFollowMutation,
-  useProfileUnfollowMutation,
   useProfileMuteMutation,
   useProfileUnmuteMutation,
   useProfileBlockMutation,
@@ -131,8 +129,7 @@ function ProfileHeaderLoaded({
         : undefined,
     [profile],
   )
-  const followMutation = useProfileFollowMutation()
-  const unfollowMutation = useProfileUnfollowMutation()
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const muteMutation = useProfileMuteMutation()
   const unmuteMutation = useProfileUnmuteMutation()
   const blockMutation = useProfileBlockMutation()
@@ -154,8 +151,6 @@ function ProfileHeaderLoaded({
       openLightbox(new ProfileImageLightbox(profile))
     }
   }, [openLightbox, profile, moderation])
-
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
   const onPressFollow = async () => {
     try {

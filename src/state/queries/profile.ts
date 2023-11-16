@@ -106,44 +106,51 @@ export function useProfileFollowMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   const did = profile.did
-  const followingUri = profile.viewer?.following
+  const initialFollowingUri = profile.viewer?.following
   const followMutation = useProfileFollowMutation()
   const unfollowMutation = useProfileUnfollowMutation()
 
   const queueToggle = useToggleMutationQueue({
-    initialState: {followingUri},
-    runMutation: async (prevState, isOn) => {
-      if (isOn) {
+    initialState: initialFollowingUri,
+    runMutation: async (prevFollowingUri, shouldFollow) => {
+      if (shouldFollow) {
         const {uri} = await followMutation.mutateAsync({
           did,
           skipOptimistic: true,
         })
-        const nextState = {followingUri: uri}
-        return nextState
+        return uri
       } else {
-        if (prevState.followingUri) {
+        if (prevFollowingUri) {
           await unfollowMutation.mutateAsync({
             did,
-            followUri: prevState.followingUri,
+            followUri: prevFollowingUri,
             skipOptimistic: true,
           })
         }
-        const nextState = {followingUri: undefined}
-        return nextState
+        return undefined
       }
     },
-    onSuccess(finalState) {
-      updateProfileShadow(did, finalState)
+    onSuccess(finalFollowingUri) {
+      // finalize
+      updateProfileShadow(did, {
+        followingUri: finalFollowingUri,
+      })
     },
   })
 
   const queueFollow = useCallback(() => {
-    updateProfileShadow(did, {followingUri: 'pending'})
+    // optimistically update
+    updateProfileShadow(did, {
+      followingUri: 'pending',
+    })
     return queueToggle(true)
   }, [did, queueToggle])
 
   const queueUnfollow = useCallback(() => {
-    updateProfileShadow(did, {followingUri: undefined})
+    // optimistically update
+    updateProfileShadow(did, {
+      followingUri: undefined,
+    })
     return queueToggle(false)
   }, [did, queueToggle])
 
@@ -158,31 +165,25 @@ export function useProfileFollowMutation() {
     {did: string; skipOptimistic?: boolean}
   >({
     mutationFn: async ({did}) => {
-      await new Promise((resolve, reject) =>
-        setTimeout(() => resolve('foo'), 3000),
-      )
       return await agent.follow(did)
     },
     onMutate(variables) {
-      console.log('follow:mutate')
       if (!variables.skipOptimistic) {
-        // optimstically update
+        // optimistically update
         updateProfileShadow(variables.did, {
           followingUri: 'pending',
         })
       }
     },
     onSuccess(data, variables) {
-      console.log('follow:success')
-      // finalize
       if (!variables.skipOptimistic) {
+        // finalize
         updateProfileShadow(variables.did, {
           followingUri: data.uri,
         })
       }
     },
     onError(error, variables) {
-      console.log('follow:error')
       if (!variables.skipOptimistic) {
         // revert the optimistic update
         updateProfileShadow(variables.did, {
@@ -201,23 +202,17 @@ export function useProfileUnfollowMutation() {
     {did: string; followUri: string; skipOptimistic?: boolean}
   >({
     mutationFn: async ({followUri}) => {
-      await new Promise(resolve => setTimeout(resolve, 3000))
       return await agent.deleteFollow(followUri)
     },
     onMutate(variables) {
-      console.log('unfollow:mutate')
-      // optimstically update
       if (!variables.skipOptimistic) {
+        // optimistically update
         updateProfileShadow(variables.did, {
           followingUri: undefined,
         })
       }
     },
-    onSuccess() {
-      console.log('unfollow:success')
-    },
     onError(error, variables) {
-      console.log('unfollow:error')
       if (!variables.skipOptimistic) {
         // revert the optimistic update
         updateProfileShadow(variables.did, {
