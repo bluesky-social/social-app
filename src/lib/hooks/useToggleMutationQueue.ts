@@ -11,6 +11,12 @@ type TaskQueue<TServerState> = {
   queuedTask: Task<TServerState> | null
 }
 
+function AbortError() {
+  const e = new Error()
+  e.name = 'AbortError'
+  return e
+}
+
 export function useToggleMutationQueue<TServerState>({
   initialState,
   runMutation,
@@ -47,6 +53,7 @@ export function useToggleMutationQueue<TServerState>({
         queue.queuedTask = null
         if (prevTask?.isOn === nextTask.isOn) {
           // Skip multiple requests to update to the same value in a row.
+          prevTask.reject(new (AbortError as any)())
           continue
         }
         try {
@@ -68,6 +75,9 @@ export function useToggleMutationQueue<TServerState>({
   function queueToggle(isOn: boolean): Promise<TServerState> {
     return new Promise((resolve, reject) => {
       // This is a toggle, so the next queued value can safely replace the queued one.
+      if (queue.queuedTask) {
+        queue.queuedTask.reject(new (AbortError as any)())
+      }
       queue.queuedTask = {isOn, resolve, reject}
       processQueue()
     })

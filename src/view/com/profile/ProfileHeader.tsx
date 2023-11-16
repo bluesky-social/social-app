@@ -158,8 +158,10 @@ function ProfileHeaderLoaded({
         )}`,
       )
     } catch (e: any) {
-      logger.error('Failed to follow', {error: String(e)})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to follow', {error: String(e)})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
   }
 
@@ -173,8 +175,10 @@ function ProfileHeaderLoaded({
         )}`,
       )
     } catch (e: any) {
-      logger.error('Failed to unfollow', {error: String(e)})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unfollow', {error: String(e)})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
   }
 
@@ -206,8 +210,10 @@ function ProfileHeaderLoaded({
       await queueMute()
       Toast.show('Account muted')
     } catch (e: any) {
-      logger.error('Failed to mute account', {error: e})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to mute account', {error: e})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
   }, [track, queueMute])
 
@@ -217,8 +223,10 @@ function ProfileHeaderLoaded({
       await queueUnmute()
       Toast.show('Account unmuted')
     } catch (e: any) {
-      logger.error('Failed to unmute account', {error: e})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unmute account', {error: e})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
   }, [track, queueUnmute])
 
@@ -234,8 +242,10 @@ function ProfileHeaderLoaded({
           await queueBlock()
           Toast.show('Account blocked')
         } catch (e: any) {
-          logger.error('Failed to block account', {error: e})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          if (e?.name !== 'AbortError') {
+            logger.error('Failed to block account', {error: e})
+            Toast.show(`There was an issue! ${e.toString()}`)
+          }
         }
       },
     })
@@ -253,8 +263,10 @@ function ProfileHeaderLoaded({
           await queueUnblock()
           Toast.show('Account unblocked')
         } catch (e: any) {
-          logger.error('Failed to unblock account', {error: e})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          if (e?.name !== 'AbortError') {
+            logger.error('Failed to unblock account', {error: e})
+            Toast.show(`There was an issue! ${e.toString()}`)
+          }
         }
       },
     })

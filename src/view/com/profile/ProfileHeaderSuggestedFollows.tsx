@@ -212,7 +212,9 @@ function SuggestedFollow({
       track('ProfileHeader:SuggestedFollowFollowed')
       await queueFollow()
     } catch (e: any) {
-      Toast.show('An issue occurred, please try again.')
+      if (e?.name !== 'AbortError') {
+        Toast.show('An issue occurred, please try again.')
+      }
     }
   }, [queueFollow, track])
 
@@ -220,7 +222,9 @@ function SuggestedFollow({
     try {
       await queueUnfollow()
     } catch (e: any) {
-      Toast.show('An issue occurred, please try again.')
+      if (e?.name !== 'AbortError') {
+        Toast.show('An issue occurred, please try again.')
+      }
     }
   }, [queueUnfollow])
 

@@ -87,8 +87,12 @@ export function ProfileCard({
         setAddingMoreSuggestions(false)
         track('Onboarding:SuggestedFollowFollowed')
       }
-    } catch (e) {
-      logger.error('RecommendedFollows: failed to toggle following', {error: e})
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('RecommendedFollows: failed to toggle following', {
+          error: e,
+        })
+      }
     } finally {
       setAddingMoreSuggestions(false)
     }
