@@ -11,6 +11,7 @@ import {useSession} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
+import {Shadow} from '#/state/cache/types'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 
@@ -101,7 +102,9 @@ export function useProfileUpdateMutation() {
 
 import {useState} from 'react'
 
-export function useProfileFollowMutationQueue(profile) {
+export function useProfileFollowMutationQueue(
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+) {
   const did = profile.did
   const followingUri = profile.viewer?.following
   const followMutation = useProfileFollowMutation()
@@ -118,11 +121,13 @@ export function useProfileFollowMutationQueue(profile) {
         const nextState = {followingUri: uri}
         return nextState
       } else {
-        await unfollowMutation.mutateAsync({
-          did,
-          followUri: prevState.followingUri,
-          skipOptimistic: true,
-        })
+        if (prevState.followingUri) {
+          await unfollowMutation.mutateAsync({
+            did,
+            followUri: prevState.followingUri,
+            skipOptimistic: true,
+          })
+        }
         const nextState = {followingUri: undefined}
         return nextState
       }
@@ -145,13 +150,33 @@ export function useProfileFollowMutationQueue(profile) {
   return [queueFollow, queueUnfollow]
 }
 
-function useToggleMutationQueue({initialState, runMutation, onSuccess}) {
-  const [queue] = useState({
+type Task<TServerState> = {
+  isOn: boolean
+  resolve: (serverState: TServerState) => void
+  reject: (e: unknown) => void
+}
+
+function useToggleMutationQueue<TServerState>({
+  initialState,
+  runMutation,
+  onSuccess,
+}: {
+  initialState: TServerState
+  runMutation: (
+    prevState: TServerState,
+    nextIsOn: boolean,
+  ) => Promise<TServerState>
+  onSuccess: (finalState: TServerState) => void
+}) {
+  const [queue] = useState<{
+    activeTask: Task<TServerState> | null
+    queuedTask: Task<TServerState> | null
+  }>({
     activeTask: null,
     queuedTask: null,
   })
 
-  function queueToggle(isOn) {
+  function queueToggle(isOn: boolean): Promise<TServerState> {
     return new Promise((resolve, reject) => {
       queue.queuedTask = {isOn, resolve, reject}
       processQueue()
@@ -162,7 +187,7 @@ function useToggleMutationQueue({initialState, runMutation, onSuccess}) {
     if (queue.activeTask) {
       return
     }
-    let confirmedState = initialState
+    let confirmedState: TServerState = initialState
     try {
       while (queue.queuedTask) {
         const prevTask = queue.activeTask
