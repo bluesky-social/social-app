@@ -33,7 +33,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useSession} from '#/state/session'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
@@ -298,8 +297,6 @@ function SearchScreenUserResults({query}: {query: string}) {
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
   const search = useActorAutocompleteFn()
-  // fuzzy search relies on followers
-  const {isFetched: isFollowsFetched} = useMyFollowsQuery()
 
   React.useEffect(() => {
     async function getResults() {
@@ -312,13 +309,13 @@ function SearchScreenUserResults({query}: {query: string}) {
       }
     }
 
-    if (query && isFollowsFetched) {
+    if (query) {
       getResults()
     } else {
       setResults([])
       setIsFetched(false)
     }
-  }, [query, isFollowsFetched, setDataUpdatedAt, search])
+  }, [query, setDataUpdatedAt, search])
 
   return isFetched ? (
     <>
@@ -413,7 +410,7 @@ export function SearchScreenDesktop(
 }
 
 export function SearchScreenMobile(
-  _props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
+  props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
@@ -431,7 +428,7 @@ export function SearchScreenMobile(
     undefined,
   )
   const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
+  const [query, setQuery] = React.useState<string>(props.route?.params?.q || '')
   const [searchResults, setSearchResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
