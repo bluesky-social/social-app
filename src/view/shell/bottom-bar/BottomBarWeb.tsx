@@ -1,6 +1,5 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNavigationState} from '@react-navigation/native'
 import Animated from 'react-native-reanimated'
@@ -23,9 +22,10 @@ import {Link} from 'view/com/util/Link'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
+import {useSession} from '#/state/session'
 
 export const BottomBarWeb = observer(function BottomBarWebImpl() {
-  const store = useStores()
+  const {currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {footerMinimalShellTransform} = useMinimalShellMode()
@@ -88,7 +88,16 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
           )
         }}
       </NavItem>
-      <NavItem routeName="Profile" href={makeProfileLink(store.me)}>
+      <NavItem
+        routeName="Profile"
+        href={
+          currentAccount
+            ? makeProfileLink({
+                did: currentAccount.did,
+                handle: currentAccount.handle,
+              })
+            : '/'
+        }>
         {({isActive}) => {
           const Icon = isActive ? UserIconSolid : UserIcon
           return (
@@ -109,18 +118,18 @@ const NavItem: React.FC<{
   href: string
   routeName: string
 }> = ({children, href, routeName}) => {
+  const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
     }
     return getCurrentRoute(state)
   })
-  const store = useStores()
   const isActive =
     currentRoute.name === 'Profile'
       ? isTab(currentRoute.name, routeName) &&
         (currentRoute.params as CommonNavigatorParams['Profile']).name ===
-          store.me.handle
+          currentAccount?.handle
       : isTab(currentRoute.name, routeName)
 
   return (
