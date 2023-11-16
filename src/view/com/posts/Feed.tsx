@@ -24,6 +24,7 @@ import {
   FeedParams,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
+import {useModerationOpts} from '#/state/queries/preferences'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -71,6 +72,7 @@ export function Feed({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
 
+  const moderationOpts = useModerationOpts()
   const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
@@ -115,7 +117,7 @@ export function Feed({
 
   const feedItems = React.useMemo(() => {
     let arr: any[] = []
-    if (isFetched) {
+    if (isFetched && moderationOpts) {
       if (isError && isEmpty) {
         arr = arr.concat([ERROR_ITEM])
       }
@@ -133,7 +135,7 @@ export function Feed({
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [isFetched, isError, isEmpty, data, moderationOpts])
 
   // events
   // =
@@ -195,7 +197,14 @@ export function Feed({
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
-      return <FeedSlice slice={item} dataUpdatedAt={dataUpdatedAt} />
+      return (
+        <FeedSlice
+          slice={item}
+          dataUpdatedAt={dataUpdatedAt}
+          // we check for this before creating the feedItems array
+          moderationOpts={moderationOpts!}
+        />
+      )
     },
     [
       feed,
@@ -204,6 +213,7 @@ export function Feed({
       onPressTryAgain,
       onPressRetryLoadMore,
       renderEmptyState,
+      moderationOpts,
     ],
   )
 
