@@ -139,6 +139,21 @@ export function Feed({
     [onPressRetryLoadMore, dataUpdatedAt, moderationOpts],
   )
 
+  const showHeaderSpinner = !isPTRing && isFetching
+  const FeedHeader = React.useCallback(
+    () => (
+      <View>
+        {showHeaderSpinner ? (
+          <View style={{padding: 10}}>
+            <ActivityIndicator />
+          </View>
+        ) : null}
+        {ListHeaderComponent ? <ListHeaderComponent /> : null}
+      </View>
+    ),
+    [ListHeaderComponent, showHeaderSpinner],
+  )
+
   const FeedFooter = React.useCallback(
     () =>
       isFetchingNextPage ? (
@@ -168,7 +183,7 @@ export function Feed({
         data={items}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
-        ListHeaderComponent={ListHeaderComponent}
+        ListHeaderComponent={FeedHeader}
         ListFooterComponent={FeedFooter}
         refreshControl={
           <RefreshControl
