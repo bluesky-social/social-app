@@ -37,13 +37,6 @@ const LightboxControlContext = React.createContext<{
   closeLightbox: () => {},
 })
 
-/**
- * @deprecated DO NOT USE THIS unless you have no other choice.
- */
-export let unstable__openLightbox: (lightbox: Lightbox) => void = () => {
-  throw new Error(`LightboxContext is not initialized`)
-}
-
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeLightbox, setActiveLightbox] = React.useState<Lightbox | null>(
     null,
@@ -55,8 +48,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [setActiveLightbox],
   )
-
-  unstable__openLightbox = openLightbox
 
   const closeLightbox = React.useCallback(() => {
     setActiveLightbox(null)
