@@ -31,7 +31,6 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -196,41 +195,31 @@ export const BottomBar = observer(function BottomBarImpl({
         testID="bottomBarProfileBtn"
         icon={
           <View style={styles.ctrlIconSizingWrapper}>
-            {profile ? (
-              <>
-                {isAtMyProfile ? (
-                  <View
-                    style={[
-                      styles.ctrlIcon,
-                      pal.text,
-                      styles.profileIcon,
-                      styles.onProfile,
-                      {borderColor: pal.text.color},
-                    ]}>
-                    <UserAvatar
-                      avatar={profile.avatar}
-                      size={27}
-                      // See https://github.com/bluesky-social/social-app/pull/1801:
-                      usePlainRNImage={true}
-                    />
-                  </View>
-                ) : (
-                  <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                    <UserAvatar
-                      avatar={profile.avatar}
-                      size={28}
-                      // See https://github.com/bluesky-social/social-app/pull/1801:
-                      usePlainRNImage={true}
-                    />
-                  </View>
-                )}
-              </>
+            {isAtMyProfile ? (
+              <View
+                style={[
+                  styles.ctrlIcon,
+                  pal.text,
+                  styles.profileIcon,
+                  styles.onProfile,
+                  {borderColor: pal.text.color},
+                ]}>
+                <UserAvatar
+                  avatar={profile?.avatar}
+                  size={27}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
+                  usePlainRNImage={true}
+                />
+              </View>
             ) : (
-              <LoadingPlaceholder
-                width={27}
-                height={27}
-                style={[{borderRadius: 27}, styles.ctrlIcon]}
-              />
+              <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                <UserAvatar
+                  avatar={profile?.avatar}
+                  size={28}
+                  // See https://github.com/bluesky-social/social-app/pull/1801:
+                  usePlainRNImage={true}
+                />
+              </View>
             )}
           </View>
         }
