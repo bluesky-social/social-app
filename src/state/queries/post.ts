@@ -4,8 +4,6 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {useSession} from '../session'
 import {updatePostShadow} from '../cache/post-shadow'
 
-import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-
 export const RQKEY = (postUri: string) => ['post', postUri]
 
 export function usePostQuery(uri: string | undefined) {
@@ -26,6 +24,7 @@ export function usePostQuery(uri: string | undefined) {
 
 export function useGetPost() {
   const queryClient = useQueryClient()
+  const {agent} = useSession()
   return React.useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
@@ -34,13 +33,13 @@ export function useGetPost() {
           const urip = new AtUri(uri)
 
           if (!urip.host.startsWith('did:')) {
-            const res = await PUBLIC_BSKY_AGENT.resolveHandle({
+            const res = await agent.resolveHandle({
               handle: urip.host,
             })
             urip.host = res.data.did
           }
 
-          const res = await PUBLIC_BSKY_AGENT.getPosts({
+          const res = await agent.getPosts({
             uris: [urip.toString()!],
           })
 
@@ -52,7 +51,7 @@ export function useGetPost() {
         },
       })
     },
-    [queryClient],
+    [agent, queryClient],
   )
 }
 
