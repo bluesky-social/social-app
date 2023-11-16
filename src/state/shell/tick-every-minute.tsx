@@ -11,7 +11,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setTick(Date.now())
     }, 60_000)
     return () => clearInterval(i)
-  })
+  }, [])
   return <stateContext.Provider value={tick}>{children}</stateContext.Provider>
 }
 
