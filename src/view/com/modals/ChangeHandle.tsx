@@ -182,7 +182,7 @@ export function Inner({
           </View>
         )}
 
-        {isCustom && currentAccount ? (
+        {isCustom ? (
           <CustomHandleForm
             currentAccount={currentAccount}
             handle={handle}
