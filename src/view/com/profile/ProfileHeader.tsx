@@ -32,8 +32,7 @@ import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
-  useProfileMuteMutation,
-  useProfileUnmuteMutation,
+  useProfileMuteMutationQueue,
   useProfileBlockMutation,
   useProfileUnblockMutation,
   useProfileFollowMutationQueue,
@@ -130,8 +129,7 @@ function ProfileHeaderLoaded({
     [profile],
   )
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
-  const muteMutation = useProfileMuteMutation()
-  const unmuteMutation = useProfileUnmuteMutation()
+  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const blockMutation = useProfileBlockMutation()
   const unblockMutation = useProfileUnblockMutation()
 
@@ -207,24 +205,24 @@ function ProfileHeaderLoaded({
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
-      await muteMutation.mutateAsync({did: profile.did})
+      await queueMute()
       Toast.show('Account muted')
     } catch (e: any) {
       logger.error('Failed to mute account', {error: e})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [track, muteMutation, profile])
+  }, [track, queueMute])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
-      await unmuteMutation.mutateAsync({did: profile.did})
+      await queueUnmute()
       Toast.show('Account unmuted')
     } catch (e: any) {
       logger.error('Failed to unmute account', {error: e})
       Toast.show(`There was an issue! ${e.toString()}`)
     }
-  }, [track, unmuteMutation, profile])
+  }, [track, queueUnmute])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')

@@ -223,48 +223,106 @@ export function useProfileUnfollowMutation() {
   })
 }
 
+export function useProfileMuteMutationQueue(
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+) {
+  const did = profile.did
+  const initialMuted = profile.viewer?.muted
+  const muteMutation = useProfileMuteMutation()
+  const unmuteMutation = useProfileUnmuteMutation()
+
+  const queueToggle = useToggleMutationQueue({
+    initialState: initialMuted,
+    runMutation: async (_prevMuted, shouldMute) => {
+      if (shouldMute) {
+        await muteMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return true
+      } else {
+        await unmuteMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return false
+      }
+    },
+    onSuccess(finalMuted) {
+      // finalize
+      updateProfileShadow(did, {muted: finalMuted})
+    },
+  })
+
+  const queueMute = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      muted: true,
+    })
+    return queueToggle(true)
+  }, [did, queueToggle])
+
+  const queueUnmute = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      muted: false,
+    })
+    return queueToggle(false)
+  }, [did, queueToggle])
+
+  return [queueMute, queueUnmute]
+}
+
 export function useProfileMuteMutation() {
   const {agent} = useSession()
   const queryClient = useQueryClient()
-  return useMutation<void, Error, {did: string}>({
+  return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
       await agent.mute(did)
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        muted: true,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          muted: true,
+        })
+      }
     },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        muted: false,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          muted: false,
+        })
+      }
     },
   })
 }
 
 export function useProfileUnmuteMutation() {
   const {agent} = useSession()
-  return useMutation<void, Error, {did: string}>({
+  return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
       await agent.unmute(did)
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        muted: false,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          muted: false,
+        })
+      }
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        muted: true,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          muted: true,
+        })
+      }
     },
   })
 }
