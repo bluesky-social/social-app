@@ -1,15 +1,18 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from 'react-native-gesture-handler'
 import {Text} from '../com/util/text/Text'
 import {Button} from '../com/util/forms/Button'
 import * as Toast from '../com/util/Toast'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -21,16 +24,22 @@ import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs} from '#/state/preferences'
+import {
+  useAppPasswordsQuery,
+  useAppPasswordDeleteMutation,
+} from '#/state/queries/app-passwords'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {cleanError} from '#/lib/strings/errors'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export const AppPasswords = withAuthRequired(
-  observer(function AppPasswordsImpl({}: Props) {
+  function AppPasswordsImpl({}: Props) {
     const pal = usePalette('default')
-    const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {screen} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
     const {openModal} = useModalControls()
+    const {data: appPasswords, error} = useAppPasswordsQuery()
 
     useFocusEffect(
       React.useCallback(() => {
@@ -43,8 +52,27 @@ export const AppPasswords = withAuthRequired(
       openModal({name: 'add-app-password'})
     }, [openModal])
 
+    if (error) {
+      return (
+        <CenteredView
+          style={[
+            styles.container,
+            isTabletOrDesktop && styles.containerDesktop,
+            pal.view,
+            pal.border,
+          ]}
+          testID="appPasswordsScreen">
+          <ErrorScreen
+            title="Oops!"
+            message="There was an issue with fetching your app passwords"
+            details={cleanError(error)}
+          />
+        </CenteredView>
+      )
+    }
+
     // no app passwords (empty) state
-    if (store.me.appPasswords.length === 0) {
+    if (appPasswords?.length === 0) {
       return (
         <CenteredView
           style={[
@@ -82,33 +110,47 @@ export const AppPasswords = withAuthRequired(
       )
     }
 
-    // has app passwords
-    return (
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="appPasswordsScreen">
-        <AppPasswordsHeader />
-        <ScrollView
+    if (appPasswords?.length) {
+      // has app passwords
+      return (
+        <CenteredView
           style={[
-            styles.scrollContainer,
+            styles.container,
+            isTabletOrDesktop && styles.containerDesktop,
+            pal.view,
             pal.border,
-            !isTabletOrDesktop && styles.flex1,
-          ]}>
-          {store.me.appPasswords.map((password, i) => (
-            <AppPassword
-              key={password.name}
-              testID={`appPassword-${i}`}
-              name={password.name}
-              createdAt={password.createdAt}
-            />
-          ))}
-          {isTabletOrDesktop && (
-            <View style={[styles.btnContainer, styles.btnContainerDesktop]}>
+          ]}
+          testID="appPasswordsScreen">
+          <AppPasswordsHeader />
+          <ScrollView
+            style={[
+              styles.scrollContainer,
+              pal.border,
+              !isTabletOrDesktop && styles.flex1,
+            ]}>
+            {appPasswords.map((password, i) => (
+              <AppPassword
+                key={password.name}
+                testID={`appPassword-${i}`}
+                name={password.name}
+                createdAt={password.createdAt}
+              />
+            ))}
+            {isTabletOrDesktop && (
+              <View style={[styles.btnContainer, styles.btnContainerDesktop]}>
+                <Button
+                  testID="appPasswordBtn"
+                  type="primary"
+                  label="Add App Password"
+                  style={styles.btn}
+                  labelStyle={styles.btnLabel}
+                  onPress={onAdd}
+                />
+              </View>
+            )}
+          </ScrollView>
+          {!isTabletOrDesktop && (
+            <View style={styles.btnContainer}>
               <Button
                 testID="appPasswordBtn"
                 type="primary"
@@ -119,22 +161,23 @@ export const AppPasswords = withAuthRequired(
               />
             </View>
           )}
-        </ScrollView>
-        {!isTabletOrDesktop && (
-          <View style={styles.btnContainer}>
-            <Button
-              testID="appPasswordBtn"
-              type="primary"
-              label="Add App Password"
-              style={styles.btn}
-              labelStyle={styles.btnLabel}
-              onPress={onAdd}
-            />
-          </View>
-        )}
+        </CenteredView>
+      )
+    }
+
+    return (
+      <CenteredView
+        style={[
+          styles.container,
+          isTabletOrDesktop && styles.containerDesktop,
+          pal.view,
+          pal.border,
+        ]}
+        testID="appPasswordsScreen">
+        <ActivityIndicator />
       </CenteredView>
     )
-  }),
+  },
 )
 
 function AppPasswordsHeader() {
@@ -169,10 +212,10 @@ function AppPassword({
   createdAt: string
 }) {
   const pal = usePalette('default')
-  const store = useStores()
   const {_} = useLingui()
   const {openModal} = useModalControls()
   const {contentLanguages} = useLanguagePrefs()
+  const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
     openModal({
@@ -180,11 +223,11 @@ function AppPassword({
       title: 'Delete App Password',
       message: `Are you sure you want to delete the app password "${name}"?`,
       async onPressConfirm() {
-        await store.me.deleteAppPassword(name)
+        await deleteMutation.mutateAsync({name})
         Toast.show('App password deleted')
       },
     })
-  }, [store, openModal, name])
+  }, [deleteMutation, openModal, name])
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'

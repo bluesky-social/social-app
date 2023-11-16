@@ -1,5 +1,4 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {RootStoreModel} from './root-store'
 import {isObj, hasProp} from 'lib/type-guards'
 import {logger} from '#/logger'
@@ -14,7 +13,6 @@ export class MeModel {
   avatar: string = ''
   followsCount: number | undefined
   followersCount: number | undefined
-  appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
   lastProfileStateUpdate = Date.now()
 
   constructor(public rootStore: RootStoreModel) {
@@ -33,7 +31,6 @@ export class MeModel {
     this.displayName = ''
     this.description = ''
     this.avatar = ''
-    this.appPasswords = []
   }
 
   serialize(): unknown {
@@ -81,7 +78,6 @@ export class MeModel {
       this.did = sess.currentSession?.did || ''
       await this.fetchProfile()
       this.rootStore.emitSessionLoaded()
-      await this.fetchAppPasswords()
     } else {
       this.clear()
     }
@@ -92,7 +88,6 @@ export class MeModel {
       logger.debug('Updating me profile information')
       this.lastProfileStateUpdate = Date.now()
       await this.fetchProfile()
-      await this.fetchAppPasswords()
     }
   }
 
@@ -116,57 +111,5 @@ export class MeModel {
         this.followersCount = undefined
       }
     })
-  }
-
-  async fetchAppPasswords() {
-    if (this.rootStore.session) {
-      try {
-        const res =
-          await this.rootStore.agent.com.atproto.server.listAppPasswords({})
-        runInAction(() => {
-          this.appPasswords = res.data.passwords
-        })
-      } catch (e) {
-        logger.error('Failed to fetch user app passwords', {
-          error: e,
-        })
-      }
-    }
-  }
-
-  async createAppPassword(name: string) {
-    if (this.rootStore.session) {
-      try {
-        if (this.appPasswords.find(p => p.name === name)) {
-          // TODO: this should be handled by the backend but it's not
-          throw new Error('App password with this name already exists')
-        }
-        const res =
-          await this.rootStore.agent.com.atproto.server.createAppPassword({
-            name,
-          })
-        runInAction(() => {
-          this.appPasswords.push(res.data)
-        })
-        return res.data
-      } catch (e) {
-        logger.error('Failed to create app password', {error: e})
-      }
-    }
-  }
-
-  async deleteAppPassword(name: string) {
-    if (this.rootStore.session) {
-      try {
-        await this.rootStore.agent.com.atproto.server.revokeAppPassword({
-          name: name,
-        })
-        runInAction(() => {
-          this.appPasswords = this.appPasswords.filter(p => p.name !== name)
-        })
-      } catch (e) {
-        logger.error('Failed to delete app password', {error: e})
-      }
-    }
   }
 }
