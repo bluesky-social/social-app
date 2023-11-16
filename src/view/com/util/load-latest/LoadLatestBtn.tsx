@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -12,7 +11,7 @@ const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
 import {isWeb} from 'platform/detection'
 
-export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
+export function LoadLatestBtn({
   onPress,
   label,
   showIndicator,
@@ -44,7 +43,7 @@ export const LoadLatestBtn = observer(function LoadLatestBtnImpl({
       {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
     </AnimatedTouchableOpacity>
   )
-})
+}
 
 const styles = StyleSheet.create({
   loadLatest: {

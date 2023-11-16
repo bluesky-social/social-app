@@ -10,7 +10,6 @@ import {
   ViewStyle,
 } from 'react-native'
 import {useNavigation, StackActions} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -101,7 +100,7 @@ export function DrawerProfileCard({
   )
 }
 
-export const DrawerContent = observer(function DrawerContentImpl() {
+export function DrawerContent() {
   const theme = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -404,7 +403,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
       </SafeAreaView>
     </View>
   )
-})
+}
 
 interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
   icon: JSX.Element
@@ -458,11 +457,7 @@ function MenuItem({
   )
 }
 
-const InviteCodes = observer(function InviteCodesImpl({
-  style,
-}: {
-  style?: StyleProp<ViewStyle>
-}) {
+function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const pal = usePalette('default')
@@ -502,7 +497,7 @@ const InviteCodes = observer(function InviteCodesImpl({
       </Text>
     </TouchableOpacity>
   )
-})
+}
 
 const styles = StyleSheet.create({
   view: {

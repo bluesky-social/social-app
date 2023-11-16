@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../com/util/text/Text'
 import {s, colors} from 'lib/styles'
@@ -25,9 +24,7 @@ import {
 } from '#/state/queries/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
-export const PreferencesThreads = observer(function PreferencesThreadsImpl({
-  navigation,
-}: Props) {
+export function PreferencesThreads({navigation}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -162,7 +159,7 @@ export const PreferencesThreads = observer(function PreferencesThreadsImpl({
       </View>
     </CenteredView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

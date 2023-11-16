@@ -1,6 +1,5 @@
 import React from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Button} from 'view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ShieldExclamation} from 'lib/icons'
@@ -11,7 +10,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
-export const LabelsBtn = observer(function LabelsBtn({
+export function LabelsBtn({
   labels,
   hasMedia,
   onChange,
@@ -49,7 +48,7 @@ export const LabelsBtn = observer(function LabelsBtn({
       ) : null}
     </Button>
   )
-})
+}
 
 const styles = StyleSheet.create({
   button: {

@@ -4,11 +4,13 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {TextLink} from '../../util/Link'
 import {Text} from '../../util/text/Text'
 import {s, colors} from 'lib/styles'
-import {ServiceDescription} from 'state/models/session'
 import {usePalette} from 'lib/hooks/usePalette'
+
+type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
 export const Policies = ({
   serviceDescription,

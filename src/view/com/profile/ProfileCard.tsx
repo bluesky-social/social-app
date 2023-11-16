@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {
   AppBskyActorDefs,
   moderateProfile,
@@ -152,7 +151,7 @@ function ProfileCardPills({
   )
 }
 
-const FollowersList = observer(function FollowersListImpl({
+function FollowersList({
   followers,
 }: {
   followers?: AppBskyActorDefs.ProfileView[] | undefined
@@ -196,7 +195,7 @@ const FollowersList = observer(function FollowersListImpl({
       ))}
     </View>
   )
-})
+}
 
 export function ProfileCardWithFollowBtn({
   profile,

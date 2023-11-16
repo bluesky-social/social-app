@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FeedPostSlice} from '#/state/queries/post-feed'
 import {AtUri, moderatePost, ModerationOpts} from '@atproto/api'
 import {Link} from '../util/Link'
@@ -10,7 +9,7 @@ import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 
-export const FeedSlice = observer(function FeedSliceImpl({
+export function FeedSlice({
   slice,
   dataUpdatedAt,
   ignoreFilterFor,
@@ -94,7 +93,7 @@ export const FeedSlice = observer(function FeedSliceImpl({
       ))}
     </>
   )
-})
+}
 
 function ViewFullThread({slice}: {slice: FeedPostSlice}) {
   const pal = usePalette('default')

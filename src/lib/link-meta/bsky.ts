@@ -1,9 +1,8 @@
-import {AppBskyFeedPost} from '@atproto/api'
+import {AppBskyFeedPost, BskyAgent} from '@atproto/api'
 import * as apilib from 'lib/api/index'
 import {LikelyType, LinkMeta} from './link-meta'
 // import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
-import {RootStoreModel} from 'state/index'
 import {ComposerOptsQuote} from 'state/shell/composer'
 import {useGetPost} from '#/state/queries/post'
 
@@ -23,7 +22,7 @@ import {useGetPost} from '#/state/queries/post'
 // remove once that's implemented
 // -prf
 export async function extractBskyMeta(
-  store: RootStoreModel,
+  agent: BskyAgent,
   url: string,
 ): Promise<LinkMeta> {
   url = convertBskyAppUrlIfNeeded(url)
@@ -120,13 +119,13 @@ export async function getPostAsQuote(
 }
 
 export async function getFeedAsEmbed(
-  store: RootStoreModel,
+  agent: BskyAgent,
   url: string,
 ): Promise<apilib.ExternalEmbedDraft> {
   url = convertBskyAppUrlIfNeeded(url)
   const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
   const feed = makeRecordUri(user, 'app.bsky.feed.generator', rkey)
-  const res = await store.agent.app.bsky.feed.getFeedGenerator({feed})
+  const res = await agent.app.bsky.feed.getFeedGenerator({feed})
   return {
     isLoading: false,
     uri: feed,
@@ -146,13 +145,13 @@ export async function getFeedAsEmbed(
 }
 
 export async function getListAsEmbed(
-  store: RootStoreModel,
+  agent: BskyAgent,
   url: string,
 ): Promise<apilib.ExternalEmbedDraft> {
   url = convertBskyAppUrlIfNeeded(url)
   const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
   const list = makeRecordUri(user, 'app.bsky.graph.list', rkey)
-  const res = await store.agent.app.bsky.graph.getList({list})
+  const res = await agent.app.bsky.graph.getList({list})
   return {
     isLoading: false,
     uri: list,

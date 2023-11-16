@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   StyleProp,
   StyleSheet,
@@ -18,7 +17,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
+export function SimpleViewHeader({
   showBackButton = true,
   style,
   children,
@@ -76,7 +75,7 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
       {children}
     </Container>
   )
-})
+}
 
 const styles = StyleSheet.create({
   header: {

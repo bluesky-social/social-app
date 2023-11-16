@@ -1,6 +1,5 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -12,7 +11,6 @@ import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {CenteredView} from '../util/Views'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {useStores} from 'state/index'
 import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
@@ -22,7 +20,7 @@ import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
 
-export const ProfileSubpageHeader = observer(function HeaderImpl({
+export function ProfileSubpageHeader({
   isLoading,
   href,
   title,
@@ -45,7 +43,6 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
     | undefined
   avatarType: UserAvatarType
 }>) {
-  const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -183,7 +180,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
       </View>
     </CenteredView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   backBtn: {

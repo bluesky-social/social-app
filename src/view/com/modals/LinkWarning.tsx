@@ -1,7 +1,6 @@
 import React from 'react'
 import {Linking, SafeAreaView, StyleSheet, View} from 'react-native'
 import {ScrollView} from './util'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
@@ -16,13 +15,7 @@ import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
 
-export const Component = observer(function Component({
-  text,
-  href,
-}: {
-  text: string
-  href: string
-}) {
+export function Component({text, href}: {text: string; href: string}) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -97,7 +90,7 @@ export const Component = observer(function Component({
       </ScrollView>
     </SafeAreaView>
   )
-})
+}
 
 function LinkBox({href}: {href: string}) {
   const pal = usePalette('default')

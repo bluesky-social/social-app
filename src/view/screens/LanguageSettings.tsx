@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Text} from '../com/util/text/Text'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -23,9 +22,7 @@ import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
-export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
-  _: Props,
-) {
+export function LanguageSettingsScreen(_: Props) {
   const pal = usePalette('default')
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -192,7 +189,7 @@ export const LanguageSettingsScreen = observer(function LanguageSettingsImpl(
       </View>
     </CenteredView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

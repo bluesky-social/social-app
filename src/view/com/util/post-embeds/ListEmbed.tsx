@@ -1,12 +1,11 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {observer} from 'mobx-react-lite'
 import {ListCard} from 'view/com/lists/ListCard'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {s} from 'lib/styles'
 
-export const ListEmbed = observer(function ListEmbedImpl({
+export function ListEmbed({
   item,
   style,
 }: {
@@ -20,7 +19,7 @@ export const ListEmbed = observer(function ListEmbedImpl({
       <ListCard list={item} style={[style, styles.card]} />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

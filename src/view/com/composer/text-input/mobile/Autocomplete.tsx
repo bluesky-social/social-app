@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react'
 import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
@@ -10,7 +9,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {Trans} from '@lingui/macro'
 import {AppBskyActorDefs} from '@atproto/api'
 
-export const Autocomplete = observer(function AutocompleteImpl({
+export function Autocomplete({
   prefix,
   onSelect,
 }: {
@@ -103,7 +102,7 @@ export const Autocomplete = observer(function AutocompleteImpl({
       ) : null}
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

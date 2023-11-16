@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -76,7 +75,7 @@ function ShellInner() {
   )
 }
 
-export const Shell: React.FC = observer(function ShellImpl() {
+export const Shell: React.FC = function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <View style={[s.hContentRegion, pageBg]}>
@@ -85,7 +84,7 @@ export const Shell: React.FC = observer(function ShellImpl() {
       </RoutesContainer>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   bgLight: {

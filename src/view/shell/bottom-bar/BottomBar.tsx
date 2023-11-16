@@ -4,7 +4,6 @@ import Animated from 'react-native-reanimated'
 import {StackActions} from '@react-navigation/native'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {clamp} from 'lib/numbers'
@@ -34,9 +33,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
-export const BottomBar = observer(function BottomBarImpl({
-  navigation,
-}: BottomTabBarProps) {
+export function BottomBar({navigation}: BottomTabBarProps) {
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
   const pal = usePalette('default')
@@ -231,7 +228,7 @@ export const BottomBar = observer(function BottomBarImpl({
       />
     </Animated.View>
   )
-})
+}
 
 interface BtnProps
   extends Pick<
