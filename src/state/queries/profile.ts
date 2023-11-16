@@ -114,15 +114,19 @@ export function useProfileFollowMutationQueue(profile) {
   })
 
   function queueFollow() {
-    queue.pendingAction = 'follow'
-    updateProfileShadow(did, {followingUri: 'pending'})
-    processQueue()
+    return new Promise((resolve, reject) => {
+      queue.pendingAction = {type: 'follow', resolve, reject}
+      updateProfileShadow(did, {followingUri: 'pending'})
+      processQueue()
+    })
   }
 
   function queueUnfollow() {
-    queue.pendingAction = 'unfollow'
-    updateProfileShadow(did, {followingUri: undefined})
-    processQueue()
+    return new Promise((resolve, reject) => {
+      queue.pendingAction = {type: 'unfollow', resolve, reject}
+      updateProfileShadow(did, {followingUri: undefined})
+      processQueue()
+    })
   }
 
   async function processQueue() {
@@ -138,14 +142,20 @@ export function useProfileFollowMutationQueue(profile) {
         queue.currentAction = nextAction
         queue.pendingAction = null
 
-        if (nextAction !== prevAction) {
-          const prevState = queue.confirmedState
+        const prevState = queue.confirmedState
+        if (nextAction.type === prevAction?.type) {
+          nextAction.resolve(prevState)
+          continue
+        }
+        try {
           const nextState = await runAction(prevState, nextAction)
           queue.confirmedState = nextState
+          nextAction.resolve(nextState)
+        } catch (e) {
+          nextAction.reject(e)
+          throw e
         }
       }
-    } catch {
-      // rollback?
     } finally {
       if (queue.confirmedState) {
         updateProfileShadow(did, queue.confirmedState)
@@ -157,12 +167,14 @@ export function useProfileFollowMutationQueue(profile) {
   }
 
   async function runAction(state, action) {
-    if (action === 'follow') {
+    if (action.type === 'follow') {
       const {uri} = await followMutation.mutateAsync({did})
       return {followingUri: uri}
-    } else if (action === 'unfollow') {
+    } else if (action.type === 'unfollow') {
       await unfollowMutation.mutateAsync({did, followUri: state.followingUri})
       return {followingUri: undefined}
+    } else {
+      throw Error('Unknown action: ' + action.type)
     }
   }
 
