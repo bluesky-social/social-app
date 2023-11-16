@@ -92,9 +92,11 @@ export function usePostFeedQuery(
       return new FollowingFeedAPI(agent)
     }
   }, [feedDesc, params, feedTuners, agent])
+
+  const disableTuner = !!params?.disableTuner
   const tuner = useMemo(
-    () => (params?.disableTuner ? new NoopFeedTuner() : new FeedTuner()),
-    [params],
+    () => (disableTuner ? new NoopFeedTuner() : new FeedTuner()),
+    [disableTuner],
   )
 
   const pollLatest = useCallback(async () => {
