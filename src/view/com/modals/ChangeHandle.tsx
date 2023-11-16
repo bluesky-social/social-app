@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Clipboard from '@react-native-clipboard/clipboard'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
@@ -13,8 +14,6 @@ import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
-import {ServiceDescription} from 'state/models/session'
 import {s} from 'lib/styles'
 import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -25,77 +24,66 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useServiceQuery} from '#/state/queries/service'
+import {useUpdateHandleMutation, useFetchDid} from '#/state/queries/handle'
+import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 
 export const snapPoints = ['100%']
 
-export function Component({onChanged}: {onChanged: () => void}) {
-  const store = useStores()
-  const [error, setError] = useState<string>('')
+export type Props = {onChanged: () => void}
+
+export function Component(props: Props) {
+  const {currentAccount} = useSession()
+  const {
+    isLoading,
+    data: serviceInfo,
+    error: serviceInfoError,
+  } = useServiceQuery()
+
+  return isLoading || !currentAccount ? (
+    <View style={{padding: 18}}>
+      <ActivityIndicator />
+    </View>
+  ) : serviceInfoError || !serviceInfo ? (
+    <ErrorMessage message={cleanError(serviceInfoError)} />
+  ) : (
+    <Inner
+      {...props}
+      currentAccount={currentAccount}
+      serviceInfo={serviceInfo}
+    />
+  )
+}
+
+export function Inner({
+  currentAccount,
+  serviceInfo,
+  onChanged,
+}: Props & {
+  currentAccount: SessionAccount
+  serviceInfo: ComAtprotoServerDescribeServer.OutputSchema
+}) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const {_} = useLingui()
+  const {updateCurrentAccount} = useSessionApi()
   const {closeModal} = useModalControls()
+  const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
+    useUpdateHandleMutation()
 
-  const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [retryDescribeTrigger, setRetryDescribeTrigger] = React.useState<any>(
-    {},
-  )
-  const [serviceDescription, setServiceDescription] = React.useState<
-    ServiceDescription | undefined
-  >(undefined)
-  const [userDomain, setUserDomain] = React.useState<string>('')
+  const [error, setError] = useState<string>('')
+
   const [isCustom, setCustom] = React.useState<boolean>(false)
   const [handle, setHandle] = React.useState<string>('')
   const [canSave, setCanSave] = React.useState<boolean>(false)
 
-  // init
-  // =
-  React.useEffect(() => {
-    let aborted = false
-    setError('')
-    setServiceDescription(undefined)
-    setProcessing(true)
-
-    // load the service description so we can properly provision handles
-    store.session.describeService(String(store.agent.service)).then(
-      desc => {
-        if (aborted) {
-          return
-        }
-        setServiceDescription(desc)
-        setUserDomain(desc.availableUserDomains[0])
-        setProcessing(false)
-      },
-      err => {
-        if (aborted) {
-          return
-        }
-        setProcessing(false)
-        logger.warn(
-          `Failed to fetch service description for ${String(
-            store.agent.service,
-          )}`,
-          {error: err},
-        )
-        setError(
-          'Unable to contact your service. Please check your Internet connection.',
-        )
-      },
-    )
-    return () => {
-      aborted = true
-    }
-  }, [store.agent.service, store.session, retryDescribeTrigger])
+  const userDomain = serviceInfo.availableUserDomains?.[0]
 
   // events
   // =
   const onPressCancel = React.useCallback(() => {
     closeModal()
   }, [closeModal])
-  const onPressRetryConnect = React.useCallback(
-    () => setRetryDescribeTrigger({}),
-    [setRetryDescribeTrigger],
-  )
   const onToggleCustom = React.useCallback(() => {
     // toggle between a provided domain vs a custom one
     setHandle('')
@@ -106,13 +94,22 @@ export function Component({onChanged}: {onChanged: () => void}) {
     )
   }, [setCustom, isCustom, track])
   const onPressSave = React.useCallback(async () => {
-    setError('')
-    setProcessing(true)
+    if (!userDomain) {
+      logger.error(`ChangeHandle: userDomain is undefined`, {
+        service: serviceInfo,
+      })
+      setError(`The service you've selected has no domains configured.`)
+      return
+    }
+
     try {
       track('EditHandle:SetNewHandle')
       const newHandle = isCustom ? handle : createFullHandle(handle, userDomain)
       logger.debug(`Updating handle to ${newHandle}`)
-      await store.agent.updateHandle({
+      await updateHandle({
+        handle: newHandle,
+      })
+      updateCurrentAccount({
         handle: newHandle,
       })
       closeModal()
@@ -121,18 +118,18 @@ export function Component({onChanged}: {onChanged: () => void}) {
       setError(cleanError(err))
       logger.error('Failed to update handle', {handle, error: err})
     } finally {
-      setProcessing(false)
     }
   }, [
     setError,
-    setProcessing,
     handle,
     userDomain,
-    store,
     isCustom,
     onChanged,
     track,
     closeModal,
+    updateCurrentAccount,
+    updateHandle,
+    serviceInfo,
   ])
 
   // rendering
@@ -159,19 +156,8 @@ export function Component({onChanged}: {onChanged: () => void}) {
           <Trans>Change Handle</Trans>
         </Text>
         <View style={styles.titleRight}>
-          {isProcessing ? (
+          {isUpdateHandlePending ? (
             <ActivityIndicator />
-          ) : error && !serviceDescription ? (
-            <TouchableOpacity
-              testID="retryConnectButton"
-              onPress={onPressRetryConnect}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Retry change handle`)}
-              accessibilityHint={`Retries handle change to ${handle}`}>
-              <Text type="xl-bold" style={[pal.link, s.pr5]}>
-                Retry
-              </Text>
-            </TouchableOpacity>
           ) : canSave ? (
             <TouchableOpacity
               onPress={onPressSave}
@@ -194,8 +180,9 @@ export function Component({onChanged}: {onChanged: () => void}) {
 
         {isCustom ? (
           <CustomHandleForm
+            currentAccount={currentAccount}
             handle={handle}
-            isProcessing={isProcessing}
+            isProcessing={isUpdateHandlePending}
             canSave={canSave}
             onToggleCustom={onToggleCustom}
             setHandle={setHandle}
@@ -206,7 +193,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           <ProvidedHandleForm
             handle={handle}
             userDomain={userDomain}
-            isProcessing={isProcessing}
+            isProcessing={isUpdateHandlePending}
             onToggleCustom={onToggleCustom}
             setHandle={setHandle}
             setCanSave={setCanSave}
@@ -297,6 +284,7 @@ function ProvidedHandleForm({
  * The form for using a custom domain
  */
 function CustomHandleForm({
+  currentAccount,
   handle,
   canSave,
   isProcessing,
@@ -305,6 +293,7 @@ function CustomHandleForm({
   onPressSave,
   setCanSave,
 }: {
+  currentAccount: SessionAccount
   handle: string
   canSave: boolean
   isProcessing: boolean
@@ -313,7 +302,6 @@ function CustomHandleForm({
   onPressSave: () => void
   setCanSave: (v: boolean) => void
 }) {
-  const store = useStores()
   const pal = usePalette('default')
   const palSecondary = usePalette('secondary')
   const palError = usePalette('error')
@@ -322,12 +310,15 @@ function CustomHandleForm({
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [error, setError] = React.useState<string>('')
   const [isDNSForm, setDNSForm] = React.useState<boolean>(true)
+  const fetchDid = useFetchDid()
   // events
   // =
   const onPressCopy = React.useCallback(() => {
-    Clipboard.setString(isDNSForm ? `did=${store.me.did}` : store.me.did)
+    Clipboard.setString(
+      isDNSForm ? `did=${currentAccount.did}` : currentAccount.did,
+    )
     Toast.show('Copied to clipboard')
-  }, [store.me.did, isDNSForm])
+  }, [currentAccount, isDNSForm])
   const onChangeHandle = React.useCallback(
     (v: string) => {
       setHandle(v)
@@ -342,13 +333,11 @@ function CustomHandleForm({
     try {
       setIsVerifying(true)
       setError('')
-      const res = await store.agent.com.atproto.identity.resolveHandle({
-        handle,
-      })
-      if (res.data.did === store.me.did) {
+      const did = await fetchDid(handle)
+      if (did === currentAccount.did) {
         setCanSave(true)
       } else {
-        setError(`Incorrect DID returned (got ${res.data.did})`)
+        setError(`Incorrect DID returned (got ${did})`)
       }
     } catch (err: any) {
       setError(cleanError(err))
@@ -358,13 +347,13 @@ function CustomHandleForm({
     }
   }, [
     handle,
-    store.me.did,
+    currentAccount,
     setIsVerifying,
     setCanSave,
     setError,
     canSave,
     onPressSave,
-    store.agent,
+    fetchDid,
   ])
 
   // rendering
@@ -442,7 +431,7 @@ function CustomHandleForm({
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                did={store.me.did}
+                did={currentAccount.did}
               </Text>
             </View>
           </View>
@@ -472,7 +461,7 @@ function CustomHandleForm({
           <View style={[styles.valueContainer, pal.btn]}>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                {store.me.did}
+                {currentAccount.did}
               </Text>
             </View>
           </View>
