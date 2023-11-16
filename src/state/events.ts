@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3'
+import {SessionAccount} from './session'
 
 type UnlistenFn = () => void
 
@@ -12,4 +13,22 @@ export function emitSoftReset() {
 export function listenSoftReset(fn: () => void): UnlistenFn {
   emitter.on('soft-reset', fn)
   return () => emitter.off('soft-reset', fn)
+}
+
+export function emitSessionLoaded(sessionAccount: SessionAccount) {
+  emitter.emit('session-loaded', sessionAccount)
+}
+export function listenSessionLoaded(
+  fn: (sessionAccount: SessionAccount) => void,
+): UnlistenFn {
+  emitter.on('session-loaded', fn)
+  return () => emitter.off('session-loaded', fn)
+}
+
+export function emitSessionDropped() {
+  emitter.emit('session-dropped')
+}
+export function listenSessionDropped(fn: () => void): UnlistenFn {
+  emitter.on('session-dropped', fn)
+  return () => emitter.off('session-dropped', fn)
 }
