@@ -10,7 +10,6 @@ import {
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {RootStoreModel} from 'state/models/root-store'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
@@ -24,33 +23,6 @@ export interface ExternalEmbedDraft {
   meta?: LinkMeta
   embed?: AppBskyEmbedRecord.Main
   localThumb?: ImageModel
-}
-
-export async function resolveName(store: RootStoreModel, didOrHandle: string) {
-  if (!didOrHandle) {
-    throw new Error('Invalid handle: ""')
-  }
-  if (didOrHandle.startsWith('did:')) {
-    return didOrHandle
-  }
-
-  // we run the resolution always to ensure freshness
-  const promise = store.agent
-    .resolveHandle({
-      handle: didOrHandle,
-    })
-    .then(res => {
-      store.handleResolutions.cache.set(didOrHandle, res.data.did)
-      return res.data.did
-    })
-
-  // but we can return immediately if it's cached
-  const cached = store.handleResolutions.cache.get(didOrHandle)
-  if (cached) {
-    return cached
-  }
-
-  return promise
 }
 
 export async function uploadBlob(
