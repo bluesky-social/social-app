@@ -2,7 +2,6 @@ import React from 'react'
 import {LabelPreference} from '@atproto/api'
 import {StyleSheet, Pressable, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {observer} from 'mobx-react-lite'
 import {ScrollView} from './util'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
@@ -28,82 +27,80 @@ import {
 
 export const snapPoints = ['90%']
 
-export const Component = observer(
-  function ContentFilteringSettingsImpl({}: {}) {
-    const {isMobile} = useWebMediaQueries()
-    const pal = usePalette('default')
-    const {_} = useLingui()
-    const {closeModal} = useModalControls()
-    const {data: preferences} = usePreferencesQuery()
+export function Component({}: {}) {
+  const {isMobile} = useWebMediaQueries()
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const {closeModal} = useModalControls()
+  const {data: preferences} = usePreferencesQuery()
 
-    const onPressDone = React.useCallback(() => {
-      closeModal()
-    }, [closeModal])
+  const onPressDone = React.useCallback(() => {
+    closeModal()
+  }, [closeModal])
 
-    return (
-      <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
-        <Text style={[pal.text, styles.title]}>
-          <Trans>Content Filtering</Trans>
-        </Text>
+  return (
+    <View testID="contentFilteringModal" style={[pal.view, styles.container]}>
+      <Text style={[pal.text, styles.title]}>
+        <Trans>Content Filtering</Trans>
+      </Text>
 
-        <ScrollView style={styles.scrollContainer}>
-          <AdultContentEnabledPref />
-          <ContentLabelPref
-            preferences={preferences}
-            labelGroup="nsfw"
-            disabled={!preferences?.adultContentEnabled}
-          />
-          <ContentLabelPref
-            preferences={preferences}
-            labelGroup="nudity"
-            disabled={!preferences?.adultContentEnabled}
-          />
-          <ContentLabelPref
-            preferences={preferences}
-            labelGroup="suggestive"
-            disabled={!preferences?.adultContentEnabled}
-          />
-          <ContentLabelPref
-            preferences={preferences}
-            labelGroup="gore"
-            disabled={!preferences?.adultContentEnabled}
-          />
-          <ContentLabelPref preferences={preferences} labelGroup="hate" />
-          <ContentLabelPref preferences={preferences} labelGroup="spam" />
-          <ContentLabelPref
-            preferences={preferences}
-            labelGroup="impersonation"
-          />
-          <View style={{height: isMobile ? 60 : 0}} />
-        </ScrollView>
+      <ScrollView style={styles.scrollContainer}>
+        <AdultContentEnabledPref />
+        <ContentLabelPref
+          preferences={preferences}
+          labelGroup="nsfw"
+          disabled={!preferences?.adultContentEnabled}
+        />
+        <ContentLabelPref
+          preferences={preferences}
+          labelGroup="nudity"
+          disabled={!preferences?.adultContentEnabled}
+        />
+        <ContentLabelPref
+          preferences={preferences}
+          labelGroup="suggestive"
+          disabled={!preferences?.adultContentEnabled}
+        />
+        <ContentLabelPref
+          preferences={preferences}
+          labelGroup="gore"
+          disabled={!preferences?.adultContentEnabled}
+        />
+        <ContentLabelPref preferences={preferences} labelGroup="hate" />
+        <ContentLabelPref preferences={preferences} labelGroup="spam" />
+        <ContentLabelPref
+          preferences={preferences}
+          labelGroup="impersonation"
+        />
+        <View style={{height: isMobile ? 60 : 0}} />
+      </ScrollView>
 
-        <View
-          style={[
-            styles.btnContainer,
-            isMobile && styles.btnContainerMobile,
-            pal.borderDark,
-          ]}>
-          <Pressable
-            testID="sendReportBtn"
-            onPress={onPressDone}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Done`)}
-            accessibilityHint="">
-            <LinearGradient
-              colors={[gradients.blueLight.start, gradients.blueLight.end]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[styles.btn]}>
-              <Text style={[s.white, s.bold, s.f18]}>
-                <Trans>Done</Trans>
-              </Text>
-            </LinearGradient>
-          </Pressable>
-        </View>
+      <View
+        style={[
+          styles.btnContainer,
+          isMobile && styles.btnContainerMobile,
+          pal.borderDark,
+        ]}>
+        <Pressable
+          testID="sendReportBtn"
+          onPress={onPressDone}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Done`)}
+          accessibilityHint="">
+          <LinearGradient
+            colors={[gradients.blueLight.start, gradients.blueLight.end]}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[styles.btn]}>
+            <Text style={[s.white, s.bold, s.f18]}>
+              <Trans>Done</Trans>
+            </Text>
+          </LinearGradient>
+        </Pressable>
       </View>
-    )
-  },
-)
+    </View>
+  )
+}
 
 function AdultContentEnabledPref() {
   const pal = usePalette('default')
@@ -171,7 +168,7 @@ function AdultContentEnabledPref() {
 }
 
 // TODO: Refactor this component to pass labels down to each tab
-const ContentLabelPref = observer(function ContentLabelPrefImpl({
+function ContentLabelPref({
   preferences,
   labelGroup,
   disabled,
@@ -217,7 +214,7 @@ const ContentLabelPref = observer(function ContentLabelPrefImpl({
       )}
     </View>
   )
-})
+}
 
 interface SelectGroupProps {
   current: LabelPreference

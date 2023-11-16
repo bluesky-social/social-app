@@ -1,6 +1,5 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -21,7 +20,7 @@ import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
 
-export const ProfileSubpageHeader = observer(function HeaderImpl({
+export function ProfileSubpageHeader({
   isLoading,
   href,
   title,
@@ -181,7 +180,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
       </View>
     </CenteredView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   backBtn: {

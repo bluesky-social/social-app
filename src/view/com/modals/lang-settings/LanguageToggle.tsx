@@ -1,11 +1,10 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
-import {observer} from 'mobx-react-lite'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {useLanguagePrefs, toPostLanguages} from '#/state/preferences/languages'
 
-export const LanguageToggle = observer(function LanguageToggleImpl({
+export function LanguageToggle({
   code2,
   name,
   onPress,
@@ -39,7 +38,7 @@ export const LanguageToggle = observer(function LanguageToggleImpl({
       style={[pal.border, styles.languageToggle, isDisabled && styles.dimmed]}
     />
   )
-})
+}
 
 const styles = StyleSheet.create({
   languageToggle: {

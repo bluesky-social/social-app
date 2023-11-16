@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, Keyboard} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -24,7 +23,7 @@ import {
 import {t, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-export const SelectLangBtn = observer(function SelectLangBtn() {
+export function SelectLangBtn() {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openModal} = useModalControls()
@@ -117,7 +116,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       )}
     </DropdownButton>
   )
-})
+}
 
 const styles = StyleSheet.create({
   button: {

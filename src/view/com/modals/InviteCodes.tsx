@@ -5,7 +5,6 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {ComAtprotoServerDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -129,7 +128,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   )
 }
 
-const InviteCode = observer(function InviteCodeImpl({
+function InviteCode({
   testID,
   invite,
   used,
@@ -211,7 +210,7 @@ const InviteCode = observer(function InviteCodeImpl({
       ) : null}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

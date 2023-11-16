@@ -5,7 +5,6 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Button} from 'view/com/util/forms/Button'
-import {observer} from 'mobx-react-lite'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Trans} from '@lingui/macro'
 
@@ -14,10 +13,7 @@ type Props = {
   skip: () => void
 }
 
-export const WelcomeMobile = observer(function WelcomeMobileImpl({
-  next,
-  skip,
-}: Props) {
+export function WelcomeMobile({next, skip}: Props) {
   const pal = usePalette('default')
 
   return (
@@ -102,7 +98,7 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
       />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

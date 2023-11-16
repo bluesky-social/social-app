@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -20,7 +19,7 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {useSession} from '#/state/session'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
-export const FeedsTabBar = observer(function FeedsTabBarImpl(
+export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
@@ -88,7 +87,7 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
       />
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   tabBar: {

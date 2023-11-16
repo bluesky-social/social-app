@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
@@ -15,7 +14,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const ViewHeader = observer(function ViewHeaderImpl({
+export function ViewHeader({
   title,
   canGoBack,
   showBackButton = true,
@@ -108,7 +107,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
       </Container>
     )
   }
-})
+}
 
 function DesktopWebHeader({
   title,
@@ -140,7 +139,7 @@ function DesktopWebHeader({
   )
 }
 
-const Container = observer(function ContainerImpl({
+function Container({
   children,
   hideOnScroll,
   showBorder,
@@ -178,7 +177,7 @@ const Container = observer(function ContainerImpl({
       {children}
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   header: {

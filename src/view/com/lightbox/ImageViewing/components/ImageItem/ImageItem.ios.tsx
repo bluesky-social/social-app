@@ -139,7 +139,6 @@ const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
         {(!loaded || !imageDimensions) && <ImageLoading />}
         <AnimatedImage
           contentFit="contain"
-          // NOTE: Don't pass imageSrc={imageSrc} or MobX will break.
           source={{uri: imageSrc.uri}}
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}

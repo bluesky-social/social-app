@@ -1,6 +1,5 @@
 import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import type {Modal as ModalIface} from '#/state/modals'
@@ -33,7 +32,7 @@ import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as LinkWarningModal from './LinkWarning'
 
-export const ModalsContainer = observer(function ModalsContainer() {
+export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
 
   if (!isModalActive) {
@@ -47,7 +46,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       ))}
     </>
   )
-})
+}
 
 function Modal({modal}: {modal: ModalIface}) {
   const {isModalActive} = useModals()

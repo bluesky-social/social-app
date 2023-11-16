@@ -1,7 +1,6 @@
 import 'lib/sentry' // must be near top
 
 import React, {useState, useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -33,7 +32,7 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 
-const InnerApp = observer(function AppImpl() {
+function InnerApp() {
   const {isInitialLoad} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
@@ -75,7 +74,7 @@ const InnerApp = observer(function AppImpl() {
       </ThemeProvider>
     </UnreadNotifsProvider>
   )
-})
+}
 
 function App() {
   const [isReady, setReady] = useState(false)

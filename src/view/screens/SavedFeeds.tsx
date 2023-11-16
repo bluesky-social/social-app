@@ -14,7 +14,6 @@ import {track} from '#/lib/analytics/analytics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {observer} from 'mobx-react-lite'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -146,7 +145,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
   )
 })
 
-const ListItem = observer(function ListItemImpl({
+function ListItem({
   feedUri,
   isPinned,
 }: {
@@ -269,7 +268,7 @@ const ListItem = observer(function ListItemImpl({
       </TouchableOpacity>
     </Pressable>
   )
-})
+}
 
 const styles = StyleSheet.create({
   desktopContainer: {

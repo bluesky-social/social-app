@@ -5,7 +5,6 @@ import React, {useState, useEffect} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {observer} from 'mobx-react-lite'
 import {QueryClientProvider} from '@tanstack/react-query'
 
 import 'view/icons'
@@ -43,7 +42,7 @@ i18n.activate('en')
 
 SplashScreen.preventAutoHideAsync()
 
-const InnerApp = observer(function AppImpl() {
+function InnerApp() {
   const colorMode = useColorMode()
   const {isInitialLoad} = useSession()
   const {resumeSession} = useSessionApi()
@@ -88,7 +87,7 @@ const InnerApp = observer(function AppImpl() {
       </ThemeProvider>
     </UnreadNotifsProvider>
   )
-})
+}
 
 function App() {
   const [isReady, setReady] = useState(false)
