@@ -21,6 +21,8 @@ import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function PostDropdownBtn({
   testID,
@@ -35,6 +37,7 @@ export function PostDropdownBtn({
 }) {
   const store = useStores()
   const theme = useTheme()
+  const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()

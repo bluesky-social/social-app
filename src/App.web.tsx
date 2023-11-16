@@ -49,8 +49,6 @@ const InnerApp = observer(function AppImpl() {
   useEffect(() => {
     initReminders()
     analytics.init()
-    dynamicActivate(defaultLocale) // async import of locale data
-
     const account = persisted.get('session').currentAccount
     resumeSession(account)
   }, [resumeSession])
