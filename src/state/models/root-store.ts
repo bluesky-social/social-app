@@ -15,7 +15,6 @@ import {ProfilesCache} from './cache/profiles-view'
 import {PostsCache} from './cache/posts'
 import {LinkMetasCache} from './cache/link-metas'
 import {MeModel} from './me'
-import {PreferencesModel} from './ui/preferences'
 import {resetToTab} from '../../Navigation'
 import {ImageSizesCache} from './cache/image-sizes'
 import {reset as resetNavigation} from '../../Navigation'
@@ -39,7 +38,6 @@ export class RootStoreModel {
   appInfo?: AppInfo
   session = new SessionModel(this)
   shell = new ShellUiModel(this)
-  preferences = new PreferencesModel(this)
   me = new MeModel(this)
   handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
@@ -64,7 +62,6 @@ export class RootStoreModel {
     return {
       appInfo: this.appInfo,
       me: this.me.serialize(),
-      preferences: this.preferences.serialize(),
     }
   }
 
@@ -78,9 +75,6 @@ export class RootStoreModel {
       }
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)
-      }
-      if (hasProp(v, 'preferences')) {
-        this.preferences.hydrate(v.preferences)
       }
     }
   }
