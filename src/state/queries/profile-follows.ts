@@ -1,10 +1,13 @@
 import {AppBskyGraphGetFollows} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {useSession} from '../session'
+
+import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
+// TODO refactor invalidate on mutate?
 export const RQKEY = (did: string) => ['profile-follows', did]
 
 export function useProfileFollowsQuery(did: string | undefined) {
@@ -16,6 +19,7 @@ export function useProfileFollowsQuery(did: string | undefined) {
     QueryKey,
     RQPageParam
   >({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getFollows({

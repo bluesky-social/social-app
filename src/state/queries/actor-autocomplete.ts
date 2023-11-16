@@ -5,6 +5,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {useMyFollowsQuery} from '#/state/queries/my-follows'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
 
@@ -13,8 +14,7 @@ export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
-    // cached for 1 min
-    staleTime: 60 * 1000,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(prefix || ''),
     async queryFn() {
       const res = prefix
@@ -41,8 +41,7 @@ export function useActorAutocompleteFn() {
       if (query) {
         try {
           res = await queryClient.fetchQuery({
-            // cached for 1 min
-            staleTime: 60 * 1000,
+            staleTime: STALE.MINUTES.ONE,
             queryKey: RQKEY(query || ''),
             queryFn: () =>
               agent.searchActorsTypeahead({

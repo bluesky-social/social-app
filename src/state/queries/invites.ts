@@ -2,6 +2,7 @@ import {ComAtprotoServerDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
   return invite.available - invite.uses.length > 0 && !invite.disabled
@@ -15,6 +16,7 @@ export function useInviteCodesQuery() {
   const {agent} = useSession()
 
   return useQuery({
+    staleTime: STALE.HOURS.ONE,
     queryKey: ['inviteCodes'],
     queryFn: async () => {
       const res = await agent.com.atproto.server.getAccountInviteCodes({})

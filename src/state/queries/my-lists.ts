@@ -1,7 +1,9 @@
 import {AppBskyGraphDefs} from '@atproto/api'
 import {useQuery, QueryClient} from '@tanstack/react-query'
-import {accumulate} from 'lib/async/accumulate'
-import {useSession} from '../session'
+
+import {accumulate} from '#/lib/async/accumulate'
+import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 export type MyListsFilter = 'all' | 'curate' | 'mod'
 export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
@@ -9,6 +11,7 @@ export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
 export function useMyListsQuery(filter: MyListsFilter) {
   const {agent, currentAccount} = useSession()
   return useQuery<AppBskyGraphDefs.ListView[]>({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(filter),
     async queryFn() {
       let lists: AppBskyGraphDefs.ListView[] = []

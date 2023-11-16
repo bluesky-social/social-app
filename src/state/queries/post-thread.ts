@@ -4,8 +4,10 @@ import {
   AppBskyFeedGetPostThread,
 } from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
+
 import {useSession} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
@@ -58,6 +60,7 @@ export type ThreadNode =
 export function usePostThreadQuery(uri: string | undefined) {
   const {agent} = useSession()
   return useQuery<ThreadNode, Error>({
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await agent.getPostThread({uri: uri!})

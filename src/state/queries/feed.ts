@@ -20,6 +20,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {STALE} from '#/state/queries'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
@@ -139,6 +140,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const type = getFeedTypeFromUri(uri)
 
   return useQuery({
+    staleTime: STALE.INFINITY,
     queryKey: feedSourceInfoQueryKey({uri}),
     queryFn: async () => {
       let view: FeedSourceInfo

@@ -2,6 +2,7 @@ import React from 'react'
 import {useQueryClient, useMutation} from '@tanstack/react-query'
 
 import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const fetchHandleQueryKey = (handleOrDid: string) => ['handle', handleOrDid]
 const fetchDidQueryKey = (handleOrDid: string) => ['did', handleOrDid]
@@ -14,6 +15,7 @@ export function useFetchHandle() {
     async (handleOrDid: string) => {
       if (handleOrDid.startsWith('did:')) {
         const res = await queryClient.fetchQuery({
+          staleTime: STALE.MINUTES.FIVE,
           queryKey: fetchHandleQueryKey(handleOrDid),
           queryFn: () => agent.getProfile({actor: handleOrDid}),
         })
@@ -27,10 +29,16 @@ export function useFetchHandle() {
 
 export function useUpdateHandleMutation() {
   const {agent} = useSession()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
       await agent.updateHandle({handle})
+    },
+    onSuccess(_data, variables) {
+      queryClient.invalidateQueries({
+        queryKey: fetchHandleQueryKey(variables.handle),
+      })
     },
   })
 }
@@ -42,6 +50,7 @@ export function useFetchDid() {
   return React.useCallback(
     async (handleOrDid: string) => {
       return queryClient.fetchQuery({
+        staleTime: STALE.INFINITY,
         queryKey: fetchDidQueryKey(handleOrDid),
         queryFn: async () => {
           let identifier = handleOrDid
