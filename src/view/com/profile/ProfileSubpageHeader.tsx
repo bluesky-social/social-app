@@ -12,7 +12,6 @@ import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {CenteredView} from '../util/Views'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {useStores} from 'state/index'
 import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
@@ -45,7 +44,6 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
     | undefined
   avatarType: UserAvatarType
 }>) {
-  const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
