@@ -22,6 +22,7 @@ export const RQKEY = (did: string) => ['profile', did]
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {agent} = useSession()
   return useQuery({
+    staleTime: 1000 * 60,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
       const res = await agent.getProfile({actor: did || ''})
