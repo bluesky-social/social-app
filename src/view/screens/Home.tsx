@@ -7,7 +7,7 @@ import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -33,17 +33,11 @@ function HomeScreenReady({
 }) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const pagerRef = React.useRef<PagerRef>(null)
   const [selectedPage, setSelectedPage] = React.useState(0)
-  const [customFeeds, setCustomFeeds] = React.useState<FeedDescriptor[]>([])
 
-  React.useEffect(() => {
-    if (!preferences.feeds.pinned) return
-
+  const customFeeds = React.useMemo(() => {
     const pinned = preferences.feeds.pinned
-
     const feeds: FeedDescriptor[] = []
-
     for (const uri of pinned) {
       if (uri.includes('app.bsky.feed.generator')) {
         feeds.push(`feedgen|${uri}`)
@@ -51,11 +45,8 @@ function HomeScreenReady({
         feeds.push(`list|${uri}`)
       }
     }
-
-    setCustomFeeds(feeds)
-
-    pagerRef.current?.setPage(0)
-  }, [preferences.feeds?.pinned, setCustomFeeds, pagerRef])
+    return feeds
+  }, [preferences.feeds.pinned])
 
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
@@ -121,7 +112,6 @@ function HomeScreenReady({
 
   return (
     <Pager
-      ref={pagerRef}
       testID="homeScreen"
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
