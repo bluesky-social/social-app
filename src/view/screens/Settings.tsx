@@ -23,7 +23,6 @@ import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import * as AppInfo from 'lib/app-info'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -45,7 +44,7 @@ import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {logger} from '#/logger'
+import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
 import {
   useSetMinimalShellMode,
@@ -69,6 +68,7 @@ import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -137,10 +137,10 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export const SettingsScreen = withAuthRequired(
   observer(function Settings({}: Props) {
+    const queryClient = useQueryClient()
     const colorMode = useColorMode()
     const setColorMode = useSetColorMode()
     const pal = usePalette('default')
-    const store = useStores()
     const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -149,12 +149,10 @@ export const SettingsScreen = withAuthRequired(
     const navigation = useNavigation<NavigationProp>()
     const {isMobile} = useWebMediaQueries()
     const {screen, track} = useAnalytics()
-    const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
-      store.agent,
-    )
     const {openModal} = useModalControls()
-    const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+    const {isSwitchingAccounts, accounts, currentAccount, agent} = useSession()
     const {clearCurrentAccount} = useSessionApi()
+    const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(agent)
     const {mutate: clearPreferences} = useClearPreferencesMutation()
     const {data: invites} = useInviteCodesQuery()
     const invitesAvailable = invites?.available?.length ?? 0
@@ -196,19 +194,15 @@ export const SettingsScreen = withAuthRequired(
       openModal({
         name: 'change-handle',
         onChanged() {
-          store.session.reloadFromServer().then(
-            () => {
-              Toast.show('Your handle has been updated')
-            },
-            err => {
-              logger.error('Failed to reload from server after handle update', {
-                error: err,
-              })
-            },
-          )
+          if (currentAccount) {
+            // refresh my profile
+            queryClient.invalidateQueries({
+              queryKey: RQKEY_PROFILE(currentAccount.did),
+            })
+          }
         },
       })
-    }, [track, store, openModal])
+    }, [track, queryClient, openModal, currentAccount])
 
     const onPressInviteCodes = React.useCallback(() => {
       track('Settings:InvitecodesButtonClicked')
