@@ -296,7 +296,7 @@ function PostThreadLoaded({
             post={item.post}
             record={item.record}
             dataUpdatedAt={dataUpdatedAt}
-            treeView={threadViewPrefs.lab_treeViewEnabled}
+            treeView={threadViewPrefs.lab_treeViewEnabled || false}
             depth={item.ctx.depth}
             isHighlightedPost={item.ctx.isHighlightedPost}
             hasMore={item.ctx.hasMore}
