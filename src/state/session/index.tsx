@@ -182,7 +182,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({...s, agent}))
       upsertAccount(account)
-      emitSessionLoaded(account)
+      emitSessionLoaded(account, agent)
 
       logger.debug(
         `session: created account`,
@@ -233,7 +233,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({...s, agent}))
       upsertAccount(account)
-      emitSessionLoaded(account)
+      emitSessionLoaded(account, agent)
 
       logger.debug(
         `session: logged in`,
@@ -295,7 +295,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({...s, agent}))
       upsertAccount(account)
-      emitSessionLoaded(account)
+      emitSessionLoaded(account, agent)
     },
     [upsertAccount],
   )

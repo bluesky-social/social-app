@@ -10,7 +10,6 @@ import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
 import {init as initReminders} from '#/state/shell/reminders'
-import {listenSessionDropped} from './state/events'
 import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
 import {RootStoreModel, setupState, RootStoreProvider} from './state'
@@ -46,12 +45,12 @@ const InnerApp = observer(function AppImpl() {
   useEffect(() => {
     setupState().then(store => {
       setRootStore(store)
-      analytics.init(store)
     })
   }, [])
 
   useEffect(() => {
     initReminders()
+    analytics.init()
     dynamicActivate(defaultLocale) // async import of locale data
 
     const account = persisted.get('session').currentAccount

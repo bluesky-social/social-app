@@ -1,16 +1,18 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   createClient,
   AnalyticsProvider,
   useAnalytics as useAnalyticsOrig,
   ClientMethods,
 } from '@segment/analytics-react-native'
-import {RootStoreModel, AppInfo} from 'state/models/root-store'
-import {useStores} from 'state/models/root-store'
+import {AppInfo} from 'state/models/root-store'
+import {useSession} from '#/state/session'
 import {sha256} from 'js-sha256'
 import {ScreenEvent, TrackEvent} from './types'
 import {logger} from '#/logger'
+import {listenSessionLoaded} from '#/state/events'
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
@@ -21,10 +23,10 @@ const segmentClient = createClient({
 export const track = segmentClient?.track?.bind?.(segmentClient) as TrackEvent
 
 export function useAnalytics() {
-  const store = useStores()
+  const {hasSession} = useSession()
   const methods: ClientMethods = useAnalyticsOrig()
   return React.useMemo(() => {
-    if (store.session.hasSession) {
+    if (hasSession) {
       return {
         screen: methods.screen as ScreenEvent, // ScreenEvents defines all the possible screen names
         track: methods.track as TrackEvent, // TrackEvents defines all the possible track events and their properties
@@ -45,21 +47,18 @@ export function useAnalytics() {
       alias: () => Promise<void>,
       reset: () => Promise<void>,
     }
-  }, [store, methods])
+  }, [hasSession, methods])
 }
 
-export function init(store: RootStoreModel) {
-  store.onSessionLoaded(() => {
-    const sess = store.session.currentSession
-    if (sess) {
-      if (sess.did) {
-        const did_hashed = sha256(sess.did)
-        segmentClient.identify(did_hashed, {did_hashed})
-        logger.debug('Ping w/hash')
-      } else {
-        logger.debug('Ping w/o hash')
-        segmentClient.identify()
-      }
+export function init() {
+  listenSessionLoaded(account => {
+    if (account.did) {
+      const did_hashed = sha256(account.did)
+      segmentClient.identify(did_hashed, {did_hashed})
+      logger.debug('Ping w/hash')
+    } else {
+      logger.debug('Ping w/o hash')
+      segmentClient.identify()
     }
   })
 
@@ -67,7 +66,7 @@ export function init(store: RootStoreModel) {
   // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
   // -prf
-  segmentClient.isReady.onChange(() => {
+  segmentClient.isReady.onChange(async () => {
     if (AppState.currentState !== 'active') {
       logger.debug('Prevented a metrics ping while the app was backgrounded')
       return
@@ -78,35 +77,29 @@ export function init(store: RootStoreModel) {
       return
     }
 
-    const oldAppInfo = store.appInfo
+    const oldAppInfo = await readAppInfo()
     const newAppInfo = context.app as AppInfo
-    store.setAppInfo(newAppInfo)
+    writeAppInfo(newAppInfo)
     logger.debug('Recording app info', {new: newAppInfo, old: oldAppInfo})
 
     if (typeof oldAppInfo === 'undefined') {
-      if (store.session.hasSession) {
-        segmentClient.track('Application Installed', {
-          version: newAppInfo.version,
-          build: newAppInfo.build,
-        })
-      }
-    } else if (newAppInfo.version !== oldAppInfo.version) {
-      if (store.session.hasSession) {
-        segmentClient.track('Application Updated', {
-          version: newAppInfo.version,
-          build: newAppInfo.build,
-          previous_version: oldAppInfo.version,
-          previous_build: oldAppInfo.build,
-        })
-      }
-    }
-    if (store.session.hasSession) {
-      segmentClient.track('Application Opened', {
-        from_background: false,
+      segmentClient.track('Application Installed', {
         version: newAppInfo.version,
         build: newAppInfo.build,
       })
+    } else if (newAppInfo.version !== oldAppInfo.version) {
+      segmentClient.track('Application Updated', {
+        version: newAppInfo.version,
+        build: newAppInfo.build,
+        previous_version: oldAppInfo.version,
+        previous_build: oldAppInfo.build,
+      })
     }
+    segmentClient.track('Application Opened', {
+      from_background: false,
+      version: newAppInfo.version,
+      build: newAppInfo.build,
+    })
   })
 
   let lastState: AppStateStatus = AppState.currentState
@@ -129,4 +122,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
   )
+}
+
+async function writeAppInfo(value: AppInfo) {
+  await AsyncStorage.setItem('BSKY_APP_INFO', JSON.stringify(value))
+}
+
+async function readAppInfo(): Promise<Partial<AppInfo> | undefined> {
+  const rawData = await AsyncStorage.getItem('BSKY_APP_INFO')
+  return rawData ? JSON.parse(rawData) : undefined
 }

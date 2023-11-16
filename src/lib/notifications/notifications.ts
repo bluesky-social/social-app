@@ -1,19 +1,19 @@
 import * as Notifications from 'expo-notifications'
 import {QueryClient} from '@tanstack/react-query'
-import {RootStoreModel} from '../../state'
 import {resetToTab} from '../../Navigation'
 import {devicePlatform, isIOS} from 'platform/detection'
 import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
+import {listenSessionLoaded} from '#/state/events'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-export function init(store: RootStoreModel, queryClient: QueryClient) {
-  store.onSessionLoaded(async () => {
+export function init(queryClient: QueryClient) {
+  listenSessionLoaded(async (account, agent) => {
     // request notifications permission once the user has logged in
     const perms = await Notifications.getPermissionsAsync()
     if (!perms.granted) {
@@ -24,8 +24,8 @@ export function init(store: RootStoreModel, queryClient: QueryClient) {
     const token = await getPushToken()
     if (token) {
       try {
-        await store.agent.api.app.bsky.notification.registerPush({
-          serviceDid: SERVICE_DID(store.session.data?.service),
+        await agent.api.app.bsky.notification.registerPush({
+          serviceDid: SERVICE_DID(account.service),
           platform: devicePlatform,
           token: token.data,
           appId: 'xyz.blueskyweb.app',
@@ -53,8 +53,8 @@ export function init(store: RootStoreModel, queryClient: QueryClient) {
       )
       if (t) {
         try {
-          await store.agent.api.app.bsky.notification.registerPush({
-            serviceDid: SERVICE_DID(store.session.data?.service),
+          await agent.api.app.bsky.notification.registerPush({
+            serviceDid: SERVICE_DID(account.service),
             platform: devicePlatform,
             token: t,
             appId: 'xyz.blueskyweb.app',
