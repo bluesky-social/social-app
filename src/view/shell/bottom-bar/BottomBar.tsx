@@ -6,7 +6,6 @@ import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {observer} from 'mobx-react-lite'
 import {Text} from 'view/com/util/text/Text'
-import {useStores} from 'state/index'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {clamp} from 'lib/numbers'
 import {
@@ -30,6 +29,8 @@ import {useModalControls} from '#/state/modals'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
+import {useSession} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -37,7 +38,7 @@ export const BottomBar = observer(function BottomBarImpl({
   navigation,
 }: BottomTabBarProps) {
   const {openModal} = useModalControls()
-  const store = useStores()
+  const {currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
@@ -47,6 +48,7 @@ export const BottomBar = observer(function BottomBarImpl({
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const {footerMinimalShellTransform} = useMinimalShellMode()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
@@ -203,7 +205,7 @@ export const BottomBar = observer(function BottomBarImpl({
                   {borderColor: pal.text.color},
                 ]}>
                 <UserAvatar
-                  avatar={store.me.avatar}
+                  avatar={profile?.avatar}
                   size={27}
                   // See https://github.com/bluesky-social/social-app/pull/1801:
                   usePlainRNImage={true}
@@ -212,7 +214,7 @@ export const BottomBar = observer(function BottomBarImpl({
             ) : (
               <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
                 <UserAvatar
-                  avatar={store.me.avatar}
+                  avatar={profile?.avatar}
                   size={28}
                   // See https://github.com/bluesky-social/social-app/pull/1801:
                   usePlainRNImage={true}
