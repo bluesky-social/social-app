@@ -138,12 +138,13 @@ export function useProfileFollowMutationQueue(profile) {
     if (queue.currentAction) {
       return
     }
+    queue.confirmedState = {followingUri}
     try {
       while (queue.pendingAction) {
         const action = queue.pendingAction
         queue.currentAction = action
         queue.pendingAction = null
-        queue.confirmedState = await runAction(action)
+        queue.confirmedState = await runAction(queue.confirmedState, action)
       }
     } catch {
       // rollback?
@@ -157,12 +158,12 @@ export function useProfileFollowMutationQueue(profile) {
     }
   }
 
-  async function runAction(action) {
+  async function runAction(state, action) {
     if (action === 'follow') {
       const {uri} = await followMutation.mutateAsync({did})
       return {followingUri: uri}
     } else if (action === 'unfollow') {
-      await unfollowMutation.mutateAsync({did, followUri: followingUri})
+      await unfollowMutation.mutateAsync({did, followUri: state.followingUri})
       return {followingUri: undefined}
     }
   }
