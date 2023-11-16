@@ -11,7 +11,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const {currentAccount} = useSession()
-  const {data: profile} = useProfileQuery({did: currentAccount!.did})
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
