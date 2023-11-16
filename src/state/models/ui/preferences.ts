@@ -29,8 +29,6 @@ export class LabelPreferencesModel {
 
 export class PreferencesModel {
   contentLabels = new LabelPreferencesModel()
-  savedFeeds: string[] = []
-  pinnedFeeds: string[] = []
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {}, {autoBind: true})
@@ -39,8 +37,6 @@ export class PreferencesModel {
   serialize() {
     return {
       contentLabels: this.contentLabels,
-      savedFeeds: this.savedFeeds,
-      pinnedFeeds: this.pinnedFeeds,
     }
   }
 
@@ -54,22 +50,6 @@ export class PreferencesModel {
       // check if content labels in preferences exist, then hydrate
       if (hasProp(v, 'contentLabels') && typeof v.contentLabels === 'object') {
         Object.assign(this.contentLabels, v.contentLabels)
-      }
-      // check if saved feeds in preferences, then hydrate
-      if (
-        hasProp(v, 'savedFeeds') &&
-        Array.isArray(v.savedFeeds) &&
-        typeof v.savedFeeds.every(item => typeof item === 'string')
-      ) {
-        this.savedFeeds = v.savedFeeds
-      }
-      // check if pinned feeds in preferences exist, then hydrate
-      if (
-        hasProp(v, 'pinnedFeeds') &&
-        Array.isArray(v.pinnedFeeds) &&
-        typeof v.pinnedFeeds.every(item => typeof item === 'string')
-      ) {
-        this.pinnedFeeds = v.pinnedFeeds
       }
     }
   }
