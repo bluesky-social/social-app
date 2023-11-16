@@ -157,7 +157,7 @@ export function useProfileFollowMutationQueue(
   return [queueFollow, queueUnfollow]
 }
 
-export function useProfileFollowMutation() {
+function useProfileFollowMutation() {
   const {agent} = useSession()
   return useMutation<
     {uri: string; cid: string},
@@ -194,7 +194,7 @@ export function useProfileFollowMutation() {
   })
 }
 
-export function useProfileUnfollowMutation() {
+function useProfileUnfollowMutation() {
   const {agent} = useSession()
   return useMutation<
     void,
@@ -273,7 +273,7 @@ export function useProfileMuteMutationQueue(
   return [queueMute, queueUnmute]
 }
 
-export function useProfileMuteMutation() {
+function useProfileMuteMutation() {
   const {agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
@@ -302,7 +302,7 @@ export function useProfileMuteMutation() {
   })
 }
 
-export function useProfileUnmuteMutation() {
+function useProfileUnmuteMutation() {
   const {agent} = useSession()
   return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
@@ -382,7 +382,7 @@ export function useProfileBlockMutationQueue(
   return [queueBlock, queueUnblock]
 }
 
-export function useProfileBlockMutation() {
+function useProfileBlockMutation() {
   const {agent, currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<
@@ -427,7 +427,7 @@ export function useProfileBlockMutation() {
   })
 }
 
-export function useProfileUnblockMutation() {
+function useProfileUnblockMutation() {
   const {agent, currentAccount} = useSession()
   return useMutation<
     void,
