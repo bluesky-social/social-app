@@ -293,9 +293,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
+      if (!agent.session) {
+        throw new Error(`session: initSession failed to establish a session`)
+      }
+
+      // ensure changes in handle/email etc are captured on reload
+      const freshAccount: persisted.PersistedAccount = {
+        service: account.service,
+        did: agent.session.did,
+        handle: agent.session.handle,
+        email: agent.session.email!, // TODO this is always defined?
+        emailConfirmed: agent.session.emailConfirmed || false,
+        refreshJwt: agent.session.refreshJwt,
+        accessJwt: agent.session.accessJwt,
+      }
+
       setState(s => ({...s, agent}))
-      upsertAccount(account)
-      emitSessionLoaded(account, agent)
+      upsertAccount(freshAccount)
+      emitSessionLoaded(freshAccount, agent)
     },
     [upsertAccount],
   )
