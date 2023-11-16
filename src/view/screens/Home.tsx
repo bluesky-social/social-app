@@ -11,19 +11,34 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired(function HomeScreenImpl({}: Props) {
+export const HomeScreen = withAuthRequired(function HomeScreenImpl(
+  props: Props,
+) {
+  const {data: preferences} = usePreferencesQuery()
+  if (preferences) {
+    return <HomeScreenReady {...props} preferences={preferences} />
+  } else {
+    return null // TODO
+  }
+})
+
+function HomeScreenReady({
+  preferences,
+}: Props & {
+  preferences: UsePreferencesQueryResponse
+}) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const pagerRef = React.useRef<PagerRef>(null)
   const [selectedPage, setSelectedPage] = React.useState(0)
   const [customFeeds, setCustomFeeds] = React.useState<FeedDescriptor[]>([])
-  const {data: preferences} = usePreferencesQuery()
 
   React.useEffect(() => {
-    if (!preferences?.feeds?.pinned) return
+    if (!preferences.feeds.pinned) return
 
     const pinned = preferences.feeds.pinned
 
@@ -40,11 +55,9 @@ export const HomeScreen = withAuthRequired(function HomeScreenImpl({}: Props) {
     setCustomFeeds(feeds)
 
     pagerRef.current?.setPage(0)
-  }, [preferences?.feeds?.pinned, setCustomFeeds, pagerRef])
+  }, [preferences.feeds?.pinned, setCustomFeeds, pagerRef])
 
   const homeFeedParams = React.useMemo<FeedParams>(() => {
-    if (!preferences) return {}
-
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
       mergeFeedSources: preferences.feeds.saved,
@@ -136,4 +149,4 @@ export const HomeScreen = withAuthRequired(function HomeScreenImpl({}: Props) {
       })}
     </Pager>
   )
-})
+}
