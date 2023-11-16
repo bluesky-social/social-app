@@ -60,6 +60,7 @@ import {
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
+import {useInviteCodesQuery} from '#/state/queries/invites'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -155,6 +156,8 @@ export const SettingsScreen = withAuthRequired(
     const {isSwitchingAccounts, accounts, currentAccount} = useSession()
     const {clearCurrentAccount} = useSessionApi()
     const {mutate: clearPreferences} = useClearPreferencesMutation()
+    const {data: invites} = useInviteCodesQuery()
+    const invitesAvailable = invites?.available?.length ?? 0
 
     const primaryBg = useCustomPalette<ViewStyle>({
       light: {backgroundColor: colors.blue0},
@@ -362,6 +365,7 @@ export const SettingsScreen = withAuthRequired(
           <Text type="xl-bold" style={[pal.text, styles.heading]}>
             <Trans>Invite a Friend</Trans>
           </Text>
+
           <TouchableOpacity
             testID="inviteFriendBtn"
             style={[
@@ -376,22 +380,20 @@ export const SettingsScreen = withAuthRequired(
             <View
               style={[
                 styles.iconContainer,
-                store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
+                invitesAvailable > 0 ? primaryBg : pal.btn,
               ]}>
               <FontAwesomeIcon
                 icon="ticket"
                 style={
-                  (store.me.invitesAvailable > 0
+                  (invitesAvailable > 0
                     ? primaryText
                     : pal.text) as FontAwesomeIconStyle
                 }
               />
             </View>
-            <Text
-              type="lg"
-              style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-              {formatCount(store.me.invitesAvailable)} invite{' '}
-              {pluralize(store.me.invitesAvailable, 'code')} available
+            <Text type="lg" style={invitesAvailable > 0 ? pal.link : pal.text}>
+              {formatCount(invitesAvailable)} invite{' '}
+              {pluralize(invitesAvailable, 'code')} available
             </Text>
           </TouchableOpacity>
 
