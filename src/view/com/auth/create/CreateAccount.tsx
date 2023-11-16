@@ -60,11 +60,12 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
     } else if (serviceInfoError) {
       uiDispatch({
         type: 'set-error',
-        value:
-          'Unable to contact your service. Please check your Internet connection.',
+        value: _(
+          msg`Unable to contact your service. Please check your Internet connection.`,
+        ),
       })
     }
-  }, [uiDispatch, serviceInfo, serviceInfoError])
+  }, [_, uiDispatch, serviceInfo, serviceInfoError])
 
   // event handlers
   // =
