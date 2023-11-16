@@ -47,7 +47,10 @@ export const NotificationsScreen = withAuthRequired(
 
     const onPressLoadLatest = React.useCallback(() => {
       scrollToTop()
-      queryClient.invalidateQueries({queryKey: NOTIFS_RQKEY()})
+      queryClient.invalidateQueries({
+        queryKey: NOTIFS_RQKEY(),
+        refetchType: 'all',
+      })
     }, [scrollToTop, queryClient])
 
     // on-visible setup
