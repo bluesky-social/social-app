@@ -18,7 +18,7 @@ export function useListMembersQuery(uri: string) {
     QueryKey,
     RQPageParam
   >({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getList({

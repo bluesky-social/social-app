@@ -16,7 +16,7 @@ export function useMyMutedAccountsQuery() {
     QueryKey,
     RQPageParam
   >({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getMutes({

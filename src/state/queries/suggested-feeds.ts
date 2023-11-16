@@ -16,7 +16,7 @@ export function useSuggestedFeedsQuery() {
     QueryKey,
     string | undefined
   >({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFeedsQueryKey,
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.feed.getSuggestedFeeds({

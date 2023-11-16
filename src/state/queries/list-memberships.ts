@@ -40,7 +40,7 @@ export interface ListMembersip {
 export function useDangerousListMembershipsQuery() {
   const {agent, currentAccount} = useSession()
   return useQuery<ListMembersip[]>({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
     async queryFn() {
       if (!currentAccount) {

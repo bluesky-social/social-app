@@ -13,7 +13,7 @@ export const RQKEY = (did: string) => ['profile-extra-info', did]
 export function useProfileExtraInfoQuery(did: string) {
   const {agent} = useSession()
   return useQuery({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did),
     async queryFn() {
       const [listsRes, feedsRes] = await Promise.all([

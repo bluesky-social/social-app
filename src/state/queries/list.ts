@@ -20,7 +20,7 @@ export const RQKEY = (uri: string) => ['list', uri]
 export function useListQuery(uri?: string) {
   const {agent} = useSession()
   return useQuery<AppBskyGraphDefs.ListView, Error>({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       if (!uri) {
