@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StatusBar} from 'expo-status-bar'
 import {
   DimensionValue,
@@ -11,7 +10,6 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
-import {useStores} from 'state/index'
 import {ModalsContainer} from 'view/com/modals/Modal'
 import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
@@ -32,15 +30,13 @@ import {
   useIsDrawerSwipeDisabled,
 } from '#/state/shell'
 import {isAndroid} from 'platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {useCloseAnyActiveElement} from '#/state/util'
 
-const ShellInner = observer(function ShellInnerImpl() {
-  const store = useStores()
+function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
-  const {closeModal} = useModalControls()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
@@ -59,20 +55,19 @@ const ShellInner = observer(function ShellInnerImpl() {
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
+  const closeAnyActiveElement = useCloseAnyActiveElement()
 
   React.useEffect(() => {
     let listener = {remove() {}}
     if (isAndroid) {
       listener = BackHandler.addEventListener('hardwareBackPress', () => {
-        setIsDrawerOpen(false)
-        closeModal()
-        return store.shell.closeAnyActiveElement()
+        return closeAnyActiveElement()
       })
     }
     return () => {
       listener.remove()
     }
-  }, [store, setIsDrawerOpen, closeModal])
+  }, [closeAnyActiveElement])
 
   return (
     <>
@@ -94,9 +89,9 @@ const ShellInner = observer(function ShellInnerImpl() {
       <Lightbox />
     </>
   )
-})
+}
 
-export const Shell: React.FC = observer(function ShellImpl() {
+export const Shell: React.FC = function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
   return (
@@ -109,7 +104,7 @@ export const Shell: React.FC = observer(function ShellImpl() {
       </View>
     </SafeAreaProvider>
   )
-})
+}
 
 const styles = StyleSheet.create({
   outerContainer: {

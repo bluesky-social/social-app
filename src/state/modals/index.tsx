@@ -213,16 +213,25 @@ const ModalContext = React.createContext<{
 
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
-  closeModal: () => void
+  closeModal: () => boolean
+  closeAllModals: () => void
 }>({
   openModal: () => {},
-  closeModal: () => {},
+  closeModal: () => false,
+  closeAllModals: () => {},
 })
 
 /**
  * @deprecated DO NOT USE THIS unless you have no other choice.
  */
 export let unstable__openModal: (modal: Modal) => void = () => {
+  throw new Error(`ModalContext is not initialized`)
+}
+
+/**
+ * @deprecated DO NOT USE THIS unless you have no other choice.
+ */
+export let unstable__closeModal: () => boolean = () => {
   throw new Error(`ModalContext is not initialized`)
 }
 
@@ -238,17 +247,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setIsModalActive, setActiveModals],
   )
 
-  unstable__openModal = openModal
-
   const closeModal = React.useCallback(() => {
     let totalActiveModals = 0
+    let wasActive = isModalActive
     setActiveModals(activeModals => {
       activeModals = activeModals.slice(0, -1)
       totalActiveModals = activeModals.length
       return activeModals
     })
     setIsModalActive(totalActiveModals > 0)
-  }, [setIsModalActive, setActiveModals])
+    return wasActive
+  }, [setIsModalActive, setActiveModals, isModalActive])
+
+  const closeAllModals = React.useCallback(() => {
+    setActiveModals([])
+    setIsModalActive(false)
+  }, [setActiveModals, setIsModalActive])
+
+  unstable__openModal = openModal
+  unstable__closeModal = closeModal
 
   const state = React.useMemo(
     () => ({
@@ -262,8 +279,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       openModal,
       closeModal,
+      closeAllModals,
     }),
-    [openModal, closeModal],
+    [openModal, closeModal, closeAllModals],
   )
 
   return (

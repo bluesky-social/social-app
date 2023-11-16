@@ -34,13 +34,15 @@ export interface ComposerOpts {
 type StateContext = ComposerOpts | undefined
 type ControlsContext = {
   openComposer: (opts: ComposerOpts) => void
-  closeComposer: () => void
+  closeComposer: () => boolean
 }
 
 const stateContext = React.createContext<StateContext>(undefined)
 const controlsContext = React.createContext<ControlsContext>({
   openComposer(_opts: ComposerOpts) {},
-  closeComposer() {},
+  closeComposer() {
+    return false
+  },
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -51,11 +53,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         setState(opts)
       },
       closeComposer() {
+        let wasOpen = !!state
         setState(undefined)
+        return wasOpen
       },
     }),
-    [setState],
+    [setState, state],
   )
+
   return (
     <stateContext.Provider value={state}>
       <controlsContext.Provider value={api}>
