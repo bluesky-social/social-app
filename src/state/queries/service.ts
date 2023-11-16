@@ -1,16 +1,26 @@
+import {BskyAgent} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
-
-import {useSession} from '#/state/session'
 
 export const RQKEY = (serviceUrl: string) => ['service', serviceUrl]
 
-export function useServiceQuery() {
-  const {agent} = useSession()
+export function useServiceQuery(serviceUrl: string) {
   return useQuery({
-    queryKey: RQKEY(agent.service.toString()),
+    queryKey: RQKEY(serviceUrl),
     queryFn: async () => {
+      const agent = new BskyAgent({service: serviceUrl})
       const res = await agent.com.atproto.server.describeServer()
       return res.data
     },
+    enabled: isValidUrl(serviceUrl),
   })
+}
+
+function isValidUrl(url: string) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const urlp = new URL(url)
+    return true
+  } catch {
+    return false
+  }
 }

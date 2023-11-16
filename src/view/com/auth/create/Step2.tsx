@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {CreateAccountModel} from 'state/models/ui/create-account'
+import {CreateAccountState, CreateAccountDispatch, is18} from './state'
 import {Text} from 'view/com/util/text/Text'
 import {DateInput} from 'view/com/util/forms/DateInput'
 import {StepHeader} from './StepHeader'
@@ -24,10 +23,12 @@ import {useModalControls} from '#/state/modals'
  * @field Birth date
  * @readonly Terms of service & privacy policy
  */
-export const Step2 = observer(function Step2Impl({
-  model,
+export function Step2({
+  uiState,
+  uiDispatch,
 }: {
-  model: CreateAccountModel
+  uiState: CreateAccountState
+  uiDispatch: CreateAccountDispatch
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -41,7 +42,7 @@ export const Step2 = observer(function Step2Impl({
     <View>
       <StepHeader step="2" title={_(msg`Your account`)} />
 
-      {model.isInviteCodeRequired && (
+      {uiState.isInviteCodeRequired && (
         <View style={s.pb20}>
           <Text type="md-medium" style={[pal.text, s.mb2]}>
             Invite code
@@ -50,16 +51,16 @@ export const Step2 = observer(function Step2Impl({
             testID="inviteCodeInput"
             icon="ticket"
             placeholder={_(msg`Required for this provider`)}
-            value={model.inviteCode}
+            value={uiState.inviteCode}
             editable
-            onChange={model.setInviteCode}
+            onChange={value => uiDispatch({type: 'set-invite-code', value})}
             accessibilityLabel={_(msg`Invite code`)}
             accessibilityHint="Input invite code to proceed"
           />
         </View>
       )}
 
-      {!model.inviteCode && model.isInviteCodeRequired ? (
+      {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
         <Text style={[s.alignBaseline, pal.text]}>
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
@@ -83,9 +84,9 @@ export const Step2 = observer(function Step2Impl({
               testID="emailInput"
               icon="envelope"
               placeholder={_(msg`Enter your email address`)}
-              value={model.email}
+              value={uiState.email}
               editable
-              onChange={model.setEmail}
+              onChange={value => uiDispatch({type: 'set-email', value})}
               accessibilityLabel={_(msg`Email`)}
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
@@ -103,10 +104,10 @@ export const Step2 = observer(function Step2Impl({
               testID="passwordInput"
               icon="lock"
               placeholder={_(msg`Choose your password`)}
-              value={model.password}
+              value={uiState.password}
               editable
               secureTextEntry
-              onChange={model.setPassword}
+              onChange={value => uiDispatch({type: 'set-password', value})}
               accessibilityLabel={_(msg`Password`)}
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
@@ -122,8 +123,8 @@ export const Step2 = observer(function Step2Impl({
             </Text>
             <DateInput
               testID="birthdayInput"
-              value={model.birthDate}
-              onChange={model.setBirthDate}
+              value={uiState.birthDate}
+              onChange={value => uiDispatch({type: 'set-birth-date', value})}
               buttonType="default-light"
               buttonStyle={[pal.border, styles.dateInputButton]}
               buttonLabelType="lg"
@@ -133,20 +134,20 @@ export const Step2 = observer(function Step2Impl({
             />
           </View>
 
-          {model.serviceDescription && (
+          {uiState.serviceDescription && (
             <Policies
-              serviceDescription={model.serviceDescription}
-              needsGuardian={!model.isAge18}
+              serviceDescription={uiState.serviceDescription}
+              needsGuardian={!is18(uiState)}
             />
           )}
         </>
       )}
-      {model.error ? (
-        <ErrorMessage message={model.error} style={styles.error} />
+      {uiState.error ? (
+        <ErrorMessage message={uiState.error} style={styles.error} />
       ) : undefined}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   error: {

@@ -1,4 +1,10 @@
-import {Insets} from 'react-native'
+import {Insets, Platform} from 'react-native'
+
+export const LOCAL_DEV_SERVICE =
+  Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
+export const STAGING_SERVICE = 'https://staging.bsky.dev'
+export const PROD_SERVICE = 'https://bsky.social'
+export const DEFAULT_SERVICE = PROD_SERVICE
 
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
