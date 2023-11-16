@@ -35,11 +35,6 @@ export class PreferencesModel {
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
-  thread: ThreadViewPreference = {
-    sort: 'oldest',
-    prioritizeFollowedUsers: true,
-    lab_treeViewEnabled: false, // experimental
-  }
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {}, {autoBind: true})
