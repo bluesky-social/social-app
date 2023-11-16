@@ -1,5 +1,6 @@
-import {AppBskyFeedDefs} from '@atproto/api'
-import {useQuery, useMutation} from '@tanstack/react-query'
+import React from 'react'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {useSession} from '../session'
 import {updatePostShadow} from '../cache/post-shadow'
 
@@ -19,6 +20,39 @@ export function usePostQuery(uri: string | undefined) {
     },
     enabled: !!uri,
   })
+}
+
+export function useGetPost() {
+  const queryClient = useQueryClient()
+  const {agent} = useSession()
+  return React.useCallback(
+    async ({uri}: {uri: string}) => {
+      return queryClient.fetchQuery({
+        queryKey: RQKEY(uri || ''),
+        async queryFn() {
+          const urip = new AtUri(uri)
+
+          if (!urip.host.startsWith('did:')) {
+            const res = await agent.resolveHandle({
+              handle: urip.host,
+            })
+            urip.host = res.data.did
+          }
+
+          const res = await agent.getPosts({
+            uris: [urip.toString()!],
+          })
+
+          if (res.success && res.data.posts[0]) {
+            return res.data.posts[0]
+          }
+
+          throw new Error('useGetPost: post not found')
+        },
+      })
+    },
+    [agent, queryClient],
+  )
 }
 
 export function usePostLikeMutation() {
