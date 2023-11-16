@@ -1,6 +1,6 @@
 import React from 'react'
 import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
-import {StyleProp, ViewStyle, DeviceEventEmitter} from 'react-native'
+import {StyleProp, ViewStyle} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {ImageModel} from '#/state/models/media/image'
@@ -232,7 +232,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const openModal = React.useCallback(
     (modal: Modal) => {
-      DeviceEventEmitter.emit('navigation')
       setActiveModals(activeModals => [...activeModals, modal])
       setIsModalActive(true)
     },

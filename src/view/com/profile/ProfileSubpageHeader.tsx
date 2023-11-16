@@ -12,11 +12,10 @@ import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {CenteredView} from '../util/Views'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {useStores} from 'state/index'
 import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
-import {ImagesLightbox} from 'state/models/ui/shell'
+import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
@@ -45,11 +44,11 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
     | undefined
   avatarType: UserAvatarType
 }>) {
-  const store = useStores()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
 
@@ -69,9 +68,9 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
-      store.shell.openLightbox(new ImagesLightbox([{uri: avatar}], 0))
+      openLightbox(new ImagesLightbox([{uri: avatar}], 0))
     }
-  }, [store, avatar])
+  }, [openLightbox, avatar])
 
   return (
     <CenteredView style={pal.view}>

@@ -31,7 +31,7 @@ export type UsePreferencesQueryResponse = Omit<
    */
   contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
   feedViewPrefs: BskyFeedViewPreference & {
-    lab_mergeFeedEnabled: boolean
+    lab_mergeFeedEnabled?: boolean
   }
   /**
    * User thread-view prefs, including newer fields that may not be typed yet.
@@ -45,5 +45,5 @@ export type UsePreferencesQueryResponse = Omit<
 
 export type ThreadViewPreferences = Omit<BskyThreadViewPreference, 'sort'> & {
   sort: 'oldest' | 'newest' | 'most-likes' | 'random' | string
-  lab_treeViewEnabled: boolean
+  lab_treeViewEnabled?: boolean
 }

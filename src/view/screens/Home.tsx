@@ -48,7 +48,9 @@ export const HomeScreen = withAuthRequired(
       if (!preferences) return {}
 
       return {
-        mergeFeedEnabled: preferences.feedViewPrefs.lab_mergeFeedEnabled,
+        mergeFeedEnabled: Boolean(
+          preferences.feedViewPrefs.lab_mergeFeedEnabled,
+        ),
         mergeFeedSources: preferences.feeds.saved,
       }
     }, [preferences])

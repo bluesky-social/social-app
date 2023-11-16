@@ -4,7 +4,6 @@ import {
   ComAtprotoServerListAppPasswords,
 } from '@atproto/api'
 import {RootStoreModel} from './root-store'
-import {MyFollowsCache} from './cache/my-follows'
 import {isObj, hasProp} from 'lib/type-guards'
 import {logger} from '#/logger'
 
@@ -18,7 +17,6 @@ export class MeModel {
   avatar: string = ''
   followsCount: number | undefined
   followersCount: number | undefined
-  follows: MyFollowsCache
   invites: ComAtprotoServerDefs.InviteCode[] = []
   appPasswords: ComAtprotoServerListAppPasswords.AppPassword[] = []
   lastProfileStateUpdate = Date.now()
@@ -33,11 +31,9 @@ export class MeModel {
       {rootStore: false, serialize: false, hydrate: false},
       {autoBind: true},
     )
-    this.follows = new MyFollowsCache(this.rootStore)
   }
 
   clear() {
-    this.follows.clear()
     this.rootStore.profiles.cache.clear()
     this.rootStore.posts.cache.clear()
     this.did = ''

@@ -84,7 +84,6 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
   })
 }
 
-// TODO refactor onboarding to use above, but this is still used
 export function useGetSuggestedFollowersByActor() {
   const {agent} = useSession()
   const queryClient = useQueryClient()

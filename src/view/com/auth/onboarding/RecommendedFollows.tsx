@@ -28,9 +28,7 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
   const {data: suggestedFollows, dataUpdatedAt} = useSuggestedFollowsQuery()
-  // TODO: @Eric @Ansh need to fix
-  const {mutateAsync: getSuggestedFollowsByActor} =
-    useGetSuggestedFollowersByActor()
+  const getSuggestedFollowsByActor = useGetSuggestedFollowersByActor()
   const [additionalSuggestions, setAdditionalSuggestions] = React.useState<{
     [did: string]: AppBskyActorDefs.ProfileView[]
   }>({})

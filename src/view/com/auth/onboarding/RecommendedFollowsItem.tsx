@@ -1,9 +1,8 @@
 import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
-import {ProfileModeration} from '@atproto/api'
+import {ProfileModeration, AppBskyActorDefs} from '@atproto/api'
 import {Button} from '#/view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
-import {SuggestedActor} from 'state/models/discovery/suggested-actors'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
@@ -21,7 +20,7 @@ import {
 import {logger} from '#/logger'
 
 type Props = {
-  profile: SuggestedActor
+  profile: AppBskyActorDefs.ProfileViewBasic
   dataUpdatedAt: number
   moderation: ProfileModeration
   onFollowStateChange: (props: {
@@ -67,7 +66,7 @@ export function ProfileCard({
   onFollowStateChange,
   moderation,
 }: {
-  profile: Shadow<SuggestedActor>
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   moderation: ProfileModeration
   onFollowStateChange: (props: {
     did: string
