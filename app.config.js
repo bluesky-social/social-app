@@ -37,6 +37,7 @@ module.exports = function () {
             'Used for profile pictures, posts, and other kinds of content',
         },
         associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        appStoreUrl: 'https://apps.apple.com/app/bluesky-social/id6444370199',
       },
       androidStatusBar: {
         barStyle: 'dark-content',
@@ -63,6 +64,8 @@ module.exports = function () {
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
+        playStoreUrl:
+          'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app',
       },
       web: {
         favicon: './assets/favicon.png',
