@@ -4,7 +4,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
 import {useStores, DEFAULT_SERVICE} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
-import {AccountData} from 'state/models/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
 import {ChooseAccountForm} from './ChooseAccountForm'
@@ -14,6 +13,7 @@ import {SetNewPasswordForm} from './SetNewPasswordForm'
 import {PasswordUpdatedForm} from './PasswordUpdatedForm'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useSession, SessionAccount} from '#/state/session'
 
 enum Forms {
   Login,
@@ -26,6 +26,7 @@ enum Forms {
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const pal = usePalette('default')
   const store = useStores()
+  const {accounts} = useSession()
   const {track} = useAnalytics()
   const {_} = useLingui()
   const [error, setError] = useState<string>('')
@@ -36,10 +37,10 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   >(undefined)
   const [initialHandle, setInitialHandle] = useState<string>('')
   const [currentForm, setCurrentForm] = useState<Forms>(
-    store.session.hasAccounts ? Forms.ChooseAccount : Forms.Login,
+    accounts.length ? Forms.ChooseAccount : Forms.Login,
   )
 
-  const onSelectAccount = (account?: AccountData) => {
+  const onSelectAccount = (account?: SessionAccount) => {
     if (account?.service) {
       setServiceUrl(account.service)
     }
@@ -95,7 +96,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           title={_(msg`Sign in`)}
           description={_(msg`Enter your username and password`)}>
           <LoginForm
-            store={store}
             error={error}
             serviceUrl={serviceUrl}
             serviceDescription={serviceDescription}
@@ -114,7 +114,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           title={_(msg`Sign in as...`)}
           description={_(msg`Select from an existing account`)}>
           <ChooseAccountForm
-            store={store}
             onSelectAccount={onSelectAccount}
             onPressBack={onPressBack}
           />
@@ -126,7 +125,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           title={_(msg`Forgot Password`)}
           description={_(msg`Let's get your password reset!`)}>
           <ForgotPasswordForm
-            store={store}
             error={error}
             serviceUrl={serviceUrl}
             serviceDescription={serviceDescription}
@@ -143,7 +141,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           title={_(msg`Forgot Password`)}
           description={_(msg`Let's get your password reset!`)}>
           <SetNewPasswordForm
-            store={store}
             error={error}
             serviceUrl={serviceUrl}
             setError={setError}

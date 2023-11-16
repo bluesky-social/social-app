@@ -63,7 +63,6 @@ export class RootStoreModel {
   serialize(): unknown {
     return {
       appInfo: this.appInfo,
-      session: this.session.serialize(),
       me: this.me.serialize(),
       preferences: this.preferences.serialize(),
     }
@@ -80,9 +79,6 @@ export class RootStoreModel {
       if (hasProp(v, 'me')) {
         this.me.hydrate(v.me)
       }
-      if (hasProp(v, 'session')) {
-        this.session.hydrate(v.session)
-      }
       if (hasProp(v, 'preferences')) {
         this.preferences.hydrate(v.preferences)
       }
@@ -92,18 +88,7 @@ export class RootStoreModel {
   /**
    * Called during init to resume any stored session.
    */
-  async attemptSessionResumption() {
-    logger.debug('RootStoreModel:attemptSessionResumption')
-    try {
-      await this.session.attemptSessionResumption()
-      logger.debug('Session initialized', {
-        hasSession: this.session.hasSession,
-      })
-      this.updateSessionState()
-    } catch (e: any) {
-      logger.warn('Failed to initialize session', {error: e})
-    }
-  }
+  async attemptSessionResumption() {}
 
   /**
    * Called by the session model. Refreshes session-oriented state.
@@ -116,7 +101,6 @@ export class RootStoreModel {
     this.agent = agent
     applyDebugHeader(this.agent)
     this.me.clear()
-    await this.preferences.sync()
     await this.me.load()
     if (!hadSession) {
       await resetNavigation()
@@ -135,11 +119,10 @@ export class RootStoreModel {
   }
 
   /**
-   * Clears all session-oriented state.
+   * Clears all session-oriented state, previously called on LOGOUT
    */
   clearAllSessionState() {
     logger.debug('RootStoreModel:clearAllSessionState')
-    this.session.clear()
     resetToTab('HomeTab')
     this.me.clear()
   }
@@ -153,7 +136,6 @@ export class RootStoreModel {
     }
     try {
       await this.me.updateIfNeeded()
-      await this.preferences.sync()
     } catch (e: any) {
       logger.error('Failed to fetch latest state', {error: e})
     }
@@ -220,14 +202,6 @@ export class RootStoreModel {
   }
   emitScreenSoftReset() {
     DeviceEventEmitter.emit('screen-soft-reset')
-  }
-
-  // the unread notifications count has changed
-  onUnreadNotifications(handler: (count: number) => void): EmitterSubscription {
-    return DeviceEventEmitter.addListener('unread-notifications', handler)
-  }
-  emitUnreadNotifications(count: number) {
-    DeviceEventEmitter.emit('unread-notifications', count)
   }
 }
 

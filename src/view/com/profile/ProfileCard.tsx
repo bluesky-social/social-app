@@ -21,10 +21,15 @@ import {
   getProfileModerationCauses,
   getModerationCauseKey,
 } from 'lib/moderation'
+import {Shadow} from '#/state/cache/types'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useSession} from '#/state/session'
 
-export const ProfileCard = observer(function ProfileCardImpl({
+export function ProfileCard({
   testID,
-  profile,
+  profile: profileUnshadowed,
+  dataUpdatedAt,
   noBg,
   noBorder,
   followers,
@@ -33,16 +38,22 @@ export const ProfileCard = observer(function ProfileCardImpl({
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
+  dataUpdatedAt: number
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
-  renderButton?: (profile: AppBskyActorDefs.ProfileViewBasic) => React.ReactNode
+  renderButton?: (
+    profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
+  ) => React.ReactNode
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
   const pal = usePalette('default')
-
-  const moderation = moderateProfile(profile, store.preferences.moderationOpts)
+  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const moderationOpts = useModerationOpts()
+  if (!moderationOpts) {
+    return null
+  }
+  const moderation = moderateProfile(profile, moderationOpts)
 
   return (
     <Link
@@ -100,7 +111,7 @@ export const ProfileCard = observer(function ProfileCardImpl({
       <FollowersList followers={followers} />
     </Link>
   )
-})
+}
 
 function ProfileCardPills({
   followedBy,
@@ -181,34 +192,37 @@ const FollowersList = observer(function FollowersListImpl({
   )
 })
 
-export const ProfileCardWithFollowBtn = observer(
-  function ProfileCardWithFollowBtnImpl({
-    profile,
-    noBg,
-    noBorder,
-    followers,
-  }: {
-    profile: AppBskyActorDefs.ProfileViewBasic
-    noBg?: boolean
-    noBorder?: boolean
-    followers?: AppBskyActorDefs.ProfileView[] | undefined
-  }) {
-    const store = useStores()
-    const isMe = store.me.did === profile.did
+export function ProfileCardWithFollowBtn({
+  profile,
+  noBg,
+  noBorder,
+  followers,
+  dataUpdatedAt,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  noBg?: boolean
+  noBorder?: boolean
+  followers?: AppBskyActorDefs.ProfileView[] | undefined
+  dataUpdatedAt: number
+}) {
+  const {currentAccount} = useSession()
+  const isMe = profile.did === currentAccount?.did
 
-    return (
-      <ProfileCard
-        profile={profile}
-        noBg={noBg}
-        noBorder={noBorder}
-        followers={followers}
-        renderButton={
-          isMe ? undefined : () => <FollowButton profile={profile} />
-        }
-      />
-    )
-  },
-)
+  return (
+    <ProfileCard
+      profile={profile}
+      noBg={noBg}
+      noBorder={noBorder}
+      followers={followers}
+      renderButton={
+        isMe
+          ? undefined
+          : profileShadow => <FollowButton profile={profileShadow} />
+      }
+      dataUpdatedAt={dataUpdatedAt}
+    />
+  )
+}
 
 const styles = StyleSheet.create({
   outer: {

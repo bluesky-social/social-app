@@ -15,11 +15,11 @@ import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
 import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {RootStoreModel} from 'state/index'
 import {ServiceDescription} from 'state/models/session'
 import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {useSessionApi} from '#/state/session'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
@@ -28,7 +28,6 @@ import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 
 export const LoginForm = ({
-  store,
   error,
   serviceUrl,
   serviceDescription,
@@ -39,7 +38,6 @@ export const LoginForm = ({
   onPressBack,
   onPressForgotPassword,
 }: {
-  store: RootStoreModel
   error: string
   serviceUrl: string
   serviceDescription: ServiceDescription | undefined
@@ -59,6 +57,7 @@ export const LoginForm = ({
   const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const {login} = useSessionApi()
 
   const onPressSelectService = () => {
     openModal({
@@ -98,7 +97,8 @@ export const LoginForm = ({
         }
       }
 
-      await store.session.login({
+      // TODO remove double login
+      await login({
         service: serviceUrl,
         identifier: fullIdent,
         password,

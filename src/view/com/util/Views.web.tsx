@@ -108,9 +108,9 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     <Animated.FlatList
       ref={ref}
       contentContainerStyle={[
+        styles.contentContainer,
         contentContainerStyle,
         pal.border,
-        styles.contentContainer,
       ]}
       style={style}
       contentOffset={contentOffset}
@@ -135,9 +135,9 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
   return (
     <Animated.ScrollView
       contentContainerStyle={[
+        styles.contentContainer,
         contentContainerStyle,
         pal.border,
-        styles.contentContainer,
       ]}
       // @ts-ignore something is wrong with the reanimated types -prf
       ref={ref}

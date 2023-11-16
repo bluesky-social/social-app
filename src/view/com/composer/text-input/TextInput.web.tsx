@@ -11,13 +11,13 @@ import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {isUriImage, blobToDataUri} from 'lib/media/util'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 
 export interface TextInputRef {
   focus: () => void
@@ -28,7 +28,6 @@ interface TextInputProps {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
-  autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -43,7 +42,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     richtext,
     placeholder,
     suggestedLinks,
-    autocompleteView,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -52,6 +50,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
+  const autocomplete = useActorAutocompleteFn()
+
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
   const extensions = React.useMemo(
     () => [
@@ -61,7 +61,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         HTMLAttributes: {
           class: 'mention',
         },
-        suggestion: createSuggestion({autocompleteView}),
+        suggestion: createSuggestion({autocomplete}),
       }),
       Paragraph,
       Placeholder.configure({
@@ -71,7 +71,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       History,
       Hardbreak,
     ],
-    [autocompleteView, placeholder],
+    [autocomplete, placeholder],
   )
 
   React.useEffect(() => {

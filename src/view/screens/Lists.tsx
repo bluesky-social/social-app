@@ -3,12 +3,9 @@ import {View} from 'react-native'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {useStores} from 'state/index'
-import {ListsListModel} from 'state/models/lists/lists-list'
-import {ListsList} from 'view/com/lists/ListsList'
+import {MyLists} from '#/view/com/lists/MyLists'
 import {Text} from 'view/com/util/text/Text'
 import {Button} from 'view/com/util/forms/Button'
 import {NavigationProp} from 'lib/routes/types'
@@ -22,24 +19,17 @@ import {Trans} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export const ListsScreen = withAuthRequired(
-  observer(function ListsScreenImpl({}: Props) {
+  function ListsScreenImpl({}: Props) {
     const pal = usePalette('default')
-    const store = useStores()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {isMobile} = useWebMediaQueries()
     const navigation = useNavigation<NavigationProp>()
     const {openModal} = useModalControls()
 
-    const listsLists: ListsListModel = React.useMemo(
-      () => new ListsListModel(store, 'my-curatelists'),
-      [store],
-    )
-
     useFocusEffect(
       React.useCallback(() => {
         setMinimalShellMode(false)
-        listsLists.refresh()
-      }, [listsLists, setMinimalShellMode]),
+      }, [setMinimalShellMode]),
     )
 
     const onPressNewList = React.useCallback(() => {
@@ -90,8 +80,8 @@ export const ListsScreen = withAuthRequired(
             </Button>
           </View>
         </SimpleViewHeader>
-        <ListsList listsList={listsLists} style={s.flexGrow1} />
+        <MyLists filter="curate" style={s.flexGrow1} />
       </View>
     )
-  }),
+  },
 )

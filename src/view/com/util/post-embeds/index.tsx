@@ -28,9 +28,9 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri} from 'lib/moderation'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -72,7 +72,13 @@ export function PostEmbeds({
     // custom feed embed (i.e. generator view)
     // =
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <CustomFeedEmbed record={embed.record} />
+      return (
+        <FeedSourceCard
+          feedUri={embed.record.uri}
+          style={[pal.view, pal.border, styles.customFeedOuter]}
+          showLikes
+        />
+      )
     }
 
     // list embed
@@ -205,5 +211,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  customFeedOuter: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
 })

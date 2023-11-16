@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyRichtextFacet,
+  BskyAgent,
   ComAtprotoLabelDefs,
   ComAtprotoRepoUploadBlob,
   RichText,
@@ -53,18 +54,18 @@ export async function resolveName(store: RootStoreModel, didOrHandle: string) {
 }
 
 export async function uploadBlob(
-  store: RootStoreModel,
+  agent: BskyAgent,
   blob: string,
   encoding: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (isWeb) {
     // `blob` should be a data uri
-    return store.agent.uploadBlob(convertDataURIToUint8Array(blob), {
+    return agent.uploadBlob(convertDataURIToUint8Array(blob), {
       encoding,
     })
   } else {
     // `blob` should be a path to a file in the local FS
-    return store.agent.uploadBlob(
+    return agent.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
@@ -81,12 +82,11 @@ interface PostOpts {
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
-  knownHandles?: Set<string>
   onStateChange?: (state: string) => void
   langs?: string[]
 }
 
-export async function post(store: RootStoreModel, opts: PostOpts) {
+export async function post(agent: BskyAgent, opts: PostOpts) {
   let embed:
     | AppBskyEmbedImages.Main
     | AppBskyEmbedExternal.Main
@@ -102,7 +102,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   )
 
   opts.onStateChange?.('Processing...')
-  await rt.detectFacets(store.agent)
+  await rt.detectFacets(agent)
   rt = shortenLinks(rt)
 
   // filter out any mention facets that didn't map to a user
@@ -135,7 +135,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       await image.compress()
       const path = image.compressed?.path ?? image.path
       const {width, height} = image.compressed || image
-      const res = await uploadBlob(store, path, 'image/jpeg')
+      const res = await uploadBlob(agent, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
         alt: image.altText ?? '',
@@ -185,7 +185,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         }
         if (encoding) {
           const thumbUploadRes = await uploadBlob(
-            store,
+            agent,
             opts.extLink.localThumb.path,
             encoding,
           )
@@ -224,7 +224,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   // add replyTo if post is a reply to another post
   if (opts.replyTo) {
     const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await store.agent.getPost({
+    const parentPost = await agent.getPost({
       repo: replyToUrip.host,
       rkey: replyToUrip.rkey,
     })
@@ -257,7 +257,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
 
   try {
     opts.onStateChange?.('Posting...')
-    return await store.agent.post({
+    return await agent.post({
       text: rt.text,
       facets: rt.facets,
       reply,

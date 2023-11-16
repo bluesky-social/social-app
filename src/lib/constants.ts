@@ -43,7 +43,10 @@ export function IS_PROD(url: string) {
   // until open federation, "production" is defined as the main server
   // this definition will not work once federation is enabled!
   // -prf
-  return url.startsWith('https://bsky.social')
+  return (
+    url.startsWith('https://bsky.social') ||
+    url.startsWith('https://api.bsky.app')
+  )
 }
 
 export const PROD_TEAM_HANDLES = [

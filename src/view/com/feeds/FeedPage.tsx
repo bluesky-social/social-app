@@ -4,77 +4,56 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {useIsFocused} from '@react-navigation/native'
 import {useAnalytics} from '@segment/analytics-react-native'
+import {useQueryClient} from '@tanstack/react-query'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
-import {observer} from 'mobx-react-lite'
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, View, useWindowDimensions} from 'react-native'
 import {useStores} from 'state/index'
-import {PostsFeedModel} from 'state/models/feeds/posts'
-import {useHeaderOffset, POLL_FREQ} from 'view/screens/Home'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
-import useAppState from 'react-native-appstate-hook'
-import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 
-export const FeedPage = observer(function FeedPageImpl({
+const POLL_FREQ = 30e3 // 30sec
+
+export function FeedPage({
   testID,
   isPageFocused,
   feed,
+  feedParams,
   renderEmptyState,
   renderEndOfFeed,
 }: {
   testID?: string
-  feed: PostsFeedModel
+  feed: FeedDescriptor
+  feedParams?: FeedParams
   isPageFocused: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
 }) {
   const store = useStores()
+  const {isSandbox} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
+  const queryClient = useQueryClient()
+  const {openComposer} = useComposerControls()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
-  const {appState} = useAppState({
-    onForeground: () => doPoll(true),
-  })
   const isScreenFocused = useIsFocused()
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
-
-  React.useEffect(() => {
-    // called on first load
-    if (!feed.hasLoaded && isPageFocused) {
-      feed.setup()
-    }
-  }, [isPageFocused, feed])
-
-  const doPoll = React.useCallback(
-    (knownActive = false) => {
-      if (
-        (!knownActive && appState !== 'active') ||
-        !isScreenFocused ||
-        !isPageFocused
-      ) {
-        return
-      }
-      if (feed.isLoading) {
-        return
-      }
-      logger.debug('HomeScreen: Polling for new posts')
-      feed.checkForLatest()
-    },
-    [appState, isScreenFocused, isPageFocused, feed],
-  )
+  const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({offset: -headerOffset})
@@ -84,41 +63,33 @@ export const FeedPage = observer(function FeedPageImpl({
   const onSoftReset = React.useCallback(() => {
     if (isPageFocused) {
       scrollToTop()
-      feed.refresh()
+      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      setHasNew(false)
     }
-  }, [isPageFocused, scrollToTop, feed])
+  }, [isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
   // fires when page within screen is activated/deactivated
-  // - check for latest
   React.useEffect(() => {
     if (!isPageFocused || !isScreenFocused) {
       return
     }
-
     const softResetSub = store.onScreenSoftReset(onSoftReset)
-    const feedCleanup = feed.registerListeners()
-    const pollInterval = setInterval(doPoll, POLL_FREQ)
-
     screen('Feed')
-    logger.debug('HomeScreen: Updating feed')
-    feed.checkForLatest()
-
     return () => {
-      clearInterval(pollInterval)
       softResetSub.remove()
-      feedCleanup()
     }
-  }, [store, doPoll, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
+  }, [store, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
 
   const onPressCompose = React.useCallback(() => {
     track('HomeScreen:PressCompose')
-    store.shell.openComposer({})
-  }, [store, track])
+    openComposer({})
+  }, [openComposer, track])
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    feed.refresh()
-  }, [feed, scrollToTop])
+    queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+    setHasNew(false)
+  }, [scrollToTop, feed, queryClient, setHasNew])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {
@@ -140,7 +111,7 @@ export const FeedPage = observer(function FeedPageImpl({
             style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
-                {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+                {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
                 {hasNew && (
                   <View
                     style={{
@@ -173,16 +144,29 @@ export const FeedPage = observer(function FeedPageImpl({
       )
     }
     return <></>
-  }, [isDesktop, pal.view, pal.text, pal.textLight, store, hasNew, _])
+  }, [
+    isDesktop,
+    pal.view,
+    pal.text,
+    pal.textLight,
+    store,
+    hasNew,
+    _,
+    isSandbox,
+  ])
 
   return (
     <View testID={testID} style={s.h100pct}>
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
         feed={feed}
+        feedParams={feedParams}
+        enabled={isPageFocused}
+        pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
         onScroll={onMainScroll}
-        scrollEventThrottle={100}
+        onHasNew={setHasNew}
+        scrollEventThrottle={1}
         renderEmptyState={renderEmptyState}
         renderEndOfFeed={renderEndOfFeed}
         ListHeaderComponent={ListHeaderComponent}
@@ -205,4 +189,18 @@ export const FeedPage = observer(function FeedPageImpl({
       />
     </View>
   )
-})
+}
+
+function useHeaderOffset() {
+  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {fontScale} = useWindowDimensions()
+  if (isDesktop) {
+    return 0
+  }
+  if (isTablet) {
+    return 50
+  }
+  // default text takes 44px, plus 34px of pad
+  // scale the 44px by the font scale
+  return 34 + 44 * fontScale
+}

@@ -18,6 +18,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useOnboardingDispatch} from '#/state/shell'
+import {useSessionApi} from '#/state/session'
+import {
+  usePreferencesSetBirthDateMutation,
+  useSetSaveFeedsMutation,
+  DEFAULT_PROD_FEEDS,
+} from '#/state/queries/preferences'
+import {IS_PROD} from '#/lib/constants'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
@@ -34,6 +41,9 @@ export const CreateAccount = observer(function CreateAccountImpl({
   const model = React.useMemo(() => new CreateAccountModel(store), [store])
   const {_} = useLingui()
   const onboardingDispatch = useOnboardingDispatch()
+  const {createAccount} = useSessionApi()
+  const {mutate: setBirthDate} = usePreferencesSetBirthDateMutation()
+  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
 
   React.useEffect(() => {
     screen('CreateAccount')
@@ -64,14 +74,30 @@ export const CreateAccount = observer(function CreateAccountImpl({
       model.next()
     } else {
       try {
-        await model.submit(onboardingDispatch)
+        await model.submit({
+          onboardingDispatch,
+          createAccount,
+        })
+
+        setBirthDate({birthDate: model.birthDate})
+
+        if (IS_PROD(model.serviceUrl)) {
+          setSavedFeeds(DEFAULT_PROD_FEEDS)
+        }
       } catch {
         // dont need to handle here
       } finally {
         track('Try Create Account')
       }
     }
-  }, [model, track, onboardingDispatch])
+  }, [
+    model,
+    track,
+    onboardingDispatch,
+    createAccount,
+    setBirthDate,
+    setSavedFeeds,
+  ])
 
   return (
     <LoggedOutLayout

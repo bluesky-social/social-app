@@ -1,11 +1,9 @@
 import React from 'react'
-import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
 import {StyleProp, ViewStyle, DeviceEventEmitter} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 
-import {ProfileModel} from '#/state/models/content/profile'
 import {ImageModel} from '#/state/models/media/image'
-import {ListModel} from '#/state/models/content/list'
 import {GalleryModel} from '#/state/models/media/gallery'
 
 export interface ConfirmModal {
@@ -21,7 +19,7 @@ export interface ConfirmModal {
 
 export interface EditProfileModal {
   name: 'edit-profile'
-  profileView: ProfileModel
+  profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }
 
@@ -55,7 +53,7 @@ export type ReportModal = {
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
-  list?: ListModel
+  list?: AppBskyGraphDefs.ListView
   onSave?: (uri: string) => void
 }
 
@@ -67,10 +65,13 @@ export interface UserAddRemoveListsModal {
   onRemove?: (listUri: string) => void
 }
 
-export interface ListAddUserModal {
-  name: 'list-add-user'
-  list: ListModel
-  onAdd?: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+export interface ListAddRemoveUsersModal {
+  name: 'list-add-remove-users'
+  list: AppBskyGraphDefs.ListView
+  onChange?: (
+    type: 'add' | 'remove',
+    profile: AppBskyActorDefs.ProfileViewBasic,
+  ) => void
 }
 
 export interface EditImageModal {
@@ -184,7 +185,7 @@ export type Modal =
   // Lists
   | CreateOrEditListModal
   | UserAddRemoveListsModal
-  | ListAddUserModal
+  | ListAddRemoveUsersModal
 
   // Posts
   | AltTextImageModal
@@ -243,7 +244,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const closeModal = React.useCallback(() => {
     let totalActiveModals = 0
     setActiveModals(activeModals => {
-      activeModals.pop()
+      activeModals = activeModals.slice(0, -1)
       totalActiveModals = activeModals.length
       return activeModals
     })

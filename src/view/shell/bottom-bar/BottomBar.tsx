@@ -27,6 +27,8 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
+import {useShellLayout} from '#/state/shell/shell-layout'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -39,11 +41,11 @@ export const BottomBar = observer(function BottomBarImpl({
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
+  const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
-
+  const numUnreadNotifications = useUnreadNotifications()
   const {footerMinimalShellTransform} = useMinimalShellMode()
-  const {notifications} = store.me
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
@@ -88,7 +90,10 @@ export const BottomBar = observer(function BottomBarImpl({
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
-      ]}>
+      ]}
+      onLayout={e => {
+        footerHeight.value = e.nativeEvent.layout.height
+      }}>
       <Btn
         testID="bottomBarHomeBtn"
         icon={
@@ -173,14 +178,14 @@ export const BottomBar = observer(function BottomBarImpl({
           )
         }
         onPress={onPressNotifications}
-        notificationCount={notifications.unreadCountLabel}
+        notificationCount={numUnreadNotifications}
         accessible={true}
         accessibilityRole="tab"
         accessibilityLabel={_(msg`Notifications`)}
         accessibilityHint={
-          notifications.unreadCountLabel === ''
+          numUnreadNotifications === ''
             ? ''
-            : `${notifications.unreadCountLabel} unread`
+            : `${numUnreadNotifications} unread`
         }
       />
       <Btn

@@ -5,23 +5,23 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 import * as Toast from '../../com/util/Toast'
+import {useSessionApi, SessionAccount} from '#/state/session'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-export function AccountDropdownBtn({handle}: {handle: string}) {
-  const store = useStores()
+export function AccountDropdownBtn({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
+  const {removeAccount} = useSessionApi()
   const {_} = useLingui()
 
   const items: DropdownItem[] = [
     {
       label: _(msg`Remove account`),
       onPress: () => {
-        store.session.removeAccount(handle)
+        removeAccount(account)
         Toast.show('Account removed from quick access')
       },
       icon: {

@@ -25,7 +25,7 @@ export const Lightbox = observer(function Lightbox() {
     const opts = store.shell.activeLightbox as models.ProfileImageLightbox
     return (
       <ImageView
-        images={[{uri: opts.profileView.avatar || ''}]}
+        images={[{uri: opts.profile.avatar || ''}]}
         initialImageIndex={0}
         visible
         onRequestClose={onClose}
@@ -94,7 +94,7 @@ const LightboxFooter = observer(function LightboxFooter({
     altText = opts.images[imageIndex].alt || ''
   } else if (lightbox.name === 'profile-image') {
     const opts = lightbox as models.ProfileImageLightbox
-    uri = opts.profileView.avatar || ''
+    uri = opts.profile.avatar || ''
   }
 
   return (

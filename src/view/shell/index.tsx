@@ -33,6 +33,7 @@ import {
 } from '#/state/shell'
 import {isAndroid} from 'platform/detection'
 import {useModalControls} from '#/state/modals'
+import {useSession} from '#/state/session'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
@@ -57,6 +58,8 @@ const ShellInner = observer(function ShellInnerImpl() {
     [setIsDrawerOpen],
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
+  const {hasSession} = useSession()
+
   React.useEffect(() => {
     let listener = {remove() {}}
     if (isAndroid) {
@@ -81,21 +84,12 @@ const ShellInner = observer(function ShellInnerImpl() {
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={
-              !canGoBack && store.session.hasSession && !isDrawerSwipeDisabled
-            }>
+            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
       </View>
-      <Composer
-        active={store.shell.isComposerActive}
-        winHeight={winDim.height}
-        replyTo={store.shell.composerOpts?.replyTo}
-        onPost={store.shell.composerOpts?.onPost}
-        quote={store.shell.composerOpts?.quote}
-        mention={store.shell.composerOpts?.mention}
-      />
+      <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <Lightbox />
     </>

@@ -1,5 +1,4 @@
 import React, {useState, useCallback, useMemo} from 'react'
-import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -9,12 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {AppBskyGraphDefs} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
-import {ListModel} from 'state/models/content/list'
+import * as Toast from '../util/Toast'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {compressIfNeeded} from 'lib/media/manip'
@@ -27,6 +26,10 @@ import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {
+  useListCreateMutation,
+  useListMetadataMutation,
+} from '#/state/queries/list'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -40,9 +43,8 @@ export function Component({
 }: {
   purpose?: string
   onSave?: (uri: string) => void
-  list?: ListModel
+  list?: AppBskyGraphDefs.ListView
 }) {
-  const store = useStores()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [error, setError] = useState<string>('')
@@ -50,10 +52,12 @@ export function Component({
   const theme = useTheme()
   const {track} = useAnalytics()
   const {_} = useLingui()
+  const listCreateMutation = useListCreateMutation()
+  const listMetadataMutation = useListMetadataMutation()
 
   const activePurpose = useMemo(() => {
-    if (list?.data?.purpose) {
-      return list.data.purpose
+    if (list?.purpose) {
+      return list.purpose
     }
     if (purpose) {
       return purpose
@@ -64,11 +68,11 @@ export function Component({
   const purposeLabel = isCurateList ? 'User' : 'Moderation'
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.data?.name || '')
+  const [name, setName] = useState<string>(list?.name || '')
   const [description, setDescription] = useState<string>(
-    list?.data?.description || '',
+    list?.description || '',
   )
-  const [avatar, setAvatar] = useState<string | undefined>(list?.data?.avatar)
+  const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onPressCancel = useCallback(() => {
@@ -111,7 +115,8 @@ export function Component({
     }
     try {
       if (list) {
-        await list.updateMetadata({
+        await listMetadataMutation.mutateAsync({
+          uri: list.uri,
           name: nameTrimmed,
           description: description.trim(),
           avatar: newAvatar,
@@ -119,7 +124,7 @@ export function Component({
         Toast.show(`${purposeLabel} list updated`)
         onSave?.(list.uri)
       } else {
-        const res = await ListModel.createList(store, {
+        const res = await listCreateMutation.mutateAsync({
           purpose: activePurpose,
           name,
           description,
@@ -145,7 +150,6 @@ export function Component({
     setError,
     error,
     onSave,
-    store,
     closeModal,
     activePurpose,
     isCurateList,
@@ -154,6 +158,8 @@ export function Component({
     description,
     newAvatar,
     list,
+    listMetadataMutation,
+    listCreateMutation,
   ])
 
   return (

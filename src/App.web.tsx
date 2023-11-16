@@ -22,8 +22,17 @@ import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import I18nProvider from './locale/i18nProvider'
+import {
+  Provider as SessionProvider,
+  useSession,
+  useSessionApi,
+} from 'state/session'
+import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
+import * as persisted from '#/state/persisted'
 
 const InnerApp = observer(function AppImpl() {
+  const {isInitialLoad} = useSession()
+  const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
   const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
     undefined,
@@ -37,26 +46,37 @@ const InnerApp = observer(function AppImpl() {
     })
   }, [])
 
+  useEffect(() => {
+    const account = persisted.get('session').currentAccount
+    resumeSession(account)
+  }, [resumeSession])
+
   // show nothing prior to init
-  if (!rootStore) {
+  if (!rootStore || isInitialLoad) {
+    // TODO add a loading state
     return null
   }
 
+  /*
+   * Session and initial state should be loaded prior to rendering below.
+   */
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <UnreadNotifsProvider>
       <ThemeProvider theme={colorMode}>
-        <RootSiblingParent>
-          <analytics.Provider>
-            <RootStoreProvider value={rootStore}>
+        <analytics.Provider>
+          <RootStoreProvider value={rootStore}>
+            {/* All components should be within this provider */}
+            <RootSiblingParent>
               <SafeAreaProvider>
                 <Shell />
               </SafeAreaProvider>
-              <ToastContainer />
-            </RootStoreProvider>
-          </analytics.Provider>
-        </RootSiblingParent>
+            </RootSiblingParent>
+            <ToastContainer />
+          </RootStoreProvider>
+        </analytics.Provider>
       </ThemeProvider>
-    </QueryClientProvider>
+    </UnreadNotifsProvider>
   )
 })
 
@@ -71,20 +91,28 @@ function App() {
     return null
   }
 
+  /*
+   * NOTE: only nothing here can depend on other data or session state, since
+   * that is set up in the InnerApp component above.
+   */
   return (
-    <ShellStateProvider>
-      <PrefsStateProvider>
-        <MutedThreadsProvider>
-          <InvitesStateProvider>
-            <ModalStateProvider>
-              <I18nProvider>
-                <InnerApp />
-              </I18nProvider>
-            </ModalStateProvider>
-          </InvitesStateProvider>
-        </MutedThreadsProvider>
-      </PrefsStateProvider>
-    </ShellStateProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <MutedThreadsProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <I18nProvider>
+                    <InnerApp />
+                  </I18nProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </MutedThreadsProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   )
 }
 

@@ -14,7 +14,6 @@ import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -23,6 +22,7 @@ import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useSession, useSessionApi} from '#/state/session'
 
 export const snapPoints = ['90%']
 
@@ -38,7 +38,8 @@ export const Component = observer(function Component({
   showReminder?: boolean
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {agent, currentAccount} = useSession()
+  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
@@ -53,7 +54,7 @@ export const Component = observer(function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.requestEmailConfirmation()
+      await agent.com.atproto.server.requestEmailConfirmation()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -66,11 +67,11 @@ export const Component = observer(function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.confirmEmail({
-        email: (store.session.currentSession?.email || '').trim(),
+      await agent.com.atproto.server.confirmEmail({
+        email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
-      store.session.updateLocalAccountData({emailConfirmed: true})
+      updateCurrentAccount({emailConfirmed: true})
       Toast.show('Email verified')
       closeModal()
     } catch (e) {
@@ -112,9 +113,8 @@ export const Component = observer(function Component({
             </Trans>
           ) : stage === Stages.ConfirmCode ? (
             <Trans>
-              An email has been sent to{' '}
-              {store.session.currentSession?.email || ''}. It includes a
-              confirmation code which you can enter below.
+              An email has been sent to {currentAccount?.email || ''}. It
+              includes a confirmation code which you can enter below.
             </Trans>
           ) : (
             ''
@@ -130,7 +130,7 @@ export const Component = observer(function Component({
                 size={16}
               />
               <Text type="xl-medium" style={[pal.text, s.flex1, {minWidth: 0}]}>
-                {store.session.currentSession?.email || ''}
+                {currentAccount?.email || ''}
               </Text>
             </View>
             <Pressable

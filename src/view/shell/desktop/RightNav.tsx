@@ -16,12 +16,13 @@ import {formatCount} from 'view/com/util/numeric/format'
 import {useModalControls} from '#/state/modals'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useSession} from '#/state/session'
 
 export const DesktopRightNav = observer(function DesktopRightNavImpl() {
-  const store = useStores()
   const pal = usePalette('default')
   const palError = usePalette('error')
   const {_} = useLingui()
+  const {isSandbox, hasSession, currentAccount} = useSession()
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -30,10 +31,10 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      {store.session.hasSession && <DesktopSearch />}
-      {store.session.hasSession && <DesktopFeeds />}
+      {hasSession && <DesktopSearch />}
+      {hasSession && <DesktopFeeds />}
       <View style={styles.message}>
-        {store.session.isSandbox ? (
+        {isSandbox ? (
           <View style={[palError.view, styles.messageLine, s.p10]}>
             <Text type="md" style={[palError.text, s.bold]}>
               SANDBOX. Posts and accounts are not permanent.
@@ -45,8 +46,8 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
             type="md"
             style={pal.link}
             href={FEEDBACK_FORM_URL({
-              email: store.session.currentSession?.email,
-              handle: store.session.currentSession?.handle,
+              email: currentAccount!.email,
+              handle: currentAccount!.handle,
             })}
             text={_(msg`Feedback`)}
           />

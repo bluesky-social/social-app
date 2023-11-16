@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
-import {observer} from 'mobx-react-lite'
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -33,10 +32,10 @@ import {isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from './state'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
+import {useUnreadNotifications} from './state/queries/notifications/unread'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -346,7 +345,7 @@ function NotificationsTabNavigator() {
   )
 }
 
-const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
+function MyProfileTabNavigator() {
   const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <MyProfileTab.Navigator
@@ -368,18 +367,17 @@ const MyProfileTabNavigator = observer(function MyProfileTabNavigatorImpl() {
       {commonScreens(MyProfileTab as typeof HomeTab)}
     </MyProfileTab.Navigator>
   )
-})
+}
 
 /**
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
-const FlatNavigator = observer(function FlatNavigatorImpl() {
+const FlatNavigator = () => {
   const pal = usePalette('default')
-  const store = useStores()
-  const unreadCountLabel = store.me.notifications.unreadCountLabel
+  const numUnread = useUnreadNotifications()
 
-  const title = (page: string) => bskyTitle(page, unreadCountLabel)
+  const title = (page: string) => bskyTitle(page, numUnread)
   return (
     <Flat.Navigator
       screenOptions={{
@@ -409,10 +407,10 @@ const FlatNavigator = observer(function FlatNavigatorImpl() {
         getComponent={() => NotificationsScreen}
         options={{title: title('Notifications')}}
       />
-      {commonScreens(Flat as typeof HomeTab, unreadCountLabel)}
+      {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
   )
-})
+}
 
 /**
  * The RoutesContainer should wrap all components which need access
