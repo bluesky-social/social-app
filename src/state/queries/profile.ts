@@ -113,13 +113,22 @@ export function useProfileFollowMutationQueue(profile) {
   })
 
   function queueFollow() {
-    queue.pendingAction = {type: 'follow'}
+    if (queue.currentAction === 'follow' || queue.pendingAction === 'follow') {
+      return
+    }
+    queue.pendingAction = 'follow'
     updateProfileShadow(did, {followingUri: 'pending'})
     processQueue()
   }
 
   function queueUnfollow() {
-    queue.pendingAction = {type: 'unfollow'}
+    if (
+      queue.currentAction === 'unfollow' ||
+      queue.pendingAction === 'unfollow'
+    ) {
+      return
+    }
+    queue.pendingAction = 'unfollow'
     updateProfileShadow(did, {followingUri: undefined})
     processQueue()
   }
@@ -131,8 +140,8 @@ export function useProfileFollowMutationQueue(profile) {
     try {
       while (queue.pendingAction) {
         const action = queue.pendingAction
-        queue.pendingAction = null
         queue.currentAction = action
+        queue.pendingAction = null
         const result = await runAction(action)
       }
       // commit success
@@ -140,13 +149,14 @@ export function useProfileFollowMutationQueue(profile) {
       // rollback?
     } finally {
       queue.currentAction = null
+      queue.pendingAction = null
     }
   }
 
   async function runAction(action) {
-    if (action.type === 'follow') {
+    if (action === 'follow') {
       await followMutation.mutateAsync({did})
-    } else if (action.type === 'unfollow') {
+    } else if (action === 'unfollow') {
       await unfollowMutation.mutateAsync({did, followUri: followingUri})
     }
   }
