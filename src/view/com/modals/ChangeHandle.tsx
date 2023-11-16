@@ -100,7 +100,10 @@ export function Inner({
   }, [setCustom, isCustom, track])
   const onPressSave = React.useCallback(async () => {
     if (!userDomain) {
-      throw new Error(`EditHandle: userDomain is undefined`)
+      logger.error(`ChangeHandle: userDomain is undefined`, {
+        service: serviceInfo,
+      })
+      return
     }
 
     try {
@@ -130,6 +133,7 @@ export function Inner({
     closeModal,
     updateCurrentAccount,
     updateHandle,
+    serviceInfo,
   ])
 
   // rendering
