@@ -11,7 +11,7 @@ export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
 export function useMyListsQuery(filter: MyListsFilter) {
   const {agent, currentAccount} = useSession()
   return useQuery<AppBskyGraphDefs.ListView[]>({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(filter),
     async queryFn() {
       let lists: AppBskyGraphDefs.ListView[] = []

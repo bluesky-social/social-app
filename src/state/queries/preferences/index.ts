@@ -34,7 +34,7 @@ export function usePreferencesQuery() {
   const {agent, hasSession} = useSession()
   return useQuery({
     enabled: hasSession,
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: usePreferencesQueryKey,
     queryFn: async () => {
       const res = await agent.getPreferences()

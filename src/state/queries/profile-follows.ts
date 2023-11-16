@@ -19,7 +19,7 @@ export function useProfileFollowsQuery(did: string | undefined) {
     QueryKey,
     RQPageParam
   >({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getFollows({
