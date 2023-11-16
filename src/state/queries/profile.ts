@@ -12,6 +12,7 @@ import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {Shadow} from '#/state/cache/types'
+import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 
@@ -100,8 +101,6 @@ export function useProfileUpdateMutation() {
   })
 }
 
-import {useState} from 'react'
-
 export function useProfileFollowMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
@@ -150,71 +149,6 @@ export function useProfileFollowMutationQueue(
   return [queueFollow, queueUnfollow]
 }
 
-type Task<TServerState> = {
-  isOn: boolean
-  resolve: (serverState: TServerState) => void
-  reject: (e: unknown) => void
-}
-
-function useToggleMutationQueue<TServerState>({
-  initialState,
-  runMutation,
-  onSuccess,
-}: {
-  initialState: TServerState
-  runMutation: (
-    prevState: TServerState,
-    nextIsOn: boolean,
-  ) => Promise<TServerState>
-  onSuccess: (finalState: TServerState) => void
-}) {
-  const [queue] = useState<{
-    activeTask: Task<TServerState> | null
-    queuedTask: Task<TServerState> | null
-  }>({
-    activeTask: null,
-    queuedTask: null,
-  })
-
-  function queueToggle(isOn: boolean): Promise<TServerState> {
-    return new Promise((resolve, reject) => {
-      queue.queuedTask = {isOn, resolve, reject}
-      processQueue()
-    })
-  }
-
-  async function processQueue() {
-    if (queue.activeTask) {
-      return
-    }
-    let confirmedState: TServerState = initialState
-    try {
-      while (queue.queuedTask) {
-        const prevTask = queue.activeTask
-        const nextTask = queue.queuedTask
-        queue.activeTask = nextTask
-        queue.queuedTask = null
-        if (prevTask?.isOn === nextTask.isOn) {
-          continue
-        }
-        try {
-          confirmedState = await runMutation(confirmedState, nextTask.isOn)
-          nextTask.resolve(confirmedState)
-        } catch (e) {
-          nextTask.reject(e)
-          throw e
-        }
-      }
-    } finally {
-      onSuccess(confirmedState)
-      queue.activeTask = null
-      queue.queuedTask = null
-    }
-  }
-
-  return queueToggle
-}
-
 export function useProfileFollowMutation() {
   const {agent} = useSession()
   return useMutation<
@@ -223,7 +157,9 @@ export function useProfileFollowMutation() {
     {did: string; skipOptimistic?: boolean}
   >({
     mutationFn: async ({did}) => {
-      await new Promise(resolve => setTimeout(resolve, 3000))
+      await new Promise((resolve, reject) =>
+        setTimeout(() => resolve('foo'), 3000),
+      )
       return await agent.follow(did)
     },
     onMutate(variables) {
