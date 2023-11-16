@@ -50,13 +50,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const closeLightbox = React.useCallback(() => {
-    let wasActive = false
-    setActiveLightbox(v => {
-      wasActive = !!v
-      return null
-    })
+    let wasActive = !!activeLightbox
+    setActiveLightbox(null)
     return wasActive
-  }, [setActiveLightbox])
+  }, [setActiveLightbox, activeLightbox])
 
   const state = React.useMemo(
     () => ({

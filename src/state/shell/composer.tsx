@@ -53,15 +53,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         setState(opts)
       },
       closeComposer() {
-        let wasOpen = false
-        setState(v => {
-          wasOpen = !!v
-          return undefined
-        })
+        let wasOpen = !!state
+        setState(undefined)
         return wasOpen
       },
     }),
-    [setState],
+    [setState, state],
   )
 
   return (

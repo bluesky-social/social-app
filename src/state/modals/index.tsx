@@ -214,9 +214,11 @@ const ModalContext = React.createContext<{
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
   closeModal: () => boolean
+  closeAllModals: () => void
 }>({
   openModal: () => {},
   closeModal: () => false,
+  closeAllModals: () => {},
 })
 
 /**
@@ -247,16 +249,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const closeModal = React.useCallback(() => {
     let totalActiveModals = 0
-    let wasActive = false
+    let wasActive = isModalActive
     setActiveModals(activeModals => {
-      wasActive = activeModals.length > 0
       activeModals = activeModals.slice(0, -1)
       totalActiveModals = activeModals.length
       return activeModals
     })
     setIsModalActive(totalActiveModals > 0)
     return wasActive
-  }, [setIsModalActive, setActiveModals])
+  }, [setIsModalActive, setActiveModals, isModalActive])
+
+  const closeAllModals = React.useCallback(() => {
+    setActiveModals([])
+    setIsModalActive(false)
+  }, [setActiveModals, setIsModalActive])
 
   unstable__openModal = openModal
   unstable__closeModal = closeModal
@@ -273,8 +279,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       openModal,
       closeModal,
+      closeAllModals,
     }),
-    [openModal, closeModal],
+    [openModal, closeModal, closeAllModals],
   )
 
   return (

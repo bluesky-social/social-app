@@ -33,13 +33,13 @@ export function useCloseAnyActiveElement() {
  */
 export function useCloseAllActiveElements() {
   const {closeLightbox} = useLightboxControls()
-  const {closeModal} = useModalControls()
+  const {closeAllModals} = useModalControls()
   const {closeComposer} = useComposerControls()
   const setDrawerOpen = useSetDrawerOpen()
   return useCallback(() => {
-    while (closeLightbox()) {}
-    while (closeModal()) {}
-    while (closeComposer()) {}
+    closeLightbox()
+    closeAllModals()
+    closeComposer()
     setDrawerOpen(false)
-  }, [closeLightbox, closeModal, closeComposer, setDrawerOpen])
+  }, [closeLightbox, closeAllModals, closeComposer, setDrawerOpen])
 }
