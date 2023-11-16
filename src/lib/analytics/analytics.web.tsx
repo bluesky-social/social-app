@@ -4,10 +4,11 @@ import {
   AnalyticsProvider,
   useAnalytics as useAnalyticsOrig,
 } from '@segment/analytics-react'
-import {RootStoreModel} from 'state/models/root-store'
-import {useStores} from 'state/models/root-store'
 import {sha256} from 'js-sha256'
+
+import {useSession} from '#/state/session'
 import {logger} from '#/logger'
+import {listenSessionLoaded} from '#/state/events'
 
 const segmentClient = createClient(
   {
@@ -24,10 +25,10 @@ const segmentClient = createClient(
 export const track = segmentClient?.track?.bind?.(segmentClient)
 
 export function useAnalytics() {
-  const store = useStores()
+  const {hasSession} = useSession()
   const methods = useAnalyticsOrig()
   return React.useMemo(() => {
-    if (store.session.hasSession) {
+    if (hasSession) {
       return methods
     }
     // dont send analytics pings for anonymous users
@@ -40,15 +41,14 @@ export function useAnalytics() {
       alias: () => {},
       reset: () => {},
     }
-  }, [store, methods])
+  }, [hasSession, methods])
 }
 
-export function init(store: RootStoreModel) {
-  store.onSessionLoaded(() => {
-    const sess = store.session.currentSession
-    if (sess) {
-      if (sess.did) {
-        const did_hashed = sha256(sess.did)
+export function init() {
+  listenSessionLoaded(account => {
+    if (account.did) {
+      if (account.did) {
+        const did_hashed = sha256(account.did)
         segmentClient.identify(did_hashed, {did_hashed})
         logger.debug('Ping w/hash')
       } else {
