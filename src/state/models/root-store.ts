@@ -12,7 +12,6 @@ import {SessionModel} from './session'
 import {ShellUiModel} from './ui/shell'
 import {HandleResolutionsCache} from './cache/handle-resolutions'
 import {ProfilesCache} from './cache/profiles-view'
-import {PostsCache} from './cache/posts'
 import {MeModel} from './me'
 import {resetToTab} from '../../Navigation'
 import {reset as resetNavigation} from '../../Navigation'
@@ -39,7 +38,6 @@ export class RootStoreModel {
   me = new MeModel(this)
   handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
-  posts = new PostsCache(this)
 
   constructor(agent: BskyAgent) {
     this.agent = agent

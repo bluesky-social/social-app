@@ -25,7 +25,6 @@ export class MeModel {
 
   clear() {
     this.rootStore.profiles.cache.clear()
-    this.rootStore.posts.cache.clear()
     this.did = ''
     this.handle = ''
     this.displayName = ''
