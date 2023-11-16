@@ -22,6 +22,7 @@ import {
   DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
+import {STALE} from '#/state/queries'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -33,6 +34,7 @@ export function usePreferencesQuery() {
   const {agent, hasSession} = useSession()
   return useQuery({
     enabled: hasSession,
+    staleTime: STALE.INFINITY,
     queryKey: usePreferencesQueryKey,
     queryFn: async () => {
       const res = await agent.getPreferences()

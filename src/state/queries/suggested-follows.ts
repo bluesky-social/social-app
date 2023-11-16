@@ -14,6 +14,7 @@ import {
 
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {STALE} from '#/state/queries'
 
 const suggestedFollowsQueryKey = ['suggested-follows']
 const suggestedFollowsByActorQueryKey = (did: string) => [
@@ -33,6 +34,7 @@ export function useSuggestedFollowsQuery() {
     string | undefined
   >({
     enabled: !!moderationOpts,
+    staleTime: STALE.INFINITY,
     queryKey: suggestedFollowsQueryKey,
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.actor.getSuggestions({

@@ -16,8 +16,10 @@
 
 import {AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
-import {useSession} from '../session'
-import {RQKEY as LIST_MEMBERS_RQKEY} from './list-members'
+
+import {useSession} from '#/state/session'
+import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
+import {STALE} from '#/state/queries'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
@@ -38,6 +40,7 @@ export interface ListMembersip {
 export function useDangerousListMembershipsQuery() {
   const {agent, currentAccount} = useSession()
   return useQuery<ListMembersip[]>({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     async queryFn() {
       if (!currentAccount) {

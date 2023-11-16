@@ -1,6 +1,7 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 import {useSession} from '../session'
+import {STALE} from '#/state/queries'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
@@ -12,6 +13,7 @@ export const RQKEY = () => ['my-follows']
 export function useMyFollowsQuery() {
   const {agent, currentAccount} = useSession()
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(),
     async queryFn() {
       if (!currentAccount) {

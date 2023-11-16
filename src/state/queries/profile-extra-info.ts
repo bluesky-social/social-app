@@ -1,6 +1,9 @@
 import {useQuery} from '@tanstack/react-query'
-import {useSession} from '../session'
 
+import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
+
+// TODO refactor invalidate on mutate?
 export const RQKEY = (did: string) => ['profile-extra-info', did]
 
 /**
@@ -10,6 +13,7 @@ export const RQKEY = (did: string) => ['profile-extra-info', did]
 export function useProfileExtraInfoQuery(did: string) {
   const {agent} = useSession()
   return useQuery({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(did),
     async queryFn() {
       const [listsRes, feedsRes] = await Promise.all([

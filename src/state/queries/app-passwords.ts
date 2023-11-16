@@ -1,12 +1,15 @@
 import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
-import {useSession} from '../session'
+
+import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = () => ['app-passwords']
 
 export function useAppPasswordsQuery() {
   const {agent} = useSession()
   return useQuery({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     queryFn: async () => {
       const res = await agent.com.atproto.server.listAppPasswords({})

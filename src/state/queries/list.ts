@@ -13,12 +13,14 @@ import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = (uri: string) => ['list', uri]
 
 export function useListQuery(uri?: string) {
   const {agent} = useSession()
   return useQuery<AppBskyGraphDefs.ListView, Error>({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       if (!uri) {

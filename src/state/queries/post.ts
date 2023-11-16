@@ -1,14 +1,17 @@
 import React from 'react'
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {useSession} from '../session'
-import {updatePostShadow} from '../cache/post-shadow'
+
+import {useSession} from '#/state/session'
+import {updatePostShadow} from '#/state/cache/post-shadow'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
 
 export function usePostQuery(uri: string | undefined) {
   const {agent} = useSession()
   return useQuery<AppBskyFeedDefs.PostView>({
+    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await agent.getPosts({uris: [uri!]})
@@ -28,6 +31,7 @@ export function useGetPost() {
   return React.useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
+        staleTime: STALE.MINUTES.ONE,
         queryKey: RQKEY(uri || ''),
         async queryFn() {
           const urip = new AtUri(uri)

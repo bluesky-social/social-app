@@ -1,12 +1,15 @@
 import {useQuery} from '@tanstack/react-query'
 import {AtUri} from '@atproto/api'
-import {useSession} from '../session'
+
+import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = (uri: string) => ['resolved-uri', uri]
 
 export function useResolveUriQuery(uri: string | undefined) {
   const {agent} = useSession()
   return useQuery<{uri: string; did: string}, Error>({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const urip = new AtUri(uri || '')

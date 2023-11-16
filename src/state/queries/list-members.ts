@@ -1,6 +1,8 @@
 import {AppBskyGraphGetList} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {useSession} from '../session'
+
+import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -16,6 +18,7 @@ export function useListMembersQuery(uri: string) {
     QueryKey,
     RQPageParam
   >({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(uri),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getList({
