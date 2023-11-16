@@ -33,8 +33,7 @@ import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
   useProfileMuteMutationQueue,
-  useProfileBlockMutation,
-  useProfileUnblockMutation,
+  useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
 } from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -130,8 +129,7 @@ function ProfileHeaderLoaded({
   )
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
-  const blockMutation = useProfileBlockMutation()
-  const unblockMutation = useProfileUnblockMutation()
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -232,11 +230,8 @@ function ProfileHeaderLoaded({
       message:
         'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
       onPressConfirm: async () => {
-        if (profile.viewer?.blocking) {
-          return
-        }
         try {
-          await blockMutation.mutateAsync({did: profile.did})
+          await queueBlock()
           Toast.show('Account blocked')
         } catch (e: any) {
           logger.error('Failed to block account', {error: e})
@@ -244,7 +239,7 @@ function ProfileHeaderLoaded({
         }
       },
     })
-  }, [track, blockMutation, profile, openModal])
+  }, [track, queueBlock, openModal])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
@@ -254,14 +249,8 @@ function ProfileHeaderLoaded({
       message:
         'The account will be able to interact with you after unblocking.',
       onPressConfirm: async () => {
-        if (!profile.viewer?.blocking) {
-          return
-        }
         try {
-          await unblockMutation.mutateAsync({
-            did: profile.did,
-            blockUri: profile.viewer.blocking,
-          })
+          await queueUnblock()
           Toast.show('Account unblocked')
         } catch (e: any) {
           logger.error('Failed to unblock account', {error: e})
@@ -269,7 +258,7 @@ function ProfileHeaderLoaded({
         }
       },
     })
-  }, [track, unblockMutation, profile, openModal])
+  }, [track, queueUnblock, openModal])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')

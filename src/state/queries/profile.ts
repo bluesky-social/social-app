@@ -327,10 +327,69 @@ export function useProfileUnmuteMutation() {
   })
 }
 
+export function useProfileBlockMutationQueue(
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+) {
+  const did = profile.did
+  const initialBlockingUri = profile.viewer?.blocking
+  const blockMutation = useProfileBlockMutation()
+  const unblockMutation = useProfileUnblockMutation()
+
+  const queueToggle = useToggleMutationQueue({
+    initialState: initialBlockingUri,
+    runMutation: async (prevBlockUri, shouldFollow) => {
+      if (shouldFollow) {
+        const {uri} = await blockMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return uri
+      } else {
+        if (prevBlockUri) {
+          await unblockMutation.mutateAsync({
+            did,
+            blockUri: prevBlockUri,
+            skipOptimistic: true,
+          })
+        }
+        return undefined
+      }
+    },
+    onSuccess(finalBlockingUri) {
+      // finalize
+      updateProfileShadow(did, {
+        followingUri: finalBlockingUri,
+      })
+    },
+  })
+
+  const queueBlock = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      blockingUri: 'pending',
+    })
+    return queueToggle(true)
+  }, [did, queueToggle])
+
+  const queueUnblock = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      blockingUri: undefined,
+    })
+    return queueToggle(false)
+  }, [did, queueToggle])
+
+  return [queueBlock, queueUnblock]
+}
+
 export function useProfileBlockMutation() {
   const {agent, currentAccount} = useSession()
   const queryClient = useQueryClient()
-  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
+  return useMutation<
+    {uri: string; cid: string},
+    Error,
+    {did: string; skipOptimistic?: boolean}
+  >({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -341,30 +400,40 @@ export function useProfileBlockMutation() {
       )
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        blockingUri: 'pending',
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          blockingUri: 'pending',
+        })
+      }
     },
     onSuccess(data, variables) {
-      // finalize
-      updateProfileShadow(variables.did, {
-        blockingUri: data.uri,
-      })
+      if (!variables.skipOptimistic) {
+        // finalize
+        updateProfileShadow(variables.did, {
+          blockingUri: data.uri,
+        })
+      }
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        blockingUri: undefined,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          blockingUri: undefined,
+        })
+      }
     },
   })
 }
 
 export function useProfileUnblockMutation() {
   const {agent, currentAccount} = useSession()
-  return useMutation<void, Error, {did: string; blockUri: string}>({
+  return useMutation<
+    void,
+    Error,
+    {did: string; blockUri: string; skipOptimistic?: boolean}
+  >({
     mutationFn: async ({blockUri}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -376,16 +445,20 @@ export function useProfileUnblockMutation() {
       })
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        blockingUri: undefined,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          blockingUri: undefined,
+        })
+      }
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        blockingUri: variables.blockUri,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          blockingUri: variables.blockUri,
+        })
+      }
     },
   })
 }
