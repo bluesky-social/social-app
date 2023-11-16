@@ -2,11 +2,12 @@ import {useCallback} from 'react'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {useSessionApi, SessionAccount} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {closeAllActiveElements} from '#/state/util'
+import {useCloseAllActiveElements} from '#/state/util'
 
 export function useAccountSwitcher() {
   const {track} = useAnalytics()
   const {selectAccount, clearCurrentAccount} = useSessionApi()
+  const closeAllActiveElements = useCloseAllActiveElements()
 
   const onPressSwitchAccount = useCallback(
     async (acct: SessionAccount) => {
@@ -21,7 +22,7 @@ export function useAccountSwitcher() {
         clearCurrentAccount() // back user out to login
       }
     },
-    [track, clearCurrentAccount, selectAccount],
+    [track, clearCurrentAccount, selectAccount, closeAllActiveElements],
   )
 
   return {onPressSwitchAccount}

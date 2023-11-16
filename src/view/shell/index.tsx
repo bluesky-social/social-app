@@ -30,15 +30,13 @@ import {
   useIsDrawerSwipeDisabled,
 } from '#/state/shell'
 import {isAndroid} from 'platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
-import {closeAnyActiveElement} from '#/state/util'
+import {useCloseAnyActiveElement} from '#/state/util'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
-  const {closeModal} = useModalControls()
   useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
@@ -57,6 +55,7 @@ function ShellInner() {
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
+  const closeAnyActiveElement = useCloseAnyActiveElement()
 
   React.useEffect(() => {
     let listener = {remove() {}}
@@ -68,7 +67,7 @@ function ShellInner() {
     return () => {
       listener.remove()
     }
-  }, [setIsDrawerOpen, closeModal])
+  }, [closeAnyActiveElement])
 
   return (
     <>

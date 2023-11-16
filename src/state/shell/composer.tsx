@@ -45,13 +45,6 @@ const controlsContext = React.createContext<ControlsContext>({
   },
 })
 
-/**
- * @deprecated DO NOT USE THIS unless you have no other choice.
- */
-export let unstable__closeComposer: () => boolean = () => {
-  throw new Error(`ComposerContext is not initialized`)
-}
-
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>()
   const api = React.useMemo(
@@ -70,8 +63,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }),
     [setState],
   )
-
-  unstable__closeComposer = api.closeComposer
 
   return (
     <stateContext.Provider value={state}>

@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
-import {useStores} from 'state/index'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
@@ -23,19 +22,17 @@ import {
   useSetDrawerOpen,
   useOnboardingState,
 } from '#/state/shell'
-import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
-import {closeAllActiveElements} from '#/state/util'
+import {useCloseAllActiveElements} from '#/state/util'
 
-const ShellInner = observer(function ShellInnerImpl() {
-  const store = useStores()
+function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
-  const {closeModal} = useModalControls()
   const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   const {hasSession} = useSession()
+  const closeAllActiveElements = useCloseAllActiveElements()
 
   useAuxClick()
 
@@ -43,7 +40,7 @@ const ShellInner = observer(function ShellInnerImpl() {
     navigator.addListener('state', () => {
       closeAllActiveElements()
     })
-  }, [navigator, store.shell, setDrawerOpen, closeModal])
+  }, [navigator, closeAllActiveElements])
 
   const showBottomBar = isMobile && !onboardingState.isActive
   const showSideNavs = !isMobile && hasSession && !onboardingState.isActive
@@ -77,7 +74,7 @@ const ShellInner = observer(function ShellInnerImpl() {
       )}
     </View>
   )
-})
+}
 
 export const Shell: React.FC = observer(function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)

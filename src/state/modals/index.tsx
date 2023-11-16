@@ -247,13 +247,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const closeModal = React.useCallback(() => {
     let totalActiveModals = 0
+    let wasActive = false
     setActiveModals(activeModals => {
+      wasActive = activeModals.length > 0
       activeModals = activeModals.slice(0, -1)
       totalActiveModals = activeModals.length
       return activeModals
     })
     setIsModalActive(totalActiveModals > 0)
-    return totalActiveModals > 0
+    return wasActive
   }, [setIsModalActive, setActiveModals])
 
   unstable__openModal = openModal

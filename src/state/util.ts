@@ -1,34 +1,45 @@
-import {unstable__closeModal} from './modals'
-import {unstable__closeLightbox} from './lightbox'
-import {unstable__closeComposer} from './shell/composer'
-import {unstable__closeDrawer} from './shell/drawer-open'
+import {useCallback} from 'react'
+import {useLightboxControls} from './lightbox'
+import {useModalControls} from './modals'
+import {useComposerControls} from './shell/composer'
+import {useSetDrawerOpen} from './shell/drawer-open'
 
 /**
  * returns true if something was closed
  * (used by the android hardware back btn)
  */
-export function closeAnyActiveElement(): boolean {
-  if (unstable__closeLightbox()) {
-    return true
-  }
-  if (unstable__closeModal()) {
-    return true
-  }
-  if (unstable__closeComposer()) {
-    return true
-  }
-  if (unstable__closeDrawer()) {
-    return true
-  }
-  return false
+export function useCloseAnyActiveElement() {
+  const {closeLightbox} = useLightboxControls()
+  const {closeModal} = useModalControls()
+  const {closeComposer} = useComposerControls()
+  const setDrawerOpen = useSetDrawerOpen()
+  return useCallback(() => {
+    if (closeLightbox()) {
+      return true
+    }
+    if (closeModal()) {
+      return true
+    }
+    if (closeComposer()) {
+      return true
+    }
+    setDrawerOpen(false)
+    return false
+  }, [closeLightbox, closeModal, closeComposer, setDrawerOpen])
 }
 
 /**
  * used to clear out any modals, eg for a navigation
  */
-export function closeAllActiveElements() {
-  while (unstable__closeLightbox()) {}
-  while (unstable__closeModal()) {}
-  while (unstable__closeComposer()) {}
-  while (unstable__closeDrawer()) {}
+export function useCloseAllActiveElements() {
+  const {closeLightbox} = useLightboxControls()
+  const {closeModal} = useModalControls()
+  const {closeComposer} = useComposerControls()
+  const setDrawerOpen = useSetDrawerOpen()
+  return useCallback(() => {
+    while (closeLightbox()) {}
+    while (closeModal()) {}
+    while (closeComposer()) {}
+    setDrawerOpen(false)
+  }, [closeLightbox, closeModal, closeComposer, setDrawerOpen])
 }

@@ -37,13 +37,6 @@ const LightboxControlContext = React.createContext<{
   closeLightbox: () => false,
 })
 
-/**
- * @deprecated DO NOT USE THIS unless you have no other choice.
- */
-export let unstable__closeLightbox: () => boolean = () => {
-  throw new Error(`LightboxContext is not initialized`)
-}
-
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeLightbox, setActiveLightbox] = React.useState<Lightbox | null>(
     null,
@@ -64,8 +57,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
     return wasActive
   }, [setActiveLightbox])
-
-  unstable__closeLightbox = closeLightbox
 
   const state = React.useMemo(
     () => ({
