@@ -26,10 +26,7 @@ import {isWeb} from 'platform/detection'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {
-  useProfileFollowMutation,
-  useProfileUnfollowMutation,
-} from '#/state/queries/profile'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -208,34 +205,28 @@ function SuggestedFollow({
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
   const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
-  const followMutation = useProfileFollowMutation()
-  const unfollowMutation = useProfileUnfollowMutation()
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
   const onPressFollow = React.useCallback(async () => {
-    if (profile.viewer?.following) {
-      return
-    }
     try {
       track('ProfileHeader:SuggestedFollowFollowed')
-      await followMutation.mutateAsync({did: profile.did})
+      await queueFollow()
     } catch (e: any) {
-      Toast.show('An issue occurred, please try again.')
+      if (e?.name !== 'AbortError') {
+        Toast.show('An issue occurred, please try again.')
+      }
     }
-  }, [followMutation, profile, track])
+  }, [queueFollow, track])
 
   const onPressUnfollow = React.useCallback(async () => {
-    if (!profile.viewer?.following) {
-      return
-    }
     try {
-      await unfollowMutation.mutateAsync({
-        did: profile.did,
-        followUri: profile.viewer?.following,
-      })
+      await queueUnfollow()
     } catch (e: any) {
-      Toast.show('An issue occurred, please try again.')
+      if (e?.name !== 'AbortError') {
+        Toast.show('An issue occurred, please try again.')
+      }
     }
-  }, [unfollowMutation, profile])
+  }, [queueUnfollow])
 
   if (!moderationOpts) {
     return null
@@ -284,7 +275,6 @@ function SuggestedFollow({
           type="inverted"
           labelStyle={{textAlign: 'center'}}
           onPress={following ? onPressUnfollow : onPressFollow}
-          withLoading
         />
       </View>
     </Link>

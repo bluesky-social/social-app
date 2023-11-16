@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {
   AtUri,
   AppBskyActorDefs,
@@ -11,6 +12,8 @@ import {useSession} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
+import {Shadow} from '#/state/cache/types'
+import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 
@@ -99,104 +102,294 @@ export function useProfileUpdateMutation() {
   })
 }
 
-export function useProfileFollowMutation() {
+export function useProfileFollowMutationQueue(
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+) {
+  const did = profile.did
+  const initialFollowingUri = profile.viewer?.following
+  const followMutation = useProfileFollowMutation()
+  const unfollowMutation = useProfileUnfollowMutation()
+
+  const queueToggle = useToggleMutationQueue({
+    initialState: initialFollowingUri,
+    runMutation: async (prevFollowingUri, shouldFollow) => {
+      if (shouldFollow) {
+        const {uri} = await followMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return uri
+      } else {
+        if (prevFollowingUri) {
+          await unfollowMutation.mutateAsync({
+            did,
+            followUri: prevFollowingUri,
+            skipOptimistic: true,
+          })
+        }
+        return undefined
+      }
+    },
+    onSuccess(finalFollowingUri) {
+      // finalize
+      updateProfileShadow(did, {
+        followingUri: finalFollowingUri,
+      })
+    },
+  })
+
+  const queueFollow = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      followingUri: 'pending',
+    })
+    return queueToggle(true)
+  }, [did, queueToggle])
+
+  const queueUnfollow = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      followingUri: undefined,
+    })
+    return queueToggle(false)
+  }, [did, queueToggle])
+
+  return [queueFollow, queueUnfollow]
+}
+
+function useProfileFollowMutation() {
   const {agent} = useSession()
-  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
+  return useMutation<
+    {uri: string; cid: string},
+    Error,
+    {did: string; skipOptimistic?: boolean}
+  >({
     mutationFn: async ({did}) => {
       return await agent.follow(did)
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        followingUri: 'pending',
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          followingUri: 'pending',
+        })
+      }
     },
     onSuccess(data, variables) {
-      // finalize
-      updateProfileShadow(variables.did, {
-        followingUri: data.uri,
-      })
+      if (!variables.skipOptimistic) {
+        // finalize
+        updateProfileShadow(variables.did, {
+          followingUri: data.uri,
+        })
+      }
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        followingUri: undefined,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          followingUri: undefined,
+        })
+      }
     },
   })
 }
 
-export function useProfileUnfollowMutation() {
+function useProfileUnfollowMutation() {
   const {agent} = useSession()
-  return useMutation<void, Error, {did: string; followUri: string}>({
+  return useMutation<
+    void,
+    Error,
+    {did: string; followUri: string; skipOptimistic?: boolean}
+  >({
     mutationFn: async ({followUri}) => {
       return await agent.deleteFollow(followUri)
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        followingUri: undefined,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          followingUri: undefined,
+        })
+      }
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        followingUri: variables.followUri,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          followingUri: variables.followUri,
+        })
+      }
     },
   })
 }
 
-export function useProfileMuteMutation() {
+export function useProfileMuteMutationQueue(
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+) {
+  const did = profile.did
+  const initialMuted = profile.viewer?.muted
+  const muteMutation = useProfileMuteMutation()
+  const unmuteMutation = useProfileUnmuteMutation()
+
+  const queueToggle = useToggleMutationQueue({
+    initialState: initialMuted,
+    runMutation: async (_prevMuted, shouldMute) => {
+      if (shouldMute) {
+        await muteMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return true
+      } else {
+        await unmuteMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return false
+      }
+    },
+    onSuccess(finalMuted) {
+      // finalize
+      updateProfileShadow(did, {muted: finalMuted})
+    },
+  })
+
+  const queueMute = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      muted: true,
+    })
+    return queueToggle(true)
+  }, [did, queueToggle])
+
+  const queueUnmute = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      muted: false,
+    })
+    return queueToggle(false)
+  }, [did, queueToggle])
+
+  return [queueMute, queueUnmute]
+}
+
+function useProfileMuteMutation() {
   const {agent} = useSession()
   const queryClient = useQueryClient()
-  return useMutation<void, Error, {did: string}>({
+  return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
       await agent.mute(did)
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        muted: true,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          muted: true,
+        })
+      }
     },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        muted: false,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          muted: false,
+        })
+      }
     },
   })
 }
 
-export function useProfileUnmuteMutation() {
+function useProfileUnmuteMutation() {
   const {agent} = useSession()
-  return useMutation<void, Error, {did: string}>({
+  return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
       await agent.unmute(did)
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        muted: false,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          muted: false,
+        })
+      }
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        muted: true,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          muted: true,
+        })
+      }
     },
   })
 }
 
-export function useProfileBlockMutation() {
+export function useProfileBlockMutationQueue(
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+) {
+  const did = profile.did
+  const initialBlockingUri = profile.viewer?.blocking
+  const blockMutation = useProfileBlockMutation()
+  const unblockMutation = useProfileUnblockMutation()
+
+  const queueToggle = useToggleMutationQueue({
+    initialState: initialBlockingUri,
+    runMutation: async (prevBlockUri, shouldFollow) => {
+      if (shouldFollow) {
+        const {uri} = await blockMutation.mutateAsync({
+          did,
+          skipOptimistic: true,
+        })
+        return uri
+      } else {
+        if (prevBlockUri) {
+          await unblockMutation.mutateAsync({
+            did,
+            blockUri: prevBlockUri,
+            skipOptimistic: true,
+          })
+        }
+        return undefined
+      }
+    },
+    onSuccess(finalBlockingUri) {
+      // finalize
+      updateProfileShadow(did, {
+        blockingUri: finalBlockingUri,
+      })
+    },
+  })
+
+  const queueBlock = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      blockingUri: 'pending',
+    })
+    return queueToggle(true)
+  }, [did, queueToggle])
+
+  const queueUnblock = useCallback(() => {
+    // optimistically update
+    updateProfileShadow(did, {
+      blockingUri: undefined,
+    })
+    return queueToggle(false)
+  }, [did, queueToggle])
+
+  return [queueBlock, queueUnblock]
+}
+
+function useProfileBlockMutation() {
   const {agent, currentAccount} = useSession()
   const queryClient = useQueryClient()
-  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
+  return useMutation<
+    {uri: string; cid: string},
+    Error,
+    {did: string; skipOptimistic?: boolean}
+  >({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -207,30 +400,40 @@ export function useProfileBlockMutation() {
       )
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        blockingUri: 'pending',
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          blockingUri: 'pending',
+        })
+      }
     },
     onSuccess(data, variables) {
-      // finalize
-      updateProfileShadow(variables.did, {
-        blockingUri: data.uri,
-      })
+      if (!variables.skipOptimistic) {
+        // finalize
+        updateProfileShadow(variables.did, {
+          blockingUri: data.uri,
+        })
+      }
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        blockingUri: undefined,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          blockingUri: undefined,
+        })
+      }
     },
   })
 }
 
-export function useProfileUnblockMutation() {
+function useProfileUnblockMutation() {
   const {agent, currentAccount} = useSession()
-  return useMutation<void, Error, {did: string; blockUri: string}>({
+  return useMutation<
+    void,
+    Error,
+    {did: string; blockUri: string; skipOptimistic?: boolean}
+  >({
     mutationFn: async ({blockUri}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -242,16 +445,20 @@ export function useProfileUnblockMutation() {
       })
     },
     onMutate(variables) {
-      // optimstically update
-      updateProfileShadow(variables.did, {
-        blockingUri: undefined,
-      })
+      if (!variables.skipOptimistic) {
+        // optimistically update
+        updateProfileShadow(variables.did, {
+          blockingUri: undefined,
+        })
+      }
     },
     onError(error, variables) {
-      // revert the optimistic update
-      updateProfileShadow(variables.did, {
-        blockingUri: variables.blockUri,
-      })
+      if (!variables.skipOptimistic) {
+        // revert the optimistic update
+        updateProfileShadow(variables.did, {
+          blockingUri: variables.blockUri,
+        })
+      }
     },
   })
 }

@@ -3,10 +3,7 @@ import {StyleProp, TextStyle, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
-import {
-  useProfileFollowMutation,
-  useProfileUnfollowMutation,
-} from '#/state/queries/profile'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {Shadow} from '#/state/cache/types'
 
 export function FollowButton({
@@ -20,31 +17,25 @@ export function FollowButton({
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   labelStyle?: StyleProp<TextStyle>
 }) {
-  const followMutation = useProfileFollowMutation()
-  const unfollowMutation = useProfileUnfollowMutation()
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
   const onPressFollow = async () => {
-    if (profile.viewer?.following) {
-      return
-    }
     try {
-      await followMutation.mutateAsync({did: profile.did})
+      await queueFollow()
     } catch (e: any) {
-      Toast.show(`An issue occurred, please try again.`)
+      if (e?.name !== 'AbortError') {
+        Toast.show(`An issue occurred, please try again.`)
+      }
     }
   }
 
   const onPressUnfollow = async () => {
-    if (!profile.viewer?.following) {
-      return
-    }
     try {
-      await unfollowMutation.mutateAsync({
-        did: profile.did,
-        followUri: profile.viewer?.following,
-      })
+      await queueUnfollow()
     } catch (e: any) {
-      Toast.show(`An issue occurred, please try again.`)
+      if (e?.name !== 'AbortError') {
+        Toast.show(`An issue occurred, please try again.`)
+      }
     }
   }
 
@@ -59,7 +50,6 @@ export function FollowButton({
         labelStyle={labelStyle}
         onPress={onPressUnfollow}
         label="Unfollow"
-        withLoading={true}
       />
     )
   } else {
@@ -69,7 +59,6 @@ export function FollowButton({
         labelStyle={labelStyle}
         onPress={onPressFollow}
         label="Follow"
-        withLoading={true}
       />
     )
   }
