@@ -106,6 +106,12 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     onboarding: {
       step: legacy.onboarding?.step || defaults.onboarding.step,
     },
+    storeReview: {
+      completed: false,
+      lastPromptedAt: undefined,
+      numSessions: 0,
+      numFollowed: 0,
+    },
   }
 }
 

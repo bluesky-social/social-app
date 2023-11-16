@@ -37,6 +37,7 @@ import * as persisted from '#/state/persisted'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {messages} from './locale/locales/en/messages'
+import {listenSessionChangeForStoreReview} from './lib/store-review'
 i18n.load('en', messages)
 i18n.activate('en')
 
@@ -55,9 +56,14 @@ function InnerApp() {
     listenSessionDropped(() => {
       Toast.show('Sorry! Your session expired. Please log in again.')
     })
+    const lForStoreReview = listenSessionChangeForStoreReview()
 
     const account = persisted.get('session').currentAccount
     resumeSession(account)
+
+    return () => {
+      lForStoreReview() // cleanup
+    }
   }, [resumeSession])
 
   // show nothing prior to init

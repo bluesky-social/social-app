@@ -39,6 +39,12 @@ export const schema = z.object({
   onboarding: z.object({
     step: z.string(),
   }),
+  storeReview: z.object({
+    lastPromptedAt: z.date().optional(),
+    completed: z.boolean(),
+    numSessions: z.number(),
+    numFollowed: z.number(),
+  }),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -66,5 +72,11 @@ export const defaults: Schema = {
   },
   onboarding: {
     step: 'Home',
+  },
+  storeReview: {
+    lastPromptedAt: undefined,
+    completed: false,
+    numSessions: 0,
+    numFollowed: 0,
   },
 }

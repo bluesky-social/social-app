@@ -8,6 +8,7 @@ import {
   useProfileUnfollowMutation,
 } from '#/state/queries/profile'
 import {Shadow} from '#/state/cache/types'
+import {incrementStoreReviewFollowed} from '#/lib/store-review'
 
 export function FollowButton({
   unfollowedType = 'inverted',
@@ -29,6 +30,7 @@ export function FollowButton({
     }
     try {
       await followMutation.mutateAsync({did: profile.did})
+      incrementStoreReviewFollowed()
     } catch (e: any) {
       Toast.show(`An issue occurred, please try again.`)
     }
