@@ -13,10 +13,8 @@ import {ShellUiModel} from './ui/shell'
 import {HandleResolutionsCache} from './cache/handle-resolutions'
 import {ProfilesCache} from './cache/profiles-view'
 import {PostsCache} from './cache/posts'
-import {LinkMetasCache} from './cache/link-metas'
 import {MeModel} from './me'
 import {resetToTab} from '../../Navigation'
-import {ImageSizesCache} from './cache/image-sizes'
 import {reset as resetNavigation} from '../../Navigation'
 import {logger} from '#/logger'
 
@@ -42,8 +40,6 @@ export class RootStoreModel {
   handleResolutions = new HandleResolutionsCache()
   profiles = new ProfilesCache(this)
   posts = new PostsCache(this)
-  linkMetas = new LinkMetasCache(this)
-  imageSizes = new ImageSizesCache()
 
   constructor(agent: BskyAgent) {
     this.agent = agent
