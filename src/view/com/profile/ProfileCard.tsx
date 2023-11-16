@@ -11,7 +11,6 @@ import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -158,18 +157,25 @@ const FollowersList = observer(function FollowersListImpl({
 }: {
   followers?: AppBskyActorDefs.ProfileView[] | undefined
 }) {
-  const store = useStores()
   const pal = usePalette('default')
-  if (!followers?.length) {
+  const moderationOpts = useModerationOpts()
+
+  const followersWithMods = React.useMemo(() => {
+    if (!followers || !moderationOpts) {
+      return []
+    }
+
+    return followers
+      .map(f => ({
+        f,
+        mod: moderateProfile(f, moderationOpts),
+      }))
+      .filter(({mod}) => !mod.account.filter)
+  }, [followers, moderationOpts])
+
+  if (!followersWithMods?.length) {
     return null
   }
-
-  const followersWithMods = followers
-    .map(f => ({
-      f,
-      mod: moderateProfile(f, store.preferences.moderationOpts),
-    }))
-    .filter(({mod}) => !mod.account.filter)
 
   return (
     <View style={styles.followedBy}>
