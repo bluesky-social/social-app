@@ -9,7 +9,6 @@ import {TextInput} from './util'
 import LinearGradient from 'react-native-linear-gradient'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -20,13 +19,15 @@ import {resetToTab} from '../../../Navigation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useSession, useSessionApi} from '#/state/session'
 
 export const snapPoints = ['60%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const store = useStores()
+  const {agent, currentAccount} = useSession()
+  const {clearCurrentAccount, removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -39,7 +40,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.requestAccountDelete()
+      await agent.com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -47,19 +48,24 @@ export function Component({}: {}) {
     setIsProcessing(false)
   }
   const onPressConfirmDelete = async () => {
+    if (!currentAccount?.did) {
+      throw new Error(`DeleteAccount modal: currentAccount.did is undefined`)
+    }
+
     setError('')
     setIsProcessing(true)
     const token = confirmCode.replace(/\s/g, '')
 
     try {
-      await store.agent.com.atproto.server.deleteAccount({
-        did: store.me.did,
+      await agent.com.atproto.server.deleteAccount({
+        did: currentAccount.did,
         password,
         token,
       })
       Toast.show('Your account has been deleted')
       resetToTab('HomeTab')
-      store.session.clear()
+      removeAccount(currentAccount)
+      clearCurrentAccount()
       closeModal()
     } catch (e: any) {
       setError(cleanError(e))
@@ -88,7 +94,7 @@ export function Component({}: {}) {
                 pal.text,
                 s.bold,
               ]}>
-              {store.me.handle}
+              {currentAccount?.handle}
             </Text>
             <Text type="title-xl" style={[pal.text, s.bold]}>
               {'"'}

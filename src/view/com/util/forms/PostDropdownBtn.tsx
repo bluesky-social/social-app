@@ -15,7 +15,6 @@ import {EventStopper} from '../EventStopper'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
 import {getTranslatorLink} from '#/locale/helpers'
-import {useStores} from '#/state'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -23,6 +22,7 @@ import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSession} from '#/state/session'
 
 export function PostDropdownBtn({
   testID,
@@ -35,7 +35,7 @@ export function PostDropdownBtn({
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
+  const {currentAccount} = useSession()
   const theme = useTheme()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
@@ -47,7 +47,7 @@ export function PostDropdownBtn({
 
   const rootUri = record.reply?.root?.uri || post.uri
   const isThreadMuted = mutedThreads.includes(rootUri)
-  const isAuthor = post.author.did === store.me.did
+  const isAuthor = post.author.did === currentAccount?.did
   const href = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)

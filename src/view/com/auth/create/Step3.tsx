@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {CreateAccountModel} from 'state/models/ui/create-account'
+import {CreateAccountState, CreateAccountDispatch} from './state'
 import {Text} from 'view/com/util/text/Text'
 import {StepHeader} from './StepHeader'
 import {s} from 'lib/styles'
@@ -15,10 +14,12 @@ import {useLingui} from '@lingui/react'
 /** STEP 3: Your user handle
  * @field User handle
  */
-export const Step3 = observer(function Step3Impl({
-  model,
+export function Step3({
+  uiState,
+  uiDispatch,
 }: {
-  model: CreateAccountModel
+  uiState: CreateAccountState
+  uiDispatch: CreateAccountDispatch
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -30,9 +31,9 @@ export const Step3 = observer(function Step3Impl({
           testID="handleInput"
           icon="at"
           placeholder="e.g. alice"
-          value={model.handle}
+          value={uiState.handle}
           editable
-          onChange={model.setHandle}
+          onChange={value => uiDispatch({type: 'set-handle', value})}
           // TODO: Add explicit text label
           accessibilityLabel={_(msg`User handle`)}
           accessibilityHint="Input your user handle"
@@ -40,16 +41,16 @@ export const Step3 = observer(function Step3Impl({
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
           <Trans>Your full handle will be</Trans>
           <Text type="lg-bold" style={[pal.text, s.ml5]}>
-            @{createFullHandle(model.handle, model.userDomain)}
+            @{createFullHandle(uiState.handle, uiState.userDomain)}
           </Text>
         </Text>
       </View>
-      {model.error ? (
-        <ErrorMessage message={model.error} style={styles.error} />
+      {uiState.error ? (
+        <ErrorMessage message={uiState.error} style={styles.error} />
       ) : undefined}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   error: {

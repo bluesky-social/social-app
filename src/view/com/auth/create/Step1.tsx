@@ -1,10 +1,8 @@
 import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
 import {StepHeader} from './StepHeader'
-import {CreateAccountModel} from 'state/models/ui/create-account'
+import {CreateAccountState, CreateAccountDispatch} from './state'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
@@ -22,10 +20,12 @@ import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
  * @field Bluesky (default)
  * @field Other (staging, local dev, your own PDS, etc.)
  */
-export const Step1 = observer(function Step1Impl({
-  model,
+export function Step1({
+  uiState,
+  uiDispatch,
 }: {
-  model: CreateAccountModel
+  uiState: CreateAccountState
+  uiDispatch: CreateAccountDispatch
 }) {
   const pal = usePalette('default')
   const [isDefaultSelected, setIsDefaultSelected] = React.useState(true)
@@ -33,35 +33,19 @@ export const Step1 = observer(function Step1Impl({
 
   const onPressDefault = React.useCallback(() => {
     setIsDefaultSelected(true)
-    model.setServiceUrl(PROD_SERVICE)
-    model.fetchServiceDescription()
-  }, [setIsDefaultSelected, model])
+    uiDispatch({type: 'set-service-url', value: PROD_SERVICE})
+  }, [setIsDefaultSelected, uiDispatch])
 
   const onPressOther = React.useCallback(() => {
     setIsDefaultSelected(false)
-    model.setServiceUrl('https://')
-    model.setServiceDescription(undefined)
-  }, [setIsDefaultSelected, model])
-
-  const fetchServiceDescription = React.useMemo(
-    () => debounce(() => model.fetchServiceDescription(), 1e3), // debouce for 1 second (1e3 = 1000ms)
-    [model],
-  )
+    uiDispatch({type: 'set-service-url', value: 'https://'})
+  }, [setIsDefaultSelected, uiDispatch])
 
   const onChangeServiceUrl = React.useCallback(
     (v: string) => {
-      model.setServiceUrl(v)
-      fetchServiceDescription()
+      uiDispatch({type: 'set-service-url', value: v})
     },
-    [model, fetchServiceDescription],
-  )
-
-  const onDebugChangeServiceUrl = React.useCallback(
-    (v: string) => {
-      model.setServiceUrl(v)
-      model.fetchServiceDescription()
-    },
-    [model],
+    [uiDispatch],
   )
 
   return (
@@ -90,7 +74,7 @@ export const Step1 = observer(function Step1Impl({
             testID="customServerInput"
             icon="globe"
             placeholder={_(msg`Hosting provider address`)}
-            value={model.serviceUrl}
+            value={uiState.serviceUrl}
             editable
             onChange={onChangeServiceUrl}
             accessibilityHint="Input hosting provider address"
@@ -104,26 +88,26 @@ export const Step1 = observer(function Step1Impl({
                 type="default"
                 style={s.mr5}
                 label={_(msg`Staging`)}
-                onPress={() => onDebugChangeServiceUrl(STAGING_SERVICE)}
+                onPress={() => onChangeServiceUrl(STAGING_SERVICE)}
               />
               <Button
                 testID="localDevServerBtn"
                 type="default"
                 label={_(msg`Dev Server`)}
-                onPress={() => onDebugChangeServiceUrl(LOCAL_DEV_SERVICE)}
+                onPress={() => onChangeServiceUrl(LOCAL_DEV_SERVICE)}
               />
             </View>
           )}
         </View>
       </Option>
-      {model.error ? (
-        <ErrorMessage message={model.error} style={styles.error} />
+      {uiState.error ? (
+        <ErrorMessage message={uiState.error} style={styles.error} />
       ) : (
         <HelpTip text={_(msg`You can change hosting providers at any time.`)} />
       )}
     </View>
   )
-})
+}
 
 function Option({
   children,

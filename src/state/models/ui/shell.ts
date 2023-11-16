@@ -21,19 +21,6 @@ export class ShellUiModel {
     this.setupLoginModals()
   }
 
-  /**
-   * returns true if something was closed
-   * (used by the android hardware back btn)
-   */
-  closeAnyActiveElement(): boolean {
-    return false
-  }
-
-  /**
-   * used to clear out any modals, eg for a navigation
-   */
-  closeAllActiveElements() {}
-
   setupLoginModals() {
     this.rootStore.onSessionReady(() => {
       if (shouldRequestEmailConfirmation(this.rootStore.session)) {

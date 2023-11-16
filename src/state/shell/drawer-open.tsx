@@ -8,6 +8,7 @@ const setContext = React.createContext<SetContext>((_: boolean) => {})
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(false)
+
   return (
     <stateContext.Provider value={state}>
       <setContext.Provider value={setState}>{children}</setContext.Provider>

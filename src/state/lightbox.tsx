@@ -31,10 +31,10 @@ const LightboxContext = React.createContext<{
 
 const LightboxControlContext = React.createContext<{
   openLightbox: (lightbox: Lightbox) => void
-  closeLightbox: () => void
+  closeLightbox: () => boolean
 }>({
   openLightbox: () => {},
-  closeLightbox: () => {},
+  closeLightbox: () => false,
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -50,8 +50,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const closeLightbox = React.useCallback(() => {
+    let wasActive = !!activeLightbox
     setActiveLightbox(null)
-  }, [setActiveLightbox])
+    return wasActive
+  }, [setActiveLightbox, activeLightbox])
 
   const state = React.useMemo(
     () => ({

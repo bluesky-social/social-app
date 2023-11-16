@@ -14,8 +14,8 @@ export type SessionState = {
   agent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
-  accounts: persisted.PersistedAccount[]
-  currentAccount: persisted.PersistedAccount | undefined
+  accounts: SessionAccount[]
+  currentAccount: SessionAccount | undefined
 }
 export type StateContext = SessionState & {
   hasSession: boolean
@@ -70,15 +70,15 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 function createPersistSessionHandler(
-  account: persisted.PersistedAccount,
+  account: SessionAccount,
   persistSessionCallback: (props: {
     expired: boolean
-    refreshedAccount: persisted.PersistedAccount
+    refreshedAccount: SessionAccount
   }) => void,
 ): AtpPersistSessionHandler {
   return function persistSession(event, session) {
     const expired = !(event === 'create' || event === 'update')
-    const refreshedAccount = {
+    const refreshedAccount: SessionAccount = {
       service: account.service,
       did: session?.did || account.did,
       handle: session?.handle || account.handle,
@@ -128,7 +128,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const upsertAccount = React.useCallback(
-    (account: persisted.PersistedAccount, expired = false) => {
+    (account: SessionAccount, expired = false) => {
       setStateAndPersist(s => {
         return {
           ...s,
@@ -164,8 +164,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
 
-      const account: persisted.PersistedAccount = {
-        service,
+      const account: SessionAccount = {
+        service: agent.service.toString(),
         did: agent.session.did,
         handle: agent.session.handle,
         email: agent.session.email!, // TODO this is always defined?
@@ -215,8 +215,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         throw new Error(`session: login failed to establish a session`)
       }
 
-      const account: persisted.PersistedAccount = {
-        service,
+      const account: SessionAccount = {
+        service: agent.service.toString(),
         did: agent.session.did,
         handle: agent.session.handle,
         email: agent.session.email!, // TODO this is always defined?
@@ -293,9 +293,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
+      if (!agent.session) {
+        throw new Error(`session: initSession failed to establish a session`)
+      }
+
+      // ensure changes in handle/email etc are captured on reload
+      const freshAccount: SessionAccount = {
+        service: agent.service.toString(),
+        did: agent.session.did,
+        handle: agent.session.handle,
+        email: agent.session.email!, // TODO this is always defined?
+        emailConfirmed: agent.session.emailConfirmed || false,
+        refreshJwt: agent.session.refreshJwt,
+        accessJwt: agent.session.accessJwt,
+      }
+
       setState(s => ({...s, agent}))
-      upsertAccount(account)
-      emitSessionLoaded(account, agent)
+      upsertAccount(freshAccount)
+      emitSessionLoaded(freshAccount, agent)
     },
     [upsertAccount],
   )

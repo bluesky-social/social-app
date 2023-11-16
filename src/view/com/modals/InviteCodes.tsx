@@ -1,5 +1,10 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from 'react-native'
 import {observer} from 'mobx-react-lite'
 import {ComAtprotoServerDefs} from '@atproto/api'
 import {
@@ -10,23 +15,41 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
-import {useStores} from 'state/index'
 import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Trans} from '@lingui/macro'
+import {cleanError} from 'lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {useInvitesState, useInvitesAPI} from '#/state/invites'
 import {UserInfoText} from '../util/UserInfoText'
 import {makeProfileLink} from '#/lib/routes/links'
 import {Link} from '../util/Link'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {
+  useInviteCodesQuery,
+  InviteCodesQueryResponse,
+} from '#/state/queries/invites'
 
 export const snapPoints = ['70%']
 
-export function Component({}: {}) {
+export function Component() {
+  const {isLoading, data: invites, error} = useInviteCodesQuery()
+
+  return error ? (
+    <ErrorMessage message={cleanError(error)} />
+  ) : isLoading || !invites ? (
+    <View style={{padding: 18}}>
+      <ActivityIndicator />
+    </View>
+  ) : (
+    <Inner invites={invites} />
+  )
+}
+
+export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const pal = usePalette('default')
-  const store = useStores()
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
@@ -34,7 +57,7 @@ export function Component({}: {}) {
     closeModal()
   }, [closeModal])
 
-  if (store.me.invites.length === 0) {
+  if (invites.all.length === 0) {
     return (
       <View style={[styles.container, pal.view]} testID="inviteCodesModal">
         <View style={[styles.empty, pal.viewLight]}>
@@ -74,12 +97,21 @@ export function Component({}: {}) {
         </Trans>
       </Text>
       <ScrollView style={[styles.scrollContainer, pal.border]}>
-        {store.me.invites.map((invite, i) => (
+        {invites.available.map((invite, i) => (
           <InviteCode
             testID={`inviteCode-${i}`}
             key={invite.code}
             invite={invite}
-            used={invite.available - invite.uses.length <= 0 || invite.disabled}
+            invites={invites}
+          />
+        ))}
+        {invites.used.map((invite, i) => (
+          <InviteCode
+            used
+            testID={`inviteCode-${i}`}
+            key={invite.code}
+            invite={invite}
+            invites={invites}
           />
         ))}
       </ScrollView>
@@ -101,14 +133,14 @@ const InviteCode = observer(function InviteCodeImpl({
   testID,
   invite,
   used,
+  invites,
 }: {
   testID: string
   invite: ComAtprotoServerDefs.InviteCode
   used?: boolean
+  invites: InviteCodesQueryResponse
 }) {
   const pal = usePalette('default')
-  const store = useStores()
-  const {invitesAvailable} = store.me
   const invitesState = useInvitesState()
   const {setInviteCopied} = useInvitesAPI()
 
@@ -130,9 +162,9 @@ const InviteCode = observer(function InviteCodeImpl({
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={
-          invitesAvailable === 1
+          invites.available.length === 1
             ? 'Invite codes: 1 available'
-            : `Invite codes: ${invitesAvailable} available`
+            : `Invite codes: ${invites.available.length} available`
         }
         accessibilityHint="Opens list of invite codes">
         <Text
