@@ -25,6 +25,7 @@ import {
 } from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {closeAllActiveElements} from '#/state/util'
 
 const ShellInner = observer(function ShellInnerImpl() {
   const store = useStores()
@@ -40,9 +41,7 @@ const ShellInner = observer(function ShellInnerImpl() {
 
   useEffect(() => {
     navigator.addListener('state', () => {
-      setDrawerOpen(false)
-      closeModal()
-      store.shell.closeAnyActiveElement()
+      closeAllActiveElements()
     })
   }, [navigator, store.shell, setDrawerOpen, closeModal])
 
