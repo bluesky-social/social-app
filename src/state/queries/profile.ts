@@ -102,83 +102,88 @@ export function useProfileUpdateMutation() {
 import {useState} from 'react'
 
 export function useProfileFollowMutationQueue(profile) {
-  const followMutation = useProfileFollowMutation()
-  const unfollowMutation = useProfileUnfollowMutation()
   const did = profile.did
   const followingUri = profile.viewer?.following
+  const followMutation = useProfileFollowMutation()
+  const unfollowMutation = useProfileUnfollowMutation()
 
-  const [queue] = useState({
-    confirmedState: null,
-    currentAction: null,
-    pendingAction: null,
+  const queueToggle = useToggleMutationQueue({
+    initialState: {followingUri},
+    runMutation: async (prevState, isOn) => {
+      if (isOn) {
+        const {uri} = await followMutation.mutateAsync({did})
+        const nextState = {followingUri: uri}
+        return nextState
+      } else {
+        await unfollowMutation.mutateAsync({
+          did,
+          followUri: prevState.followingUri,
+        })
+        const nextState = {followingUri: undefined}
+        return nextState
+      }
+    },
+    onSuccess(finalState) {
+      updateProfileShadow(did, finalState)
+    },
   })
 
-  function queueFollow() {
-    return new Promise((resolve, reject) => {
-      queue.pendingAction = {type: 'follow', resolve, reject}
-      updateProfileShadow(did, {followingUri: 'pending'})
-      processQueue()
-    })
+  async function queueFollow() {
+    updateProfileShadow(did, {followingUri: 'pending'})
+    return queueToggle(true)
   }
 
-  function queueUnfollow() {
+  async function queueUnfollow() {
+    updateProfileShadow(did, {followingUri: undefined})
+    return queueToggle(false)
+  }
+
+  return [queueFollow, queueUnfollow]
+}
+
+function useToggleMutationQueue({initialState, runMutation, onSuccess}) {
+  const [queue] = useState({
+    activeTask: null,
+    queuedTask: null,
+  })
+
+  function queueToggle(isOn) {
     return new Promise((resolve, reject) => {
-      queue.pendingAction = {type: 'unfollow', resolve, reject}
-      updateProfileShadow(did, {followingUri: undefined})
+      queue.queuedTask = {isOn, resolve, reject}
       processQueue()
     })
   }
 
   async function processQueue() {
-    if (queue.currentAction) {
+    if (queue.activeTask) {
       return
     }
-    queue.confirmedState = {followingUri}
+    let confirmedState = initialState
     try {
-      while (queue.pendingAction) {
-        const prevAction = queue.currentAction
-        const nextAction = queue.pendingAction
-
-        queue.currentAction = nextAction
-        queue.pendingAction = null
-
-        const prevState = queue.confirmedState
-        if (nextAction.type === prevAction?.type) {
-          nextAction.resolve(prevState)
+      while (queue.queuedTask) {
+        const prevTask = queue.activeTask
+        const nextTask = queue.queuedTask
+        queue.activeTask = nextTask
+        queue.queuedTask = null
+        if (prevTask?.isOn === nextTask.isOn) {
           continue
         }
         try {
-          const nextState = await runAction(prevState, nextAction)
-          queue.confirmedState = nextState
-          nextAction.resolve(nextState)
+          confirmedState = await runMutation(confirmedState, nextTask.isOn)
+          nextTask.resolve(confirmedState)
         } catch (e) {
-          nextAction.reject(e)
+          nextTask.reject(e)
           throw e
         }
       }
     } finally {
-      if (queue.confirmedState) {
-        updateProfileShadow(did, queue.confirmedState)
-      }
-      queue.confirmedState = null
-      queue.currentAction = null
-      queue.pendingAction = null
+      onSuccess(confirmedState)
+      queue.activeTask = null
+      queue.queuedTask = null
     }
   }
 
-  async function runAction(state, action) {
-    if (action.type === 'follow') {
-      const {uri} = await followMutation.mutateAsync({did})
-      return {followingUri: uri}
-    } else if (action.type === 'unfollow') {
-      await unfollowMutation.mutateAsync({did, followUri: state.followingUri})
-      return {followingUri: undefined}
-    } else {
-      throw Error('Unknown action: ' + action.type)
-    }
-  }
-
-  return [queueFollow, queueUnfollow]
+  return queueToggle
 }
 
 export function useProfileFollowMutation() {
