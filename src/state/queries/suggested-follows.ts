@@ -34,7 +34,7 @@ export function useSuggestedFollowsQuery() {
     string | undefined
   >({
     enabled: !!moderationOpts,
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFollowsQueryKey,
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.actor.getSuggestions({
