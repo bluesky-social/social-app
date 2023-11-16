@@ -11,12 +11,14 @@ import {s} from 'lib/styles'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {ErrorScreen} from '../util/error/ErrorScreen'
+import {CenteredView} from '../util/Views'
 import {cleanError} from '#/lib/strings/errors'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 
 export const snapPoints = [520, '100%']
 
 export function Component({did}: {did: string}) {
+  const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
   const {
     data: profile,
@@ -30,9 +32,13 @@ export function Component({did}: {did: string}) {
 
   if (isFetchingProfile || !moderationOpts) {
     return (
-      <View style={s.p20}>
-        <ActivityIndicator size="large" />
-      </View>
+      <CenteredView style={[pal.view, s.flex1]}>
+        <ProfileHeader
+          profile={null}
+          moderation={null}
+          isProfilePreview={true}
+        />
+      </CenteredView>
     )
   }
   if (profileError) {

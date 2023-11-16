@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -73,9 +73,11 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
   if (isFetchingDid || isFetchingProfile || !moderationOpts) {
     return (
       <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
+        <ProfileHeader
+          profile={null}
+          moderation={null}
+          isProfilePreview={true}
+        />
       </CenteredView>
     )
   }
@@ -157,12 +159,6 @@ function ProfileScreenLoaded({
       showListsTab ? 'Lists' : undefined,
     ].filter(Boolean) as string[]
   }, [showLikesTab, showFeedsTab, showListsTab])
-
-  /*
-    - todo
-        - feeds
-        - lists
-    */
 
   useFocusEffect(
     React.useCallback(() => {
