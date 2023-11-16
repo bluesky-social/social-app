@@ -103,6 +103,7 @@ export function Inner({
       logger.error(`ChangeHandle: userDomain is undefined`, {
         service: serviceInfo,
       })
+      setError(`The service you've selected has no domains configured.`)
       return
     }
 
