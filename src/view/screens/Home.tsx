@@ -1,4 +1,5 @@
 import React from 'react'
+import {View, ActivityIndicator, StyleSheet} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -22,7 +23,11 @@ export const HomeScreen = withAuthRequired(function HomeScreenImpl(
   if (preferences) {
     return <HomeScreenReady {...props} preferences={preferences} />
   } else {
-    return null // TODO
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
   }
 })
 
@@ -140,3 +145,12 @@ function HomeScreenReady({
     </Pager>
   )
 }
+
+const styles = StyleSheet.create({
+  loading: {
+    height: '100%',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingBottom: 100,
+  },
+})
