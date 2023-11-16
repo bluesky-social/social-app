@@ -33,12 +33,12 @@ export const snapPoints = ['100%']
 export type Props = {onChanged: () => void}
 
 export function Component(props: Props) {
-  const {currentAccount} = useSession()
+  const {agent, currentAccount} = useSession()
   const {
     isLoading,
     data: serviceInfo,
     error: serviceInfoError,
-  } = useServiceQuery()
+  } = useServiceQuery(agent.service.toString())
 
   return isLoading || !currentAccount ? (
     <View style={{padding: 18}}>
