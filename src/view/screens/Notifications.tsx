@@ -49,7 +49,6 @@ export const NotificationsScreen = withAuthRequired(
       scrollToTop()
       queryClient.invalidateQueries({
         queryKey: NOTIFS_RQKEY(),
-        refetchType: 'all',
       })
     }, [scrollToTop, queryClient])
 

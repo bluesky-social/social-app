@@ -39,6 +39,7 @@ export function Feed({
   const {
     data,
     dataUpdatedAt,
+    isLoading,
     isFetching,
     isFetched,
     isError,
@@ -139,7 +140,7 @@ export function Feed({
     [onPressRetryLoadMore, dataUpdatedAt, moderationOpts],
   )
 
-  const showHeaderSpinner = !isPTRing && isFetching
+  const showHeaderSpinner = !isPTRing && isFetching && !isLoading
   const FeedHeader = React.useCallback(
     () => (
       <View>
