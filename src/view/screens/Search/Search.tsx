@@ -65,7 +65,6 @@ function Loader() {
   )
 }
 
-// TODO refactor how to translate?
 function EmptyState({message, error}: {message: string; error?: string}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -196,6 +195,7 @@ type SearchResultSlice =
     }
 
 function SearchScreenPostResults({query}: {query: string}) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const [isPTR, setIsPTR] = React.useState(false)
   const {
@@ -246,7 +246,9 @@ function SearchScreenPostResults({query}: {query: string}) {
 
   return error ? (
     <EmptyState
-      message="We're sorry, but your search could not be completed. Please try again in a few minutes."
+      message={_(
+        msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+      )}
       error={error.toString()}
     />
   ) : (
@@ -278,7 +280,7 @@ function SearchScreenPostResults({query}: {query: string}) {
               contentContainerStyle={{paddingBottom: 100}}
             />
           ) : (
-            <EmptyState message={`No results found for ${query}`} />
+            <EmptyState message={_(msg`No results found for ${query}`)} />
           )}
         </>
       ) : (
@@ -289,6 +291,7 @@ function SearchScreenPostResults({query}: {query: string}) {
 }
 
 function SearchScreenUserResults({query}: {query: string}) {
+  const {_} = useLingui()
   const [isFetched, setIsFetched] = React.useState(false)
   const [dataUpdatedAt, setDataUpdatedAt] = React.useState(0)
   const [results, setResults] = React.useState<
@@ -335,7 +338,7 @@ function SearchScreenUserResults({query}: {query: string}) {
           contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <EmptyState message={`No results found for ${query}`} />
+        <EmptyState message={_(msg`No results found for ${query}`)} />
       )}
     </>
   ) : (
@@ -587,7 +590,7 @@ export function SearchScreenMobile(
                   />
                 ))
               ) : (
-                <EmptyState message={`No results found for ${query}`} />
+                <EmptyState message={_(msg`No results found for ${query}`)} />
               )}
 
               <View style={{height: 200}} />
