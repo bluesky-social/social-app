@@ -20,6 +20,7 @@ import {ImagesLightbox} from 'state/models/ui/shell'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
+import {emitSoftReset} from '#/state/events'
 
 export const ProfileSubpageHeader = observer(function HeaderImpl({
   isLoading,
@@ -145,7 +146,7 @@ export const ProfileSubpageHeader = observer(function HeaderImpl({
               href={href}
               style={[pal.text, {fontWeight: 'bold'}]}
               text={title || ''}
-              onPress={() => store.emitScreenSoftReset()}
+              onPress={emitSoftReset}
               numberOfLines={4}
             />
           )}

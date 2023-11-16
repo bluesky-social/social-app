@@ -4,8 +4,8 @@ import {
   AppBskyFeedGetPostThread,
 } from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
-import {useSession} from '../session'
-import {ThreadViewPreference} from '../models/ui/preferences'
+import {useSession} from '#/state/session'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
@@ -72,7 +72,7 @@ export function usePostThreadQuery(uri: string | undefined) {
 
 export function sortThread(
   node: ThreadNode,
-  opts: ThreadViewPreference,
+  opts: UsePreferencesQueryResponse['threadViewPrefs'],
 ): ThreadNode {
   if (node.type !== 'post') {
     return node

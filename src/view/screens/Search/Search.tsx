@@ -33,7 +33,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useSession} from '#/state/session'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
@@ -43,8 +42,8 @@ import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {SearchResultCard} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {useStores} from '#/state'
 import {isWeb} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
 
 function Loader() {
   const pal = usePalette('default')
@@ -65,7 +64,6 @@ function Loader() {
   )
 }
 
-// TODO refactor how to translate?
 function EmptyState({message, error}: {message: string; error?: string}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -196,6 +194,7 @@ type SearchResultSlice =
     }
 
 function SearchScreenPostResults({query}: {query: string}) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const [isPTR, setIsPTR] = React.useState(false)
   const {
@@ -246,7 +245,9 @@ function SearchScreenPostResults({query}: {query: string}) {
 
   return error ? (
     <EmptyState
-      message="We're sorry, but your search could not be completed. Please try again in a few minutes."
+      message={_(
+        msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+      )}
       error={error.toString()}
     />
   ) : (
@@ -278,7 +279,7 @@ function SearchScreenPostResults({query}: {query: string}) {
               contentContainerStyle={{paddingBottom: 100}}
             />
           ) : (
-            <EmptyState message={`No results found for ${query}`} />
+            <EmptyState message={_(msg`No results found for ${query}`)} />
           )}
         </>
       ) : (
@@ -289,14 +290,13 @@ function SearchScreenPostResults({query}: {query: string}) {
 }
 
 function SearchScreenUserResults({query}: {query: string}) {
+  const {_} = useLingui()
   const [isFetched, setIsFetched] = React.useState(false)
   const [dataUpdatedAt, setDataUpdatedAt] = React.useState(0)
   const [results, setResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
   const search = useActorAutocompleteFn()
-  // fuzzy search relies on followers
-  const {isFetched: isFollowsFetched} = useMyFollowsQuery()
 
   React.useEffect(() => {
     async function getResults() {
@@ -309,13 +309,13 @@ function SearchScreenUserResults({query}: {query: string}) {
       }
     }
 
-    if (query && isFollowsFetched) {
+    if (query) {
       getResults()
     } else {
       setResults([])
       setIsFetched(false)
     }
-  }, [query, isFollowsFetched, setDataUpdatedAt, search, results])
+  }, [query, setDataUpdatedAt, search, results])
 
   return isFetched ? (
     <>
@@ -335,7 +335,7 @@ function SearchScreenUserResults({query}: {query: string}) {
           contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <EmptyState message={`No results found for ${query}`} />
+        <EmptyState message={_(msg`No results found for ${query}`)} />
       )}
     </>
   ) : (
@@ -410,7 +410,7 @@ export function SearchScreenDesktop(
 }
 
 export function SearchScreenMobile(
-  _props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
+  props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
@@ -421,14 +421,13 @@ export function SearchScreenMobile(
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const store = useStores()
   const {isTablet} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
   )
   const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
+  const [query, setQuery] = React.useState<string>(props.route?.params?.q || '')
   const [searchResults, setSearchResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
@@ -490,14 +489,9 @@ export function SearchScreenMobile(
 
   useFocusEffect(
     React.useCallback(() => {
-      const softResetSub = store.onScreenSoftReset(onSoftReset)
-
       setMinimalShellMode(false)
-
-      return () => {
-        softResetSub.remove()
-      }
-    }, [store, onSoftReset, setMinimalShellMode]),
+      return listenSoftReset(onSoftReset)
+    }, [onSoftReset, setMinimalShellMode]),
   )
 
   return (
@@ -587,7 +581,7 @@ export function SearchScreenMobile(
                   />
                 ))
               ) : (
-                <EmptyState message={`No results found for ${query}`} />
+                <EmptyState message={_(msg`No results found for ${query}`)} />
               )}
 
               <View style={{height: 200}} />

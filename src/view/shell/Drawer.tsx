@@ -50,6 +50,7 @@ import {useModalControls} from '#/state/modals'
 import {useSession, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {emitSoftReset} from '#/state/events'
 
 export function DrawerProfileCard({
   account,
@@ -103,7 +104,6 @@ export function DrawerProfileCard({
 export const DrawerContent = observer(function DrawerContentImpl() {
   const theme = useTheme()
   const pal = usePalette('default')
-  const store = useStores()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
@@ -124,7 +124,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
       if (isWeb) {
         // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
         if (tab === 'MyProfile') {
-          navigation.navigate('Profile', {name: store.me.handle})
+          navigation.navigate('Profile', {name: currentAccount!.handle})
         } else {
           // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(tab)
@@ -132,7 +132,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
       } else {
         const tabState = getTabState(state, tab)
         if (tabState === TabState.InsideAtRoot) {
-          store.emitScreenSoftReset()
+          emitSoftReset()
         } else if (tabState === TabState.Inside) {
           navigation.dispatch(StackActions.popToTop())
         } else {
@@ -141,7 +141,7 @@ export const DrawerContent = observer(function DrawerContentImpl() {
         }
       }
     },
-    [store, track, navigation, setDrawerOpen],
+    [track, navigation, setDrawerOpen, currentAccount],
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])

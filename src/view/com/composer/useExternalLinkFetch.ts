@@ -17,6 +17,7 @@ import {
 import {ComposerOpts} from 'state/shell/composer'
 import {POST_IMG_MAX} from 'lib/constants'
 import {logger} from '#/logger'
+import {useGetPost} from '#/state/queries/post'
 
 export function useExternalLinkFetch({
   setQuote,
@@ -27,6 +28,7 @@ export function useExternalLinkFetch({
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
+  const getPost = useGetPost()
 
   useEffect(() => {
     let aborted = false
@@ -38,7 +40,7 @@ export function useExternalLinkFetch({
     }
     if (!extLink.meta) {
       if (isBskyPostUrl(extLink.uri)) {
-        getPostAsQuote(store, extLink.uri).then(
+        getPostAsQuote(getPost, extLink.uri).then(
           newQuote => {
             if (aborted) {
               return
@@ -48,7 +50,7 @@ export function useExternalLinkFetch({
           },
           err => {
             logger.error('Failed to fetch post for quote embedding', {
-              error: err,
+              error: err.toString(),
             })
             setExtLink(undefined)
           },
@@ -132,7 +134,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [store, extLink, setQuote])
+  }, [store, extLink, setQuote, getPost])
 
   return {extLink, setExtLink}
 }

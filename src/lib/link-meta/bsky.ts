@@ -1,10 +1,11 @@
+import {AppBskyFeedPost} from '@atproto/api'
 import * as apilib from 'lib/api/index'
 import {LikelyType, LinkMeta} from './link-meta'
 // import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 import {RootStoreModel} from 'state/index'
-import {PostThreadModel} from 'state/models/content/post-thread'
 import {ComposerOptsQuote} from 'state/shell/composer'
+import {useGetPost} from '#/state/queries/post'
 
 // TODO
 // import {Home} from 'view/screens/Home'
@@ -102,27 +103,19 @@ export async function extractBskyMeta(
 }
 
 export async function getPostAsQuote(
-  store: RootStoreModel,
+  getPost: ReturnType<typeof useGetPost>,
   url: string,
 ): Promise<ComposerOptsQuote> {
   url = convertBskyAppUrlIfNeeded(url)
   const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-  const threadUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
-
-  const threadView = new PostThreadModel(store, {
-    uri: threadUri,
-    depth: 0,
-  })
-  await threadView.setup()
-  if (!threadView.thread || threadView.notFound) {
-    throw new Error('Not found')
-  }
+  const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+  const post = await getPost({uri: uri})
   return {
-    uri: threadView.thread.post.uri,
-    cid: threadView.thread.post.cid,
-    text: threadView.thread.postRecord?.text || '',
-    indexedAt: threadView.thread.post.indexedAt,
-    author: threadView.thread.post.author,
+    uri: post.uri,
+    cid: post.cid,
+    text: AppBskyFeedPost.isRecord(post.record) ? post.record.text : '',
+    indexedAt: post.indexedAt,
+    author: post.author,
   }
 }
 

@@ -1,7 +1,6 @@
 import {makeAutoObservable} from 'mobx'
 import {
   LabelPreference as APILabelPreference,
-  BskyFeedViewPreference,
   BskyThreadViewPreference,
 } from '@atproto/api'
 import {isObj, hasProp} from 'lib/type-guards'
@@ -10,9 +9,6 @@ import {ModerationOpts} from '@atproto/api'
 
 // TEMP we need to permanently convert 'show' to 'ignore', for now we manually convert -prf
 export type LabelPreference = APILabelPreference | 'show'
-export type FeedViewPreference = BskyFeedViewPreference & {
-  lab_mergeFeedEnabled?: boolean | undefined
-}
 export type ThreadViewPreference = BskyThreadViewPreference & {
   lab_treeViewEnabled?: boolean | undefined
 }
@@ -35,11 +31,6 @@ export class PreferencesModel {
   contentLabels = new LabelPreferencesModel()
   savedFeeds: string[] = []
   pinnedFeeds: string[] = []
-  thread: ThreadViewPreference = {
-    sort: 'oldest',
-    prioritizeFollowedUsers: true,
-    lab_treeViewEnabled: false, // experimental
-  }
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {}, {autoBind: true})

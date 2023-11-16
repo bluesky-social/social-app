@@ -11,7 +11,6 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {useStores} from 'state/index'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -23,6 +22,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {listenSoftReset, emitSoftReset} from '#/state/events'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -30,7 +30,6 @@ type Props = NativeStackScreenProps<
 >
 export const NotificationsScreen = withAuthRequired(
   function NotificationsScreenImpl({}: Props) {
-    const store = useStores()
     const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
@@ -60,13 +59,9 @@ export const NotificationsScreen = withAuthRequired(
       React.useCallback(() => {
         setMinimalShellMode(false)
         logger.debug('NotificationsScreen: Updating feed')
-        const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
         screen('Notifications')
-
-        return () => {
-          softResetSub.remove()
-        }
-      }, [store, screen, onPressLoadLatest, setMinimalShellMode]),
+        return listenSoftReset(onPressLoadLatest)
+      }, [screen, onPressLoadLatest, setMinimalShellMode]),
     )
 
     const ListHeaderComponent = React.useCallback(() => {
@@ -103,13 +98,13 @@ export const NotificationsScreen = withAuthRequired(
                   )}
                 </>
               }
-              onPress={() => store.emitScreenSoftReset()}
+              onPress={emitSoftReset}
             />
           </View>
         )
       }
       return <></>
-    }, [isDesktop, pal, store, hasNew])
+    }, [isDesktop, pal, hasNew])
 
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>

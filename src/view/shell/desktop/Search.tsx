@@ -157,7 +157,7 @@ export function DesktopSearch() {
           />
           <TextInput
             testID="searchTextInput"
-            placeholder="Search"
+            placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus
             returnKeyType="search"

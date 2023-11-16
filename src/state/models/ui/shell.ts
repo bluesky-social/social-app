@@ -1,6 +1,6 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {RootStoreModel} from '../root-store'
-import {makeAutoObservable, runInAction} from 'mobx'
+import {makeAutoObservable} from 'mobx'
 import {
   shouldRequestEmailConfirmation,
   setEmailConfirmationRequested,
@@ -40,14 +40,12 @@ export class ImagesLightbox implements LightboxModel {
 export class ShellUiModel {
   isLightboxActive = false
   activeLightbox: ProfileImageLightbox | ImagesLightbox | null = null
-  tickEveryMinute = Date.now()
 
   constructor(public rootStore: RootStoreModel) {
     makeAutoObservable(this, {
       rootStore: false,
     })
 
-    this.setupClock()
     this.setupLoginModals()
   }
 
@@ -81,14 +79,6 @@ export class ShellUiModel {
   closeLightbox() {
     this.isLightboxActive = false
     this.activeLightbox = null
-  }
-
-  setupClock() {
-    setInterval(() => {
-      runInAction(() => {
-        this.tickEveryMinute = Date.now()
-      })
-    }, 60_000)
   }
 
   setupLoginModals() {
