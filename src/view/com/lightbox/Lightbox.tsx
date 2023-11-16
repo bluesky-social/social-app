@@ -1,10 +1,7 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
-import {useStores} from 'state/index'
-import * as models from 'state/models/ui/shell'
 import {shareImageModal, saveImageToMediaLibrary} from 'lib/media/manip'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
@@ -12,17 +9,24 @@ import {s, colors} from 'lib/styles'
 import {Button} from '../util/forms/Button'
 import {isIOS} from 'platform/detection'
 import * as MediaLibrary from 'expo-media-library'
+import {
+  useLightbox,
+  useLightboxControls,
+  ProfileImageLightbox,
+  ImagesLightbox,
+} from '#/state/lightbox'
 
-export const Lightbox = observer(function Lightbox() {
-  const store = useStores()
+export function Lightbox() {
+  const {activeLightbox} = useLightbox()
+  const {closeLightbox} = useLightboxControls()
   const onClose = React.useCallback(() => {
-    store.shell.closeLightbox()
-  }, [store])
+    closeLightbox()
+  }, [closeLightbox])
 
-  if (!store.shell.activeLightbox) {
+  if (!activeLightbox) {
     return null
-  } else if (store.shell.activeLightbox.name === 'profile-image') {
-    const opts = store.shell.activeLightbox as models.ProfileImageLightbox
+  } else if (activeLightbox.name === 'profile-image') {
+    const opts = activeLightbox as ProfileImageLightbox
     return (
       <ImageView
         images={[{uri: opts.profile.avatar || ''}]}
@@ -32,8 +36,8 @@ export const Lightbox = observer(function Lightbox() {
         FooterComponent={LightboxFooter}
       />
     )
-  } else if (store.shell.activeLightbox.name === 'images') {
-    const opts = store.shell.activeLightbox as models.ImagesLightbox
+  } else if (activeLightbox.name === 'images') {
+    const opts = activeLightbox as ImagesLightbox
     return (
       <ImageView
         images={opts.images.map(img => ({...img}))}
@@ -46,14 +50,10 @@ export const Lightbox = observer(function Lightbox() {
   } else {
     return null
   }
-})
+}
 
-const LightboxFooter = observer(function LightboxFooter({
-  imageIndex,
-}: {
-  imageIndex: number
-}) {
-  const store = useStores()
+function LightboxFooter({imageIndex}: {imageIndex: number}) {
+  const {activeLightbox} = useLightbox()
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
 
@@ -81,7 +81,7 @@ const LightboxFooter = observer(function LightboxFooter({
     [permissionResponse, requestPermission],
   )
 
-  const lightbox = store.shell.activeLightbox
+  const lightbox = activeLightbox
   if (!lightbox) {
     return null
   }
@@ -89,11 +89,11 @@ const LightboxFooter = observer(function LightboxFooter({
   let altText = ''
   let uri = ''
   if (lightbox.name === 'images') {
-    const opts = lightbox as models.ImagesLightbox
+    const opts = lightbox as ImagesLightbox
     uri = opts.images[imageIndex].uri
     altText = opts.images[imageIndex].alt || ''
   } else if (lightbox.name === 'profile-image') {
-    const opts = lightbox as models.ProfileImageLightbox
+    const opts = lightbox as ProfileImageLightbox
     uri = opts.profile.avatar || ''
   }
 
@@ -132,7 +132,7 @@ const LightboxFooter = observer(function LightboxFooter({
       </View>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   footer: {

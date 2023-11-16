@@ -17,7 +17,6 @@ import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
 import {isNative} from 'platform/detection'
 import {BlurView} from '../util/BlurView'
-import {ProfileImageLightbox} from 'state/models/ui/shell'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -30,8 +29,8 @@ import {formatCount} from '../util/numeric/format'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
-import {useStores} from 'state/index'
 import {useModalControls} from '#/state/modals'
+import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
   useProfileFollowMutation,
   useProfileUnfollowMutation,
@@ -115,10 +114,10 @@ function ProfileHeaderLoaded({
 }: Props) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const store = useStores()
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const invalidHandle = isInvalidHandle(profile.handle)
@@ -151,9 +150,9 @@ function ProfileHeaderLoaded({
       profile.avatar &&
       !(moderation.avatar.blur && moderation.avatar.noOverride)
     ) {
-      store.shell.openLightbox(new ProfileImageLightbox(profile))
+      openLightbox(new ProfileImageLightbox(profile))
     }
-  }, [store, profile, moderation])
+  }, [openLightbox, profile, moderation])
 
   const onPressFollow = React.useCallback(async () => {
     if (profile.viewer?.following) {
