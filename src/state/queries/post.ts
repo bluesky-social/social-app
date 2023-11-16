@@ -1,7 +1,10 @@
-import {AppBskyFeedDefs} from '@atproto/api'
-import {useQuery, useMutation} from '@tanstack/react-query'
+import React from 'react'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {useSession} from '../session'
 import {updatePostShadow} from '../cache/post-shadow'
+
+import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
 
@@ -19,6 +22,38 @@ export function usePostQuery(uri: string | undefined) {
     },
     enabled: !!uri,
   })
+}
+
+export function useGetPost() {
+  const queryClient = useQueryClient()
+  return React.useCallback(
+    async ({uri}: {uri: string}) => {
+      return queryClient.fetchQuery({
+        queryKey: RQKEY(uri || ''),
+        async queryFn() {
+          const urip = new AtUri(uri)
+
+          if (!urip.host.startsWith('did:')) {
+            const res = await PUBLIC_BSKY_AGENT.resolveHandle({
+              handle: urip.host,
+            })
+            urip.host = res.data.did
+          }
+
+          const res = await PUBLIC_BSKY_AGENT.getPosts({
+            uris: [urip.toString()!],
+          })
+
+          if (res.success && res.data.posts[0]) {
+            return res.data.posts[0]
+          }
+
+          throw new Error('useGetPost: post not found')
+        },
+      })
+    },
+    [queryClient],
+  )
 }
 
 export function usePostLikeMutation() {
