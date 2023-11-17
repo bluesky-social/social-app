@@ -89,7 +89,7 @@ export function FeedSourceCardLoaded({
       openModal({
         name: 'confirm',
         title: _(msg`Remove from my feeds`),
-        message: _(msg`Remove ${item.displayName} from my feeds?`),
+        message: _(msg`Remove ${feed.displayName} from my feeds?`),
         onPressConfirm: async () => {
           try {
             await removeFeed({uri: feed.uri})

@@ -135,7 +135,7 @@ export const ComposePost = observer(function ComposePost({
           closeModal()
         },
         message: _(msg`Are you sure you'd like to discard this draft?`),
-        confirmBtnText: t`Discard`,
+        confirmBtnText: _(msg`Discard`),
         confirmBtnStyle: {backgroundColor: colors.red4},
       })
     } else {
