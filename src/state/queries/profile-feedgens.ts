@@ -1,7 +1,7 @@
 import {AppBskyFeedGetActorFeeds} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
 
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
 const PAGE_SIZE = 30
@@ -14,7 +14,6 @@ export function useProfileFeedgensQuery(
   did: string,
   opts?: {enabled?: boolean},
 ) {
-  const {agent} = useSession()
   const enabled = opts?.enabled !== false
   return useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
@@ -26,7 +25,7 @@ export function useProfileFeedgensQuery(
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.feed.getActorFeeds({
+      const res = await getAgent().app.bsky.feed.getActorFeeds({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

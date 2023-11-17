@@ -2,14 +2,14 @@ import {AppBskyGraphDefs} from '@atproto/api'
 import {useQuery, QueryClient} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
 export type MyListsFilter = 'all' | 'curate' | 'mod'
 export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
 
 export function useMyListsQuery(filter: MyListsFilter) {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   return useQuery<AppBskyGraphDefs.ListView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(filter),
@@ -17,8 +17,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
       let lists: AppBskyGraphDefs.ListView[] = []
       const promises = [
         accumulate(cursor =>
-          agent.app.bsky.graph
-            .getLists({
+          getAgent()
+            .app.bsky.graph.getLists({
               actor: currentAccount!.did,
               cursor,
               limit: 50,
@@ -32,8 +32,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
       if (filter === 'all' || filter === 'mod') {
         promises.push(
           accumulate(cursor =>
-            agent.app.bsky.graph
-              .getListMutes({
+            getAgent()
+              .app.bsky.graph.getListMutes({
                 cursor,
                 limit: 50,
               })
@@ -45,8 +45,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
         )
         promises.push(
           accumulate(cursor =>
-            agent.app.bsky.graph
-              .getListBlocks({
+            getAgent()
+              .app.bsky.graph.getListBlocks({
                 cursor,
                 limit: 50,
               })

@@ -17,7 +17,7 @@
 import {AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
 import {STALE} from '#/state/queries'
 
@@ -38,7 +38,7 @@ export interface ListMembersip {
  * This API is dangerous! Read the note above!
  */
 export function useDangerousListMembershipsQuery() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   return useQuery<ListMembersip[]>({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
@@ -49,7 +49,7 @@ export function useDangerousListMembershipsQuery() {
       let cursor
       let arr: ListMembersip[] = []
       for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
-        const res = await agent.app.bsky.graph.listitem.list({
+        const res = await getAgent().app.bsky.graph.listitem.list({
           repo: currentAccount.did,
           limit: PAGE_SIZE,
           cursor,
@@ -89,7 +89,7 @@ export function getMembership(
 }
 
 export function useListMembershipAddMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -100,7 +100,7 @@ export function useListMembershipAddMutation() {
       if (!currentAccount) {
         throw new Error('Not logged in')
       }
-      const res = await agent.app.bsky.graph.listitem.create(
+      const res = await getAgent().app.bsky.graph.listitem.create(
         {repo: currentAccount.did},
         {
           subject: actorDid,
@@ -147,7 +147,7 @@ export function useListMembershipAddMutation() {
 }
 
 export function useListMembershipRemoveMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<
     void,
@@ -159,7 +159,7 @@ export function useListMembershipRemoveMutation() {
         throw new Error('Not logged in')
       }
       const membershipUrip = new AtUri(membershipUri)
-      await agent.app.bsky.graph.listitem.delete({
+      await getAgent().app.bsky.graph.listitem.delete({
         repo: currentAccount.did,
         rkey: membershipUrip.rkey,
       })

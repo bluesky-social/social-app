@@ -16,7 +16,7 @@ import {CollectionId} from './types'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 
 const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
@@ -39,7 +39,6 @@ type ReportComponentProps =
     }
 
 export function Component(content: ReportComponentProps) {
-  const {agent} = useSession()
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -70,7 +69,7 @@ export function Component(content: ReportComponentProps) {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await agent.createModerationReport({
+      await getAgent().createModerationReport({
         reasonType: issue,
         subject: {
           $type,

@@ -9,7 +9,7 @@ import isEqual from 'lodash.isequal'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   ConfigurableLabelGroup,
@@ -31,13 +31,13 @@ export * from '#/state/queries/preferences/const'
 export const usePreferencesQueryKey = ['getPreferences']
 
 export function usePreferencesQuery() {
-  const {agent, hasSession} = useSession()
+  const {hasSession} = useSession()
   return useQuery({
     enabled: hasSession,
     staleTime: STALE.MINUTES.ONE,
     queryKey: usePreferencesQueryKey,
     queryFn: async () => {
-      const res = await agent.getPreferences()
+      const res = await getAgent().getPreferences()
       const preferences: UsePreferencesQueryResponse = {
         ...res,
         feeds: {
@@ -110,12 +110,11 @@ export function useModerationOpts() {
 }
 
 export function useClearPreferencesMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.actor.putPreferences({preferences: []})
+      await getAgent().app.bsky.actor.putPreferences({preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -125,7 +124,6 @@ export function useClearPreferencesMutation() {
 }
 
 export function usePreferencesSetContentLabelMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<
@@ -134,7 +132,7 @@ export function usePreferencesSetContentLabelMutation() {
     {labelGroup: ConfigurableLabelGroup; visibility: LabelPreference}
   >({
     mutationFn: async ({labelGroup, visibility}) => {
-      await agent.setContentLabelPref(labelGroup, visibility)
+      await getAgent().setContentLabelPref(labelGroup, visibility)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -144,12 +142,11 @@ export function usePreferencesSetContentLabelMutation() {
 }
 
 export function usePreferencesSetAdultContentMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, {enabled: boolean}>({
     mutationFn: async ({enabled}) => {
-      await agent.setAdultContentEnabled(enabled)
+      await getAgent().setAdultContentEnabled(enabled)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -159,12 +156,11 @@ export function usePreferencesSetAdultContentMutation() {
 }
 
 export function usePreferencesSetBirthDateMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
-      await agent.setPersonalDetails({birthDate})
+      await getAgent().setPersonalDetails({birthDate})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -174,12 +170,11 @@ export function usePreferencesSetBirthDateMutation() {
 }
 
 export function useSetFeedViewPreferencesMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
-      await agent.setFeedViewPrefs('home', prefs)
+      await getAgent().setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -189,12 +184,11 @@ export function useSetFeedViewPreferencesMutation() {
 }
 
 export function useSetThreadViewPreferencesMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
     mutationFn: async prefs => {
-      await agent.setThreadViewPrefs(prefs)
+      await getAgent().setThreadViewPrefs(prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -204,7 +198,6 @@ export function useSetThreadViewPreferencesMutation() {
 }
 
 export function useSetSaveFeedsMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<
@@ -213,7 +206,7 @@ export function useSetSaveFeedsMutation() {
     Pick<UsePreferencesQueryResponse['feeds'], 'saved' | 'pinned'>
   >({
     mutationFn: async ({saved, pinned}) => {
-      await agent.setSavedFeeds(saved, pinned)
+      await getAgent().setSavedFeeds(saved, pinned)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: usePreferencesQueryKey,
@@ -223,12 +216,11 @@ export function useSetSaveFeedsMutation() {
 }
 
 export function useSaveFeedMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.addSavedFeed(uri)
+      await getAgent().addSavedFeed(uri)
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -239,12 +231,11 @@ export function useSaveFeedMutation() {
 }
 
 export function useRemoveFeedMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.removeSavedFeed(uri)
+      await getAgent().removeSavedFeed(uri)
       track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -255,12 +246,11 @@ export function useRemoveFeedMutation() {
 }
 
 export function usePinFeedMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.addPinnedFeed(uri)
+      await getAgent().addPinnedFeed(uri)
       track('CustomFeed:Pin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -271,12 +261,11 @@ export function usePinFeedMutation() {
 }
 
 export function useUnpinFeedMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.removePinnedFeed(uri)
+      await getAgent().removePinnedFeed(uri)
       track('CustomFeed:Unpin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({

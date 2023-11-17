@@ -2,19 +2,18 @@ import React from 'react'
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {STALE} from '#/state/queries'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
 
 export function usePostQuery(uri: string | undefined) {
-  const {agent} = useSession()
   return useQuery<AppBskyFeedDefs.PostView>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPosts({uris: [uri!]})
+      const res = await getAgent().getPosts({uris: [uri!]})
       if (res.success && res.data.posts[0]) {
         return res.data.posts[0]
       }
@@ -27,7 +26,6 @@ export function usePostQuery(uri: string | undefined) {
 
 export function useGetPost() {
   const queryClient = useQueryClient()
-  const {agent} = useSession()
   return React.useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
@@ -37,13 +35,13 @@ export function useGetPost() {
           const urip = new AtUri(uri)
 
           if (!urip.host.startsWith('did:')) {
-            const res = await agent.resolveHandle({
+            const res = await getAgent().resolveHandle({
               handle: urip.host,
             })
             urip.host = res.data.did
           }
 
-          const res = await agent.getPosts({
+          const res = await getAgent().getPosts({
             uris: [urip.toString()!],
           })
 
@@ -55,18 +53,17 @@ export function useGetPost() {
         },
       })
     },
-    [agent, queryClient],
+    [queryClient],
   )
 }
 
 export function usePostLikeMutation() {
-  const {agent} = useSession()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
     {uri: string; cid: string; likeCount: number} // the post's uri, cid, and likes
   >({
-    mutationFn: post => agent.like(post.uri, post.cid),
+    mutationFn: post => getAgent().like(post.uri, post.cid),
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.uri, {
@@ -91,14 +88,13 @@ export function usePostLikeMutation() {
 }
 
 export function usePostUnlikeMutation() {
-  const {agent} = useSession()
   return useMutation<
     void,
     Error,
     {postUri: string; likeUri: string; likeCount: number}
   >({
     mutationFn: async ({likeUri}) => {
-      await agent.deleteLike(likeUri)
+      await getAgent().deleteLike(likeUri)
     },
     onMutate(variables) {
       // optimistically update the post-shadow
@@ -118,13 +114,12 @@ export function usePostUnlikeMutation() {
 }
 
 export function usePostRepostMutation() {
-  const {agent} = useSession()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
     {uri: string; cid: string; repostCount: number} // the post's uri, cid, and reposts
   >({
-    mutationFn: post => agent.repost(post.uri, post.cid),
+    mutationFn: post => getAgent().repost(post.uri, post.cid),
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.uri, {
@@ -149,14 +144,13 @@ export function usePostRepostMutation() {
 }
 
 export function usePostUnrepostMutation() {
-  const {agent} = useSession()
   return useMutation<
     void,
     Error,
     {postUri: string; repostUri: string; repostCount: number}
   >({
     mutationFn: async ({repostUri}) => {
-      await agent.deleteRepost(repostUri)
+      await getAgent().deleteRepost(repostUri)
     },
     onMutate(variables) {
       // optimistically update the post-shadow
@@ -176,10 +170,9 @@ export function usePostUnrepostMutation() {
 }
 
 export function usePostDeleteMutation() {
-  const {agent} = useSession()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.deletePost(uri)
+      await getAgent().deletePost(uri)
     },
     onSuccess(data, variables) {
       updatePostShadow(variables.uri, {isDeleted: true})

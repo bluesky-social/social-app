@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
 import BroadcastChannel from '#/lib/broadcast'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences'
 import {shouldFilterNotif} from './util'
 import {isNative} from '#/platform/detection'
@@ -25,7 +25,7 @@ const apiContext = React.createContext<ApiContext>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const {hasSession, agent} = useSession()
+  const {hasSession} = useSession()
   const moderationOpts = useModerationOpts()
 
   const [numUnread, setNumUnread] = React.useState('')
@@ -60,7 +60,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return {
       async markAllRead() {
         // update server
-        await agent.updateSeenNotifications(lastSyncRef.current.toISOString())
+        await getAgent().updateSeenNotifications(
+          lastSyncRef.current.toISOString(),
+        )
 
         // update & broadcast
         setNumUnread('')
@@ -69,7 +71,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       async checkUnread() {
         // count
-        const res = await agent.listNotifications({limit: 40})
+        const res = await getAgent().listNotifications({limit: 40})
         const filtered = res.data.notifications.filter(
           notif => !notif.isRead && !shouldFilterNotif(notif, moderationOpts),
         )
@@ -94,7 +96,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         broadcast.postMessage({event: num})
       },
     }
-  }, [setNumUnread, agent, moderationOpts])
+  }, [setNumUnread, moderationOpts])
   checkUnreadRef.current = api.checkUnread
 
   return (

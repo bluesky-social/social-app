@@ -1,7 +1,7 @@
 import {ComAtprotoServerDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
 function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
@@ -13,13 +13,11 @@ export type InviteCodesQueryResponse = Exclude<
   undefined
 >
 export function useInviteCodesQuery() {
-  const {agent} = useSession()
-
   return useQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: ['inviteCodes'],
     queryFn: async () => {
-      const res = await agent.com.atproto.server.getAccountInviteCodes({})
+      const res = await getAgent().com.atproto.server.getAccountInviteCodes({})
 
       if (!res.data?.codes) {
         throw new Error(`useInviteCodesQuery: no codes returned`)

@@ -8,7 +8,7 @@ import {
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
-import {useSession} from '../session'
+import {useSession, getAgent} from '../session'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 import {uploadBlob} from '#/lib/api'
@@ -18,7 +18,6 @@ import {STALE} from '#/state/queries'
 export const RQKEY = (uri: string) => ['list', uri]
 
 export function useListQuery(uri?: string) {
-  const {agent} = useSession()
   return useQuery<AppBskyGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
@@ -26,7 +25,7 @@ export function useListQuery(uri?: string) {
       if (!uri) {
         throw new Error('URI not provided')
       }
-      const res = await agent.app.bsky.graph.getList({
+      const res = await getAgent().app.bsky.graph.getList({
         list: uri,
         limit: 1,
       })
@@ -43,7 +42,7 @@ export interface ListCreateMutateParams {
   avatar: RNImage | null | undefined
 }
 export function useListCreateMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, ListCreateMutateParams>(
     {
@@ -65,10 +64,10 @@ export function useListCreateMutation() {
           createdAt: new Date().toISOString(),
         }
         if (avatar) {
-          const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
+          const blobRes = await uploadBlob(getAgent(), avatar.path, avatar.mime)
           record.avatar = blobRes.data.blob
         }
-        const res = await agent.app.bsky.graph.list.create(
+        const res = await getAgent().app.bsky.graph.list.create(
           {
             repo: currentAccount.did,
           },
@@ -77,7 +76,7 @@ export function useListCreateMutation() {
 
         // wait for the appview to update
         await whenAppViewReady(
-          agent,
+          getAgent(),
           res.uri,
           (v: AppBskyGraphGetList.Response) => {
             return typeof v?.data?.list.uri === 'string'
@@ -102,7 +101,7 @@ export interface ListMetadataMutateParams {
   avatar: RNImage | null | undefined
 }
 export function useListMetadataMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -119,7 +118,7 @@ export function useListMetadataMutation() {
       }
 
       // get the current record
-      const {value: record} = await agent.app.bsky.graph.list.get({
+      const {value: record} = await getAgent().app.bsky.graph.list.get({
         repo: currentAccount.did,
         rkey,
       })
@@ -128,13 +127,13 @@ export function useListMetadataMutation() {
       record.name = name
       record.description = description
       if (avatar) {
-        const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
+        const blobRes = await uploadBlob(getAgent(), avatar.path, avatar.mime)
         record.avatar = blobRes.data.blob
       } else if (avatar === null) {
         record.avatar = undefined
       }
       const res = (
-        await agent.com.atproto.repo.putRecord({
+        await getAgent().com.atproto.repo.putRecord({
           repo: currentAccount.did,
           collection: 'app.bsky.graph.list',
           rkey,
@@ -144,7 +143,7 @@ export function useListMetadataMutation() {
 
       // wait for the appview to update
       await whenAppViewReady(
-        agent,
+        getAgent(),
         res.uri,
         (v: AppBskyGraphGetList.Response) => {
           const list = v.data.list
@@ -168,7 +167,7 @@ export function useListMetadataMutation() {
 }
 
 export function useListDeleteMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
@@ -179,7 +178,7 @@ export function useListDeleteMutation() {
       let cursor
       let listitemRecordUris: string[] = []
       for (let i = 0; i < 100; i++) {
-        const res = await agent.app.bsky.graph.listitem.list({
+        const res = await getAgent().app.bsky.graph.listitem.list({
           repo: currentAccount.did,
           cursor,
           limit: 100,
@@ -210,16 +209,20 @@ export function useListDeleteMutation() {
 
       // apply in chunks
       for (const writesChunk of chunk(writes, 10)) {
-        await agent.com.atproto.repo.applyWrites({
+        await getAgent().com.atproto.repo.applyWrites({
           repo: currentAccount.did,
           writes: writesChunk,
         })
       }
 
       // wait for the appview to update
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
-        return !v?.success
-      })
+      await whenAppViewReady(
+        getAgent(),
+        uri,
+        (v: AppBskyGraphGetList.Response) => {
+          return !v?.success
+        },
+      )
     },
     onSuccess() {
       invalidateMyLists(queryClient)
@@ -232,14 +235,13 @@ export function useListDeleteMutation() {
 }
 
 export function useListMuteMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string; mute: boolean}>({
     mutationFn: async ({uri, mute}) => {
       if (mute) {
-        await agent.muteModList(uri)
+        await getAgent().muteModList(uri)
       } else {
-        await agent.unmuteModList(uri)
+        await getAgent().unmuteModList(uri)
       }
     },
     onSuccess(data, variables) {
@@ -251,14 +253,13 @@ export function useListMuteMutation() {
 }
 
 export function useListBlockMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string; block: boolean}>({
     mutationFn: async ({uri, block}) => {
       if (block) {
-        await agent.blockModList(uri)
+        await getAgent().blockModList(uri)
       } else {
-        await agent.unblockModList(uri)
+        await getAgent().unblockModList(uri)
       }
     },
     onSuccess(data, variables) {

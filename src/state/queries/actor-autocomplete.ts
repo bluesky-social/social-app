@@ -3,14 +3,13 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {STALE} from '#/state/queries'
 
 export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
 
 export function useActorAutocompleteQuery(prefix: string) {
-  const {agent} = useSession()
   const {data: follows, isFetching} = useMyFollowsQuery()
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
@@ -18,7 +17,7 @@ export function useActorAutocompleteQuery(prefix: string) {
     queryKey: RQKEY(prefix || ''),
     async queryFn() {
       const res = prefix
-        ? await agent.searchActorsTypeahead({
+        ? await getAgent().searchActorsTypeahead({
             term: prefix,
             limit: 8,
           })
@@ -32,7 +31,6 @@ export function useActorAutocompleteQuery(prefix: string) {
 export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>
 export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
-  const {agent} = useSession()
   const {data: follows} = useMyFollowsQuery()
 
   return React.useCallback(
@@ -44,7 +42,7 @@ export function useActorAutocompleteFn() {
             staleTime: STALE.MINUTES.ONE,
             queryKey: RQKEY(query || ''),
             queryFn: () =>
-              agent.searchActorsTypeahead({
+              getAgent().searchActorsTypeahead({
                 term: query,
                 limit,
               }),
@@ -58,7 +56,7 @@ export function useActorAutocompleteFn() {
 
       return computeSuggestions(query, follows, res?.data.actors)
     },
-    [agent, follows, queryClient],
+    [follows, queryClient],
   )
 }
 

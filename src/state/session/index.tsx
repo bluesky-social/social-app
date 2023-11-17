@@ -1,5 +1,6 @@
 import React from 'react'
 import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
@@ -8,10 +9,15 @@ import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {IS_PROD} from '#/lib/constants'
 import {emitSessionLoaded, emitSessionDropped} from '../events'
 
+let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
+
+export function getAgent() {
+  return __globalAgent
+}
+
 export type SessionAccount = persisted.PersistedAccount
 
 export type SessionState = {
-  agent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
   accounts: SessionAccount[]
@@ -48,7 +54,6 @@ export type ApiContext = {
 }
 
 const StateContext = React.createContext<StateContext>({
-  agent: PUBLIC_BSKY_AGENT,
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
@@ -110,9 +115,9 @@ function createPersistSessionHandler(
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const queryClient = useQueryClient()
   const isDirty = React.useRef(false)
   const [state, setState] = React.useState<SessionState>({
-    agent: PUBLIC_BSKY_AGENT,
     isInitialLoad: true, // try to resume the session first
     isSwitchingAccounts: false,
     accounts: persisted.get('session').accounts,
@@ -180,7 +185,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
-      setState(s => ({...s, agent}))
+      __globalAgent = agent
+      queryClient.clear()
       upsertAccount(account)
       emitSessionLoaded(account, agent)
 
@@ -193,7 +199,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.DebugContext.session,
       )
     },
-    [upsertAccount],
+    [upsertAccount, queryClient],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -231,7 +237,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }),
       )
 
-      setState(s => ({...s, agent}))
+      __globalAgent = agent
+      queryClient.clear()
       upsertAccount(account)
       emitSessionLoaded(account, agent)
 
@@ -244,7 +251,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.DebugContext.session,
       )
     },
-    [upsertAccount],
+    [upsertAccount, queryClient],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
@@ -308,11 +315,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accessJwt: agent.session.accessJwt,
       }
 
-      setState(s => ({...s, agent}))
+      __globalAgent = agent
+      queryClient.clear()
       upsertAccount(freshAccount)
       emitSessionLoaded(freshAccount, agent)
     },
-    [upsertAccount],
+    [upsertAccount, queryClient],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
@@ -399,12 +407,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
    * back to the sign-in page.
    */
   const clearCurrentAccount = React.useCallback(() => {
+    __globalAgent = PUBLIC_BSKY_AGENT
+    queryClient.clear()
     setStateAndPersist(s => ({
       ...s,
-      agent: PUBLIC_BSKY_AGENT,
       currentAccount: undefined,
     }))
-  }, [setStateAndPersist])
+  }, [setStateAndPersist, queryClient])
 
   React.useEffect(() => {
     if (isDirty.current) {

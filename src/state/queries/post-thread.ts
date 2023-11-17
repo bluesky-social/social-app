@@ -5,7 +5,7 @@ import {
 } from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {STALE} from '#/state/queries'
 
@@ -58,12 +58,11 @@ export type ThreadNode =
   | ThreadUnknown
 
 export function usePostThreadQuery(uri: string | undefined) {
-  const {agent} = useSession()
   return useQuery<ThreadNode, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPostThread({uri: uri!})
+      const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {
         return responseToThreadNodes(res.data.thread)
       }

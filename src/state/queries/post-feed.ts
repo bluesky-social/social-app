@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {useSession} from '../session'
+import {getAgent} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
@@ -66,10 +66,10 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean},
 ) {
-  const {agent} = useSession()
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
   const moderationOpts = useModerationOpts()
+  const agent = getAgent()
 
   const api: FeedAPI = useMemo(() => {
     if (feedDesc === 'home') {
