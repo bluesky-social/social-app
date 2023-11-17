@@ -1,7 +1,7 @@
 import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {Shadow} from './types'
+import {Shadow, castAsShadow} from './types'
 export type {Shadow} from './types'
 
 const emitter = new EventEmitter()
@@ -58,20 +58,13 @@ export function usePostShadow(
   return useMemo(() => {
     return state.ts > ifAfterTS
       ? mergeShadow(post, state.value)
-      : {...post, isShadowed: true}
+      : castAsShadow(post)
   }, [post, state, ifAfterTS])
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   emitter.emit(uri, value)
 }
-
-export function isPostShadowed(
-  v: AppBskyFeedDefs.PostView | Shadow<AppBskyFeedDefs.PostView>,
-): v is Shadow<AppBskyFeedDefs.PostView> {
-  return 'isShadowed' in v && !!v.isShadowed
-}
-
 function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
   return {
     likeUri: post.viewer?.like,
@@ -89,7 +82,7 @@ function mergeShadow(
   if (shadow.isDeleted) {
     return POST_TOMBSTONE
   }
-  return {
+  return castAsShadow({
     ...post,
     likeCount: shadow.likeCount,
     repostCount: shadow.repostCount,
@@ -98,6 +91,5 @@ function mergeShadow(
       like: shadow.likeUri,
       repost: shadow.repostUri,
     },
-    isShadowed: true,
-  }
+  })
 }
