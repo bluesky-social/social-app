@@ -25,10 +25,10 @@ export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
   ifAfterTS: number,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const [state, setState] = useState<CacheEntry>({
+  const [state, setState] = useState<CacheEntry>(() => ({
     ts: Date.now(),
     value: fromPost(post),
-  })
+  }))
   const firstRun = useRef(true)
 
   const onUpdate = useCallback(

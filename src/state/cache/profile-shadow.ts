@@ -26,10 +26,10 @@ export function useProfileShadow(
   profile: ProfileView,
   ifAfterTS: number,
 ): Shadow<ProfileView> {
-  const [state, setState] = useState<CacheEntry>({
+  const [state, setState] = useState<CacheEntry>(() => ({
     ts: Date.now(),
     value: fromProfile(profile),
-  })
+  }))
   const firstRun = useRef(true)
 
   const onUpdate = useCallback(
