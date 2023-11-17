@@ -9,6 +9,7 @@ import {navigate} from '../../../Navigation'
 import once from 'lodash.once'
 
 import {useModals, useModalControls} from '#/state/modals'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
@@ -50,12 +51,15 @@ export function ModalsContainer() {
 
   const navigateOnce = once(navigate)
 
-  const onBottomSheetAnimate = (_fromIndex: number, toIndex: number) => {
-    if (activeModal?.name === 'profile-preview' && toIndex === 1) {
-      // begin loading the profile screen behind the scenes
-      navigateOnce('Profile', {name: activeModal.did})
-    }
-  }
+  // It seems like the bottom sheet bugs out when this callback changes.
+  const onBottomSheetAnimate = useNonReactiveCallback(
+    (_fromIndex: number, toIndex: number) => {
+      if (activeModal?.name === 'profile-preview' && toIndex === 1) {
+        // begin loading the profile screen behind the scenes
+        navigateOnce('Profile', {name: activeModal.did})
+      }
+    },
+  )
   const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
       closeModal()
