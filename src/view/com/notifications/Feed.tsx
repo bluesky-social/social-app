@@ -54,9 +54,12 @@ export function Feed({
 
   // mark all read on fresh data
   React.useEffect(() => {
+    let cleanup
     if (firstItem) {
-      markAllRead()
+      const to = setTimeout(() => markAllRead(), 250)
+      cleanup = () => clearTimeout(to)
     }
+    return cleanup
   }, [firstItem, markAllRead])
 
   const items = React.useMemo(() => {

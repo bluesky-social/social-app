@@ -12,7 +12,6 @@ import {getAgent} from '../../session'
 import {useModerationOpts} from '../preferences'
 import {shouldFilterNotif} from './util'
 import {useMutedThreads} from '#/state/muted-threads'
-import {STALE} from '#/state/queries'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -60,7 +59,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     QueryKey,
     RQPageParam
   >({
-    staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().listNotifications({
