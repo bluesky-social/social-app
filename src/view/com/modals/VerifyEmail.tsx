@@ -21,7 +21,7 @@ import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useSession, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi, getAgent} from '#/state/session'
 
 export const snapPoints = ['90%']
 
@@ -33,7 +33,7 @@ enum Stages {
 
 export function Component({showReminder}: {showReminder?: boolean}) {
   const pal = usePalette('default')
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
@@ -49,7 +49,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestEmailConfirmation()
+      await getAgent().com.atproto.server.requestEmailConfirmation()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -62,7 +62,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.confirmEmail({
+      await getAgent().com.atproto.server.confirmEmail({
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })

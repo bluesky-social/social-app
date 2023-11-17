@@ -8,7 +8,7 @@ import {
 } from '@atproto/api'
 import chunk from 'lodash.chunk'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {useSession} from '../../session'
+import {getAgent} from '../../session'
 import {useModerationOpts} from '../preferences'
 import {shouldFilterNotif} from './util'
 import {useMutedThreads} from '#/state/muted-threads'
@@ -49,7 +49,6 @@ export interface FeedPage {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
-  const {agent} = useSession()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
   const enabled = opts?.enabled !== false
@@ -64,7 +63,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.listNotifications({
+      const res = await getAgent().listNotifications({
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
@@ -79,7 +78,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
 
       // we fetch subjects of notifications (usually posts) now instead of lazily
       // in the UI to avoid relayouts
-      const subjects = await fetchSubjects(agent, notifsGrouped)
+      const subjects = await fetchSubjects(getAgent(), notifsGrouped)
       for (const notif of notifsGrouped) {
         if (notif.subjectUri) {
           notif.subject = subjects.get(notif.subjectUri)

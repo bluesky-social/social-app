@@ -1,6 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
 // TODO refactor invalidate on mutate?
@@ -11,17 +11,16 @@ export const RQKEY = (did: string) => ['profile-extra-info', did]
  * is not available in the API's ProfileView
  */
 export function useProfileExtraInfoQuery(did: string) {
-  const {agent} = useSession()
   return useQuery({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did),
     async queryFn() {
       const [listsRes, feedsRes] = await Promise.all([
-        agent.app.bsky.graph.getLists({
+        getAgent().app.bsky.graph.getLists({
           actor: did,
           limit: 1,
         }),
-        agent.app.bsky.feed.getActorFeeds({
+        getAgent().app.bsky.feed.getActorFeeds({
           actor: did,
           limit: 1,
         }),

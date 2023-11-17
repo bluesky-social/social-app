@@ -18,7 +18,7 @@ import {
 import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
 
@@ -136,7 +136,6 @@ export function getFeedTypeFromUri(uri: string) {
 }
 
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
-  const {agent} = useSession()
   const type = getFeedTypeFromUri(uri)
 
   return useQuery({
@@ -146,10 +145,10 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       let view: FeedSourceInfo
 
       if (type === 'feed') {
-        const res = await agent.app.bsky.feed.getFeedGenerator({feed: uri})
+        const res = await getAgent().app.bsky.feed.getFeedGenerator({feed: uri})
         view = hydrateFeedGenerator(res.data.view)
       } else {
-        const res = await agent.app.bsky.graph.getList({
+        const res = await getAgent().app.bsky.graph.getList({
           list: uri,
           limit: 1,
         })
@@ -164,8 +163,6 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
-  const {agent} = useSession()
-
   return useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
@@ -175,7 +172,7 @@ export function useGetPopularFeedsQuery() {
   >({
     queryKey: useGetPopularFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         cursor: pageParam,
       })
@@ -187,11 +184,9 @@ export function useGetPopularFeedsQuery() {
 }
 
 export function useSearchPopularFeedsMutation() {
-  const {agent} = useSession()
-
   return useMutation({
     mutationFn: async (query: string) => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
       })
@@ -220,7 +215,6 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
 }
 
 export function usePinnedFeedsInfos(): FeedSourceInfo[] {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
     FOLLOWING_FEED_STUB,
@@ -250,12 +244,12 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
                 const type = getFeedTypeFromUri(uri)
 
                 if (type === 'feed') {
-                  const res = await agent.app.bsky.feed.getFeedGenerator({
+                  const res = await getAgent().app.bsky.feed.getFeedGenerator({
                     feed: uri,
                   })
                   return hydrateFeedGenerator(res.data.view)
                 } else {
-                  const res = await agent.app.bsky.graph.getList({
+                  const res = await getAgent().app.bsky.graph.getList({
                     list: uri,
                     limit: 1,
                   })
@@ -274,7 +268,6 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
 
     fetchFeedInfo()
   }, [
-    agent,
     queryClient,
     setTabs,
     preferences?.feeds?.pinned,

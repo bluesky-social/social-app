@@ -13,7 +13,7 @@ import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useSession, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi, getAgent} from '#/state/session'
 
 enum Stages {
   InputEmail,
@@ -25,7 +25,7 @@ export const snapPoints = ['90%']
 
 export function Component() {
   const pal = usePalette('default')
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
@@ -44,11 +44,11 @@ export function Component() {
     setError('')
     setIsProcessing(true)
     try {
-      const res = await agent.com.atproto.server.requestEmailUpdate()
+      const res = await getAgent().com.atproto.server.requestEmailUpdate()
       if (res.data.tokenRequired) {
         setStage(Stages.ConfirmCode)
       } else {
-        await agent.com.atproto.server.updateEmail({email: email.trim()})
+        await getAgent().com.atproto.server.updateEmail({email: email.trim()})
         updateCurrentAccount({
           email: email.trim(),
           emailConfirmed: false,
@@ -77,7 +77,7 @@ export function Component() {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.updateEmail({
+      await getAgent().com.atproto.server.updateEmail({
         email: email.trim(),
         token: confirmationCode.trim(),
       })

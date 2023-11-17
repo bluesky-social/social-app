@@ -26,19 +26,24 @@ import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useServiceQuery} from '#/state/queries/service'
 import {useUpdateHandleMutation, useFetchDid} from '#/state/queries/handle'
-import {useSession, useSessionApi, SessionAccount} from '#/state/session'
+import {
+  useSession,
+  useSessionApi,
+  SessionAccount,
+  getAgent,
+} from '#/state/session'
 
 export const snapPoints = ['100%']
 
 export type Props = {onChanged: () => void}
 
 export function Component(props: Props) {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {
     isLoading,
     data: serviceInfo,
     error: serviceInfoError,
-  } = useServiceQuery(agent.service.toString())
+  } = useServiceQuery(getAgent().service.toString())
 
   return isLoading || !currentAccount ? (
     <View style={{padding: 18}}>

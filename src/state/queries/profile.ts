@@ -8,7 +8,7 @@ import {
 } from '@atproto/api'
 import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useSession} from '../session'
+import {useSession, getAgent} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
@@ -21,12 +21,11 @@ import {STALE} from '#/state/queries'
 export const RQKEY = (did: string) => ['profile', did]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
-  const {agent} = useSession()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
-      const res = await agent.getProfile({actor: did || ''})
+      const res = await getAgent().getProfile({actor: did || ''})
       return res.data
     },
     enabled: !!did,
@@ -40,17 +39,16 @@ interface ProfileUpdateParams {
   newUserBanner: RNImage | undefined | null
 }
 export function useProfileUpdateMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({profile, updates, newUserAvatar, newUserBanner}) => {
-      await agent.upsertProfile(async existing => {
+      await getAgent().upsertProfile(async existing => {
         existing = existing || {}
         existing.displayName = updates.displayName
         existing.description = updates.description
         if (newUserAvatar) {
           const res = await uploadBlob(
-            agent,
+            getAgent(),
             newUserAvatar.path,
             newUserAvatar.mime,
           )
@@ -60,7 +58,7 @@ export function useProfileUpdateMutation() {
         }
         if (newUserBanner) {
           const res = await uploadBlob(
-            agent,
+            getAgent(),
             newUserBanner.path,
             newUserBanner.mime,
           )
@@ -70,7 +68,7 @@ export function useProfileUpdateMutation() {
         }
         return existing
       })
-      await whenAppViewReady(agent, profile.did, res => {
+      await whenAppViewReady(getAgent(), profile.did, res => {
         if (typeof newUserAvatar !== 'undefined') {
           if (newUserAvatar === null && res.data.avatar) {
             // url hasnt cleared yet
@@ -160,14 +158,13 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation() {
-  const {agent} = useSession()
   return useMutation<
     {uri: string; cid: string},
     Error,
     {did: string; skipOptimistic?: boolean}
   >({
     mutationFn: async ({did}) => {
-      return await agent.follow(did)
+      return await getAgent().follow(did)
     },
     onMutate(variables) {
       if (!variables.skipOptimistic) {
@@ -197,14 +194,13 @@ function useProfileFollowMutation() {
 }
 
 function useProfileUnfollowMutation() {
-  const {agent} = useSession()
   return useMutation<
     void,
     Error,
     {did: string; followUri: string; skipOptimistic?: boolean}
   >({
     mutationFn: async ({followUri}) => {
-      return await agent.deleteFollow(followUri)
+      return await getAgent().deleteFollow(followUri)
     },
     onMutate(variables) {
       if (!variables.skipOptimistic) {
@@ -276,11 +272,10 @@ export function useProfileMuteMutationQueue(
 }
 
 function useProfileMuteMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
-      await agent.mute(did)
+      await getAgent().mute(did)
     },
     onMutate(variables) {
       if (!variables.skipOptimistic) {
@@ -305,11 +300,10 @@ function useProfileMuteMutation() {
 }
 
 function useProfileUnmuteMutation() {
-  const {agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
     mutationFn: async ({did}) => {
-      await agent.unmute(did)
+      await getAgent().unmute(did)
     },
     onMutate(variables) {
       if (!variables.skipOptimistic) {
@@ -389,7 +383,7 @@ export function useProfileBlockMutationQueue(
 }
 
 function useProfileBlockMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -400,7 +394,7 @@ function useProfileBlockMutation() {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await agent.app.bsky.graph.block.create(
+      return await getAgent().app.bsky.graph.block.create(
         {repo: currentAccount.did},
         {subject: did, createdAt: new Date().toISOString()},
       )
@@ -434,7 +428,7 @@ function useProfileBlockMutation() {
 }
 
 function useProfileUnblockMutation() {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   return useMutation<
     void,
     Error,
@@ -445,7 +439,7 @@ function useProfileUnblockMutation() {
         throw new Error('Not signed in')
       }
       const {rkey} = new AtUri(blockUri)
-      await agent.app.bsky.graph.block.delete({
+      await getAgent().app.bsky.graph.block.delete({
         repo: currentAccount.did,
         rkey,
       })

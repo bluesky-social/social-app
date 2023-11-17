@@ -55,7 +55,12 @@ import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {useSession, useSessionApi, SessionAccount} from '#/state/session'
+import {
+  useSession,
+  useSessionApi,
+  SessionAccount,
+  getAgent,
+} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {useInviteCodesQuery} from '#/state/queries/invites'
@@ -148,9 +153,11 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
   const {isMobile} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
-  const {isSwitchingAccounts, accounts, currentAccount, agent} = useSession()
+  const {isSwitchingAccounts, accounts, currentAccount} = useSession()
   const {clearCurrentAccount} = useSessionApi()
-  const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(agent)
+  const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
+    getAgent(),
+  )
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0

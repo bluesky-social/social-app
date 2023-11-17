@@ -16,7 +16,7 @@ import {
 import {ComposerOpts} from 'state/shell/composer'
 import {POST_IMG_MAX} from 'lib/constants'
 import {logger} from '#/logger'
-import {useSession} from '#/state/session'
+import {getAgent} from '#/state/session'
 import {useGetPost} from '#/state/queries/post'
 
 export function useExternalLinkFetch({
@@ -24,7 +24,6 @@ export function useExternalLinkFetch({
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
-  const {agent} = useSession()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -56,7 +55,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(agent, extLink.uri).then(
+        getFeedAsEmbed(getAgent(), extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -74,7 +73,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(agent, extLink.uri).then(
+        getListAsEmbed(getAgent(), extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -92,7 +91,7 @@ export function useExternalLinkFetch({
           },
         )
       } else {
-        getLinkMeta(agent, extLink.uri).then(meta => {
+        getLinkMeta(getAgent(), extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -134,7 +133,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [agent, extLink, setQuote, getPost])
+  }, [extLink, setQuote, getPost])
 
   return {extLink, setExtLink}
 }
