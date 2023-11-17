@@ -5,6 +5,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -238,24 +239,21 @@ export let unstable__closeModal: () => boolean = () => {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])
 
-  const openModal = React.useCallback(
-    (modal: Modal) => {
-      setActiveModals(modals => [...modals, modal])
-    },
-    [setActiveModals],
-  )
+  const openModal = useNonReactiveCallback((modal: Modal) => {
+    setActiveModals(modals => [...modals, modal])
+  })
 
-  const closeModal = React.useCallback(() => {
+  const closeModal = useNonReactiveCallback(() => {
     let wasActive = activeModals.length > 0
     setActiveModals(modals => {
       return modals.slice(0, -1)
     })
     return wasActive
-  }, [setActiveModals, activeModals])
+  })
 
-  const closeAllModals = React.useCallback(() => {
+  const closeAllModals = useNonReactiveCallback(() => {
     setActiveModals([])
-  }, [setActiveModals])
+  })
 
   unstable__openModal = openModal
   unstable__closeModal = closeModal
