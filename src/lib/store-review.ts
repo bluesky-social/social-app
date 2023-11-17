@@ -24,7 +24,7 @@ async function askForStoreReviewWithDelay() {
     return
   }
   // prompt if user has had 100 sessions or followed 50 people
-  if (numSessions >= 10 || numFollowed >= 50) {
+  if (numSessions >= 100 || numFollowed >= 50) {
     setTimeout(() => {
       askForStoreReivew().then(() => {
         persisted
@@ -58,7 +58,6 @@ export async function incrementStoreReviewSessions() {
   if (isWeb) return
 
   const {numSessions, ...others} = persisted.get('storeReview')
-  console.log('incrementStoreReviewSessions', numSessions, others)
   await persisted.write('storeReview', {
     numSessions: numSessions + 1,
     ...others,
@@ -67,8 +66,6 @@ export async function incrementStoreReviewSessions() {
 }
 
 export function listenSessionChangeForStoreReview() {
-  console.log('listenSessionChangeForStoreReview')
-
   // sets up AppState listener
   const l = AppState.addEventListener('change', () => {
     if (AppState.currentState === 'active') {

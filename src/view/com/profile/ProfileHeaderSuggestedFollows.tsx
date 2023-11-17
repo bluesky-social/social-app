@@ -30,6 +30,7 @@ import {
   useProfileFollowMutation,
   useProfileUnfollowMutation,
 } from '#/state/queries/profile'
+import {incrementStoreReviewFollowed} from '#/lib/store-review'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -218,6 +219,7 @@ function SuggestedFollow({
     try {
       track('ProfileHeader:SuggestedFollowFollowed')
       await followMutation.mutateAsync({did: profile.did})
+      incrementStoreReviewFollowed()
     } catch (e: any) {
       Toast.show('An issue occurred, please try again.')
     }

@@ -54,6 +54,7 @@ import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
+import {incrementStoreReviewFollowed} from '#/lib/store-review'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -166,6 +167,7 @@ function ProfileHeaderLoaded({
           profile.displayName || profile.handle,
         )}`,
       )
+      incrementStoreReviewFollowed()
     } catch (e: any) {
       logger.error('Failed to follow', {error: String(e)})
       Toast.show(`There was an issue! ${e.toString()}`)
