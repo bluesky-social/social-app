@@ -23,7 +23,7 @@ export function RecommendedFeeds({next}: Props) {
   const {isTabletOrMobile} = useWebMediaQueries()
   const {isLoading, data} = useSuggestedFeedsQuery()
 
-  const hasFeeds = data && data.pages[0].pages[0].feeds.length
+  const hasFeeds = data && data.pages[0].feeds.length
 
   const title = (
     <>
@@ -96,7 +96,7 @@ export function RecommendedFeeds({next}: Props) {
           contentStyle={{paddingHorizontal: 0}}>
           {hasFeeds ? (
             <FlatList
-              data={data.pages[0].pages[0].feeds}
+              data={data.pages[0].feeds}
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
@@ -126,7 +126,7 @@ export function RecommendedFeeds({next}: Props) {
 
           {hasFeeds ? (
             <FlatList
-              data={data.pages[0].pages[0].feeds}
+              data={data.pages[0].feeds}
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
