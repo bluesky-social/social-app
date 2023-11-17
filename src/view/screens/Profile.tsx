@@ -38,6 +38,10 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset} from '#/state/events'
 
+interface SectionRef {
+  scrollToTop: () => void
+}
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
   route,
