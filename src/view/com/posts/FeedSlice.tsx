@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FeedPostSlice} from '#/state/queries/post-feed'
 import {AtUri, moderatePost, ModerationOpts} from '@atproto/api'
@@ -9,7 +9,7 @@ import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 
-export function FeedSlice({
+let FeedSlice = ({
   slice,
   dataUpdatedAt,
   ignoreFilterFor,
@@ -19,7 +19,7 @@ export function FeedSlice({
   dataUpdatedAt: number
   ignoreFilterFor?: string
   moderationOpts: ModerationOpts
-}) {
+}): React.ReactNode => {
   const moderations = React.useMemo(() => {
     return slice.items.map(item => moderatePost(item.post, moderationOpts))
   }, [slice, moderationOpts])
@@ -94,6 +94,8 @@ export function FeedSlice({
     </>
   )
 }
+FeedSlice = memo(FeedSlice)
+export {FeedSlice}
 
 function ViewFullThread({slice}: {slice: FeedPostSlice}) {
   const pal = usePalette('default')

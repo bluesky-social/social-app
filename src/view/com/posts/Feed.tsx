@@ -1,4 +1,4 @@
-import React, {MutableRefObject} from 'react'
+import React, {memo, MutableRefObject} from 'react'
 import {
   ActivityIndicator,
   Dimensions,
@@ -31,7 +31,7 @@ const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export function Feed({
+let Feed = ({
   feed,
   feedParams,
   style,
@@ -65,7 +65,7 @@ export function Feed({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -273,6 +273,8 @@ export function Feed({
     </View>
   )
 }
+Feed = memo(Feed)
+export {Feed}
 
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
