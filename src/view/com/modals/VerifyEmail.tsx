@@ -224,7 +224,9 @@ export function Component({showReminder}: {showReminder?: boolean}) {
               <Button
                 testID="cancelBtn"
                 type="default"
-                onPress={() => closeModal()}
+                onPress={() => {
+                  closeModal()
+                }}
                 accessibilityLabel={
                   stage === Stages.Reminder ? 'Not right now' : 'Cancel'
                 }

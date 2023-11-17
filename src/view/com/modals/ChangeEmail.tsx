@@ -212,7 +212,9 @@ export function Component() {
               <Button
                 testID="cancelBtn"
                 type="default"
-                onPress={() => closeModal()}
+                onPress={() => {
+                  closeModal()
+                }}
                 accessibilityLabel={_(msg`Cancel`)}
                 accessibilityHint=""
                 label={_(msg`Cancel`)}

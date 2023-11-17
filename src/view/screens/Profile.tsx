@@ -193,7 +193,7 @@ function ProfileScreenLoaded({
   }, [openComposer, currentAccount, track, profile])
 
   const onPageSelected = React.useCallback(
-    i => {
+    (i: number) => {
       setCurrentPage(i)
     },
     [setCurrentPage],

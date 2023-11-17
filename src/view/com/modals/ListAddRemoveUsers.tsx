@@ -136,7 +136,9 @@ export function Component({
           <Button
             testID="doneBtn"
             type="default"
-            onPress={() => closeModal()}
+            onPress={() => {
+              closeModal()
+            }}
             accessibilityLabel={_(msg`Done`)}
             accessibilityHint=""
             label="Done"
