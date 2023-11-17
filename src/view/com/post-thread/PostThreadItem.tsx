@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {memo, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AtUri,
@@ -118,7 +118,7 @@ function PostThreadItemDeleted() {
   )
 }
 
-function PostThreadItemLoaded({
+let PostThreadItemLoaded = ({
   post,
   record,
   richText,
@@ -144,12 +144,12 @@ function PostThreadItemLoaded({
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
   onPostReply: () => void
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
-    countLines(richText?.text) >= MAX_POST_LINES,
+    () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const styles = useStyles()
   const hasEngagement = post.likeCount || post.repostCount
@@ -565,6 +565,7 @@ function PostThreadItemLoaded({
     )
   }
 }
+PostThreadItemLoaded = memo(PostThreadItemLoaded)
 
 function PostOuterWrapper({
   post,
