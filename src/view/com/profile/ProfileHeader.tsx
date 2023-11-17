@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -105,12 +105,12 @@ interface LoadedProps {
   isProfilePreview?: boolean
 }
 
-function ProfileHeaderLoaded({
+let ProfileHeaderLoaded = ({
   profile,
   moderation,
   hideBackButton = false,
   isProfilePreview,
-}: LoadedProps) {
+}: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {currentAccount} = useSession()
@@ -627,6 +627,7 @@ function ProfileHeaderLoaded({
     </View>
   )
 }
+ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 
 const styles = StyleSheet.create({
   banner: {

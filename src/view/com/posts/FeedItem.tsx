@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -83,7 +83,7 @@ export function FeedItem({
   return null
 }
 
-function FeedItemInner({
+let FeedItemInner = ({
   post,
   record,
   reason,
@@ -101,7 +101,7 @@ function FeedItemInner({
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
-}) {
+}): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -334,6 +334,7 @@ function FeedItemInner({
     </Link>
   )
 }
+FeedItemInner = memo(FeedItemInner)
 
 const styles = StyleSheet.create({
   outer: {
