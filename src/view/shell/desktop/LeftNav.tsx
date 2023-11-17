@@ -45,6 +45,8 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useComposerControls} from '#/state/shell/composer'
 import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
+import {useQueryClient} from '@tanstack/react-query'
+import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -118,6 +120,7 @@ interface NavItemProps {
 }
 function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const pal = usePalette('default')
+  const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
@@ -143,10 +146,16 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
       if (isCurrent) {
         emitSoftReset()
       } else {
+        if (href === '/notifications') {
+          // fetch new notifs on view
+          queryClient.invalidateQueries({
+            queryKey: NOTIFS_RQKEY(),
+          })
+        }
         onPress()
       }
     },
-    [onPress, isCurrent],
+    [onPress, isCurrent, queryClient, href],
   )
 
   return (
