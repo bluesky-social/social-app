@@ -75,7 +75,12 @@ export function ProfileLists({
       items = items.concat([EMPTY])
     } else if (data?.pages) {
       for (const page of data?.pages) {
-        items = items.concat(page.lists)
+        items = items.concat(
+          page.lists.map(l => ({
+            ...l,
+            _reactKey: l.uri,
+          })),
+        )
       }
     }
     if (isError && !isEmpty) {

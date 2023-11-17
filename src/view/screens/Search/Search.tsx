@@ -137,11 +137,11 @@ function SearchScreenSuggestedFollows() {
             ),
         )
       ).flat()
-
-      setSuggestions(
-        // dedupe
-        friendsOfFriends.filter(f => !friends.find(f2 => f.did === f2.did)),
+      const deduped = friendsOfFriends.filter(
+        (f, i) => friendsOfFriends.findIndex(f2 => f.did === f2.did) === i,
       )
+
+      setSuggestions(deduped)
       setDataUpdatedAt(Date.now())
     }
 
