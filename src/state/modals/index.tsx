@@ -236,43 +236,36 @@ export let unstable__closeModal: () => boolean = () => {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [isModalActive, setIsModalActive] = React.useState(false)
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])
 
   const openModal = React.useCallback(
     (modal: Modal) => {
-      setActiveModals(activeModals => [...activeModals, modal])
-      setIsModalActive(true)
+      setActiveModals(modals => [...modals, modal])
     },
-    [setIsModalActive, setActiveModals],
+    [setActiveModals],
   )
 
   const closeModal = React.useCallback(() => {
-    let totalActiveModals = 0
-    let wasActive = isModalActive
-    setActiveModals(activeModals => {
-      activeModals = activeModals.slice(0, -1)
-      totalActiveModals = activeModals.length
-      return activeModals
+    let wasActive = activeModals.length > 0
+    setActiveModals(modals => {
+      return modals.slice(0, -1)
     })
-    setIsModalActive(totalActiveModals > 0)
     return wasActive
-  }, [setIsModalActive, setActiveModals, isModalActive])
+  }, [setActiveModals, activeModals])
 
   const closeAllModals = React.useCallback(() => {
     setActiveModals([])
-    setIsModalActive(false)
-  }, [setActiveModals, setIsModalActive])
+  }, [setActiveModals])
 
   unstable__openModal = openModal
   unstable__closeModal = closeModal
 
   const state = React.useMemo(
     () => ({
-      isModalActive,
+      isModalActive: activeModals.length > 0,
       activeModals,
     }),
-    [isModalActive, activeModals],
+    [activeModals],
   )
 
   const methods = React.useMemo(
