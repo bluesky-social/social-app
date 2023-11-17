@@ -6,6 +6,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {QueryClientProvider} from '@tanstack/react-query'
+import {enableFreeze} from 'react-native-screens'
 
 import 'view/icons'
 
@@ -40,6 +41,7 @@ import {messages} from './locale/locales/en/messages'
 i18n.load('en', messages)
 i18n.activate('en')
 
+enableFreeze(true)
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {

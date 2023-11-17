@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
+import {enableFreeze} from 'react-native-screens'
 
 import 'view/icons'
 
@@ -31,6 +32,8 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
+
+enableFreeze(true)
 
 function InnerApp() {
   const {isInitialLoad} = useSession()
