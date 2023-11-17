@@ -1,4 +1,4 @@
-import React, {useMemo, useState, useEffect} from 'react'
+import React, {memo, useMemo, useState, useEffect} from 'react'
 import {
   Animated,
   TouchableOpacity,
@@ -56,7 +56,7 @@ interface Author {
   moderation: ProfileModeration
 }
 
-export function FeedItem({
+let FeedItem = ({
   item,
   dataUpdatedAt,
   moderationOpts,
@@ -64,7 +64,7 @@ export function FeedItem({
   item: FeedNotification
   dataUpdatedAt: number
   moderationOpts: ModerationOpts
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
@@ -262,6 +262,8 @@ export function FeedItem({
     </Link>
   )
 }
+FeedItem = memo(FeedItem)
+export {FeedItem}
 
 function ExpandListPressable({
   hasMultipleAuthors,
