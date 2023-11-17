@@ -1,5 +1,6 @@
 import React from 'react'
 import {AppBskyEmbedRecord} from '@atproto/api'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -47,18 +48,23 @@ const controlsContext = React.createContext<ControlsContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>()
+
+  const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
+    setState(opts)
+  })
+
+  const closeComposer = useNonReactiveCallback(() => {
+    let wasOpen = !!state
+    setState(undefined)
+    return wasOpen
+  })
+
   const api = React.useMemo(
     () => ({
-      openComposer(opts: ComposerOpts) {
-        setState(opts)
-      },
-      closeComposer() {
-        let wasOpen = !!state
-        setState(undefined)
-        return wasOpen
-      },
+      openComposer,
+      closeComposer,
     }),
-    [setState, state],
+    [openComposer, closeComposer],
   )
 
   return (
