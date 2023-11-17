@@ -106,7 +106,7 @@ let FeedItemInner = ({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const [limitLines, setLimitLines] = useState(
-    countLines(richText.text) >= MAX_POST_LINES,
+    () => countLines(richText.text) >= MAX_POST_LINES,
   )
 
   const href = useMemo(() => {

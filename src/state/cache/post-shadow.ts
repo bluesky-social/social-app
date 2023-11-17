@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback, useRef} from 'react'
+import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {Shadow} from './types'
@@ -55,9 +55,11 @@ export function usePostShadow(
     firstRun.current = false
   }, [post])
 
-  return state.ts > ifAfterTS
-    ? mergeShadow(post, state.value)
-    : {...post, isShadowed: true}
+  return useMemo(() => {
+    return state.ts > ifAfterTS
+      ? mergeShadow(post, state.value)
+      : {...post, isShadowed: true}
+  }, [post, state, ifAfterTS])
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
