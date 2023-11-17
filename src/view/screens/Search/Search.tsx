@@ -119,29 +119,28 @@ function SearchScreenSuggestedFollows() {
 
   React.useEffect(() => {
     async function getSuggestions() {
-      // TODO not quite right, doesn't fetch your follows
       const friends = await getSuggestedFollowsByActor(
         currentAccount!.did,
       ).then(friendsRes => friendsRes.suggestions)
 
       if (!friends) return // :(
 
-      const friendsOfFriends = (
-        await Promise.all(
-          friends
-            .slice(0, 4)
-            .map(friend =>
-              getSuggestedFollowsByActor(friend.did).then(
-                foafsRes => foafsRes.suggestions,
-              ),
-            ),
-        )
-      ).flat()
-      const deduped = friendsOfFriends.filter(
-        (f, i) => friendsOfFriends.findIndex(f2 => f.did === f2.did) === i,
+      const friendsOfFriends = new Map<
+        string,
+        AppBskyActorDefs.ProfileViewBasic
+      >()
+
+      await Promise.all(
+        friends.slice(0, 4).map(friend =>
+          getSuggestedFollowsByActor(friend.did).then(foafsRes => {
+            for (const user of foafsRes.suggestions) {
+              friendsOfFriends.set(user.did, user)
+            }
+          }),
+        ),
       )
 
-      setSuggestions(deduped)
+      setSuggestions(Array.from(friendsOfFriends.values()))
       setDataUpdatedAt(Date.now())
     }
 
