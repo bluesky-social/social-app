@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
+import {useEffect, useState, useMemo, useCallback} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Shadow, castAsShadow} from './types'
@@ -30,7 +30,17 @@ export function useProfileShadow(
     ts: Date.now(),
     value: fromProfile(profile),
   }))
-  const firstRun = useRef(true)
+
+  const [prevProfile, setPrevProfile] = useState(profile)
+  if (profile !== prevProfile) {
+    // if we got a new prop, assume it's fresher
+    // than whatever shadow state we accumulated
+    setPrevProfile(profile)
+    setState({
+      ts: Date.now(),
+      value: fromProfile(profile),
+    })
+  }
 
   const onUpdate = useCallback(
     (value: Partial<ProfileShadow>) => {
@@ -46,15 +56,6 @@ export function useProfileShadow(
       emitter.removeListener(profile.did, onUpdate)
     }
   }, [profile.did, onUpdate])
-
-  // react to profile updates
-  useEffect(() => {
-    // dont fire on first run to avoid needless re-renders
-    if (!firstRun.current) {
-      setState({ts: Date.now(), value: fromProfile(profile)})
-    }
-    firstRun.current = false
-  }, [profile])
 
   return useMemo(() => {
     return state.ts > ifAfterTS

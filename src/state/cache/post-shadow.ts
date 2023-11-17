@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
+import {useEffect, useState, useMemo, useCallback} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {Shadow, castAsShadow} from './types'
@@ -29,7 +29,17 @@ export function usePostShadow(
     ts: Date.now(),
     value: fromPost(post),
   }))
-  const firstRun = useRef(true)
+
+  const [prevPost, setPrevPost] = useState(post)
+  if (post !== prevPost) {
+    // if we got a new prop, assume it's fresher
+    // than whatever shadow state we accumulated
+    setPrevPost(post)
+    setState({
+      ts: Date.now(),
+      value: fromPost(post),
+    })
+  }
 
   const onUpdate = useCallback(
     (value: Partial<PostShadow>) => {
@@ -45,15 +55,6 @@ export function usePostShadow(
       emitter.removeListener(post.uri, onUpdate)
     }
   }, [post.uri, onUpdate])
-
-  // react to post updates
-  useEffect(() => {
-    // dont fire on first run to avoid needless re-renders
-    if (!firstRun.current) {
-      setState({ts: Date.now(), value: fromPost(post)})
-    }
-    firstRun.current = false
-  }, [post])
 
   return useMemo(() => {
     return state.ts > ifAfterTS
