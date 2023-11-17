@@ -19,14 +19,14 @@ import {resetToTab} from '../../../Navigation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useSession, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi, getAgent} from '#/state/session'
 
 export const snapPoints = ['60%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {clearCurrentAccount, removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
@@ -40,7 +40,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestAccountDelete()
+      await getAgent().com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -57,7 +57,7 @@ export function Component({}: {}) {
     const token = confirmCode.replace(/\s/g, '')
 
     try {
-      await agent.com.atproto.server.deleteAccount({
+      await getAgent().com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
         token,

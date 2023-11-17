@@ -1,6 +1,5 @@
 import React from 'react'
 import {SafeAreaView} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Login} from 'view/com/auth/login/Login'
 import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
@@ -16,7 +15,7 @@ enum ScreenState {
   S_CreateAccount,
 }
 
-export const LoggedOut = observer(function LoggedOutImpl() {
+export function LoggedOut() {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
@@ -58,4 +57,4 @@ export const LoggedOut = observer(function LoggedOutImpl() {
       </ErrorBoundary>
     </SafeAreaView>
   )
-})
+}

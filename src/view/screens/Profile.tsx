@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewSelectorHandle} from '../com/util/ViewSelector'
-import {CenteredView} from '../com/util/Views'
+import {CenteredView, FlatList} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileLists} from '../com/lists/ProfileLists'
@@ -37,6 +37,10 @@ import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {useQueryClient} from '@tanstack/react-query'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset} from '#/state/events'
+
+interface SectionRef {
+  scrollToTop: () => void
+}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
@@ -73,9 +77,11 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
   if (isFetchingDid || isFetchingProfile || !moderationOpts) {
     return (
       <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
+        <ProfileHeader
+          profile={null}
+          moderation={null}
+          isProfilePreview={true}
+        />
       </CenteredView>
     )
   }
@@ -158,12 +164,6 @@ function ProfileScreenLoaded({
     ].filter(Boolean) as string[]
   }, [showLikesTab, showFeedsTab, showListsTab])
 
-  /*
-    - todo
-        - feeds
-        - lists
-    */
-
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
@@ -197,7 +197,7 @@ function ProfileScreenLoaded({
   }, [openComposer, currentAccount, track, profile])
 
   const onPageSelected = React.useCallback(
-    i => {
+    (i: number) => {
       setCurrentPage(i)
     },
     [setCurrentPage],
@@ -235,7 +235,9 @@ function ProfileScreenLoaded({
             headerHeight={headerHeight}
             isFocused={isFocused}
             isScrolledDown={isScrolledDown}
-            scrollElRef={scrollElRef}
+            scrollElRef={
+              scrollElRef as React.MutableRefObject<FlatList<any> | null>
+            }
           />
         )}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
@@ -246,7 +248,9 @@ function ProfileScreenLoaded({
             headerHeight={headerHeight}
             isFocused={isFocused}
             isScrolledDown={isScrolledDown}
-            scrollElRef={scrollElRef}
+            scrollElRef={
+              scrollElRef as React.MutableRefObject<FlatList<any> | null>
+            }
           />
         )}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
@@ -257,7 +261,9 @@ function ProfileScreenLoaded({
             headerHeight={headerHeight}
             isFocused={isFocused}
             isScrolledDown={isScrolledDown}
-            scrollElRef={scrollElRef}
+            scrollElRef={
+              scrollElRef as React.MutableRefObject<FlatList<any> | null>
+            }
           />
         )}
         {showLikesTab
@@ -275,7 +281,9 @@ function ProfileScreenLoaded({
                 headerHeight={headerHeight}
                 isFocused={isFocused}
                 isScrolledDown={isScrolledDown}
-                scrollElRef={scrollElRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
               />
             )
           : null}
@@ -283,7 +291,9 @@ function ProfileScreenLoaded({
           ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
                 did={profile.did}
-                scrollElRef={scrollElRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
@@ -295,7 +305,9 @@ function ProfileScreenLoaded({
           ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 did={profile.did}
-                scrollElRef={scrollElRef}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
@@ -322,7 +334,7 @@ interface FeedSectionProps {
   headerHeight: number
   isFocused: boolean
   isScrolledDown: boolean
-  scrollElRef: any /* TODO */
+  scrollElRef: React.MutableRefObject<FlatList<any> | null>
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(

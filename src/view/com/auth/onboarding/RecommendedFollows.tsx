@@ -1,6 +1,5 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
@@ -21,9 +20,7 @@ import {useLingui} from '@lingui/react'
 type Props = {
   next: () => void
 }
-export const RecommendedFollows = observer(function RecommendedFollowsImpl({
-  next,
-}: Props) {
+export function RecommendedFollows({next}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
@@ -220,7 +217,7 @@ export const RecommendedFollows = observer(function RecommendedFollowsImpl({
       </Mobile>
     </>
   )
-})
+}
 
 const tdStyles = StyleSheet.create({
   container: {

@@ -1,10 +1,10 @@
 import 'lib/sentry' // must be near top
 
 import React, {useState, useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
+import {enableFreeze} from 'react-native-screens'
 
 import 'view/icons'
 
@@ -12,7 +12,6 @@ import {init as initPersistedState} from '#/state/persisted'
 import {init as initReminders} from '#/state/shell/reminders'
 import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
-import {RootStoreModel, setupState, RootStoreProvider} from './state'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -32,21 +31,14 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 
-const InnerApp = observer(function AppImpl() {
+enableFreeze(true)
+
+function InnerApp() {
   const {isInitialLoad} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
-  const [rootStore, setRootStore] = useState<RootStoreModel | undefined>(
-    undefined,
-  )
 
   // init
-  useEffect(() => {
-    setupState().then(store => {
-      setRootStore(store)
-    })
-  }, [])
-
   useEffect(() => {
     initReminders()
     analytics.init()
@@ -55,7 +47,7 @@ const InnerApp = observer(function AppImpl() {
   }, [resumeSession])
 
   // show nothing prior to init
-  if (!rootStore || isInitialLoad) {
+  if (isInitialLoad) {
     // TODO add a loading state
     return null
   }
@@ -68,20 +60,18 @@ const InnerApp = observer(function AppImpl() {
     <UnreadNotifsProvider>
       <ThemeProvider theme={colorMode}>
         <analytics.Provider>
-          <RootStoreProvider value={rootStore}>
-            {/* All components should be within this provider */}
-            <RootSiblingParent>
-              <SafeAreaProvider>
-                <Shell />
-              </SafeAreaProvider>
-            </RootSiblingParent>
-            <ToastContainer />
-          </RootStoreProvider>
+          {/* All components should be within this provider */}
+          <RootSiblingParent>
+            <SafeAreaProvider>
+              <Shell />
+            </SafeAreaProvider>
+          </RootSiblingParent>
+          <ToastContainer />
         </analytics.Provider>
       </ThemeProvider>
     </UnreadNotifsProvider>
   )
-})
+}
 
 function App() {
   const [isReady, setReady] = useState(false)

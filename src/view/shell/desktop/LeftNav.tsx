@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {
@@ -46,8 +45,10 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useComposerControls} from '#/state/shell/composer'
 import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
+import {useQueryClient} from '@tanstack/react-query'
+import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 
-const ProfileCard = observer(function ProfileCardImpl() {
+function ProfileCard() {
   const {currentAccount} = useSession()
   const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
   const {isDesktop} = useWebMediaQueries()
@@ -74,7 +75,7 @@ const ProfileCard = observer(function ProfileCardImpl() {
       />
     </View>
   )
-})
+}
 
 function BackBtn() {
   const {isTablet} = useWebMediaQueries()
@@ -118,14 +119,9 @@ interface NavItemProps {
   iconFilled: JSX.Element
   label: string
 }
-const NavItem = observer(function NavItemImpl({
-  count,
-  href,
-  icon,
-  iconFilled,
-  label,
-}: NavItemProps) {
+function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const pal = usePalette('default')
+  const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
@@ -151,10 +147,16 @@ const NavItem = observer(function NavItemImpl({
       if (isCurrent) {
         emitSoftReset()
       } else {
+        if (href === '/notifications') {
+          // fetch new notifs on view
+          queryClient.invalidateQueries({
+            queryKey: NOTIFS_RQKEY(),
+          })
+        }
         onPress()
       }
     },
-    [onPress, isCurrent],
+    [onPress, isCurrent, queryClient, href],
   )
 
   return (
@@ -193,7 +195,7 @@ const NavItem = observer(function NavItemImpl({
       )}
     </PressableWithHover>
   )
-})
+}
 
 function ComposeBtn() {
   const {currentAccount} = useSession()
@@ -265,7 +267,7 @@ function ComposeBtn() {
   )
 }
 
-export const DesktopLeftNav = observer(function DesktopLeftNav() {
+export function DesktopLeftNav() {
   const {currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -424,7 +426,7 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
       <ComposeBtn />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   leftNav: {

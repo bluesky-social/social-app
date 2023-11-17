@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {useSession} from '../session'
+import {getAgent} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
@@ -13,6 +13,7 @@ import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
 
 type ActorDid = string
 type AuthorFilter =
@@ -65,10 +66,10 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean},
 ) {
-  const {agent} = useSession()
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
   const moderationOpts = useModerationOpts()
+  const agent = getAgent()
 
   const api: FeedAPI = useMemo(() => {
     if (feedDesc === 'home') {
@@ -132,6 +133,7 @@ export function usePostFeedQuery(
     QueryKey,
     RQPageParam
   >({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       console.log('fetch', feedDesc, pageParam)

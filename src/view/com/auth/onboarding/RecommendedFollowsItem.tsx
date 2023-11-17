@@ -13,10 +13,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Trans} from '@lingui/macro'
 import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
-import {
-  useProfileFollowMutation,
-  useProfileUnfollowMutation,
-} from '#/state/queries/profile'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {logger} from '#/logger'
 
 type Props = {
@@ -77,35 +74,32 @@ export function ProfileCard({
   const pal = usePalette('default')
   const [addingMoreSuggestions, setAddingMoreSuggestions] =
     React.useState(false)
-  const {mutateAsync: follow} = useProfileFollowMutation()
-  const {mutateAsync: unfollow} = useProfileUnfollowMutation()
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
   const onToggleFollow = React.useCallback(async () => {
     try {
-      if (
-        profile.viewer?.following &&
-        profile.viewer?.following !== 'pending'
-      ) {
-        await unfollow({did: profile.did, followUri: profile.viewer.following})
-      } else if (
-        !profile.viewer?.following &&
-        profile.viewer?.following !== 'pending'
-      ) {
+      if (profile.viewer?.following) {
+        await queueUnfollow()
+      } else {
         setAddingMoreSuggestions(true)
-        await follow({did: profile.did})
+        await queueFollow()
         await onFollowStateChange({did: profile.did, following: true})
         setAddingMoreSuggestions(false)
         track('Onboarding:SuggestedFollowFollowed')
       }
-    } catch (e) {
-      logger.error('RecommendedFollows: failed to toggle following', {error: e})
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('RecommendedFollows: failed to toggle following', {
+          error: e,
+        })
+      }
     } finally {
       setAddingMoreSuggestions(false)
     }
   }, [
     profile,
-    follow,
-    unfollow,
+    queueFollow,
+    queueUnfollow,
     setAddingMoreSuggestions,
     track,
     onFollowStateChange,
@@ -142,7 +136,6 @@ export function ProfileCard({
           labelStyle={styles.followButton}
           onPress={onToggleFollow}
           label={profile.viewer?.following ? 'Unfollow' : 'Follow'}
-          withLoading={true}
         />
       </View>
       {profile.description ? (

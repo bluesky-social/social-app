@@ -1,6 +1,5 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
 import {Text} from 'view/com/util/text/Text'
@@ -18,9 +17,7 @@ import {useSuggestedFeedsQuery} from '#/state/queries/suggested-feeds'
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
-  next,
-}: Props) {
+export function RecommendedFeeds({next}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
@@ -157,7 +154,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
       </Mobile>
     </>
   )
-})
+}
 
 const tdStyles = StyleSheet.create({
   container: {

@@ -2,7 +2,6 @@ import React, {useState, useMemo} from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {AtUri} from '@atproto/api'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../../util/text/Text'
@@ -17,6 +16,7 @@ import {CollectionId} from './types'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {getAgent} from '#/state/session'
 
 const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
@@ -39,7 +39,6 @@ type ReportComponentProps =
     }
 
 export function Component(content: ReportComponentProps) {
-  const store = useStores()
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -70,7 +69,7 @@ export function Component(content: ReportComponentProps) {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await store.agent.createModerationReport({
+      await getAgent().createModerationReport({
         reasonType: issue,
         subject: {
           $type,

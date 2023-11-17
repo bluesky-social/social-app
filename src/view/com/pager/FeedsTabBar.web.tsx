@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {observer} from 'mobx-react-lite'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -11,7 +10,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
-export const FeedsTabBar = observer(function FeedsTabBarImpl(
+export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const {isMobile, isTablet} = useWebMediaQueries()
@@ -22,9 +21,9 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
   } else {
     return null
   }
-})
+}
 
-const FeedsTabBarTablet = observer(function FeedsTabBarTabletImpl(
+function FeedsTabBarTablet(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const feeds = usePinnedFeedsInfos()
@@ -48,7 +47,7 @@ const FeedsTabBarTablet = observer(function FeedsTabBarTabletImpl(
       />
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   tabBar: {

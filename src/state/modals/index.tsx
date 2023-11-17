@@ -5,6 +5,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -236,43 +237,33 @@ export let unstable__closeModal: () => boolean = () => {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [isModalActive, setIsModalActive] = React.useState(false)
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])
 
-  const openModal = React.useCallback(
-    (modal: Modal) => {
-      setActiveModals(activeModals => [...activeModals, modal])
-      setIsModalActive(true)
-    },
-    [setIsModalActive, setActiveModals],
-  )
+  const openModal = useNonReactiveCallback((modal: Modal) => {
+    setActiveModals(modals => [...modals, modal])
+  })
 
-  const closeModal = React.useCallback(() => {
-    let totalActiveModals = 0
-    let wasActive = isModalActive
-    setActiveModals(activeModals => {
-      activeModals = activeModals.slice(0, -1)
-      totalActiveModals = activeModals.length
-      return activeModals
+  const closeModal = useNonReactiveCallback(() => {
+    let wasActive = activeModals.length > 0
+    setActiveModals(modals => {
+      return modals.slice(0, -1)
     })
-    setIsModalActive(totalActiveModals > 0)
     return wasActive
-  }, [setIsModalActive, setActiveModals, isModalActive])
+  })
 
-  const closeAllModals = React.useCallback(() => {
+  const closeAllModals = useNonReactiveCallback(() => {
     setActiveModals([])
-    setIsModalActive(false)
-  }, [setActiveModals, setIsModalActive])
+  })
 
   unstable__openModal = openModal
   unstable__closeModal = closeModal
 
   const state = React.useMemo(
     () => ({
-      isModalActive,
+      isModalActive: activeModals.length > 0,
       activeModals,
     }),
-    [isModalActive, activeModals],
+    [activeModals],
   )
 
   const methods = React.useMemo(

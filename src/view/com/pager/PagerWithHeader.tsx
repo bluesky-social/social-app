@@ -22,7 +22,7 @@ import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 
 const SCROLLED_DOWN_LIMIT = 200
 
-interface PagerWithHeaderChildParams {
+export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
   onScroll: OnScrollHandler

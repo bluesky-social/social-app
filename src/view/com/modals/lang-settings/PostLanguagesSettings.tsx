@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {ScrollView} from '../util'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -19,7 +18,7 @@ import {
 
 export const snapPoints = ['100%']
 
-export const Component = observer(function PostLanguagesSettingsImpl() {
+export function Component() {
   const {closeModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -111,7 +110,7 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
       <ConfirmLanguagesButton onPress={onPressDone} />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

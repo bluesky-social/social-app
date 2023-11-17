@@ -13,7 +13,7 @@ import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'state/index'
+import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'lib/constants'
 import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
 
 /** STEP 1: Your hosting provider

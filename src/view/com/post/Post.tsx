@@ -99,7 +99,7 @@ function PostInner({
   const pal = usePalette('default')
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = useState(
-    countLines(richText?.text) >= MAX_POST_LINES,
+    () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const itemUrip = new AtUri(post.uri)
   const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)

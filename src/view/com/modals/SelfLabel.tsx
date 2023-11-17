@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -17,7 +16,7 @@ const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
 
 export const snapPoints = ['50%']
 
-export const Component = observer(function Component({
+export function Component({
   labels,
   hasMedia,
   onChange,
@@ -161,7 +160,7 @@ export const Component = observer(function Component({
       </View>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {Svg, Circle, Path} from 'react-native-svg'
 import {ScrollView, TextInput} from './util'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
@@ -22,7 +21,7 @@ import {cleanError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useSession, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi, getAgent} from '#/state/session'
 
 export const snapPoints = ['90%']
 
@@ -32,13 +31,9 @@ enum Stages {
   ConfirmCode,
 }
 
-export const Component = observer(function Component({
-  showReminder,
-}: {
-  showReminder?: boolean
-}) {
+export function Component({showReminder}: {showReminder?: boolean}) {
   const pal = usePalette('default')
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
@@ -54,7 +49,7 @@ export const Component = observer(function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestEmailConfirmation()
+      await getAgent().com.atproto.server.requestEmailConfirmation()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -67,7 +62,7 @@ export const Component = observer(function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.confirmEmail({
+      await getAgent().com.atproto.server.confirmEmail({
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
@@ -229,7 +224,9 @@ export const Component = observer(function Component({
               <Button
                 testID="cancelBtn"
                 type="default"
-                onPress={() => closeModal()}
+                onPress={() => {
+                  closeModal()
+                }}
                 accessibilityLabel={
                   stage === Stages.Reminder ? 'Not right now' : 'Cancel'
                 }
@@ -244,7 +241,7 @@ export const Component = observer(function Component({
       </ScrollView>
     </SafeAreaView>
   )
-})
+}
 
 function ReminderIllustration() {
   const pal = usePalette('default')

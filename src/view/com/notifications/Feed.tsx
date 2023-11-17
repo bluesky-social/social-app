@@ -39,6 +39,7 @@ export function Feed({
   const {
     data,
     dataUpdatedAt,
+    isLoading,
     isFetching,
     isFetched,
     isError,
@@ -53,9 +54,12 @@ export function Feed({
 
   // mark all read on fresh data
   React.useEffect(() => {
+    let cleanup
     if (firstItem) {
-      markAllRead()
+      const to = setTimeout(() => markAllRead(), 250)
+      cleanup = () => clearTimeout(to)
     }
+    return cleanup
   }, [firstItem, markAllRead])
 
   const items = React.useMemo(() => {
@@ -139,6 +143,21 @@ export function Feed({
     [onPressRetryLoadMore, dataUpdatedAt, moderationOpts],
   )
 
+  const showHeaderSpinner = !isPTRing && isFetching && !isLoading
+  const FeedHeader = React.useCallback(
+    () => (
+      <View>
+        {ListHeaderComponent ? <ListHeaderComponent /> : null}
+        {showHeaderSpinner ? (
+          <View style={{padding: 10}}>
+            <ActivityIndicator />
+          </View>
+        ) : null}
+      </View>
+    ),
+    [ListHeaderComponent, showHeaderSpinner],
+  )
+
   const FeedFooter = React.useCallback(
     () =>
       isFetchingNextPage ? (
@@ -168,7 +187,7 @@ export function Feed({
         data={items}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
-        ListHeaderComponent={ListHeaderComponent}
+        ListHeaderComponent={FeedHeader}
         ListFooterComponent={FeedFooter}
         refreshControl={
           <RefreshControl

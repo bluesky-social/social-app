@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Slider} from '@miblanchard/react-native-slider'
 import {Text} from '../com/util/text/Text'
@@ -72,9 +71,7 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'PreferencesHomeFeed'
 >
-export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
-  navigation,
-}: Props) {
+export function PreferencesHomeFeed({navigation}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -308,7 +305,7 @@ export const PreferencesHomeFeed = observer(function PreferencesHomeFeedImpl({
       </View>
     </CenteredView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

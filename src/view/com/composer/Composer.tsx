@@ -56,7 +56,7 @@ import {
   useLanguagePrefsApi,
   toPostLanguages,
 } from '#/state/preferences/languages'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useComposerControls} from '#/state/shell/composer'
 
@@ -67,7 +67,7 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
 }: Props) {
-  const {agent, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {activeModals} = useModals()
   const {openModal, closeModal} = useModalControls()
@@ -209,7 +209,7 @@ export const ComposePost = observer(function ComposePost({
     setIsProcessing(true)
 
     try {
-      await apilib.post(agent, {
+      await apilib.post(getAgent(), {
         rawText: richtext.text,
         replyTo: replyTo?.uri,
         images: gallery.images,

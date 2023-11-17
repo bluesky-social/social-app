@@ -99,7 +99,12 @@ export function Component({
         {description}
       </Text>
       <View style={s.flex1} />
-      <Button type="primary" style={styles.btn} onPress={() => closeModal()}>
+      <Button
+        type="primary"
+        style={styles.btn}
+        onPress={() => {
+          closeModal()
+        }}>
         <Text type="button-lg" style={[pal.textLight, s.textCenter, s.white]}>
           Okay
         </Text>

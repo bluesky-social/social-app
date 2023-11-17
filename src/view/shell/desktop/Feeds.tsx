@@ -1,7 +1,6 @@
 import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import {useNavigationState} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TextLink} from 'view/com/util/Link'
 import {getCurrentRoute} from 'lib/routes/helpers'
@@ -9,7 +8,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
-export const DesktopFeeds = observer(function DesktopFeeds() {
+export function DesktopFeeds() {
   const pal = usePalette('default')
   const {_} = useLingui()
   const feeds = usePinnedFeedsInfos()
@@ -57,7 +56,7 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
       </View>
     </View>
   )
-})
+}
 
 function FeedItem({
   title,

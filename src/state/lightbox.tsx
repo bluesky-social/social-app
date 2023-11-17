@@ -1,5 +1,6 @@
 import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 interface Lightbox {
   name: string
@@ -42,18 +43,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     null,
   )
 
-  const openLightbox = React.useCallback(
-    (lightbox: Lightbox) => {
-      setActiveLightbox(lightbox)
-    },
-    [setActiveLightbox],
-  )
+  const openLightbox = useNonReactiveCallback((lightbox: Lightbox) => {
+    setActiveLightbox(lightbox)
+  })
 
-  const closeLightbox = React.useCallback(() => {
+  const closeLightbox = useNonReactiveCallback(() => {
     let wasActive = !!activeLightbox
     setActiveLightbox(null)
     return wasActive
-  }, [setActiveLightbox, activeLightbox])
+  })
 
   const state = React.useMemo(
     () => ({

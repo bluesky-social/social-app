@@ -1,6 +1,8 @@
 import {AppBskyGraphGetFollowers} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {useSession} from '../session'
+
+import {getAgent} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -8,7 +10,6 @@ type RQPageParam = string | undefined
 export const RQKEY = (did: string) => ['profile-followers', did]
 
 export function useProfileFollowersQuery(did: string | undefined) {
-  const {agent} = useSession()
   return useInfiniteQuery<
     AppBskyGraphGetFollowers.OutputSchema,
     Error,
@@ -16,9 +17,10 @@ export function useProfileFollowersQuery(did: string | undefined) {
     QueryKey,
     RQPageParam
   >({
+    staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getFollowers({
+      const res = await getAgent().app.bsky.graph.getFollowers({
         actor: did || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

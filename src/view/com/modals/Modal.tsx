@@ -1,7 +1,6 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
-import {observer} from 'mobx-react-lite'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -10,6 +9,7 @@ import {navigate} from '../../../Navigation'
 import once from 'lodash.once'
 
 import {useModals, useModalControls} from '#/state/modals'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
@@ -40,7 +40,7 @@ import * as LinkWarningModal from './LinkWarning'
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
 
-export const ModalsContainer = observer(function ModalsContainer() {
+export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
   const {closeModal} = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -51,12 +51,15 @@ export const ModalsContainer = observer(function ModalsContainer() {
 
   const navigateOnce = once(navigate)
 
-  const onBottomSheetAnimate = (_fromIndex: number, toIndex: number) => {
-    if (activeModal?.name === 'profile-preview' && toIndex === 1) {
-      // begin loading the profile screen behind the scenes
-      navigateOnce('Profile', {name: activeModal.did})
-    }
-  }
+  // It seems like the bottom sheet bugs out when this callback changes.
+  const onBottomSheetAnimate = useNonReactiveCallback(
+    (_fromIndex: number, toIndex: number) => {
+      if (activeModal?.name === 'profile-preview' && toIndex === 1) {
+        // begin loading the profile screen behind the scenes
+        navigateOnce('Profile', {name: activeModal.did})
+      }
+    },
+  )
   const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
       closeModal()
@@ -198,7 +201,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       {element}
     </BottomSheet>
   )
-})
+}
 
 const styles = StyleSheet.create({
   handle: {

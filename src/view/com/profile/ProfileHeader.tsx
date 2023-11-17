@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -32,12 +32,9 @@ import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
-  useProfileFollowMutation,
-  useProfileUnfollowMutation,
-  useProfileMuteMutation,
-  useProfileUnmuteMutation,
-  useProfileBlockMutation,
-  useProfileUnblockMutation,
+  useProfileMuteMutationQueue,
+  useProfileBlockMutationQueue,
+  useProfileFollowMutationQueue,
 } from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -56,8 +53,8 @@ import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 
 interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ProfileModeration
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
+  moderation: ProfileModeration | null
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
@@ -72,7 +69,7 @@ export function ProfileHeader({
 
   // loading
   // =
-  if (!profile) {
+  if (!profile || !moderation) {
     return (
       <View style={pal.view}>
         <LoadingPlaceholder width="100%" height={153} />
@@ -83,11 +80,6 @@ export function ProfileHeader({
         <View style={styles.content}>
           <View style={[styles.buttonsLine]}>
             <LoadingPlaceholder width={167} height={31} style={styles.br50} />
-          </View>
-          <View>
-            <Text type="title-2xl" style={[pal.text, styles.title]}>
-              <Trans>Loading...</Trans>
-            </Text>
           </View>
         </View>
       </View>
@@ -106,12 +98,19 @@ export function ProfileHeader({
   )
 }
 
-function ProfileHeaderLoaded({
+interface LoadedProps {
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  moderation: ProfileModeration
+  hideBackButton?: boolean
+  isProfilePreview?: boolean
+}
+
+let ProfileHeaderLoaded = ({
   profile,
   moderation,
   hideBackButton = false,
   isProfilePreview,
-}: Props) {
+}: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {currentAccount} = useSession()
@@ -130,12 +129,9 @@ function ProfileHeaderLoaded({
         : undefined,
     [profile],
   )
-  const followMutation = useProfileFollowMutation()
-  const unfollowMutation = useProfileUnfollowMutation()
-  const muteMutation = useProfileMuteMutation()
-  const unmuteMutation = useProfileUnmuteMutation()
-  const blockMutation = useProfileBlockMutation()
-  const unblockMutation = useProfileUnblockMutation()
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -154,44 +150,39 @@ function ProfileHeaderLoaded({
     }
   }, [openLightbox, profile, moderation])
 
-  const onPressFollow = React.useCallback(async () => {
-    if (profile.viewer?.following) {
-      return
-    }
+  const onPressFollow = async () => {
     try {
       track('ProfileHeader:FollowButtonClicked')
-      await followMutation.mutateAsync({did: profile.did})
+      await queueFollow()
       Toast.show(
         `Following ${sanitizeDisplayName(
           profile.displayName || profile.handle,
         )}`,
       )
     } catch (e: any) {
-      logger.error('Failed to follow', {error: String(e)})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to follow', {error: String(e)})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
-  }, [followMutation, profile, track])
+  }
 
-  const onPressUnfollow = React.useCallback(async () => {
-    if (!profile.viewer?.following) {
-      return
-    }
+  const onPressUnfollow = async () => {
     try {
       track('ProfileHeader:UnfollowButtonClicked')
-      await unfollowMutation.mutateAsync({
-        did: profile.did,
-        followUri: profile.viewer?.following,
-      })
+      await queueUnfollow()
       Toast.show(
         `No longer following ${sanitizeDisplayName(
           profile.displayName || profile.handle,
         )}`,
       )
     } catch (e: any) {
-      logger.error('Failed to unfollow', {error: String(e)})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unfollow', {error: String(e)})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
-  }, [unfollowMutation, profile, track])
+  }
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -218,24 +209,28 @@ function ProfileHeaderLoaded({
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
-      await muteMutation.mutateAsync({did: profile.did})
+      await queueMute()
       Toast.show('Account muted')
     } catch (e: any) {
-      logger.error('Failed to mute account', {error: e})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to mute account', {error: e})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
-  }, [track, muteMutation, profile])
+  }, [track, queueMute])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
-      await unmuteMutation.mutateAsync({did: profile.did})
+      await queueUnmute()
       Toast.show('Account unmuted')
     } catch (e: any) {
-      logger.error('Failed to unmute account', {error: e})
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unmute account', {error: e})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
-  }, [track, unmuteMutation, profile])
+  }, [track, queueUnmute])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')
@@ -246,19 +241,18 @@ function ProfileHeaderLoaded({
         msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
       ),
       onPressConfirm: async () => {
-        if (profile.viewer?.blocking) {
-          return
-        }
         try {
-          await blockMutation.mutateAsync({did: profile.did})
+          await queueBlock()
           Toast.show('Account blocked')
         } catch (e: any) {
-          logger.error('Failed to block account', {error: e})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          if (e?.name !== 'AbortError') {
+            logger.error('Failed to block account', {error: e})
+            Toast.show(`There was an issue! ${e.toString()}`)
+          }
         }
       },
     })
-  }, [track, blockMutation, profile, openModal, _])
+  }, [track, queueBlock, openModal, _])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
@@ -269,22 +263,18 @@ function ProfileHeaderLoaded({
         msg`The account will be able to interact with you after unblocking.`,
       ),
       onPressConfirm: async () => {
-        if (!profile.viewer?.blocking) {
-          return
-        }
         try {
-          await unblockMutation.mutateAsync({
-            did: profile.did,
-            blockUri: profile.viewer.blocking,
-          })
+          await queueUnblock()
           Toast.show('Account unblocked')
         } catch (e: any) {
-          logger.error('Failed to unblock account', {error: e})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          if (e?.name !== 'AbortError') {
+            logger.error('Failed to unblock account', {error: e})
+            Toast.show(`There was an issue! ${e.toString()}`)
+          }
         }
       },
     })
-  }, [track, unblockMutation, profile, openModal, _])
+  }, [track, queueUnblock, openModal, _])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
@@ -644,6 +634,7 @@ function ProfileHeaderLoaded({
     </View>
   )
 }
+ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 
 const styles = StyleSheet.create({
   banner: {

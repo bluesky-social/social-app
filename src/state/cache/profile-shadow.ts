@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback, useRef} from 'react'
+import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Shadow} from './types'
@@ -56,9 +56,11 @@ export function useProfileShadow(
     firstRun.current = false
   }, [profile])
 
-  return state.ts > ifAfterTS
-    ? mergeShadow(profile, state.value)
-    : {...profile, isShadowed: true}
+  return useMemo(() => {
+    return state.ts > ifAfterTS
+      ? mergeShadow(profile, state.value)
+      : {...profile, isShadowed: true}
+  }, [profile, state, ifAfterTS])
 }
 
 export function updateProfileShadow(

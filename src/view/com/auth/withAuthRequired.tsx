@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {CenteredView} from '../util/Views'
 import {LoggedOut} from './LoggedOut'
 import {Onboarding} from './Onboarding'
@@ -18,7 +17,7 @@ import {useSession} from '#/state/session'
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
 ): React.FC<P> =>
-  observer(function AuthRequired(props: P) {
+  function AuthRequired(props: P) {
     const {isInitialLoad, hasSession} = useSession()
     const onboardingState = useOnboardingState()
     if (isInitialLoad) {
@@ -31,7 +30,7 @@ export const withAuthRequired = <P extends object>(
       return <Onboarding />
     }
     return <Component {...props} />
-  })
+  }
 
 function Loading() {
   const pal = usePalette('default')

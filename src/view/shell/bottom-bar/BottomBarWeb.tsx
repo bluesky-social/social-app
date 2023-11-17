@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNavigationState} from '@react-navigation/native'
 import Animated from 'react-native-reanimated'
@@ -24,7 +23,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {useSession} from '#/state/session'
 
-export const BottomBarWeb = observer(function BottomBarWebImpl() {
+export function BottomBarWeb() {
   const {currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
@@ -111,7 +110,7 @@ export const BottomBarWeb = observer(function BottomBarWebImpl() {
       </NavItem>
     </Animated.View>
   )
-})
+}
 
 const NavItem: React.FC<{
   children: (props: {isActive: boolean}) => React.ReactChild
