@@ -24,7 +24,7 @@ export function RecommendedFollows({next}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
-  const {data: suggestedFollows, dataUpdatedAt} = useSuggestedFollowsQuery()
+  const {data: suggestedFollows} = useSuggestedFollowsQuery()
   const getSuggestedFollowsByActor = useGetSuggestedFollowersByActor()
   const [additionalSuggestions, setAdditionalSuggestions] = React.useState<{
     [did: string]: AppBskyActorDefs.ProfileView[]
@@ -162,7 +162,6 @@ export function RecommendedFollows({next}: Props) {
               renderItem={({item}) => (
                 <RecommendedFollowsItem
                   profile={item}
-                  dataUpdatedAt={dataUpdatedAt}
                   onFollowStateChange={onFollowStateChange}
                   moderation={moderateProfile(item, moderationOpts)}
                 />
@@ -197,7 +196,6 @@ export function RecommendedFollows({next}: Props) {
               renderItem={({item}) => (
                 <RecommendedFollowsItem
                   profile={item}
-                  dataUpdatedAt={dataUpdatedAt}
                   onFollowStateChange={onFollowStateChange}
                   moderation={moderateProfile(item, moderationOpts)}
                 />

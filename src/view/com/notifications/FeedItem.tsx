@@ -58,11 +58,9 @@ interface Author {
 
 let FeedItem = ({
   item,
-  dataUpdatedAt,
   moderationOpts,
 }: {
   item: FeedNotification
-  dataUpdatedAt: number
   moderationOpts: ModerationOpts
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -135,7 +133,6 @@ let FeedItem = ({
         accessible={false}>
         <Post
           post={item.subject}
-          dataUpdatedAt={dataUpdatedAt}
           style={
             item.notification.isRead
               ? undefined

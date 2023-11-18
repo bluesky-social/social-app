@@ -76,7 +76,6 @@ let Feed = ({
   const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
-    dataUpdatedAt,
     isFetching,
     isFetched,
     isError,
@@ -200,7 +199,6 @@ let Feed = ({
       return (
         <FeedSlice
           slice={item}
-          dataUpdatedAt={dataUpdatedAt}
           // we check for this before creating the feedItems array
           moderationOpts={moderationOpts!}
         />
@@ -208,7 +206,6 @@ let Feed = ({
     },
     [
       feed,
-      dataUpdatedAt,
       error,
       onPressTryAgain,
       onPressRetryLoadMore,

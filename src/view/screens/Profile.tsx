@@ -58,7 +58,6 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
   } = useResolveDidQuery(name)
   const {
     data: profile,
-    dataUpdatedAt,
     error: profileError,
     refetch: refetchProfile,
     isFetching: isFetchingProfile,
@@ -101,7 +100,6 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
     return (
       <ProfileScreenLoaded
         profile={profile}
-        dataUpdatedAt={dataUpdatedAt}
         moderationOpts={moderationOpts}
         hideBackButton={!!route.params.hideBackButton}
       />
@@ -122,16 +120,14 @@ export const ProfileScreen = withAuthRequired(function ProfileScreenImpl({
 
 function ProfileScreenLoaded({
   profile: profileUnshadowed,
-  dataUpdatedAt,
   moderationOpts,
   hideBackButton,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  dataUpdatedAt: number
   moderationOpts: ModerationOpts
   hideBackButton: boolean
 }) {
-  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const profile = useProfileShadow(profileUnshadowed)
   const {currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()

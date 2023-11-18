@@ -73,7 +73,6 @@ export function PostThread({
     refetch,
     isRefetching,
     data: thread,
-    dataUpdatedAt,
   } = usePostThreadQuery(uri)
   const {data: preferences} = usePreferencesQuery()
   const rootPost = thread?.type === 'post' ? thread.post : undefined
@@ -111,7 +110,6 @@ export function PostThread({
     <PostThreadLoaded
       thread={thread}
       isRefetching={isRefetching}
-      dataUpdatedAt={dataUpdatedAt}
       threadViewPrefs={preferences.threadViewPrefs}
       onRefresh={refetch}
       onPressReply={onPressReply}
@@ -122,14 +120,12 @@ export function PostThread({
 function PostThreadLoaded({
   thread,
   isRefetching,
-  dataUpdatedAt,
   threadViewPrefs,
   onRefresh,
   onPressReply,
 }: {
   thread: ThreadNode
   isRefetching: boolean
-  dataUpdatedAt: number
   threadViewPrefs: UsePreferencesQueryResponse['threadViewPrefs']
   onRefresh: () => void
   onPressReply: () => void
@@ -295,7 +291,6 @@ function PostThreadLoaded({
           <PostThreadItem
             post={item.post}
             record={item.record}
-            dataUpdatedAt={dataUpdatedAt}
             treeView={threadViewPrefs.lab_treeViewEnabled || false}
             depth={item.ctx.depth}
             isHighlightedPost={item.ctx.isHighlightedPost}
@@ -322,7 +317,6 @@ function PostThreadLoaded({
       posts,
       onRefresh,
       threadViewPrefs.lab_treeViewEnabled,
-      dataUpdatedAt,
       _,
     ],
   )

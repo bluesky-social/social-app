@@ -20,7 +20,6 @@ export function PostRepostedBy({uri}: {uri: string}) {
   } = useResolveUriQuery(uri)
   const {
     data,
-    dataUpdatedAt,
     isFetching,
     isFetched,
     isFetchingNextPage,
@@ -57,15 +56,9 @@ export function PostRepostedBy({uri}: {uri: string}) {
 
   const renderItem = useCallback(
     ({item}: {item: ActorDefs.ProfileViewBasic}) => {
-      return (
-        <ProfileCardWithFollowBtn
-          key={item.did}
-          profile={item}
-          dataUpdatedAt={dataUpdatedAt}
-        />
-      )
+      return <ProfileCardWithFollowBtn key={item.did} profile={item} />
     },
-    [dataUpdatedAt],
+    [],
   )
 
   if (isFetchingResolvedUri || !isFetched) {

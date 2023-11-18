@@ -20,7 +20,6 @@ export function ProfileFollowers({name}: {name: string}) {
   } = useResolveDidQuery(name)
   const {
     data,
-    dataUpdatedAt,
     isFetching,
     isFetched,
     isFetchingNextPage,
@@ -58,13 +57,9 @@ export function ProfileFollowers({name}: {name: string}) {
 
   const renderItem = React.useCallback(
     ({item}: {item: ActorDefs.ProfileViewBasic}) => (
-      <ProfileCardWithFollowBtn
-        key={item.did}
-        profile={item}
-        dataUpdatedAt={dataUpdatedAt}
-      />
+      <ProfileCardWithFollowBtn key={item.did} profile={item} />
     ),
-    [dataUpdatedAt],
+    [],
   )
 
   if (isFetchingDid || !isFetched) {

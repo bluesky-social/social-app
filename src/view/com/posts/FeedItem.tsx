@@ -40,7 +40,6 @@ export function FeedItem({
   record,
   reason,
   moderation,
-  dataUpdatedAt,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
@@ -49,12 +48,11 @@ export function FeedItem({
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   moderation: PostModeration
-  dataUpdatedAt: number
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
 }) {
-  const postShadowed = usePostShadow(post, dataUpdatedAt)
+  const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
       new RichTextAPI({

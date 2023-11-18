@@ -111,7 +111,6 @@ function EmptyState({message, error}: {message: string; error?: string}) {
 function SearchScreenSuggestedFollows() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const [dataUpdatedAt, setDataUpdatedAt] = React.useState(0)
   const [suggestions, setSuggestions] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
@@ -141,7 +140,6 @@ function SearchScreenSuggestedFollows() {
       )
 
       setSuggestions(Array.from(friendsOfFriends.values()))
-      setDataUpdatedAt(Date.now())
     }
 
     try {
@@ -151,23 +149,12 @@ function SearchScreenSuggestedFollows() {
         error: e,
       })
     }
-  }, [
-    currentAccount,
-    setSuggestions,
-    setDataUpdatedAt,
-    getSuggestedFollowsByActor,
-  ])
+  }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
 
   return suggestions.length ? (
     <FlatList
       data={suggestions}
-      renderItem={({item}) => (
-        <ProfileCardWithFollowBtn
-          profile={item}
-          noBg
-          dataUpdatedAt={dataUpdatedAt}
-        />
-      )}
+      renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
       keyExtractor={item => item.did}
       // @ts-ignore web only -prf
       desktopFixedHeight
@@ -205,7 +192,6 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-    dataUpdatedAt,
   } = useSearchPostsQuery({query})
 
   const onPullToRefresh = React.useCallback(async () => {
@@ -258,7 +244,7 @@ function SearchScreenPostResults({query}: {query: string}) {
               data={items}
               renderItem={({item}) => {
                 if (item.type === 'post') {
-                  return <Post post={item.post} dataUpdatedAt={dataUpdatedAt} />
+                  return <Post post={item.post} />
                 } else {
                   return <Loader />
                 }
@@ -291,7 +277,6 @@ function SearchScreenPostResults({query}: {query: string}) {
 function SearchScreenUserResults({query}: {query: string}) {
   const {_} = useLingui()
   const [isFetched, setIsFetched] = React.useState(false)
-  const [dataUpdatedAt, setDataUpdatedAt] = React.useState(0)
   const [results, setResults] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
@@ -302,7 +287,6 @@ function SearchScreenUserResults({query}: {query: string}) {
       const searchResults = await search({query, limit: 30})
 
       if (searchResults) {
-        setDataUpdatedAt(Date.now())
         setResults(results)
         setIsFetched(true)
       }
@@ -314,7 +298,7 @@ function SearchScreenUserResults({query}: {query: string}) {
       setResults([])
       setIsFetched(false)
     }
-  }, [query, setDataUpdatedAt, search, results])
+  }, [query, search, results])
 
   return isFetched ? (
     <>
@@ -322,11 +306,7 @@ function SearchScreenUserResults({query}: {query: string}) {
         <FlatList
           data={results}
           renderItem={({item}) => (
-            <ProfileCardWithFollowBtn
-              profile={item}
-              noBg
-              dataUpdatedAt={dataUpdatedAt}
-            />
+            <ProfileCardWithFollowBtn profile={item} noBg />
           )}
           keyExtractor={item => item.did}
           // @ts-ignore web only -prf

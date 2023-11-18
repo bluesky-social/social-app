@@ -22,7 +22,6 @@ export function Component({did}: {did: string}) {
   const moderationOpts = useModerationOpts()
   const {
     data: profile,
-    dataUpdatedAt,
     error: profileError,
     refetch: refetchProfile,
     isFetching: isFetchingProfile,
@@ -51,13 +50,7 @@ export function Component({did}: {did: string}) {
     )
   }
   if (profile && moderationOpts) {
-    return (
-      <ComponentLoaded
-        profile={profile}
-        dataUpdatedAt={dataUpdatedAt}
-        moderationOpts={moderationOpts}
-      />
-    )
+    return <ComponentLoaded profile={profile} moderationOpts={moderationOpts} />
   }
   // should never happen
   return (
@@ -71,15 +64,13 @@ export function Component({did}: {did: string}) {
 
 function ComponentLoaded({
   profile: profileUnshadowed,
-  dataUpdatedAt,
   moderationOpts,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  dataUpdatedAt: number
   moderationOpts: ModerationOpts
 }) {
   const pal = usePalette('default')
-  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const profile = useProfileShadow(profileUnshadowed)
   const {screen} = useAnalytics()
   const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),

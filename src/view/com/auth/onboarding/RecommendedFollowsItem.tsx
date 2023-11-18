@@ -18,7 +18,6 @@ import {logger} from '#/logger'
 
 type Props = {
   profile: AppBskyActorDefs.ProfileViewBasic
-  dataUpdatedAt: number
   moderation: ProfileModeration
   onFollowStateChange: (props: {
     did: string
@@ -28,13 +27,12 @@ type Props = {
 
 export function RecommendedFollowsItem({
   profile,
-  dataUpdatedAt,
   moderation,
   onFollowStateChange,
 }: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
-  const shadowedProfile = useProfileShadow(profile, dataUpdatedAt)
+  const shadowedProfile = useProfileShadow(profile)
 
   return (
     <Animated.View
