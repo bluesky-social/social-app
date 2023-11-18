@@ -1,6 +1,7 @@
 import {useEffect, useState, useMemo, useCallback} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
+import {batchedUpdates} from '#/lib/batchedUpdates'
 import {Shadow, castAsShadow} from './types'
 export type {Shadow} from './types'
 
@@ -64,8 +65,11 @@ export function usePostShadow(
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  emitter.emit(uri, value)
+  batchedUpdates(() => {
+    emitter.emit(uri, value)
+  })
 }
+
 function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
   return {
     likeUri: post.viewer?.like,

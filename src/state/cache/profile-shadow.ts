@@ -1,6 +1,7 @@
 import {useEffect, useState, useMemo, useCallback} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
+import {batchedUpdates} from '#/lib/batchedUpdates'
 import {Shadow, castAsShadow} from './types'
 export type {Shadow} from './types'
 
@@ -68,7 +69,9 @@ export function updateProfileShadow(
   uri: string,
   value: Partial<ProfileShadow>,
 ) {
-  emitter.emit(uri, value)
+  batchedUpdates(() => {
+    emitter.emit(uri, value)
+  })
 }
 
 function fromProfile(profile: ProfileView): ProfileShadow {
