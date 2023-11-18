@@ -22,12 +22,23 @@ interface CacheEntry {
   value: PostShadow
 }
 
+const firstSeenMap = new WeakMap<AppBskyFeedDefs.PostView, number>()
+function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
+  let timeStamp = firstSeenMap.get(post)
+  if (timeStamp !== undefined) {
+    return timeStamp
+  }
+  timeStamp = Date.now()
+  firstSeenMap.set(post, timeStamp)
+  return timeStamp
+}
+
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
-  ifAfterTS: number,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
+  const postSeenTS = getFirstSeenTS(post)
   const [state, setState] = useState<CacheEntry>(() => ({
-    ts: Date.now(),
+    ts: postSeenTS,
     value: fromPost(post),
   }))
 
@@ -37,7 +48,7 @@ export function usePostShadow(
     // than whatever shadow state we accumulated
     setPrevPost(post)
     setState({
-      ts: Date.now(),
+      ts: postSeenTS,
       value: fromPost(post),
     })
   }
@@ -58,10 +69,10 @@ export function usePostShadow(
   }, [post.uri, onUpdate])
 
   return useMemo(() => {
-    return state.ts > ifAfterTS
+    return state.ts > postSeenTS
       ? mergeShadow(post, state.value)
       : castAsShadow(post)
-  }, [post, state, ifAfterTS])
+  }, [post, state, postSeenTS])
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {

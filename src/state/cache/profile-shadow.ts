@@ -23,12 +23,21 @@ type ProfileView =
   | AppBskyActorDefs.ProfileViewBasic
   | AppBskyActorDefs.ProfileViewDetailed
 
-export function useProfileShadow(
-  profile: ProfileView,
-  ifAfterTS: number,
-): Shadow<ProfileView> {
+const firstSeenMap = new WeakMap<ProfileView, number>()
+function getFirstSeenTS(profile: ProfileView): number {
+  let timeStamp = firstSeenMap.get(profile)
+  if (timeStamp !== undefined) {
+    return timeStamp
+  }
+  timeStamp = Date.now()
+  firstSeenMap.set(profile, timeStamp)
+  return timeStamp
+}
+
+export function useProfileShadow(profile: ProfileView): Shadow<ProfileView> {
+  const profileSeenTS = getFirstSeenTS(profile)
   const [state, setState] = useState<CacheEntry>(() => ({
-    ts: Date.now(),
+    ts: getFirstSeenTS(profile),
     value: fromProfile(profile),
   }))
 
@@ -38,7 +47,7 @@ export function useProfileShadow(
     // than whatever shadow state we accumulated
     setPrevProfile(profile)
     setState({
-      ts: Date.now(),
+      ts: profileSeenTS,
       value: fromProfile(profile),
     })
   }
@@ -59,10 +68,10 @@ export function useProfileShadow(
   }, [profile.did, onUpdate])
 
   return useMemo(() => {
-    return state.ts > ifAfterTS
+    return state.ts > profileSeenTS
       ? mergeShadow(profile, state.value)
       : castAsShadow(profile)
-  }, [profile, state, ifAfterTS])
+  }, [profile, state, profileSeenTS])
 }
 
 export function updateProfileShadow(
