@@ -236,9 +236,10 @@ let ProfileHeaderLoaded = ({
     track('ProfileHeader:BlockAccountButtonClicked')
     openModal({
       name: 'confirm',
-      title: 'Block Account',
-      message:
-        'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
+      title: _(msg`Block Account`),
+      message: _(
+        msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+      ),
       onPressConfirm: async () => {
         try {
           await queueBlock()
@@ -251,15 +252,16 @@ let ProfileHeaderLoaded = ({
         }
       },
     })
-  }, [track, queueBlock, openModal])
+  }, [track, queueBlock, openModal, _])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
     openModal({
       name: 'confirm',
-      title: 'Unblock Account',
-      message:
-        'The account will be able to interact with you after unblocking.',
+      title: _(msg`Unblock Account`),
+      message: _(
+        msg`The account will be able to interact with you after unblocking.`,
+      ),
       onPressConfirm: async () => {
         try {
           await queueUnblock()
@@ -272,7 +274,7 @@ let ProfileHeaderLoaded = ({
         }
       },
     })
-  }, [track, queueUnblock, openModal])
+  }, [track, queueUnblock, openModal, _])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
@@ -290,7 +292,7 @@ let ProfileHeaderLoaded = ({
     let items: DropdownItem[] = [
       {
         testID: 'profileHeaderDropdownShareBtn',
-        label: 'Share',
+        label: _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -304,7 +306,7 @@ let ProfileHeaderLoaded = ({
     items.push({label: 'separator'})
     items.push({
       testID: 'profileHeaderDropdownListAddRemoveBtn',
-      label: 'Add to Lists',
+      label: _(msg`Add to Lists`),
       onPress: onPressAddRemoveLists,
       icon: {
         ios: {
@@ -318,7 +320,9 @@ let ProfileHeaderLoaded = ({
       if (!profile.viewer?.blocking) {
         items.push({
           testID: 'profileHeaderDropdownMuteBtn',
-          label: profile.viewer?.muted ? 'Unmute Account' : 'Mute Account',
+          label: profile.viewer?.muted
+            ? _(msg`Unmute Account`)
+            : _(msg`Mute Account`),
           onPress: profile.viewer?.muted
             ? onPressUnmuteAccount
             : onPressMuteAccount,
@@ -334,7 +338,9 @@ let ProfileHeaderLoaded = ({
       if (!profile.viewer?.blockingByList) {
         items.push({
           testID: 'profileHeaderDropdownBlockBtn',
-          label: profile.viewer?.blocking ? 'Unblock Account' : 'Block Account',
+          label: profile.viewer?.blocking
+            ? _(msg`Unblock Account`)
+            : _(msg`Block Account`),
           onPress: profile.viewer?.blocking
             ? onPressUnblockAccount
             : onPressBlockAccount,
@@ -349,7 +355,7 @@ let ProfileHeaderLoaded = ({
       }
       items.push({
         testID: 'profileHeaderDropdownReportBtn',
-        label: 'Report Account',
+        label: _(msg`Report Account`),
         onPress: onPressReportAccount,
         icon: {
           ios: {
@@ -373,6 +379,7 @@ let ProfileHeaderLoaded = ({
     onPressBlockAccount,
     onPressReportAccount,
     onPressAddRemoveLists,
+    _,
   ])
 
   const blockHide =

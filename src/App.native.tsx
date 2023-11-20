@@ -28,6 +28,7 @@ import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
+import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
   useSession,
@@ -35,11 +36,6 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
-import {i18n} from '@lingui/core'
-import {I18nProvider} from '@lingui/react'
-import {messages} from './locale/locales/en/messages'
-i18n.load('en', messages)
-i18n.activate('en')
 
 enableFreeze(true)
 SplashScreen.preventAutoHideAsync()
@@ -76,15 +72,13 @@ function InnerApp() {
     <UnreadNotifsProvider>
       <ThemeProvider theme={colorMode}>
         <analytics.Provider>
-          <I18nProvider i18n={i18n}>
-            {/* All components should be within this provider */}
-            <RootSiblingParent>
-              <GestureHandlerRootView style={s.h100pct}>
-                <TestCtrls />
-                <Shell />
-              </GestureHandlerRootView>
-            </RootSiblingParent>
-          </I18nProvider>
+          {/* All components should be within this provider */}
+          <RootSiblingParent>
+            <GestureHandlerRootView style={s.h100pct}>
+              <TestCtrls />
+              <Shell />
+            </GestureHandlerRootView>
+          </RootSiblingParent>
         </analytics.Provider>
       </ThemeProvider>
     </UnreadNotifsProvider>
@@ -115,7 +109,9 @@ function App() {
               <InvitesStateProvider>
                 <ModalStateProvider>
                   <LightboxStateProvider>
-                    <InnerApp />
+                    <I18nProvider>
+                      <InnerApp />
+                    </I18nProvider>
                   </LightboxStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>

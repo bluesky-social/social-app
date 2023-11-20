@@ -52,6 +52,7 @@ function ProfileCard() {
   const {currentAccount} = useSession()
   const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
   const {isDesktop} = useWebMediaQueries()
+  const {_} = useLingui()
   const size = 48
 
   return !isLoading && profile ? (
@@ -61,7 +62,7 @@ function ProfileCard() {
         handle: currentAccount!.handle,
       })}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
-      title="My Profile"
+      title={_(msg`My Profile`)}
       asAnchor>
       <UserAvatar avatar={profile.avatar} size={size} />
     </Link>
@@ -269,6 +270,7 @@ function ComposeBtn() {
 export function DesktopLeftNav() {
   const {currentAccount} = useSession()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
 
@@ -292,7 +294,7 @@ export function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Home"
+        label={_(msg`Home`)}
       />
       <NavItem
         href="/search"
@@ -310,7 +312,7 @@ export function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Search"
+        label={_(msg`Search`)}
       />
       <NavItem
         href="/feeds"
@@ -328,7 +330,7 @@ export function DesktopLeftNav() {
             size={isDesktop ? 24 : 28}
           />
         }
-        label="Feeds"
+        label={_(msg`Feeds`)}
       />
       <NavItem
         href="/notifications"
@@ -347,7 +349,7 @@ export function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Notifications"
+        label={_(msg`Notifications`)}
       />
       <NavItem
         href="/lists"
@@ -365,7 +367,7 @@ export function DesktopLeftNav() {
             strokeWidth={3}
           />
         }
-        label="Lists"
+        label={_(msg`Lists`)}
       />
       <NavItem
         href="/moderation"
@@ -383,7 +385,7 @@ export function DesktopLeftNav() {
             size={isDesktop ? 20 : 26}
           />
         }
-        label="Moderation"
+        label={_(msg`Moderation`)}
       />
       <NavItem
         href={currentAccount ? makeProfileLink(currentAccount) : '/'}
@@ -419,7 +421,7 @@ export function DesktopLeftNav() {
             style={pal.text}
           />
         }
-        label="Settings"
+        label={_(msg`Settings`)}
       />
       <ComposeBtn />
     </View>

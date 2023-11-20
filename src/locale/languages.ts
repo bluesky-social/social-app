@@ -4,6 +4,16 @@ interface Language {
   name: string
 }
 
+interface AppLanguage {
+  code2: string
+  name: string
+}
+
+export const APP_LANGUAGES: AppLanguage[] = [
+  {code2: 'en', name: 'English'},
+  {code2: 'hi', name: 'हिंदी'},
+]
+
 export const LANGUAGES: Language[] = [
   {code3: 'aar', code2: 'aa', name: 'Afar'},
   {code3: 'abk', code2: 'ab', name: 'Abkhazian'},

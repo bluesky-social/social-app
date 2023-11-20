@@ -10,6 +10,8 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {msg as msgLingui} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {EmptyState} from '../util/EmptyState'
 import {cleanError} from '#/lib/strings/errors'
@@ -86,6 +88,7 @@ function FeedgenErrorMessage({
   knownError: KnownError
 }) {
   const pal = usePalette('default')
+  const {_: _l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const msg = MESSAGES[knownError]
   const [_, uri] = feedDesc.split('|')
@@ -100,8 +103,8 @@ function FeedgenErrorMessage({
   const onRemoveFeed = React.useCallback(async () => {
     openModal({
       name: 'confirm',
-      title: 'Remove feed',
-      message: 'Remove this feed from your saved feeds?',
+      title: _l(msgLingui`Remove feed`),
+      message: _l(msgLingui`Remove this feed from your saved feeds?`),
       async onPressConfirm() {
         try {
           await removeFeed({uri})
@@ -116,7 +119,7 @@ function FeedgenErrorMessage({
         closeModal()
       },
     })
-  }, [openModal, closeModal, uri, removeFeed])
+  }, [openModal, closeModal, uri, removeFeed, _l])
 
   return (
     <View

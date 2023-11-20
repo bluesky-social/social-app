@@ -15,6 +15,7 @@ import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {s} from 'lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {Trans} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export const ListsScreen = withAuthRequired(
@@ -56,10 +57,10 @@ export const ListsScreen = withAuthRequired(
           }>
           <View style={{flex: 1}}>
             <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-              User Lists
+              <Trans>User Lists</Trans>
             </Text>
             <Text style={pal.textLight}>
-              Public, shareable lists which can drive feeds.
+              <Trans>Public, shareable lists which can drive feeds.</Trans>
             </Text>
           </View>
           <View>
@@ -74,7 +75,7 @@ export const ListsScreen = withAuthRequired(
               }}>
               <FontAwesomeIcon icon="plus" color={pal.colors.text} />
               <Text type="button" style={pal.text}>
-                New
+                <Trans>New</Trans>
               </Text>
             </Button>
           </View>

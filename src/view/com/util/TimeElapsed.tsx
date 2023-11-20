@@ -3,7 +3,6 @@ import {ago} from 'lib/strings/time'
 import {useTickEveryMinute} from '#/state/shell'
 
 // FIXME(dan): Figure out why the false positives
-/* eslint-disable react/prop-types */
 
 export function TimeElapsed({
   timestamp,

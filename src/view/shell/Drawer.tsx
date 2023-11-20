@@ -247,7 +247,7 @@ export function DrawerContent() {
                 />
               )
             }
-            label="Search"
+            label={_(msg`Search`)}
             accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
             bold={isAtSearch}
@@ -269,7 +269,7 @@ export function DrawerContent() {
                 />
               )
             }
-            label="Home"
+            label={_(msg`Home`)}
             accessibilityLabel={_(msg`Home`)}
             accessibilityHint=""
             bold={isAtHome}
@@ -291,7 +291,7 @@ export function DrawerContent() {
                 />
               )
             }
-            label="Notifications"
+            label={_(msg`Notifications`)}
             accessibilityLabel={_(msg`Notifications`)}
             accessibilityHint={
               numUnreadNotifications === ''
@@ -318,7 +318,7 @@ export function DrawerContent() {
                 />
               )
             }
-            label="Feeds"
+            label={_(msg`Feeds`)}
             accessibilityLabel={_(msg`Feeds`)}
             accessibilityHint=""
             bold={isAtFeeds}
@@ -326,14 +326,14 @@ export function DrawerContent() {
           />
           <MenuItem
             icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
-            label="Lists"
+            label={_(msg`Lists`)}
             accessibilityLabel={_(msg`Lists`)}
             accessibilityHint=""
             onPress={onPressLists}
           />
           <MenuItem
             icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
-            label="Moderation"
+            label={_(msg`Moderation`)}
             accessibilityLabel={_(msg`Moderation`)}
             accessibilityHint=""
             onPress={onPressModeration}
@@ -354,7 +354,7 @@ export function DrawerContent() {
                 />
               )
             }
-            label="Profile"
+            label={_(msg`Profile`)}
             accessibilityLabel={_(msg`Profile`)}
             accessibilityHint=""
             onPress={onPressProfile}
@@ -367,7 +367,7 @@ export function DrawerContent() {
                 strokeWidth={1.75}
               />
             }
-            label="Settings"
+            label={_(msg`Settings`)}
             accessibilityLabel={_(msg`Settings`)}
             accessibilityHint=""
             onPress={onPressSettings}

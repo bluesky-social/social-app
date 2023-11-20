@@ -43,10 +43,10 @@ export function WelcomeMobile({next, skip}: Props) {
       />
       <View>
         <Text style={[pal.text, styles.title]}>
-          Welcome to{' '}
-          <Text style={[pal.text, pal.link, styles.title]}>
-            <Trans>Bluesky</Trans>
-          </Text>
+          <Trans>
+            Welcome to{' '}
+            <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
+          </Trans>
         </Text>
         <View style={styles.spacer} />
         <View style={[styles.row]}>

@@ -222,10 +222,10 @@ function SearchScreenPostResults({query}: {query: string}) {
     return results?.pages.flatMap(page => page.posts) || []
   }, [results])
   const items = React.useMemo(() => {
-    let items: SearchResultSlice[] = []
+    let temp: SearchResultSlice[] = []
 
     for (const post of posts) {
-      items.push({
+      temp.push({
         type: 'post',
         key: post.uri,
         post,
@@ -233,13 +233,13 @@ function SearchScreenPostResults({query}: {query: string}) {
     }
 
     if (isFetchingNextPage) {
-      items.push({
+      temp.push({
         type: 'loadingMore',
         key: 'loadingMore',
       })
     }
 
-    return items
+    return temp
   }, [posts, isFetchingNextPage])
 
   return error ? (
@@ -299,9 +299,9 @@ function SearchScreenUserResults({query}: {query: string}) {
 
   React.useEffect(() => {
     async function getResults() {
-      const results = await search({query, limit: 30})
+      const searchResults = await search({query, limit: 30})
 
-      if (results) {
+      if (searchResults) {
         setDataUpdatedAt(Date.now())
         setResults(results)
         setIsFetched(true)
@@ -314,7 +314,7 @@ function SearchScreenUserResults({query}: {query: string}) {
       setResults([])
       setIsFetched(false)
     }
-  }, [query, setDataUpdatedAt, search])
+  }, [query, setDataUpdatedAt, search, results])
 
   return isFetched ? (
     <>

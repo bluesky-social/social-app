@@ -30,6 +30,7 @@ export const schema = z.object({
     contentLanguages: z.array(z.string()), // should move to server
     postLanguage: z.string(), // should move to server
     postLanguageHistory: z.array(z.string()),
+    appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
   mutedThreads: z.array(z.string()), // should move to server
@@ -58,6 +59,7 @@ export const defaults: Schema = {
     postLanguageHistory: (deviceLocales || [])
       .concat(['en', 'ja', 'pt', 'de'])
       .slice(0, 6),
+    appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
   mutedThreads: [],

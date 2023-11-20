@@ -9,11 +9,14 @@ import {ScrollView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'TermsOfService'>
 export const TermsOfServiceScreen = (_props: Props) => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {_} = useLingui()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -23,11 +26,11 @@ export const TermsOfServiceScreen = (_props: Props) => {
 
   return (
     <View>
-      <ViewHeader title="Terms of Service" />
+      <ViewHeader title={_(msg`Terms of Service`)} />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
           <Text style={pal.text}>
-            The Terms of Service have been moved to{' '}
+            <Trans>The Terms of Service have been moved to</Trans>{' '}
             <TextLink
               style={pal.link}
               href="https://blueskyweb.xyz/support/tos"

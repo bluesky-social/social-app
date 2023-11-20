@@ -41,7 +41,7 @@ export const RepostButton = ({
 
   const dropdownItems: NativeDropdownItem[] = [
     {
-      label: isReposted ? 'Undo repost' : 'Repost',
+      label: isReposted ? _(msg`Undo repost`) : _(msg`Repost`),
       testID: 'repostDropdownRepostBtn',
       icon: {
         ios: {name: 'repeat'},
@@ -51,7 +51,7 @@ export const RepostButton = ({
       onPress: onRepost,
     },
     {
-      label: 'Quote post',
+      label: _(msg`Quote post`),
       testID: 'repostDropdownQuoteBtn',
       icon: {
         ios: {name: 'quote.bubble'},

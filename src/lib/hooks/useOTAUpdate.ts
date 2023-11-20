@@ -3,6 +3,7 @@ import {useCallback, useEffect} from 'react'
 import {AppState} from 'react-native'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {t} from '@lingui/macro'
 
 export function useOTAUpdate() {
   const {openModal} = useModalControls()
@@ -11,9 +12,8 @@ export function useOTAUpdate() {
   const showUpdatePopup = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Update Available',
-      message:
-        'A new version of the app is available. Please update to continue using the app.',
+      title: t`Update Available`,
+      message: t`A new version of the app is available. Please update to continue using the app.`,
       onPressConfirm: async () => {
         Updates.reloadAsync().catch(err => {
           throw err

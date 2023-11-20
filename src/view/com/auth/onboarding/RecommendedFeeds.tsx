@@ -10,6 +10,8 @@ import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useSuggestedFeedsQuery} from '#/state/queries/suggested-feeds'
 
 type Props = {
@@ -17,40 +19,45 @@ type Props = {
 }
 export function RecommendedFeeds({next}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
   const {isLoading, data} = useSuggestedFeedsQuery()
 
-  const hasFeeds = data && data?.pages?.[0]?.feeds?.length
+  const hasFeeds = data && data.pages[0].feeds.length
 
   const title = (
     <>
-      <Text
-        style={[
-          pal.textLight,
-          tdStyles.title1,
-          isTabletOrMobile && tdStyles.title1Small,
-        ]}>
-        Choose your
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          tdStyles.title2,
-          isTabletOrMobile && tdStyles.title2Small,
-        ]}>
-        Recommended
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          tdStyles.title2,
-          isTabletOrMobile && tdStyles.title2Small,
-        ]}>
-        Feeds
-      </Text>
+      <Trans>
+        <Text
+          style={[
+            pal.textLight,
+            tdStyles.title1,
+            isTabletOrMobile && tdStyles.title1Small,
+          ]}>
+          Choose your
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            tdStyles.title2,
+            isTabletOrMobile && tdStyles.title2Small,
+          ]}>
+          Recommended
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            tdStyles.title2,
+            isTabletOrMobile && tdStyles.title2Small,
+          ]}>
+          Feeds
+        </Text>
+      </Trans>
       <Text type="2xl-medium" style={[pal.textLight, tdStyles.description]}>
-        Feeds are created by users to curate content. Choose some feeds that you
-        find interesting.
+        <Trans>
+          Feeds are created by users to curate content. Choose some feeds that
+          you find interesting.
+        </Trans>
       </Text>
       <View
         style={{
@@ -69,7 +76,7 @@ export function RecommendedFeeds({next}: Props) {
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Next
+              <Trans>Next</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -99,20 +106,22 @@ export function RecommendedFeeds({next}: Props) {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <ErrorMessage message="Failed to load recommended feeds" />
+            <ErrorMessage message={_(msg`Failed to load recommended feeds`)} />
           )}
         </TitleColumnLayout>
       </TabletOrDesktop>
       <Mobile>
         <View style={[mStyles.container]} testID="recommendedFeedsOnboarding">
           <ViewHeader
-            title="Recommended Feeds"
+            title={_(msg`Recommended Feeds`)}
             showBackButton={false}
             showOnDesktop
           />
           <Text type="lg-medium" style={[pal.text, mStyles.header]}>
-            Check out some recommended feeds. Tap + to add them to your list of
-            pinned feeds.
+            <Trans>
+              Check out some recommended feeds. Tap + to add them to your list
+              of pinned feeds.
+            </Trans>
           </Text>
 
           {hasFeeds ? (
@@ -128,13 +137,15 @@ export function RecommendedFeeds({next}: Props) {
             </View>
           ) : (
             <View style={{flex: 1}}>
-              <ErrorMessage message="Failed to load recommended feeds" />
+              <ErrorMessage
+                message={_(msg`Failed to load recommended feeds`)}
+              />
             </View>
           )}
 
           <Button
             onPress={next}
-            label="Continue"
+            label={_(msg`Continue`)}
             testID="continueBtn"
             style={mStyles.button}
             labelStyle={mStyles.buttonText}

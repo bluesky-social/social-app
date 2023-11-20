@@ -16,15 +16,13 @@ import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
-import {i18n} from '@lingui/core'
-import {I18nProvider} from '@lingui/react'
-import {defaultLocale, dynamicActivate} from './locale/i18n'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
+import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
   useSession,
@@ -44,8 +42,6 @@ function InnerApp() {
   useEffect(() => {
     initReminders()
     analytics.init()
-    dynamicActivate(defaultLocale) // async import of locale data
-
     const account = persisted.get('session').currentAccount
     resumeSession(account)
   }, [resumeSession])
@@ -64,14 +60,12 @@ function InnerApp() {
     <UnreadNotifsProvider>
       <ThemeProvider theme={colorMode}>
         <analytics.Provider>
-          <I18nProvider i18n={i18n}>
-            {/* All components should be within this provider */}
-            <RootSiblingParent>
-              <SafeAreaProvider>
-                <Shell />
-              </SafeAreaProvider>
-            </RootSiblingParent>
-          </I18nProvider>
+          {/* All components should be within this provider */}
+          <RootSiblingParent>
+            <SafeAreaProvider>
+              <Shell />
+            </SafeAreaProvider>
+          </RootSiblingParent>
           <ToastContainer />
         </analytics.Provider>
       </ThemeProvider>
@@ -103,7 +97,9 @@ function App() {
               <InvitesStateProvider>
                 <ModalStateProvider>
                   <LightboxStateProvider>
-                    <InnerApp />
+                    <I18nProvider>
+                      <InnerApp />
+                    </I18nProvider>
                   </LightboxStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>

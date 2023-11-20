@@ -20,6 +20,8 @@ import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 
 export function PostDropdownBtn({
@@ -35,6 +37,7 @@ export function PostDropdownBtn({
 }) {
   const {currentAccount} = useSession()
   const theme = useTheme()
+  const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
@@ -91,7 +94,7 @@ export function PostDropdownBtn({
 
   const dropdownItems: NativeDropdownItem[] = [
     {
-      label: 'Translate',
+      label: _(msg`Translate`),
       onPress() {
         onOpenTranslate()
       },
@@ -105,7 +108,7 @@ export function PostDropdownBtn({
       },
     },
     {
-      label: 'Copy post text',
+      label: _(msg`Copy post text`),
       onPress() {
         onCopyPostText()
       },
@@ -119,7 +122,7 @@ export function PostDropdownBtn({
       },
     },
     {
-      label: 'Share',
+      label: _(msg`Share`),
       onPress() {
         const url = toShareUrl(href)
         shareUrl(url)
@@ -137,7 +140,7 @@ export function PostDropdownBtn({
       label: 'separator',
     },
     {
-      label: isThreadMuted ? 'Unmute thread' : 'Mute thread',
+      label: isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`),
       onPress() {
         onToggleThreadMute()
       },
@@ -154,7 +157,7 @@ export function PostDropdownBtn({
       label: 'separator',
     },
     !isAuthor && {
-      label: 'Report post',
+      label: _(msg`Report post`),
       onPress() {
         openModal({
           name: 'report',
@@ -175,12 +178,12 @@ export function PostDropdownBtn({
       label: 'separator',
     },
     isAuthor && {
-      label: 'Delete post',
+      label: _(msg`Delete post`),
       onPress() {
         openModal({
           name: 'confirm',
-          title: 'Delete this post?',
-          message: 'Are you sure? This can not be undone.',
+          title: _(msg`Delete this post?`),
+          message: _(msg`Are you sure? This cannot be undone.`),
           onPressConfirm: onDeletePost,
         })
       },

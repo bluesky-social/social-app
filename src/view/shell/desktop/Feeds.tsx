@@ -4,10 +4,13 @@ import {useNavigationState} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TextLink} from 'view/com/util/Link'
 import {getCurrentRoute} from 'lib/routes/helpers'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const feeds = usePinnedFeedsInfos()
 
   const route = useNavigationState(state => {
@@ -47,7 +50,7 @@ export function DesktopFeeds() {
         <TextLink
           type="lg"
           href="/feeds"
-          text="More feeds"
+          text={_(msg`More feeds`)}
           style={[pal.link]}
         />
       </View>

@@ -268,7 +268,7 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
 
   return (
     <View style={[s.hContentRegion]} testID="settingsScreen">
-      <ViewHeader title="Settings" />
+      <ViewHeader title={_(msg`Settings`)} />
       <ScrollView
         style={[s.hContentRegion]}
         contentContainerStyle={isMobile && pal.viewLight}
@@ -281,7 +281,7 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
             </Text>
             <View style={[styles.infoLine]}>
               <Text type="lg-medium" style={pal.text}>
-                Email:{' '}
+                <Trans>Email:</Trans>{' '}
               </Text>
               {currentAccount.emailConfirmed && (
                 <>

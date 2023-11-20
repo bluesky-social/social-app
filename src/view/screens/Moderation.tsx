@@ -17,11 +17,14 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export const ModerationScreen = withAuthRequired(
   function Moderation({}: Props) {
     const pal = usePalette('default')
+    const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {screen, track} = useAnalytics()
     const {isTabletOrDesktop} = useWebMediaQueries()
@@ -47,7 +50,7 @@ export const ModerationScreen = withAuthRequired(
           isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
         ]}
         testID="moderationScreen">
-        <ViewHeader title="Moderation" showOnDesktop />
+        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
         <View style={styles.spacer} />
         <TouchableOpacity
           testID="contentFilteringBtn"
@@ -63,7 +66,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Content filtering
+            <Trans>Content filtering</Trans>
           </Text>
         </TouchableOpacity>
         <Link
@@ -77,7 +80,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Moderation lists
+            <Trans>Moderation lists</Trans>
           </Text>
         </Link>
         <Link
@@ -91,7 +94,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Muted accounts
+            <Trans>Muted accounts</Trans>
           </Text>
         </Link>
         <Link
@@ -105,7 +108,7 @@ export const ModerationScreen = withAuthRequired(
             />
           </View>
           <Text type="lg" style={pal.text}>
-            Blocked accounts
+            <Trans>Blocked accounts</Trans>
           </Text>
         </Link>
       </CenteredView>
