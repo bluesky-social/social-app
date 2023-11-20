@@ -66,52 +66,43 @@ export const RepostButton = ({
     },
   ]
 
+  const inner = (
+    <View
+      style={[
+        styles.control,
+        !big && styles.controlPad,
+        (isReposted
+          ? styles.reposted
+          : defaultControlColor) as StyleProp<ViewStyle>,
+      ]}>
+      <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
+      {typeof repostCount !== 'undefined' ? (
+        <Text
+          testID="repostCount"
+          type={isReposted ? 'md-bold' : 'md'}
+          style={styles.repostCount}>
+          {repostCount ?? 0}
+        </Text>
+      ) : undefined}
+    </View>
+  )
+
   return hasSession ? (
     <EventStopper>
       <NativeDropdown
         items={dropdownItems}
         accessibilityLabel={_(msg`Repost or quote post`)}
         accessibilityHint="">
-        <View
-          style={[
-            styles.control,
-            !big && styles.controlPad,
-            (isReposted
-              ? styles.reposted
-              : defaultControlColor) as StyleProp<ViewStyle>,
-          ]}>
-          <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
-          {typeof repostCount !== 'undefined' ? (
-            <Text
-              testID="repostCount"
-              type={isReposted ? 'md-bold' : 'md'}
-              style={styles.repostCount}>
-              {repostCount ?? 0}
-            </Text>
-          ) : undefined}
-        </View>
+        {inner}
       </NativeDropdown>
     </EventStopper>
   ) : (
-    <Pressable accessibilityRole="button" onPress={authedMethod(() => {})}>
-      <View
-        style={[
-          styles.control,
-          !big && styles.controlPad,
-          (isReposted
-            ? styles.reposted
-            : defaultControlColor) as StyleProp<ViewStyle>,
-        ]}>
-        <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
-        {typeof repostCount !== 'undefined' ? (
-          <Text
-            testID="repostCount"
-            type={isReposted ? 'md-bold' : 'md'}
-            style={styles.repostCount}>
-            {repostCount ?? 0}
-          </Text>
-        ) : undefined}
-      </View>
+    <Pressable
+      accessibilityRole="button"
+      onPress={authedMethod(() => {})}
+      accessibilityLabel={_(msg`Repost or quote post`)}
+      accessibilityHint="">
+      {inner}
     </Pressable>
   )
 }
