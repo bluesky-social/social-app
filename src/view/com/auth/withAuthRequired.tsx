@@ -29,7 +29,7 @@ export const withAuthRequired = <P extends object>(
     if (isInitialLoad) {
       return <Loading />
     }
-    if (showLoggedOut || (!hasSession && !options?.isPublic)) {
+    if ((!hasSession && showLoggedOut) || (!hasSession && !options?.isPublic)) {
       return <LoggedOut />
     }
     if (onboardingState.isActive) {
