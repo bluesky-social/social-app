@@ -26,9 +26,9 @@ export const DEFAULT_LABEL_PREFERENCES: Record<
   LabelPreference
 > = {
   nsfw: 'hide',
-  nudity: 'warn',
-  suggestive: 'warn',
-  gore: 'warn',
+  nudity: 'hide',
+  suggestive: 'hide',
+  gore: 'hide',
   hate: 'hide',
   spam: 'hide',
   impersonation: 'hide',
