@@ -64,6 +64,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {useInviteCodesQuery} from '#/state/queries/invites'
+import {clear as clearPersistentData} from '#/state/persisted/store'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -264,6 +265,11 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
 
   const onPressStatusPage = React.useCallback(() => {
     Linking.openURL(STATUS_PAGE_URL)
+  }, [])
+
+  const clearAllPersistedData = React.useCallback(async () => {
+    await clearPersistentData()
+    Toast.show(`Storage cleared, you need to restart the app now.`)
   }, [])
 
   return (
@@ -669,6 +675,16 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
               accessibilityLabel={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={clearAllPersistedData}
+              accessibilityRole="button"
+              accessibilityHint="Clear all storage data"
+              accessibilityLabel={_(msg`Clear all storage data`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Clear all storage data (restart after this)</Trans>
               </Text>
             </TouchableOpacity>
           </>

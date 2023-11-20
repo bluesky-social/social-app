@@ -16,3 +16,9 @@ export async function read(): Promise<Schema | undefined> {
     return objData
   }
 }
+
+export async function clear() {
+  await AsyncStorage.removeItem(BSKY_STORAGE, e => {
+    if (e) console.error(e)
+  })
+}
