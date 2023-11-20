@@ -117,7 +117,7 @@ function HomeScreenReady({
     emitSoftReset()
   }, [])
 
-  // TODO may need this in public view
+  // TODO refactor may need this in public view
   const onPageScrollStateChanged = React.useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
       if (state === 'dragging') {
