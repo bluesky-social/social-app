@@ -18,7 +18,7 @@ import {useLoggedOutView} from '#/state/shell/logged-out'
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
   options: {
-    isPublic?: boolean // TODO needs to be a feature flag of some kind
+    isPublic?: boolean // TODO refactor — needs to be a feature flag of some kind
   } = {},
 ): React.FC<P> =>
   function AuthRequired(props: P) {
