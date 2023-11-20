@@ -15,6 +15,7 @@ import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_THREAD_VIEW_PREFS,
+  DEFAULT_PREFERENCES,
 } from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {STALE} from '#/state/queries'
@@ -23,63 +24,71 @@ export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/const'
 
-export const usePreferencesQueryKey = ['getPreferences']
+const DEFAULT_USER_DID = 'noUser'
+
+export const preferencesQueryKey = (did = DEFAULT_USER_DID) => [
+  'getPreferences',
+  did,
+]
 
 export function usePreferencesQuery() {
-  const {hasSession} = useSession()
+  const {currentAccount} = useSession()
   return useQuery({
-    enabled: hasSession,
     staleTime: STALE.MINUTES.ONE,
-    queryKey: usePreferencesQueryKey,
+    queryKey: preferencesQueryKey(currentAccount?.did),
     queryFn: async () => {
-      const res = await getAgent().getPreferences()
-      const preferences: UsePreferencesQueryResponse = {
-        ...res,
-        feeds: {
-          saved: res.feeds?.saved || [],
-          pinned: res.feeds?.pinned || [],
-          unpinned:
-            res.feeds.saved?.filter(f => {
-              return !res.feeds.pinned?.includes(f)
-            }) || [],
-        },
-        // labels are undefined until set by user
-        contentLabels: {
-          nsfw: temp__migrateLabelPref(
-            res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
-          ),
-          nudity: temp__migrateLabelPref(
-            res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
-          ),
-          suggestive: temp__migrateLabelPref(
-            res.contentLabels?.suggestive ||
-              DEFAULT_LABEL_PREFERENCES.suggestive,
-          ),
-          gore: temp__migrateLabelPref(
-            res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
-          ),
-          hate: temp__migrateLabelPref(
-            res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
-          ),
-          spam: temp__migrateLabelPref(
-            res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
-          ),
-          impersonation: temp__migrateLabelPref(
-            res.contentLabels?.impersonation ||
-              DEFAULT_LABEL_PREFERENCES.impersonation,
-          ),
-        },
-        feedViewPrefs: {
-          ...DEFAULT_HOME_FEED_PREFS,
-          ...(res.feedViewPrefs.home || {}),
-        },
-        threadViewPrefs: {
-          ...DEFAULT_THREAD_VIEW_PREFS,
-          ...(res.threadViewPrefs ?? {}),
-        },
-        userAge: res.birthDate ? getAge(res.birthDate) : undefined,
+      if (currentAccount?.did === undefined) {
+        return DEFAULT_PREFERENCES
+      } else {
+        const res = await getAgent().getPreferences()
+        const preferences: UsePreferencesQueryResponse = {
+          ...res,
+          feeds: {
+            saved: res.feeds?.saved || [],
+            pinned: res.feeds?.pinned || [],
+            unpinned:
+              res.feeds.saved?.filter(f => {
+                return !res.feeds.pinned?.includes(f)
+              }) || [],
+          },
+          // labels are undefined until set by user
+          contentLabels: {
+            nsfw: temp__migrateLabelPref(
+              res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
+            ),
+            nudity: temp__migrateLabelPref(
+              res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
+            ),
+            suggestive: temp__migrateLabelPref(
+              res.contentLabels?.suggestive ||
+                DEFAULT_LABEL_PREFERENCES.suggestive,
+            ),
+            gore: temp__migrateLabelPref(
+              res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
+            ),
+            hate: temp__migrateLabelPref(
+              res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
+            ),
+            spam: temp__migrateLabelPref(
+              res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
+            ),
+            impersonation: temp__migrateLabelPref(
+              res.contentLabels?.impersonation ||
+                DEFAULT_LABEL_PREFERENCES.impersonation,
+            ),
+          },
+          feedViewPrefs: {
+            ...DEFAULT_HOME_FEED_PREFS,
+            ...(res.feedViewPrefs.home || {}),
+          },
+          threadViewPrefs: {
+            ...DEFAULT_THREAD_VIEW_PREFS,
+            ...(res.threadViewPrefs ?? {}),
+          },
+          userAge: res.birthDate ? getAge(res.birthDate) : undefined,
+        }
+        return preferences
       }
-      return preferences
     },
   })
 }
@@ -104,10 +113,11 @@ export function useClearPreferencesMutation() {
 
   return useMutation({
     mutationFn: async () => {
-      await getAgent().app.bsky.actor.putPreferences({preferences: []})
+      const agent = getAgent()
+      await agent.app.bsky.actor.putPreferences({preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -122,10 +132,11 @@ export function usePreferencesSetContentLabelMutation() {
     {labelGroup: ConfigurableLabelGroup; visibility: LabelPreference}
   >({
     mutationFn: async ({labelGroup, visibility}) => {
-      await getAgent().setContentLabelPref(labelGroup, visibility)
+      const agent = getAgent()
+      await agent.setContentLabelPref(labelGroup, visibility)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -136,10 +147,11 @@ export function usePreferencesSetAdultContentMutation() {
 
   return useMutation<void, unknown, {enabled: boolean}>({
     mutationFn: async ({enabled}) => {
-      await getAgent().setAdultContentEnabled(enabled)
+      const agent = getAgent()
+      await agent.setAdultContentEnabled(enabled)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -150,10 +162,11 @@ export function usePreferencesSetBirthDateMutation() {
 
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
-      await getAgent().setPersonalDetails({birthDate})
+      const agent = getAgent()
+      await agent.setPersonalDetails({birthDate})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -164,10 +177,11 @@ export function useSetFeedViewPreferencesMutation() {
 
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
-      await getAgent().setFeedViewPrefs('home', prefs)
+      const agent = getAgent()
+      await agent.setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -178,10 +192,11 @@ export function useSetThreadViewPreferencesMutation() {
 
   return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
     mutationFn: async prefs => {
-      await getAgent().setThreadViewPrefs(prefs)
+      const agent = getAgent()
+      await agent.setThreadViewPrefs(prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -196,10 +211,11 @@ export function useSetSaveFeedsMutation() {
     Pick<UsePreferencesQueryResponse['feeds'], 'saved' | 'pinned'>
   >({
     mutationFn: async ({saved, pinned}) => {
-      await getAgent().setSavedFeeds(saved, pinned)
+      const agent = getAgent()
+      await agent.setSavedFeeds(saved, pinned)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -210,11 +226,12 @@ export function useSaveFeedMutation() {
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await getAgent().addSavedFeed(uri)
+      const agent = getAgent()
+      await agent.addSavedFeed(uri)
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -225,11 +242,12 @@ export function useRemoveFeedMutation() {
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await getAgent().removeSavedFeed(uri)
+      const agent = getAgent()
+      await agent.removeSavedFeed(uri)
       track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -240,11 +258,12 @@ export function usePinFeedMutation() {
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await getAgent().addPinnedFeed(uri)
+      const agent = getAgent()
+      await agent.addPinnedFeed(uri)
       track('CustomFeed:Pin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })
@@ -255,11 +274,12 @@ export function useUnpinFeedMutation() {
 
   return useMutation<void, unknown, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await getAgent().removePinnedFeed(uri)
+      const agent = getAgent()
+      await agent.removePinnedFeed(uri)
       track('CustomFeed:Unpin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey(agent.session?.did),
       })
     },
   })

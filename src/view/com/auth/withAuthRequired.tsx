@@ -16,14 +16,18 @@ import {useSession} from '#/state/session'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
+  options: {
+    isPublic?: boolean // TODO needs to be a feature flag of some kind
+  } = {},
 ): React.FC<P> =>
   function AuthRequired(props: P) {
     const {isInitialLoad, hasSession} = useSession()
     const onboardingState = useOnboardingState()
+
     if (isInitialLoad) {
       return <Loading />
     }
-    if (!hasSession) {
+    if (!hasSession && !options?.isPublic) {
       return <LoggedOut />
     }
     if (onboardingState.isActive) {

@@ -9,21 +9,26 @@ import {makeRecordUri} from 'lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostLikedBy'>
-export const PostLikedByScreen = withAuthRequired(({route}: Props) => {
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+export const PostLikedByScreen = withAuthRequired(
+  ({route}: Props) => {
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const {name, rkey} = route.params
+    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+    useFocusEffect(
+      React.useCallback(() => {
+        setMinimalShellMode(false)
+      }, [setMinimalShellMode]),
+    )
 
-  return (
-    <View>
-      <ViewHeader title="Liked by" />
-      <PostLikedByComponent uri={uri} />
-    </View>
-  )
-})
+    return (
+      <View>
+        <ViewHeader title="Liked by" />
+        <PostLikedByComponent uri={uri} />
+      </View>
+    )
+  },
+  {
+    isPublic: true,
+  },
+)

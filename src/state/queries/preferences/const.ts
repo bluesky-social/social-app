@@ -2,6 +2,7 @@ import {
   UsePreferencesQueryResponse,
   ThreadViewPreferences,
 } from '#/state/queries/preferences/types'
+import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {
@@ -24,4 +25,27 @@ const DEFAULT_PROD_FEED_PREFIX = (rkey: string) =>
 export const DEFAULT_PROD_FEEDS = {
   pinned: [DEFAULT_PROD_FEED_PREFIX('whats-hot')],
   saved: [DEFAULT_PROD_FEED_PREFIX('whats-hot')],
+}
+
+export const DEFAULT_PREFERENCES: UsePreferencesQueryResponse = {
+  birthDate: new Date('2022-11-17'), // first post on network
+  adultContentEnabled: false,
+  feeds: {
+    saved: [],
+    pinned: [],
+    unpinned: [],
+  },
+  // labels are undefined until set by user
+  contentLabels: {
+    nsfw: DEFAULT_LABEL_PREFERENCES.nsfw,
+    nudity: DEFAULT_LABEL_PREFERENCES.nudity,
+    suggestive: DEFAULT_LABEL_PREFERENCES.suggestive,
+    gore: DEFAULT_LABEL_PREFERENCES.gore,
+    hate: DEFAULT_LABEL_PREFERENCES.hate,
+    spam: DEFAULT_LABEL_PREFERENCES.spam,
+    impersonation: DEFAULT_LABEL_PREFERENCES.impersonation,
+  },
+  feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
+  threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
+  userAge: 13,
 }

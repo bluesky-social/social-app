@@ -8,20 +8,25 @@ import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/Prof
 import {useSetMinimalShellMode} from '#/state/shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>
-export const ProfileFollowersScreen = withAuthRequired(({route}: Props) => {
-  const {name} = route.params
-  const setMinimalShellMode = useSetMinimalShellMode()
+export const ProfileFollowersScreen = withAuthRequired(
+  ({route}: Props) => {
+    const {name} = route.params
+    const setMinimalShellMode = useSetMinimalShellMode()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+    useFocusEffect(
+      React.useCallback(() => {
+        setMinimalShellMode(false)
+      }, [setMinimalShellMode]),
+    )
 
-  return (
-    <View>
-      <ViewHeader title="Followers" />
-      <ProfileFollowersComponent name={name} />
-    </View>
-  )
-})
+    return (
+      <View>
+        <ViewHeader title="Followers" />
+        <ProfileFollowersComponent name={name} />
+      </View>
+    )
+  },
+  {
+    isPublic: true,
+  },
+)
