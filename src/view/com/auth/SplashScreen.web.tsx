@@ -1,5 +1,6 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, Pressable} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from '../util/Link'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
@@ -9,6 +10,10 @@ import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Trans} from '@lingui/macro'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -21,49 +26,74 @@ export const SplashScreen = ({
   const {isTabletOrMobile} = useWebMediaQueries()
   const styles = useStyles()
   const isMobileWeb = isWeb && isTabletOrMobile
+  const {showLoggedOut} = useLoggedOutView()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return (
-    <CenteredView style={[styles.container, pal.view]}>
-      <View
-        testID="noSessionView"
-        style={[
-          styles.containerInner,
-          isMobileWeb && styles.containerInnerMobile,
-          pal.border,
-        ]}>
-        <ErrorBoundary>
-          <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
-            Bluesky
-          </Text>
-          <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
-            See what's next
-          </Text>
-          <View testID="signinOrCreateAccount" style={styles.btns}>
-            <TouchableOpacity
-              testID="createAccountButton"
-              style={[styles.btn, {backgroundColor: colors.blue3}]}
-              onPress={onPressCreateAccount}
-              // TODO: web accessibility
-              accessibilityRole="button">
-              <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="signInButton"
-              style={[styles.btn, pal.btn]}
-              onPress={onPressSignin}
-              // TODO: web accessibility
-              accessibilityRole="button">
-              <Text style={[pal.text, styles.btnLabel]}>
-                <Trans>Sign In</Trans>
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ErrorBoundary>
-      </View>
-      <Footer styles={styles} />
-    </CenteredView>
+    <>
+      {showLoggedOut && (
+        <Pressable
+          accessibilityRole="button"
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            padding: 20,
+            zIndex: 100,
+          }}
+          onPress={() => setShowLoggedOut(false)}>
+          <FontAwesomeIcon
+            icon="x"
+            size={24}
+            style={{
+              color: 'white',
+            }}
+          />
+        </Pressable>
+      )}
+
+      <CenteredView style={[styles.container, pal.view]}>
+        <View
+          testID="noSessionView"
+          style={[
+            styles.containerInner,
+            isMobileWeb && styles.containerInnerMobile,
+            pal.border,
+          ]}>
+          <ErrorBoundary>
+            <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
+              Bluesky
+            </Text>
+            <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
+              See what's next
+            </Text>
+            <View testID="signinOrCreateAccount" style={styles.btns}>
+              <TouchableOpacity
+                testID="createAccountButton"
+                style={[styles.btn, {backgroundColor: colors.blue3}]}
+                onPress={onPressCreateAccount}
+                // TODO: web accessibility
+                accessibilityRole="button">
+                <Text style={[s.white, styles.btnLabel]}>
+                  Create a new account
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="signInButton"
+                style={[styles.btn, pal.btn]}
+                onPress={onPressSignin}
+                // TODO: web accessibility
+                accessibilityRole="button">
+                <Text style={[pal.text, styles.btnLabel]}>
+                  <Trans>Sign In</Trans>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ErrorBoundary>
+        </View>
+        <Footer styles={styles} />
+      </CenteredView>
+    </>
   )
 }
 

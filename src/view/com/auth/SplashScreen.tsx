@@ -1,5 +1,12 @@
 import React from 'react'
-import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+  View,
+} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
@@ -7,6 +14,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -17,9 +28,32 @@ export const SplashScreen = ({
 }) => {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const {showLoggedOut} = useLoggedOutView()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
+      {showLoggedOut && (
+        <Pressable
+          accessibilityRole="button"
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            padding: 20,
+            zIndex: 100,
+          }}
+          onPress={() => setShowLoggedOut(false)}>
+          <FontAwesomeIcon
+            icon="x"
+            size={24}
+            style={{
+              color: 'white',
+            }}
+          />
+        </Pressable>
+      )}
+
       <SafeAreaView testID="noSessionView" style={styles.container}>
         <ErrorBoundary>
           <View style={styles.hero}>

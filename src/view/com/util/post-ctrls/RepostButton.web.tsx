@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle, Pressable} from 'react-native'
 import {RepostIcon} from 'lib/icons'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
@@ -12,6 +12,8 @@ import {
 import {EventStopper} from '../EventStopper'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useAuthedMethod} from '#/state/session'
+import {useSession} from '#/state/session'
 
 interface Props {
   isReposted: boolean
@@ -31,6 +33,8 @@ export const RepostButton = ({
 }: Props) => {
   const theme = useTheme()
   const {_} = useLingui()
+  const {hasSession} = useSession()
+  const authedMethod = useAuthedMethod()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -62,7 +66,7 @@ export const RepostButton = ({
     },
   ]
 
-  return (
+  return hasSession ? (
     <EventStopper>
       <NativeDropdown
         items={dropdownItems}
@@ -88,6 +92,27 @@ export const RepostButton = ({
         </View>
       </NativeDropdown>
     </EventStopper>
+  ) : (
+    <Pressable accessibilityRole="button" onPress={authedMethod(() => {})}>
+      <View
+        style={[
+          styles.control,
+          !big && styles.controlPad,
+          (isReposted
+            ? styles.reposted
+            : defaultControlColor) as StyleProp<ViewStyle>,
+        ]}>
+        <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
+        {typeof repostCount !== 'undefined' ? (
+          <Text
+            testID="repostCount"
+            type={isReposted ? 'md-bold' : 'md'}
+            style={styles.repostCount}>
+            {repostCount ?? 0}
+          </Text>
+        ) : undefined}
+      </View>
+    </Pressable>
   )
 }
 
