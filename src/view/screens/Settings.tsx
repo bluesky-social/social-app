@@ -64,7 +64,8 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {useInviteCodesQuery} from '#/state/queries/invites'
-import {clear as clearPersistentData} from '#/state/persisted/store'
+import {clear as clearStorage} from '#/state/persisted/store'
+import {clearLegacyStorage} from '#/state/persisted/legacy'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
@@ -267,9 +268,13 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
     Linking.openURL(STATUS_PAGE_URL)
   }, [])
 
-  const clearAllPersistedData = React.useCallback(async () => {
-    await clearPersistentData()
+  const clearAllStorage = React.useCallback(async () => {
+    await clearStorage()
     Toast.show(`Storage cleared, you need to restart the app now.`)
+  }, [])
+  const clearAllLegacyStorage = React.useCallback(async () => {
+    await clearLegacyStorage()
+    Toast.show(`Legacy storage cleared, you need to restart the app now.`)
   }, [])
 
   return (
@@ -679,7 +684,19 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
-              onPress={clearAllPersistedData}
+              onPress={clearAllLegacyStorage}
+              accessibilityRole="button"
+              accessibilityHint="Clear all legacy storage data"
+              accessibilityLabel={_(msg`Clear all legacy storage data`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>
+                  Clear all legacy storage data (restart after this)
+                </Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={clearAllStorage}
               accessibilityRole="button"
               accessibilityHint="Clear all storage data"
               accessibilityLabel={_(msg`Clear all storage data`)}>

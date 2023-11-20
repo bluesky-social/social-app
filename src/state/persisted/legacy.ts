@@ -128,10 +128,18 @@ export async function migrate() {
       const newData = transform(legacyData)
       await write(newData)
       logger.debug('persisted state: migrated legacy storage')
+    } else {
+      logger.debug('persisted state: no migration needed')
     }
   } catch (e) {
     logger.error('persisted state: error migrating legacy storage', {
       error: String(e),
     })
   }
+}
+
+export async function clearLegacyStorage() {
+  await AsyncStorage.removeItem(DEPRECATED_ROOT_STATE_STORAGE_KEY, e => {
+    if (e) console.error(e)
+  })
 }
