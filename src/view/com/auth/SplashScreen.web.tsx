@@ -46,7 +46,7 @@ export const SplashScreen = ({
             icon="x"
             size={24}
             style={{
-              color: 'white',
+              color: String(pal.text.color),
             }}
           />
         </Pressable>
