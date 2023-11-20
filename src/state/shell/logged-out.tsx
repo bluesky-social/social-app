@@ -1,7 +1,5 @@
 import React from 'react'
 
-import {useSession} from '#/state/session'
-
 type StateContext = {
   showLoggedOut: boolean
 }
@@ -36,20 +34,4 @@ export function useLoggedOutView() {
 
 export function useLoggedOutViewControls() {
   return React.useContext(ControlsContext)
-}
-
-export function useAuthedMethod() {
-  const {hasSession} = useSession()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
-
-  return React.useCallback(
-    (fn: () => void) => {
-      if (hasSession) {
-        fn()
-      } else {
-        setShowLoggedOut(true)
-      }
-    },
-    [hasSession, setShowLoggedOut],
-  )
 }
