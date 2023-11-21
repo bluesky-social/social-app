@@ -11,7 +11,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
-import {DefaultAvatar, UserAvatar} from 'view/com/util/UserAvatar'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -47,8 +47,7 @@ import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
-import {Button} from '#/view/com/util/forms/Button'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {NavSignupCard} from '#/view/shell/NavSignupCard'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -275,7 +274,6 @@ export function DesktopLeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return (
     <View
@@ -288,33 +286,9 @@ export function DesktopLeftNav() {
       {hasSession ? (
         <ProfileCard />
       ) : (
-        <>
-          {isDesktop && (
-            <View
-              style={{
-                alignItems: 'flex-start',
-                paddingTop: 6,
-                paddingHorizontal: 12,
-                marginBottom: 24,
-              }}>
-              <DefaultAvatar type="user" size={48} />
-
-              <View style={{paddingTop: 12}}>
-                <Text type="md" style={[pal.text, s.bold]}>
-                  Sign up or log in to join the conversation.
-                </Text>
-              </View>
-
-              <View style={{paddingTop: 12}}>
-                <Button onPress={() => setShowLoggedOut(true)}>
-                  <Text type="md" style={[pal.text, s.bold]}>
-                    Sign up
-                  </Text>
-                </Button>
-              </View>
-            </View>
-          )}
-        </>
+        <View style={{paddingHorizontal: 12}}>
+          <NavSignupCard />
+        </View>
       )}
 
       <BackBtn />

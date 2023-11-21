@@ -57,10 +57,15 @@ function ShellInner() {
           <DesktopRightNav />
         </>
       )}
+
       <Composer winHeight={0} />
+
       {showBottomBar && <BottomBarWeb />}
+
       <ModalsContainer />
+
       <Lightbox />
+
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}
