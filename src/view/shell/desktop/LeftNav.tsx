@@ -435,10 +435,10 @@ export function DesktopLeftNav() {
             }
             label={_(msg`Settings`)}
           />
+
+          <ComposeBtn />
         </>
       )}
-
-      {hasSession && <ComposeBtn />}
     </View>
   )
 }
