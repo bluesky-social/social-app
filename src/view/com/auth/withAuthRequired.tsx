@@ -13,7 +13,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useOnboardingState} from '#/state/shell'
 import {useSession} from '#/state/session'
-import {useLoggedOutView} from '#/state/shell/logged-out'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
@@ -25,12 +28,17 @@ export const withAuthRequired = <P extends object>(
     const {isInitialLoad, hasSession} = useSession()
     const onboardingState = useOnboardingState()
     const {showLoggedOut} = useLoggedOutView()
+    const {setShowLoggedOut} = useLoggedOutViewControls()
 
     if (isInitialLoad) {
       return <Loading />
     }
     if ((!hasSession && showLoggedOut) || (!hasSession && !options?.isPublic)) {
-      return <LoggedOut />
+      const isDismissable = !hasSession && showLoggedOut
+      const onDismiss = isDismissable
+        ? () => setShowLoggedOut(false)
+        : undefined
+      return <LoggedOut onDismiss={onDismiss} />
     }
     if (onboardingState.isActive) {
       return <Onboarding />

@@ -14,26 +14,22 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
 
 export const SplashScreen = ({
+  onDismiss,
   onPressSignin,
   onPressCreateAccount,
 }: {
+  onDismiss?: () => void
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {showLoggedOut} = useLoggedOutView()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
-      {showLoggedOut && (
+      {onDismiss && (
         <Pressable
           accessibilityRole="button"
           style={{
@@ -43,7 +39,7 @@ export const SplashScreen = ({
             padding: 20,
             zIndex: 100,
           }}
-          onPress={() => setShowLoggedOut(false)}>
+          onPress={onDismiss}>
           <FontAwesomeIcon
             icon="x"
             size={24}
