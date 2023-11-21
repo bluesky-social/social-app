@@ -10,15 +10,13 @@ import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Trans} from '@lingui/macro'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
 
 export const SplashScreen = ({
+  onDismiss,
   onPressSignin,
   onPressCreateAccount,
 }: {
+  onDismiss?: () => void
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
@@ -26,12 +24,10 @@ export const SplashScreen = ({
   const {isTabletOrMobile} = useWebMediaQueries()
   const styles = useStyles()
   const isMobileWeb = isWeb && isTabletOrMobile
-  const {showLoggedOut} = useLoggedOutView()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return (
     <>
-      {showLoggedOut && (
+      {onDismiss && (
         <Pressable
           accessibilityRole="button"
           style={{
@@ -41,7 +37,7 @@ export const SplashScreen = ({
             padding: 20,
             zIndex: 100,
           }}
-          onPress={() => setShowLoggedOut(false)}>
+          onPress={onDismiss}>
           <FontAwesomeIcon
             icon="x"
             size={24}
