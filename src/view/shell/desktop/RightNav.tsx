@@ -12,12 +12,15 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import {useModalControls} from '#/state/modals'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useSession} from '#/state/session'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 
 export function DesktopRightNav() {
   const pal = usePalette('default')
   const palError = usePalette('error')
+  const {_} = useLingui()
   const {isSandbox, hasSession, currentAccount} = useSession()
 
   const {isTablet} = useWebMediaQueries()
@@ -45,7 +48,7 @@ export function DesktopRightNav() {
               email: currentAccount!.email,
               handle: currentAccount!.handle,
             })}
-            text="Send feedback"
+            text={_(msg`Feedback`)}
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -54,7 +57,7 @@ export function DesktopRightNav() {
             type="md"
             style={pal.link}
             href="https://blueskyweb.xyz/support/privacy-policy"
-            text="Privacy"
+            text={_(msg`Privacy`)}
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -63,7 +66,7 @@ export function DesktopRightNav() {
             type="md"
             style={pal.link}
             href="https://blueskyweb.xyz/support/tos"
-            text="Terms"
+            text={_(msg`Terms`)}
           />
           <Text type="md" style={pal.textLight}>
             &nbsp;&middot;&nbsp;
@@ -72,7 +75,7 @@ export function DesktopRightNav() {
             type="md"
             style={pal.link}
             href={HELP_DESK_URL}
-            text="Help"
+            text={_(msg`Help`)}
           />
         </View>
       </View>

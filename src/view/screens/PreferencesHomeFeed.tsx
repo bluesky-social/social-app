@@ -92,7 +92,7 @@ export function PreferencesHomeFeed({navigation}: Props) {
         styles.container,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title="Home Feed Preferences" showOnDesktop />
+      <ViewHeader title={_(msg`Home Feed Preferences`)} showOnDesktop />
       <View
         style={[
           styles.titleSection,
@@ -142,7 +142,7 @@ export function PreferencesHomeFeed({navigation}: Props) {
             </Text>
             <ToggleButton
               type="default-light"
-              label="Followed users only"
+              label={_(msg`Followed users only`)}
               isSelected={Boolean(
                 variables?.hideRepliesByUnfollowed ??
                   preferences?.feedViewPrefs?.hideRepliesByUnfollowed,
@@ -188,8 +188,8 @@ export function PreferencesHomeFeed({navigation}: Props) {
               label={
                 variables?.hideReposts ??
                 preferences?.feedViewPrefs?.hideReposts
-                  ? 'No'
-                  : 'Yes'
+                  ? _(msg`No`)
+                  : _(msg`Yes`)
               }
               isSelected={
                 !(
@@ -223,8 +223,8 @@ export function PreferencesHomeFeed({navigation}: Props) {
               label={
                 variables?.hideQuotePosts ??
                 preferences?.feedViewPrefs?.hideQuotePosts
-                  ? 'No'
-                  : 'Yes'
+                  ? _(msg`No`)
+                  : _(msg`Yes`)
               }
               isSelected={
                 !(
@@ -259,8 +259,8 @@ export function PreferencesHomeFeed({navigation}: Props) {
               label={
                 variables?.lab_mergeFeedEnabled ??
                 preferences?.feedViewPrefs?.lab_mergeFeedEnabled
-                  ? 'Yes'
-                  : 'No'
+                  ? _(msg`Yes`)
+                  : _(msg`No`)
               }
               isSelected={
                 !!(

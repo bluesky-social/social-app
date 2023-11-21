@@ -14,6 +14,8 @@ import * as Toast from 'view/com/util/Toast'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   UsePreferencesQueryResponse,
   usePreferencesQuery,
@@ -68,6 +70,7 @@ export function FeedSourceCardLoaded({
   showLikes?: boolean
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {openModal} = useModalControls()
 
@@ -85,8 +88,8 @@ export function FeedSourceCardLoaded({
     if (isSaved) {
       openModal({
         name: 'confirm',
-        title: 'Remove from my feeds',
-        message: `Remove ${feed?.displayName} from my feeds?`,
+        title: _(msg`Remove from my feeds`),
+        message: _(msg`Remove ${feed.displayName} from my feeds?`),
         onPressConfirm: async () => {
           try {
             await removeFeed({uri: feed.uri})
@@ -107,7 +110,7 @@ export function FeedSourceCardLoaded({
         logger.error('Failed to save feed', {error: e})
       }
     }
-  }, [isSaved, openModal, feed, removeFeed, saveFeed])
+  }, [isSaved, openModal, feed, removeFeed, saveFeed, _])
 
   if (!feed || !preferences) return null
 

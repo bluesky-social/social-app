@@ -208,7 +208,7 @@ export function EditableUserAvatar({
       [
         !isWeb && {
           testID: 'changeAvatarCameraBtn',
-          label: 'Camera',
+          label: _(msg`Camera`),
           icon: {
             ios: {
               name: 'camera',
@@ -232,7 +232,7 @@ export function EditableUserAvatar({
         },
         {
           testID: 'changeAvatarLibraryBtn',
-          label: 'Library',
+          label: _(msg`Library`),
           icon: {
             ios: {
               name: 'photo.on.rectangle.angled',
@@ -269,7 +269,7 @@ export function EditableUserAvatar({
         },
         !!avatar && {
           testID: 'changeAvatarRemoveBtn',
-          label: 'Remove',
+          label: _(msg`Remove`),
           icon: {
             ios: {
               name: 'trash',
@@ -287,6 +287,7 @@ export function EditableUserAvatar({
       onSelectNewAvatar,
       requestCameraAccessIfNeeded,
       requestPhotoAccessIfNeeded,
+      _,
     ],
   )
 

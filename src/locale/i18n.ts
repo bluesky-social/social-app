@@ -1,4 +1,8 @@
+import {useLanguagePrefs} from '#/state/preferences'
 import {i18n} from '@lingui/core'
+import {useEffect} from 'react'
+import {messages as messagesEn} from './locales/en/messages'
+import {messages as messagesHi} from './locales/hi/messages'
 
 export const locales = {
   en: 'English',
@@ -14,7 +18,22 @@ export const defaultLocale = 'en'
  * @param locale any locale string
  */
 export async function dynamicActivate(locale: string) {
-  const {messages} = await import(`./locales/${locale}/messages`)
-  i18n.load(locale, messages)
-  i18n.activate(locale)
+  console.log('dynamicActivate', locale)
+  if (locale === 'en') {
+    i18n.loadAndActivate({locale, messages: messagesEn})
+    return
+  } else if (locale === 'hi') {
+    i18n.loadAndActivate({locale, messages: messagesHi})
+    return
+  } else {
+    i18n.loadAndActivate({locale, messages: messagesEn})
+    return
+  }
+}
+
+export async function useLocaleLanguage() {
+  const {appLanguage} = useLanguagePrefs()
+  useEffect(() => {
+    dynamicActivate(appLanguage)
+  }, [appLanguage])
 }

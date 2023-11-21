@@ -129,19 +129,19 @@ export const ComposePost = observer(function ComposePost({
       }
       openModal({
         name: 'confirm',
-        title: 'Discard draft',
+        title: _(msg`Discard draft`),
         onPressConfirm: onClose,
         onPressCancel: () => {
           closeModal()
         },
-        message: "Are you sure you'd like to discard this draft?",
-        confirmBtnText: 'Discard',
+        message: _(msg`Are you sure you'd like to discard this draft?`),
+        confirmBtnText: _(msg`Discard`),
         confirmBtnStyle: {backgroundColor: colors.red4},
       })
     } else {
       onClose()
     }
-  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery])
+  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery, _])
   // android back button
   useEffect(() => {
     if (!isAndroid) {

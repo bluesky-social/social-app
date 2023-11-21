@@ -7,6 +7,8 @@ import {ViewHeader} from '../com/util/ViewHeader'
 import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
 export const PostRepostedByScreen = withAuthRequired(
@@ -14,6 +16,7 @@ export const PostRepostedByScreen = withAuthRequired(
     const {name, rkey} = route.params
     const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
     const setMinimalShellMode = useSetMinimalShellMode()
+    const {_} = useLingui()
 
     useFocusEffect(
       React.useCallback(() => {
@@ -23,12 +26,10 @@ export const PostRepostedByScreen = withAuthRequired(
 
     return (
       <View>
-        <ViewHeader title="Reposted by" />
+        <ViewHeader title={_(msg`Reposted by`)} />
         <PostRepostedByComponent uri={uri} />
       </View>
     )
   },
-  {
-    isPublic: true,
-  },
+  {isPublic: true},
 )

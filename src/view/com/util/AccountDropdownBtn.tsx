@@ -19,7 +19,7 @@ export function AccountDropdownBtn({account}: {account: SessionAccount}) {
 
   const items: DropdownItem[] = [
     {
-      label: 'Remove account',
+      label: _(msg`Remove account`),
       onPress: () => {
         removeAccount(account)
         Toast.show('Account removed from quick access')

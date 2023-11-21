@@ -9,7 +9,6 @@ import {
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
-
 import {track} from '#/lib/analytics/analytics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -27,6 +26,8 @@ import {Haptics} from 'lib/haptics'
 import {TextLink} from 'view/com/util/Link'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   usePreferencesQuery,
   usePinFeedMutation,
@@ -52,6 +53,7 @@ const HITSLOP_BOTTOM = {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -71,11 +73,11 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
         pal.border,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title="Edit My Feeds" showOnDesktop showBorder />
+      <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1}>
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
-            Pinned Feeds
+            <Trans>Pinned Feeds</Trans>
           </Text>
         </View>
         {preferences?.feeds ? (
@@ -88,7 +90,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
                 styles.empty,
               ]}>
               <Text type="lg" style={[pal.text]}>
-                You don't have any pinned feeds.
+                <Trans>You don't have any pinned feeds.</Trans>
               </Text>
             </View>
           ) : (
@@ -101,7 +103,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
         )}
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
-            Saved Feeds
+            <Trans>Saved Feeds</Trans>
           </Text>
         </View>
         {preferences?.feeds ? (
@@ -114,7 +116,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
                 styles.empty,
               ]}>
               <Text type="lg" style={[pal.text]}>
-                You don't have any saved feeds.
+                <Trans>You don't have any saved feeds.</Trans>
               </Text>
             </View>
           ) : (
@@ -128,15 +130,17 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
 
         <View style={styles.footerText}>
           <Text type="sm" style={pal.textLight}>
-            Feeds are custom algorithms that users build with a little coding
-            expertise.{' '}
-            <TextLink
-              type="sm"
-              style={pal.link}
-              href="https://github.com/bluesky-social/feed-generator"
-              text="See this guide"
-            />{' '}
-            for more information.
+            <Trans>
+              Feeds are custom algorithms that users build with a little coding
+              expertise.{' '}
+              <TextLink
+                type="sm"
+                style={pal.link}
+                href="https://github.com/bluesky-social/feed-generator"
+                text="See this guide"
+              />{' '}
+              for more information.
+            </Trans>
           </Text>
         </View>
         <View style={{height: 100}} />

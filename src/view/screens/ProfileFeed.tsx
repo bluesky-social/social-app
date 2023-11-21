@@ -272,7 +272,7 @@ export function ProfileFeedScreenInner({
     return [
       {
         testID: 'feedHeaderDropdownToggleSavedBtn',
-        label: isSaved ? 'Remove from my feeds' : 'Add to my feeds',
+        label: isSaved ? _(msg`Remove from my feeds`) : _(msg`Add to my feeds`),
         onPress: isSavePending || isRemovePending ? undefined : onToggleSaved,
         icon: isSaved
           ? {
@@ -292,7 +292,7 @@ export function ProfileFeedScreenInner({
       },
       {
         testID: 'feedHeaderDropdownReportBtn',
-        label: 'Report feed',
+        label: _(msg`Report feed`),
         onPress: onPressReport,
         icon: {
           ios: {
@@ -304,7 +304,7 @@ export function ProfileFeedScreenInner({
       },
       {
         testID: 'feedHeaderDropdownShareBtn',
-        label: 'Share link',
+        label: _(msg`Share feed`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -322,6 +322,7 @@ export function ProfileFeedScreenInner({
     isSaved,
     isSavePending,
     isRemovePending,
+    _,
   ])
 
   const renderHeader = useCallback(() => {

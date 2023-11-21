@@ -220,7 +220,7 @@ function PostThreadLoaded({
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
       if (item === TOP_COMPONENT) {
-        return isTablet ? <ViewHeader title="Post" /> : null
+        return isTablet ? <ViewHeader title={_(msg`Post`)} /> : null
       } else if (item === PARENT_SPINNER) {
         return (
           <View style={styles.parentSpinner}>

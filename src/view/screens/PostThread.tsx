@@ -19,6 +19,8 @@ import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {CenteredView} from '../com/util/Views'
@@ -28,6 +30,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export const PostThreadScreen = withAuthRequired(
   function PostThreadScreenImpl({route}: Props) {
     const queryClient = useQueryClient()
+    const {_} = useLingui()
     const {fabMinimalShellTransform} = useMinimalShellMode()
     const setMinimalShellMode = useSetMinimalShellMode()
     const {openComposer} = useComposerControls()
@@ -73,7 +76,7 @@ export const PostThreadScreen = withAuthRequired(
 
     return (
       <View style={s.hContentRegion}>
-        {isMobile && <ViewHeader title="Post" />}
+        {isMobile && <ViewHeader title={_(msg`Post`)} />}
         <View style={s.flex1}>
           {uriError ? (
             <CenteredView>
@@ -101,9 +104,7 @@ export const PostThreadScreen = withAuthRequired(
       </View>
     )
   },
-  {
-    isPublic: true,
-  },
+  {isPublic: true},
 )
 
 const styles = StyleSheet.create({

@@ -18,6 +18,8 @@ import {s, colors} from 'lib/styles'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
@@ -28,6 +30,7 @@ type Props = NativeStackScreenProps<
 >
 export const NotificationsScreen = withAuthRequired(
   function NotificationsScreenImpl({}: Props) {
+    const {_} = useLingui()
     const setMinimalShellMode = useSetMinimalShellMode()
     const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
     const scrollElRef = React.useRef<FlatList>(null)
@@ -83,7 +86,7 @@ export const NotificationsScreen = withAuthRequired(
               style={[pal.text, {fontWeight: 'bold'}]}
               text={
                 <>
-                  Notifications{' '}
+                  <Trans>Notifications</Trans>{' '}
                   {hasNew && (
                     <View
                       style={{
@@ -107,7 +110,7 @@ export const NotificationsScreen = withAuthRequired(
 
     return (
       <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title="Notifications" canGoBack={false} />
+        <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
         <Feed
           onScroll={onMainScroll}
           scrollElRef={scrollElRef}
@@ -116,7 +119,7 @@ export const NotificationsScreen = withAuthRequired(
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onPressLoadLatest}
-            label="Load new notifications"
+            label={_(msg`Load new notifications`)}
             showIndicator={hasNew}
           />
         )}

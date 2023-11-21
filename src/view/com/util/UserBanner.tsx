@@ -35,7 +35,7 @@ export function UserBanner({
       [
         !isWeb && {
           testID: 'changeBannerCameraBtn',
-          label: 'Camera',
+          label: _(msg`Camera`),
           icon: {
             ios: {
               name: 'camera',
@@ -57,7 +57,7 @@ export function UserBanner({
         },
         {
           testID: 'changeBannerLibraryBtn',
-          label: 'Library',
+          label: _(msg`Library`),
           icon: {
             ios: {
               name: 'photo.on.rectangle.angled',
@@ -86,7 +86,7 @@ export function UserBanner({
         },
         !!banner && {
           testID: 'changeBannerRemoveBtn',
-          label: 'Remove',
+          label: _(msg`Remove`),
           icon: {
             ios: {
               name: 'trash',
@@ -104,6 +104,7 @@ export function UserBanner({
       onSelectNewBanner,
       requestCameraAccessIfNeeded,
       requestPhotoAccessIfNeeded,
+      _,
     ],
   )
 

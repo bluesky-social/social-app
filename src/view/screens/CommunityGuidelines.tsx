@@ -9,6 +9,8 @@ import {ScrollView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -16,6 +18,7 @@ type Props = NativeStackScreenProps<
 >
 export const CommunityGuidelinesScreen = (_props: Props) => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
@@ -26,16 +29,18 @@ export const CommunityGuidelinesScreen = (_props: Props) => {
 
   return (
     <View>
-      <ViewHeader title="Community Guidelines" />
+      <ViewHeader title={_(msg`Community Guidelines`)} />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
           <Text style={pal.text}>
-            The Community Guidelines have been moved to{' '}
-            <TextLink
-              style={pal.link}
-              href="https://blueskyweb.xyz/support/community-guidelines"
-              text="blueskyweb.xyz/support/community-guidelines"
-            />
+            <Trans>
+              The Community Guidelines have been moved to{' '}
+              <TextLink
+                style={pal.link}
+                href="https://blueskyweb.xyz/support/community-guidelines"
+                text="blueskyweb.xyz/support/community-guidelines"
+              />
+            </Trans>
           </Text>
         </View>
         <View style={s.footerSpacer} />

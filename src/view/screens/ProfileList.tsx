@@ -268,9 +268,10 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onSubscribeMute = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Mute these accounts?',
-      message:
-        'Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.',
+      title: _(msg`Mute these accounts?`),
+      message: _(
+        msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
+      ),
       confirmBtnText: 'Mute this List',
       async onPressConfirm() {
         try {
@@ -286,7 +287,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         closeModal()
       },
     })
-  }, [openModal, closeModal, list, listMuteMutation])
+  }, [openModal, closeModal, list, listMuteMutation, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
@@ -302,9 +303,10 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onSubscribeBlock = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Block these accounts?',
-      message:
-        'Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
+      title: _(msg`Block these accounts?`),
+      message: _(
+        msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+      ),
       confirmBtnText: 'Block this List',
       async onPressConfirm() {
         try {
@@ -320,7 +322,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         closeModal()
       },
     })
-  }, [openModal, closeModal, list, listBlockMutation])
+  }, [openModal, closeModal, list, listBlockMutation, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
@@ -343,8 +345,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onPressDelete = useCallback(() => {
     openModal({
       name: 'confirm',
-      title: 'Delete List',
-      message: 'Are you sure?',
+      title: _(msg`Delete List`),
+      message: _(msg`Are you sure?`),
       async onPressConfirm() {
         await listDeleteMutation.mutateAsync({uri: list.uri})
         Toast.show('List deleted')
@@ -355,7 +357,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         }
       },
     })
-  }, [openModal, list, listDeleteMutation, navigation])
+  }, [openModal, list, listDeleteMutation, navigation, _])
 
   const onPressReport = useCallback(() => {
     openModal({
@@ -374,7 +376,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
-        label: 'Share',
+        label: _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -389,7 +391,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownEditBtn',
-        label: 'Edit List Details',
+        label: _(msg`Edit list details`),
         onPress: onPressEdit,
         icon: {
           ios: {
@@ -401,7 +403,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       })
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
-        label: 'Delete List',
+        label: _(msg`Delete List`),
         onPress: onPressDelete,
         icon: {
           ios: {
@@ -415,7 +417,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownReportBtn',
-        label: 'Report List',
+        label: _(msg`Report List`),
         onPress: onPressReport,
         icon: {
           ios: {
@@ -427,13 +429,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       })
     }
     return items
-  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport])
+  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport, _])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
       {
         testID: 'subscribeDropdownMuteBtn',
-        label: 'Mute accounts',
+        label: _(msg`Mute accounts`),
         onPress: onSubscribeMute,
         icon: {
           ios: {
@@ -445,7 +447,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       },
       {
         testID: 'subscribeDropdownBlockBtn',
-        label: 'Block accounts',
+        label: _(msg`Block accounts`),
         onPress: onSubscribeBlock,
         icon: {
           ios: {
@@ -456,7 +458,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       },
     ]
-  }, [onSubscribeMute, onSubscribeBlock])
+  }, [onSubscribeMute, onSubscribeBlock, _])
 
   return (
     <ProfileSubpageHeader

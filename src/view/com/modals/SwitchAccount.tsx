@@ -75,7 +75,7 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
         did: currentAccount.did,
         handle: currentAccount.handle,
       })}
-      title="Your profile"
+      title={_(msg`Your profile`)}
       noFeedback>
       {contents}
     </Link>
