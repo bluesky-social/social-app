@@ -25,7 +25,7 @@ import {
 } from '#/state/queries/post'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
-import {useAuthedMethod} from '#/state/session'
+import {useRequireAuth} from '#/state/session'
 
 export function PostCtrls({
   big,
@@ -47,7 +47,7 @@ export function PostCtrls({
   const postUnlikeMutation = usePostUnlikeMutation()
   const postRepostMutation = usePostRepostMutation()
   const postUnrepostMutation = usePostUnrepostMutation()
-  const authedMethod = useAuthedMethod()
+  const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(
     () => ({
@@ -109,7 +109,9 @@ export function PostCtrls({
       <TouchableOpacity
         testID="replyBtn"
         style={[styles.ctrl, !big && styles.ctrlPad, {paddingLeft: 0}]}
-        onPress={authedMethod(onPressReply)}
+        onPress={() => {
+          requireAuth(() => onPressReply())
+        }}
         accessibilityRole="button"
         accessibilityLabel={`Reply (${post.replyCount} ${
           post.replyCount === 1 ? 'reply' : 'replies'
@@ -137,7 +139,9 @@ export function PostCtrls({
       <TouchableOpacity
         testID="likeBtn"
         style={[styles.ctrl, !big && styles.ctrlPad]}
-        onPress={authedMethod(onPressToggleLike)}
+        onPress={() => {
+          requireAuth(() => onPressToggleLike())
+        }}
         accessibilityRole="button"
         accessibilityLabel={`${post.viewer?.like ? 'Unlike' : 'Like'} (${
           post.likeCount

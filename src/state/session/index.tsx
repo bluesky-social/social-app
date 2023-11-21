@@ -517,12 +517,12 @@ export function useSessionApi() {
   return React.useContext(ApiContext)
 }
 
-export function useAuthedMethod() {
+export function useRequireAuth() {
   const {hasSession} = useSession()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return React.useCallback(
-    (fn: any) => () => {
+    (fn: () => void) => {
       if (hasSession) {
         fn()
       } else {

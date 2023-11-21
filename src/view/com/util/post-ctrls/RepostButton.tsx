@@ -7,7 +7,7 @@ import {Text} from '../text/Text'
 import {pluralize} from 'lib/strings/helpers'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 import {useModalControls} from '#/state/modals'
-import {useAuthedMethod} from '#/state/session'
+import {useRequireAuth} from '#/state/session'
 
 interface Props {
   isReposted: boolean
@@ -26,7 +26,7 @@ export const RepostButton = ({
 }: Props) => {
   const theme = useTheme()
   const {openModal} = useModalControls()
-  const authedMethod = useAuthedMethod()
+  const requireAuth = useRequireAuth()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -47,7 +47,9 @@ export const RepostButton = ({
   return (
     <TouchableOpacity
       testID="repostBtn"
-      onPress={authedMethod(onPressToggleRepostWrapper)}
+      onPress={() => {
+        requireAuth(() => onPressToggleRepostWrapper())
+      }}
       style={[styles.control, !big && styles.controlPad]}
       accessibilityRole="button"
       accessibilityLabel={`${

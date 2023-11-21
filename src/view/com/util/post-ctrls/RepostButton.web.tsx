@@ -12,7 +12,7 @@ import {
 import {EventStopper} from '../EventStopper'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {useAuthedMethod} from '#/state/session'
+import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 
 interface Props {
@@ -34,7 +34,7 @@ export const RepostButton = ({
   const theme = useTheme()
   const {_} = useLingui()
   const {hasSession} = useSession()
-  const authedMethod = useAuthedMethod()
+  const requireAuth = useRequireAuth()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -99,7 +99,9 @@ export const RepostButton = ({
   ) : (
     <Pressable
       accessibilityRole="button"
-      onPress={authedMethod(() => {})}
+      onPress={() => {
+        requireAuth(() => {})
+      }}
       accessibilityLabel={_(msg`Repost or quote post`)}
       accessibilityHint="">
       {inner}
