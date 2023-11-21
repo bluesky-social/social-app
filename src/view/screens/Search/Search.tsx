@@ -6,6 +6,7 @@ import {
   RefreshControl,
   TextInput,
   Pressable,
+  Platform,
 } from 'react-native'
 import {FlatList, ScrollView, CenteredView} from '#/view/com/util/Views'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
@@ -284,10 +285,17 @@ function SearchScreenUserResults({query}: {query: string}) {
 
   React.useEffect(() => {
     async function getResults() {
-      const searchResults = await search({query, limit: 30})
+      try {
+        const searchResults = await search({query, limit: 30})
 
-      if (searchResults) {
-        setResults(results)
+        if (searchResults) {
+          setResults(searchResults)
+        }
+      } catch (e: any) {
+        logger.error(`SearchScreenUserResults: failed to get results`, {
+          error: e.toString(),
+        })
+      } finally {
         setIsFetched(true)
       }
     }
@@ -298,7 +306,7 @@ function SearchScreenUserResults({query}: {query: string}) {
       setResults([])
       setIsFetched(false)
     }
-  }, [query, search, results])
+  }, [query, search, setResults])
 
   return isFetched ? (
     <>
@@ -327,6 +335,8 @@ export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const {hasSession} = useSession()
+  const {isDesktop} = useWebMediaQueries()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -353,7 +363,7 @@ export function SearchScreenInner({query}: {query?: string}) {
         <SearchScreenUserResults query={query} />
       </View>
     </Pager>
-  ) : (
+  ) : hasSession ? (
     <View>
       <CenteredView sideBorders style={pal.border}>
         <Text
@@ -371,8 +381,43 @@ export function SearchScreenInner({query}: {query?: string}) {
           <Trans>Suggested Follows</Trans>
         </Text>
       </CenteredView>
+
       <SearchScreenSuggestedFollows />
     </View>
+  ) : (
+    <CenteredView sideBorders style={pal.border}>
+      <View
+        // @ts-ignore web only -esb
+        style={{
+          height: Platform.select({web: '100vh'}),
+        }}>
+        {isDesktop && (
+          <Text
+            type="title"
+            style={[
+              pal.text,
+              pal.border,
+              {
+                display: 'flex',
+                paddingVertical: 12,
+                paddingHorizontal: 18,
+                fontWeight: 'bold',
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <Trans>Search</Trans>
+          </Text>
+        )}
+
+        <Text
+          style={[
+            pal.textLight,
+            {textAlign: 'center', paddingVertical: 12, paddingHorizontal: 18},
+          ]}>
+          <Trans>Search for posts and users.</Trans>
+        </Text>
+      </View>
+    </CenteredView>
   )
 }
 
