@@ -139,7 +139,11 @@ export async function migrate() {
 }
 
 export async function clearLegacyStorage() {
-  await AsyncStorage.removeItem(DEPRECATED_ROOT_STATE_STORAGE_KEY, e => {
-    if (e) console.error(e)
-  })
+  try {
+    await AsyncStorage.removeItem(DEPRECATED_ROOT_STATE_STORAGE_KEY)
+  } catch (e: any) {
+    logger.error(`persisted legacy store: failed to clear`, {
+      error: e.toString(),
+    })
+  }
 }

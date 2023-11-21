@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {Schema, schema} from '#/state/persisted/schema'
+import {logger} from '#/logger'
 
 const BSKY_STORAGE = 'BSKY_STORAGE'
 
@@ -18,7 +19,9 @@ export async function read(): Promise<Schema | undefined> {
 }
 
 export async function clear() {
-  await AsyncStorage.removeItem(BSKY_STORAGE, e => {
-    if (e) console.error(e)
-  })
+  try {
+    await AsyncStorage.removeItem(BSKY_STORAGE)
+  } catch (e: any) {
+    logger.error(`persisted store: failed to clear`, {error: e.toString()})
+  }
 }
