@@ -24,7 +24,7 @@ import {CommonNavigatorParams} from 'lib/routes/types'
 import {useSession} from '#/state/session'
 
 export function BottomBarWeb() {
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const {footerMinimalShellTransform} = useMinimalShellMode()
@@ -75,39 +75,44 @@ export function BottomBarWeb() {
           )
         }}
       </NavItem>
-      <NavItem routeName="Notifications" href="/notifications">
-        {({isActive}) => {
-          const Icon = isActive ? BellIconSolid : BellIcon
-          return (
-            <Icon
-              size={24}
-              strokeWidth={1.9}
-              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-            />
-          )
-        }}
-      </NavItem>
-      <NavItem
-        routeName="Profile"
-        href={
-          currentAccount
-            ? makeProfileLink({
-                did: currentAccount.did,
-                handle: currentAccount.handle,
-              })
-            : '/'
-        }>
-        {({isActive}) => {
-          const Icon = isActive ? UserIconSolid : UserIcon
-          return (
-            <Icon
-              size={28}
-              strokeWidth={1.5}
-              style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-            />
-          )
-        }}
-      </NavItem>
+
+      {hasSession && (
+        <>
+          <NavItem routeName="Notifications" href="/notifications">
+            {({isActive}) => {
+              const Icon = isActive ? BellIconSolid : BellIcon
+              return (
+                <Icon
+                  size={24}
+                  strokeWidth={1.9}
+                  style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                />
+              )
+            }}
+          </NavItem>
+          <NavItem
+            routeName="Profile"
+            href={
+              currentAccount
+                ? makeProfileLink({
+                    did: currentAccount.did,
+                    handle: currentAccount.handle,
+                  })
+                : '/'
+            }>
+            {({isActive}) => {
+              const Icon = isActive ? UserIconSolid : UserIcon
+              return (
+                <Icon
+                  size={28}
+                  strokeWidth={1.5}
+                  style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+                />
+              )
+            }}
+          </NavItem>
+        </>
+      )}
     </Animated.View>
   )
 }
