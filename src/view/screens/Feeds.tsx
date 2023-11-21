@@ -34,6 +34,7 @@ import {
 } from '#/state/queries/feed'
 import {cleanError} from 'lib/strings/errors'
 import {useComposerControls} from '#/state/shell/composer'
+import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -117,6 +118,7 @@ export const FeedsScreen = withAuthRequired(
       isPending: isSearchPending,
       error: searchError,
     } = useSearchPopularFeedsMutation()
+    const {hasSession} = useSession()
 
     /**
      * A search query is present. We may not have search results yet.
@@ -180,50 +182,52 @@ export const FeedsScreen = withAuthRequired(
     const items = React.useMemo(() => {
       let slices: FlatlistSlice[] = []
 
-      slices.push({
-        key: 'savedFeedsHeader',
-        type: 'savedFeedsHeader',
-      })
-
-      if (preferencesError) {
+      if (hasSession) {
         slices.push({
-          key: 'savedFeedsError',
-          type: 'error',
-          error: cleanError(preferencesError.toString()),
+          key: 'savedFeedsHeader',
+          type: 'savedFeedsHeader',
         })
-      } else {
-        if (isPreferencesLoading || !preferences?.feeds?.saved) {
+
+        if (preferencesError) {
           slices.push({
-            key: 'savedFeedsLoading',
-            type: 'savedFeedsLoading',
-            // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
+            key: 'savedFeedsError',
+            type: 'error',
+            error: cleanError(preferencesError.toString()),
           })
         } else {
-          if (preferences?.feeds?.saved.length === 0) {
+          if (isPreferencesLoading || !preferences?.feeds?.saved) {
             slices.push({
-              key: 'savedFeedNoResults',
-              type: 'savedFeedNoResults',
+              key: 'savedFeedsLoading',
+              type: 'savedFeedsLoading',
+              // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
             })
           } else {
-            const {saved, pinned} = preferences.feeds
+            if (preferences?.feeds?.saved.length === 0) {
+              slices.push({
+                key: 'savedFeedNoResults',
+                type: 'savedFeedNoResults',
+              })
+            } else {
+              const {saved, pinned} = preferences.feeds
 
-            slices = slices.concat(
-              pinned.map(uri => ({
-                key: `savedFeed:${uri}`,
-                type: 'savedFeed',
-                feedUri: uri,
-              })),
-            )
-
-            slices = slices.concat(
-              saved
-                .filter(uri => !pinned.includes(uri))
-                .map(uri => ({
+              slices = slices.concat(
+                pinned.map(uri => ({
                   key: `savedFeed:${uri}`,
                   type: 'savedFeed',
                   feedUri: uri,
                 })),
-            )
+              )
+
+              slices = slices.concat(
+                saved
+                  .filter(uri => !pinned.includes(uri))
+                  .map(uri => ({
+                    key: `savedFeed:${uri}`,
+                    type: 'savedFeed',
+                    feedUri: uri,
+                  })),
+              )
+            }
           }
         }
       }
@@ -307,6 +311,7 @@ export const FeedsScreen = withAuthRequired(
 
       return slices
     }, [
+      hasSession,
       preferences,
       isPreferencesLoading,
       preferencesError,
@@ -393,7 +398,8 @@ export const FeedsScreen = withAuthRequired(
                   pal.view,
                   styles.header,
                   {
-                    marginTop: 16,
+                    // This is first in the flatlist without a session -esb
+                    marginTop: hasSession ? 16 : 0,
                     paddingLeft: isMobile ? 12 : undefined,
                     paddingRight: 10,
                     paddingBottom: isMobile ? 6 : undefined,
@@ -432,7 +438,7 @@ export const FeedsScreen = withAuthRequired(
           return (
             <FeedSourceCard
               feedUri={item.feedUri}
-              showSaveBtn
+              showSaveBtn={hasSession}
               showDescription
               showLikes
             />
@@ -455,6 +461,7 @@ export const FeedsScreen = withAuthRequired(
       },
       [
         _,
+        hasSession,
         isMobile,
         pal,
         query,
