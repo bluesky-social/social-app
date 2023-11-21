@@ -28,7 +28,7 @@ export const DEFAULT_PROD_FEEDS = {
 }
 
 export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
-  birthDate: new Date('2022-11-17'), // first post on network
+  birthDate: new Date('2022-11-17'), // TODO(pwi)
   adultContentEnabled: false,
   feeds: {
     saved: [],
@@ -47,5 +47,5 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   },
   feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
-  userAge: 13,
+  userAge: 13, // TODO(pwi)
 }
