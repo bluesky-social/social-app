@@ -1,5 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -10,6 +12,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 
 export function NavSignupCard() {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -30,17 +33,24 @@ export function NavSignupCard() {
 
       <View style={{paddingTop: 12}}>
         <Text type="md" style={[pal.text, s.bold]}>
-          Sign up or sign in to join the conversation
+          <Trans>Sign up or sign in to join the conversation</Trans>
         </Text>
       </View>
 
       <View style={{flexDirection: 'row', paddingTop: 12, gap: 8}}>
-        <Button onPress={showLoggedOut}>
+        <Button
+          onPress={showLoggedOut}
+          accessibilityHint={_(msg`Sign up`)}
+          accessibilityLabel={_(msg`Sign up`)}>
           <Text type="md" style={[{color: 'white'}, s.bold]}>
-            Sign up
+            <Trans>Sign up</Trans>
           </Text>
         </Button>
-        <Button type="default" onPress={showLoggedOut}>
+        <Button
+          type="default"
+          onPress={showLoggedOut}
+          accessibilityHint={_(msg`Sign in`)}
+          accessibilityLabel={_(msg`Sign in`)}>
           <Text type="md" style={[pal.text, s.bold]}>
             Sign in
           </Text>
