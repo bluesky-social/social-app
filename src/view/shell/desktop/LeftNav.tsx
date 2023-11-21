@@ -285,11 +285,11 @@ export function DesktopLeftNav() {
       ]}>
       {hasSession ? (
         <ProfileCard />
-      ) : (
+      ) : isDesktop ? (
         <View style={{paddingHorizontal: 12}}>
           <NavSignupCard />
         </View>
-      )}
+      ) : null}
 
       <BackBtn />
 
