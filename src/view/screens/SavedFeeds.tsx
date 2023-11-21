@@ -33,7 +33,7 @@ import {
   usePinFeedMutation,
   useUnpinFeedMutation,
   useSetSaveFeedsMutation,
-  usePreferencesQueryKey,
+  preferencesQueryKey,
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 
@@ -182,9 +182,10 @@ function ListItem({
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
 
-    const feeds = queryClient.getQueryData<UsePreferencesQueryResponse>(
-      usePreferencesQueryKey,
-    )?.feeds
+    const feeds =
+      queryClient.getQueryData<UsePreferencesQueryResponse>(
+        preferencesQueryKey,
+      )?.feeds
     const pinned = feeds?.pinned ?? []
     const index = pinned.indexOf(feedUri)
 
@@ -206,9 +207,10 @@ function ListItem({
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
 
-    const feeds = queryClient.getQueryData<UsePreferencesQueryResponse>(
-      usePreferencesQueryKey,
-    )?.feeds
+    const feeds =
+      queryClient.getQueryData<UsePreferencesQueryResponse>(
+        preferencesQueryKey,
+      )?.feeds
     const pinned = feeds?.pinned ?? []
     const index = pinned.indexOf(feedUri)
 

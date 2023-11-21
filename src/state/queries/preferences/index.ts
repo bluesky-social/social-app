@@ -15,6 +15,7 @@ import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_THREAD_VIEW_PREFS,
+  DEFAULT_LOGGED_OUT_PREFERENCES,
 } from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {STALE} from '#/state/queries'
@@ -23,63 +24,67 @@ export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/const'
 
-export const usePreferencesQueryKey = ['getPreferences']
+export const preferencesQueryKey = ['getPreferences']
 
 export function usePreferencesQuery() {
-  const {hasSession} = useSession()
   return useQuery({
-    enabled: hasSession,
     staleTime: STALE.MINUTES.ONE,
-    queryKey: usePreferencesQueryKey,
+    queryKey: preferencesQueryKey,
     queryFn: async () => {
-      const res = await getAgent().getPreferences()
-      const preferences: UsePreferencesQueryResponse = {
-        ...res,
-        feeds: {
-          saved: res.feeds?.saved || [],
-          pinned: res.feeds?.pinned || [],
-          unpinned:
-            res.feeds.saved?.filter(f => {
-              return !res.feeds.pinned?.includes(f)
-            }) || [],
-        },
-        // labels are undefined until set by user
-        contentLabels: {
-          nsfw: temp__migrateLabelPref(
-            res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
-          ),
-          nudity: temp__migrateLabelPref(
-            res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
-          ),
-          suggestive: temp__migrateLabelPref(
-            res.contentLabels?.suggestive ||
-              DEFAULT_LABEL_PREFERENCES.suggestive,
-          ),
-          gore: temp__migrateLabelPref(
-            res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
-          ),
-          hate: temp__migrateLabelPref(
-            res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
-          ),
-          spam: temp__migrateLabelPref(
-            res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
-          ),
-          impersonation: temp__migrateLabelPref(
-            res.contentLabels?.impersonation ||
-              DEFAULT_LABEL_PREFERENCES.impersonation,
-          ),
-        },
-        feedViewPrefs: {
-          ...DEFAULT_HOME_FEED_PREFS,
-          ...(res.feedViewPrefs.home || {}),
-        },
-        threadViewPrefs: {
-          ...DEFAULT_THREAD_VIEW_PREFS,
-          ...(res.threadViewPrefs ?? {}),
-        },
-        userAge: res.birthDate ? getAge(res.birthDate) : undefined,
+      const agent = getAgent()
+
+      if (agent.session?.did === undefined) {
+        return DEFAULT_LOGGED_OUT_PREFERENCES
+      } else {
+        const res = await agent.getPreferences()
+        const preferences: UsePreferencesQueryResponse = {
+          ...res,
+          feeds: {
+            saved: res.feeds?.saved || [],
+            pinned: res.feeds?.pinned || [],
+            unpinned:
+              res.feeds.saved?.filter(f => {
+                return !res.feeds.pinned?.includes(f)
+              }) || [],
+          },
+          // labels are undefined until set by user
+          contentLabels: {
+            nsfw: temp__migrateLabelPref(
+              res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
+            ),
+            nudity: temp__migrateLabelPref(
+              res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
+            ),
+            suggestive: temp__migrateLabelPref(
+              res.contentLabels?.suggestive ||
+                DEFAULT_LABEL_PREFERENCES.suggestive,
+            ),
+            gore: temp__migrateLabelPref(
+              res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
+            ),
+            hate: temp__migrateLabelPref(
+              res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
+            ),
+            spam: temp__migrateLabelPref(
+              res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
+            ),
+            impersonation: temp__migrateLabelPref(
+              res.contentLabels?.impersonation ||
+                DEFAULT_LABEL_PREFERENCES.impersonation,
+            ),
+          },
+          feedViewPrefs: {
+            ...DEFAULT_HOME_FEED_PREFS,
+            ...(res.feedViewPrefs.home || {}),
+          },
+          threadViewPrefs: {
+            ...DEFAULT_THREAD_VIEW_PREFS,
+            ...(res.threadViewPrefs ?? {}),
+          },
+          userAge: res.birthDate ? getAge(res.birthDate) : undefined,
+        }
+        return preferences
       }
-      return preferences
     },
   })
 }
@@ -107,7 +112,7 @@ export function useClearPreferencesMutation() {
       await getAgent().app.bsky.actor.putPreferences({preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -125,7 +130,7 @@ export function usePreferencesSetContentLabelMutation() {
       await getAgent().setContentLabelPref(labelGroup, visibility)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -139,7 +144,7 @@ export function usePreferencesSetAdultContentMutation() {
       await getAgent().setAdultContentEnabled(enabled)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -153,7 +158,7 @@ export function usePreferencesSetBirthDateMutation() {
       await getAgent().setPersonalDetails({birthDate})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -167,7 +172,7 @@ export function useSetFeedViewPreferencesMutation() {
       await getAgent().setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -181,7 +186,7 @@ export function useSetThreadViewPreferencesMutation() {
       await getAgent().setThreadViewPrefs(prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -199,7 +204,7 @@ export function useSetSaveFeedsMutation() {
       await getAgent().setSavedFeeds(saved, pinned)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -214,7 +219,7 @@ export function useSaveFeedMutation() {
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -229,7 +234,7 @@ export function useRemoveFeedMutation() {
       track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -244,7 +249,7 @@ export function usePinFeedMutation() {
       track('CustomFeed:Pin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })
@@ -259,7 +264,7 @@ export function useUnpinFeedMutation() {
       track('CustomFeed:Unpin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: usePreferencesQueryKey,
+        queryKey: preferencesQueryKey,
       })
     },
   })

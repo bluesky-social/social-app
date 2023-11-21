@@ -11,22 +11,25 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>
-export const ProfileFeedLikedByScreen = withAuthRequired(({route}: Props) => {
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
-  const {_} = useLingui()
+export const ProfileFeedLikedByScreen = withAuthRequired(
+  ({route}: Props) => {
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const {name, rkey} = route.params
+    const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
+    const {_} = useLingui()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+    useFocusEffect(
+      React.useCallback(() => {
+        setMinimalShellMode(false)
+      }, [setMinimalShellMode]),
+    )
 
-  return (
-    <View>
-      <ViewHeader title={_(msg`Liked by`)} />
-      <PostLikedByComponent uri={uri} />
-    </View>
-  )
-})
+    return (
+      <View>
+        <ViewHeader title={_(msg`Liked by`)} />
+        <PostLikedByComponent uri={uri} />
+      </View>
+    )
+  },
+  {isPublic: true},
+)

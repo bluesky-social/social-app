@@ -14,22 +14,56 @@ import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
+import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired(function HomeScreenImpl(
-  props: Props,
-) {
-  const {data: preferences} = usePreferencesQuery()
-  if (preferences) {
-    return <HomeScreenReady {...props} preferences={preferences} />
-  } else {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
-  }
-})
+export const HomeScreen = withAuthRequired(
+  function HomeScreenImpl(props: Props) {
+    const {hasSession} = useSession()
+    const {data: preferences} = usePreferencesQuery()
+
+    if (!hasSession) {
+      return <HomeScreenPublic />
+    }
+
+    if (preferences) {
+      return <HomeScreenReady {...props} preferences={preferences} />
+    } else {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </View>
+      )
+    }
+  },
+  {
+    isPublic: true,
+  },
+)
+
+function HomeScreenPublic() {
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+
+  const renderCustomFeedEmptyState = React.useCallback(() => {
+    return <CustomFeedEmptyState />
+  }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+      setDrawerSwipeDisabled(false)
+    }, [setDrawerSwipeDisabled, setMinimalShellMode]),
+  )
+
+  return (
+    <FeedPage
+      isPageFocused
+      feed={`feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot`}
+      renderEmptyState={renderCustomFeedEmptyState}
+    />
+  )
+}
 
 function HomeScreenReady({
   preferences,
@@ -83,6 +117,7 @@ function HomeScreenReady({
     emitSoftReset()
   }, [])
 
+  // TODO(pwi) may need this in public view
   const onPageScrollStateChanged = React.useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
       if (state === 'dragging') {

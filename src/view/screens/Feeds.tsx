@@ -87,426 +87,429 @@ type FlatlistSlice =
       key: string
     }
 
-export const FeedsScreen = withAuthRequired(function FeedsScreenImpl(
-  _props: Props,
-) {
-  const pal = usePalette('default')
-  const {openComposer} = useComposerControls()
-  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-  const [query, setQuery] = React.useState('')
-  const [isPTR, setIsPTR] = React.useState(false)
-  const {
-    data: preferences,
-    isLoading: isPreferencesLoading,
-    error: preferencesError,
-  } = usePreferencesQuery()
-  const {
-    data: popularFeeds,
-    isFetching: isPopularFeedsFetching,
-    error: popularFeedsError,
-    refetch: refetchPopularFeeds,
-    fetchNextPage: fetchNextPopularFeedsPage,
-    isFetchingNextPage: isPopularFeedsFetchingNextPage,
-    hasNextPage: hasNextPopularFeedsPage,
-  } = useGetPopularFeedsQuery()
-  const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const {
-    data: searchResults,
-    mutate: search,
-    reset: resetSearch,
-    isPending: isSearchPending,
-    error: searchError,
-  } = useSearchPopularFeedsMutation()
+export const FeedsScreen = withAuthRequired(
+  function FeedsScreenImpl(_props: Props) {
+    const pal = usePalette('default')
+    const {openComposer} = useComposerControls()
+    const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+    const [query, setQuery] = React.useState('')
+    const [isPTR, setIsPTR] = React.useState(false)
+    const {
+      data: preferences,
+      isLoading: isPreferencesLoading,
+      error: preferencesError,
+    } = usePreferencesQuery()
+    const {
+      data: popularFeeds,
+      isFetching: isPopularFeedsFetching,
+      error: popularFeedsError,
+      refetch: refetchPopularFeeds,
+      fetchNextPage: fetchNextPopularFeedsPage,
+      isFetchingNextPage: isPopularFeedsFetchingNextPage,
+      hasNextPage: hasNextPopularFeedsPage,
+    } = useGetPopularFeedsQuery()
+    const {_} = useLingui()
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const {
+      data: searchResults,
+      mutate: search,
+      reset: resetSearch,
+      isPending: isSearchPending,
+      error: searchError,
+    } = useSearchPopularFeedsMutation()
 
-  /**
-   * A search query is present. We may not have search results yet.
-   */
-  const isUserSearching = query.length > 1
-  const debouncedSearch = React.useMemo(
-    () => debounce(q => search(q), 500), // debounce for 500ms
-    [search],
-  )
-  const onPressCompose = React.useCallback(() => {
-    openComposer({})
-  }, [openComposer])
-  const onChangeQuery = React.useCallback(
-    (text: string) => {
-      setQuery(text)
-      if (text.length > 1) {
-        debouncedSearch(text)
-      } else {
-        refetchPopularFeeds()
-        resetSearch()
-      }
-    },
-    [setQuery, refetchPopularFeeds, debouncedSearch, resetSearch],
-  )
-  const onPressCancelSearch = React.useCallback(() => {
-    setQuery('')
-    refetchPopularFeeds()
-    resetSearch()
-  }, [refetchPopularFeeds, setQuery, resetSearch])
-  const onSubmitQuery = React.useCallback(() => {
-    debouncedSearch(query)
-  }, [query, debouncedSearch])
-  const onPullToRefresh = React.useCallback(async () => {
-    setIsPTR(true)
-    await refetchPopularFeeds()
-    setIsPTR(false)
-  }, [setIsPTR, refetchPopularFeeds])
-  const onEndReached = React.useCallback(() => {
-    if (
-      isPopularFeedsFetching ||
-      isUserSearching ||
-      !hasNextPopularFeedsPage ||
-      popularFeedsError
+    /**
+     * A search query is present. We may not have search results yet.
+     */
+    const isUserSearching = query.length > 1
+    const debouncedSearch = React.useMemo(
+      () => debounce(q => search(q), 500), // debounce for 500ms
+      [search],
     )
-      return
-    fetchNextPopularFeedsPage()
-  }, [
-    isPopularFeedsFetching,
-    isUserSearching,
-    popularFeedsError,
-    hasNextPopularFeedsPage,
-    fetchNextPopularFeedsPage,
-  ])
+    const onPressCompose = React.useCallback(() => {
+      openComposer({})
+    }, [openComposer])
+    const onChangeQuery = React.useCallback(
+      (text: string) => {
+        setQuery(text)
+        if (text.length > 1) {
+          debouncedSearch(text)
+        } else {
+          refetchPopularFeeds()
+          resetSearch()
+        }
+      },
+      [setQuery, refetchPopularFeeds, debouncedSearch, resetSearch],
+    )
+    const onPressCancelSearch = React.useCallback(() => {
+      setQuery('')
+      refetchPopularFeeds()
+      resetSearch()
+    }, [refetchPopularFeeds, setQuery, resetSearch])
+    const onSubmitQuery = React.useCallback(() => {
+      debouncedSearch(query)
+    }, [query, debouncedSearch])
+    const onPullToRefresh = React.useCallback(async () => {
+      setIsPTR(true)
+      await refetchPopularFeeds()
+      setIsPTR(false)
+    }, [setIsPTR, refetchPopularFeeds])
+    const onEndReached = React.useCallback(() => {
+      if (
+        isPopularFeedsFetching ||
+        isUserSearching ||
+        !hasNextPopularFeedsPage ||
+        popularFeedsError
+      )
+        return
+      fetchNextPopularFeedsPage()
+    }, [
+      isPopularFeedsFetching,
+      isUserSearching,
+      popularFeedsError,
+      hasNextPopularFeedsPage,
+      fetchNextPopularFeedsPage,
+    ])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+    useFocusEffect(
+      React.useCallback(() => {
+        setMinimalShellMode(false)
+      }, [setMinimalShellMode]),
+    )
 
-  const items = React.useMemo(() => {
-    let slices: FlatlistSlice[] = []
+    const items = React.useMemo(() => {
+      let slices: FlatlistSlice[] = []
 
-    slices.push({
-      key: 'savedFeedsHeader',
-      type: 'savedFeedsHeader',
-    })
-
-    if (preferencesError) {
       slices.push({
-        key: 'savedFeedsError',
-        type: 'error',
-        error: cleanError(preferencesError.toString()),
+        key: 'savedFeedsHeader',
+        type: 'savedFeedsHeader',
       })
-    } else {
-      if (isPreferencesLoading || !preferences?.feeds?.saved) {
+
+      if (preferencesError) {
         slices.push({
-          key: 'savedFeedsLoading',
-          type: 'savedFeedsLoading',
-          // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
+          key: 'savedFeedsError',
+          type: 'error',
+          error: cleanError(preferencesError.toString()),
         })
       } else {
-        if (preferences?.feeds?.saved.length === 0) {
+        if (isPreferencesLoading || !preferences?.feeds?.saved) {
           slices.push({
-            key: 'savedFeedNoResults',
-            type: 'savedFeedNoResults',
+            key: 'savedFeedsLoading',
+            type: 'savedFeedsLoading',
+            // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
-          const {saved, pinned} = preferences.feeds
+          if (preferences?.feeds?.saved.length === 0) {
+            slices.push({
+              key: 'savedFeedNoResults',
+              type: 'savedFeedNoResults',
+            })
+          } else {
+            const {saved, pinned} = preferences.feeds
 
-          slices = slices.concat(
-            pinned.map(uri => ({
-              key: `savedFeed:${uri}`,
-              type: 'savedFeed',
-              feedUri: uri,
-            })),
-          )
-
-          slices = slices.concat(
-            saved
-              .filter(uri => !pinned.includes(uri))
-              .map(uri => ({
+            slices = slices.concat(
+              pinned.map(uri => ({
                 key: `savedFeed:${uri}`,
                 type: 'savedFeed',
                 feedUri: uri,
               })),
-          )
-        }
-      }
-    }
+            )
 
-    slices.push({
-      key: 'popularFeedsHeader',
-      type: 'popularFeedsHeader',
-    })
-
-    if (popularFeedsError || searchError) {
-      slices.push({
-        key: 'popularFeedsError',
-        type: 'error',
-        error: cleanError(
-          popularFeedsError?.toString() ?? searchError?.toString() ?? '',
-        ),
-      })
-    } else {
-      if (isUserSearching) {
-        if (isSearchPending || !searchResults) {
-          slices.push({
-            key: 'popularFeedsLoading',
-            type: 'popularFeedsLoading',
-          })
-        } else {
-          if (!searchResults || searchResults?.length === 0) {
-            slices.push({
-              key: 'popularFeedsNoResults',
-              type: 'popularFeedsNoResults',
-            })
-          } else {
             slices = slices.concat(
-              searchResults.map(feed => ({
-                key: `popularFeed:${feed.uri}`,
-                type: 'popularFeed',
-                feedUri: feed.uri,
-              })),
+              saved
+                .filter(uri => !pinned.includes(uri))
+                .map(uri => ({
+                  key: `savedFeed:${uri}`,
+                  type: 'savedFeed',
+                  feedUri: uri,
+                })),
             )
           }
         }
+      }
+
+      slices.push({
+        key: 'popularFeedsHeader',
+        type: 'popularFeedsHeader',
+      })
+
+      if (popularFeedsError || searchError) {
+        slices.push({
+          key: 'popularFeedsError',
+          type: 'error',
+          error: cleanError(
+            popularFeedsError?.toString() ?? searchError?.toString() ?? '',
+          ),
+        })
       } else {
-        if (isPopularFeedsFetching && !popularFeeds?.pages) {
-          slices.push({
-            key: 'popularFeedsLoading',
-            type: 'popularFeedsLoading',
-          })
-        } else {
-          if (
-            !popularFeeds?.pages ||
-            popularFeeds?.pages[0]?.feeds?.length === 0
-          ) {
+        if (isUserSearching) {
+          if (isSearchPending || !searchResults) {
             slices.push({
-              key: 'popularFeedsNoResults',
-              type: 'popularFeedsNoResults',
+              key: 'popularFeedsLoading',
+              type: 'popularFeedsLoading',
             })
           } else {
-            for (const page of popularFeeds.pages || []) {
+            if (!searchResults || searchResults?.length === 0) {
+              slices.push({
+                key: 'popularFeedsNoResults',
+                type: 'popularFeedsNoResults',
+              })
+            } else {
               slices = slices.concat(
-                page.feeds
-                  .filter(feed => !preferences?.feeds?.saved.includes(feed.uri))
-                  .map(feed => ({
-                    key: `popularFeed:${feed.uri}`,
-                    type: 'popularFeed',
-                    feedUri: feed.uri,
-                  })),
+                searchResults.map(feed => ({
+                  key: `popularFeed:${feed.uri}`,
+                  type: 'popularFeed',
+                  feedUri: feed.uri,
+                })),
               )
             }
-
-            if (isPopularFeedsFetchingNextPage) {
+          }
+        } else {
+          if (isPopularFeedsFetching && !popularFeeds?.pages) {
+            slices.push({
+              key: 'popularFeedsLoading',
+              type: 'popularFeedsLoading',
+            })
+          } else {
+            if (
+              !popularFeeds?.pages ||
+              popularFeeds?.pages[0]?.feeds?.length === 0
+            ) {
               slices.push({
-                key: 'popularFeedsLoadingMore',
-                type: 'popularFeedsLoadingMore',
+                key: 'popularFeedsNoResults',
+                type: 'popularFeedsNoResults',
               })
+            } else {
+              for (const page of popularFeeds.pages || []) {
+                slices = slices.concat(
+                  page.feeds
+                    .filter(
+                      feed => !preferences?.feeds?.saved.includes(feed.uri),
+                    )
+                    .map(feed => ({
+                      key: `popularFeed:${feed.uri}`,
+                      type: 'popularFeed',
+                      feedUri: feed.uri,
+                    })),
+                )
+              }
+
+              if (isPopularFeedsFetchingNextPage) {
+                slices.push({
+                  key: 'popularFeedsLoadingMore',
+                  type: 'popularFeedsLoadingMore',
+                })
+              }
             }
           }
         }
       }
-    }
 
-    return slices
-  }, [
-    preferences,
-    isPreferencesLoading,
-    preferencesError,
-    popularFeeds,
-    isPopularFeedsFetching,
-    popularFeedsError,
-    isPopularFeedsFetchingNextPage,
-    searchResults,
-    isSearchPending,
-    searchError,
-    isUserSearching,
-  ])
+      return slices
+    }, [
+      preferences,
+      isPreferencesLoading,
+      preferencesError,
+      popularFeeds,
+      isPopularFeedsFetching,
+      popularFeedsError,
+      isPopularFeedsFetchingNextPage,
+      searchResults,
+      isSearchPending,
+      searchError,
+      isUserSearching,
+    ])
 
-  const renderHeaderBtn = React.useCallback(() => {
-    return (
-      <Link
-        href="/settings/saved-feeds"
-        hitSlop={10}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Edit Saved Feeds`)}
-        accessibilityHint="Opens screen to edit Saved Feeds">
-        <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-      </Link>
-    )
-  }, [pal, _])
+    const renderHeaderBtn = React.useCallback(() => {
+      return (
+        <Link
+          href="/settings/saved-feeds"
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Edit Saved Feeds`)}
+          accessibilityHint="Opens screen to edit Saved Feeds">
+          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+        </Link>
+      )
+    }, [pal, _])
 
-  const renderItem = React.useCallback(
-    ({item}: {item: FlatlistSlice}) => {
-      if (item.type === 'error') {
-        return <ErrorMessage message={item.error} />
-      } else if (
-        item.type === 'popularFeedsLoadingMore' ||
-        item.type === 'savedFeedsLoading'
-      ) {
-        return (
-          <View style={s.p10}>
-            <ActivityIndicator />
-          </View>
-        )
-      } else if (item.type === 'savedFeedsHeader') {
-        if (!isMobile) {
+    const renderItem = React.useCallback(
+      ({item}: {item: FlatlistSlice}) => {
+        if (item.type === 'error') {
+          return <ErrorMessage message={item.error} />
+        } else if (
+          item.type === 'popularFeedsLoadingMore' ||
+          item.type === 'savedFeedsLoading'
+        ) {
+          return (
+            <View style={s.p10}>
+              <ActivityIndicator />
+            </View>
+          )
+        } else if (item.type === 'savedFeedsHeader') {
+          if (!isMobile) {
+            return (
+              <View
+                style={[
+                  pal.view,
+                  styles.header,
+                  pal.border,
+                  {
+                    borderBottomWidth: 1,
+                  },
+                ]}>
+                <Text type="title-lg" style={[pal.text, s.bold]}>
+                  <Trans>My Feeds</Trans>
+                </Text>
+                <Link
+                  href="/settings/saved-feeds"
+                  accessibilityLabel={_(msg`Edit My Feeds`)}
+                  accessibilityHint="">
+                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                </Link>
+              </View>
+            )
+          }
+          return <View />
+        } else if (item.type === 'savedFeedNoResults') {
           return (
             <View
-              style={[
-                pal.view,
-                styles.header,
-                pal.border,
-                {
-                  borderBottomWidth: 1,
-                },
-              ]}>
-              <Text type="title-lg" style={[pal.text, s.bold]}>
-                <Trans>My Feeds</Trans>
+              style={{
+                paddingHorizontal: 16,
+                paddingTop: 10,
+              }}>
+              <Text type="lg" style={pal.textLight}>
+                <Trans>You don't have any saved feeds!</Trans>
               </Text>
-              <Link
-                href="/settings/saved-feeds"
-                accessibilityLabel={_(msg`Edit My Feeds`)}
-                accessibilityHint="">
-                <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-              </Link>
+            </View>
+          )
+        } else if (item.type === 'savedFeed') {
+          return <SavedFeed feedUri={item.feedUri} />
+        } else if (item.type === 'popularFeedsHeader') {
+          return (
+            <>
+              <View
+                style={[
+                  pal.view,
+                  styles.header,
+                  {
+                    marginTop: 16,
+                    paddingLeft: isMobile ? 12 : undefined,
+                    paddingRight: 10,
+                    paddingBottom: isMobile ? 6 : undefined,
+                  },
+                ]}>
+                <Text type="title-lg" style={[pal.text, s.bold]}>
+                  <Trans>Discover new feeds</Trans>
+                </Text>
+
+                {!isMobile && (
+                  <SearchInput
+                    query={query}
+                    onChangeQuery={onChangeQuery}
+                    onPressCancelSearch={onPressCancelSearch}
+                    onSubmitQuery={onSubmitQuery}
+                    style={{flex: 1, maxWidth: 250}}
+                  />
+                )}
+              </View>
+
+              {isMobile && (
+                <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
+                  <SearchInput
+                    query={query}
+                    onChangeQuery={onChangeQuery}
+                    onPressCancelSearch={onPressCancelSearch}
+                    onSubmitQuery={onSubmitQuery}
+                  />
+                </View>
+              )}
+            </>
+          )
+        } else if (item.type === 'popularFeedsLoading') {
+          return <FeedFeedLoadingPlaceholder />
+        } else if (item.type === 'popularFeed') {
+          return (
+            <FeedSourceCard
+              feedUri={item.feedUri}
+              showSaveBtn
+              showDescription
+              showLikes
+            />
+          )
+        } else if (item.type === 'popularFeedsNoResults') {
+          return (
+            <View
+              style={{
+                paddingHorizontal: 16,
+                paddingTop: 10,
+                paddingBottom: '150%',
+              }}>
+              <Text type="lg" style={pal.textLight}>
+                <Trans>No results found for "{query}"</Trans>
+              </Text>
             </View>
           )
         }
-        return <View />
-      } else if (item.type === 'savedFeedNoResults') {
-        return (
-          <View
-            style={{
-              paddingHorizontal: 16,
-              paddingTop: 10,
-            }}>
-            <Text type="lg" style={pal.textLight}>
-              <Trans>You don't have any saved feeds!</Trans>
-            </Text>
-          </View>
-        )
-      } else if (item.type === 'savedFeed') {
-        return <SavedFeed feedUri={item.feedUri} />
-      } else if (item.type === 'popularFeedsHeader') {
-        return (
-          <>
-            <View
-              style={[
-                pal.view,
-                styles.header,
-                {
-                  marginTop: 16,
-                  paddingLeft: isMobile ? 12 : undefined,
-                  paddingRight: 10,
-                  paddingBottom: isMobile ? 6 : undefined,
-                },
-              ]}>
-              <Text type="title-lg" style={[pal.text, s.bold]}>
-                <Trans>Discover new feeds</Trans>
-              </Text>
+        return null
+      },
+      [
+        _,
+        isMobile,
+        pal,
+        query,
+        onChangeQuery,
+        onPressCancelSearch,
+        onSubmitQuery,
+      ],
+    )
 
-              {!isMobile && (
-                <SearchInput
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                  style={{flex: 1, maxWidth: 250}}
-                />
-              )}
-            </View>
-
-            {isMobile && (
-              <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
-                <SearchInput
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                />
-              </View>
-            )}
-          </>
-        )
-      } else if (item.type === 'popularFeedsLoading') {
-        return <FeedFeedLoadingPlaceholder />
-      } else if (item.type === 'popularFeed') {
-        return (
-          <FeedSourceCard
-            feedUri={item.feedUri}
-            showSaveBtn
-            showDescription
-            showLikes
+    return (
+      <View style={[pal.view, styles.container]}>
+        {isMobile && (
+          <ViewHeader
+            title={_(msg`Feeds`)}
+            canGoBack={false}
+            renderButton={renderHeaderBtn}
+            showBorder
           />
-        )
-      } else if (item.type === 'popularFeedsNoResults') {
-        return (
-          <View
-            style={{
-              paddingHorizontal: 16,
-              paddingTop: 10,
-              paddingBottom: '150%',
-            }}>
-            <Text type="lg" style={pal.textLight}>
-              <Trans>No results found for "{query}"</Trans>
-            </Text>
-          </View>
-        )
-      }
-      return null
-    },
-    [
-      _,
-      isMobile,
-      pal,
-      query,
-      onChangeQuery,
-      onPressCancelSearch,
-      onSubmitQuery,
-    ],
-  )
+        )}
 
-  return (
-    <View style={[pal.view, styles.container]}>
-      {isMobile && (
-        <ViewHeader
-          title={_(msg`Feeds`)}
-          canGoBack={false}
-          renderButton={renderHeaderBtn}
-          showBorder
+        {preferences ? <View /> : <ActivityIndicator />}
+
+        <FlatList
+          style={[!isTabletOrDesktop && s.flex1, styles.list]}
+          data={items}
+          keyExtractor={item => item.key}
+          contentContainerStyle={styles.contentContainer}
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl
+              refreshing={isPTR}
+              onRefresh={isUserSearching ? undefined : onPullToRefresh}
+              tintColor={pal.colors.text}
+              titleColor={pal.colors.text}
+            />
+          }
+          initialNumToRender={10}
+          onEndReached={onEndReached}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
         />
-      )}
 
-      {preferences ? <View /> : <ActivityIndicator />}
-
-      <FlatList
-        style={[!isTabletOrDesktop && s.flex1, styles.list]}
-        data={items}
-        keyExtractor={item => item.key}
-        contentContainerStyle={styles.contentContainer}
-        renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            refreshing={isPTR}
-            onRefresh={isUserSearching ? undefined : onPullToRefresh}
-            tintColor={pal.colors.text}
-            titleColor={pal.colors.text}
-          />
-        }
-        initialNumToRender={10}
-        onEndReached={onEndReached}
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight
-      />
-
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
-    </View>
-  )
-})
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      </View>
+    )
+  },
+  {isPublic: true},
+)
 
 function SavedFeed({feedUri}: {feedUri: string}) {
   const pal = usePalette('default')

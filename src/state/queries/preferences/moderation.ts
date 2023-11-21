@@ -34,6 +34,24 @@ export const DEFAULT_LABEL_PREFERENCES: Record<
   impersonation: 'hide',
 }
 
+/**
+ * More strict than our default settings for logged in users.
+ *
+ * TODO(pwi)
+ */
+export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: Record<
+  ConfigurableLabelGroup,
+  LabelPreference
+> = {
+  nsfw: 'hide',
+  nudity: 'hide',
+  suggestive: 'hide',
+  gore: 'hide',
+  hate: 'hide',
+  spam: 'hide',
+  impersonation: 'hide',
+}
+
 export const ILLEGAL_LABEL_GROUP: LabelGroupConfig = {
   id: 'illegal',
   title: 'Illegal Content',

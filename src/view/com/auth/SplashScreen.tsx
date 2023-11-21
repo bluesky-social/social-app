@@ -1,5 +1,12 @@
 import React from 'react'
-import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+  View,
+} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
@@ -9,9 +16,11 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 export const SplashScreen = ({
+  onDismiss,
   onPressSignin,
   onPressCreateAccount,
 }: {
+  onDismiss?: () => void
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
@@ -20,6 +29,27 @@ export const SplashScreen = ({
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
+      {onDismiss && (
+        <Pressable
+          accessibilityRole="button"
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            padding: 20,
+            zIndex: 100,
+          }}
+          onPress={onDismiss}>
+          <FontAwesomeIcon
+            icon="x"
+            size={24}
+            style={{
+              color: String(pal.text.color),
+            }}
+          />
+        </Pressable>
+      )}
+
       <SafeAreaView testID="noSessionView" style={styles.container}>
         <ErrorBoundary>
           <View style={styles.hero}>

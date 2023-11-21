@@ -10,21 +10,24 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>
-export const ProfileFollowersScreen = withAuthRequired(({route}: Props) => {
-  const {name} = route.params
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const {_} = useLingui()
+export const ProfileFollowersScreen = withAuthRequired(
+  ({route}: Props) => {
+    const {name} = route.params
+    const setMinimalShellMode = useSetMinimalShellMode()
+    const {_} = useLingui()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+    useFocusEffect(
+      React.useCallback(() => {
+        setMinimalShellMode(false)
+      }, [setMinimalShellMode]),
+    )
 
-  return (
-    <View>
-      <ViewHeader title={_(msg`Followers`)} />
-      <ProfileFollowersComponent name={name} />
-    </View>
-  )
-})
+    return (
+      <View>
+        <ViewHeader title={_(msg`Followers`)} />
+        <ProfileFollowersComponent name={name} />
+      </View>
+    )
+  },
+  {isPublic: true},
+)
