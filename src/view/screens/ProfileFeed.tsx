@@ -165,7 +165,7 @@ export function ProfileFeedScreenInner({
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const {openModal} = useModalControls()
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
@@ -270,7 +270,7 @@ export function ProfileFeedScreenInner({
 
   const dropdownItems: DropdownItem[] = React.useMemo(() => {
     return [
-      {
+      hasSession && {
         testID: 'feedHeaderDropdownToggleSavedBtn',
         label: isSaved ? _(msg`Remove from my feeds`) : _(msg`Add to my feeds`),
         onPress: isSavePending || isRemovePending ? undefined : onToggleSaved,
@@ -290,7 +290,7 @@ export function ProfileFeedScreenInner({
               web: 'plus',
             },
       },
-      {
+      hasSession && {
         testID: 'feedHeaderDropdownReportBtn',
         label: _(msg`Report feed`),
         onPress: onPressReport,
@@ -314,8 +314,9 @@ export function ProfileFeedScreenInner({
           web: 'share',
         },
       },
-    ] as DropdownItem[]
+    ].filter(Boolean) as DropdownItem[]
   }, [
+    hasSession,
     onToggleSaved,
     onPressReport,
     onPressShare,
@@ -339,7 +340,7 @@ export function ProfileFeedScreenInner({
             : undefined
         }
         avatarType="algo">
-        {feedInfo && (
+        {feedInfo && hasSession && (
           <>
             <Button
               disabled={isSavePending || isRemovePending}
@@ -374,6 +375,7 @@ export function ProfileFeedScreenInner({
     )
   }, [
     _,
+    hasSession,
     pal,
     feedInfo,
     isPinned,
@@ -509,6 +511,7 @@ function AboutSection({
   const {_} = useLingui()
   const scrollHandler = useAnimatedScrollHandler(onScroll)
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
+  const {hasSession} = useSession()
 
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
@@ -574,7 +577,7 @@ function AboutSection({
             testID="toggleLikeBtn"
             accessibilityLabel={_(msg`Like this feed`)}
             accessibilityHint=""
-            disabled={isLikePending || isUnlikePending}
+            disabled={!hasSession || isLikePending || isUnlikePending}
             onPress={onToggleLiked}
             style={{paddingHorizontal: 10}}>
             {isLiked ? (
