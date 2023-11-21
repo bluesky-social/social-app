@@ -11,7 +11,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {DefaultAvatar, UserAvatar} from 'view/com/util/UserAvatar'
 import {Link} from 'view/com/util/Link'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -47,6 +47,8 @@ import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {Button} from '#/view/com/util/forms/Button'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -268,11 +270,12 @@ function ComposeBtn() {
 }
 
 export function DesktopLeftNav() {
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   return (
     <View
@@ -282,8 +285,40 @@ export function DesktopLeftNav() {
         pal.view,
         pal.border,
       ]}>
-      <ProfileCard />
+      {hasSession ? (
+        <ProfileCard />
+      ) : (
+        <>
+          {isDesktop && (
+            <View
+              style={{
+                alignItems: 'flex-start',
+                paddingTop: 6,
+                paddingHorizontal: 12,
+                marginBottom: 24,
+              }}>
+              <DefaultAvatar type="user" size={48} />
+
+              <View style={{paddingTop: 12}}>
+                <Text type="md" style={[pal.text, s.bold]}>
+                  Sign up or log in to join the conversation.
+                </Text>
+              </View>
+
+              <View style={{paddingTop: 12}}>
+                <Button onPress={() => setShowLoggedOut(true)}>
+                  <Text type="md" style={[pal.text, s.bold]}>
+                    Sign up
+                  </Text>
+                </Button>
+              </View>
+            </View>
+          )}
+        </>
+      )}
+
       <BackBtn />
+
       <NavItem
         href="/"
         icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
@@ -332,98 +367,104 @@ export function DesktopLeftNav() {
         }
         label={_(msg`Feeds`)}
       />
-      <NavItem
-        href="/notifications"
-        count={numUnread}
-        icon={
-          <BellIcon
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
+
+      {hasSession && (
+        <>
+          <NavItem
+            href="/notifications"
+            count={numUnread}
+            icon={
+              <BellIcon
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <BellIconSolid
+                strokeWidth={1.5}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Notifications`)}
           />
-        }
-        iconFilled={
-          <BellIconSolid
-            strokeWidth={1.5}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
+          <NavItem
+            href="/lists"
+            icon={
+              <ListIcon
+                style={pal.text}
+                size={isDesktop ? 26 : 30}
+                strokeWidth={2}
+              />
+            }
+            iconFilled={
+              <ListIcon
+                style={pal.text}
+                size={isDesktop ? 26 : 30}
+                strokeWidth={3}
+              />
+            }
+            label={_(msg`Lists`)}
           />
-        }
-        label={_(msg`Notifications`)}
-      />
-      <NavItem
-        href="/lists"
-        icon={
-          <ListIcon
-            style={pal.text}
-            size={isDesktop ? 26 : 30}
-            strokeWidth={2}
+          <NavItem
+            href="/moderation"
+            icon={
+              <HandIcon
+                style={pal.text}
+                size={isDesktop ? 24 : 27}
+                strokeWidth={5.5}
+              />
+            }
+            iconFilled={
+              <FontAwesomeIcon
+                icon="hand"
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 20 : 26}
+              />
+            }
+            label={_(msg`Moderation`)}
           />
-        }
-        iconFilled={
-          <ListIcon
-            style={pal.text}
-            size={isDesktop ? 26 : 30}
-            strokeWidth={3}
+          <NavItem
+            href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            icon={
+              <UserIcon
+                strokeWidth={1.75}
+                size={isDesktop ? 28 : 30}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <UserIconSolid
+                strokeWidth={1.75}
+                size={isDesktop ? 28 : 30}
+                style={pal.text}
+              />
+            }
+            label="Profile"
           />
-        }
-        label={_(msg`Lists`)}
-      />
-      <NavItem
-        href="/moderation"
-        icon={
-          <HandIcon
-            style={pal.text}
-            size={isDesktop ? 24 : 27}
-            strokeWidth={5.5}
+          <NavItem
+            href="/settings"
+            icon={
+              <CogIcon
+                strokeWidth={1.75}
+                size={isDesktop ? 28 : 32}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <CogIconSolid
+                strokeWidth={1.5}
+                size={isDesktop ? 28 : 32}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Settings`)}
           />
-        }
-        iconFilled={
-          <FontAwesomeIcon
-            icon="hand"
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 20 : 26}
-          />
-        }
-        label={_(msg`Moderation`)}
-      />
-      <NavItem
-        href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-        icon={
-          <UserIcon
-            strokeWidth={1.75}
-            size={isDesktop ? 28 : 30}
-            style={pal.text}
-          />
-        }
-        iconFilled={
-          <UserIconSolid
-            strokeWidth={1.75}
-            size={isDesktop ? 28 : 30}
-            style={pal.text}
-          />
-        }
-        label="Profile"
-      />
-      <NavItem
-        href="/settings"
-        icon={
-          <CogIcon
-            strokeWidth={1.75}
-            size={isDesktop ? 28 : 32}
-            style={pal.text}
-          />
-        }
-        iconFilled={
-          <CogIconSolid
-            strokeWidth={1.5}
-            size={isDesktop ? 28 : 32}
-            style={pal.text}
-          />
-        }
-        label={_(msg`Settings`)}
-      />
-      <ComposeBtn />
+        </>
+      )}
+
+      {hasSession && <ComposeBtn />}
     </View>
   )
 }
