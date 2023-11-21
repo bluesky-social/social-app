@@ -136,7 +136,12 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         </LoggedOutLayout>
       ) : undefined}
       {currentForm === Forms.PasswordUpdated ? (
-        <PasswordUpdatedForm onPressNext={gotoForm(Forms.Login)} />
+        <LoggedOutLayout
+          leadin=""
+          title={_(msg`Password updated`)}
+          description={_(msg`You can now sign in with your new password.`)}>
+          <PasswordUpdatedForm onPressNext={gotoForm(Forms.Login)} />
+        </LoggedOutLayout>
       ) : undefined}
     </KeyboardAvoidingView>
   )
