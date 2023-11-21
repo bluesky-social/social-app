@@ -37,7 +37,7 @@ function getFirstSeenTS(profile: ProfileView): number {
 export function useProfileShadow(profile: ProfileView): Shadow<ProfileView> {
   const profileSeenTS = getFirstSeenTS(profile)
   const [state, setState] = useState<CacheEntry>(() => ({
-    ts: getFirstSeenTS(profile),
+    ts: profileSeenTS,
     value: fromProfile(profile),
   }))
 
