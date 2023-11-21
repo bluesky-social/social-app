@@ -30,12 +30,10 @@ import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 
 export function Post({
   post,
-  dataUpdatedAt,
   showReplyLine,
   style,
 }: {
   post: AppBskyFeedDefs.PostView
-  dataUpdatedAt: number
   showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
@@ -48,7 +46,7 @@ export function Post({
         : undefined,
     [post],
   )
-  const postShadowed = usePostShadow(post, dataUpdatedAt)
+  const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
       record

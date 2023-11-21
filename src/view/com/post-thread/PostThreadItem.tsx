@@ -45,7 +45,6 @@ import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 export function PostThreadItem({
   post,
   record,
-  dataUpdatedAt,
   treeView,
   depth,
   isHighlightedPost,
@@ -57,7 +56,6 @@ export function PostThreadItem({
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  dataUpdatedAt: number
   treeView: boolean
   depth: number
   isHighlightedPost?: boolean
@@ -68,7 +66,7 @@ export function PostThreadItem({
   onPostReply: () => void
 }) {
   const moderationOpts = useModerationOpts()
-  const postShadowed = usePostShadow(post, dataUpdatedAt)
+  const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
       new RichTextAPI({

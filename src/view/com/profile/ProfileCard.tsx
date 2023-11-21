@@ -27,7 +27,6 @@ import {useSession} from '#/state/session'
 export function ProfileCard({
   testID,
   profile: profileUnshadowed,
-  dataUpdatedAt,
   noBg,
   noBorder,
   followers,
@@ -36,7 +35,6 @@ export function ProfileCard({
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
-  dataUpdatedAt: number
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
@@ -46,7 +44,7 @@ export function ProfileCard({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const profile = useProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
   if (!moderationOpts) {
     return null
@@ -202,13 +200,11 @@ export function ProfileCardWithFollowBtn({
   noBg,
   noBorder,
   followers,
-  dataUpdatedAt,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
-  dataUpdatedAt: number
 }) {
   const {currentAccount} = useSession()
   const isMe = profile.did === currentAccount?.did
@@ -224,7 +220,6 @@ export function ProfileCardWithFollowBtn({
           ? undefined
           : profileShadow => <FollowButton profile={profileShadow} />
       }
-      dataUpdatedAt={dataUpdatedAt}
     />
   )
 }

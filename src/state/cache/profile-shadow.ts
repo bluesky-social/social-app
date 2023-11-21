@@ -1,7 +1,8 @@
-import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
+import {useEffect, useState, useMemo, useCallback} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
-import {Shadow} from './types'
+import {batchedUpdates} from '#/lib/batchedUpdates'
+import {Shadow, castAsShadow} from './types'
 export type {Shadow} from './types'
 
 const emitter = new EventEmitter()
@@ -22,15 +23,34 @@ type ProfileView =
   | AppBskyActorDefs.ProfileViewBasic
   | AppBskyActorDefs.ProfileViewDetailed
 
-export function useProfileShadow(
-  profile: ProfileView,
-  ifAfterTS: number,
-): Shadow<ProfileView> {
-  const [state, setState] = useState<CacheEntry>({
-    ts: Date.now(),
+const firstSeenMap = new WeakMap<ProfileView, number>()
+function getFirstSeenTS(profile: ProfileView): number {
+  let timeStamp = firstSeenMap.get(profile)
+  if (timeStamp !== undefined) {
+    return timeStamp
+  }
+  timeStamp = Date.now()
+  firstSeenMap.set(profile, timeStamp)
+  return timeStamp
+}
+
+export function useProfileShadow(profile: ProfileView): Shadow<ProfileView> {
+  const profileSeenTS = getFirstSeenTS(profile)
+  const [state, setState] = useState<CacheEntry>(() => ({
+    ts: profileSeenTS,
     value: fromProfile(profile),
-  })
-  const firstRun = useRef(true)
+  }))
+
+  const [prevProfile, setPrevProfile] = useState(profile)
+  if (profile !== prevProfile) {
+    // if we got a new prop, assume it's fresher
+    // than whatever shadow state we accumulated
+    setPrevProfile(profile)
+    setState({
+      ts: profileSeenTS,
+      value: fromProfile(profile),
+    })
+  }
 
   const onUpdate = useCallback(
     (value: Partial<ProfileShadow>) => {
@@ -47,33 +67,20 @@ export function useProfileShadow(
     }
   }, [profile.did, onUpdate])
 
-  // react to profile updates
-  useEffect(() => {
-    // dont fire on first run to avoid needless re-renders
-    if (!firstRun.current) {
-      setState({ts: Date.now(), value: fromProfile(profile)})
-    }
-    firstRun.current = false
-  }, [profile])
-
   return useMemo(() => {
-    return state.ts > ifAfterTS
+    return state.ts > profileSeenTS
       ? mergeShadow(profile, state.value)
-      : {...profile, isShadowed: true}
-  }, [profile, state, ifAfterTS])
+      : castAsShadow(profile)
+  }, [profile, state, profileSeenTS])
 }
 
 export function updateProfileShadow(
   uri: string,
   value: Partial<ProfileShadow>,
 ) {
-  emitter.emit(uri, value)
-}
-
-export function isProfileShadowed<T extends ProfileView>(
-  v: T | Shadow<T>,
-): v is Shadow<T> {
-  return 'isShadowed' in v && !!v.isShadowed
+  batchedUpdates(() => {
+    emitter.emit(uri, value)
+  })
 }
 
 function fromProfile(profile: ProfileView): ProfileShadow {
@@ -88,7 +95,7 @@ function mergeShadow(
   profile: ProfileView,
   shadow: ProfileShadow,
 ): Shadow<ProfileView> {
-  return {
+  return castAsShadow({
     ...profile,
     viewer: {
       ...(profile.viewer || {}),
@@ -96,6 +103,5 @@ function mergeShadow(
       muted: shadow.muted,
       blocking: shadow.blockingUri,
     },
-    isShadowed: true,
-  }
+  })
 }

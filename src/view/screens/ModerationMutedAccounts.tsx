@@ -40,7 +40,6 @@ export const ModerationMutedAccounts = withAuthRequired(
     const [isPTRing, setIsPTRing] = React.useState(false)
     const {
       data,
-      dataUpdatedAt,
       isFetching,
       isError,
       error,
@@ -95,7 +94,6 @@ export const ModerationMutedAccounts = withAuthRequired(
         testID={`mutedAccount-${index}`}
         key={item.did}
         profile={item}
-        dataUpdatedAt={dataUpdatedAt}
       />
     )
     return (

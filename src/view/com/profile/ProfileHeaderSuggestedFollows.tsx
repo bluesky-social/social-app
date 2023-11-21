@@ -65,7 +65,7 @@ export function ProfileHeaderSuggestedFollows({
     }
   }, [active, animatedHeight, track])
 
-  const {isLoading, data, dataUpdatedAt} = useSuggestedFollowsByActorQuery({
+  const {isLoading, data} = useSuggestedFollowsByActorQuery({
     did: actorDid,
   })
 
@@ -127,11 +127,7 @@ export function ProfileHeaderSuggestedFollows({
               </>
             ) : data ? (
               data.suggestions.map(profile => (
-                <SuggestedFollow
-                  key={profile.did}
-                  profile={profile}
-                  dataUpdatedAt={dataUpdatedAt}
-                />
+                <SuggestedFollow key={profile.did} profile={profile} />
               ))
             ) : (
               <View />
@@ -196,15 +192,13 @@ function SuggestedFollowSkeleton() {
 
 function SuggestedFollow({
   profile: profileUnshadowed,
-  dataUpdatedAt,
 }: {
   profile: AppBskyActorDefs.ProfileView
-  dataUpdatedAt: number
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
-  const profile = useProfileShadow(profileUnshadowed, dataUpdatedAt)
+  const profile = useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
   const onPressFollow = React.useCallback(async () => {

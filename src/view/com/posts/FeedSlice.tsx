@@ -11,12 +11,10 @@ import {makeProfileLink} from 'lib/routes/links'
 
 let FeedSlice = ({
   slice,
-  dataUpdatedAt,
   ignoreFilterFor,
   moderationOpts,
 }: {
   slice: FeedPostSlice
-  dataUpdatedAt: number
   ignoreFilterFor?: string
   moderationOpts: ModerationOpts
 }): React.ReactNode => {
@@ -44,7 +42,6 @@ let FeedSlice = ({
           record={slice.items[0].record}
           reason={slice.items[0].reason}
           moderation={moderations[0]}
-          dataUpdatedAt={dataUpdatedAt}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
         />
@@ -54,7 +51,6 @@ let FeedSlice = ({
           record={slice.items[1].record}
           reason={slice.items[1].reason}
           moderation={moderations[1]}
-          dataUpdatedAt={dataUpdatedAt}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
         />
@@ -65,7 +61,6 @@ let FeedSlice = ({
           record={slice.items[last].record}
           reason={slice.items[last].reason}
           moderation={moderations[last]}
-          dataUpdatedAt={dataUpdatedAt}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
           isThreadLastChild
@@ -83,7 +78,6 @@ let FeedSlice = ({
           record={slice.items[i].record}
           reason={slice.items[i].reason}
           moderation={moderations[i]}
-          dataUpdatedAt={dataUpdatedAt}
           isThreadParent={isThreadParentAt(slice.items, i)}
           isThreadChild={isThreadChildAt(slice.items, i)}
           isThreadLastChild={

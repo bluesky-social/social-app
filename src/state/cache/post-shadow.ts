@@ -1,7 +1,8 @@
-import {useEffect, useState, useMemo, useCallback, useRef} from 'react'
+import {useEffect, useState, useMemo, useCallback} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {Shadow} from './types'
+import {batchedUpdates} from '#/lib/batchedUpdates'
+import {Shadow, castAsShadow} from './types'
 export type {Shadow} from './types'
 
 const emitter = new EventEmitter()
@@ -21,15 +22,36 @@ interface CacheEntry {
   value: PostShadow
 }
 
+const firstSeenMap = new WeakMap<AppBskyFeedDefs.PostView, number>()
+function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
+  let timeStamp = firstSeenMap.get(post)
+  if (timeStamp !== undefined) {
+    return timeStamp
+  }
+  timeStamp = Date.now()
+  firstSeenMap.set(post, timeStamp)
+  return timeStamp
+}
+
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
-  ifAfterTS: number,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const [state, setState] = useState<CacheEntry>({
-    ts: Date.now(),
+  const postSeenTS = getFirstSeenTS(post)
+  const [state, setState] = useState<CacheEntry>(() => ({
+    ts: postSeenTS,
     value: fromPost(post),
-  })
-  const firstRun = useRef(true)
+  }))
+
+  const [prevPost, setPrevPost] = useState(post)
+  if (post !== prevPost) {
+    // if we got a new prop, assume it's fresher
+    // than whatever shadow state we accumulated
+    setPrevPost(post)
+    setState({
+      ts: postSeenTS,
+      value: fromPost(post),
+    })
+  }
 
   const onUpdate = useCallback(
     (value: Partial<PostShadow>) => {
@@ -46,30 +68,17 @@ export function usePostShadow(
     }
   }, [post.uri, onUpdate])
 
-  // react to post updates
-  useEffect(() => {
-    // dont fire on first run to avoid needless re-renders
-    if (!firstRun.current) {
-      setState({ts: Date.now(), value: fromPost(post)})
-    }
-    firstRun.current = false
-  }, [post])
-
   return useMemo(() => {
-    return state.ts > ifAfterTS
+    return state.ts > postSeenTS
       ? mergeShadow(post, state.value)
-      : {...post, isShadowed: true}
-  }, [post, state, ifAfterTS])
+      : castAsShadow(post)
+  }, [post, state, postSeenTS])
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  emitter.emit(uri, value)
-}
-
-export function isPostShadowed(
-  v: AppBskyFeedDefs.PostView | Shadow<AppBskyFeedDefs.PostView>,
-): v is Shadow<AppBskyFeedDefs.PostView> {
-  return 'isShadowed' in v && !!v.isShadowed
+  batchedUpdates(() => {
+    emitter.emit(uri, value)
+  })
 }
 
 function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
@@ -89,7 +98,7 @@ function mergeShadow(
   if (shadow.isDeleted) {
     return POST_TOMBSTONE
   }
-  return {
+  return castAsShadow({
     ...post,
     likeCount: shadow.likeCount,
     repostCount: shadow.repostCount,
@@ -98,6 +107,5 @@ function mergeShadow(
       like: shadow.likeUri,
       repost: shadow.repostUri,
     },
-    isShadowed: true,
-  }
+  })
 }

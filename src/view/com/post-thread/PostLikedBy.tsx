@@ -20,7 +20,6 @@ export function PostLikedBy({uri}: {uri: string}) {
   } = useResolveUriQuery(uri)
   const {
     data,
-    dataUpdatedAt,
     isFetching,
     isFetched,
     isFetchingNextPage,
@@ -55,18 +54,11 @@ export function PostLikedBy({uri}: {uri: string}) {
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(
-    ({item}: {item: GetLikes.Like}) => {
-      return (
-        <ProfileCardWithFollowBtn
-          key={item.actor.did}
-          profile={item.actor}
-          dataUpdatedAt={dataUpdatedAt}
-        />
-      )
-    },
-    [dataUpdatedAt],
-  )
+  const renderItem = useCallback(({item}: {item: GetLikes.Like}) => {
+    return (
+      <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
+    )
+  }, [])
 
   if (isFetchingResolvedUri || !isFetched) {
     return (

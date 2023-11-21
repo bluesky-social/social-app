@@ -38,7 +38,6 @@ export function Feed({
   const {markAllRead} = useUnreadNotificationsApi()
   const {
     data,
-    dataUpdatedAt,
     isLoading,
     isFetching,
     isFetched,
@@ -132,15 +131,9 @@ export function Feed({
       } else if (item === LOADING_ITEM) {
         return <NotificationFeedLoadingPlaceholder />
       }
-      return (
-        <FeedItem
-          item={item}
-          dataUpdatedAt={dataUpdatedAt}
-          moderationOpts={moderationOpts!}
-        />
-      )
+      return <FeedItem item={item} moderationOpts={moderationOpts!} />
     },
-    [onPressRetryLoadMore, dataUpdatedAt, moderationOpts],
+    [onPressRetryLoadMore, moderationOpts],
   )
 
   const showHeaderSpinner = !isPTRing && isFetching && !isLoading
