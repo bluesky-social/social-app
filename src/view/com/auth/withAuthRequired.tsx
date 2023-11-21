@@ -13,18 +13,33 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useOnboardingState} from '#/state/shell'
 import {useSession} from '#/state/session'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
+import {IS_PROD} from '#/env'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
+  options: {
+    isPublic?: boolean // TODO(pwi) need to enable in TF somehow
+  } = {},
 ): React.FC<P> =>
   function AuthRequired(props: P) {
     const {isInitialLoad, hasSession} = useSession()
     const onboardingState = useOnboardingState()
+    const {showLoggedOut} = useLoggedOutView()
+    const {setShowLoggedOut} = useLoggedOutViewControls()
+
     if (isInitialLoad) {
       return <Loading />
     }
     if (!hasSession) {
-      return <LoggedOut />
+      if (showLoggedOut) {
+        return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+      } else if (!options?.isPublic || IS_PROD) {
+        return <LoggedOut />
+      }
     }
     if (onboardingState.isActive) {
       return <Onboarding />

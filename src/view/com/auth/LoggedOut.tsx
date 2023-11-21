@@ -15,7 +15,7 @@ enum ScreenState {
   S_CreateAccount,
 }
 
-export function LoggedOut() {
+export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
@@ -31,6 +31,7 @@ export function LoggedOut() {
   if (screenState === ScreenState.S_LoginOrCreateAccount) {
     return (
       <SplashScreen
+        onDismiss={onDismiss}
         onPressSignin={() => setScreenState(ScreenState.S_Login)}
         onPressCreateAccount={() => setScreenState(ScreenState.S_CreateAccount)}
       />

@@ -43,7 +43,10 @@ export type UsePreferencesQueryResponse = Omit<
   }
 }
 
-export type ThreadViewPreferences = Omit<BskyThreadViewPreference, 'sort'> & {
+export type ThreadViewPreferences = Pick<
+  BskyThreadViewPreference,
+  'prioritizeFollowedUsers'
+> & {
   sort: 'oldest' | 'newest' | 'most-likes' | 'random' | string
   lab_treeViewEnabled?: boolean
 }
