@@ -17,11 +17,12 @@ import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
+import {IS_PROD} from '#/env'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
   options: {
-    isPublic?: boolean // TODO refactor — needs to be a feature flag of some kind
+    isPublic?: boolean // TODO(pwi) need to enable in TF somehow
   } = {},
 ): React.FC<P> =>
   function AuthRequired(props: P) {
@@ -33,12 +34,12 @@ export const withAuthRequired = <P extends object>(
     if (isInitialLoad) {
       return <Loading />
     }
-    if ((!hasSession && showLoggedOut) || (!hasSession && !options?.isPublic)) {
-      const isDismissable = !hasSession && showLoggedOut
-      const onDismiss = isDismissable
-        ? () => setShowLoggedOut(false)
-        : undefined
-      return <LoggedOut onDismiss={onDismiss} />
+    if (!hasSession) {
+      if (showLoggedOut) {
+        return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+      } else if (!options?.isPublic || IS_PROD) {
+        return <LoggedOut />
+      }
     }
     if (onboardingState.isActive) {
       return <Onboarding />
