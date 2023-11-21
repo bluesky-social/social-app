@@ -438,7 +438,7 @@ export const FeedsScreen = withAuthRequired(
           return (
             <FeedSourceCard
               feedUri={item.feedUri}
-              showSaveBtn
+              showSaveBtn={hasSession}
               showDescription
               showLikes
             />
