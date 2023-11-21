@@ -21,8 +21,8 @@ import {
   useSetDrawerOpen,
   useOnboardingState,
 } from '#/state/shell'
-import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useLoggedOutView} from '#/state/shell/logged-out'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -30,8 +30,8 @@ function ShellInner() {
   const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
-  const {hasSession} = useSession()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const {showLoggedOut} = useLoggedOutView()
 
   useAuxClick()
 
@@ -42,7 +42,7 @@ function ShellInner() {
   }, [navigator, closeAllActiveElements])
 
   const showBottomBar = isMobile && !onboardingState.isActive
-  const showSideNavs = !isMobile && hasSession && !onboardingState.isActive
+  const showSideNavs = !isMobile && !onboardingState.isActive && !showLoggedOut
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
@@ -50,16 +50,22 @@ function ShellInner() {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
+
       {showSideNavs && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav />
         </>
       )}
+
       <Composer winHeight={0} />
+
       {showBottomBar && <BottomBarWeb />}
+
       <ModalsContainer />
+
       <Lightbox />
+
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

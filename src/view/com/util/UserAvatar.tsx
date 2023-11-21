@@ -43,7 +43,13 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
-function DefaultAvatar({type, size}: {type: UserAvatarType; size: number}) {
+export function DefaultAvatar({
+  type,
+  size,
+}: {
+  type: UserAvatarType
+  size: number
+}) {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (

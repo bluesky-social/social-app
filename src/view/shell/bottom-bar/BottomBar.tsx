@@ -37,7 +37,7 @@ type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {openModal} = useModalControls()
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -169,72 +169,77 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         accessibilityLabel={_(msg`Feeds`)}
         accessibilityHint=""
       />
-      <Btn
-        testID="bottomBarNotificationsBtn"
-        icon={
-          isAtNotifications ? (
-            <BellIconSolid
-              size={24}
-              strokeWidth={1.9}
-              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-            />
-          ) : (
-            <BellIcon
-              size={24}
-              strokeWidth={1.9}
-              style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-            />
-          )
-        }
-        onPress={onPressNotifications}
-        notificationCount={numUnreadNotifications}
-        accessible={true}
-        accessibilityRole="tab"
-        accessibilityLabel={_(msg`Notifications`)}
-        accessibilityHint={
-          numUnreadNotifications === ''
-            ? ''
-            : `${numUnreadNotifications} unread`
-        }
-      />
-      <Btn
-        testID="bottomBarProfileBtn"
-        icon={
-          <View style={styles.ctrlIconSizingWrapper}>
-            {isAtMyProfile ? (
-              <View
-                style={[
-                  styles.ctrlIcon,
-                  pal.text,
-                  styles.profileIcon,
-                  styles.onProfile,
-                  {borderColor: pal.text.color},
-                ]}>
-                <UserAvatar
-                  avatar={profile?.avatar}
-                  size={27}
-                  // See https://github.com/bluesky-social/social-app/pull/1801:
-                  usePlainRNImage={true}
+
+      {hasSession && (
+        <>
+          <Btn
+            testID="bottomBarNotificationsBtn"
+            icon={
+              isAtNotifications ? (
+                <BellIconSolid
+                  size={24}
+                  strokeWidth={1.9}
+                  style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                 />
-              </View>
-            ) : (
-              <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                <UserAvatar
-                  avatar={profile?.avatar}
-                  size={28}
-                  // See https://github.com/bluesky-social/social-app/pull/1801:
-                  usePlainRNImage={true}
+              ) : (
+                <BellIcon
+                  size={24}
+                  strokeWidth={1.9}
+                  style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                 />
+              )
+            }
+            onPress={onPressNotifications}
+            notificationCount={numUnreadNotifications}
+            accessible={true}
+            accessibilityRole="tab"
+            accessibilityLabel={_(msg`Notifications`)}
+            accessibilityHint={
+              numUnreadNotifications === ''
+                ? ''
+                : `${numUnreadNotifications} unread`
+            }
+          />
+          <Btn
+            testID="bottomBarProfileBtn"
+            icon={
+              <View style={styles.ctrlIconSizingWrapper}>
+                {isAtMyProfile ? (
+                  <View
+                    style={[
+                      styles.ctrlIcon,
+                      pal.text,
+                      styles.profileIcon,
+                      styles.onProfile,
+                      {borderColor: pal.text.color},
+                    ]}>
+                    <UserAvatar
+                      avatar={profile?.avatar}
+                      size={27}
+                      // See https://github.com/bluesky-social/social-app/pull/1801:
+                      usePlainRNImage={true}
+                    />
+                  </View>
+                ) : (
+                  <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                    <UserAvatar
+                      avatar={profile?.avatar}
+                      size={28}
+                      // See https://github.com/bluesky-social/social-app/pull/1801:
+                      usePlainRNImage={true}
+                    />
+                  </View>
+                )}
               </View>
-            )}
-          </View>
-        }
-        onPress={onPressProfile}
-        onLongPress={onLongPressProfile}
-        accessibilityRole="tab"
-        accessibilityLabel={_(msg`Profile`)}
-        accessibilityHint=""
-      />
+            }
+            onPress={onPressProfile}
+            onLongPress={onLongPressProfile}
+            accessibilityRole="tab"
+            accessibilityLabel={_(msg`Profile`)}
+            accessibilityHint=""
+          />
+        </>
+      )}
     </Animated.View>
   )
 }

@@ -52,6 +52,7 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {NavSignupCard} from '#/view/shell/NavSignupCard'
 
 export function DrawerProfileCard({
   account,
@@ -112,7 +113,7 @@ export function DrawerContent() {
   const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const numUnreadNotifications = useUnreadNotifications()
 
   // events
@@ -218,18 +219,20 @@ export function DrawerContent() {
       ]}>
       <SafeAreaView style={s.flex1}>
         <ScrollView style={styles.main}>
-          <View style={{}}>
-            {currentAccount && (
+          {hasSession && currentAccount ? (
+            <View style={{}}>
               <DrawerProfileCard
                 account={currentAccount}
                 onPressProfile={onPressProfile}
               />
-            )}
-          </View>
+            </View>
+          ) : (
+            <NavSignupCard />
+          )}
 
-          <InviteCodes style={{paddingLeft: 0}} />
+          {hasSession && <InviteCodes style={{paddingLeft: 0}} />}
 
-          <View style={{height: 10}} />
+          {hasSession && <View style={{height: 10}} />}
 
           <MenuItem
             icon={
@@ -275,33 +278,37 @@ export function DrawerContent() {
             bold={isAtHome}
             onPress={onPressHome}
           />
-          <MenuItem
-            icon={
-              isAtNotifications ? (
-                <BellIconSolid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
-                  strokeWidth={1.7}
-                />
-              ) : (
-                <BellIcon
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
-                  strokeWidth={1.7}
-                />
-              )
-            }
-            label={_(msg`Notifications`)}
-            accessibilityLabel={_(msg`Notifications`)}
-            accessibilityHint={
-              numUnreadNotifications === ''
-                ? ''
-                : `${numUnreadNotifications} unread`
-            }
-            count={numUnreadNotifications}
-            bold={isAtNotifications}
-            onPress={onPressNotifications}
-          />
+
+          {hasSession && (
+            <MenuItem
+              icon={
+                isAtNotifications ? (
+                  <BellIconSolid
+                    style={pal.text as StyleProp<ViewStyle>}
+                    size="24"
+                    strokeWidth={1.7}
+                  />
+                ) : (
+                  <BellIcon
+                    style={pal.text as StyleProp<ViewStyle>}
+                    size="24"
+                    strokeWidth={1.7}
+                  />
+                )
+              }
+              label={_(msg`Notifications`)}
+              accessibilityLabel={_(msg`Notifications`)}
+              accessibilityHint={
+                numUnreadNotifications === ''
+                  ? ''
+                  : `${numUnreadNotifications} unread`
+              }
+              count={numUnreadNotifications}
+              bold={isAtNotifications}
+              onPress={onPressNotifications}
+            />
+          )}
+
           <MenuItem
             icon={
               isAtFeeds ? (
@@ -324,58 +331,64 @@ export function DrawerContent() {
             bold={isAtFeeds}
             onPress={onPressMyFeeds}
           />
-          <MenuItem
-            icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
-            label={_(msg`Lists`)}
-            accessibilityLabel={_(msg`Lists`)}
-            accessibilityHint=""
-            onPress={onPressLists}
-          />
-          <MenuItem
-            icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
-            label={_(msg`Moderation`)}
-            accessibilityLabel={_(msg`Moderation`)}
-            accessibilityHint=""
-            onPress={onPressModeration}
-          />
-          <MenuItem
-            icon={
-              isAtMyProfile ? (
-                <UserIconSolid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="26"
-                  strokeWidth={1.5}
-                />
-              ) : (
-                <UserIcon
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="26"
-                  strokeWidth={1.5}
-                />
-              )
-            }
-            label={_(msg`Profile`)}
-            accessibilityLabel={_(msg`Profile`)}
-            accessibilityHint=""
-            onPress={onPressProfile}
-          />
-          <MenuItem
-            icon={
-              <CogIcon
-                style={pal.text as StyleProp<ViewStyle>}
-                size="26"
-                strokeWidth={1.75}
+
+          {hasSession && (
+            <>
+              <MenuItem
+                icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
+                label={_(msg`Lists`)}
+                accessibilityLabel={_(msg`Lists`)}
+                accessibilityHint=""
+                onPress={onPressLists}
               />
-            }
-            label={_(msg`Settings`)}
-            accessibilityLabel={_(msg`Settings`)}
-            accessibilityHint=""
-            onPress={onPressSettings}
-          />
+              <MenuItem
+                icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+                label={_(msg`Moderation`)}
+                accessibilityLabel={_(msg`Moderation`)}
+                accessibilityHint=""
+                onPress={onPressModeration}
+              />
+              <MenuItem
+                icon={
+                  isAtMyProfile ? (
+                    <UserIconSolid
+                      style={pal.text as StyleProp<ViewStyle>}
+                      size="26"
+                      strokeWidth={1.5}
+                    />
+                  ) : (
+                    <UserIcon
+                      style={pal.text as StyleProp<ViewStyle>}
+                      size="26"
+                      strokeWidth={1.5}
+                    />
+                  )
+                }
+                label={_(msg`Profile`)}
+                accessibilityLabel={_(msg`Profile`)}
+                accessibilityHint=""
+                onPress={onPressProfile}
+              />
+              <MenuItem
+                icon={
+                  <CogIcon
+                    style={pal.text as StyleProp<ViewStyle>}
+                    size="26"
+                    strokeWidth={1.75}
+                  />
+                }
+                label={_(msg`Settings`)}
+                accessibilityLabel={_(msg`Settings`)}
+                accessibilityHint=""
+                onPress={onPressSettings}
+              />
+            </>
+          )}
 
           <View style={styles.smallSpacer} />
           <View style={styles.smallSpacer} />
         </ScrollView>
+
         <View style={styles.footer}>
           <TouchableOpacity
             accessibilityRole="link"

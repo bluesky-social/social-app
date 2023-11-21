@@ -30,9 +30,21 @@ export function DesktopRightNav() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      {hasSession && <DesktopSearch />}
-      {hasSession && <DesktopFeeds />}
-      <View style={styles.message}>
+      <DesktopSearch />
+
+      {hasSession && (
+        <View style={{paddingTop: 18, marginBottom: 18}}>
+          <DesktopFeeds />
+        </View>
+      )}
+
+      <View
+        style={[
+          styles.message,
+          {
+            paddingTop: hasSession ? 0 : 18,
+          },
+        ]}>
         {isSandbox ? (
           <View style={[palError.view, styles.messageLine, s.p10]}>
             <Text type="md" style={[palError.text, s.bold]}>
@@ -41,18 +53,22 @@ export function DesktopRightNav() {
           </View>
         ) : undefined}
         <View style={[s.flexRow]}>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href={FEEDBACK_FORM_URL({
-              email: currentAccount!.email,
-              handle: currentAccount!.handle,
-            })}
-            text={_(msg`Feedback`)}
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
+          {hasSession && (
+            <>
+              <TextLink
+                type="md"
+                style={pal.link}
+                href={FEEDBACK_FORM_URL({
+                  email: currentAccount!.email,
+                  handle: currentAccount!.handle,
+                })}
+                text={_(msg`Feedback`)}
+              />
+              <Text type="md" style={pal.textLight}>
+                &nbsp;&middot;&nbsp;
+              </Text>
+            </>
+          )}
           <TextLink
             type="md"
             style={pal.link}
@@ -79,7 +95,8 @@ export function DesktopRightNav() {
           />
         </View>
       </View>
-      <InviteCodes />
+
+      {hasSession && <InviteCodes />}
     </View>
   )
 }
