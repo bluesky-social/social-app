@@ -33,7 +33,7 @@ export function DesktopRightNav() {
       <DesktopSearch />
 
       {hasSession && (
-        <View style={{paddingTop: 18}}>
+        <View style={{paddingTop: 18, marginBottom: 18}}>
           <DesktopFeeds />
         </View>
       )}
