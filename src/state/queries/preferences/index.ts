@@ -15,7 +15,7 @@ import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_THREAD_VIEW_PREFS,
-  DEFAULT_PREFERENCES,
+  DEFAULT_LOGGED_OUT_PREFERENCES,
 } from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {STALE} from '#/state/queries'
@@ -34,7 +34,7 @@ export function usePreferencesQuery() {
       const agent = getAgent()
 
       if (agent.session?.did === undefined) {
-        return DEFAULT_PREFERENCES
+        return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
         const preferences: UsePreferencesQueryResponse = {

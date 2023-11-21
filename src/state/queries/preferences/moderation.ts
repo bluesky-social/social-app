@@ -26,6 +26,24 @@ export const DEFAULT_LABEL_PREFERENCES: Record<
   LabelPreference
 > = {
   nsfw: 'hide',
+  nudity: 'warn',
+  suggestive: 'warn',
+  gore: 'warn',
+  hate: 'hide',
+  spam: 'hide',
+  impersonation: 'hide',
+}
+
+/**
+ * More strict than our default settings for logged in users.
+ *
+ * TODO(pwi)
+ */
+export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: Record<
+  ConfigurableLabelGroup,
+  LabelPreference
+> = {
+  nsfw: 'hide',
   nudity: 'hide',
   suggestive: 'hide',
   gore: 'hide',
