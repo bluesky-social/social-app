@@ -168,8 +168,15 @@ export function getYoutubeVideoId(link: string): string | undefined {
   return videoId
 }
 
+/**
+ * Checks if the label in the post text matches the host of the link facet.
+ *
+ * Hosts are case-insensitive, so should be lowercase for comparison.
+ * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
+ */
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
+
   let urip
   try {
     urip = new URL(uri)
@@ -177,7 +184,9 @@ export function linkRequiresWarning(uri: string, label: string) {
     return true
   }
 
-  if (urip.hostname === 'bsky.app') {
+  const host = urip.hostname.toLowerCase()
+
+  if (host === 'bsky.app') {
     // if this is a link to internal content,
     // warn if it represents itself as a URL to another app
     if (
@@ -194,20 +203,26 @@ export function linkRequiresWarning(uri: string, label: string) {
     if (!labelDomain) {
       return true
     }
-    return labelDomain !== urip.hostname
+    return labelDomain !== host
   }
 }
 
-function labelToDomain(label: string): string | undefined {
+/**
+ * Returns a lowercase domain hostname if the label is a valid URL.
+ *
+ * Hosts are case-insensitive, so should be lowercase for comparison.
+ * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
+ */
+export function labelToDomain(label: string): string | undefined {
   // any spaces just immediately consider the label a non-url
   if (/\s/.test(label)) {
     return undefined
   }
   try {
-    return new URL(label).hostname
+    return new URL(label).hostname.toLowerCase()
   } catch {}
   try {
-    return new URL('https://' + label).hostname
+    return new URL('https://' + label).hostname.toLowerCase()
   } catch {}
   return undefined
 }
