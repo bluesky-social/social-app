@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useQueryClient} from '@tanstack/react-query'
 import {FlatList} from '../util/Views'
 import {ListCard} from './ListCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -15,7 +16,7 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Text} from '../util/text/Text'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useProfileListsQuery} from '#/state/queries/profile-lists'
+import {useProfileListsQuery, RQKEY} from '#/state/queries/profile-lists'
 import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
@@ -34,7 +35,7 @@ interface SectionRef {
 
 interface ProfileListsProps {
   did: string
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   headerOffset: number
@@ -102,9 +103,13 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     // events
     // =
 
+    const queryClient = useQueryClient()
+
     const onScrollToTop = React.useCallback(() => {
-      console.log('scroll lists to top') // TODO
-    }, [])
+      scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+      queryClient.invalidateQueries({queryKey: RQKEY(did)})
+    }, [scrollElRef, queryClient, headerOffset, did])
+
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))

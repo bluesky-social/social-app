@@ -8,13 +8,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useQueryClient} from '@tanstack/react-query'
 import {FlatList} from '../util/Views'
 import {FeedSourceCardLoaded} from './FeedSourceCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
+import {useProfileFeedgensQuery, RQKEY} from '#/state/queries/profile-feedgens'
 import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
@@ -35,7 +36,7 @@ interface SectionRef {
 
 interface ProfileFeedgensProps {
   did: string
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   headerOffset: number
@@ -100,9 +101,13 @@ export const ProfileFeedgens = React.forwardRef<
   // events
   // =
 
+  const queryClient = useQueryClient()
+
   const onScrollToTop = React.useCallback(() => {
-    console.log('scroll feeds to top') // TODO
-  }, [])
+    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+    queryClient.invalidateQueries({queryKey: RQKEY(did)})
+  }, [scrollElRef, queryClient, headerOffset, did])
+
   React.useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
