@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
+import {useNavigationState} from '@react-navigation/native'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
@@ -22,17 +23,35 @@ import {
   useOnboardingState,
 } from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useLoggedOutView} from '#/state/shell/logged-out'
-import {Outlet} from '#/view/com/util/Portal'
+import {ROUTES_CONFIG, RouteName} from '#/routes'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
+import {IS_PROD} from '#/env'
+import {LoggedOut} from '#/view/com/auth/LoggedOut'
+import {useSession} from '#/state/session'
 
 function ShellInner() {
+  const {hasSession} = useSession()
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
   const onboardingState = useOnboardingState()
   const {isDesktop, isMobile} = useWebMediaQueries()
-  const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {showLoggedOut} = useLoggedOutView()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+
+  const navigator = useNavigation<NavigationProp>()
+  const navigationState = useNavigationState(state => state)
+
+  const {routes} = navigationState
+  const currentRouteName = routes.slice(-1)[0]?.name
+  const currentRouteConfig = ROUTES_CONFIG[currentRouteName as RouteName]
+  const currentRouteIsPublic = currentRouteConfig?.isPublic
+
+  const showBottomBar = isMobile && !onboardingState.isActive
+  const showSideNavs = !isMobile && !onboardingState.isActive
 
   useAuxClick()
 
@@ -42,8 +61,6 @@ function ShellInner() {
     })
   }, [navigator, closeAllActiveElements])
 
-  const showBottomBar = isMobile && !onboardingState.isActive
-  const showSideNavs = !isMobile && !onboardingState.isActive && !showLoggedOut
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
@@ -79,7 +96,15 @@ function ShellInner() {
         </TouchableOpacity>
       )}
 
-      <Outlet />
+      {!hasSession && (
+        <>
+          {!currentRouteIsPublic || IS_PROD ? (
+            <LoggedOut />
+          ) : showLoggedOut ? (
+            <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+          ) : null}
+        </>
+      )}
     </View>
   )
 }

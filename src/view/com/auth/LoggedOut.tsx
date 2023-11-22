@@ -1,6 +1,7 @@
 import React from 'react'
-import {Pressable, SafeAreaView, StyleSheet} from 'react-native'
+import {View, Pressable, StyleSheet} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Login} from 'view/com/auth/login/Login'
 import {CreateAccount} from 'view/com/auth/create/CreateAccount'
@@ -24,6 +25,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const [screenState, setScreenState] = React.useState<ScreenState>(
     ScreenState.S_LoginOrCreateAccount,
   )
+  const insets = useSafeAreaInsets()
 
   React.useEffect(() => {
     screen('Login')
@@ -31,25 +33,36 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   }, [screen, setMinimalShellMode])
 
   return (
-    <SafeAreaView
+    <View
       testID="noSessionView"
-      style={[StyleSheet.absoluteFillObject, s.hContentRegion, pal.view]}>
+      style={[
+        StyleSheet.absoluteFillObject,
+        s.hContentRegion,
+        pal.view,
+        {
+          paddingTop: insets.top + 60,
+        },
+      ]}>
       {onDismiss && (
         <Pressable
           accessibilityRole="button"
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            padding: 20,
-            zIndex: 100,
-          }}
+          style={[
+            {
+              position: 'absolute',
+              top: insets.top + 10,
+              right: 20,
+              padding: 10,
+              zIndex: 100,
+              backgroundColor: pal.textLight.color,
+              borderRadius: 100,
+            },
+          ]}
           onPress={onDismiss}>
           <FontAwesomeIcon
             icon="x"
-            size={24}
+            size={16}
             style={{
-              color: String(pal.text.color),
+              color: String(pal.textInverted.color),
             }}
           />
         </Pressable>
@@ -79,6 +92,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
       </ErrorBoundary>
-    </SafeAreaView>
+    </View>
   )
 }

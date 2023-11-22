@@ -36,14 +36,14 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
-import {Provider as PortalProvider} from '#/view/com/util/Portal'
+import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 
 enableFreeze(true)
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
   const colorMode = useColorMode()
-  const {isInitialLoad} = useSession()
+  const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
 
   // init
@@ -70,19 +70,25 @@ function InnerApp() {
    */
 
   return (
-    <UnreadNotifsProvider>
-      <ThemeProvider theme={colorMode}>
-        <analytics.Provider>
-          {/* All components should be within this provider */}
-          <RootSiblingParent>
-            <GestureHandlerRootView style={s.h100pct}>
-              <TestCtrls />
-              <Shell />
-            </GestureHandlerRootView>
-          </RootSiblingParent>
-        </analytics.Provider>
-      </ThemeProvider>
-    </UnreadNotifsProvider>
+    <React.Fragment key={currentAccount?.did}>
+      {/* Anything within this Fragment will be reset when `currentAccount?.did` changes */}
+
+      <LoggedOutViewProvider>
+        <UnreadNotifsProvider>
+          <ThemeProvider theme={colorMode}>
+            <analytics.Provider>
+              {/* All components should be within this provider */}
+              <RootSiblingParent>
+                <GestureHandlerRootView style={s.h100pct}>
+                  <TestCtrls />
+                  <Shell />
+                </GestureHandlerRootView>
+              </RootSiblingParent>
+            </analytics.Provider>
+          </ThemeProvider>
+        </UnreadNotifsProvider>
+      </LoggedOutViewProvider>
+    </React.Fragment>
   )
 }
 
@@ -104,23 +110,21 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <PortalProvider>
-          <ShellStateProvider>
-            <PrefsStateProvider>
-              <MutedThreadsProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <InnerApp />
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </MutedThreadsProvider>
-            </PrefsStateProvider>
-          </ShellStateProvider>
-        </PortalProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <MutedThreadsProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <InnerApp />
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </MutedThreadsProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
       </SessionProvider>
     </QueryClientProvider>
   )

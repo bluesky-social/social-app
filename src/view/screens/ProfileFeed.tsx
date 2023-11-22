@@ -129,9 +129,6 @@ export const ProfileFeedScreen = withAuthRequired(
       </CenteredView>
     )
   },
-  {
-    isPublic: true,
-  },
 )
 
 function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {

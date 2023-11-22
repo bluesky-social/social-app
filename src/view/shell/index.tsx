@@ -32,15 +32,31 @@ import {
 import {isAndroid} from 'platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
-import {Outlet} from '#/view/com/util/Portal'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
+import {IS_PROD} from '#/env'
+import {LoggedOut} from '#/view/com/auth/LoggedOut'
 
 function ShellInner() {
+  useOTAUpdate() // this hook polls for OTA updates every few seconds
+
+  const {hasSession} = useSession()
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
-  useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
+  const closeAnyActiveElement = useCloseAnyActiveElement()
+  const {showLoggedOut} = useLoggedOutView()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+
+  const navigationState = useNavigationState(state => state)
+  const canGoBack = !isStateAtTabRoot(navigationState)
+  // on mobile we default to public
+  const currentRouteIsPublic = true
+
   const containerPadding = React.useMemo(
     () => ({height: '100%' as DimensionValue, paddingTop: safeAreaInsets.top}),
     [safeAreaInsets],
@@ -54,9 +70,6 @@ function ShellInner() {
     () => setIsDrawerOpen(false),
     [setIsDrawerOpen],
   )
-  const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
-  const {hasSession} = useSession()
-  const closeAnyActiveElement = useCloseAnyActiveElement()
 
   React.useEffect(() => {
     let listener = {remove() {}}
@@ -88,7 +101,16 @@ function ShellInner() {
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <Lightbox />
-      <Outlet />
+
+      {!hasSession && (
+        <>
+          {!currentRouteIsPublic || IS_PROD ? (
+            <LoggedOut />
+          ) : showLoggedOut ? (
+            <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+          ) : null}
+        </>
+      )}
     </>
   )
 }

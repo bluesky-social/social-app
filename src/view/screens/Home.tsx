@@ -17,29 +17,26 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired(
-  function HomeScreenImpl(props: Props) {
-    const {hasSession} = useSession()
-    const {data: preferences} = usePreferencesQuery()
+export const HomeScreen = withAuthRequired(function HomeScreenImpl(
+  props: Props,
+) {
+  const {hasSession} = useSession()
+  const {data: preferences} = usePreferencesQuery()
 
-    if (!hasSession) {
-      return <HomeScreenPublic />
-    }
+  if (!hasSession) {
+    return <HomeScreenPublic />
+  }
 
-    if (preferences) {
-      return <HomeScreenReady {...props} preferences={preferences} />
-    } else {
-      return (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" />
-        </View>
-      )
-    }
-  },
-  {
-    isPublic: true,
-  },
-)
+  if (preferences) {
+    return <HomeScreenReady {...props} preferences={preferences} />
+  } else {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+})
 
 function HomeScreenPublic() {
   const setMinimalShellMode = useSetMinimalShellMode()

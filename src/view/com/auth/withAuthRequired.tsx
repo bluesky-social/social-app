@@ -5,50 +5,35 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native'
+import {useNavigationState} from '@react-navigation/native'
 import {CenteredView} from '../util/Views'
-import {LoggedOut} from './LoggedOut'
 import {Onboarding} from './Onboarding'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useOnboardingState} from '#/state/shell'
 import {useSession} from '#/state/session'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
+import {ROUTES_CONFIG, RouteName} from '#/routes'
 import {IS_PROD} from '#/env'
-import {Portal} from '#/view/com/util/Portal'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
-  options: {
-    isPublic?: boolean // TODO(pwi) need to enable in TF somehow
-  } = {},
 ): React.FC<P> =>
   function AuthRequired(props: P) {
     const {isInitialLoad, hasSession} = useSession()
     const onboardingState = useOnboardingState()
-    const {showLoggedOut} = useLoggedOutView()
-    const {setShowLoggedOut} = useLoggedOutViewControls()
+
+    const routes = useNavigationState(state => state.routes)
+    const currentRouteName = routes.slice(-1)[0]?.name
+    const currentRouteConfig = ROUTES_CONFIG[currentRouteName as RouteName]
+    const currentRouteIsPublic = currentRouteConfig?.isPublic
 
     if (isInitialLoad) {
       return <Loading />
     }
-    if (!hasSession) {
-      if (showLoggedOut) {
-        return (
-          <Portal>
-            <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
-          </Portal>
-        )
-      } else if (!options?.isPublic || IS_PROD) {
-        return (
-          <Portal>
-            <LoggedOut />
-          </Portal>
-        )
-      }
+    if ((!hasSession && !currentRouteIsPublic) || (!hasSession && IS_PROD)) {
+      // handled in the `shell.index` components -esb
+      return null
     }
     if (onboardingState.isActive) {
       return <Onboarding />
