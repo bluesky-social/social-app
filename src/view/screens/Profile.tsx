@@ -174,14 +174,14 @@ function ProfileScreenLoaded({
   const repliesIndex = nextIndex++
   const mediaIndex = nextIndex++
   let likesIndex: number | null = null
-  let feedsIndex: number | null = null
-  let listsIndex: number | null = null
   if (showLikesTab) {
     likesIndex = nextIndex++
   }
+  let feedsIndex: number | null = null
   if (showFeedsTab) {
     feedsIndex = nextIndex++
   }
+  let listsIndex: number | null = null
   if (showListsTab) {
     listsIndex = nextIndex++
   }
