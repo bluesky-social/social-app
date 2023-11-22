@@ -13,6 +13,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {SplashScreen} from './SplashScreen'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -28,6 +29,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const [screenState, setScreenState] = React.useState<ScreenState>(
     ScreenState.S_LoginOrCreateAccount,
   )
+  const {isMobile} = useWebMediaQueries()
 
   React.useEffect(() => {
     screen('Login')
@@ -41,7 +43,8 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         s.hContentRegion,
         pal.view,
         {
-          paddingTop: 40,
+          // only needed if dismiss button is present
+          paddingTop: onDismiss && isMobile ? 40 : 0,
         },
       ]}>
       <ErrorBoundary>
