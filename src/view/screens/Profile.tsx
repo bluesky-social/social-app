@@ -169,6 +169,23 @@ function ProfileScreenLoaded({
     ].filter(Boolean) as string[]
   }, [showLikesTab, showFeedsTab, showListsTab])
 
+  let nextIndex = 0
+  const postsIndex = nextIndex++
+  const repliesIndex = nextIndex++
+  const mediaIndex = nextIndex++
+  let likesIndex: number | null = null
+  let feedsIndex: number | null = null
+  let listsIndex: number | null = null
+  if (showLikesTab) {
+    likesIndex = nextIndex++
+  }
+  if (showFeedsTab) {
+    feedsIndex = nextIndex++
+  }
+  if (showListsTab) {
+    listsIndex = nextIndex++
+  }
+
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
@@ -208,21 +225,24 @@ function ProfileScreenLoaded({
     [setCurrentPage],
   )
 
-  const onCurrentPageSelected = React.useCallback((index: number) => {
-    if (index === 0) {
-      postsSectionRef.current?.scrollToTop()
-    } else if (index === 1) {
-      repliesSectionRef.current?.scrollToTop()
-    } else if (index === 2) {
-      mediaSectionRef.current?.scrollToTop()
-    } else if (index === 3) {
-      likesSectionRef.current?.scrollToTop()
-    } else if (index === 4) {
-      feedsSectionRef.current?.scrollToTop()
-    } else if (index === 5) {
-      listsSectionRef.current?.scrollToTop()
-    }
-  }, [])
+  const onCurrentPageSelected = React.useCallback(
+    (index: number) => {
+      if (index === postsIndex) {
+        postsSectionRef.current?.scrollToTop()
+      } else if (index === repliesIndex) {
+        repliesSectionRef.current?.scrollToTop()
+      } else if (index === mediaIndex) {
+        mediaSectionRef.current?.scrollToTop()
+      } else if (index === likesIndex) {
+        likesSectionRef.current?.scrollToTop()
+      } else if (index === feedsIndex) {
+        feedsSectionRef.current?.scrollToTop()
+      } else if (index === listsIndex) {
+        listsSectionRef.current?.scrollToTop()
+      }
+    },
+    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+  )
 
   // rendering
   // =
