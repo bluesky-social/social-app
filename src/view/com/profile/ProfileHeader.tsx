@@ -51,6 +51,7 @@ import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
+import {useRequireAuth} from '#/state/session'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
@@ -113,7 +114,8 @@ let ProfileHeaderLoaded = ({
 }: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
+  const requireAuth = useRequireAuth()
   const {_} = useLingui()
   const {openModal} = useModalControls()
   const {openLightbox} = useLightboxControls()
@@ -150,38 +152,42 @@ let ProfileHeaderLoaded = ({
     }
   }, [openLightbox, profile, moderation])
 
-  const onPressFollow = async () => {
-    try {
-      track('ProfileHeader:FollowButtonClicked')
-      await queueFollow()
-      Toast.show(
-        `Following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-        )}`,
-      )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        logger.error('Failed to follow', {error: String(e)})
-        Toast.show(`There was an issue! ${e.toString()}`)
+  const onPressFollow = () => {
+    requireAuth(async () => {
+      try {
+        track('ProfileHeader:FollowButtonClicked')
+        await queueFollow()
+        Toast.show(
+          `Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        )
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to follow', {error: String(e)})
+          Toast.show(`There was an issue! ${e.toString()}`)
+        }
       }
-    }
+    })
   }
 
-  const onPressUnfollow = async () => {
-    try {
-      track('ProfileHeader:UnfollowButtonClicked')
-      await queueUnfollow()
-      Toast.show(
-        `No longer following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-        )}`,
-      )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        logger.error('Failed to unfollow', {error: String(e)})
-        Toast.show(`There was an issue! ${e.toString()}`)
+  const onPressUnfollow = () => {
+    requireAuth(async () => {
+      try {
+        track('ProfileHeader:UnfollowButtonClicked')
+        await queueUnfollow()
+        Toast.show(
+          `No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        )
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to unfollow', {error: String(e)})
+          Toast.show(`There was an issue! ${e.toString()}`)
+        }
       }
-    }
+    })
   }
 
   const onPressEditProfile = React.useCallback(() => {
@@ -303,72 +309,75 @@ let ProfileHeaderLoaded = ({
         },
       },
     ]
-    items.push({label: 'separator'})
-    items.push({
-      testID: 'profileHeaderDropdownListAddRemoveBtn',
-      label: _(msg`Add to Lists`),
-      onPress: onPressAddRemoveLists,
-      icon: {
-        ios: {
-          name: 'list.bullet',
-        },
-        android: 'ic_menu_add',
-        web: 'list',
-      },
-    })
-    if (!isMe) {
-      if (!profile.viewer?.blocking) {
-        items.push({
-          testID: 'profileHeaderDropdownMuteBtn',
-          label: profile.viewer?.muted
-            ? _(msg`Unmute Account`)
-            : _(msg`Mute Account`),
-          onPress: profile.viewer?.muted
-            ? onPressUnmuteAccount
-            : onPressMuteAccount,
-          icon: {
-            ios: {
-              name: 'speaker.slash',
-            },
-            android: 'ic_lock_silent_mode',
-            web: 'comment-slash',
-          },
-        })
-      }
-      if (!profile.viewer?.blockingByList) {
-        items.push({
-          testID: 'profileHeaderDropdownBlockBtn',
-          label: profile.viewer?.blocking
-            ? _(msg`Unblock Account`)
-            : _(msg`Block Account`),
-          onPress: profile.viewer?.blocking
-            ? onPressUnblockAccount
-            : onPressBlockAccount,
-          icon: {
-            ios: {
-              name: 'person.fill.xmark',
-            },
-            android: 'ic_menu_close_clear_cancel',
-            web: 'user-slash',
-          },
-        })
-      }
+    if (hasSession) {
+      items.push({label: 'separator'})
       items.push({
-        testID: 'profileHeaderDropdownReportBtn',
-        label: _(msg`Report Account`),
-        onPress: onPressReportAccount,
+        testID: 'profileHeaderDropdownListAddRemoveBtn',
+        label: _(msg`Add to Lists`),
+        onPress: onPressAddRemoveLists,
         icon: {
           ios: {
-            name: 'exclamationmark.triangle',
+            name: 'list.bullet',
           },
-          android: 'ic_menu_report_image',
-          web: 'circle-exclamation',
+          android: 'ic_menu_add',
+          web: 'list',
         },
       })
+      if (!isMe) {
+        if (!profile.viewer?.blocking) {
+          items.push({
+            testID: 'profileHeaderDropdownMuteBtn',
+            label: profile.viewer?.muted
+              ? _(msg`Unmute Account`)
+              : _(msg`Mute Account`),
+            onPress: profile.viewer?.muted
+              ? onPressUnmuteAccount
+              : onPressMuteAccount,
+            icon: {
+              ios: {
+                name: 'speaker.slash',
+              },
+              android: 'ic_lock_silent_mode',
+              web: 'comment-slash',
+            },
+          })
+        }
+        if (!profile.viewer?.blockingByList) {
+          items.push({
+            testID: 'profileHeaderDropdownBlockBtn',
+            label: profile.viewer?.blocking
+              ? _(msg`Unblock Account`)
+              : _(msg`Block Account`),
+            onPress: profile.viewer?.blocking
+              ? onPressUnblockAccount
+              : onPressBlockAccount,
+            icon: {
+              ios: {
+                name: 'person.fill.xmark',
+              },
+              android: 'ic_menu_close_clear_cancel',
+              web: 'user-slash',
+            },
+          })
+        }
+        items.push({
+          testID: 'profileHeaderDropdownReportBtn',
+          label: _(msg`Report Account`),
+          onPress: onPressReportAccount,
+          icon: {
+            ios: {
+              name: 'exclamationmark.triangle',
+            },
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
+          },
+        })
+      }
     }
     return items
   }, [
     isMe,
+    hasSession,
     profile.viewer?.muted,
     profile.viewer?.blocking,
     profile.viewer?.blockingByList,
@@ -421,7 +430,7 @@ let ProfileHeaderLoaded = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {!isProfilePreview && (
+              {!isProfilePreview && hasSession && (
                 <TouchableOpacity
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}

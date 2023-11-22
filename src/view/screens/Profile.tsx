@@ -156,8 +156,8 @@ function ProfileScreenLoaded({
 
   const isMe = profile.did === currentAccount?.did
   const showLikesTab = isMe
-  const showFeedsTab = isMe || extraInfoQuery.data?.hasFeedgens
-  const showListsTab = isMe || extraInfoQuery.data?.hasLists
+  const showFeedsTab = hasSession && (isMe || extraInfoQuery.data?.hasFeedgens)
+  const showListsTab = hasSession && (isMe || extraInfoQuery.data?.hasLists)
   const sectionTitles = useMemo<string[]>(() => {
     return [
       'Posts',
