@@ -1,5 +1,5 @@
-<!DOCTYPE html>                                                                                          
-<html lang="en">
+<!DOCTYPE html>
+<html lang="{{ lang }}">
 <head>   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
@@ -172,6 +172,11 @@
     }
   </style>
   {% include "scripts.html" %}
+  {% if lang == "en" %}{% include "scripts_en.html" %}{% endif %}
+  {% if lang == "ja" %}{% include "scripts_ja.html" %}{% endif %}
+  {% if lang == "pt" %}{% include "scripts_pt.html" %}{% endif %}
+  {% if lang == "de" %}{% include "scripts_de.html" %}{% endif %}
+  {% if lang == "hi" %}{% include "scripts_hi.html" %}{% endif %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">

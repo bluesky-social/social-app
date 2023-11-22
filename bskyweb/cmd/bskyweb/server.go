@@ -276,16 +276,19 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
 	data := pongo2.Context{}
+	data["lang"] = determineLangCode(c)
 	return c.Render(http.StatusOK, "base.html", data)
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
 	data := pongo2.Context{}
+	data["lang"] = determineLangCode(c)
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
 	data := pongo2.Context{}
+	data["lang"] = determineLangCode(c)
 	handle := c.Param("handle")
 	rkey := c.Param("rkey")
 	// sanity check argument
@@ -321,6 +324,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 func (srv *Server) WebProfile(c echo.Context) error {
 	data := pongo2.Context{}
+	data["lang"] = determineLangCode(c)
 	handle := c.Param("handle")
 	// sanity check argument
 	if len(handle) > 4 && len(handle) < 128 {

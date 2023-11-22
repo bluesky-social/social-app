@@ -9,6 +9,7 @@ static/js/*.js
 static/js/*.map
 static/js/*.js.LICENSE.txt
 templates/scripts.html
+templates/scripts_*.html
 
 # Don't ignore this file
 !.gitignore
