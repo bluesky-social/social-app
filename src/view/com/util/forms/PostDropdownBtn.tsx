@@ -35,7 +35,7 @@ export function PostDropdownBtn({
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
 }) {
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
@@ -136,10 +136,10 @@ export function PostDropdownBtn({
         web: 'share',
       },
     },
-    {
+    hasSession && {
       label: 'separator',
     },
-    {
+    hasSession && {
       label: isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`),
       onPress() {
         onToggleThreadMute()
@@ -153,27 +153,28 @@ export function PostDropdownBtn({
         web: 'comment-slash',
       },
     },
-    {
+    hasSession && {
       label: 'separator',
     },
-    !isAuthor && {
-      label: _(msg`Report post`),
-      onPress() {
-        openModal({
-          name: 'report',
-          uri: post.uri,
-          cid: post.cid,
-        })
-      },
-      testID: 'postDropdownReportBtn',
-      icon: {
-        ios: {
-          name: 'exclamationmark.triangle',
+    !isAuthor &&
+      hasSession && {
+        label: _(msg`Report post`),
+        onPress() {
+          openModal({
+            name: 'report',
+            uri: post.uri,
+            cid: post.cid,
+          })
         },
-        android: 'ic_menu_report_image',
-        web: 'circle-exclamation',
+        testID: 'postDropdownReportBtn',
+        icon: {
+          ios: {
+            name: 'exclamationmark.triangle',
+          },
+          android: 'ic_menu_report_image',
+          web: 'circle-exclamation',
+        },
       },
-    },
     isAuthor && {
       label: 'separator',
     },
