@@ -140,6 +140,12 @@ function ProfileScreenLoaded({
   const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
+  const postsSectionRef = React.useRef<SectionRef>(null)
+  const repliesSectionRef = React.useRef<SectionRef>(null)
+  const mediaSectionRef = React.useRef<SectionRef>(null)
+  const likesSectionRef = React.useRef<SectionRef>(null)
+  const feedsSectionRef = React.useRef<SectionRef>(null)
+  const listsSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -162,6 +168,23 @@ function ProfileScreenLoaded({
       showListsTab ? 'Lists' : undefined,
     ].filter(Boolean) as string[]
   }, [showLikesTab, showFeedsTab, showListsTab])
+
+  let nextIndex = 0
+  const postsIndex = nextIndex++
+  const repliesIndex = nextIndex++
+  const mediaIndex = nextIndex++
+  let likesIndex: number | null = null
+  if (showLikesTab) {
+    likesIndex = nextIndex++
+  }
+  let feedsIndex: number | null = null
+  if (showFeedsTab) {
+    feedsIndex = nextIndex++
+  }
+  let listsIndex: number | null = null
+  if (showListsTab) {
+    listsIndex = nextIndex++
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -202,6 +225,25 @@ function ProfileScreenLoaded({
     [setCurrentPage],
   )
 
+  const onCurrentPageSelected = React.useCallback(
+    (index: number) => {
+      if (index === postsIndex) {
+        postsSectionRef.current?.scrollToTop()
+      } else if (index === repliesIndex) {
+        repliesSectionRef.current?.scrollToTop()
+      } else if (index === mediaIndex) {
+        mediaSectionRef.current?.scrollToTop()
+      } else if (index === likesIndex) {
+        likesSectionRef.current?.scrollToTop()
+      } else if (index === feedsIndex) {
+        feedsSectionRef.current?.scrollToTop()
+      } else if (index === listsIndex) {
+        listsSectionRef.current?.scrollToTop()
+      }
+    },
+    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+  )
+
   // rendering
   // =
 
@@ -225,10 +267,11 @@ function ProfileScreenLoaded({
         isHeaderReady={true}
         items={sectionTitles}
         onPageSelected={onPageSelected}
+        onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
-            ref={null}
+            ref={postsSectionRef}
             feed={`author|${profile.did}|posts_no_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
@@ -241,7 +284,7 @@ function ProfileScreenLoaded({
         )}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
-            ref={null}
+            ref={repliesSectionRef}
             feed={`author|${profile.did}|posts_with_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
@@ -254,7 +297,7 @@ function ProfileScreenLoaded({
         )}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
-            ref={null}
+            ref={mediaSectionRef}
             feed={`author|${profile.did}|posts_with_media`}
             onScroll={onScroll}
             headerHeight={headerHeight}
@@ -274,7 +317,7 @@ function ProfileScreenLoaded({
               scrollElRef,
             }) => (
               <FeedSection
-                ref={null}
+                ref={likesSectionRef}
                 feed={`likes|${profile.did}`}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
@@ -289,6 +332,7 @@ function ProfileScreenLoaded({
         {showFeedsTab
           ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
+                ref={feedsSectionRef}
                 did={profile.did}
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>
@@ -303,6 +347,7 @@ function ProfileScreenLoaded({
         {showListsTab
           ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
+                ref={listsSectionRef}
                 did={profile.did}
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>

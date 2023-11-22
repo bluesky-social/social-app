@@ -8,13 +8,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useQueryClient} from '@tanstack/react-query'
 import {FlatList} from '../util/Views'
 import {FeedSourceCardLoaded} from './FeedSourceCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
+import {useProfileFeedgensQuery, RQKEY} from '#/state/queries/profile-feedgens'
 import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
@@ -29,25 +30,37 @@ const EMPTY = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export function ProfileFeedgens({
-  did,
-  scrollElRef,
-  onScroll,
-  scrollEventThrottle,
-  headerOffset,
-  enabled,
-  style,
-  testID,
-}: {
+interface SectionRef {
+  scrollToTop: () => void
+}
+
+interface ProfileFeedgensProps {
   did: string
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   headerOffset: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
-}) {
+}
+
+export const ProfileFeedgens = React.forwardRef<
+  SectionRef,
+  ProfileFeedgensProps
+>(function ProfileFeedgensImpl(
+  {
+    did,
+    scrollElRef,
+    onScroll,
+    scrollEventThrottle,
+    headerOffset,
+    enabled,
+    style,
+    testID,
+  },
+  ref,
+) {
   const pal = usePalette('default')
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -87,6 +100,17 @@ export function ProfileFeedgens({
 
   // events
   // =
+
+  const queryClient = useQueryClient()
+
+  const onScrollToTop = React.useCallback(() => {
+    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+    queryClient.invalidateQueries({queryKey: RQKEY(did)})
+  }, [scrollElRef, queryClient, headerOffset, did])
+
+  React.useImperativeHandle(ref, () => ({
+    scrollToTop: onScrollToTop,
+  }))
 
   const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
@@ -192,7 +216,7 @@ export function ProfileFeedgens({
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   item: {
