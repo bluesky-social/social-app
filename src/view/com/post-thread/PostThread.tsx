@@ -38,6 +38,7 @@ import {
   UsePreferencesQueryResponse,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
+import {useSession} from '#/state/session'
 
 // const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
 
@@ -130,6 +131,7 @@ function PostThreadLoaded({
   onRefresh: () => void
   onPressReply: () => void
 }) {
+  const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isTablet, isDesktop} = useWebMediaQueries()
@@ -223,7 +225,7 @@ function PostThreadLoaded({
             <ActivityIndicator />
           </View>
         )
-      } else if (item === REPLY_PROMPT) {
+      } else if (item === REPLY_PROMPT && hasSession) {
         return (
           <View>
             {isDesktop && <ComposePrompt onPressCompose={onPressReply} />}
@@ -305,6 +307,7 @@ function PostThreadLoaded({
       return null
     },
     [
+      hasSession,
       isTablet,
       isDesktop,
       onPressReply,
