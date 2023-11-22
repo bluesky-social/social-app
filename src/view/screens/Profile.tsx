@@ -131,7 +131,7 @@ function ProfileScreenLoaded({
   hideBackButton: boolean
 }) {
   const profile = useProfileShadow(profileUnshadowed)
-  const {currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
@@ -360,14 +360,16 @@ function ProfileScreenLoaded({
             )
           : null}
       </PagerWithHeader>
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
+      {hasSession && (
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      )}
     </ScreenHider>
   )
 }

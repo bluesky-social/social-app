@@ -41,7 +41,7 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
 }) {
-  const {isSandbox} = useSession()
+  const {isSandbox, hasSession} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
@@ -123,24 +123,35 @@ export function FeedPage({
             }
             onPress={emitSoftReset}
           />
-          <TextLink
-            type="title-lg"
-            href="/settings/home-feed"
-            style={{fontWeight: 'bold'}}
-            accessibilityLabel={_(msg`Feed Preferences`)}
-            accessibilityHint=""
-            text={
-              <FontAwesomeIcon
-                icon="sliders"
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            }
-          />
+          {hasSession && (
+            <TextLink
+              type="title-lg"
+              href="/settings/home-feed"
+              style={{fontWeight: 'bold'}}
+              accessibilityLabel={_(msg`Feed Preferences`)}
+              accessibilityHint=""
+              text={
+                <FontAwesomeIcon
+                  icon="sliders"
+                  style={pal.textLight as FontAwesomeIconStyle}
+                />
+              }
+            />
+          )}
         </View>
       )
     }
     return <></>
-  }, [isDesktop, pal.view, pal.text, pal.textLight, hasNew, _, isSandbox])
+  }, [
+    isDesktop,
+    pal.view,
+    pal.text,
+    pal.textLight,
+    hasNew,
+    _,
+    isSandbox,
+    hasSession,
+  ])
 
   return (
     <View testID={testID} style={s.h100pct}>
@@ -166,14 +177,17 @@ export function FeedPage({
           showIndicator={hasNew}
         />
       )}
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
+
+      {hasSession && (
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      )}
     </View>
   )
 }
