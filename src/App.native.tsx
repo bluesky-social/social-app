@@ -36,6 +36,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
+import {Provider as PortalProvider} from '#/view/com/util/Portal'
 
 enableFreeze(true)
 SplashScreen.preventAutoHideAsync()
@@ -103,21 +104,23 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
-                      <InnerApp />
-                    </I18nProvider>
-                  </LightboxStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
+        <PortalProvider>
+          <ShellStateProvider>
+            <PrefsStateProvider>
+              <MutedThreadsProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <LightboxStateProvider>
+                      <I18nProvider>
+                        <InnerApp />
+                      </I18nProvider>
+                    </LightboxStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </MutedThreadsProvider>
+            </PrefsStateProvider>
+          </ShellStateProvider>
+        </PortalProvider>
       </SessionProvider>
     </QueryClientProvider>
   )

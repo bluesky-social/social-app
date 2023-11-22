@@ -23,6 +23,7 @@ import {
 } from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useLoggedOutView} from '#/state/shell/logged-out'
+import {Outlet} from '#/view/com/util/Portal'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -77,6 +78,8 @@ function ShellInner() {
           </View>
         </TouchableOpacity>
       )}
+
+      <Outlet />
     </View>
   )
 }

@@ -32,6 +32,7 @@ import {
 import {isAndroid} from 'platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
+import {Outlet} from '#/view/com/util/Portal'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -87,6 +88,7 @@ function ShellInner() {
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <Lightbox />
+      <Outlet />
     </>
   )
 }

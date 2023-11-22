@@ -1,5 +1,7 @@
 import React from 'react'
-import {SafeAreaView} from 'react-native'
+import {Pressable, SafeAreaView, StyleSheet} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+
 import {Login} from 'view/com/auth/login/Login'
 import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
@@ -28,19 +30,40 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     setMinimalShellMode(true)
   }, [screen, setMinimalShellMode])
 
-  if (screenState === ScreenState.S_LoginOrCreateAccount) {
-    return (
-      <SplashScreen
-        onDismiss={onDismiss}
-        onPressSignin={() => setScreenState(ScreenState.S_Login)}
-        onPressCreateAccount={() => setScreenState(ScreenState.S_CreateAccount)}
-      />
-    )
-  }
-
   return (
-    <SafeAreaView testID="noSessionView" style={[s.hContentRegion, pal.view]}>
+    <SafeAreaView
+      testID="noSessionView"
+      style={[StyleSheet.absoluteFillObject, s.hContentRegion, pal.view]}>
+      {onDismiss && (
+        <Pressable
+          accessibilityRole="button"
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            padding: 20,
+            zIndex: 100,
+          }}
+          onPress={onDismiss}>
+          <FontAwesomeIcon
+            icon="x"
+            size={24}
+            style={{
+              color: String(pal.text.color),
+            }}
+          />
+        </Pressable>
+      )}
+
       <ErrorBoundary>
+        {screenState === ScreenState.S_LoginOrCreateAccount ? (
+          <SplashScreen
+            onPressSignin={() => setScreenState(ScreenState.S_Login)}
+            onPressCreateAccount={() =>
+              setScreenState(ScreenState.S_CreateAccount)
+            }
+          />
+        ) : undefined}
         {screenState === ScreenState.S_Login ? (
           <Login
             onPressBack={() =>

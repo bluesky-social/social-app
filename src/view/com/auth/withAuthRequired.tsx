@@ -18,6 +18,7 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {IS_PROD} from '#/env'
+import {Portal} from '#/view/com/util/Portal'
 
 export const withAuthRequired = <P extends object>(
   Component: React.ComponentType<P>,
@@ -36,9 +37,17 @@ export const withAuthRequired = <P extends object>(
     }
     if (!hasSession) {
       if (showLoggedOut) {
-        return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+        return (
+          <Portal>
+            <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+          </Portal>
+        )
       } else if (!options?.isPublic || IS_PROD) {
-        return <LoggedOut />
+        return (
+          <Portal>
+            <LoggedOut />
+          </Portal>
+        )
       }
     }
     if (onboardingState.isActive) {
