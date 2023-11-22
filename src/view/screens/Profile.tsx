@@ -140,6 +140,12 @@ function ProfileScreenLoaded({
   const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
+  const postsSectionRef = React.useRef<SectionRef>(null)
+  const repliesSectionRef = React.useRef<SectionRef>(null)
+  const mediaSectionRef = React.useRef<SectionRef>(null)
+  const likesSectionRef = React.useRef<SectionRef>(null)
+  const feedsSectionRef = React.useRef<SectionRef>(null)
+  const listsSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -202,6 +208,22 @@ function ProfileScreenLoaded({
     [setCurrentPage],
   )
 
+  const onCurrentPageSelected = React.useCallback((index: number) => {
+    if (index === 0) {
+      postsSectionRef.current?.scrollToTop()
+    } else if (index === 1) {
+      repliesSectionRef.current?.scrollToTop()
+    } else if (index === 2) {
+      mediaSectionRef.current?.scrollToTop()
+    } else if (index === 3) {
+      likesSectionRef.current?.scrollToTop()
+    } else if (index === 4) {
+      feedsSectionRef.current?.scrollToTop()
+    } else if (index === 5) {
+      listsSectionRef.current?.scrollToTop()
+    }
+  }, [])
+
   // rendering
   // =
 
@@ -225,10 +247,11 @@ function ProfileScreenLoaded({
         isHeaderReady={true}
         items={sectionTitles}
         onPageSelected={onPageSelected}
+        onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
-            ref={null}
+            ref={postsSectionRef}
             feed={`author|${profile.did}|posts_no_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
@@ -241,7 +264,7 @@ function ProfileScreenLoaded({
         )}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
-            ref={null}
+            ref={repliesSectionRef}
             feed={`author|${profile.did}|posts_with_replies`}
             onScroll={onScroll}
             headerHeight={headerHeight}
@@ -254,7 +277,7 @@ function ProfileScreenLoaded({
         )}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
-            ref={null}
+            ref={mediaSectionRef}
             feed={`author|${profile.did}|posts_with_media`}
             onScroll={onScroll}
             headerHeight={headerHeight}
@@ -274,7 +297,7 @@ function ProfileScreenLoaded({
               scrollElRef,
             }) => (
               <FeedSection
-                ref={null}
+                ref={likesSectionRef}
                 feed={`likes|${profile.did}`}
                 onScroll={onScroll}
                 headerHeight={headerHeight}
@@ -289,6 +312,7 @@ function ProfileScreenLoaded({
         {showFeedsTab
           ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
+                ref={feedsSectionRef}
                 did={profile.did}
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>
@@ -303,6 +327,7 @@ function ProfileScreenLoaded({
         {showListsTab
           ? ({onScroll, headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
+                ref={listsSectionRef}
                 did={profile.did}
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>

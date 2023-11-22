@@ -29,16 +29,11 @@ const EMPTY = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export function ProfileFeedgens({
-  did,
-  scrollElRef,
-  onScroll,
-  scrollEventThrottle,
-  headerOffset,
-  enabled,
-  style,
-  testID,
-}: {
+interface SectionRef {
+  scrollToTop: () => void
+}
+
+interface ProfileFeedgensProps {
   did: string
   scrollElRef?: MutableRefObject<FlatList<any> | null>
   onScroll?: OnScrollHandler
@@ -47,7 +42,24 @@ export function ProfileFeedgens({
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
-}) {
+}
+
+export const ProfileFeedgens = React.forwardRef<
+  SectionRef,
+  ProfileFeedgensProps
+>(function ProfileFeedgensImpl(
+  {
+    did,
+    scrollElRef,
+    onScroll,
+    scrollEventThrottle,
+    headerOffset,
+    enabled,
+    style,
+    testID,
+  },
+  ref,
+) {
   const pal = usePalette('default')
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -87,6 +99,13 @@ export function ProfileFeedgens({
 
   // events
   // =
+
+  const onScrollToTop = React.useCallback(() => {
+    console.log('scroll feeds to top') // TODO
+  }, [])
+  React.useImperativeHandle(ref, () => ({
+    scrollToTop: onScrollToTop,
+  }))
 
   const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
@@ -192,7 +211,7 @@ export function ProfileFeedgens({
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   item: {

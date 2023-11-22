@@ -143,8 +143,7 @@ function ProfileListScreenLoaded({
     (index: number) => {
       if (index === 0) {
         feedSectionRef.current?.scrollToTop()
-      }
-      if (index === 1) {
+      } else if (index === 1) {
         aboutSectionRef.current?.scrollToTop()
       }
     },
