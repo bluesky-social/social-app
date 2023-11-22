@@ -1,3 +1,5 @@
+import {it, describe, expect} from '@jest/globals'
+
 import {
   linkRequiresWarning,
   isPossiblyAUrl,
@@ -6,6 +8,7 @@ import {
 
 describe('linkRequiresWarning', () => {
   type Case = [string, string, boolean]
+
   const cases: Case[] = [
     ['http://example.com', 'http://example.com', false],
     ['http://example.com', 'example.com', false],
@@ -63,6 +66,10 @@ describe('linkRequiresWarning', () => {
     ],
     ['http://bsky.app/', 'https://google.com', true],
     ['https://bsky.app/', 'https://google.com', true],
+
+    // case insensitive
+    ['https://Example.com', 'example.com', false],
+    ['https://example.com', 'Example.com', false],
 
     // bad uri inputs, default to true
     ['', '', true],
