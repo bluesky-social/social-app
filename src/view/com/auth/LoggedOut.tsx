@@ -1,5 +1,10 @@
 import React from 'react'
-import {SafeAreaView} from 'react-native'
+import {View, Pressable} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+
+import {isIOS} from 'platform/detection'
 import {Login} from 'view/com/auth/login/Login'
 import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
@@ -16,6 +21,7 @@ enum ScreenState {
 }
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
@@ -28,19 +34,50 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     setMinimalShellMode(true)
   }, [screen, setMinimalShellMode])
 
-  if (screenState === ScreenState.S_LoginOrCreateAccount) {
-    return (
-      <SplashScreen
-        onDismiss={onDismiss}
-        onPressSignin={() => setScreenState(ScreenState.S_Login)}
-        onPressCreateAccount={() => setScreenState(ScreenState.S_CreateAccount)}
-      />
-    )
-  }
-
   return (
-    <SafeAreaView testID="noSessionView" style={[s.hContentRegion, pal.view]}>
+    <View
+      testID="noSessionView"
+      style={[
+        s.hContentRegion,
+        pal.view,
+        {
+          paddingTop: 40,
+        },
+      ]}>
       <ErrorBoundary>
+        {onDismiss && (
+          <Pressable
+            accessibilityHint={_(msg`Go back`)}
+            accessibilityLabel={_(msg`Go back`)}
+            accessibilityRole="button"
+            style={{
+              position: 'absolute',
+              top: isIOS ? 0 : 20,
+              right: 20,
+              padding: 10,
+              zIndex: 100,
+              backgroundColor: pal.text.color,
+              borderRadius: 100,
+            }}
+            onPress={onDismiss}>
+            <FontAwesomeIcon
+              icon="x"
+              size={12}
+              style={{
+                color: String(pal.textInverted.color),
+              }}
+            />
+          </Pressable>
+        )}
+
+        {screenState === ScreenState.S_LoginOrCreateAccount ? (
+          <SplashScreen
+            onPressSignin={() => setScreenState(ScreenState.S_Login)}
+            onPressCreateAccount={() =>
+              setScreenState(ScreenState.S_CreateAccount)
+            }
+          />
+        ) : undefined}
         {screenState === ScreenState.S_Login ? (
           <Login
             onPressBack={() =>
@@ -56,6 +93,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
       </ErrorBoundary>
-    </SafeAreaView>
+    </View>
   )
 }
