@@ -8,12 +8,12 @@ export const TabletOrDesktop = ({children}: React.PropsWithChildren<{}>) => (
   <MediaQuery minWidth={800}>{children}</MediaQuery>
 )
 export const Tablet = ({children}: React.PropsWithChildren<{}>) => (
-  <MediaQuery minWidth={800} maxWidth={1300}>
+  <MediaQuery minWidth={800} maxWidth={1299}>
     {children}
   </MediaQuery>
 )
 export const TabletOrMobile = ({children}: React.PropsWithChildren<{}>) => (
-  <MediaQuery maxWidth={1300}>{children}</MediaQuery>
+  <MediaQuery maxWidth={1299}>{children}</MediaQuery>
 )
 export const Mobile = ({children}: React.PropsWithChildren<{}>) => (
   <MediaQuery maxWidth={800}>{children}</MediaQuery>
