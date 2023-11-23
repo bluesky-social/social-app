@@ -155,23 +155,27 @@ function ProfileScreenLoaded({
   )
 
   const isMe = profile.did === currentAccount?.did
+  const showRepliesTab = hasSession
   const showLikesTab = isMe
-  const showFeedsTab = isMe || extraInfoQuery.data?.hasFeedgens
-  const showListsTab = isMe || extraInfoQuery.data?.hasLists
+  const showFeedsTab = hasSession && (isMe || extraInfoQuery.data?.hasFeedgens)
+  const showListsTab = hasSession && (isMe || extraInfoQuery.data?.hasLists)
   const sectionTitles = useMemo<string[]>(() => {
     return [
       'Posts',
-      'Posts & Replies',
+      showRepliesTab ? 'Posts & Replies' : undefined,
       'Media',
       showLikesTab ? 'Likes' : undefined,
       showFeedsTab ? 'Feeds' : undefined,
       showListsTab ? 'Lists' : undefined,
     ].filter(Boolean) as string[]
-  }, [showLikesTab, showFeedsTab, showListsTab])
+  }, [showRepliesTab, showLikesTab, showFeedsTab, showListsTab])
 
   let nextIndex = 0
   const postsIndex = nextIndex++
-  const repliesIndex = nextIndex++
+  let repliesIndex: number | null = null
+  if (showRepliesTab) {
+    repliesIndex = nextIndex++
+  }
   const mediaIndex = nextIndex++
   let likesIndex: number | null = null
   if (showLikesTab) {
@@ -282,19 +286,27 @@ function ProfileScreenLoaded({
             }
           />
         )}
-        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
-          <FeedSection
-            ref={repliesSectionRef}
-            feed={`author|${profile.did}|posts_with_replies`}
-            onScroll={onScroll}
-            headerHeight={headerHeight}
-            isFocused={isFocused}
-            isScrolledDown={isScrolledDown}
-            scrollElRef={
-              scrollElRef as React.MutableRefObject<FlatList<any> | null>
-            }
-          />
-        )}
+        {showRepliesTab
+          ? ({
+              onScroll,
+              headerHeight,
+              isFocused,
+              isScrolledDown,
+              scrollElRef,
+            }) => (
+              <FeedSection
+                ref={repliesSectionRef}
+                feed={`author|${profile.did}|posts_with_replies`}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                isScrolledDown={isScrolledDown}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
+              />
+            )
+          : null}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={mediaSectionRef}
