@@ -9,6 +9,7 @@ import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {IS_PROD} from '#/lib/constants'
 import {emitSessionLoaded, emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -520,15 +521,17 @@ export function useSessionApi() {
 export function useRequireAuth() {
   const {hasSession} = useSession()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeAll = useCloseAllActiveElements()
 
   return React.useCallback(
     (fn: () => void) => {
       if (hasSession) {
         fn()
       } else {
+        closeAll()
         setShowLoggedOut(true)
       }
     },
-    [hasSession, setShowLoggedOut],
+    [hasSession, setShowLoggedOut, closeAll],
   )
 }
