@@ -16,5 +16,5 @@ export const TabletOrMobile = ({children}: React.PropsWithChildren<{}>) => (
   <MediaQuery maxWidth={1299}>{children}</MediaQuery>
 )
 export const Mobile = ({children}: React.PropsWithChildren<{}>) => (
-  <MediaQuery maxWidth={800}>{children}</MediaQuery>
+  <MediaQuery maxWidth={799}>{children}</MediaQuery>
 )
