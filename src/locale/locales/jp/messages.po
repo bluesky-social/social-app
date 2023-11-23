@@ -1,25 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-11-05 16:01-0800\n"
+"POT-Creation-Date: 2023-11-22 17:10-0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-
-#: src/view/screens/Profile.tsx:214
-#~ msgid "- end of feed -"
-#~ msgstr ""
-
-#: src/view/com/modals/SelfLabel.tsx:138
-#~ msgid ". This warning is only available for posts with media attached."
-#~ msgstr ""
+"Language: jp\n"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -40,10 +26,6 @@ msgstr ""
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
 msgstr ""
-
-#: src/view/com/modals/AddAppPasswords.tsx:132
-#~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
-#~ msgstr ""
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -389,10 +371,6 @@ msgstr ""
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr ""
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65
-#~ msgid "Choose your"
-#~ msgstr ""
-
 #: src/view/com/auth/create/Step2.tsx:106
 msgid "Choose your password"
 msgstr ""
@@ -553,10 +531,6 @@ msgstr ""
 #: src/view/screens/Settings.tsx:611
 msgid "Danger Zone"
 msgstr ""
-
-#: src/view/screens/Settings.tsx:411
-#~ msgid "Dark"
-#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:618
 msgid "Delete account"
@@ -791,10 +765,6 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:42
-#~ msgid "Follow some"
-#~ msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr ""
@@ -933,11 +903,6 @@ msgstr ""
 msgid "Image options"
 msgstr ""
 
-#: src/view/com/search/Suggestions.tsx:104
-#: src/view/com/search/Suggestions.tsx:115
-#~ msgid "In Your Network"
-#~ msgstr ""
-
 #: src/view/com/auth/login/LoginForm.tsx:113
 msgid "Invalid username or password"
 msgstr ""
@@ -1016,10 +981,6 @@ msgstr ""
 msgid "Library"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:405
-#~ msgid "Light"
-#~ msgstr ""
-
 #: src/view/screens/ProfileFeed.tsx:584
 msgid "Like this feed"
 msgstr ""
@@ -1097,10 +1058,6 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:509
 msgid "More options"
 msgstr ""
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:158
-#~ msgid "More post options"
-#~ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:325
 msgid "Mute Account"
@@ -1210,11 +1167,6 @@ msgstr ""
 msgid "No results found for \"{query}\""
 msgstr ""
 
-#: src/view/com/modals/ListAddUser.tsx:142
-#: src/view/shell/desktop/Search.tsx:112
-#~ msgid "No results found for {0}"
-#~ msgstr ""
-
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:268
 #: src/view/screens/Search/Search.tsx:325
@@ -1222,10 +1174,6 @@ msgstr ""
 #: src/view/shell/desktop/Search.tsx:209
 msgid "No results found for {query}"
 msgstr ""
-
-#: src/view/com/modals/SelfLabel.tsx:136
-#~ msgid "Not Applicable"
-#~ msgstr ""
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "Not Applicable."
@@ -1435,11 +1383,6 @@ msgstr ""
 msgid "Ratios"
 msgstr ""
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:50
-#~ msgid "Recommended"
-#~ msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
 msgid "Recommended Feeds"
 msgstr ""
@@ -1533,10 +1476,6 @@ msgstr ""
 msgid "Request Change"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:382
-#~ msgid "Require alt text before posting"
-#~ msgstr ""
-
 #: src/view/com/auth/create/Step2.tsx:53
 msgid "Required for this provider"
 msgstr ""
@@ -1574,10 +1513,6 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/view/com/modals/ChangeHandle.tsx:169
-#~ msgid "Retry change handle"
-#~ msgstr ""
-
 #: src/view/com/modals/AltImage.tsx:114
 #: src/view/com/modals/BirthDateSettings.tsx:93
 #: src/view/com/modals/BirthDateSettings.tsx:96
@@ -1591,10 +1526,6 @@ msgstr ""
 #: src/view/com/modals/AltImage.tsx:105
 msgid "Save alt text"
 msgstr ""
-
-#: src/view/com/modals/UserAddRemoveLists.tsx:212
-#~ msgid "Save changes"
-#~ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:231
 msgid "Save Changes"
@@ -1727,10 +1658,6 @@ msgstr ""
 msgid "Share feed"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:276
-#~ msgid "Share link"
-#~ msgstr ""
-
 #: src/view/screens/Settings.tsx:321
 msgid "Show"
 msgstr ""
@@ -1856,10 +1783,6 @@ msgstr ""
 #: src/view/com/modals/SwitchAccount.tsx:111
 msgid "Switch Account"
 msgstr ""
-
-#: src/view/screens/Settings.tsx:398
-#~ msgid "System"
-#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:642
 msgid "System log"
