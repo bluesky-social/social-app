@@ -16,7 +16,6 @@ import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {FeedDescriptor} from '#/state/queries/post-feed'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
@@ -69,70 +68,65 @@ interface SectionRef {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
-export const ProfileFeedScreen = withAuthRequired(
-  function ProfileFeedScreenImpl(props: Props) {
-    const {rkey, name: handleOrDid} = props.route.params
+export function ProfileFeedScreen(props: Props) {
+  const {rkey, name: handleOrDid} = props.route.params
 
-    const pal = usePalette('default')
-    const {_} = useLingui()
-    const navigation = useNavigation<NavigationProp>()
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
 
-    const uri = useMemo(
-      () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
-      [rkey, handleOrDid],
-    )
-    const {error, data: resolvedUri} = useResolveUriQuery(uri)
+  const uri = useMemo(
+    () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
+    [rkey, handleOrDid],
+  )
+  const {error, data: resolvedUri} = useResolveUriQuery(uri)
 
-    const onPressBack = React.useCallback(() => {
-      if (navigation.canGoBack()) {
-        navigation.goBack()
-      } else {
-        navigation.navigate('Home')
-      }
-    }, [navigation])
-
-    if (error) {
-      return (
-        <CenteredView>
-          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-            <Text type="title-lg" style={[pal.text, s.mb10]}>
-              <Trans>Could not load feed</Trans>
-            </Text>
-            <Text type="md" style={[pal.text, s.mb20]}>
-              {error.toString()}
-            </Text>
-
-            <View style={{flexDirection: 'row'}}>
-              <Button
-                type="default"
-                accessibilityLabel={_(msg`Go Back`)}
-                accessibilityHint="Return to previous page"
-                onPress={onPressBack}
-                style={{flexShrink: 1}}>
-                <Text type="button" style={pal.text}>
-                  <Trans>Go Back</Trans>
-                </Text>
-              </Button>
-            </View>
-          </View>
-        </CenteredView>
-      )
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
     }
+  }, [navigation])
 
-    return resolvedUri ? (
-      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
-    ) : (
+  if (error) {
+    return (
       <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
+        <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+          <Text type="title-lg" style={[pal.text, s.mb10]}>
+            <Trans>Could not load feed</Trans>
+          </Text>
+          <Text type="md" style={[pal.text, s.mb20]}>
+            {error.toString()}
+          </Text>
+
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              type="default"
+              accessibilityLabel={_(msg`Go Back`)}
+              accessibilityHint="Return to previous page"
+              onPress={onPressBack}
+              style={{flexShrink: 1}}>
+              <Text type="button" style={pal.text}>
+                <Trans>Go Back</Trans>
+              </Text>
+            </Button>
+          </View>
         </View>
       </CenteredView>
     )
-  },
-  {
-    isPublic: true,
-  },
-)
+  }
+
+  return resolvedUri ? (
+    <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+  ) : (
+    <CenteredView>
+      <View style={s.p20}>
+        <ActivityIndicator size="large" />
+      </View>
+    </CenteredView>
+  )
+}
 
 function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   const {data: preferences} = usePreferencesQuery()

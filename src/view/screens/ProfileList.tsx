@@ -12,7 +12,6 @@ import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
@@ -64,42 +63,40 @@ interface SectionRef {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
-export const ProfileListScreen = withAuthRequired(
-  function ProfileListScreenImpl(props: Props) {
-    const {name: handleOrDid, rkey} = props.route.params
-    const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
-      AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
-    )
-    const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
+export function ProfileListScreen(props: Props) {
+  const {name: handleOrDid, rkey} = props.route.params
+  const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
+    AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+  )
+  const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
 
-    if (resolveError) {
-      return (
-        <CenteredView>
-          <ErrorScreen
-            error={`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
-          />
-        </CenteredView>
-      )
-    }
-    if (listError) {
-      return (
-        <CenteredView>
-          <ErrorScreen error={cleanError(listError)} />
-        </CenteredView>
-      )
-    }
-
-    return resolvedUri && list ? (
-      <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
-    ) : (
+  if (resolveError) {
+    return (
       <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
+        <ErrorScreen
+          error={`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
+        />
       </CenteredView>
     )
-  },
-)
+  }
+  if (listError) {
+    return (
+      <CenteredView>
+        <ErrorScreen error={cleanError(listError)} />
+      </CenteredView>
+    )
+  }
+
+  return resolvedUri && list ? (
+    <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
+  ) : (
+    <CenteredView>
+      <View style={s.p20}>
+        <ActivityIndicator size="large" />
+      </View>
+    </CenteredView>
+  )
+}
 
 function ProfileListScreenLoaded({
   route,

@@ -3,7 +3,6 @@ import {View, ActivityIndicator, StyleSheet} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -17,29 +16,24 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired(
-  function HomeScreenImpl(props: Props) {
-    const {hasSession} = useSession()
-    const {data: preferences} = usePreferencesQuery()
+export function HomeScreen(props: Props) {
+  const {hasSession} = useSession()
+  const {data: preferences} = usePreferencesQuery()
 
-    if (!hasSession) {
-      return <HomeScreenPublic />
-    }
+  if (!hasSession) {
+    return <HomeScreenPublic />
+  }
 
-    if (preferences) {
-      return <HomeScreenReady {...props} preferences={preferences} />
-    } else {
-      return (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" />
-        </View>
-      )
-    }
-  },
-  {
-    isPublic: true,
-  },
-)
+  if (preferences) {
+    return <HomeScreenReady {...props} preferences={preferences} />
+  } else {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+}
 
 function HomeScreenPublic() {
   const setMinimalShellMode = useSetMinimalShellMode()

@@ -5,7 +5,6 @@ import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView, FlatList} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
@@ -43,83 +42,78 @@ interface SectionRef {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
-export const ProfileScreen = withAuthRequired(
-  function ProfileScreenImpl({route}: Props) {
-    const {currentAccount} = useSession()
-    const name =
-      route.params.name === 'me' ? currentAccount?.did : route.params.name
-    const moderationOpts = useModerationOpts()
-    const {
-      data: resolvedDid,
-      error: resolveError,
-      refetch: refetchDid,
-      isFetching: isFetchingDid,
-    } = useResolveDidQuery(name)
-    const {
-      data: profile,
-      error: profileError,
-      refetch: refetchProfile,
-      isFetching: isFetchingProfile,
-    } = useProfileQuery({
-      did: resolvedDid?.did,
-    })
+export function ProfileScreen({route}: Props) {
+  const {currentAccount} = useSession()
+  const name =
+    route.params.name === 'me' ? currentAccount?.did : route.params.name
+  const moderationOpts = useModerationOpts()
+  const {
+    data: resolvedDid,
+    error: resolveError,
+    refetch: refetchDid,
+    isFetching: isFetchingDid,
+  } = useResolveDidQuery(name)
+  const {
+    data: profile,
+    error: profileError,
+    refetch: refetchProfile,
+    isFetching: isFetchingProfile,
+  } = useProfileQuery({
+    did: resolvedDid?.did,
+  })
 
-    const onPressTryAgain = React.useCallback(() => {
-      if (resolveError) {
-        refetchDid()
-      } else {
-        refetchProfile()
-      }
-    }, [resolveError, refetchDid, refetchProfile])
+  const onPressTryAgain = React.useCallback(() => {
+    if (resolveError) {
+      refetchDid()
+    } else {
+      refetchProfile()
+    }
+  }, [resolveError, refetchDid, refetchProfile])
 
-    if (isFetchingDid || isFetchingProfile || !moderationOpts) {
-      return (
-        <CenteredView>
-          <ProfileHeader
-            profile={null}
-            moderation={null}
-            isProfilePreview={true}
-          />
-        </CenteredView>
-      )
-    }
-    if (resolveError || profileError) {
-      return (
-        <CenteredView>
-          <ErrorScreen
-            testID="profileErrorScreen"
-            title="Oops!"
-            message={cleanError(resolveError || profileError)}
-            onPressTryAgain={onPressTryAgain}
-          />
-        </CenteredView>
-      )
-    }
-    if (profile && moderationOpts) {
-      return (
-        <ProfileScreenLoaded
-          profile={profile}
-          moderationOpts={moderationOpts}
-          hideBackButton={!!route.params.hideBackButton}
+  if (isFetchingDid || isFetchingProfile || !moderationOpts) {
+    return (
+      <CenteredView>
+        <ProfileHeader
+          profile={null}
+          moderation={null}
+          isProfilePreview={true}
         />
-      )
-    }
-    // should never happen
+      </CenteredView>
+    )
+  }
+  if (resolveError || profileError) {
     return (
       <CenteredView>
         <ErrorScreen
           testID="profileErrorScreen"
           title="Oops!"
-          message="Something went wrong and we're not sure what."
+          message={cleanError(resolveError || profileError)}
           onPressTryAgain={onPressTryAgain}
         />
       </CenteredView>
     )
-  },
-  {
-    isPublic: true,
-  },
-)
+  }
+  if (profile && moderationOpts) {
+    return (
+      <ProfileScreenLoaded
+        profile={profile}
+        moderationOpts={moderationOpts}
+        hideBackButton={!!route.params.hideBackButton}
+      />
+    )
+  }
+  // should never happen
+  return (
+    <CenteredView>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+      />
+    </CenteredView>
+  )
+}
 
 function ProfileScreenLoaded({
   profile: profileUnshadowed,

@@ -14,7 +14,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {ScrollView, CenteredView} from 'view/com/util/Views'
 import {Text} from 'view/com/util/text/Text'
@@ -51,7 +50,7 @@ const HITSLOP_BOTTOM = {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
-export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
+export function SavedFeeds({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
@@ -147,7 +146,7 @@ export const SavedFeeds = withAuthRequired(function SavedFeedsImpl({}: Props) {
       </ScrollView>
     </CenteredView>
   )
-})
+}
 
 function ListItem({
   feedUri,
