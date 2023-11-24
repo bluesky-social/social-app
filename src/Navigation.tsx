@@ -9,7 +9,6 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native'
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
@@ -69,16 +68,18 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
+import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
-const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
-const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
-const FeedsTab = createNativeStackNavigator<FeedsTabNavigatorParams>()
+const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
+const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
+const FeedsTab = createNativeStackNavigatorWithAuth<FeedsTabNavigatorParams>()
 const NotificationsTab =
-  createNativeStackNavigator<NotificationsTabNavigatorParams>()
-const MyProfileTab = createNativeStackNavigator<MyProfileTabNavigatorParams>()
-const Flat = createNativeStackNavigator<FlatNavigatorParams>()
+  createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
+const MyProfileTab =
+  createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
+const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
 /**
