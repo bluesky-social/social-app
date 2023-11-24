@@ -28,6 +28,10 @@ import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useOnboardingState} from '#/state/shell'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
 import {LoggedOut} from '../com/auth/LoggedOut'
@@ -92,9 +96,14 @@ function NativeStackNavigator({
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
   const onboardingState = useOnboardingState()
+  const {showLoggedOut} = useLoggedOutView()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   if (activeRouteRequiresAuth && !hasSession) {
     return <LoggedOut />
+  }
+  if (showLoggedOut) {
+    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   if (onboardingState.isActive) {
     return <Onboarding />
