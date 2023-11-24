@@ -26,24 +26,24 @@ export const withAuthRequired = <P extends object>(
   } = {},
 ): React.FC<P> =>
   function AuthRequired(props: P) {
-    const {isInitialLoad, hasSession} = useSession()
-    const onboardingState = useOnboardingState()
-    const {showLoggedOut} = useLoggedOutView()
-    const {setShowLoggedOut} = useLoggedOutViewControls()
+    // const {isInitialLoad, hasSession} = useSession()
+    // const onboardingState = useOnboardingState()
+    // const {showLoggedOut} = useLoggedOutView()
+    // const {setShowLoggedOut} = useLoggedOutViewControls()
 
-    if (isInitialLoad) {
-      return <Loading />
-    }
-    if (!hasSession) {
-      if (showLoggedOut) {
-        return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
-      } else if (!options?.isPublic || IS_PROD) {
-        return <LoggedOut />
-      }
-    }
-    if (onboardingState.isActive) {
-      return <Onboarding />
-    }
+    // if (isInitialLoad) {
+    //   return <Loading />
+    // }
+    // if (!hasSession) {
+    //   if (showLoggedOut) {
+    //     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+    //   } else if (!options?.isPublic || IS_PROD) {
+    //     return <LoggedOut />
+    //   }
+    // }
+    // if (onboardingState.isActive) {
+    //   return <Onboarding />
+    // }
     return <Component {...props} />
   }
 
