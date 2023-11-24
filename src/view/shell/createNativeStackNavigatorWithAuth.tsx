@@ -22,7 +22,13 @@ import type {
 import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
 import {NativeStackView} from '@react-navigation/native-stack'
 
+import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
+import {DesktopLeftNav} from './desktop/LeftNav'
+import {DesktopRightNav} from './desktop/RightNav'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useOnboardingState} from '#/state/shell'
 import {useSession} from '#/state/session'
+import {isWeb} from 'platform/detection'
 import {LoggedOut} from '../com/auth/LoggedOut'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
@@ -96,15 +102,32 @@ function NativeStackNavigator({
     }
   }
 
+  const activeRoute = state.routes[state.index]
+  const activeDescriptor = newDescriptors[activeRoute.key]
+  const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
+  const isShowingLoggedOut = activeRouteRequiresAuth && !hasSession
+  const onboardingState = useOnboardingState()
+  const isFullScreenRoute = isShowingLoggedOut || onboardingState.isActive
+  const showWebShell = isWeb && !isFullScreenRoute
+  const {isMobile} = useWebMediaQueries()
   return (
-    <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={newDescriptors}
-      />
-    </NavigationContent>
+    <>
+      <NavigationContent>
+        <NativeStackView
+          {...rest}
+          state={state}
+          navigation={navigation}
+          descriptors={newDescriptors}
+        />
+      </NavigationContent>
+      {showWebShell && isMobile && <BottomBarWeb />}
+      {showWebShell && !isMobile && (
+        <>
+          <DesktopLeftNav />
+          <DesktopRightNav />
+        </>
+      )}
+    </>
   )
 }
 
