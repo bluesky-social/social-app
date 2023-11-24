@@ -22,6 +22,7 @@ import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
+import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -34,7 +35,7 @@ import * as persisted from '#/state/persisted'
 enableFreeze(true)
 
 function InnerApp() {
-  const {isInitialLoad} = useSession()
+  const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
 
@@ -57,19 +58,25 @@ function InnerApp() {
    */
 
   return (
-    <UnreadNotifsProvider>
-      <ThemeProvider theme={colorMode}>
-        <analytics.Provider>
-          {/* All components should be within this provider */}
-          <RootSiblingParent>
-            <SafeAreaProvider>
-              <Shell />
-            </SafeAreaProvider>
-          </RootSiblingParent>
-          <ToastContainer />
-        </analytics.Provider>
-      </ThemeProvider>
-    </UnreadNotifsProvider>
+    <React.Fragment
+      // Resets the entire tree below when it changes:
+      key={currentAccount?.did}>
+      <LoggedOutViewProvider>
+        <UnreadNotifsProvider>
+          <ThemeProvider theme={colorMode}>
+            <analytics.Provider>
+              {/* All components should be within this provider */}
+              <RootSiblingParent>
+                <SafeAreaProvider>
+                  <Shell />
+                </SafeAreaProvider>
+              </RootSiblingParent>
+              <ToastContainer />
+            </analytics.Provider>
+          </ThemeProvider>
+        </UnreadNotifsProvider>
+      </LoggedOutViewProvider>
+    </React.Fragment>
   )
 }
 

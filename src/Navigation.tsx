@@ -9,7 +9,6 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native'
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
@@ -69,16 +68,18 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
+import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
-const HomeTab = createNativeStackNavigator<HomeTabNavigatorParams>()
-const SearchTab = createNativeStackNavigator<SearchTabNavigatorParams>()
-const FeedsTab = createNativeStackNavigator<FeedsTabNavigatorParams>()
+const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
+const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
+const FeedsTab = createNativeStackNavigatorWithAuth<FeedsTabNavigatorParams>()
 const NotificationsTab =
-  createNativeStackNavigator<NotificationsTabNavigatorParams>()
-const MyProfileTab = createNativeStackNavigator<MyProfileTabNavigatorParams>()
-const Flat = createNativeStackNavigator<FlatNavigatorParams>()
+  createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
+const MyProfileTab =
+  createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
+const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
 /**
@@ -97,37 +98,37 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="Lists"
         component={ListsScreen}
-        options={{title: title('Lists')}}
+        options={{title: title('Lists'), requireAuth: true}}
       />
       <Stack.Screen
         name="Moderation"
         getComponent={() => ModerationScreen}
-        options={{title: title('Moderation')}}
+        options={{title: title('Moderation'), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
         getComponent={() => ModerationModlistsScreen}
-        options={{title: title('Moderation Lists')}}
+        options={{title: title('Moderation Lists'), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
         getComponent={() => ModerationMutedAccounts}
-        options={{title: title('Muted Accounts')}}
+        options={{title: title('Muted Accounts'), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
         getComponent={() => ModerationBlockedAccounts}
-        options={{title: title('Blocked Accounts')}}
+        options={{title: title('Blocked Accounts'), requireAuth: true}}
       />
       <Stack.Screen
         name="Settings"
         getComponent={() => SettingsScreen}
-        options={{title: title('Settings')}}
+        options={{title: title('Settings'), requireAuth: true}}
       />
       <Stack.Screen
         name="LanguageSettings"
         getComponent={() => LanguageSettingsScreen}
-        options={{title: title('Language Settings')}}
+        options={{title: title('Language Settings'), requireAuth: true}}
       />
       <Stack.Screen
         name="Profile"
@@ -154,7 +155,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
-        options={{title: title('List')}}
+        options={{title: title('List'), requireAuth: true}}
       />
       <Stack.Screen
         name="PostThread"
@@ -184,12 +185,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="Debug"
         getComponent={() => DebugScreen}
-        options={{title: title('Debug')}}
+        options={{title: title('Debug'), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"
         getComponent={() => LogScreen}
-        options={{title: title('Log')}}
+        options={{title: title('Log'), requireAuth: true}}
       />
       <Stack.Screen
         name="Support"
@@ -219,22 +220,22 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="AppPasswords"
         getComponent={() => AppPasswords}
-        options={{title: title('App Passwords')}}
+        options={{title: title('App Passwords'), requireAuth: true}}
       />
       <Stack.Screen
         name="SavedFeeds"
         getComponent={() => SavedFeeds}
-        options={{title: title('Edit My Feeds')}}
+        options={{title: title('Edit My Feeds'), requireAuth: true}}
       />
       <Stack.Screen
         name="PreferencesHomeFeed"
         getComponent={() => PreferencesHomeFeed}
-        options={{title: title('Home Feed Preferences')}}
+        options={{title: title('Home Feed Preferences'), requireAuth: true}}
       />
       <Stack.Screen
         name="PreferencesThreads"
         getComponent={() => PreferencesThreads}
-        options={{title: title('Threads Preferences')}}
+        options={{title: title('Threads Preferences'), requireAuth: true}}
       />
     </>
   )
@@ -339,6 +340,7 @@ function NotificationsTabNavigator() {
       <NotificationsTab.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
+        options={{requireAuth: true}}
       />
       {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>
@@ -357,8 +359,8 @@ function MyProfileTabNavigator() {
         contentStyle,
       }}>
       <MyProfileTab.Screen
-        name="MyProfile"
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
+        name="MyProfile"
         getComponent={() => ProfileScreen}
         initialParams={{
           name: 'me',
@@ -405,7 +407,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
-        options={{title: title('Notifications')}}
+        options={{title: title('Notifications'), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>

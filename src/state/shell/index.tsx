@@ -7,7 +7,6 @@ import {Provider as ColorModeProvider} from './color-mode'
 import {Provider as OnboardingProvider} from './onboarding'
 import {Provider as ComposerProvider} from './composer'
 import {Provider as TickEveryMinuteProvider} from './tick-every-minute'
-import {Provider as LoggedOutViewProvider} from './logged-out'
 
 export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
 export {
@@ -23,23 +22,19 @@ export {useTickEveryMinute} from './tick-every-minute'
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <ShellLayoutProvder>
-      <LoggedOutViewProvider>
-        <DrawerOpenProvider>
-          <DrawerSwipableProvider>
-            <MinimalModeProvider>
-              <ColorModeProvider>
-                <OnboardingProvider>
-                  <ComposerProvider>
-                    <TickEveryMinuteProvider>
-                      {children}
-                    </TickEveryMinuteProvider>
-                  </ComposerProvider>
-                </OnboardingProvider>
-              </ColorModeProvider>
-            </MinimalModeProvider>
-          </DrawerSwipableProvider>
-        </DrawerOpenProvider>
-      </LoggedOutViewProvider>
+      <DrawerOpenProvider>
+        <DrawerSwipableProvider>
+          <MinimalModeProvider>
+            <ColorModeProvider>
+              <OnboardingProvider>
+                <ComposerProvider>
+                  <TickEveryMinuteProvider>{children}</TickEveryMinuteProvider>
+                </ComposerProvider>
+              </OnboardingProvider>
+            </ColorModeProvider>
+          </MinimalModeProvider>
+        </DrawerSwipableProvider>
+      </DrawerOpenProvider>
     </ShellLayoutProvder>
   )
 }

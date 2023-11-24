@@ -1,7 +1,5 @@
 import React, {useEffect} from 'react'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
-import {DesktopLeftNav} from './desktop/LeftNav'
-import {DesktopRightNav} from './desktop/RightNav'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {Lightbox} from '../com/lightbox/Lightbox'
 import {ModalsContainer} from '../com/modals/Modal'
@@ -11,27 +9,19 @@ import {s, colors} from 'lib/styles'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
-import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
-import {
-  useIsDrawerOpen,
-  useSetDrawerOpen,
-  useOnboardingState,
-} from '#/state/shell'
+import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useLoggedOutView} from '#/state/shell/logged-out'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
-  const onboardingState = useOnboardingState()
-  const {isDesktop, isMobile} = useWebMediaQueries()
+  const {isDesktop} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {showLoggedOut} = useLoggedOutView()
 
   useAuxClick()
 
@@ -42,8 +32,6 @@ function ShellInner() {
     return unsubscribe
   }, [navigator, closeAllActiveElements])
 
-  const showBottomBar = isMobile && !onboardingState.isActive
-  const showSideNavs = !isMobile && !onboardingState.isActive && !showLoggedOut
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
@@ -51,22 +39,9 @@ function ShellInner() {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-
-      {showSideNavs && (
-        <>
-          <DesktopLeftNav />
-          <DesktopRightNav />
-        </>
-      )}
-
       <Composer winHeight={0} />
-
-      {showBottomBar && <BottomBarWeb />}
-
       <ModalsContainer />
-
       <Lightbox />
-
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

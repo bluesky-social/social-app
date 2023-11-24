@@ -6,7 +6,6 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {s} from 'lib/styles'
 import {CenteredView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -21,100 +20,98 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
-export const ModerationScreen = withAuthRequired(
-  function Moderation({}: Props) {
-    const pal = usePalette('default')
-    const {_} = useLingui()
-    const setMinimalShellMode = useSetMinimalShellMode()
-    const {screen, track} = useAnalytics()
-    const {isTabletOrDesktop} = useWebMediaQueries()
-    const {openModal} = useModalControls()
+export function ModerationScreen({}: Props) {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {screen, track} = useAnalytics()
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {openModal} = useModalControls()
 
-    useFocusEffect(
-      React.useCallback(() => {
-        screen('Moderation')
-        setMinimalShellMode(false)
-      }, [screen, setMinimalShellMode]),
-    )
+  useFocusEffect(
+    React.useCallback(() => {
+      screen('Moderation')
+      setMinimalShellMode(false)
+    }, [screen, setMinimalShellMode]),
+  )
 
-    const onPressContentFiltering = React.useCallback(() => {
-      track('Moderation:ContentfilteringButtonClicked')
-      openModal({name: 'content-filtering-settings'})
-    }, [track, openModal])
+  const onPressContentFiltering = React.useCallback(() => {
+    track('Moderation:ContentfilteringButtonClicked')
+    openModal({name: 'content-filtering-settings'})
+  }, [track, openModal])
 
-    return (
-      <CenteredView
-        style={[
-          s.hContentRegion,
-          pal.border,
-          isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
-        ]}
-        testID="moderationScreen">
-        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-        <View style={styles.spacer} />
-        <TouchableOpacity
-          testID="contentFilteringBtn"
-          style={[styles.linkCard, pal.view]}
-          onPress={onPressContentFiltering}
-          accessibilityRole="tab"
-          accessibilityHint="Content filtering"
-          accessibilityLabel="">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="eye"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Content filtering</Trans>
-          </Text>
-        </TouchableOpacity>
-        <Link
-          testID="moderationlistsBtn"
-          style={[styles.linkCard, pal.view]}
-          href="/moderation/modlists">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="users-slash"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Moderation lists</Trans>
-          </Text>
-        </Link>
-        <Link
-          testID="mutedAccountsBtn"
-          style={[styles.linkCard, pal.view]}
-          href="/moderation/muted-accounts">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="user-slash"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Muted accounts</Trans>
-          </Text>
-        </Link>
-        <Link
-          testID="blockedAccountsBtn"
-          style={[styles.linkCard, pal.view]}
-          href="/moderation/blocked-accounts">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="ban"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Blocked accounts</Trans>
-          </Text>
-        </Link>
-      </CenteredView>
-    )
-  },
-)
+  return (
+    <CenteredView
+      style={[
+        s.hContentRegion,
+        pal.border,
+        isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
+      ]}
+      testID="moderationScreen">
+      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+      <View style={styles.spacer} />
+      <TouchableOpacity
+        testID="contentFilteringBtn"
+        style={[styles.linkCard, pal.view]}
+        onPress={onPressContentFiltering}
+        accessibilityRole="tab"
+        accessibilityHint="Content filtering"
+        accessibilityLabel="">
+        <View style={[styles.iconContainer, pal.btn]}>
+          <FontAwesomeIcon
+            icon="eye"
+            style={pal.text as FontAwesomeIconStyle}
+          />
+        </View>
+        <Text type="lg" style={pal.text}>
+          <Trans>Content filtering</Trans>
+        </Text>
+      </TouchableOpacity>
+      <Link
+        testID="moderationlistsBtn"
+        style={[styles.linkCard, pal.view]}
+        href="/moderation/modlists">
+        <View style={[styles.iconContainer, pal.btn]}>
+          <FontAwesomeIcon
+            icon="users-slash"
+            style={pal.text as FontAwesomeIconStyle}
+          />
+        </View>
+        <Text type="lg" style={pal.text}>
+          <Trans>Moderation lists</Trans>
+        </Text>
+      </Link>
+      <Link
+        testID="mutedAccountsBtn"
+        style={[styles.linkCard, pal.view]}
+        href="/moderation/muted-accounts">
+        <View style={[styles.iconContainer, pal.btn]}>
+          <FontAwesomeIcon
+            icon="user-slash"
+            style={pal.text as FontAwesomeIconStyle}
+          />
+        </View>
+        <Text type="lg" style={pal.text}>
+          <Trans>Muted accounts</Trans>
+        </Text>
+      </Link>
+      <Link
+        testID="blockedAccountsBtn"
+        style={[styles.linkCard, pal.view]}
+        href="/moderation/blocked-accounts">
+        <View style={[styles.iconContainer, pal.btn]}>
+          <FontAwesomeIcon
+            icon="ban"
+            style={pal.text as FontAwesomeIconStyle}
+          />
+        </View>
+        <Text type="lg" style={pal.text}>
+          <Trans>Blocked accounts</Trans>
+        </Text>
+      </Link>
+    </CenteredView>
+  )
+}
 
 const styles = StyleSheet.create({
   desktopContainer: {

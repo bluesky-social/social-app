@@ -28,6 +28,7 @@ import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
+import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -42,7 +43,7 @@ SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
   const colorMode = useColorMode()
-  const {isInitialLoad} = useSession()
+  const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
 
   // init
@@ -69,19 +70,25 @@ function InnerApp() {
    */
 
   return (
-    <UnreadNotifsProvider>
-      <ThemeProvider theme={colorMode}>
-        <analytics.Provider>
-          {/* All components should be within this provider */}
-          <RootSiblingParent>
-            <GestureHandlerRootView style={s.h100pct}>
-              <TestCtrls />
-              <Shell />
-            </GestureHandlerRootView>
-          </RootSiblingParent>
-        </analytics.Provider>
-      </ThemeProvider>
-    </UnreadNotifsProvider>
+    <React.Fragment
+      // Resets the entire tree below when it changes:
+      key={currentAccount?.did}>
+      <LoggedOutViewProvider>
+        <UnreadNotifsProvider>
+          <ThemeProvider theme={colorMode}>
+            <analytics.Provider>
+              {/* All components should be within this provider */}
+              <RootSiblingParent>
+                <GestureHandlerRootView style={s.h100pct}>
+                  <TestCtrls />
+                  <Shell />
+                </GestureHandlerRootView>
+              </RootSiblingParent>
+            </analytics.Provider>
+          </ThemeProvider>
+        </UnreadNotifsProvider>
+      </LoggedOutViewProvider>
+    </React.Fragment>
   )
 }
 

@@ -20,7 +20,6 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
@@ -141,7 +140,7 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
-export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
+export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
   const colorMode = useColorMode()
   const setColorMode = useSetColorMode()
@@ -731,7 +730,7 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
       </ScrollView>
     </View>
   )
-})
+}
 
 function EmailConfirmationNotice() {
   const pal = usePalette('default')
