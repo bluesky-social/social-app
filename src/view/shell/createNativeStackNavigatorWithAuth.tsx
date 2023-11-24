@@ -22,6 +22,13 @@ import type {
 import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
 import {NativeStackView} from '@react-navigation/native-stack'
 
+import {useSession} from '#/state/session'
+import {LoggedOut} from '../com/auth/LoggedOut'
+
+type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
+  requireAuth?: boolean
+}
+
 function NativeStackNavigator({
   id,
   initialRouteName,
@@ -36,7 +43,7 @@ function NativeStackNavigator({
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
       StackActionHelpers<ParamListBase>,
-      NativeStackNavigationOptions,
+      NativeStackNavigationOptionsWithAuth,
       NativeStackNavigationEventMap
     >(StackRouter, {
       id,
@@ -70,13 +77,32 @@ function NativeStackNavigator({
       }),
     [navigation, state.index, state.key],
   )
+
+  // --- our custom logic starts here ---
+  const {hasSession} = useSession()
+  const newDescriptors: typeof descriptors = {}
+  for (let key in descriptors) {
+    const descriptor = descriptors[key]
+    const requireAuth = descriptor.options.requireAuth ?? false
+    newDescriptors[key] = {
+      ...descriptor,
+      render() {
+        if (requireAuth && !hasSession) {
+          return <LoggedOut />
+        } else {
+          return descriptor.render()
+        }
+      },
+    }
+  }
+
   return (
     <NavigationContent>
       <NativeStackView
         {...rest}
         state={state}
         navigation={navigation}
-        descriptors={descriptors}
+        descriptors={newDescriptors}
       />
     </NavigationContent>
   )
@@ -84,7 +110,7 @@ function NativeStackNavigator({
 
 export const createNativeStackNavigatorWithAuth = createNavigatorFactory<
   StackNavigationState<ParamListBase>,
-  NativeStackNavigationOptions,
+  NativeStackNavigationOptionsWithAuth,
   NativeStackNavigationEventMap,
   typeof NativeStackNavigator
 >(NativeStackNavigator)
