@@ -36,9 +36,10 @@ function ShellInner() {
   useAuxClick()
 
   useEffect(() => {
-    navigator.addListener('state', () => {
+    const unsubscribe = navigator.addListener('state', () => {
       closeAllActiveElements()
     })
+    return unsubscribe
   }, [navigator, closeAllActiveElements])
 
   const showBottomBar = isMobile && !onboardingState.isActive
