@@ -160,6 +160,35 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   })
 }
 
+export const isFeedPublicQueryKey = ({uri}: {uri: string}) => [
+  'isFeedPublic',
+  uri,
+]
+
+export function useIsFeedPublicQuery({uri}: {uri: string}) {
+  return useQuery({
+    queryKey: isFeedPublicQueryKey({uri}),
+    queryFn: async ({queryKey}) => {
+      const [, uri] = queryKey
+      try {
+        const res = await getAgent().app.bsky.feed.getFeed({
+          feed: uri,
+          limit: 1,
+        })
+        return Boolean(res.data.feed)
+      } catch (e: any) {
+        const msg = e.toString() as string
+
+        if (msg.includes('missing jwt')) {
+          return false
+        }
+
+        return true
+      }
+    },
+  })
+}
+
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
