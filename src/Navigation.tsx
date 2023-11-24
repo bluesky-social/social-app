@@ -359,8 +359,8 @@ function MyProfileTabNavigator() {
         contentStyle,
       }}>
       <MyProfileTab.Screen
-        name="MyProfile"
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
+        name="MyProfile"
         getComponent={() => ProfileScreen}
         initialParams={{
           name: 'me',
