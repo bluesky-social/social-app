@@ -42,7 +42,20 @@ export type ApiContext = {
     identifier: string
     password: string
   }) => Promise<void>
+  /**
+   * A full logout. Clears the `currentAccount` from session, AND removes
+   * access tokens from all accounts, so that returning as any user will
+   * require a full login.
+   */
   logout: () => Promise<void>
+  /**
+   * A partial logout. Clears the `currentAccount` from session, but DOES NOT
+   * clear access tokens from accounts, allowing the user to return to their
+   * other accounts without logging in.
+   *
+   * Used when adding a new account, deleting an account.
+   */
+  clearCurrentAccount: () => void
   initSession: (account: SessionAccount) => Promise<void>
   resumeSession: (account?: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
@@ -52,7 +65,6 @@ export type ApiContext = {
       Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
     >,
   ) => void
-  clearCurrentAccount: () => void
 }
 
 const StateContext = React.createContext<StateContext>({
@@ -256,13 +268,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAccount, queryClient],
   )
 
+  const clearCurrentAccount = React.useCallback(() => {
+    logger.debug(
+      `session: clear current account`,
+      {},
+      logger.DebugContext.session,
+    )
+    __globalAgent = PUBLIC_BSKY_AGENT
+    queryClient.clear()
+    setStateAndPersist(s => ({
+      ...s,
+      currentAccount: undefined,
+    }))
+  }, [setStateAndPersist, queryClient])
+
   const logout = React.useCallback<ApiContext['logout']>(async () => {
+    clearCurrentAccount()
     logger.debug(`session: logout`, {}, logger.DebugContext.session)
     setStateAndPersist(s => {
       return {
         ...s,
-        agent: PUBLIC_BSKY_AGENT,
-        currentAccount: undefined,
         accounts: s.accounts.map(a => ({
           ...a,
           refreshJwt: undefined,
@@ -270,7 +295,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })),
       }
     })
-  }, [setStateAndPersist])
+  }, [clearCurrentAccount, setStateAndPersist])
 
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
@@ -403,19 +428,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [setState, initSession],
   )
-
-  /**
-   * Clears the `currentAccount` from session. Typically used to drop the user
-   * back to the sign-in page.
-   */
-  const clearCurrentAccount = React.useCallback(() => {
-    __globalAgent = PUBLIC_BSKY_AGENT
-    queryClient.clear()
-    setStateAndPersist(s => ({
-      ...s,
-      currentAccount: undefined,
-    }))
-  }, [setStateAndPersist, queryClient])
 
   React.useEffect(() => {
     if (isDirty.current) {
