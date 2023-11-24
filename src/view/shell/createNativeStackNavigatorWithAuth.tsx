@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {View} from 'react-native'
 
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
@@ -30,6 +31,7 @@ import {useOnboardingState} from '#/state/shell'
 import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
 import {LoggedOut} from '../com/auth/LoggedOut'
+import {Onboarding} from '../com/auth/Onboarding'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
@@ -86,6 +88,17 @@ function NativeStackNavigator({
 
   // --- our custom logic starts here ---
   const {hasSession} = useSession()
+  const activeRoute = state.routes[state.index]
+  const activeDescriptor = descriptors[activeRoute.key]
+  const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
+  const onboardingState = useOnboardingState()
+  const {isMobile} = useWebMediaQueries()
+  if (activeRouteRequiresAuth && !hasSession) {
+    return <LoggedOut />
+  }
+  if (onboardingState.isActive) {
+    return <Onboarding />
+  }
   const newDescriptors: typeof descriptors = {}
   for (let key in descriptors) {
     const descriptor = descriptors[key]
@@ -94,40 +107,29 @@ function NativeStackNavigator({
       ...descriptor,
       render() {
         if (requireAuth && !hasSession) {
-          return <LoggedOut />
+          return <View />
         } else {
           return descriptor.render()
         }
       },
     }
   }
-
-  const activeRoute = state.routes[state.index]
-  const activeDescriptor = newDescriptors[activeRoute.key]
-  const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
-  const isShowingLoggedOut = activeRouteRequiresAuth && !hasSession
-  const onboardingState = useOnboardingState()
-  const isFullScreenRoute = isShowingLoggedOut || onboardingState.isActive
-  const showWebShell = isWeb && !isFullScreenRoute
-  const {isMobile} = useWebMediaQueries()
   return (
-    <>
-      <NavigationContent>
-        <NativeStackView
-          {...rest}
-          state={state}
-          navigation={navigation}
-          descriptors={newDescriptors}
-        />
-      </NavigationContent>
-      {showWebShell && isMobile && <BottomBarWeb />}
-      {showWebShell && !isMobile && (
+    <NavigationContent>
+      <NativeStackView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={newDescriptors}
+      />
+      {isWeb && isMobile && <BottomBarWeb />}
+      {isWeb && !isMobile && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav />
         </>
       )}
-    </>
+    </NavigationContent>
   )
 }
 
