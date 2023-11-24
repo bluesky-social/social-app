@@ -283,8 +283,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [setStateAndPersist, queryClient])
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
-    logger.debug(`session: logout`, {}, logger.DebugContext.session)
     clearCurrentAccount()
+    logger.debug(`session: logout`, {}, logger.DebugContext.session)
     setStateAndPersist(s => {
       return {
         ...s,
