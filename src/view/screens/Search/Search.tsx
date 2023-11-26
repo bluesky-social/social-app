@@ -24,7 +24,7 @@ import {
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {Text} from '#/view/com/util/text/Text'
-import {NotificationFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Post} from '#/view/com/post/Post'
 import {Pager} from '#/view/com/pager/Pager'
@@ -45,6 +45,7 @@ import {SearchResultCard} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {s} from '#/lib/styles'
 
 function Loader() {
   const pal = usePalette('default')
@@ -162,9 +163,9 @@ function SearchScreenSuggestedFollows() {
       contentContainerStyle={{paddingBottom: 1200}}
     />
   ) : (
-    <CenteredView
-      style={[pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]}>
-      <NotificationFeedLoadingPlaceholder />
+    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
+      <ProfileCardFeedLoadingPlaceholder />
+      <ProfileCardFeedLoadingPlaceholder />
     </CenteredView>
   )
 }
