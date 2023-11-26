@@ -35,6 +35,7 @@
       "channel": "production"
     },
     "dev-android-apk": {
+      "node": "18.18.2",
       "developmentClient": true,
       "android": {
         "buildType": "apk",
