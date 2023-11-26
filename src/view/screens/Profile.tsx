@@ -5,7 +5,6 @@ import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView, FlatList} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
@@ -131,7 +130,6 @@ function ProfileScreenLoaded({
   const {screen, track} = useAnalytics()
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
   const postsSectionRef = React.useRef<SectionRef>(null)
@@ -184,14 +182,33 @@ function ProfileScreenLoaded({
     listsIndex = nextIndex++
   }
 
+  const scrollSectionToTop = React.useCallback(
+    (index: number) => {
+      if (index === postsIndex) {
+        postsSectionRef.current?.scrollToTop()
+      } else if (index === repliesIndex) {
+        repliesSectionRef.current?.scrollToTop()
+      } else if (index === mediaIndex) {
+        mediaSectionRef.current?.scrollToTop()
+      } else if (index === likesIndex) {
+        likesSectionRef.current?.scrollToTop()
+      } else if (index === feedsIndex) {
+        feedsSectionRef.current?.scrollToTop()
+      } else if (index === listsIndex) {
+        listsSectionRef.current?.scrollToTop()
+      }
+    },
+    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+  )
+
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
       screen('Profile')
       return listenSoftReset(() => {
-        viewSelectorRef.current?.scrollToTop()
+        scrollSectionToTop(currentPage)
       })
-    }, [viewSelectorRef, setMinimalShellMode, screen]),
+    }, [setMinimalShellMode, screen, currentPage, scrollSectionToTop]),
   )
 
   useFocusEffect(
@@ -225,21 +242,9 @@ function ProfileScreenLoaded({
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {
-      if (index === postsIndex) {
-        postsSectionRef.current?.scrollToTop()
-      } else if (index === repliesIndex) {
-        repliesSectionRef.current?.scrollToTop()
-      } else if (index === mediaIndex) {
-        mediaSectionRef.current?.scrollToTop()
-      } else if (index === likesIndex) {
-        likesSectionRef.current?.scrollToTop()
-      } else if (index === feedsIndex) {
-        feedsSectionRef.current?.scrollToTop()
-      } else if (index === listsIndex) {
-        listsSectionRef.current?.scrollToTop()
-      }
+      scrollSectionToTop(index)
     },
-    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+    [scrollSectionToTop],
   )
 
   // rendering
