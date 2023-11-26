@@ -14,6 +14,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
+import {HomePublic} from '#/view/screens/HomePublic'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -21,7 +22,7 @@ export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
 
   if (!hasSession) {
-    return <HomeScreenPublic />
+    return <HomePublic />
   }
 
   if (preferences) {
@@ -33,30 +34,6 @@ export function HomeScreen(props: Props) {
       </View>
     )
   }
-}
-
-function HomeScreenPublic() {
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-
-  const renderCustomFeedEmptyState = React.useCallback(() => {
-    return <CustomFeedEmptyState />
-  }, [])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-      setDrawerSwipeDisabled(false)
-    }, [setDrawerSwipeDisabled, setMinimalShellMode]),
-  )
-
-  return (
-    <FeedPage
-      isPageFocused
-      feed={`feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot`}
-      renderEmptyState={renderCustomFeedEmptyState}
-    />
-  )
 }
 
 function HomeScreenReady({
