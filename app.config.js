@@ -6,7 +6,7 @@ module.exports = function () {
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
-      version: '1.56.0',
+      version: '1.57.0',
       runtimeVersion: {
         policy: 'appVersion',
       },

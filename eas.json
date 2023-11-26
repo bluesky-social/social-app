@@ -4,37 +4,45 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
+    "base": {
+      "node": "18.18.2"
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
         "simulator": true,
-        "resourceClass": "m-large"
+        "resourceClass": "large"
       },
       "channel": "development"
     },
     "development-device": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "resourceClass": "m-large"
+        "resourceClass": "large"
       },
       "channel": "development"
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
       "ios": {
-        "resourceClass": "m-large"
+        "resourceClass": "large"
       },
       "channel": "preview"
     },
     "production": {
+      "extends": "base",
       "ios": {
-        "resourceClass": "m-large"
+        "resourceClass": "large"
       },
       "channel": "production"
     },
     "dev-android-apk": {
+      "extends": "base",
       "developmentClient": true,
       "android": {
         "buildType": "apk",
