@@ -45,10 +45,10 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text} numberOfLines={1}>
-          {profile?.displayName || currentAccount?.handle}
+          {profile?.displayName || account?.handle}
         </Text>
         <Text type="sm" style={pal.textLight} numberOfLines={1}>
-          {currentAccount?.handle}
+          {account?.handle}
         </Text>
       </View>
 
