@@ -80,24 +80,20 @@ export function usePostThreadQuery(uri: string | undefined) {
     enabled: !!uri,
     placeholderData: () => {
       if (!uri) {
-        console.log('bombed here')
         return undefined
       }
       {
         const item = findPostInFeedQueryData(queryClient, uri)
         if (item) {
-          console.log('using cache')
           return feedItemToPlaceholderThread(item)
         }
       }
       {
         const item = findPostInNotifsQueryData(queryClient, uri)
         if (item) {
-          console.log('using cache 2')
           return postViewToPlaceholderThread(item)
         }
       }
-      console.log('no cache')
       return undefined
     },
   })
