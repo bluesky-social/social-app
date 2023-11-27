@@ -122,7 +122,35 @@ export async function migrate() {
     const rawLegacyData = await AsyncStorage.getItem(
       DEPRECATED_ROOT_STATE_STORAGE_KEY,
     )
-    const alreadyMigrated = Boolean(await read())
+    const newData = await read()
+    const alreadyMigrated = Boolean(newData)
+
+    try {
+      if (rawLegacyData) {
+        const legacy = JSON.parse(rawLegacyData) as Partial<LegacySchema>
+        logger.info(`persisted state: debug legacy data`, {
+          hasExistingLoggedInAccount: Boolean(legacy?.session?.data),
+          numberOfExistingAccounts: legacy?.session?.accounts?.length,
+          foundExistingCurrentAccount: Boolean(
+            legacy.session?.accounts?.find(
+              a => a.did === legacy.session?.data?.did,
+            ),
+          ),
+        })
+        logger.info(`persisted state: debug new data`, {
+          hasExistingLoggedInAccount: Boolean(newData?.session?.currentAccount),
+          numberOfExistingAccounts: newData?.session?.accounts?.length,
+          existingAccountMatchesLegacy: Boolean(
+            newData?.session?.currentAccount?.did ===
+              legacy?.session?.data?.did,
+          ),
+        })
+      } else {
+        logger.info(`persisted state: no legacy to debug, fresh install`)
+      }
+    } catch (e) {
+      logger.error(`persisted state: legacy debugging failed`, {error: e})
+    }
 
     if (!alreadyMigrated && rawLegacyData) {
       logger.info('persisted state: migrating legacy storage')
