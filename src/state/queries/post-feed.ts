@@ -161,7 +161,6 @@ export function usePostFeedQuery(
             slice.items.every(
               item => item.post.author.did === slice.items[0].post.author.did,
             ),
-          source: undefined, // TODO
           items: slice.items
             .map((item, i) => {
               if (
