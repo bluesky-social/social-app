@@ -195,13 +195,27 @@ export function FeedPage({
 function useHeaderOffset() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const {fontScale} = useWindowDimensions()
+  const {hasSession} = useSession()
+
   if (isDesktop) {
     return 0
   }
   if (isTablet) {
-    return 50
+    if (hasSession) {
+      return 50
+    } else {
+      return 0
+    }
   }
-  // default text takes 44px, plus 34px of pad
-  // scale the 44px by the font scale
-  return 34 + 44 * fontScale
+
+  if (hasSession) {
+    // Adds up to:
+    // - height of nav bar + logo
+    // - height of tab bar padding
+    // - font size
+    return 38 + 44 * fontScale
+  } else {
+    // just nav bar + logo
+    return 40
+  }
 }

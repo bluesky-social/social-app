@@ -17,12 +17,7 @@ import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
-  const {hasSession} = useSession()
   const {data: preferences} = usePreferencesQuery()
-
-  if (!hasSession) {
-    return <HomeScreenPublic />
-  }
 
   if (preferences) {
     return <HomeScreenReady {...props} preferences={preferences} />
@@ -35,35 +30,12 @@ export function HomeScreen(props: Props) {
   }
 }
 
-function HomeScreenPublic() {
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-
-  const renderCustomFeedEmptyState = React.useCallback(() => {
-    return <CustomFeedEmptyState />
-  }, [])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-      setDrawerSwipeDisabled(false)
-    }, [setDrawerSwipeDisabled, setMinimalShellMode]),
-  )
-
-  return (
-    <FeedPage
-      isPageFocused
-      feed={`feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot`}
-      renderEmptyState={renderCustomFeedEmptyState}
-    />
-  )
-}
-
 function HomeScreenReady({
   preferences,
 }: Props & {
   preferences: UsePreferencesQueryResponse
 }) {
+  const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const [selectedPage, setSelectedPage] = React.useState(0)
@@ -144,7 +116,7 @@ function HomeScreenReady({
     return <CustomFeedEmptyState />
   }, [])
 
-  return (
+  return hasSession ? (
     <Pager
       testID="homeScreen"
       onPageSelected={onPageSelected}
@@ -171,6 +143,20 @@ function HomeScreenReady({
           />
         )
       })}
+    </Pager>
+  ) : (
+    <Pager
+      testID="homeScreen"
+      onPageSelected={onPageSelected}
+      onPageScrollStateChanged={onPageScrollStateChanged}
+      renderTabBar={renderTabBar}
+      tabBarPosition="top">
+      <FeedPage
+        testID="customFeedPage"
+        isPageFocused
+        feed={`feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot`}
+        renderEmptyState={renderCustomFeedEmptyState}
+      />
     </Pager>
   )
 }
