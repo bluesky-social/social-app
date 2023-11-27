@@ -70,8 +70,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
 
       async checkUnread() {
+        const agent = getAgent()
+
+        if (!agent.session) return
+
         // count
-        const res = await getAgent().listNotifications({limit: 40})
+        const res = await agent.listNotifications({limit: 40})
         const filtered = res.data.notifications.filter(
           notif => !notif.isRead && !shouldFilterNotif(notif, moderationOpts),
         )
