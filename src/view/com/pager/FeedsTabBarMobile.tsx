@@ -79,7 +79,7 @@ export function FeedsTabBar(
         </View>
       </View>
 
-      {items.length > 1 && (
+      {items.length > 0 && (
         <TabBar
           key={items.join(',')}
           onPressSelected={props.onPressSelected}
