@@ -215,7 +215,7 @@ export function ListMembers({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item.uri || item._reactKey}
+        keyExtractor={(item: any) => item.subject?.did || item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={Footer}
