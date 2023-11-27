@@ -90,6 +90,16 @@ const enabledLogLevels: {
   [LogLevel.Error]: [LogLevel.Error],
 }
 
+export function prepareMetadata(metadata: Metadata): Metadata {
+  return Object.keys(metadata).reduce((acc, key) => {
+    let value = metadata[key]
+    if (value instanceof Error) {
+      value = value.toString()
+    }
+    return {...acc, [key]: value}
+  }, {})
+}
+
 /**
  * Used in dev mode to nicely log to the console
  */
@@ -100,7 +110,8 @@ export const consoleTransport: Transport = (
   timestamp,
 ) => {
   const extra = Object.keys(metadata).length
-    ? ' ' + JSON.stringify(metadata, null, '  ')
+    ? // don't prepareMetadata here, in dev we want the stack trace
+      ' ' + JSON.stringify(metadata, null, '  ')
     : ''
   const log = {
     [LogLevel.Debug]: console.debug,
@@ -119,6 +130,8 @@ export const sentryTransport: Transport = (
   {type, tags, ...metadata},
   timestamp,
 ) => {
+  const meta = prepareMetadata(metadata)
+
   /**
    * If a string, report a breadcrumb
    */
@@ -135,7 +148,7 @@ export const sentryTransport: Transport = (
 
     Sentry.addBreadcrumb({
       message,
-      data: metadata,
+      data: meta,
       type: type || 'default',
       level: severity,
       timestamp: timestamp / 1000, // Sentry expects seconds
@@ -155,7 +168,7 @@ export const sentryTransport: Transport = (
       Sentry.captureMessage(message, {
         level: messageLevel,
         tags,
-        extra: metadata,
+        extra: meta,
       })
     }
   } else {
@@ -164,7 +177,7 @@ export const sentryTransport: Transport = (
      */
     Sentry.captureException(message, {
       tags,
-      extra: metadata,
+      extra: meta,
     })
   }
 }

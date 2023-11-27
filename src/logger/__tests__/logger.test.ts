@@ -222,6 +222,26 @@ describe('general functionality', () => {
     })
   })
 
+  test('sentryTransport serializes errors', () => {
+    const message = 'message'
+    const timestamp = Date.now()
+    const sentryTimestamp = timestamp / 1000
+
+    sentryTransport(
+      LogLevel.Debug,
+      message,
+      {error: new Error('foo')},
+      timestamp,
+    )
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      message,
+      data: {error: 'Error: foo'},
+      type: 'default',
+      level: LogLevel.Debug,
+      timestamp: sentryTimestamp,
+    })
+  })
+
   test('add/remove transport', () => {
     const timestamp = Date.now()
     const logger = new Logger({enabled: true})
