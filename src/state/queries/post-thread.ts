@@ -151,9 +151,10 @@ function responseToThreadNodes(
           : undefined,
       replies:
         node.replies?.length && direction !== 'up'
-          ? node.replies.map(reply =>
-              responseToThreadNodes(reply, depth + 1, 'down'),
-            )
+          ? node.replies
+              .map(reply => responseToThreadNodes(reply, depth + 1, 'down'))
+              // do not show blocked posts in replies
+              .filter(node => node.type !== 'blocked')
           : undefined,
       viewer: node.viewer,
       ctx: {
