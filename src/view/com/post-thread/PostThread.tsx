@@ -465,6 +465,8 @@ function* flattenThreadSkeleton(
   if (node.type === 'post') {
     if (node.parent) {
       yield* flattenThreadSkeleton(node.parent)
+    } else if (node.ctx.isParentLoading) {
+      yield PARENT_SPINNER
     }
     yield node
     if (node.ctx.isHighlightedPost) {
@@ -474,6 +476,8 @@ function* flattenThreadSkeleton(
       for (const reply of node.replies) {
         yield* flattenThreadSkeleton(reply)
       }
+    } else if (node.ctx.isChildLoading) {
+      yield CHILD_SPINNER
     }
   } else if (node.type === 'not-found') {
     yield DELETED

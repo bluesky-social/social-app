@@ -24,6 +24,8 @@ export interface ThreadCtx {
   hasMore?: boolean
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
+  isParentLoading?: boolean
+  isChildLoading?: boolean
 }
 
 export type ThreadPost = {
@@ -221,6 +223,8 @@ function feedItemToPlaceholderThread(item: FeedPostSliceItem): ThreadNode {
       hasMore: false,
       showChildReplyLine: false,
       showParentReplyLine: false,
+      isParentLoading: !!item.record.reply,
+      isChildLoading: !!item.post.replyCount,
     },
   }
 }
@@ -243,6 +247,8 @@ function postViewToPlaceholderThread(
       hasMore: false,
       showChildReplyLine: false,
       showParentReplyLine: false,
+      isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
+      isChildLoading: !!post.replyCount,
     },
   }
 }
