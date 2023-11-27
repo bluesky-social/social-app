@@ -7,11 +7,17 @@ import {
   BskyAgent,
 } from '@atproto/api'
 import chunk from 'lodash.chunk'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryKey,
+  useQueryClient,
+} from '@tanstack/react-query'
 import {getAgent} from '../../session'
 import {useModerationOpts} from '../preferences'
 import {shouldFilterNotif} from './util'
 import {useMutedThreads} from '#/state/muted-threads'
+import {precacheProfile as precacheResolvedUri} from '../resolve-uri'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -48,6 +54,7 @@ export interface FeedPage {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+  const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
   const enabled = opts?.enabled !== false
@@ -80,6 +87,9 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       for (const notif of notifsGrouped) {
         if (notif.subjectUri) {
           notif.subject = subjects.get(notif.subjectUri)
+          if (notif.subject) {
+            precacheResolvedUri(queryClient, notif.subject.author) // precache the handle->did resolution
+          }
         }
       }
 

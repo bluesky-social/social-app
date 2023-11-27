@@ -1,8 +1,9 @@
-import {useQuery, UseQueryResult} from '@tanstack/react-query'
-import {AtUri} from '@atproto/api'
+import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
+import {AtUri, AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {ThreadNode} from './post-thread'
 
 export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
 
@@ -36,4 +37,40 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     },
     enabled: !!didOrHandle,
   })
+}
+
+export function precacheProfile(
+  queryClient: QueryClient,
+  profile:
+    | AppBskyActorDefs.ProfileView
+    | AppBskyActorDefs.ProfileViewBasic
+    | AppBskyActorDefs.ProfileViewDetailed,
+) {
+  queryClient.setQueryData(RQKEY(profile.handle), profile.did)
+}
+
+export function precacheFeedPosts(
+  queryClient: QueryClient,
+  posts: AppBskyFeedDefs.FeedViewPost[],
+) {
+  for (const post of posts) {
+    precacheProfile(queryClient, post.post.author)
+  }
+}
+
+export function precacheThreadPosts(
+  queryClient: QueryClient,
+  node: ThreadNode,
+) {
+  if (node.type === 'post') {
+    precacheProfile(queryClient, node.post.author)
+    if (node.parent) {
+      precacheThreadPosts(queryClient, node.parent)
+    }
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        precacheThreadPosts(queryClient, reply)
+      }
+    }
+  }
 }

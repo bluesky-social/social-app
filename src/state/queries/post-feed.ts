@@ -1,6 +1,12 @@
 import {useCallback, useMemo} from 'react'
 import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryKey,
+  QueryClient,
+  useQueryClient,
+} from '@tanstack/react-query'
 import {getAgent} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
@@ -14,6 +20,7 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
+import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
 
 type ActorDid = string
 type AuthorFilter =
@@ -66,6 +73,7 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean},
 ) {
+  const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
   const moderationOpts = useModerationOpts()
@@ -141,6 +149,7 @@ export function usePostFeedQuery(
         tuner.reset()
       }
       const res = await api.fetch({cursor: pageParam, limit: 30})
+      precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
       const slices = tuner.tune(res.feed, feedTuners)
       return {
         cursor: res.cursor,

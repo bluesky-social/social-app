@@ -3,11 +3,12 @@ import {
   AppBskyFeedPost,
   AppBskyFeedGetPostThread,
 } from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {STALE} from '#/state/queries'
+import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
@@ -58,13 +59,16 @@ export type ThreadNode =
   | ThreadUnknown
 
 export function usePostThreadQuery(uri: string | undefined) {
+  const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {
-        return responseToThreadNodes(res.data.thread)
+        const nodes = responseToThreadNodes(res.data.thread)
+        precacheResolvedUris(queryClient, nodes) // precache the handle->did resolution
+        return nodes
       }
       return {type: 'unknown', uri: uri!}
     },
