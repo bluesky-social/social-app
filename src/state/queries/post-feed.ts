@@ -188,3 +188,31 @@ export function usePostFeedQuery(
 
   return {...out, pollLatest}
 }
+
+/**
+ * This helper is used by the post-thread placeholder function to
+ * find a post in the query-data cache
+ */
+export function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): FeedPostSliceItem | undefined {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: ['post-feed'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const slice of page.slices) {
+        for (const item of slice.items) {
+          if (item.uri === uri) {
+            return item
+          }
+        }
+      }
+    }
+  }
+  return undefined
+}

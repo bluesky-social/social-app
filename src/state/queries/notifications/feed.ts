@@ -12,6 +12,7 @@ import {
   InfiniteData,
   QueryKey,
   useQueryClient,
+  QueryClient,
 } from '@tanstack/react-query'
 import {getAgent} from '../../session'
 import {useModerationOpts} from '../preferences'
@@ -107,6 +108,32 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
   })
+}
+
+/**
+ * This helper is used by the post-thread placeholder function to
+ * find a post in the query-data cache
+ */
+export function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): AppBskyFeedDefs.PostView | undefined {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: ['notification-feed'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.items) {
+        if (item.subject?.uri === uri) {
+          return item.subject
+        }
+      }
+    }
+  }
+  return undefined
 }
 
 function groupNotifications(

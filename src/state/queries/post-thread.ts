@@ -8,6 +8,11 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {STALE} from '#/state/queries'
+import {
+  findPostInQueryData as findPostInFeedQueryData,
+  FeedPostSliceItem,
+} from './post-feed'
+import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
 import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
@@ -73,6 +78,28 @@ export function usePostThreadQuery(uri: string | undefined) {
       return {type: 'unknown', uri: uri!}
     },
     enabled: !!uri,
+    placeholderData: () => {
+      if (!uri) {
+        console.log('bombed here')
+        return undefined
+      }
+      {
+        const item = findPostInFeedQueryData(queryClient, uri)
+        if (item) {
+          console.log('using cache')
+          return feedItemToPlaceholderThread(item)
+        }
+      }
+      {
+        const item = findPostInNotifsQueryData(queryClient, uri)
+        if (item) {
+          console.log('using cache 2')
+          return postViewToPlaceholderThread(item)
+        }
+      }
+      console.log('no cache')
+      return undefined
+    },
   })
 }
 
@@ -179,5 +206,47 @@ function responseToThreadNodes(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
+  }
+}
+
+function feedItemToPlaceholderThread(item: FeedPostSliceItem): ThreadNode {
+  return {
+    type: 'post',
+    _reactKey: post.uri,
+    uri: item.post.uri,
+    post: item.post,
+    record: item.record,
+    parent: undefined,
+    replies: undefined,
+    viewer: item.post.viewer,
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+    },
+  }
+}
+
+function postViewToPlaceholderThread(
+  post: AppBskyFeedDefs.PostView,
+): ThreadNode {
+  return {
+    type: 'post',
+    _reactKey: post.uri,
+    uri: post.uri,
+    post: post,
+    record: post.record as AppBskyFeedPost.Record, // validate in notifs
+    parent: undefined,
+    replies: undefined,
+    viewer: post.viewer,
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+    },
   }
 }
