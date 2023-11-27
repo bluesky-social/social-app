@@ -58,7 +58,7 @@ export function ProfileScreen({route}: Props) {
     refetch: refetchProfile,
     isFetching: isFetchingProfile,
   } = useProfileQuery({
-    did: resolvedDid?.did,
+    did: resolvedDid,
   })
 
   const onPressTryAgain = React.useCallback(() => {

@@ -28,7 +28,7 @@ export function ProfileFollows({name}: {name: string}) {
     isError,
     error,
     refetch,
-  } = useProfileFollowsQuery(resolvedDid?.did)
+  } = useProfileFollowsQuery(resolvedDid)
 
   const follows = React.useMemo(() => {
     if (data?.pages) {
