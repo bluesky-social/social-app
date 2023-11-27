@@ -209,13 +209,16 @@ function useHeaderOffset() {
   }
 
   if (hasSession) {
-    // Adds up to:
-    // - height of nav bar + logo
-    // - height of tab bar padding
-    // - font size
-    return 38 + 44 * fontScale
+    const navBarPad = 16
+    const navBarText = 21 * fontScale
+    const tabBarPad = 20 + 3 // nav bar padding + border
+    const tabBarText = 16 * fontScale
+    const magic = 7 * fontScale
+    return navBarPad + navBarText + tabBarPad + tabBarText + magic
   } else {
-    // just nav bar + logo
-    return 40
+    const navBarPad = 16
+    const navBarText = 21 * fontScale
+    const magic = 4 * fontScale
+    return navBarPad + navBarText + magic
   }
 }

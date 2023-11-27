@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 18,
+    paddingVertical: 8,
     width: '100%',
-    height: 40, // allows for easy math
   },
   title: {
     fontSize: 21,
