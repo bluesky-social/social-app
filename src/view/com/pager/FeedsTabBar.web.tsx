@@ -79,12 +79,11 @@ function FeedsTabBarPublic() {
 function FeedsTabBarTablet(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const {hasSession} = useSession()
   const feeds = usePinnedFeedsInfos()
   const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
-  const items = hasSession ? feeds.map(f => f.displayName) : ['Discover']
+  const items = feeds.map(f => f.displayName)
 
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
