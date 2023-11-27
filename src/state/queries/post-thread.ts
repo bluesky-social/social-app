@@ -208,7 +208,7 @@ function responseToThreadNodes(
 function feedItemToPlaceholderThread(item: FeedPostSliceItem): ThreadNode {
   return {
     type: 'post',
-    _reactKey: post.uri,
+    _reactKey: item.post.uri,
     uri: item.post.uri,
     post: item.post,
     record: item.record,
