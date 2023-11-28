@@ -36,76 +36,39 @@ function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const postSeenTS = getFirstSeenTS(post)
-  const [state, setState] = useState<CacheEntry>(() => ({
-    ts: postSeenTS,
-    value: fromPost(post),
-  }))
-
-  const [prevPost, setPrevPost] = useState(post)
-  if (post !== prevPost) {
-    // if we got a new prop, assume it's fresher
-    // than whatever shadow state we accumulated
-    setPrevPost(post)
-    setState({
-      ts: postSeenTS,
-      value: fromPost(post),
-    })
-  }
-
-  const onUpdate = useCallback(
-    (value: Partial<PostShadow>) => {
-      setState(s => ({ts: Date.now(), value: {...s.value, ...value}}))
-    },
-    [setState],
-  )
-
-  // react to shadow updates
   useEffect(() => {
-    emitter.addListener(post.uri, onUpdate)
-    return () => {
-      emitter.removeListener(post.uri, onUpdate)
+    function onChange() {
+      // TODOO
     }
-  }, [post.uri, onUpdate])
 
-  return useMemo(() => {
-    return state.ts > postSeenTS
-      ? mergeShadow(post, state.value)
-      : castAsShadow(post)
-  }, [post, state, postSeenTS])
+    const unsub = addListener(post.uri, onChange)
+    return unsub
+  }, [post.uri])
+
+  return post
 }
+
+function addListener(uri, onChange) {
+  let record
+  if (map.has(uri)) {
+    record = map.get(uri)
+  } else {
+    record = {listeners: []}
+    map.set(uri, record)
+  }
+  record.listeners.push(onChange)
+  return () => {
+    record.listeners = record.listeners.filter(l => l !== onChange)
+    if (record.listeners.length === 0) {
+      map.delete(uri)
+    }
+  }
+}
+
+const map = new Map()
+
+console.log(map)
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  batchedUpdates(() => {
-    emitter.emit(uri, value)
-  })
-}
-
-function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
-  return {
-    likeUri: post.viewer?.like,
-    likeCount: post.likeCount,
-    repostUri: post.viewer?.repost,
-    repostCount: post.repostCount,
-    isDeleted: false,
-  }
-}
-
-function mergeShadow(
-  post: AppBskyFeedDefs.PostView,
-  shadow: PostShadow,
-): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  if (shadow.isDeleted) {
-    return POST_TOMBSTONE
-  }
-  return castAsShadow({
-    ...post,
-    likeCount: shadow.likeCount,
-    repostCount: shadow.repostCount,
-    viewer: {
-      ...(post.viewer || {}),
-      like: shadow.likeUri,
-      repost: shadow.repostUri,
-    },
-  })
+  // TODO
 }
