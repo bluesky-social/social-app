@@ -29,10 +29,12 @@ const release = app.appVersion ?? 'dev'
  * - `ios.dev`
  * - `android.dev`
  * - `web.1.57.0`
- * - `ios.1.57.0`
- * - `android.1.57.0`
+ * - `ios.1.57.0.3`
+ * - `android.1.57.0.46`
  */
-const dist = `${Platform.OS}.${release}`
+const dist = `${Platform.OS}.${release}${
+  app.buildVersion ? `.${app.buildVersion}` : ''
+}`
 
 init({
   dsn: 'https://05bc3789bf994b81bd7ce20c86ccd3ae@o4505071687041024.ingest.sentry.io/4505071690514432',
