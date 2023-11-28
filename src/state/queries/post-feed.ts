@@ -144,7 +144,7 @@ export function usePostFeedQuery(
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      console.log('fetch', feedDesc, pageParam)
+      logger.debug('usePostFeedQuery', {feedDesc, pageParam})
       if (!pageParam) {
         tuner.reset()
       }
