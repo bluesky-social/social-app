@@ -185,7 +185,8 @@ function ListItem({
       queryClient.getQueryData<UsePreferencesQueryResponse>(
         preferencesQueryKey,
       )?.feeds
-    const pinned = feeds?.pinned ?? []
+    // create new array, do not mutate
+    const pinned = feeds?.pinned ? [...feeds.pinned] : []
     const index = pinned.indexOf(feedUri)
 
     if (index === -1 || index === 0) return
@@ -210,7 +211,8 @@ function ListItem({
       queryClient.getQueryData<UsePreferencesQueryResponse>(
         preferencesQueryKey,
       )?.feeds
-    const pinned = feeds?.pinned ?? []
+    // create new array, do not mutate
+    const pinned = feeds?.pinned ? [...feeds.pinned] : []
     const index = pinned.indexOf(feedUri)
 
     if (index === -1 || index >= pinned.length - 1) return

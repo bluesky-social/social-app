@@ -57,9 +57,7 @@ function HomeScreenReady({
       }
     }
     return feeds
-    // TODO careful, needed to disabled this -esb
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [preferences.feeds.pinned, pinnedFeedOrderKey])
+  }, [preferences.feeds.pinned])
 
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
