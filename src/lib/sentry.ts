@@ -18,15 +18,27 @@ const buildChannel = (info.channel || 'development') as
 
 /**
  * Examples:
- * - `ios-1.57.0(3)`
- * - `android-1.57.0(46)`
+ * - `dev`
+ * - `1.57.0`
  */
-const appVersion = `${Platform.OS}-${app.appVersion}(${app.buildVersion})`
+const release = app.appVersion ?? 'dev'
+
+/**
+ * Examples:
+ * - `web.dev`
+ * - `ios.dev`
+ * - `android.dev`
+ * - `web.1.57.0`
+ * - `ios.1.57.0`
+ * - `android.1.57.0`
+ */
+const dist = `${Platform.OS}.${release}`
 
 init({
   dsn: 'https://05bc3789bf994b81bd7ce20c86ccd3ae@o4505071687041024.ingest.sentry.io/4505071690514432',
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   enableInExpoDevelopment: true,
   environment: buildChannel,
-  dist: appVersion,
+  dist,
+  release,
 })
