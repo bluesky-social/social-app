@@ -3,7 +3,7 @@ import {
   AppBskyFeedPost,
   AppBskyFeedGetPostThread,
 } from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
@@ -83,6 +83,12 @@ export function usePostThreadQuery(uri: string | undefined) {
     placeholderData: () => {
       if (!uri) {
         return undefined
+      }
+      {
+        const item = findPostInQueryData(queryClient, uri)
+        if (item) {
+          return threadNodeToPlaceholderThread(item)
+        }
       }
       {
         const item = findPostInFeedQueryData(queryClient, uri)
@@ -204,6 +210,67 @@ function responseToThreadNodes(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
+  }
+}
+
+function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): ThreadNode | undefined {
+  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+    queryKey: ['post-thread'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const item of traverseThread(queryData)) {
+      if (item.uri === uri) {
+        return item
+      }
+    }
+  }
+  return undefined
+}
+
+function* traverseThread(node: ThreadNode): Generator<ThreadNode, void> {
+  if (node.type === 'post') {
+    if (node.parent) {
+      yield* traverseThread(node.parent)
+    }
+    yield node
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        yield* traverseThread(reply)
+      }
+    }
+  }
+}
+
+function threadNodeToPlaceholderThread(
+  node: ThreadNode,
+): ThreadNode | undefined {
+  if (node.type !== 'post') {
+    return undefined
+  }
+  return {
+    type: node.type,
+    _reactKey: node._reactKey,
+    uri: node.uri,
+    post: node.post,
+    record: node.record,
+    parent: undefined,
+    replies: undefined,
+    viewer: node.viewer,
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+      isParentLoading: !!node.record.reply,
+      isChildLoading: !!node.post.replyCount,
+    },
   }
 }
 
