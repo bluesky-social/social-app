@@ -37,12 +37,13 @@ export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   useEffect(() => {
-    function onChange() {
-      // TODOO
+    function onChange(s) {
+      console.log('onChange', s)
     }
-
     const unsub = addListener(post.uri, onChange)
-    return unsub
+    return () => {
+      unsub()
+    }
   }, [post.uri])
 
   return post
@@ -53,7 +54,7 @@ function addListener(uri, onChange) {
   if (map.has(uri)) {
     record = map.get(uri)
   } else {
-    record = {listeners: []}
+    record = {listeners: [], shadow: null}
     map.set(uri, record)
   }
   record.listeners.push(onChange)
@@ -70,5 +71,12 @@ const map = new Map()
 console.log(map)
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  // TODO
+  const record = map.get(uri)
+  if (!record) {
+    return
+  }
+  record.shadow = {...record.shadow, ...value}
+  batchedUpdates(() => {
+    record.listeners.forEach(l => l(record.shadow))
+  })
 }
