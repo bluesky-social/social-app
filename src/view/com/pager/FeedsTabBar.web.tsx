@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {View, StyleSheet} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -9,18 +9,71 @@ import {FeedsTabBar as FeedsTabBarMobile} from './FeedsTabBarMobile'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {useSession} from '#/state/session'
+import {TextLink} from '#/view/com/util/Link'
+import {CenteredView} from '../util/Views'
 
 export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const {isMobile, isTablet} = useWebMediaQueries()
+  const {hasSession} = useSession()
+
   if (isMobile) {
     return <FeedsTabBarMobile {...props} />
   } else if (isTablet) {
-    return <FeedsTabBarTablet {...props} />
+    if (hasSession) {
+      return <FeedsTabBarTablet {...props} />
+    } else {
+      return <FeedsTabBarPublic />
+    }
   } else {
     return null
   }
+}
+
+function FeedsTabBarPublic() {
+  const pal = usePalette('default')
+  const {isSandbox} = useSession()
+
+  return (
+    <CenteredView sideBorders>
+      <View
+        style={[
+          pal.view,
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 18,
+            paddingVertical: 12,
+          },
+        ]}>
+        <TextLink
+          type="title-lg"
+          href="/"
+          style={[pal.text, {fontWeight: 'bold'}]}
+          text={
+            <>
+              {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+              {/*hasNew && (
+                <View
+                  style={{
+                    top: -8,
+                    backgroundColor: colors.blue3,
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                  }}
+                />
+              )*/}
+            </>
+          }
+          // onPress={emitSoftReset}
+        />
+      </View>
+    </CenteredView>
+  )
 }
 
 function FeedsTabBarTablet(

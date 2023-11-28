@@ -23,7 +23,7 @@ export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
-  const {isSandbox} = useSession()
+  const {isSandbox, hasSession} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const feeds = usePinnedFeedsInfos()
@@ -61,30 +61,35 @@ export function FeedsTabBar(
         <Text style={[brandBlue, s.bold, styles.title]}>
           {isSandbox ? 'SANDBOX' : 'Bluesky'}
         </Text>
-        <View style={[pal.view]}>
-          <Link
-            testID="viewHeaderHomeFeedPrefsBtn"
-            href="/settings/home-feed"
-            hitSlop={HITSLOP_10}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Home Feed Preferences`)}
-            accessibilityHint="">
-            <FontAwesomeIcon
-              icon="sliders"
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
-          </Link>
+        <View style={[pal.view, {width: 18}]}>
+          {hasSession && (
+            <Link
+              testID="viewHeaderHomeFeedPrefsBtn"
+              href="/settings/home-feed"
+              hitSlop={HITSLOP_10}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Home Feed Preferences`)}
+              accessibilityHint="">
+              <FontAwesomeIcon
+                icon="sliders"
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+            </Link>
+          )}
         </View>
       </View>
-      <TabBar
-        key={items.join(',')}
-        onPressSelected={props.onPressSelected}
-        selectedPage={props.selectedPage}
-        onSelect={props.onSelect}
-        testID={props.testID}
-        items={items}
-        indicatorColor={pal.colors.link}
-      />
+
+      {items.length > 0 && (
+        <TabBar
+          key={items.join(',')}
+          onPressSelected={props.onPressSelected}
+          selectedPage={props.selectedPage}
+          onSelect={props.onSelect}
+          testID={props.testID}
+          items={items}
+          indicatorColor={pal.colors.link}
+        />
+      )}
     </Animated.View>
   )
 }
@@ -104,8 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 18,
-    paddingTop: 8,
-    paddingBottom: 2,
+    paddingVertical: 8,
     width: '100%',
   },
   title: {

@@ -195,13 +195,30 @@ export function FeedPage({
 function useHeaderOffset() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const {fontScale} = useWindowDimensions()
+  const {hasSession} = useSession()
+
   if (isDesktop) {
     return 0
   }
   if (isTablet) {
-    return 50
+    if (hasSession) {
+      return 50
+    } else {
+      return 0
+    }
   }
-  // default text takes 44px, plus 34px of pad
-  // scale the 44px by the font scale
-  return 34 + 44 * fontScale
+
+  if (hasSession) {
+    const navBarPad = 16
+    const navBarText = 21 * fontScale
+    const tabBarPad = 20 + 3 // nav bar padding + border
+    const tabBarText = 16 * fontScale
+    const magic = 7 * fontScale
+    return navBarPad + navBarText + tabBarPad + tabBarText + magic
+  } else {
+    const navBarPad = 16
+    const navBarText = 21 * fontScale
+    const magic = 4 * fontScale
+    return navBarPad + navBarText + magic
+  }
 }
