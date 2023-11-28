@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: jp\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -157,7 +163,7 @@ msgstr "外観"
 
 #: src/view/screens/AppPasswords.tsx:226
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "本当にアプリのパスワード「\{name}」を削除しますか？"
+msgstr "本当にアプリのパスワード「\\{name}」を削除しますか？"
 
 #: src/view/com/composer/Composer.tsx:137
 msgid "Are you sure you'd like to discard this draft?"
@@ -1165,7 +1171,7 @@ msgstr "結果なし"
 
 #: src/view/screens/Feeds.tsx:455
 msgid "No results found for \"{query}\""
-msgstr "「\{query}」の検索結果がない"
+msgstr "「\\{query}」の検索結果がない"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:268
@@ -1173,7 +1179,7 @@ msgstr "「\{query}」の検索結果がない"
 #: src/view/screens/Search/Search.tsx:608
 #: src/view/shell/desktop/Search.tsx:209
 msgid "No results found for {query}"
-msgstr "\{query}の検索結果がない"
+msgstr "\\{query}の検索結果がない"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "Not Applicable."
@@ -1439,7 +1445,7 @@ msgstr "返信フィルター"
 
 #: src/view/com/modals/report/Modal.tsx:166
 msgid "Report {collectionName}"
-msgstr "レポート \{collectionName}"
+msgstr "レポート \\{collectionName}"
 
 #: src/view/com/profile/ProfileHeader.tsx:358
 msgid "Report Account"
@@ -1826,7 +1832,7 @@ msgstr "プライバシーポリシーが<0/>に移動された"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "サポートフォームが移動しました。サポートが必要な場合は、<0/>または\{HELP_DESK_URL}にアクセスしてご連絡ください。"
+msgstr "サポートフォームが移動しました。サポートが必要な場合は、<0/>または\\{HELP_DESK_URL}にアクセスしてご連絡ください。"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -1838,7 +1844,7 @@ msgstr "アプリケーションに予期しない問題が発生しました。
 
 #: src/view/com/util/moderation/ScreenHider.tsx:72
 msgid "This {screenDescription} has been flagged:"
-msgstr "この\{screenDescription}にはフラグが設定されています。"
+msgstr "この\\{screenDescription}にはフラグが設定されています。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
@@ -1925,7 +1931,7 @@ msgstr "スレッドをミュート解除"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:52
 msgid "Update {displayName} in Lists"
-msgstr "リストの\{displayName}を更新"
+msgstr "リストの\\{displayName}を更新"
 
 #: src/lib/hooks/useOTAUpdate.ts:15
 msgid "Update Available"
@@ -2019,7 +2025,7 @@ msgstr "<0>Bluesky</0>へようこそ"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
-msgstr "この\{collectionName}の問題は何ですか？"
+msgstr "この\\{collectionName}の問題は何ですか？"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
