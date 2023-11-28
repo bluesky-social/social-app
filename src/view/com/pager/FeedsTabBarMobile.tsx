@@ -30,7 +30,7 @@ export function FeedsTabBar(
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
-  const items = feeds.map(f => f.displayName)
+  const items = hasSession ? feeds.map(f => f.displayName) : []
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
