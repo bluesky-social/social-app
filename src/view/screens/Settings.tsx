@@ -172,6 +172,8 @@ export function SettingsScreen({}: Props) {
     dark: {color: colors.blue2},
   })
 
+  console.log(AppInfo)
+
   const dangerBg = useCustomPalette<ViewStyle>({
     light: {backgroundColor: colors.red1},
     dark: {backgroundColor: colors.red7},
