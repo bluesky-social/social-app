@@ -252,7 +252,6 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
     FOLLOWING_FEED_STUB,
   ])
   const {data: preferences} = usePreferencesQuery()
-  const pinnedFeedsKey = JSON.stringify(preferences?.feeds?.pinned)
 
   React.useEffect(() => {
     if (!preferences?.feeds?.pinned) return
@@ -299,13 +298,7 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
     }
 
     fetchFeedInfo()
-  }, [
-    queryClient,
-    setTabs,
-    preferences?.feeds?.pinned,
-    // ensure we react to re-ordering
-    pinnedFeedsKey,
-  ])
+  }, [queryClient, setTabs, preferences?.feeds?.pinned])
 
   return tabs
 }
