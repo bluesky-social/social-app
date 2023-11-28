@@ -36,7 +36,13 @@ function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const [shadow, setShadow] = useState(null)
+  const [shadow, setShadow] = useState(() => {
+    const record = map.get(post.uri)
+    if (!record) {
+      return null
+    }
+    return record.shadow
+  })
 
   useEffect(() => {
     function onChange(s) {
