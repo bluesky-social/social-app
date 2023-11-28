@@ -36,9 +36,11 @@ function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
+  const [shadow, setShadow] = useState(null)
+
   useEffect(() => {
     function onChange(s) {
-      console.log('onChange', s)
+      setShadow(s)
     }
     const unsub = addListener(post.uri, onChange)
     return () => {
@@ -46,7 +48,23 @@ export function usePostShadow(
     }
   }, [post.uri])
 
-  return post
+  return mergeShadow(post, shadow)
+}
+
+function mergeShadow(post, shadow) {
+  if (!shadow) {
+    return post
+  }
+  return {
+    ...post,
+    likeCount: shadow.likeCount ?? post.likeCount,
+    repostCount: shadow.repostCount ?? post.repostCount,
+    viewer: {
+      ...(post.viewer || {}),
+      like: shadow.likeUri,
+      repost: shadow.repostUri,
+    },
+  }
 }
 
 function addListener(uri, onChange) {
