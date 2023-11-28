@@ -181,6 +181,9 @@ export function useIsFeedPublicQuery({uri}: {uri: string}) {
 
         if (msg.includes('missing jwt')) {
           return false
+        } else if (msg.includes('This feed requires being logged-in')) {
+          // e.g. https://github.com/bluesky-social/atproto/blob/99ab1ae55c463e8d5321a1eaad07a175bdd56fea/packages/bsky/src/feed-gen/best-of-follows.ts#L13
+          return false
         }
 
         return true
