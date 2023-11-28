@@ -18,10 +18,10 @@ const buildChannel = (info.channel || 'development') as
 
 /**
  * Examples:
- * - `ios@1.57.0(3)`
- * - `android@1.57.0(46)`
+ * - `ios-1.57.0(3)`
+ * - `android-1.57.0(46)`
  */
-const appVersion = `${Platform.OS}@${app.appVersion}(${app.buildVersion})`
+const appVersion = `${Platform.OS}-${app.appVersion}(${app.buildVersion})`
 
 init({
   dsn: 'https://05bc3789bf994b81bd7ce20c86ccd3ae@o4505071687041024.ingest.sentry.io/4505071690514432',
