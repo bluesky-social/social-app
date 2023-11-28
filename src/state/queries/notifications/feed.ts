@@ -7,11 +7,18 @@ import {
   BskyAgent,
 } from '@atproto/api'
 import chunk from 'lodash.chunk'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryKey,
+  useQueryClient,
+  QueryClient,
+} from '@tanstack/react-query'
 import {getAgent} from '../../session'
 import {useModerationOpts} from '../preferences'
 import {shouldFilterNotif} from './util'
 import {useMutedThreads} from '#/state/muted-threads'
+import {precacheProfile as precacheResolvedUri} from '../resolve-uri'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const PAGE_SIZE = 30
@@ -48,6 +55,7 @@ export interface FeedPage {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+  const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
   const enabled = opts?.enabled !== false
@@ -80,6 +88,9 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       for (const notif of notifsGrouped) {
         if (notif.subjectUri) {
           notif.subject = subjects.get(notif.subjectUri)
+          if (notif.subject) {
+            precacheResolvedUri(queryClient, notif.subject.author) // precache the handle->did resolution
+          }
         }
       }
 
@@ -97,6 +108,32 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
   })
+}
+
+/**
+ * This helper is used by the post-thread placeholder function to
+ * find a post in the query-data cache
+ */
+export function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): AppBskyFeedDefs.PostView | undefined {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: ['notification-feed'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.items) {
+        if (item.subject?.uri === uri) {
+          return item.subject
+        }
+      }
+    }
+  }
+  return undefined
 }
 
 function groupNotifications(

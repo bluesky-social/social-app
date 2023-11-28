@@ -3,11 +3,17 @@ import {
   AppBskyFeedPost,
   AppBskyFeedGetPostThread,
 } from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {STALE} from '#/state/queries'
+import {
+  findPostInQueryData as findPostInFeedQueryData,
+  FeedPostSliceItem,
+} from './post-feed'
+import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
+import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
@@ -18,6 +24,8 @@ export interface ThreadCtx {
   hasMore?: boolean
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
+  isParentLoading?: boolean
+  isChildLoading?: boolean
 }
 
 export type ThreadPost = {
@@ -58,17 +66,44 @@ export type ThreadNode =
   | ThreadUnknown
 
 export function usePostThreadQuery(uri: string | undefined) {
+  const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {
-        return responseToThreadNodes(res.data.thread)
+        const nodes = responseToThreadNodes(res.data.thread)
+        precacheResolvedUris(queryClient, nodes) // precache the handle->did resolution
+        return nodes
       }
       return {type: 'unknown', uri: uri!}
     },
     enabled: !!uri,
+    placeholderData: () => {
+      if (!uri) {
+        return undefined
+      }
+      {
+        const item = findPostInQueryData(queryClient, uri)
+        if (item) {
+          return threadNodeToPlaceholderThread(item)
+        }
+      }
+      {
+        const item = findPostInFeedQueryData(queryClient, uri)
+        if (item) {
+          return feedItemToPlaceholderThread(item)
+        }
+      }
+      {
+        const item = findPostInNotifsQueryData(queryClient, uri)
+        if (item) {
+          return postViewToPlaceholderThread(item)
+        }
+      }
+      return undefined
+    },
   })
 }
 
@@ -176,5 +211,112 @@ function responseToThreadNodes(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
+  }
+}
+
+function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): ThreadNode | undefined {
+  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+    queryKey: ['post-thread'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const item of traverseThread(queryData)) {
+      if (item.uri === uri) {
+        return item
+      }
+    }
+  }
+  return undefined
+}
+
+function* traverseThread(node: ThreadNode): Generator<ThreadNode, void> {
+  if (node.type === 'post') {
+    if (node.parent) {
+      yield* traverseThread(node.parent)
+    }
+    yield node
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        yield* traverseThread(reply)
+      }
+    }
+  }
+}
+
+function threadNodeToPlaceholderThread(
+  node: ThreadNode,
+): ThreadNode | undefined {
+  if (node.type !== 'post') {
+    return undefined
+  }
+  return {
+    type: node.type,
+    _reactKey: node._reactKey,
+    uri: node.uri,
+    post: node.post,
+    record: node.record,
+    parent: undefined,
+    replies: undefined,
+    viewer: node.viewer,
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+      isParentLoading: !!node.record.reply,
+      isChildLoading: !!node.post.replyCount,
+    },
+  }
+}
+
+function feedItemToPlaceholderThread(item: FeedPostSliceItem): ThreadNode {
+  return {
+    type: 'post',
+    _reactKey: item.post.uri,
+    uri: item.post.uri,
+    post: item.post,
+    record: item.record,
+    parent: undefined,
+    replies: undefined,
+    viewer: item.post.viewer,
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+      isParentLoading: !!item.record.reply,
+      isChildLoading: !!item.post.replyCount,
+    },
+  }
+}
+
+function postViewToPlaceholderThread(
+  post: AppBskyFeedDefs.PostView,
+): ThreadNode {
+  return {
+    type: 'post',
+    _reactKey: post.uri,
+    uri: post.uri,
+    post: post,
+    record: post.record as AppBskyFeedPost.Record, // validate in notifs
+    parent: undefined,
+    replies: undefined,
+    viewer: post.viewer,
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+      isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
+      isChildLoading: !!post.replyCount,
+    },
   }
 }

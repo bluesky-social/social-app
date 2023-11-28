@@ -39,8 +39,10 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {isNative} from '#/platform/detection'
+import {logger} from '#/logger'
 
-// const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2} TODO
+const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
 const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const PARENT_SPINNER = {_reactKey: '__parent_spinner__'}
@@ -72,7 +74,6 @@ export function PostThread({
     isError,
     error,
     refetch,
-    isRefetching,
     data: thread,
   } = usePostThreadQuery(uri)
   const {data: preferences} = usePreferencesQuery()
@@ -110,7 +111,6 @@ export function PostThread({
   return (
     <PostThreadLoaded
       thread={thread}
-      isRefetching={isRefetching}
       threadViewPrefs={preferences.threadViewPrefs}
       onRefresh={refetch}
       onPressReply={onPressReply}
@@ -120,13 +120,11 @@ export function PostThread({
 
 function PostThreadLoaded({
   thread,
-  isRefetching,
   threadViewPrefs,
   onRefresh,
   onPressReply,
 }: {
   thread: ThreadNode
-  isRefetching: boolean
   threadViewPrefs: UsePreferencesQueryResponse['threadViewPrefs']
   onRefresh: () => void
   onPressReply: () => void
@@ -136,29 +134,15 @@ function PostThreadLoaded({
   const pal = usePalette('default')
   const {isTablet, isDesktop} = useWebMediaQueries()
   const ref = useRef<FlatList>(null)
-  // const hasScrolledIntoView = useRef<boolean>(false) TODO
+  const highlightedPostRef = useRef<View | null>(null)
+  const needsScrollAdjustment = useRef<boolean>(
+    !isNative || // web always uses scroll adjustment
+      (thread.type === 'post' && !thread.ctx.isParentLoading), // native only does it when not loading from placeholder
+  )
   const [maxVisible, setMaxVisible] = React.useState(100)
+  const [isPTRing, setIsPTRing] = React.useState(false)
 
-  // TODO
-  // const posts = React.useMemo(() => {
-  //   if (view.thread) {
-  //     let arr = [TOP_COMPONENT].concat(Array.from(flattenThread(view.thread)))
-  //     if (arr.length > maxVisible) {
-  //       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-  //     }
-  //     if (view.isLoadingFromCache) {
-  //       if (view.thread?.postRecord?.reply) {
-  //         arr.unshift(PARENT_SPINNER)
-  //       }
-  //       arr.push(CHILD_SPINNER)
-  //     } else {
-  //       arr.push(BOTTOM_COMPONENT)
-  //     }
-  //     return arr
-  //   }
-  //   return []
-  // }, [view.isLoadingFromCache, view.thread, maxVisible])
-  // const highlightedPostIndex = posts.findIndex(post => post._isHighlightedPost)
+  // construct content
   const posts = React.useMemo(() => {
     let arr = [TOP_COMPONENT].concat(
       Array.from(flattenThreadSkeleton(sortThread(thread, threadViewPrefs))),
@@ -166,54 +150,61 @@ function PostThreadLoaded({
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
     }
-    arr.push(BOTTOM_COMPONENT)
+    if (arr.indexOf(CHILD_SPINNER) === -1) {
+      arr.push(BOTTOM_COMPONENT)
+    }
     return arr
   }, [thread, maxVisible, threadViewPrefs])
 
-  // TODO
-  /*const onContentSizeChange = React.useCallback(() => {
+  /**
+   * NOTE
+   * Scroll positioning
+   *
+   * This callback is run if needsScrollAdjustment.current == true, which is...
+   *  - On web: always
+   *  - On native: when the placeholder cache is not being used
+   *
+   * It then only runs when viewing a reply, and the goal is to scroll the
+   * reply into view.
+   *
+   * On native, if the placeholder cache is being used then maintainVisibleContentPosition
+   * is a more effective solution, so we use that. Otherwise, typically we're loading from
+   * the react-query cache, so we just need to immediately scroll down to the post.
+   *
+   * On desktop, maintainVisibleContentPosition isn't supported so we just always use
+   * this technique.
+   *
+   * -prf
+   */
+  const onContentSizeChange = React.useCallback(() => {
     // only run once
-    if (hasScrolledIntoView.current) {
+    if (!needsScrollAdjustment.current) {
       return
     }
 
     // wait for loading to finish
-    if (
-      !view.hasContent ||
-      (view.isFromCache && view.isLoadingFromCache) ||
-      view.isLoading
-    ) {
-      return
+    if (thread.type === 'post' && !!thread.parent) {
+      highlightedPostRef.current?.measure(
+        (_x, _y, _width, _height, _pageX, pageY) => {
+          ref.current?.scrollToOffset({
+            animated: false,
+            offset: pageY - (isDesktop ? 0 : 50),
+          })
+        },
+      )
+      needsScrollAdjustment.current = false
     }
+  }, [thread, isDesktop])
 
-    if (highlightedPostIndex !== -1) {
-      ref.current?.scrollToIndex({
-        index: highlightedPostIndex,
-        animated: false,
-        viewPosition: 0,
-      })
-      hasScrolledIntoView.current = true
+  const onPTR = React.useCallback(async () => {
+    setIsPTRing(true)
+    try {
+      await onRefresh()
+    } catch (err) {
+      logger.error('Failed to refresh posts thread', {error: err})
     }
-  }, [
-    highlightedPostIndex,
-    view.hasContent,
-    view.isFromCache,
-    view.isLoadingFromCache,
-    view.isLoading,
-  ])*/
-  const onScrollToIndexFailed = React.useCallback(
-    (info: {
-      index: number
-      highestMeasuredFrameIndex: number
-      averageItemLength: number
-    }) => {
-      ref.current?.scrollToOffset({
-        animated: false,
-        offset: info.averageItemLength * info.index,
-      })
-    },
-    [ref],
-  )
+    setIsPTRing(false)
+  }, [setIsPTRing, onRefresh])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
@@ -290,18 +281,21 @@ function PostThreadLoaded({
           ? (posts[index - 1] as ThreadPost)
           : undefined
         return (
-          <PostThreadItem
-            post={item.post}
-            record={item.record}
-            treeView={threadViewPrefs.lab_treeViewEnabled || false}
-            depth={item.ctx.depth}
-            isHighlightedPost={item.ctx.isHighlightedPost}
-            hasMore={item.ctx.hasMore}
-            showChildReplyLine={item.ctx.showChildReplyLine}
-            showParentReplyLine={item.ctx.showParentReplyLine}
-            hasPrecedingItem={!!prev?.ctx.showChildReplyLine}
-            onPostReply={onRefresh}
-          />
+          <View
+            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}>
+            <PostThreadItem
+              post={item.post}
+              record={item.record}
+              treeView={threadViewPrefs.lab_treeViewEnabled || false}
+              depth={item.ctx.depth}
+              isHighlightedPost={item.ctx.isHighlightedPost}
+              hasMore={item.ctx.hasMore}
+              showChildReplyLine={item.ctx.showChildReplyLine}
+              showParentReplyLine={item.ctx.showParentReplyLine}
+              hasPrecedingItem={!!prev?.ctx.showChildReplyLine}
+              onPostReply={onRefresh}
+            />
+          </View>
         )
       }
       return null
@@ -330,25 +324,21 @@ function PostThreadLoaded({
       data={posts}
       initialNumToRender={posts.length}
       maintainVisibleContentPosition={
-        undefined // TODO
-        // isNative && view.isFromCache && view.isCachedPostAReply
-        //   ? MAINTAIN_VISIBLE_CONTENT_POSITION
-        //   : undefined
+        !needsScrollAdjustment.current
+          ? MAINTAIN_VISIBLE_CONTENT_POSITION
+          : undefined
       }
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshControl={
         <RefreshControl
-          refreshing={isRefetching}
-          onRefresh={onRefresh}
+          refreshing={isPTRing}
+          onRefresh={onPTR}
           tintColor={pal.colors.text}
           titleColor={pal.colors.text}
         />
       }
-      onContentSizeChange={
-        undefined //TODOisNative && view.isFromCache ? undefined : onContentSizeChange
-      }
-      onScrollToIndexFailed={onScrollToIndexFailed}
+      onContentSizeChange={onContentSizeChange}
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
@@ -465,6 +455,8 @@ function* flattenThreadSkeleton(
   if (node.type === 'post') {
     if (node.parent) {
       yield* flattenThreadSkeleton(node.parent)
+    } else if (node.ctx.isParentLoading) {
+      yield PARENT_SPINNER
     }
     yield node
     if (node.ctx.isHighlightedPost) {
@@ -474,6 +466,8 @@ function* flattenThreadSkeleton(
       for (const reply of node.replies) {
         yield* flattenThreadSkeleton(reply)
       }
+    } else if (node.ctx.isChildLoading) {
+      yield CHILD_SPINNER
     }
   } else if (node.type === 'not-found') {
     yield DELETED

@@ -1,6 +1,12 @@
 import {useCallback, useMemo} from 'react'
 import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryKey,
+  QueryClient,
+  useQueryClient,
+} from '@tanstack/react-query'
 import {getAgent} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
@@ -14,6 +20,7 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
+import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
 
 type ActorDid = string
 type AuthorFilter =
@@ -66,6 +73,7 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean},
 ) {
+  const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
   const moderationOpts = useModerationOpts()
@@ -141,6 +149,7 @@ export function usePostFeedQuery(
         tuner.reset()
       }
       const res = await api.fetch({cursor: pageParam, limit: 30})
+      precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
       const slices = tuner.tune(res.feed, feedTuners)
       return {
         cursor: res.cursor,
@@ -152,7 +161,6 @@ export function usePostFeedQuery(
             slice.items.every(
               item => item.post.author.did === slice.items[0].post.author.did,
             ),
-          source: undefined, // TODO
           items: slice.items
             .map((item, i) => {
               if (
@@ -179,4 +187,32 @@ export function usePostFeedQuery(
   })
 
   return {...out, pollLatest}
+}
+
+/**
+ * This helper is used by the post-thread placeholder function to
+ * find a post in the query-data cache
+ */
+export function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): FeedPostSliceItem | undefined {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: ['post-feed'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const slice of page.slices) {
+        for (const item of slice.items) {
+          if (item.uri === uri) {
+            return item
+          }
+        }
+      }
+    }
+  }
+  return undefined
 }
