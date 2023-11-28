@@ -5,10 +5,7 @@
   },
   "build": {
     "base": {
-      "node": "18.18.2",
-      "env": {
-        "EXPO_PUBLIC_LOG_LEVEL": "info"
-      }
+      "node": "18.18.2"
     },
     "development": {
       "extends": "base",
