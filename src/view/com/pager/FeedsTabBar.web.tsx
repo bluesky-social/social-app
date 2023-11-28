@@ -81,9 +81,10 @@ function FeedsTabBarTablet(
 ) {
   const feeds = usePinnedFeedsInfos()
   const pal = usePalette('default')
+  const {hasSession} = useSession()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
-  const items = feeds.map(f => f.displayName)
+  const items = hasSession ? feeds.map(f => f.displayName) : []
 
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
