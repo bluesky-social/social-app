@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
   moderateProfile,
@@ -143,7 +143,7 @@ export function DesktopSearch() {
     setSearchResults([])
     if (searchDebounceTimeout.current)
       clearTimeout(searchDebounceTimeout.current)
-    navigation.dispatch(StackActions.push('Search', {q: query}))
+    navigation.navigate('Search', {q: query})
   }, [query, navigation, setSearchResults])
 
   return (
