@@ -26,10 +26,6 @@
       "channel": "preview",
       "ios": {
         "resourceClass": "large"
-      },
-      "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
       }
     },
     "production": {
