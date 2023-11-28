@@ -14,6 +14,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
+import {logger} from '#/logger'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -35,6 +36,7 @@ function HomeScreenReady({
 }: Props & {
   preferences: UsePreferencesQueryResponse
 }) {
+  logger.log('HomeScreenReady')
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
