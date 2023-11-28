@@ -150,7 +150,9 @@ function PostThreadLoaded({
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
     }
-    arr.push(BOTTOM_COMPONENT)
+    if (arr.indexOf(CHILD_SPINNER) === -1) {
+      arr.push(BOTTOM_COMPONENT)
+    }
     return arr
   }, [thread, maxVisible, threadViewPrefs])
 
