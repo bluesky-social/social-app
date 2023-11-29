@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native'
+import {StyleSheet, View, ActivityIndicator, Pressable} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {track} from '#/lib/analytics/analytics'
@@ -196,6 +190,7 @@ function ListItem({
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
+  const isPending = isPinPending || isUnpinPending
 
   const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
@@ -263,7 +258,7 @@ function ListItem({
       style={[styles.itemContainer, pal.border]}>
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
-          <TouchableOpacity
+          <Pressable
             // disabled={isMovePending}
             accessibilityRole="button"
             onPress={onPressUp}
@@ -273,14 +268,14 @@ function ListItem({
               size={12}
               style={[pal.text, styles.webArrowUpButton]}
             />
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             // disabled={isMovePending}
             accessibilityRole="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}>
             <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       ) : null}
       <FeedSourceCard
@@ -289,17 +284,20 @@ function ListItem({
         style={styles.noBorder}
         showSaveBtn
       />
-      <TouchableOpacity
-        disabled={isPinPending || isUnpinPending}
+      <Pressable
+        disabled={isPending}
         accessibilityRole="button"
         hitSlop={10}
-        onPress={onTogglePinned}>
+        onPress={onTogglePinned}
+        style={state => ({
+          opacity: state.hovered || isPending ? 0.5 : 1,
+        })}>
         <FontAwesomeIcon
           icon="thumb-tack"
           size={20}
           color={isPinned ? colors.blue3 : pal.colors.icon}
         />
-      </TouchableOpacity>
+      </Pressable>
     </Pressable>
   )
 }
