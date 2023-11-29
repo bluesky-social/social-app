@@ -1,10 +1,19 @@
+/**
+ * A kind of companion API to ./feed.ts. See that file for more info.
+ */
+
 import React from 'react'
 import * as Notifications from 'expo-notifications'
+import {useQueryClient} from '@tanstack/react-query'
 import BroadcastChannel from '#/lib/broadcast'
 import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences'
-import {shouldFilterNotif} from './util'
+import {fetchPage} from './util'
+import {CachedFeedPage, FeedPage} from './types'
 import {isNative} from '#/platform/detection'
+import {useMutedThreads} from '#/state/muted-threads'
+import {RQKEY as RQKEY_NOTIFS} from './feed'
+import {logger} from '#/logger'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -14,7 +23,8 @@ type StateContext = string
 
 interface ApiContext {
   markAllRead: () => Promise<void>
-  checkUnread: () => Promise<void>
+  checkUnread: (opts?: {invalidate?: boolean}) => Promise<void>
+  getCachedUnreadPage: () => FeedPage | undefined
 }
 
 const stateContext = React.createContext<StateContext>('')
@@ -22,16 +32,23 @@ const stateContext = React.createContext<StateContext>('')
 const apiContext = React.createContext<ApiContext>({
   async markAllRead() {},
   async checkUnread() {},
+  getCachedUnreadPage: () => undefined,
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
+  const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
+  const threadMutes = useMutedThreads()
 
   const [numUnread, setNumUnread] = React.useState('')
 
-  const checkUnreadRef = React.useRef<(() => Promise<void>) | null>(null)
-  const lastSyncRef = React.useRef<Date>(new Date())
+  const checkUnreadRef = React.useRef<ApiContext['checkUnread'] | null>(null)
+  const cacheRef = React.useRef<CachedFeedPage>({
+    sessDid: currentAccount?.did || '',
+    syncedAt: new Date(),
+    data: undefined,
+  })
 
   // periodic sync
   React.useEffect(() => {
@@ -46,14 +63,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // listen for broadcasts
   React.useEffect(() => {
     const listener = ({data}: MessageEvent) => {
-      lastSyncRef.current = new Date()
+      cacheRef.current = {
+        sessDid: currentAccount?.did || '',
+        syncedAt: new Date(),
+        data: undefined,
+      }
       setNumUnread(data.event)
     }
     broadcast.addEventListener('message', listener)
     return () => {
       broadcast.removeEventListener('message', listener)
     }
-  }, [setNumUnread])
+  }, [setNumUnread, currentAccount])
 
   // create API
   const api = React.useMemo<ApiContext>(() => {
@@ -61,7 +82,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       async markAllRead() {
         // update server
         await getAgent().updateSeenNotifications(
-          lastSyncRef.current.toISOString(),
+          cacheRef.current.syncedAt.toISOString(),
         )
 
         // update & broadcast
@@ -69,36 +90,59 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         broadcast.postMessage({event: ''})
       },
 
-      async checkUnread() {
-        if (!getAgent().session) return
+      async checkUnread({invalidate}: {invalidate?: boolean} = {}) {
+        try {
+          if (!getAgent().session) return
 
-        // count
-        const res = await getAgent().listNotifications({limit: 40})
-        const filtered = res.data.notifications.filter(
-          notif => !notif.isRead && !shouldFilterNotif(notif, moderationOpts),
-        )
-        const num =
-          filtered.length >= 30
-            ? '30+'
-            : filtered.length === 0
-            ? ''
-            : String(filtered.length)
-        if (isNative) {
-          Notifications.setBadgeCountAsync(Math.min(filtered.length, 30))
+          // count
+          const page = await fetchPage({
+            cursor: undefined,
+            limit: 40,
+            queryClient,
+            moderationOpts,
+            threadMutes,
+          })
+          const unreadCount = countUnread(page)
+          const unreadCountStr =
+            unreadCount >= 30
+              ? '30+'
+              : unreadCount === 0
+              ? ''
+              : String(unreadCount)
+          if (isNative) {
+            Notifications.setBadgeCountAsync(Math.min(unreadCount, 30))
+          }
+
+          // track last sync
+          const now = new Date()
+          const lastIndexed =
+            page.items[0] && new Date(page.items[0].notification.indexedAt)
+          cacheRef.current = {
+            sessDid: currentAccount?.did || '',
+            data: page,
+            syncedAt: !lastIndexed || now > lastIndexed ? now : lastIndexed,
+          }
+
+          // update & broadcast
+          setNumUnread(unreadCountStr)
+          if (invalidate) {
+            queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+          }
+          broadcast.postMessage({event: unreadCountStr})
+        } catch (e) {
+          logger.error('Failed to check unread notifications', {error: e})
         }
+      },
 
-        // track last sync
-        const now = new Date()
-        const lastIndexed = filtered[0] && new Date(filtered[0].indexedAt)
-        lastSyncRef.current =
-          !lastIndexed || now > lastIndexed ? now : lastIndexed
-
-        // update & broadcast
-        setNumUnread(num)
-        broadcast.postMessage({event: num})
+      getCachedUnreadPage() {
+        // return cached page if was for the current user
+        // (protects against session changes serving data from the past session)
+        if (cacheRef.current.sessDid === currentAccount?.did) {
+          return cacheRef.current.data
+        }
       },
     }
-  }, [setNumUnread, moderationOpts])
+  }, [setNumUnread, queryClient, moderationOpts, threadMutes, currentAccount])
   checkUnreadRef.current = api.checkUnread
 
   return (
@@ -114,4 +158,21 @@ export function useUnreadNotifications() {
 
 export function useUnreadNotificationsApi() {
   return React.useContext(apiContext)
+}
+
+function countUnread(page: FeedPage) {
+  let num = 0
+  for (const item of page.items) {
+    if (!item.notification.isRead) {
+      num++
+    }
+    if (item.additional) {
+      for (const item2 of item.additional) {
+        if (!item2.isRead) {
+          num++
+        }
+      }
+    }
+  }
+  return num
 }

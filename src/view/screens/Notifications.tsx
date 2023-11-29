@@ -19,7 +19,10 @@ import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {
+  useUnreadNotifications,
+  useUnreadNotificationsApi,
+} from '#/state/queries/notifications/unread'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
 
@@ -35,8 +38,9 @@ export function NotificationsScreen({}: Props) {
   const {screen} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
-  const unreadNotifs = useUnreadNotifications()
   const queryClient = useQueryClient()
+  const unreadNotifs = useUnreadNotifications()
+  const unreadApi = useUnreadNotificationsApi()
   const hasNew = !!unreadNotifs
 
   // event handlers
@@ -48,10 +52,16 @@ export function NotificationsScreen({}: Props) {
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    queryClient.invalidateQueries({
-      queryKey: NOTIFS_RQKEY(),
-    })
-  }, [scrollToTop, queryClient])
+    if (hasNew) {
+      // render what we have now
+      queryClient.invalidateQueries({
+        queryKey: NOTIFS_RQKEY(),
+      })
+    } else {
+      // check with the server
+      unreadApi.checkUnread({invalidate: true})
+    }
+  }, [scrollToTop, queryClient, unreadApi, hasNew])
 
   // on-visible setup
   // =
