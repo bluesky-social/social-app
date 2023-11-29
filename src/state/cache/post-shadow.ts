@@ -37,33 +37,23 @@ export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   const [prevPost, setPrevPost] = useState(post)
-  const [shadow, setShadow] = useState(() =>
-    computeShadow(post, findChain(post)),
-  )
+  const [shadow, setShadow] = useState(() => computeShadow(post))
   if (post !== prevPost) {
     setPrevPost(post)
-    setShadow(computeShadow(post, findChain(post)))
+    setShadow(computeShadow(post))
   }
 
   useEffect(() => {
-    function onChange(updatedChain) {
-      setShadow(computeShadow(post, updatedChain))
+    function onChange() {
+      setShadow(computeShadow(post))
     }
-    const unsub = addListener(post.uri, onChange)
+    const unsub = addListener(post, onChange)
     return () => {
       unsub()
     }
   }, [post])
 
   return mergeShadow(post, shadow)
-}
-
-function findChain(post) {
-  const record = map.get(post.uri)
-  if (!record) {
-    return null
-  }
-  return record.chain
 }
 
 function mergeShadow(post, shadow) {
@@ -83,41 +73,59 @@ function mergeShadow(post, shadow) {
   }
 }
 
-function computeShadow(post, chain) {
+function computeShadow(post) {
+  const chain = findChain(post)
   const postTS = getFirstSeenTS(post)
   let acc = {}
-  while (chain && chain.value) {
-    if (chain.timestamp > postTS) {
-      Object.assign(acc, chain.value)
+  let node = chain
+  while (node && node.value) {
+    if (node.timestamp > postTS) {
+      Object.assign(acc, node.value)
     }
-    chain = chain.next
+    node = node.next
   }
   return acc
 }
 
-function addListener(uri, onChange) {
-  let record
-  if (map.has(uri)) {
-    record = map.get(uri)
+let chainByPost = new WeakMap()
+
+function findChain(post) {
+  if (chainByPost.has(post)) {
+    return chainByPost.get(post)
+  }
+  let chain
+  if (recordByUri.has(post.uri)) {
+    chain = recordByUri.get(post.uri).chain
   } else {
-    record = {listeners: [], chain: {value: null, next: null, timestamp: null}}
-    map.set(uri, record)
+    chain = {value: null, next: null, timestamp: null}
+  }
+  chainByPost.set(post, chain)
+  return chain
+}
+
+let recordByUri = new Map()
+
+function addListener(post, onChange) {
+  const uri = post.uri
+  const chain = findChain(post)
+  let record
+  if (recordByUri.has(uri)) {
+    record = recordByUri.get(uri)
+  } else {
+    record = {chain, listeners: []}
+    recordByUri.set(uri, record)
   }
   record.listeners.push(onChange)
   return () => {
     record.listeners = record.listeners.filter(l => l !== onChange)
     if (record.listeners.length === 0) {
-      map.delete(uri)
+      recordByUri.delete(uri)
     }
   }
 }
 
-const map = new Map()
-
-console.log(map)
-
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  const record = map.get(uri)
+  const record = recordByUri.get(uri)
   if (!record) {
     return
   }
@@ -129,6 +137,6 @@ export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   node.timestamp = Date.now()
   node.next = {value: null, next: null, timestamp: null}
   batchedUpdates(() => {
-    record.listeners.forEach(l => l(record.chain))
+    record.listeners.forEach(l => l())
   })
 }
