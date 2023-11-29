@@ -54,7 +54,7 @@ export function NotificationsScreen({}: Props) {
     scrollToTop()
     if (hasNew) {
       // render what we have now
-      queryClient.invalidateQueries({
+      queryClient.resetQueries({
         queryKey: NOTIFS_RQKEY(),
       })
     } else {

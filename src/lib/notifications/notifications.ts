@@ -83,7 +83,7 @@ export function init(queryClient: QueryClient) {
     )
     if (event.request.trigger.type === 'push') {
       // refresh notifications in the background
-      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+      queryClient.resetQueries({queryKey: RQKEY_NOTIFS()})
       // handle payload-based deeplinks
       let payload
       if (isIOS) {
@@ -121,7 +121,7 @@ export function init(queryClient: QueryClient) {
           logger.DebugContext.notifications,
         )
         track('Notificatons:OpenApp')
-        queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+        queryClient.resetQueries({queryKey: RQKEY_NOTIFS()})
         resetToTab('NotificationsTab') // open notifications tab
       }
     },

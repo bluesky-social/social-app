@@ -150,7 +150,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
       } else {
         if (href === '/notifications') {
           // fetch new notifs on view
-          queryClient.invalidateQueries({
+          queryClient.resetQueries({
             queryKey: NOTIFS_RQKEY(),
           })
         }
