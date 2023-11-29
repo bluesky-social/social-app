@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {PostModeration, moderatePost} from '@atproto/api'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
@@ -26,11 +27,31 @@ import {
   pollLatest,
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {FeedPostSlice} from '#/state/queries/post-feed'
+import {Text} from '#/view/com/util/text/Text'
+import {Trans} from '@lingui/macro'
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+type FeedItem =
+  | {
+      _reactKey: '__loading__'
+    }
+  | {
+      _reactKey: '__empty__'
+    }
+  | {
+      _reactKey: '__error__'
+    }
+  | {
+      _reactKey: '__load_more_error__'
+    }
+  | {
+      _reactKey: '__feed_slice__'
+      slice: FeedPostSlice
+      moderations: PostModeration[]
+    }
+  | {
+      _reactKey: '__authed_only__'
+    }
 
 let Feed = ({
   feed,
@@ -72,6 +93,7 @@ let Feed = ({
   const {track} = useAnalytics()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
+  const isFeedDisabledRef = React.useRef<boolean>(false)
 
   const moderationOpts = useModerationOpts()
   const opts = React.useMemo(() => ({enabled}), [enabled])
@@ -115,23 +137,50 @@ let Feed = ({
   }, [pollInterval])
 
   const feedItems = React.useMemo(() => {
-    let arr: any[] = []
+    let arr: FeedItem[] = []
     if (isFetched && moderationOpts) {
       if (isError && isEmpty) {
-        arr = arr.concat([ERROR_ITEM])
+        arr = arr.concat([{_reactKey: '__error__'}])
       }
       if (isEmpty) {
-        arr = arr.concat([EMPTY_FEED_ITEM])
+        arr = arr.concat([{_reactKey: '__empty__'}])
       } else if (data) {
+        let slices: FeedItem[] = []
+
         for (const page of data?.pages) {
-          arr = arr.concat(page.slices)
+          slices = slices.concat(
+            page.slices
+              .map(slice => ({
+                _reactKey: '__feed_slice__',
+                slice,
+                moderations: slice.items.map(item =>
+                  moderatePost(item.post, moderationOpts),
+                ),
+              }))
+              .filter(item => {
+                for (let i = 0; i < item.slice.items.length; i++) {
+                  if (item.moderations[i]?.content.filter) {
+                    return false
+                  }
+                }
+
+                return true
+              }) as FeedItem[],
+          )
+        }
+
+        if (slices.length) {
+          arr = arr.concat(slices)
+        } else {
+          isFeedDisabledRef.current = true
+          arr.push({_reactKey: '__authed_only__'})
         }
       }
       if (isError && !isEmpty) {
-        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
+        arr = arr.concat([{_reactKey: '__load_more_error__'}])
       }
     } else {
-      arr.push(LOADING_ITEM)
+      arr.push({_reactKey: '__loading__'})
     }
     return arr
   }, [isFetched, isError, isEmpty, data, moderationOpts])
@@ -140,6 +189,8 @@ let Feed = ({
   // =
 
   const onRefresh = React.useCallback(async () => {
+    if (isFeedDisabledRef.current) return
+
     track('Feed:onRefresh')
     setIsPTRing(true)
     try {
@@ -152,7 +203,8 @@ let Feed = ({
   }, [refetch, track, setIsPTRing, onHasNew])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetching || !hasNextPage || isError || isFeedDisabledRef.current)
+      return
 
     track('Feed:onEndReached')
     try {
@@ -175,10 +227,10 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
-      if (item === EMPTY_FEED_ITEM) {
+    ({item}: {item: FeedItem}) => {
+      if (item._reactKey === '__empty__') {
         return renderEmptyState()
-      } else if (item === ERROR_ITEM) {
+      } else if (item._reactKey === '__error__') {
         return (
           <FeedErrorMessage
             feedDesc={feed}
@@ -186,32 +238,24 @@ let Feed = ({
             onPressTryAgain={onPressTryAgain}
           />
         )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
+      } else if (item._reactKey === '__load_more_error__') {
         return (
           <LoadMoreRetryBtn
             label="There was an issue fetching posts. Tap here to try again."
             onPress={onPressRetryLoadMore}
           />
         )
-      } else if (item === LOADING_ITEM) {
+      } else if (item._reactKey === '__loading__') {
         return <PostFeedLoadingPlaceholder />
+      } else if (item._reactKey === '__feed_slice__') {
+        return <FeedSlice slice={item.slice} moderations={item.moderations} />
+      } else if (item._reactKey === '__authed_only__') {
+        return <AuthedOnlyFeedFallback />
+      } else {
+        return null
       }
-      return (
-        <FeedSlice
-          slice={item}
-          // we check for this before creating the feedItems array
-          moderationOpts={moderationOpts!}
-        />
-      )
     },
-    [
-      feed,
-      error,
-      onPressTryAgain,
-      onPressRetryLoadMore,
-      renderEmptyState,
-      moderationOpts,
-    ],
+    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
   )
 
   const shouldRenderEndOfFeed =
@@ -276,3 +320,34 @@ export {Feed}
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
+
+function AuthedOnlyFeedFallback() {
+  const pal = usePalette('default')
+  return (
+    <View
+      style={[
+        pal.border,
+        {
+          padding: 18,
+          borderTopWidth: 1,
+          minHeight: Dimensions.get('window').height * 1.5,
+        },
+      ]}>
+      <View
+        style={[
+          pal.viewLight,
+          {
+            padding: 12,
+            borderRadius: 8,
+          },
+        ]}>
+        <Text style={[pal.text]}>
+          <Trans>
+            We're sorry, but this content is not viewable without a Bluesky
+            account.
+          </Trans>
+        </Text>
+      </View>
+    </View>
+  )
+}
