@@ -1,5 +1,9 @@
 import React from 'react'
-import {useQueryClient, useMutation} from '@tanstack/react-query'
+import {
+  useQueryClient,
+  useMutation,
+  QueryFunctionContext,
+} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
@@ -16,7 +20,7 @@ export function useFetchHandle() {
         const res = await queryClient.fetchQuery({
           staleTime: STALE.MINUTES.FIVE,
           queryKey: fetchHandleQueryKey(handleOrDid),
-          queryFn: () => getAgent().getProfile({actor: handleOrDid}),
+          queryFn: fetchHandleQueryFn,
         })
         return res.data.handle
       }
@@ -24,6 +28,11 @@ export function useFetchHandle() {
     },
     [queryClient],
   )
+}
+
+async function fetchHandleQueryFn({queryKey}: QueryFunctionContext) {
+  const [_, handleOrDid] = queryKey as ReturnType<typeof fetchHandleQueryKey>
+  return getAgent().getProfile({actor: handleOrDid})
 }
 
 export function useUpdateHandleMutation() {
@@ -49,16 +58,18 @@ export function useFetchDid() {
       return queryClient.fetchQuery({
         staleTime: STALE.INFINITY,
         queryKey: fetchDidQueryKey(handleOrDid),
-        queryFn: async () => {
-          let identifier = handleOrDid
-          if (!identifier.startsWith('did:')) {
-            const res = await getAgent().resolveHandle({handle: identifier})
-            identifier = res.data.did
-          }
-          return identifier
-        },
+        queryFn: fetchDidQueryFn,
       })
     },
     [queryClient],
   )
+}
+
+async function fetchDidQueryFn({queryKey}: QueryFunctionContext) {
+  let [_, identifier] = queryKey as ReturnType<typeof fetchDidQueryKey>
+  if (!identifier.startsWith('did:')) {
+    const res = await getAgent().resolveHandle({handle: identifier})
+    identifier = res.data.did
+  }
+  return identifier
 }
