@@ -127,7 +127,7 @@ function ProfileListScreenLoaded({
       list,
       onChange() {
         if (isCurateList) {
-          queryClient.invalidateQueries({
+          queryClient.resetQueries({
             // TODO(eric) should construct these strings with a fn too
             queryKey: FEED_RQKEY(`list|${list.uri}`),
           })
@@ -530,7 +530,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({

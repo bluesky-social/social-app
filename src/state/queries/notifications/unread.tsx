@@ -126,7 +126,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // update & broadcast
           setNumUnread(unreadCountStr)
           if (invalidate) {
-            queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+            queryClient.resetQueries({queryKey: RQKEY_NOTIFS()})
           }
           broadcast.postMessage({event: unreadCountStr})
         } catch (e) {

@@ -62,7 +62,7 @@ export function FeedPage({
   const onSoftReset = React.useCallback(() => {
     if (isPageFocused) {
       scrollToTop()
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }
   }, [isPageFocused, scrollToTop, queryClient, feed, setHasNew])
@@ -83,7 +83,7 @@ export function FeedPage({
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+    queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
     setHasNew(false)
   }, [scrollToTop, feed, queryClient, setHasNew])
 
