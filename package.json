@@ -28,7 +28,6 @@
     "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
-    "build:apk": "eas build -p android --profile dev-android-apk",
     "intl:extract": "lingui extract",
     "intl:compile": "lingui compile"
   },
