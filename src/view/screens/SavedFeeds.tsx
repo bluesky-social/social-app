@@ -259,10 +259,13 @@ function ListItem({
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
           <Pressable
-            // disabled={isMovePending}
+            disabled={isPending}
             accessibilityRole="button"
             onPress={onPressUp}
-            hitSlop={HITSLOP_TOP}>
+            hitSlop={HITSLOP_TOP}
+            style={state => ({
+              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+            })}>
             <FontAwesomeIcon
               icon="arrow-up"
               size={12}
@@ -270,10 +273,13 @@ function ListItem({
             />
           </Pressable>
           <Pressable
-            // disabled={isMovePending}
+            disabled={isPending}
             accessibilityRole="button"
             onPress={onPressDown}
-            hitSlop={HITSLOP_BOTTOM}>
+            hitSlop={HITSLOP_BOTTOM}
+            style={state => ({
+              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+            })}>
             <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
           </Pressable>
         </View>
@@ -290,7 +296,7 @@ function ListItem({
         hitSlop={10}
         onPress={onTogglePinned}
         style={state => ({
-          opacity: state.hovered || isPending ? 0.5 : 1,
+          opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
         })}>
         <FontAwesomeIcon
           icon="thumb-tack"

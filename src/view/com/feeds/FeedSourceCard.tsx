@@ -1,5 +1,12 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+  ActivityIndicator,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
@@ -40,7 +47,12 @@ export function FeedSourceCard({
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
 
-  if (!feed || !preferences) return null
+  if (!feed || !preferences)
+    return (
+      <View style={{paddingVertical: 12, paddingHorizontal: 18}}>
+        <ActivityIndicator />
+      </View>
+    )
 
   return (
     <FeedSourceCardLoaded
