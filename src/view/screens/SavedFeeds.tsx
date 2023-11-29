@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
 import {track} from '#/lib/analytics/analytics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -32,8 +31,6 @@ import {
   usePinFeedMutation,
   useUnpinFeedMutation,
   useSetSaveFeedsMutation,
-  preferencesQueryKey,
-  UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 
 const HITSLOP_TOP = {
@@ -57,6 +54,24 @@ export function SavedFeeds({}: Props) {
   const {screen} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: preferences} = usePreferencesQuery()
+  const {
+    mutateAsync: setSavedFeeds,
+    variables: optimisticSavedFeedsResponse,
+    reset: resetSaveFeedsMutationState,
+    error: setSavedFeedsError,
+  } = useSetSaveFeedsMutation()
+
+  /*
+   * Use optimistic data if exists and no error, otherwise fallback to remote
+   * data
+   */
+  const currentFeeds =
+    optimisticSavedFeedsResponse && !setSavedFeedsError
+      ? optimisticSavedFeedsResponse
+      : preferences?.feeds || {saved: [], pinned: []}
+  const unpinned = currentFeeds.saved.filter(f => {
+    return !currentFeeds.pinned?.includes(f)
+  })
 
   useFocusEffect(
     React.useCallback(() => {
@@ -80,7 +95,7 @@ export function SavedFeeds({}: Props) {
           </Text>
         </View>
         {preferences?.feeds ? (
-          !preferences.feeds.pinned.length ? (
+          !currentFeeds.pinned.length ? (
             <View
               style={[
                 pal.border,
@@ -93,8 +108,15 @@ export function SavedFeeds({}: Props) {
               </Text>
             </View>
           ) : (
-            preferences?.feeds?.pinned?.map(uri => (
-              <ListItem key={uri} feedUri={uri} isPinned />
+            currentFeeds.pinned.map(uri => (
+              <ListItem
+                key={uri}
+                feedUri={uri}
+                isPinned
+                setSavedFeeds={setSavedFeeds}
+                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+                currentFeeds={currentFeeds}
+              />
             ))
           )
         ) : (
@@ -106,7 +128,7 @@ export function SavedFeeds({}: Props) {
           </Text>
         </View>
         {preferences?.feeds ? (
-          !preferences.feeds.unpinned.length ? (
+          !unpinned.length ? (
             <View
               style={[
                 pal.border,
@@ -119,8 +141,15 @@ export function SavedFeeds({}: Props) {
               </Text>
             </View>
           ) : (
-            preferences.feeds.unpinned.map(uri => (
-              <ListItem key={uri} feedUri={uri} isPinned={false} />
+            unpinned.map(uri => (
+              <ListItem
+                key={uri}
+                feedUri={uri}
+                isPinned={false}
+                setSavedFeeds={setSavedFeeds}
+                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+                currentFeeds={currentFeeds}
+              />
             ))
           )
         ) : (
@@ -151,22 +180,29 @@ export function SavedFeeds({}: Props) {
 function ListItem({
   feedUri,
   isPinned,
+  currentFeeds,
+  setSavedFeeds,
+  resetSaveFeedsMutationState,
 }: {
   feedUri: string // uri
   isPinned: boolean
+  currentFeeds: {saved: string[]; pinned: string[]}
+  setSavedFeeds: ReturnType<typeof useSetSaveFeedsMutation>['mutateAsync']
+  resetSaveFeedsMutationState: ReturnType<
+    typeof useSetSaveFeedsMutation
+  >['reset']
 }) {
   const pal = usePalette('default')
-  const queryClient = useQueryClient()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
-  const {isPending: isMovePending, mutateAsync: setSavedFeeds} =
-    useSetSaveFeedsMutation()
 
   const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
 
     try {
+      resetSaveFeedsMutationState()
+
       if (isPinned) {
         await unpinFeed({uri: feedUri})
       } else {
@@ -176,24 +212,20 @@ function ListItem({
       Toast.show('There was an issue contacting the server')
       logger.error('Failed to toggle pinned feed', {error: e})
     }
-  }, [feedUri, isPinned, pinFeed, unpinFeed])
+  }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
 
-    const feeds =
-      queryClient.getQueryData<UsePreferencesQueryResponse>(
-        preferencesQueryKey,
-      )?.feeds
     // create new array, do not mutate
-    const pinned = feeds?.pinned ? [...feeds.pinned] : []
+    const pinned = [...currentFeeds.pinned]
     const index = pinned.indexOf(feedUri)
 
     if (index === -1 || index === 0) return
     ;[pinned[index], pinned[index - 1]] = [pinned[index - 1], pinned[index]]
 
     try {
-      await setSavedFeeds({saved: feeds?.saved ?? [], pinned})
+      await setSavedFeeds({saved: currentFeeds.saved, pinned})
       track('CustomFeed:Reorder', {
         uri: feedUri,
         index: pinned.indexOf(feedUri),
@@ -202,24 +234,19 @@ function ListItem({
       Toast.show('There was an issue contacting the server')
       logger.error('Failed to set pinned feed order', {error: e})
     }
-  }, [feedUri, isPinned, queryClient, setSavedFeeds])
+  }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
 
-    const feeds =
-      queryClient.getQueryData<UsePreferencesQueryResponse>(
-        preferencesQueryKey,
-      )?.feeds
-    // create new array, do not mutate
-    const pinned = feeds?.pinned ? [...feeds.pinned] : []
+    const pinned = [...currentFeeds.pinned]
     const index = pinned.indexOf(feedUri)
 
     if (index === -1 || index >= pinned.length - 1) return
     ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
 
     try {
-      await setSavedFeeds({saved: feeds?.saved ?? [], pinned})
+      await setSavedFeeds({saved: currentFeeds.saved, pinned})
       track('CustomFeed:Reorder', {
         uri: feedUri,
         index: pinned.indexOf(feedUri),
@@ -228,7 +255,7 @@ function ListItem({
       Toast.show('There was an issue contacting the server')
       logger.error('Failed to set pinned feed order', {error: e})
     }
-  }, [feedUri, isPinned, queryClient, setSavedFeeds])
+  }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
 
   return (
     <Pressable
@@ -237,7 +264,7 @@ function ListItem({
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
           <TouchableOpacity
-            disabled={isMovePending}
+            // disabled={isMovePending}
             accessibilityRole="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}>
@@ -248,7 +275,7 @@ function ListItem({
             />
           </TouchableOpacity>
           <TouchableOpacity
-            disabled={isMovePending}
+            // disabled={isMovePending}
             accessibilityRole="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}>
