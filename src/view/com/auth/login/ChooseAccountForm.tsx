@@ -11,6 +11,7 @@ import {useLingui} from '@lingui/react'
 import {styles} from './styles'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 
 function AccountItem({
   account,
@@ -67,8 +68,9 @@ export const ChooseAccountForm = ({
   const {track, screen} = useAnalytics()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {accounts} = useSession()
+  const {accounts, currentAccount} = useSession()
   const {initSession} = useSessionApi()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   React.useEffect(() => {
     screen('Choose Account')
@@ -77,13 +79,17 @@ export const ChooseAccountForm = ({
   const onSelect = React.useCallback(
     async (account: SessionAccount) => {
       if (account.accessJwt) {
-        await initSession(account)
-        track('Sign In', {resumedSession: true})
+        if (account.did === currentAccount?.did) {
+          setShowLoggedOut(false)
+        } else {
+          await initSession(account)
+          track('Sign In', {resumedSession: true})
+        }
       } else {
         onSelectAccount(account)
       }
     },
-    [track, initSession, onSelectAccount],
+    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut],
   )
 
   return (
