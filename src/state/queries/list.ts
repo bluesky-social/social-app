@@ -6,7 +6,12 @@ import {
   BskyAgent,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryFunctionContext,
+} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 import {useSession, getAgent} from '../session'
 import {invalidate as invalidateMyLists} from './my-lists'
@@ -21,18 +26,21 @@ export function useListQuery(uri?: string) {
   return useQuery<AppBskyGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
-    async queryFn() {
-      if (!uri) {
-        throw new Error('URI not provided')
-      }
-      const res = await getAgent().app.bsky.graph.getList({
-        list: uri,
-        limit: 1,
-      })
-      return res.data.list
-    },
+    queryFn: listQueryFn,
     enabled: !!uri,
   })
+}
+
+async function listQueryFn({queryKey}: QueryFunctionContext) {
+  const [_, uri] = queryKey as ReturnType<typeof RQKEY>
+  if (!uri) {
+    throw new Error('URI not provided')
+  }
+  const res = await getAgent().app.bsky.graph.getList({
+    list: uri,
+    limit: 1,
+  })
+  return res.data.list
 }
 
 export interface ListCreateMutateParams {
