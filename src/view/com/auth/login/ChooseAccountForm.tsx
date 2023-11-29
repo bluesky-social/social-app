@@ -1,10 +1,13 @@
 import React from 'react'
 import {ScrollView, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {UserAvatar} from '../../util/UserAvatar'
-import {s} from 'lib/styles'
+import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -16,9 +19,11 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 function AccountItem({
   account,
   onSelect,
+  isCurrentAccount,
 }: {
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
+  isCurrentAccount: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -49,11 +54,19 @@ function AccountItem({
             {account.handle}
           </Text>
         </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          size={16}
-          style={[pal.text, s.mr10]}
-        />
+        {isCurrentAccount ? (
+          <FontAwesomeIcon
+            icon="check"
+            size={16}
+            style={[{color: colors.green3} as FontAwesomeIconStyle, s.mr10]}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon="angle-right"
+            size={16}
+            style={[pal.text, s.mr10]}
+          />
+        )}
       </View>
     </TouchableOpacity>
   )
@@ -100,7 +113,12 @@ export const ChooseAccountForm = ({
         <Trans>Sign in as...</Trans>
       </Text>
       {accounts.map(account => (
-        <AccountItem key={account.did} account={account} onSelect={onSelect} />
+        <AccountItem
+          key={account.did}
+          account={account}
+          onSelect={onSelect}
+          isCurrentAccount={account.did === currentAccount?.did}
+        />
       ))}
       <TouchableOpacity
         testID="chooseNewAccountBtn"
