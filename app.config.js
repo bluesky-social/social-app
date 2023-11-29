@@ -1,8 +1,10 @@
+const pkg = require('./package.json')
+
 module.exports = function () {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
-  const VERSION = '1.57.0'
+  const VERSION = pkg.version
 
   /**
    * iOS build number. Must be incremented for each TestFlight version.
