@@ -63,7 +63,7 @@ msgstr "コンテンツ警告を追加"
 
 #: src/view/screens/ProfileList.tsx:668
 msgid "Add a user to this list"
-msgstr "このリストにユーザーを追加"
+msgstr "リストにユーザーを追加"
 
 #: src/view/screens/Settings.tsx:360
 #: src/view/screens/Settings.tsx:369
@@ -73,7 +73,7 @@ msgstr "アカウントを追加"
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
 msgid "Add alt text"
-msgstr "Altテキストを追加"
+msgstr "全てのテキストを追加"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
@@ -262,7 +262,7 @@ msgstr "Blueskyは公開されています。"
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "Blueskyは、より健康なコミュニティを構築するために招待状を使用します。招待状をお持ちの方がいない場合は、キャンセル待ちを申し込めばすぐにお送りします。"
+msgstr "Blueskyはより健全なコミュニティを構築するために招待状を使用します。招待状をお持ちでない方の場合、waitlistに申し込めば招待状をお送りします。"
 
 #: src/view/com/modals/ServerInput.tsx:78
 msgid "Bluesky.Social"
@@ -313,7 +313,7 @@ msgstr "画像のaltテキストの追加をキャンセル"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "変更ハンドルをキャンセル"
+msgstr "ハンドルの変更をキャンセル"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -334,7 +334,7 @@ msgstr "検索をキャンセル"
 
 #: src/view/com/modals/Waitlist.tsx:132
 msgid "Cancel waitlist signup"
-msgstr "キャンセル待ち登録をキャンセル"
+msgstr "Waitlistの登録をキャンセル"
 
 #: src/view/screens/Settings.tsx:311
 msgid "Change"
@@ -351,7 +351,7 @@ msgstr "ハンドルを変更"
 
 #: src/view/com/modals/VerifyEmail.tsx:133
 msgid "Change my email"
-msgstr "マイEメールを変更"
+msgstr "Eメールの変更"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -359,15 +359,15 @@ msgstr "Eメールを変更"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "推奨フィードをいくつか確認しください。「+」をタップして、ピン接続されたフィードのリストに追加します。"
+msgstr "推奨フィードを確認してください。「＋」をタップすればフィードに追加されます。"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
-msgstr "推奨ユーザーをいくつか確認してください。似たようなユーザーを見るためにフォローしてください。"
+msgstr "推奨ユーザーを確認してください。フォローする事であなたに合ったユーザーが見つかるかもしれません。"
 
 #: src/view/com/modals/DeleteAccount.tsx:163
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "以下に入力する確認コードが記載されているEメールの受信トレイを確認してください。"
+msgstr "以下に入力する確認コードが記載されているか、Eメールの受信トレイを確認してください。"
 
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
@@ -507,11 +507,11 @@ msgstr "著作権ポリシー"
 
 #: src/view/screens/ProfileFeed.tsx:99
 msgid "Could not load feed"
-msgstr "フィードをロードできなかった"
+msgstr "フィードのロード失敗"
 
 #: src/view/screens/ProfileList.tsx:755
 msgid "Could not load list"
-msgstr "リストをロードできなかった"
+msgstr "リストのロード失敗"
 
 #: src/view/com/auth/SplashScreen.tsx:41
 msgid "Create a new account"
@@ -728,11 +728,12 @@ msgstr "推奨フィードのロードに失敗"
 
 #: src/view/screens/Feeds.tsx:564
 msgid "Feed offline"
-msgstr "オフラインでフィード"
+msgstr "フィードはオフライン"
 
 #: src/view/com/feeds/FeedPage.tsx:131
 msgid "Feed Preferences"
 msgstr "フィードプリファレンス"
+
 
 #: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:411
@@ -749,15 +750,15 @@ msgstr "フィード"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "フィードは、コンテンツをキュレーションするためにユーザーによって作成されます。興味深いと思うフィードをいくつか選択してください。"
+msgstr "フィードはコンテンツを整理する為にユーザーによって作成されます。興味具かいフィードをいくつか選択してください。"
 
 #: src/view/screens/SavedFeeds.tsx:133
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "フィードは、ユーザーがコーディングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
+msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
 msgid "Finding similar accounts..."
-msgstr "似たようなアカウントを検索中..."
+msgstr "似通ったアカウントを検索中..."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:102
 msgid "Fine-tune the content you see on your home screen."
@@ -928,7 +929,7 @@ msgstr "招待コード"
 
 #: src/view/com/auth/create/state.ts:136
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr "招待コードが受け入れられません。正しく入力されていることを確認し、もう一度実行してください。"
+msgstr "招待コードが確認できません。正しく入力されている事を確認し、もう一度実行してください。"
 
 #: src/view/com/modals/Waitlist.tsx:67
 msgid "Join the waitlist"
@@ -1037,7 +1038,7 @@ msgstr "リストにないアカウントにログイン"
 
 #: src/view/com/modals/LinkWarning.tsx:63
 msgid "Make sure this is where you intend to go!"
-msgstr "ここが行く予定の場所であることを確認してください！"
+msgstr "意図する場所である事を確認してください！"
 
 #: src/view/screens/Search/Search.tsx:530
 msgid "Menu"
@@ -1067,11 +1068,11 @@ msgstr "その他のオプション"
 
 #: src/view/com/profile/ProfileHeader.tsx:325
 msgid "Mute Account"
-msgstr "アカウントのミュート"
+msgstr "アカウントをミュート"
 
 #: src/view/screens/ProfileList.tsx:437
 msgid "Mute accounts"
-msgstr "アカウントのミュート"
+msgstr "アカウントをミュート"
 
 #: src/view/screens/ProfileList.tsx:270
 msgid "Mute these accounts?"
@@ -1079,7 +1080,7 @@ msgstr "これらのアカウントをミュートしますか？"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:143
 msgid "Mute thread"
-msgstr "スレッドのミュート"
+msgstr "スレッドをミュート"
 
 #: src/view/screens/Moderation.tsx:97
 msgid "Muted accounts"
@@ -1091,7 +1092,7 @@ msgstr "ミュート済みアカウント"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "ミュート済みアカウントには、フィードと通知から投稿が削除されます。 ミュートは完全にプライベートです。"
+msgstr "ミュート済みのアカウントは、フィードと通知からの投稿が削除されます。ミュート設定は知られることはありません。"
 
 #: src/view/screens/ProfileList.tsx:272
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -1343,7 +1344,7 @@ msgstr "前の画像"
 
 #: src/view/screens/LanguageSettings.tsx:183
 msgid "Primary Language"
-msgstr "プライマリ言語"
+msgstr "第一言語"
 
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Prioritize Your Follows"
@@ -1625,15 +1626,15 @@ msgstr "新しいパスワードを設定"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "フィードからすべての引用投稿が非表示にするには、この設定を「いいえ」にします。再投稿は引き続き表示されます。"
+msgstr "フィードから全ての引用投稿を非表示にするには、この設定を「いいえ」にします。再投稿は引き続き表示されます。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "フィードからすべての返信が非表示にするには、この設定を「いいえ」にします。"
+msgstr "フィードから全ての返信を非表示にするには、この設定を「いいえ」にします。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:182
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "フィードからすべての再投稿が非表示にするには、この設定を「いいえ」にします。"
+msgstr "フィードから全ての再投稿を非表示にするには、この設定を「いいえ」にします。"
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -1734,7 +1735,7 @@ msgstr "サインアップ"
 
 #: src/view/shell/NavSignupCard.tsx:36
 msgid "Sign up or sign in to join the conversation"
-msgstr "ログインまたはログインして会話に参加する"
+msgstr "登録またはログインして会話に参加する"
 
 #: src/view/screens/Settings.tsx:332
 msgid "Signed in as"
@@ -1746,11 +1747,11 @@ msgstr "スキップ"
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
-msgstr "返信をソート"
+msgstr "返信を並び替える"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr "次の方法で同じ投稿への返信をソートします。"
+msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -1788,7 +1789,7 @@ msgstr "サポート"
 
 #: src/view/com/modals/SwitchAccount.tsx:111
 msgid "Switch Account"
-msgstr "アカウントをスイッチ"
+msgstr "アカウントを切り替える"
 
 #: src/view/screens/Settings.tsx:642
 msgid "System log"
@@ -1911,7 +1912,7 @@ msgstr "ブロック解除"
 #: src/view/com/profile/ProfileHeader.tsx:261
 #: src/view/com/profile/ProfileHeader.tsx:342
 msgid "Unblock Account"
-msgstr "アカウントをブロック解除"
+msgstr "アカウントのブロック解除"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
@@ -1923,11 +1924,11 @@ msgstr "残念ながら、アカウントを作成するための要件を満た
 
 #: src/view/com/profile/ProfileHeader.tsx:324
 msgid "Unmute Account"
-msgstr "アカウントをミュート解除"
+msgstr "アカウントのミュート解除"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:143
 msgid "Unmute thread"
-msgstr "スレッドをミュート解除"
+msgstr "スレッドのミュート解除"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:52
 msgid "Update {displayName} in Lists"
@@ -1998,6 +1999,7 @@ msgstr "新しいEメールを確認"
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
 msgstr "デバッグエントリを表示"
+msgstr "欠陥事項を表示"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:128
 msgid "View the avatar"
@@ -2033,7 +2035,8 @@ msgstr "この投稿ではどの言語が使われていますか？"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "アルゴリズムフィードに表示する言語を選択します？"
+msgstr "アルゴリズムフィードに表示する言語を選択しますか？"
+
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
@@ -2090,7 +2093,7 @@ msgstr "リストがありません。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-msgstr "まだアカウントをブロックしていません。アカウントをブロックするには、ユーザーのプロフィールに移動し、アカウントのメニューから「アカウントをブロック」を選択します。"
+msgstr "ブロックしているアカウントはまだありません。アカウントをブロックするには、ユーザーのプロフィールに移動し、アカウントメニューから「アカウントをブロック」を選択します。"
 
 #: src/view/screens/AppPasswords.tsx:88
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -2098,7 +2101,7 @@ msgstr "アプリのパスワードはまだ作成していません。 下の�
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-msgstr "まだアカウントをミュートしていません。アカウントをミュートするには、プロフィールに移動し、アカウントのメニューから「アカウントをミュート」を選択します。"
+msgstr "ミュートしているアカウントはまだありません。アカウントをミュートするには、プロフィールに移動し、アカウントメニューから「アカウントをミュート」を選択します。"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
