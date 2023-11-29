@@ -10,11 +10,13 @@ export function useAppPasswordsQuery() {
   return useQuery({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(),
-    queryFn: async () => {
-      const res = await getAgent().com.atproto.server.listAppPasswords({})
-      return res.data.passwords
-    },
+    queryFn: appPasswordsQueryFn,
   })
+}
+
+async function appPasswordsQueryFn() {
+  const res = await getAgent().com.atproto.server.listAppPasswords({})
+  return res.data.passwords
 }
 
 export function useAppPasswordCreateMutation() {
