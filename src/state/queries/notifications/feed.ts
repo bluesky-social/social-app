@@ -4,7 +4,6 @@ import {
   AppBskyFeedRepost,
   AppBskyFeedLike,
   AppBskyNotificationListNotifications,
-  BskyAgent,
 } from '@atproto/api'
 import chunk from 'lodash.chunk'
 import {
@@ -84,7 +83,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
 
       // we fetch subjects of notifications (usually posts) now instead of lazily
       // in the UI to avoid relayouts
-      const subjects = await fetchSubjects(getAgent(), notifsGrouped)
+      const subjects = await fetchSubjects(notifsGrouped)
       for (const notif of notifsGrouped) {
         if (notif.subjectUri) {
           notif.subject = subjects.get(notif.subjectUri)
@@ -173,7 +172,6 @@ function groupNotifications(
 }
 
 async function fetchSubjects(
-  agent: BskyAgent,
   groupedNotifs: FeedNotification[],
 ): Promise<Map<string, AppBskyFeedDefs.PostView>> {
   const uris = new Set<string>()
@@ -185,7 +183,9 @@ async function fetchSubjects(
   const uriChunks = chunk(Array.from(uris), 25)
   const postsChunks = await Promise.all(
     uriChunks.map(uris =>
-      agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
+      getAgent()
+        .app.bsky.feed.getPosts({uris})
+        .then(res => res.data.posts),
     ),
   )
   const map = new Map<string, AppBskyFeedDefs.PostView>()

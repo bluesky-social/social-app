@@ -4,7 +4,6 @@ import {
   AppBskyActorDefs,
   AppBskyActorProfile,
   AppBskyActorGetProfile,
-  BskyAgent,
 } from '@atproto/api'
 import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
 import {Image as RNImage} from 'react-native-image-crop-picker'
@@ -68,7 +67,7 @@ export function useProfileUpdateMutation() {
         }
         return existing
       })
-      await whenAppViewReady(getAgent(), profile.did, res => {
+      await whenAppViewReady(profile.did, res => {
         if (typeof newUserAvatar !== 'undefined') {
           if (newUserAvatar === null && res.data.avatar) {
             // url hasnt cleared yet
@@ -464,7 +463,6 @@ function useProfileUnblockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {
@@ -472,6 +470,6 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.actor.getProfile({actor}),
+    () => getAgent().app.bsky.actor.getProfile({actor}),
   )
 }
