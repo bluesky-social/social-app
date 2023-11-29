@@ -732,8 +732,7 @@ msgstr "フィードはオフライン"
 
 #: src/view/com/feeds/FeedPage.tsx:131
 msgid "Feed Preferences"
-msgstr "フィードプリファレンス"
-
+msgstr "フィード設定"
 
 #: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:411
@@ -878,7 +877,7 @@ msgstr "ホーム"
 #: src/view/screens/PreferencesHomeFeed.tsx:95
 #: src/view/screens/Settings.tsx:477
 msgid "Home Feed Preferences"
-msgstr "ホームフィードプリファレンス"
+msgstr "ホームフィード設定"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:114
 msgid "Hosting provider"
@@ -1233,7 +1232,7 @@ msgstr "アプリのパスワード設定ページを開く"
 
 #: src/view/screens/Settings.tsx:469
 msgid "Opens the home feed preferences"
-msgstr "ホームフィードプリファレンスを開く"
+msgstr "ホームフィード設定を開きます"
 
 #: src/view/screens/Settings.tsx:660
 msgid "Opens the storybook page"
@@ -1245,7 +1244,7 @@ msgstr "システムログのページを開く"
 
 #: src/view/screens/Settings.tsx:490
 msgid "Opens the threads preferences"
-msgstr "スレッドのプリファレンスを開く"
+msgstr "スレッド設定を開きます"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:109
 msgid "Other account"
@@ -1501,7 +1500,7 @@ msgstr "パスワードをリセット"
 
 #: src/view/screens/Settings.tsx:672
 msgid "Reset preferences state"
-msgstr "プリファレンスの状態をリセット"
+msgstr "設定をリセット"
 
 #: src/view/screens/Settings.tsx:680
 msgid "Resets the onboarding state"
@@ -1509,7 +1508,7 @@ msgstr "オンボード状態をリセット"
 
 #: src/view/screens/Settings.tsx:670
 msgid "Resets the preferences state"
-msgstr "プリファレンス状態をリセット"
+msgstr "設定状態をリセット"
 
 #: src/view/com/auth/create/CreateAccount.tsx:167
 #: src/view/com/auth/create/CreateAccount.tsx:171
@@ -1874,7 +1873,7 @@ msgstr "この警告は、メディアが接続されている投稿にのみ使
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:499
 msgid "Thread Preferences"
-msgstr "スレッドのプリファレンス"
+msgstr "スレッドの設定"
 
 #: src/view/screens/PreferencesThreads.tsx:113
 msgid "Threaded Mode"
