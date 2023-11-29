@@ -17,14 +17,16 @@ export function useMyMutedAccountsQuery() {
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(),
-    async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getMutes({
-        limit: 30,
-        cursor: pageParam,
-      })
-      return res.data
-    },
+    queryFn,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+async function queryFn({pageParam}: {pageParam: RQPageParam}) {
+  const res = await getAgent().app.bsky.graph.getMutes({
+    limit: 30,
+    cursor: pageParam,
+  })
+  return res.data
 }
