@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-  ActivityIndicator,
-} from 'react-native'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
@@ -30,6 +23,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 
 export function FeedSourceCard({
   feedUri,
@@ -37,22 +31,25 @@ export function FeedSourceCard({
   showSaveBtn = false,
   showDescription = false,
   showLikes = false,
+  LoadingComponent,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
   showLikes?: boolean
+  LoadingComponent?: JSX.Element
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
 
-  if (!feed || !preferences)
-    return (
-      <View style={{paddingVertical: 12, paddingHorizontal: 18}}>
-        <ActivityIndicator />
-      </View>
+  if (!feed || !preferences) {
+    return LoadingComponent ? (
+      LoadingComponent
+    ) : (
+      <FeedLoadingPlaceholder style={{flex: 1}} />
     )
+  }
 
   return (
     <FeedSourceCardLoaded
