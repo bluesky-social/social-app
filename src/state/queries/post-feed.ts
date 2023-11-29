@@ -1,5 +1,4 @@
-import {useCallback, useMemo} from 'react'
-import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -8,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import {useFeedTuners} from '../preferences/feed-tuners'
-import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
+import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
@@ -16,7 +15,6 @@ import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
@@ -41,7 +39,9 @@ export interface FeedParams {
   mergeFeedSources?: string[]
 }
 
-type RQPageParam = string | undefined
+type RQPageParam =
+  | {cursor: string | undefined; api: FeedAPI; tuner: FeedTuner | NoopFeedTuner}
+  | undefined
 
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
   return ['post-feed', feedDesc, params || {}]
@@ -63,6 +63,8 @@ export interface FeedPostSlice {
 }
 
 export interface FeedPage {
+  api: FeedAPI
+  tuner: FeedTuner | NoopFeedTuner
   cursor: string | undefined
   slices: FeedPostSlice[]
 }
@@ -75,64 +77,8 @@ export function usePostFeedQuery(
   const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
-  const moderationOpts = useModerationOpts()
 
-  const api: FeedAPI = useMemo(() => {
-    if (feedDesc === 'home') {
-      return new MergeFeedAPI(params || {}, feedTuners)
-    } else if (feedDesc === 'following') {
-      return new FollowingFeedAPI()
-    } else if (feedDesc.startsWith('author')) {
-      const [_, actor, filter] = feedDesc.split('|')
-      return new AuthorFeedAPI({actor, filter})
-    } else if (feedDesc.startsWith('likes')) {
-      const [_, actor] = feedDesc.split('|')
-      return new LikesFeedAPI({actor})
-    } else if (feedDesc.startsWith('feedgen')) {
-      const [_, feed] = feedDesc.split('|')
-      return new CustomFeedAPI({feed})
-    } else if (feedDesc.startsWith('list')) {
-      const [_, list] = feedDesc.split('|')
-      return new ListFeedAPI({list})
-    } else {
-      // shouldnt happen
-      return new FollowingFeedAPI()
-    }
-  }, [feedDesc, params, feedTuners])
-
-  const disableTuner = !!params?.disableTuner
-  const tuner = useMemo(
-    () => (disableTuner ? new NoopFeedTuner() : new FeedTuner()),
-    [disableTuner],
-  )
-
-  const pollLatest = useCallback(async () => {
-    if (!enabled) {
-      return false
-    }
-
-    logger.debug('usePostFeedQuery: pollLatest')
-
-    const post = await api.peekLatest()
-
-    if (post && moderationOpts) {
-      const slices = tuner.tune([post], feedTuners, {
-        dryRun: true,
-        maintainOrder: true,
-      })
-      if (slices[0]) {
-        if (
-          !moderatePost(slices[0].items[0].post, moderationOpts).content.filter
-        ) {
-          return true
-        }
-      }
-    }
-
-    return false
-  }, [api, tuner, feedTuners, moderationOpts, enabled])
-
-  const out = useInfiniteQuery<
+  return useInfiniteQuery<
     FeedPage,
     Error,
     InfiniteData<FeedPage>,
@@ -143,13 +89,23 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, pageParam})
-      if (!pageParam) {
-        tuner.reset()
-      }
-      const res = await api.fetch({cursor: pageParam, limit: 30})
+
+      const {api, tuner, cursor} = pageParam
+        ? pageParam
+        : {
+            api: createApi(feedDesc, params || {}, feedTuners),
+            tuner: params?.disableTuner
+              ? new NoopFeedTuner()
+              : new FeedTuner(feedTuners),
+            cursor: undefined,
+          }
+
+      const res = await api.fetch({cursor, limit: 30})
       precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
-      const slices = tuner.tune(res.feed, feedTuners)
+      const slices = tuner.tune(res.feed)
       return {
+        api,
+        tuner,
         cursor: res.cursor,
         slices: slices.map(slice => ({
           _reactKey: slice._reactKey,
@@ -180,11 +136,60 @@ export function usePostFeedQuery(
       }
     },
     initialPageParam: undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
+    getNextPageParam: lastPage => ({
+      api: lastPage.api,
+      tuner: lastPage.tuner,
+      cursor: lastPage.cursor,
+    }),
     enabled,
   })
+}
 
-  return {...out, pollLatest}
+export async function pollLatest(page: FeedPage | undefined) {
+  if (!page) {
+    return false
+  }
+
+  logger.debug('usePostFeedQuery: pollLatest')
+  const post = await page.api.peekLatest()
+  if (post) {
+    const slices = page.tuner.tune([post], {
+      dryRun: true,
+      maintainOrder: true,
+    })
+    if (slices[0]) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function createApi(
+  feedDesc: FeedDescriptor,
+  params: FeedParams,
+  feedTuners: FeedTunerFn[],
+) {
+  if (feedDesc === 'home') {
+    return new MergeFeedAPI(params, feedTuners)
+  } else if (feedDesc === 'following') {
+    return new FollowingFeedAPI()
+  } else if (feedDesc.startsWith('author')) {
+    const [_, actor, filter] = feedDesc.split('|')
+    return new AuthorFeedAPI({actor, filter})
+  } else if (feedDesc.startsWith('likes')) {
+    const [_, actor] = feedDesc.split('|')
+    return new LikesFeedAPI({actor})
+  } else if (feedDesc.startsWith('feedgen')) {
+    const [_, feed] = feedDesc.split('|')
+    return new CustomFeedAPI({feed})
+  } else if (feedDesc.startsWith('list')) {
+    const [_, list] = feedDesc.split('|')
+    return new ListFeedAPI({list})
+  } else {
+    // shouldnt happen
+    return new FollowingFeedAPI()
+  }
 }
 
 /**

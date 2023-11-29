@@ -118,7 +118,6 @@ export class NoopFeedTuner {
   }
   tune(
     feed: FeedViewPost[],
-    _tunerFns: FeedTunerFn[] = [],
     _opts?: {dryRun: boolean; maintainOrder: boolean},
   ): FeedViewPostsSlice[] {
     return feed.map(
@@ -131,7 +130,7 @@ export class FeedTuner {
   private keyCounter = 0
   seenUris: Set<string> = new Set()
 
-  constructor() {}
+  constructor(public tunerFns: FeedTunerFn[]) {}
 
   reset() {
     this.keyCounter = 0
@@ -140,7 +139,6 @@ export class FeedTuner {
 
   tune(
     feed: FeedViewPost[],
-    tunerFns: FeedTunerFn[] = [],
     {dryRun, maintainOrder}: {dryRun: boolean; maintainOrder: boolean} = {
       dryRun: false,
       maintainOrder: false,
@@ -174,7 +172,7 @@ export class FeedTuner {
     }
 
     // run the custom tuners
-    for (const tunerFn of tunerFns) {
+    for (const tunerFn of this.tunerFns) {
       slices = tunerFn(this, slices.slice())
     }
 
