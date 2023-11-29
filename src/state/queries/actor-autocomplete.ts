@@ -1,29 +1,30 @@
 import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  useQuery,
+  useQueryClient,
+  QueryFunctionContext,
+} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {getAgent} from '#/state/session'
 import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {STALE} from '#/state/queries'
 
-export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
+export const RQKEY = (prefix: string, limit = 8) =>
+  ['actor-autocomplete', prefix, limit] as [string, string, number]
 
+interface ActorAutocompleteQueryMeta {
+  follows: AppBskyActorDefs.ProfileViewBasic[] | undefined
+}
 export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(prefix || ''),
-    async queryFn() {
-      const res = prefix
-        ? await getAgent().searchActorsTypeahead({
-            term: prefix,
-            limit: 8,
-          })
-        : undefined
-      return computeSuggestions(prefix, follows, res?.data.actors)
-    },
+    queryFn: actorAutoCompleteQueryFn,
+    meta: {follows},
     enabled: !isFetching,
   })
 }
@@ -40,12 +41,9 @@ export function useActorAutocompleteFn() {
         try {
           res = await queryClient.fetchQuery({
             staleTime: STALE.MINUTES.ONE,
-            queryKey: RQKEY(query || ''),
-            queryFn: () =>
-              getAgent().searchActorsTypeahead({
-                term: query,
-                limit,
-              }),
+            queryKey: RQKEY(query || '', limit),
+            meta: {follows},
+            queryFn: actorAutoCompleteQueryFn,
           })
         } catch (e) {
           logger.error('useActorSearch: searchActorsTypeahead failed', {
@@ -53,11 +51,25 @@ export function useActorAutocompleteFn() {
           })
         }
       }
-
-      return computeSuggestions(query, follows, res?.data.actors)
+      return res
     },
     [follows, queryClient],
   )
+}
+
+async function actorAutoCompleteQueryFn({
+  queryKey,
+  meta,
+}: QueryFunctionContext) {
+  const [_, prefix, limit] = queryKey as ReturnType<typeof RQKEY>
+  const {follows} = meta as any as ActorAutocompleteQueryMeta
+  const res = prefix
+    ? await getAgent().searchActorsTypeahead({
+        term: prefix,
+        limit,
+      })
+    : undefined
+  return computeSuggestions(prefix, follows, res?.data.actors)
 }
 
 function computeSuggestions(
