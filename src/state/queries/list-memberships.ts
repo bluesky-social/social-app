@@ -15,7 +15,12 @@
  */
 
 import {AtUri} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  QueryFunctionContext,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useSession, getAgent} from '#/state/session'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
@@ -26,7 +31,10 @@ const SANITY_PAGE_LIMIT = 1000
 const PAGE_SIZE = 100
 // ...which comes 100,000k list members
 
-export const RQKEY = () => ['list-memberships']
+export const RQKEY = (userDid: string | undefined) => [
+  'list-memberships',
+  userDid,
+]
 
 export interface ListMembersip {
   membershipUri: string
@@ -41,34 +49,39 @@ export function useDangerousListMembershipsQuery() {
   const {currentAccount} = useSession()
   return useQuery<ListMembersip[]>({
     staleTime: STALE.MINUTES.FIVE,
-    queryKey: RQKEY(),
-    async queryFn() {
-      if (!currentAccount) {
-        return []
-      }
-      let cursor
-      let arr: ListMembersip[] = []
-      for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
-        const res = await getAgent().app.bsky.graph.listitem.list({
-          repo: currentAccount.did,
-          limit: PAGE_SIZE,
-          cursor,
-        })
-        arr = arr.concat(
-          res.records.map(r => ({
-            membershipUri: r.uri,
-            listUri: r.value.list,
-            actorDid: r.value.subject,
-          })),
-        )
-        cursor = res.cursor
-        if (!cursor) {
-          break
-        }
-      }
-      return arr
-    },
+    queryKey: RQKEY(currentAccount?.did),
+    queryFn: dangerousListMembershipsQueryFn,
   })
+}
+
+async function dangerousListMembershipsQueryFn({
+  queryKey,
+}: QueryFunctionContext) {
+  const [_, userDid] = queryKey as ReturnType<typeof RQKEY>
+  if (!userDid) {
+    return []
+  }
+  let cursor
+  let arr: ListMembersip[] = []
+  for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
+    const res = await getAgent().app.bsky.graph.listitem.list({
+      repo: userDid,
+      limit: PAGE_SIZE,
+      cursor,
+    })
+    arr = arr.concat(
+      res.records.map(r => ({
+        membershipUri: r.uri,
+        listUri: r.value.list,
+        actorDid: r.value.subject,
+      })),
+    )
+    cursor = res.cursor
+    if (!cursor) {
+      break
+    }
+  }
+  return arr
 }
 
 /**
