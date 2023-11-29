@@ -23,7 +23,7 @@ type StateContext = string
 
 interface ApiContext {
   markAllRead: () => Promise<void>
-  checkUnread: ({invalidate}: {invalidate?: boolean}) => Promise<void>
+  checkUnread: (opts?: {invalidate?: boolean}) => Promise<void>
   getCachedUnreadPage: () => FeedPage | undefined
 }
 
@@ -43,7 +43,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const [numUnread, setNumUnread] = React.useState('')
 
-  const checkUnreadRef = React.useRef<(() => Promise<void>) | null>(null)
+  const checkUnreadRef = React.useRef<ApiContext['checkUnread'] | null>(null)
   const cacheRef = React.useRef<CachedFeedPage>({
     sessDid: currentAccount?.did || '',
     syncedAt: new Date(),
