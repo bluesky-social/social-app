@@ -6,6 +6,7 @@ import {
   QueryKey,
   useMutation,
   useQueryClient,
+  QueryFunctionContext,
 } from '@tanstack/react-query'
 import {
   AtUri,
@@ -136,28 +137,30 @@ export function getFeedTypeFromUri(uri: string) {
 }
 
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
-  const type = getFeedTypeFromUri(uri)
-
   return useQuery({
     staleTime: STALE.INFINITY,
     queryKey: feedSourceInfoQueryKey({uri}),
-    queryFn: async () => {
-      let view: FeedSourceInfo
-
-      if (type === 'feed') {
-        const res = await getAgent().app.bsky.feed.getFeedGenerator({feed: uri})
-        view = hydrateFeedGenerator(res.data.view)
-      } else {
-        const res = await getAgent().app.bsky.graph.getList({
-          list: uri,
-          limit: 1,
-        })
-        view = hydrateList(res.data.list)
-      }
-
-      return view
-    },
+    queryFn: feedSourceInfoQueryFn,
   })
+}
+
+async function feedSourceInfoQueryFn({queryKey}: QueryFunctionContext) {
+  let view: FeedSourceInfo
+  const [_, uri] = queryKey as ReturnType<typeof feedSourceInfoQueryKey>
+  const type = getFeedTypeFromUri(uri)
+
+  if (type === 'feed') {
+    const res = await getAgent().app.bsky.feed.getFeedGenerator({feed: uri})
+    view = hydrateFeedGenerator(res.data.view)
+  } else {
+    const res = await getAgent().app.bsky.graph.getList({
+      list: uri,
+      limit: 1,
+    })
+    view = hydrateList(res.data.list)
+  }
+
+  return view
 }
 
 export const isFeedPublicQueryKey = ({uri}: {uri: string}) => [
@@ -168,28 +171,30 @@ export const isFeedPublicQueryKey = ({uri}: {uri: string}) => [
 export function useIsFeedPublicQuery({uri}: {uri: string}) {
   return useQuery({
     queryKey: isFeedPublicQueryKey({uri}),
-    queryFn: async ({queryKey}) => {
-      const [, uri] = queryKey
-      try {
-        const res = await getAgent().app.bsky.feed.getFeed({
-          feed: uri,
-          limit: 1,
-        })
-        return Boolean(res.data.feed)
-      } catch (e: any) {
-        const msg = e.toString() as string
-
-        if (msg.includes('missing jwt')) {
-          return false
-        } else if (msg.includes('This feed requires being logged-in')) {
-          // e.g. https://github.com/bluesky-social/atproto/blob/99ab1ae55c463e8d5321a1eaad07a175bdd56fea/packages/bsky/src/feed-gen/best-of-follows.ts#L13
-          return false
-        }
-
-        return true
-      }
-    },
+    queryFn: isFeedPublicQueryFn,
   })
+}
+
+async function isFeedPublicQueryFn({queryKey}: QueryFunctionContext) {
+  const [, uri] = queryKey as ReturnType<typeof isFeedPublicQueryKey>
+  try {
+    const res = await getAgent().app.bsky.feed.getFeed({
+      feed: uri,
+      limit: 1,
+    })
+    return Boolean(res.data.feed)
+  } catch (e: any) {
+    const msg = e.toString() as string
+
+    if (msg.includes('missing jwt')) {
+      return false
+    } else if (msg.includes('This feed requires being logged-in')) {
+      // e.g. https://github.com/bluesky-social/atproto/blob/99ab1ae55c463e8d5321a1eaad07a175bdd56fea/packages/bsky/src/feed-gen/best-of-follows.ts#L13
+      return false
+    }
+
+    return true
+  }
 }
 
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
@@ -203,16 +208,20 @@ export function useGetPopularFeedsQuery() {
     string | undefined
   >({
     queryKey: useGetPopularFeedsQueryKey,
-    queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 10,
-        cursor: pageParam,
-      })
-      return res.data
-    },
+    queryFn: getPopularFeedsQueryFn,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+async function getPopularFeedsQueryFn({
+  pageParam,
+}: QueryFunctionContext<QueryKey, string | undefined>) {
+  const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
+    limit: 10,
+    cursor: pageParam,
+  })
+  return res.data
 }
 
 export function useSearchPopularFeedsMutation() {
@@ -271,22 +280,7 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
           reqs.push(
             queryClient.fetchQuery({
               queryKey: feedSourceInfoQueryKey({uri}),
-              queryFn: async () => {
-                const type = getFeedTypeFromUri(uri)
-
-                if (type === 'feed') {
-                  const res = await getAgent().app.bsky.feed.getFeedGenerator({
-                    feed: uri,
-                  })
-                  return hydrateFeedGenerator(res.data.view)
-                } else {
-                  const res = await getAgent().app.bsky.graph.getList({
-                    list: uri,
-                    limit: 1,
-                  })
-                  return hydrateList(res.data.list)
-                }
-              },
+              queryFn: feedSourceInfoQueryFn,
             }),
           )
         }
