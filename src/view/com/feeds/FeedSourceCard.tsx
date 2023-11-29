@@ -17,6 +17,7 @@ import {useModalControls} from '#/state/modals'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
+  usePinFeedMutation,
   UsePreferencesQueryResponse,
   usePreferencesQuery,
   useSaveFeedMutation,
@@ -30,12 +31,14 @@ export function FeedSourceCard({
   showSaveBtn = false,
   showDescription = false,
   showLikes = false,
+  pinOnSave = false,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
   showLikes?: boolean
+  pinOnSave?: boolean
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
@@ -50,6 +53,7 @@ export function FeedSourceCard({
       showSaveBtn={showSaveBtn}
       showDescription={showDescription}
       showLikes={showLikes}
+      pinOnSave={pinOnSave}
     />
   )
 }
@@ -61,6 +65,7 @@ export function FeedSourceCardLoaded({
   showSaveBtn = false,
   showDescription = false,
   showLikes = false,
+  pinOnSave = false,
 }: {
   feed: FeedSourceInfo
   preferences: UsePreferencesQueryResponse
@@ -68,6 +73,7 @@ export function FeedSourceCardLoaded({
   showSaveBtn?: boolean
   showDescription?: boolean
   showLikes?: boolean
+  pinOnSave?: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -78,6 +84,7 @@ export function FeedSourceCardLoaded({
     useSaveFeedMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
+  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
 
   const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed.uri))
 
@@ -103,14 +110,18 @@ export function FeedSourceCardLoaded({
       })
     } else {
       try {
-        await saveFeed({uri: feed.uri})
+        if (pinOnSave) {
+          await pinFeed({uri: feed.uri})
+        } else {
+          await saveFeed({uri: feed.uri})
+        }
         Toast.show('Added to my feeds')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
         logger.error('Failed to save feed', {error: e})
       }
     }
-  }, [isSaved, openModal, feed, removeFeed, saveFeed, _])
+  }, [isSaved, openModal, feed, removeFeed, saveFeed, _, pinOnSave, pinFeed])
 
   if (!feed || !preferences) return null
 
@@ -150,7 +161,7 @@ export function FeedSourceCardLoaded({
         {showSaveBtn && feed.type === 'feed' && (
           <View>
             <Pressable
-              disabled={isSavePending || isRemovePending}
+              disabled={isSavePending || isPinPending || isRemovePending}
               accessibilityRole="button"
               accessibilityLabel={
                 isSaved ? 'Remove from my feeds' : 'Add to my feeds'
