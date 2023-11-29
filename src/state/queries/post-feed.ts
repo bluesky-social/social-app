@@ -143,50 +143,74 @@ export function usePostFeedQuery(
   >({
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
-    async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      logger.debug('usePostFeedQuery', {feedDesc, pageParam})
-      if (!pageParam) {
-        tuner.reset()
-      }
-      const res = await api.fetch({cursor: pageParam, limit: 30})
-      precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
-      const slices = tuner.tune(res.feed, feedTuners)
-      return {
-        cursor: res.cursor,
-        slices: slices.map(slice => ({
-          _reactKey: slice._reactKey,
-          rootUri: slice.rootItem.post.uri,
-          isThread:
-            slice.items.length > 1 &&
-            slice.items.every(
-              item => item.post.author.did === slice.items[0].post.author.did,
-            ),
-          items: slice.items
-            .map((item, i) => {
-              if (
-                AppBskyFeedPost.isRecord(item.post.record) &&
-                AppBskyFeedPost.validateRecord(item.post.record).success
-              ) {
-                return {
-                  _reactKey: `${slice._reactKey}-${i}`,
-                  uri: item.post.uri,
-                  post: item.post,
-                  record: item.post.record,
-                  reason: i === 0 && slice.source ? slice.source : item.reason,
-                }
-              }
-              return undefined
-            })
-            .filter(Boolean) as FeedPostSliceItem[],
-        })),
-      }
-    },
+    queryFn,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    meta: {queryClient, tuner, api, feedTuners},
     enabled,
   })
 
   return {...out, pollLatest}
+}
+
+interface QueryMeta {
+  queryClient: QueryClient
+  tuner: FeedTuner
+  api: FeedAPI
+  feedTuners: ReturnType<typeof useFeedTuners>
+}
+
+async function queryFn({
+  queryKey,
+  meta,
+  pageParam,
+}: {
+  queryKey: QueryKey
+  meta: any
+  pageParam: RQPageParam
+}) {
+  const [_, feedDesc, _params] = queryKey as ReturnType<typeof RQKEY>
+  const {queryClient, tuner, api, feedTuners} = meta as QueryMeta
+
+  logger.debug('usePostFeedQuery', {feedDesc, pageParam})
+
+  if (!pageParam) {
+    tuner.reset()
+  }
+
+  const res = await api.fetch({cursor: pageParam, limit: 30})
+  precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
+
+  const slices = tuner.tune(res.feed, feedTuners)
+  return {
+    cursor: res.cursor,
+    slices: slices.map(slice => ({
+      _reactKey: slice._reactKey,
+      rootUri: slice.rootItem.post.uri,
+      isThread:
+        slice.items.length > 1 &&
+        slice.items.every(
+          item => item.post.author.did === slice.items[0].post.author.did,
+        ),
+      items: slice.items
+        .map((item, i) => {
+          if (
+            AppBskyFeedPost.isRecord(item.post.record) &&
+            AppBskyFeedPost.validateRecord(item.post.record).success
+          ) {
+            return {
+              _reactKey: `${slice._reactKey}-${i}`,
+              uri: item.post.uri,
+              post: item.post,
+              record: item.post.record,
+              reason: i === 0 && slice.source ? slice.source : item.reason,
+            }
+          }
+          return undefined
+        })
+        .filter(Boolean) as FeedPostSliceItem[],
+    })),
+  }
 }
 
 /**
