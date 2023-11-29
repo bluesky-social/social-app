@@ -23,6 +23,12 @@ module.exports = function () {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
+  /**
+   * Additional granularity for the `dist` field
+   */
+  const DIST_BUILD_NUMBER =
+    PLATFORM === 'android' ? ANDROID_VERSION_CODE : IOS_BUILD_NUMBER
+
   return {
     expo: {
       version: VERSION,
@@ -132,7 +138,7 @@ module.exports = function () {
               organization: 'blueskyweb',
               project: 'react-native',
               release: VERSION,
-              dist: `${PLATFORM}.${VERSION}`,
+              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
             },
           },
         ],
