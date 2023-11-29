@@ -79,7 +79,7 @@ function FeedsTabBarPublic() {
 function FeedsTabBarTablet(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const feeds = usePinnedFeedsInfos()
+  const {feeds} = usePinnedFeedsInfos()
   const pal = usePalette('default')
   const {hasSession} = useSession()
   const {headerMinimalShellTransform} = useMinimalShellMode()

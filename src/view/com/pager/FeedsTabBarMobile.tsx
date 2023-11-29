@@ -26,7 +26,7 @@ export function FeedsTabBar(
   const {isSandbox, hasSession} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
-  const feeds = usePinnedFeedsInfos()
+  const {feeds} = usePinnedFeedsInfos()
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()

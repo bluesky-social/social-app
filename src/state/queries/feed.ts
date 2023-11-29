@@ -246,12 +246,19 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
   likeUri: '',
 }
 
-export function usePinnedFeedsInfos(): FeedSourceInfo[] {
+export function usePinnedFeedsInfos(): {
+  feeds: FeedSourceInfo[]
+  hasPinnedCustomFeedOrList: boolean
+} {
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
     FOLLOWING_FEED_STUB,
   ])
   const {data: preferences} = usePreferencesQuery()
+
+  const hasPinnedCustomFeedOrList = React.useMemo<boolean>(() => {
+    return tabs.some(tab => tab !== FOLLOWING_FEED_STUB)
+  }, [tabs])
 
   React.useEffect(() => {
     if (!preferences?.feeds?.pinned) return
@@ -300,5 +307,5 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
     fetchFeedInfo()
   }, [queryClient, setTabs, preferences?.feeds?.pinned])
 
-  return tabs
+  return {feeds: tabs, hasPinnedCustomFeedOrList}
 }
