@@ -53,6 +53,8 @@ export function usePostShadow(
     }
   }, [post])
 
+  // TODO: memoize
+  // TODO: types, cast to shadow
   return mergeShadow(post, shadow)
 }
 
@@ -74,10 +76,10 @@ function mergeShadow(post, shadow) {
 }
 
 function computeShadow(post) {
-  const chain = findChain(post)
+  const queue = findQueue(post)
   const postTS = getFirstSeenTS(post)
   let acc = {}
-  let node = chain
+  let node = queue
   while (node && node.value) {
     if (node.timestamp > postTS) {
       Object.assign(acc, node.value)
@@ -87,32 +89,31 @@ function computeShadow(post) {
   return acc
 }
 
-let chainByPost = new WeakMap()
-
-function findChain(post) {
-  if (chainByPost.has(post)) {
-    return chainByPost.get(post)
-  }
-  let chain
-  if (recordByUri.has(post.uri)) {
-    chain = recordByUri.get(post.uri).chain
-  } else {
-    chain = {value: null, next: null, timestamp: null}
-  }
-  chainByPost.set(post, chain)
-  return chain
-}
-
+let queueByPost = new WeakMap()
 let recordByUri = new Map()
+
+function findQueue(post) {
+  if (queueByPost.has(post)) {
+    return queueByPost.get(post)
+  }
+  let queue
+  if (recordByUri.has(post.uri)) {
+    queue = recordByUri.get(post.uri).queue
+  } else {
+    queue = {value: null, next: null, timestamp: null}
+  }
+  queueByPost.set(post, queue)
+  return queue
+}
 
 function addListener(post, onChange) {
   const uri = post.uri
-  const chain = findChain(post)
+  const queue = findQueue(post)
   let record
   if (recordByUri.has(uri)) {
     record = recordByUri.get(uri)
   } else {
-    record = {chain, listeners: []}
+    record = {queue, listeners: []}
     recordByUri.set(uri, record)
   }
   record.listeners.push(onChange)
@@ -129,13 +130,13 @@ export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   if (!record) {
     return
   }
-  let node = record.chain
-  while (node.next) {
-    node = node.next
+  let tail = record.queue
+  while (tail.next) {
+    tail = tail.next
   }
-  node.value = value
-  node.timestamp = Date.now()
-  node.next = {value: null, next: null, timestamp: null}
+  tail.value = value
+  tail.timestamp = Date.now()
+  tail.next = {value: null, next: null, timestamp: null}
   batchedUpdates(() => {
     record.listeners.forEach(l => l())
   })
