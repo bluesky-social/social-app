@@ -36,25 +36,34 @@ function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const [shadow, setShadow] = useState(() => {
-    const record = map.get(post.uri)
-    if (!record) {
-      return null
-    }
-    return computeShadow(record.chain)
-  })
+  const [prevPost, setPrevPost] = useState(post)
+  const [shadow, setShadow] = useState(() =>
+    computeShadow(post, findChain(post)),
+  )
+  if (post !== prevPost) {
+    setPrevPost(post)
+    setShadow(computeShadow(post, findChain(post)))
+  }
 
   useEffect(() => {
-    function onChange(chain) {
-      setShadow(computeShadow(chain))
+    function onChange(updatedChain) {
+      setShadow(computeShadow(post, updatedChain))
     }
     const unsub = addListener(post.uri, onChange)
     return () => {
       unsub()
     }
-  }, [post.uri])
+  }, [post])
 
   return mergeShadow(post, shadow)
+}
+
+function findChain(post) {
+  const record = map.get(post.uri)
+  if (!record) {
+    return null
+  }
+  return record.chain
 }
 
 function mergeShadow(post, shadow) {
@@ -74,10 +83,13 @@ function mergeShadow(post, shadow) {
   }
 }
 
-function computeShadow(chain) {
+function computeShadow(post, chain) {
+  const postTS = getFirstSeenTS(post)
   let acc = {}
-  while (chain) {
-    Object.assign(acc, chain.value)
+  while (chain && chain.value) {
+    if (chain.timestamp > postTS) {
+      Object.assign(acc, chain.value)
+    }
     chain = chain.next
   }
   return acc
