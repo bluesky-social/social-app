@@ -31,9 +31,9 @@ const SANITY_PAGE_LIMIT = 1000
 const PAGE_SIZE = 100
 // ...which comes 100,000k list members
 
-export const RQKEY = (userDid: string | undefined) => [
+export const RQKEY = (sessionDid: string | undefined) => [
   'list-memberships',
-  userDid,
+  sessionDid,
 ]
 
 export interface ListMembersip {
@@ -57,15 +57,15 @@ export function useDangerousListMembershipsQuery() {
 async function dangerousListMembershipsQueryFn({
   queryKey,
 }: QueryFunctionContext) {
-  const [_, userDid] = queryKey as ReturnType<typeof RQKEY>
-  if (!userDid) {
+  const [_, sessionDid] = queryKey as ReturnType<typeof RQKEY>
+  if (!sessionDid) {
     return []
   }
   let cursor
   let arr: ListMembersip[] = []
   for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
     const res = await getAgent().app.bsky.graph.listitem.list({
-      repo: userDid,
+      repo: sessionDid,
       limit: PAGE_SIZE,
       cursor,
     })
