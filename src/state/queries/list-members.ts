@@ -19,15 +19,24 @@ export function useListMembersQuery(uri: string) {
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri),
-    async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getList({
-        list: uri,
-        limit: PAGE_SIZE,
-        cursor: pageParam,
-      })
-      return res.data
-    },
+    queryFn: listMembersQueryFn,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+async function listMembersQueryFn({
+  queryKey,
+  pageParam,
+}: {
+  queryKey: QueryKey
+  pageParam: RQPageParam
+}) {
+  const [_, uri] = queryKey as ReturnType<typeof RQKEY>
+  const res = await getAgent().app.bsky.graph.getList({
+    list: uri,
+    limit: PAGE_SIZE,
+    cursor: pageParam,
+  })
+  return res.data
 }
