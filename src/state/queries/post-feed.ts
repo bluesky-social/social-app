@@ -7,7 +7,6 @@ import {
   QueryClient,
   useQueryClient,
 } from '@tanstack/react-query'
-import {getAgent, useSession} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
@@ -77,33 +76,29 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
   const moderationOpts = useModerationOpts()
-  const {currentAccount} = useSession()
 
   const api: FeedAPI = useMemo(() => {
     if (feedDesc === 'home') {
-      return new MergeFeedAPI(getAgent(), params || {}, feedTuners)
+      return new MergeFeedAPI(params || {}, feedTuners)
     } else if (feedDesc === 'following') {
-      return new FollowingFeedAPI(getAgent())
+      return new FollowingFeedAPI()
     } else if (feedDesc.startsWith('author')) {
       const [_, actor, filter] = feedDesc.split('|')
-      return new AuthorFeedAPI(getAgent(), {actor, filter})
+      return new AuthorFeedAPI({actor, filter})
     } else if (feedDesc.startsWith('likes')) {
       const [_, actor] = feedDesc.split('|')
-      return new LikesFeedAPI(getAgent(), {actor})
+      return new LikesFeedAPI({actor})
     } else if (feedDesc.startsWith('feedgen')) {
       const [_, feed] = feedDesc.split('|')
-      return new CustomFeedAPI(getAgent(), {feed})
+      return new CustomFeedAPI({feed})
     } else if (feedDesc.startsWith('list')) {
       const [_, list] = feedDesc.split('|')
-      return new ListFeedAPI(getAgent(), {list})
+      return new ListFeedAPI({list})
     } else {
       // shouldnt happen
-      return new FollowingFeedAPI(getAgent())
+      return new FollowingFeedAPI()
     }
-    // NOTE: rule disabled so that `currentAccount.did` can trigger reruns
-    //       used as a proxy to changes with `getAgent()` -prf
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [feedDesc, params, feedTuners, currentAccount?.did])
+  }, [feedDesc, params, feedTuners])
 
   const disableTuner = !!params?.disableTuner
   const tuner = useMemo(
