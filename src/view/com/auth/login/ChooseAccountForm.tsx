@@ -15,6 +15,7 @@ import {styles} from './styles'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import * as Toast from '#/view/com/util/Toast'
 
 function AccountItem({
   account,
@@ -94,9 +95,13 @@ export const ChooseAccountForm = ({
       if (account.accessJwt) {
         if (account.did === currentAccount?.did) {
           setShowLoggedOut(false)
+          Toast.show(`Already signed in as @${account.handle}`)
         } else {
           await initSession(account)
           track('Sign In', {resumedSession: true})
+          setTimeout(() => {
+            Toast.show(`Signed in as @${account.handle}`)
+          }, 100)
         }
       } else {
         onSelectAccount(account)

@@ -25,7 +25,9 @@ export function useAccountSwitcher() {
           closeAllActiveElements()
           navigation.navigate(isWeb ? 'Home' : 'HomeTab')
           await selectAccount(account)
-          Toast.show(`Signed in as @${account.handle}`)
+          setTimeout(() => {
+            Toast.show(`Signed in as @${account.handle}`)
+          }, 100)
         } else {
           setShowLoggedOut(true)
           Toast.show(
