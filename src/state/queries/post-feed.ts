@@ -7,7 +7,6 @@ import {
   QueryClient,
   useQueryClient,
 } from '@tanstack/react-query'
-import {getAgent} from '../session'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
@@ -77,30 +76,29 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
   const moderationOpts = useModerationOpts()
-  const agent = getAgent()
 
   const api: FeedAPI = useMemo(() => {
     if (feedDesc === 'home') {
-      return new MergeFeedAPI(agent, params || {}, feedTuners)
+      return new MergeFeedAPI(params || {}, feedTuners)
     } else if (feedDesc === 'following') {
-      return new FollowingFeedAPI(agent)
+      return new FollowingFeedAPI()
     } else if (feedDesc.startsWith('author')) {
       const [_, actor, filter] = feedDesc.split('|')
-      return new AuthorFeedAPI(agent, {actor, filter})
+      return new AuthorFeedAPI({actor, filter})
     } else if (feedDesc.startsWith('likes')) {
       const [_, actor] = feedDesc.split('|')
-      return new LikesFeedAPI(agent, {actor})
+      return new LikesFeedAPI({actor})
     } else if (feedDesc.startsWith('feedgen')) {
       const [_, feed] = feedDesc.split('|')
-      return new CustomFeedAPI(agent, {feed})
+      return new CustomFeedAPI({feed})
     } else if (feedDesc.startsWith('list')) {
       const [_, list] = feedDesc.split('|')
-      return new ListFeedAPI(agent, {list})
+      return new ListFeedAPI({list})
     } else {
       // shouldnt happen
-      return new FollowingFeedAPI(agent)
+      return new FollowingFeedAPI()
     }
-  }, [feedDesc, params, feedTuners, agent])
+  }, [feedDesc, params, feedTuners])
 
   const disableTuner = !!params?.disableTuner
   const tuner = useMemo(
