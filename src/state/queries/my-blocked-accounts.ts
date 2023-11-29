@@ -17,14 +17,16 @@ export function useMyBlockedAccountsQuery() {
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(),
-    async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getBlocks({
-        limit: 30,
-        cursor: pageParam,
-      })
-      return res.data
-    },
+    queryFn: myBlockedAccountsQueryFn,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+async function myBlockedAccountsQueryFn({pageParam}: {pageParam: RQPageParam}) {
+  const res = await getAgent().app.bsky.graph.getBlocks({
+    limit: 30,
+    cursor: pageParam,
+  })
+  return res.data
 }
