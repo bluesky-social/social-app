@@ -26,7 +26,7 @@ import {
   useUnpinFeedMutation,
   useSetSaveFeedsMutation,
 } from '#/state/queries/preferences'
-import {MinimalFeedCardLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -291,7 +291,11 @@ function ListItem({
         style={styles.noBorder}
         showSaveBtn
         LoadingComponent={
-          <MinimalFeedCardLoadingPlaceholder style={{flex: 1}} />
+          <FeedLoadingPlaceholder
+            style={{flex: 1}}
+            showLowerPlaceholder={false}
+            showTopBorder={false}
+          />
         }
       />
       <Pressable

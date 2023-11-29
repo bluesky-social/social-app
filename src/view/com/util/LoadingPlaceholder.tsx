@@ -171,14 +171,22 @@ export function ProfileCardFeedLoadingPlaceholder() {
 
 export function FeedLoadingPlaceholder({
   style,
+  showLowerPlaceholder = true,
+  showTopBorder = true,
 }: {
   style?: StyleProp<ViewStyle>
+  showTopBorder?: boolean
+  showLowerPlaceholder?: boolean
 }) {
   const pal = usePalette('default')
   return (
     <View
       style={[
-        {paddingHorizontal: 12, paddingVertical: 18, borderTopWidth: 1},
+        {
+          paddingHorizontal: 12,
+          paddingVertical: 18,
+          borderTopWidth: showTopBorder ? 1 : 0,
+        },
         pal.border,
         style,
       ]}>
@@ -193,42 +201,16 @@ export function FeedLoadingPlaceholder({
           <LoadingPlaceholder width={120} height={8} />
         </View>
       </View>
-      <View style={{paddingHorizontal: 5}}>
-        <LoadingPlaceholder
-          width={260}
-          height={8}
-          style={{marginVertical: 12}}
-        />
-        <LoadingPlaceholder width={120} height={8} />
-      </View>
-    </View>
-  )
-}
-
-export function MinimalFeedCardLoadingPlaceholder({
-  style,
-}: {
-  style?: StyleProp<ViewStyle>
-}) {
-  const pal = usePalette('default')
-  return (
-    <View
-      style={[
-        {paddingHorizontal: 12, paddingVertical: 18, borderTopWidth: 1},
-        pal.border,
-        style,
-      ]}>
-      <View style={[pal.view, {flexDirection: 'row', marginBottom: 10}]}>
-        <LoadingPlaceholder
-          width={36}
-          height={36}
-          style={[styles.avatar, {borderRadius: 6}]}
-        />
-        <View style={[s.flex1]}>
-          <LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
+      {showLowerPlaceholder && (
+        <View style={{paddingHorizontal: 5}}>
+          <LoadingPlaceholder
+            width={260}
+            height={8}
+            style={{marginVertical: 12}}
+          />
           <LoadingPlaceholder width={120} height={8} />
         </View>
-      </View>
+      )}
     </View>
   )
 }
