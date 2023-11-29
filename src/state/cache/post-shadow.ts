@@ -41,12 +41,12 @@ export function usePostShadow(
     if (!record) {
       return null
     }
-    return record.shadow
+    return computeShadow(record.chain)
   })
 
   useEffect(() => {
-    function onChange(s) {
-      setShadow(s)
+    function onChange(chain) {
+      setShadow(computeShadow(chain))
     }
     const unsub = addListener(post.uri, onChange)
     return () => {
@@ -63,14 +63,24 @@ function mergeShadow(post, shadow) {
   }
   return {
     ...post,
-    likeCount: shadow.likeCount ?? post.likeCount,
-    repostCount: shadow.repostCount ?? post.repostCount,
+    likeCount: 'likeCount' in shadow ? shadow.likeCount : post.likeCount,
+    repostCount:
+      'repostCount' in shadow ? shadow.repostCount : post.repostCount,
     viewer: {
       ...(post.viewer || {}),
-      like: shadow.likeUri,
-      repost: shadow.repostUri,
+      like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
+      repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
     },
   }
+}
+
+function computeShadow(chain) {
+  let acc = {}
+  while (chain) {
+    Object.assign(acc, chain.value)
+    chain = chain.next
+  }
+  return acc
 }
 
 function addListener(uri, onChange) {
@@ -78,7 +88,7 @@ function addListener(uri, onChange) {
   if (map.has(uri)) {
     record = map.get(uri)
   } else {
-    record = {listeners: [], shadow: null}
+    record = {listeners: [], chain: {value: null, next: null, timestamp: null}}
     map.set(uri, record)
   }
   record.listeners.push(onChange)
@@ -99,8 +109,14 @@ export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   if (!record) {
     return
   }
-  record.shadow = {...record.shadow, ...value}
+  let node = record.chain
+  while (node.next) {
+    node = node.next
+  }
+  node.value = value
+  node.timestamp = Date.now()
+  node.next = {value: null, next: null, timestamp: null}
   batchedUpdates(() => {
-    record.listeners.forEach(l => l(record.shadow))
+    record.listeners.forEach(l => l(record.chain))
   })
 }
