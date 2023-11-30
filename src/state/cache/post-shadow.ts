@@ -21,7 +21,10 @@ export interface PostShadow {
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
-let shadows = new WeakMap()
+const shadows: WeakMap<
+  AppBskyFeedDefs.PostView,
+  Partial<PostShadow>
+> = new WeakMap()
 
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
