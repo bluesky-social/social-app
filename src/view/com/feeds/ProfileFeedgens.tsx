@@ -1,6 +1,5 @@
 import React, {MutableRefObject} from 'react'
 import {
-  ActivityIndicator,
   Dimensions,
   RefreshControl,
   StyleProp,
@@ -24,6 +23,7 @@ import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {useTheme} from '#/lib/ThemeContext'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -147,7 +147,7 @@ export const ProfileFeedgens = React.forwardRef<
             testID="listsEmpty"
             style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
             <Text style={pal.textLight}>
-              <Trans>You have no lists.</Trans>
+              <Trans>You have no feeds.</Trans>
             </Text>
           </View>
         )
@@ -163,11 +163,7 @@ export const ProfileFeedgens = React.forwardRef<
           />
         )
       } else if (item === LOADING) {
-        return (
-          <View style={{padding: 20}}>
-            <ActivityIndicator />
-          </View>
-        )
+        return <FeedLoadingPlaceholder />
       }
       if (preferences) {
         return (
@@ -175,6 +171,7 @@ export const ProfileFeedgens = React.forwardRef<
             feed={item}
             preferences={preferences}
             style={styles.item}
+            showLikes
           />
         )
       }
@@ -221,6 +218,5 @@ export const ProfileFeedgens = React.forwardRef<
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 18,
-    paddingVertical: 4,
   },
 })
