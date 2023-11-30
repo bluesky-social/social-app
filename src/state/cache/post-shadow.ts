@@ -9,8 +9,6 @@ import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queri
 import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
 
-const emitter = new EventEmitter()
-
 export interface PostShadow {
   likeUri: string | undefined
   likeCount: number | undefined
@@ -21,6 +19,7 @@ export interface PostShadow {
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
+const emitter = new EventEmitter()
 const shadows: WeakMap<
   AppBskyFeedDefs.PostView,
   Partial<PostShadow>
