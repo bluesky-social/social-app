@@ -2182,6 +2182,9 @@ msgid "You have blocked the author or you have been blocked by the author."
 msgstr ""
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:150
+msgid "You have no feeds."
+msgstr ""
+
 #: src/view/com/lists/MyLists.tsx:88
 #: src/view/com/lists/ProfileLists.tsx:154
 msgid "You have no lists."
