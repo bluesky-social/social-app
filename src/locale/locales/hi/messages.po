@@ -882,6 +882,26 @@ msgstr "इसे छिपाएं"
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
+#: src/view/com/posts/FeedErrorMessage.tsx:101
+msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:89
+msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:95
+msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:92
+msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:86
+msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
+msgstr ""
+
 #: src/view/shell/bottom-bar/BottomBar.tsx:125
 #: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:275
@@ -1460,7 +1480,7 @@ msgstr "मेरे फ़ीड से {0} हटाएं?"
 msgid "Remove account"
 msgstr "खाता हटाएं"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:109
+#: src/view/com/posts/FeedErrorMessage.tsx:118
 msgid "Remove feed"
 msgstr "फ़ीड हटाएँ"
 
@@ -1477,7 +1497,7 @@ msgstr "छवि निकालें"
 msgid "Remove image preview"
 msgstr "छवि पूर्वावलोकन निकालें"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:110
+#: src/view/com/posts/FeedErrorMessage.tsx:119
 msgid "Remove this feed from your saved feeds?"
 msgstr "इस फ़ीड को सहेजे गए फ़ीड से हटा दें?"
 
@@ -2078,9 +2098,9 @@ msgstr "साइट पर जाएं"
 msgid "We're so excited to have you join us!"
 msgstr "हम आपके हमारी सेवा में शामिल होने को लेकर बहुत उत्साहित हैं!"
 
-#: src/view/com/posts/Feed.tsx:345
-#~ msgid "We're sorry, but this content is not viewable without a Bluesky account."
-#~ msgstr ""
+#: src/view/com/posts/FeedErrorMessage.tsx:98
+msgid "We're sorry, but this content is not viewable without a Bluesky account."
+msgstr ""
 
 #: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
