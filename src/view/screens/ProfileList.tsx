@@ -54,6 +54,7 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {isWeb} from '#/platform/detection'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -372,7 +373,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
-        label: _(msg`Share`),
+        label: isWeb ? _(msg`Copy link to list`) : _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {

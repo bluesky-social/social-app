@@ -15,7 +15,7 @@ import {
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {BlurView} from '../util/BlurView'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -298,7 +298,7 @@ let ProfileHeaderLoaded = ({
     let items: DropdownItem[] = [
       {
         testID: 'profileHeaderDropdownShareBtn',
-        label: _(msg`Share`),
+        label: isWeb ? _(msg`Copy link to profile`) : _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {

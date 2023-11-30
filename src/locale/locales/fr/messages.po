@@ -65,7 +65,7 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:187
-#: src/view/screens/ProfileList.tsx:675
+#: src/view/screens/ProfileList.tsx:676
 msgid "Add"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:665
+#: src/view/screens/ProfileList.tsx:666
 msgid "Add a user to this list"
 msgstr ""
 
@@ -181,11 +181,11 @@ msgstr ""
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:345
+#: src/view/screens/ProfileList.tsx:346
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:188
 msgid "Are you sure? This cannot be undone."
 msgstr ""
 
@@ -224,11 +224,11 @@ msgstr ""
 msgid "Block Account"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:446
+#: src/view/screens/ProfileList.tsx:447
 msgid "Block accounts"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:302
+#: src/view/screens/ProfileList.tsx:303
 msgid "Block these accounts?"
 msgstr ""
 
@@ -252,7 +252,7 @@ msgstr ""
 msgid "Blocked post."
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:304
+#: src/view/screens/ProfileList.tsx:305
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -513,7 +513,19 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:111
+#: src/view/screens/ProfileList.tsx:376
+msgid "Copy link to list"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+msgid "Copy link to post"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:301
+msgid "Copy link to profile"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:112
 msgid "Copy post text"
 msgstr ""
 
@@ -525,7 +537,7 @@ msgstr ""
 msgid "Could not load feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:752
+#: src/view/screens/ProfileList.tsx:753
 msgid "Could not load list"
 msgstr ""
 
@@ -571,8 +583,8 @@ msgstr ""
 msgid "Delete app password"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:344
-#: src/view/screens/ProfileList.tsx:402
+#: src/view/screens/ProfileList.tsx:345
+#: src/view/screens/ProfileList.tsx:403
 msgid "Delete List"
 msgstr ""
 
@@ -584,11 +596,11 @@ msgstr ""
 msgid "Delete my account…"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:182
+#: src/view/com/util/forms/PostDropdownBtn.tsx:183
 msgid "Delete post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:186
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
 msgid "Delete this post?"
 msgstr ""
 
@@ -661,7 +673,7 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:391
 msgid "Edit list details"
 msgstr ""
 
@@ -858,8 +870,8 @@ msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:110
 #: src/view/screens/ProfileFeed.tsx:115
-#: src/view/screens/ProfileList.tsx:761
-#: src/view/screens/ProfileList.tsx:766
+#: src/view/screens/ProfileList.tsx:762
+#: src/view/screens/ProfileList.tsx:767
 msgid "Go Back"
 msgstr ""
 
@@ -1118,7 +1130,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:506
 #: src/view/screens/ProfileFeed.tsx:368
-#: src/view/screens/ProfileList.tsx:506
+#: src/view/screens/ProfileList.tsx:507
 msgid "More options"
 msgstr ""
 
@@ -1130,15 +1142,15 @@ msgstr ""
 msgid "Mute Account"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:434
+#: src/view/screens/ProfileList.tsx:435
 msgid "Mute accounts"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:267
+#: src/view/screens/ProfileList.tsx:268
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:143
+#: src/view/com/util/forms/PostDropdownBtn.tsx:144
 msgid "Mute thread"
 msgstr ""
 
@@ -1154,7 +1166,7 @@ msgstr ""
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:269
+#: src/view/screens/ProfileList.tsx:270
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
@@ -1191,8 +1203,8 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:510
 #: src/view/screens/Profile.tsx:381
 #: src/view/screens/ProfileFeed.tsx:448
-#: src/view/screens/ProfileList.tsx:199
-#: src/view/screens/ProfileList.tsx:231
+#: src/view/screens/ProfileList.tsx:200
+#: src/view/screens/ProfileList.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:255
 msgid "New post"
 msgstr ""
@@ -1222,7 +1234,7 @@ msgid "No"
 msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:619
-#: src/view/screens/ProfileList.tsx:632
+#: src/view/screens/ProfileList.tsx:633
 msgid "No description"
 msgstr ""
 
@@ -1530,12 +1542,12 @@ msgstr ""
 msgid "Report feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:417
 msgid "Report List"
 msgstr ""
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:161
+#: src/view/com/util/forms/PostDropdownBtn.tsx:162
 msgid "Report post"
 msgstr ""
 
@@ -1742,8 +1754,8 @@ msgid "Sexual activity or erotic nudity."
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:301
-#: src/view/com/util/forms/PostDropdownBtn.tsx:125
-#: src/view/screens/ProfileList.tsx:375
+#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/screens/ProfileList.tsx:376
 msgid "Share"
 msgstr ""
 
@@ -1860,11 +1872,11 @@ msgstr ""
 msgid "Storybook"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:497
+#: src/view/screens/ProfileList.tsx:498
 msgid "Subscribe"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:493
+#: src/view/screens/ProfileList.tsx:494
 msgid "Subscribe to this list"
 msgstr ""
 
@@ -1984,7 +1996,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:646
 #: src/view/com/post-thread/PostThreadItem.tsx:648
-#: src/view/com/util/forms/PostDropdownBtn.tsx:97
+#: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "Translate"
 msgstr ""
 
@@ -2020,7 +2032,7 @@ msgstr ""
 msgid "Unmute Account"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:143
+#: src/view/com/util/forms/PostDropdownBtn.tsx:144
 msgid "Unmute thread"
 msgstr ""
 
@@ -2069,7 +2081,7 @@ msgstr ""
 msgid "Username or email address"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:659
+#: src/view/screens/ProfileList.tsx:660
 msgid "Users"
 msgstr ""
 
