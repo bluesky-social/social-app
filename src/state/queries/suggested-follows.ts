@@ -90,7 +90,7 @@ export function useGetSuggestedFollowersByActor() {
   return React.useCallback(
     async (actor: string) => {
       const res = await queryClient.fetchQuery({
-        staleTime: 60 * 1000,
+        staleTime: STALE.MINUTES.ONE,
         queryKey: suggestedFollowsByActorQueryKey(actor),
         queryFn: async () => {
           const res =

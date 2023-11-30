@@ -21,6 +21,10 @@ export const RQKEY = (did: string) => ['profile', did]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   return useQuery({
+    // WARNING
+    // this staleTime is load-bearing
+    // if you remove it, the UI infinite-loops
+    // -prf
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
