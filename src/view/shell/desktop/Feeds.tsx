@@ -11,7 +11,7 @@ import {usePinnedFeedsInfos} from '#/state/queries/feed'
 export function DesktopFeeds() {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const feeds = usePinnedFeedsInfos()
+  const {feeds} = usePinnedFeedsInfos()
 
   const route = useNavigationState(state => {
     if (!state) {

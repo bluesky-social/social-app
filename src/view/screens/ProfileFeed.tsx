@@ -353,6 +353,7 @@ export function ProfileFeedScreenInner({
               style={styles.btn}
             />
             <Button
+              testID={isPinned ? 'unpinBtn' : 'pinBtn'}
               disabled={isPinPending || isUnpinPending}
               type={isPinned ? 'default' : 'inverted'}
               label={isPinned ? 'Unpin' : 'Pin to home'}
