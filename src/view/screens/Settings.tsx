@@ -36,7 +36,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 import {HandIcon, HashtagIcon} from 'lib/icons'
 import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
@@ -71,7 +70,7 @@ import {clearLegacyStorage} from '#/state/persisted/legacy'
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
-import {Trans, msg} from '@lingui/macro'
+import {Plural, Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -385,7 +384,8 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Invite`)}
-          accessibilityHint="Opens invite code list">
+          accessibilityHint="Opens invite code list"
+          disabled={invites?.disabled}>
           <View
             style={[
               styles.iconContainer,
@@ -401,8 +401,18 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={invitesAvailable > 0 ? pal.link : pal.text}>
-            {formatCount(invitesAvailable)} invite{' '}
-            {pluralize(invitesAvailable, 'code')} available
+            {invites?.disabled ? (
+              <Trans>
+                Your invite codes are hidden when logged in using an App
+                Password
+              </Trans>
+            ) : (
+              <Plural
+                value={formatCount(invitesAvailable)}
+                one="# invite code available"
+                other="# invite codes available"
+              />
+            )}
           </Text>
         </TouchableOpacity>
 
