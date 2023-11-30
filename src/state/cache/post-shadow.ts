@@ -22,62 +22,16 @@ interface CacheEntry {
   value: PostShadow
 }
 
-const firstSeenMap = new WeakMap<AppBskyFeedDefs.PostView, number>()
-function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
-  let timeStamp = firstSeenMap.get(post)
-  if (timeStamp !== undefined) {
-    return timeStamp
-  }
-  timeStamp = Date.now()
-  firstSeenMap.set(post, timeStamp)
-  return timeStamp
-}
-
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const postSeenTS = getFirstSeenTS(post)
-  const [state, setState] = useState<CacheEntry>(() => ({
-    ts: postSeenTS,
-    value: fromPost(post),
-  }))
-
-  const [prevPost, setPrevPost] = useState(post)
-  if (post !== prevPost) {
-    // if we got a new prop, assume it's fresher
-    // than whatever shadow state we accumulated
-    setPrevPost(post)
-    setState({
-      ts: postSeenTS,
-      value: fromPost(post),
-    })
-  }
-
-  const onUpdate = useCallback(
-    (value: Partial<PostShadow>) => {
-      setState(s => ({ts: Date.now(), value: {...s.value, ...value}}))
-    },
-    [setState],
-  )
-
-  // react to shadow updates
-  useEffect(() => {
-    emitter.addListener(post.uri, onUpdate)
-    return () => {
-      emitter.removeListener(post.uri, onUpdate)
-    }
-  }, [post.uri, onUpdate])
-
-  return useMemo(() => {
-    return state.ts > postSeenTS
-      ? mergeShadow(post, state.value)
-      : castAsShadow(post)
-  }, [post, state, postSeenTS])
+  // TODO
+  return post
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   batchedUpdates(() => {
-    emitter.emit(uri, value)
+    // TODO
   })
 }
 
