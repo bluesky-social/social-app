@@ -437,6 +437,7 @@ export function FeedsScreen(_props: Props) {
             showSaveBtn={hasSession}
             showDescription
             showLikes
+            pinOnSave
           />
         )
       } else if (item.type === 'popularFeedsNoResults') {
