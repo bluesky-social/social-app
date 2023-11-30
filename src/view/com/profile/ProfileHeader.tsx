@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {
   AppBskyActorDefs,
   ProfileModeration,
@@ -32,6 +33,7 @@ import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
+  RQKEY as profileQueryKey,
   useProfileMuteMutationQueue,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -134,6 +136,13 @@ let ProfileHeaderLoaded = ({
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const queryClient = useQueryClient()
+
+  const invalidateProfileQuery = React.useCallback(() => {
+    queryClient.invalidateQueries({
+      queryKey: profileQueryKey(profile.did),
+    })
+  }, [queryClient, profile.did])
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -209,8 +218,10 @@ let ProfileHeaderLoaded = ({
       name: 'user-add-remove-lists',
       subject: profile.did,
       displayName: profile.displayName || profile.handle,
+      onAdd: invalidateProfileQuery,
+      onRemove: invalidateProfileQuery,
     })
-  }, [track, profile, openModal])
+  }, [track, profile, openModal, invalidateProfileQuery])
 
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
@@ -325,22 +336,24 @@ let ProfileHeaderLoaded = ({
       })
       if (!isMe) {
         if (!profile.viewer?.blocking) {
-          items.push({
-            testID: 'profileHeaderDropdownMuteBtn',
-            label: profile.viewer?.muted
-              ? _(msg`Unmute Account`)
-              : _(msg`Mute Account`),
-            onPress: profile.viewer?.muted
-              ? onPressUnmuteAccount
-              : onPressMuteAccount,
-            icon: {
-              ios: {
-                name: 'speaker.slash',
+          if (!profile.viewer?.mutedByList) {
+            items.push({
+              testID: 'profileHeaderDropdownMuteBtn',
+              label: profile.viewer?.muted
+                ? _(msg`Unmute Account`)
+                : _(msg`Mute Account`),
+              onPress: profile.viewer?.muted
+                ? onPressUnmuteAccount
+                : onPressMuteAccount,
+              icon: {
+                ios: {
+                  name: 'speaker.slash',
+                },
+                android: 'ic_lock_silent_mode',
+                web: 'comment-slash',
               },
-              android: 'ic_lock_silent_mode',
-              web: 'comment-slash',
-            },
-          })
+            })
+          }
         }
         if (!profile.viewer?.blockingByList) {
           items.push({
@@ -379,6 +392,7 @@ let ProfileHeaderLoaded = ({
     isMe,
     hasSession,
     profile.viewer?.muted,
+    profile.viewer?.mutedByList,
     profile.viewer?.blocking,
     profile.viewer?.blockingByList,
     onPressShare,
