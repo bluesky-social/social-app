@@ -21,6 +21,12 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr ""
 
+#: src/view/screens/Settings.tsx:410
+#: src/view/shell/desktop/RightNav.tsx:158
+#: src/view/shell/Drawer.tsx:527
+msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
+msgstr ""
+
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
 msgstr ""
@@ -29,7 +35,12 @@ msgstr ""
 msgid "{0} {purposeLabel} List"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:85
+#: src/view/shell/desktop/RightNav.tsx:141
+#: src/view/shell/Drawer.tsx:504
+msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:86
 msgid "{message}"
 msgstr ""
 
@@ -50,12 +61,12 @@ msgid "A new version of the app is available. Please update to continue using th
 msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:299
-#: src/view/screens/Settings.tsx:412
+#: src/view/screens/Settings.tsx:422
 msgid "Accessibility"
 msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:161
-#: src/view/screens/Settings.tsx:290
+#: src/view/screens/Settings.tsx:289
 msgid "Account"
 msgstr ""
 
@@ -77,8 +88,8 @@ msgstr ""
 msgid "Add a user to this list"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:359
-#: src/view/screens/Settings.tsx:368
+#: src/view/screens/Settings.tsx:358
+#: src/view/screens/Settings.tsx:367
 msgid "Add account"
 msgstr ""
 
@@ -129,7 +140,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:564
+#: src/view/screens/Settings.tsx:574
 msgid "Advanced"
 msgstr ""
 
@@ -161,7 +172,7 @@ msgstr ""
 msgid "App Language"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:584
+#: src/view/screens/Settings.tsx:594
 msgid "App passwords"
 msgstr ""
 
@@ -169,7 +180,7 @@ msgstr ""
 msgid "App Passwords"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:427
+#: src/view/screens/Settings.tsx:437
 msgid "Appearance"
 msgstr ""
 
@@ -199,14 +210,14 @@ msgstr ""
 #: src/view/com/auth/login/LoginForm.tsx:251
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:386
-#: src/view/com/post-thread/PostThread.tsx:436
-#: src/view/com/post-thread/PostThread.tsx:444
+#: src/view/com/post-thread/PostThread.tsx:376
+#: src/view/com/post-thread/PostThread.tsx:426
+#: src/view/com/post-thread/PostThread.tsx:434
 #: src/view/com/profile/ProfileHeader.tsx:619
 msgid "Back"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:456
+#: src/view/screens/Settings.tsx:466
 msgid "Basics"
 msgstr ""
 
@@ -215,7 +226,7 @@ msgstr ""
 msgid "Birthday"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:316
+#: src/view/screens/Settings.tsx:315
 msgid "Birthday:"
 msgstr ""
 
@@ -248,7 +259,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:237
 msgid "Blocked post."
 msgstr ""
 
@@ -280,7 +291,7 @@ msgstr ""
 msgid "Bluesky.Social"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:713
+#: src/view/screens/Settings.tsx:723
 msgid "Build version {0} {1}"
 msgstr ""
 
@@ -309,7 +320,7 @@ msgstr ""
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:585
+#: src/view/screens/Search/Search.tsx:586
 #: src/view/shell/desktop/Search.tsx:181
 msgid "Cancel"
 msgstr ""
@@ -348,12 +359,12 @@ msgstr ""
 msgid "Cancel waitlist signup"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:310
+#: src/view/screens/Settings.tsx:309
 msgid "Change"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:596
-#: src/view/screens/Settings.tsx:605
+#: src/view/screens/Settings.tsx:606
+#: src/view/screens/Settings.tsx:615
 msgid "Change handle"
 msgstr ""
 
@@ -397,24 +408,24 @@ msgstr ""
 msgid "Choose your password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:689
+#: src/view/screens/Settings.tsx:699
 msgid "Clear all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:691
+#: src/view/screens/Settings.tsx:701
 msgid "Clear all legacy storage data (restart after this)"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:701
+#: src/view/screens/Settings.tsx:711
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:703
+#: src/view/screens/Settings.tsx:713
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:570
+#: src/view/screens/Search/Search.tsx:571
 msgid "Clear search query"
 msgstr ""
 
@@ -550,7 +561,7 @@ msgstr ""
 msgid "Custom domain"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:610
+#: src/view/screens/Settings.tsx:620
 msgid "Danger Zone"
 msgstr ""
 
@@ -558,7 +569,7 @@ msgstr ""
 #~ msgid "Dark"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:617
+#: src/view/screens/Settings.tsx:627
 msgid "Delete account"
 msgstr ""
 
@@ -580,7 +591,7 @@ msgstr ""
 msgid "Delete my account"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:627
+#: src/view/screens/Settings.tsx:637
 msgid "Delete my account…"
 msgstr ""
 
@@ -592,7 +603,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:238
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "Deleted post."
 msgstr ""
 
@@ -607,7 +618,7 @@ msgstr ""
 msgid "Dev Server"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:632
+#: src/view/screens/Settings.tsx:642
 msgid "Developer Tools"
 msgstr ""
 
@@ -701,7 +712,7 @@ msgstr ""
 msgid "Email Updated"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:294
+#: src/view/screens/Settings.tsx:293
 msgid "Email:"
 msgstr ""
 
@@ -733,7 +744,7 @@ msgstr ""
 msgid "Enter your username and password"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:103
+#: src/view/screens/Search/Search.tsx:104
 msgid "Error:"
 msgstr ""
 
@@ -754,7 +765,7 @@ msgstr ""
 msgid "Feed Preferences"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:65
+#: src/view/shell/desktop/RightNav.tsx:64
 #: src/view/shell/Drawer.tsx:411
 msgid "Feedback"
 msgstr ""
@@ -873,7 +884,7 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:94
+#: src/view/shell/desktop/RightNav.tsx:93
 #: src/view/shell/Drawer.tsx:421
 msgid "Help"
 msgstr ""
@@ -897,9 +908,9 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:70
+#: src/view/com/pager/FeedsTabBarMobile.tsx:71
 #: src/view/screens/PreferencesHomeFeed.tsx:95
-#: src/view/screens/Settings.tsx:476
+#: src/view/screens/Settings.tsx:486
 msgid "Home Feed Preferences"
 msgstr ""
 
@@ -942,12 +953,12 @@ msgstr ""
 msgid "Invalid username or password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:387
+#: src/view/screens/Settings.tsx:386
 msgid "Invite"
 msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:91
-#: src/view/screens/Settings.tsx:375
+#: src/view/screens/Settings.tsx:374
 msgid "Invite a Friend"
 msgstr ""
 
@@ -980,7 +991,7 @@ msgstr ""
 msgid "Language Settings"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:536
+#: src/view/screens/Settings.tsx:546
 msgid "Languages"
 msgstr ""
 
@@ -1043,8 +1054,8 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:255
-#: src/view/com/post-thread/PostThread.tsx:263
+#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:254
 msgid "Load more posts"
 msgstr ""
 
@@ -1076,12 +1087,12 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:530
+#: src/view/screens/Search/Search.tsx:531
 msgid "Menu"
 msgstr ""
 
 #: src/view/screens/Moderation.tsx:51
-#: src/view/screens/Settings.tsx:558
+#: src/view/screens/Settings.tsx:568
 #: src/view/shell/desktop/LeftNav.tsx:400
 #: src/view/shell/Drawer.tsx:346
 #: src/view/shell/Drawer.tsx:347
@@ -1150,7 +1161,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:515
+#: src/view/screens/Settings.tsx:525
 msgid "My Saved Feeds"
 msgstr ""
 
@@ -1169,7 +1180,7 @@ msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:187
 #: src/view/screens/Feeds.tsx:509
-#: src/view/screens/Profile.tsx:375
+#: src/view/screens/Profile.tsx:380
 #: src/view/screens/ProfileFeed.tsx:447
 #: src/view/screens/ProfileList.tsx:199
 #: src/view/screens/ProfileList.tsx:231
@@ -1220,9 +1231,9 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:268
-#: src/view/screens/Search/Search.tsx:325
-#: src/view/screens/Search/Search.tsx:608
+#: src/view/screens/Search/Search.tsx:269
+#: src/view/screens/Search/Search.tsx:326
+#: src/view/screens/Search/Search.tsx:609
 #: src/view/shell/desktop/Search.tsx:209
 msgid "No results found for {query}"
 msgstr ""
@@ -1260,39 +1271,44 @@ msgstr ""
 msgid "Open navigation"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:528
+#: src/view/screens/Settings.tsx:538
 msgid "Opens configurable language settings"
+msgstr ""
+
+#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/Drawer.tsx:509
+msgid "Opens list of invite codes"
 msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:279
 msgid "Opens modal for using custom domain"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:553
+#: src/view/screens/Settings.tsx:563
 msgid "Opens moderation settings"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:509
+#: src/view/screens/Settings.tsx:519
 msgid "Opens screen with all saved feeds"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:576
+#: src/view/screens/Settings.tsx:586
 msgid "Opens the app password settings page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:468
+#: src/view/screens/Settings.tsx:478
 msgid "Opens the home feed preferences"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:659
+#: src/view/screens/Settings.tsx:669
 msgid "Opens the storybook page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:639
+#: src/view/screens/Settings.tsx:649
 msgid "Opens the system log page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:489
+#: src/view/screens/Settings.tsx:499
 msgid "Opens the threads preferences"
 msgstr ""
 
@@ -1362,12 +1378,12 @@ msgid "Please enter your password as well:"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:317
-#: src/view/com/post-thread/PostThread.tsx:221
+#: src/view/com/post-thread/PostThread.tsx:212
 #: src/view/screens/PostThread.tsx:77
 msgid "Post"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:376
+#: src/view/com/post-thread/PostThread.tsx:366
 msgid "Post hidden"
 msgstr ""
 
@@ -1379,7 +1395,7 @@ msgstr ""
 msgid "Post Languages"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:428
+#: src/view/com/post-thread/PostThread.tsx:418
 msgid "Post not found"
 msgstr ""
 
@@ -1399,7 +1415,7 @@ msgstr ""
 msgid "Prioritize Your Follows"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:75
 msgid "Privacy"
 msgstr ""
 
@@ -1418,7 +1434,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:784
+#: src/view/screens/Settings.tsx:794
 msgid "Protect your account by verifying your email."
 msgstr ""
 
@@ -1549,7 +1565,7 @@ msgstr ""
 msgid "Reset code"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:681
+#: src/view/screens/Settings.tsx:691
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -1557,15 +1573,15 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:671
+#: src/view/screens/Settings.tsx:681
 msgid "Reset preferences state"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:679
+#: src/view/screens/Settings.tsx:689
 msgid "Resets the onboarding state"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:669
+#: src/view/screens/Settings.tsx:679
 msgid "Resets the preferences state"
 msgstr ""
 
@@ -1618,8 +1634,8 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:408
-#: src/view/screens/Search/Search.tsx:560
+#: src/view/screens/Search/Search.tsx:409
+#: src/view/screens/Search/Search.tsx:561
 #: src/view/shell/bottom-bar/BottomBar.tsx:147
 #: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:160
@@ -1629,7 +1645,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:417
+#: src/view/screens/Search/Search.tsx:418
 msgid "Search for posts and users."
 msgstr ""
 
@@ -1710,7 +1726,7 @@ msgstr ""
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr ""
 
-#: src/view/screens/Settings.tsx:281
+#: src/view/screens/Settings.tsx:280
 #: src/view/shell/desktop/LeftNav.tsx:436
 #: src/view/shell/Drawer.tsx:380
 #: src/view/shell/Drawer.tsx:381
@@ -1735,7 +1751,7 @@ msgstr ""
 #~ msgid "Share link"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:320
+#: src/view/screens/Settings.tsx:319
 msgid "Show"
 msgstr ""
 
@@ -1807,7 +1823,7 @@ msgstr ""
 msgid "Sign up or sign in to join the conversation"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:331
+#: src/view/screens/Settings.tsx:330
 msgid "Signed in as"
 msgstr ""
 
@@ -1832,11 +1848,11 @@ msgstr ""
 msgid "Staging"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:725
+#: src/view/screens/Settings.tsx:735
 msgid "Status page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:661
+#: src/view/screens/Settings.tsx:671
 msgid "Storybook"
 msgstr ""
 
@@ -1848,7 +1864,7 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:381
+#: src/view/screens/Search/Search.tsx:382
 msgid "Suggested Follows"
 msgstr ""
 
@@ -1865,7 +1881,7 @@ msgstr ""
 #~ msgid "System"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:641
+#: src/view/screens/Settings.tsx:651
 msgid "System log"
 msgstr ""
 
@@ -1873,7 +1889,7 @@ msgstr ""
 msgid "Tall"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:85
+#: src/view/shell/desktop/RightNav.tsx:84
 msgid "Terms"
 msgstr ""
 
@@ -1897,7 +1913,7 @@ msgstr ""
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:431
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "The post may have been deleted."
 msgstr ""
 
@@ -1946,7 +1962,7 @@ msgid "This warning is only available for posts with media attached."
 msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings.tsx:498
+#: src/view/screens/Settings.tsx:508
 msgid "Thread Preferences"
 msgstr ""
 
@@ -2053,15 +2069,15 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:745
+#: src/view/screens/Settings.tsx:755
 msgid "Verify email"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:770
+#: src/view/screens/Settings.tsx:780
 msgid "Verify my email"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:779
+#: src/view/screens/Settings.tsx:789
 msgid "Verify My Email"
 msgstr ""
 
@@ -2086,7 +2102,7 @@ msgstr ""
 msgid "We're so excited to have you join us!"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:235
+#: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
@@ -2153,7 +2169,7 @@ msgstr ""
 msgid "You don't have any saved feeds."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:379
+#: src/view/com/post-thread/PostThread.tsx:369
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr ""
 
@@ -2210,6 +2226,12 @@ msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:53
 msgid "Your hosting provider"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:405
+#: src/view/shell/desktop/RightNav.tsx:127
+#: src/view/shell/Drawer.tsx:523
+msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
