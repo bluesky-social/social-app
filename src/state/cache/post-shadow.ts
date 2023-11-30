@@ -43,7 +43,7 @@ export function usePostShadow(
     return () => {
       emitter.removeListener(post.uri, onUpdate)
     }
-  }, [post])
+  }, [post, setShadow])
 
   return useMemo(() => {
     if (shadow) {
