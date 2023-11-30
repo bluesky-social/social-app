@@ -1,3 +1,4 @@
+import React from 'react'
 import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -39,9 +40,7 @@ export interface FeedParams {
   mergeFeedSources?: string[]
 }
 
-type RQPageParam =
-  | {cursor: string | undefined; api: FeedAPI; tuner: FeedTuner | NoopFeedTuner}
-  | undefined
+type RQPageParam = {cursor: string | undefined} | undefined
 
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
   return ['post-feed', feedDesc, params || {}]
@@ -78,6 +77,17 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const enabled = opts?.enabled !== false
 
+  const api = React.useMemo(() => {
+    return createApi(feedDesc, params || {}, feedTuners)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const tuner = React.useMemo(() => {
+    return params?.disableTuner
+      ? new NoopFeedTuner()
+      : new FeedTuner(feedTuners)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return useInfiniteQuery<
     FeedPage,
     Error,
@@ -90,13 +100,9 @@ export function usePostFeedQuery(
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, pageParam})
 
-      const {api, tuner, cursor} = pageParam
+      const {cursor} = pageParam
         ? pageParam
         : {
-            api: createApi(feedDesc, params || {}, feedTuners),
-            tuner: params?.disableTuner
-              ? new NoopFeedTuner()
-              : new FeedTuner(feedTuners),
             cursor: undefined,
           }
 
@@ -137,8 +143,6 @@ export function usePostFeedQuery(
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => ({
-      api: lastPage.api,
-      tuner: lastPage.tuner,
       cursor: lastPage.cursor,
     }),
     enabled,
