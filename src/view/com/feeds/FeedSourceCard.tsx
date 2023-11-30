@@ -23,6 +23,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 
 export function FeedSourceCard({
   feedUri,
@@ -30,17 +31,25 @@ export function FeedSourceCard({
   showSaveBtn = false,
   showDescription = false,
   showLikes = false,
+  LoadingComponent,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
   showLikes?: boolean
+  LoadingComponent?: JSX.Element
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
 
-  if (!feed || !preferences) return null
+  if (!feed || !preferences) {
+    return LoadingComponent ? (
+      LoadingComponent
+    ) : (
+      <FeedLoadingPlaceholder style={{flex: 1}} />
+    )
+  }
 
   return (
     <FeedSourceCardLoaded
