@@ -23,6 +23,7 @@ import {
   FeedDescriptor,
   FeedParams,
   usePostFeedQuery,
+  pollLatest,
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
 
@@ -84,22 +85,21 @@ let Feed = ({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-    pollLatest,
   } = usePostFeedQuery(feed, feedParams, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.slices.length
 
   const checkForNew = React.useCallback(async () => {
-    if (!isFetched || isFetching || !onHasNew) {
+    if (!data?.pages[0] || isFetching || !onHasNew) {
       return
     }
     try {
-      if (await pollLatest()) {
+      if (await pollLatest(data.pages[0])) {
         onHasNew(true)
       }
     } catch (e) {
       logger.error('Poll latest failed', {feed, error: String(e)})
     }
-  }, [feed, isFetched, isFetching, pollLatest, onHasNew])
+  }, [feed, data, isFetching, onHasNew])
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless

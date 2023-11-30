@@ -180,7 +180,7 @@ class MergeFeedSource {
 }
 
 class MergeFeedSource_Following extends MergeFeedSource {
-  tuner = new FeedTuner()
+  tuner = new FeedTuner(this.feedTuners)
 
   reset() {
     super.reset()
@@ -197,7 +197,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
   ): Promise<AppBskyFeedGetTimeline.Response> {
     const res = await getAgent().getTimeline({cursor, limit})
     // run the tuner pre-emptively to ensure better mixing
-    const slices = this.tuner.tune(res.data.feed, this.feedTuners, {
+    const slices = this.tuner.tune(res.data.feed, {
       dryRun: false,
       maintainOrder: true,
     })
