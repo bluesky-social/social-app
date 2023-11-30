@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, useCallback} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
@@ -52,7 +52,7 @@ export function usePostShadow(
   }, [post, shadow])
 }
 
-function* findPosts(uri) {
+function* findPosts(uri: string): Generator<AppBskyFeedDefs.PostView, void> {
   for (let item of findAllPostsInFeedQueryData(queryClient, uri)) {
     yield item.post
   }
