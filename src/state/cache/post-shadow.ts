@@ -52,30 +52,6 @@ export function usePostShadow(
   }, [post, shadow])
 }
 
-function* findPosts(uri: string): Generator<AppBskyFeedDefs.PostView, void> {
-  for (let item of findAllPostsInFeedQueryData(queryClient, uri)) {
-    yield item.post
-  }
-  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-    yield post
-  }
-  for (let node of findAllPostsInThreadQueryData(queryClient, uri)) {
-    if (node.type === 'post') {
-      yield node.post
-    }
-  }
-}
-
-export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  const matches = findPosts(uri)
-  for (let post of matches) {
-    shadows.set(post, {...shadows.get(post), ...value})
-  }
-  batchedUpdates(() => {
-    emitter.emit(uri)
-  })
-}
-
 function mergeShadow(
   post: AppBskyFeedDefs.PostView,
   shadow: Partial<PostShadow>,
@@ -94,4 +70,30 @@ function mergeShadow(
       repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
     },
   })
+}
+
+export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
+  const cachedPosts = findPostsInCache(uri)
+  for (let post of cachedPosts) {
+    shadows.set(post, {...shadows.get(post), ...value})
+  }
+  batchedUpdates(() => {
+    emitter.emit(uri)
+  })
+}
+
+function* findPostsInCache(
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, void> {
+  for (let item of findAllPostsInFeedQueryData(queryClient, uri)) {
+    yield item.post
+  }
+  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let node of findAllPostsInThreadQueryData(queryClient, uri)) {
+    if (node.type === 'post') {
+      yield node.post
+    }
+  }
 }
