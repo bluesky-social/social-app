@@ -3,6 +3,9 @@ import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {Shadow, castAsShadow} from './types'
+import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
+import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
+import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
 import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
 
@@ -49,40 +52,18 @@ export function usePostShadow(
   }, [post, shadow])
 }
 
-function findPosts(uri) {
-  const found = []
-  for (let [key, data] of queryClient.getQueriesData()) {
-    if (!data) {
-      continue
-    }
-    switch (key[0]) {
-      case 'post-feed': {
-        for (let page of data.pages) {
-          for (let slice of page.slices) {
-            for (let item of slice.items) {
-              const post = item.post
-              if (post.uri === uri) {
-                found.push(post)
-              }
-            }
-          }
-        }
-        break
-      }
-      case 'post-thread': {
-        if (data.post.uri === uri) {
-          found.push(data.post)
-        }
-        for (let reply of data.replies) {
-          if (reply.post.uri === uri) {
-            found.push(reply.post)
-          }
-        }
-        break
-      }
+function* findPosts(uri) {
+  for (let item of findAllPostsInFeedQueryData(queryClient, uri)) {
+    yield item.post
+  }
+  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let node of findAllPostsInThreadQueryData(queryClient, uri)) {
+    if (node.type === 'post') {
+      yield node.post
     }
   }
-  return found
 }
 
 export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
@@ -90,7 +71,6 @@ export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
   for (let post of matches) {
     shadows.set(post, {...shadows.get(post), ...value})
   }
-
   batchedUpdates(() => {
     emitter.emit(uri)
   })

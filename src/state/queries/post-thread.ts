@@ -213,6 +213,19 @@ function findPostInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): ThreadNode | undefined {
+  const generator = findAllPostsInQueryData(queryClient, uri)
+  const result = generator.next()
+  if (result.done) {
+    return undefined
+  } else {
+    return result.value
+  }
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<ThreadNode, void> {
   const queryDatas = queryClient.getQueriesData<ThreadNode>({
     queryKey: ['post-thread'],
   })
@@ -222,11 +235,10 @@ function findPostInQueryData(
     }
     for (const item of traverseThread(queryData)) {
       if (item.uri === uri) {
-        return item
+        yield item
       }
     }
   }
-  return undefined
 }
 
 function* traverseThread(node: ThreadNode): Generator<ThreadNode, void> {

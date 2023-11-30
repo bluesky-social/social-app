@@ -233,6 +233,19 @@ export function findPostInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): AppBskyFeedDefs.FeedViewPost | undefined {
+  const generator = findAllPostsInQueryData(queryClient, uri)
+  const result = generator.next()
+  if (result.done) {
+    return undefined
+  } else {
+    return result.value
+  }
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.FeedViewPost, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -245,12 +258,11 @@ export function findPostInQueryData(
     for (const page of queryData?.pages) {
       for (const item of page.feed) {
         if (item.post.uri === uri) {
-          return item
+          yield item
         }
       }
     }
   }
-  return undefined
 }
 
 function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
