@@ -267,6 +267,7 @@ function ProfileScreenLoaded({
       screenDescription="profile"
       moderation={moderation.account}>
       <PagerWithHeader
+        testID="profilePager"
         isHeaderReady={true}
         items={sectionTitles}
         onPageSelected={onPageSelected}

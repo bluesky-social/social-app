@@ -108,6 +108,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                 pointerEvents: isHeaderReady ? 'auto' : 'none',
               }}>
               <TabBar
+                testID={testID}
                 items={items}
                 selectedPage={currentPage}
                 onSelect={props.onSelect}
@@ -127,6 +128,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         isMobile,
         onTabBarLayout,
         onHeaderOnlyLayout,
+        testID,
       ],
     )
 
