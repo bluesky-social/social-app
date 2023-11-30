@@ -4,6 +4,7 @@ import {ComposePost} from '../com/composer/Composer'
 import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -20,8 +21,15 @@ export function Composer({}: {winHeight: number}) {
   }
 
   return (
-    <View style={styles.mask} aria-modal accessibilityViewIsModal>
-      <View
+    <Animated.View
+      style={styles.mask}
+      aria-modal
+      accessibilityViewIsModal
+      entering={FadeIn.duration(150)}
+      exiting={FadeOut}>
+      <Animated.View
+        entering={FadeInDown.duration(200)}
+        exiting={FadeOut}
         style={[
           styles.container,
           isMobile && styles.containerMobile,
@@ -34,8 +42,8 @@ export function Composer({}: {winHeight: number}) {
           onPost={state.onPost}
           mention={state.mention}
         />
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   )
 }
 

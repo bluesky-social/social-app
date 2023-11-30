@@ -31,6 +31,7 @@ import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as LinkWarningModal from './LinkWarning'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
@@ -129,7 +130,10 @@ function Modal({modal}: {modal: ModalIface}) {
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={onPressMask}>
-      <View style={styles.mask}>
+      <Animated.View
+        style={styles.mask}
+        entering={FadeIn.duration(150)}
+        exiting={FadeOut}>
         {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
@@ -142,7 +146,7 @@ function Modal({modal}: {modal: ModalIface}) {
             {element}
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </Animated.View>
     </TouchableWithoutFeedback>
   )
 }
