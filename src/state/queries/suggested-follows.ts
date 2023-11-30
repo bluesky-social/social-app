@@ -121,17 +121,20 @@ function* findAllProfilesInSuggestedFollowsQueryData(
   queryClient: QueryClient,
   did: string,
 ) {
-  const queryDatas =
-    queryClient.getQueriesData<AppBskyActorGetSuggestions.OutputSchema>({
-      queryKey: ['suggested-follows'],
-    })
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyActorGetSuggestions.OutputSchema>
+  >({
+    queryKey: ['suggested-follows'],
+  })
   for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData) {
+    if (!queryData?.pages) {
       continue
     }
-    for (const actor of queryData.actors) {
-      if (actor.did === did) {
-        yield actor
+    for (const page of queryData?.pages) {
+      for (const actor of page.actors) {
+        if (actor.did === did) {
+          yield actor
+        }
       }
     }
   }
