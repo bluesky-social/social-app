@@ -15,11 +15,17 @@ import {Shadow} from '#/state/cache/types'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {STALE} from '#/state/queries'
 
 export const RQKEY = (did: string) => ['profile', did]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   return useQuery({
+    // WARNING
+    // this staleTime is load-bearing
+    // if you remove it, the UI infinite-loops
+    // -prf
+    staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
       const res = await getAgent().getProfile({actor: did || ''})
