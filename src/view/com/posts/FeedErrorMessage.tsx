@@ -38,8 +38,7 @@ const MESSAGES = {
     'Hmm, the feed server gave a bad response. Please let the feed owner know about this issue.',
   [KnownError.FeedgenOffline]:
     'Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.',
-  [KnownError.FeedNSFPublic]:
-    'Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!',
+  [KnownError.FeedNSFPublic]: `We're sorry, but this content is not viewable without a Bluesky account.`,
   [KnownError.FeedgenUnknown]:
     'Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue.',
 }
