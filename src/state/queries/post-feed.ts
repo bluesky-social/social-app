@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -130,46 +131,50 @@ export function usePostFeedQuery(
       api: lastPage.api,
       cursor: lastPage.cursor,
     }),
-    select(data) {
-      const tuner = params?.disableTuner
-        ? new NoopFeedTuner()
-        : new FeedTuner(feedTuners)
-      return {
-        pageParams: data.pageParams,
-        pages: data.pages.map(page => ({
-          api: page.api,
-          tuner,
-          cursor: page.cursor,
-          slices: tuner.tune(page.feed).map(slice => ({
-            _reactKey: slice._reactKey,
-            rootUri: slice.rootItem.post.uri,
-            isThread:
-              slice.items.length > 1 &&
-              slice.items.every(
-                item => item.post.author.did === slice.items[0].post.author.did,
-              ),
-            items: slice.items
-              .map((item, i) => {
-                if (
-                  AppBskyFeedPost.isRecord(item.post.record) &&
-                  AppBskyFeedPost.validateRecord(item.post.record).success
-                ) {
-                  return {
-                    _reactKey: `${slice._reactKey}-${i}`,
-                    uri: item.post.uri,
-                    post: item.post,
-                    record: item.post.record,
-                    reason:
-                      i === 0 && slice.source ? slice.source : item.reason,
+    select: useCallback(
+      (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
+        const tuner = params?.disableTuner
+          ? new NoopFeedTuner()
+          : new FeedTuner(feedTuners)
+        return {
+          pageParams: data.pageParams,
+          pages: data.pages.map(page => ({
+            api: page.api,
+            tuner,
+            cursor: page.cursor,
+            slices: tuner.tune(page.feed).map(slice => ({
+              _reactKey: slice._reactKey,
+              rootUri: slice.rootItem.post.uri,
+              isThread:
+                slice.items.length > 1 &&
+                slice.items.every(
+                  item =>
+                    item.post.author.did === slice.items[0].post.author.did,
+                ),
+              items: slice.items
+                .map((item, i) => {
+                  if (
+                    AppBskyFeedPost.isRecord(item.post.record) &&
+                    AppBskyFeedPost.validateRecord(item.post.record).success
+                  ) {
+                    return {
+                      _reactKey: `${slice._reactKey}-${i}`,
+                      uri: item.post.uri,
+                      post: item.post,
+                      record: item.post.record,
+                      reason:
+                        i === 0 && slice.source ? slice.source : item.reason,
+                    }
                   }
-                }
-                return undefined
-              })
-              .filter(Boolean) as FeedPostSliceItem[],
+                  return undefined
+                })
+                .filter(Boolean) as FeedPostSliceItem[],
+            })),
           })),
-        })),
-      }
-    },
+        }
+      },
+      [feedTuners, params?.disableTuner],
+    ),
   })
 }
 
