@@ -17,14 +17,15 @@ import {EmptyState} from '../util/EmptyState'
 import {cleanError} from '#/lib/strings/errors'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
 
-enum KnownError {
-  Block,
-  FeedgenDoesNotExist,
-  FeedgenMisconfigured,
-  FeedgenBadResponse,
-  FeedgenOffline,
-  FeedgenUnknown,
-  Unknown,
+export enum KnownError {
+  Block = 'Block',
+  FeedgenDoesNotExist = 'FeedgenDoesNotExist',
+  FeedgenMisconfigured = 'FeedgenMisconfigured',
+  FeedgenBadResponse = 'FeedgenBadResponse',
+  FeedgenOffline = 'FeedgenOffline',
+  FeedgenUnknown = 'FeedgenUnknown',
+  FeedNSFPublic = 'FeedNSFPublic',
+  Unknown = 'Unknown',
 }
 
 const MESSAGES = {
@@ -37,6 +38,8 @@ const MESSAGES = {
     'Hmm, the feed server gave a bad response. Please let the feed owner know about this issue.',
   [KnownError.FeedgenOffline]:
     'Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.',
+  [KnownError.FeedNSFPublic]:
+    'Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!',
   [KnownError.FeedgenUnknown]:
     'Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue.',
 }
@@ -121,6 +124,36 @@ function FeedgenErrorMessage({
     })
   }, [openModal, closeModal, uri, removeFeed, _l])
 
+  const cta = React.useMemo(() => {
+    switch (knownError) {
+      case KnownError.FeedNSFPublic: {
+        return null
+      }
+      case KnownError.FeedgenDoesNotExist:
+      case KnownError.FeedgenMisconfigured:
+      case KnownError.FeedgenBadResponse:
+      case KnownError.FeedgenOffline:
+      case KnownError.FeedgenUnknown: {
+        return (
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+            {knownError === KnownError.FeedgenDoesNotExist && (
+              <Button
+                type="inverted"
+                label="Remove feed"
+                onPress={onRemoveFeed}
+              />
+            )}
+            <Button
+              type="default-light"
+              label="View profile"
+              onPress={onViewProfile}
+            />
+          </View>
+        )
+      }
+    }
+  }, [knownError, onViewProfile, onRemoveFeed])
+
   return (
     <View
       style={[
@@ -134,16 +167,7 @@ function FeedgenErrorMessage({
         },
       ]}>
       <Text style={pal.text}>{msg}</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-        {knownError === KnownError.FeedgenDoesNotExist && (
-          <Button type="inverted" label="Remove feed" onPress={onRemoveFeed} />
-        )}
-        <Button
-          type="default-light"
-          label="View profile"
-          onPress={onViewProfile}
-        />
-      </View>
+      {cta}
     </View>
   )
 }
@@ -195,6 +219,9 @@ function detectKnownError(
   }
   if (error.includes('feed provided an invalid response')) {
     return KnownError.FeedgenBadResponse
+  }
+  if (error.includes(KnownError.FeedNSFPublic)) {
+    return KnownError.FeedNSFPublic
   }
   return KnownError.FeedgenUnknown
 }

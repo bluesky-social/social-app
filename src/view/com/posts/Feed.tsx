@@ -8,7 +8,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {PostModeration, moderatePost} from '@atproto/api'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
@@ -28,8 +27,6 @@ import {
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {FeedPostSlice} from '#/state/queries/post-feed'
-import {Text} from '#/view/com/util/text/Text'
-import {Trans} from '@lingui/macro'
 
 type FeedItem =
   | {
@@ -47,10 +44,6 @@ type FeedItem =
   | {
       _reactKey: '__feed_slice__'
       slice: FeedPostSlice
-      moderations: PostModeration[]
-    }
-  | {
-      _reactKey: '__authed_only__'
     }
 
 let Feed = ({
@@ -149,32 +142,14 @@ let Feed = ({
 
         for (const page of data?.pages) {
           slices = slices.concat(
-            page.slices
-              .map(slice => ({
-                _reactKey: '__feed_slice__',
-                slice,
-                moderations: slice.items.map(item =>
-                  moderatePost(item.post, moderationOpts),
-                ),
-              }))
-              .filter(item => {
-                for (let i = 0; i < item.slice.items.length; i++) {
-                  if (item.moderations[i]?.content.filter) {
-                    return false
-                  }
-                }
-
-                return true
-              }) as FeedItem[],
+            page.slices.map(slice => ({
+              _reactKey: '__feed_slice__',
+              slice,
+            })),
           )
         }
 
-        if (slices.length) {
-          arr = arr.concat(slices)
-        } else {
-          isFeedDisabledRef.current = true
-          arr.push({_reactKey: '__authed_only__'})
-        }
+        arr = arr.concat(slices)
       }
       if (isError && !isEmpty) {
         arr = arr.concat([{_reactKey: '__load_more_error__'}])
@@ -248,14 +223,19 @@ let Feed = ({
       } else if (item._reactKey === '__loading__') {
         return <PostFeedLoadingPlaceholder />
       } else if (item._reactKey === '__feed_slice__') {
-        return <FeedSlice slice={item.slice} moderations={item.moderations} />
-      } else if (item._reactKey === '__authed_only__') {
-        return <AuthedOnlyFeedFallback />
+        return <FeedSlice slice={item.slice} moderationOpts={moderationOpts!} />
       } else {
         return null
       }
     },
-    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
+    [
+      feed,
+      error,
+      onPressTryAgain,
+      onPressRetryLoadMore,
+      renderEmptyState,
+      moderationOpts,
+    ],
   )
 
   const shouldRenderEndOfFeed =
@@ -320,34 +300,3 @@ export {Feed}
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
-
-function AuthedOnlyFeedFallback() {
-  const pal = usePalette('default')
-  return (
-    <View
-      style={[
-        pal.border,
-        {
-          padding: 18,
-          borderTopWidth: 1,
-          minHeight: Dimensions.get('window').height * 1.5,
-        },
-      ]}>
-      <View
-        style={[
-          pal.viewLight,
-          {
-            padding: 12,
-            borderRadius: 8,
-          },
-        ]}>
-        <Text style={[pal.text]}>
-          <Trans>
-            We're sorry, but this content is not viewable without a Bluesky
-            account.
-          </Trans>
-        </Text>
-      </View>
-    </View>
-  )
-}

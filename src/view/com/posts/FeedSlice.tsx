@@ -1,7 +1,7 @@
 import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FeedPostSlice} from '#/state/queries/post-feed'
-import {AtUri, PostModeration} from '@atproto/api'
+import {AtUri, moderatePost, ModerationOpts} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
@@ -11,11 +11,27 @@ import {makeProfileLink} from 'lib/routes/links'
 
 let FeedSlice = ({
   slice,
-  moderations,
+  ignoreFilterFor,
+  moderationOpts,
 }: {
   slice: FeedPostSlice
-  moderations: PostModeration[]
+  ignoreFilterFor?: string
+  moderationOpts: ModerationOpts
 }): React.ReactNode => {
+  const moderations = React.useMemo(() => {
+    return slice.items.map(item => moderatePost(item.post, moderationOpts))
+  }, [slice, moderationOpts])
+
+  // apply moderation filter
+  for (let i = 0; i < slice.items.length; i++) {
+    if (
+      moderations[i]?.content.filter &&
+      slice.items[i].post.author.did !== ignoreFilterFor
+    ) {
+      return null
+    }
+  }
+
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (
