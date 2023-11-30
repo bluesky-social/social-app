@@ -68,6 +68,7 @@ export function TabBar({
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
+        testID={`${testID}-selector`}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
@@ -76,6 +77,7 @@ export function TabBar({
           const selected = i === selectedPage
           return (
             <PressableWithHover
+              testID={`${testID}-selector-${i}`}
               key={item}
               onLayout={e => onItemLayout(e, i)}
               style={[styles.item, selected && indicatorStyle]}

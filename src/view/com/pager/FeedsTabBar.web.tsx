@@ -12,6 +12,9 @@ import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
 import {TextLink} from '#/view/com/util/Link'
 import {CenteredView} from '../util/Views'
+import {isWeb} from 'platform/detection'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -79,12 +82,37 @@ function FeedsTabBarPublic() {
 function FeedsTabBarTablet(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const feeds = usePinnedFeedsInfos()
+  const {feeds, hasPinnedCustomFeedOrList} = usePinnedFeedsInfos()
   const pal = usePalette('default')
   const {hasSession} = useSession()
+  const navigation = useNavigation<NavigationProp>()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
-  const items = hasSession ? feeds.map(f => f.displayName) : []
+  const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
+  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustomFeedOrList
+  const items = showFeedsLinkInTabBar
+    ? pinnedDisplayNames.concat('Feeds ✨')
+    : pinnedDisplayNames
+
+  const onPressDiscoverFeeds = React.useCallback(() => {
+    if (isWeb) {
+      navigation.navigate('Feeds')
+    } else {
+      navigation.navigate('FeedsTab')
+      navigation.popToTop()
+    }
+  }, [navigation])
+
+  const onSelect = React.useCallback(
+    (index: number) => {
+      if (showFeedsLinkInTabBar && index === items.length - 1) {
+        onPressDiscoverFeeds()
+      } else if (props.onSelect) {
+        props.onSelect(index)
+      }
+    },
+    [items.length, onPressDiscoverFeeds, props, showFeedsLinkInTabBar],
+  )
 
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
@@ -96,6 +124,7 @@ function FeedsTabBarTablet(
       <TabBar
         key={items.join(',')}
         {...props}
+        onSelect={onSelect}
         items={items}
         indicatorColor={pal.colors.link}
       />
