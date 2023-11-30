@@ -26,25 +26,11 @@ import {
   pollLatest,
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {FeedPostSlice} from '#/state/queries/post-feed'
 
-type FeedItem =
-  | {
-      _reactKey: '__loading__'
-    }
-  | {
-      _reactKey: '__empty__'
-    }
-  | {
-      _reactKey: '__error__'
-    }
-  | {
-      _reactKey: '__load_more_error__'
-    }
-  | {
-      _reactKey: '__feed_slice__'
-      slice: FeedPostSlice
-    }
+const LOADING_ITEM = {_reactKey: '__loading__'}
+const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
+const ERROR_ITEM = {_reactKey: '__error__'}
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 let Feed = ({
   feed,
@@ -86,7 +72,6 @@ let Feed = ({
   const {track} = useAnalytics()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
-  const isFeedDisabledRef = React.useRef<boolean>(false)
 
   const moderationOpts = useModerationOpts()
   const opts = React.useMemo(() => ({enabled}), [enabled])
@@ -130,32 +115,23 @@ let Feed = ({
   }, [pollInterval])
 
   const feedItems = React.useMemo(() => {
-    let arr: FeedItem[] = []
+    let arr: any[] = []
     if (isFetched && moderationOpts) {
       if (isError && isEmpty) {
-        arr = arr.concat([{_reactKey: '__error__'}])
+        arr = arr.concat([ERROR_ITEM])
       }
       if (isEmpty) {
-        arr = arr.concat([{_reactKey: '__empty__'}])
+        arr = arr.concat([EMPTY_FEED_ITEM])
       } else if (data) {
-        let slices: FeedItem[] = []
-
         for (const page of data?.pages) {
-          slices = slices.concat(
-            page.slices.map(slice => ({
-              _reactKey: '__feed_slice__',
-              slice,
-            })),
-          )
+          arr = arr.concat(page.slices)
         }
-
-        arr = arr.concat(slices)
       }
       if (isError && !isEmpty) {
-        arr = arr.concat([{_reactKey: '__load_more_error__'}])
+        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
       }
     } else {
-      arr.push({_reactKey: '__loading__'})
+      arr.push(LOADING_ITEM)
     }
     return arr
   }, [isFetched, isError, isEmpty, data, moderationOpts])
@@ -164,8 +140,6 @@ let Feed = ({
   // =
 
   const onRefresh = React.useCallback(async () => {
-    if (isFeedDisabledRef.current) return
-
     track('Feed:onRefresh')
     setIsPTRing(true)
     try {
@@ -178,8 +152,7 @@ let Feed = ({
   }, [refetch, track, setIsPTRing, onHasNew])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage || isError || isFeedDisabledRef.current)
-      return
+    if (isFetching || !hasNextPage || isError) return
 
     track('Feed:onEndReached')
     try {
@@ -202,10 +175,10 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item}: {item: FeedItem}) => {
-      if (item._reactKey === '__empty__') {
+    ({item}: {item: any}) => {
+      if (item === EMPTY_FEED_ITEM) {
         return renderEmptyState()
-      } else if (item._reactKey === '__error__') {
+      } else if (item === ERROR_ITEM) {
         return (
           <FeedErrorMessage
             feedDesc={feed}
@@ -213,20 +186,23 @@ let Feed = ({
             onPressTryAgain={onPressTryAgain}
           />
         )
-      } else if (item._reactKey === '__load_more_error__') {
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
             label="There was an issue fetching posts. Tap here to try again."
             onPress={onPressRetryLoadMore}
           />
         )
-      } else if (item._reactKey === '__loading__') {
+      } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
-      } else if (item._reactKey === '__feed_slice__') {
-        return <FeedSlice slice={item.slice} moderationOpts={moderationOpts!} />
-      } else {
-        return null
       }
+      return (
+        <FeedSlice
+          slice={item}
+          // we check for this before creating the feedItems array
+          moderationOpts={moderationOpts!}
+        />
+      )
     },
     [
       feed,
