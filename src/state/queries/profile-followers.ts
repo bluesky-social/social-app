@@ -1,5 +1,10 @@
-import {AppBskyGraphGetFollowers} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {AppBskyActorDefs, AppBskyGraphGetFollowers} from '@atproto/api'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 
@@ -29,4 +34,27 @@ export function useProfileFollowersQuery(did: string | undefined) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!did,
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyGraphGetFollowers.OutputSchema>
+  >({
+    queryKey: ['profile-followers'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const follower of page.followers) {
+        if (follower.did === did) {
+          yield follower
+        }
+      }
+    }
+  }
 }

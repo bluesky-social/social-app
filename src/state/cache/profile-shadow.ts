@@ -2,7 +2,14 @@ import {useEffect, useState, useMemo} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
+import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '../queries/post-liked-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '../queries/post-reposted-by'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
+import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
+import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
 import {Shadow, castAsShadow} from './types'
 import {queryClient} from 'lib/react-query'
@@ -82,6 +89,13 @@ function mergeShadow(
 }
 
 function* findProfilesInCache(did: string): Generator<ProfileView, void> {
+  yield* findAllProfilesInListMembersQueryData(queryClient, did)
+  yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
+  yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)
+  yield* findAllProfilesInPostLikedByQueryData(queryClient, did)
+  yield* findAllProfilesInPostRepostedByQueryData(queryClient, did)
   yield* findAllProfilesInProfileQueryData(queryClient, did)
+  yield* findAllProfilesInProfileFollowersQueryData(queryClient, did)
+  yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
 }

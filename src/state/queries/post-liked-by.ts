@@ -1,5 +1,10 @@
-import {AppBskyFeedGetLikes} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {AppBskyActorDefs, AppBskyFeedGetLikes} from '@atproto/api'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 
@@ -30,4 +35,27 @@ export function usePostLikedByQuery(resolvedUri: string | undefined) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!resolvedUri,
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyFeedGetLikes.OutputSchema>
+  >({
+    queryKey: ['post-liked-by'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const like of page.likes) {
+        if (like.actor.did === did) {
+          yield like.actor
+        }
+      }
+    }
+  }
 }
