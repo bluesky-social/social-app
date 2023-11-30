@@ -746,7 +746,7 @@ msgstr ""
 msgid "Failed to load recommended feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:558
+#: src/view/screens/Feeds.tsx:559
 msgid "Feed offline"
 msgstr ""
 
@@ -759,7 +759,7 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:474
+#: src/view/screens/Feeds.tsx:475
 #: src/view/shell/bottom-bar/BottomBar.tsx:169
 #: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:328
@@ -917,7 +917,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:71
+#: src/view/com/pager/FeedsTabBarMobile.tsx:99
 #: src/view/screens/PreferencesHomeFeed.tsx:95
 #: src/view/screens/Settings.tsx:474
 msgid "Home Feed Preferences"
@@ -1040,7 +1040,7 @@ msgstr ""
 #~ msgid "Light"
 #~ msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:625
+#: src/view/screens/ProfileFeed.tsx:626
 msgid "Like this feed"
 msgstr ""
 
@@ -1088,7 +1088,7 @@ msgstr ""
 msgid "Login to account that is not listed"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:477
+#: src/view/screens/ProfileFeed.tsx:478
 msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
 msgstr ""
 
@@ -1117,7 +1117,7 @@ msgid "More feeds"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:506
-#: src/view/screens/ProfileFeed.tsx:367
+#: src/view/screens/ProfileFeed.tsx:368
 #: src/view/screens/ProfileList.tsx:506
 msgid "More options"
 msgstr ""
@@ -1188,9 +1188,9 @@ msgid "New"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:187
-#: src/view/screens/Feeds.tsx:509
-#: src/view/screens/Profile.tsx:380
-#: src/view/screens/ProfileFeed.tsx:447
+#: src/view/screens/Feeds.tsx:510
+#: src/view/screens/Profile.tsx:381
+#: src/view/screens/ProfileFeed.tsx:448
 #: src/view/screens/ProfileList.tsx:199
 #: src/view/screens/ProfileList.tsx:231
 #: src/view/shell/desktop/LeftNav.tsx:255
@@ -1221,7 +1221,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:618
+#: src/view/screens/ProfileFeed.tsx:619
 #: src/view/screens/ProfileList.tsx:632
 msgid "No description"
 msgstr ""
@@ -1230,7 +1230,7 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "No results found for \"{query}\""
 msgstr ""
 
@@ -1276,7 +1276,7 @@ msgstr ""
 msgid "One or more images is missing alt text."
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:51
+#: src/view/com/pager/FeedsTabBarMobile.tsx:79
 msgid "Open navigation"
 msgstr ""
 
@@ -1480,7 +1480,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:101
+#: src/view/com/feeds/FeedSourceCard.tsx:108
 msgid "Remove {0} from my feeds?"
 msgstr ""
 
@@ -1492,7 +1492,7 @@ msgstr ""
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:100
+#: src/view/com/feeds/FeedSourceCard.tsx:107
 #: src/view/screens/ProfileFeed.tsx:278
 msgid "Remove from my feeds"
 msgstr ""
