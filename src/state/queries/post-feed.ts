@@ -91,7 +91,6 @@ export function usePostFeedQuery(
   >({
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
-    retry: false,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, pageParam})
 
