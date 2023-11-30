@@ -88,7 +88,7 @@ export function usePostThreadQuery(uri: string | undefined) {
       {
         const item = findPostInFeedQueryData(queryClient, uri)
         if (item) {
-          return feedViewPostToPlaceholderThread(item)
+          return postViewToPlaceholderThread(item)
         }
       }
       {
@@ -278,30 +278,6 @@ function threadNodeToPlaceholderThread(
       showParentReplyLine: false,
       isParentLoading: !!node.record.reply,
       isChildLoading: !!node.post.replyCount,
-    },
-  }
-}
-
-function feedViewPostToPlaceholderThread(
-  item: AppBskyFeedDefs.FeedViewPost,
-): ThreadNode {
-  return {
-    type: 'post',
-    _reactKey: item.post.uri,
-    uri: item.post.uri,
-    post: item.post,
-    record: item.post.record as AppBskyFeedPost.Record, // validated in post-feed
-    parent: undefined,
-    replies: undefined,
-    viewer: item.post.viewer,
-    ctx: {
-      depth: 0,
-      isHighlightedPost: true,
-      hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
-      isParentLoading: !!(item.post.record as AppBskyFeedPost.Record).reply,
-      isChildLoading: !!item.post.replyCount,
     },
   }
 }

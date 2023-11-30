@@ -87,8 +87,8 @@ export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
 function* findPostsInCache(
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
-  for (let item of findAllPostsInFeedQueryData(queryClient, uri)) {
-    yield item.post
+  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
+    yield post
   }
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield post

@@ -232,7 +232,7 @@ function createApi(
 export function findPostInQueryData(
   queryClient: QueryClient,
   uri: string,
-): AppBskyFeedDefs.FeedViewPost | undefined {
+): AppBskyFeedDefs.PostView | undefined {
   const generator = findAllPostsInQueryData(queryClient, uri)
   const result = generator.next()
   if (result.done) {
@@ -245,7 +245,7 @@ export function findPostInQueryData(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.FeedViewPost, void> {
+): Generator<AppBskyFeedDefs.PostView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -258,7 +258,19 @@ export function* findAllPostsInQueryData(
     for (const page of queryData?.pages) {
       for (const item of page.feed) {
         if (item.post.uri === uri) {
-          yield item
+          yield item.post
+        }
+        if (
+          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          item.reply?.parent?.uri === uri
+        ) {
+          yield item.reply.parent
+        }
+        if (
+          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          item.reply?.root?.uri === uri
+        ) {
+          yield item.reply.root
         }
       }
     }
