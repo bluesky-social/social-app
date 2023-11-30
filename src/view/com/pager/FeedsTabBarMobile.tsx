@@ -30,12 +30,12 @@ export function FeedsTabBar(
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
-  const {feeds, hasPinnedCustomFeedOrList} = usePinnedFeedsInfos()
+  const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
-  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustomFeedOrList
+  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
   const items = showFeedsLinkInTabBar
     ? pinnedDisplayNames.concat('Feeds ✨')
     : pinnedDisplayNames

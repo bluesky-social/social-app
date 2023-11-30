@@ -82,14 +82,14 @@ function FeedsTabBarPublic() {
 function FeedsTabBarTablet(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const {feeds, hasPinnedCustomFeedOrList} = usePinnedFeedsInfos()
+  const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
   const pal = usePalette('default')
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
   const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
-  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustomFeedOrList
+  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
   const items = showFeedsLinkInTabBar
     ? pinnedDisplayNames.concat('Feeds ✨')
     : pinnedDisplayNames

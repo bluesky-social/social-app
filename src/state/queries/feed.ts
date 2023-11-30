@@ -248,7 +248,7 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
 
 export function usePinnedFeedsInfos(): {
   feeds: FeedSourceInfo[]
-  hasPinnedCustomFeedOrList: boolean
+  hasPinnedCustom: boolean
 } {
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
@@ -256,7 +256,7 @@ export function usePinnedFeedsInfos(): {
   ])
   const {data: preferences} = usePreferencesQuery()
 
-  const hasPinnedCustomFeedOrList = React.useMemo<boolean>(() => {
+  const hasPinnedCustom = React.useMemo<boolean>(() => {
     return tabs.some(tab => tab !== FOLLOWING_FEED_STUB)
   }, [tabs])
 
@@ -307,5 +307,5 @@ export function usePinnedFeedsInfos(): {
     fetchFeedInfo()
   }, [queryClient, setTabs, preferences?.feeds?.pinned])
 
-  return {feeds: tabs, hasPinnedCustomFeedOrList}
+  return {feeds: tabs, hasPinnedCustom}
 }
