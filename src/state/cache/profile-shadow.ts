@@ -3,6 +3,7 @@ import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
+import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
 import {Shadow, castAsShadow} from './types'
 import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
@@ -82,4 +83,5 @@ function mergeShadow(
 
 function* findProfilesInCache(did: string): Generator<ProfileView, void> {
   yield* findAllProfilesInProfileQueryData(queryClient, did)
+  yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
 }
