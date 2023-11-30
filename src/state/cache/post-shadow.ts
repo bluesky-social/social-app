@@ -1,11 +1,13 @@
-import {useEffect, useState, useMemo, useCallback} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {Shadow, castAsShadow} from './types'
+import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
+import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
+import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
+import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
-
-const emitter = new EventEmitter()
 
 export interface PostShadow {
   likeUri: string | undefined
@@ -17,95 +19,83 @@ export interface PostShadow {
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
-interface CacheEntry {
-  ts: number
-  value: PostShadow
-}
-
-const firstSeenMap = new WeakMap<AppBskyFeedDefs.PostView, number>()
-function getFirstSeenTS(post: AppBskyFeedDefs.PostView): number {
-  let timeStamp = firstSeenMap.get(post)
-  if (timeStamp !== undefined) {
-    return timeStamp
-  }
-  timeStamp = Date.now()
-  firstSeenMap.set(post, timeStamp)
-  return timeStamp
-}
+const emitter = new EventEmitter()
+const shadows: WeakMap<
+  AppBskyFeedDefs.PostView,
+  Partial<PostShadow>
+> = new WeakMap()
 
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const postSeenTS = getFirstSeenTS(post)
-  const [state, setState] = useState<CacheEntry>(() => ({
-    ts: postSeenTS,
-    value: fromPost(post),
-  }))
-
+  const [shadow, setShadow] = useState(() => shadows.get(post))
   const [prevPost, setPrevPost] = useState(post)
   if (post !== prevPost) {
-    // if we got a new prop, assume it's fresher
-    // than whatever shadow state we accumulated
     setPrevPost(post)
-    setState({
-      ts: postSeenTS,
-      value: fromPost(post),
-    })
+    setShadow(shadows.get(post))
   }
 
-  const onUpdate = useCallback(
-    (value: Partial<PostShadow>) => {
-      setState(s => ({ts: Date.now(), value: {...s.value, ...value}}))
-    },
-    [setState],
-  )
-
-  // react to shadow updates
   useEffect(() => {
+    function onUpdate() {
+      setShadow(shadows.get(post))
+    }
     emitter.addListener(post.uri, onUpdate)
     return () => {
       emitter.removeListener(post.uri, onUpdate)
     }
-  }, [post.uri, onUpdate])
+  }, [post, setShadow])
 
   return useMemo(() => {
-    return state.ts > postSeenTS
-      ? mergeShadow(post, state.value)
-      : castAsShadow(post)
-  }, [post, state, postSeenTS])
-}
-
-export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
-  batchedUpdates(() => {
-    emitter.emit(uri, value)
-  })
-}
-
-function fromPost(post: AppBskyFeedDefs.PostView): PostShadow {
-  return {
-    likeUri: post.viewer?.like,
-    likeCount: post.likeCount,
-    repostUri: post.viewer?.repost,
-    repostCount: post.repostCount,
-    isDeleted: false,
-  }
+    if (shadow) {
+      return mergeShadow(post, shadow)
+    } else {
+      return castAsShadow(post)
+    }
+  }, [post, shadow])
 }
 
 function mergeShadow(
   post: AppBskyFeedDefs.PostView,
-  shadow: PostShadow,
+  shadow: Partial<PostShadow>,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   if (shadow.isDeleted) {
     return POST_TOMBSTONE
   }
   return castAsShadow({
     ...post,
-    likeCount: shadow.likeCount,
-    repostCount: shadow.repostCount,
+    likeCount: 'likeCount' in shadow ? shadow.likeCount : post.likeCount,
+    repostCount:
+      'repostCount' in shadow ? shadow.repostCount : post.repostCount,
     viewer: {
       ...(post.viewer || {}),
-      like: shadow.likeUri,
-      repost: shadow.repostUri,
+      like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
+      repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
     },
   })
+}
+
+export function updatePostShadow(uri: string, value: Partial<PostShadow>) {
+  const cachedPosts = findPostsInCache(uri)
+  for (let post of cachedPosts) {
+    shadows.set(post, {...shadows.get(post), ...value})
+  }
+  batchedUpdates(() => {
+    emitter.emit(uri)
+  })
+}
+
+function* findPostsInCache(
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, void> {
+  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let node of findAllPostsInThreadQueryData(queryClient, uri)) {
+    if (node.type === 'post') {
+      yield node.post
+    }
+  }
 }

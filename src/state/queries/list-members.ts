@@ -1,5 +1,10 @@
-import {AppBskyGraphGetList} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {AppBskyActorDefs, AppBskyGraphGetList} from '@atproto/api'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
@@ -30,4 +35,35 @@ export function useListMembersQuery(uri: string) {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyGraphGetList.OutputSchema>
+  >({
+    queryKey: ['list-members'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const [_queryKey, queryData] of queryDatas) {
+      if (!queryData?.pages) {
+        continue
+      }
+      for (const page of queryData?.pages) {
+        if (page.list.creator.did === did) {
+          yield page.list.creator
+        }
+        for (const item of page.items) {
+          if (item.subject.did === did) {
+            yield item.subject
+          }
+        }
+      }
+    }
+  }
 }

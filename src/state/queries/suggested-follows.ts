@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  AppBskyActorDefs,
   AppBskyActorGetSuggestions,
   AppBskyGraphGetSuggestedFollowsByActor,
   moderateProfile,
@@ -9,6 +10,7 @@ import {
   useQueryClient,
   useQuery,
   InfiniteData,
+  QueryClient,
   QueryKey,
 } from '@tanstack/react-query'
 
@@ -105,4 +107,57 @@ export function useGetSuggestedFollowersByActor() {
     },
     [queryClient],
   )
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
+  yield* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient, did)
+}
+
+function* findAllProfilesInSuggestedFollowsQueryData(
+  queryClient: QueryClient,
+  did: string,
+) {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyActorGetSuggestions.OutputSchema>
+  >({
+    queryKey: ['suggested-follows'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const actor of page.actors) {
+        if (actor.did === did) {
+          yield actor
+        }
+      }
+    }
+  }
+}
+
+function* findAllProfilesInSuggestedFollowsByActorQueryData(
+  queryClient: QueryClient,
+  did: string,
+) {
+  const queryDatas =
+    queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema>(
+      {
+        queryKey: ['suggested-follows-by-actor'],
+      },
+    )
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const suggestion of queryData.suggestions) {
+      if (suggestion.did === did) {
+        yield suggestion
+      }
+    }
+  }
 }

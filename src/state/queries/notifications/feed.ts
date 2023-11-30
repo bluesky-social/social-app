@@ -86,6 +86,19 @@ export function findPostInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): AppBskyFeedDefs.PostView | undefined {
+  const generator = findAllPostsInQueryData(queryClient, uri)
+  const result = generator.next()
+  if (result.done) {
+    return undefined
+  } else {
+    return result.value
+  }
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: ['notification-feed'],
   })
@@ -96,10 +109,9 @@ export function findPostInQueryData(
     for (const page of queryData?.pages) {
       for (const item of page.items) {
         if (item.subject?.uri === uri) {
-          return item.subject
+          yield item.subject
         }
       }
     }
   }
-  return undefined
 }

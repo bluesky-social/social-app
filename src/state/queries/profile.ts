@@ -5,7 +5,12 @@ import {
   AppBskyActorProfile,
   AppBskyActorGetProfile,
 } from '@atproto/api'
-import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
+import {
+  useQuery,
+  useQueryClient,
+  useMutation,
+  QueryClient,
+} from '@tanstack/react-query'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {useSession, getAgent} from '../session'
 import {updateProfileShadow} from '../cache/profile-shadow'
@@ -476,4 +481,22 @@ async function whenAppViewReady(
     fn,
     () => getAgent().app.bsky.actor.getProfile({actor}),
   )
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
+  const queryDatas =
+    queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
+      queryKey: ['profile'],
+    })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    if (queryData.did === did) {
+      yield queryData
+    }
+  }
 }
