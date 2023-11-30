@@ -127,10 +127,13 @@ export function usePostFeedQuery(
       }
     },
     initialPageParam: undefined,
-    getNextPageParam: lastPage => ({
-      api: lastPage.api,
-      cursor: lastPage.cursor,
-    }),
+    getNextPageParam: lastPage =>
+      lastPage.cursor
+        ? {
+            api: lastPage.api,
+            cursor: lastPage.cursor,
+          }
+        : undefined,
     select: useCallback(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         const tuner = params?.disableTuner
