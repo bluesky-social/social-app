@@ -666,7 +666,7 @@ msgid "Edit list details"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:367
-#: src/view/screens/SavedFeeds.tsx:75
+#: src/view/screens/SavedFeeds.tsx:85
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -771,7 +771,7 @@ msgstr ""
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:132
+#: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr ""
 
@@ -1333,7 +1333,7 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:79
+#: src/view/screens/SavedFeeds.tsx:89
 msgid "Pinned Feeds"
 msgstr ""
 
@@ -1460,7 +1460,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:92
+#: src/view/com/feeds/FeedSourceCard.tsx:101
 msgid "Remove {0} from my feeds?"
 msgstr ""
 
@@ -1468,11 +1468,11 @@ msgstr ""
 msgid "Remove account"
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:106
+#: src/view/com/posts/FeedErrorMessage.tsx:109
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:91
+#: src/view/com/feeds/FeedSourceCard.tsx:100
 #: src/view/screens/ProfileFeed.tsx:278
 msgid "Remove from my feeds"
 msgstr ""
@@ -1485,7 +1485,7 @@ msgstr ""
 msgid "Remove image preview"
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:107
+#: src/view/com/posts/FeedErrorMessage.tsx:110
 msgid "Remove this feed from your saved feeds?"
 msgstr ""
 
@@ -1612,7 +1612,7 @@ msgstr ""
 msgid "Save image crop"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:105
+#: src/view/screens/SavedFeeds.tsx:122
 msgid "Saved Feeds"
 msgstr ""
 
@@ -2087,8 +2087,8 @@ msgid "We're so excited to have you join us!"
 msgstr ""
 
 #: src/view/com/posts/Feed.tsx:345
-msgid "We're sorry, but this content is not viewable without a Bluesky account."
-msgstr ""
+#~ msgid "We're sorry, but this content is not viewable without a Bluesky account."
+#~ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -2145,7 +2145,7 @@ msgstr ""
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:92
+#: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
 msgstr ""
 
@@ -2153,7 +2153,7 @@ msgstr ""
 msgid "You don't have any saved feeds!"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:118
+#: src/view/screens/SavedFeeds.tsx:135
 msgid "You don't have any saved feeds."
 msgstr ""
 
