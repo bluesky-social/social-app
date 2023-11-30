@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
 import {ComposePost} from '../com/composer/Composer'
 import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
 
 const BOTTOM_BAR_HEIGHT = 61
 
