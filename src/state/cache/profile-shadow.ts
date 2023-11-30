@@ -2,7 +2,9 @@ import {useEffect, useState, useMemo} from 'react'
 import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
 import {Shadow, castAsShadow} from './types'
+import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
 
 export interface ProfileShadow {
@@ -78,6 +80,6 @@ function mergeShadow(
   })
 }
 
-function* findProfilesInCache(_did: string): Generator<ProfileView, void> {
-  // TODO
+function* findProfilesInCache(did: string): Generator<ProfileView, void> {
+  yield* findAllProfilesInProfileQueryData(queryClient, did)
 }
