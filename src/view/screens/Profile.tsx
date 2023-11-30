@@ -267,6 +267,7 @@ function ProfileScreenLoaded({
       screenDescription="profile"
       moderation={moderation.account}>
       <PagerWithHeader
+        testID="profilePager"
         isHeaderReady={true}
         items={sectionTitles}
         onPageSelected={onPageSelected}
@@ -403,7 +404,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({

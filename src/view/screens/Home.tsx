@@ -40,6 +40,12 @@ function HomeScreenReady({
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const [selectedPage, setSelectedPage] = React.useState(0)
 
+  /**
+   * Used to ensure that we re-compute `customFeeds` AND force a re-render of
+   * the pager with the new order of feeds.
+   */
+  const pinnedFeedOrderKey = JSON.stringify(preferences.feeds.pinned)
+
   const customFeeds = React.useMemo(() => {
     const pinned = preferences.feeds.pinned
     const feeds: FeedDescriptor[] = []
@@ -83,7 +89,6 @@ function HomeScreenReady({
     emitSoftReset()
   }, [])
 
-  // TODO(pwi) may need this in public view
   const onPageScrollStateChanged = React.useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
       if (state === 'dragging') {
@@ -118,6 +123,7 @@ function HomeScreenReady({
 
   return hasSession ? (
     <Pager
+      key={pinnedFeedOrderKey}
       testID="homeScreen"
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}

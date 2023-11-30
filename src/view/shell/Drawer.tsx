@@ -141,7 +141,7 @@ export function DrawerContent() {
         } else {
           if (tab === 'Notifications') {
             // fetch new notifs on view
-            queryClient.invalidateQueries({
+            queryClient.resetQueries({
               queryKey: NOTIFS_RQKEY(),
             })
           }

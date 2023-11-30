@@ -10,11 +10,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  useFocusEffect,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -73,6 +69,8 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 import {Plural, Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -154,13 +152,14 @@ export function SettingsScreen({}: Props) {
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
-  const {clearCurrentAccount} = useSessionApi()
   const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
     getAgent(),
   )
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeAllActiveElements = useCloseAllActiveElements()
 
   const primaryBg = useCustomPalette<ViewStyle>({
     light: {backgroundColor: colors.blue0},
@@ -189,10 +188,9 @@ export function SettingsScreen({}: Props) {
 
   const onPressAddAccount = React.useCallback(() => {
     track('Settings:AddAccountButtonClicked')
-    navigation.navigate('HomeTab')
-    navigation.dispatch(StackActions.popToTop())
-    clearCurrentAccount()
-  }, [track, navigation, clearCurrentAccount])
+    setShowLoggedOut(true)
+    closeAllActiveElements()
+  }, [track, setShowLoggedOut, closeAllActiveElements])
 
   const onPressChangeHandle = React.useCallback(() => {
     track('Settings:ChangeHandleButtonClicked')

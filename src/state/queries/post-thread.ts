@@ -7,11 +7,7 @@ import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {STALE} from '#/state/queries'
-import {
-  findPostInQueryData as findPostInFeedQueryData,
-  FeedPostSliceItem,
-} from './post-feed'
+import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
 import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
 import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
 
@@ -68,7 +64,6 @@ export type ThreadNode =
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
-    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
@@ -93,7 +88,7 @@ export function usePostThreadQuery(uri: string | undefined) {
       {
         const item = findPostInFeedQueryData(queryClient, uri)
         if (item) {
-          return feedItemToPlaceholderThread(item)
+          return feedViewPostToPlaceholderThread(item)
         }
       }
       {
@@ -275,13 +270,15 @@ function threadNodeToPlaceholderThread(
   }
 }
 
-function feedItemToPlaceholderThread(item: FeedPostSliceItem): ThreadNode {
+function feedViewPostToPlaceholderThread(
+  item: AppBskyFeedDefs.FeedViewPost,
+): ThreadNode {
   return {
     type: 'post',
     _reactKey: item.post.uri,
     uri: item.post.uri,
     post: item.post,
-    record: item.record,
+    record: item.post.record as AppBskyFeedPost.Record, // validated in post-feed
     parent: undefined,
     replies: undefined,
     viewer: item.post.viewer,
@@ -291,7 +288,7 @@ function feedItemToPlaceholderThread(item: FeedPostSliceItem): ThreadNode {
       hasMore: false,
       showChildReplyLine: false,
       showParentReplyLine: false,
-      isParentLoading: !!item.record.reply,
+      isParentLoading: !!(item.post.record as AppBskyFeedPost.Record).reply,
       isChildLoading: !!item.post.replyCount,
     },
   }
@@ -305,7 +302,7 @@ function postViewToPlaceholderThread(
     _reactKey: post.uri,
     uri: post.uri,
     post: post,
-    record: post.record as AppBskyFeedPost.Record, // validate in notifs
+    record: post.record as AppBskyFeedPost.Record, // validated in notifs
     parent: undefined,
     replies: undefined,
     viewer: post.viewer,

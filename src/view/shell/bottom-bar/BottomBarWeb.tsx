@@ -137,7 +137,7 @@ const NavItem: React.FC<{
       : isTab(currentRoute.name, routeName)
 
   return (
-    <Link href={href} style={styles.ctrl}>
+    <Link href={href} style={styles.ctrl} navigationAction="navigate">
       {children({isActive})}
     </Link>
   )

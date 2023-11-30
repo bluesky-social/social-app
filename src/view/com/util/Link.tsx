@@ -46,6 +46,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   noFeedback?: boolean
   asAnchor?: boolean
   anchorNoUnderline?: boolean
+  navigationAction?: 'push' | 'replace' | 'navigate'
 }
 
 export const Link = memo(function Link({
@@ -58,6 +59,7 @@ export const Link = memo(function Link({
   asAnchor,
   accessible,
   anchorNoUnderline,
+  navigationAction,
   ...props
 }: Props) {
   const {closeModal} = useModalControls()
@@ -67,10 +69,16 @@ export const Link = memo(function Link({
   const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
-        return onPressInner(closeModal, navigation, sanitizeUrl(href), e)
+        return onPressInner(
+          closeModal,
+          navigation,
+          sanitizeUrl(href),
+          navigationAction,
+          e,
+        )
       }
     },
-    [closeModal, navigation, href],
+    [closeModal, navigation, navigationAction, href],
   )
 
   if (noFeedback) {
@@ -146,6 +154,7 @@ export const TextLink = memo(function TextLink({
   title,
   onPress,
   warnOnMismatchingLabel,
+  navigationAction,
   ...orgProps
 }: {
   testID?: string
@@ -158,6 +167,7 @@ export const TextLink = memo(function TextLink({
   dataSet?: any
   title?: string
   warnOnMismatchingLabel?: boolean
+  navigationAction?: 'push' | 'replace' | 'navigate'
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const navigation = useNavigation<NavigationProp>()
@@ -185,7 +195,13 @@ export const TextLink = memo(function TextLink({
         // @ts-ignore function signature differs by platform -prf
         return onPress()
       }
-      return onPressInner(closeModal, navigation, sanitizeUrl(href), e)
+      return onPressInner(
+        closeModal,
+        navigation,
+        sanitizeUrl(href),
+        navigationAction,
+        e,
+      )
     },
     [
       onPress,
@@ -195,6 +211,7 @@ export const TextLink = memo(function TextLink({
       href,
       text,
       warnOnMismatchingLabel,
+      navigationAction,
     ],
   )
   const hrefAttrs = useMemo(() => {
@@ -241,6 +258,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   accessibilityLabel?: string
   accessibilityHint?: string
   title?: string
+  navigationAction?: 'push' | 'replace' | 'navigate'
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
@@ -250,6 +268,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   text,
   numberOfLines,
   lineHeight,
+  navigationAction,
   ...props
 }: TextLinkOnWebOnlyProps) {
   if (isWeb) {
@@ -263,6 +282,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
         numberOfLines={numberOfLines}
         lineHeight={lineHeight}
         title={props.title}
+        navigationAction={navigationAction}
         {...props}
       />
     )
@@ -296,6 +316,7 @@ function onPressInner(
   closeModal = () => {},
   navigation: NavigationProp,
   href: string,
+  navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   e?: Event,
 ) {
   let shouldHandle = false
@@ -328,8 +349,18 @@ function onPressInner(
     } else {
       closeModal() // close any active modals
 
-      // @ts-ignore we're not able to type check on this one -prf
-      navigation.dispatch(StackActions.push(...router.matchPath(href)))
+      if (navigationAction === 'push') {
+        // @ts-ignore we're not able to type check on this one -prf
+        navigation.dispatch(StackActions.push(...router.matchPath(href)))
+      } else if (navigationAction === 'replace') {
+        // @ts-ignore we're not able to type check on this one -prf
+        navigation.dispatch(StackActions.replace(...router.matchPath(href)))
+      } else if (navigationAction === 'navigate') {
+        // @ts-ignore we're not able to type check on this one -prf
+        navigation.navigate(...router.matchPath(href))
+      } else {
+        throw Error('Unsupported navigator action.')
+      }
     }
   }
 }

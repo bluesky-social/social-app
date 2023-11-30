@@ -181,6 +181,9 @@ export function useIsFeedPublicQuery({uri}: {uri: string}) {
 
         if (msg.includes('missing jwt')) {
           return false
+        } else if (msg.includes('This feed requires being logged-in')) {
+          // e.g. https://github.com/bluesky-social/atproto/blob/99ab1ae55c463e8d5321a1eaad07a175bdd56fea/packages/bsky/src/feed-gen/best-of-follows.ts#L13
+          return false
         }
 
         return true
@@ -243,13 +246,19 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
   likeUri: '',
 }
 
-export function usePinnedFeedsInfos(): FeedSourceInfo[] {
+export function usePinnedFeedsInfos(): {
+  feeds: FeedSourceInfo[]
+  hasPinnedCustom: boolean
+} {
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
     FOLLOWING_FEED_STUB,
   ])
   const {data: preferences} = usePreferencesQuery()
-  const pinnedFeedsKey = JSON.stringify(preferences?.feeds?.pinned)
+
+  const hasPinnedCustom = React.useMemo<boolean>(() => {
+    return tabs.some(tab => tab !== FOLLOWING_FEED_STUB)
+  }, [tabs])
 
   React.useEffect(() => {
     if (!preferences?.feeds?.pinned) return
@@ -296,13 +305,7 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
     }
 
     fetchFeedInfo()
-  }, [
-    queryClient,
-    setTabs,
-    preferences?.feeds?.pinned,
-    // ensure we react to re-ordering
-    pinnedFeedsKey,
-  ])
+  }, [queryClient, setTabs, preferences?.feeds?.pinned])
 
-  return tabs
+  return {feeds: tabs, hasPinnedCustom}
 }

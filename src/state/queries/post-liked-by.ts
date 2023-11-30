@@ -2,7 +2,6 @@ import {AppBskyFeedGetLikes} from '@atproto/api'
 import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
-import {STALE} from '#/state/queries'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -18,7 +17,6 @@ export function usePostLikedByQuery(resolvedUri: string | undefined) {
     QueryKey,
     RQPageParam
   >({
-    staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().getLikes({

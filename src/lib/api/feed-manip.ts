@@ -16,14 +16,7 @@ export type FeedTunerFn = (
 export class FeedViewPostsSlice {
   isFlattenedReply = false
 
-  constructor(public items: FeedViewPost[] = []) {}
-
-  get _reactKey() {
-    const rootItem = this.isFlattenedReply ? this.items[1] : this.items[0]
-    return `slice-${rootItem.post.uri}-${
-      rootItem.reason?.indexedAt || rootItem.post.indexedAt
-    }`
-  }
+  constructor(public items: FeedViewPost[], public _reactKey: string) {}
 
   get uri() {
     if (this.isFlattenedReply) {
@@ -118,28 +111,34 @@ export class FeedViewPostsSlice {
 }
 
 export class NoopFeedTuner {
-  reset() {}
+  private keyCounter = 0
+
+  reset() {
+    this.keyCounter = 0
+  }
   tune(
     feed: FeedViewPost[],
-    _tunerFns: FeedTunerFn[] = [],
     _opts?: {dryRun: boolean; maintainOrder: boolean},
   ): FeedViewPostsSlice[] {
-    return feed.map(item => new FeedViewPostsSlice([item]))
+    return feed.map(
+      item => new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
+    )
   }
 }
 
 export class FeedTuner {
+  private keyCounter = 0
   seenUris: Set<string> = new Set()
 
-  constructor() {}
+  constructor(public tunerFns: FeedTunerFn[]) {}
 
   reset() {
+    this.keyCounter = 0
     this.seenUris.clear()
   }
 
   tune(
     feed: FeedViewPost[],
-    tunerFns: FeedTunerFn[] = [],
     {dryRun, maintainOrder}: {dryRun: boolean; maintainOrder: boolean} = {
       dryRun: false,
       maintainOrder: false,
@@ -148,7 +147,9 @@ export class FeedTuner {
     let slices: FeedViewPostsSlice[] = []
 
     if (maintainOrder) {
-      slices = feed.map(item => new FeedViewPostsSlice([item]))
+      slices = feed.map(
+        item => new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
+      )
     } else {
       // arrange the posts into thread slices
       for (let i = feed.length - 1; i >= 0; i--) {
@@ -164,12 +165,14 @@ export class FeedTuner {
             continue
           }
         }
-        slices.unshift(new FeedViewPostsSlice([item]))
+        slices.unshift(
+          new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
+        )
       }
     }
 
     // run the custom tuners
-    for (const tunerFn of tunerFns) {
+    for (const tunerFn of this.tunerFns) {
       slices = tunerFn(this, slices.slice())
     }
 

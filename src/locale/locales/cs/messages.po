@@ -21,23 +21,12 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:410
-#: src/view/shell/desktop/RightNav.tsx:158
-#: src/view/shell/Drawer.tsx:527
-msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr ""
-
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
 msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgid "{0} {purposeLabel} List"
-msgstr ""
-
-#: src/view/shell/desktop/RightNav.tsx:141
-#: src/view/shell/Drawer.tsx:504
-msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
 #: src/view/screens/Search/Search.tsx:86
@@ -61,12 +50,12 @@ msgid "A new version of the app is available. Please update to continue using th
 msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:299
-#: src/view/screens/Settings.tsx:422
+#: src/view/screens/Settings.tsx:410
 msgid "Accessibility"
 msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:161
-#: src/view/screens/Settings.tsx:289
+#: src/view/screens/Settings.tsx:288
 msgid "Account"
 msgstr ""
 
@@ -88,8 +77,8 @@ msgstr ""
 msgid "Add a user to this list"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:358
-#: src/view/screens/Settings.tsx:367
+#: src/view/screens/Settings.tsx:357
+#: src/view/screens/Settings.tsx:366
 msgid "Add account"
 msgstr ""
 
@@ -140,7 +129,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:574
+#: src/view/screens/Settings.tsx:562
 msgid "Advanced"
 msgstr ""
 
@@ -172,7 +161,7 @@ msgstr ""
 msgid "App Language"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:594
+#: src/view/screens/Settings.tsx:582
 msgid "App passwords"
 msgstr ""
 
@@ -180,7 +169,7 @@ msgstr ""
 msgid "App Passwords"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:437
+#: src/view/screens/Settings.tsx:425
 msgid "Appearance"
 msgstr ""
 
@@ -205,7 +194,7 @@ msgid "Artistic or non-erotic nudity."
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:145
-#: src/view/com/auth/login/ChooseAccountForm.tsx:122
+#: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
 #: src/view/com/auth/login/LoginForm.tsx:251
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
@@ -217,7 +206,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:466
+#: src/view/screens/Settings.tsx:454
 msgid "Basics"
 msgstr ""
 
@@ -226,7 +215,7 @@ msgstr ""
 msgid "Birthday"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:315
+#: src/view/screens/Settings.tsx:314
 msgid "Birthday:"
 msgstr ""
 
@@ -291,7 +280,7 @@ msgstr ""
 msgid "Bluesky.Social"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:723
+#: src/view/screens/Settings.tsx:711
 msgid "Build version {0} {1}"
 msgstr ""
 
@@ -359,12 +348,12 @@ msgstr ""
 msgid "Cancel waitlist signup"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:309
+#: src/view/screens/Settings.tsx:308
 msgid "Change"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:606
-#: src/view/screens/Settings.tsx:615
+#: src/view/screens/Settings.tsx:594
+#: src/view/screens/Settings.tsx:603
 msgid "Change handle"
 msgstr ""
 
@@ -408,19 +397,19 @@ msgstr ""
 msgid "Choose your password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:699
+#: src/view/screens/Settings.tsx:687
 msgid "Clear all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:701
+#: src/view/screens/Settings.tsx:689
 msgid "Clear all legacy storage data (restart after this)"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:711
+#: src/view/screens/Settings.tsx:699
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:713
+#: src/view/screens/Settings.tsx:701
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -561,7 +550,7 @@ msgstr ""
 msgid "Custom domain"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:620
+#: src/view/screens/Settings.tsx:608
 msgid "Danger Zone"
 msgstr ""
 
@@ -569,7 +558,7 @@ msgstr ""
 #~ msgid "Dark"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:627
+#: src/view/screens/Settings.tsx:615
 msgid "Delete account"
 msgstr ""
 
@@ -591,7 +580,7 @@ msgstr ""
 msgid "Delete my account"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:637
+#: src/view/screens/Settings.tsx:625
 msgid "Delete my account…"
 msgstr ""
 
@@ -618,7 +607,7 @@ msgstr ""
 msgid "Dev Server"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:642
+#: src/view/screens/Settings.tsx:630
 msgid "Developer Tools"
 msgstr ""
 
@@ -677,7 +666,7 @@ msgid "Edit list details"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:367
-#: src/view/screens/SavedFeeds.tsx:75
+#: src/view/screens/SavedFeeds.tsx:85
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -712,7 +701,7 @@ msgstr ""
 msgid "Email Updated"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:293
+#: src/view/screens/Settings.tsx:292
 msgid "Email:"
 msgstr ""
 
@@ -757,7 +746,7 @@ msgstr ""
 msgid "Failed to load recommended feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:558
+#: src/view/screens/Feeds.tsx:559
 msgid "Feed offline"
 msgstr ""
 
@@ -765,12 +754,12 @@ msgstr ""
 msgid "Feed Preferences"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:64
+#: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:411
 msgid "Feedback"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:474
+#: src/view/screens/Feeds.tsx:475
 #: src/view/shell/bottom-bar/BottomBar.tsx:169
 #: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:328
@@ -782,7 +771,7 @@ msgstr ""
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:132
+#: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr ""
 
@@ -884,7 +873,7 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:93
+#: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:421
 msgid "Help"
 msgstr ""
@@ -901,6 +890,26 @@ msgstr ""
 msgid "Hide user list"
 msgstr ""
 
+#: src/view/com/posts/FeedErrorMessage.tsx:101
+msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:89
+msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:95
+msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:92
+msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:86
+msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
+msgstr ""
+
 #: src/view/shell/bottom-bar/BottomBar.tsx:125
 #: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:275
@@ -908,9 +917,9 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:71
+#: src/view/com/pager/FeedsTabBarMobile.tsx:99
 #: src/view/screens/PreferencesHomeFeed.tsx:95
-#: src/view/screens/Settings.tsx:486
+#: src/view/screens/Settings.tsx:474
 msgid "Home Feed Preferences"
 msgstr ""
 
@@ -953,12 +962,12 @@ msgstr ""
 msgid "Invalid username or password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:386
+#: src/view/screens/Settings.tsx:385
 msgid "Invite"
 msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:91
-#: src/view/screens/Settings.tsx:374
+#: src/view/screens/Settings.tsx:373
 msgid "Invite a Friend"
 msgstr ""
 
@@ -991,7 +1000,7 @@ msgstr ""
 msgid "Language Settings"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:546
+#: src/view/screens/Settings.tsx:534
 msgid "Languages"
 msgstr ""
 
@@ -1031,7 +1040,7 @@ msgstr ""
 #~ msgid "Light"
 #~ msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:625
+#: src/view/screens/ProfileFeed.tsx:626
 msgid "Like this feed"
 msgstr ""
 
@@ -1059,7 +1068,7 @@ msgstr ""
 msgid "Load more posts"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:120
+#: src/view/screens/Notifications.tsx:130
 msgid "Load new notifications"
 msgstr ""
 
@@ -1075,11 +1084,11 @@ msgstr ""
 msgid "Local dev server"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:104
+#: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:477
+#: src/view/screens/ProfileFeed.tsx:478
 msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
 msgstr ""
 
@@ -1092,7 +1101,7 @@ msgid "Menu"
 msgstr ""
 
 #: src/view/screens/Moderation.tsx:51
-#: src/view/screens/Settings.tsx:568
+#: src/view/screens/Settings.tsx:556
 #: src/view/shell/desktop/LeftNav.tsx:400
 #: src/view/shell/Drawer.tsx:346
 #: src/view/shell/Drawer.tsx:347
@@ -1108,7 +1117,7 @@ msgid "More feeds"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:506
-#: src/view/screens/ProfileFeed.tsx:367
+#: src/view/screens/ProfileFeed.tsx:368
 #: src/view/screens/ProfileList.tsx:506
 msgid "More options"
 msgstr ""
@@ -1161,7 +1170,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:525
+#: src/view/screens/Settings.tsx:513
 msgid "My Saved Feeds"
 msgstr ""
 
@@ -1179,9 +1188,9 @@ msgid "New"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:187
-#: src/view/screens/Feeds.tsx:509
-#: src/view/screens/Profile.tsx:380
-#: src/view/screens/ProfileFeed.tsx:447
+#: src/view/screens/Feeds.tsx:510
+#: src/view/screens/Profile.tsx:381
+#: src/view/screens/ProfileFeed.tsx:448
 #: src/view/screens/ProfileList.tsx:199
 #: src/view/screens/ProfileList.tsx:231
 #: src/view/shell/desktop/LeftNav.tsx:255
@@ -1212,7 +1221,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:618
+#: src/view/screens/ProfileFeed.tsx:619
 #: src/view/screens/ProfileList.tsx:632
 msgid "No description"
 msgstr ""
@@ -1221,7 +1230,7 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "No results found for \"{query}\""
 msgstr ""
 
@@ -1246,8 +1255,8 @@ msgstr ""
 msgid "Not Applicable."
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:87
-#: src/view/screens/Notifications.tsx:111
+#: src/view/screens/Notifications.tsx:97
+#: src/view/screens/Notifications.tsx:121
 #: src/view/shell/bottom-bar/BottomBar.tsx:196
 #: src/view/shell/desktop/LeftNav.tsx:364
 #: src/view/shell/Drawer.tsx:299
@@ -1267,52 +1276,47 @@ msgstr ""
 msgid "One or more images is missing alt text."
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:51
+#: src/view/com/pager/FeedsTabBarMobile.tsx:79
 msgid "Open navigation"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:538
+#: src/view/screens/Settings.tsx:526
 msgid "Opens configurable language settings"
-msgstr ""
-
-#: src/view/shell/desktop/RightNav.tsx:146
-#: src/view/shell/Drawer.tsx:509
-msgid "Opens list of invite codes"
 msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:279
 msgid "Opens modal for using custom domain"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:563
+#: src/view/screens/Settings.tsx:551
 msgid "Opens moderation settings"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:519
+#: src/view/screens/Settings.tsx:507
 msgid "Opens screen with all saved feeds"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:586
+#: src/view/screens/Settings.tsx:574
 msgid "Opens the app password settings page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:478
+#: src/view/screens/Settings.tsx:466
 msgid "Opens the home feed preferences"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:669
+#: src/view/screens/Settings.tsx:657
 msgid "Opens the storybook page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:649
+#: src/view/screens/Settings.tsx:637
 msgid "Opens the system log page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:499
+#: src/view/screens/Settings.tsx:487
 msgid "Opens the threads preferences"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:109
+#: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr ""
 
@@ -1349,7 +1353,7 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:79
+#: src/view/screens/SavedFeeds.tsx:89
 msgid "Pinned Feeds"
 msgstr ""
 
@@ -1415,7 +1419,7 @@ msgstr ""
 msgid "Prioritize Your Follows"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:75
+#: src/view/shell/desktop/RightNav.tsx:76
 msgid "Privacy"
 msgstr ""
 
@@ -1434,7 +1438,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:794
+#: src/view/screens/Settings.tsx:782
 msgid "Protect your account by verifying your email."
 msgstr ""
 
@@ -1476,7 +1480,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:92
+#: src/view/com/feeds/FeedSourceCard.tsx:108
 msgid "Remove {0} from my feeds?"
 msgstr ""
 
@@ -1484,11 +1488,11 @@ msgstr ""
 msgid "Remove account"
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:106
+#: src/view/com/posts/FeedErrorMessage.tsx:118
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:91
+#: src/view/com/feeds/FeedSourceCard.tsx:107
 #: src/view/screens/ProfileFeed.tsx:278
 msgid "Remove from my feeds"
 msgstr ""
@@ -1501,7 +1505,7 @@ msgstr ""
 msgid "Remove image preview"
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:107
+#: src/view/com/posts/FeedErrorMessage.tsx:119
 msgid "Remove this feed from your saved feeds?"
 msgstr ""
 
@@ -1565,7 +1569,7 @@ msgstr ""
 msgid "Reset code"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:691
+#: src/view/screens/Settings.tsx:679
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -1573,15 +1577,15 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:681
+#: src/view/screens/Settings.tsx:669
 msgid "Reset preferences state"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:689
+#: src/view/screens/Settings.tsx:677
 msgid "Resets the onboarding state"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:679
+#: src/view/screens/Settings.tsx:667
 msgid "Resets the preferences state"
 msgstr ""
 
@@ -1628,7 +1632,7 @@ msgstr ""
 msgid "Save image crop"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:105
+#: src/view/screens/SavedFeeds.tsx:122
 msgid "Saved Feeds"
 msgstr ""
 
@@ -1726,7 +1730,7 @@ msgstr ""
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr ""
 
-#: src/view/screens/Settings.tsx:280
+#: src/view/screens/Settings.tsx:279
 #: src/view/shell/desktop/LeftNav.tsx:436
 #: src/view/shell/Drawer.tsx:380
 #: src/view/shell/Drawer.tsx:381
@@ -1751,7 +1755,7 @@ msgstr ""
 #~ msgid "Share link"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:319
+#: src/view/screens/Settings.tsx:318
 msgid "Show"
 msgstr ""
 
@@ -1795,11 +1799,11 @@ msgstr ""
 msgid "Sign In"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:37
+#: src/view/com/auth/login/ChooseAccountForm.tsx:44
 msgid "Sign in as {0}"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:94
+#: src/view/com/auth/login/ChooseAccountForm.tsx:118
 #: src/view/com/auth/login/Login.tsx:100
 msgid "Sign in as..."
 msgstr ""
@@ -1823,7 +1827,7 @@ msgstr ""
 msgid "Sign up or sign in to join the conversation"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:330
+#: src/view/screens/Settings.tsx:329
 msgid "Signed in as"
 msgstr ""
 
@@ -1848,11 +1852,11 @@ msgstr ""
 msgid "Staging"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:735
+#: src/view/screens/Settings.tsx:723
 msgid "Status page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:671
+#: src/view/screens/Settings.tsx:659
 msgid "Storybook"
 msgstr ""
 
@@ -1881,7 +1885,7 @@ msgstr ""
 #~ msgid "System"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:651
+#: src/view/screens/Settings.tsx:639
 msgid "System log"
 msgstr ""
 
@@ -1889,7 +1893,7 @@ msgstr ""
 msgid "Tall"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:84
+#: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
 msgstr ""
 
@@ -1962,7 +1966,7 @@ msgid "This warning is only available for posts with media attached."
 msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings.tsx:508
+#: src/view/screens/Settings.tsx:496
 msgid "Thread Preferences"
 msgstr ""
 
@@ -2069,15 +2073,15 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:755
+#: src/view/screens/Settings.tsx:743
 msgid "Verify email"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:780
+#: src/view/screens/Settings.tsx:768
 msgid "Verify my email"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:789
+#: src/view/screens/Settings.tsx:777
 msgid "Verify My Email"
 msgstr ""
 
@@ -2100,6 +2104,10 @@ msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:125
 msgid "We're so excited to have you join us!"
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:98
+msgid "We're sorry, but this content is not viewable without a Bluesky account."
 msgstr ""
 
 #: src/view/screens/Search/Search.tsx:236
@@ -2157,7 +2165,7 @@ msgstr ""
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:92
+#: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
 msgstr ""
 
@@ -2165,7 +2173,7 @@ msgstr ""
 msgid "You don't have any saved feeds!"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:118
+#: src/view/screens/SavedFeeds.tsx:135
 msgid "You don't have any saved feeds."
 msgstr ""
 
@@ -2226,12 +2234,6 @@ msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:53
 msgid "Your hosting provider"
-msgstr ""
-
-#: src/view/screens/Settings.tsx:405
-#: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:523
-msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59

@@ -23,7 +23,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
   return useQuery<string, Error>({
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY(didOrHandle || ''),
     async queryFn() {
       if (!didOrHandle) {

@@ -62,7 +62,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       } else {
         if (tab === 'Notifications') {
           // fetch new notifs on view
-          queryClient.invalidateQueries({
+          queryClient.resetQueries({
             queryKey: NOTIFS_RQKEY(),
           })
         }

@@ -353,6 +353,7 @@ export function ProfileFeedScreenInner({
               style={styles.btn}
             />
             <Button
+              testID={isPinned ? 'unpinBtn' : 'pinBtn'}
               disabled={isPinPending || isUnpinPending}
               type={isPinned ? 'default' : 'inverted'}
               label={isPinned ? 'Unpin' : 'Pin to home'}
@@ -501,7 +502,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 

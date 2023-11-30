@@ -3,7 +3,6 @@ import {
   AppBskyGraphGetList,
   AppBskyGraphList,
   AppBskyGraphDefs,
-  BskyAgent,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
@@ -75,13 +74,9 @@ export function useListCreateMutation() {
         )
 
         // wait for the appview to update
-        await whenAppViewReady(
-          getAgent(),
-          res.uri,
-          (v: AppBskyGraphGetList.Response) => {
-            return typeof v?.data?.list.uri === 'string'
-          },
-        )
+        await whenAppViewReady(res.uri, (v: AppBskyGraphGetList.Response) => {
+          return typeof v?.data?.list.uri === 'string'
+        })
         return res
       },
       onSuccess() {
@@ -142,16 +137,12 @@ export function useListMetadataMutation() {
       ).data
 
       // wait for the appview to update
-      await whenAppViewReady(
-        getAgent(),
-        res.uri,
-        (v: AppBskyGraphGetList.Response) => {
-          const list = v.data.list
-          return (
-            list.name === record.name && list.description === record.description
-          )
-        },
-      )
+      await whenAppViewReady(res.uri, (v: AppBskyGraphGetList.Response) => {
+        const list = v.data.list
+        return (
+          list.name === record.name && list.description === record.description
+        )
+      })
       return res
     },
     onSuccess(data, variables) {
@@ -216,13 +207,9 @@ export function useListDeleteMutation() {
       }
 
       // wait for the appview to update
-      await whenAppViewReady(
-        getAgent(),
-        uri,
-        (v: AppBskyGraphGetList.Response) => {
-          return !v?.success
-        },
-      )
+      await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
+        return !v?.success
+      })
     },
     onSuccess() {
       invalidateMyLists(queryClient)
@@ -271,7 +258,6 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
   uri: string,
   fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {
@@ -280,7 +266,7 @@ async function whenAppViewReady(
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.graph.getList({
+      getAgent().app.bsky.graph.getList({
         list: uri,
         limit: 1,
       }),

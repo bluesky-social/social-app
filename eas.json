@@ -11,28 +11,19 @@
       "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
+      "channel": "development",
       "ios": {
         "simulator": true,
         "resourceClass": "large"
-      },
-      "channel": "development"
-    },
-    "development-device": {
-      "extends": "base",
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "large"
-      },
-      "channel": "development"
+      }
     },
     "preview": {
       "extends": "base",
       "distribution": "internal",
+      "channel": "preview",
       "ios": {
         "resourceClass": "large"
-      },
-      "channel": "preview"
+      }
     },
     "production": {
       "extends": "base",
@@ -40,14 +31,6 @@
         "resourceClass": "large"
       },
       "channel": "production"
-    },
-    "dev-android-apk": {
-      "extends": "base",
-      "developmentClient": true,
-      "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      }
     }
   },
   "submit": {

@@ -18,6 +18,9 @@ import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useSession} from '#/state/session'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {isWeb} from 'platform/detection'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
@@ -26,11 +29,36 @@ export function FeedsTabBar(
   const {isSandbox, hasSession} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
-  const feeds = usePinnedFeedsInfos()
+  const navigation = useNavigation<NavigationProp>()
+  const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
   const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
-  const items = feeds.map(f => f.displayName)
+  const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
+  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
+  const items = showFeedsLinkInTabBar
+    ? pinnedDisplayNames.concat('Feeds ✨')
+    : pinnedDisplayNames
+
+  const onPressFeedsLink = React.useCallback(() => {
+    if (isWeb) {
+      navigation.navigate('Feeds')
+    } else {
+      navigation.navigate('FeedsTab')
+      navigation.popToTop()
+    }
+  }, [navigation])
+
+  const onSelect = React.useCallback(
+    (index: number) => {
+      if (showFeedsLinkInTabBar && index === items.length - 1) {
+        onPressFeedsLink()
+      } else if (props.onSelect) {
+        props.onSelect(index)
+      }
+    },
+    [items.length, onPressFeedsLink, props, showFeedsLinkInTabBar],
+  )
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -84,7 +112,7 @@ export function FeedsTabBar(
           key={items.join(',')}
           onPressSelected={props.onPressSelected}
           selectedPage={props.selectedPage}
-          onSelect={props.onSelect}
+          onSelect={onSelect}
           testID={props.testID}
           items={items}
           indicatorColor={pal.colors.link}

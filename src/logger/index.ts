@@ -288,16 +288,13 @@ export class Logger {
  */
 export const logger = new Logger()
 
-/**
- * Report to console in dev, Sentry in prod, nothing in test.
- */
 if (env.IS_DEV && !env.IS_TEST) {
   logger.addTransport(consoleTransport)
 
   /**
-   * Uncomment this to test Sentry in dev
+   * Comment this out to disable Sentry transport in dev
    */
-  // logger.addTransport(sentryTransport);
+  logger.addTransport(sentryTransport)
 } else if (env.IS_PROD) {
-  // logger.addTransport(sentryTransport)
+  logger.addTransport(sentryTransport)
 }
