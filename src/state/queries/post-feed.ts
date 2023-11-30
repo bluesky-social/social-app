@@ -43,9 +43,7 @@ export interface FeedParams {
   mergeFeedSources?: string[]
 }
 
-type RQPageParam =
-  | {cursor: string | undefined; api: FeedAPI; tuner: FeedTuner | NoopFeedTuner}
-  | undefined
+type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
 
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
   return ['post-feed', feedDesc, params || {}]
@@ -66,6 +64,12 @@ export interface FeedPostSlice {
   items: FeedPostSliceItem[]
 }
 
+export interface FeedPageUnselected {
+  api: FeedAPI
+  cursor: string | undefined
+  feed: AppBskyFeedDefs.FeedViewPost[]
+}
+
 export interface FeedPage {
   api: FeedAPI
   tuner: FeedTuner | NoopFeedTuner
@@ -83,30 +87,27 @@ export function usePostFeedQuery(
   const enabled = opts?.enabled !== false
 
   return useInfiniteQuery<
-    FeedPage,
+    FeedPageUnselected,
     Error,
     InfiniteData<FeedPage>,
     QueryKey,
     RQPageParam
   >({
+    enabled,
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, pageParam})
 
-      const {api, tuner, cursor} = pageParam
+      const {api, cursor} = pageParam
         ? pageParam
         : {
             api: createApi(feedDesc, params || {}, feedTuners),
-            tuner: params?.disableTuner
-              ? new NoopFeedTuner()
-              : new FeedTuner(feedTuners),
             cursor: undefined,
           }
 
       const res = await api.fetch({cursor, limit: 30})
       precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
-      const slices = tuner.tune(res.feed)
 
       /*
        * If this is a public view, we need to check if posts fail moderation.
@@ -115,69 +116,60 @@ export function usePostFeedQuery(
        * some not.
        */
       if (!getAgent().session) {
-        // assume false
-        let somePostsPassModeration = false
-
-        for (const slice of slices) {
-          for (let i = 0; i < slice.items.length; i++) {
-            const item = slice.items[i]
-            const moderationOpts = getModerationOpts({
-              userDid: '',
-              preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
-            })
-            const moderation = moderatePost(item.post, moderationOpts)
-
-            if (!moderation.content.filter) {
-              // we have a sfw post
-              somePostsPassModeration = true
-            }
-          }
-        }
-
-        if (!somePostsPassModeration) {
-          throw new Error(KnownError.FeedNSFPublic)
-        }
+        assertSomePostsPassModeration(res.feed)
       }
 
       return {
         api,
-        tuner,
         cursor: res.cursor,
-        slices: slices.map(slice => ({
-          _reactKey: slice._reactKey,
-          rootUri: slice.rootItem.post.uri,
-          isThread:
-            slice.items.length > 1 &&
-            slice.items.every(
-              item => item.post.author.did === slice.items[0].post.author.did,
-            ),
-          items: slice.items
-            .map((item, i) => {
-              if (
-                AppBskyFeedPost.isRecord(item.post.record) &&
-                AppBskyFeedPost.validateRecord(item.post.record).success
-              ) {
-                return {
-                  _reactKey: `${slice._reactKey}-${i}`,
-                  uri: item.post.uri,
-                  post: item.post,
-                  record: item.post.record,
-                  reason: i === 0 && slice.source ? slice.source : item.reason,
-                }
-              }
-              return undefined
-            })
-            .filter(Boolean) as FeedPostSliceItem[],
-        })),
+        feed: res.feed,
       }
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => ({
       api: lastPage.api,
-      tuner: lastPage.tuner,
       cursor: lastPage.cursor,
     }),
-    enabled,
+    select(data) {
+      const tuner = params?.disableTuner
+        ? new NoopFeedTuner()
+        : new FeedTuner(feedTuners)
+      return {
+        pageParams: data.pageParams,
+        pages: data.pages.map(page => ({
+          api: page.api,
+          tuner,
+          cursor: page.cursor,
+          slices: tuner.tune(page.feed).map(slice => ({
+            _reactKey: slice._reactKey,
+            rootUri: slice.rootItem.post.uri,
+            isThread:
+              slice.items.length > 1 &&
+              slice.items.every(
+                item => item.post.author.did === slice.items[0].post.author.did,
+              ),
+            items: slice.items
+              .map((item, i) => {
+                if (
+                  AppBskyFeedPost.isRecord(item.post.record) &&
+                  AppBskyFeedPost.validateRecord(item.post.record).success
+                ) {
+                  return {
+                    _reactKey: `${slice._reactKey}-${i}`,
+                    uri: item.post.uri,
+                    post: item.post,
+                    record: item.post.record,
+                    reason:
+                      i === 0 && slice.source ? slice.source : item.reason,
+                  }
+                }
+                return undefined
+              })
+              .filter(Boolean) as FeedPostSliceItem[],
+          })),
+        })),
+      }
+    },
   })
 }
 
@@ -235,8 +227,10 @@ function createApi(
 export function findPostInQueryData(
   queryClient: QueryClient,
   uri: string,
-): FeedPostSliceItem | undefined {
-  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+): AppBskyFeedDefs.FeedViewPost | undefined {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<FeedPageUnselected>
+  >({
     queryKey: ['post-feed'],
   })
   for (const [_queryKey, queryData] of queryDatas) {
@@ -244,14 +238,34 @@ export function findPostInQueryData(
       continue
     }
     for (const page of queryData?.pages) {
-      for (const slice of page.slices) {
-        for (const item of slice.items) {
-          if (item.uri === uri) {
-            return item
-          }
+      for (const item of page.feed) {
+        if (item.post.uri === uri) {
+          return item
         }
       }
     }
   }
   return undefined
+}
+
+function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
+  // assume false
+  let somePostsPassModeration = false
+
+  for (const item of feed) {
+    const moderationOpts = getModerationOpts({
+      userDid: '',
+      preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
+    })
+    const moderation = moderatePost(item.post, moderationOpts)
+
+    if (!moderation.content.filter) {
+      // we have a sfw post
+      somePostsPassModeration = true
+    }
+  }
+
+  if (!somePostsPassModeration) {
+    throw new Error(KnownError.FeedNSFPublic)
+  }
 }
