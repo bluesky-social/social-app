@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -18,6 +18,10 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
+import {getAgent} from '#/state/session'
+import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
+import {getModerationOpts} from '#/state/queries/preferences/moderation'
+import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 
 type ActorDid = string
 type AuthorFilter =
@@ -103,6 +107,38 @@ export function usePostFeedQuery(
       const res = await api.fetch({cursor, limit: 30})
       precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
       const slices = tuner.tune(res.feed)
+
+      /*
+       * If this is a public view, we need to check if posts fail moderation.
+       * If all fail, we throw an error. If only some fail, we continue and let
+       * moderations happen later, which results in some posts being shown and
+       * some not.
+       */
+      if (!getAgent().session) {
+        // assume false
+        let somePostsPassModeration = false
+
+        for (const slice of slices) {
+          for (let i = 0; i < slice.items.length; i++) {
+            const item = slice.items[i]
+            const moderationOpts = getModerationOpts({
+              userDid: '',
+              preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
+            })
+            const moderation = moderatePost(item.post, moderationOpts)
+
+            if (!moderation.content.filter) {
+              // we have a sfw post
+              somePostsPassModeration = true
+            }
+          }
+        }
+
+        if (!somePostsPassModeration) {
+          throw new Error(KnownError.FeedNSFPublic)
+        }
+      }
+
       return {
         api,
         tuner,
