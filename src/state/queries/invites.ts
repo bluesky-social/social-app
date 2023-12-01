@@ -3,6 +3,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {cleanError} from '#/lib/strings/errors'
 
 function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
   return invite.available - invite.uses.length > 0 && !invite.disabled
@@ -17,7 +18,24 @@ export function useInviteCodesQuery() {
     staleTime: STALE.HOURS.ONE,
     queryKey: ['inviteCodes'],
     queryFn: async () => {
-      const res = await getAgent().com.atproto.server.getAccountInviteCodes({})
+      const res = await getAgent()
+        .com.atproto.server.getAccountInviteCodes({})
+        .catch(e => {
+          if (cleanError(e) === 'Bad token scope') {
+            return null
+          } else {
+            throw e
+          }
+        })
+
+      if (res === null) {
+        return {
+          disabled: true,
+          all: [],
+          available: [],
+          used: [],
+        }
+      }
 
       if (!res.data?.codes) {
         throw new Error(`useInviteCodesQuery: no codes returned`)
@@ -27,6 +45,7 @@ export function useInviteCodesQuery() {
       const used = res.data.codes.filter(code => !isInviteAvailable(code))
 
       return {
+        disabled: false,
         all: [...available, ...used],
         available,
         used,

@@ -42,7 +42,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
 import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Trans, msg} from '@lingui/macro'
+import {Plural, Trans, msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
@@ -486,23 +486,28 @@ function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0
   const {openModal} = useModalControls()
+  const {_} = useLingui()
+
   const onPress = React.useCallback(() => {
     track('Menu:ItemClicked', {url: '#invite-codes'})
     setDrawerOpen(false)
     openModal({name: 'invite-codes'})
   }, [openModal, track, setDrawerOpen])
+
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"
       style={[styles.inviteCodes, style]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={
-        invitesAvailable === 1
-          ? 'Invite codes: 1 available'
-          : `Invite codes: ${invitesAvailable} available`
-      }
-      accessibilityHint="Opens list of invite codes">
+      accessibilityLabel={_(
+        plural(invitesAvailable, {
+          one: 'Invite codes: # available',
+          other: 'Invite codes: # available',
+        }),
+      )}
+      accessibilityHint={_(msg`Opens list of invite codes`)}
+      disabled={invites?.disabled}>
       <FontAwesomeIcon
         icon="ticket"
         style={[
@@ -514,8 +519,17 @@ function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
       <Text
         type="lg-medium"
         style={invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {formatCount(invitesAvailable)} invite{' '}
-        {pluralize(invitesAvailable, 'code')}
+        {invites?.disabled ? (
+          <Trans>
+            Your invite codes are hidden when logged in using an App Password
+          </Trans>
+        ) : (
+          <Plural
+            value={formatCount(invitesAvailable)}
+            one="# invite code available"
+            other="# invite codes available"
+          />
+        )}
       </Text>
     </TouchableOpacity>
   )
@@ -592,10 +606,11 @@ const styles = StyleSheet.create({
     paddingLeft: 22,
     paddingVertical: 8,
     flexDirection: 'row',
-    alignItems: 'center',
   },
   inviteCodesIcon: {
     marginRight: 6,
+    flexShrink: 0,
+    marginTop: 2,
   },
 
   footer: {
