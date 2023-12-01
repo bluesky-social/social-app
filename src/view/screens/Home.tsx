@@ -14,13 +14,43 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
+import {save, load} from '#/lib/storage'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
+  const {isDesktop} = useWebMediaQueries()
+  const [lastActiveTab, setLastActiveTab] = React.useState<number | undefined>(
+    undefined,
+  )
 
-  if (preferences) {
-    return <HomeScreenReady {...props} preferences={preferences} />
+  React.useEffect(() => {
+    const loadLastActieTab = async () => {
+      try {
+        const savedTab = await load('lastActiveTab')
+        const tabIndex = savedTab ? parseInt(savedTab, 10) : 0
+        setLastActiveTab(tabIndex)
+      } catch {
+        setLastActiveTab(0)
+      }
+    }
+    // Ignoring lastActiveTab for desktop
+    if (isDesktop) {
+      setLastActiveTab(0)
+    } else {
+      loadLastActieTab()
+    }
+  }, [isDesktop])
+
+  if (preferences && lastActiveTab !== undefined) {
+    return (
+      <HomeScreenReady
+        {...props}
+        preferences={preferences}
+        lastActiveTab={lastActiveTab}
+      />
+    )
   } else {
     return (
       <View style={styles.loading}>
@@ -32,13 +62,15 @@ export function HomeScreen(props: Props) {
 
 function HomeScreenReady({
   preferences,
+  lastActiveTab,
 }: Props & {
   preferences: UsePreferencesQueryResponse
+  lastActiveTab: number
 }) {
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const [selectedPage, setSelectedPage] = React.useState(0)
+  const [selectedPage, setSelectedPage] = React.useState(lastActiveTab)
 
   /**
    * Used to ensure that we re-compute `customFeeds` AND force a re-render of
@@ -80,6 +112,7 @@ function HomeScreenReady({
     (index: number) => {
       setMinimalShellMode(false)
       setSelectedPage(index)
+      save('lastActiveTab', index)
       setDrawerSwipeDisabled(index > 0)
     },
     [setDrawerSwipeDisabled, setSelectedPage, setMinimalShellMode],
@@ -125,6 +158,7 @@ function HomeScreenReady({
     <Pager
       key={pinnedFeedOrderKey}
       testID="homeScreen"
+      initialPage={selectedPage > customFeeds.length ? 0 : selectedPage}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}
