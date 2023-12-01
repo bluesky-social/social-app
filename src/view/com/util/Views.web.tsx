@@ -51,6 +51,83 @@ export function CenteredView({
 
 export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   {
+    data,
+    contentOffset,
+    keyExtractor,
+    desktopFixedHeight,
+    renderItem,
+    style,
+    contentContainerStyle,
+    ...props
+  }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
+  ref: React.Ref<Animated.FlatList<ItemT>>,
+) {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+  if (!isMobile) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerScroll,
+    )
+  }
+  style = addStyle(style, {
+    // @ts-ignore web-only
+    contain: 'content',
+  })
+  if (contentOffset && contentOffset?.y !== 0) {
+    // NOTE
+    // we use paddingTop & contentOffset to space around the floating header
+    // but reactnative web puts the paddingTop on the wrong element (style instead of the contentContainer)
+    // so we manually correct it here
+    // -prf
+    style = addStyle(style, {
+      paddingTop: 0,
+    })
+    contentContainerStyle = addStyle(contentContainerStyle, {
+      paddingTop: Math.abs(contentOffset.y),
+    })
+  }
+  if (desktopFixedHeight) {
+    if (typeof desktopFixedHeight === 'number') {
+      // @ts-ignore Web only -prf
+      style = addStyle(style, {
+        height: `calc(100vh - ${desktopFixedHeight}px)`,
+      })
+    } else {
+      style = addStyle(style, styles.fixedHeight)
+    }
+    if (!isMobile) {
+      // NOTE
+      // react native web produces *three* wrapping divs
+      // the first two use the `style` prop and the innermost uses the
+      // `contentContainerStyle`. Unfortunately the stable-gutter style
+      // needs to be applied to only the "middle" of these. To hack
+      // around this, we set data-stable-gutters which can then be
+      // styled in our external CSS.
+      // -prf
+      // @ts-ignore web only -prf
+      props.dataSet = props.dataSet || {}
+      // @ts-ignore web only -prf
+      props.dataSet.stableGutters = '1'
+    }
+  }
+  return (
+    <Animated.ScrollView
+      {...props}
+      style={[style, {overflowY: 'auto'}]}
+      ref={ref}>
+      <View
+        style={[styles.contentContainer, contentContainerStyle, pal.border]}>
+        {data.map(item => (
+          <View key={keyExtractor(item)}>{renderItem({item})}</View>
+        ))}
+      </View>
+    </Animated.ScrollView>
+  )
+})
+
+export const FlatListOld = React.forwardRef(function FlatListImpl<ItemT>(
+  {
     contentContainerStyle,
     style,
     contentOffset,
