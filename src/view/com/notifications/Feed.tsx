@@ -35,7 +35,7 @@ export function Feed({
   const [isPTRing, setIsPTRing] = React.useState(false)
 
   const moderationOpts = useModerationOpts()
-  const {markAllRead, checkUnread} = useUnreadNotificationsApi()
+  const {checkUnread} = useUnreadNotificationsApi()
   const {
     data,
     isFetching,
@@ -47,15 +47,6 @@ export function Feed({
     fetchNextPage,
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
-  const firstItem = data?.pages[0]?.items[0]
-
-  // mark all read on fresh data
-  // (this will fire each time firstItem changes)
-  React.useEffect(() => {
-    if (firstItem) {
-      markAllRead()
-    }
-  }, [firstItem, markAllRead])
 
   const items = React.useMemo(() => {
     let arr: any[] = []

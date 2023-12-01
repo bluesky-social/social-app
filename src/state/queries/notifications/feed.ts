@@ -29,6 +29,7 @@ import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
 import {FeedPage} from './types'
 import {useMutedThreads} from '#/state/muted-threads'
+import {STALE} from '..'
 
 export type {NotificationType, FeedNotification, FeedPage} from './types'
 
@@ -54,23 +55,30 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     QueryKey,
     RQPageParam
   >({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      // for the first page, we check the cached page held by the unread-checker first
+      let page
       if (!pageParam) {
-        const cachedPage = unreads.getCachedUnreadPage()
-        if (cachedPage) {
-          return cachedPage
-        }
+        // for the first page, we check the cached page held by the unread-checker first
+        page = unreads.getCachedUnreadPage()
       }
-      // do a normal fetch
-      return fetchPage({
-        limit: PAGE_SIZE,
-        cursor: pageParam,
-        queryClient,
-        moderationOpts,
-        threadMutes,
-      })
+      if (!page) {
+        page = await fetchPage({
+          limit: PAGE_SIZE,
+          cursor: pageParam,
+          queryClient,
+          moderationOpts,
+          threadMutes,
+        })
+      }
+
+      // if the first page has an unread, mark all read
+      if (!pageParam && page.items[0] && !page.items[0].notification.isRead) {
+        unreads.markAllRead()
+      }
+
+      return page
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
