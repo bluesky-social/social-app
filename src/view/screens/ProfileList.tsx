@@ -159,7 +159,13 @@ function ProfileListScreenLoaded({
           isHeaderReady={true}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          {({
+            onScroll,
+            headerHeight,
+            isScrolledDown,
+            scrollElRef,
+            isFocused,
+          }) => (
             <FeedSection
               ref={feedSectionRef}
               feed={`list|${uri}`}
@@ -169,6 +175,7 @@ function ProfileListScreenLoaded({
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
+              isFocused={isFocused}
             />
           )}
           {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
@@ -519,10 +526,11 @@ interface FeedSectionProps {
   headerHeight: number
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown},
+    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown, isFocused},
     ref,
   ) {
     const queryClient = useQueryClient()
@@ -545,6 +553,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       <View>
         <Feed
           testID="listFeed"
+          enabled={isFocused}
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}

@@ -158,9 +158,9 @@ export function FeedPage({
     <View testID={testID} style={s.h100pct}>
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
+        enabled={isPageFocused}
         feed={feed}
         feedParams={feedParams}
-        enabled={isPageFocused}
         pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
         onScroll={onMainScroll}
