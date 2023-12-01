@@ -177,12 +177,13 @@ export function useIsFeedPublicQuery({uri}: {uri: string}) {
         })
         return Boolean(res.data.feed)
       } catch (e: any) {
-        const msg = e.toString() as string
-
-        if (msg.includes('missing jwt')) {
-          return false
-        } else if (msg.includes('This feed requires being logged-in')) {
-          // e.g. https://github.com/bluesky-social/atproto/blob/99ab1ae55c463e8d5321a1eaad07a175bdd56fea/packages/bsky/src/feed-gen/best-of-follows.ts#L13
+        /**
+         * This should be an `XRPCError`, but I can't safely import from
+         * `@atproto/xrpc` due to a depdency on node's `crypto` module.
+         *
+         * @see https://github.com/bluesky-social/atproto/blob/c17971a2d8e424cc7f10c071d97c07c08aa319cf/packages/xrpc/src/client.ts#L126
+         */
+        if (e?.status === 401) {
           return false
         }
 
