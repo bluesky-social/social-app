@@ -11,6 +11,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   runOnJS,
+  runOnUI,
   scrollTo,
   useAnimatedRef,
   AnimatedRef,
@@ -20,6 +21,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -120,36 +122,46 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     }
 
     const lastForcedScrollY = useSharedValue(0)
+    const adjustScrollForOtherPages = () => {
+      'worklet'
+      const currentScrollY = scrollY.value
+      const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
+      if (lastForcedScrollY.value !== forcedScrollY) {
+        lastForcedScrollY.value = forcedScrollY
+        const refs = scrollRefs.value
+        for (let i = 0; i < refs.length; i++) {
+          if (i !== currentPage) {
+            // This needs to run on the UI thread.
+            scrollTo(refs[i], 0, forcedScrollY, false)
+          }
+        }
+      }
+    }
+
+    const throttleTimeout = React.useRef(null)
+    const queueThrottledOnScroll = useNonReactiveCallback(() => {
+      if (!throttleTimeout.current) {
+        throttleTimeout.current = setTimeout(() => {
+          throttleTimeout.current = null
+
+          runOnUI(adjustScrollForOtherPages)()
+
+          const nextIsScrolledDown = scrollY.value > SCROLLED_DOWN_LIMIT
+          if (isScrolledDown !== nextIsScrolledDown) {
+            setIsScrolledDown(nextIsScrolledDown)
+          }
+        }, 80 /* Sync often enough you're unlikely to catch it unsynced */)
+      }
+    })
+
     const onScrollWorklet = React.useCallback(
       (e: NativeScrollEvent) => {
         'worklet'
         const nextScrollY = e.contentOffset.y
         scrollY.value = nextScrollY
-
-        const forcedScrollY = Math.min(nextScrollY, headerOnlyHeight)
-        if (lastForcedScrollY.value !== forcedScrollY) {
-          lastForcedScrollY.value = forcedScrollY
-          const refs = scrollRefs.value
-          for (let i = 0; i < refs.length; i++) {
-            if (i !== currentPage) {
-              scrollTo(refs[i], 0, forcedScrollY, false)
-            }
-          }
-        }
-
-        const nextIsScrolledDown = nextScrollY > SCROLLED_DOWN_LIMIT
-        if (isScrolledDown !== nextIsScrolledDown) {
-          runOnJS(setIsScrolledDown)(nextIsScrolledDown)
-        }
+        runOnJS(queueThrottledOnScroll)()
       },
-      [
-        currentPage,
-        headerOnlyHeight,
-        isScrolledDown,
-        scrollRefs,
-        scrollY,
-        lastForcedScrollY,
-      ],
+      [scrollY, queueThrottledOnScroll],
     )
 
     const onPageSelectedInner = React.useCallback(
