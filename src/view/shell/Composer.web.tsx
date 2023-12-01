@@ -25,10 +25,10 @@ export function Composer({}: {winHeight: number}) {
       style={styles.mask}
       aria-modal
       accessibilityViewIsModal
-      entering={FadeIn.duration(150)}
+      entering={FadeIn.duration(100)}
       exiting={FadeOut}>
       <Animated.View
-        entering={FadeInDown.duration(200)}
+        entering={FadeInDown.duration(150)}
         exiting={FadeOut}
         style={[
           styles.container,

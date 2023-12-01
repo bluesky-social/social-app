@@ -21,9 +21,7 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr "यह चेतावनी केवल मीडिया वाले पोस्ट के लिए उपलब्ध है।"
 
-#: src/view/screens/Settings.tsx:408
 #: src/view/shell/desktop/RightNav.tsx:158
-#: src/view/shell/Drawer.tsx:527
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -36,8 +34,17 @@ msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} सूची"
 
 #: src/view/shell/desktop/RightNav.tsx:141
-#: src/view/shell/Drawer.tsx:504
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:408
+#: src/view/shell/Drawer.tsx:522
+msgid "{invitesAvailable} invite code available"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:410
+#: src/view/shell/Drawer.tsx:524
+msgid "{invitesAvailable} invite codes available"
 msgstr ""
 
 #: src/view/screens/Search/Search.tsx:86
@@ -61,7 +68,7 @@ msgid "A new version of the app is available. Please update to continue using th
 msgstr "ऐप का एक नया संस्करण उपलब्ध है. कृपया ऐप का उपयोग जारी रखने के लिए अपडेट करें।"
 
 #: src/view/com/modals/EditImage.tsx:299
-#: src/view/screens/Settings.tsx:420
+#: src/view/screens/Settings.tsx:418
 msgid "Accessibility"
 msgstr "प्रवेर्शयोग्यता"
 
@@ -140,7 +147,7 @@ msgstr "पसंद की संख्या को समायोजित �
 msgid "Adult Content"
 msgstr "वयस्क सामग्री"
 
-#: src/view/screens/Settings.tsx:572
+#: src/view/screens/Settings.tsx:570
 msgid "Advanced"
 msgstr "विकसित"
 
@@ -172,7 +179,7 @@ msgstr "और"
 msgid "App Language"
 msgstr "ऐप भाषा"
 
-#: src/view/screens/Settings.tsx:592
+#: src/view/screens/Settings.tsx:590
 msgid "App passwords"
 msgstr "ऐप पासवर्ड"
 
@@ -180,7 +187,7 @@ msgstr "ऐप पासवर्ड"
 msgid "App Passwords"
 msgstr "ऐप पासवर्ड"
 
-#: src/view/screens/Settings.tsx:435
+#: src/view/screens/Settings.tsx:433
 msgid "Appearance"
 msgstr "दिखावट"
 
@@ -217,7 +224,7 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 msgid "Back"
 msgstr "वापस"
 
-#: src/view/screens/Settings.tsx:464
+#: src/view/screens/Settings.tsx:462
 msgid "Basics"
 msgstr "मूल बातें"
 
@@ -291,7 +298,7 @@ msgstr "ब्लूस्की एक स्वस्थ समुदाय �
 msgid "Bluesky.Social"
 msgstr "Bluesky.Social"
 
-#: src/view/screens/Settings.tsx:721
+#: src/view/screens/Settings.tsx:719
 msgid "Build version {0} {1}"
 msgstr "Build version {0} {1}"
 
@@ -363,8 +370,8 @@ msgstr "प्रतीक्षा सूची पंजीकरण मत �
 msgid "Change"
 msgstr "परिवर्तन"
 
-#: src/view/screens/Settings.tsx:604
-#: src/view/screens/Settings.tsx:613
+#: src/view/screens/Settings.tsx:602
+#: src/view/screens/Settings.tsx:611
 msgid "Change handle"
 msgstr "हैंडल बदलें"
 
@@ -404,19 +411,19 @@ msgstr "उन एल्गोरिदम का चयन करें जो 
 msgid "Choose your password"
 msgstr "अपना पासवर्ड चुनें"
 
-#: src/view/screens/Settings.tsx:697
+#: src/view/screens/Settings.tsx:695
 msgid "Clear all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:699
+#: src/view/screens/Settings.tsx:697
 msgid "Clear all legacy storage data (restart after this)"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:709
+#: src/view/screens/Settings.tsx:707
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:711
+#: src/view/screens/Settings.tsx:709
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -569,7 +576,7 @@ msgstr "बनाया गया {0}"
 msgid "Custom domain"
 msgstr "कस्टम डोमेन"
 
-#: src/view/screens/Settings.tsx:618
+#: src/view/screens/Settings.tsx:616
 msgid "Danger Zone"
 msgstr "खतरा क्षेत्र"
 
@@ -577,7 +584,7 @@ msgstr "खतरा क्षेत्र"
 #~ msgid "Dark"
 #~ msgstr "डार्क मोड"
 
-#: src/view/screens/Settings.tsx:625
+#: src/view/screens/Settings.tsx:623
 msgid "Delete account"
 msgstr "खाता हटाएं"
 
@@ -599,7 +606,7 @@ msgstr "सूची हटाएँ"
 msgid "Delete my account"
 msgstr "मेरा खाता हटाएं"
 
-#: src/view/screens/Settings.tsx:635
+#: src/view/screens/Settings.tsx:633
 msgid "Delete my account…"
 msgstr "मेरा खाता हटाएं…"
 
@@ -626,7 +633,7 @@ msgstr "विवरण"
 msgid "Dev Server"
 msgstr "देव सर्वर"
 
-#: src/view/screens/Settings.tsx:640
+#: src/view/screens/Settings.tsx:638
 msgid "Developer Tools"
 msgstr "डेवलपर उपकरण"
 
@@ -934,7 +941,7 @@ msgstr "होम फीड"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:99
 #: src/view/screens/PreferencesHomeFeed.tsx:95
-#: src/view/screens/Settings.tsx:484
+#: src/view/screens/Settings.tsx:482
 msgid "Home Feed Preferences"
 msgstr "होम फ़ीड प्राथमिकताएं"
 
@@ -994,6 +1001,10 @@ msgstr "आमंत्रण कोड"
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
+#: src/view/shell/Drawer.tsx:503
+msgid "Invite codes: {invitesAvailable} available"
+msgstr ""
+
 #: src/view/com/modals/Waitlist.tsx:67
 msgid "Join the waitlist"
 msgstr "प्रतीक्षा सूची में शामिल हों"
@@ -1015,7 +1026,7 @@ msgstr "अपनी भाषा चुने"
 msgid "Language Settings"
 msgstr "भाषा सेटिंग्स"
 
-#: src/view/screens/Settings.tsx:544
+#: src/view/screens/Settings.tsx:542
 msgid "Languages"
 msgstr "भाषा"
 
@@ -1116,7 +1127,7 @@ msgid "Menu"
 msgstr "मेनू"
 
 #: src/view/screens/Moderation.tsx:51
-#: src/view/screens/Settings.tsx:566
+#: src/view/screens/Settings.tsx:564
 #: src/view/shell/desktop/LeftNav.tsx:400
 #: src/view/shell/Drawer.tsx:346
 #: src/view/shell/Drawer.tsx:347
@@ -1185,7 +1196,7 @@ msgstr "मेरी फ़ीड"
 msgid "My Profile"
 msgstr "मेरी प्रोफाइल"
 
-#: src/view/screens/Settings.tsx:523
+#: src/view/screens/Settings.tsx:521
 msgid "My Saved Feeds"
 msgstr "मेरी फ़ीड"
 
@@ -1295,12 +1306,12 @@ msgstr "एक या अधिक छवियाँ alt पाठ याद �
 msgid "Open navigation"
 msgstr "ओपन नेविगेशन"
 
-#: src/view/screens/Settings.tsx:536
+#: src/view/screens/Settings.tsx:534
 msgid "Opens configurable language settings"
 msgstr "भाषा सेटिंग्स खोलें"
 
 #: src/view/shell/desktop/RightNav.tsx:146
-#: src/view/shell/Drawer.tsx:509
+#: src/view/shell/Drawer.tsx:504
 msgid "Opens list of invite codes"
 msgstr ""
 
@@ -1308,31 +1319,31 @@ msgstr ""
 msgid "Opens modal for using custom domain"
 msgstr "कस्टम डोमेन का उपयोग करने के लिए मोडल खोलें"
 
-#: src/view/screens/Settings.tsx:561
+#: src/view/screens/Settings.tsx:559
 msgid "Opens moderation settings"
 msgstr "मॉडरेशन सेटिंग्स खोलें"
 
-#: src/view/screens/Settings.tsx:517
+#: src/view/screens/Settings.tsx:515
 msgid "Opens screen with all saved feeds"
 msgstr "सभी बचाया फ़ीड के साथ स्क्रीन खोलें"
 
-#: src/view/screens/Settings.tsx:584
+#: src/view/screens/Settings.tsx:582
 msgid "Opens the app password settings page"
 msgstr "ऐप पासवर्ड सेटिंग पेज खोलें"
 
-#: src/view/screens/Settings.tsx:476
+#: src/view/screens/Settings.tsx:474
 msgid "Opens the home feed preferences"
 msgstr "होम फीड वरीयताओं को खोलता है"
 
-#: src/view/screens/Settings.tsx:667
+#: src/view/screens/Settings.tsx:665
 msgid "Opens the storybook page"
 msgstr "स्टोरीबुक पेज खोलें"
 
-#: src/view/screens/Settings.tsx:647
+#: src/view/screens/Settings.tsx:645
 msgid "Opens the system log page"
 msgstr "सिस्टम लॉग पेज खोलें"
 
-#: src/view/screens/Settings.tsx:497
+#: src/view/screens/Settings.tsx:495
 msgid "Opens the threads preferences"
 msgstr "धागे वरीयताओं को खोलता है"
 
@@ -1458,7 +1469,7 @@ msgstr "प्रसंस्करण..."
 msgid "Profile"
 msgstr "प्रोफ़ाइल"
 
-#: src/view/screens/Settings.tsx:792
+#: src/view/screens/Settings.tsx:790
 msgid "Protect your account by verifying your email."
 msgstr "अपने ईमेल को सत्यापित करके अपने खाते को सुरक्षित रखें।।"
 
@@ -1589,7 +1600,7 @@ msgstr "इस प्रदाता के लिए आवश्यक"
 msgid "Reset code"
 msgstr "कोड रीसेट करें"
 
-#: src/view/screens/Settings.tsx:689
+#: src/view/screens/Settings.tsx:687
 msgid "Reset onboarding state"
 msgstr "ऑनबोर्डिंग स्टेट को रीसेट करें"
 
@@ -1597,15 +1608,15 @@ msgstr "ऑनबोर्डिंग स्टेट को रीसेट �
 msgid "Reset password"
 msgstr "पासवर्ड रीसेट"
 
-#: src/view/screens/Settings.tsx:679
+#: src/view/screens/Settings.tsx:677
 msgid "Reset preferences state"
 msgstr "प्राथमिकताओं को रीसेट करें"
 
-#: src/view/screens/Settings.tsx:687
+#: src/view/screens/Settings.tsx:685
 msgid "Resets the onboarding state"
 msgstr "ऑनबोर्डिंग स्टेट को रीसेट करें"
 
-#: src/view/screens/Settings.tsx:677
+#: src/view/screens/Settings.tsx:675
 msgid "Resets the preferences state"
 msgstr "प्राथमिकताओं की स्थिति को रीसेट करें"
 
@@ -1872,11 +1883,11 @@ msgstr "स्क्वायर"
 msgid "Staging"
 msgstr "स्टेजिंग"
 
-#: src/view/screens/Settings.tsx:733
+#: src/view/screens/Settings.tsx:731
 msgid "Status page"
 msgstr "स्थिति पृष्ठ"
 
-#: src/view/screens/Settings.tsx:669
+#: src/view/screens/Settings.tsx:667
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -1905,7 +1916,7 @@ msgstr "खाते बदलें"
 #~ msgid "System"
 #~ msgstr "प्रणाली"
 
-#: src/view/screens/Settings.tsx:649
+#: src/view/screens/Settings.tsx:647
 msgid "System log"
 msgstr "सिस्टम लॉग"
 
@@ -1986,7 +1997,7 @@ msgid "This warning is only available for posts with media attached."
 msgstr "यह चेतावनी केवल मीडिया संलग्न पोस्ट के लिए उपलब्ध है।"
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings.tsx:506
+#: src/view/screens/Settings.tsx:504
 msgid "Thread Preferences"
 msgstr "थ्रेड प्राथमिकता"
 
@@ -2093,15 +2104,15 @@ msgstr "यूजर नाम या ईमेल पता"
 msgid "Users"
 msgstr "यूजर लोग"
 
-#: src/view/screens/Settings.tsx:753
+#: src/view/screens/Settings.tsx:751
 msgid "Verify email"
 msgstr "ईमेल सत्यापित करें"
 
-#: src/view/screens/Settings.tsx:778
+#: src/view/screens/Settings.tsx:776
 msgid "Verify my email"
 msgstr "मेरी ईमेल सत्यापित करें"
 
-#: src/view/screens/Settings.tsx:787
+#: src/view/screens/Settings.tsx:785
 msgid "Verify My Email"
 msgstr "मेरी ईमेल सत्यापित करें"
 
@@ -2261,7 +2272,7 @@ msgstr "आपका होस्टिंग प्रदाता"
 
 #: src/view/screens/Settings.tsx:403
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:523
+#: src/view/shell/Drawer.tsx:518
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
 

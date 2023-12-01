@@ -33,7 +33,6 @@ import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {HandIcon, HashtagIcon} from 'lib/icons'
-import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
@@ -66,7 +65,7 @@ import {clearLegacyStorage} from '#/state/persisted/legacy'
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
-import {Plural, Trans, msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -404,12 +403,10 @@ export function SettingsScreen({}: Props) {
                 Your invite codes are hidden when logged in using an App
                 Password
               </Trans>
+            ) : invitesAvailable === 1 ? (
+              <Trans>{invitesAvailable} invite code available</Trans>
             ) : (
-              <Plural
-                value={formatCount(invitesAvailable)}
-                one="# invite code available"
-                other="# invite codes available"
-              />
+              <Trans>{invitesAvailable} invite codes available</Trans>
             )}
           </Text>
         </TouchableOpacity>
