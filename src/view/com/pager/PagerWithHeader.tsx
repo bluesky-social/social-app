@@ -14,6 +14,7 @@ import Animated, {
   scrollTo,
   useAnimatedRef,
   AnimatedRef,
+  SharedValue,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
@@ -56,7 +57,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const {isMobile} = useWebMediaQueries()
     const [currentPage, setCurrentPage] = React.useState(0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
@@ -78,56 +78,34 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [setHeaderOnlyHeight],
     )
 
-    // render the the header and tab bar
-    const headerTransform = useAnimatedStyle(() => ({
-      transform: [
-        {
-          translateY: Math.min(
-            Math.min(scrollY.value, headerOnlyHeight) * -1,
-            0,
-          ),
-        },
-      ],
-    }))
-
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
-          <Animated.View
-            style={[
-              isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
-              headerTransform,
-            ]}>
-            <View onLayout={onHeaderOnlyLayout}>{renderHeader?.()}</View>
-            <View
-              onLayout={onTabBarLayout}
-              style={{
-                // Render it immediately to measure it early since its size doesn't depend on the content.
-                // However, keep it invisible until the header above stabilizes in order to prevent jumps.
-                opacity: isHeaderReady ? 1 : 0,
-                pointerEvents: isHeaderReady ? 'auto' : 'none',
-              }}>
-              <TabBar
-                testID={testID}
-                items={items}
-                selectedPage={currentPage}
-                onSelect={props.onSelect}
-                onPressSelected={onCurrentPageSelected}
-              />
-            </View>
-          </Animated.View>
+          <PagerTabBar
+            headerOnlyHeight={headerOnlyHeight}
+            items={items}
+            isHeaderReady={isHeaderReady}
+            renderHeader={renderHeader}
+            currentPage={currentPage}
+            onCurrentPageSelected={onCurrentPageSelected}
+            onTabBarLayout={onTabBarLayout}
+            onHeaderOnlyLayout={onHeaderOnlyLayout}
+            onSelect={props.onSelect}
+            scrollY={scrollY}
+            testID={testID}
+          />
         )
       },
       [
+        headerOnlyHeight,
         items,
         isHeaderReady,
         renderHeader,
-        headerTransform,
         currentPage,
         onCurrentPageSelected,
-        isMobile,
         onTabBarLayout,
         onHeaderOnlyLayout,
+        scrollY,
         testID,
       ],
     )
@@ -218,6 +196,67 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
   },
 )
+
+let PagerTabBar = ({
+  currentPage,
+  headerOnlyHeight,
+  isHeaderReady,
+  items,
+  scrollY,
+  testID,
+  renderHeader,
+  onHeaderOnlyLayout,
+  onTabBarLayout,
+  onCurrentPageSelected,
+  onSelect,
+}: {
+  currentPage: number
+  headerOnlyHeight: number
+  isHeaderReady: boolean
+  items: string[]
+  testID: string
+  scrollY: SharedValue<number>
+  renderHeader?: () => JSX.Element
+  onHeaderOnlyLayout: (e: LayoutChangeEvent) => void
+  onTabBarLayout: (e: LayoutChangeEvent) => void
+  onCurrentPageSelected?: (index: number) => void
+  onSelect?: (index: number) => void
+}): React.ReactNode => {
+  const {isMobile} = useWebMediaQueries()
+  const headerTransform = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: Math.min(Math.min(scrollY.value, headerOnlyHeight) * -1, 0),
+      },
+    ],
+  }))
+  return (
+    <Animated.View
+      style={[
+        isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
+        headerTransform,
+      ]}>
+      <View onLayout={onHeaderOnlyLayout}>{renderHeader?.()}</View>
+      <View
+        onLayout={onTabBarLayout}
+        style={{
+          // Render it immediately to measure it early since its size doesn't depend on the content.
+          // However, keep it invisible until the header above stabilizes in order to prevent jumps.
+          opacity: isHeaderReady ? 1 : 0,
+          pointerEvents: isHeaderReady ? 'auto' : 'none',
+        }}>
+        <TabBar
+          testID={testID}
+          items={items}
+          selectedPage={currentPage}
+          onSelect={onSelect}
+          onPressSelected={onCurrentPageSelected}
+        />
+      </View>
+    </Animated.View>
+  )
+}
+PagerTabBar = React.memo(PagerTabBar)
 
 function PagerItem({
   headerHeight,
