@@ -436,7 +436,7 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'absolute',
+    position: 'fixed',
     top: 10,
     // @ts-ignore web only
     right: 'calc(50vw + 312px)',

@@ -90,11 +90,11 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   if (desktopFixedHeight) {
     if (typeof desktopFixedHeight === 'number') {
       // @ts-ignore Web only -prf
-      style = addStyle(style, {
-        height: `calc(100vh - ${desktopFixedHeight}px)`,
-      })
+      // style = addStyle(style, {
+      //   height: `calc(100vh - ${desktopFixedHeight}px)`,
+      // })
     } else {
-      style = addStyle(style, styles.fixedHeight)
+      // style = addStyle(style, styles.fixedHeight)
     }
     if (!isMobile) {
       // NOTE
@@ -228,7 +228,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderRightWidth: 1,
     // @ts-ignore web only
-    minHeight: '100vh',
   },
   container: {
     width: '100%',
