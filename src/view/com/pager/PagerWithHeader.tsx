@@ -69,13 +69,19 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     // capture the header bar sizing
     const onTabBarLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
-        setTabBarHeight(evt.nativeEvent.layout.height)
+        const height = evt.nativeEvent.layout.height
+        if (height > 0) {
+          setTabBarHeight(height)
+        }
       },
       [setTabBarHeight],
     )
     const onHeaderOnlyLayout = React.useCallback(
       (evt: LayoutChangeEvent) => {
-        setHeaderOnlyHeight(evt.nativeEvent.layout.height)
+        const height = evt.nativeEvent.layout.height
+        if (height > 0) {
+          setHeaderOnlyHeight(height)
+        }
       },
       [setHeaderOnlyHeight],
     )
