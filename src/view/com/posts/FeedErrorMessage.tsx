@@ -25,6 +25,7 @@ export enum KnownError {
   FeedgenOffline = 'FeedgenOffline',
   FeedgenUnknown = 'FeedgenUnknown',
   FeedNSFPublic = 'FeedNSFPublic',
+  FeedTooManyRequests = 'FeedTooManyRequests',
   Unknown = 'Unknown',
 }
 
@@ -99,6 +100,9 @@ function FeedgenErrorMessage({
         ),
         [KnownError.FeedgenUnknown]: _l(
           msgLingui`Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue.`,
+        ),
+        [KnownError.FeedTooManyRequests]: _l(
+          msgLingui`We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later.`,
         ),
       }[knownError]),
     [_l, knownError],
@@ -203,6 +207,13 @@ function detectKnownError(
   ) {
     return KnownError.Block
   }
+
+  // check status codes
+  if (error?.status === 429) {
+    return KnownError.FeedTooManyRequests
+  }
+
+  // convert error to string and continue
   if (typeof error !== 'string') {
     error = error.toString()
   }
