@@ -138,7 +138,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       }
     }
 
-    const throttleTimeout = React.useRef(null)
+    const throttleTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
+      null,
+    )
     const queueThrottledOnScroll = useNonReactiveCallback(() => {
       if (!throttleTimeout.current) {
         throttleTimeout.current = setTimeout(() => {
@@ -228,7 +230,7 @@ let PagerTabBar = ({
   headerOnlyHeight: number
   isHeaderReady: boolean
   items: string[]
-  testID: string
+  testID?: string
   scrollY: SharedValue<number>
   renderHeader?: () => JSX.Element
   onHeaderOnlyLayout: (e: LayoutChangeEvent) => void
