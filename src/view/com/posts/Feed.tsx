@@ -89,7 +89,7 @@ let Feed = ({
   const isEmpty = !isFetching && !data?.pages[0]?.slices.length
 
   const checkForNew = React.useCallback(async () => {
-    if (!data?.pages[0] || isFetching || !onHasNew) {
+    if (!data?.pages[0] || isFetching || !onHasNew || !enabled) {
       return
     }
     try {
@@ -99,7 +99,7 @@ let Feed = ({
     } catch (e) {
       logger.error('Poll latest failed', {feed, error: String(e)})
     }
-  }, [feed, data, isFetching, onHasNew])
+  }, [feed, data, isFetching, onHasNew, enabled])
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless

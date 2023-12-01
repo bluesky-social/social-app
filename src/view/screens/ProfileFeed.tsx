@@ -402,7 +402,7 @@ export function ProfileFeedScreenInner({
         isHeaderReady={true}
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) =>
+        {({onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused}) =>
           isPublic ? (
             <FeedSection
               ref={feedSectionRef}
@@ -413,6 +413,7 @@ export function ProfileFeedScreenInner({
               scrollElRef={
                 scrollElRef as React.MutableRefObject<FlatList<any> | null>
               }
+              isFocused={isFocused}
             />
           ) : (
             <CenteredView sideBorders style={[{paddingTop: headerHeight}]}>
@@ -492,10 +493,11 @@ interface FeedSectionProps {
   headerHeight: number
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
+    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused},
     ref,
   ) {
     const [hasNew, setHasNew] = React.useState(false)
@@ -518,6 +520,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     return (
       <View>
         <Feed
+          enabled={isFocused}
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}

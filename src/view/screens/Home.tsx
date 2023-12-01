@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, ActivityIndicator, StyleSheet} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
@@ -39,6 +39,7 @@ function HomeScreenReady({
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const [selectedPage, setSelectedPage] = React.useState(0)
+  const isPageFocused = useIsFocused()
 
   /**
    * Used to ensure that we re-compute `customFeeds` AND force a re-render of
@@ -132,7 +133,7 @@ function HomeScreenReady({
       <FeedPage
         key="1"
         testID="followingFeedPage"
-        isPageFocused={selectedPage === 0}
+        isPageFocused={selectedPage === 0 && isPageFocused}
         feed={homeFeedParams.mergeFeedEnabled ? 'home' : 'following'}
         feedParams={homeFeedParams}
         renderEmptyState={renderFollowingEmptyState}
@@ -143,7 +144,7 @@ function HomeScreenReady({
           <FeedPage
             key={f}
             testID="customFeedPage"
-            isPageFocused={selectedPage === 1 + index}
+            isPageFocused={selectedPage === 1 + index && isPageFocused}
             feed={f}
             renderEmptyState={renderCustomFeedEmptyState}
           />
@@ -159,7 +160,7 @@ function HomeScreenReady({
       tabBarPosition="top">
       <FeedPage
         testID="customFeedPage"
-        isPageFocused
+        isPageFocused={isPageFocused}
         feed={`feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot`}
         renderEmptyState={renderCustomFeedEmptyState}
       />

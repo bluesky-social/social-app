@@ -420,6 +420,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       <View>
         <Feed
           testID="postsFeed"
+          enabled={isFocused}
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}
@@ -428,7 +429,6 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
-          enabled={isFocused}
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
