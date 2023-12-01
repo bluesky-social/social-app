@@ -9,11 +9,10 @@ import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
 import {useModalControls} from '#/state/modals'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Plural, Trans, msg, plural} from '@lingui/macro'
 import {useSession} from '#/state/session'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 
@@ -106,21 +105,45 @@ function InviteCodes() {
   const {openModal} = useModalControls()
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0
+  const {_} = useLingui()
 
   const onPress = React.useCallback(() => {
     openModal({name: 'invite-codes'})
   }, [openModal])
+
+  if (!invites) {
+    return null
+  }
+
+  if (invites?.disabled) {
+    return (
+      <View style={[styles.inviteCodes, pal.border]}>
+        <FontAwesomeIcon
+          icon="ticket"
+          style={[styles.inviteCodesIcon, pal.textLight]}
+          size={16}
+        />
+        <Text type="md-medium" style={pal.textLight}>
+          <Trans>
+            Your invite codes are hidden when logged in using an App Password
+          </Trans>
+        </Text>
+      </View>
+    )
+  }
+
   return (
     <TouchableOpacity
       style={[styles.inviteCodes, pal.border]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={
-        invitesAvailable === 1
-          ? 'Invite codes: 1 available'
-          : `Invite codes: ${invitesAvailable} available`
-      }
-      accessibilityHint="Opens list of invite codes">
+      accessibilityLabel={_(
+        plural(invitesAvailable, {
+          one: 'Invite codes: # available',
+          other: 'Invite codes: # available',
+        }),
+      )}
+      accessibilityHint={_(msg`Opens list of invite codes`)}>
       <FontAwesomeIcon
         icon="ticket"
         style={[
@@ -132,8 +155,11 @@ function InviteCodes() {
       <Text
         type="md-medium"
         style={invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {formatCount(invitesAvailable)} invite{' '}
-        {pluralize(invitesAvailable, 'code')} available
+        <Plural
+          value={formatCount(invitesAvailable)}
+          one="# invite code available"
+          other="# invite codes available"
+        />
       </Text>
     </TouchableOpacity>
   )
@@ -163,9 +189,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     flexDirection: 'row',
-    alignItems: 'center',
   },
   inviteCodesIcon: {
+    marginTop: 2,
     marginRight: 6,
+    flexShrink: 0,
   },
 })
