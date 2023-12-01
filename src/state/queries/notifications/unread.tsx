@@ -14,6 +14,7 @@ import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {logger} from '#/logger'
+import {truncateAndInvalidate} from '../util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -126,7 +127,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // update & broadcast
           setNumUnread(unreadCountStr)
           if (invalidate) {
-            queryClient.resetQueries({queryKey: RQKEY_NOTIFS()})
+            truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
           }
           broadcast.postMessage({event: unreadCountStr})
         } catch (e) {

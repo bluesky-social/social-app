@@ -53,6 +53,7 @@ import {emitSoftReset} from '#/state/events'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 export function DrawerProfileCard({
   account,
@@ -141,9 +142,7 @@ export function DrawerContent() {
         } else {
           if (tab === 'Notifications') {
             // fetch new notifs on view
-            queryClient.resetQueries({
-              queryKey: NOTIFS_RQKEY(),
-            })
+            truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
           }
           // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(`${tab}Tab`)

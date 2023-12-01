@@ -32,6 +32,7 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -62,9 +63,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       } else {
         if (tab === 'Notifications') {
           // fetch new notifs on view
-          queryClient.resetQueries({
-            queryKey: NOTIFS_RQKEY(),
-          })
+          truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
         }
         navigation.navigate(`${tab}Tab`)
       }

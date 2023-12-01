@@ -35,6 +35,7 @@ import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {useQueryClient} from '@tanstack/react-query'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset} from '#/state/events'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -404,7 +405,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({

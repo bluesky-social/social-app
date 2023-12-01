@@ -48,6 +48,7 @@ import {emitSoftReset} from '#/state/events'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -150,9 +151,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
       } else {
         if (href === '/notifications') {
           // fetch new notifs on view
-          queryClient.resetQueries({
-            queryKey: NOTIFS_RQKEY(),
-          })
+          truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
         }
         onPress()
       }
