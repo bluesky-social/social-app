@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
@@ -72,6 +73,7 @@ let Feed = ({
   const {track} = useAnalytics()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
+  const navigation = useNavigation()
 
   const moderationOpts = useModerationOpts()
   const opts = React.useMemo(() => ({enabled}), [enabled])
@@ -89,7 +91,7 @@ let Feed = ({
   const isEmpty = !isFetching && !data?.pages[0]?.slices.length
 
   const checkForNew = React.useCallback(async () => {
-    if (!data?.pages[0] || isFetching || !onHasNew) {
+    if (!data?.pages[0] || isFetching || !onHasNew || !navigation.isFocused()) {
       return
     }
     try {
@@ -99,7 +101,7 @@ let Feed = ({
     } catch (e) {
       logger.error('Poll latest failed', {feed, error: String(e)})
     }
-  }, [feed, data, isFetching, onHasNew])
+  }, [feed, data, isFetching, onHasNew, navigation])
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless
