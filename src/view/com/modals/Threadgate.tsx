@@ -68,7 +68,9 @@ export function Component({
       </View>
 
       <ScrollView>
-        <Text style={styles.description}>Choose "Everybody" or "Nobody"</Text>
+        <Text style={[pal.text, styles.description]}>
+          Choose "Everybody" or "Nobody"
+        </Text>
         <View style={{flexDirection: 'row', gap: 6, paddingHorizontal: 6}}>
           <Selectable
             label={_(msg`Everybody`)}
@@ -83,7 +85,9 @@ export function Component({
             style={{flex: 1}}
           />
         </View>
-        <Text style={styles.description}>Or combine these options:</Text>
+        <Text style={[pal.text, styles.description]}>
+          Or combine these options:
+        </Text>
         <View style={{flexDirection: 'column', gap: 4, paddingHorizontal: 6}}>
           <Selectable
             label={_(msg`Mentioned users`)}

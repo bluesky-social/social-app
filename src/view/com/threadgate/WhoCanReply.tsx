@@ -11,6 +11,10 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
 import {makeProfileLink, makeListLink} from '#/lib/routes/links'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+
+import {colors} from '#/lib/styles'
 
 export function WhoCanReply({
   post,
@@ -19,7 +23,20 @@ export function WhoCanReply({
   post: AppBskyFeedDefs.PostView
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
+  const containerStyles = useColorSchemeStyle(
+    {
+      borderColor: colors.blue1,
+      backgroundColor: '#ebf6ff',
+    },
+    {
+      borderColor: colors.gray6,
+      backgroundColor: colors.gray8,
+    },
+  )
+  const textStyles = useColorSchemeStyle(
+    {color: colors.gray6},
+    {color: colors.gray3},
+  )
   const record = React.useMemo(
     () =>
       post.threadgate &&
@@ -33,33 +50,47 @@ export function WhoCanReply({
     return (
       <View
         style={[
-          pal.viewLight,
           {
-            paddingHorizontal: 12,
+            flexDirection: 'row',
+            alignItems: !record.allow?.length ? 'center' : 'flex-start',
+            gap: 12,
+            borderWidth: 1,
+            borderRadius: 8,
+            paddingHorizontal: 15,
             paddingVertical: 10,
           },
+          containerStyles,
           style,
         ]}>
-        <Text type="md" style={pal.textLight}>
+        <FontAwesomeIcon
+          icon={['far', 'comments']}
+          size={21}
+          color={textStyles.color}
+          style={{marginTop: 2}}
+        />
+        <View style={{flexDirection: 'column', gap: 2}}>
           {!record.allow?.length ? (
-            <Trans>Replies to this thread are disabled</Trans>
+            <Text type="md" style={textStyles}>
+              <Trans>Replies to this thread are disabled</Trans>
+            </Text>
           ) : (
-            <Trans>
-              Only{' '}
+            <>
+              <Text type="md-bold" style={textStyles}>
+                <Trans>Who can reply?</Trans>
+              </Text>
               {record.allow.map((rule, i) => (
-                <>
+                <Text key={`rule-${i}`} type="md" style={textStyles}>
+                  {'• '}
                   <Rule
                     rule={rule}
                     post={post}
                     lists={post.threadgate!.lists}
                   />
-                  <Separator i={i} length={record.allow!.length} />
-                </>
-              ))}{' '}
-              can reply.
-            </Trans>
+                </Text>
+              ))}
+            </>
           )}
-        </Text>
+        </View>
       </View>
     )
   }
@@ -77,12 +108,12 @@ function Rule({
 }) {
   const pal = usePalette('default')
   if (AppBskyFeedThreadgate.isMentionRule(rule)) {
-    return <Trans>mentioned users</Trans>
+    return <Trans>Mentioned users</Trans>
   }
   if (AppBskyFeedThreadgate.isFollowingRule(rule)) {
     return (
       <Trans>
-        users followed by{' '}
+        Users followed by{' '}
         <TextLink
           href={makeProfileLink(post.author)}
           text={`@${post.author.handle}`}
@@ -107,18 +138,4 @@ function Rule({
       )
     }
   }
-}
-
-function Separator({i, length}: {i: number; length: number}) {
-  if (length < 2 || i === length - 1) {
-    return null
-  }
-  if (i === length - 2) {
-    return (
-      <>
-        {length > 2 ? ',' : ''} <Trans>and</Trans>{' '}
-      </>
-    )
-  }
-  return <>, </>
 }
