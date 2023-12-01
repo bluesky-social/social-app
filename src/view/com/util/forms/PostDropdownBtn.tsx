@@ -23,6 +23,7 @@ import {Shadow} from '#/state/cache/types'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
+import {isWeb} from '#/platform/detection'
 
 export function PostDropdownBtn({
   testID,
@@ -122,7 +123,7 @@ export function PostDropdownBtn({
       },
     },
     {
-      label: _(msg`Share`),
+      label: isWeb ? _(msg`Copy link to post`) : _(msg`Share`),
       onPress() {
         const url = toShareUrl(href)
         shareUrl(url)
