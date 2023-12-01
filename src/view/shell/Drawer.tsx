@@ -41,8 +41,8 @@ import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
-import {formatCount, formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Plural, Trans, msg, plural} from '@lingui/macro'
+import {formatCountShortOnly} from 'view/com/util/numeric/format'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
@@ -500,12 +500,7 @@ function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
       style={[styles.inviteCodes, style]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={_(
-        plural(invitesAvailable, {
-          one: 'Invite codes: # available',
-          other: 'Invite codes: # available',
-        }),
-      )}
+      accessibilityLabel={_(msg`Invite codes: ${invitesAvailable} available`)}
       accessibilityHint={_(msg`Opens list of invite codes`)}
       disabled={invites?.disabled}>
       <FontAwesomeIcon
@@ -523,12 +518,10 @@ function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
           <Trans>
             Your invite codes are hidden when logged in using an App Password
           </Trans>
+        ) : invitesAvailable === 1 ? (
+          <Trans>{invitesAvailable} invite code available</Trans>
         ) : (
-          <Plural
-            value={formatCount(invitesAvailable)}
-            one="# invite code available"
-            other="# invite codes available"
-          />
+          <Trans>{invitesAvailable} invite codes available</Trans>
         )}
       </Text>
     </TouchableOpacity>
