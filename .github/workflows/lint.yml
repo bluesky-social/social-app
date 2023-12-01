@@ -37,3 +37,5 @@ jobs:
       - name: Run tests
         run: |
           yarn test --forceExit
+      - name: Check for i18n
+        run: yarn intl:extract && git diff-index --quiet HEAD || exit 1
