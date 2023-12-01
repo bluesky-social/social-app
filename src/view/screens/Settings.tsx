@@ -284,7 +284,6 @@ export function SettingsScreen({}: Props) {
           <>
             <Text type="xl-bold" style={[pal.text, styles.heading]}>
               <Trans>Account</Trans>
-              <Trans>New string to test</Trans>
             </Text>
             <View style={[styles.infoLine]}>
               <Text type="lg-medium" style={pal.text}>
