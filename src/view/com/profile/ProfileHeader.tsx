@@ -412,10 +412,12 @@ let ProfileHeaderLoaded = ({
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
-    <View style={pal.view}>
-      <UserBanner banner={profile.banner} moderation={moderation.avatar} />
-      <View style={styles.content}>
-        <View style={[styles.buttonsLine]}>
+    <View style={pal.view} pointerEvents="box-none">
+      <View pointerEvents="none">
+        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+      </View>
+      <View style={styles.content} pointerEvents="box-none">
+        <View style={[styles.buttonsLine]} pointerEvents="box-none">
           {isMe ? (
             <TouchableOpacity
               testID="profileHeaderEditProfileButton"
@@ -525,7 +527,7 @@ let ProfileHeaderLoaded = ({
             </NativeDropdown>
           ) : undefined}
         </View>
-        <View>
+        <View pointerEvents="none">
           <Text
             testID="profileHeaderDisplayName"
             type="title-2xl"
@@ -536,7 +538,7 @@ let ProfileHeaderLoaded = ({
             )}
           </Text>
         </View>
-        <View style={styles.handleLine}>
+        <View style={styles.handleLine} pointerEvents="none">
           {profile.viewer?.followedBy && !blockHide ? (
             <View style={[styles.pill, pal.btn, s.mr5]}>
               <Text type="xs" style={[pal.text]}>
@@ -557,7 +559,7 @@ let ProfileHeaderLoaded = ({
         </View>
         {!blockHide && (
           <>
-            <View style={styles.metricsLine}>
+            <View style={styles.metricsLine} pointerEvents="box-none">
               <Link
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
@@ -604,12 +606,14 @@ let ProfileHeaderLoaded = ({
               </Text>
             </View>
             {descriptionRT && !moderation.profile.blur ? (
-              <RichText
-                testID="profileHeaderDescription"
-                style={[styles.description, pal.text]}
-                numberOfLines={15}
-                richText={descriptionRT}
-              />
+              <View pointerEvents="none">
+                <RichText
+                  testID="profileHeaderDescription"
+                  style={[styles.description, pal.text]}
+                  numberOfLines={15}
+                  richText={descriptionRT}
+                />
+              </View>
             ) : undefined}
           </>
         )}

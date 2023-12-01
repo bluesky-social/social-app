@@ -70,15 +70,19 @@ export function ProfileHeaderSuggestedFollows({
   })
 
   return (
-    <Animated.View style={[{overflow: 'hidden', opacity: 0}, animatedStyles]}>
-      <View style={{paddingVertical: OUTER_PADDING}}>
+    <Animated.View
+      pointerEvents="box-none"
+      style={[{overflow: 'hidden', opacity: 0}, animatedStyles]}>
+      <View style={{paddingVertical: OUTER_PADDING}} pointerEvents="box-none">
         <View
+          pointerEvents="box-none"
           style={{
             backgroundColor: pal.viewLight.backgroundColor,
             height: '100%',
             paddingTop: INNER_PADDING / 2,
           }}>
           <View
+            pointerEvents="box-none"
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
