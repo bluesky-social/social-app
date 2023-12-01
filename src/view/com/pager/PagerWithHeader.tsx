@@ -148,7 +148,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 
           const nextIsScrolledDown = scrollY.value > SCROLLED_DOWN_LIMIT
           if (isScrolledDown !== nextIsScrolledDown) {
-            setIsScrolledDown(nextIsScrolledDown)
+            React.startTransition(() => {
+              setIsScrolledDown(nextIsScrolledDown)
+            })
           }
         }, 80 /* Sync often enough you're unlikely to catch it unsynced */)
       }
