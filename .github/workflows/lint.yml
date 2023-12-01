@@ -22,8 +22,8 @@ jobs:
         run: yarn lint
       - name: Type check
         run: yarn typecheck
-      - name: Check for i18n
-        run: yarn intl:extract && git diff-index --quiet HEAD || echo '⚠️ i18n detected un-extracted translations' && exit 1
+      - name: Check i18n
+        run: yarn intl:check
   testing:
     name: Run tests
     runs-on: ubuntu-latest
