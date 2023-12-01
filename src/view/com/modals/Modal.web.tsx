@@ -1,10 +1,11 @@
 import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import type {Modal as ModalIface} from '#/state/modals'
 
 import {useModals, useModalControls} from '#/state/modals'
+import type {Modal as ModalIface} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
@@ -129,7 +130,10 @@ function Modal({modal}: {modal: ModalIface}) {
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={onPressMask}>
-      <View style={styles.mask}>
+      <Animated.View
+        style={styles.mask}
+        entering={FadeIn.duration(150)}
+        exiting={FadeOut}>
         {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
@@ -142,7 +146,7 @@ function Modal({modal}: {modal: ModalIface}) {
             {element}
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </Animated.View>
     </TouchableWithoutFeedback>
   )
 }
