@@ -10,7 +10,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "build-web": "expo export:web && node ./scripts/post-web-build.js && cp --verbose ./web-build/static/js/*.* ./bskyweb/static/js/",
-    "build-all": "yarn intl:all && eas build --platform all",
+    "build-all": "yarn intl:build && eas build --platform all",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
@@ -29,7 +29,7 @@
     "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
-    "intl:all": "yarn intl:check && yarn intl:compile",
+    "intl:build": "yarn intl:check && yarn intl:compile",
     "intl:check": "yarn intl:extract && git diff-index --quiet HEAD || (echo '\n⚠️ i18n detected un-extracted translations\n' && exit 1)",
     "intl:extract": "lingui extract",
     "intl:compile": "lingui compile"
