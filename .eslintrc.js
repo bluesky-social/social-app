@@ -7,7 +7,7 @@ module.exports = {
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'detox', 'react'],
+  plugins: ['@typescript-eslint', 'detox', 'react', 'lingui'],
   rules: {
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
@@ -25,6 +25,8 @@ module.exports = {
     'bskyweb',
     '*.html',
     'bskyweb',
+    'src/locale/locales/_build/',
+    'src/locale/locales/**/*.js',
   ],
   settings: {
     componentWrapperFunctions: ['observer'],
