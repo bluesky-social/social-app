@@ -14,7 +14,6 @@ import {
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
 } from '@atproto/api'
-// import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
