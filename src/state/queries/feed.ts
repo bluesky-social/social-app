@@ -177,6 +177,12 @@ export function useIsFeedPublicQuery({uri}: {uri: string}) {
         })
         return Boolean(res.data.feed)
       } catch (e: any) {
+        /**
+         * This should be an `XRPCError`, but I can't safely import from
+         * `@atproto/xrpc` due to a depdency on node's `crypto` module.
+         *
+         * @see https://github.com/bluesky-social/atproto/blob/c17971a2d8e424cc7f10c071d97c07c08aa319cf/packages/xrpc/src/client.ts#L126
+         */
         if (e?.status === 401) {
           return false
         }
