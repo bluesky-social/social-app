@@ -5,6 +5,7 @@ import {devicePlatform, isIOS} from 'platform/detection'
 import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
+import {truncateAndInvalidate} from '#/state/queries/util'
 import {listenSessionLoaded} from '#/state/events'
 
 const SERVICE_DID = (serviceUrl?: string) =>
@@ -83,7 +84,7 @@ export function init(queryClient: QueryClient) {
     )
     if (event.request.trigger.type === 'push') {
       // refresh notifications in the background
-      queryClient.resetQueries({queryKey: RQKEY_NOTIFS()})
+      truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
       // handle payload-based deeplinks
       let payload
       if (isIOS) {
@@ -121,7 +122,7 @@ export function init(queryClient: QueryClient) {
           logger.DebugContext.notifications,
         )
         track('Notificatons:OpenApp')
-        queryClient.resetQueries({queryKey: RQKEY_NOTIFS()})
+        truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
         resetToTab('NotificationsTab') // open notifications tab
       }
     },

@@ -23,6 +23,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -62,7 +63,7 @@ export function FeedPage({
   const onSoftReset = React.useCallback(() => {
     if (isPageFocused) {
       scrollToTop()
-      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }
   }, [isPageFocused, scrollToTop, queryClient, feed, setHasNew])
@@ -83,7 +84,7 @@ export function FeedPage({
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
+    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
   }, [scrollToTop, feed, queryClient, setHasNew])
 

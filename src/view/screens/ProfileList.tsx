@@ -55,6 +55,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {isWeb} from '#/platform/detection'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -128,10 +129,8 @@ function ProfileListScreenLoaded({
       list,
       onChange() {
         if (isCurateList) {
-          queryClient.resetQueries({
-            // TODO(eric) should construct these strings with a fn too
-            queryKey: FEED_RQKEY(`list|${list.uri}`),
-          })
+          // TODO(eric) should construct these strings with a fn too
+          truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`))
         }
       },
     })

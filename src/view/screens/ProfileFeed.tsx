@@ -64,6 +64,7 @@ import {
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {useComposerControls} from '#/state/shell/composer'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -502,7 +503,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 

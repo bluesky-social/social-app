@@ -25,6 +25,7 @@ import {
 } from '#/state/queries/notifications/unread'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
+import {truncateAndInvalidate} from '#/state/queries/util'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -54,9 +55,7 @@ export function NotificationsScreen({}: Props) {
     scrollToTop()
     if (hasNew) {
       // render what we have now
-      queryClient.resetQueries({
-        queryKey: NOTIFS_RQKEY(),
-      })
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
     } else {
       // check with the server
       unreadApi.checkUnread({invalidate: true})
