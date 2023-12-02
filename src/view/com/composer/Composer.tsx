@@ -441,9 +441,11 @@ export const ComposePost = observer(function ComposePost({
             <>
               <SelectPhotoBtn gallery={gallery} />
               <OpenCameraBtn gallery={gallery} />
-              <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
             </>
           ) : null}
+          {replyTo ? null : (
+            <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+          )}
           {isDesktop ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
