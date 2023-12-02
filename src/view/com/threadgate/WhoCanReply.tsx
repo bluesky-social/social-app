@@ -64,8 +64,8 @@ export function WhoCanReply({
           {
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 8,
-            paddingHorizontal: isMobile ? 18 : 15,
+            gap: isMobile ? 8 : 10,
+            paddingHorizontal: isMobile ? 16 : 18,
             paddingVertical: 12,
             borderWidth: 1,
             borderLeftWidth: isMobile ? 0 : 1,
@@ -80,20 +80,20 @@ export function WhoCanReply({
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 38,
-              height: 38,
+              width: 32,
+              height: 32,
               borderRadius: 19,
             },
             iconStyles,
           ]}>
           <FontAwesomeIcon
             icon={['far', 'comments']}
-            size={18}
+            size={16}
             color={'#fff'}
           />
         </View>
         <View>
-          <Text type="md" style={textStyles}>
+          <Text type="sm" style={textStyles}>
             {!record.allow?.length ? (
               <Trans>Replies to this thread are disabled</Trans>
             ) : (
