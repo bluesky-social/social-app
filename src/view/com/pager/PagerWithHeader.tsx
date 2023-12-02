@@ -22,6 +22,7 @@ import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isIOS} from 'platform/detection'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -131,7 +132,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const adjustScrollForOtherPages = () => {
       'worklet'
       const currentScrollY = scrollY.value
-      const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
+      let forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
+      if (isIOS) {
+        // Compensate for FlatListIOSHack
+        forcedScrollY -= headerHeight
+      }
       if (lastForcedScrollY.value !== forcedScrollY) {
         lastForcedScrollY.value = forcedScrollY
         const refs = scrollRefs.value
@@ -167,11 +172,15 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const onScrollWorklet = React.useCallback(
       (e: NativeScrollEvent) => {
         'worklet'
-        const nextScrollY = e.contentOffset.y
+        let nextScrollY = e.contentOffset.y
+        if (isIOS) {
+          // Compensate for FlatListIOSHack
+          nextScrollY += headerHeight
+        }
         scrollY.value = nextScrollY
         runOnJS(queueThrottledOnScroll)()
       },
-      [scrollY, queueThrottledOnScroll],
+      [scrollY, queueThrottledOnScroll, headerHeight],
     )
 
     const onPageSelectedInner = React.useCallback(
