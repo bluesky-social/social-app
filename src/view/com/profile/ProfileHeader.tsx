@@ -468,7 +468,7 @@ let ProfileHeaderLoaded = ({
                       pal.text,
                       {
                         color: showSuggestedFollows
-                          ? colors.white
+                          ? pal.textInverted.color
                           : pal.text.color,
                       },
                     ]}
