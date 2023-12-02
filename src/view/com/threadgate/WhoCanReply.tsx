@@ -45,7 +45,7 @@ export function WhoCanReply({
     },
   )
   const textStyles = useColorSchemeStyle(
-    {color: colors.blue3},
+    {color: colors.gray7},
     {color: colors.blue1},
   )
   const record = React.useMemo(
