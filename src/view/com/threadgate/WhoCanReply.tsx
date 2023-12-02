@@ -92,8 +92,8 @@ export function WhoCanReply({
             color={'#fff'}
           />
         </View>
-        <View>
-          <Text type="sm" style={textStyles}>
+        <View style={{flex: 1}}>
+          <Text type="sm" style={[{flexWrap: 'wrap'}, textStyles]}>
             {!record.allow?.length ? (
               <Trans>Replies to this thread are disabled</Trans>
             ) : (
