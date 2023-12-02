@@ -613,7 +613,12 @@ let PostThreadItemLoaded = ({
             ) : undefined}
           </PostHider>
         </PostOuterWrapper>
-        <WhoCanReply post={post} />
+        <WhoCanReply
+          post={post}
+          style={{
+            marginTop: 4,
+          }}
+        />
       </>
     )
   }

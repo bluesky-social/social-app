@@ -13,6 +13,7 @@ import {TextLink} from '../util/Link'
 import {makeProfileLink, makeListLink} from '#/lib/routes/links'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 import {colors} from '#/lib/styles'
 
@@ -23,19 +24,29 @@ export function WhoCanReply({
   post: AppBskyFeedDefs.PostView
   style?: StyleProp<ViewStyle>
 }) {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   const containerStyles = useColorSchemeStyle(
     {
-      borderColor: colors.blue1,
-      backgroundColor: '#ebf6ff',
+      borderColor: pal.colors.unreadNotifBorder,
+      backgroundColor: pal.colors.unreadNotifBg,
     },
     {
-      borderColor: colors.gray6,
-      backgroundColor: colors.gray8,
+      borderColor: pal.colors.unreadNotifBorder,
+      backgroundColor: pal.colors.unreadNotifBg,
+    },
+  )
+  const iconStyles = useColorSchemeStyle(
+    {
+      backgroundColor: colors.blue3,
+    },
+    {
+      backgroundColor: colors.blue3,
     },
   )
   const textStyles = useColorSchemeStyle(
-    {color: colors.gray6},
-    {color: colors.gray3},
+    {color: colors.blue3},
+    {color: colors.blue1},
   )
   const record = React.useMemo(
     () =>
@@ -52,44 +63,59 @@ export function WhoCanReply({
         style={[
           {
             flexDirection: 'row',
-            alignItems: !record.allow?.length ? 'center' : 'flex-start',
-            gap: 12,
+            alignItems: 'center',
+            gap: 8,
+            paddingHorizontal: isMobile ? 18 : 15,
+            paddingVertical: 12,
             borderWidth: 1,
-            borderRadius: 8,
-            paddingHorizontal: 15,
-            paddingVertical: 10,
+            borderLeftWidth: isMobile ? 0 : 1,
+            borderRightWidth: isMobile ? 0 : 1,
+            // marginHorizontal: isMobile ? 0 : 4,
+            // borderRadius: isMobile ? 0 : 8,
+            // marginBottom: 4,
           },
           containerStyles,
           style,
         ]}>
-        <FontAwesomeIcon
-          icon={['far', 'comments']}
-          size={21}
-          color={textStyles.color}
-          style={{marginTop: 2}}
-        />
-        <View style={{flexDirection: 'column', gap: 2}}>
-          {!record.allow?.length ? (
-            <Text type="md" style={textStyles}>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 38,
+              height: 38,
+              borderRadius: 19,
+            },
+            iconStyles,
+          ]}>
+          <FontAwesomeIcon
+            icon={['far', 'comments']}
+            size={18}
+            color={'#fff'}
+          />
+        </View>
+        <View>
+          <Text type="md" style={textStyles}>
+            {!record.allow?.length ? (
               <Trans>Replies to this thread are disabled</Trans>
-            </Text>
-          ) : (
-            <>
-              <Text type="md-bold" style={textStyles}>
-                <Trans>Who can reply?</Trans>
-              </Text>
-              {record.allow.map((rule, i) => (
-                <Text key={`rule-${i}`} type="md" style={textStyles}>
-                  {'• '}
-                  <Rule
-                    rule={rule}
-                    post={post}
-                    lists={post.threadgate!.lists}
-                  />
-                </Text>
-              ))}
-            </>
-          )}
+            ) : (
+              <Trans>
+                Only{' '}
+                {record.allow.map((rule, i) => (
+                  <>
+                    <Rule
+                      rule={rule}
+                      post={post}
+                      lists={post.threadgate!.lists}
+                    />
+                    <Separator i={i} length={record.allow!.length} />
+                  </>
+                ))}{' '}
+                can reply.
+              </Trans>
+            )}
+          </Text>
         </View>
       </View>
     )
@@ -108,12 +134,12 @@ function Rule({
 }) {
   const pal = usePalette('default')
   if (AppBskyFeedThreadgate.isMentionRule(rule)) {
-    return <Trans>Mentioned users</Trans>
+    return <Trans>mentioned users</Trans>
   }
   if (AppBskyFeedThreadgate.isFollowingRule(rule)) {
     return (
       <Trans>
-        Users followed by{' '}
+        users followed by{' '}
         <TextLink
           href={makeProfileLink(post.author)}
           text={`@${post.author.handle}`}
@@ -138,4 +164,18 @@ function Rule({
       )
     }
   }
+}
+
+function Separator({i, length}: {i: number; length: number}) {
+  if (length < 2 || i === length - 1) {
+    return null
+  }
+  if (i === length - 2) {
+    return (
+      <>
+        {length > 2 ? ',' : ''} <Trans>and</Trans>{' '}
+      </>
+    )
+  }
+  return <>, </>
 }

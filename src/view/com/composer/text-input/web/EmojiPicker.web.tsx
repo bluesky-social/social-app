@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     border: 'none',
     paddingTop: 4,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
     cursor: 'pointer',
   },
   picker: {

@@ -468,7 +468,7 @@ function* flattenThreadSkeleton(
       yield PARENT_SPINNER
     }
     yield node
-    if (node.ctx.isHighlightedPost) {
+    if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
       yield REPLY_PROMPT
     }
     if (node.replies?.length) {
