@@ -102,11 +102,16 @@ export function WhoCanReply({
                 {record.allow.map((rule, i) => (
                   <>
                     <Rule
+                      key={`rule-${i}`}
                       rule={rule}
                       post={post}
                       lists={post.threadgate!.lists}
                     />
-                    <Separator i={i} length={record.allow!.length} />
+                    <Separator
+                      key={`sep-${i}`}
+                      i={i}
+                      length={record.allow!.length}
+                    />
                   </>
                 ))}{' '}
                 can reply.
