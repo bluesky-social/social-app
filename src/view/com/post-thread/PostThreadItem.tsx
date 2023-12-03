@@ -351,11 +351,14 @@ let PostThreadItemLoaded = ({
               {post.embed && (
                 <ContentHider
                   moderation={moderation.embed}
+                  moderationDecisions={moderation.decisions}
                   ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
+                  ignoreQuoteDecisions
                   style={s.mb10}>
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation.embed}
+                    moderationDecisions={moderation.decisions}
                   />
                 </ContentHider>
               )}
@@ -526,10 +529,14 @@ let PostThreadItemLoaded = ({
               {post.embed && (
                 <ContentHider
                   style={styles.contentHider}
-                  moderation={moderation.embed}>
+                  moderation={moderation.embed}
+                  moderationDecisions={moderation.decisions}
+                  ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
+                  ignoreQuoteDecisions>
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation.embed}
+                    moderationDecisions={moderation.decisions}
                   />
                 </ContentHider>
               )}

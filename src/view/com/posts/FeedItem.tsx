@@ -320,9 +320,15 @@ let FeedItemInner = ({
               <ContentHider
                 testID="contentHider-embed"
                 moderation={moderation.embed}
+                moderationDecisions={moderation.decisions}
                 ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
+                ignoreQuoteDecisions
                 style={styles.embed}>
-                <PostEmbeds embed={post.embed} moderation={moderation.embed} />
+                <PostEmbeds
+                  embed={post.embed}
+                  moderation={moderation.embed}
+                  moderationDecisions={moderation.decisions}
+                />
               </ContentHider>
             ) : null}
           </ContentHider>
