@@ -201,7 +201,7 @@ export const ComposePost = observer(function ComposePost({
 
     setError('')
 
-    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
+    if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
       setError('Did you want to say anything?')
       return
     }
