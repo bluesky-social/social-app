@@ -426,7 +426,11 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           style={[pal.view]}
-          moderation={moderation.content}>
+          moderation={moderation.content}
+          iconSize={isThreadedChild ? 26 : 38}
+          iconStyles={
+            isThreadedChild ? {marginRight: 4} : {marginLeft: 2, marginRight: 2}
+          }>
           <PostSandboxWarning />
 
           <View
