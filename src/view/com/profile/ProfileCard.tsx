@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
     paddingHorizontal: 6,
+    paddingVertical: 4,
   },
   outerNoBorder: {
     borderTopWidth: 0,
@@ -261,7 +262,6 @@ const styles = StyleSheet.create({
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
-    paddingTop: 15,
   },
   pills: {
     flexDirection: 'row',
