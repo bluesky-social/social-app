@@ -1,6 +1,6 @@
 import {AppBskyEmbedImages} from '@atproto/api'
 import React, {ComponentProps, FC} from 'react'
-import {StyleSheet, Text, Pressable, View} from 'react-native'
+import {StyleSheet, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 
 type EventFunction = (index: number) => void
@@ -42,13 +42,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityIgnoresInvertColors
         />
       </Pressable>
-      {image.alt === '' ? null : (
-        <View style={styles.altContainer}>
-          <Text style={styles.alt} accessible={false}>
-            ALT
-          </Text>
-        </View>
-      )}
     </View>
   )
 }
@@ -60,19 +53,5 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     borderRadius: 4,
-  },
-  altContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    position: 'absolute',
-    left: 8,
-    bottom: 8,
-  },
-  alt: {
-    color: 'white',
-    fontSize: 10,
-    fontWeight: 'bold',
   },
 })

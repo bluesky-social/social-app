@@ -6,6 +6,7 @@ import {
   ViewStyle,
   Text,
   InteractionManager,
+  Pressable,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
@@ -122,18 +123,20 @@ export function PostEmbeds({
               dimensionsHint={aspectRatio}
               onPress={() => _openLightbox(0)}
               onPressIn={() => onPressIn(0)}
-              style={[
-                styles.singleImage,
-                isMobile && styles.singleImageMobile,
-              ]}>
-              {alt === '' ? null : (
-                <View style={styles.altContainer}>
-                  <Text style={styles.alt} accessible={false}>
+              style={[styles.singleImage, isMobile && styles.singleImageMobile]}
+            />
+            {alt === '' ? null : (
+              <View style={{flexDirection: 'row', marginTop: 4}}>
+                <Pressable
+                  style={[styles.altContainer, pal.viewLight]}
+                  accessibilityRole="button"
+                  onPress={() => _openLightbox(0)}>
+                  <Text style={[styles.alt, pal.textLight]} accessible={false}>
                     ALT
                   </Text>
-                </View>
-              )}
-            </AutoSizedImage>
+                </Pressable>
+              </View>
+            )}
           </View>
         )
       }
@@ -150,6 +153,18 @@ export function PostEmbeds({
                 : undefined
             }
           />
+          {embed.images.find(img => img.alt !== '') ? (
+            <View style={{flexDirection: 'row', marginTop: 4}}>
+              <Pressable
+                style={[styles.altContainer, pal.viewLight]}
+                accessibilityRole="button"
+                onPress={() => _openLightbox(0)}>
+                <Text style={[styles.alt, pal.textLight]} accessible={false}>
+                  ALT
+                </Text>
+              </Pressable>
+            </View>
+          ) : null}
         </View>
       )
     }
@@ -198,16 +213,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   altContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
+    borderRadius: 8,
     paddingHorizontal: 6,
     paddingVertical: 3,
-    position: 'absolute',
-    left: 6,
-    bottom: 6,
   },
   alt: {
-    color: 'white',
     fontSize: 10,
     fontWeight: 'bold',
   },
