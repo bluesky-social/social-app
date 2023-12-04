@@ -216,19 +216,25 @@ let Feed = ({
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
-  const FeedFooter = React.useCallback(
-    () =>
-      isFetchingNextPage ? (
-        <View style={styles.feedFooter}>
-          <ActivityIndicator />
-        </View>
-      ) : shouldRenderEndOfFeed ? (
-        renderEndOfFeed()
-      ) : (
-        <View />
-      ),
-    [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed],
-  )
+  const FeedFooter = React.useCallback(() => {
+    /**
+     * A bit of padding at the bottom of the feed as you scroll and when you
+     * reach the end, so that content isn't cut off by the bottom of the
+     * screen.
+     */
+    const offset = headerOffset * 2
+
+    return isFetchingNextPage ? (
+      <View style={styles.feedFooter}>
+        <ActivityIndicator />
+        <View style={{minHeight: offset}} />
+      </View>
+    ) : shouldRenderEndOfFeed ? (
+      <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
+    ) : (
+      <View style={{minHeight: offset}} />
+    )
+  }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
   const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
