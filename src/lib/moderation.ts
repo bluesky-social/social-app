@@ -106,7 +106,8 @@ export function isQuoteBlurred(
     decisions.quote?.blurMedia ||
     decisions.quote?.filter ||
     decisions.quotedAccount?.blur ||
-    decisions.quotedAccount?.filter
+    decisions.quotedAccount?.filter ||
+    false
   )
 }
 

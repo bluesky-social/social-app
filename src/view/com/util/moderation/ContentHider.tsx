@@ -23,7 +23,7 @@ export function ContentHider({
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationUI
-  moderationDecisions?: any
+  moderationDecisions?: PostModeration['decisions']
   ignoreMute?: boolean
   ignoreQuoteDecisions?: boolean
   style?: StyleProp<ViewStyle>
