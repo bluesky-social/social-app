@@ -56,6 +56,12 @@ import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {isWeb} from '#/platform/detection'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {
+  usePreferencesQuery,
+  usePinFeedMutation,
+  useUnpinFeedMutation,
+} from '#/state/queries/preferences'
+import {logger} from '#/logger'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -129,7 +135,6 @@ function ProfileListScreenLoaded({
       list,
       onChange() {
         if (isCurateList) {
-          // TODO(eric) should construct these strings with a fn too
           truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`))
         }
       },
@@ -254,19 +259,31 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const listDeleteMutation = useListDeleteMutation()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
-  const isPinned = false // TODO
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
+  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
+  const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
+    useUnpinFeedMutation()
+  const isPending = isPinPending || isUnpinPending
+  const {data: preferences} = usePreferencesQuery()
 
-  const onTogglePinned = useCallback(async () => {
+  const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
+
+  const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
-    // TODO
-    // list.togglePin().catch(e => {
-    //   Toast.show('There was an issue contacting the server')
-    //   logger.error('Failed to toggle pinned list', {error: e})
-    // })
-  }, [])
+
+    try {
+      if (isPinned) {
+        await unpinFeed({uri: list.uri})
+      } else {
+        await pinFeed({uri: list.uri})
+      }
+    } catch (e) {
+      Toast.show('There was an issue contacting the server')
+      logger.error('Failed to toggle pinned feed', {error: e})
+    }
+  }, [list.uri, isPinned, pinFeed, unpinFeed])
 
   const onSubscribeMute = useCallback(() => {
     openModal({
@@ -473,10 +490,11 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       avatarType="list">
       {isCurateList || isPinned ? (
         <Button
-          testID={list.isPinned ? 'unpinBtn' : 'pinBtn'}
-          type={list.isPinned ? 'default' : 'inverted'}
-          label={list.isPinned ? 'Unpin' : 'Pin to home'}
+          testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+          type={isPinned ? 'default' : 'inverted'}
+          label={isPinned ? 'Unpin' : 'Pin to home'}
           onPress={onTogglePinned}
+          disabled={isPending}
         />
       ) : isModList ? (
         isBlocking ? (
