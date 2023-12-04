@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {CenteredView, FlatList} from '../com/util/Views'
@@ -451,7 +451,7 @@ function ProfileEndOfFeed() {
   return (
     <View style={[pal.border, {paddingTop: 32, borderTopWidth: 1}]}>
       <Text style={[pal.textLight, pal.border, {textAlign: 'center'}]}>
-        End of feed
+        <Trans>End of feed</Trans>
       </Text>
     </View>
   )
