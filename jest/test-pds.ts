@@ -61,12 +61,13 @@ export async function createServer(
   const port2 = await getPort(port + 1)
   const pdsUrl = `http://localhost:${port}`
   const id = ids.next()
+
   const testNet = await TestNetwork.create({
     pds: {
       port,
-      publicUrl: pdsUrl,
-      inviteRequired,
+      hostname: 'localhost',
       dbPostgresSchema: `pds_${id}`,
+      inviteRequired,
     },
     bsky: {
       dbPostgresSchema: `bsky_${id}`,
