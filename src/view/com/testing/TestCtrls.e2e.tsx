@@ -5,6 +5,7 @@ import {useModalControls} from '#/state/modals'
 import {useQueryClient} from '@tanstack/react-query'
 import {useSessionApi} from '#/state/session'
 import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 
 /**
  * This utility component is only included in the test simulator
@@ -19,6 +20,7 @@ export function TestCtrls() {
   const {logout, login} = useSessionApi()
   const {openModal} = useModalControls()
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
     await login({
       service: 'http://localhost:3000',
@@ -92,6 +94,12 @@ export function TestCtrls() {
       <Pressable
         testID="e2eOpenInviteCodesModal"
         onPress={() => openModal({name: 'invite-codes'})}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eOpenLoggedOutView"
+        onPress={() => setShowLoggedOut(true)}
         accessibilityRole="button"
         style={BTN}
       />
