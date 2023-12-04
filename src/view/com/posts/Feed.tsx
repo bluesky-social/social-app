@@ -26,6 +26,7 @@ import {
   pollLatest,
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {isWeb} from '#/platform/detection'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -222,17 +223,17 @@ let Feed = ({
      * reach the end, so that content isn't cut off by the bottom of the
      * screen.
      */
-    const offset = headerOffset * 2
+    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
 
     return isFetchingNextPage ? (
-      <View style={styles.feedFooter}>
+      <View style={[styles.feedFooter]}>
         <ActivityIndicator />
-        <View style={{minHeight: offset}} />
+        <View style={{height: offset}} />
       </View>
     ) : shouldRenderEndOfFeed ? (
       <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
     ) : (
-      <View style={{minHeight: offset}} />
+      <View style={{height: offset}} />
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
