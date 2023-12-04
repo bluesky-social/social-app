@@ -14,41 +14,36 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
-import {save, load} from '#/lib/storage'
+import {loadString, saveString} from '#/lib/storage'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {isDesktop} = useWebMediaQueries()
-  const [lastActiveTab, setLastActiveTab] = React.useState<number | undefined>(
+  const [initialPage, setInitialPage] = React.useState<string | undefined>(
     undefined,
   )
 
   React.useEffect(() => {
-    const loadLastActieTab = async () => {
+    const loadLastActivePage = async () => {
       try {
-        const savedTab = await load('lastActiveTab')
-        const tabIndex = savedTab ? parseInt(savedTab, 10) : 0
-        setLastActiveTab(tabIndex)
+        const lastActivePage =
+          (await loadString('lastActivePage')) ?? 'Following'
+        setInitialPage(lastActivePage)
       } catch {
-        setLastActiveTab(0)
+        setInitialPage('Following')
       }
     }
-    // Ignoring lastActiveTab for desktop
-    if (isDesktop) {
-      setLastActiveTab(0)
-    } else {
-      loadLastActieTab()
-    }
-  }, [isDesktop])
+    loadLastActivePage()
+  }, [])
 
-  if (preferences && lastActiveTab !== undefined) {
+  if (preferences && initialPage !== undefined) {
     return (
       <HomeScreenReady
         {...props}
         preferences={preferences}
-        lastActiveTab={lastActiveTab}
+        initialPage={isDesktop ? 'Following' : initialPage}
       />
     )
   } else {
@@ -62,21 +57,28 @@ export function HomeScreen(props: Props) {
 
 function HomeScreenReady({
   preferences,
-  lastActiveTab,
+  initialPage,
 }: Props & {
   preferences: UsePreferencesQueryResponse
-  lastActiveTab: number
+  initialPage: string
 }) {
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const [selectedPage, setSelectedPage] = React.useState(lastActiveTab)
+  const [selectedPage, setSelectedPage] = React.useState<string>(initialPage)
 
   /**
    * Used to ensure that we re-compute `customFeeds` AND force a re-render of
    * the pager with the new order of feeds.
    */
   const pinnedFeedOrderKey = JSON.stringify(preferences.feeds.pinned)
+
+  const selectedPageIndex = React.useMemo(() => {
+    const index = ['Following', ...preferences.feeds.pinned].indexOf(
+      selectedPage,
+    )
+    return Math.max(index, 0)
+  }, [preferences.feeds.pinned, selectedPage])
 
   const customFeeds = React.useMemo(() => {
     const pinned = preferences.feeds.pinned
@@ -101,21 +103,27 @@ function HomeScreenReady({
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(selectedPage > 0)
+      setDrawerSwipeDisabled(selectedPageIndex > 0)
       return () => {
         setDrawerSwipeDisabled(false)
       }
-    }, [setDrawerSwipeDisabled, selectedPage, setMinimalShellMode]),
+    }, [setDrawerSwipeDisabled, selectedPageIndex, setMinimalShellMode]),
   )
 
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setSelectedPage(index)
-      save('lastActiveTab', index)
       setDrawerSwipeDisabled(index > 0)
+      const page = ['Following', ...preferences.feeds.pinned][index]
+      setSelectedPage(page)
+      saveString('lastActivePage', page)
     },
-    [setDrawerSwipeDisabled, setSelectedPage, setMinimalShellMode],
+    [
+      setDrawerSwipeDisabled,
+      setSelectedPage,
+      setMinimalShellMode,
+      preferences.feeds.pinned,
+    ],
   )
 
   const onPressSelected = React.useCallback(() => {
@@ -158,7 +166,7 @@ function HomeScreenReady({
     <Pager
       key={pinnedFeedOrderKey}
       testID="homeScreen"
-      initialPage={selectedPage > customFeeds.length ? 0 : selectedPage}
+      initialPage={selectedPageIndex}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}
@@ -166,7 +174,7 @@ function HomeScreenReady({
       <FeedPage
         key="1"
         testID="followingFeedPage"
-        isPageFocused={selectedPage === 0}
+        isPageFocused={selectedPageIndex === 0}
         feed={homeFeedParams.mergeFeedEnabled ? 'home' : 'following'}
         feedParams={homeFeedParams}
         renderEmptyState={renderFollowingEmptyState}
@@ -177,7 +185,7 @@ function HomeScreenReady({
           <FeedPage
             key={f}
             testID="customFeedPage"
-            isPageFocused={selectedPage === 1 + index}
+            isPageFocused={selectedPageIndex === 1 + index}
             feed={f}
             renderEmptyState={renderCustomFeedEmptyState}
           />
