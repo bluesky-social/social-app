@@ -7,7 +7,7 @@ import {
   DimensionValue,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HeartIcon} from 'lib/icons'
+import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -46,12 +46,22 @@ export function PostLoadingPlaceholder({
   const pal = usePalette('default')
   return (
     <View style={[styles.post, pal.view, style]}>
-      <LoadingPlaceholder width={52} height={52} style={styles.avatar} />
+      <LoadingPlaceholder
+        width={52}
+        height={52}
+        style={[
+          styles.avatar,
+          {
+            position: 'relative',
+            top: -6,
+          },
+        ]}
+      />
       <View style={[s.flex1]}>
-        <LoadingPlaceholder width={100} height={8} style={[s.mb10]} />
-        <LoadingPlaceholder width={200} height={8} style={[s.mb5]} />
-        <LoadingPlaceholder width={200} height={8} style={[s.mb5]} />
-        <LoadingPlaceholder width={120} height={8} style={[s.mb10]} />
+        <LoadingPlaceholder width={100} height={6} style={{marginBottom: 10}} />
+        <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
+        <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
+        <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 15}} />
         <View style={s.flexRow}>
           <View style={s.flex1}>
             <FontAwesomeIcon
@@ -90,6 +100,8 @@ export function PostFeedLoadingPlaceholder() {
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
+      <PostLoadingPlaceholder />
+      <PostLoadingPlaceholder />
     </View>
   )
 }
@@ -102,11 +114,23 @@ export function NotificationLoadingPlaceholder({
   const pal = usePalette('default')
   return (
     <View style={[styles.notification, pal.view, style]}>
-      <View style={[s.flexRow, s.mb10]}>
-        <LoadingPlaceholder width={30} height={30} style={styles.smallAvatar} />
+      <View style={{paddingLeft: 30, paddingRight: 10}}>
+        <HeartIconSolid
+          style={{color: pal.colors.backgroundLight} as ViewStyle}
+          size={30}
+        />
       </View>
-      <LoadingPlaceholder width={200} height={8} style={[s.mb5]} />
-      <LoadingPlaceholder width={120} height={8} style={[s.mb5]} />
+      <View style={{flex: 1}}>
+        <View style={[s.flexRow, s.mb10]}>
+          <LoadingPlaceholder
+            width={30}
+            height={30}
+            style={styles.smallAvatar}
+          />
+        </View>
+        <LoadingPlaceholder width="90%" height={6} style={[s.mb5]} />
+        <LoadingPlaceholder width="70%" height={6} style={[s.mb5]} />
+      </View>
     </View>
   )
 }
@@ -239,18 +263,19 @@ const styles = StyleSheet.create({
   },
   post: {
     flexDirection: 'row',
-    padding: 10,
-    margin: 1,
+    alignItems: 'flex-start',
+    paddingHorizontal: 10,
+    paddingTop: 20,
+    paddingBottom: 5,
   },
   avatar: {
     borderRadius: 26,
     marginRight: 10,
-    marginLeft: 6,
+    marginLeft: 8,
   },
   notification: {
+    flexDirection: 'row',
     padding: 10,
-    paddingLeft: 46,
-    margin: 1,
   },
   profileCard: {
     flexDirection: 'row',
