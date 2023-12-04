@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {View} from 'react-native'
+import {PWI_ENABLED} from '#/lib/build-flags'
 
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
@@ -99,7 +100,7 @@ function NativeStackNavigator({
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
-  if (activeRouteRequiresAuth && !hasSession) {
+  if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
     return <LoggedOut />
   }
   if (showLoggedOut) {
