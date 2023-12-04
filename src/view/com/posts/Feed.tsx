@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useQueryClient} from '@tanstack/react-query'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
@@ -20,6 +21,7 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
+  RQKEY,
   FeedDescriptor,
   FeedParams,
   usePostFeedQuery,
@@ -27,6 +29,8 @@ import {
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {isWeb} from '#/platform/detection'
+import {listenPostCreated} from '#/state/events'
+import {useSession} from '#/state/session'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -73,6 +77,8 @@ let Feed = ({
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
+  const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
 
@@ -103,6 +109,25 @@ let Feed = ({
       logger.error('Poll latest failed', {feed, error: String(e)})
     }
   }, [feed, data, isFetching, onHasNew, enabled])
+
+  const myDid = currentAccount?.did || ''
+  const onPostCreated = React.useCallback(() => {
+    // NOTE
+    // only invalidate if there's 1 page
+    // more than 1 page can trigger some UI freakouts on iOS and android
+    // -prf
+    if (
+      data?.pages.length === 1 &&
+      (feed === 'following' ||
+        feed === 'home' ||
+        feed === `author|${myDid}|posts_no_replies`)
+    ) {
+      queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+    }
+  }, [queryClient, feed, data, myDid])
+  React.useEffect(() => {
+    return listenPostCreated(onPostCreated)
+  }, [onPostCreated])
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless

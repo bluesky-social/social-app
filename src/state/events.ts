@@ -36,3 +36,11 @@ export function listenSessionDropped(fn: () => void): UnlistenFn {
   emitter.on('session-dropped', fn)
   return () => emitter.off('session-dropped', fn)
 }
+
+export function emitPostCreated() {
+  emitter.emit('post-created')
+}
+export function listenPostCreated(fn: () => void): UnlistenFn {
+  emitter.on('post-created', fn)
+  return () => emitter.off('post-created', fn)
+}
