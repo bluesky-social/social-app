@@ -2,25 +2,30 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ModerationUI} from '@atproto/api'
+import {ModerationUI, PostModeration} from '@atproto/api'
 import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
+import {isPostMediaBlurred} from 'lib/moderation'
 
 export function ContentHider({
   testID,
   moderation,
+  moderationDecisions,
   ignoreMute,
+  ignoreQuoteDecisions,
   style,
   childContainerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   moderation: ModerationUI
+  moderationDecisions?: PostModeration['decisions']
   ignoreMute?: boolean
+  ignoreQuoteDecisions?: boolean
   style?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -29,7 +34,11 @@ export function ContentHider({
   const [override, setOverride] = React.useState(false)
   const {openModal} = useModalControls()
 
-  if (!moderation.blur || (ignoreMute && moderation.cause?.type === 'muted')) {
+  if (
+    !moderation.blur ||
+    (ignoreMute && moderation.cause?.type === 'muted') ||
+    shouldIgnoreQuote(moderationDecisions, ignoreQuoteDecisions)
+  ) {
     return (
       <View testID={testID} style={[styles.outer, style]}>
         {children}
@@ -97,6 +106,16 @@ export function ContentHider({
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>
   )
+}
+
+function shouldIgnoreQuote(
+  decisions: PostModeration['decisions'] | undefined,
+  ignore: boolean | undefined,
+): boolean {
+  if (!decisions || !ignore) {
+    return false
+  }
+  return !isPostMediaBlurred(decisions)
 }
 
 const styles = StyleSheet.create({
