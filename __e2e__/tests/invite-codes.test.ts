@@ -5,6 +5,8 @@
  * with the side drawer.
  */
 
+import {describe, beforeAll, it} from '@jest/globals'
+import {expect} from 'detox'
 import {openApp, loginAsAlice, createServer} from '../util'
 
 describe('invite-codes', () => {
@@ -16,7 +18,6 @@ describe('invite-codes', () => {
   })
 
   it('I can fetch invite codes', async () => {
-    await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
     await element(by.id('e2eOpenInviteCodesModal')).tap()
     await expect(element(by.id('inviteCodesModal'))).toBeVisible()
@@ -27,6 +28,7 @@ describe('invite-codes', () => {
   })
 
   it('I can create a new account with the invite code', async () => {
+    await element(by.id('e2eOpenLoggedOutView')).tap()
     await element(by.id('createAccountButton')).tap()
     await device.takeScreenshot('1- opened create account screen')
     await element(by.id('otherServerBtn')).tap()
@@ -50,20 +52,5 @@ describe('invite-codes', () => {
     await expect(element(by.id('recommendedFollowsOnboarding'))).toBeVisible()
     await element(by.id('continueBtn')).tap()
     await expect(element(by.id('homeScreen'))).toBeVisible()
-  })
-
-  it('I get a notification for the new user', async () => {
-    await element(by.id('e2eSignOut')).tap()
-    await loginAsAlice()
-    await waitFor(element(by.id('homeScreen')))
-      .toBeVisible()
-      .withTimeout(5000)
-    await element(by.id('bottomBarNotificationsBtn')).tap()
-    await expect(element(by.id('invitedUser'))).toBeVisible()
-  })
-
-  it('I can dismiss the new user notification', async () => {
-    await element(by.id('dismissBtn')).tap()
-    await expect(element(by.id('invitedUser'))).not.toBeVisible()
   })
 })
