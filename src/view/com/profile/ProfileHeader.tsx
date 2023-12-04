@@ -217,6 +217,7 @@ let ProfileHeaderLoaded = ({
     openModal({
       name: 'user-add-remove-lists',
       subject: profile.did,
+      handle: profile.handle,
       displayName: profile.displayName || profile.handle,
       onAdd: invalidateProfileQuery,
       onRemove: invalidateProfileQuery,

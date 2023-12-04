@@ -4,7 +4,7 @@ import {describe, beforeAll, it} from '@jest/globals'
 import {expect} from 'detox'
 import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
 
-describe.skip('Curate lists', () => {
+describe('Curate lists', () => {
   beforeAll(async () => {
     await createServer('?users&follows&posts')
     await openApp({
@@ -165,15 +165,15 @@ describe('Curate lists 2', () => {
     await expect(element(by.id('user-bob.test'))).toBeVisible()
     await element(by.id('user-bob.test-editBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Good Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
   it('Shows the curatelist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-4')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-5')).tap()
     await element(by.id('list-Good Ppl')).tap()
   })
 
@@ -186,15 +186,15 @@ describe('Curate lists 2', () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Good Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Good Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
@@ -205,8 +205,8 @@ describe('Curate lists 2', () => {
     await element(by.id('bottomBarSearchBtn')).tap()
     await element(by.id('searchTextInput')).typeText('alice')
     await element(by.id('searchAutoCompleteResult-alice.test')).tap()
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-3')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-3')).tap()
     await element(by.id('list-Good Ppl')).tap()
     await element(by.id('headerDropdownBtn')).tap()
     await element(by.text('Report List')).tap()

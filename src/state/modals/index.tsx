@@ -61,6 +61,7 @@ export interface CreateOrEditListModal {
 export interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
   subject: string
+  handle: string
   displayName: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
