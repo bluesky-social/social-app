@@ -912,23 +912,23 @@ msgstr "इसे छिपाएं"
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:101
+#: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:89
+#: src/view/com/posts/FeedErrorMessage.tsx:90
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:95
+#: src/view/com/posts/FeedErrorMessage.tsx:96
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:92
+#: src/view/com/posts/FeedErrorMessage.tsx:93
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:86
+#: src/view/com/posts/FeedErrorMessage.tsx:87
 msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
@@ -1519,7 +1519,7 @@ msgstr "मेरे फ़ीड से {0} हटाएं?"
 msgid "Remove account"
 msgstr "खाता हटाएं"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:118
+#: src/view/com/posts/FeedErrorMessage.tsx:122
 msgid "Remove feed"
 msgstr "फ़ीड हटाएँ"
 
@@ -1536,7 +1536,7 @@ msgstr "छवि निकालें"
 msgid "Remove image preview"
 msgstr "छवि पूर्वावलोकन निकालें"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:119
+#: src/view/com/posts/FeedErrorMessage.tsx:123
 msgid "Remove this feed from your saved feeds?"
 msgstr "इस फ़ीड को सहेजे गए फ़ीड से हटा दें?"
 
@@ -2137,8 +2137,12 @@ msgstr "साइट पर जाएं"
 msgid "We're so excited to have you join us!"
 msgstr "हम आपके हमारी सेवा में शामिल होने को लेकर बहुत उत्साहित हैं!"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:98
+#: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "We're sorry, but this content is not viewable without a Bluesky account."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:105
+msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
 #: src/view/screens/Search/Search.tsx:236
