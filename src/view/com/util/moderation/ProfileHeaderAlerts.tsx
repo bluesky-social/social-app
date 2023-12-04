@@ -10,6 +10,7 @@ import {
 } from 'lib/moderation'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useModalControls} from '#/state/modals'
 
 export function ProfileHeaderAlerts({
@@ -31,6 +32,7 @@ export function ProfileHeaderAlerts({
   return (
     <View style={styles.grid}>
       {causes.map(cause => {
+        const isMute = cause.type === 'muted'
         const desc = describeModerationCause(cause, 'account')
         return (
           <Pressable
@@ -47,11 +49,19 @@ export function ProfileHeaderAlerts({
             accessibilityLabel={_(msg`Learn more about this warning`)}
             accessibilityHint=""
             style={[styles.container, pal.viewLight, style]}>
-            <ShieldExclamation style={pal.text} size={24} />
-            <Text type="lg" style={[{flex: 1}, pal.text]}>
+            {isMute ? (
+              <FontAwesomeIcon
+                icon={['far', 'eye-slash']}
+                size={14}
+                color={pal.colors.textLight}
+              />
+            ) : (
+              <ShieldExclamation style={pal.text} size={18} />
+            )}
+            <Text type="sm" style={[{flex: 1}, pal.text]}>
               {desc.name}
             </Text>
-            <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
+            <Text type="sm" style={[pal.link, styles.learnMoreBtn]}>
               <Trans>Learn More</Trans>
             </Text>
           </Pressable>

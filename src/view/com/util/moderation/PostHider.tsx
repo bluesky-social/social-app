@@ -1,8 +1,8 @@
 import React, {ComponentProps} from 'react'
-import {StyleSheet, Pressable, View} from 'react-native'
+import {StyleSheet, Pressable, View, ViewStyle, StyleProp} from 'react-native'
 import {ModerationUI} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
@@ -13,9 +13,8 @@ import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
 interface Props extends ComponentProps<typeof Link> {
-  // testID?: string
-  // href?: string
-  // style: StyleProp<ViewStyle>
+  iconSize: number
+  iconStyles: StyleProp<ViewStyle>
   moderation: ModerationUI
 }
 
@@ -25,11 +24,12 @@ export function PostHider({
   moderation,
   style,
   children,
+  iconSize,
+  iconStyles,
   ...props
 }: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
   const [override, setOverride] = React.useState(false)
   const {openModal} = useModalControls()
 
@@ -47,57 +47,74 @@ export function PostHider({
     )
   }
 
+  const isMute = moderation.cause.type === 'muted'
   const desc = describeModerationCause(moderation.cause, 'content')
-  return (
-    <>
+  return !override ? (
+    <Pressable
+      onPress={() => {
+        if (!moderation.noOverride) {
+          setOverride(v => !v)
+        }
+      }}
+      accessibilityRole="button"
+      accessibilityHint={override ? 'Hide the content' : 'Show the content'}
+      accessibilityLabel=""
+      style={[
+        styles.description,
+        override ? {paddingBottom: 0} : undefined,
+        pal.view,
+      ]}>
       <Pressable
         onPress={() => {
-          if (!moderation.noOverride) {
-            setOverride(v => !v)
-          }
+          openModal({
+            name: 'moderation-details',
+            context: 'content',
+            moderation,
+          })
         }}
         accessibilityRole="button"
-        accessibilityHint={override ? 'Hide the content' : 'Show the content'}
-        accessibilityLabel=""
-        style={[
-          styles.description,
-          {paddingRight: isMobile ? 22 : 18},
-          pal.viewLight,
-        ]}>
-        <Pressable
-          onPress={() => {
-            openModal({
-              name: 'moderation-details',
-              context: 'content',
-              moderation,
-            })
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Learn more about this warning`)}
-          accessibilityHint="">
-          <ShieldExclamation size={18} style={pal.text} />
-        </Pressable>
-        <Text type="lg" style={[{flex: 1}, pal.text]} numberOfLines={1}>
-          {desc.name}
-        </Text>
-        {!moderation.noOverride && (
-          <Text type="xl" style={[styles.showBtn, pal.link]}>
-            {override ? 'Hide' : 'Show'}
-          </Text>
-        )}
-      </Pressable>
-      {override && (
-        <View style={[styles.childrenContainer, pal.border, pal.viewLight]}>
-          <Link
-            testID={testID}
-            style={addStyle(style, styles.child)}
-            href={href}
-            noFeedback>
-            {children}
-          </Link>
+        accessibilityLabel={_(msg`Learn more about this warning`)}
+        accessibilityHint="">
+        <View
+          style={[
+            pal.viewLight,
+            {
+              width: iconSize,
+              height: iconSize,
+              borderRadius: iconSize,
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+            iconStyles,
+          ]}>
+          {isMute ? (
+            <FontAwesomeIcon
+              icon={['far', 'eye-slash']}
+              size={14}
+              color={pal.colors.textLight}
+            />
+          ) : (
+            <ShieldExclamation size={14} style={pal.textLight} />
+          )}
         </View>
+      </Pressable>
+      <Text type="sm" style={[{flex: 1}, pal.textLight]} numberOfLines={1}>
+        {desc.name}
+      </Text>
+      {!moderation.noOverride && (
+        <Text type="sm" style={[styles.showBtn, pal.link]}>
+          {override ? 'Hide' : 'Show'}
+        </Text>
       )}
-    </>
+    </Pressable>
+  ) : (
+    <Link
+      testID={testID}
+      style={addStyle(style, styles.child)}
+      href={href}
+      noFeedback>
+      {children}
+    </Link>
   )
 }
 
@@ -106,17 +123,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingVertical: 14,
-    paddingLeft: 18,
+    paddingVertical: 10,
+    paddingLeft: 6,
+    paddingRight: 18,
     marginTop: 1,
   },
   showBtn: {
     marginLeft: 'auto',
     alignSelf: 'center',
-  },
-  childrenContainer: {
-    paddingHorizontal: 4,
-    paddingBottom: 6,
   },
   child: {
     borderWidth: 0,
