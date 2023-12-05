@@ -115,7 +115,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
  * local storage AND old storage exists.
  */
 export async function migrate() {
-  logger.info('persisted state: migrate')
+  logger.info('persisted state: check need to migrate')
 
   try {
     const rawLegacyData = await AsyncStorage.getItem(
@@ -137,6 +137,7 @@ export async function migrate() {
           ),
         })
         logger.info(`persisted state: debug new data`, {
+          hasNewData: Boolean(newData),
           hasExistingLoggedInAccount: Boolean(newData?.session?.currentAccount),
           numberOfExistingAccounts: newData?.session?.accounts?.length,
           existingAccountMatchesLegacy: Boolean(
@@ -144,8 +145,6 @@ export async function migrate() {
               legacy?.session?.data?.did,
           ),
         })
-      } else {
-        logger.info(`persisted state: no legacy to debug, fresh install`)
       }
     } catch (e: any) {
       logger.error(e, {message: `persisted state: legacy debugging failed`})
@@ -165,24 +164,6 @@ export async function migrate() {
         logger.error('persisted state: legacy data failed validation', {
           error: validate.error,
         })
-
-        /*
-         * If transformed data fails validation, start from a clean slate with
-         * the new data structure.
-         *
-         * If this fails, there's likely something related to AsyncStorage
-         * going wrong.
-         */
-        try {
-          await write(transform({}))
-          logger.log(
-            'persisted state: recovered from legacy validation failure',
-          )
-        } catch (e: any) {
-          logger.error(e, {
-            message: 'persisted state: error recovering from legacy migration',
-          })
-        }
       }
     } else {
       logger.log('persisted state: no migration needed')
