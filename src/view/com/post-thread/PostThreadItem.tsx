@@ -249,7 +249,7 @@ let PostThreadItemLoaded = ({
           <View style={styles.layout}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
-                size={52}
+                size={42}
                 did={post.author.did}
                 handle={post.author.handle}
                 avatar={post.author.avatar}
@@ -718,7 +718,7 @@ const useStyles = () => {
       paddingBottom: 2,
     },
     metaExpandedLine1: {
-      paddingTop: 5,
+      paddingTop: 0,
       paddingBottom: 0,
     },
     metaItem: {
