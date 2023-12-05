@@ -1,11 +1,5 @@
 import React from 'react'
 import {View, StyleSheet, Pressable, ScrollView} from 'react-native'
-import Animated, {
-  useSharedValue,
-  withTiming,
-  useAnimatedStyle,
-  Easing,
-} from 'react-native-reanimated'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -34,112 +28,84 @@ const TOTAL_HEIGHT = 250
 
 export function ProfileHeaderSuggestedFollows({
   actorDid,
-  active,
   requestDismiss,
 }: {
   actorDid: string
-  active: boolean
   requestDismiss: () => void
 }) {
-  const {track} = useAnalytics()
   const pal = usePalette('default')
-  const animatedHeight = useSharedValue(0)
-  const animatedStyles = useAnimatedStyle(() => ({
-    opacity: animatedHeight.value / TOTAL_HEIGHT,
-    height: animatedHeight.value,
-  }))
-
-  React.useEffect(() => {
-    if (active) {
-      track('ProfileHeader:SuggestedFollowsOpened')
-
-      animatedHeight.value = withTiming(TOTAL_HEIGHT, {
-        duration: 500,
-        easing: Easing.inOut(Easing.exp),
-      })
-    } else {
-      animatedHeight.value = withTiming(0, {
-        duration: 500,
-        easing: Easing.inOut(Easing.exp),
-      })
-    }
-  }, [active, animatedHeight, track])
-
   const {isLoading, data} = useSuggestedFollowsByActorQuery({
     did: actorDid,
   })
-
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[{overflow: 'hidden', opacity: 0}, animatedStyles]}>
-      <View style={{paddingVertical: OUTER_PADDING}} pointerEvents="box-none">
+    <View
+      style={{paddingVertical: OUTER_PADDING, height: TOTAL_HEIGHT}}
+      pointerEvents="box-none">
+      <View
+        pointerEvents="box-none"
+        style={{
+          backgroundColor: pal.viewLight.backgroundColor,
+          height: '100%',
+          paddingTop: INNER_PADDING / 2,
+        }}>
         <View
           pointerEvents="box-none"
           style={{
-            backgroundColor: pal.viewLight.backgroundColor,
-            height: '100%',
-            paddingTop: INNER_PADDING / 2,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: 4,
+            paddingBottom: INNER_PADDING / 2,
+            paddingLeft: INNER_PADDING,
+            paddingRight: INNER_PADDING / 2,
           }}>
-          <View
-            pointerEvents="box-none"
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingTop: 4,
-              paddingBottom: INNER_PADDING / 2,
-              paddingLeft: INNER_PADDING,
-              paddingRight: INNER_PADDING / 2,
-            }}>
-            <Text type="sm-bold" style={[pal.textLight]}>
-              Suggested for you
-            </Text>
+          <Text type="sm-bold" style={[pal.textLight]}>
+            Suggested for you
+          </Text>
 
-            <Pressable
-              accessibilityRole="button"
-              onPress={requestDismiss}
-              hitSlop={10}
-              style={{padding: INNER_PADDING / 2}}>
-              <FontAwesomeIcon
-                icon="x"
-                size={12}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Pressable>
-          </View>
-
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={isWeb}
-            persistentScrollbar={true}
-            scrollIndicatorInsets={{bottom: 0}}
-            scrollEnabled={true}
-            contentContainerStyle={{
-              alignItems: 'flex-start',
-              paddingLeft: INNER_PADDING / 2,
-              paddingBottom: INNER_PADDING,
-            }}>
-            {isLoading ? (
-              <>
-                <SuggestedFollowSkeleton />
-                <SuggestedFollowSkeleton />
-                <SuggestedFollowSkeleton />
-                <SuggestedFollowSkeleton />
-                <SuggestedFollowSkeleton />
-                <SuggestedFollowSkeleton />
-              </>
-            ) : data ? (
-              data.suggestions.map(profile => (
-                <SuggestedFollow key={profile.did} profile={profile} />
-              ))
-            ) : (
-              <View />
-            )}
-          </ScrollView>
+          <Pressable
+            accessibilityRole="button"
+            onPress={requestDismiss}
+            hitSlop={10}
+            style={{padding: INNER_PADDING / 2}}>
+            <FontAwesomeIcon
+              icon="x"
+              size={12}
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </Pressable>
         </View>
+
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={isWeb}
+          persistentScrollbar={true}
+          scrollIndicatorInsets={{bottom: 0}}
+          scrollEnabled={true}
+          contentContainerStyle={{
+            alignItems: 'flex-start',
+            paddingLeft: INNER_PADDING / 2,
+            paddingBottom: INNER_PADDING,
+          }}>
+          {isLoading ? (
+            <>
+              <SuggestedFollowSkeleton />
+              <SuggestedFollowSkeleton />
+              <SuggestedFollowSkeleton />
+              <SuggestedFollowSkeleton />
+              <SuggestedFollowSkeleton />
+              <SuggestedFollowSkeleton />
+            </>
+          ) : data ? (
+            data.suggestions.map(profile => (
+              <SuggestedFollow key={profile.did} profile={profile} />
+            ))
+          ) : (
+            <View />
+          )}
+        </ScrollView>
       </View>
-    </Animated.View>
+    </View>
   )
 }
 
