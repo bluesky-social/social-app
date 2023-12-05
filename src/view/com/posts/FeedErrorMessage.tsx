@@ -92,7 +92,7 @@ function FeedgenErrorMessage({
         [KnownError.Unknown]: '',
         [KnownError.Block]: '',
         [KnownError.FeedgenDoesNotExist]: _l(
-          msgLingui`Hmmm, we're having trouble finding this feed. It may have been deleted.`,
+          msgLingui`Hmm, we're having trouble finding this feed. It may have been deleted.`,
         ),
         [KnownError.FeedgenMisconfigured]: _l(
           msgLingui`Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue.`,
@@ -104,13 +104,13 @@ function FeedgenErrorMessage({
           msgLingui`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
         ),
         [KnownError.FeedNSFPublic]: _l(
-          msgLingui`We're sorry, but this content is not viewable without a Bluesky account.`,
+          msgLingui`This content is not viewable without a Bluesky account.`,
         ),
         [KnownError.FeedgenUnknown]: _l(
-          msgLingui`Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue.`,
+          msgLingui`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
         ),
         [KnownError.FeedTooManyRequests]: _l(
-          msgLingui`We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later.`,
+          msgLingui`This feed is currently receiving high traffic and is temporarily unavailable. Please try again later.`,
         ),
       }[knownError]),
     [_l, knownError],
