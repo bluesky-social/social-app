@@ -417,7 +417,7 @@ let PostThreadItemLoaded = ({
       </>
     )
   } else {
-    const isThreadedChild = treeView && depth > 1
+    const isThreadedChild = treeView && depth > 0
     return (
       <PostOuterWrapper
         post={post}
@@ -498,10 +498,10 @@ let PostThreadItemLoaded = ({
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
-                avatarSize={26}
+                avatarSize={20}
                 displayNameType="md-bold"
                 displayNameStyle={isThreadedChild && s.ml2}
-                style={isThreadedChild && s.mb5}
+                style={isThreadedChild && s.mb2}
               />
               <PostAlerts
                 moderation={moderation.content}
@@ -594,7 +594,7 @@ function PostOuterWrapper({
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const styles = useStyles()
-  if (treeView && depth > 1) {
+  if (treeView && depth > 0) {
     return (
       <View
         style={[
@@ -603,9 +603,9 @@ function PostOuterWrapper({
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingLeft: 20,
+            paddingLeft: depth === 1 ? 10 : 20,
             borderTopWidth: depth === 1 ? 1 : 0,
-            paddingTop: depth === 1 ? 8 : 0,
+            paddingTop: depth === 1 ? 6 : 0,
           },
         ]}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
@@ -614,8 +614,8 @@ function PostOuterWrapper({
             style={{
               borderLeftWidth: 2,
               borderLeftColor: pal.colors.border,
-              marginLeft: n === 0 ? 14 : isMobile ? 6 : 14,
-              paddingLeft: n === 0 ? 18 : isMobile ? 6 : 12,
+              marginLeft: isMobile ? 6 : 14,
+              paddingLeft: isMobile ? 6 : 12,
             }}
           />
         ))}
