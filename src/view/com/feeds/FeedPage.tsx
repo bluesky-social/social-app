@@ -1,8 +1,9 @@
+import React from 'react'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useIsFocused} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {useAnalytics} from '@segment/analytics-react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
@@ -12,7 +13,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
-import React from 'react'
 import {FlatList, View, useWindowDimensions} from 'react-native'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
@@ -24,6 +24,7 @@ import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -45,6 +46,7 @@ export function FeedPage({
   const {isSandbox, hasSession} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const navigation = useNavigation()
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -52,7 +54,6 @@ export function FeedPage({
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
-  const isScreenFocused = useIsFocused()
   const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {
@@ -61,21 +62,24 @@ export function FeedPage({
   }, [headerOffset, resetMainScroll])
 
   const onSoftReset = React.useCallback(() => {
-    if (isPageFocused) {
+    const isScreenFocused =
+      getTabState(getRootNavigation(navigation).getState(), 'Home') ===
+      TabState.InsideAtRoot
+    if (isScreenFocused && isPageFocused) {
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }
-  }, [isPageFocused, scrollToTop, queryClient, feed, setHasNew])
+  }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
   // fires when page within screen is activated/deactivated
   React.useEffect(() => {
-    if (!isPageFocused || !isScreenFocused) {
+    if (!isPageFocused) {
       return
     }
     screen('Feed')
     return listenSoftReset(onSoftReset)
-  }, [onSoftReset, screen, isPageFocused, isScreenFocused])
+  }, [onSoftReset, screen, isPageFocused])
 
   const onPressCompose = React.useCallback(() => {
     track('HomeScreen:PressCompose')
