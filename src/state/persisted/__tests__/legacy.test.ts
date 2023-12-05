@@ -1,7 +1,11 @@
 import {expect, test} from '@jest/globals'
 
 import {transform} from '#/state/persisted/legacy'
-import {schema} from '#/state/persisted/schema'
+import {defaults, schema} from '#/state/persisted/schema'
+
+test('defaults', () => {
+  expect(() => schema.parse(defaults)).not.toThrow()
+})
 
 test('transform', () => {
   const data = transform({})
