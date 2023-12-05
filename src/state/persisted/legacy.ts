@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
-import {defaults, Schema} from '#/state/persisted/schema'
+import {defaults, Schema, schema} from '#/state/persisted/schema'
 import {write, read} from '#/state/persisted/store'
 
 /**
@@ -153,33 +153,44 @@ export async function migrate() {
 
     if (!alreadyMigrated && rawLegacyData) {
       logger.info('persisted state: migrating legacy storage')
+
       const legacyData = JSON.parse(rawLegacyData)
       const newData = transform(legacyData)
-      await write(newData)
-      // track successful migrations
-      logger.log('persisted state: migrated legacy storage')
+      const validate = schema.safeParse(newData)
+
+      if (validate.success) {
+        await write(newData)
+        logger.log('persisted state: migrated legacy storage')
+      } else {
+        logger.error('persisted state: legacy data failed validation', {
+          error: validate.error,
+        })
+
+        /*
+         * If transformed data fails validation, start from a clean slate with
+         * the new data structure.
+         *
+         * If this fails, there's likely something related to AsyncStorage
+         * going wrong.
+         */
+        try {
+          await write(transform({}))
+          logger.log(
+            'persisted state: recovered from legacy validation failure',
+          )
+        } catch (e: any) {
+          logger.error(e, {
+            message: 'persisted state: error recovering from legacy migration',
+          })
+        }
+      }
     } else {
-      // track successful migrations
       logger.log('persisted state: no migration needed')
     }
   } catch (e: any) {
     logger.error(e, {
       message: 'persisted state: error migrating legacy storage',
     })
-
-    /*
-     * If we fail to migrate, attempt to start from a blank slate with new data
-     * structure. If this fails, there's likely something related to
-     * AsyncStorage going wrong.
-     */
-    try {
-      const newData = transform({})
-      await write(newData)
-    } catch (e: any) {
-      logger.error(e, {
-        message: 'persisted state: error recovering from legacy migration',
-      })
-    }
   }
 }
 
