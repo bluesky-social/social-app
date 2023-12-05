@@ -2,9 +2,9 @@ import {QueryClient, QueryKey, InfiniteData} from '@tanstack/react-query'
 
 export function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,
-  querykey: QueryKey,
+  queryKey: QueryKey,
 ) {
-  queryClient.setQueryData<InfiniteData<T>>(querykey, data => {
+  queryClient.setQueriesData<InfiniteData<T>>({queryKey}, data => {
     if (data) {
       return {
         pageParams: data.pageParams.slice(0, 1),
@@ -13,5 +13,5 @@ export function truncateAndInvalidate<T = any>(
     }
     return data
   })
-  queryClient.invalidateQueries({queryKey: querykey})
+  queryClient.invalidateQueries({queryKey})
 }
