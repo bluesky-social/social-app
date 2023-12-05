@@ -110,8 +110,7 @@ export const consoleTransport: Transport = (
   timestamp,
 ) => {
   const extra = Object.keys(metadata).length
-    ? // don't prepareMetadata here, in dev we want the stack trace
-      ' ' + JSON.stringify(metadata, null, '  ')
+    ? ' ' + JSON.stringify(prepareMetadata(metadata), null, '  ')
     : ''
   const log = {
     [LogLevel.Debug]: console.debug,
@@ -121,7 +120,14 @@ export const consoleTransport: Transport = (
     [LogLevel.Error]: console.error,
   }[level]
 
-  log(`${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`)
+  if (message instanceof Error) {
+    console.info(
+      `${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`,
+    )
+    log(message)
+  } else {
+    log(`${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`)
+  }
 }
 
 export const sentryTransport: Transport = (
