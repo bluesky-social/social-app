@@ -132,6 +132,7 @@ export function ListMembers({
         name: 'user-add-remove-lists',
         subject: profile.did,
         displayName: profile.displayName || profile.handle,
+        handle: profile.handle,
       })
     },
     [openModal],

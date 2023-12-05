@@ -375,7 +375,10 @@ let PostThreadItemLoaded = ({
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
-                    <Text testID="repostCount" type="lg" style={pal.textLight}>
+                    <Text
+                      testID="repostCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.repostCount)}
                       </Text>{' '}
@@ -390,7 +393,10 @@ let PostThreadItemLoaded = ({
                     style={styles.expandedInfoItem}
                     href={likesHref}
                     title={likesTitle}>
-                    <Text testID="likeCount" type="lg" style={pal.textLight}>
+                    <Text
+                      testID="likeCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.likeCount)}
                       </Text>{' '}

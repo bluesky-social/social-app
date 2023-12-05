@@ -1,5 +1,7 @@
 /* eslint-env detox/detox */
 
+import {describe, beforeAll, it} from '@jest/globals'
+import {expect} from 'detox'
 import {openApp, loginAsAlice, createServer} from '../util'
 
 describe('Mergefeed', () => {
@@ -9,8 +11,12 @@ describe('Mergefeed', () => {
   })
 
   it('Login', async () => {
+    await element(by.id('e2eOpenLoggedOutView')).tap()
     await loginAsAlice()
     await element(by.id('e2eToggleMergefeed')).tap()
+    await element(by.id('bottomBarFeedsBtn')).tap()
+    await element(by.id('feed-alice-favs-toggleSave')).tap()
+    await element(by.id('e2eGotoHome')).tap()
   })
 
   it('Sees the expected mix of posts with default filters', async () => {

@@ -28,11 +28,13 @@ export const snapPoints = ['fullscreen']
 
 export function Component({
   subject,
+  handle,
   displayName,
   onAdd,
   onRemove,
 }: {
   subject: string
+  handle: string
   displayName: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
@@ -60,6 +62,7 @@ export function Component({
             list={list}
             memberships={memberships}
             subject={subject}
+            handle={handle}
             onAdd={onAdd}
             onRemove={onRemove}
           />
@@ -87,6 +90,7 @@ function ListItem({
   list,
   memberships,
   subject,
+  handle,
   onAdd,
   onRemove,
 }: {
@@ -94,6 +98,7 @@ function ListItem({
   list: GraphDefs.ListView
   memberships: ListMembersip[] | undefined
   subject: string
+  handle: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
@@ -182,7 +187,7 @@ function ListItem({
           <ActivityIndicator />
         ) : (
           <Button
-            testID={`user-${subject}-addBtn`}
+            testID={`user-${handle}-addBtn`}
             type="default"
             label={membership === false ? _(msg`Add`) : _(msg`Remove`)}
             onPress={onToggleMembership}

@@ -1,5 +1,7 @@
 /* eslint-env detox/detox */
 
+import {describe, beforeAll, it} from '@jest/globals'
+import {expect} from 'detox'
 import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
 
 describe('Curate lists', () => {
@@ -11,7 +13,6 @@ describe('Curate lists', () => {
   })
 
   it('Login and create a curatelists', async () => {
-    await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
     await element(by.id('e2eGotoLists')).tap()
     await element(by.id('newUserListBtn')).tap()
@@ -27,7 +28,7 @@ describe('Curate lists', () => {
 
   it('Edit display name and description via the edit curatelist modal', async () => {
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editNameInput')).clearText()
     await element(by.id('editNameInput')).typeText('Bad Ppl')
@@ -45,7 +46,7 @@ describe('Curate lists', () => {
 
   it('Remove description via the edit curatelist modal', async () => {
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editDescriptionInput')).clearText()
     await element(by.id('saveBtn')).tap()
@@ -60,7 +61,7 @@ describe('Curate lists', () => {
   it('Set avi via the edit curatelist modal', async () => {
     await expect(element(by.id('userAvatarFallback'))).toExist()
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
     await element(by.text('Library')).tap()
@@ -77,7 +78,7 @@ describe('Curate lists', () => {
   it('Remove avi via the edit curatelist modal', async () => {
     await expect(element(by.id('userAvatarImage'))).toExist()
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
     await element(by.text('Remove')).tap()
@@ -98,6 +99,7 @@ describe('Curate lists', () => {
   })
 
   it('Create a new curatelist', async () => {
+    await element(by.id('e2eGotoLists')).tap()
     await element(by.id('newUserListBtn')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editNameInput')).typeText('Good Ppl')
@@ -128,6 +130,7 @@ describe('Curate lists', () => {
   })
 
   it('Pins the list', async () => {
+    await expect(element(by.id('pinBtn'))).toBeVisible()
     await element(by.id('pinBtn')).tap()
     await element(by.id('e2eGotoHome')).tap()
     await element(by.id('homeScreenFeedTabs-Good Ppl')).tap()
@@ -152,15 +155,15 @@ describe('Curate lists', () => {
     await expect(element(by.id('user-bob.test'))).toBeVisible()
     await element(by.id('user-bob.test-editBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Good Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
   it('Shows the curatelist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-4')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-5')).tap()
     await element(by.id('list-Good Ppl')).tap()
   })
 
@@ -173,15 +176,15 @@ describe('Curate lists', () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Good Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Good Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
@@ -192,8 +195,8 @@ describe('Curate lists', () => {
     await element(by.id('bottomBarSearchBtn')).tap()
     await element(by.id('searchTextInput')).typeText('alice')
     await element(by.id('searchAutoCompleteResult-alice.test')).tap()
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-3')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-3')).tap()
     await element(by.id('list-Good Ppl')).tap()
     await element(by.id('headerDropdownBtn')).tap()
     await element(by.text('Report List')).tap()

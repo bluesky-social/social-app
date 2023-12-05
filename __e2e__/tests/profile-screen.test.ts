@@ -1,5 +1,7 @@
 /* eslint-env detox/detox */
 
+import {describe, beforeAll, it} from '@jest/globals'
+import {expect} from 'detox'
 import {openApp, loginAsAlice, createServer, sleep} from '../util'
 
 describe('Profile screen', () => {
@@ -11,17 +13,16 @@ describe('Profile screen', () => {
   })
 
   it('Login and navigate to my profile', async () => {
-    await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
     await element(by.id('bottomBarProfileBtn')).tap()
   })
 
   it('Can see feeds', async () => {
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-4')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-4')).tap()
     await expect(element(by.id('feed-alice-favs'))).toBeVisible()
-    await element(by.id('selector')).swipe('right')
-    await element(by.id('selector-0')).tap()
+    await element(by.id('profilePager-selector')).swipe('right')
+    await element(by.id('profilePager-selector-0')).tap()
   })
 
   it('Open and close edit profile modal', async () => {
@@ -135,6 +136,14 @@ describe('Profile screen', () => {
   })
 
   it('Can like posts', async () => {
+    await element(by.id('postsFeed-flatlist')).swipe(
+      'down',
+      'slow',
+      1,
+      0.5,
+      0.5,
+    )
+
     const posts = by.id('feedItem-by-bob.test')
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),

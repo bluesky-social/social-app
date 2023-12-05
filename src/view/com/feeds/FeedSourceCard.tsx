@@ -170,6 +170,7 @@ export function FeedSourceCardLoaded({
         {showSaveBtn && feed.type === 'feed' && (
           <View>
             <Pressable
+              testID={`feed-${feed.displayName}-toggleSave`}
               disabled={isSavePending || isPinPending || isRemovePending}
               accessibilityRole="button"
               accessibilityLabel={

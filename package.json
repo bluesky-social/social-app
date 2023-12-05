@@ -21,9 +21,9 @@
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node __e2e__/mock-server.ts",
-    "e2e:metro": "RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
-    "e2e:build": "detox build -c ios.sim.debug",
-    "e2e:run": "detox test --configuration ios.sim.debug --take-screenshots all",
+    "e2e:metro": "NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
+    "e2e:build": "NODE_ENV=test detox build -c ios.sim.debug",
+    "e2e:run": "NODE_ENV=test detox test --configuration ios.sim.debug --take-screenshots all",
     "perf:test": "NODE_ENV=test maestro test",
     "perf:test:run": "NODE_ENV=test maestro test __e2e__/maestro/scroll.yaml",
     "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
@@ -168,7 +168,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.2.5",
+    "@atproto/dev-env": "^0.2.16",
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
