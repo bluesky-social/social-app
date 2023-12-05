@@ -71,7 +71,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       (evt: LayoutChangeEvent) => {
         const height = evt.nativeEvent.layout.height
         if (height > 0) {
-          setTabBarHeight(height)
+          // The rounding is necessary to prevent jumps on iOS
+          setTabBarHeight(Math.round(height))
         }
       },
       [setTabBarHeight],
@@ -80,7 +81,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       (evt: LayoutChangeEvent) => {
         const height = evt.nativeEvent.layout.height
         if (height > 0) {
-          setHeaderOnlyHeight(height)
+          // The rounding is necessary to prevent jumps on iOS
+          setHeaderOnlyHeight(Math.round(height))
         }
       },
       [setHeaderOnlyHeight],

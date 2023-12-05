@@ -620,11 +620,17 @@ let ProfileHeaderLoaded = ({
         <ProfileHeaderAlerts moderation={moderation} />
       </View>
 
-      {!isProfilePreview && (
+      {!isProfilePreview && showSuggestedFollows && (
         <ProfileHeaderSuggestedFollows
           actorDid={profile.did}
-          active={showSuggestedFollows}
-          requestDismiss={() => setShowSuggestedFollows(!showSuggestedFollows)}
+          requestDismiss={() => {
+            if (showSuggestedFollows) {
+              setShowSuggestedFollows(false)
+            } else {
+              track('ProfileHeader:SuggestedFollowsOpened')
+              setShowSuggestedFollows(true)
+            }
+          }}
         />
       )}
 
