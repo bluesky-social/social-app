@@ -36,6 +36,7 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 let Feed = ({
   feed,
   feedParams,
+  ignoreFilterFor,
   style,
   enabled,
   pollInterval,
@@ -53,6 +54,7 @@ let Feed = ({
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
+  ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
   enabled?: boolean
   pollInterval?: number
@@ -202,6 +204,7 @@ let Feed = ({
           slice={item}
           // we check for this before creating the feedItems array
           moderationOpts={moderationOpts!}
+          ignoreFilterFor={ignoreFilterFor}
         />
       )
     },
@@ -212,6 +215,7 @@ let Feed = ({
       onPressRetryLoadMore,
       renderEmptyState,
       moderationOpts,
+      ignoreFilterFor,
     ],
   )
 

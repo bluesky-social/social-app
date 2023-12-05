@@ -287,6 +287,7 @@ function ProfileScreenLoaded({
             scrollElRef={
               scrollElRef as React.MutableRefObject<FlatList<any> | null>
             }
+            ignoreFilterFor={profile.did}
           />
         )}
         {showRepliesTab
@@ -307,6 +308,7 @@ function ProfileScreenLoaded({
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>
                 }
+                ignoreFilterFor={profile.did}
               />
             )
           : null}
@@ -321,6 +323,7 @@ function ProfileScreenLoaded({
             scrollElRef={
               scrollElRef as React.MutableRefObject<FlatList<any> | null>
             }
+            ignoreFilterFor={profile.did}
           />
         )}
         {showLikesTab
@@ -341,6 +344,7 @@ function ProfileScreenLoaded({
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>
                 }
+                ignoreFilterFor={profile.did}
               />
             )
           : null}
@@ -396,10 +400,19 @@ interface FeedSectionProps {
   isFocused: boolean
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  ignoreFilterFor?: string
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef},
+    {
+      feed,
+      onScroll,
+      headerHeight,
+      isFocused,
+      isScrolledDown,
+      scrollElRef,
+      ignoreFilterFor,
+    },
     ref,
   ) {
     const queryClient = useQueryClient()
@@ -432,6 +445,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
           renderEndOfFeed={ProfileEndOfFeed}
+          ignoreFilterFor={ignoreFilterFor}
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
