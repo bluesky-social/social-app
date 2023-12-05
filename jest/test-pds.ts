@@ -59,6 +59,7 @@ export async function createServer(
 ): Promise<TestPDS> {
   const port = await getPort()
   const port2 = await getPort(port + 1)
+  const port3 = await getPort(port2 + 1)
   const pdsUrl = `http://localhost:${port}`
   const id = ids.next()
 
@@ -71,6 +72,8 @@ export async function createServer(
     },
     bsky: {
       dbPostgresSchema: `bsky_${id}`,
+      port: port3,
+      publicUrl: 'http://localhost:2584',
     },
     plc: {port: port2},
   })
