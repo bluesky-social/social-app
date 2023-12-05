@@ -22,7 +22,7 @@ export function init(queryClient: QueryClient) {
     }
 
     // register the push token with the server
-    const token = await getPushToken()
+    const token = await Notifications.getDevicePushTokenAsync()
     if (token) {
       try {
         await agent.api.app.bsky.notification.registerPush({
@@ -131,8 +131,4 @@ export function init(queryClient: QueryClient) {
   return () => {
     sub.remove()
   }
-}
-
-export function getPushToken() {
-  return Notifications.getDevicePushTokenAsync()
 }
