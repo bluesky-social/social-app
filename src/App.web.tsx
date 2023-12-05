@@ -9,7 +9,6 @@ import {enableFreeze} from 'react-native-screens'
 import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
-import {init as initReminders} from '#/state/shell/reminders'
 import {useColorMode} from 'state/shell'
 import * as analytics from 'lib/analytics/analytics'
 import {Shell} from 'view/shell/index'
@@ -41,7 +40,6 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    initReminders()
     analytics.init()
     const account = persisted.get('session').currentAccount
     resumeSession(account)

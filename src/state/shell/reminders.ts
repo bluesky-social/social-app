@@ -2,17 +2,6 @@ import * as persisted from '#/state/persisted'
 import {toHashCode} from 'lib/strings/helpers'
 import {isOnboardingActive} from './onboarding'
 import {SessionAccount} from '../session'
-import {listenSessionLoaded} from '../events'
-import {unstable__openModal} from '../modals'
-
-export function init() {
-  listenSessionLoaded(account => {
-    if (shouldRequestEmailConfirmation(account)) {
-      unstable__openModal({name: 'verify-email', showReminder: true})
-      setEmailConfirmationRequested()
-    }
-  })
-}
 
 export function shouldRequestEmailConfirmation(account: SessionAccount) {
   if (!account) {

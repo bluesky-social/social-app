@@ -11,7 +11,6 @@ import {enableFreeze} from 'react-native-screens'
 import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
-import {init as initReminders} from '#/state/shell/reminders'
 import {listenSessionDropped} from './state/events'
 import {useColorMode} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -48,7 +47,6 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    initReminders()
     analytics.init()
     notifications.init(queryClient)
     listenSessionDropped(() => {
