@@ -120,8 +120,6 @@ export const LoginForm = ({
       } else {
         setError(cleanError(errMsg))
       }
-    } finally {
-      track('Sign In', {resumedSession: false})
     }
   }
 
