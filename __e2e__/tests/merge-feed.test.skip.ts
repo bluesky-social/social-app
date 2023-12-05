@@ -4,7 +4,7 @@ import {describe, beforeAll, it} from '@jest/globals'
 import {expect} from 'detox'
 import {openApp, loginAsAlice, createServer} from '../util'
 
-describe.skip('Mergefeed', () => {
+describe('Mergefeed', () => {
   beforeAll(async () => {
     await createServer('?mergefeed')
     await openApp({permissions: {notifications: 'YES'}})
