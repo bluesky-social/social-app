@@ -39,7 +39,7 @@ export function Step3({
           accessibilityHint="Input your user handle"
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
-          <Trans>Your full handle will be</Trans>
+          <Trans>Your full handle will be</Trans>{' '}
           <Text type="lg-bold" style={[pal.text, s.ml5]}>
             @{createFullHandle(uiState.handle, uiState.userDomain)}
           </Text>
