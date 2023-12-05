@@ -104,31 +104,23 @@ export function init(queryClient: QueryClient) {
   })
 
   // handle notifications that are tapped on
-  const sub = Notifications.addNotificationResponseReceivedListener(
-    response => {
+  Notifications.addNotificationResponseReceivedListener(response => {
+    logger.debug(
+      'Notifications: response received',
+      {
+        actionIdentifier: response.actionIdentifier,
+      },
+      logger.DebugContext.notifications,
+    )
+    if (response.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
       logger.debug(
-        'Notifications: response received',
-        {
-          actionIdentifier: response.actionIdentifier,
-        },
+        'User pressed a notification, opening notifications tab',
+        {},
         logger.DebugContext.notifications,
       )
-      if (
-        response.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-      ) {
-        logger.debug(
-          'User pressed a notification, opening notifications tab',
-          {},
-          logger.DebugContext.notifications,
-        )
-        track('Notificatons:OpenApp')
-        truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
-        resetToTab('NotificationsTab') // open notifications tab
-      }
-    },
-  )
-
-  return () => {
-    sub.remove()
-  }
+      track('Notificatons:OpenApp')
+      truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+      resetToTab('NotificationsTab') // open notifications tab
+    }
+  })
 }
