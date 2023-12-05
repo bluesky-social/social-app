@@ -26,6 +26,7 @@ import {
   pollLatest,
 } from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {isWeb} from '#/platform/detection'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -216,19 +217,25 @@ let Feed = ({
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
-  const FeedFooter = React.useCallback(
-    () =>
-      isFetchingNextPage ? (
-        <View style={styles.feedFooter}>
-          <ActivityIndicator />
-        </View>
-      ) : shouldRenderEndOfFeed ? (
-        renderEndOfFeed()
-      ) : (
-        <View />
-      ),
-    [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed],
-  )
+  const FeedFooter = React.useCallback(() => {
+    /**
+     * A bit of padding at the bottom of the feed as you scroll and when you
+     * reach the end, so that content isn't cut off by the bottom of the
+     * screen.
+     */
+    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
+
+    return isFetchingNextPage ? (
+      <View style={[styles.feedFooter]}>
+        <ActivityIndicator />
+        <View style={{height: offset}} />
+      </View>
+    ) : shouldRenderEndOfFeed ? (
+      <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
+    ) : (
+      <View style={{height: offset}} />
+    )
+  }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
   const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (

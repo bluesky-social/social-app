@@ -83,7 +83,7 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:187
-#: src/view/screens/ProfileList.tsx:675
+#: src/view/screens/ProfileList.tsx:684
 msgid "Add"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:665
+#: src/view/screens/ProfileList.tsx:674
 msgid "Add a user to this list"
 msgstr ""
 
@@ -199,7 +199,7 @@ msgstr ""
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:345
+#: src/view/screens/ProfileList.tsx:352
 msgid "Are you sure?"
 msgstr ""
 
@@ -242,11 +242,11 @@ msgstr ""
 msgid "Block Account"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:446
+#: src/view/screens/ProfileList.tsx:453
 msgid "Block accounts"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:302
+#: src/view/screens/ProfileList.tsx:309
 msgid "Block these accounts?"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgstr ""
 msgid "Blocked post."
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:304
+#: src/view/screens/ProfileList.tsx:311
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:375
+#: src/view/screens/ProfileList.tsx:382
 msgid "Copy link to list"
 msgstr ""
 
@@ -555,7 +555,7 @@ msgstr ""
 msgid "Could not load feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:752
+#: src/view/screens/ProfileList.tsx:761
 msgid "Could not load list"
 msgstr ""
 
@@ -601,8 +601,8 @@ msgstr ""
 msgid "Delete app password"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:344
-#: src/view/screens/ProfileList.tsx:402
+#: src/view/screens/ProfileList.tsx:351
+#: src/view/screens/ProfileList.tsx:409
 msgid "Delete List"
 msgstr ""
 
@@ -691,7 +691,7 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:397
 msgid "Edit list details"
 msgstr ""
 
@@ -737,6 +737,10 @@ msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
+msgstr ""
+
+#: src/view/screens/Profile.tsx:454
+msgid "End of feed"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:71
@@ -888,8 +892,8 @@ msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:111
 #: src/view/screens/ProfileFeed.tsx:116
-#: src/view/screens/ProfileList.tsx:761
-#: src/view/screens/ProfileList.tsx:766
+#: src/view/screens/ProfileList.tsx:770
+#: src/view/screens/ProfileList.tsx:775
 msgid "Go Back"
 msgstr ""
 
@@ -1074,7 +1078,7 @@ msgstr ""
 #~ msgid "Light"
 #~ msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:627
+#: src/view/screens/ProfileFeed.tsx:630
 msgid "Like this feed"
 msgstr ""
 
@@ -1122,7 +1126,7 @@ msgstr ""
 msgid "Login to account that is not listed"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:479
+#: src/view/screens/ProfileFeed.tsx:480
 msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
 msgstr ""
 
@@ -1152,7 +1156,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:520
 #: src/view/screens/ProfileFeed.tsx:369
-#: src/view/screens/ProfileList.tsx:506
+#: src/view/screens/ProfileList.tsx:513
 msgid "More options"
 msgstr ""
 
@@ -1164,11 +1168,11 @@ msgstr ""
 msgid "Mute Account"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:434
+#: src/view/screens/ProfileList.tsx:441
 msgid "Mute accounts"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:267
+#: src/view/screens/ProfileList.tsx:274
 msgid "Mute these accounts?"
 msgstr ""
 
@@ -1188,7 +1192,7 @@ msgstr ""
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:269
+#: src/view/screens/ProfileList.tsx:276
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
@@ -1223,10 +1227,10 @@ msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:188
 #: src/view/screens/Feeds.tsx:510
-#: src/view/screens/Profile.tsx:382
-#: src/view/screens/ProfileFeed.tsx:449
-#: src/view/screens/ProfileList.tsx:199
-#: src/view/screens/ProfileList.tsx:231
+#: src/view/screens/Profile.tsx:384
+#: src/view/screens/ProfileFeed.tsx:450
+#: src/view/screens/ProfileList.tsx:206
+#: src/view/screens/ProfileList.tsx:238
 #: src/view/shell/desktop/LeftNav.tsx:254
 msgid "New post"
 msgstr ""
@@ -1255,8 +1259,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:620
-#: src/view/screens/ProfileList.tsx:632
+#: src/view/screens/ProfileFeed.tsx:623
+#: src/view/screens/ProfileList.tsx:641
 msgid "No description"
 msgstr ""
 
@@ -1569,7 +1573,7 @@ msgstr ""
 msgid "Report feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:423
 msgid "Report List"
 msgstr ""
 
@@ -1782,7 +1786,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:312
 #: src/view/com/util/forms/PostDropdownBtn.tsx:126
-#: src/view/screens/ProfileList.tsx:375
+#: src/view/screens/ProfileList.tsx:382
 msgid "Share"
 msgstr ""
 
@@ -1899,11 +1903,11 @@ msgstr ""
 msgid "Storybook"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:497
+#: src/view/screens/ProfileList.tsx:504
 msgid "Subscribe"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:493
+#: src/view/screens/ProfileList.tsx:500
 msgid "Subscribe to this list"
 msgstr ""
 
@@ -2108,7 +2112,7 @@ msgstr ""
 msgid "Username or email address"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:659
+#: src/view/screens/ProfileList.tsx:668
 msgid "Users"
 msgstr ""
 

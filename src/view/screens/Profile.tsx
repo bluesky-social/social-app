@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {CenteredView, FlatList} from '../com/util/Views'
@@ -36,6 +36,8 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {Text} from '#/view/com/util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -429,6 +431,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
+          renderEndOfFeed={ProfileEndOfFeed}
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
@@ -441,6 +444,18 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     )
   },
 )
+
+function ProfileEndOfFeed() {
+  const pal = usePalette('default')
+
+  return (
+    <View style={[pal.border, {paddingTop: 32, borderTopWidth: 1}]}>
+      <Text style={[pal.textLight, pal.border, {textAlign: 'center'}]}>
+        <Trans>End of feed</Trans>
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
