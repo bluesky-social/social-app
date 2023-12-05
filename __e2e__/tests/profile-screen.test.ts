@@ -136,7 +136,13 @@ describe('Profile screen', () => {
   })
 
   it('Can like posts', async () => {
-    await element(by.id('postsFeed-flatlist')).swipe('down', 'fast')
+    await element(by.id('postsFeed-flatlist')).swipe(
+      'down',
+      'slow',
+      1,
+      0.5,
+      0.5,
+    )
 
     const posts = by.id('feedItem-by-bob.test')
     await expect(
