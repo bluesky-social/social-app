@@ -267,7 +267,7 @@ function ProvidedHandleForm({
         />
       </View>
       <Text type="md" style={[pal.textLight, s.pl10, s.pt10]}>
-        <Trans>Your full handle will be </Trans>
+        <Trans>Your full handle will be</Trans>{' '}
         <Text type="md-bold" style={pal.textLight}>
           @{createFullHandle(handle, userDomain)}
         </Text>
