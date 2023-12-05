@@ -299,7 +299,7 @@ export function SettingsScreen({}: Props) {
                 </>
               )}
               <Text type="lg" style={pal.text}>
-                {currentAccount.email}{' '}
+                {currentAccount.email || '(no email)'}{' '}
               </Text>
               <Link onPress={() => openModal({name: 'change-email'})}>
                 <Text type="lg" style={pal.link}>

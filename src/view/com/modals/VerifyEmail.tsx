@@ -108,8 +108,8 @@ export function Component({showReminder}: {showReminder?: boolean}) {
             </Trans>
           ) : stage === Stages.ConfirmCode ? (
             <Trans>
-              An email has been sent to {currentAccount?.email || ''}. It
-              includes a confirmation code which you can enter below.
+              An email has been sent to {currentAccount?.email || '(no email)'}.
+              It includes a confirmation code which you can enter below.
             </Trans>
           ) : (
             ''
@@ -125,7 +125,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                 size={16}
               />
               <Text type="xl-medium" style={[pal.text, s.flex1, {minWidth: 0}]}>
-                {currentAccount?.email || ''}
+                {currentAccount?.email || '(no email)'}
               </Text>
             </View>
             <Pressable

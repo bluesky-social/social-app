@@ -66,7 +66,6 @@ type LegacySchema = {
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
-// TODO remove, assume that partial data may be here during our refactor
 export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
