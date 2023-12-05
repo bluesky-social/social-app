@@ -147,8 +147,8 @@ export async function migrate() {
       } else {
         logger.info(`persisted state: no legacy to debug, fresh install`)
       }
-    } catch (e) {
-      logger.error(`persisted state: legacy debugging failed`, {error: e})
+    } catch (e: any) {
+      logger.error(e, {message: `persisted state: legacy debugging failed`})
     }
 
     if (!alreadyMigrated && rawLegacyData) {
@@ -162,10 +162,24 @@ export async function migrate() {
       // track successful migrations
       logger.log('persisted state: no migration needed')
     }
-  } catch (e) {
-    logger.error('persisted state: error migrating legacy storage', {
-      error: String(e),
+  } catch (e: any) {
+    logger.error(e, {
+      message: 'persisted state: error migrating legacy storage',
     })
+
+    /*
+     * If we fail to migrate, attempt to start from a blank slate with new data
+     * structure. If this fails, there's likely something related to
+     * AsyncStorage going wrong.
+     */
+    try {
+      const newData = transform({})
+      await write(newData)
+    } catch (e: any) {
+      logger.error(e, {
+        message: 'persisted state: error recovering from legacy migration',
+      })
+    }
   }
 }
 
