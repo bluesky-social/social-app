@@ -97,18 +97,8 @@ describe('Curate lists', () => {
     await element(by.id('confirmBtn')).tap()
     await expect(element(by.id('listsEmpty'))).toBeVisible()
   })
-})
-
-describe('Curate lists 2', () => {
-  beforeAll(async () => {
-    await createServer('?users&follows&posts')
-    await openApp({
-      permissions: {notifications: 'YES', medialibrary: 'YES', photos: 'YES'},
-    })
-  })
 
   it('Create a new curatelist', async () => {
-    await loginAsAlice()
     await element(by.id('e2eGotoLists')).tap()
     await element(by.id('newUserListBtn')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
