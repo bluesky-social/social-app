@@ -471,12 +471,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       theme={theme}
       onReady={() => {
         SplashScreen.hideAsync()
-        const initMs = Math.round(
-          // @ts-ignore Emitted by Metro in the bundle prelude
-          performance.now() - global.__BUNDLE_START_TIME__,
-        )
-        console.log(`Time to first paint: ${initMs} ms`)
-        logModuleInitTrace()
+        logModuleInitTime()
       }}>
       {children}
     </NavigationContainer>
@@ -585,7 +580,17 @@ const styles = StyleSheet.create({
   },
 })
 
-function logModuleInitTrace() {
+let didInit = false
+function logModuleInitTime() {
+  if (didInit) {
+    return
+  }
+  didInit = true
+  const initMs = Math.round(
+    // @ts-ignore Emitted by Metro in the bundle prelude
+    performance.now() - global.__BUNDLE_START_TIME__,
+  )
+  console.log(`Time to first paint: ${initMs} ms`)
   if (__DEV__) {
     // This log is noisy, so keep false committed
     const shouldLog = false
