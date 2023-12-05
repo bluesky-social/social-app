@@ -210,7 +210,7 @@ let Feed = ({
         return (
           <FeedErrorMessage
             feedDesc={feed}
-            error={error}
+            error={error ?? undefined}
             onPressTryAgain={onPressTryAgain}
           />
         )

@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {msg as msgLingui} from '@lingui/macro'
+import {msg as msgLingui, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {EmptyState} from '../util/EmptyState'
@@ -35,7 +35,7 @@ export function FeedErrorMessage({
   onPressTryAgain,
 }: {
   feedDesc: FeedDescriptor
-  error: any
+  error?: Error
   onPressTryAgain: () => void
 }) {
   const knownError = React.useMemo(
@@ -47,7 +47,13 @@ export function FeedErrorMessage({
     knownError !== KnownError.Unknown &&
     feedDesc.startsWith('feedgen')
   ) {
-    return <FeedgenErrorMessage feedDesc={feedDesc} knownError={knownError} />
+    return (
+      <FeedgenErrorMessage
+        feedDesc={feedDesc}
+        knownError={knownError}
+        rawError={error}
+      />
+    )
   }
 
   if (knownError === KnownError.Block) {
@@ -71,9 +77,11 @@ export function FeedErrorMessage({
 function FeedgenErrorMessage({
   feedDesc,
   knownError,
+  rawError,
 }: {
   feedDesc: FeedDescriptor
   knownError: KnownError
+  rawError?: Error
 }) {
   const pal = usePalette('default')
   const {_: _l} = useLingui()
@@ -180,6 +188,13 @@ function FeedgenErrorMessage({
         },
       ]}>
       <Text style={pal.text}>{msg}</Text>
+
+      {rawError?.message && (
+        <Text style={pal.textLight}>
+          <Trans>Message from server</Trans>: {rawError.message}
+        </Text>
+      )}
+
       {cta}
     </View>
   )

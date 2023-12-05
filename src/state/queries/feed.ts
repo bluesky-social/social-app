@@ -175,7 +175,10 @@ export function useIsFeedPublicQuery({uri}: {uri: string}) {
           feed: uri,
           limit: 1,
         })
-        return Boolean(res.data.feed)
+        return {
+          isPublic: Boolean(res.data.feed),
+          error: undefined,
+        }
       } catch (e: any) {
         /**
          * This should be an `XRPCError`, but I can't safely import from
@@ -184,10 +187,19 @@ export function useIsFeedPublicQuery({uri}: {uri: string}) {
          * @see https://github.com/bluesky-social/atproto/blob/c17971a2d8e424cc7f10c071d97c07c08aa319cf/packages/xrpc/src/client.ts#L126
          */
         if (e?.status === 401) {
-          return false
+          return {
+            isPublic: false,
+            error: e,
+          }
         }
 
-        return true
+        /*
+         * Non-401 response means something else went wrong on the server
+         */
+        return {
+          isPublic: true,
+          error: e,
+        }
       }
     },
   })

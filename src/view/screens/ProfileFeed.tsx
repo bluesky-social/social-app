@@ -136,7 +136,7 @@ export function ProfileFeedScreen(props: Props) {
 function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   const {data: preferences} = usePreferencesQuery()
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
-  const {isLoading: isPublicStatusLoading, data: isPublic} =
+  const {isLoading: isPublicStatusLoading, data: isPublicResponse} =
     useIsFeedPublicQuery({uri: feedUri})
 
   if (!preferences || !info || isPublicStatusLoading) {
@@ -153,7 +153,7 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
     <ProfileFeedScreenInner
       preferences={preferences}
       feedInfo={info as FeedSourceFeedInfo}
-      isPublic={Boolean(isPublic)}
+      isPublicResponse={isPublicResponse}
     />
   )
 }
@@ -161,11 +161,11 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
 export function ProfileFeedScreenInner({
   preferences,
   feedInfo,
-  isPublic,
+  isPublicResponse,
 }: {
   preferences: UsePreferencesQueryResponse
   feedInfo: FeedSourceFeedInfo
-  isPublic: boolean
+  isPublicResponse: ReturnType<typeof useIsFeedPublicQuery>['data']
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
@@ -403,7 +403,7 @@ export function ProfileFeedScreenInner({
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
         {({onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused}) =>
-          isPublic ? (
+          isPublicResponse?.isPublic ? (
             <FeedSection
               ref={feedSectionRef}
               feed={`feedgen|${feedInfo.uri}`}
@@ -417,7 +417,7 @@ export function ProfileFeedScreenInner({
             />
           ) : (
             <CenteredView sideBorders style={[{paddingTop: headerHeight}]}>
-              <NonPublicFeedMessage />
+              <NonPublicFeedMessage rawError={isPublicResponse?.error} />
             </CenteredView>
           )
         }
@@ -455,7 +455,7 @@ export function ProfileFeedScreenInner({
   )
 }
 
-function NonPublicFeedMessage() {
+function NonPublicFeedMessage({rawError}: {rawError?: Error}) {
   const pal = usePalette('default')
 
   return (
@@ -474,6 +474,7 @@ function NonPublicFeedMessage() {
           {
             padding: 12,
             borderRadius: 8,
+            gap: 12,
           },
         ]}>
         <Text style={[pal.text]}>
@@ -482,6 +483,12 @@ function NonPublicFeedMessage() {
             account. Please sign up or sign in to view this feed!
           </Trans>
         </Text>
+
+        {rawError?.message && (
+          <Text style={pal.textLight}>
+            <Trans>Message from server</Trans>: {rawError.message}
+          </Text>
+        )}
       </View>
     </View>
   )
