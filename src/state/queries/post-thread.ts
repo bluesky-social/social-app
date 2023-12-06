@@ -239,7 +239,8 @@ export function* findAllPostsInQueryData(
       if (item.uri === uri) {
         yield item
       }
-      const quotedPost = getEmbeddedPost(item.post.embed)
+      const quotedPost =
+        item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
       if (quotedPost?.uri === uri) {
         yield embedViewRecordToPlaceholderThread(quotedPost)
       }

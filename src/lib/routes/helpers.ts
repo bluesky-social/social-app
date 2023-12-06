@@ -1,7 +1,7 @@
 import {NavigationProp} from '@react-navigation/native'
 import {State, RouteParams} from './types'
 
-export function getRootNavigation<T>(
+export function getRootNavigation<T extends {}>(
   nav: NavigationProp<T>,
 ): NavigationProp<T> {
   while (nav.getParent()) {

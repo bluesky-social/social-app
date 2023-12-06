@@ -120,7 +120,7 @@ export function* findAllPostsInQueryData(
         if (item.subject?.uri === uri) {
           yield item.subject
         }
-        const quotedPost = getEmbeddedPost(item.subject.embed)
+        const quotedPost = getEmbeddedPost(item.subject?.embed)
         if (quotedPost?.uri === uri) {
           yield embedViewRecordToPostView(quotedPost)
         }
