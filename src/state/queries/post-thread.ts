@@ -2,6 +2,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedGetPostThread,
+  AppBskyEmbedRecord,
 } from '@atproto/api'
 import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
@@ -10,6 +11,7 @@ import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
 import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
 import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
+import {getEmbeddedPost} from './util'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
@@ -237,6 +239,10 @@ export function* findAllPostsInQueryData(
       if (item.uri === uri) {
         yield item
       }
+      const quotedPost = getEmbeddedPost(item.post.embed)
+      if (quotedPost?.uri === uri) {
+        yield embedViewRecordToPlaceholderThread(quotedPost)
+      }
     }
   }
 }
@@ -301,7 +307,38 @@ function postViewToPlaceholderThread(
       showChildReplyLine: false,
       showParentReplyLine: false,
       isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
-      isChildLoading: !!post.replyCount,
+      isChildLoading: true, // assume yes (show the spinner) just in case
+    },
+  }
+}
+
+function embedViewRecordToPlaceholderThread(
+  record: AppBskyEmbedRecord.ViewRecord,
+): ThreadNode {
+  return {
+    type: 'post',
+    _reactKey: record.uri,
+    uri: record.uri,
+    post: {
+      uri: record.uri,
+      cid: record.cid,
+      author: record.author,
+      record: record.value,
+      indexedAt: record.indexedAt,
+      labels: record.labels,
+    },
+    record: record.value as AppBskyFeedPost.Record, // validated in getEmbeddedPost
+    parent: undefined,
+    replies: undefined,
+    viewer: undefined, // not available
+    ctx: {
+      depth: 0,
+      isHighlightedPost: true,
+      hasMore: false,
+      showChildReplyLine: false,
+      showParentReplyLine: false,
+      isParentLoading: !!(record.value as AppBskyFeedPost.Record).reply,
+      isChildLoading: true, // not available, so assume yes (to show the spinner)
     },
   }
 }

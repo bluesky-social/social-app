@@ -23,6 +23,7 @@ import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
+import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
 type AuthorFilter =
@@ -262,6 +263,10 @@ export function* findAllPostsInQueryData(
       for (const item of page.feed) {
         if (item.post.uri === uri) {
           yield item.post
+        }
+        const quotedPost = getEmbeddedPost(item.post.embed)
+        if (quotedPost?.uri === uri) {
+          yield embedViewRecordToPostView(quotedPost)
         }
         if (
           AppBskyFeedDefs.isPostView(item.reply?.parent) &&

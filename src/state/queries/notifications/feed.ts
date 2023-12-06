@@ -30,6 +30,7 @@ import {fetchPage} from './util'
 import {FeedPage} from './types'
 import {useMutedThreads} from '#/state/muted-threads'
 import {STALE} from '..'
+import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
 
 export type {NotificationType, FeedNotification, FeedPage} from './types'
 
@@ -118,6 +119,10 @@ export function* findAllPostsInQueryData(
       for (const item of page.items) {
         if (item.subject?.uri === uri) {
           yield item.subject
+        }
+        const quotedPost = getEmbeddedPost(item.subject.embed)
+        if (quotedPost?.uri === uri) {
+          yield embedViewRecordToPostView(quotedPost)
         }
       }
     }
