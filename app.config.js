@@ -9,7 +9,7 @@ module.exports = function () {
   /**
    * iOS build number. Must be incremented for each TestFlight version.
    */
-  const IOS_BUILD_NUMBER = '8'
+  const IOS_BUILD_NUMBER = '9'
 
   /**
    * Android build number. Must be incremented for each release.
