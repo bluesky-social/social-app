@@ -280,6 +280,9 @@ function PostThreadLoaded({
         const prev = isThreadPost(posts[index - 1])
           ? (posts[index - 1] as ThreadPost)
           : undefined
+        const next = isThreadPost(posts[index - 1])
+          ? (posts[index - 1] as ThreadPost)
+          : undefined
         return (
           <View
             ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}>
@@ -288,6 +291,8 @@ function PostThreadLoaded({
               record={item.record}
               treeView={threadViewPrefs.lab_treeViewEnabled || false}
               depth={item.ctx.depth}
+              prevPost={prev}
+              nextPost={next}
               isHighlightedPost={item.ctx.isHighlightedPost}
               hasMore={item.ctx.hasMore}
               showChildReplyLine={item.ctx.showChildReplyLine}

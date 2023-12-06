@@ -41,12 +41,15 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {ThreadPost} from '#/state/queries/post-thread'
 
 export function PostThreadItem({
   post,
   record,
   treeView,
   depth,
+  prevPost,
+  nextPost,
   isHighlightedPost,
   hasMore,
   showChildReplyLine,
@@ -58,6 +61,8 @@ export function PostThreadItem({
   record: AppBskyFeedPost.Record
   treeView: boolean
   depth: number
+  prevPost: ThreadPost | undefined
+  nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
   hasMore?: boolean
   showChildReplyLine?: boolean
@@ -87,6 +92,8 @@ export function PostThreadItem({
     return (
       <PostThreadItemLoaded
         post={postShadowed}
+        prevPost={prevPost}
+        nextPost={nextPost}
         record={record}
         richText={richText}
         moderation={moderation}
@@ -124,6 +131,8 @@ let PostThreadItemLoaded = ({
   moderation,
   treeView,
   depth,
+  prevPost,
+  nextPost,
   isHighlightedPost,
   hasMore,
   showChildReplyLine,
@@ -137,6 +146,8 @@ let PostThreadItemLoaded = ({
   moderation: PostModeration
   treeView: boolean
   depth: number
+  prevPost: ThreadPost | undefined
+  nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
   hasMore?: boolean
   showChildReplyLine?: boolean
@@ -238,7 +249,7 @@ let PostThreadItemLoaded = ({
           <View style={styles.layout}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
-                size={52}
+                size={42}
                 did={post.author.did}
                 handle={post.author.handle}
                 avatar={post.author.avatar}
@@ -424,9 +435,14 @@ let PostThreadItemLoaded = ({
     )
   } else {
     const isThreadedChild = treeView && depth > 0
+    const isThreadedChildAdjacentTop =
+      isThreadedChild && prevPost?.ctx.depth === depth
+    const isThreadedChildAdjacentBot =
+      isThreadedChild && nextPost?.ctx.depth === depth
     return (
       <PostOuterWrapper
         post={post}
+        prevPost={prevPost}
         depth={depth}
         showParentReplyLine={!!showParentReplyLine}
         treeView={treeView}
@@ -447,7 +463,7 @@ let PostThreadItemLoaded = ({
               flexDirection: 'row',
               gap: 10,
               paddingLeft: 8,
-              height: isThreadedChild ? 8 : 16,
+              height: isThreadedChildAdjacentTop ? 8 : 16,
             }}>
             <View style={{width: 38}}>
               {!isThreadedChild && showParentReplyLine && (
@@ -469,7 +485,12 @@ let PostThreadItemLoaded = ({
             style={[
               styles.layout,
               {
-                paddingBottom: showChildReplyLine && !isThreadedChild ? 0 : 8,
+                paddingBottom:
+                  showChildReplyLine && !isThreadedChild
+                    ? 0
+                    : isThreadedChildAdjacentBot
+                    ? 4
+                    : 8,
               },
             ]}>
             {!isThreadedChild && (
@@ -585,6 +606,7 @@ PostThreadItemLoaded = memo(PostThreadItemLoaded)
 
 function PostOuterWrapper({
   post,
+  prevPost,
   treeView,
   depth,
   showParentReplyLine,
@@ -592,6 +614,7 @@ function PostOuterWrapper({
   children,
 }: React.PropsWithChildren<{
   post: AppBskyFeedDefs.PostView
+  prevPost: ThreadPost | undefined
   treeView: boolean
   depth: number
   showParentReplyLine: boolean
@@ -609,12 +632,11 @@ function PostOuterWrapper({
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingLeft: depth === 1 ? 10 : 20,
-            borderTopWidth: depth === 1 ? 1 : 0,
-            paddingTop: depth === 1 ? 6 : 0,
+            paddingLeft: isMobile ? 10 : 6,
+            borderTopWidth: !prevPost ? 1 : 0,
           },
         ]}>
-        {Array.from(Array(depth - 1)).map((_, n: number) => (
+        {Array.from(Array(depth)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
             style={{
@@ -702,7 +724,7 @@ const useStyles = () => {
       paddingBottom: 2,
     },
     metaExpandedLine1: {
-      paddingTop: 5,
+      paddingTop: 0,
       paddingBottom: 0,
     },
     metaItem: {
