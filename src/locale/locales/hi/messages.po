@@ -175,7 +175,7 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "and"
 msgstr "और"
 
-#: src/view/screens/LanguageSettings.tsx:92
+#: src/view/screens/LanguageSettings.tsx:94
 msgid "App Language"
 msgstr "ऐप भाषा"
 
@@ -217,9 +217,9 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 #: src/view/com/auth/login/LoginForm.tsx:251
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:376
-#: src/view/com/post-thread/PostThread.tsx:426
-#: src/view/com/post-thread/PostThread.tsx:434
+#: src/view/com/post-thread/PostThread.tsx:381
+#: src/view/com/post-thread/PostThread.tsx:431
+#: src/view/com/post-thread/PostThread.tsx:439
 #: src/view/com/profile/ProfileHeader.tsx:644
 msgid "Back"
 msgstr "वापस"
@@ -501,7 +501,7 @@ msgid "Content Filtering"
 msgstr "सामग्री फ़िल्टरिंग"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
-#: src/view/screens/LanguageSettings.tsx:273
+#: src/view/screens/LanguageSettings.tsx:277
 msgid "Content Languages"
 msgstr "सामग्री भाषा"
 
@@ -780,7 +780,7 @@ msgstr "अनुशंसित फ़ीड लोड करने में �
 msgid "Feed offline"
 msgstr "फ़ीड ऑफ़लाइन है"
 
-#: src/view/com/feeds/FeedPage.tsx:132
+#: src/view/com/feeds/FeedPage.tsx:136
 msgid "Feed Preferences"
 msgstr "फ़ीड प्राथमिकता"
 
@@ -1034,7 +1034,7 @@ msgstr "वेटरलिस्ट में शामिल हों"
 msgid "Language selection"
 msgstr "अपनी भाषा चुने"
 
-#: src/view/screens/LanguageSettings.tsx:86
+#: src/view/screens/LanguageSettings.tsx:88
 msgid "Language Settings"
 msgstr "भाषा सेटिंग्स"
 
@@ -1110,7 +1110,7 @@ msgstr "अधिक पोस्ट लोड करें"
 msgid "Load new notifications"
 msgstr "नई सूचनाएं लोड करें"
 
-#: src/view/com/feeds/FeedPage.tsx:177
+#: src/view/com/feeds/FeedPage.tsx:181
 msgid "Load new posts"
 msgstr "नई पोस्ट लोड करें"
 
@@ -1154,6 +1154,10 @@ msgstr "मॉडरेशन"
 #: src/view/screens/Moderation.tsx:81
 msgid "Moderation lists"
 msgstr "मॉडरेशन सूचियाँ"
+
+#: src/view/screens/ModerationModlists.tsx:58
+msgid "Moderation Lists"
+msgstr ""
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
@@ -1227,10 +1231,11 @@ msgid "Never lose access to your followers and data."
 msgstr "अपने फ़ॉलोअर्स और डेटा तक पहुंच कभी न खोएं।"
 
 #: src/view/screens/Lists.tsx:76
+#: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
 msgstr "नया"
 
-#: src/view/com/feeds/FeedPage.tsx:188
+#: src/view/com/feeds/FeedPage.tsx:192
 #: src/view/screens/Feeds.tsx:510
 #: src/view/screens/Profile.tsx:388
 #: src/view/screens/ProfileFeed.tsx:450
@@ -1262,7 +1267,7 @@ msgstr "अगली फोटो"
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
-msgstr "नहीं"
+msgstr "नहीं<<<<<<< HEAD"
 
 #: src/view/screens/ProfileFeed.tsx:630
 #: src/view/screens/ProfileList.tsx:659
@@ -1435,7 +1440,7 @@ msgstr "कृपया अपना पासवर्ड भी दर्ज �
 msgid "Post"
 msgstr "पोस्ट"
 
-#: src/view/com/post-thread/PostThread.tsx:366
+#: src/view/com/post-thread/PostThread.tsx:371
 msgid "Post hidden"
 msgstr "छुपा पोस्ट"
 
@@ -1447,7 +1452,7 @@ msgstr "पोस्ट भाषा"
 msgid "Post Languages"
 msgstr "पोस्ट भाषा"
 
-#: src/view/com/post-thread/PostThread.tsx:418
+#: src/view/com/post-thread/PostThread.tsx:423
 msgid "Post not found"
 msgstr "पोस्ट नहीं मिला"
 
@@ -1459,7 +1464,7 @@ msgstr "शायद एक भ्रामक लिंक"
 msgid "Previous image"
 msgstr "पिछली छवि"
 
-#: src/view/screens/LanguageSettings.tsx:183
+#: src/view/screens/LanguageSettings.tsx:186
 msgid "Primary Language"
 msgstr "प्राथमिक भाषा"
 
@@ -1489,6 +1494,10 @@ msgstr "प्रोफ़ाइल"
 #: src/view/screens/Settings.tsx:789
 msgid "Protect your account by verifying your email."
 msgstr "अपने ईमेल को सत्यापित करके अपने खाते को सुरक्षित रखें।।"
+
+#: src/view/screens/ModerationModlists.tsx:61
+msgid "Public, shareable lists of users to mute or block in bulk."
+msgstr ""
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
@@ -1721,15 +1730,15 @@ msgstr "मौजूदा खाते से चुनें"
 msgid "Select service"
 msgstr "सेवा चुनें"
 
-#: src/view/screens/LanguageSettings.tsx:276
+#: src/view/screens/LanguageSettings.tsx:280
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "चुनें कि आप अपनी सदस्यता वाली फ़ीड में कौन सी भाषाएँ शामिल करना चाहते हैं। यदि कोई भी चयनित नहीं है, तो सभी भाषाएँ दिखाई जाएंगी।"
 
-#: src/view/screens/LanguageSettings.tsx:95
+#: src/view/screens/LanguageSettings.tsx:97
 msgid "Select your app language for the default text to display in the app"
 msgstr "ऐप में प्रदर्शित होने वाले डिफ़ॉल्ट टेक्स्ट के लिए अपनी ऐप भाषा चुनें"
 
-#: src/view/screens/LanguageSettings.tsx:186
+#: src/view/screens/LanguageSettings.tsx:189
 msgid "Select your preferred language for translations in your feed."
 msgstr "अपने फ़ीड में अनुवाद के लिए अपनी पसंदीदा भाषा चुनें।"
 
@@ -1965,7 +1974,7 @@ msgstr "सामुदायिक दिशानिर्देशों क�
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "कॉपीराइट नीति को <0/> पर स्थानांतरित कर दिया गया है"
 
-#: src/view/com/post-thread/PostThread.tsx:421
+#: src/view/com/post-thread/PostThread.tsx:426
 msgid "The post may have been deleted."
 msgstr "हो सकता है कि यह पोस्ट हटा दी गई हो।"
 
@@ -2013,7 +2022,7 @@ msgstr "यह वह सेवा है जो आपको ऑनलाइन
 msgid "This link is taking you to the following website:"
 msgstr "यह लिंक आपको निम्नलिखित वेबसाइट पर ले जा रहा है:"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:114
+#: src/view/com/post-thread/PostThreadItem.tsx:121
 msgid "This post has been deleted."
 msgstr "इस पोस्ट को हटा दिया गया है।।"
 
@@ -2038,8 +2047,8 @@ msgstr "ड्रॉपडाउन टॉगल करें"
 msgid "Transformations"
 msgstr "परिवर्तन"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:663
-#: src/view/com/post-thread/PostThreadItem.tsx:665
+#: src/view/com/post-thread/PostThreadItem.tsx:685
+#: src/view/com/post-thread/PostThreadItem.tsx:687
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "Translate"
 msgstr "अनुवाद"
@@ -2237,7 +2246,7 @@ msgstr ""
 msgid "You don't have any saved feeds."
 msgstr "आपके पास कोई सहेजी गई फ़ीड नहीं है."
 
-#: src/view/com/post-thread/PostThread.tsx:369
+#: src/view/com/post-thread/PostThread.tsx:374
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "आपने लेखक को अवरुद्ध किया है या आपने लेखक द्वारा अवरुद्ध किया है।।"
 

@@ -82,6 +82,7 @@ export function MyLists({
       if (item === EMPTY) {
         return (
           <View
+            key={item._reactKey}
             testID="listsEmpty"
             style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
             <Text style={pal.textLight}>
@@ -92,13 +93,14 @@ export function MyLists({
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
+            key={item._reactKey}
             message={cleanError(error)}
             onPressTryAgain={onRefresh}
           />
         )
       } else if (item === LOADING) {
         return (
-          <View style={{padding: 20}}>
+          <View key={item._reactKey} style={{padding: 20}}>
             <ActivityIndicator />
           </View>
         )
@@ -107,6 +109,7 @@ export function MyLists({
         renderItem(item, index)
       ) : (
         <ListCard
+          key={item.uri}
           list={item}
           testID={`list-${item.name}`}
           style={styles.item}
@@ -123,7 +126,7 @@ export function MyLists({
         <FlatListCom
           testID={testID ? `${testID}-flatlist` : undefined}
           data={items}
-          keyExtractor={(item: any) => item._reactKey}
+          keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
           renderItem={renderItemInner}
           refreshControl={
             <RefreshControl

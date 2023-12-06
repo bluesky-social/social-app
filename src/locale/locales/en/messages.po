@@ -175,7 +175,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:92
+#: src/view/screens/LanguageSettings.tsx:94
 msgid "App Language"
 msgstr ""
 
@@ -217,9 +217,9 @@ msgstr ""
 #: src/view/com/auth/login/LoginForm.tsx:251
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:376
-#: src/view/com/post-thread/PostThread.tsx:426
-#: src/view/com/post-thread/PostThread.tsx:434
+#: src/view/com/post-thread/PostThread.tsx:381
+#: src/view/com/post-thread/PostThread.tsx:431
+#: src/view/com/post-thread/PostThread.tsx:439
 #: src/view/com/profile/ProfileHeader.tsx:644
 msgid "Back"
 msgstr ""
@@ -505,7 +505,7 @@ msgid "Content Filtering"
 msgstr ""
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
-#: src/view/screens/LanguageSettings.tsx:273
+#: src/view/screens/LanguageSettings.tsx:277
 msgid "Content Languages"
 msgstr ""
 
@@ -784,7 +784,7 @@ msgstr ""
 msgid "Feed offline"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:132
+#: src/view/com/feeds/FeedPage.tsx:136
 msgid "Feed Preferences"
 msgstr ""
 
@@ -1042,7 +1042,7 @@ msgstr ""
 msgid "Language selection"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:86
+#: src/view/screens/LanguageSettings.tsx:88
 msgid "Language Settings"
 msgstr ""
 
@@ -1118,7 +1118,7 @@ msgstr ""
 msgid "Load new notifications"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:177
+#: src/view/com/feeds/FeedPage.tsx:181
 msgid "Load new posts"
 msgstr ""
 
@@ -1161,6 +1161,10 @@ msgstr ""
 
 #: src/view/screens/Moderation.tsx:81
 msgid "Moderation lists"
+msgstr ""
+
+#: src/view/screens/ModerationModlists.tsx:58
+msgid "Moderation Lists"
 msgstr ""
 
 #: src/view/shell/desktop/Feeds.tsx:53
@@ -1235,10 +1239,11 @@ msgid "Never lose access to your followers and data."
 msgstr ""
 
 #: src/view/screens/Lists.tsx:76
+#: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:188
+#: src/view/com/feeds/FeedPage.tsx:192
 #: src/view/screens/Feeds.tsx:510
 #: src/view/screens/Profile.tsx:388
 #: src/view/screens/ProfileFeed.tsx:450
@@ -1270,7 +1275,7 @@ msgstr ""
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
-msgstr ""
+msgstr "<<<<<<< HEAD"
 
 #: src/view/screens/ProfileFeed.tsx:630
 #: src/view/screens/ProfileList.tsx:659
@@ -1443,7 +1448,7 @@ msgstr ""
 msgid "Post"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:366
+#: src/view/com/post-thread/PostThread.tsx:371
 msgid "Post hidden"
 msgstr ""
 
@@ -1455,7 +1460,7 @@ msgstr ""
 msgid "Post Languages"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:418
+#: src/view/com/post-thread/PostThread.tsx:423
 msgid "Post not found"
 msgstr ""
 
@@ -1467,7 +1472,7 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:183
+#: src/view/screens/LanguageSettings.tsx:186
 msgid "Primary Language"
 msgstr ""
 
@@ -1496,6 +1501,10 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:789
 msgid "Protect your account by verifying your email."
+msgstr ""
+
+#: src/view/screens/ModerationModlists.tsx:61
+msgid "Public, shareable lists of users to mute or block in bulk."
 msgstr ""
 
 #: src/view/screens/Lists.tsx:61
@@ -1729,15 +1738,15 @@ msgstr ""
 msgid "Select service"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:276
+#: src/view/screens/LanguageSettings.tsx:280
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:95
+#: src/view/screens/LanguageSettings.tsx:97
 msgid "Select your app language for the default text to display in the app"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:186
+#: src/view/screens/LanguageSettings.tsx:189
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
@@ -1973,7 +1982,7 @@ msgstr ""
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:421
+#: src/view/com/post-thread/PostThread.tsx:426
 msgid "The post may have been deleted."
 msgstr ""
 
@@ -2021,7 +2030,7 @@ msgstr ""
 msgid "This link is taking you to the following website:"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:114
+#: src/view/com/post-thread/PostThreadItem.tsx:121
 msgid "This post has been deleted."
 msgstr ""
 
@@ -2046,8 +2055,8 @@ msgstr ""
 msgid "Transformations"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:663
-#: src/view/com/post-thread/PostThreadItem.tsx:665
+#: src/view/com/post-thread/PostThreadItem.tsx:685
+#: src/view/com/post-thread/PostThreadItem.tsx:687
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "Translate"
 msgstr ""
@@ -2245,7 +2254,7 @@ msgstr ""
 msgid "You don't have any saved feeds."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:369
+#: src/view/com/post-thread/PostThread.tsx:374
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr ""
 
