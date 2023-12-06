@@ -14,7 +14,7 @@ const SERVICE_DID = (serviceUrl?: string) =>
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-export async function onSessionLoaded(
+export async function requestPermissionsAndRegisterToken(
   account: SessionAccount,
   agent: BskyAgent,
 ) {
@@ -44,7 +44,12 @@ export async function onSessionLoaded(
   } catch (error) {
     logger.error('Notifications: Failed to set push token', {error})
   }
+}
 
+export function registerTokenChangeHandler(
+  account: SessionAccount,
+  agent: BskyAgent,
+) {
   // listens for new changes to the push token
   // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
   Notifications.addPushTokenListener(async newToken => {

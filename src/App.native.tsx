@@ -48,7 +48,10 @@ function InnerApp() {
   // init
   useEffect(() => {
     analytics.init()
-    listenSessionLoaded(notifications.onSessionLoaded)
+    listenSessionLoaded((account, agent) => {
+      notifications.requestPermissionsAndRegisterToken(account, agent)
+      notifications.registerTokenChangeHandler(account, agent)
+    })
     notifications.init(queryClient)
     listenSessionDropped(() => {
       Toast.show('Sorry! Your session expired. Please log in again.')
