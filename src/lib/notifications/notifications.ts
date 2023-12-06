@@ -26,25 +26,23 @@ export async function onSessionLoaded(
 
   // register the push token with the server
   const token = await Notifications.getDevicePushTokenAsync()
-  if (token) {
-    try {
-      await agent.api.app.bsky.notification.registerPush({
-        serviceDid: SERVICE_DID(account.service),
-        platform: devicePlatform,
+  try {
+    await agent.api.app.bsky.notification.registerPush({
+      serviceDid: SERVICE_DID(account.service),
+      platform: devicePlatform,
+      token: token.data,
+      appId: 'xyz.blueskyweb.app',
+    })
+    logger.debug(
+      'Notifications: Sent push token (init)',
+      {
+        tokenType: token.type,
         token: token.data,
-        appId: 'xyz.blueskyweb.app',
-      })
-      logger.debug(
-        'Notifications: Sent push token (init)',
-        {
-          tokenType: token.type,
-          token: token.data,
-        },
-        logger.DebugContext.notifications,
-      )
-    } catch (error) {
-      logger.error('Notifications: Failed to set push token', {error})
-    }
+      },
+      logger.DebugContext.notifications,
+    )
+  } catch (error) {
+    logger.error('Notifications: Failed to set push token', {error})
   }
 
   // listens for new changes to the push token
@@ -55,25 +53,23 @@ export async function onSessionLoaded(
       {tokenType: newToken.data, token: newToken.type},
       logger.DebugContext.notifications,
     )
-    if (newToken.data) {
-      try {
-        await agent.api.app.bsky.notification.registerPush({
-          serviceDid: SERVICE_DID(account.service),
-          platform: devicePlatform,
+    try {
+      await agent.api.app.bsky.notification.registerPush({
+        serviceDid: SERVICE_DID(account.service),
+        platform: devicePlatform,
+        token: newToken.data,
+        appId: 'xyz.blueskyweb.app',
+      })
+      logger.debug(
+        'Notifications: Sent push token (event)',
+        {
+          tokenType: newToken.type,
           token: newToken.data,
-          appId: 'xyz.blueskyweb.app',
-        })
-        logger.debug(
-          'Notifications: Sent push token (event)',
-          {
-            tokenType: newToken.type,
-            token: newToken.data,
-          },
-          logger.DebugContext.notifications,
-        )
-      } catch (error) {
-        logger.error('Notifications: Failed to set push token', {error})
-      }
+        },
+        logger.DebugContext.notifications,
+      )
+    } catch (error) {
+      logger.error('Notifications: Failed to set push token', {error})
     }
   })
 }
