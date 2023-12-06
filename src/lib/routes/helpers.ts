@@ -1,4 +1,14 @@
+import {NavigationProp} from '@react-navigation/native'
 import {State, RouteParams} from './types'
+
+export function getRootNavigation<T>(
+  nav: NavigationProp<T>,
+): NavigationProp<T> {
+  while (nav.getParent()) {
+    nav = nav.getParent()
+  }
+  return nav
+}
 
 export function getCurrentRoute(state: State) {
   let node = state.routes[state.index || 0]

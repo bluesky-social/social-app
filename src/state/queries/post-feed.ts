@@ -98,7 +98,7 @@ export function usePostFeedQuery(
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      logger.debug('usePostFeedQuery', {feedDesc, pageParam})
+      logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
 
       const {api, cursor} = pageParam
         ? pageParam
