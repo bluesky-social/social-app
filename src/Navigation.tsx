@@ -35,6 +35,12 @@ import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
+import {useSession} from './state/session'
+import {useModalControls} from './state/modals'
+import {
+  shouldRequestEmailConfirmation,
+  setEmailConfirmationRequested,
+} from './state/shell/reminders'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -464,6 +470,16 @@ const LINKING = {
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
+  const {currentAccount} = useSession()
+  const {openModal} = useModalControls()
+
+  function onReady() {
+    if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
+      openModal({name: 'verify-email', showReminder: true})
+      setEmailConfirmationRequested()
+    }
+  }
+
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -471,12 +487,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       theme={theme}
       onReady={() => {
         SplashScreen.hideAsync()
-        const initMs = Math.round(
-          // @ts-ignore Emitted by Metro in the bundle prelude
-          performance.now() - global.__BUNDLE_START_TIME__,
-        )
-        console.log(`Time to first paint: ${initMs} ms`)
-        logModuleInitTrace()
+        logModuleInitTime()
+        onReady()
       }}>
       {children}
     </NavigationContainer>
@@ -585,7 +597,17 @@ const styles = StyleSheet.create({
   },
 })
 
-function logModuleInitTrace() {
+let didInit = false
+function logModuleInitTime() {
+  if (didInit) {
+    return
+  }
+  didInit = true
+  const initMs = Math.round(
+    // @ts-ignore Emitted by Metro in the bundle prelude
+    performance.now() - global.__BUNDLE_START_TIME__,
+  )
+  console.log(`Time to first paint: ${initMs} ms`)
   if (__DEV__) {
     // This log is noisy, so keep false committed
     const shouldLog = false
