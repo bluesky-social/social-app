@@ -41,12 +41,6 @@ interface TrackPropertiesMap {
   'Post:ThreadMute': {} // CAN BE SERVER
   'Post:ThreadUnmute': {} // CAN BE SERVER
   'Post:Reply': {} // CAN BE SERVER
-  // FEED ITEM events
-  'FeedItem:PostReply': {} // CAN BE SERVER
-  'FeedItem:PostRepost': {} // CAN BE SERVER
-  'FeedItem:PostLike': {} // CAN BE SERVER
-  'FeedItem:PostDelete': {} // CAN BE SERVER
-  'FeedItem:ThreadMute': {} // CAN BE SERVER
   // PROFILE events
   'Profile:Follow': {
     username: string
@@ -79,7 +73,6 @@ interface TrackPropertiesMap {
   'Settings:AddAccountButtonClicked': {}
   'Settings:ChangeHandleButtonClicked': {}
   'Settings:InvitecodesButtonClicked': {}
-  'Settings:ContentfilteringButtonClicked': {}
   'Settings:SignOutButtonClicked': {}
   'Settings:ContentlanguagesButtonClicked': {}
   // MENU events

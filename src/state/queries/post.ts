@@ -4,6 +4,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {updatePostShadow} from '#/state/cache/post-shadow'
+import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
 
@@ -73,6 +74,8 @@ export function usePostLikeMutation() {
       updatePostShadow(variables.uri, {
         likeUri: data.uri,
       })
+      // track like event
+      track('Post:Like')
     },
     onError(error, variables) {
       // revert the optimistic update
@@ -99,6 +102,8 @@ export function usePostUnlikeMutation() {
         likeCount: variables.likeCount - 1,
         likeUri: undefined,
       })
+      // track unlike event
+      track('Post:Unlike')
     },
     onError(error, variables) {
       // revert the optimistic update
@@ -129,6 +134,8 @@ export function usePostRepostMutation() {
       updatePostShadow(variables.uri, {
         repostUri: data.uri,
       })
+      // track repost event
+      track('Post:Repost')
     },
     onError(error, variables) {
       // revert the optimistic update
@@ -155,6 +162,8 @@ export function usePostUnrepostMutation() {
         repostCount: variables.repostCount - 1,
         repostUri: undefined,
       })
+      // track unrepost event
+      track('Post:Unrepost')
     },
     onError(error, variables) {
       // revert the optimistic update
@@ -173,6 +182,7 @@ export function usePostDeleteMutation() {
     },
     onSuccess(data, variables) {
       updatePostShadow(variables.uri, {isDeleted: true})
+      track('Post:Delete')
     },
   })
 }
