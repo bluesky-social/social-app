@@ -97,6 +97,8 @@ interface TrackPropertiesMap {
   'Lists:Unmute': {} // CAN BE SERVER
   'Lists:Block': {} // CAN BE SERVER
   'Lists:Unblock': {} // CAN BE SERVER
+  'Lists:Delete': {} // CAN BE SERVER
+  'Lists:Share': {} // CAN BE SERVER
   // CUSTOM FEED events
   'CustomFeed:Save': {}
   'CustomFeed:Unsave': {}
@@ -127,6 +129,7 @@ interface TrackPropertiesMap {
   'Onboarding:Skipped': {}
   'Onboarding:Reset': {}
   'Onboarding:SuggestedFollowFollowed': {}
+  'Onboarding:CustomFeedAdded': {}
 }
 
 interface ScreenPropertiesMap {

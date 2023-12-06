@@ -564,7 +564,7 @@ function AboutSection({
   const scrollHandler = useAnimatedScrollHandler(onScroll)
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
-
+  const {track} = useAnalytics()
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -579,9 +579,11 @@ function AboutSection({
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
+        track('CustomFeed:Unlike')
         setLikeUri('')
       } else {
         const res = await likeFeed({uri: feedInfo.uri, cid: feedInfo.cid})
+        track('CustomFeed:Like')
         setLikeUri(res.uri)
       }
     } catch (err) {
@@ -590,7 +592,7 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {error: err})
     }
-  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed])
+  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track])
 
   return (
     <ScrollView

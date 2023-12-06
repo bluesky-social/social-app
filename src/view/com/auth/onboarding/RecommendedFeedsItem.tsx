@@ -17,6 +17,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 export function RecommendedFeedsItem({
   item,
@@ -36,6 +37,7 @@ export function RecommendedFeedsItem({
     variables: removedFeed,
     reset: resetRemoveFeed,
   } = useRemoveFeedMutation()
+  const {track} = useAnalytics()
 
   if (!item || !preferences) return null
 
@@ -56,6 +58,7 @@ export function RecommendedFeedsItem({
       try {
         await pinFeed({uri: item.uri})
         resetPinFeed()
+        track('Onboarding:CustomFeedAdded')
       } catch (e) {
         Toast.show('There was an issue contacting your server')
         logger.error('Failed to pin feed', {error: e})
