@@ -1,6 +1,10 @@
-import {useMemo} from 'react'
+import {useMemo, useCallback} from 'react'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
+import {
+  LabelPreference,
+  BskyFeedViewPreference,
+  BskyPreferences,
+} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
@@ -26,6 +30,56 @@ export * from '#/state/queries/preferences/const'
 
 export const preferencesQueryKey = ['getPreferences']
 
+function mergePreferencesResponseWithDefaults(
+  res: BskyPreferences,
+): UsePreferencesQueryResponse {
+  return {
+    ...res,
+    feeds: {
+      saved: res.feeds?.saved || [],
+      pinned: res.feeds?.pinned || [],
+      unpinned:
+        res.feeds.saved?.filter(f => {
+          return !res.feeds.pinned?.includes(f)
+        }) || [],
+    },
+    // labels are undefined until set by user
+    contentLabels: {
+      nsfw: temp__migrateLabelPref(
+        res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
+      ),
+      nudity: temp__migrateLabelPref(
+        res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
+      ),
+      suggestive: temp__migrateLabelPref(
+        res.contentLabels?.suggestive || DEFAULT_LABEL_PREFERENCES.suggestive,
+      ),
+      gore: temp__migrateLabelPref(
+        res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
+      ),
+      hate: temp__migrateLabelPref(
+        res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
+      ),
+      spam: temp__migrateLabelPref(
+        res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
+      ),
+      impersonation: temp__migrateLabelPref(
+        res.contentLabels?.impersonation ||
+          DEFAULT_LABEL_PREFERENCES.impersonation,
+      ),
+    },
+    feedViewPrefs: {
+      ...DEFAULT_HOME_FEED_PREFS,
+      ...(res.feedViewPrefs.home || {}),
+    },
+    threadViewPrefs: {
+      ...DEFAULT_THREAD_VIEW_PREFS,
+      ...(res.threadViewPrefs ?? {}),
+    },
+    userAge: res.birthDate ? getAge(res.birthDate) : undefined,
+  }
+}
+
 export function usePreferencesQuery() {
   return useQuery({
     staleTime: STALE.MINUTES.ONE,
@@ -37,56 +91,22 @@ export function usePreferencesQuery() {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
-        const preferences: UsePreferencesQueryResponse = {
-          ...res,
-          feeds: {
-            saved: res.feeds?.saved || [],
-            pinned: res.feeds?.pinned || [],
-            unpinned:
-              res.feeds.saved?.filter(f => {
-                return !res.feeds.pinned?.includes(f)
-              }) || [],
-          },
-          // labels are undefined until set by user
-          contentLabels: {
-            nsfw: temp__migrateLabelPref(
-              res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
-            ),
-            nudity: temp__migrateLabelPref(
-              res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
-            ),
-            suggestive: temp__migrateLabelPref(
-              res.contentLabels?.suggestive ||
-                DEFAULT_LABEL_PREFERENCES.suggestive,
-            ),
-            gore: temp__migrateLabelPref(
-              res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
-            ),
-            hate: temp__migrateLabelPref(
-              res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
-            ),
-            spam: temp__migrateLabelPref(
-              res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
-            ),
-            impersonation: temp__migrateLabelPref(
-              res.contentLabels?.impersonation ||
-                DEFAULT_LABEL_PREFERENCES.impersonation,
-            ),
-          },
-          feedViewPrefs: {
-            ...DEFAULT_HOME_FEED_PREFS,
-            ...(res.feedViewPrefs.home || {}),
-          },
-          threadViewPrefs: {
-            ...DEFAULT_THREAD_VIEW_PREFS,
-            ...(res.threadViewPrefs ?? {}),
-          },
-          userAge: res.birthDate ? getAge(res.birthDate) : undefined,
-        }
+        const preferences = mergePreferencesResponseWithDefaults(res)
         return preferences
       }
     },
   })
+}
+
+export function useSyncPreferences() {
+  const queryClient = useQueryClient()
+
+  return useCallback(async () => {
+    queryClient.invalidateQueries({
+      queryKey: preferencesQueryKey,
+      refetchType: 'none',
+    })
+  }, [queryClient])
 }
 
 export function useModerationOpts() {

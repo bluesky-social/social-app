@@ -29,6 +29,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
+import {AccountBackgroundTaskProvider} from '#/state/AccountBackgroundTaskProvider'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
@@ -56,6 +57,9 @@ function InnerApp() {
     <React.Fragment
       // Resets the entire tree below when it changes:
       key={currentAccount?.did}>
+      {/* Must live inside the tree reset above */}
+      <AccountBackgroundTaskProvider />
+
       <LoggedOutViewProvider>
         <UnreadNotifsProvider>
           <ThemeProvider theme={colorMode}>
