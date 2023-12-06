@@ -6,7 +6,6 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {QueryClientProvider} from '@tanstack/react-query'
-import {enableFreeze} from 'react-native-screens'
 
 import 'view/icons'
 
@@ -37,7 +36,6 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 
-enableFreeze(true)
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
