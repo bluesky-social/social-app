@@ -43,9 +43,11 @@ export function useProfileQuery({did}: {did: string | undefined}) {
 
 interface ProfileUpdateParams {
   profile: AppBskyActorDefs.ProfileView
-  updates: AppBskyActorProfile.Record
-  newUserAvatar: RNImage | undefined | null
-  newUserBanner: RNImage | undefined | null
+  updates:
+    | AppBskyActorProfile.Record
+    | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
+  newUserAvatar?: RNImage | undefined | null
+  newUserBanner?: RNImage | undefined | null
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
@@ -53,8 +55,12 @@ export function useProfileUpdateMutation() {
     mutationFn: async ({profile, updates, newUserAvatar, newUserBanner}) => {
       await getAgent().upsertProfile(async existing => {
         existing = existing || {}
-        existing.displayName = updates.displayName
-        existing.description = updates.description
+        if (typeof updates === 'function') {
+          existing = updates(existing)
+        } else {
+          existing.displayName = updates.displayName
+          existing.description = updates.description
+        }
         if (newUserAvatar) {
           const res = await uploadBlob(
             getAgent(),

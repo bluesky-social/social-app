@@ -1,10 +1,16 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {ComAtprotoLabelDefs} from '@atproto/api'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {s} from 'lib/styles'
 import {CenteredView} from '../com/util/Views'
@@ -18,6 +24,12 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {ToggleButton} from '../com/util/forms/ToggleButton'
+import {useSession} from '#/state/session'
+import {
+  useProfileQuery,
+  useProfileUpdateMutation,
+} from '#/state/queries/profile'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export function ModerationScreen({}: Props) {
@@ -109,7 +121,100 @@ export function ModerationScreen({}: Props) {
           <Trans>Blocked accounts</Trans>
         </Text>
       </Link>
+      <Text
+        type="xl-bold"
+        style={[
+          pal.text,
+          {
+            paddingHorizontal: 18,
+            paddingTop: 18,
+            paddingBottom: 6,
+          },
+        ]}>
+        <Trans>My Account</Trans>
+      </Text>
+      <PwiOptOut />
     </CenteredView>
+  )
+}
+
+function PwiOptOut() {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const updateProfile = useProfileUpdateMutation()
+
+  const isOptedOut =
+    profile?.labels?.some(l => l.val === '!no-unauthenticated') || false
+  const canToggle = profile && !updateProfile.isPending
+
+  const onToggleOptOut = React.useCallback(() => {
+    if (!profile) {
+      return
+    }
+    updateProfile.mutate({
+      profile,
+      updates: existing => {
+        existing.labels = ComAtprotoLabelDefs.isSelfLabels(existing.labels)
+          ? existing.labels
+          : {
+              $type: 'com.atproto.label.defs#selfLabels',
+              values: [],
+            }
+        const hasLabel = existing.labels.values.some(
+          l => l.val === '!no-unauthenticated',
+        )
+        if (hasLabel) {
+          existing.labels.values = existing.labels.values.filter(
+            l => l.val !== '!no-unauthenticated',
+          )
+        } else {
+          existing.labels.values.push({val: '!no-unauthenticated'})
+        }
+        if (existing.labels.values.length === 0) {
+          delete existing.labels
+        }
+        return existing
+      },
+    })
+  }, [updateProfile, profile])
+
+  return (
+    <View style={[pal.view, styles.toggleCard]}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <ToggleButton
+          type="default-light"
+          label={_(msg`Hide my account from logged-out users`)}
+          labelType="lg"
+          isSelected={isOptedOut}
+          onPress={canToggle ? onToggleOptOut : undefined}
+          style={canToggle ? undefined : {opacity: 0.5}}
+        />
+        {updateProfile.isPending && <ActivityIndicator />}
+      </View>
+      <View
+        style={{
+          flexDirection: 'column',
+          gap: 10,
+          paddingLeft: 66,
+          paddingRight: 8,
+          paddingBottom: 10,
+        }}>
+        <Text style={pal.textLight}>
+          <Trans>
+            Enabling this will not make your profile private, but it will hide
+            your profile and content from logged-out users.
+          </Trans>
+        </Text>
+        <Text style={pal.textLight}>
+          <Trans>
+            Bluesky is an open network. Your profile and content are publicly
+            available. Other apps on the network may not respect this setting.
+          </Trans>
+        </Text>
+      </View>
+    </View>
   )
 }
 
@@ -126,6 +231,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 18,
+    marginBottom: 1,
+  },
+  toggleCard: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
     marginBottom: 1,
   },
   iconContainer: {
