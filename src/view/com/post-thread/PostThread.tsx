@@ -322,7 +322,7 @@ function PostThreadLoaded({
     <FlatList
       ref={ref}
       data={posts}
-      initialNumToRender={posts.length}
+      initialNumToRender={!isNative ? posts.length : undefined}
       maintainVisibleContentPosition={
         !needsScrollAdjustment.current
           ? MAINTAIN_VISIBLE_CONTENT_POSITION
