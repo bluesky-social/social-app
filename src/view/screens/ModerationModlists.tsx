@@ -14,6 +14,7 @@ import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {s} from 'lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {Trans} from '@lingui/macro'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
@@ -54,10 +55,12 @@ export function ModerationModlistsScreen({}: Props) {
         }>
         <View style={{flex: 1}}>
           <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            Moderation Lists
+            <Trans>Moderation Lists</Trans>
           </Text>
           <Text style={pal.textLight}>
-            Public, shareable lists of users to mute or block in bulk.
+            <Trans>
+              Public, shareable lists of users to mute or block in bulk.
+            </Trans>
           </Text>
         </View>
         <View>
@@ -72,7 +75,7 @@ export function ModerationModlistsScreen({}: Props) {
             }}>
             <FontAwesomeIcon icon="plus" color={pal.colors.text} />
             <Text type="button" style={pal.text}>
-              New
+              <Trans>New</Trans>
             </Text>
           </Button>
         </View>
