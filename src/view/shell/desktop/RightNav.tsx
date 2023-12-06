@@ -58,8 +58,8 @@ export function DesktopRightNav() {
                 type="md"
                 style={pal.link}
                 href={FEEDBACK_FORM_URL({
-                  email: currentAccount!.email,
-                  handle: currentAccount!.handle,
+                  email: currentAccount?.email,
+                  handle: currentAccount?.handle,
                 })}
                 text={_(msg`Feedback`)}
               />

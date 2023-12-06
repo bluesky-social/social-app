@@ -26,7 +26,10 @@ export async function init() {
   try {
     await migrate() // migrate old store
     const stored = await store.read() // check for new store
-    if (!stored) await store.write(defaults) // opt: init new store
+    if (!stored) {
+      logger.info('persisted state: initializing default storage')
+      await store.write(defaults) // opt: init new store
+    }
     _state = stored || defaults // return new store
     logger.log('persisted state: initialized')
   } catch (e) {

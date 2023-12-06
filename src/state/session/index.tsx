@@ -245,7 +245,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         service: agent.service.toString(),
         did: agent.session.did,
         handle: agent.session.handle,
-        email: agent.session.email!, // TODO this is always defined?
+        email: agent.session.email,
         emailConfirmed: agent.session.emailConfirmed || false,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
@@ -342,7 +342,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         service: agent.service.toString(),
         did: agent.session.did,
         handle: agent.session.handle,
-        email: agent.session.email!, // TODO this is always defined?
+        email: agent.session.email,
         emailConfirmed: agent.session.emailConfirmed || false,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,

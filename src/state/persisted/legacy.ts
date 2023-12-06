@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
-import {defaults, Schema} from '#/state/persisted/schema'
+import {defaults, Schema, schema} from '#/state/persisted/schema'
 import {write, read} from '#/state/persisted/store'
 
 /**
@@ -66,7 +66,6 @@ type LegacySchema = {
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
-// TODO remove, assume that partial data may be here during our refactor
 export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
@@ -116,7 +115,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
  * local storage AND old storage exists.
  */
 export async function migrate() {
-  logger.info('persisted state: migrate')
+  logger.info('persisted state: check need to migrate')
 
   try {
     const rawLegacyData = await AsyncStorage.getItem(
@@ -138,6 +137,7 @@ export async function migrate() {
           ),
         })
         logger.info(`persisted state: debug new data`, {
+          hasNewData: Boolean(newData),
           hasExistingLoggedInAccount: Boolean(newData?.session?.currentAccount),
           numberOfExistingAccounts: newData?.session?.accounts?.length,
           existingAccountMatchesLegacy: Boolean(
@@ -145,27 +145,32 @@ export async function migrate() {
               legacy?.session?.data?.did,
           ),
         })
-      } else {
-        logger.info(`persisted state: no legacy to debug, fresh install`)
       }
-    } catch (e) {
-      logger.error(`persisted state: legacy debugging failed`, {error: e})
+    } catch (e: any) {
+      logger.error(e, {message: `persisted state: legacy debugging failed`})
     }
 
     if (!alreadyMigrated && rawLegacyData) {
       logger.info('persisted state: migrating legacy storage')
+
       const legacyData = JSON.parse(rawLegacyData)
       const newData = transform(legacyData)
-      await write(newData)
-      // track successful migrations
-      logger.log('persisted state: migrated legacy storage')
+      const validate = schema.safeParse(newData)
+
+      if (validate.success) {
+        await write(newData)
+        logger.log('persisted state: migrated legacy storage')
+      } else {
+        logger.error('persisted state: legacy data failed validation', {
+          error: validate.error,
+        })
+      }
     } else {
-      // track successful migrations
       logger.log('persisted state: no migration needed')
     }
-  } catch (e) {
-    logger.error('persisted state: error migrating legacy storage', {
-      error: String(e),
+  } catch (e: any) {
+    logger.error(e, {
+      message: 'persisted state: error migrating legacy storage',
     })
   }
 }
