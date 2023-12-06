@@ -9,7 +9,6 @@ import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
-import {Provider as AnalyticsProvider} from 'lib/analytics/analytics'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -58,15 +57,13 @@ function InnerApp() {
       <LoggedOutViewProvider>
         <UnreadNotifsProvider>
           <ThemeProvider theme={colorMode}>
-            <AnalyticsProvider>
-              {/* All components should be within this provider */}
-              <RootSiblingParent>
-                <SafeAreaProvider>
-                  <Shell />
-                </SafeAreaProvider>
-              </RootSiblingParent>
-              <ToastContainer />
-            </AnalyticsProvider>
+            {/* All components should be within this provider */}
+            <RootSiblingParent>
+              <SafeAreaProvider>
+                <Shell />
+              </SafeAreaProvider>
+            </RootSiblingParent>
+            <ToastContainer />
           </ThemeProvider>
         </UnreadNotifsProvider>
       </LoggedOutViewProvider>

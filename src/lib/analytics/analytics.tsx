@@ -1,15 +1,10 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {
-  createClient,
-  AnalyticsProvider,
-  useAnalytics as useAnalyticsOrig,
-  ClientMethods,
-} from '@segment/analytics-react-native'
+import {createClient} from '@segment/analytics-react-native'
 import {useSession, SessionAccount} from '#/state/session'
 import {sha256} from 'js-sha256'
-import {ScreenEvent, TrackEvent} from './types'
+import {TrackEvent, AnalyticsMethods} from './types'
 import {logger} from '#/logger'
 
 type AppInfo = {
@@ -27,32 +22,25 @@ const segmentClient = createClient({
 
 export const track = segmentClient?.track?.bind?.(segmentClient) as TrackEvent
 
-export function useAnalytics() {
+export function useAnalytics(): AnalyticsMethods {
   const {hasSession} = useSession()
-  const methods: ClientMethods = useAnalyticsOrig()
   return React.useMemo(() => {
     if (hasSession) {
       return {
-        screen: methods.screen as ScreenEvent, // ScreenEvents defines all the possible screen names
-        track: methods.track as TrackEvent, // TrackEvents defines all the possible track events and their properties
-        identify: methods.identify,
-        flush: methods.flush,
-        group: methods.group,
-        alias: methods.alias,
-        reset: methods.reset,
+        async screen(...args) {
+          await segmentClient.screen(...args)
+        },
+        async track(...args) {
+          await segmentClient.track(...args)
+        },
       }
     }
     // dont send analytics pings for anonymous users
     return {
-      screen: () => Promise<void>,
-      track: () => Promise<void>,
-      identify: () => Promise<void>,
-      flush: () => Promise<void>,
-      group: () => Promise<void>,
-      alias: () => Promise<void>,
-      reset: () => Promise<void>,
+      screen: async () => {},
+      track: async () => {},
     }
-  }, [hasSession, methods])
+  }, [hasSession])
 }
 
 export function init(account: SessionAccount | undefined) {
@@ -130,12 +118,6 @@ function setupListenersOnce() {
     }
     lastState = state
   })
-}
-
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  return (
-    <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
-  )
 }
 
 async function writeAppInfo(value: AppInfo) {

@@ -1,10 +1,7 @@
 import React from 'react'
-import {
-  createClient,
-  AnalyticsProvider,
-  useAnalytics as useAnalyticsOrig,
-} from '@segment/analytics-react'
+import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
+import {AnalyticsMethods} from './types'
 
 import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
@@ -23,24 +20,25 @@ const segmentClient = createClient(
 )
 export const track = segmentClient?.track?.bind?.(segmentClient)
 
-export function useAnalytics() {
+export function useAnalytics(): AnalyticsMethods {
   const {hasSession} = useSession()
-  const methods = useAnalyticsOrig()
   return React.useMemo(() => {
     if (hasSession) {
-      return methods
+      return {
+        async screen(...args) {
+          await segmentClient.screen(...args)
+        },
+        async track(...args) {
+          await segmentClient.track(...args)
+        },
+      }
     }
     // dont send analytics pings for anonymous users
     return {
-      screen: () => {},
-      track: () => {},
-      identify: () => {},
-      flush: () => {},
-      group: () => {},
-      alias: () => {},
-      reset: () => {},
+      screen: async () => {},
+      track: async () => {},
     }
-  }, [hasSession, methods])
+  }, [hasSession])
 }
 
 export function init(account: SessionAccount | undefined) {
@@ -56,10 +54,4 @@ export function init(account: SessionAccount | undefined) {
       }
     }
   }
-}
-
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  return (
-    <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
-  )
 }

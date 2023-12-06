@@ -7,6 +7,7 @@ export type ScreenEvent = (
   name: keyof ScreenPropertiesMap,
   properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
 ) => Promise<void>
+
 interface TrackPropertiesMap {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
@@ -149,4 +150,9 @@ interface ScreenPropertiesMap {
   BlockedAccounts: {}
   MutedAccounts: {}
   SavedFeeds: {}
+}
+
+export type AnalyticsMethods = {
+  screen: ScreenEvent
+  track: TrackEvent
 }
