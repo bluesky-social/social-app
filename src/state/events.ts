@@ -1,6 +1,4 @@
 import EventEmitter from 'eventemitter3'
-import {BskyAgent} from '@atproto/api'
-import {SessionAccount} from './session'
 
 type UnlistenFn = () => void
 
@@ -14,19 +12,6 @@ export function emitSoftReset() {
 export function listenSoftReset(fn: () => void): UnlistenFn {
   emitter.on('soft-reset', fn)
   return () => emitter.off('soft-reset', fn)
-}
-
-export function emitSessionLoaded(
-  sessionAccount: SessionAccount,
-  agent: BskyAgent,
-) {
-  emitter.emit('session-loaded', sessionAccount, agent)
-}
-export function listenSessionLoaded(
-  fn: (sessionAccount: SessionAccount, agent: BskyAgent) => void,
-): UnlistenFn {
-  emitter.on('session-loaded', fn)
-  return () => emitter.off('session-loaded', fn)
 }
 
 export function emitSessionDropped() {

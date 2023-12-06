@@ -8,7 +8,7 @@ import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {IS_PROD} from '#/lib/constants'
-import {emitSessionLoaded, emitSessionDropped} from '../events'
+import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
@@ -210,7 +210,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       queryClient.clear()
       upsertAccount(account)
-      emitSessionLoaded(account, agent)
 
       logger.debug(
         `session: created account`,
@@ -262,7 +261,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       queryClient.clear()
       upsertAccount(account)
-      emitSessionLoaded(account, agent)
 
       logger.debug(
         `session: logged in`,
@@ -355,12 +353,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         __globalAgent = agent
         queryClient.clear()
         upsertAccount(account)
-        emitSessionLoaded(account, agent)
+
         // Intentionally not awaited to unblock the UI:
-        resumeSessionWithFreshAccount().then(async freshAccount => {
+        resumeSessionWithFreshAccount().then(freshAccount => {
           if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
             upsertAccount(freshAccount)
-            emitSessionLoaded(freshAccount, agent)
           }
         })
       } else {
@@ -368,7 +365,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         __globalAgent = agent
         queryClient.clear()
         upsertAccount(freshAccount)
-        emitSessionLoaded(freshAccount, agent)
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
