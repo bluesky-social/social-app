@@ -456,8 +456,35 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
+    if (isModList && isPinned) {
+      items.push({label: 'separator'})
+      items.push({
+        testID: 'listHeaderDropdownUnpinBtn',
+        label: _(msg`Unpin moderation list`),
+        onPress: isPending ? undefined : () => unpinFeed({uri: list.uri}),
+        icon: {
+          ios: {
+            name: 'pin',
+          },
+          android: '',
+          web: 'thumbtack',
+        },
+      })
+    }
     return items
-  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport, _])
+  }, [
+    isOwner,
+    onPressShare,
+    onPressEdit,
+    onPressDelete,
+    onPressReport,
+    _,
+    isModList,
+    isPinned,
+    unpinFeed,
+    isPending,
+    list.uri,
+  ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
