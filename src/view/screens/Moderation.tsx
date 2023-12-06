@@ -182,14 +182,15 @@ function PwiOptOut() {
 
   return (
     <View style={[pal.view, styles.toggleCard]}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View
+        style={{flexDirection: 'row', alignItems: 'center', paddingRight: 14}}>
         <ToggleButton
           type="default-light"
           label={_(msg`Request to limit the visibility of my account`)}
           labelType="lg"
           isSelected={isOptedOut}
           onPress={canToggle ? onToggleOptOut : undefined}
-          style={canToggle ? undefined : {opacity: 0.5}}
+          style={[canToggle ? undefined : {opacity: 0.5}, {flex: 1}]}
         />
         {updateProfile.isPending && <ActivityIndicator />}
       </View>
