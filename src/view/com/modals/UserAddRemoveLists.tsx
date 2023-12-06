@@ -58,7 +58,7 @@ export function Component({
         inline
         renderItem={(list, index) => (
           <ListItem
-            key={index}
+            key={list.uri}
             index={index}
             list={list}
             memberships={memberships}
