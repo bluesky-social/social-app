@@ -471,6 +471,41 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
+    if (isCurateList) {
+      items.push({label: 'separator'})
+
+      if (!isBlocking) {
+        items.push({
+          testID: 'listHeaderDropdownMuteBtn',
+          label: isMuting ? _(msg`Un-mute list`) : _(msg`Mute list`),
+          onPress: isMuting ? onUnsubscribeMute : onSubscribeMute,
+          icon: {
+            ios: {
+              name: isMuting ? 'eye' : 'eye.slash',
+            },
+            android: '',
+            web: isMuting ? 'eye' : ['far', 'eye-slash'],
+          },
+        })
+      }
+
+      if (!isMuting) {
+        items.push({
+          testID: 'listHeaderDropdownBlockBtn',
+          label: isBlocking ? _(msg`Un-block list`) : _(msg`Block list`),
+          onPress: isBlocking ? onUnsubscribeBlock : onSubscribeBlock,
+          icon: {
+            ios: {
+              name: isBlocking
+                ? 'exclamationmark.shield'
+                : 'exclamationmark.shield.fill',
+            },
+            android: '',
+            web: isBlocking ? 'shield' : 'shield',
+          },
+        })
+      }
+    }
     return items
   }, [
     isOwner,
@@ -484,6 +519,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     unpinFeed,
     isPending,
     list.uri,
+    isCurateList,
+    isMuting,
+    isBlocking,
+    onUnsubscribeMute,
+    onSubscribeMute,
+    onUnsubscribeBlock,
+    onSubscribeBlock,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
