@@ -1,7 +1,7 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {createClient} from '@segment/analytics-react-native'
+import {createClient, SegmentClient} from '@segment/analytics-react-native'
 import {useSession, SessionAccount} from '#/state/session'
 import {sha256} from 'js-sha256'
 import {TrackEvent, AnalyticsMethods} from './types'
@@ -14,14 +14,21 @@ type AppInfo = {
   version?: string | undefined
 }
 
-const segmentClient = createClient({
-  writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
-  trackAppLifecycleEvents: false,
-  proxy: 'https://api.events.bsky.app/v1',
-})
+// Delay creating until first actual use.
+let segmentClient: SegmentClient | null = null
+function getClient(): SegmentClient {
+  if (!segmentClient) {
+    segmentClient = createClient({
+      writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
+      trackAppLifecycleEvents: false,
+      proxy: 'https://api.events.bsky.app/v1',
+    })
+  }
+  return segmentClient
+}
 
 export const track: TrackEvent = async (...args) => {
-  await segmentClient.track(...args)
+  await getClient().track(...args)
 }
 
 export function useAnalytics(): AnalyticsMethods {
@@ -30,10 +37,10 @@ export function useAnalytics(): AnalyticsMethods {
     if (hasSession) {
       return {
         async screen(...args) {
-          await segmentClient.screen(...args)
+          await getClient().screen(...args)
         },
         async track(...args) {
-          await segmentClient.track(...args)
+          await getClient().track(...args)
         },
       }
     }
@@ -49,13 +56,14 @@ export function init(account: SessionAccount | undefined) {
   setupListenersOnce()
 
   if (account) {
+    const client = getClient()
     if (account.did) {
       const did_hashed = sha256(account.did)
-      segmentClient.identify(did_hashed, {did_hashed})
+      client.identify(did_hashed, {did_hashed})
       logger.debug('Ping w/hash')
     } else {
       logger.debug('Ping w/o hash')
-      segmentClient.identify()
+      client.identify()
     }
   }
 }
@@ -70,12 +78,13 @@ function setupListenersOnce() {
   // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
   // -prf
-  segmentClient.isReady.onChange(async () => {
+  const client = getClient()
+  client.isReady.onChange(async () => {
     if (AppState.currentState !== 'active') {
       logger.debug('Prevented a metrics ping while the app was backgrounded')
       return
     }
-    const context = segmentClient.context.get()
+    const context = client.context.get()
     if (typeof context?.app === 'undefined') {
       logger.debug('Aborted metrics ping due to unavailable context')
       return
@@ -87,19 +96,19 @@ function setupListenersOnce() {
     logger.debug('Recording app info', {new: newAppInfo, old: oldAppInfo})
 
     if (typeof oldAppInfo === 'undefined') {
-      segmentClient.track('Application Installed', {
+      client.track('Application Installed', {
         version: newAppInfo.version,
         build: newAppInfo.build,
       })
     } else if (newAppInfo.version !== oldAppInfo.version) {
-      segmentClient.track('Application Updated', {
+      client.track('Application Updated', {
         version: newAppInfo.version,
         build: newAppInfo.build,
         previous_version: oldAppInfo.version,
         previous_build: oldAppInfo.build,
       })
     }
-    segmentClient.track('Application Opened', {
+    client.track('Application Opened', {
       from_background: false,
       version: newAppInfo.version,
       build: newAppInfo.build,
@@ -109,14 +118,14 @@ function setupListenersOnce() {
   let lastState: AppStateStatus = AppState.currentState
   AppState.addEventListener('change', (state: AppStateStatus) => {
     if (state === 'active' && lastState !== 'active') {
-      const context = segmentClient.context.get()
-      segmentClient.track('Application Opened', {
+      const context = client.context.get()
+      client.track('Application Opened', {
         from_background: true,
         version: context?.app?.version,
         build: context?.app?.build,
       })
     } else if (state !== 'active' && lastState === 'active') {
-      segmentClient.track('Application Backgrounded')
+      client.track('Application Backgrounded')
     }
     lastState = state
   })

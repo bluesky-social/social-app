@@ -6,21 +6,30 @@ import {TrackEvent, AnalyticsMethods} from './types'
 import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
 
-const segmentClient = createClient(
-  {
-    writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
-  },
-  {
-    integrations: {
-      'Segment.io': {
-        apiHost: 'api.events.bsky.app/v1',
+type SegmentClient = ReturnType<typeof createClient>
+
+// Delay creating until first actual use.
+let segmentClient: SegmentClient | null = null
+function getClient(): SegmentClient {
+  if (!segmentClient) {
+    segmentClient = createClient(
+      {
+        writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
       },
-    },
-  },
-)
+      {
+        integrations: {
+          'Segment.io': {
+            apiHost: 'api.events.bsky.app/v1',
+          },
+        },
+      },
+    )
+  }
+  return segmentClient
+}
 
 export const track: TrackEvent = async (...args) => {
-  await segmentClient.track(...args)
+  await getClient().track(...args)
 }
 
 export function useAnalytics(): AnalyticsMethods {
@@ -29,10 +38,10 @@ export function useAnalytics(): AnalyticsMethods {
     if (hasSession) {
       return {
         async screen(...args) {
-          await segmentClient.screen(...args)
+          await getClient().screen(...args)
         },
         async track(...args) {
-          await segmentClient.track(...args)
+          await getClient().track(...args)
         },
       }
     }
@@ -46,15 +55,14 @@ export function useAnalytics(): AnalyticsMethods {
 
 export function init(account: SessionAccount | undefined) {
   if (account) {
+    const client = getClient()
     if (account.did) {
-      if (account.did) {
-        const did_hashed = sha256(account.did)
-        segmentClient.identify(did_hashed, {did_hashed})
-        logger.debug('Ping w/hash')
-      } else {
-        logger.debug('Ping w/o hash')
-        segmentClient.identify()
-      }
+      const did_hashed = sha256(account.did)
+      client.identify(did_hashed, {did_hashed})
+      logger.debug('Ping w/hash')
+    } else {
+      logger.debug('Ping w/o hash')
+      client.identify()
     }
   }
 }
