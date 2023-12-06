@@ -7,7 +7,7 @@ import {write, read} from '#/state/persisted/store'
 /**
  * The shape of the serialized data from our legacy Mobx store.
  */
-type LegacySchema = {
+export type LegacySchema = {
   shell: {
     colorMode: 'system' | 'light' | 'dark'
   }
@@ -15,7 +15,7 @@ type LegacySchema = {
     data: {
       service: string
       did: `did:plc:${string}`
-    }
+    } | null
     accounts: {
       service: string
       did: `did:plc:${string}`
@@ -61,7 +61,7 @@ type LegacySchema = {
     copiedInvites: string[]
   }
   mutedThreads: {uris: string[]}
-  reminders: {lastEmailConfirm: string}
+  reminders: {lastEmailConfirm?: string}
 }
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
@@ -124,6 +124,7 @@ export async function migrate() {
     const newData = await read()
     const alreadyMigrated = Boolean(newData)
 
+    /* TODO BEGIN DEBUG — remove this eventually */
     try {
       if (rawLegacyData) {
         const legacy = JSON.parse(rawLegacyData) as Partial<LegacySchema>
@@ -149,6 +150,7 @@ export async function migrate() {
     } catch (e: any) {
       logger.error(e, {message: `persisted state: legacy debugging failed`})
     }
+    /* TODO END DEBUG */
 
     if (!alreadyMigrated && rawLegacyData) {
       logger.info('persisted state: migrating legacy storage')
