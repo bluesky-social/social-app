@@ -56,6 +56,8 @@ export function useAnalytics() {
 }
 
 export function init(account: SessionAccount | undefined) {
+  setupListenersOnce()
+
   if (account) {
     if (account.did) {
       const did_hashed = sha256(account.did)
@@ -66,7 +68,14 @@ export function init(account: SessionAccount | undefined) {
       segmentClient.identify()
     }
   }
+}
 
+let didSetupListeners = false
+function setupListenersOnce() {
+  if (didSetupListeners) {
+    return
+  }
+  didSetupListeners = true
   // NOTE
   // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
