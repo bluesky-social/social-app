@@ -6,9 +6,8 @@ import {
 } from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
 
-import {useSession} from '#/state/session'
+import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
-import {listenSessionLoaded} from '#/state/events'
 
 const segmentClient = createClient(
   {
@@ -44,8 +43,8 @@ export function useAnalytics() {
   }, [hasSession, methods])
 }
 
-export function init() {
-  listenSessionLoaded(account => {
+export function init(account: SessionAccount | undefined) {
+  if (account) {
     if (account.did) {
       if (account.did) {
         const did_hashed = sha256(account.did)
@@ -56,7 +55,7 @@ export function init() {
         segmentClient.identify()
       }
     }
-  })
+  }
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {

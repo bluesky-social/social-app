@@ -9,7 +9,7 @@ import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
-import * as analytics from 'lib/analytics/analytics'
+import {Provider as AnalyticsProvider} from 'lib/analytics/analytics'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -37,7 +37,6 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    analytics.init()
     const account = persisted.get('session').currentAccount
     resumeSession(account)
   }, [resumeSession])
@@ -59,7 +58,7 @@ function InnerApp() {
       <LoggedOutViewProvider>
         <UnreadNotifsProvider>
           <ThemeProvider theme={colorMode}>
-            <analytics.Provider>
+            <AnalyticsProvider>
               {/* All components should be within this provider */}
               <RootSiblingParent>
                 <SafeAreaProvider>
@@ -67,7 +66,7 @@ function InnerApp() {
                 </SafeAreaProvider>
               </RootSiblingParent>
               <ToastContainer />
-            </analytics.Provider>
+            </AnalyticsProvider>
           </ThemeProvider>
         </UnreadNotifsProvider>
       </LoggedOutViewProvider>

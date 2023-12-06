@@ -16,7 +16,7 @@ import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
 import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
-import * as analytics from 'lib/analytics/analytics'
+import {Provider as AnalyticsProvider} from 'lib/analytics/analytics'
 import * as Toast from 'view/com/util/Toast'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
@@ -45,7 +45,6 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    analytics.init()
     notifications.init(queryClient)
     listenSessionDropped(() => {
       Toast.show('Sorry! Your session expired. Please log in again.')
@@ -72,7 +71,7 @@ function InnerApp() {
       <LoggedOutViewProvider>
         <UnreadNotifsProvider>
           <ThemeProvider theme={colorMode}>
-            <analytics.Provider>
+            <AnalyticsProvider>
               {/* All components should be within this provider */}
               <RootSiblingParent>
                 <GestureHandlerRootView style={s.h100pct}>
@@ -80,7 +79,7 @@ function InnerApp() {
                   <Shell />
                 </GestureHandlerRootView>
               </RootSiblingParent>
-            </analytics.Provider>
+            </AnalyticsProvider>
           </ThemeProvider>
         </UnreadNotifsProvider>
       </LoggedOutViewProvider>
