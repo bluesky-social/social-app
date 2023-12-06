@@ -55,13 +55,13 @@ import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {truncateAndInvalidate} from '#/state/queries/util'
 
-export function DrawerProfileCard({
+let DrawerProfileCard = ({
   account,
   onPressProfile,
 }: {
   account: SessionAccount
   onPressProfile: () => void
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   const {data: profile} = useProfileQuery({did: account.did})
@@ -103,11 +103,12 @@ export function DrawerProfileCard({
     </TouchableOpacity>
   )
 }
+DrawerProfileCard = React.memo(DrawerProfileCard)
+export {DrawerProfileCard}
 
-export function DrawerContent() {
+let DrawerContent = ({}: {}): React.ReactNode => {
   const theme = useTheme()
   const pal = usePalette('default')
-  const {_} = useLingui()
   const queryClient = useQueryClient()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
@@ -115,7 +116,6 @@ export function DrawerContent() {
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
-  const numUnreadNotifications = useUnreadNotifications()
 
   // events
   // =
@@ -229,158 +229,26 @@ export function DrawerContent() {
             <NavSignupCard />
           )}
 
-          {hasSession && <InviteCodes style={{paddingLeft: 0}} />}
-
+          {hasSession && <InviteCodes />}
           {hasSession && <View style={{height: 10}} />}
-
-          <MenuItem
-            icon={
-              isAtSearch ? (
-                <MagnifyingGlassIcon2Solid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size={24}
-                  strokeWidth={1.7}
-                />
-              ) : (
-                <MagnifyingGlassIcon2
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size={24}
-                  strokeWidth={1.7}
-                />
-              )
-            }
-            label={_(msg`Search`)}
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            bold={isAtSearch}
-            onPress={onPressSearch}
-          />
-          <MenuItem
-            icon={
-              isAtHome ? (
-                <HomeIconSolid
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
-                  strokeWidth={3.25}
-                />
-              ) : (
-                <HomeIcon
-                  style={pal.text as StyleProp<ViewStyle>}
-                  size="24"
-                  strokeWidth={3.25}
-                />
-              )
-            }
-            label={_(msg`Home`)}
-            accessibilityLabel={_(msg`Home`)}
-            accessibilityHint=""
-            bold={isAtHome}
-            onPress={onPressHome}
-          />
-
+          <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+          <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
           {hasSession && (
-            <MenuItem
-              icon={
-                isAtNotifications ? (
-                  <BellIconSolid
-                    style={pal.text as StyleProp<ViewStyle>}
-                    size="24"
-                    strokeWidth={1.7}
-                  />
-                ) : (
-                  <BellIcon
-                    style={pal.text as StyleProp<ViewStyle>}
-                    size="24"
-                    strokeWidth={1.7}
-                  />
-                )
-              }
-              label={_(msg`Notifications`)}
-              accessibilityLabel={_(msg`Notifications`)}
-              accessibilityHint={
-                numUnreadNotifications === ''
-                  ? ''
-                  : `${numUnreadNotifications} unread`
-              }
-              count={numUnreadNotifications}
-              bold={isAtNotifications}
+            <NotificationsMenuItem
+              isActive={isAtNotifications}
               onPress={onPressNotifications}
             />
           )}
-
-          <MenuItem
-            icon={
-              isAtFeeds ? (
-                <HashtagIcon
-                  strokeWidth={3}
-                  style={pal.text as FontAwesomeIconStyle}
-                  size={24}
-                />
-              ) : (
-                <HashtagIcon
-                  strokeWidth={2}
-                  style={pal.text as FontAwesomeIconStyle}
-                  size={24}
-                />
-              )
-            }
-            label={_(msg`Feeds`)}
-            accessibilityLabel={_(msg`Feeds`)}
-            accessibilityHint=""
-            bold={isAtFeeds}
-            onPress={onPressMyFeeds}
-          />
-
+          <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
           {hasSession && (
             <>
-              <MenuItem
-                icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
-                label={_(msg`Lists`)}
-                accessibilityLabel={_(msg`Lists`)}
-                accessibilityHint=""
-                onPress={onPressLists}
-              />
-              <MenuItem
-                icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
-                label={_(msg`Moderation`)}
-                accessibilityLabel={_(msg`Moderation`)}
-                accessibilityHint=""
-                onPress={onPressModeration}
-              />
-              <MenuItem
-                icon={
-                  isAtMyProfile ? (
-                    <UserIconSolid
-                      style={pal.text as StyleProp<ViewStyle>}
-                      size="26"
-                      strokeWidth={1.5}
-                    />
-                  ) : (
-                    <UserIcon
-                      style={pal.text as StyleProp<ViewStyle>}
-                      size="26"
-                      strokeWidth={1.5}
-                    />
-                  )
-                }
-                label={_(msg`Profile`)}
-                accessibilityLabel={_(msg`Profile`)}
-                accessibilityHint=""
+              <ListsMenuItem onPress={onPressLists} />
+              <ModerationMenuItem onPress={onPressModeration} />
+              <ProfileMenuItem
+                isActive={isAtMyProfile}
                 onPress={onPressProfile}
               />
-              <MenuItem
-                icon={
-                  <CogIcon
-                    style={pal.text as StyleProp<ViewStyle>}
-                    size="26"
-                    strokeWidth={1.75}
-                  />
-                }
-                label={_(msg`Settings`)}
-                accessibilityLabel={_(msg`Settings`)}
-                accessibilityHint=""
-                onPress={onPressSettings}
-              />
+              <SettingsMenuItem onPress={onPressSettings} />
             </>
           )}
 
@@ -388,43 +256,64 @@ export function DrawerContent() {
           <View style={styles.smallSpacer} />
         </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            accessibilityRole="link"
-            accessibilityLabel={_(msg`Send feedback`)}
-            accessibilityHint=""
-            onPress={onPressFeedback}
-            style={[
-              styles.footerBtn,
-              styles.footerBtnFeedback,
-              theme.colorScheme === 'light'
-                ? styles.footerBtnFeedbackLight
-                : styles.footerBtnFeedbackDark,
-            ]}>
-            <FontAwesomeIcon
-              style={pal.link as FontAwesomeIconStyle}
-              size={18}
-              icon={['far', 'message']}
-            />
-            <Text type="lg-medium" style={[pal.link, s.pl10]}>
-              <Trans>Feedback</Trans>
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            accessibilityRole="link"
-            accessibilityLabel={_(msg`Send feedback`)}
-            accessibilityHint=""
-            onPress={onPressHelp}
-            style={[styles.footerBtn]}>
-            <Text type="lg-medium" style={[pal.link, s.pl10]}>
-              <Trans>Help</Trans>
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <DrawerFooter
+          onPressFeedback={onPressFeedback}
+          onPressHelp={onPressHelp}
+        />
       </SafeAreaView>
     </View>
   )
 }
+DrawerContent = React.memo(DrawerContent)
+export {DrawerContent}
+
+let DrawerFooter = ({
+  onPressFeedback,
+  onPressHelp,
+}: {
+  onPressFeedback: () => void
+  onPressHelp: () => void
+}): React.ReactNode => {
+  const theme = useTheme()
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  return (
+    <View style={styles.footer}>
+      <TouchableOpacity
+        accessibilityRole="link"
+        accessibilityLabel={_(msg`Send feedback`)}
+        accessibilityHint=""
+        onPress={onPressFeedback}
+        style={[
+          styles.footerBtn,
+          styles.footerBtnFeedback,
+          theme.colorScheme === 'light'
+            ? styles.footerBtnFeedbackLight
+            : styles.footerBtnFeedbackDark,
+        ]}>
+        <FontAwesomeIcon
+          style={pal.link as FontAwesomeIconStyle}
+          size={18}
+          icon={['far', 'message']}
+        />
+        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+          <Trans>Feedback</Trans>
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        accessibilityRole="link"
+        accessibilityLabel={_(msg`Send feedback`)}
+        accessibilityHint=""
+        onPress={onPressHelp}
+        style={[styles.footerBtn]}>
+        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+          <Trans>Help</Trans>
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+DrawerFooter = React.memo(DrawerFooter)
 
 interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
   icon: JSX.Element
@@ -432,6 +321,244 @@ interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
   count?: string
   bold?: boolean
 }
+
+let SearchMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <MagnifyingGlassIcon2Solid
+            style={pal.text as StyleProp<ViewStyle>}
+            size={24}
+            strokeWidth={1.7}
+          />
+        ) : (
+          <MagnifyingGlassIcon2
+            style={pal.text as StyleProp<ViewStyle>}
+            size={24}
+            strokeWidth={1.7}
+          />
+        )
+      }
+      label={_(msg`Search`)}
+      accessibilityLabel={_(msg`Search`)}
+      accessibilityHint=""
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+SearchMenuItem = React.memo(SearchMenuItem)
+
+let HomeMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <HomeIconSolid
+            style={pal.text as StyleProp<ViewStyle>}
+            size="24"
+            strokeWidth={3.25}
+          />
+        ) : (
+          <HomeIcon
+            style={pal.text as StyleProp<ViewStyle>}
+            size="24"
+            strokeWidth={3.25}
+          />
+        )
+      }
+      label={_(msg`Home`)}
+      accessibilityLabel={_(msg`Home`)}
+      accessibilityHint=""
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+HomeMenuItem = React.memo(HomeMenuItem)
+
+let NotificationsMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const numUnreadNotifications = useUnreadNotifications()
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <BellIconSolid
+            style={pal.text as StyleProp<ViewStyle>}
+            size="24"
+            strokeWidth={1.7}
+          />
+        ) : (
+          <BellIcon
+            style={pal.text as StyleProp<ViewStyle>}
+            size="24"
+            strokeWidth={1.7}
+          />
+        )
+      }
+      label={_(msg`Notifications`)}
+      accessibilityLabel={_(msg`Notifications`)}
+      accessibilityHint={
+        numUnreadNotifications === '' ? '' : `${numUnreadNotifications} unread`
+      }
+      count={numUnreadNotifications}
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+NotificationsMenuItem = React.memo(NotificationsMenuItem)
+
+let FeedsMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <HashtagIcon
+            strokeWidth={3}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        ) : (
+          <HashtagIcon
+            strokeWidth={2}
+            style={pal.text as FontAwesomeIconStyle}
+            size={24}
+          />
+        )
+      }
+      label={_(msg`Feeds`)}
+      accessibilityLabel={_(msg`Feeds`)}
+      accessibilityHint=""
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+FeedsMenuItem = React.memo(FeedsMenuItem)
+
+let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
+      label={_(msg`Lists`)}
+      accessibilityLabel={_(msg`Lists`)}
+      accessibilityHint=""
+      onPress={onPress}
+    />
+  )
+}
+ListsMenuItem = React.memo(ListsMenuItem)
+
+let ModerationMenuItem = ({
+  onPress,
+}: {
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+      label={_(msg`Moderation`)}
+      accessibilityLabel={_(msg`Moderation`)}
+      accessibilityHint=""
+      onPress={onPress}
+    />
+  )
+}
+ModerationMenuItem = React.memo(ModerationMenuItem)
+
+let ProfileMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <UserIconSolid
+            style={pal.text as StyleProp<ViewStyle>}
+            size="26"
+            strokeWidth={1.5}
+          />
+        ) : (
+          <UserIcon
+            style={pal.text as StyleProp<ViewStyle>}
+            size="26"
+            strokeWidth={1.5}
+          />
+        )
+      }
+      label={_(msg`Profile`)}
+      accessibilityLabel={_(msg`Profile`)}
+      accessibilityHint=""
+      onPress={onPress}
+    />
+  )
+}
+ProfileMenuItem = React.memo(ProfileMenuItem)
+
+let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={
+        <CogIcon
+          style={pal.text as StyleProp<ViewStyle>}
+          size="26"
+          strokeWidth={1.75}
+        />
+      }
+      label={_(msg`Settings`)}
+      accessibilityLabel={_(msg`Settings`)}
+      accessibilityHint=""
+      onPress={onPress}
+    />
+  )
+}
+SettingsMenuItem = React.memo(SettingsMenuItem)
 
 function MenuItem({
   icon,
@@ -478,7 +605,7 @@ function MenuItem({
   )
 }
 
-function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
+let InviteCodes = ({}: {}): React.ReactNode => {
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const pal = usePalette('default')
@@ -496,7 +623,7 @@ function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
   return (
     <TouchableOpacity
       testID="menuItemInviteCodes"
-      style={[styles.inviteCodes, style]}
+      style={styles.inviteCodes}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Invite codes: ${invitesAvailable} available`)}
@@ -526,6 +653,7 @@ function InviteCodes({style}: {style?: StyleProp<ViewStyle>}) {
     </TouchableOpacity>
   )
 }
+InviteCodes = React.memo(InviteCodes)
 
 const styles = StyleSheet.create({
   view: {
@@ -595,7 +723,7 @@ const styles = StyleSheet.create({
   },
 
   inviteCodes: {
-    paddingLeft: 22,
+    paddingLeft: 0,
     paddingVertical: 8,
     flexDirection: 'row',
   },
