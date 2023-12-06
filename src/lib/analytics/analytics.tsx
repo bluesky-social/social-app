@@ -7,19 +7,17 @@ import {
   useAnalytics as useAnalyticsOrig,
   ClientMethods,
 } from '@segment/analytics-react-native'
-import {z} from 'zod'
 import {useSession, SessionAccount} from '#/state/session'
 import {sha256} from 'js-sha256'
 import {ScreenEvent, TrackEvent} from './types'
 import {logger} from '#/logger'
 
-export const appInfo = z.object({
-  build: z.string().optional(),
-  name: z.string().optional(),
-  namespace: z.string().optional(),
-  version: z.string().optional(),
-})
-export type AppInfo = z.infer<typeof appInfo>
+type AppInfo = {
+  build?: string | undefined
+  name?: string | undefined
+  namespace?: string | undefined
+  version?: string | undefined
+}
 
 const segmentClient = createClient({
   writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
