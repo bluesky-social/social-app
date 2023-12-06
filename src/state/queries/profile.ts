@@ -26,12 +26,18 @@ import {track} from '#/lib/analytics/analytics'
 export const RQKEY = (did: string) => ['profile', did]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
+  const {currentAccount} = useSession()
+  const isCurrentAccount = did === currentAccount?.did
+
   return useQuery({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
     // -prf
-    staleTime: STALE.MINUTES.FIVE,
+    staleTime: isCurrentAccount ? STALE.SECONDS.THIRTY : STALE.MINUTES.FIVE,
+    refetchInterval: isCurrentAccount
+      ? STALE.SECONDS.THIRTY
+      : STALE.MINUTES.FIVE,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
       const res = await getAgent().getProfile({actor: did || ''})

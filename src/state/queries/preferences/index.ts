@@ -28,8 +28,9 @@ export const preferencesQueryKey = ['getPreferences']
 
 export function usePreferencesQuery() {
   return useQuery({
-    staleTime: STALE.MINUTES.ONE,
+    staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: true,
+    refetchInterval: STALE.SECONDS.FIFTEEN,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
       const agent = getAgent()

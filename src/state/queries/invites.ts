@@ -15,7 +15,8 @@ export type InviteCodesQueryResponse = Exclude<
 >
 export function useInviteCodesQuery() {
   return useQuery({
-    staleTime: STALE.HOURS.ONE,
+    staleTime: STALE.MINUTES.FIVE,
+    refetchInterval: STALE.MINUTES.FIVE,
     queryKey: ['inviteCodes'],
     queryFn: async () => {
       const res = await getAgent()
