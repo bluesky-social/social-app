@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSession, SessionAccount} from '#/state/session'
 import {useServiceQuery} from '#/state/queries/service'
+import {useLoggedOutView} from '#/state/shell/logged-out'
 
 enum Forms {
   Login,
@@ -31,6 +32,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const [error, setError] = useState<string>('')
   const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
   const [initialHandle, setInitialHandle] = useState<string>('')
+  const {requestedAccountSwitchTo} = useLoggedOutView()
   const [currentForm, setCurrentForm] = useState<Forms>(
     accounts.length ? Forms.ChooseAccount : Forms.Login,
   )
@@ -39,6 +41,12 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     error: serviceError,
     refetch: refetchService,
   } = useServiceQuery(serviceUrl)
+
+  useEffect(() => {
+    if (requestedAccountSwitchTo) {
+      onSelectAccount(accounts.find(a => a.did === requestedAccountSwitchTo))
+    }
+  }, [accounts, requestedAccountSwitchTo])
 
   const onSelectAccount = (account?: SessionAccount) => {
     if (account?.service) {

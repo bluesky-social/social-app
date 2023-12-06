@@ -34,7 +34,7 @@ export function useAccountSwitcher() {
           }, 100)
         } else {
           closeAllActiveElements()
-          setShowLoggedOut(true)
+          setShowLoggedOut(true, account.did)
           Toast.show(
             `Please sign in as @${account.handle}`,
             'circle-exclamation',

@@ -14,6 +14,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {SplashScreen} from './SplashScreen'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useLoggedOutView} from '#/state/shell/logged-out'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -26,6 +27,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
+  const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(
     ScreenState.S_LoginOrCreateAccount,
   )
@@ -35,6 +37,12 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     screen('Login')
     setMinimalShellMode(true)
   }, [screen, setMinimalShellMode])
+
+  React.useEffect(() => {
+    if (requestedAccountSwitchTo) {
+      setScreenState(ScreenState.S_Login)
+    }
+  }, [requestedAccountSwitchTo])
 
   return (
     <View
