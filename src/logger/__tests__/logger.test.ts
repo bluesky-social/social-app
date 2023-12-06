@@ -179,6 +179,7 @@ describe('general functionality', () => {
       level: 'debug', // Sentry bug, log becomes debug
       timestamp: sentryTimestamp,
     })
+    jest.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'log',
       tags: undefined,
@@ -193,6 +194,7 @@ describe('general functionality', () => {
       level: 'warning',
       timestamp: sentryTimestamp,
     })
+    jest.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'warning',
       tags: undefined,

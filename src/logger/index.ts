@@ -170,8 +170,8 @@ export const sentryTransport: Transport = (
         [LogLevel.Warn]: 'warning',
         [LogLevel.Error]: 'error',
       }[level] || 'log') as Sentry.Breadcrumb['level']
-
-      Sentry.captureMessage(message, {
+      // Defer non-critical messages so they're sent in a batch
+      queueMessageForSentry(message, {
         level: messageLevel,
         tags,
         extra: meta,
@@ -185,6 +185,32 @@ export const sentryTransport: Transport = (
       tags,
       extra: meta,
     })
+  }
+}
+
+const queuedMessages: [string, Parameters<typeof Sentry.captureMessage>[1]][] =
+  []
+let sentrySendTimeout: ReturnType<typeof setTimeout> | null = null
+function queueMessageForSentry(
+  message: string,
+  captureContext: Parameters<typeof Sentry.captureMessage>[1],
+) {
+  queuedMessages.push([message, captureContext])
+  if (!sentrySendTimeout) {
+    // Throttle sending messages with a leading delay
+    // so that we can get Sentry out of the critical path.
+    sentrySendTimeout = setTimeout(() => {
+      sentrySendTimeout = null
+      sendQueuedMessages()
+    }, 7000)
+  }
+}
+function sendQueuedMessages() {
+  while (queuedMessages.length > 0) {
+    const record = queuedMessages.shift()
+    if (record) {
+      Sentry.captureMessage(record[0], record[1])
+    }
   }
 }
 
