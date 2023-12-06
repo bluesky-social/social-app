@@ -294,7 +294,7 @@ let Feed = ({
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
-        onEndReachedThreshold={3} // number of posts left to trigger load more
+        onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
