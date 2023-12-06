@@ -1,6 +1,7 @@
 import React from 'react'
 import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
+import {jwtDecode} from 'jwt-decode'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
@@ -327,34 +328,65 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         ),
       })
 
-      await networkRetry(3, () =>
-        agent.resumeSession({
-          accessJwt: account.accessJwt || '',
-          refreshJwt: account.refreshJwt || '',
-          did: account.did,
-          handle: account.handle,
-        }),
-      )
-
-      if (!agent.session) {
-        throw new Error(`session: initSession failed to establish a session`)
+      let canReusePrevSession = false
+      try {
+        if (account.accessJwt) {
+          const decoded = jwtDecode(account.accessJwt)
+          if (decoded.exp) {
+            const didExpire = Date.now() >= decoded.exp * 1000
+            if (!didExpire) {
+              canReusePrevSession = true
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Could not decode jwt.')
       }
 
-      // ensure changes in handle/email etc are captured on reload
-      const freshAccount: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email,
-        emailConfirmed: agent.session.emailConfirmed || false,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
+      const prevSession = {
+        accessJwt: account.accessJwt || '',
+        refreshJwt: account.refreshJwt || '',
+        did: account.did,
+        handle: account.handle,
       }
 
-      __globalAgent = agent
-      queryClient.clear()
-      upsertAccount(freshAccount)
-      emitSessionLoaded(freshAccount, agent)
+      if (canReusePrevSession) {
+        agent.session = prevSession
+        __globalAgent = agent
+        queryClient.clear()
+        upsertAccount(account)
+        emitSessionLoaded(account, agent)
+        // Intentionally not awaited to unblock the UI:
+        resumeSessionWithFreshAccount().then(async freshAccount => {
+          if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
+            upsertAccount(freshAccount)
+            emitSessionLoaded(freshAccount, agent)
+          }
+        })
+      } else {
+        const freshAccount = await resumeSessionWithFreshAccount()
+        __globalAgent = agent
+        queryClient.clear()
+        upsertAccount(freshAccount)
+        emitSessionLoaded(freshAccount, agent)
+      }
+
+      async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
+        await networkRetry(3, () => agent.resumeSession(prevSession))
+        if (!agent.session) {
+          throw new Error(`session: initSession failed to establish a session`)
+        }
+        // ensure changes in handle/email etc are captured on reload
+        return {
+          service: agent.service.toString(),
+          did: agent.session.did,
+          handle: agent.session.handle,
+          email: agent.session.email,
+          emailConfirmed: agent.session.emailConfirmed || false,
+          refreshJwt: agent.session.refreshJwt,
+          accessJwt: agent.session.accessJwt,
+        }
+      }
     },
     [upsertAccount, queryClient],
   )
