@@ -20,7 +20,9 @@ const segmentClient = createClient({
   proxy: 'https://api.events.bsky.app/v1',
 })
 
-export const track = segmentClient?.track?.bind?.(segmentClient) as TrackEvent
+export const track: TrackEvent = async (...args) => {
+  await segmentClient.track(...args)
+}
 
 export function useAnalytics(): AnalyticsMethods {
   const {hasSession} = useSession()

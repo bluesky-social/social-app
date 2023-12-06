@@ -1,7 +1,7 @@
 import React from 'react'
 import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
-import {AnalyticsMethods} from './types'
+import {TrackEvent, AnalyticsMethods} from './types'
 
 import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
@@ -18,7 +18,10 @@ const segmentClient = createClient(
     },
   },
 )
-export const track = segmentClient?.track?.bind?.(segmentClient)
+
+export const track: TrackEvent = async (...args) => {
+  await segmentClient.track(...args)
+}
 
 export function useAnalytics(): AnalyticsMethods {
   const {hasSession} = useSession()
