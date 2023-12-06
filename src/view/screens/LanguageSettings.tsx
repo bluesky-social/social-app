@@ -48,6 +48,7 @@ export function LanguageSettingsScreen(_props: Props) {
 
   const onChangePrimaryLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+      if (!value) return
       if (langPrefs.primaryLanguage !== value) {
         setLangPrefs.setPrimaryLanguage(value)
       }
@@ -57,6 +58,7 @@ export function LanguageSettingsScreen(_props: Props) {
 
   const onChangeAppLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+      if (!value) return
       if (langPrefs.appLanguage !== value) {
         setLangPrefs.setAppLanguage(value)
       }
@@ -100,6 +102,7 @@ export function LanguageSettingsScreen(_props: Props) {
 
           <View style={{position: 'relative'}}>
             <RNPickerSelect
+              placeholder={{}}
               value={langPrefs.appLanguage}
               onValueChange={onChangeAppLanguage}
               items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
@@ -190,6 +193,7 @@ export function LanguageSettingsScreen(_props: Props) {
 
           <View style={{position: 'relative'}}>
             <RNPickerSelect
+              placeholder={{}}
               value={langPrefs.primaryLanguage}
               onValueChange={onChangePrimaryLanguage}
               items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
