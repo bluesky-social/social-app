@@ -10,6 +10,7 @@ import {IS_PROD} from '#/lib/constants'
 import {emitSessionLoaded, emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {track} from '#/lib/analytics/analytics'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -270,6 +271,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
         logger.DebugContext.session,
       )
+
+      track('Sign In', {resumedSession: false})
     },
     [upsertAccount, queryClient],
   )

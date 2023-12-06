@@ -62,6 +62,7 @@ import {
   useUnpinFeedMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -267,6 +268,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     useUnpinFeedMutation()
   const isPending = isPinPending || isUnpinPending
   const {data: preferences} = usePreferencesQuery()
+  const {track} = useAnalytics()
 
   const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
 
@@ -297,6 +299,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         try {
           await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
           Toast.show('List muted')
+          track('Lists:Mute')
         } catch {
           Toast.show(
             'There was an issue. Please check your internet connection and try again.',
@@ -307,18 +310,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         closeModal()
       },
     })
-  }, [openModal, closeModal, list, listMuteMutation, _])
+  }, [openModal, closeModal, list, listMuteMutation, track, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
       Toast.show('List unmuted')
+      track('Lists:Unmute')
     } catch {
       Toast.show(
         'There was an issue. Please check your internet connection and try again.',
       )
     }
-  }, [list, listMuteMutation])
+  }, [list, listMuteMutation, track])
 
   const onSubscribeBlock = useCallback(() => {
     openModal({
@@ -332,6 +336,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         try {
           await listBlockMutation.mutateAsync({uri: list.uri, block: true})
           Toast.show('List blocked')
+          track('Lists:Block')
         } catch {
           Toast.show(
             'There was an issue. Please check your internet connection and try again.',
@@ -342,18 +347,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         closeModal()
       },
     })
-  }, [openModal, closeModal, list, listBlockMutation, _])
+  }, [openModal, closeModal, list, listBlockMutation, track, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
       Toast.show('List unblocked')
+      track('Lists:Unblock')
     } catch {
       Toast.show(
         'There was an issue. Please check your internet connection and try again.',
       )
     }
-  }, [list, listBlockMutation])
+  }, [list, listBlockMutation, track])
 
   const onPressEdit = useCallback(() => {
     openModal({
@@ -370,6 +376,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       async onPressConfirm() {
         await listDeleteMutation.mutateAsync({uri: list.uri})
         Toast.show('List deleted')
+        track('Lists:Delete')
         if (navigation.canGoBack()) {
           navigation.goBack()
         } else {
@@ -377,7 +384,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         }
       },
     })
-  }, [openModal, list, listDeleteMutation, navigation, _])
+  }, [openModal, list, listDeleteMutation, navigation, track, _])
 
   const onPressReport = useCallback(() => {
     openModal({
@@ -390,7 +397,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
     shareUrl(url)
-  }, [list, rkey])
+    track('Lists:Share')
+  }, [list, rkey, track])
 
   const dropdownItems: DropdownItem[] = useMemo(() => {
     let items: DropdownItem[] = [

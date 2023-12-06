@@ -25,7 +25,6 @@ import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
@@ -102,7 +101,6 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
-  const {track} = useAnalytics()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -121,7 +119,6 @@ let FeedItemInner = ({
   }, [record?.reply])
 
   const onPressReply = React.useCallback(() => {
-    track('FeedItem:PostReply')
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -134,7 +131,7 @@ let FeedItemInner = ({
         },
       },
     })
-  }, [post, record, track, openComposer])
+  }, [post, record, openComposer])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

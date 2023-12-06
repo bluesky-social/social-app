@@ -21,6 +21,7 @@ import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
+import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (did: string) => ['profile', did]
 
@@ -188,6 +189,7 @@ function useProfileFollowMutation() {
         updateProfileShadow(variables.did, {
           followingUri: data.uri,
         })
+        track('Profile:Follow', {username: variables.did})
       }
     },
     onError(error, variables) {
@@ -208,6 +210,7 @@ function useProfileUnfollowMutation() {
     {did: string; followUri: string; skipOptimistic?: boolean}
   >({
     mutationFn: async ({followUri}) => {
+      track('Profile:Unfollow', {username: followUri})
       return await getAgent().deleteFollow(followUri)
     },
     onMutate(variables) {
