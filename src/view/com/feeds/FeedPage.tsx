@@ -4,7 +4,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'

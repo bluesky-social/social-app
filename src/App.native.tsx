@@ -16,7 +16,6 @@ import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
 import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
-import {Provider as AnalyticsProvider} from 'lib/analytics/analytics'
 import * as Toast from 'view/com/util/Toast'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
@@ -71,15 +70,13 @@ function InnerApp() {
       <LoggedOutViewProvider>
         <UnreadNotifsProvider>
           <ThemeProvider theme={colorMode}>
-            <AnalyticsProvider>
-              {/* All components should be within this provider */}
-              <RootSiblingParent>
-                <GestureHandlerRootView style={s.h100pct}>
-                  <TestCtrls />
-                  <Shell />
-                </GestureHandlerRootView>
-              </RootSiblingParent>
-            </AnalyticsProvider>
+            {/* All components should be within this provider */}
+            <RootSiblingParent>
+              <GestureHandlerRootView style={s.h100pct}>
+                <TestCtrls />
+                <Shell />
+              </GestureHandlerRootView>
+            </RootSiblingParent>
           </ThemeProvider>
         </UnreadNotifsProvider>
       </LoggedOutViewProvider>
