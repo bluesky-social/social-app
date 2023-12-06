@@ -15,7 +15,7 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {s} from 'lib/styles'
 import {CenteredView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
-import {Link} from '../com/util/Link'
+import {Link, TextLink} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -185,7 +185,7 @@ function PwiOptOut() {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <ToggleButton
           type="default-light"
-          label={_(msg`Hide my account from logged-out users`)}
+          label={_(msg`Request to limit the visibility of my account`)}
           labelType="lg"
           isSelected={isOptedOut}
           onPress={canToggle ? onToggleOptOut : undefined}
@@ -203,16 +203,24 @@ function PwiOptOut() {
         }}>
         <Text style={pal.textLight}>
           <Trans>
-            Enabling this will not make your profile private, but it will hide
-            your profile and content from logged-out users.
+            Your profile and account will not be visible to anyone visiting the
+            Bluesky app without an account, or to account holders who are not
+            logged in. Enabling this will not make your profile private.
           </Trans>
         </Text>
         <Text style={pal.textLight}>
           <Trans>
-            Bluesky is an open network. Your profile and content are publicly
-            available. Other apps on the network may not respect this setting.
+            <Text style={[pal.textLight, {fontWeight: '600'}]}>
+              Note: This setting may not be respected by third-party apps that
+              display Bluesky content.
+            </Text>{' '}
           </Trans>
         </Text>
+        <TextLink
+          style={pal.link}
+          href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
+          text={_(msg`Learn more about what is public on Bluesky.`)}
+        />
       </View>
     </View>
   )
