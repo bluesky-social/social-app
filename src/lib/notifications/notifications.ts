@@ -1,4 +1,3 @@
-import {BskyAgent} from '@atproto/api'
 import * as Notifications from 'expo-notifications'
 import {QueryClient} from '@tanstack/react-query'
 import {resetToTab} from '../../Navigation'
@@ -7,7 +6,7 @@ import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {SessionAccount} from '#/state/session'
+import {SessionAccount, getAgent} from '#/state/session'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -16,7 +15,6 @@ const SERVICE_DID = (serviceUrl?: string) =>
 
 export async function requestPermissionsAndRegisterToken(
   account: SessionAccount,
-  agent: BskyAgent,
 ) {
   // request notifications permission once the user has logged in
   const perms = await Notifications.getPermissionsAsync()
@@ -27,7 +25,7 @@ export async function requestPermissionsAndRegisterToken(
   // register the push token with the server
   const token = await Notifications.getDevicePushTokenAsync()
   try {
-    await agent.api.app.bsky.notification.registerPush({
+    await getAgent().api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
       platform: devicePlatform,
       token: token.data,
@@ -46,10 +44,7 @@ export async function requestPermissionsAndRegisterToken(
   }
 }
 
-export function registerTokenChangeHandler(
-  account: SessionAccount,
-  agent: BskyAgent,
-) {
+export function registerTokenChangeHandler(account: SessionAccount) {
   // listens for new changes to the push token
   // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
   Notifications.addPushTokenListener(async newToken => {
@@ -59,7 +54,7 @@ export function registerTokenChangeHandler(
       logger.DebugContext.notifications,
     )
     try {
-      await agent.api.app.bsky.notification.registerPush({
+      await getAgent().api.app.bsky.notification.registerPush({
         serviceDid: SERVICE_DID(account.service),
         platform: devicePlatform,
         token: newToken.data,

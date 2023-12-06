@@ -48,9 +48,9 @@ function InnerApp() {
   // init
   useEffect(() => {
     analytics.init()
-    listenSessionLoaded((account, agent) => {
-      notifications.requestPermissionsAndRegisterToken(account, agent)
-      notifications.registerTokenChangeHandler(account, agent)
+    listenSessionLoaded(account => {
+      notifications.requestPermissionsAndRegisterToken(account)
+      notifications.registerTokenChangeHandler(account)
     })
     notifications.init(queryClient)
     listenSessionDropped(() => {
