@@ -11,7 +11,7 @@ import {enableFreeze} from 'react-native-screens'
 import 'view/icons'
 
 import {init as initPersistedState} from '#/state/persisted'
-import {listenSessionDropped, listenSessionLoaded} from './state/events'
+import {listenSessionDropped} from './state/events'
 import {useColorMode} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
@@ -48,10 +48,6 @@ function InnerApp() {
   // init
   useEffect(() => {
     analytics.init()
-    listenSessionLoaded(account => {
-      notifications.requestPermissionsAndRegisterToken(account)
-      notifications.registerTokenChangeHandler(account)
-    })
     notifications.init(queryClient)
     listenSessionDropped(() => {
       Toast.show('Sorry! Your session expired. Please log in again.')

@@ -44,10 +44,12 @@ export async function requestPermissionsAndRegisterToken(
   }
 }
 
-export function registerTokenChangeHandler(account: SessionAccount) {
+export function registerTokenChangeHandler(
+  account: SessionAccount,
+): () => void {
   // listens for new changes to the push token
   // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
-  Notifications.addPushTokenListener(async newToken => {
+  const sub = Notifications.addPushTokenListener(async newToken => {
     logger.debug(
       'Notifications: Push token changed',
       {tokenType: newToken.data, token: newToken.type},
@@ -72,6 +74,9 @@ export function registerTokenChangeHandler(account: SessionAccount) {
       logger.error('Notifications: Failed to set push token', {error})
     }
   })
+  return () => {
+    sub.remove()
+  }
 }
 
 export function init(queryClient: QueryClient) {
