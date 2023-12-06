@@ -41,7 +41,7 @@ import {
   shouldRequestEmailConfirmation,
   setEmailConfirmationRequested,
 } from './state/shell/reminders'
-import {identify} from './lib/analytics/analytics'
+import {init as initAnalytics} from './lib/analytics/analytics'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -475,13 +475,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const {openModal} = useModalControls()
 
   function onReady() {
-    if (currentAccount) {
-      identify(currentAccount)
+    initAnalytics(currentAccount)
 
-      if (shouldRequestEmailConfirmation(currentAccount)) {
-        openModal({name: 'verify-email', showReminder: true})
-        setEmailConfirmationRequested()
-      }
+    if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
+      openModal({name: 'verify-email', showReminder: true})
+      setEmailConfirmationRequested()
     }
   }
 

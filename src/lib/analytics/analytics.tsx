@@ -57,18 +57,18 @@ export function useAnalytics() {
   }, [hasSession, methods])
 }
 
-export function identify(account: SessionAccount) {
-  if (account.did) {
-    const did_hashed = sha256(account.did)
-    segmentClient.identify(did_hashed, {did_hashed})
-    logger.debug('Ping w/hash')
-  } else {
-    logger.debug('Ping w/o hash')
-    segmentClient.identify()
+export function init(account: SessionAccount | undefined) {
+  if (account) {
+    if (account.did) {
+      const did_hashed = sha256(account.did)
+      segmentClient.identify(did_hashed, {did_hashed})
+      logger.debug('Ping w/hash')
+    } else {
+      logger.debug('Ping w/o hash')
+      segmentClient.identify()
+    }
   }
-}
 
-export function init() {
   // NOTE
   // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
