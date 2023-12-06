@@ -7,7 +7,6 @@ import {track} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {listenSessionLoaded} from '#/state/events'
 import {SessionAccount} from '#/state/session'
 
 const SERVICE_DID = (serviceUrl?: string) =>
@@ -15,7 +14,10 @@ const SERVICE_DID = (serviceUrl?: string) =>
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-async function onSessionLoaded(account: SessionAccount, agent: BskyAgent) {
+export async function onSessionLoaded(
+  account: SessionAccount,
+  agent: BskyAgent,
+) {
   // request notifications permission once the user has logged in
   const perms = await Notifications.getPermissionsAsync()
   if (!perms.granted) {
@@ -77,8 +79,6 @@ async function onSessionLoaded(account: SessionAccount, agent: BskyAgent) {
 }
 
 export function init(queryClient: QueryClient) {
-  listenSessionLoaded(onSessionLoaded)
-
   // handle notifications that are received, both in the foreground or background
   Notifications.addNotificationReceivedListener(event => {
     logger.debug(
