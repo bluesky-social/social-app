@@ -74,7 +74,6 @@ export function usePostLikeMutation() {
       updatePostShadow(variables.uri, {
         likeUri: data.uri,
       })
-      // track like event
       track('Post:Like')
     },
     onError(error, variables) {
@@ -95,6 +94,7 @@ export function usePostUnlikeMutation() {
   >({
     mutationFn: async ({likeUri}) => {
       await getAgent().deleteLike(likeUri)
+      track('Post:Unlike')
     },
     onMutate(variables) {
       // optimistically update the post-shadow
@@ -102,8 +102,6 @@ export function usePostUnlikeMutation() {
         likeCount: variables.likeCount - 1,
         likeUri: undefined,
       })
-      // track unlike event
-      track('Post:Unlike')
     },
     onError(error, variables) {
       // revert the optimistic update
@@ -134,7 +132,6 @@ export function usePostRepostMutation() {
       updatePostShadow(variables.uri, {
         repostUri: data.uri,
       })
-      // track repost event
       track('Post:Repost')
     },
     onError(error, variables) {
@@ -155,6 +152,7 @@ export function usePostUnrepostMutation() {
   >({
     mutationFn: async ({repostUri}) => {
       await getAgent().deleteRepost(repostUri)
+      track('Post:Unrepost')
     },
     onMutate(variables) {
       // optimistically update the post-shadow
@@ -162,8 +160,6 @@ export function usePostUnrepostMutation() {
         repostCount: variables.repostCount - 1,
         repostUri: undefined,
       })
-      // track unrepost event
-      track('Post:Unrepost')
     },
     onError(error, variables) {
       // revert the optimistic update
