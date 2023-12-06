@@ -8,11 +8,10 @@ import {
   ClientMethods,
 } from '@segment/analytics-react-native'
 import {z} from 'zod'
-import {useSession} from '#/state/session'
+import {useSession, SessionAccount} from '#/state/session'
 import {sha256} from 'js-sha256'
 import {ScreenEvent, TrackEvent} from './types'
 import {logger} from '#/logger'
-import {listenSessionLoaded} from '#/state/events'
 
 export const appInfo = z.object({
   build: z.string().optional(),
@@ -58,18 +57,18 @@ export function useAnalytics() {
   }, [hasSession, methods])
 }
 
-export function init() {
-  listenSessionLoaded(account => {
-    if (account.did) {
-      const did_hashed = sha256(account.did)
-      segmentClient.identify(did_hashed, {did_hashed})
-      logger.debug('Ping w/hash')
-    } else {
-      logger.debug('Ping w/o hash')
-      segmentClient.identify()
-    }
-  })
+export function identify(account: SessionAccount) {
+  if (account.did) {
+    const did_hashed = sha256(account.did)
+    segmentClient.identify(did_hashed, {did_hashed})
+    logger.debug('Ping w/hash')
+  } else {
+    logger.debug('Ping w/o hash')
+    segmentClient.identify()
+  }
+}
 
+export function init() {
   // NOTE
   // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
