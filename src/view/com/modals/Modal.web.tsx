@@ -11,6 +11,7 @@ import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportModal from './report/Modal'
+import * as AppealLabelModal from './AppealLabel'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 import * as ListAddUserModal from './ListAddRemoveUsers'
@@ -81,6 +82,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report') {
     element = <ReportModal.Component {...modal} />
+  } else if (modal.name === 'appeal-label') {
+    element = <AppealLabelModal.Component {...modal} />
   } else if (modal.name === 'create-or-edit-list') {
     element = <CreateOrEditListModal.Component {...modal} />
   } else if (modal.name === 'user-add-remove-lists') {

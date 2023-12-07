@@ -22,6 +22,7 @@ import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as AltImageModal from './AltImage'
 import * as EditImageModal from './AltImage'
 import * as ReportModal from './report/Modal'
+import * as AppealLabelModal from './AppealLabel'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
@@ -105,6 +106,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'report') {
     snapPoints = ReportModal.snapPoints
     element = <ReportModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'appeal-label') {
+    snapPoints = AppealLabelModal.snapPoints
+    element = <AppealLabelModal.Component {...activeModal} />
   } else if (activeModal?.name === 'create-or-edit-list') {
     snapPoints = CreateOrEditListModal.snapPoints
     element = <CreateOrEditListModal.Component {...activeModal} />
