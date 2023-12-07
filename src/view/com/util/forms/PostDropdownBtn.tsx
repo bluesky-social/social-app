@@ -154,7 +154,7 @@ export function PostDropdownBtn({
         web: 'comment-slash',
       },
     },
-    hasSession && {
+    {
       label: 'separator',
     },
     !isAuthor &&
@@ -176,9 +176,6 @@ export function PostDropdownBtn({
           web: 'circle-exclamation',
         },
       },
-    isAuthor && {
-      label: 'separator',
-    },
     isAuthor && {
       label: _(msg`Delete post`),
       onPress() {
