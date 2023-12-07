@@ -91,11 +91,15 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     const {isFetching, hasNextPage, data} = query
 
     let count = 0
+    let numEmpties = 0
     for (const page of data?.pages || []) {
+      if (!page.items.length) {
+        numEmpties++
+      }
       count += page.items.length
     }
 
-    if (!isFetching && hasNextPage && count < PAGE_SIZE) {
+    if (!isFetching && hasNextPage && count < PAGE_SIZE && numEmpties < 3) {
       query.fetchNextPage()
     }
   }, [query])
