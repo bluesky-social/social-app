@@ -496,12 +496,10 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           onPress: isBlocking ? onUnsubscribeBlock : onSubscribeBlock,
           icon: {
             ios: {
-              name: isBlocking
-                ? 'exclamationmark.shield'
-                : 'exclamationmark.shield.fill',
+              name: 'person.fill.xmark',
             },
             android: '',
-            web: isBlocking ? 'shield' : 'shield',
+            web: 'user-slash',
           },
         })
       }
