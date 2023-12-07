@@ -68,8 +68,12 @@ export function Component(props: ReportComponentProps) {
         <View style={[pal.btn, styles.detailsInputContainer]}>
           <TextInput
             accessibilityLabel={_(msg`Text input field`)}
-            accessibilityHint="Please tell us why you think this decision was incorrect."
-            placeholder="Please tell us why you think this decision was incorrect."
+            accessibilityHint={_(
+              msg`Please tell us why you think this decision was incorrect.`,
+            )}
+            placeholder={_(
+              msg`Please tell us why you think this decision was incorrect.`,
+            )}
             placeholderTextColor={pal.textLight.color}
             value={details}
             onChangeText={setDetails}
