@@ -113,11 +113,27 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
       props.dataSet.stableGutters = '1'
     }
   }
+
+  const nativeRef = React.useRef(null)
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      scrollToOffset({animated, offset}) {
+        nativeRef.current.scrollTo({
+          x: 0,
+          y: offset,
+          animated,
+        })
+      },
+    }),
+    [],
+  )
+
   return (
     <Animated.ScrollView
       {...props}
       style={[style, {overflowY: 'auto'}]}
-      ref={ref}>
+      ref={nativeRef}>
       <View
         style={[styles.contentContainer, contentContainerStyle, pal.border]}>
         {data.map(item => (
