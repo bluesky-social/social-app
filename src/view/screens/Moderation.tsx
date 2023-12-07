@@ -186,7 +186,7 @@ function PwiOptOut() {
         style={{flexDirection: 'row', alignItems: 'center', paddingRight: 14}}>
         <ToggleButton
           type="default-light"
-          label={_(msg`Request to limit the visibility of my account`)}
+          label={_(msg`Ask apps to limit the visibility of my account`)}
           labelType="lg"
           isSelected={isOptedOut}
           onPress={canToggle ? onToggleOptOut : undefined}
@@ -204,16 +204,16 @@ function PwiOptOut() {
         }}>
         <Text style={pal.textLight}>
           <Trans>
-            Your profile and account will not be visible to anyone visiting the
-            Bluesky app without an account, or to account holders who are not
-            logged in. Enabling this will not make your profile private.
+            Apps that respect this setting, including the official Bluesky app
+            and bsky.app website, won't show your content to logged out users.
           </Trans>
         </Text>
         <Text style={pal.textLight}>
           <Trans>
             <Text style={[pal.textLight, {fontWeight: '600'}]}>
-              Note: This setting may not be respected by third-party apps that
-              display Bluesky content.
+              Note: Your profile and posts will remain publicly available.
+              Third-party apps that display Bluesky content may not respect this
+              setting.
             </Text>{' '}
           </Trans>
         </Text>
