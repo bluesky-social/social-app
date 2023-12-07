@@ -159,7 +159,8 @@ function Modal({modal}: {modal: ModalIface}) {
 
 const styles = StyleSheet.create({
   mask: {
-    position: 'absolute',
+    // @ts-ignore
+    position: 'fixed',
     top: 0,
     left: 0,
     width: '100%',
