@@ -16,6 +16,7 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
+import {useEffect} from 'react'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -49,7 +50,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
 
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     FeedPage,
     Error,
     InfiniteData<FeedPage>,
@@ -85,6 +86,21 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+
+    let count = 0
+    for (const page of data?.pages || []) {
+      count += page.items.length
+    }
+
+    if (!isFetching && hasNextPage && count < PAGE_SIZE) {
+      query.fetchNextPage()
+    }
+  }, [query])
+
+  return query
 }
 
 /**
