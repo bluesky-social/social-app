@@ -22,6 +22,7 @@ import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isWeb} from '#/platform/detection'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -255,23 +256,30 @@ let PagerTabBar = ({
     ],
   }))
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[
-        isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
-        headerTransform,
-      ]}>
-      <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
+    <>
+      <View
+        onLayout={onHeaderOnlyLayout}
+        pointerEvents="box-none"
+        style={{
+          width: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          width: 598,
+        }}>
         {renderHeader?.()}
       </View>
       <View
         onLayout={onTabBarLayout}
-        style={{
-          // Render it immediately to measure it early since its size doesn't depend on the content.
-          // However, keep it invisible until the header above stabilizes in order to prevent jumps.
-          opacity: isHeaderReady ? 1 : 0,
-          pointerEvents: isHeaderReady ? 'auto' : 'none',
-        }}>
+        style={[
+          {
+            // Render it immediately to measure it early since its size doesn't depend on the content.
+            // However, keep it invisible until the header above stabilizes in order to prevent jumps.
+            opacity: isHeaderReady ? 1 : 0,
+            pointerEvents: isHeaderReady ? 'auto' : 'none',
+          },
+          isWeb ? {position: 'sticky', top: 0, zIndex: 1} : null,
+          {width: '100%', marginLeft: 'auto', marginRight: 'auto', width: 598},
+        ]}>
         <TabBar
           testID={testID}
           items={items}
@@ -280,7 +288,7 @@ let PagerTabBar = ({
           onPressSelected={onCurrentPageSelected}
         />
       </View>
-    </Animated.View>
+    </>
   )
 }
 PagerTabBar = React.memo(PagerTabBar)
@@ -315,7 +323,7 @@ function PagerItem({
   }
 
   return renderTab({
-    headerHeight,
+    headerHeight: isWeb ? 0 : headerHeight,
     isFocused,
     isScrolledDown,
     onScroll: scrollHandler,
@@ -327,19 +335,15 @@ function PagerItem({
 
 const styles = StyleSheet.create({
   tabBarMobile: {
-    position: 'absolute',
     zIndex: 1,
     top: 0,
     left: 0,
     width: '100%',
   },
   tabBarDesktop: {
-    position: 'absolute',
     zIndex: 1,
     top: 0,
     // @ts-ignore Web only -prf
-    left: 'calc(50% - 299px)',
-    width: 598,
   },
 })
 
