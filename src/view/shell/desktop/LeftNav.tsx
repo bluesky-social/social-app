@@ -436,6 +436,7 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
+    // @ts-ignore web only
     position: 'fixed',
     top: 10,
     // @ts-ignore web only

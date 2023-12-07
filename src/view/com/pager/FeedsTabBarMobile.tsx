@@ -124,6 +124,7 @@ export function FeedsTabBar(
 
 const styles = StyleSheet.create({
   tabBar: {
+    // @ts-ignore web-only
     position: isWeb ? 'fixed' : 'absolute',
     zIndex: 1,
     left: 0,

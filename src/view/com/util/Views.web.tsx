@@ -139,9 +139,12 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
       <View
         style={[styles.contentContainer, contentContainerStyle, pal.border]}>
         {(data as Array<ItemT>).map((item, index) => (
-          <View key={keyExtractor!(item, index)}>
-            {renderItem!({item, index, separators: null as any})}
-          </View>
+          <Row<ItemT>
+            key={keyExtractor!(item, index)}
+            item={item}
+            index={index}
+            renderItem={renderItem}
+          />
         ))}
         {onEndReached && (
           <Tail threshold={onEndReachedThreshold} onVisible={onVisible} />
@@ -150,6 +153,25 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     </Animated.ScrollView>
   )
 })
+
+let Row = function RowImpl<ItemT>({
+  item,
+  index,
+  renderItem,
+}: {
+  item: ItemT
+  index: number
+  renderItem:
+    | null
+    | undefined
+    | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
+}): React.ReactNode {
+  if (!renderItem) {
+    return null
+  }
+  return renderItem({item, index, separators: null as any})
+}
+Row = React.memo(Row)
 
 let Tail = ({
   threshold = 0,
