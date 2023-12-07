@@ -258,14 +258,11 @@ let PagerTabBar = ({
   return (
     <Animated.View
       pointerEvents="box-none"
-      style={
-        isWeb
-          ? []
-          : [
-              isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
-              headerTransform,
-            ]
-      }>
+      style={[
+        isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
+        isWeb ? null : headerTransform,
+        isWeb ? null : {position: 'absolute'},
+      ]}>
       <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
         {renderHeader?.()}
       </View>
@@ -335,14 +332,12 @@ function PagerItem({
 
 const styles = StyleSheet.create({
   tabBarMobile: {
-    position: 'absolute',
     zIndex: 1,
     top: 0,
     left: 0,
     width: '100%',
   },
   tabBarDesktop: {
-    position: 'absolute',
     zIndex: 1,
     top: 0,
     // @ts-ignore Web only -prf
