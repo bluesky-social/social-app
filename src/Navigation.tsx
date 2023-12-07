@@ -394,7 +394,7 @@ const FlatNavigator = () => {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: [pal.view],
+        contentStyle: [pal.view, {flex: 'none'}],
       }}>
       <Flat.Screen
         name="Home"
