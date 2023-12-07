@@ -54,7 +54,6 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     data,
     contentOffset,
     keyExtractor,
-    desktopFixedHeight,
     renderItem,
     style,
     contentContainerStyle,
@@ -90,46 +89,28 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
       paddingTop: Math.abs(contentOffset.y),
     })
   }
-  if (desktopFixedHeight) {
-    if (typeof desktopFixedHeight === 'number') {
-      // @ts-ignore Web only -prf
-      // style = addStyle(style, {
-      //   height: `calc(100vh - ${desktopFixedHeight}px)`,
-      // })
-    } else {
-      // style = addStyle(style, styles.fixedHeight)
-    }
-    if (!isMobile) {
-      // NOTE
-      // react native web produces *three* wrapping divs
-      // the first two use the `style` prop and the innermost uses the
-      // `contentContainerStyle`. Unfortunately the stable-gutter style
-      // needs to be applied to only the "middle" of these. To hack
-      // around this, we set data-stable-gutters which can then be
-      // styled in our external CSS.
-      // -prf
-      // @ts-ignore web only -prf
-      props.dataSet = props.dataSet || {}
-      // @ts-ignore web only -prf
-      props.dataSet.stableGutters = '1'
-    }
-  }
-
   const nativeRef = React.useRef(null)
   React.useImperativeHandle(
     ref,
-    () => ({
-      scrollToTop() {
-        window.scrollTo({top: 0})
-      },
-      scrollToOffset({animated, offset}) {
-        window.scrollTo({
-          left: 0,
-          top: offset,
-          behavior: animated ? 'smooth' : 'instant',
-        })
-      },
-    }),
+    () =>
+      ({
+        scrollToTop() {
+          window.scrollTo({top: 0})
+        },
+        scrollToOffset({
+          animated,
+          offset,
+        }: {
+          animated: boolean
+          offset: number
+        }) {
+          window.scrollTo({
+            left: 0,
+            top: offset,
+            behavior: animated ? 'smooth' : 'instant',
+          })
+        },
+      } as any), // TODO: Types.
     [],
   )
 
@@ -137,8 +118,8 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     if (!onScroll) {
       return
     }
-    function handleScroll(e) {
-      onScroll.current.worklet({
+    function handleScroll(e: any) {
+      ;(onScroll as any).current?.worklet({
         ...e.nativeEvent,
         eventName: 'onScroll',
         contentOffset: {
@@ -152,24 +133,36 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   }, [onScroll])
 
   return (
-    <Animated.ScrollView
-      {...props}
-      style={[style, {overflowY: 'auto'}]}
-      ref={nativeRef}>
+    <Animated.ScrollView {...props} style={style} ref={nativeRef}>
       <View
         style={[styles.contentContainer, contentContainerStyle, pal.border]}>
-        {data.map(item => (
-          <View key={keyExtractor(item)}>{renderItem({item})}</View>
+        {(data as Array<ItemT>).map((item, index) => (
+          <View key={keyExtractor!(item, index)}>
+            {renderItem!({item, index, separators: null as any})}
+          </View>
         ))}
         {onEndReached && (
-          <Tail threshold={onEndReachedThreshold} onVisible={onEndReached} />
+          <Tail
+            threshold={onEndReachedThreshold}
+            onVisible={() => {
+              onEndReached({
+                distanceFromEnd: onEndReachedThreshold || 0,
+              })
+            }}
+          />
         )}
       </View>
     </Animated.ScrollView>
   )
 })
 
-function Tail({onVisible}) {
+function Tail({
+  threshold = 0,
+  onVisible,
+}: {
+  threshold?: number | null | undefined
+  onVisible: () => void
+}) {
   const tailRef = React.useRef(null)
 
   React.useEffect(() => {
@@ -182,90 +175,18 @@ function Tail({onVisible}) {
         })
       },
       {
-        rootMargin: '200%',
+        rootMargin: (threshold || 0) * 100 + '%',
       },
     )
-
-    const tail = tailRef.current
+    const tail: Element | null = tailRef.current!
     observer.observe(tail)
-
     return () => {
       observer.unobserve(tail)
     }
-  }, [onVisible])
+  }, [onVisible, threshold])
 
   return <div ref={tailRef} />
 }
-
-export const FlatListOld = React.forwardRef(function FlatListImpl<ItemT>(
-  {
-    contentContainerStyle,
-    style,
-    contentOffset,
-    desktopFixedHeight,
-    ...props
-  }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<Animated.FlatList<ItemT>>,
-) {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
-  if (!isMobile) {
-    contentContainerStyle = addStyle(
-      contentContainerStyle,
-      styles.containerScroll,
-    )
-  }
-  if (contentOffset && contentOffset?.y !== 0) {
-    // NOTE
-    // we use paddingTop & contentOffset to space around the floating header
-    // but reactnative web puts the paddingTop on the wrong element (style instead of the contentContainer)
-    // so we manually correct it here
-    // -prf
-    style = addStyle(style, {
-      paddingTop: 0,
-    })
-    contentContainerStyle = addStyle(contentContainerStyle, {
-      paddingTop: Math.abs(contentOffset.y),
-    })
-  }
-  if (desktopFixedHeight) {
-    if (typeof desktopFixedHeight === 'number') {
-      // @ts-ignore Web only -prf
-      style = addStyle(style, {
-        height: `calc(100vh - ${desktopFixedHeight}px)`,
-      })
-    } else {
-      style = addStyle(style, styles.fixedHeight)
-    }
-    if (!isMobile) {
-      // NOTE
-      // react native web produces *three* wrapping divs
-      // the first two use the `style` prop and the innermost uses the
-      // `contentContainerStyle`. Unfortunately the stable-gutter style
-      // needs to be applied to only the "middle" of these. To hack
-      // around this, we set data-stable-gutters which can then be
-      // styled in our external CSS.
-      // -prf
-      // @ts-ignore web only -prf
-      props.dataSet = props.dataSet || {}
-      // @ts-ignore web only -prf
-      props.dataSet.stableGutters = '1'
-    }
-  }
-  return (
-    <Animated.FlatList
-      ref={ref}
-      contentContainerStyle={[
-        styles.contentContainer,
-        contentContainerStyle,
-        pal.border,
-      ]}
-      style={style}
-      contentOffset={contentOffset}
-      {...props}
-    />
-  )
-})
 
 export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
