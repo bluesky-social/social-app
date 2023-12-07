@@ -14,7 +14,10 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {SplashScreen} from './SplashScreen'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useLoggedOutView} from '#/state/shell/logged-out'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -29,20 +32,24 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {screen} = useAnalytics()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(
-    ScreenState.S_LoginOrCreateAccount,
+    requestedAccountSwitchTo
+      ? ScreenState.S_Login
+      : ScreenState.S_LoginOrCreateAccount,
   )
   const {isMobile} = useWebMediaQueries()
+  const {clearRequestedAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
     screen('Login')
     setMinimalShellMode(true)
   }, [screen, setMinimalShellMode])
 
-  React.useEffect(() => {
-    if (requestedAccountSwitchTo) {
-      setScreenState(ScreenState.S_Login)
+  const onPressDismiss = React.useCallback(() => {
+    if (onDismiss) {
+      onDismiss()
     }
-  }, [requestedAccountSwitchTo])
+    clearRequestedAccount()
+  }, [clearRequestedAccount, onDismiss])
 
   return (
     <View
@@ -70,7 +77,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               backgroundColor: pal.text.color,
               borderRadius: 100,
             }}
-            onPress={onDismiss}>
+            onPress={onPressDismiss}>
             <FontAwesomeIcon
               icon="x"
               size={12}
@@ -91,9 +98,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
           <Login
-            onPressBack={() =>
+            onPressBack={() => {
               setScreenState(ScreenState.S_LoginOrCreateAccount)
-            }
+              clearRequestedAccount()
+            }}
           />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (

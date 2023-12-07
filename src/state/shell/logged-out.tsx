@@ -24,6 +24,11 @@ type Controls = {
      */
     requestedAccount?: string
   }) => void
+  /**
+   * Clears the requested account so that next time the logged out view is
+   * show, no account is pre-populated.
+   */
+  clearRequestedAccount: () => void
 }
 
 const StateContext = React.createContext<State>({
@@ -34,6 +39,7 @@ const StateContext = React.createContext<State>({
 const ControlsContext = React.createContext<Controls>({
   setShowLoggedOut: () => {},
   requestSwitchToAccount: () => {},
+  clearRequestedAccount: () => {},
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -55,6 +61,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ...s,
           showLoggedOut: true,
           requestedAccountSwitchTo: requestedAccount,
+        }))
+      },
+      clearRequestedAccount() {
+        setState(s => ({
+          ...s,
+          requestedAccountSwitchTo: undefined,
         }))
       },
     }),
