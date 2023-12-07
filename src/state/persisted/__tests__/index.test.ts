@@ -9,6 +9,7 @@ import * as persisted from '#/state/persisted'
 const write = jest.mocked(store.write)
 const read = jest.mocked(store.read)
 
+jest.mock('#/logger')
 jest.mock('#/state/persisted/legacy', () => ({
   migrate: jest.fn(),
 }))
