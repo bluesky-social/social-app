@@ -23,6 +23,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {useTheme} from '#/lib/ThemeContext'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {isNative} from '#/platform/detection'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -106,7 +107,10 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     const queryClient = useQueryClient()
 
     const onScrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerOffset,
+      })
       queryClient.invalidateQueries({queryKey: RQKEY(did)})
     }, [scrollElRef, queryClient, headerOffset, did])
 

@@ -25,6 +25,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
+import {isNative} from '#/platform/detection'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -57,7 +58,10 @@ export function FeedPage({
   const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+    scrollElRef.current?.scrollToOffset({
+      animated: isNative,
+      offset: -headerOffset,
+    })
     resetMainScroll()
   }, [headerOffset, resetMainScroll])
 

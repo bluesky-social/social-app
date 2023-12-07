@@ -54,7 +54,7 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {
   usePreferencesQuery,
@@ -563,7 +563,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [hasNew, setHasNew] = React.useState(false)
 
     const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
       queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
@@ -633,7 +636,10 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     )
 
     const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
     }, [scrollElRef, headerHeight])
 
     React.useImperativeHandle(ref, () => ({

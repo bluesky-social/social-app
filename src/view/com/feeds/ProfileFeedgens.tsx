@@ -24,6 +24,7 @@ import {useTheme} from '#/lib/ThemeContext'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {isNative} from '#/platform/detection'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -104,7 +105,10 @@ export const ProfileFeedgens = React.forwardRef<
   const queryClient = useQueryClient()
 
   const onScrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+    scrollElRef.current?.scrollToOffset({
+      animated: isNative,
+      offset: -headerOffset,
+    })
     queryClient.invalidateQueries({queryKey: RQKEY(did)})
   }, [scrollElRef, queryClient, headerOffset, did])
 

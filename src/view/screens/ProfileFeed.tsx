@@ -65,6 +65,7 @@ import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {useComposerControls} from '#/state/shell/composer'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {isNative} from '#/platform/detection'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -511,7 +512,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])

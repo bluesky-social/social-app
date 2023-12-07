@@ -38,6 +38,7 @@ import {listenSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {isNative} from '#/platform/detection'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -419,7 +420,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [hasNew, setHasNew] = React.useState(false)
 
     const onScrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
