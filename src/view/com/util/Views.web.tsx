@@ -120,13 +120,13 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     ref,
     () => ({
       scrollToTop() {
-        console.log('yeahh')
+        window.scrollTo({top: 0})
       },
       scrollToOffset({animated, offset}) {
-        nativeRef.current.scrollTo({
-          x: 0,
-          y: offset,
-          animated,
+        window.scrollTo({
+          left: 0,
+          top: offset,
+          behavior: animated ? 'smooth' : 'instant',
         })
       },
     }),
@@ -134,6 +134,9 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   )
 
   React.useEffect(() => {
+    if (!onScroll) {
+      return
+    }
     function handleScroll(e) {
       onScroll.current.worklet({
         ...e.nativeEvent,

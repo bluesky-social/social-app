@@ -22,6 +22,7 @@ import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isWeb} from '#/platform/detection'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -257,21 +258,28 @@ let PagerTabBar = ({
   return (
     <Animated.View
       pointerEvents="box-none"
-      style={[
-        isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
-        headerTransform,
-      ]}>
+      style={
+        isWeb
+          ? []
+          : [
+              isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
+              headerTransform,
+            ]
+      }>
       <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
         {renderHeader?.()}
       </View>
       <View
         onLayout={onTabBarLayout}
-        style={{
-          // Render it immediately to measure it early since its size doesn't depend on the content.
-          // However, keep it invisible until the header above stabilizes in order to prevent jumps.
-          opacity: isHeaderReady ? 1 : 0,
-          pointerEvents: isHeaderReady ? 'auto' : 'none',
-        }}>
+        style={[
+          {
+            // Render it immediately to measure it early since its size doesn't depend on the content.
+            // However, keep it invisible until the header above stabilizes in order to prevent jumps.
+            opacity: isHeaderReady ? 1 : 0,
+            pointerEvents: isHeaderReady ? 'auto' : 'none',
+          },
+          isWeb ? {position: 'sticky', top: 0} : null,
+        ]}>
         <TabBar
           testID={testID}
           items={items}
@@ -315,7 +323,7 @@ function PagerItem({
   }
 
   return renderTab({
-    headerHeight,
+    headerHeight: isWeb ? 0 : headerHeight,
     isFocused,
     isScrolledDown,
     onScroll: scrollHandler,
