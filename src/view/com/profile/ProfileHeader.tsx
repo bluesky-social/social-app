@@ -54,6 +54,7 @@ import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
+import {LabelInfo} from '../util/moderation/LabelInfo'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
@@ -619,6 +620,9 @@ let ProfileHeaderLoaded = ({
           </>
         )}
         <ProfileHeaderAlerts moderation={moderation} />
+        {isMe && (
+          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
+        )}
       </View>
 
       {!isProfilePreview && showSuggestedFollows && (
