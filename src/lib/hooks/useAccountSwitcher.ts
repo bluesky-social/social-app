@@ -25,7 +25,10 @@ export function useAccountSwitcher() {
           closeAllActiveElements()
           await selectAccount(account)
 
-          // mobile resets to home upon account switch
+          /*
+           * Mobile resets to Home on its own, so no need to handle mobile
+           * specifically.
+           */
           if (isWeb) {
             navigation.navigate('Home')
           }
