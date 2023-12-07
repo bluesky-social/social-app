@@ -401,8 +401,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
-        // TODO on flaky networks, this takes ages to time out
-        await networkRetry(3, () => agent.resumeSession(prevSession))
+        await networkRetry(1, () => agent.resumeSession(prevSession))
 
         /*
          * If `agent.resumeSession` fails above, it'll throw. This is just to
