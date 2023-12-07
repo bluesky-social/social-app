@@ -38,12 +38,12 @@ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite 
 msgstr ""
 
 #: src/view/screens/Settings.tsx:407
-#: src/view/shell/Drawer.tsx:521
+#: src/view/shell/Drawer.tsx:648
 msgid "{invitesAvailable} invite code available"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:409
-#: src/view/shell/Drawer.tsx:523
+#: src/view/shell/Drawer.tsx:650
 msgid "{invitesAvailable} invite codes available"
 msgstr ""
 
@@ -63,6 +63,14 @@ msgstr ""
 #~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
 #~ msgstr ""
 
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: This setting may not be respected by third-party apps that display Bluesky content.</0>"
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
+#~ msgstr ""
+
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
 msgstr ""
@@ -72,7 +80,7 @@ msgstr ""
 msgid "Accessibility"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:161
+#: src/view/com/auth/login/LoginForm.tsx:159
 #: src/view/screens/Settings.tsx:286
 msgid "Account"
 msgstr ""
@@ -82,8 +90,8 @@ msgid "Account options"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
-#: src/view/com/modals/UserAddRemoveLists.tsx:192
-#: src/view/screens/ProfileList.tsx:702
+#: src/view/com/modals/UserAddRemoveLists.tsx:193
+#: src/view/screens/ProfileList.tsx:710
 msgid "Add"
 msgstr ""
 
@@ -91,7 +99,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:700
 msgid "Add a user to this list"
 msgstr ""
 
@@ -135,7 +143,7 @@ msgid "Add to my feeds"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
-#: src/view/com/modals/UserAddRemoveLists.tsx:127
+#: src/view/com/modals/UserAddRemoveLists.tsx:128
 msgid "Added to list"
 msgstr ""
 
@@ -191,6 +199,10 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:206
+#~ msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
+#~ msgstr ""
+
 #: src/view/screens/AppPasswords.tsx:223
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr ""
@@ -199,7 +211,7 @@ msgstr ""
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:369
+#: src/view/screens/ProfileList.tsx:375
 msgid "Are you sure?"
 msgstr ""
 
@@ -211,10 +223,14 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:189
+#~ msgid "Ask apps to limit the visibility of my account"
+#~ msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:145
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:251
+#: src/view/com/auth/login/LoginForm.tsx:249
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
 #: src/view/com/post-thread/PostThread.tsx:381
@@ -242,15 +258,15 @@ msgstr ""
 msgid "Block Account"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:470
+#: src/view/screens/ProfileList.tsx:478
 msgid "Block accounts"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:326
+#: src/view/screens/ProfileList.tsx:330
 msgid "Block these accounts?"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:109
+#: src/view/screens/Moderation.tsx:121
 msgid "Blocked accounts"
 msgstr ""
 
@@ -270,7 +286,7 @@ msgstr ""
 msgid "Blocked post."
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:328
+#: src/view/screens/ProfileList.tsx:332
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -492,11 +508,11 @@ msgid "Confirmation code"
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:178
-#: src/view/com/auth/login/LoginForm.tsx:270
+#: src/view/com/auth/login/LoginForm.tsx:268
 msgid "Connecting..."
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:67
+#: src/view/screens/Moderation.tsx:79
 msgid "Content filtering"
 msgstr ""
 
@@ -531,7 +547,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:399
+#: src/view/screens/ProfileList.tsx:407
 msgid "Copy link to list"
 msgstr ""
 
@@ -555,7 +571,7 @@ msgstr ""
 msgid "Could not load feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:779
+#: src/view/screens/ProfileList.tsx:787
 msgid "Could not load list"
 msgstr ""
 
@@ -601,8 +617,8 @@ msgstr ""
 msgid "Delete app password"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:368
-#: src/view/screens/ProfileList.tsx:426
+#: src/view/screens/ProfileList.tsx:374
+#: src/view/screens/ProfileList.tsx:434
 msgid "Delete List"
 msgstr ""
 
@@ -672,7 +688,7 @@ msgstr ""
 #: src/view/com/modals/EditImage.tsx:333
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/SelfLabel.tsx:157
-#: src/view/com/modals/UserAddRemoveLists.tsx:78
+#: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/screens/PreferencesHomeFeed.tsx:302
 #: src/view/screens/PreferencesThreads.tsx:156
 msgid "Done"
@@ -691,7 +707,7 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:414
+#: src/view/screens/ProfileList.tsx:422
 msgid "Edit list details"
 msgstr ""
 
@@ -789,15 +805,15 @@ msgid "Feed Preferences"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:64
-#: src/view/shell/Drawer.tsx:410
+#: src/view/shell/Drawer.tsx:300
 msgid "Feedback"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:475
 #: src/view/shell/bottom-bar/BottomBar.tsx:168
 #: src/view/shell/desktop/LeftNav.tsx:341
-#: src/view/shell/Drawer.tsx:327
-#: src/view/shell/Drawer.tsx:328
+#: src/view/shell/Drawer.tsx:463
+#: src/view/shell/Drawer.tsx:464
 msgid "Feeds"
 msgstr ""
 
@@ -862,11 +878,11 @@ msgstr ""
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:233
+#: src/view/com/auth/login/LoginForm.tsx:231
 msgid "Forgot"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:230
+#: src/view/com/auth/login/LoginForm.tsx:228
 msgid "Forgot password"
 msgstr ""
 
@@ -892,13 +908,13 @@ msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:111
 #: src/view/screens/ProfileFeed.tsx:116
-#: src/view/screens/ProfileList.tsx:788
-#: src/view/screens/ProfileList.tsx:793
+#: src/view/screens/ProfileList.tsx:796
+#: src/view/screens/ProfileList.tsx:801
 msgid "Go Back"
 msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:280
+#: src/view/com/auth/login/LoginForm.tsx:278
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr ""
@@ -908,7 +924,7 @@ msgid "Handle"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:93
-#: src/view/shell/Drawer.tsx:420
+#: src/view/shell/Drawer.tsx:310
 msgid "Help"
 msgstr ""
 
@@ -954,8 +970,8 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:124
 #: src/view/shell/desktop/LeftNav.tsx:305
-#: src/view/shell/Drawer.tsx:274
-#: src/view/shell/Drawer.tsx:275
+#: src/view/shell/Drawer.tsx:387
+#: src/view/shell/Drawer.tsx:388
 msgid "Home"
 msgstr ""
 
@@ -1021,7 +1037,7 @@ msgstr ""
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:502
+#: src/view/shell/Drawer.tsx:629
 msgid "Invite codes: {invitesAvailable} available"
 msgstr ""
 
@@ -1064,6 +1080,10 @@ msgstr ""
 msgid "Learn more about this warning"
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:235
+msgid "Learn more about what is public on Bluesky."
+msgstr ""
+
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
 msgstr ""
@@ -1086,13 +1106,17 @@ msgstr ""
 #~ msgid "Light"
 #~ msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:637
+#: src/view/screens/ProfileFeed.tsx:639
 msgid "Like this feed"
 msgstr ""
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:203
+msgid "Limit the visibility of my account"
 msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
@@ -1104,8 +1128,8 @@ msgid "List Name"
 msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:381
-#: src/view/shell/Drawer.tsx:338
-#: src/view/shell/Drawer.tsx:339
+#: src/view/shell/Drawer.tsx:479
+#: src/view/shell/Drawer.tsx:480
 msgid "Lists"
 msgstr ""
 
@@ -1130,6 +1154,10 @@ msgstr ""
 msgid "Local dev server"
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:134
+msgid "Logged-out users"
+msgstr ""
+
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
 msgstr ""
@@ -1151,15 +1179,15 @@ msgstr ""
 msgid "Message from server"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:51
+#: src/view/screens/Moderation.tsx:63
 #: src/view/screens/Settings.tsx:563
 #: src/view/shell/desktop/LeftNav.tsx:399
-#: src/view/shell/Drawer.tsx:345
-#: src/view/shell/Drawer.tsx:346
+#: src/view/shell/Drawer.tsx:498
+#: src/view/shell/Drawer.tsx:499
 msgid "Moderation"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:81
+#: src/view/screens/Moderation.tsx:93
 msgid "Moderation lists"
 msgstr ""
 
@@ -1173,7 +1201,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:523
 #: src/view/screens/ProfileFeed.tsx:369
-#: src/view/screens/ProfileList.tsx:531
+#: src/view/screens/ProfileList.tsx:539
 msgid "More options"
 msgstr ""
 
@@ -1185,11 +1213,11 @@ msgstr ""
 msgid "Mute Account"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:458
+#: src/view/screens/ProfileList.tsx:466
 msgid "Mute accounts"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:291
+#: src/view/screens/ProfileList.tsx:293
 msgid "Mute these accounts?"
 msgstr ""
 
@@ -1197,7 +1225,7 @@ msgstr ""
 msgid "Mute thread"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:95
+#: src/view/screens/Moderation.tsx:107
 msgid "Muted accounts"
 msgstr ""
 
@@ -1209,9 +1237,13 @@ msgstr ""
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:293
+#: src/view/screens/ProfileList.tsx:295
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
+
+#: src/view/screens/Moderation.tsx:134
+#~ msgid "My Account"
+#~ msgstr ""
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -1247,8 +1279,8 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:510
 #: src/view/screens/Profile.tsx:388
 #: src/view/screens/ProfileFeed.tsx:450
-#: src/view/screens/ProfileList.tsx:211
-#: src/view/screens/ProfileList.tsx:243
+#: src/view/screens/ProfileList.tsx:212
+#: src/view/screens/ProfileList.tsx:244
 #: src/view/shell/desktop/LeftNav.tsx:254
 msgid "New post"
 msgstr ""
@@ -1260,7 +1292,7 @@ msgstr ""
 #: src/view/com/auth/create/CreateAccount.tsx:158
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:283
+#: src/view/com/auth/login/LoginForm.tsx:281
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1277,8 +1309,8 @@ msgstr ""
 msgid "No"
 msgstr "<<<<<<< HEAD"
 
-#: src/view/screens/ProfileFeed.tsx:630
-#: src/view/screens/ProfileList.tsx:659
+#: src/view/screens/ProfileFeed.tsx:632
+#: src/view/screens/ProfileList.tsx:667
 msgid "No description"
 msgstr ""
 
@@ -1311,12 +1343,16 @@ msgstr ""
 msgid "Not Applicable."
 msgstr ""
 
+#: src/view/screens/Moderation.tsx:227
+msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+msgstr ""
+
 #: src/view/screens/Notifications.tsx:96
 #: src/view/screens/Notifications.tsx:120
 #: src/view/shell/bottom-bar/BottomBar.tsx:195
 #: src/view/shell/desktop/LeftNav.tsx:363
-#: src/view/shell/Drawer.tsx:298
-#: src/view/shell/Drawer.tsx:299
+#: src/view/shell/Drawer.tsx:424
+#: src/view/shell/Drawer.tsx:425
 msgid "Notifications"
 msgstr ""
 
@@ -1341,7 +1377,7 @@ msgid "Opens configurable language settings"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:146
-#: src/view/shell/Drawer.tsx:503
+#: src/view/shell/Drawer.tsx:630
 msgid "Opens list of invite codes"
 msgstr ""
 
@@ -1396,7 +1432,7 @@ msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:101
 #: src/view/com/auth/create/Step2.tsx:111
-#: src/view/com/auth/login/LoginForm.tsx:218
+#: src/view/com/auth/login/LoginForm.tsx:216
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1494,8 +1530,8 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:237
 #: src/view/shell/Drawer.tsx:72
-#: src/view/shell/Drawer.tsx:366
-#: src/view/shell/Drawer.tsx:367
+#: src/view/shell/Drawer.tsx:533
+#: src/view/shell/Drawer.tsx:534
 msgid "Profile"
 msgstr ""
 
@@ -1539,7 +1575,7 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
-#: src/view/com/modals/UserAddRemoveLists.tsx:192
+#: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/com/util/UserAvatar.tsx:278
 #: src/view/com/util/UserBanner.tsx:89
 msgid "Remove"
@@ -1575,7 +1611,7 @@ msgid "Remove this feed from your saved feeds?"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
-#: src/view/com/modals/UserAddRemoveLists.tsx:135
+#: src/view/com/modals/UserAddRemoveLists.tsx:136
 msgid "Removed from list"
 msgstr ""
 
@@ -1595,7 +1631,7 @@ msgstr ""
 msgid "Report feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:440
+#: src/view/screens/ProfileList.tsx:448
 msgid "Report List"
 msgstr ""
 
@@ -1621,6 +1657,10 @@ msgstr ""
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
 msgstr ""
+
+#: src/view/screens/Moderation.tsx:188
+#~ msgid "Request to limit the visibility of my account"
+#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:382
 #~ msgid "Require alt text before posting"
@@ -1656,8 +1696,8 @@ msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:167
 #: src/view/com/auth/create/CreateAccount.tsx:171
-#: src/view/com/auth/login/LoginForm.tsx:260
-#: src/view/com/auth/login/LoginForm.tsx:263
+#: src/view/com/auth/login/LoginForm.tsx:258
+#: src/view/com/auth/login/LoginForm.tsx:261
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
@@ -1709,8 +1749,8 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:323
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
-#: src/view/shell/Drawer.tsx:252
-#: src/view/shell/Drawer.tsx:253
+#: src/view/shell/Drawer.tsx:351
+#: src/view/shell/Drawer.tsx:352
 msgid "Search"
 msgstr ""
 
@@ -1734,7 +1774,7 @@ msgstr ""
 msgid "Select from an existing account"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:145
+#: src/view/com/auth/login/LoginForm.tsx:143
 msgid "Select service"
 msgstr ""
 
@@ -1762,8 +1802,8 @@ msgstr ""
 msgid "Send Email"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:394
-#: src/view/shell/Drawer.tsx:415
+#: src/view/shell/Drawer.tsx:284
+#: src/view/shell/Drawer.tsx:305
 msgid "Send feedback"
 msgstr ""
 
@@ -1797,8 +1837,8 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:277
 #: src/view/shell/desktop/LeftNav.tsx:435
-#: src/view/shell/Drawer.tsx:379
-#: src/view/shell/Drawer.tsx:380
+#: src/view/shell/Drawer.tsx:554
+#: src/view/shell/Drawer.tsx:555
 msgid "Settings"
 msgstr ""
 
@@ -1808,7 +1848,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:313
 #: src/view/com/util/forms/PostDropdownBtn.tsx:126
-#: src/view/screens/ProfileList.tsx:399
+#: src/view/screens/ProfileList.tsx:407
 msgid "Share"
 msgstr ""
 
@@ -1873,7 +1913,7 @@ msgstr ""
 msgid "Sign in as..."
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:130
 msgid "Sign into"
 msgstr ""
 
@@ -1925,11 +1965,11 @@ msgstr ""
 msgid "Storybook"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:522
+#: src/view/screens/ProfileList.tsx:530
 msgid "Subscribe"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:518
+#: src/view/screens/ProfileList.tsx:526
 msgid "Subscribe to this list"
 msgstr ""
 
@@ -2137,12 +2177,12 @@ msgstr ""
 msgid "User Lists"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:172
-#: src/view/com/auth/login/LoginForm.tsx:189
+#: src/view/com/auth/login/LoginForm.tsx:170
+#: src/view/com/auth/login/LoginForm.tsx:187
 msgid "Username or email address"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:686
+#: src/view/screens/ProfileList.tsx:694
 msgid "Users"
 msgstr ""
 
@@ -2262,7 +2302,7 @@ msgstr ""
 msgid "You have no feeds."
 msgstr ""
 
-#: src/view/com/lists/MyLists.tsx:88
+#: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:154
 msgid "You have no lists."
 msgstr ""
@@ -2318,7 +2358,7 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:402
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:517
+#: src/view/shell/Drawer.tsx:644
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
 
@@ -2328,6 +2368,14 @@ msgstr ""
 
 #: src/view/com/modals/SwitchAccount.tsx:78
 msgid "Your profile"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:205
+#~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:220
+msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
 msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:28

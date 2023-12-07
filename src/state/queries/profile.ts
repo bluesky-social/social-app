@@ -49,18 +49,31 @@ export function useProfileQuery({did}: {did: string | undefined}) {
 
 interface ProfileUpdateParams {
   profile: AppBskyActorDefs.ProfileView
-  updates: AppBskyActorProfile.Record
-  newUserAvatar: RNImage | undefined | null
-  newUserBanner: RNImage | undefined | null
+  updates:
+    | AppBskyActorProfile.Record
+    | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
+  newUserAvatar?: RNImage | undefined | null
+  newUserBanner?: RNImage | undefined | null
+  checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
   return useMutation<void, Error, ProfileUpdateParams>({
-    mutationFn: async ({profile, updates, newUserAvatar, newUserBanner}) => {
+    mutationFn: async ({
+      profile,
+      updates,
+      newUserAvatar,
+      newUserBanner,
+      checkCommitted,
+    }) => {
       await getAgent().upsertProfile(async existing => {
         existing = existing || {}
-        existing.displayName = updates.displayName
-        existing.description = updates.description
+        if (typeof updates === 'function') {
+          existing = updates(existing)
+        } else {
+          existing.displayName = updates.displayName
+          existing.description = updates.description
+        }
         if (newUserAvatar) {
           const res = await uploadBlob(
             getAgent(),
@@ -83,30 +96,37 @@ export function useProfileUpdateMutation() {
         }
         return existing
       })
-      await whenAppViewReady(profile.did, res => {
-        if (typeof newUserAvatar !== 'undefined') {
-          if (newUserAvatar === null && res.data.avatar) {
-            // url hasnt cleared yet
-            return false
-          } else if (res.data.avatar === profile.avatar) {
-            // url hasnt changed yet
-            return false
-          }
-        }
-        if (typeof newUserBanner !== 'undefined') {
-          if (newUserBanner === null && res.data.banner) {
-            // url hasnt cleared yet
-            return false
-          } else if (res.data.banner === profile.banner) {
-            // url hasnt changed yet
-            return false
-          }
-        }
-        return (
-          res.data.displayName === updates.displayName &&
-          res.data.description === updates.description
-        )
-      })
+      await whenAppViewReady(
+        profile.did,
+        checkCommitted ||
+          (res => {
+            if (typeof newUserAvatar !== 'undefined') {
+              if (newUserAvatar === null && res.data.avatar) {
+                // url hasnt cleared yet
+                return false
+              } else if (res.data.avatar === profile.avatar) {
+                // url hasnt changed yet
+                return false
+              }
+            }
+            if (typeof newUserBanner !== 'undefined') {
+              if (newUserBanner === null && res.data.banner) {
+                // url hasnt cleared yet
+                return false
+              } else if (res.data.banner === profile.banner) {
+                // url hasnt changed yet
+                return false
+              }
+            }
+            if (typeof updates === 'function') {
+              return true
+            }
+            return (
+              res.data.displayName === updates.displayName &&
+              res.data.description === updates.description
+            )
+          }),
+      )
     },
     onSuccess(data, variables) {
       // invalidate cache

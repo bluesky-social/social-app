@@ -34,7 +34,6 @@ export type ThreadPost = {
   record: AppBskyFeedPost.Record
   parent?: ThreadNode
   replies?: ThreadNode[]
-  viewer?: AppBskyFeedDefs.ViewerThreadState
   ctx: ThreadCtx
 }
 
@@ -188,7 +187,6 @@ function responseToThreadNodes(
               // do not show blocked posts in replies
               .filter(node => node.type !== 'blocked')
           : undefined,
-      viewer: node.viewer,
       ctx: {
         depth,
         isHighlightedPost: depth === 0,
@@ -276,7 +274,6 @@ function threadNodeToPlaceholderThread(
     record: node.record,
     parent: undefined,
     replies: undefined,
-    viewer: node.viewer,
     ctx: {
       depth: 0,
       isHighlightedPost: true,
@@ -300,7 +297,6 @@ function postViewToPlaceholderThread(
     record: post.record as AppBskyFeedPost.Record, // validated in notifs
     parent: undefined,
     replies: undefined,
-    viewer: post.viewer,
     ctx: {
       depth: 0,
       isHighlightedPost: true,
@@ -331,7 +327,6 @@ function embedViewRecordToPlaceholderThread(
     record: record.value as AppBskyFeedPost.Record, // validated in getEmbeddedPost
     parent: undefined,
     replies: undefined,
-    viewer: undefined, // not available
     ctx: {
       depth: 0,
       isHighlightedPost: true,
