@@ -23,8 +23,13 @@ export function useAccountSwitcher() {
       try {
         if (account.accessJwt) {
           closeAllActiveElements()
-          navigation.navigate(isWeb ? 'Home' : 'HomeTab')
           await selectAccount(account)
+
+          // mobile resets to home upon account switch
+          if (isWeb) {
+            navigation.navigate('Home')
+          }
+
           setTimeout(() => {
             Toast.show(`Signed in as @${account.handle}`)
           }, 100)
