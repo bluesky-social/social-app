@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect} from 'react'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -86,6 +86,8 @@ export interface FeedPage {
   slices: FeedPostSlice[]
 }
 
+const PAGE_SIZE = 30
+
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
   params?: FeedParams,
@@ -96,7 +98,7 @@ export function usePostFeedQuery(
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
 
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     FeedPageUnselected,
     Error,
     InfiniteData<FeedPage>,
@@ -116,7 +118,7 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      const res = await api.fetch({cursor, limit: 30})
+      const res = await api.fetch({cursor, limit: PAGE_SIZE})
       precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
 
       /*
@@ -210,6 +212,23 @@ export function usePostFeedQuery(
       [feedTuners, params?.disableTuner, moderationOpts, opts?.ignoreFilterFor],
     ),
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+
+    let count = 0
+    for (const page of data?.pages || []) {
+      for (const slice of page.slices) {
+        count += slice.items.length
+      }
+    }
+
+    if (!isFetching && hasNextPage && count < PAGE_SIZE) {
+      query.fetchNextPage()
+    }
+  }, [query])
+
+  return query
 }
 
 export async function pollLatest(page: FeedPage | undefined) {
