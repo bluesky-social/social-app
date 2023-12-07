@@ -48,11 +48,18 @@ interface ProfileUpdateParams {
     | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
   newUserAvatar?: RNImage | undefined | null
   newUserBanner?: RNImage | undefined | null
+  checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
   return useMutation<void, Error, ProfileUpdateParams>({
-    mutationFn: async ({profile, updates, newUserAvatar, newUserBanner}) => {
+    mutationFn: async ({
+      profile,
+      updates,
+      newUserAvatar,
+      newUserBanner,
+      checkCommitted,
+    }) => {
       await getAgent().upsertProfile(async existing => {
         existing = existing || {}
         if (typeof updates === 'function') {
@@ -83,30 +90,37 @@ export function useProfileUpdateMutation() {
         }
         return existing
       })
-      await whenAppViewReady(profile.did, res => {
-        if (typeof newUserAvatar !== 'undefined') {
-          if (newUserAvatar === null && res.data.avatar) {
-            // url hasnt cleared yet
-            return false
-          } else if (res.data.avatar === profile.avatar) {
-            // url hasnt changed yet
-            return false
-          }
-        }
-        if (typeof newUserBanner !== 'undefined') {
-          if (newUserBanner === null && res.data.banner) {
-            // url hasnt cleared yet
-            return false
-          } else if (res.data.banner === profile.banner) {
-            // url hasnt changed yet
-            return false
-          }
-        }
-        return (
-          res.data.displayName === updates.displayName &&
-          res.data.description === updates.description
-        )
-      })
+      await whenAppViewReady(
+        profile.did,
+        checkCommitted ||
+          (res => {
+            if (typeof newUserAvatar !== 'undefined') {
+              if (newUserAvatar === null && res.data.avatar) {
+                // url hasnt cleared yet
+                return false
+              } else if (res.data.avatar === profile.avatar) {
+                // url hasnt changed yet
+                return false
+              }
+            }
+            if (typeof newUserBanner !== 'undefined') {
+              if (newUserBanner === null && res.data.banner) {
+                // url hasnt cleared yet
+                return false
+              } else if (res.data.banner === profile.banner) {
+                // url hasnt changed yet
+                return false
+              }
+            }
+            if (typeof updates === 'function') {
+              return true
+            }
+            return (
+              res.data.displayName === updates.displayName &&
+              res.data.description === updates.description
+            )
+          }),
+      )
     },
     onSuccess(data, variables) {
       // invalidate cache

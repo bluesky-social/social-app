@@ -153,29 +153,43 @@ function PwiOptOut() {
     if (!profile) {
       return
     }
+    let wasAdded = false
     updateProfile.mutate({
       profile,
       updates: existing => {
+        // create labels attr if needed
         existing.labels = ComAtprotoLabelDefs.isSelfLabels(existing.labels)
           ? existing.labels
           : {
               $type: 'com.atproto.label.defs#selfLabels',
               values: [],
             }
+
+        // toggle the label
         const hasLabel = existing.labels.values.some(
           l => l.val === '!no-unauthenticated',
         )
         if (hasLabel) {
+          wasAdded = false
           existing.labels.values = existing.labels.values.filter(
             l => l.val !== '!no-unauthenticated',
           )
         } else {
+          wasAdded = true
           existing.labels.values.push({val: '!no-unauthenticated'})
         }
+
+        // delete if no longer needed
         if (existing.labels.values.length === 0) {
           delete existing.labels
         }
         return existing
+      },
+      checkCommitted: res => {
+        const exists = !!res.data.labels?.some(
+          l => l.val === '!no-unauthenticated',
+        )
+        return exists === wasAdded
       },
     })
   }, [updateProfile, profile])
