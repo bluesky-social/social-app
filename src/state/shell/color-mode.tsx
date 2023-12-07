@@ -23,6 +23,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
+    updateDocument(persisted.get('colorMode')) // set on load
     return persisted.onUpdate(() => {
       setState(persisted.get('colorMode'))
       updateDocument(persisted.get('colorMode'))
