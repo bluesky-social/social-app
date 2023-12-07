@@ -58,6 +58,8 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     renderItem,
     style,
     contentContainerStyle,
+    onEndReached,
+    onEndReachedThreshold,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
   ref: React.Ref<Animated.FlatList<ItemT>>,
@@ -121,10 +123,41 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
         {data.map(item => (
           <View key={keyExtractor(item)}>{renderItem({item})}</View>
         ))}
+        {onEndReached && (
+          <Tail threshold={onEndReachedThreshold} onVisible={onEndReached} />
+        )}
       </View>
     </Animated.ScrollView>
   )
 })
+
+function Tail({onVisible}) {
+  const tailRef = React.useRef(null)
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            onVisible()
+          }
+        })
+      },
+      {
+        rootMargin: '200%',
+      },
+    )
+
+    const tail = tailRef.current
+    observer.observe(tail)
+
+    return () => {
+      observer.unobserve(tail)
+    }
+  }, [onVisible])
+
+  return <div ref={tailRef} />
+}
 
 export const FlatListOld = React.forwardRef(function FlatListImpl<ItemT>(
   {
