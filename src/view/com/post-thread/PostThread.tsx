@@ -141,6 +141,10 @@ function PostThreadLoaded({
   )
   const [maxVisible, setMaxVisible] = React.useState(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
+  const treeView = React.useMemo(
+    () => !!threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
+    [threadViewPrefs, thread],
+  )
 
   // construct content
   const posts = React.useMemo(() => {
@@ -289,7 +293,7 @@ function PostThreadLoaded({
             <PostThreadItem
               post={item.post}
               record={item.record}
-              treeView={threadViewPrefs.lab_treeViewEnabled || false}
+              treeView={treeView}
               depth={item.ctx.depth}
               prevPost={prev}
               nextPost={next}
@@ -318,7 +322,7 @@ function PostThreadLoaded({
       pal.colors.border,
       posts,
       onRefresh,
-      threadViewPrefs.lab_treeViewEnabled,
+      treeView,
       _,
     ],
   )
@@ -479,6 +483,19 @@ function* flattenThreadSkeleton(
   } else if (node.type === 'blocked') {
     yield BLOCKED
   }
+}
+
+function hasBranchingReplies(node: ThreadNode) {
+  if (node.type !== 'post') {
+    return false
+  }
+  if (!node.replies) {
+    return false
+  }
+  if (node.replies.length === 1) {
+    return hasBranchingReplies(node.replies[0])
+  }
+  return true
 }
 
 const styles = StyleSheet.create({
