@@ -33,7 +33,7 @@ function ShellInner() {
   }, [navigator, closeAllActiveElements])
 
   return (
-    <View style={[s.hContentRegion]}>
+    <View style={s.hContentRegion}>
       <View style={s.hContentRegion}>
         <ErrorBoundary>
           <FlatNavigator />

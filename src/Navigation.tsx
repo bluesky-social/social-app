@@ -30,6 +30,7 @@ import {colors} from 'lib/styles'
 import {isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
+import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {bskyTitle} from 'lib/strings/headings'
 import {JSX} from 'react/jsx-runtime'
@@ -394,7 +395,7 @@ const FlatNavigator = () => {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: [pal.view, {flex: 'none'}],
+        contentStyle: [pal.view, styles.webContainer],
       }}>
       <Flat.Screen
         name="Home"
@@ -592,6 +593,10 @@ function handleLink(url: string) {
 }
 
 const styles = StyleSheet.create({
+  webContainer: {
+    // @ts-ignore web-only
+    flex: '',
+  },
   bgDark: {
     backgroundColor: colors.black,
   },
