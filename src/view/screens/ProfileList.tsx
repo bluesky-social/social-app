@@ -456,8 +456,75 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
+    if (isModList && isPinned) {
+      items.push({label: 'separator'})
+      items.push({
+        testID: 'listHeaderDropdownUnpinBtn',
+        label: _(msg`Unpin moderation list`),
+        onPress: isPending ? undefined : () => unpinFeed({uri: list.uri}),
+        icon: {
+          ios: {
+            name: 'pin',
+          },
+          android: '',
+          web: 'thumbtack',
+        },
+      })
+    }
+    if (isCurateList) {
+      items.push({label: 'separator'})
+
+      if (!isBlocking) {
+        items.push({
+          testID: 'listHeaderDropdownMuteBtn',
+          label: isMuting ? _(msg`Un-mute list`) : _(msg`Mute list`),
+          onPress: isMuting ? onUnsubscribeMute : onSubscribeMute,
+          icon: {
+            ios: {
+              name: isMuting ? 'eye' : 'eye.slash',
+            },
+            android: '',
+            web: isMuting ? 'eye' : ['far', 'eye-slash'],
+          },
+        })
+      }
+
+      if (!isMuting) {
+        items.push({
+          testID: 'listHeaderDropdownBlockBtn',
+          label: isBlocking ? _(msg`Un-block list`) : _(msg`Block list`),
+          onPress: isBlocking ? onUnsubscribeBlock : onSubscribeBlock,
+          icon: {
+            ios: {
+              name: 'person.fill.xmark',
+            },
+            android: '',
+            web: 'user-slash',
+          },
+        })
+      }
+    }
     return items
-  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport, _])
+  }, [
+    isOwner,
+    onPressShare,
+    onPressEdit,
+    onPressDelete,
+    onPressReport,
+    _,
+    isModList,
+    isPinned,
+    unpinFeed,
+    isPending,
+    list.uri,
+    isCurateList,
+    isMuting,
+    isBlocking,
+    onUnsubscribeMute,
+    onSubscribeMute,
+    onUnsubscribeBlock,
+    onSubscribeBlock,
+  ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
