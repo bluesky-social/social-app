@@ -37,6 +37,7 @@ export function BottomBarWeb() {
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
+        {position: 'fixed'},
       ]}>
       <NavItem routeName="Home" href="/">
         {({isActive}) => {

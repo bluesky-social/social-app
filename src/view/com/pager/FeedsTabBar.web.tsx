@@ -134,7 +134,8 @@ function FeedsTabBarTablet(
 
 const styles = StyleSheet.create({
   tabBar: {
-    position: 'absolute',
+    // @ts-ignore Web only
+    position: 'fixed',
     zIndex: 1,
     // @ts-ignore Web only -prf
     left: 'calc(50% - 299px)',
