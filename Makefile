@@ -11,6 +11,11 @@ help: ## Print info about all commands
 .PHONY: build-web
 build-web: ## Compile web bundle, copy to bskyweb directory
 	yarn build-web
+	echo '<!-- TODO: en -->' > bskyweb/templates/scripts_en.html
+	echo '<!-- TODO: ja -->' > bskyweb/templates/scripts_ja.html
+	echo '<!-- TODO: pt -->' > bskyweb/templates/scripts_pt.html
+	echo '<!-- TODO: de -->' > bskyweb/templates/scripts_de.html
+	echo '<!-- TODO: hi -->' > bskyweb/templates/scripts_hi.html
 
 .PHONY: test
 test: ## Run all tests
