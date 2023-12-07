@@ -65,6 +65,7 @@ export type ThreadNode =
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
+    gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
