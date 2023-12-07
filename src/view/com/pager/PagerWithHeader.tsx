@@ -256,14 +256,16 @@ let PagerTabBar = ({
     ],
   }))
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[
-        isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
-        isWeb ? null : headerTransform,
-        isWeb ? null : {position: 'absolute'},
-      ]}>
-      <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
+    <>
+      <View
+        onLayout={onHeaderOnlyLayout}
+        pointerEvents="box-none"
+        style={{
+          width: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          width: 598,
+        }}>
         {renderHeader?.()}
       </View>
       <View
@@ -275,7 +277,8 @@ let PagerTabBar = ({
             opacity: isHeaderReady ? 1 : 0,
             pointerEvents: isHeaderReady ? 'auto' : 'none',
           },
-          isWeb ? {position: 'sticky', top: 0} : null,
+          isWeb ? {position: 'sticky', top: 0, zIndex: 1} : null,
+          {width: '100%', marginLeft: 'auto', marginRight: 'auto', width: 598},
         ]}>
         <TabBar
           testID={testID}
@@ -285,7 +288,7 @@ let PagerTabBar = ({
           onPressSelected={onCurrentPageSelected}
         />
       </View>
-    </Animated.View>
+    </>
   )
 }
 PagerTabBar = React.memo(PagerTabBar)
@@ -341,8 +344,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: 0,
     // @ts-ignore Web only -prf
-    left: 'calc(50% - 299px)',
-    width: 598,
   },
 })
 
