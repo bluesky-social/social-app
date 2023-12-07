@@ -26,6 +26,7 @@ import {
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {isNative} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -47,7 +48,7 @@ export function NotificationsScreen({}: Props) {
   // event handlers
   // =
   const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: 0})
+    scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
     resetMainScroll()
   }, [scrollElRef, resetMainScroll])
 
