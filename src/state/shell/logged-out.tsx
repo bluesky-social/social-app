@@ -1,42 +1,64 @@
 import React from 'react'
 
-const StateContext = React.createContext<{
+type State = {
   showLoggedOut: boolean
-  requestedAccountSwitchTo?: string // did of account to switch to
-}>({
+  /**
+   * Account did used to populate the login form when the logged out view is
+   * shown.
+   */
+  requestedAccountSwitchTo?: string
+}
+
+type Controls = {
+  /**
+   * Show or hide the logged out view.
+   */
+  setShowLoggedOut: (show: boolean) => void
+  /**
+   * Shows the logged out view and drops the user into the login form using the
+   * requested account.
+   */
+  requestSwitchToAccount: (props: {
+    /**
+     * The did of the account to populate the login form with.
+     */
+    requestedAccount?: string
+  }) => void
+}
+
+const StateContext = React.createContext<State>({
   showLoggedOut: false,
   requestedAccountSwitchTo: undefined,
 })
 
-const ControlsContext = React.createContext<{
-  setShowLoggedOut: (show: boolean, did?: string) => void
-}>({
+const ControlsContext = React.createContext<Controls>({
   setShowLoggedOut: () => {},
+  requestSwitchToAccount: () => {},
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [showLoggedOut, setShowLoggedOut] = React.useState(false)
-  const [requestedAccountSwitchTo, setRequestedAccountSwitchTo] =
-    React.useState<string>()
+  const [state, setState] = React.useState<State>({
+    showLoggedOut: false,
+    requestedAccountSwitchTo: undefined,
+  })
 
-  const state = React.useMemo(
-    () => ({showLoggedOut, requestedAccountSwitchTo}),
-    [showLoggedOut, requestedAccountSwitchTo],
-  )
-
-  const controls = React.useMemo(
+  const controls = React.useMemo<Controls>(
     () => ({
-      /**
-       * Sets the visibility of the logged-out state and optionally specifies the account to switch to.
-       * @param show - Whether to show the logged-out state.
-       * @param did - The account to switch to (optional).
-       */
-      setShowLoggedOut: (show: boolean, did?: string) => {
-        setShowLoggedOut(show)
-        setRequestedAccountSwitchTo(did)
+      setShowLoggedOut(show) {
+        setState(s => ({
+          ...s,
+          showLoggedOut: show,
+        }))
+      },
+      requestSwitchToAccount({requestedAccount}) {
+        setState(s => ({
+          ...s,
+          showLoggedOut: true,
+          requestedAccountSwitchTo: requestedAccount,
+        }))
       },
     }),
-    [setShowLoggedOut, setRequestedAccountSwitchTo],
+    [setState],
   )
 
   return (
