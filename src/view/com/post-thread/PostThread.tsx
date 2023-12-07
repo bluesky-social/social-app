@@ -142,7 +142,7 @@ function PostThreadLoaded({
   const [maxVisible, setMaxVisible] = React.useState(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
   const treeView = React.useMemo(
-    () => threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
+    () => !!threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
     [threadViewPrefs, thread],
   )
 
