@@ -146,6 +146,19 @@ export class FeedTuner {
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
 
+    // remove posts that are replies, but which don't have the parent
+    // hydrated. this means the parent was either deleted or blocked
+    feed = feed.filter(item => {
+      if (
+        AppBskyFeedPost.isRecord(item.post.record) &&
+        item.post.record.reply &&
+        !item.reply
+      ) {
+        return false
+      }
+      return true
+    })
+
     if (maintainOrder) {
       slices = feed.map(
         item => new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
