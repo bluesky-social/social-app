@@ -28,7 +28,6 @@ export function getAgent() {
 export type SessionAccount = persisted.PersistedAccount
 
 export type SessionState = {
-  isInitialLoad: boolean
   isSwitchingAccounts: boolean
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined
@@ -76,7 +75,6 @@ export type ApiContext = {
 }
 
 const StateContext = React.createContext<StateContext>({
-  isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
   currentAccount: undefined,
@@ -104,31 +102,43 @@ function createPersistSessionHandler(
   }) => void,
 ): AtpPersistSessionHandler {
   return function persistSession(event, session) {
-    const expired = !(event === 'create' || event === 'update')
+    const expired = event === 'expired' || event === 'create-failed'
+
     const refreshedAccount: SessionAccount = {
       service: account.service,
       did: session?.did || account.did,
       handle: session?.handle || account.handle,
       email: session?.email || account.email,
       emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
-      refreshJwt: session?.refreshJwt, // undefined when expired or creation fails
-      accessJwt: session?.accessJwt, // undefined when expired or creation fails
+
+      /*
+       * Tokens are undefined if the session expires, or if creation fails for
+       * any reason e.g. tokens are invalid, network error, etc.
+       */
+      refreshJwt: session?.refreshJwt,
+      accessJwt: session?.accessJwt,
     }
 
-    logger.debug(
-      `session: BskyAgent.persistSession`,
-      {
-        expired,
-        did: refreshedAccount.did,
-        handle: refreshedAccount.handle,
-      },
-      logger.DebugContext.session,
-    )
+    logger.info(`session: persistSession`, {
+      event,
+      did: refreshedAccount.did,
+      handle: refreshedAccount.handle,
+    })
 
     if (expired) {
       emitSessionDropped()
     }
 
+    /*
+     * If the session expired, or it was successfully created/updated, we want
+     * to update/persist the data.
+     *
+     * If the session creation failed, it could be a network error, or it could
+     * be more serious like an invalid token(s). We can't differentiate, so in
+     * order to allow the user to get a fresh token (if they need it), we need
+     * to persist this data and wipe their tokens, effectively logging them
+     * out.
+     */
     persistSessionCallback({
       expired,
       refreshedAccount,
@@ -140,7 +150,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const queryClient = useQueryClient()
   const isDirty = React.useRef(false)
   const [state, setState] = React.useState<SessionState>({
-    isInitialLoad: true, // try to resume the session first
     isSwitchingAccounts: false,
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
@@ -338,7 +347,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
         }
       } catch (e) {
-        console.error('Could not decode jwt.')
+        logger.error(`session: could not decode jwt`)
       }
 
       const prevSession = {
@@ -355,23 +364,53 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         upsertAccount(account)
 
         // Intentionally not awaited to unblock the UI:
-        resumeSessionWithFreshAccount().then(freshAccount => {
-          if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
-            upsertAccount(freshAccount)
-          }
-        })
+        resumeSessionWithFreshAccount()
+          .then(freshAccount => {
+            if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
+              upsertAccount(freshAccount)
+            }
+          })
+          .catch(e => {
+            /*
+             * Note: `agent.persistSession` is also called when this fails, and
+             * we handle that failure via `createPersistSessionHandler`
+             */
+            logger.info(`session: resumeSessionWithFreshAccount failed`, {
+              error: e,
+            })
+
+            __globalAgent = PUBLIC_BSKY_AGENT
+          })
       } else {
-        const freshAccount = await resumeSessionWithFreshAccount()
-        __globalAgent = agent
-        queryClient.clear()
-        upsertAccount(freshAccount)
+        try {
+          const freshAccount = await resumeSessionWithFreshAccount()
+          __globalAgent = agent
+          queryClient.clear()
+          upsertAccount(freshAccount)
+        } catch (e) {
+          /*
+           * Note: `agent.persistSession` is also called when this fails, and
+           * we handle that failure via `createPersistSessionHandler`
+           */
+          logger.info(`session: resumeSessionWithFreshAccount failed`, {
+            error: e,
+          })
+
+          __globalAgent = PUBLIC_BSKY_AGENT
+        }
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
-        await networkRetry(3, () => agent.resumeSession(prevSession))
+        await networkRetry(1, () => agent.resumeSession(prevSession))
+
+        /*
+         * If `agent.resumeSession` fails above, it'll throw. This is just to
+         * make TypeScript happy.
+         */
         if (!agent.session) {
           throw new Error(`session: initSession failed to establish a session`)
         }
+
         // ensure changes in handle/email etc are captured on reload
         return {
           service: agent.service.toString(),
@@ -395,11 +434,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {error: e})
-      } finally {
-        setState(s => ({
-          ...s,
-          isInitialLoad: false,
-        }))
       }
     },
     [initSession],
