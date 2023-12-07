@@ -6,7 +6,7 @@ import {Dimensions} from 'lib/media/types'
 import * as imageSizes from 'lib/media/image-sizes'
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
-const MAX_ASPECT_RATIO = 5 // 5/1
+const MAX_ASPECT_RATIO = 10 // 10/1
 
 interface Props {
   alt?: string
