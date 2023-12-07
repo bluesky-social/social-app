@@ -60,6 +60,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     contentContainerStyle,
     onEndReached,
     onEndReachedThreshold,
+    onScroll,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
   ref: React.Ref<Animated.FlatList<ItemT>>,
@@ -118,6 +119,9 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   React.useImperativeHandle(
     ref,
     () => ({
+      scrollToTop() {
+        console.log('yeahh')
+      },
       scrollToOffset({animated, offset}) {
         nativeRef.current.scrollTo({
           x: 0,
@@ -128,6 +132,21 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     }),
     [],
   )
+
+  React.useEffect(() => {
+    function handleScroll(e) {
+      onScroll.current.worklet({
+        ...e.nativeEvent,
+        eventName: 'onScroll',
+        contentOffset: {
+          x: 0,
+          y: window.scrollY,
+        },
+      })
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [onScroll])
 
   return (
     <Animated.ScrollView
