@@ -72,10 +72,6 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
       styles.containerScroll,
     )
   }
-  style = addStyle(style, {
-    // @ts-ignore web-only
-    contain: 'content',
-  })
   if (contentOffset && contentOffset?.y !== 0) {
     // NOTE
     // we use paddingTop & contentOffset to space around the floating header
@@ -132,6 +128,12 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     return () => window.removeEventListener('scroll', handleScroll)
   }, [onScroll])
 
+  const onVisible = React.useCallback(() => {
+    onEndReached?.({
+      distanceFromEnd: onEndReachedThreshold || 0,
+    })
+  }, [onEndReachedThreshold, onEndReached])
+
   return (
     <Animated.ScrollView {...props} style={style} ref={nativeRef}>
       <View
@@ -142,27 +144,20 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
           </View>
         ))}
         {onEndReached && (
-          <Tail
-            threshold={onEndReachedThreshold}
-            onVisible={() => {
-              onEndReached({
-                distanceFromEnd: onEndReachedThreshold || 0,
-              })
-            }}
-          />
+          <Tail threshold={onEndReachedThreshold} onVisible={onVisible} />
         )}
       </View>
     </Animated.ScrollView>
   )
 })
 
-function Tail({
+let Tail = ({
   threshold = 0,
   onVisible,
 }: {
   threshold?: number | null | undefined
   onVisible: () => void
-}) {
+}): React.ReactNode => {
   const tailRef = React.useRef(null)
 
   React.useEffect(() => {
@@ -185,8 +180,9 @@ function Tail({
     }
   }, [onVisible, threshold])
 
-  return <div ref={tailRef} />
+  return <View ref={tailRef} />
 }
+Tail = React.memo(Tail)
 
 export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
@@ -219,7 +215,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    // @ts-ignore web only
   },
   container: {
     width: '100%',
@@ -232,9 +227,5 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
-  },
-  fixedHeight: {
-    // @ts-ignore web only
-    height: '100vh',
   },
 })
