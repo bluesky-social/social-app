@@ -1,5 +1,10 @@
-import {useCallback} from 'react'
-import {AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
+import {useCallback, useEffect} from 'react'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  moderatePost,
+  PostModeration,
+} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -24,6 +29,7 @@ import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {useModerationOpts} from './preferences'
 
 type ActorDid = string
 type AuthorFilter =
@@ -57,6 +63,7 @@ export interface FeedPostSliceItem {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
+  moderation: PostModeration
 }
 
 export interface FeedPostSlice {
@@ -79,16 +86,19 @@ export interface FeedPage {
   slices: FeedPostSlice[]
 }
 
+const PAGE_SIZE = 30
+
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
   params?: FeedParams,
-  opts?: {enabled?: boolean},
+  opts?: {enabled?: boolean; ignoreFilterFor?: string},
 ) {
   const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
-  const enabled = opts?.enabled !== false
+  const moderationOpts = useModerationOpts()
+  const enabled = opts?.enabled !== false && Boolean(moderationOpts)
 
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     FeedPageUnselected,
     Error,
     InfiniteData<FeedPage>,
@@ -108,7 +118,7 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      const res = await api.fetch({cursor, limit: 30})
+      const res = await api.fetch({cursor, limit: PAGE_SIZE})
       precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
 
       /*
@@ -146,40 +156,79 @@ export function usePostFeedQuery(
             api: page.api,
             tuner,
             cursor: page.cursor,
-            slices: tuner.tune(page.feed).map(slice => ({
-              _reactKey: slice._reactKey,
-              rootUri: slice.rootItem.post.uri,
-              isThread:
-                slice.items.length > 1 &&
-                slice.items.every(
-                  item =>
-                    item.post.author.did === slice.items[0].post.author.did,
-                ),
-              items: slice.items
-                .map((item, i) => {
+            slices: tuner
+              .tune(page.feed)
+              .map(slice => {
+                const moderations = slice.items.map(item =>
+                  moderatePost(item.post, moderationOpts!),
+                )
+
+                // apply moderation filter
+                for (let i = 0; i < slice.items.length; i++) {
                   if (
-                    AppBskyFeedPost.isRecord(item.post.record) &&
-                    AppBskyFeedPost.validateRecord(item.post.record).success
+                    moderations[i]?.content.filter &&
+                    slice.items[i].post.author.did !== opts?.ignoreFilterFor
                   ) {
-                    return {
-                      _reactKey: `${slice._reactKey}-${i}`,
-                      uri: item.post.uri,
-                      post: item.post,
-                      record: item.post.record,
-                      reason:
-                        i === 0 && slice.source ? slice.source : item.reason,
-                    }
+                    return undefined
                   }
-                  return undefined
-                })
-                .filter(Boolean) as FeedPostSliceItem[],
-            })),
+                }
+
+                return {
+                  _reactKey: slice._reactKey,
+                  rootUri: slice.rootItem.post.uri,
+                  isThread:
+                    slice.items.length > 1 &&
+                    slice.items.every(
+                      item =>
+                        item.post.author.did === slice.items[0].post.author.did,
+                    ),
+                  items: slice.items
+                    .map((item, i) => {
+                      if (
+                        AppBskyFeedPost.isRecord(item.post.record) &&
+                        AppBskyFeedPost.validateRecord(item.post.record).success
+                      ) {
+                        return {
+                          _reactKey: `${slice._reactKey}-${i}`,
+                          uri: item.post.uri,
+                          post: item.post,
+                          record: item.post.record,
+                          reason:
+                            i === 0 && slice.source
+                              ? slice.source
+                              : item.reason,
+                          moderation: moderations[i],
+                        }
+                      }
+                      return undefined
+                    })
+                    .filter(Boolean) as FeedPostSliceItem[],
+                }
+              })
+              .filter(Boolean) as FeedPostSlice[],
           })),
         }
       },
-      [feedTuners, params?.disableTuner],
+      [feedTuners, params?.disableTuner, moderationOpts, opts?.ignoreFilterFor],
     ),
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+
+    let count = 0
+    for (const page of data?.pages || []) {
+      for (const slice of page.slices) {
+        count += slice.items.length
+      }
+    }
+
+    if (!isFetching && hasNextPage && count < PAGE_SIZE) {
+      query.fetchNextPage()
+    }
+  }, [query])
+
+  return query
 }
 
 export async function pollLatest(page: FeedPage | undefined) {

@@ -1,7 +1,7 @@
 import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FeedPostSlice} from '#/state/queries/post-feed'
-import {AtUri, moderatePost, ModerationOpts} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
@@ -9,29 +9,7 @@ import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 
-let FeedSlice = ({
-  slice,
-  ignoreFilterFor,
-  moderationOpts,
-}: {
-  slice: FeedPostSlice
-  ignoreFilterFor?: string
-  moderationOpts: ModerationOpts
-}): React.ReactNode => {
-  const moderations = React.useMemo(() => {
-    return slice.items.map(item => moderatePost(item.post, moderationOpts))
-  }, [slice, moderationOpts])
-
-  // apply moderation filter
-  for (let i = 0; i < slice.items.length; i++) {
-    if (
-      moderations[i]?.content.filter &&
-      slice.items[i].post.author.did !== ignoreFilterFor
-    ) {
-      return null
-    }
-  }
-
+let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (
@@ -41,7 +19,7 @@ let FeedSlice = ({
           post={slice.items[0].post}
           record={slice.items[0].record}
           reason={slice.items[0].reason}
-          moderation={moderations[0]}
+          moderation={slice.items[0].moderation}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
         />
@@ -50,7 +28,7 @@ let FeedSlice = ({
           post={slice.items[1].post}
           record={slice.items[1].record}
           reason={slice.items[1].reason}
-          moderation={moderations[1]}
+          moderation={slice.items[1].moderation}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
         />
@@ -60,7 +38,7 @@ let FeedSlice = ({
           post={slice.items[last].post}
           record={slice.items[last].record}
           reason={slice.items[last].reason}
-          moderation={moderations[last]}
+          moderation={slice.items[last].moderation}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
           isThreadLastChild
@@ -77,7 +55,7 @@ let FeedSlice = ({
           post={slice.items[i].post}
           record={slice.items[i].record}
           reason={slice.items[i].reason}
-          moderation={moderations[i]}
+          moderation={slice.items[i].moderation}
           isThreadParent={isThreadParentAt(slice.items, i)}
           isThreadChild={isThreadChildAt(slice.items, i)}
           isThreadLastChild={

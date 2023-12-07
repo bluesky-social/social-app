@@ -27,7 +27,6 @@ import {
   usePostFeedQuery,
   pollLatest,
 } from '#/state/queries/post-feed'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useSession} from '#/state/session'
@@ -82,8 +81,10 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
 
-  const moderationOpts = useModerationOpts()
-  const opts = React.useMemo(() => ({enabled}), [enabled])
+  const opts = React.useMemo(
+    () => ({enabled, ignoreFilterFor}),
+    [enabled, ignoreFilterFor],
+  )
   const {
     data,
     isFetching,
@@ -144,7 +145,7 @@ let Feed = ({
 
   const feedItems = React.useMemo(() => {
     let arr: any[] = []
-    if (isFetched && moderationOpts) {
+    if (isFetched) {
       if (isError && isEmpty) {
         arr = arr.concat([ERROR_ITEM])
       }
@@ -162,7 +163,7 @@ let Feed = ({
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data, moderationOpts])
+  }, [isFetched, isError, isEmpty, data])
 
   // events
   // =
@@ -224,24 +225,9 @@ let Feed = ({
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
-      return (
-        <FeedSlice
-          slice={item}
-          // we check for this before creating the feedItems array
-          moderationOpts={moderationOpts!}
-          ignoreFilterFor={ignoreFilterFor}
-        />
-      )
+      return <FeedSlice slice={item} />
     },
-    [
-      feed,
-      error,
-      onPressTryAgain,
-      onPressRetryLoadMore,
-      renderEmptyState,
-      moderationOpts,
-      ignoreFilterFor,
-    ],
+    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
   )
 
   const shouldRenderEndOfFeed =
