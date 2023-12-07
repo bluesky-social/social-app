@@ -131,7 +131,7 @@ export function ModerationScreen({}: Props) {
             paddingBottom: 6,
           },
         ]}>
-        <Trans>My Account</Trans>
+        <Trans>Logged-out users</Trans>
       </Text>
       <PwiOptOut />
     </CenteredView>
@@ -200,7 +200,7 @@ function PwiOptOut() {
         style={{flexDirection: 'row', alignItems: 'center', paddingRight: 14}}>
         <ToggleButton
           type="default-light"
-          label={_(msg`Ask apps to limit the visibility of my account`)}
+          label={_(msg`Limit the visibility of my account`)}
           labelType="lg"
           isSelected={isOptedOut}
           onPress={canToggle ? onToggleOptOut : undefined}
@@ -213,22 +213,20 @@ function PwiOptOut() {
           flexDirection: 'column',
           gap: 10,
           paddingLeft: 66,
-          paddingRight: 8,
+          paddingRight: 12,
           paddingBottom: 10,
         }}>
         <Text style={pal.textLight}>
           <Trans>
-            Apps that respect this setting, including the official Bluesky app
-            and bsky.app website, won't show your content to logged out users.
+            Your profile and content will not be visible to anyone visiting the
+            Bluesky app without an account. Enabling this will not make your
+            profile private.
           </Trans>
         </Text>
-        <Text style={pal.textLight}>
+        <Text style={[pal.textLight, {fontWeight: '500'}]}>
           <Trans>
-            <Text style={[pal.textLight, {fontWeight: '600'}]}>
-              Note: Your profile and posts will remain publicly available.
-              Third-party apps that display Bluesky content may not respect this
-              setting.
-            </Text>{' '}
+            Note: Third-party apps that display Bluesky content may not respect
+            this setting.
           </Trans>
         </Text>
         <TextLink
@@ -258,6 +256,7 @@ const styles = StyleSheet.create({
   },
   toggleCard: {
     paddingVertical: 8,
+    paddingTop: 2,
     paddingHorizontal: 6,
     marginBottom: 1,
   },

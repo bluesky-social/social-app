@@ -68,8 +68,8 @@ msgstr "<0>कुछ</0><1>पसंदीदा उपयोगकर्ता�
 #~ msgstr ""
 
 #: src/view/screens/Moderation.tsx:212
-msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
-msgstr ""
+#~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
+#~ msgstr ""
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -200,8 +200,8 @@ msgid "Appearance"
 msgstr "दिखावट"
 
 #: src/view/screens/Moderation.tsx:206
-msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
-msgstr ""
+#~ msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
+#~ msgstr ""
 
 #: src/view/screens/AppPasswords.tsx:223
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -224,8 +224,8 @@ msgid "Artistic or non-erotic nudity."
 msgstr "कलात्मक या गैर-कामुक नग्नता।।"
 
 #: src/view/screens/Moderation.tsx:189
-msgid "Ask apps to limit the visibility of my account"
-msgstr ""
+#~ msgid "Ask apps to limit the visibility of my account"
+#~ msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:145
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
@@ -1072,7 +1072,7 @@ msgstr "अधिक जानें"
 msgid "Learn more about this warning"
 msgstr "इस चेतावनी के बारे में अधिक जानें"
 
-#: src/view/screens/Moderation.tsx:223
+#: src/view/screens/Moderation.tsx:235
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -1106,6 +1106,10 @@ msgstr "इस फ़ीड को लाइक करो"
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
 msgstr "इन यूजर ने लाइक किया है"
+
+#: src/view/screens/Moderation.tsx:203
+msgid "Limit the visibility of my account"
+msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "List Avatar"
@@ -1141,6 +1145,10 @@ msgstr ""
 #: src/view/com/modals/ServerInput.tsx:50
 msgid "Local dev server"
 msgstr "स्थानीय देव सर्वर"
+
+#: src/view/screens/Moderation.tsx:134
+msgid "Logged-out users"
+msgstr ""
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
@@ -1226,8 +1234,8 @@ msgid "Muting is private. Muted accounts can interact with you, but you will not
 msgstr "म्यूट करना निजी है. म्यूट किए गए खाते आपके साथ इंटरैक्ट कर सकते हैं, लेकिन आप उनकी पोस्ट नहीं देखेंगे या उनसे सूचनाएं प्राप्त नहीं करेंगे।"
 
 #: src/view/screens/Moderation.tsx:134
-msgid "My Account"
-msgstr ""
+#~ msgid "My Account"
+#~ msgstr ""
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -1326,6 +1334,10 @@ msgstr ""
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "Not Applicable."
 msgstr "लागू नहीं।"
+
+#: src/view/screens/Moderation.tsx:227
+msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+msgstr ""
 
 #: src/view/screens/Notifications.tsx:96
 #: src/view/screens/Notifications.tsx:120
@@ -2353,6 +2365,10 @@ msgstr "आपकी प्रोफ़ाइल"
 #: src/view/screens/Moderation.tsx:205
 #~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
 #~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:220
+msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
+msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
