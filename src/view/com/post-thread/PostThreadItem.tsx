@@ -436,13 +436,12 @@ let PostThreadItemLoaded = ({
   } else {
     const isThreadedChild = treeView && depth > 0
     const isThreadedChildAdjacentTop =
-      isThreadedChild && prevPost?.ctx.depth === depth
+      isThreadedChild && prevPost?.ctx.depth === depth && depth !== 1
     const isThreadedChildAdjacentBot =
       isThreadedChild && nextPost?.ctx.depth === depth
     return (
       <PostOuterWrapper
         post={post}
-        prevPost={prevPost}
         depth={depth}
         showParentReplyLine={!!showParentReplyLine}
         treeView={treeView}
@@ -525,7 +524,7 @@ let PostThreadItemLoaded = ({
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
-                avatarSize={20}
+                avatarSize={28}
                 displayNameType="md-bold"
                 displayNameStyle={isThreadedChild && s.ml2}
                 style={isThreadedChild && s.mb2}
@@ -606,7 +605,6 @@ PostThreadItemLoaded = memo(PostThreadItemLoaded)
 
 function PostOuterWrapper({
   post,
-  prevPost,
   treeView,
   depth,
   showParentReplyLine,
@@ -614,7 +612,6 @@ function PostOuterWrapper({
   children,
 }: React.PropsWithChildren<{
   post: AppBskyFeedDefs.PostView
-  prevPost: ThreadPost | undefined
   treeView: boolean
   depth: number
   showParentReplyLine: boolean
@@ -632,18 +629,18 @@ function PostOuterWrapper({
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingLeft: isMobile ? 10 : 6,
-            borderTopWidth: !prevPost ? 1 : 0,
+            paddingHorizontal: isMobile ? 10 : 6,
+            borderTopWidth: depth === 1 ? 1 : 0,
           },
         ]}>
-        {Array.from(Array(depth)).map((_, n: number) => (
+        {Array.from(Array(depth - 1)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
             style={{
               borderLeftWidth: 2,
               borderLeftColor: pal.colors.border,
-              marginLeft: isMobile ? 6 : 14,
-              paddingLeft: isMobile ? 6 : 12,
+              marginLeft: isMobile ? 6 : 12,
+              paddingLeft: isMobile ? 6 : 8,
             }}
           />
         ))}
