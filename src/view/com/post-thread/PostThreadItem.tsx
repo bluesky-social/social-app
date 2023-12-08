@@ -376,6 +376,7 @@ let PostThreadItemLoaded = ({
                   ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
                   ignoreQuoteDecisions
                   style={s.mb10}>
+                  {console.log(moderation.embed, moderation.decisions)}
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation.embed}
