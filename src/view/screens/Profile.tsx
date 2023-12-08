@@ -477,7 +477,7 @@ function ProfileEndOfFeed() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    height: '100%',
+    height: isNative ? '100%' : undefined,
   },
   loading: {
     paddingVertical: 10,
