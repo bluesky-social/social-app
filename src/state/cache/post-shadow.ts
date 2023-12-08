@@ -6,6 +6,7 @@ import {Shadow, castAsShadow} from './types'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
+import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '../queries/search-posts'
 import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
 
@@ -97,5 +98,8 @@ function* findPostsInCache(
     if (node.type === 'post') {
       yield node.post
     }
+  }
+  for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+    yield post
   }
 }
