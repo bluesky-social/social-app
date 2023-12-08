@@ -1,8 +1,9 @@
 import React from 'react'
 import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
-import {TrackEvent, AnalyticsMethods} from './types'
+import {Browser} from 'sentry-expo'
 
+import {TrackEvent, AnalyticsMethods} from './types'
 import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
 
@@ -29,6 +30,7 @@ function getClient(): SegmentClient {
 }
 
 export const track: TrackEvent = async (...args) => {
+  logger.info('analytics: track', {args})
   await getClient().track(...args)
 }
 
@@ -38,9 +40,11 @@ export function useAnalytics(): AnalyticsMethods {
     if (hasSession) {
       return {
         async screen(...args) {
+          logger.info('analytics: screen', {args})
           await getClient().screen(...args)
         },
         async track(...args) {
+          logger.info('analytics: track', {args})
           await getClient().track(...args)
         },
       }
@@ -59,6 +63,7 @@ export function init(account: SessionAccount | undefined) {
     if (account.did) {
       const did_hashed = sha256(account.did)
       client.identify(did_hashed, {did_hashed})
+      Browser.setUser({id: did_hashed})
       logger.debug('Ping w/hash')
     } else {
       logger.debug('Ping w/o hash')
