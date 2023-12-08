@@ -232,7 +232,7 @@ export function useListMuteMutation() {
       }
 
       await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
-        return !v?.data.list.viewer?.muted
+        return Boolean(v?.data.list.viewer?.muted) === mute
       })
     },
     onSuccess(data, variables) {
@@ -254,7 +254,9 @@ export function useListBlockMutation() {
       }
 
       await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
-        return !v?.data.list.viewer?.blocked
+        return block
+          ? typeof v?.data.list.viewer?.blocked === 'string'
+          : !v?.data.list.viewer?.blocked
       })
     },
     onSuccess(data, variables) {
