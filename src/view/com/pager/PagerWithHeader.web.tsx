@@ -12,6 +12,7 @@ import {TabBar} from './TabBar'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -152,12 +153,20 @@ let PagerTabBar = ({
   onSelect?: (index: number) => void
 }): React.ReactNode => {
   const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
   return (
     <>
-      <View style={[styles.headerContainer, pal.border]}>
+      <View style={[!isMobile && styles.headerContainerDesktop, pal.border]}>
         {renderHeader?.()}
       </View>
-      <View style={[styles.tabBarContainer, pal.border]}>
+      <View
+        style={[
+          styles.tabBarContainer,
+          isMobile
+            ? styles.tabBarContainerMobile
+            : styles.tabBarContainerDesktop,
+          pal.border,
+        ]}>
         <TabBar
           testID={testID}
           items={items}
@@ -202,7 +211,7 @@ function PagerItem({
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
+  headerContainerDesktop: {
     marginLeft: 'auto',
     marginRight: 'auto',
     width: 600,
@@ -215,11 +224,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     top: 0,
     zIndex: 1,
+  },
+  tabBarContainerDesktop: {
     marginLeft: 'auto',
     marginRight: 'auto',
     width: 600,
     borderLeftWidth: 1,
     borderRightWidth: 1,
+  },
+  tabBarContainerMobile: {
+    paddingLeft: 14,
+    paddingRight: 14,
   },
 })
 

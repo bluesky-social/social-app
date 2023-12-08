@@ -30,7 +30,7 @@ export function EmojiPickerButton() {
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
-      <DropdownMenu.Trigger style={styles.trigger}>
+      <DropdownMenu.Trigger style={styles.trigger as React.CSSProperties}>
         <FontAwesomeIcon
           icon={['far', 'face-smile']}
           color={pal.colors.link}
@@ -87,7 +87,8 @@ export function EmojiPicker({close}: {close: () => void}) {
 
 const styles = StyleSheet.create({
   mask: {
-    position: 'absolute',
+    // @ts-ignore web ony
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
   },
   trigger: {
     backgroundColor: 'transparent',
+    // @ts-ignore web only
     border: 'none',
     paddingTop: 4,
     paddingLeft: 12,
