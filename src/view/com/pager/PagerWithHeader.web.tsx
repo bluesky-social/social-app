@@ -11,6 +11,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {usePalette} from '#/lib/hooks/usePalette'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -150,10 +151,13 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
 }): React.ReactNode => {
+  const pal = usePalette('default')
   return (
     <>
-      <View style={styles.headerContainer}>{renderHeader?.()}</View>
-      <View style={styles.tabBarContainer}>
+      <View style={[styles.headerContainer, pal.border]}>
+        {renderHeader?.()}
+      </View>
+      <View style={[styles.tabBarContainer, pal.border]}>
         <TabBar
           testID={testID}
           items={items}
@@ -201,16 +205,21 @@ const styles = StyleSheet.create({
   headerContainer: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: 598,
+    width: 600,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   tabBarContainer: {
     // @ts-ignore web-only
     position: 'sticky',
+    overflow: 'hidden',
     top: 0,
     zIndex: 1,
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: 598,
+    width: 600,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
 })
 
