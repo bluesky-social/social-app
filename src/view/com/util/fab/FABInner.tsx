@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   outer: {
+    // @ts-ignore web-only
     position: isWeb ? 'fixed' : 'absolute',
     zIndex: 1,
   },
