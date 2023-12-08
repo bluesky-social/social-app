@@ -38,9 +38,8 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
   const onPressSignout = React.useCallback(() => {
     track('Settings:SignOutButtonClicked')
     closeAllActiveElements()
-    setTimeout(() => {
-      logout()
-    }, 0)
+    // needs to be in timeout or the modal re-opens
+    setTimeout(() => logout(), 0)
   }, [track, logout, closeAllActiveElements])
 
   const contents = (
