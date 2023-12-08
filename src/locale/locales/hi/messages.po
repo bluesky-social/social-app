@@ -1320,7 +1320,7 @@ msgstr "अगली फोटो"
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
-msgstr "नहीं<<<<<<< HEAD"
+msgstr "नहीं"
 
 #: src/view/screens/ProfileFeed.tsx:636
 #: src/view/screens/ProfileList.tsx:740
@@ -1981,7 +1981,7 @@ msgstr "स्थिति पृष्ठ"
 
 #: src/view/screens/Settings.tsx:666
 msgid "Storybook"
-msgstr "Storybook<<<<<<< HEAD======="
+msgstr "Storybook"
 
 #: src/view/com/modals/AppealLabel.tsx:101
 msgid "Submit"
