@@ -552,7 +552,7 @@ msgid "Continue"
 msgstr "आगे बढ़ें"
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
-#: src/view/com/modals/InviteCodes.tsx:178
+#: src/view/com/modals/InviteCodes.tsx:179
 msgid "Copied"
 msgstr "कॉपी कर ली"
 
@@ -1089,7 +1089,7 @@ msgstr "अधिक जानें"
 msgid "Learn more about this warning"
 msgstr "इस चेतावनी के बारे में अधिक जानें"
 
-#: src/view/screens/Moderation.tsx:235
+#: src/view/screens/Moderation.tsx:239
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -1125,7 +1125,11 @@ msgid "Liked by"
 msgstr "इन यूजर ने लाइक किया है"
 
 #: src/view/screens/Moderation.tsx:203
-msgid "Limit the visibility of my account"
+#~ msgid "Limit the visibility of my account"
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:203
+msgid "Limit the visibility of my account to logged-out users"
 msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
@@ -1357,8 +1361,12 @@ msgid "Not Applicable."
 msgstr "लागू नहीं।"
 
 #: src/view/screens/Moderation.tsx:227
-msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
 msgstr ""
+
+#: src/view/screens/Moderation.tsx:227
+#~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+#~ msgstr ""
 
 #: src/view/screens/Notifications.tsx:97
 #: src/view/screens/Notifications.tsx:121
@@ -2204,7 +2212,7 @@ msgstr "डिफ़ॉल्ट प्रदाता का उपयोग �
 msgid "Use this to sign into the other app along with your handle."
 msgstr "अपने हैंडल के साथ दूसरे ऐप में साइन इन करने के लिए इसका उपयोग करें।"
 
-#: src/view/com/modals/InviteCodes.tsx:196
+#: src/view/com/modals/InviteCodes.tsx:197
 msgid "Used by:"
 msgstr "के द्वारा उपयोग:"
 
@@ -2414,7 +2422,11 @@ msgstr "आपकी प्रोफ़ाइल"
 #~ msgstr ""
 
 #: src/view/screens/Moderation.tsx:220
-msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
+#~ msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:220
+msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
 msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:28
