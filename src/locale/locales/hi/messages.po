@@ -47,7 +47,7 @@ msgstr ""
 msgid "{invitesAvailable} invite codes available"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:86
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr ""
 
@@ -359,7 +359,7 @@ msgstr "केवल अक्षर, संख्या, रिक्त स्
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:586
+#: src/view/screens/Search/Search.tsx:558
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "कैंसिल"
@@ -460,7 +460,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:571
+#: src/view/screens/Search/Search.tsx:543
 msgid "Clear search query"
 msgstr "खोज क्वेरी साफ़ करें"
 
@@ -792,11 +792,11 @@ msgstr "अपना ईमेल पता दर्ज करें"
 msgid "Enter your new email address below."
 msgstr "नीचे अपना नया ईमेल पता दर्ज करें।।"
 
-#: src/view/com/auth/login/Login.tsx:83
+#: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
 msgstr "अपने यूज़रनेम और पासवर्ड दर्ज करें"
 
-#: src/view/screens/Search/Search.tsx:104
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr ""
 
@@ -895,8 +895,8 @@ msgstr "भूल"
 msgid "Forgot password"
 msgstr "पासवर्ड भूल गए"
 
-#: src/view/com/auth/login/Login.tsx:111
 #: src/view/com/auth/login/Login.tsx:127
+#: src/view/com/auth/login/Login.tsx:143
 msgid "Forgot Password"
 msgstr "पासवर्ड भूल गए"
 
@@ -908,8 +908,8 @@ msgstr "गैलरी"
 msgid "Get Started"
 msgstr "प्रारंभ करें"
 
-#: src/view/com/auth/LoggedOut.tsx:53
-#: src/view/com/auth/LoggedOut.tsx:54
+#: src/view/com/auth/LoggedOut.tsx:68
+#: src/view/com/auth/LoggedOut.tsx:69
 #: src/view/com/util/moderation/ScreenHider.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:106
 msgid "Go back"
@@ -1101,8 +1101,8 @@ msgstr "उन्हें किसी भी भाषा को देखन�
 msgid "Leaving Bluesky"
 msgstr "लीविंग Bluesky"
 
-#: src/view/com/auth/login/Login.tsx:112
 #: src/view/com/auth/login/Login.tsx:128
+#: src/view/com/auth/login/Login.tsx:144
 msgid "Let's get your password reset!"
 msgstr "चलो अपना पासवर्ड रीसेट करें!"
 
@@ -1183,7 +1183,7 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr "यह सुनिश्चित करने के लिए कि आप कहाँ जाना चाहते हैं!"
 
-#: src/view/screens/Search/Search.tsx:531
+#: src/view/screens/Search/Search.tsx:503
 msgid "Menu"
 msgstr "मेनू"
 
@@ -1345,9 +1345,9 @@ msgstr "\"{query}\" के लिए कोई परिणाम नहीं �
 #~ msgstr "{0} के लिए कोई परिणाम नहीं मिला"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:269
-#: src/view/screens/Search/Search.tsx:326
-#: src/view/screens/Search/Search.tsx:609
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:581
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr ""
@@ -1459,7 +1459,7 @@ msgstr "पृष्ठ नहीं मिला"
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: src/view/com/auth/login/Login.tsx:141
+#: src/view/com/auth/login/Login.tsx:157
 msgid "Password updated"
 msgstr ""
 
@@ -1769,8 +1769,8 @@ msgstr "सहेजे गए फ़ीड"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:409
-#: src/view/screens/Search/Search.tsx:561
+#: src/view/screens/Search/Search.tsx:381
+#: src/view/screens/Search/Search.tsx:533
 #: src/view/shell/bottom-bar/BottomBar.tsx:146
 #: src/view/shell/desktop/LeftNav.tsx:323
 #: src/view/shell/desktop/Search.tsx:161
@@ -1780,7 +1780,7 @@ msgstr "सहेजे गए फ़ीड"
 msgid "Search"
 msgstr "खोज"
 
-#: src/view/screens/Search/Search.tsx:418
+#: src/view/screens/Search/Search.tsx:390
 msgid "Search for posts and users."
 msgstr ""
 
@@ -1796,7 +1796,7 @@ msgstr "आगे क्या है"
 msgid "Select Bluesky Social"
 msgstr "Bluesky Social का चयन करें"
 
-#: src/view/com/auth/login/Login.tsx:101
+#: src/view/com/auth/login/Login.tsx:117
 msgid "Select from an existing account"
 msgstr "मौजूदा खाते से चुनें"
 
@@ -1918,7 +1918,7 @@ msgstr "रीपोस्ट दिखाएँ"
 msgid "Show users"
 msgstr "लोग दिखाएँ"
 
-#: src/view/com/auth/login/Login.tsx:82
+#: src/view/com/auth/login/Login.tsx:98
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/shell/NavSignupCard.tsx:52
 #: src/view/shell/NavSignupCard.tsx:53
@@ -1935,7 +1935,7 @@ msgid "Sign in as {0}"
 msgstr "{0} के रूप में साइन इन करें"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:118
-#: src/view/com/auth/login/Login.tsx:100
+#: src/view/com/auth/login/Login.tsx:116
 msgid "Sign in as..."
 msgstr "... के रूप में साइन इन करें"
 
@@ -2003,7 +2003,7 @@ msgstr "सब्सक्राइब"
 msgid "Subscribe to this list"
 msgstr "इस सूची को सब्सक्राइब करें"
 
-#: src/view/screens/Search/Search.tsx:382
+#: src/view/screens/Search/Search.tsx:354
 msgid "Suggested Follows"
 msgstr "अनुशंसित लोग"
 
@@ -2149,7 +2149,7 @@ msgid "Un-mute list"
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:64
-#: src/view/com/auth/login/Login.tsx:60
+#: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "आपकी सेवा से संपर्क करने में असमर्थ। कृपया अपने इंटरनेट कनेक्शन की जांच करें।।"
@@ -2274,7 +2274,7 @@ msgstr "हम आपके हमारी सेवा में शामि�
 #~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:236
+#: src/view/screens/Search/Search.tsx:237
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
@@ -2320,7 +2320,7 @@ msgstr "हाँ"
 msgid "You can change hosting providers at any time."
 msgstr "आप किसी भी समय होस्टिंग प्रदाताओं को बदल सकते हैं।।"
 
-#: src/view/com/auth/login/Login.tsx:142
+#: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
 msgid "You can now sign in with your new password."
 msgstr "अब आप अपने नए पासवर्ड के साथ साइन इन कर सकते हैं।।"

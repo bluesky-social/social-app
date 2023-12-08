@@ -47,7 +47,7 @@ msgstr ""
 msgid "{invitesAvailable} invite codes available"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:86
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr ""
 
@@ -359,7 +359,7 @@ msgstr ""
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:586
+#: src/view/screens/Search/Search.tsx:558
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr ""
@@ -464,7 +464,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:571
+#: src/view/screens/Search/Search.tsx:543
 msgid "Clear search query"
 msgstr ""
 
@@ -796,11 +796,11 @@ msgstr ""
 msgid "Enter your new email address below."
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:83
+#: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:104
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr ""
 
@@ -903,8 +903,8 @@ msgstr ""
 msgid "Forgot password"
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:111
 #: src/view/com/auth/login/Login.tsx:127
+#: src/view/com/auth/login/Login.tsx:143
 msgid "Forgot Password"
 msgstr ""
 
@@ -916,8 +916,8 @@ msgstr ""
 msgid "Get Started"
 msgstr ""
 
-#: src/view/com/auth/LoggedOut.tsx:53
-#: src/view/com/auth/LoggedOut.tsx:54
+#: src/view/com/auth/LoggedOut.tsx:68
+#: src/view/com/auth/LoggedOut.tsx:69
 #: src/view/com/util/moderation/ScreenHider.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:106
 msgid "Go back"
@@ -1109,8 +1109,8 @@ msgstr ""
 msgid "Leaving Bluesky"
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:112
 #: src/view/com/auth/login/Login.tsx:128
+#: src/view/com/auth/login/Login.tsx:144
 msgid "Let's get your password reset!"
 msgstr ""
 
@@ -1191,7 +1191,7 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:531
+#: src/view/screens/Search/Search.tsx:503
 msgid "Menu"
 msgstr ""
 
@@ -1353,9 +1353,9 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:269
-#: src/view/screens/Search/Search.tsx:326
-#: src/view/screens/Search/Search.tsx:609
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:581
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr ""
@@ -1467,7 +1467,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:141
+#: src/view/com/auth/login/Login.tsx:157
 msgid "Password updated"
 msgstr ""
 
@@ -1777,8 +1777,8 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:409
-#: src/view/screens/Search/Search.tsx:561
+#: src/view/screens/Search/Search.tsx:381
+#: src/view/screens/Search/Search.tsx:533
 #: src/view/shell/bottom-bar/BottomBar.tsx:146
 #: src/view/shell/desktop/LeftNav.tsx:323
 #: src/view/shell/desktop/Search.tsx:161
@@ -1788,7 +1788,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:418
+#: src/view/screens/Search/Search.tsx:390
 msgid "Search for posts and users."
 msgstr ""
 
@@ -1804,7 +1804,7 @@ msgstr ""
 msgid "Select Bluesky Social"
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:101
+#: src/view/com/auth/login/Login.tsx:117
 msgid "Select from an existing account"
 msgstr ""
 
@@ -1926,7 +1926,7 @@ msgstr ""
 msgid "Show users"
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:82
+#: src/view/com/auth/login/Login.tsx:98
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/shell/NavSignupCard.tsx:52
 #: src/view/shell/NavSignupCard.tsx:53
@@ -1943,7 +1943,7 @@ msgid "Sign in as {0}"
 msgstr ""
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:118
-#: src/view/com/auth/login/Login.tsx:100
+#: src/view/com/auth/login/Login.tsx:116
 msgid "Sign in as..."
 msgstr ""
 
@@ -2011,7 +2011,7 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:382
+#: src/view/screens/Search/Search.tsx:354
 msgid "Suggested Follows"
 msgstr ""
 
@@ -2157,7 +2157,7 @@ msgid "Un-mute list"
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:64
-#: src/view/com/auth/login/Login.tsx:60
+#: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
@@ -2282,7 +2282,7 @@ msgstr ""
 #~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:236
+#: src/view/screens/Search/Search.tsx:237
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
@@ -2328,7 +2328,7 @@ msgstr ""
 msgid "You can change hosting providers at any time."
 msgstr ""
 
-#: src/view/com/auth/login/Login.tsx:142
+#: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
 msgid "You can now sign in with your new password."
 msgstr ""
