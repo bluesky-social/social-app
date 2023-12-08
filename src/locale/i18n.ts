@@ -7,10 +7,7 @@ import {messages as messagesHi} from '#/locale/locales/hi/messages'
 
 export const locales = {
   en: 'English',
-  cs: 'Česky',
-  fr: 'Français',
   hi: 'हिंदी',
-  es: 'Español',
 }
 export const defaultLocale = 'en'
 

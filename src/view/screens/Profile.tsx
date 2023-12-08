@@ -157,14 +157,14 @@ function ProfileScreenLoaded({
   const showListsTab = hasSession && (isMe || extraInfoQuery.data?.hasLists)
   const sectionTitles = useMemo<string[]>(() => {
     return [
-      'Posts',
-      showRepliesTab ? 'Replies' : undefined,
-      'Media',
-      showLikesTab ? 'Likes' : undefined,
-      showFeedsTab ? 'Feeds' : undefined,
-      showListsTab ? 'Lists' : undefined,
+      _(msg`Posts`),
+      showRepliesTab ? _(msg`Replies`) : undefined,
+      _(msg`Media`),
+      showLikesTab ? _(msg`Likes`) : undefined,
+      showFeedsTab ? _(msg`Feeds`) : undefined,
+      showListsTab ? _(msg`Lists`) : undefined,
     ].filter(Boolean) as string[]
-  }, [showRepliesTab, showLikesTab, showFeedsTab, showListsTab])
+  }, [showRepliesTab, showLikesTab, showFeedsTab, showListsTab, _])
 
   let nextIndex = 0
   const postsIndex = nextIndex++
