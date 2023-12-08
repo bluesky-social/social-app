@@ -2,8 +2,10 @@ import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createClient, SegmentClient} from '@segment/analytics-react-native'
-import {useSession, SessionAccount} from '#/state/session'
 import {sha256} from 'js-sha256'
+import {Native} from 'sentry-expo'
+
+import {useSession, SessionAccount} from '#/state/session'
 import {TrackEvent, AnalyticsMethods} from './types'
 import {logger} from '#/logger'
 
@@ -28,6 +30,7 @@ function getClient(): SegmentClient {
 }
 
 export const track: TrackEvent = async (...args) => {
+  logger.info('analytics: track', {args})
   await getClient().track(...args)
 }
 
@@ -37,9 +40,11 @@ export function useAnalytics(): AnalyticsMethods {
     if (hasSession) {
       return {
         async screen(...args) {
+          logger.info('analytics: screen', {args})
           await getClient().screen(...args)
         },
         async track(...args) {
+          logger.info('analytics: track', {args})
           await getClient().track(...args)
         },
       }
@@ -60,6 +65,7 @@ export function init(account: SessionAccount | undefined) {
     if (account.did) {
       const did_hashed = sha256(account.did)
       client.identify(did_hashed, {did_hashed})
+      Native.setUser({id: did_hashed})
       logger.debug('Ping w/hash')
     } else {
       logger.debug('Ping w/o hash')
