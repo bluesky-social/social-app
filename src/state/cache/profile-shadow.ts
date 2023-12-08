@@ -11,6 +11,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '.
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
+import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
 import {Shadow, castAsShadow} from './types'
 import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
@@ -98,4 +99,5 @@ function* findProfilesInCache(did: string): Generator<ProfileView, void> {
   yield* findAllProfilesInProfileFollowersQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
+  yield* findAllProfilesInActorSearchQueryData(queryClient, did)
 }
