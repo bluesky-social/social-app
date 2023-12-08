@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSession, SessionAccount} from '#/state/session'
 import {useServiceQuery} from '#/state/queries/service'
+import {useLoggedOutView} from '#/state/shell/logged-out'
 
 enum Forms {
   Login,
@@ -24,16 +25,31 @@ enum Forms {
 }
 
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
+  const {_} = useLingui()
   const pal = usePalette('default')
+
   const {accounts} = useSession()
   const {track} = useAnalytics()
-  const {_} = useLingui()
-  const [error, setError] = useState<string>('')
-  const [serviceUrl, setServiceUrl] = useState<string>(DEFAULT_SERVICE)
-  const [initialHandle, setInitialHandle] = useState<string>('')
-  const [currentForm, setCurrentForm] = useState<Forms>(
-    accounts.length ? Forms.ChooseAccount : Forms.Login,
+  const {requestedAccountSwitchTo} = useLoggedOutView()
+  const requestedAccount = accounts.find(
+    a => a.did === requestedAccountSwitchTo,
   )
+
+  const [error, setError] = useState<string>('')
+  const [serviceUrl, setServiceUrl] = useState<string>(
+    requestedAccount?.service || DEFAULT_SERVICE,
+  )
+  const [initialHandle, setInitialHandle] = useState<string>(
+    requestedAccount?.handle || '',
+  )
+  const [currentForm, setCurrentForm] = useState<Forms>(
+    requestedAccount
+      ? Forms.Login
+      : accounts.length
+      ? Forms.ChooseAccount
+      : Forms.Login,
+  )
+
   const {
     data: serviceDescription,
     error: serviceError,

@@ -11,7 +11,7 @@ export function useAccountSwitcher() {
   const {track} = useAnalytics()
   const {selectAccount, clearCurrentAccount} = useSessionApi()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
     async (account: SessionAccount) => {
@@ -34,7 +34,7 @@ export function useAccountSwitcher() {
           }, 100)
         } else {
           closeAllActiveElements()
-          setShowLoggedOut(true)
+          requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
             `Please sign in as @${account.handle}`,
             'circle-exclamation',
@@ -50,7 +50,7 @@ export function useAccountSwitcher() {
       clearCurrentAccount,
       selectAccount,
       closeAllActiveElements,
-      setShowLoggedOut,
+      requestSwitchToAccount,
     ],
   )
 
