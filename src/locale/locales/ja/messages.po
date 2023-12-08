@@ -45,11 +45,11 @@ msgstr "{message}"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>推奨</0><1>フィード</1><2>を選択</2>"
+msgstr "<1>推奨</1><2>フィード</2><0>を選択</0>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr "<0>推奨</0><1>ユーザー</1><2>を選択</2>"
+msgstr "<1>推奨</1><2>ユーザー</2><0>をフォロー</0>"
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -91,7 +91,7 @@ msgstr "アカウントを追加"
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
 msgid "Add alt text"
-msgstr "全てのテキストを追加"
+msgstr "ALTテキストを追加"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
@@ -112,7 +112,7 @@ msgstr "リンクカードの追加："
 
 #: src/view/com/modals/ChangeHandle.tsx:415
 msgid "Add the following DNS record to your domain:"
-msgstr "次のDNSレコードをドメインに追加します。"
+msgstr "次のDNSレコードをドメインに追加してください："
 
 #: src/view/com/profile/ProfileHeader.tsx:329
 msgid "Add to Lists"
@@ -129,7 +129,7 @@ msgstr "リストに追加"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:164
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "返信がフィードに表示されるために必要な「好き」の数を調整します。"
+msgstr "返信がフィードに表示されるために必要な「いいね」の数を調整します。"
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -145,11 +145,11 @@ msgstr "ALT"
 
 #: src/view/com/modals/EditImage.tsx:315
 msgid "Alt text"
-msgstr "Altテキスト"
+msgstr "ALTテキスト"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "Altテキストは、視覚障害者や低視力者のための画像を説明し、すべての人に文脈を与えるのに役立ちます。"
+msgstr "ALTテキストは、視覚障害者や低視力者のために画像を説明し、すべての人に文脈を与えるのに役立ちます。"
 
 #: src/view/com/modals/VerifyEmail.tsx:110
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
@@ -169,11 +169,11 @@ msgstr "アプリケーション言語"
 
 #: src/view/screens/Settings.tsx:589
 msgid "App passwords"
-msgstr "アプリのパスワード"
+msgstr "アプリパスワード"
 
 #: src/view/screens/AppPasswords.tsx:186
 msgid "App Passwords"
-msgstr "アプリのパスワード"
+msgstr "アプリパスワード"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Decision"
@@ -193,11 +193,11 @@ msgstr "外観"
 
 #: src/view/screens/AppPasswords.tsx:223
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "本当にアプリのパスワード「\\{name}」を削除しますか？"
+msgstr "本当にアプリパスワード「{name}」を削除しますか？"
 
 #: src/view/com/composer/Composer.tsx:139
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "本当にこのドラフトを破棄しますか？"
+msgstr "本当にこの下書きを破棄しますか？"
 
 #: src/view/screens/ProfileList.tsx:375
 msgid "Are you sure?"
@@ -292,7 +292,7 @@ msgstr "Blueskyは開いています。"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
 msgid "Bluesky is public."
-msgstr "Blueskyは公開されています。"
+msgstr "Blueskyはオープンです。"
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
@@ -314,7 +314,7 @@ msgstr "カメラ"
 
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "文字、数字、スペース、ダッシュ、およびアンダースコアのみを含めることができます。長さは4文字以上32文字以下である必要があります。"
+msgstr "文字、数字、スペース、ハイフン、およびアンダースコアのみを含めることができます。長さは4文字以上32文字以下である必要があります。"
 
 #: src/view/com/composer/Composer.tsx:278
 #: src/view/com/composer/Composer.tsx:281
@@ -343,7 +343,7 @@ msgstr "アカウントの削除をキャンセル"
 
 #: src/view/com/modals/AltImage.tsx:122
 msgid "Cancel add image alt text"
-msgstr "画像のaltテキストの追加をキャンセル"
+msgstr "画像のALTテキストの追加をキャンセル"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
@@ -401,7 +401,7 @@ msgstr "推奨ユーザーを確認してください。フォローする事で
 
 #: src/view/com/modals/DeleteAccount.tsx:163
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "以下に入力する確認コードが記載されているか、Eメールの受信トレイを確認してください。"
+msgstr "Eメールの受信トレイを確認して、以下に入力するコードが記載されたメールが届いていないか確認してください："
 
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
@@ -554,11 +554,11 @@ msgstr "著作権ポリシー"
 
 #: src/view/screens/ProfileFeed.tsx:103
 msgid "Could not load feed"
-msgstr "フィードのロード失敗"
+msgstr "フィードのロードに失敗"
 
 #: src/view/screens/ProfileList.tsx:860
 msgid "Could not load list"
-msgstr "リストのロード失敗"
+msgstr "リストのロードに失敗"
 
 #: src/view/com/auth/SplashScreen.tsx:41
 msgid "Create a new account"
@@ -596,7 +596,7 @@ msgstr "アカウントを削除"
 #: src/view/screens/AppPasswords.tsx:221
 #: src/view/screens/AppPasswords.tsx:241
 msgid "Delete app password"
-msgstr "アプリのパスワードを削除"
+msgstr "アプリパスワードを削除"
 
 #: src/view/screens/ProfileList.tsx:374
 #: src/view/screens/ProfileList.tsx:434
@@ -742,7 +742,7 @@ msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:71
 msgid "Enter the address of your provider:"
-msgstr "プロバイダーのアドレスを入力します。"
+msgstr "プロバイダーのアドレスを入力してください："
 
 #: src/view/com/modals/ChangeHandle.tsx:369
 msgid "Enter the domain you want to use"
@@ -770,7 +770,7 @@ msgstr "エラー："
 
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
-msgstr "altテキストを展開"
+msgstr "ALTテキストを展開"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -858,16 +858,16 @@ msgstr "セキュリティ上の理由から、これを再度表示すること
 
 #: src/view/com/auth/login/LoginForm.tsx:231
 msgid "Forgot"
-msgstr "忘れた"
+msgstr "失念"
 
 #: src/view/com/auth/login/LoginForm.tsx:228
 msgid "Forgot password"
-msgstr "パスワードを忘れた"
+msgstr "パスワードを失念"
 
 #: src/view/com/auth/login/Login.tsx:127
 #: src/view/com/auth/login/Login.tsx:143
 msgid "Forgot Password"
-msgstr "パスワードを忘れた"
+msgstr "パスワードを失念"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
 msgid "Gallery"
@@ -908,7 +908,7 @@ msgstr "ヘルプ"
 
 #: src/view/com/modals/AddAppPasswords.tsx:148
 msgid "Here is your app password."
-msgstr "アプリのパスワードをお知らせします。"
+msgstr "アプリパスワードをお知らせします。"
 
 #: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide"
@@ -974,7 +974,7 @@ msgstr "選択されていない場合は、すべての年齢に適していま
 
 #: src/view/com/modals/AltImage.tsx:96
 msgid "Image alt text"
-msgstr "画像のaltテキスト"
+msgstr "画像のALTテキスト"
 
 #: src/view/com/util/UserAvatar.tsx:304
 #: src/view/com/util/UserBanner.tsx:116
@@ -1055,7 +1055,7 @@ msgstr "どの言語も表示するには、すべてのチェックを外した
 
 #: src/view/com/modals/LinkWarning.tsx:49
 msgid "Leaving Bluesky"
-msgstr "Blueskyを去る"
+msgstr "Blueskyから離れる"
 
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
@@ -1069,12 +1069,12 @@ msgstr "ライブラリー"
 
 #: src/view/screens/ProfileFeed.tsx:643
 msgid "Like this feed"
-msgstr "このフィードを好む"
+msgstr "このフィードをいいね"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
-msgstr "好む者"
+msgstr "いいねした人："
 
 #: src/view/screens/Profile.tsx:163
 msgid "Likes"
@@ -1323,7 +1323,7 @@ msgstr "OK"
 
 #: src/view/com/composer/Composer.tsx:341
 msgid "One or more images is missing alt text."
-msgstr "1つ以上の画像にaltテキストがありません。"
+msgstr "1つ以上の画像にALTテキストがありません。"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:79
 msgid "Open navigation"
@@ -1433,7 +1433,7 @@ msgstr "Eメールを入力してください。"
 
 #: src/view/com/modals/DeleteAccount.tsx:180
 msgid "Please enter your password as well:"
-msgstr "パスワードも入力してください。"
+msgstr "パスワードも入力してください："
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
@@ -1672,7 +1672,7 @@ msgstr "保存"
 
 #: src/view/com/modals/AltImage.tsx:105
 msgid "Save alt text"
-msgstr "altテキストを保存"
+msgstr "ALTテキストを保存"
 
 #: src/view/com/modals/EditProfile.tsx:231
 msgid "Save Changes"
@@ -2018,7 +2018,7 @@ msgstr "これはオンラインを維持するためのサービスです。"
 
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
-msgstr "このリンクは次のウェブサイトへリンクしています。"
+msgstr "このリンクは次のウェブサイトへリンクしています："
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
@@ -2109,7 +2109,7 @@ msgstr "更新可能"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:172
 msgid "Updating..."
-msgstr "更新中..."
+msgstr "更新中…"
 
 #: src/view/com/modals/ChangeHandle.tsx:453
 msgid "Upload a text file to:"
@@ -2117,7 +2117,7 @@ msgstr "テキストファイルのアップロード先："
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "アプリのパスワードを使用して、アカウントやパスワードに完全なアクセス権を与えることなく、他のBlueskyクライアントにログインします。"
+msgstr "他のBlueskyクライアントにアカウントやパスワードにフルアクセスする権限を与えずに、アプリパスワードを使ってログインします。"
 
 #: src/view/com/modals/ChangeHandle.tsx:513
 msgid "Use default provider"
@@ -2125,7 +2125,7 @@ msgstr "デフォルトプロバイダーを使用"
 
 #: src/view/com/modals/AddAppPasswords.tsx:150
 msgid "Use this to sign into the other app along with your handle."
-msgstr "これを使用して、ハンドルと一緒に他のアプリにサインインします。"
+msgstr "これとハンドルを使って他のアプリにサインインします。"
 
 #: src/view/com/modals/InviteCodes.tsx:197
 msgid "Used by:"
@@ -2154,11 +2154,11 @@ msgstr "Eメールを確認"
 
 #: src/view/screens/Settings.tsx:775
 msgid "Verify my email"
-msgstr "マイEメールを確認"
+msgstr "Eメールを確認"
 
 #: src/view/screens/Settings.tsx:784
 msgid "Verify My Email"
-msgstr "マイEメールを確認"
+msgstr "Eメールを確認"
 
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
@@ -2175,7 +2175,7 @@ msgstr "アバターを表示"
 
 #: src/view/com/modals/LinkWarning.tsx:73
 msgid "Visit Site"
-msgstr "サイトへのアクセス"
+msgstr "サイトへアクセス"
 
 #: src/view/com/auth/create/CreateAccount.tsx:125
 msgid "We're so excited to have you join us!"
@@ -2234,7 +2234,7 @@ msgstr "新しいパスワードでサインインできるようになりまし
 
 #: src/view/com/modals/InviteCodes.tsx:64
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "まだ招待コードがありません！Blueskyにもう少し長く滞在しているときにお送りします。"
+msgstr "まだ招待コードがありません！Blueskyをもうしばらく利用したらお送りします。"
 
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
@@ -2267,7 +2267,7 @@ msgstr "ブロックしているアカウントはまだありません。アカ
 
 #: src/view/screens/AppPasswords.tsx:86
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "アプリのパスワードはまだ作成していません。 下のボタンを押すと作成できます。"
+msgstr "アプリパスワードはまだ作成されていません。 下のボタンを押すと作成できます。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:130
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
@@ -2318,7 +2318,7 @@ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "投稿、好き、ブロックは公開されています。ミュートはプライベートです。"
+msgstr "投稿、いいね、ブロックは公開されます。ミュートはプライベートです。"
 
 #: src/view/com/modals/SwitchAccount.tsx:78
 msgid "Your profile"
