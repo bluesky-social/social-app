@@ -169,7 +169,11 @@ let Row = function RowImpl<ItemT>({
   if (!renderItem) {
     return null
   }
-  return renderItem({item, index, separators: null as any})
+  return (
+    <View style={styles.row}>
+      {renderItem({item, index, separators: null as any})}
+    </View>
+  )
 }
 Row = React.memo(Row)
 
@@ -249,5 +253,9 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  row: {
+    // @ts-ignore web
+    contentVisibility: 'auto',
   },
 })
