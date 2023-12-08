@@ -60,20 +60,13 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      let page
-      if (!pageParam) {
-        // for the first page, we check the cached page held by the unread-checker first
-        page = unreads.getCachedUnreadPage()
-      }
-      if (!page) {
-        page = await fetchPage({
-          limit: PAGE_SIZE,
-          cursor: pageParam,
-          queryClient,
-          moderationOpts,
-          threadMutes,
-        })
-      }
+      let page = await fetchPage({
+        limit: PAGE_SIZE,
+        cursor: pageParam,
+        queryClient,
+        moderationOpts,
+        threadMutes,
+      })
 
       // if the first page has an unread, mark all read
       if (!pageParam && page.items[0] && !page.items[0].notification.isRead) {
