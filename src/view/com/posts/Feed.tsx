@@ -132,13 +132,20 @@ let Feed = ({
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless
-    // reassignments of the interval
+    // reassignments in other effects
     checkForNewRef.current = checkForNew
   }, [checkForNew])
+  React.useEffect(() => {
+    if (enabled && checkForNewRef.current) {
+      // check for new on enable (aka on focus)
+      checkForNewRef.current()
+    }
+  }, [enabled])
   React.useEffect(() => {
     if (!pollInterval) {
       return
     }
+    // check for new on interval
     const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
     return () => clearInterval(i)
   }, [pollInterval])
