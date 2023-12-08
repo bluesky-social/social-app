@@ -20,6 +20,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useCloseAllActiveElements} from '#/state/util'
 
 export const snapPoints = ['40%', '90%']
 
@@ -32,11 +33,14 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
   const {onPressSwitchAccount} = useAccountSwitcher()
+  const closeAllActiveElements = useCloseAllActiveElements()
 
   const onPressSignout = React.useCallback(() => {
     track('Settings:SignOutButtonClicked')
-    logout()
-  }, [track, logout])
+    closeAllActiveElements()
+    // needs to be in timeout or the modal re-opens
+    setTimeout(() => logout(), 0)
+  }, [track, logout, closeAllActiveElements])
 
   const contents = (
     <View style={[pal.view, styles.linkCard]}>

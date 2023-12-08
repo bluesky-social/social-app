@@ -827,6 +827,7 @@ msgid "Feedback"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:475
+#: src/view/screens/Profile.tsx:164
 #: src/view/shell/bottom-bar/BottomBar.tsx:168
 #: src/view/shell/desktop/LeftNav.tsx:341
 #: src/view/shell/Drawer.tsx:463
@@ -1132,6 +1133,10 @@ msgstr ""
 msgid "Liked by"
 msgstr ""
 
+#: src/view/screens/Profile.tsx:163
+msgid "Likes"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:203
 #~ msgid "Limit the visibility of my account"
 #~ msgstr ""
@@ -1148,6 +1153,7 @@ msgstr ""
 msgid "List Name"
 msgstr ""
 
+#: src/view/screens/Profile.tsx:165
 #: src/view/shell/desktop/LeftNav.tsx:381
 #: src/view/shell/Drawer.tsx:479
 #: src/view/shell/Drawer.tsx:480
@@ -1189,6 +1195,10 @@ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:63
 msgid "Make sure this is where you intend to go!"
+msgstr ""
+
+#: src/view/screens/Profile.tsx:162
+msgid "Media"
 msgstr ""
 
 #: src/view/screens/Search/Search.tsx:503
@@ -1534,6 +1544,10 @@ msgstr ""
 msgid "Post not found"
 msgstr ""
 
+#: src/view/screens/Profile.tsx:160
+msgid "Posts"
+msgstr ""
+
 #: src/view/com/modals/LinkWarning.tsx:44
 msgid "Potentially Misleading Link"
 msgstr ""
@@ -1647,6 +1661,10 @@ msgstr ""
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:136
 msgid "Removed from list"
+msgstr ""
+
+#: src/view/screens/Profile.tsx:161
+msgid "Replies"
 msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
@@ -1951,8 +1969,8 @@ msgstr ""
 msgid "Sign into"
 msgstr ""
 
-#: src/view/com/modals/SwitchAccount.tsx:60
-#: src/view/com/modals/SwitchAccount.tsx:63
+#: src/view/com/modals/SwitchAccount.tsx:64
+#: src/view/com/modals/SwitchAccount.tsx:67
 msgid "Sign out"
 msgstr ""
 
@@ -2020,7 +2038,7 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/view/com/modals/SwitchAccount.tsx:111
+#: src/view/com/modals/SwitchAccount.tsx:115
 msgid "Switch Account"
 msgstr ""
 
@@ -2421,7 +2439,7 @@ msgstr ""
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr ""
 
-#: src/view/com/modals/SwitchAccount.tsx:78
+#: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
 msgstr ""
 
