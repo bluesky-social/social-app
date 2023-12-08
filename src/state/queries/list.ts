@@ -230,6 +230,10 @@ export function useListMuteMutation() {
       } else {
         await getAgent().unmuteModList(uri)
       }
+
+      await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
+        return Boolean(v?.data.list.viewer?.muted) === mute
+      })
     },
     onSuccess(data, variables) {
       queryClient.invalidateQueries({
@@ -248,6 +252,12 @@ export function useListBlockMutation() {
       } else {
         await getAgent().unblockModList(uri)
       }
+
+      await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
+        return block
+          ? typeof v?.data.list.viewer?.blocked === 'string'
+          : !v?.data.list.viewer?.blocked
+      })
     },
     onSuccess(data, variables) {
       queryClient.invalidateQueries({
