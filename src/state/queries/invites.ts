@@ -43,7 +43,14 @@ export function useInviteCodesQuery() {
       }
 
       const available = res.data.codes.filter(isInviteAvailable)
-      const used = res.data.codes.filter(code => !isInviteAvailable(code))
+      const used = res.data.codes
+        .filter(code => !isInviteAvailable(code))
+        .sort((a, b) => {
+          return (
+            new Date(b.uses[0].usedAt).getTime() -
+            new Date(a.uses[0].usedAt).getTime()
+          )
+        })
 
       return {
         disabled: false,

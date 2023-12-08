@@ -142,6 +142,7 @@ function InviteCode({
   const pal = usePalette('default')
   const invitesState = useInvitesState()
   const {setInviteCopied} = useInvitesAPI()
+  const uses = invite.uses
 
   const onPress = React.useCallback(() => {
     Clipboard.setString(invite.code)
@@ -185,7 +186,7 @@ function InviteCode({
           />
         )}
       </TouchableOpacity>
-      {invite.uses.length > 0 ? (
+      {uses.length > 0 ? (
         <View
           style={{
             flexDirection: 'column',
@@ -193,19 +194,19 @@ function InviteCode({
             paddingTop: 6,
           }}>
           <Text style={pal.text}>
-            <Trans>Used by:</Trans>
+            <Trans>Used by:</Trans>{' '}
+            {uses.map((use, i) => (
+              <Link
+                key={use.usedBy}
+                href={makeProfileLink({handle: use.usedBy, did: ''})}
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <UserInfoText did={use.usedBy} style={pal.link} />
+                {i !== uses.length - 1 && <Text style={pal.text}>, </Text>}
+              </Link>
+            ))}
           </Text>
-          {invite.uses.map(use => (
-            <Link
-              key={use.usedBy}
-              href={makeProfileLink({handle: use.usedBy, did: ''})}
-              style={{
-                flexDirection: 'row',
-              }}>
-              <Text style={pal.text}>• </Text>
-              <UserInfoText did={use.usedBy} style={pal.link} />
-            </Link>
-          ))}
         </View>
       ) : null}
     </View>
