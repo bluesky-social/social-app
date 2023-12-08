@@ -29,7 +29,7 @@ export class MergeFeedAPI implements FeedAPI {
     this.feedCursor = 0
     this.itemCursor = 0
     this.sampleCursor = 0
-    if (this.params.mergeFeedEnabled && this.params.mergeFeedSources) {
+    if (this.params.mergeFeedSources) {
       this.customFeeds = shuffle(
         this.params.mergeFeedSources.map(
           feedUri => new MergeFeedSource_Custom(feedUri, this.feedTuners),
@@ -108,7 +108,10 @@ export class MergeFeedAPI implements FeedAPI {
 
     // this condition establishes the frequency that custom feeds are woven into follows
     const shouldSample =
-      i >= 15 && candidateFeeds.length >= 2 && (i % 4 === 0 || i % 5 === 0)
+      this.params.mergeFeedEnabled &&
+      i >= 15 &&
+      candidateFeeds.length >= 2 &&
+      (i % 4 === 0 || i % 5 === 0)
 
     if (!canSample && !hasFollows) {
       // no data available

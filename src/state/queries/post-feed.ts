@@ -217,13 +217,17 @@ export function usePostFeedQuery(
     const {isFetching, hasNextPage, data} = query
 
     let count = 0
+    let numEmpties = 0
     for (const page of data?.pages || []) {
+      if (page.slices.length === 0) {
+        numEmpties++
+      }
       for (const slice of page.slices) {
         count += slice.items.length
       }
     }
 
-    if (!isFetching && hasNextPage && count < PAGE_SIZE) {
+    if (!isFetching && hasNextPage && count < PAGE_SIZE && numEmpties < 3) {
       query.fetchNextPage()
     }
   }, [query])

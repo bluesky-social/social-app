@@ -175,7 +175,7 @@ function HomeScreenReady({
         key="1"
         testID="followingFeedPage"
         isPageFocused={selectedPageIndex === 0}
-        feed={homeFeedParams.mergeFeedEnabled ? 'home' : 'following'}
+        feed="home"
         feedParams={homeFeedParams}
         renderEmptyState={renderFollowingEmptyState}
         renderEndOfFeed={FollowingEndOfFeed}
