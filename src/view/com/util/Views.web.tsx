@@ -52,6 +52,7 @@ export function CenteredView({
 export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   {
     data,
+    extraData,
     contentOffset,
     keyExtractor,
     renderItem,
@@ -60,6 +61,8 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     onEndReached,
     onEndReachedThreshold,
     onScroll,
+    ListHeaderComponent,
+    ListFooterComponent,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
   ref: React.Ref<Animated.FlatList<ItemT>>,
@@ -85,6 +88,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
       paddingTop: Math.abs(contentOffset.y),
     })
   }
+
   const nativeRef = React.useRef(null)
   React.useImperativeHandle(
     ref,
@@ -134,21 +138,44 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     })
   }, [onEndReachedThreshold, onEndReached])
 
+  let header = null
+  if (ListHeaderComponent != null) {
+    if (typeof ListHeaderComponent === 'object') {
+      header = ListHeaderComponent
+    } else if (typeof ListHeaderComponent === 'function') {
+      // @ts-ignore We aren't using classes so it's a render function.
+      header = ListHeaderComponent()
+    }
+  }
+
+  let footer = null
+  if (ListFooterComponent != null) {
+    if (typeof ListFooterComponent === 'object') {
+      footer = ListFooterComponent
+    } else if (typeof ListFooterComponent === 'function') {
+      // @ts-ignore We aren't using classes so it's a render function.
+      footer = ListFooterComponent()
+    }
+  }
+
   return (
     <Animated.ScrollView {...props} style={style} ref={nativeRef}>
       <View
         style={[styles.contentContainer, contentContainerStyle, pal.border]}>
+        {header}
         {(data as Array<ItemT>).map((item, index) => (
           <Row<ItemT>
             key={keyExtractor!(item, index)}
             item={item}
             index={index}
             renderItem={renderItem}
+            extraData={extraData}
           />
         ))}
         {onEndReached && (
           <Tail threshold={onEndReachedThreshold} onVisible={onVisible} />
         )}
+        {footer}
       </View>
     </Animated.ScrollView>
   )
@@ -158,6 +185,7 @@ let Row = function RowImpl<ItemT>({
   item,
   index,
   renderItem,
+  extraData: _unused,
 }: {
   item: ItemT
   index: number
@@ -165,6 +193,7 @@ let Row = function RowImpl<ItemT>({
     | null
     | undefined
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
+  extraData: any
 }): React.ReactNode {
   if (!renderItem) {
     return null
