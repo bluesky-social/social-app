@@ -5,10 +5,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 
 export const locales = {
   en: 'English',
-  cs: 'Česky',
-  fr: 'Français',
   hi: 'हिंदी',
-  es: 'Español',
 }
 export const defaultLocale = 'en'
 
