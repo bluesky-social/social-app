@@ -23,10 +23,11 @@ export function useSearchPostsQuery({query}: {query: string}) {
     string | undefined
   >({
     queryKey: searchPostsQueryKey({query}),
-    queryFn: async () => {
+    queryFn: async ({pageParam}) => {
       const res = await getAgent().app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
+        cursor: pageParam,
       })
       return res.data
     },
