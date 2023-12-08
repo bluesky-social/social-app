@@ -33,12 +33,12 @@ function ShellInner() {
   }, [navigator, closeAllActiveElements])
 
   return (
-    <View style={s.hContentRegion}>
-      <View style={s.hContentRegion}>
+    <>
+      <>
         <ErrorBoundary>
           <FlatNavigator />
         </ErrorBoundary>
-      </View>
+      </>
       <Composer winHeight={0} />
       <ModalsContainer />
       <Lightbox />
@@ -53,7 +53,7 @@ function ShellInner() {
           </View>
         </TouchableOpacity>
       )}
-    </View>
+    </>
   )
 }
 

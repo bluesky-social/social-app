@@ -394,7 +394,7 @@ const FlatNavigator = () => {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: [pal.view, styles.webContainer],
+        contentStyle: [pal.view],
       }}>
       <Flat.Screen
         name="Home"
@@ -592,10 +592,6 @@ function handleLink(url: string) {
 }
 
 const styles = StyleSheet.create({
-  webContainer: {
-    // @ts-ignore web-only
-    flex: '',
-  },
   bgDark: {
     backgroundColor: colors.black,
   },
