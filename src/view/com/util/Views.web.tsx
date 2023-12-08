@@ -60,7 +60,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     contentContainerStyle,
     onEndReached,
     onEndReachedThreshold,
-    onScroll,
+    onScroll: _unused, // Not supported on the web.
     ListHeaderComponent,
     ListFooterComponent,
     desktopFixedHeight,
@@ -114,24 +114,6 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
       } as any), // TODO: Types.
     [],
   )
-
-  React.useEffect(() => {
-    if (!onScroll) {
-      return
-    }
-    function handleScroll(e: any) {
-      ;(onScroll as any).current?.worklet({
-        ...e.nativeEvent,
-        eventName: 'onScroll',
-        contentOffset: {
-          x: 0,
-          y: window.scrollY,
-        },
-      })
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [onScroll])
 
   const onVisible = React.useCallback(() => {
     onEndReached?.({
