@@ -51,6 +51,16 @@ export type ReportModal = {
   | {did: string}
 )
 
+export type AppealLabelModal = {
+  name: 'appeal-label'
+} & (
+  | {
+      uri: string
+      cid: string
+    }
+  | {did: string}
+)
+
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
@@ -61,6 +71,7 @@ export interface CreateOrEditListModal {
 export interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
   subject: string
+  handle: string
   displayName: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
@@ -182,6 +193,7 @@ export type Modal =
   // Moderation
   | ModerationDetailsModal
   | ReportModal
+  | AppealLabelModal
 
   // Lists
   | CreateOrEditListModal

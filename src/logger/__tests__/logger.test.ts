@@ -179,6 +179,7 @@ describe('general functionality', () => {
       level: 'debug', // Sentry bug, log becomes debug
       timestamp: sentryTimestamp,
     })
+    jest.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'log',
       tags: undefined,
@@ -193,6 +194,7 @@ describe('general functionality', () => {
       level: 'warning',
       timestamp: sentryTimestamp,
     })
+    jest.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'warning',
       tags: undefined,
@@ -219,6 +221,26 @@ describe('general functionality', () => {
       extra: {
         prop: true,
       },
+    })
+  })
+
+  test('sentryTransport serializes errors', () => {
+    const message = 'message'
+    const timestamp = Date.now()
+    const sentryTimestamp = timestamp / 1000
+
+    sentryTransport(
+      LogLevel.Debug,
+      message,
+      {error: new Error('foo')},
+      timestamp,
+    )
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      message,
+      data: {error: 'Error: foo'},
+      type: 'default',
+      level: LogLevel.Debug,
+      timestamp: sentryTimestamp,
     })
   })
 

@@ -1,85 +1,96 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {
-  createClient,
-  AnalyticsProvider,
-  useAnalytics as useAnalyticsOrig,
-  ClientMethods,
-} from '@segment/analytics-react-native'
-import {z} from 'zod'
-import {useSession} from '#/state/session'
+import {createClient, SegmentClient} from '@segment/analytics-react-native'
 import {sha256} from 'js-sha256'
-import {ScreenEvent, TrackEvent} from './types'
+import {Native} from 'sentry-expo'
+
+import {useSession, SessionAccount} from '#/state/session'
+import {TrackEvent, AnalyticsMethods} from './types'
 import {logger} from '#/logger'
-import {listenSessionLoaded} from '#/state/events'
 
-export const appInfo = z.object({
-  build: z.string().optional(),
-  name: z.string().optional(),
-  namespace: z.string().optional(),
-  version: z.string().optional(),
-})
-export type AppInfo = z.infer<typeof appInfo>
+type AppInfo = {
+  build?: string | undefined
+  name?: string | undefined
+  namespace?: string | undefined
+  version?: string | undefined
+}
 
-const segmentClient = createClient({
-  writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
-  trackAppLifecycleEvents: false,
-  proxy: 'https://api.events.bsky.app/v1',
-})
+// Delay creating until first actual use.
+let segmentClient: SegmentClient | null = null
+function getClient(): SegmentClient {
+  if (!segmentClient) {
+    segmentClient = createClient({
+      writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
+      trackAppLifecycleEvents: false,
+      proxy: 'https://api.events.bsky.app/v1',
+    })
+  }
+  return segmentClient
+}
 
-export const track = segmentClient?.track?.bind?.(segmentClient) as TrackEvent
+export const track: TrackEvent = async (...args) => {
+  logger.info('analytics: track', {args})
+  await getClient().track(...args)
+}
 
-export function useAnalytics() {
+export function useAnalytics(): AnalyticsMethods {
   const {hasSession} = useSession()
-  const methods: ClientMethods = useAnalyticsOrig()
   return React.useMemo(() => {
     if (hasSession) {
       return {
-        screen: methods.screen as ScreenEvent, // ScreenEvents defines all the possible screen names
-        track: methods.track as TrackEvent, // TrackEvents defines all the possible track events and their properties
-        identify: methods.identify,
-        flush: methods.flush,
-        group: methods.group,
-        alias: methods.alias,
-        reset: methods.reset,
+        async screen(...args) {
+          logger.info('analytics: screen', {args})
+          await getClient().screen(...args)
+        },
+        async track(...args) {
+          logger.info('analytics: track', {args})
+          await getClient().track(...args)
+        },
       }
     }
     // dont send analytics pings for anonymous users
     return {
-      screen: () => Promise<void>,
-      track: () => Promise<void>,
-      identify: () => Promise<void>,
-      flush: () => Promise<void>,
-      group: () => Promise<void>,
-      alias: () => Promise<void>,
-      reset: () => Promise<void>,
+      screen: async () => {},
+      track: async () => {},
     }
-  }, [hasSession, methods])
+  }, [hasSession])
 }
 
-export function init() {
-  listenSessionLoaded(account => {
+export function init(account: SessionAccount | undefined) {
+  setupListenersOnce()
+
+  if (account) {
+    const client = getClient()
     if (account.did) {
       const did_hashed = sha256(account.did)
-      segmentClient.identify(did_hashed, {did_hashed})
+      client.identify(did_hashed, {did_hashed})
+      Native.setUser({id: did_hashed})
       logger.debug('Ping w/hash')
     } else {
       logger.debug('Ping w/o hash')
-      segmentClient.identify()
+      client.identify()
     }
-  })
+  }
+}
 
+let didSetupListeners = false
+function setupListenersOnce() {
+  if (didSetupListeners) {
+    return
+  }
+  didSetupListeners = true
   // NOTE
   // this is a copy of segment's own lifecycle event tracking
   // we handle it manually to ensure that it never fires while the app is backgrounded
   // -prf
-  segmentClient.isReady.onChange(async () => {
+  const client = getClient()
+  client.isReady.onChange(async () => {
     if (AppState.currentState !== 'active') {
       logger.debug('Prevented a metrics ping while the app was backgrounded')
       return
     }
-    const context = segmentClient.context.get()
+    const context = client.context.get()
     if (typeof context?.app === 'undefined') {
       logger.debug('Aborted metrics ping due to unavailable context')
       return
@@ -91,19 +102,19 @@ export function init() {
     logger.debug('Recording app info', {new: newAppInfo, old: oldAppInfo})
 
     if (typeof oldAppInfo === 'undefined') {
-      segmentClient.track('Application Installed', {
+      client.track('Application Installed', {
         version: newAppInfo.version,
         build: newAppInfo.build,
       })
     } else if (newAppInfo.version !== oldAppInfo.version) {
-      segmentClient.track('Application Updated', {
+      client.track('Application Updated', {
         version: newAppInfo.version,
         build: newAppInfo.build,
         previous_version: oldAppInfo.version,
         previous_build: oldAppInfo.build,
       })
     }
-    segmentClient.track('Application Opened', {
+    client.track('Application Opened', {
       from_background: false,
       version: newAppInfo.version,
       build: newAppInfo.build,
@@ -113,23 +124,17 @@ export function init() {
   let lastState: AppStateStatus = AppState.currentState
   AppState.addEventListener('change', (state: AppStateStatus) => {
     if (state === 'active' && lastState !== 'active') {
-      const context = segmentClient.context.get()
-      segmentClient.track('Application Opened', {
+      const context = client.context.get()
+      client.track('Application Opened', {
         from_background: true,
         version: context?.app?.version,
         build: context?.app?.build,
       })
     } else if (state !== 'active' && lastState === 'active') {
-      segmentClient.track('Application Backgrounded')
+      client.track('Application Backgrounded')
     }
     lastState = state
   })
-}
-
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  return (
-    <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
-  )
 }
 
 async function writeAppInfo(value: AppInfo) {

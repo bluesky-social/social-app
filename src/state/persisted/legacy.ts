@@ -1,13 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
-import {defaults, Schema} from '#/state/persisted/schema'
+import {defaults, Schema, schema} from '#/state/persisted/schema'
 import {write, read} from '#/state/persisted/store'
 
 /**
  * The shape of the serialized data from our legacy Mobx store.
  */
-type LegacySchema = {
+export type LegacySchema = {
   shell: {
     colorMode: 'system' | 'light' | 'dark'
   }
@@ -15,7 +15,7 @@ type LegacySchema = {
     data: {
       service: string
       did: `did:plc:${string}`
-    }
+    } | null
     accounts: {
       service: string
       did: `did:plc:${string}`
@@ -61,12 +61,11 @@ type LegacySchema = {
     copiedInvites: string[]
   }
   mutedThreads: {uris: string[]}
-  reminders: {lastEmailConfirm: string}
+  reminders: {lastEmailConfirm?: string}
 }
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 
-// TODO remove, assume that partial data may be here during our refactor
 export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
@@ -116,26 +115,64 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
  * local storage AND old storage exists.
  */
 export async function migrate() {
-  logger.debug('persisted state: migrate')
+  logger.info('persisted state: check need to migrate')
 
   try {
     const rawLegacyData = await AsyncStorage.getItem(
       DEPRECATED_ROOT_STATE_STORAGE_KEY,
     )
-    const alreadyMigrated = Boolean(await read())
+    const newData = await read()
+    const alreadyMigrated = Boolean(newData)
+
+    /* TODO BEGIN DEBUG — remove this eventually */
+    try {
+      if (rawLegacyData) {
+        const legacy = JSON.parse(rawLegacyData) as Partial<LegacySchema>
+        logger.info(`persisted state: debug legacy data`, {
+          hasExistingLoggedInAccount: Boolean(legacy?.session?.data),
+          numberOfExistingAccounts: legacy?.session?.accounts?.length,
+          foundExistingCurrentAccount: Boolean(
+            legacy.session?.accounts?.find(
+              a => a.did === legacy.session?.data?.did,
+            ),
+          ),
+        })
+        logger.info(`persisted state: debug new data`, {
+          hasNewData: Boolean(newData),
+          hasExistingLoggedInAccount: Boolean(newData?.session?.currentAccount),
+          numberOfExistingAccounts: newData?.session?.accounts?.length,
+          existingAccountMatchesLegacy: Boolean(
+            newData?.session?.currentAccount?.did ===
+              legacy?.session?.data?.did,
+          ),
+        })
+      }
+    } catch (e: any) {
+      logger.error(e, {message: `persisted state: legacy debugging failed`})
+    }
+    /* TODO END DEBUG */
 
     if (!alreadyMigrated && rawLegacyData) {
-      logger.debug('persisted state: migrating legacy storage')
+      logger.info('persisted state: migrating legacy storage')
+
       const legacyData = JSON.parse(rawLegacyData)
       const newData = transform(legacyData)
-      await write(newData)
-      logger.debug('persisted state: migrated legacy storage')
+      const validate = schema.safeParse(newData)
+
+      if (validate.success) {
+        await write(newData)
+        logger.log('persisted state: migrated legacy storage')
+      } else {
+        logger.error('persisted state: legacy data failed validation', {
+          error: validate.error,
+        })
+      }
     } else {
-      logger.debug('persisted state: no migration needed')
+      logger.log('persisted state: no migration needed')
     }
-  } catch (e) {
-    logger.error('persisted state: error migrating legacy storage', {
-      error: String(e),
+  } catch (e: any) {
+    logger.error(e, {
+      message: 'persisted state: error migrating legacy storage',
     })
   }
 }

@@ -19,20 +19,24 @@ const _emitter = new EventEmitter()
  * the Provider.
  */
 export async function init() {
-  logger.debug('persisted state: initializing')
+  logger.info('persisted state: initializing')
 
   broadcast.onmessage = onBroadcastMessage
 
   try {
     await migrate() // migrate old store
     const stored = await store.read() // check for new store
-    if (!stored) await store.write(defaults) // opt: init new store
+    if (!stored) {
+      logger.info('persisted state: initializing default storage')
+      await store.write(defaults) // opt: init new store
+    }
     _state = stored || defaults // return new store
+    logger.log('persisted state: initialized')
   } catch (e) {
     logger.error('persisted state: failed to load root state from storage', {
       error: e,
     })
-    // AsyncStorage failured, but we can still continue in memory
+    // AsyncStorage failure, but we can still continue in memory
     return defaults
   }
 }

@@ -1,4 +1,4 @@
-import {ModerationCause, ProfileModeration} from '@atproto/api'
+import {ModerationCause, ProfileModeration, PostModeration} from '@atproto/api'
 
 export interface ModerationCauseDescription {
   name: string
@@ -90,6 +90,25 @@ export function getProfileModerationCauses(
     }
     return true
   }) as ModerationCause[]
+}
+
+export function isPostMediaBlurred(
+  decisions: PostModeration['decisions'],
+): boolean {
+  return decisions.post.blurMedia
+}
+
+export function isQuoteBlurred(
+  decisions: PostModeration['decisions'],
+): boolean {
+  return (
+    decisions.quote?.blur ||
+    decisions.quote?.blurMedia ||
+    decisions.quote?.filter ||
+    decisions.quotedAccount?.blur ||
+    decisions.quotedAccount?.filter ||
+    false
+  )
 }
 
 export function isCauseALabelOnUri(

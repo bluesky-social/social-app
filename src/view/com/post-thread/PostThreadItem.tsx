@@ -41,12 +41,17 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {ThreadPost} from '#/state/queries/post-thread'
+import {LabelInfo} from '../util/moderation/LabelInfo'
+import {useSession} from '#/state/session'
 
 export function PostThreadItem({
   post,
   record,
   treeView,
   depth,
+  prevPost,
+  nextPost,
   isHighlightedPost,
   hasMore,
   showChildReplyLine,
@@ -58,6 +63,8 @@ export function PostThreadItem({
   record: AppBskyFeedPost.Record
   treeView: boolean
   depth: number
+  prevPost: ThreadPost | undefined
+  nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
   hasMore?: boolean
   showChildReplyLine?: boolean
@@ -87,6 +94,8 @@ export function PostThreadItem({
     return (
       <PostThreadItemLoaded
         post={postShadowed}
+        prevPost={prevPost}
+        nextPost={nextPost}
         record={record}
         richText={richText}
         moderation={moderation}
@@ -124,6 +133,8 @@ let PostThreadItemLoaded = ({
   moderation,
   treeView,
   depth,
+  prevPost,
+  nextPost,
   isHighlightedPost,
   hasMore,
   showChildReplyLine,
@@ -137,6 +148,8 @@ let PostThreadItemLoaded = ({
   moderation: PostModeration
   treeView: boolean
   depth: number
+  prevPost: ThreadPost | undefined
+  nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
   hasMore?: boolean
   showChildReplyLine?: boolean
@@ -147,6 +160,7 @@ let PostThreadItemLoaded = ({
   const pal = usePalette('default')
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
+  const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -238,7 +252,7 @@ let PostThreadItemLoaded = ({
           <View style={styles.layout}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
-                size={52}
+                size={42}
                 did={post.author.did}
                 handle={post.author.handle}
                 avatar={post.author.avatar}
@@ -334,6 +348,13 @@ let PostThreadItemLoaded = ({
                 includeMute
                 style={styles.alert}
               />
+              {post.author.did === currentAccount?.did ? (
+                <LabelInfo
+                  details={{uri: post.uri, cid: post.cid}}
+                  labels={post.labels}
+                  style={{marginBottom: 8}}
+                />
+              ) : null}
               {richText?.text ? (
                 <View
                   style={[
@@ -351,11 +372,14 @@ let PostThreadItemLoaded = ({
               {post.embed && (
                 <ContentHider
                   moderation={moderation.embed}
+                  moderationDecisions={moderation.decisions}
                   ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
+                  ignoreQuoteDecisions
                   style={s.mb10}>
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation.embed}
+                    moderationDecisions={moderation.decisions}
                   />
                 </ContentHider>
               )}
@@ -372,7 +396,10 @@ let PostThreadItemLoaded = ({
                     style={styles.expandedInfoItem}
                     href={repostsHref}
                     title={repostsTitle}>
-                    <Text testID="repostCount" type="lg" style={pal.textLight}>
+                    <Text
+                      testID="repostCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.repostCount)}
                       </Text>{' '}
@@ -387,7 +414,10 @@ let PostThreadItemLoaded = ({
                     style={styles.expandedInfoItem}
                     href={likesHref}
                     title={likesTitle}>
-                    <Text testID="likeCount" type="lg" style={pal.textLight}>
+                    <Text
+                      testID="likeCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.likeCount)}
                       </Text>{' '}
@@ -414,7 +444,11 @@ let PostThreadItemLoaded = ({
       </>
     )
   } else {
-    const isThreadedChild = treeView && depth > 1
+    const isThreadedChild = treeView && depth > 0
+    const isThreadedChildAdjacentTop =
+      isThreadedChild && prevPost?.ctx.depth === depth && depth !== 1
+    const isThreadedChildAdjacentBot =
+      isThreadedChild && nextPost?.ctx.depth === depth
     return (
       <PostOuterWrapper
         post={post}
@@ -426,7 +460,11 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           style={[pal.view]}
-          moderation={moderation.content}>
+          moderation={moderation.content}
+          iconSize={isThreadedChild ? 26 : 38}
+          iconStyles={
+            isThreadedChild ? {marginRight: 4} : {marginLeft: 2, marginRight: 2}
+          }>
           <PostSandboxWarning />
 
           <View
@@ -434,7 +472,7 @@ let PostThreadItemLoaded = ({
               flexDirection: 'row',
               gap: 10,
               paddingLeft: 8,
-              height: isThreadedChild ? 8 : 16,
+              height: isThreadedChildAdjacentTop ? 8 : 16,
             }}>
             <View style={{width: 38}}>
               {!isThreadedChild && showParentReplyLine && (
@@ -456,7 +494,12 @@ let PostThreadItemLoaded = ({
             style={[
               styles.layout,
               {
-                paddingBottom: showChildReplyLine && !isThreadedChild ? 0 : 8,
+                paddingBottom:
+                  showChildReplyLine && !isThreadedChild
+                    ? 0
+                    : isThreadedChildAdjacentBot
+                    ? 4
+                    : 8,
               },
             ]}>
             {!isThreadedChild && (
@@ -491,10 +534,10 @@ let PostThreadItemLoaded = ({
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
-                avatarSize={26}
+                avatarSize={28}
                 displayNameType="md-bold"
                 displayNameStyle={isThreadedChild && s.ml2}
-                style={isThreadedChild && s.mb5}
+                style={isThreadedChild && s.mb2}
               />
               <PostAlerts
                 moderation={moderation.content}
@@ -522,10 +565,14 @@ let PostThreadItemLoaded = ({
               {post.embed && (
                 <ContentHider
                   style={styles.contentHider}
-                  moderation={moderation.embed}>
+                  moderation={moderation.embed}
+                  moderationDecisions={moderation.decisions}
+                  ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
+                  ignoreQuoteDecisions>
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation.embed}
+                    moderationDecisions={moderation.decisions}
                   />
                 </ContentHider>
               )}
@@ -583,7 +630,7 @@ function PostOuterWrapper({
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const styles = useStyles()
-  if (treeView && depth > 1) {
+  if (treeView && depth > 0) {
     return (
       <View
         style={[
@@ -592,9 +639,8 @@ function PostOuterWrapper({
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingLeft: 20,
+            paddingHorizontal: isMobile ? 10 : 6,
             borderTopWidth: depth === 1 ? 1 : 0,
-            paddingTop: depth === 1 ? 8 : 0,
           },
         ]}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
@@ -603,8 +649,8 @@ function PostOuterWrapper({
             style={{
               borderLeftWidth: 2,
               borderLeftColor: pal.colors.border,
-              marginLeft: n === 0 ? 14 : isMobile ? 6 : 14,
-              paddingLeft: n === 0 ? 18 : isMobile ? 6 : 12,
+              marginLeft: isMobile ? 6 : 12,
+              paddingLeft: isMobile ? 6 : 8,
             }}
           />
         ))}
@@ -685,7 +731,7 @@ const useStyles = () => {
       paddingBottom: 2,
     },
     metaExpandedLine1: {
-      paddingTop: 5,
+      paddingTop: 0,
       paddingBottom: 0,
     },
     metaItem: {

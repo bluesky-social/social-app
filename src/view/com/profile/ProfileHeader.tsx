@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 import {
   AppBskyActorDefs,
   ProfileModeration,
@@ -15,7 +16,7 @@ import {
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {BlurView} from '../util/BlurView'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -32,6 +33,7 @@ import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
+  RQKEY as profileQueryKey,
   useProfileMuteMutationQueue,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -51,6 +53,8 @@ import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
+import {useRequireAuth} from '#/state/session'
+import {LabelInfo} from '../util/moderation/LabelInfo'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
@@ -113,7 +117,8 @@ let ProfileHeaderLoaded = ({
 }: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
+  const requireAuth = useRequireAuth()
   const {_} = useLingui()
   const {openModal} = useModalControls()
   const {openLightbox} = useLightboxControls()
@@ -132,6 +137,13 @@ let ProfileHeaderLoaded = ({
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const queryClient = useQueryClient()
+
+  const invalidateProfileQuery = React.useCallback(() => {
+    queryClient.invalidateQueries({
+      queryKey: profileQueryKey(profile.did),
+    })
+  }, [queryClient, profile.did])
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -150,38 +162,42 @@ let ProfileHeaderLoaded = ({
     }
   }, [openLightbox, profile, moderation])
 
-  const onPressFollow = async () => {
-    try {
-      track('ProfileHeader:FollowButtonClicked')
-      await queueFollow()
-      Toast.show(
-        `Following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-        )}`,
-      )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        logger.error('Failed to follow', {error: String(e)})
-        Toast.show(`There was an issue! ${e.toString()}`)
+  const onPressFollow = () => {
+    requireAuth(async () => {
+      try {
+        track('ProfileHeader:FollowButtonClicked')
+        await queueFollow()
+        Toast.show(
+          `Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        )
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to follow', {error: String(e)})
+          Toast.show(`There was an issue! ${e.toString()}`)
+        }
       }
-    }
+    })
   }
 
-  const onPressUnfollow = async () => {
-    try {
-      track('ProfileHeader:UnfollowButtonClicked')
-      await queueUnfollow()
-      Toast.show(
-        `No longer following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-        )}`,
-      )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        logger.error('Failed to unfollow', {error: String(e)})
-        Toast.show(`There was an issue! ${e.toString()}`)
+  const onPressUnfollow = () => {
+    requireAuth(async () => {
+      try {
+        track('ProfileHeader:UnfollowButtonClicked')
+        await queueUnfollow()
+        Toast.show(
+          `No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        )
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to unfollow', {error: String(e)})
+          Toast.show(`There was an issue! ${e.toString()}`)
+        }
       }
-    }
+    })
   }
 
   const onPressEditProfile = React.useCallback(() => {
@@ -202,9 +218,12 @@ let ProfileHeaderLoaded = ({
     openModal({
       name: 'user-add-remove-lists',
       subject: profile.did,
+      handle: profile.handle,
       displayName: profile.displayName || profile.handle,
+      onAdd: invalidateProfileQuery,
+      onRemove: invalidateProfileQuery,
     })
-  }, [track, profile, openModal])
+  }, [track, profile, openModal, invalidateProfileQuery])
 
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
@@ -292,7 +311,7 @@ let ProfileHeaderLoaded = ({
     let items: DropdownItem[] = [
       {
         testID: 'profileHeaderDropdownShareBtn',
-        label: _(msg`Share`),
+        label: isWeb ? _(msg`Copy link to profile`) : _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -303,73 +322,79 @@ let ProfileHeaderLoaded = ({
         },
       },
     ]
-    items.push({label: 'separator'})
-    items.push({
-      testID: 'profileHeaderDropdownListAddRemoveBtn',
-      label: _(msg`Add to Lists`),
-      onPress: onPressAddRemoveLists,
-      icon: {
-        ios: {
-          name: 'list.bullet',
-        },
-        android: 'ic_menu_add',
-        web: 'list',
-      },
-    })
-    if (!isMe) {
-      if (!profile.viewer?.blocking) {
-        items.push({
-          testID: 'profileHeaderDropdownMuteBtn',
-          label: profile.viewer?.muted
-            ? _(msg`Unmute Account`)
-            : _(msg`Mute Account`),
-          onPress: profile.viewer?.muted
-            ? onPressUnmuteAccount
-            : onPressMuteAccount,
-          icon: {
-            ios: {
-              name: 'speaker.slash',
-            },
-            android: 'ic_lock_silent_mode',
-            web: 'comment-slash',
-          },
-        })
-      }
-      if (!profile.viewer?.blockingByList) {
-        items.push({
-          testID: 'profileHeaderDropdownBlockBtn',
-          label: profile.viewer?.blocking
-            ? _(msg`Unblock Account`)
-            : _(msg`Block Account`),
-          onPress: profile.viewer?.blocking
-            ? onPressUnblockAccount
-            : onPressBlockAccount,
-          icon: {
-            ios: {
-              name: 'person.fill.xmark',
-            },
-            android: 'ic_menu_close_clear_cancel',
-            web: 'user-slash',
-          },
-        })
-      }
+    if (hasSession) {
+      items.push({label: 'separator'})
       items.push({
-        testID: 'profileHeaderDropdownReportBtn',
-        label: _(msg`Report Account`),
-        onPress: onPressReportAccount,
+        testID: 'profileHeaderDropdownListAddRemoveBtn',
+        label: _(msg`Add to Lists`),
+        onPress: onPressAddRemoveLists,
         icon: {
           ios: {
-            name: 'exclamationmark.triangle',
+            name: 'list.bullet',
           },
-          android: 'ic_menu_report_image',
-          web: 'circle-exclamation',
+          android: 'ic_menu_add',
+          web: 'list',
         },
       })
+      if (!isMe) {
+        if (!profile.viewer?.blocking) {
+          if (!profile.viewer?.mutedByList) {
+            items.push({
+              testID: 'profileHeaderDropdownMuteBtn',
+              label: profile.viewer?.muted
+                ? _(msg`Unmute Account`)
+                : _(msg`Mute Account`),
+              onPress: profile.viewer?.muted
+                ? onPressUnmuteAccount
+                : onPressMuteAccount,
+              icon: {
+                ios: {
+                  name: 'speaker.slash',
+                },
+                android: 'ic_lock_silent_mode',
+                web: 'comment-slash',
+              },
+            })
+          }
+        }
+        if (!profile.viewer?.blockingByList) {
+          items.push({
+            testID: 'profileHeaderDropdownBlockBtn',
+            label: profile.viewer?.blocking
+              ? _(msg`Unblock Account`)
+              : _(msg`Block Account`),
+            onPress: profile.viewer?.blocking
+              ? onPressUnblockAccount
+              : onPressBlockAccount,
+            icon: {
+              ios: {
+                name: 'person.fill.xmark',
+              },
+              android: 'ic_menu_close_clear_cancel',
+              web: 'user-slash',
+            },
+          })
+        }
+        items.push({
+          testID: 'profileHeaderDropdownReportBtn',
+          label: _(msg`Report Account`),
+          onPress: onPressReportAccount,
+          icon: {
+            ios: {
+              name: 'exclamationmark.triangle',
+            },
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
+          },
+        })
+      }
     }
     return items
   }, [
     isMe,
+    hasSession,
     profile.viewer?.muted,
+    profile.viewer?.mutedByList,
     profile.viewer?.blocking,
     profile.viewer?.blockingByList,
     onPressShare,
@@ -389,10 +414,12 @@ let ProfileHeaderLoaded = ({
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
-    <View style={pal.view}>
-      <UserBanner banner={profile.banner} moderation={moderation.avatar} />
-      <View style={styles.content}>
-        <View style={[styles.buttonsLine]}>
+    <View style={pal.view} pointerEvents="box-none">
+      <View pointerEvents="none">
+        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+      </View>
+      <View style={styles.content} pointerEvents="box-none">
+        <View style={[styles.buttonsLine]} pointerEvents="box-none">
           {isMe ? (
             <TouchableOpacity
               testID="profileHeaderEditProfileButton"
@@ -421,7 +448,7 @@ let ProfileHeaderLoaded = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {!isProfilePreview && (
+              {!isProfilePreview && hasSession && (
                 <TouchableOpacity
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
@@ -445,7 +472,7 @@ let ProfileHeaderLoaded = ({
                       pal.text,
                       {
                         color: showSuggestedFollows
-                          ? colors.white
+                          ? pal.textInverted.color
                           : pal.text.color,
                       },
                     ]}
@@ -502,7 +529,7 @@ let ProfileHeaderLoaded = ({
             </NativeDropdown>
           ) : undefined}
         </View>
-        <View>
+        <View pointerEvents="none">
           <Text
             testID="profileHeaderDisplayName"
             type="title-2xl"
@@ -513,7 +540,7 @@ let ProfileHeaderLoaded = ({
             )}
           </Text>
         </View>
-        <View style={styles.handleLine}>
+        <View style={styles.handleLine} pointerEvents="none">
           {profile.viewer?.followedBy && !blockHide ? (
             <View style={[styles.pill, pal.btn, s.mr5]}>
               <Text type="xs" style={[pal.text]}>
@@ -534,7 +561,7 @@ let ProfileHeaderLoaded = ({
         </View>
         {!blockHide && (
           <>
-            <View style={styles.metricsLine}>
+            <View style={styles.metricsLine} pointerEvents="box-none">
               <Link
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
@@ -581,23 +608,34 @@ let ProfileHeaderLoaded = ({
               </Text>
             </View>
             {descriptionRT && !moderation.profile.blur ? (
-              <RichText
-                testID="profileHeaderDescription"
-                style={[styles.description, pal.text]}
-                numberOfLines={15}
-                richText={descriptionRT}
-              />
+              <View pointerEvents="none">
+                <RichText
+                  testID="profileHeaderDescription"
+                  style={[styles.description, pal.text]}
+                  numberOfLines={15}
+                  richText={descriptionRT}
+                />
+              </View>
             ) : undefined}
           </>
         )}
         <ProfileHeaderAlerts moderation={moderation} />
+        {isMe && (
+          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
+        )}
       </View>
 
-      {!isProfilePreview && (
+      {!isProfilePreview && showSuggestedFollows && (
         <ProfileHeaderSuggestedFollows
           actorDid={profile.did}
-          active={showSuggestedFollows}
-          requestDismiss={() => setShowSuggestedFollows(!showSuggestedFollows)}
+          requestDismiss={() => {
+            if (showSuggestedFollows) {
+              setShowSuggestedFollows(false)
+            } else {
+              track('ProfileHeader:SuggestedFollowsOpened')
+              setShowSuggestedFollows(true)
+            }
+          }}
         />
       )}
 

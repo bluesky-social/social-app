@@ -1,211 +1,143 @@
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedRepost,
-  AppBskyFeedLike,
-  AppBskyNotificationListNotifications,
-  BskyAgent,
-} from '@atproto/api'
-import chunk from 'lodash.chunk'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
-import {getAgent} from '../../session'
-import {useModerationOpts} from '../preferences'
-import {shouldFilterNotif} from './util'
-import {useMutedThreads} from '#/state/muted-threads'
+/**
+ * NOTE
+ * The ./unread.ts API:
+ *
+ * - Provides a `checkUnread()` function to sync with the server,
+ * - Periodically calls `checkUnread()`, and
+ * - Caches the first page of notifications.
+ *
+ * IMPORTANT: This query uses ./unread.ts's cache as its first page,
+ * IMPORTANT: which means the cache-freshness of this query is driven by the unread API.
+ *
+ * Follow these rules:
+ *
+ * 1. Call `checkUnread()` if you want to fetch latest in the background.
+ * 2. Call `checkUnread({invalidate: true})` if you want latest to sync into this query's results immediately.
+ * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
+ */
 
-const GROUPABLE_REASONS = ['like', 'repost', 'follow']
+import {useEffect} from 'react'
+import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryKey,
+  useQueryClient,
+  QueryClient,
+} from '@tanstack/react-query'
+import {useModerationOpts} from '../preferences'
+import {useUnreadNotificationsApi} from './unread'
+import {fetchPage} from './util'
+import {FeedPage} from './types'
+import {useMutedThreads} from '#/state/muted-threads'
+import {STALE} from '..'
+import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
+
+export type {NotificationType, FeedNotification, FeedPage} from './types'
+
 const PAGE_SIZE = 30
-const MS_1HR = 1e3 * 60 * 60
-const MS_2DAY = MS_1HR * 48
 
 type RQPageParam = string | undefined
-type NotificationType =
-  | 'post-like'
-  | 'feedgen-like'
-  | 'repost'
-  | 'mention'
-  | 'reply'
-  | 'quote'
-  | 'follow'
-  | 'unknown'
 
 export function RQKEY() {
   return ['notification-feed']
 }
 
-export interface FeedNotification {
-  _reactKey: string
-  type: NotificationType
-  notification: AppBskyNotificationListNotifications.Notification
-  additional?: AppBskyNotificationListNotifications.Notification[]
-  subjectUri?: string
-  subject?: AppBskyFeedDefs.PostView
-}
-
-export interface FeedPage {
-  cursor: string | undefined
-  items: FeedNotification[]
-}
-
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+  const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
+  const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
 
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     FeedPage,
     Error,
     InfiniteData<FeedPage>,
     QueryKey,
     RQPageParam
   >({
+    staleTime: STALE.INFINITY,
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().listNotifications({
+      let page = await fetchPage({
         limit: PAGE_SIZE,
         cursor: pageParam,
+        queryClient,
+        moderationOpts,
+        threadMutes,
       })
 
-      // filter out notifs by mod rules
-      const notifs = res.data.notifications.filter(
-        notif => !shouldFilterNotif(notif, moderationOpts),
-      )
-
-      // group notifications which are essentially similar (follows, likes on a post)
-      let notifsGrouped = groupNotifications(notifs)
-
-      // we fetch subjects of notifications (usually posts) now instead of lazily
-      // in the UI to avoid relayouts
-      const subjects = await fetchSubjects(getAgent(), notifsGrouped)
-      for (const notif of notifsGrouped) {
-        if (notif.subjectUri) {
-          notif.subject = subjects.get(notif.subjectUri)
-        }
+      // if the first page has an unread, mark all read
+      if (!pageParam && page.items[0] && !page.items[0].notification.isRead) {
+        unreads.markAllRead()
       }
 
-      // apply thread muting
-      notifsGrouped = notifsGrouped.filter(
-        notif => !isThreadMuted(notif, threadMutes),
-      )
-
-      return {
-        cursor: res.data.cursor,
-        items: notifsGrouped,
-      }
+      return page
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+
+    let count = 0
+    let numEmpties = 0
+    for (const page of data?.pages || []) {
+      if (!page.items.length) {
+        numEmpties++
+      }
+      count += page.items.length
+    }
+
+    if (!isFetching && hasNextPage && count < PAGE_SIZE && numEmpties < 3) {
+      query.fetchNextPage()
+    }
+  }, [query])
+
+  return query
 }
 
-function groupNotifications(
-  notifs: AppBskyNotificationListNotifications.Notification[],
-): FeedNotification[] {
-  const groupedNotifs: FeedNotification[] = []
-  for (const notif of notifs) {
-    const ts = +new Date(notif.indexedAt)
-    let grouped = false
-    if (GROUPABLE_REASONS.includes(notif.reason)) {
-      for (const groupedNotif of groupedNotifs) {
-        const ts2 = +new Date(groupedNotif.notification.indexedAt)
-        if (
-          Math.abs(ts2 - ts) < MS_2DAY &&
-          notif.reason === groupedNotif.notification.reason &&
-          notif.reasonSubject === groupedNotif.notification.reasonSubject &&
-          notif.author.did !== groupedNotif.notification.author.did
-        ) {
-          groupedNotif.additional = groupedNotif.additional || []
-          groupedNotif.additional.push(notif)
-          grouped = true
-          break
+/**
+ * This helper is used by the post-thread placeholder function to
+ * find a post in the query-data cache
+ */
+export function findPostInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): AppBskyFeedDefs.PostView | undefined {
+  const generator = findAllPostsInQueryData(queryClient, uri)
+  const result = generator.next()
+  if (result.done) {
+    return undefined
+  } else {
+    return result.value
+  }
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, void> {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: ['notification-feed'],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.items) {
+        if (item.subject?.uri === uri) {
+          yield item.subject
+        }
+        const quotedPost = getEmbeddedPost(item.subject?.embed)
+        if (quotedPost?.uri === uri) {
+          yield embedViewRecordToPostView(quotedPost)
         }
       }
     }
-    if (!grouped) {
-      const type = toKnownType(notif)
-      groupedNotifs.push({
-        _reactKey: `notif-${notif.uri}`,
-        type,
-        notification: notif,
-        subjectUri: getSubjectUri(type, notif),
-      })
-    }
   }
-  return groupedNotifs
-}
-
-async function fetchSubjects(
-  agent: BskyAgent,
-  groupedNotifs: FeedNotification[],
-): Promise<Map<string, AppBskyFeedDefs.PostView>> {
-  const uris = new Set<string>()
-  for (const notif of groupedNotifs) {
-    if (notif.subjectUri) {
-      uris.add(notif.subjectUri)
-    }
-  }
-  const uriChunks = chunk(Array.from(uris), 25)
-  const postsChunks = await Promise.all(
-    uriChunks.map(uris =>
-      agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
-    ),
-  )
-  const map = new Map<string, AppBskyFeedDefs.PostView>()
-  for (const post of postsChunks.flat()) {
-    if (
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
-    ) {
-      map.set(post.uri, post)
-    }
-  }
-  return map
-}
-
-function toKnownType(
-  notif: AppBskyNotificationListNotifications.Notification,
-): NotificationType {
-  if (notif.reason === 'like') {
-    if (notif.reasonSubject?.includes('feed.generator')) {
-      return 'feedgen-like'
-    }
-    return 'post-like'
-  }
-  if (
-    notif.reason === 'repost' ||
-    notif.reason === 'mention' ||
-    notif.reason === 'reply' ||
-    notif.reason === 'quote' ||
-    notif.reason === 'follow'
-  ) {
-    return notif.reason as NotificationType
-  }
-  return 'unknown'
-}
-
-function getSubjectUri(
-  type: NotificationType,
-  notif: AppBskyNotificationListNotifications.Notification,
-): string | undefined {
-  if (type === 'reply' || type === 'quote' || type === 'mention') {
-    return notif.uri
-  } else if (type === 'post-like' || type === 'repost') {
-    if (
-      AppBskyFeedRepost.isRecord(notif.record) ||
-      AppBskyFeedLike.isRecord(notif.record)
-    ) {
-      return typeof notif.record.subject?.uri === 'string'
-        ? notif.record.subject?.uri
-        : undefined
-    }
-  }
-}
-
-function isThreadMuted(notif: FeedNotification, mutes: string[]): boolean {
-  if (!notif.subject) {
-    return false
-  }
-  const record = notif.subject.record as AppBskyFeedPost.Record // assured in fetchSubjects()
-  return mutes.includes(record.reply?.root.uri || notif.subject.uri)
 }

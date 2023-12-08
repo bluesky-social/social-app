@@ -16,6 +16,7 @@ import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   ModerationUI,
+  PostModeration,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -28,8 +29,9 @@ import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ListEmbed} from './ListEmbed'
-import {isCauseALabelOnUri} from 'lib/moderation'
+import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {ContentHider} from '../moderation/ContentHider'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -41,10 +43,12 @@ type Embed =
 export function PostEmbeds({
   embed,
   moderation,
+  moderationDecisions,
   style,
 }: {
   embed?: Embed
   moderation: ModerationUI
+  moderationDecisions?: PostModeration['decisions']
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -55,14 +59,17 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     const isModOnQuote =
-      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-      isCauseALabelOnUri(moderation.cause, embed.record.record.uri)
+      (AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+        isCauseALabelOnUri(moderation.cause, embed.record.record.uri)) ||
+      (moderationDecisions && isQuoteBlurred(moderationDecisions))
     const mediaModeration = isModOnQuote ? {} : moderation
     const quoteModeration = isModOnQuote ? moderation : {}
     return (
       <View style={[styles.stackContainer, style]}>
         <PostEmbeds embed={embed.media} moderation={mediaModeration} />
-        <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
+        <ContentHider moderation={quoteModeration}>
+          <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
+        </ContentHider>
       </View>
     )
   }

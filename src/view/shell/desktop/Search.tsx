@@ -42,6 +42,7 @@ export function SearchResultCard({
 
   return (
     <Link
+      testID={`searchAutoCompleteResult-${profile.handle}`}
       href={makeProfileLink(profile)}
       title={profile.handle}
       asAnchor

@@ -2,9 +2,13 @@ import {useMemo} from 'react'
 import {FeedTuner} from '#/lib/api/feed-manip'
 import {FeedDescriptor} from '../queries/post-feed'
 import {useLanguagePrefs} from './languages'
+import {usePreferencesQuery} from '../queries/preferences'
+import {useSession} from '../session'
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
   const langPrefs = useLanguagePrefs()
+  const {data: preferences} = usePreferencesQuery()
+  const {currentAccount} = useSession()
 
   return useMemo(() => {
     if (feedDesc.startsWith('feedgen')) {
@@ -19,30 +23,30 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
     if (feedDesc === 'home' || feedDesc === 'following') {
       const feedTuners = []
 
-      if (false /*TODOthis.homeFeed.hideReposts*/) {
+      if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
       } else {
         feedTuners.push(FeedTuner.dedupReposts)
       }
 
-      if (true /*TODOthis.homeFeed.hideReplies*/) {
+      if (preferences?.feedViewPrefs.hideReplies) {
         feedTuners.push(FeedTuner.removeReplies)
-      } /* TODO else {
+      } else {
         feedTuners.push(
           FeedTuner.thresholdRepliesOnly({
-            userDid: this.rootStore.session.data?.did || '',
-            minLikes: this.homeFeed.hideRepliesByLikeCount,
-            followedOnly: !!this.homeFeed.hideRepliesByUnfollowed,
+            userDid: currentAccount?.did || '',
+            minLikes: preferences?.feedViewPrefs.hideRepliesByLikeCount || 0,
+            followedOnly: !!preferences?.feedViewPrefs.hideRepliesByUnfollowed,
           }),
         )
-      }*/
+      }
 
-      if (false /*TODOthis.homeFeed.hideQuotePosts*/) {
+      if (preferences?.feedViewPrefs.hideQuotePosts) {
         feedTuners.push(FeedTuner.removeQuotePosts)
       }
 
       return feedTuners
     }
     return []
-  }, [feedDesc, langPrefs])
+  }, [feedDesc, currentAccount, preferences, langPrefs])
 }

@@ -1,5 +1,7 @@
 /* eslint-env detox/detox */
 
+import {describe, beforeAll, it} from '@jest/globals'
+import {expect} from 'detox'
 import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
 
 describe('Mod lists', () => {
@@ -11,7 +13,6 @@ describe('Mod lists', () => {
   })
 
   it('Login and view my modlists', async () => {
-    await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
     await element(by.id('e2eGotoModeration')).tap()
     await element(by.id('moderationlistsBtn')).tap()
@@ -31,7 +32,7 @@ describe('Mod lists', () => {
 
   it('Edit display name and description via the edit modlist modal', async () => {
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editNameInput')).clearText()
     await element(by.id('editNameInput')).typeText('Bad Ppl')
@@ -49,7 +50,7 @@ describe('Mod lists', () => {
 
   it('Remove description via the edit modlist modal', async () => {
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('editDescriptionInput')).clearText()
     await element(by.id('saveBtn')).tap()
@@ -64,7 +65,7 @@ describe('Mod lists', () => {
   it('Set avi via the edit modlist modal', async () => {
     await expect(element(by.id('userAvatarFallback'))).toExist()
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
     await element(by.text('Library')).tap()
@@ -81,7 +82,7 @@ describe('Mod lists', () => {
   it('Remove avi via the edit modlist modal', async () => {
     await expect(element(by.id('userAvatarImage'))).toExist()
     await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit List Details')).tap()
+    await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
     await element(by.text('Remove')).tap()
@@ -131,15 +132,15 @@ describe('Mod lists', () => {
     await expect(element(by.id('user-warn-posts.test'))).toBeVisible()
     await element(by.id('user-warn-posts.test-editBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Bad Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-warn-posts.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
   it('Shows the modlist on my profile', async () => {
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-4')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-5')).tap()
     await element(by.id('list-Bad Ppl')).tap()
   })
 
@@ -152,15 +153,15 @@ describe('Mod lists', () => {
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Bad Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
 
     await element(by.id('profileHeaderDropdownBtn')).tap()
     await element(by.text('Add to Lists')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).toBeVisible()
-    await element(by.id('toggleBtn-Bad Ppl')).tap()
-    await element(by.id('saveBtn')).tap()
+    await element(by.id('user-bob.test-addBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await expect(element(by.id('userAddRemoveListsModal'))).not.toBeVisible()
   })
 
@@ -171,8 +172,8 @@ describe('Mod lists', () => {
     await element(by.id('bottomBarSearchBtn')).tap()
     await element(by.id('searchTextInput')).typeText('alice')
     await element(by.id('searchAutoCompleteResult-alice.test')).tap()
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-3')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-3')).tap()
     await element(by.id('list-Bad Ppl')).tap()
     await element(by.id('headerDropdownBtn')).tap()
     await element(by.text('Report List')).tap()

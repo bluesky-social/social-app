@@ -11,31 +11,31 @@ export const useAnimatedScrollHandler: typeof useAnimatedScrollHandler_BUGGY = (
   })
   return useAnimatedScrollHandler_BUGGY(
     {
-      onBeginDrag(e) {
+      onBeginDrag(e, ctx) {
         if (typeof ref.current !== 'function' && ref.current.onBeginDrag) {
-          ref.current.onBeginDrag(e)
+          ref.current.onBeginDrag(e, ctx)
         }
       },
-      onEndDrag(e) {
+      onEndDrag(e, ctx) {
         if (typeof ref.current !== 'function' && ref.current.onEndDrag) {
-          ref.current.onEndDrag(e)
+          ref.current.onEndDrag(e, ctx)
         }
       },
-      onMomentumBegin(e) {
+      onMomentumBegin(e, ctx) {
         if (typeof ref.current !== 'function' && ref.current.onMomentumBegin) {
-          ref.current.onMomentumBegin(e)
+          ref.current.onMomentumBegin(e, ctx)
         }
       },
-      onMomentumEnd(e) {
+      onMomentumEnd(e, ctx) {
         if (typeof ref.current !== 'function' && ref.current.onMomentumEnd) {
-          ref.current.onMomentumEnd(e)
+          ref.current.onMomentumEnd(e, ctx)
         }
       },
-      onScroll(e) {
+      onScroll(e, ctx) {
         if (typeof ref.current === 'function') {
-          ref.current(e)
+          ref.current(e, ctx)
         } else if (ref.current.onScroll) {
-          ref.current.onScroll(e)
+          ref.current.onScroll(e, ctx)
         }
       },
     },

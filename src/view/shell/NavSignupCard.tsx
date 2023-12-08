@@ -11,7 +11,7 @@ import {Button} from '#/view/com/util/forms/Button'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 
-export function NavSignupCard() {
+let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -59,3 +59,5 @@ export function NavSignupCard() {
     </View>
   )
 }
+NavSignupCard = React.memo(NavSignupCard)
+export {NavSignupCard}

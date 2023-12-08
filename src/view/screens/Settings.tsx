@@ -10,17 +10,12 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  useFocusEffect,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
@@ -37,9 +32,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 import {HandIcon, HashtagIcon} from 'lib/icons'
-import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
@@ -75,6 +68,8 @@ import {STATUS_PAGE_URL} from 'lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -141,7 +136,7 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
-export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
+export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
   const colorMode = useColorMode()
   const setColorMode = useSetColorMode()
@@ -156,13 +151,14 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
-  const {clearCurrentAccount} = useSessionApi()
   const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
     getAgent(),
   )
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeAllActiveElements = useCloseAllActiveElements()
 
   const primaryBg = useCustomPalette<ViewStyle>({
     light: {backgroundColor: colors.blue0},
@@ -191,10 +187,9 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
 
   const onPressAddAccount = React.useCallback(() => {
     track('Settings:AddAccountButtonClicked')
-    navigation.navigate('HomeTab')
-    navigation.dispatch(StackActions.popToTop())
-    clearCurrentAccount()
-  }, [track, navigation, clearCurrentAccount])
+    setShowLoggedOut(true)
+    closeAllActiveElements()
+  }, [track, setShowLoggedOut, closeAllActiveElements])
 
   const onPressChangeHandle = React.useCallback(() => {
     track('Settings:ChangeHandleButtonClicked')
@@ -304,7 +299,7 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
                 </>
               )}
               <Text type="lg" style={pal.text}>
-                {currentAccount.email}{' '}
+                {currentAccount.email || '(no email)'}{' '}
               </Text>
               <Link onPress={() => openModal({name: 'change-email'})}>
                 <Text type="lg" style={pal.link}>
@@ -386,7 +381,8 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Invite`)}
-          accessibilityHint="Opens invite code list">
+          accessibilityHint="Opens invite code list"
+          disabled={invites?.disabled}>
           <View
             style={[
               styles.iconContainer,
@@ -402,8 +398,16 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
             />
           </View>
           <Text type="lg" style={invitesAvailable > 0 ? pal.link : pal.text}>
-            {formatCount(invitesAvailable)} invite{' '}
-            {pluralize(invitesAvailable, 'code')} available
+            {invites?.disabled ? (
+              <Trans>
+                Your invite codes are hidden when logged in using an App
+                Password
+              </Trans>
+            ) : invitesAvailable === 1 ? (
+              <Trans>{invitesAvailable} invite code available</Trans>
+            ) : (
+              <Trans>{invitesAvailable} invite codes available</Trans>
+            )}
           </Text>
         </TouchableOpacity>
 
@@ -731,7 +735,7 @@ export const SettingsScreen = withAuthRequired(function Settings({}: Props) {
       </ScrollView>
     </View>
   )
-})
+}
 
 function EmailConfirmationNotice() {
   const pal = usePalette('default')

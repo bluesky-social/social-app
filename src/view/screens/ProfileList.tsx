@@ -12,7 +12,6 @@ import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
@@ -55,6 +54,15 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {isNative, isWeb} from '#/platform/detection'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {
+  usePreferencesQuery,
+  usePinFeedMutation,
+  useUnpinFeedMutation,
+} from '#/state/queries/preferences'
+import {logger} from '#/logger'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -64,42 +72,40 @@ interface SectionRef {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
-export const ProfileListScreen = withAuthRequired(
-  function ProfileListScreenImpl(props: Props) {
-    const {name: handleOrDid, rkey} = props.route.params
-    const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
-      AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
-    )
-    const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
+export function ProfileListScreen(props: Props) {
+  const {name: handleOrDid, rkey} = props.route.params
+  const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
+    AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+  )
+  const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
 
-    if (resolveError) {
-      return (
-        <CenteredView>
-          <ErrorScreen
-            error={`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
-          />
-        </CenteredView>
-      )
-    }
-    if (listError) {
-      return (
-        <CenteredView>
-          <ErrorScreen error={cleanError(listError)} />
-        </CenteredView>
-      )
-    }
-
-    return resolvedUri && list ? (
-      <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
-    ) : (
+  if (resolveError) {
+    return (
       <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
+        <ErrorScreen
+          error={`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
+        />
       </CenteredView>
     )
-  },
-)
+  }
+  if (listError) {
+    return (
+      <CenteredView>
+        <ErrorScreen error={cleanError(listError)} />
+      </CenteredView>
+    )
+  }
+
+  return resolvedUri && list ? (
+    <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
+  ) : (
+    <CenteredView>
+      <View style={s.p20}>
+        <ActivityIndicator size="large" />
+      </View>
+    </CenteredView>
+  )
+}
 
 function ProfileListScreenLoaded({
   route,
@@ -130,10 +136,7 @@ function ProfileListScreenLoaded({
       list,
       onChange() {
         if (isCurateList) {
-          queryClient.invalidateQueries({
-            // TODO(eric) should construct these strings with a fn too
-            queryKey: FEED_RQKEY(`list|${list.uri}`),
-          })
+          truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`))
         }
       },
     })
@@ -162,7 +165,13 @@ function ProfileListScreenLoaded({
           isHeaderReady={true}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          {({
+            onScroll,
+            headerHeight,
+            isScrolledDown,
+            scrollElRef,
+            isFocused,
+          }) => (
             <FeedSection
               ref={feedSectionRef}
               feed={`list|${uri}`}
@@ -172,6 +181,7 @@ function ProfileListScreenLoaded({
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
+              isFocused={isFocused}
             />
           )}
           {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
@@ -250,19 +260,32 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const listDeleteMutation = useListDeleteMutation()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
-  const isPinned = false // TODO
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
+  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
+  const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
+    useUnpinFeedMutation()
+  const isPending = isPinPending || isUnpinPending
+  const {data: preferences} = usePreferencesQuery()
+  const {track} = useAnalytics()
 
-  const onTogglePinned = useCallback(async () => {
+  const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
+
+  const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
-    // TODO
-    // list.togglePin().catch(e => {
-    //   Toast.show('There was an issue contacting the server')
-    //   logger.error('Failed to toggle pinned list', {error: e})
-    // })
-  }, [])
+
+    try {
+      if (isPinned) {
+        await unpinFeed({uri: list.uri})
+      } else {
+        await pinFeed({uri: list.uri})
+      }
+    } catch (e) {
+      Toast.show('There was an issue contacting the server')
+      logger.error('Failed to toggle pinned feed', {error: e})
+    }
+  }, [list.uri, isPinned, pinFeed, unpinFeed])
 
   const onSubscribeMute = useCallback(() => {
     openModal({
@@ -276,6 +299,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         try {
           await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
           Toast.show('List muted')
+          track('Lists:Mute')
         } catch {
           Toast.show(
             'There was an issue. Please check your internet connection and try again.',
@@ -286,18 +310,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         closeModal()
       },
     })
-  }, [openModal, closeModal, list, listMuteMutation, _])
+  }, [openModal, closeModal, list, listMuteMutation, track, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
       Toast.show('List unmuted')
+      track('Lists:Unmute')
     } catch {
       Toast.show(
         'There was an issue. Please check your internet connection and try again.',
       )
     }
-  }, [list, listMuteMutation])
+  }, [list, listMuteMutation, track])
 
   const onSubscribeBlock = useCallback(() => {
     openModal({
@@ -311,6 +336,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         try {
           await listBlockMutation.mutateAsync({uri: list.uri, block: true})
           Toast.show('List blocked')
+          track('Lists:Block')
         } catch {
           Toast.show(
             'There was an issue. Please check your internet connection and try again.',
@@ -321,18 +347,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         closeModal()
       },
     })
-  }, [openModal, closeModal, list, listBlockMutation, _])
+  }, [openModal, closeModal, list, listBlockMutation, track, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
       Toast.show('List unblocked')
+      track('Lists:Unblock')
     } catch {
       Toast.show(
         'There was an issue. Please check your internet connection and try again.',
       )
     }
-  }, [list, listBlockMutation])
+  }, [list, listBlockMutation, track])
 
   const onPressEdit = useCallback(() => {
     openModal({
@@ -349,6 +376,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       async onPressConfirm() {
         await listDeleteMutation.mutateAsync({uri: list.uri})
         Toast.show('List deleted')
+        track('Lists:Delete')
         if (navigation.canGoBack()) {
           navigation.goBack()
         } else {
@@ -356,7 +384,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         }
       },
     })
-  }, [openModal, list, listDeleteMutation, navigation, _])
+  }, [openModal, list, listDeleteMutation, navigation, track, _])
 
   const onPressReport = useCallback(() => {
     openModal({
@@ -369,13 +397,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
     shareUrl(url)
-  }, [list, rkey])
+    track('Lists:Share')
+  }, [list, rkey, track])
 
   const dropdownItems: DropdownItem[] = useMemo(() => {
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
-        label: _(msg`Share`),
+        label: isWeb ? _(msg`Copy link to list`) : _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -427,8 +456,75 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
+    if (isModList && isPinned) {
+      items.push({label: 'separator'})
+      items.push({
+        testID: 'listHeaderDropdownUnpinBtn',
+        label: _(msg`Unpin moderation list`),
+        onPress: isPending ? undefined : () => unpinFeed({uri: list.uri}),
+        icon: {
+          ios: {
+            name: 'pin',
+          },
+          android: '',
+          web: 'thumbtack',
+        },
+      })
+    }
+    if (isCurateList) {
+      items.push({label: 'separator'})
+
+      if (!isBlocking) {
+        items.push({
+          testID: 'listHeaderDropdownMuteBtn',
+          label: isMuting ? _(msg`Un-mute list`) : _(msg`Mute list`),
+          onPress: isMuting ? onUnsubscribeMute : onSubscribeMute,
+          icon: {
+            ios: {
+              name: isMuting ? 'eye' : 'eye.slash',
+            },
+            android: '',
+            web: isMuting ? 'eye' : ['far', 'eye-slash'],
+          },
+        })
+      }
+
+      if (!isMuting) {
+        items.push({
+          testID: 'listHeaderDropdownBlockBtn',
+          label: isBlocking ? _(msg`Un-block list`) : _(msg`Block list`),
+          onPress: isBlocking ? onUnsubscribeBlock : onSubscribeBlock,
+          icon: {
+            ios: {
+              name: 'person.fill.xmark',
+            },
+            android: '',
+            web: 'user-slash',
+          },
+        })
+      }
+    }
     return items
-  }, [isOwner, onPressShare, onPressEdit, onPressDelete, onPressReport, _])
+  }, [
+    isOwner,
+    onPressShare,
+    onPressEdit,
+    onPressDelete,
+    onPressReport,
+    _,
+    isModList,
+    isPinned,
+    unpinFeed,
+    isPending,
+    list.uri,
+    isCurateList,
+    isMuting,
+    isBlocking,
+    onUnsubscribeMute,
+    onSubscribeMute,
+    onUnsubscribeBlock,
+    onSubscribeBlock,
+  ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
@@ -469,10 +565,11 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       avatarType="list">
       {isCurateList || isPinned ? (
         <Button
-          testID={list.isPinned ? 'unpinBtn' : 'pinBtn'}
-          type={list.isPinned ? 'default' : 'inverted'}
-          label={list.isPinned ? 'Unpin' : 'Pin to home'}
+          testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+          type={isPinned ? 'default' : 'inverted'}
+          label={isPinned ? 'Unpin' : 'Pin to home'}
           onPress={onTogglePinned}
+          disabled={isPending}
         />
       ) : isModList ? (
         isBlocking ? (
@@ -522,18 +619,22 @@ interface FeedSectionProps {
   headerHeight: number
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown},
+    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown, isFocused},
     ref,
   ) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
 
     const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
+      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({
@@ -548,6 +649,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       <View>
         <Feed
           testID="listFeed"
+          enabled={isFocused}
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}
@@ -601,7 +703,10 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     )
 
     const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
     }, [scrollElRef, headerHeight])
 
     React.useImperativeHandle(ref, () => ({

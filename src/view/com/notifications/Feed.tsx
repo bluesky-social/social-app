@@ -35,31 +35,18 @@ export function Feed({
   const [isPTRing, setIsPTRing] = React.useState(false)
 
   const moderationOpts = useModerationOpts()
-  const {markAllRead} = useUnreadNotificationsApi()
+  const {checkUnread} = useUnreadNotificationsApi()
   const {
     data,
-    isLoading,
     isFetching,
     isFetched,
     isError,
     error,
-    refetch,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
-  const firstItem = data?.pages[0]?.items[0]
-
-  // mark all read on fresh data
-  React.useEffect(() => {
-    let cleanup
-    if (firstItem) {
-      const to = setTimeout(() => markAllRead(), 250)
-      cleanup = () => clearTimeout(to)
-    }
-    return cleanup
-  }, [firstItem, markAllRead])
 
   const items = React.useMemo(() => {
     let arr: any[] = []
@@ -83,7 +70,7 @@ export function Feed({
   const onRefresh = React.useCallback(async () => {
     try {
       setIsPTRing(true)
-      await refetch()
+      await checkUnread({invalidate: true})
     } catch (err) {
       logger.error('Failed to refresh notifications feed', {
         error: err,
@@ -91,7 +78,7 @@ export function Feed({
     } finally {
       setIsPTRing(false)
     }
-  }, [refetch, setIsPTRing])
+  }, [checkUnread, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -136,21 +123,6 @@ export function Feed({
     [onPressRetryLoadMore, moderationOpts],
   )
 
-  const showHeaderSpinner = !isPTRing && isFetching && !isLoading
-  const FeedHeader = React.useCallback(
-    () => (
-      <View>
-        {ListHeaderComponent ? <ListHeaderComponent /> : null}
-        {showHeaderSpinner ? (
-          <View style={{padding: 10}}>
-            <ActivityIndicator />
-          </View>
-        ) : null}
-      </View>
-    ),
-    [ListHeaderComponent, showHeaderSpinner],
-  )
-
   const FeedFooter = React.useCallback(
     () =>
       isFetchingNextPage ? (
@@ -180,7 +152,7 @@ export function Feed({
         data={items}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
-        ListHeaderComponent={FeedHeader}
+        ListHeaderComponent={ListHeaderComponent}
         ListFooterComponent={FeedFooter}
         refreshControl={
           <RefreshControl

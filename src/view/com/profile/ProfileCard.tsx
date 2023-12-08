@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   outer: {
     borderTopWidth: 1,
     paddingHorizontal: 6,
+    paddingVertical: 4,
   },
   outerNoBorder: {
     borderTopWidth: 0,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   layoutAvi: {
-    alignSelf: 'baseline',
+    alignSelf: 'flex-start',
     width: 54,
     paddingLeft: 4,
     paddingTop: 10,

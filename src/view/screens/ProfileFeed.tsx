@@ -16,7 +16,6 @@ import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {colors, s} from 'lib/styles'
 import {FeedDescriptor} from '#/state/queries/post-feed'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
@@ -48,7 +47,11 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
+import {
+  useFeedSourceInfoQuery,
+  FeedSourceFeedInfo,
+  useIsFeedPublicQuery,
+} from '#/state/queries/feed'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {
   UsePreferencesQueryResponse,
@@ -61,6 +64,8 @@ import {
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {useComposerControls} from '#/state/shell/composer'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {isNative} from '#/platform/detection'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -69,76 +74,73 @@ interface SectionRef {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
-export const ProfileFeedScreen = withAuthRequired(
-  function ProfileFeedScreenImpl(props: Props) {
-    const {rkey, name: handleOrDid} = props.route.params
+export function ProfileFeedScreen(props: Props) {
+  const {rkey, name: handleOrDid} = props.route.params
 
-    const pal = usePalette('default')
-    const {_} = useLingui()
-    const navigation = useNavigation<NavigationProp>()
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
 
-    const uri = useMemo(
-      () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
-      [rkey, handleOrDid],
-    )
-    const {error, data: resolvedUri} = useResolveUriQuery(uri)
+  const uri = useMemo(
+    () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
+    [rkey, handleOrDid],
+  )
+  const {error, data: resolvedUri} = useResolveUriQuery(uri)
 
-    const onPressBack = React.useCallback(() => {
-      if (navigation.canGoBack()) {
-        navigation.goBack()
-      } else {
-        navigation.navigate('Home')
-      }
-    }, [navigation])
-
-    if (error) {
-      return (
-        <CenteredView>
-          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-            <Text type="title-lg" style={[pal.text, s.mb10]}>
-              <Trans>Could not load feed</Trans>
-            </Text>
-            <Text type="md" style={[pal.text, s.mb20]}>
-              {error.toString()}
-            </Text>
-
-            <View style={{flexDirection: 'row'}}>
-              <Button
-                type="default"
-                accessibilityLabel={_(msg`Go Back`)}
-                accessibilityHint="Return to previous page"
-                onPress={onPressBack}
-                style={{flexShrink: 1}}>
-                <Text type="button" style={pal.text}>
-                  <Trans>Go Back</Trans>
-                </Text>
-              </Button>
-            </View>
-          </View>
-        </CenteredView>
-      )
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
     }
+  }, [navigation])
 
-    return resolvedUri ? (
-      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
-    ) : (
+  if (error) {
+    return (
       <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
+        <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+          <Text type="title-lg" style={[pal.text, s.mb10]}>
+            <Trans>Could not load feed</Trans>
+          </Text>
+          <Text type="md" style={[pal.text, s.mb20]}>
+            {error.toString()}
+          </Text>
+
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              type="default"
+              accessibilityLabel={_(msg`Go Back`)}
+              accessibilityHint="Return to previous page"
+              onPress={onPressBack}
+              style={{flexShrink: 1}}>
+              <Text type="button" style={pal.text}>
+                <Trans>Go Back</Trans>
+              </Text>
+            </Button>
+          </View>
         </View>
       </CenteredView>
     )
-  },
-  {
-    isPublic: true,
-  },
-)
+  }
+
+  return resolvedUri ? (
+    <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+  ) : (
+    <CenteredView>
+      <View style={s.p20}>
+        <ActivityIndicator size="large" />
+      </View>
+    </CenteredView>
+  )
+}
 
 function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   const {data: preferences} = usePreferencesQuery()
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
+  const {isLoading: isPublicStatusLoading, data: isPublicResponse} =
+    useIsFeedPublicQuery({uri: feedUri})
 
-  if (!preferences || !info) {
+  if (!preferences || !info || isPublicStatusLoading) {
     return (
       <CenteredView>
         <View style={s.p20}>
@@ -152,6 +154,7 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
     <ProfileFeedScreenInner
       preferences={preferences}
       feedInfo={info as FeedSourceFeedInfo}
+      isPublicResponse={isPublicResponse}
     />
   )
 }
@@ -159,9 +162,11 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
 export function ProfileFeedScreenInner({
   preferences,
   feedInfo,
+  isPublicResponse,
 }: {
   preferences: UsePreferencesQueryResponse
   feedInfo: FeedSourceFeedInfo
+  isPublicResponse: ReturnType<typeof useIsFeedPublicQuery>['data']
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
@@ -350,6 +355,7 @@ export function ProfileFeedScreenInner({
               style={styles.btn}
             />
             <Button
+              testID={isPinned ? 'unpinBtn' : 'pinBtn'}
               disabled={isPinPending || isUnpinPending}
               type={isPinned ? 'default' : 'inverted'}
               label={isPinned ? 'Unpin' : 'Pin to home'}
@@ -397,18 +403,25 @@ export function ProfileFeedScreenInner({
         isHeaderReady={true}
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
-          <FeedSection
-            ref={feedSectionRef}
-            feed={`feedgen|${feedInfo.uri}`}
-            onScroll={onScroll}
-            headerHeight={headerHeight}
-            isScrolledDown={isScrolledDown}
-            scrollElRef={
-              scrollElRef as React.MutableRefObject<FlatList<any> | null>
-            }
-          />
-        )}
+        {({onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused}) =>
+          isPublicResponse?.isPublic ? (
+            <FeedSection
+              ref={feedSectionRef}
+              feed={`feedgen|${feedInfo.uri}`}
+              onScroll={onScroll}
+              headerHeight={headerHeight}
+              isScrolledDown={isScrolledDown}
+              scrollElRef={
+                scrollElRef as React.MutableRefObject<FlatList<any> | null>
+              }
+              isFocused={isFocused}
+            />
+          ) : (
+            <CenteredView sideBorders style={[{paddingTop: headerHeight}]}>
+              <NonPublicFeedMessage rawError={isPublicResponse?.error} />
+            </CenteredView>
+          )
+        }
         {({onScroll, headerHeight, scrollElRef}) => (
           <AboutSection
             feedOwnerDid={feedInfo.creatorDid}
@@ -443,24 +456,67 @@ export function ProfileFeedScreenInner({
   )
 }
 
+function NonPublicFeedMessage({rawError}: {rawError?: Error}) {
+  const pal = usePalette('default')
+
+  return (
+    <View
+      style={[
+        pal.border,
+        {
+          padding: 18,
+          borderTopWidth: 1,
+          minHeight: Dimensions.get('window').height * 1.5,
+        },
+      ]}>
+      <View
+        style={[
+          pal.viewLight,
+          {
+            padding: 12,
+            borderRadius: 8,
+            gap: 12,
+          },
+        ]}>
+        <Text style={[pal.text]}>
+          <Trans>
+            Looks like this feed is only available to users with a Bluesky
+            account. Please sign up or sign in to view this feed!
+          </Trans>
+        </Text>
+
+        {rawError?.message && (
+          <Text style={pal.textLight}>
+            <Trans>Message from server</Trans>: {rawError.message}
+          </Text>
+        )}
+      </View>
+    </View>
+  )
+}
+
 interface FeedSectionProps {
   feed: FeedDescriptor
   onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef},
+    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused},
     ref,
   ) {
     const [hasNew, setHasNew] = React.useState(false)
     const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 
@@ -475,6 +531,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     return (
       <View>
         <Feed
+          enabled={isFocused}
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}
@@ -518,7 +575,7 @@ function AboutSection({
   const scrollHandler = useAnimatedScrollHandler(onScroll)
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
-
+  const {track} = useAnalytics()
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -533,9 +590,11 @@ function AboutSection({
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
+        track('CustomFeed:Unlike')
         setLikeUri('')
       } else {
         const res = await likeFeed({uri: feedInfo.uri, cid: feedInfo.cid})
+        track('CustomFeed:Like')
         setLikeUri(res.uri)
       }
     } catch (err) {
@@ -544,7 +603,7 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {error: err})
     }
-  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed])
+  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track])
 
   return (
     <ScrollView

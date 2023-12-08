@@ -132,6 +132,7 @@ export function ListMembers({
         name: 'user-add-remove-lists',
         subject: profile.did,
         displayName: profile.displayName || profile.handle,
+        handle: profile.handle,
       })
     },
     [openModal],
@@ -215,7 +216,7 @@ export function ListMembers({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item.uri || item._reactKey}
+        keyExtractor={(item: any) => item.subject?.did || item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={Footer}

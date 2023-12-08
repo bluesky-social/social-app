@@ -2,11 +2,9 @@ import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewSelectorHandle} from '../com/util/ViewSelector'
 import {CenteredView, FlatList} from '../com/util/Views'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
@@ -37,89 +35,88 @@ import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {useQueryClient} from '@tanstack/react-query'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset} from '#/state/events'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {Text} from '#/view/com/util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isNative} from '#/platform/detection'
 
 interface SectionRef {
   scrollToTop: () => void
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
-export const ProfileScreen = withAuthRequired(
-  function ProfileScreenImpl({route}: Props) {
-    const {currentAccount} = useSession()
-    const name =
-      route.params.name === 'me' ? currentAccount?.did : route.params.name
-    const moderationOpts = useModerationOpts()
-    const {
-      data: resolvedDid,
-      error: resolveError,
-      refetch: refetchDid,
-      isFetching: isFetchingDid,
-    } = useResolveDidQuery(name)
-    const {
-      data: profile,
-      error: profileError,
-      refetch: refetchProfile,
-      isFetching: isFetchingProfile,
-    } = useProfileQuery({
-      did: resolvedDid?.did,
-    })
+export function ProfileScreen({route}: Props) {
+  const {currentAccount} = useSession()
+  const name =
+    route.params.name === 'me' ? currentAccount?.did : route.params.name
+  const moderationOpts = useModerationOpts()
+  const {
+    data: resolvedDid,
+    error: resolveError,
+    refetch: refetchDid,
+    isInitialLoading: isInitialLoadingDid,
+  } = useResolveDidQuery(name)
+  const {
+    data: profile,
+    error: profileError,
+    refetch: refetchProfile,
+    isInitialLoading: isInitialLoadingProfile,
+  } = useProfileQuery({
+    did: resolvedDid,
+  })
 
-    const onPressTryAgain = React.useCallback(() => {
-      if (resolveError) {
-        refetchDid()
-      } else {
-        refetchProfile()
-      }
-    }, [resolveError, refetchDid, refetchProfile])
+  const onPressTryAgain = React.useCallback(() => {
+    if (resolveError) {
+      refetchDid()
+    } else {
+      refetchProfile()
+    }
+  }, [resolveError, refetchDid, refetchProfile])
 
-    if (isFetchingDid || isFetchingProfile || !moderationOpts) {
-      return (
-        <CenteredView>
-          <ProfileHeader
-            profile={null}
-            moderation={null}
-            isProfilePreview={true}
-          />
-        </CenteredView>
-      )
-    }
-    if (resolveError || profileError) {
-      return (
-        <CenteredView>
-          <ErrorScreen
-            testID="profileErrorScreen"
-            title="Oops!"
-            message={cleanError(resolveError || profileError)}
-            onPressTryAgain={onPressTryAgain}
-          />
-        </CenteredView>
-      )
-    }
-    if (profile && moderationOpts) {
-      return (
-        <ProfileScreenLoaded
-          profile={profile}
-          moderationOpts={moderationOpts}
-          hideBackButton={!!route.params.hideBackButton}
+  if (isInitialLoadingDid || isInitialLoadingProfile || !moderationOpts) {
+    return (
+      <CenteredView>
+        <ProfileHeader
+          profile={null}
+          moderation={null}
+          isProfilePreview={true}
         />
-      )
-    }
-    // should never happen
+      </CenteredView>
+    )
+  }
+  if (resolveError || profileError) {
     return (
       <CenteredView>
         <ErrorScreen
           testID="profileErrorScreen"
           title="Oops!"
-          message="Something went wrong and we're not sure what."
+          message={cleanError(resolveError || profileError)}
           onPressTryAgain={onPressTryAgain}
         />
       </CenteredView>
     )
-  },
-  {
-    isPublic: true,
-  },
-)
+  }
+  if (profile && moderationOpts) {
+    return (
+      <ProfileScreenLoaded
+        profile={profile}
+        moderationOpts={moderationOpts}
+        hideBackButton={!!route.params.hideBackButton}
+      />
+    )
+  }
+  // should never happen
+  return (
+    <CenteredView>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+      />
+    </CenteredView>
+  )
+}
 
 function ProfileScreenLoaded({
   profile: profileUnshadowed,
@@ -137,7 +134,6 @@ function ProfileScreenLoaded({
   const {screen, track} = useAnalytics()
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const viewSelectorRef = React.useRef<ViewSelectorHandle>(null)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
   const postsSectionRef = React.useRef<SectionRef>(null)
@@ -155,23 +151,27 @@ function ProfileScreenLoaded({
   )
 
   const isMe = profile.did === currentAccount?.did
+  const showRepliesTab = hasSession
   const showLikesTab = isMe
   const showFeedsTab = isMe || extraInfoQuery.data?.hasFeedgens
-  const showListsTab = isMe || extraInfoQuery.data?.hasLists
+  const showListsTab = hasSession && (isMe || extraInfoQuery.data?.hasLists)
   const sectionTitles = useMemo<string[]>(() => {
     return [
-      'Posts',
-      'Posts & Replies',
-      'Media',
-      showLikesTab ? 'Likes' : undefined,
-      showFeedsTab ? 'Feeds' : undefined,
-      showListsTab ? 'Lists' : undefined,
+      _(msg`Posts`),
+      showRepliesTab ? _(msg`Replies`) : undefined,
+      _(msg`Media`),
+      showLikesTab ? _(msg`Likes`) : undefined,
+      showFeedsTab ? _(msg`Feeds`) : undefined,
+      showListsTab ? _(msg`Lists`) : undefined,
     ].filter(Boolean) as string[]
-  }, [showLikesTab, showFeedsTab, showListsTab])
+  }, [showRepliesTab, showLikesTab, showFeedsTab, showListsTab, _])
 
   let nextIndex = 0
   const postsIndex = nextIndex++
-  const repliesIndex = nextIndex++
+  let repliesIndex: number | null = null
+  if (showRepliesTab) {
+    repliesIndex = nextIndex++
+  }
   const mediaIndex = nextIndex++
   let likesIndex: number | null = null
   if (showLikesTab) {
@@ -186,14 +186,33 @@ function ProfileScreenLoaded({
     listsIndex = nextIndex++
   }
 
+  const scrollSectionToTop = React.useCallback(
+    (index: number) => {
+      if (index === postsIndex) {
+        postsSectionRef.current?.scrollToTop()
+      } else if (index === repliesIndex) {
+        repliesSectionRef.current?.scrollToTop()
+      } else if (index === mediaIndex) {
+        mediaSectionRef.current?.scrollToTop()
+      } else if (index === likesIndex) {
+        likesSectionRef.current?.scrollToTop()
+      } else if (index === feedsIndex) {
+        feedsSectionRef.current?.scrollToTop()
+      } else if (index === listsIndex) {
+        listsSectionRef.current?.scrollToTop()
+      }
+    },
+    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+  )
+
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
       screen('Profile')
       return listenSoftReset(() => {
-        viewSelectorRef.current?.scrollToTop()
+        scrollSectionToTop(currentPage)
       })
-    }, [viewSelectorRef, setMinimalShellMode, screen]),
+    }, [setMinimalShellMode, screen, currentPage, scrollSectionToTop]),
   )
 
   useFocusEffect(
@@ -227,21 +246,9 @@ function ProfileScreenLoaded({
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {
-      if (index === postsIndex) {
-        postsSectionRef.current?.scrollToTop()
-      } else if (index === repliesIndex) {
-        repliesSectionRef.current?.scrollToTop()
-      } else if (index === mediaIndex) {
-        mediaSectionRef.current?.scrollToTop()
-      } else if (index === likesIndex) {
-        likesSectionRef.current?.scrollToTop()
-      } else if (index === feedsIndex) {
-        feedsSectionRef.current?.scrollToTop()
-      } else if (index === listsIndex) {
-        listsSectionRef.current?.scrollToTop()
-      }
+      scrollSectionToTop(index)
     },
-    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+    [scrollSectionToTop],
   )
 
   // rendering
@@ -264,6 +271,7 @@ function ProfileScreenLoaded({
       screenDescription="profile"
       moderation={moderation.account}>
       <PagerWithHeader
+        testID="profilePager"
         isHeaderReady={true}
         items={sectionTitles}
         onPageSelected={onPageSelected}
@@ -280,21 +288,31 @@ function ProfileScreenLoaded({
             scrollElRef={
               scrollElRef as React.MutableRefObject<FlatList<any> | null>
             }
+            ignoreFilterFor={profile.did}
           />
         )}
-        {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
-          <FeedSection
-            ref={repliesSectionRef}
-            feed={`author|${profile.did}|posts_with_replies`}
-            onScroll={onScroll}
-            headerHeight={headerHeight}
-            isFocused={isFocused}
-            isScrolledDown={isScrolledDown}
-            scrollElRef={
-              scrollElRef as React.MutableRefObject<FlatList<any> | null>
-            }
-          />
-        )}
+        {showRepliesTab
+          ? ({
+              onScroll,
+              headerHeight,
+              isFocused,
+              isScrolledDown,
+              scrollElRef,
+            }) => (
+              <FeedSection
+                ref={repliesSectionRef}
+                feed={`author|${profile.did}|posts_with_replies`}
+                onScroll={onScroll}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                isScrolledDown={isScrolledDown}
+                scrollElRef={
+                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
+                }
+                ignoreFilterFor={profile.did}
+              />
+            )
+          : null}
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={mediaSectionRef}
@@ -306,6 +324,7 @@ function ProfileScreenLoaded({
             scrollElRef={
               scrollElRef as React.MutableRefObject<FlatList<any> | null>
             }
+            ignoreFilterFor={profile.did}
           />
         )}
         {showLikesTab
@@ -326,6 +345,7 @@ function ProfileScreenLoaded({
                 scrollElRef={
                   scrollElRef as React.MutableRefObject<FlatList<any> | null>
                 }
+                ignoreFilterFor={profile.did}
               />
             )
           : null}
@@ -381,18 +401,30 @@ interface FeedSectionProps {
   isFocused: boolean
   isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  ignoreFilterFor?: string
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef},
+    {
+      feed,
+      onScroll,
+      headerHeight,
+      isFocused,
+      isScrolledDown,
+      scrollElRef,
+      ignoreFilterFor,
+    },
     ref,
   ) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
 
     const onScrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerHeight})
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
     React.useImperativeHandle(ref, () => ({
@@ -407,6 +439,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       <View>
         <Feed
           testID="postsFeed"
+          enabled={isFocused}
           feed={feed}
           pollInterval={30e3}
           scrollElRef={scrollElRef}
@@ -415,7 +448,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
-          enabled={isFocused}
+          renderEndOfFeed={ProfileEndOfFeed}
+          ignoreFilterFor={ignoreFilterFor}
         />
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
@@ -428,6 +462,18 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     )
   },
 )
+
+function ProfileEndOfFeed() {
+  const pal = usePalette('default')
+
+  return (
+    <View style={[pal.border, {paddingTop: 32, borderTopWidth: 1}]}>
+      <Text style={[pal.textLight, pal.border, {textAlign: 'center'}]}>
+        <Trans>End of feed</Trans>
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {SafeAreaView} from 'react-native'
+import {SafeAreaView, Platform} from 'react-native'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -23,7 +23,18 @@ export function Onboarding() {
   const skip = () => onboardingDispatch({type: 'skip'})
 
   return (
-    <SafeAreaView testID="onboardingView" style={[s.hContentRegion, pal.view]}>
+    <SafeAreaView
+      testID="onboardingView"
+      style={[
+        s.hContentRegion,
+        pal.view,
+        // @ts-ignore web only -esb
+        Platform.select({
+          web: {
+            height: '100vh',
+          },
+        }),
+      ]}>
       <ErrorBoundary>
         {onboardingState.step === 'Welcome' && (
           <Welcome skip={skip} next={next} />

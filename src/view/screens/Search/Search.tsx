@@ -24,7 +24,7 @@ import {
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {Text} from '#/view/com/util/text/Text'
-import {NotificationFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Post} from '#/view/com/post/Post'
 import {Pager} from '#/view/com/pager/Pager'
@@ -36,6 +36,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {useSession} from '#/state/session'
 import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
@@ -45,6 +46,7 @@ import {SearchResultCard} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {s} from '#/lib/styles'
 
 function Loader() {
   const pal = usePalette('default')
@@ -162,9 +164,9 @@ function SearchScreenSuggestedFollows() {
       contentContainerStyle={{paddingBottom: 1200}}
     />
   ) : (
-    <CenteredView
-      style={[pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]}>
-      <NotificationFeedLoadingPlaceholder />
+    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
+      <ProfileCardFeedLoadingPlaceholder />
+      <ProfileCardFeedLoadingPlaceholder />
     </CenteredView>
   )
 }
@@ -277,38 +279,9 @@ function SearchScreenPostResults({query}: {query: string}) {
 
 function SearchScreenUserResults({query}: {query: string}) {
   const {_} = useLingui()
-  const [isFetched, setIsFetched] = React.useState(false)
-  const [results, setResults] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
-  const search = useActorAutocompleteFn()
+  const {data: results, isFetched} = useActorSearch(query)
 
-  React.useEffect(() => {
-    async function getResults() {
-      try {
-        const searchResults = await search({query, limit: 30})
-
-        if (searchResults) {
-          setResults(searchResults)
-        }
-      } catch (e: any) {
-        logger.error(`SearchScreenUserResults: failed to get results`, {
-          error: e.toString(),
-        })
-      } finally {
-        setIsFetched(true)
-      }
-    }
-
-    if (query) {
-      getResults()
-    } else {
-      setResults([])
-      setIsFetched(false)
-    }
-  }, [query, search, setResults])
-
-  return isFetched ? (
+  return isFetched && results ? (
     <>
       {results.length ? (
         <FlatList

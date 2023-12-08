@@ -23,7 +23,6 @@ import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
-import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 import {
   useIsDrawerOpen,
   useSetDrawerOpen,
@@ -32,12 +31,12 @@ import {
 import {isAndroid} from 'platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
+import * as notifications from 'lib/notifications/notifications'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
-  useOTAUpdate() // this hook polls for OTA updates every few seconds
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
@@ -54,7 +53,7 @@ function ShellInner() {
     [setIsDrawerOpen],
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
 
   React.useEffect(() => {
@@ -68,6 +67,19 @@ function ShellInner() {
       listener.remove()
     }
   }, [closeAnyActiveElement])
+
+  React.useEffect(() => {
+    if (currentAccount) {
+      notifications.requestPermissionsAndRegisterToken(currentAccount)
+    }
+  }, [currentAccount])
+
+  React.useEffect(() => {
+    if (currentAccount) {
+      const unsub = notifications.registerTokenChangeHandler(currentAccount)
+      return unsub
+    }
+  }, [currentAccount])
 
   return (
     <>

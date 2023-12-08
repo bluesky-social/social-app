@@ -12,6 +12,7 @@ interface AppLanguage {
 export const APP_LANGUAGES: AppLanguage[] = [
   {code2: 'en', name: 'English'},
   {code2: 'hi', name: 'हिंदी'},
+  {code2: 'jpa', name: '日本語'},
 ]
 
 export const LANGUAGES: Language[] = [

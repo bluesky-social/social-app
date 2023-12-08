@@ -90,6 +90,16 @@ const enabledLogLevels: {
   [LogLevel.Error]: [LogLevel.Error],
 }
 
+export function prepareMetadata(metadata: Metadata): Metadata {
+  return Object.keys(metadata).reduce((acc, key) => {
+    let value = metadata[key]
+    if (value instanceof Error) {
+      value = value.toString()
+    }
+    return {...acc, [key]: value}
+  }, {})
+}
+
 /**
  * Used in dev mode to nicely log to the console
  */
@@ -100,7 +110,7 @@ export const consoleTransport: Transport = (
   timestamp,
 ) => {
   const extra = Object.keys(metadata).length
-    ? ' ' + JSON.stringify(metadata, null, '  ')
+    ? ' ' + JSON.stringify(prepareMetadata(metadata), null, '  ')
     : ''
   const log = {
     [LogLevel.Debug]: console.debug,
@@ -110,7 +120,14 @@ export const consoleTransport: Transport = (
     [LogLevel.Error]: console.error,
   }[level]
 
-  log(`${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`)
+  if (message instanceof Error) {
+    console.info(
+      `${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`,
+    )
+    log(message)
+  } else {
+    log(`${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`)
+  }
 }
 
 export const sentryTransport: Transport = (
@@ -119,6 +136,8 @@ export const sentryTransport: Transport = (
   {type, tags, ...metadata},
   timestamp,
 ) => {
+  const meta = prepareMetadata(metadata)
+
   /**
    * If a string, report a breadcrumb
    */
@@ -135,7 +154,7 @@ export const sentryTransport: Transport = (
 
     Sentry.addBreadcrumb({
       message,
-      data: metadata,
+      data: meta,
       type: type || 'default',
       level: severity,
       timestamp: timestamp / 1000, // Sentry expects seconds
@@ -151,11 +170,11 @@ export const sentryTransport: Transport = (
         [LogLevel.Warn]: 'warning',
         [LogLevel.Error]: 'error',
       }[level] || 'log') as Sentry.Breadcrumb['level']
-
-      Sentry.captureMessage(message, {
+      // Defer non-critical messages so they're sent in a batch
+      queueMessageForSentry(message, {
         level: messageLevel,
         tags,
-        extra: metadata,
+        extra: meta,
       })
     }
   } else {
@@ -164,8 +183,34 @@ export const sentryTransport: Transport = (
      */
     Sentry.captureException(message, {
       tags,
-      extra: metadata,
+      extra: meta,
     })
+  }
+}
+
+const queuedMessages: [string, Parameters<typeof Sentry.captureMessage>[1]][] =
+  []
+let sentrySendTimeout: ReturnType<typeof setTimeout> | null = null
+function queueMessageForSentry(
+  message: string,
+  captureContext: Parameters<typeof Sentry.captureMessage>[1],
+) {
+  queuedMessages.push([message, captureContext])
+  if (!sentrySendTimeout) {
+    // Throttle sending messages with a leading delay
+    // so that we can get Sentry out of the critical path.
+    sentrySendTimeout = setTimeout(() => {
+      sentrySendTimeout = null
+      sendQueuedMessages()
+    }, 7000)
+  }
+}
+function sendQueuedMessages() {
+  while (queuedMessages.length > 0) {
+    const record = queuedMessages.shift()
+    if (record) {
+      Sentry.captureMessage(record[0], record[1])
+    }
   }
 }
 
@@ -275,16 +320,13 @@ export class Logger {
  */
 export const logger = new Logger()
 
-/**
- * Report to console in dev, Sentry in prod, nothing in test.
- */
 if (env.IS_DEV && !env.IS_TEST) {
   logger.addTransport(consoleTransport)
 
-  /**
-   * Uncomment this to test Sentry in dev
+  /*
+   * Comment this out to disable Sentry transport in dev
    */
-  // logger.addTransport(sentryTransport);
-} else if (env.IS_PROD) {
   // logger.addTransport(sentryTransport)
+} else if (env.IS_PROD) {
+  logger.addTransport(sentryTransport)
 }

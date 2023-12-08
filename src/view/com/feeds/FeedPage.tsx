@@ -1,9 +1,10 @@
+import React from 'react'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useIsFocused} from '@react-navigation/native'
-import {useAnalytics} from '@segment/analytics-react-native'
+import {useNavigation} from '@react-navigation/native'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
@@ -12,7 +13,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
-import React from 'react'
 import {FlatList, View, useWindowDimensions} from 'react-native'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
@@ -23,6 +23,9 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
+import {isNative} from '#/platform/detection'
 
 const POLL_FREQ = 30e3 // 30sec
 
@@ -44,6 +47,7 @@ export function FeedPage({
   const {isSandbox, hasSession} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const navigation = useNavigation()
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -51,30 +55,35 @@ export function FeedPage({
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<FlatList>(null)
-  const isScreenFocused = useIsFocused()
   const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+    scrollElRef.current?.scrollToOffset({
+      animated: isNative,
+      offset: -headerOffset,
+    })
     resetMainScroll()
   }, [headerOffset, resetMainScroll])
 
   const onSoftReset = React.useCallback(() => {
-    if (isPageFocused) {
+    const isScreenFocused =
+      getTabState(getRootNavigation(navigation).getState(), 'Home') ===
+      TabState.InsideAtRoot
+    if (isScreenFocused && isPageFocused) {
       scrollToTop()
-      queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
     }
-  }, [isPageFocused, scrollToTop, queryClient, feed, setHasNew])
+  }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
   // fires when page within screen is activated/deactivated
   React.useEffect(() => {
-    if (!isPageFocused || !isScreenFocused) {
+    if (!isPageFocused) {
       return
     }
     screen('Feed')
     return listenSoftReset(onSoftReset)
-  }, [onSoftReset, screen, isPageFocused, isScreenFocused])
+  }, [onSoftReset, screen, isPageFocused])
 
   const onPressCompose = React.useCallback(() => {
     track('HomeScreen:PressCompose')
@@ -83,7 +92,7 @@ export function FeedPage({
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
-    queryClient.invalidateQueries({queryKey: FEED_RQKEY(feed)})
+    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
   }, [scrollToTop, feed, queryClient, setHasNew])
 
@@ -157,9 +166,9 @@ export function FeedPage({
     <View testID={testID} style={s.h100pct}>
       <Feed
         testID={testID ? `${testID}-feed` : undefined}
+        enabled={isPageFocused}
         feed={feed}
         feedParams={feedParams}
-        enabled={isPageFocused}
         pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
         onScroll={onMainScroll}
@@ -195,13 +204,30 @@ export function FeedPage({
 function useHeaderOffset() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const {fontScale} = useWindowDimensions()
+  const {hasSession} = useSession()
+
   if (isDesktop) {
     return 0
   }
   if (isTablet) {
-    return 50
+    if (hasSession) {
+      return 50
+    } else {
+      return 0
+    }
   }
-  // default text takes 44px, plus 34px of pad
-  // scale the 44px by the font scale
-  return 34 + 44 * fontScale
+
+  if (hasSession) {
+    const navBarPad = 16
+    const navBarText = 21 * fontScale
+    const tabBarPad = 20 + 3 // nav bar padding + border
+    const tabBarText = 16 * fontScale
+    const magic = 7 * fontScale
+    return navBarPad + navBarText + tabBarPad + tabBarText + magic
+  } else {
+    const navBarPad = 16
+    const navBarText = 21 * fontScale
+    const magic = 4 * fontScale
+    return navBarPad + navBarText + magic
+  }
 }

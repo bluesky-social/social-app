@@ -196,8 +196,14 @@ function PostInner({
             {post.embed ? (
               <ContentHider
                 moderation={moderation.embed}
+                moderationDecisions={moderation.decisions}
+                ignoreQuoteDecisions
                 style={styles.contentHider}>
-                <PostEmbeds embed={post.embed} moderation={moderation.embed} />
+                <PostEmbeds
+                  embed={post.embed}
+                  moderation={moderation.embed}
+                  moderationDecisions={moderation.decisions}
+                />
               </ContentHider>
             ) : null}
           </ContentHider>

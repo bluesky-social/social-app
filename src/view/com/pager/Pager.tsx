@@ -81,12 +81,14 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         if (scrollState.current === 'settling') {
           if (lastDirection.current === -1 && offset < lastOffset.current) {
             onPageSelecting?.(position)
+            setSelectedPage(position)
             lastDirection.current = 0
           } else if (
             lastDirection.current === 1 &&
             offset > lastOffset.current
           ) {
             onPageSelecting?.(position + 1)
+            setSelectedPage(position + 1)
             lastDirection.current = 0
           }
         } else {

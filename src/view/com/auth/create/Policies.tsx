@@ -27,8 +27,12 @@ export const Policies = ({
   const pp = validWebLink(serviceDescription.links?.privacyPolicy)
   if (!tos && !pp) {
     return (
-      <View style={styles.policies}>
-        <View style={[styles.errorIcon, {borderColor: pal.colors.text}, s.mt2]}>
+      <View style={[styles.policies, {flexDirection: 'row'}]}>
+        <View
+          style={[
+            styles.errorIcon,
+            {borderColor: pal.colors.text, marginTop: 1},
+          ]}>
           <FontAwesomeIcon
             icon="exclamation"
             style={pal.textLight as FontAwesomeIconStyle}
@@ -106,6 +110,5 @@ const styles = StyleSheet.create({
     height: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 5,
   },
 })

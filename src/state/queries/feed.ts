@@ -160,6 +160,51 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   })
 }
 
+export const isFeedPublicQueryKey = ({uri}: {uri: string}) => [
+  'isFeedPublic',
+  uri,
+]
+
+export function useIsFeedPublicQuery({uri}: {uri: string}) {
+  return useQuery({
+    queryKey: isFeedPublicQueryKey({uri}),
+    queryFn: async ({queryKey}) => {
+      const [, uri] = queryKey
+      try {
+        const res = await getAgent().app.bsky.feed.getFeed({
+          feed: uri,
+          limit: 1,
+        })
+        return {
+          isPublic: Boolean(res.data.feed),
+          error: undefined,
+        }
+      } catch (e: any) {
+        /**
+         * This should be an `XRPCError`, but I can't safely import from
+         * `@atproto/xrpc` due to a depdency on node's `crypto` module.
+         *
+         * @see https://github.com/bluesky-social/atproto/blob/c17971a2d8e424cc7f10c071d97c07c08aa319cf/packages/xrpc/src/client.ts#L126
+         */
+        if (e?.status === 401) {
+          return {
+            isPublic: false,
+            error: e,
+          }
+        }
+
+        /*
+         * Non-401 response means something else went wrong on the server
+         */
+        return {
+          isPublic: true,
+          error: e,
+        }
+      }
+    },
+  })
+}
+
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
@@ -214,13 +259,19 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
   likeUri: '',
 }
 
-export function usePinnedFeedsInfos(): FeedSourceInfo[] {
+export function usePinnedFeedsInfos(): {
+  feeds: FeedSourceInfo[]
+  hasPinnedCustom: boolean
+} {
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
     FOLLOWING_FEED_STUB,
   ])
   const {data: preferences} = usePreferencesQuery()
-  const pinnedFeedsKey = JSON.stringify(preferences?.feeds?.pinned)
+
+  const hasPinnedCustom = React.useMemo<boolean>(() => {
+    return tabs.some(tab => tab !== FOLLOWING_FEED_STUB)
+  }, [tabs])
 
   React.useEffect(() => {
     if (!preferences?.feeds?.pinned) return
@@ -267,13 +318,7 @@ export function usePinnedFeedsInfos(): FeedSourceInfo[] {
     }
 
     fetchFeedInfo()
-  }, [
-    queryClient,
-    setTabs,
-    preferences?.feeds?.pinned,
-    // ensure we react to re-ordering
-    pinnedFeedsKey,
-  ])
+  }, [queryClient, setTabs, preferences?.feeds?.pinned])
 
-  return tabs
+  return {feeds: tabs, hasPinnedCustom}
 }

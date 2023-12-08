@@ -118,8 +118,8 @@ export function Component() {
           ) : stage === Stages.ConfirmCode ? (
             <Trans>
               An email has been sent to your previous address,{' '}
-              {currentAccount?.email || ''}. It includes a confirmation code
-              which you can enter below.
+              {currentAccount?.email || '(no email)'}. It includes a
+              confirmation code which you can enter below.
             </Trans>
           ) : (
             <Trans>

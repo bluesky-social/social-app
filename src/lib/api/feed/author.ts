@@ -1,18 +1,15 @@
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
-  BskyAgent,
 } from '@atproto/api'
 import {FeedAPI, FeedAPIResponse} from './types'
+import {getAgent} from '#/state/session'
 
 export class AuthorFeedAPI implements FeedAPI {
-  constructor(
-    public agent: BskyAgent,
-    public params: GetAuthorFeed.QueryParams,
-  ) {}
+  constructor(public params: GetAuthorFeed.QueryParams) {}
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.getAuthorFeed({
+    const res = await getAgent().getAuthorFeed({
       ...this.params,
       limit: 1,
     })
@@ -26,7 +23,7 @@ export class AuthorFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.getAuthorFeed({
+    const res = await getAgent().getAuthorFeed({
       ...this.params,
       cursor,
       limit,
@@ -63,13 +60,13 @@ function isAuthorReplyChain(
   posts: AppBskyFeedDefs.FeedViewPost[],
 ): boolean {
   // current post is by a different user (shouldn't happen)
-  if (post.post.author.handle !== actor) return false
+  if (post.post.author.did !== actor) return false
 
   const replyParent = post.reply?.parent
 
   if (AppBskyFeedDefs.isPostView(replyParent)) {
     // reply parent is by a different user
-    if (replyParent.author.handle !== actor) return false
+    if (replyParent.author.did !== actor) return false
 
     // A top-level post that matches the parent of the current post.
     const parentPost = posts.find(p => p.post.uri === replyParent.uri)

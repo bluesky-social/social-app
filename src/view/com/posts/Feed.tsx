@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useQueryClient} from '@tanstack/react-query'
 import {FlatList} from '../util/Views'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
@@ -20,11 +21,15 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
+  RQKEY,
   FeedDescriptor,
   FeedParams,
   usePostFeedQuery,
+  pollLatest,
 } from '#/state/queries/post-feed'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {isWeb} from '#/platform/detection'
+import {listenPostCreated} from '#/state/events'
+import {useSession} from '#/state/session'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -34,6 +39,7 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 let Feed = ({
   feed,
   feedParams,
+  ignoreFilterFor,
   style,
   enabled,
   pollInterval,
@@ -51,6 +57,7 @@ let Feed = ({
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
+  ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
   enabled?: boolean
   pollInterval?: number
@@ -69,11 +76,15 @@ let Feed = ({
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
+  const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
 
-  const moderationOpts = useModerationOpts()
-  const opts = React.useMemo(() => ({enabled}), [enabled])
+  const opts = React.useMemo(
+    () => ({enabled, ignoreFilterFor}),
+    [enabled, ignoreFilterFor],
+  )
   const {
     data,
     isFetching,
@@ -84,39 +95,64 @@ let Feed = ({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-    pollLatest,
   } = usePostFeedQuery(feed, feedParams, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.slices.length
 
   const checkForNew = React.useCallback(async () => {
-    if (!isFetched || isFetching || !onHasNew) {
+    if (!data?.pages[0] || isFetching || !onHasNew || !enabled) {
       return
     }
     try {
-      if (await pollLatest()) {
+      if (await pollLatest(data.pages[0])) {
         onHasNew(true)
       }
     } catch (e) {
       logger.error('Poll latest failed', {feed, error: String(e)})
     }
-  }, [feed, isFetched, isFetching, pollLatest, onHasNew])
+  }, [feed, data, isFetching, onHasNew, enabled])
+
+  const myDid = currentAccount?.did || ''
+  const onPostCreated = React.useCallback(() => {
+    // NOTE
+    // only invalidate if there's 1 page
+    // more than 1 page can trigger some UI freakouts on iOS and android
+    // -prf
+    if (
+      data?.pages.length === 1 &&
+      (feed === 'following' ||
+        feed === 'home' ||
+        feed === `author|${myDid}|posts_no_replies`)
+    ) {
+      queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+    }
+  }, [queryClient, feed, data, myDid])
+  React.useEffect(() => {
+    return listenPostCreated(onPostCreated)
+  }, [onPostCreated])
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless
-    // reassignments of the interval
+    // reassignments in other effects
     checkForNewRef.current = checkForNew
   }, [checkForNew])
+  React.useEffect(() => {
+    if (enabled && checkForNewRef.current) {
+      // check for new on enable (aka on focus)
+      checkForNewRef.current()
+    }
+  }, [enabled])
   React.useEffect(() => {
     if (!pollInterval) {
       return
     }
+    // check for new on interval
     const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
     return () => clearInterval(i)
   }, [pollInterval])
 
   const feedItems = React.useMemo(() => {
     let arr: any[] = []
-    if (isFetched && moderationOpts) {
+    if (isFetched) {
       if (isError && isEmpty) {
         arr = arr.concat([ERROR_ITEM])
       }
@@ -134,7 +170,7 @@ let Feed = ({
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data, moderationOpts])
+  }, [isFetched, isError, isEmpty, data])
 
   // events
   // =
@@ -182,7 +218,7 @@ let Feed = ({
         return (
           <FeedErrorMessage
             feedDesc={feed}
-            error={error}
+            error={error ?? undefined}
             onPressTryAgain={onPressTryAgain}
           />
         )
@@ -196,39 +232,32 @@ let Feed = ({
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
       }
-      return (
-        <FeedSlice
-          slice={item}
-          // we check for this before creating the feedItems array
-          moderationOpts={moderationOpts!}
-        />
-      )
+      return <FeedSlice slice={item} />
     },
-    [
-      feed,
-      error,
-      onPressTryAgain,
-      onPressRetryLoadMore,
-      renderEmptyState,
-      moderationOpts,
-    ],
+    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
   )
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
-  const FeedFooter = React.useCallback(
-    () =>
-      isFetchingNextPage ? (
-        <View style={styles.feedFooter}>
-          <ActivityIndicator />
-        </View>
-      ) : shouldRenderEndOfFeed ? (
-        renderEndOfFeed()
-      ) : (
-        <View />
-      ),
-    [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed],
-  )
+  const FeedFooter = React.useCallback(() => {
+    /**
+     * A bit of padding at the bottom of the feed as you scroll and when you
+     * reach the end, so that content isn't cut off by the bottom of the
+     * screen.
+     */
+    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
+
+    return isFetchingNextPage ? (
+      <View style={[styles.feedFooter]}>
+        <ActivityIndicator />
+        <View style={{height: offset}} />
+      </View>
+    ) : shouldRenderEndOfFeed ? (
+      <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
+    ) : (
+      <View style={{height: offset}} />
+    )
+  }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
   const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
@@ -258,7 +287,7 @@ let Feed = ({
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}

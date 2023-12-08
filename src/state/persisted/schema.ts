@@ -2,17 +2,14 @@ import {z} from 'zod'
 import {deviceLocales} from '#/platform/detection'
 
 // only data needed for rendering account page
-// TODO agent.resumeSession requires the following fields
 const accountSchema = z.object({
   service: z.string(),
   did: z.string(),
   handle: z.string(),
-  email: z.string(),
-  emailConfirmed: z.boolean(),
+  email: z.string().optional(),
+  emailConfirmed: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
-  // displayName: z.string().optional(),
-  // aviUrl: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 

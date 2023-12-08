@@ -4,42 +4,33 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
+    "base": {
+      "node": "18.18.2"
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
+      "channel": "development",
       "ios": {
         "simulator": true,
-        "resourceClass": "m-large"
-      },
-      "channel": "development"
-    },
-    "development-device": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m-large"
-      },
-      "channel": "development"
+        "resourceClass": "large"
+      }
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
+      "channel": "preview",
       "ios": {
-        "resourceClass": "m-large"
-      },
-      "channel": "preview"
+        "resourceClass": "large"
+      }
     },
     "production": {
+      "extends": "base",
       "ios": {
-        "resourceClass": "m-large"
+        "resourceClass": "large"
       },
       "channel": "production"
-    },
-    "dev-android-apk": {
-      "developmentClient": true,
-      "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      }
     }
   },
   "submit": {

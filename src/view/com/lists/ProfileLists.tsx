@@ -1,6 +1,5 @@
 import React, {MutableRefObject} from 'react'
 import {
-  ActivityIndicator,
   Dimensions,
   RefreshControl,
   StyleProp,
@@ -23,6 +22,8 @@ import {Trans} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {useAnimatedScrollHandler} from 'react-native-reanimated'
 import {useTheme} from '#/lib/ThemeContext'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {isNative} from '#/platform/detection'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -106,7 +107,10 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     const queryClient = useQueryClient()
 
     const onScrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: -headerOffset})
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerOffset,
+      })
       queryClient.invalidateQueries({queryKey: RQKEY(did)})
     }, [scrollElRef, queryClient, headerOffset, did])
 
@@ -170,11 +174,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
             />
           )
         } else if (item === LOADING) {
-          return (
-            <View style={{padding: 20}}>
-              <ActivityIndicator />
-            </View>
-          )
+          return <FeedLoadingPlaceholder />
         }
         return (
           <ListCard
@@ -226,6 +226,5 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 18,
-    paddingVertical: 4,
   },
 })

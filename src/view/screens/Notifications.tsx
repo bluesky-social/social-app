@@ -6,7 +6,6 @@ import {
   NativeStackScreenProps,
   NotificationsTabNavigatorParams,
 } from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
@@ -20,110 +19,118 @@ import {logger} from '#/logger'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {
+  useUnreadNotifications,
+  useUnreadNotificationsApi,
+} from '#/state/queries/notifications/unread'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {isNative} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-export const NotificationsScreen = withAuthRequired(
-  function NotificationsScreenImpl({}: Props) {
-    const {_} = useLingui()
-    const setMinimalShellMode = useSetMinimalShellMode()
-    const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
-    const scrollElRef = React.useRef<FlatList>(null)
-    const {screen} = useAnalytics()
-    const pal = usePalette('default')
-    const {isDesktop} = useWebMediaQueries()
-    const unreadNotifs = useUnreadNotifications()
-    const queryClient = useQueryClient()
-    const hasNew = !!unreadNotifs
+export function NotificationsScreen({}: Props) {
+  const {_} = useLingui()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
+  const scrollElRef = React.useRef<FlatList>(null)
+  const {screen} = useAnalytics()
+  const pal = usePalette('default')
+  const {isDesktop} = useWebMediaQueries()
+  const queryClient = useQueryClient()
+  const unreadNotifs = useUnreadNotifications()
+  const unreadApi = useUnreadNotificationsApi()
+  const hasNew = !!unreadNotifs
 
-    // event handlers
-    // =
-    const scrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: 0})
-      resetMainScroll()
-    }, [scrollElRef, resetMainScroll])
+  // event handlers
+  // =
+  const scrollToTop = React.useCallback(() => {
+    scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
+    resetMainScroll()
+  }, [scrollElRef, resetMainScroll])
 
-    const onPressLoadLatest = React.useCallback(() => {
-      scrollToTop()
-      queryClient.invalidateQueries({
-        queryKey: NOTIFS_RQKEY(),
-      })
-    }, [scrollToTop, queryClient])
+  const onPressLoadLatest = React.useCallback(() => {
+    scrollToTop()
+    if (hasNew) {
+      // render what we have now
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
+    } else {
+      // check with the server
+      unreadApi.checkUnread({invalidate: true})
+    }
+  }, [scrollToTop, queryClient, unreadApi, hasNew])
 
-    // on-visible setup
-    // =
-    useFocusEffect(
-      React.useCallback(() => {
-        setMinimalShellMode(false)
-        logger.debug('NotificationsScreen: Updating feed')
-        screen('Notifications')
-        return listenSoftReset(onPressLoadLatest)
-      }, [screen, onPressLoadLatest, setMinimalShellMode]),
-    )
+  // on-visible setup
+  // =
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+      logger.debug('NotificationsScreen: Updating feed')
+      screen('Notifications')
+      return listenSoftReset(onPressLoadLatest)
+    }, [screen, onPressLoadLatest, setMinimalShellMode]),
+  )
 
-    const ListHeaderComponent = React.useCallback(() => {
-      if (isDesktop) {
-        return (
-          <View
-            style={[
-              pal.view,
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: 18,
-                paddingVertical: 12,
-              },
-            ]}>
-            <TextLink
-              type="title-lg"
-              href="/notifications"
-              style={[pal.text, {fontWeight: 'bold'}]}
-              text={
-                <>
-                  <Trans>Notifications</Trans>{' '}
-                  {hasNew && (
-                    <View
-                      style={{
-                        top: -8,
-                        backgroundColor: colors.blue3,
-                        width: 8,
-                        height: 8,
-                        borderRadius: 4,
-                      }}
-                    />
-                  )}
-                </>
-              }
-              onPress={emitSoftReset}
-            />
-          </View>
-        )
-      }
-      return <></>
-    }, [isDesktop, pal, hasNew])
-
-    return (
-      <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
-        <Feed
-          onScroll={onMainScroll}
-          scrollElRef={scrollElRef}
-          ListHeaderComponent={ListHeaderComponent}
-        />
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label={_(msg`Load new notifications`)}
-            showIndicator={hasNew}
+  const ListHeaderComponent = React.useCallback(() => {
+    if (isDesktop) {
+      return (
+        <View
+          style={[
+            pal.view,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 18,
+              paddingVertical: 12,
+            },
+          ]}>
+          <TextLink
+            type="title-lg"
+            href="/notifications"
+            style={[pal.text, {fontWeight: 'bold'}]}
+            text={
+              <>
+                <Trans>Notifications</Trans>{' '}
+                {hasNew && (
+                  <View
+                    style={{
+                      top: -8,
+                      backgroundColor: colors.blue3,
+                      width: 8,
+                      height: 8,
+                      borderRadius: 4,
+                    }}
+                  />
+                )}
+              </>
+            }
+            onPress={emitSoftReset}
           />
-        )}
-      </View>
-    )
-  },
-)
+        </View>
+      )
+    }
+    return <></>
+  }, [isDesktop, pal, hasNew])
+
+  return (
+    <View testID="notificationsScreen" style={s.hContentRegion}>
+      <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
+      <Feed
+        onScroll={onMainScroll}
+        scrollElRef={scrollElRef}
+        ListHeaderComponent={ListHeaderComponent}
+      />
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label={_(msg`Load new notifications`)}
+          showIndicator={hasNew}
+        />
+      )}
+    </View>
+  )
+}

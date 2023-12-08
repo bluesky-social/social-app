@@ -1,5 +1,6 @@
 import React from 'react'
 import * as persisted from '#/state/persisted'
+import {track} from '#/lib/analytics/analytics'
 
 type StateContext = persisted.Schema['mutedThreads']
 type ToggleContext = (uri: string) => boolean
@@ -19,9 +20,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         if (arr.includes(uri)) {
           arr = arr.filter(v => v !== uri)
           muted = false
+          track('Post:ThreadUnmute')
         } else {
           arr = arr.concat([uri])
           muted = true
+          track('Post:ThreadMute')
         }
         persisted.write('mutedThreads', arr)
         return arr

@@ -1,5 +1,8 @@
 # Testing instructions
 
+Make sure you've copied `.env.example` to `.env.test` and provided any required
+values.
+
 ### Using Maestro E2E tests
 1. Install Maestro by following [these instructions](https://maestro.mobile.dev/getting-started/installing-maestro). This will help us run the E2E tests.
 2. You can write Maestro tests in `__e2e__/maestro` directory by creating a new `.yaml` file or by modifying an existing one.
