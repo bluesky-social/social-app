@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black, // TODO
   },
   drawerMask: {
-    position: 'absolute',
+    // @ts-ignore web only
+    position: 'fixed',
     width: '100%',
     height: '100%',
     top: 0,
@@ -85,7 +86,8 @@ const styles = StyleSheet.create({
   },
   drawerContainer: {
     display: 'flex',
-    position: 'absolute',
+    // @ts-ignore web only
+    position: 'fixed',
     top: 0,
     left: 0,
     height: '100%',

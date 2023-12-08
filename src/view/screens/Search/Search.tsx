@@ -493,7 +493,9 @@ export function SearchScreenMobile(
 
   return (
     <View style={{flex: 1}}>
-      <CenteredView style={[styles.header, pal.border]} sideBorders={isTablet}>
+      <CenteredView
+        style={[styles.header, pal.view, styles.container]}
+        sideBorders={isTablet}>
         <Pressable
           testID="viewHeaderBackOrMenuBtn"
           onPress={onPressMenu}
@@ -593,6 +595,12 @@ export function SearchScreenMobile(
 }
 
 const styles = StyleSheet.create({
+  container: {
+    // @ts-ignore web only
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
