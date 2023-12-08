@@ -1328,7 +1328,7 @@ msgstr ""
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
-msgstr "<<<<<<< HEAD"
+msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:636
 #: src/view/screens/ProfileList.tsx:740
@@ -1989,7 +1989,7 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:666
 msgid "Storybook"
-msgstr "<<<<<<< HEAD======="
+msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:101
 msgid "Submit"
