@@ -63,6 +63,7 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     onScroll,
     ListHeaderComponent,
     ListFooterComponent,
+    desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
   ref: React.Ref<Animated.FlatList<ItemT>>,
@@ -161,7 +162,12 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
   return (
     <Animated.ScrollView {...props} style={style} ref={nativeRef}>
       <View
-        style={[styles.contentContainer, contentContainerStyle, pal.border]}>
+        style={[
+          styles.contentContainer,
+          contentContainerStyle,
+          desktopFixedHeight ? styles.minHeightViewport : null,
+          pal.border,
+        ]}>
         {header}
         {(data as Array<ItemT>).map((item, index) => (
           <Row<ItemT>
@@ -286,5 +292,9 @@ const styles = StyleSheet.create({
   row: {
     // @ts-ignore web
     contentVisibility: 'auto',
+  },
+  minHeightViewport: {
+    // @ts-ignore web only
+    minHeight: '100vh',
   },
 })
