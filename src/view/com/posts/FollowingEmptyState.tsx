@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   inner: {
+    width: '100%',
     maxWidth: 460,
   },
   iconContainer: {
