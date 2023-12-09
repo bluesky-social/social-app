@@ -95,7 +95,9 @@ export function PostEmbeds({
     // quote post
     // =
     return (
-      <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
+      <ContentHider moderation={moderation}>
+        <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
+      </ContentHider>
     )
   }
 
