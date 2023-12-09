@@ -35,6 +35,7 @@ type ActorDid = string
 type AuthorFilter =
   | 'posts_with_replies'
   | 'posts_no_replies'
+  | 'posts_and_author_threads'
   | 'posts_with_media'
 type FeedUri = string
 type ListUri = string
