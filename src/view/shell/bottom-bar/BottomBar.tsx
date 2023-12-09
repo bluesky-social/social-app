@@ -1,7 +1,6 @@
 import React, {ComponentProps} from 'react'
 import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {useQueryClient} from '@tanstack/react-query'
 import {StackActions} from '@react-navigation/native'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -31,8 +30,6 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
-import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
-import {truncateAndInvalidate} from '#/state/queries/util'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -41,7 +38,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const queryClient = useQueryClient()
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
@@ -61,14 +57,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       } else if (tabState === TabState.Inside) {
         navigation.dispatch(StackActions.popToTop())
       } else {
-        if (tab === 'Notifications') {
-          // fetch new notifs on view
-          truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
-        }
         navigation.navigate(`${tab}Tab`)
       }
     },
-    [track, navigation, queryClient],
+    [track, navigation],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(

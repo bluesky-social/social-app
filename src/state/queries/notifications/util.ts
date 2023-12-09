@@ -119,8 +119,7 @@ function groupNotifications(
           Math.abs(ts2 - ts) < MS_2DAY &&
           notif.reason === groupedNotif.notification.reason &&
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
-          notif.author.did !== groupedNotif.notification.author.did &&
-          notif.isRead === groupedNotif.notification.isRead
+          notif.author.did !== groupedNotif.notification.author.did
         ) {
           groupedNotif.additional = groupedNotif.additional || []
           groupedNotif.additional.push(notif)

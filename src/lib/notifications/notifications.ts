@@ -81,6 +81,7 @@ export function registerTokenChangeHandler(
 
 export function init(queryClient: QueryClient) {
   // handle notifications that are received, both in the foreground or background
+  // NOTE: currently just here for debug logging
   Notifications.addNotificationReceivedListener(event => {
     logger.debug(
       'Notifications: received',
@@ -88,8 +89,6 @@ export function init(queryClient: QueryClient) {
       logger.DebugContext.notifications,
     )
     if (event.request.trigger.type === 'push') {
-      // refresh notifications in the background
-      truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
       // handle payload-based deeplinks
       let payload
       if (isIOS) {

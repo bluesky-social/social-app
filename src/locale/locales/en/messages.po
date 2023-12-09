@@ -38,12 +38,12 @@ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite 
 msgstr ""
 
 #: src/view/screens/Settings.tsx:407
-#: src/view/shell/Drawer.tsx:648
+#: src/view/shell/Drawer.tsx:640
 msgid "{invitesAvailable} invite code available"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:409
-#: src/view/shell/Drawer.tsx:650
+#: src/view/shell/Drawer.tsx:642
 msgid "{invitesAvailable} invite codes available"
 msgstr ""
 
@@ -830,16 +830,16 @@ msgid "Feed Preferences"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:64
-#: src/view/shell/Drawer.tsx:300
+#: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:475
 #: src/view/screens/Profile.tsx:164
-#: src/view/shell/bottom-bar/BottomBar.tsx:168
-#: src/view/shell/desktop/LeftNav.tsx:341
-#: src/view/shell/Drawer.tsx:463
-#: src/view/shell/Drawer.tsx:464
+#: src/view/shell/bottom-bar/BottomBar.tsx:160
+#: src/view/shell/desktop/LeftNav.tsx:333
+#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/Drawer.tsx:456
 msgid "Feeds"
 msgstr ""
 
@@ -928,7 +928,7 @@ msgstr ""
 #: src/view/com/auth/LoggedOut.tsx:68
 #: src/view/com/auth/LoggedOut.tsx:69
 #: src/view/com/util/moderation/ScreenHider.tsx:105
-#: src/view/shell/desktop/LeftNav.tsx:106
+#: src/view/shell/desktop/LeftNav.tsx:103
 msgid "Go back"
 msgstr ""
 
@@ -950,7 +950,7 @@ msgid "Handle"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:93
-#: src/view/shell/Drawer.tsx:310
+#: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr ""
 
@@ -994,10 +994,10 @@ msgstr ""
 #~ msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
 #~ msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:124
-#: src/view/shell/desktop/LeftNav.tsx:305
-#: src/view/shell/Drawer.tsx:387
-#: src/view/shell/Drawer.tsx:388
+#: src/view/shell/bottom-bar/BottomBar.tsx:116
+#: src/view/shell/desktop/LeftNav.tsx:297
+#: src/view/shell/Drawer.tsx:379
+#: src/view/shell/Drawer.tsx:380
 msgid "Home"
 msgstr ""
 
@@ -1063,7 +1063,7 @@ msgstr ""
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:629
+#: src/view/shell/Drawer.tsx:621
 msgid "Invite codes: {invitesAvailable} available"
 msgstr ""
 
@@ -1162,9 +1162,9 @@ msgid "List Name"
 msgstr ""
 
 #: src/view/screens/Profile.tsx:165
-#: src/view/shell/desktop/LeftNav.tsx:381
-#: src/view/shell/Drawer.tsx:479
-#: src/view/shell/Drawer.tsx:480
+#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/Drawer.tsx:471
+#: src/view/shell/Drawer.tsx:472
 msgid "Lists"
 msgstr ""
 
@@ -1173,7 +1173,7 @@ msgstr ""
 msgid "Load more posts"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:130
+#: src/view/screens/Notifications.tsx:141
 msgid "Load new notifications"
 msgstr ""
 
@@ -1224,9 +1224,9 @@ msgstr ""
 
 #: src/view/screens/Moderation.tsx:63
 #: src/view/screens/Settings.tsx:563
-#: src/view/shell/desktop/LeftNav.tsx:399
-#: src/view/shell/Drawer.tsx:498
-#: src/view/shell/Drawer.tsx:499
+#: src/view/shell/desktop/LeftNav.tsx:391
+#: src/view/shell/Drawer.tsx:490
+#: src/view/shell/Drawer.tsx:491
 msgid "Moderation"
 msgstr ""
 
@@ -1300,7 +1300,7 @@ msgstr ""
 msgid "My Feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:67
+#: src/view/shell/desktop/LeftNav.tsx:64
 msgid "My Profile"
 msgstr ""
 
@@ -1328,11 +1328,11 @@ msgstr ""
 #: src/view/screens/ProfileFeed.tsx:451
 #: src/view/screens/ProfileList.tsx:212
 #: src/view/screens/ProfileList.tsx:244
-#: src/view/shell/desktop/LeftNav.tsx:254
+#: src/view/shell/desktop/LeftNav.tsx:246
 msgid "New post"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:264
+#: src/view/shell/desktop/LeftNav.tsx:256
 msgid "New Post"
 msgstr ""
 
@@ -1402,12 +1402,12 @@ msgstr ""
 #~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
 #~ msgstr ""
 
-#: src/view/screens/Notifications.tsx:97
-#: src/view/screens/Notifications.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:195
-#: src/view/shell/desktop/LeftNav.tsx:363
-#: src/view/shell/Drawer.tsx:424
-#: src/view/shell/Drawer.tsx:425
+#: src/view/screens/Notifications.tsx:108
+#: src/view/screens/Notifications.tsx:132
+#: src/view/shell/bottom-bar/BottomBar.tsx:187
+#: src/view/shell/desktop/LeftNav.tsx:355
+#: src/view/shell/Drawer.tsx:416
+#: src/view/shell/Drawer.tsx:417
 msgid "Notifications"
 msgstr ""
 
@@ -1432,7 +1432,7 @@ msgid "Opens configurable language settings"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:146
-#: src/view/shell/Drawer.tsx:630
+#: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
 
@@ -1592,10 +1592,10 @@ msgstr ""
 msgid "Processing..."
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:237
-#: src/view/shell/Drawer.tsx:72
-#: src/view/shell/Drawer.tsx:533
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/bottom-bar/BottomBar.tsx:229
+#: src/view/shell/Drawer.tsx:69
+#: src/view/shell/Drawer.tsx:525
+#: src/view/shell/Drawer.tsx:526
 msgid "Profile"
 msgstr ""
 
@@ -1813,12 +1813,12 @@ msgstr ""
 #: src/view/com/util/forms/SearchInput.tsx:64
 #: src/view/screens/Search/Search.tsx:381
 #: src/view/screens/Search/Search.tsx:533
-#: src/view/shell/bottom-bar/BottomBar.tsx:146
-#: src/view/shell/desktop/LeftNav.tsx:323
+#: src/view/shell/bottom-bar/BottomBar.tsx:138
+#: src/view/shell/desktop/LeftNav.tsx:315
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
-#: src/view/shell/Drawer.tsx:351
-#: src/view/shell/Drawer.tsx:352
+#: src/view/shell/Drawer.tsx:343
+#: src/view/shell/Drawer.tsx:344
 msgid "Search"
 msgstr ""
 
@@ -1870,8 +1870,8 @@ msgstr ""
 msgid "Send Email"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:284
-#: src/view/shell/Drawer.tsx:305
+#: src/view/shell/Drawer.tsx:276
+#: src/view/shell/Drawer.tsx:297
 msgid "Send feedback"
 msgstr ""
 
@@ -1904,9 +1904,9 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr ""
 
 #: src/view/screens/Settings.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:435
-#: src/view/shell/Drawer.tsx:554
-#: src/view/shell/Drawer.tsx:555
+#: src/view/shell/desktop/LeftNav.tsx:427
+#: src/view/shell/Drawer.tsx:546
+#: src/view/shell/Drawer.tsx:547
 msgid "Settings"
 msgstr ""
 
@@ -2447,7 +2447,7 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:402
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:644
+#: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
 
