@@ -28,7 +28,7 @@ export interface FeedPage {
 }
 
 export interface CachedFeedPage {
-  sessDid: string // used to invalidate on session changes
+  usableInFeed: boolean // if true, the cached page is recent enough to use as the response
   syncedAt: Date
   data: FeedPage | undefined
 }
