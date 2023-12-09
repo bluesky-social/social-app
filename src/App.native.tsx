@@ -39,7 +39,7 @@ SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
   const colorMode = useColorMode()
-  const {currentAccount} = useSession()
+  const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
 
   // init
@@ -52,6 +52,9 @@ function InnerApp() {
     const account = persisted.get('session').currentAccount
     resumeSession(account)
   }, [resumeSession])
+
+  // wait for session to resume
+  if (isInitialLoad) return null
 
   return (
     <React.Fragment
