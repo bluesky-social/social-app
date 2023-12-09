@@ -9,7 +9,7 @@ import {describeModerationCause} from 'lib/moderation'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
-import {isQuoteBlurred} from 'lib/moderation'
+import {isPostMediaBlurred} from 'lib/moderation'
 
 export function ContentHider({
   testID,
@@ -115,7 +115,7 @@ function shouldIgnoreQuote(
   if (!decisions || !ignore) {
     return false
   }
-  return !isQuoteBlurred(decisions)
+  return !isPostMediaBlurred(decisions)
 }
 
 const styles = StyleSheet.create({
