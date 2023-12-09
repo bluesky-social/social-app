@@ -28,7 +28,10 @@ export interface FeedPage {
 }
 
 export interface CachedFeedPage {
-  usableInFeed: boolean // if true, the cached page is recent enough to use as the response
+  /**
+   * if true, the cached page is recent enough to use as the response
+   */
+  usableInFeed: boolean
   syncedAt: Date
   data: FeedPage | undefined
 }

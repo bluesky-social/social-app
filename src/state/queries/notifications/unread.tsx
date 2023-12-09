@@ -136,8 +136,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
 
       getCachedUnreadPage() {
-        // return cached page if was for the current user
-        // (protects against session changes serving data from the past session)
+        // return cached page if it's marked as fresh enough
         if (cacheRef.current.usableInFeed) {
           return cacheRef.current.data
         }

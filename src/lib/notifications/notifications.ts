@@ -81,7 +81,7 @@ export function registerTokenChangeHandler(
 
 export function init(queryClient: QueryClient) {
   // handle notifications that are received, both in the foreground or background
-  // TODO: is this needed?
+  // NOTE: currently just here for debug logging
   Notifications.addNotificationReceivedListener(event => {
     logger.debug(
       'Notifications: received',
