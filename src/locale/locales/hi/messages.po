@@ -326,6 +326,10 @@ msgstr "Bluesky सार्वजनिक है।।"
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
 msgstr "ब्लूस्की एक स्वस्थ समुदाय बनाने के लिए आमंत्रित करता है। यदि आप किसी को आमंत्रित नहीं करते हैं, तो आप प्रतीक्षा सूची के लिए साइन अप कर सकते हैं और हम जल्द ही एक भेज देंगे।।"
 
+#: src/view/screens/Moderation.tsx:222
+msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
+msgstr ""
+
 #: src/view/com/modals/ServerInput.tsx:78
 msgid "Bluesky.Social"
 msgstr "Bluesky.Social"
@@ -677,6 +681,10 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:134
 msgid "Discard draft"
 msgstr "ड्राफ्ट हटाएं"
+
+#: src/view/screens/Moderation.tsx:204
+msgid "Discourage apps from showing my account to logged-out users"
+msgstr ""
 
 #: src/view/screens/Feeds.tsx:405
 msgid "Discover new feeds"
@@ -1134,8 +1142,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/screens/Moderation.tsx:203
-msgid "Limit the visibility of my account to logged-out users"
-msgstr ""
+#~ msgid "Limit the visibility of my account to logged-out users"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "List Avatar"
@@ -1174,7 +1182,11 @@ msgid "Local dev server"
 msgstr "स्थानीय देव सर्वर"
 
 #: src/view/screens/Moderation.tsx:134
-msgid "Logged-out users"
+#~ msgid "Logged-out users"
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:134
+msgid "Logged-out visibility"
 msgstr ""
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
@@ -1371,7 +1383,11 @@ msgid "Not Applicable."
 msgstr "लागू नहीं।"
 
 #: src/view/screens/Moderation.tsx:227
-msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
+#~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:229
+msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
 #: src/view/screens/Moderation.tsx:227
@@ -2444,8 +2460,8 @@ msgstr "आपकी प्रोफ़ाइल"
 #~ msgstr ""
 
 #: src/view/screens/Moderation.tsx:220
-msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
-msgstr ""
+#~ msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
+#~ msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
