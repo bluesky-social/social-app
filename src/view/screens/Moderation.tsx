@@ -131,7 +131,7 @@ export function ModerationScreen({}: Props) {
             paddingBottom: 6,
           },
         ]}>
-        <Trans>Logged-out users</Trans>
+        <Trans>Logged-out visibility</Trans>
       </Text>
       <PwiOptOut />
     </CenteredView>
@@ -200,7 +200,9 @@ function PwiOptOut() {
         style={{flexDirection: 'row', alignItems: 'center', paddingRight: 14}}>
         <ToggleButton
           type="default-light"
-          label={_(msg`Limit the visibility of my account to logged-out users`)}
+          label={_(
+            msg`Discourage apps from showing my account to logged-out users`,
+          )}
           labelType="lg"
           isSelected={isOptedOut}
           onPress={canToggle ? onToggleOptOut : undefined}
@@ -218,19 +220,17 @@ function PwiOptOut() {
         }}>
         <Text style={pal.textLight}>
           <Trans>
-            Your profile and posts will not be visible to people visiting the
-            Bluesky app or website without having an account and being logged
-            in.
+            Bluesky will not show your profile and posts to logged-out users.
+            Other apps may not honor this request. This does not make your
+            account private.
           </Trans>
         </Text>
         <Text style={[pal.textLight, {fontWeight: '500'}]}>
           <Trans>
-            Note: Bluesky is an open and public network, and enabling this will
-            not make your profile private or limit the ability of logged in
-            users to see your posts. This setting only limits the visibility of
-            posts on the Bluesky app and website; third-party apps that display
-            Bluesky content may not respect this setting, and could show your
-            content to logged-out users.
+            Note: Bluesky is an open and public network. This setting only
+            limits the visibility of your content on the Bluesky app and
+            website, and other apps may not respect this setting. Your content
+            may still be shown to logged-out users by other apps and websites.
           </Trans>
         </Text>
         <TextLink
