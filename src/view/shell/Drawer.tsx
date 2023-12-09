@@ -14,7 +14,6 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useQueryClient} from '@tanstack/react-query'
 import {s, colors} from 'lib/styles'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {
@@ -51,9 +50,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
 import {useInviteCodesQuery} from '#/state/queries/invites'
-import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {truncateAndInvalidate} from '#/state/queries/util'
 
 let DrawerProfileCard = ({
   account,
@@ -109,7 +106,6 @@ export {DrawerProfileCard}
 let DrawerContent = ({}: {}): React.ReactNode => {
   const theme = useTheme()
   const pal = usePalette('default')
-  const queryClient = useQueryClient()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
@@ -140,16 +136,12 @@ let DrawerContent = ({}: {}): React.ReactNode => {
         } else if (tabState === TabState.Inside) {
           navigation.dispatch(StackActions.popToTop())
         } else {
-          if (tab === 'Notifications') {
-            // fetch new notifs on view
-            truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
-          }
           // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(`${tab}Tab`)
         }
       }
     },
-    [track, navigation, setDrawerOpen, currentAccount, queryClient],
+    [track, navigation, setDrawerOpen, currentAccount],
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
