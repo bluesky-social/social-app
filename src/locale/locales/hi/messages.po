@@ -51,7 +51,7 @@ msgstr ""
 msgid "{message}"
 msgstr ""
 
-#: src/view/com/threadgate/WhoCanReply.tsx:130
+#: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr "विवरण जोड़ें"
 msgid "Add details to report"
 msgstr "रिपोर्ट करने के लिए विवरण जोड़ें"
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:435
 msgid "Add link card"
 msgstr "लिंक कार्ड जोड़ें"
 
-#: src/view/com/composer/Composer.tsx:428
+#: src/view/com/composer/Composer.tsx:438
 msgid "Add link card:"
 msgstr "लिंक कार्ड जोड़ें:"
 
@@ -184,6 +184,7 @@ msgid "An email has been sent to your previous address, {0}. It includes a confi
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
 #: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "और"
 
@@ -223,7 +224,7 @@ msgstr "दिखावट"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "क्या आप वाकई ऐप पासवर्ड \"{name}\" हटाना चाहते हैं?"
 
-#: src/view/com/composer/Composer.tsx:139
+#: src/view/com/composer/Composer.tsx:142
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "क्या आप वाकई इस ड्राफ्ट को हटाना करना चाहेंगे?"
 
@@ -352,8 +353,8 @@ msgstr "कैमरा"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "केवल अक्षर, संख्या, रिक्त स्थान, डैश और अंडरस्कोर हो सकते हैं। कम से कम 4 अक्षर लंबा होना चाहिए, लेकिन 32 अक्षरों से अधिक लंबा नहीं होना चाहिए।।"
 
-#: src/view/com/composer/Composer.tsx:278
-#: src/view/com/composer/Composer.tsx:281
+#: src/view/com/composer/Composer.tsx:282
+#: src/view/com/composer/Composer.tsx:285
 #: src/view/com/modals/AltImage.tsx:127
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -678,11 +679,11 @@ msgstr "देव सर्वर"
 msgid "Developer Tools"
 msgstr "डेवलपर उपकरण"
 
-#: src/view/com/composer/Composer.tsx:140
+#: src/view/com/composer/Composer.tsx:143
 msgid "Discard"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:134
+#: src/view/com/composer/Composer.tsx:137
 msgid "Discard draft"
 msgstr "ड्राफ्ट हटाएं"
 
@@ -713,6 +714,8 @@ msgstr "डोमेन सत्यापित!"
 #: src/view/com/modals/EditImage.tsx:333
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/screens/PreferencesHomeFeed.tsx:302
 #: src/view/screens/PreferencesThreads.tsx:156
@@ -1217,6 +1220,14 @@ msgstr "यह सुनिश्चित करने के लिए कि 
 msgid "Media"
 msgstr ""
 
+#: src/view/com/threadgate/WhoCanReply.tsx:139
+msgid "mentioned users"
+msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:93
+msgid "Mentioned users"
+msgstr ""
+
 #: src/view/screens/Search/Search.tsx:503
 msgid "Menu"
 msgstr "मेनू"
@@ -1427,9 +1438,13 @@ msgstr "अरे नहीं!"
 msgid "Okay"
 msgstr "ठीक है"
 
-#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:351
 msgid "One or more images is missing alt text."
 msgstr "एक या अधिक छवियाँ alt पाठ याद आती हैं।।"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:100
+msgid "Only {0} can reply."
+msgstr ""
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:79
 msgid "Open navigation"
@@ -1546,7 +1561,7 @@ msgstr "कृपया अपना पासवर्ड भी दर्ज �
 msgid "Please tell us why you think this decision was incorrect."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:324
+#: src/view/com/composer/Composer.tsx:334
 #: src/view/com/post-thread/PostThread.tsx:216
 #: src/view/screens/PostThread.tsx:77
 msgid "Post"
@@ -1689,6 +1704,10 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:161
 msgid "Replies"
+msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:98
+msgid "Replies to this thread are disabled"
 msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
@@ -2155,7 +2174,7 @@ msgstr "यह वह सेवा है जो आपको ऑनलाइन
 msgid "This link is taking you to the following website:"
 msgstr "यह लिंक आपको निम्नलिखित वेबसाइट पर ले जा रहा है:"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:123
+#: src/view/com/post-thread/PostThreadItem.tsx:124
 msgid "This post has been deleted."
 msgstr "इस पोस्ट को हटा दिया गया है।।"
 
@@ -2180,8 +2199,8 @@ msgstr "ड्रॉपडाउन टॉगल करें"
 msgid "Transformations"
 msgstr "परिवर्तन"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:692
-#: src/view/com/post-thread/PostThreadItem.tsx:694
+#: src/view/com/post-thread/PostThreadItem.tsx:704
+#: src/view/com/post-thread/PostThreadItem.tsx:706
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "Translate"
 msgstr "अनुवाद"
@@ -2283,9 +2302,13 @@ msgstr "यूजर नाम या ईमेल पता"
 msgid "Users"
 msgstr "यूजर लोग"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:115
-msgid "Users followed by <0/>"
+#: src/view/com/threadgate/WhoCanReply.tsx:143
+msgid "users followed by <0/>"
 msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:115
+#~ msgid "Users followed by <0/>"
+#~ msgstr ""
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
@@ -2362,14 +2385,14 @@ msgid "Who can reply"
 msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:79
-msgid "Who can reply?"
-msgstr ""
+#~ msgid "Who can reply?"
+#~ msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
 msgstr "चौड़ा"
 
-#: src/view/com/composer/Composer.tsx:396
+#: src/view/com/composer/Composer.tsx:406
 msgid "Write post"
 msgstr "पोस्ट लिखो"
 

@@ -51,7 +51,7 @@ msgstr ""
 msgid "{message}"
 msgstr ""
 
-#: src/view/com/threadgate/WhoCanReply.tsx:130
+#: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr ""
 msgid "Add details to report"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:435
 msgid "Add link card"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:428
+#: src/view/com/composer/Composer.tsx:438
 msgid "Add link card:"
 msgstr ""
 
@@ -184,6 +184,7 @@ msgid "An email has been sent to your previous address, {0}. It includes a confi
 msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr ""
 
@@ -223,7 +224,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:139
+#: src/view/com/composer/Composer.tsx:142
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
@@ -352,8 +353,8 @@ msgstr ""
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:278
-#: src/view/com/composer/Composer.tsx:281
+#: src/view/com/composer/Composer.tsx:282
+#: src/view/com/composer/Composer.tsx:285
 #: src/view/com/modals/AltImage.tsx:127
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -682,11 +683,11 @@ msgstr ""
 msgid "Developer Tools"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:140
+#: src/view/com/composer/Composer.tsx:143
 msgid "Discard"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:134
+#: src/view/com/composer/Composer.tsx:137
 msgid "Discard draft"
 msgstr ""
 
@@ -717,6 +718,8 @@ msgstr ""
 #: src/view/com/modals/EditImage.tsx:333
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/screens/PreferencesHomeFeed.tsx:302
 #: src/view/screens/PreferencesThreads.tsx:156
@@ -1225,6 +1228,14 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
+#: src/view/com/threadgate/WhoCanReply.tsx:139
+msgid "mentioned users"
+msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:93
+msgid "Mentioned users"
+msgstr ""
+
 #: src/view/screens/Search/Search.tsx:503
 msgid "Menu"
 msgstr ""
@@ -1435,8 +1446,12 @@ msgstr ""
 msgid "Okay"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:351
 msgid "One or more images is missing alt text."
+msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:100
+msgid "Only {0} can reply."
 msgstr ""
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:79
@@ -1554,7 +1569,7 @@ msgstr ""
 msgid "Please tell us why you think this decision was incorrect."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:324
+#: src/view/com/composer/Composer.tsx:334
 #: src/view/com/post-thread/PostThread.tsx:216
 #: src/view/screens/PostThread.tsx:77
 msgid "Post"
@@ -1697,6 +1712,10 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:161
 msgid "Replies"
+msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:98
+msgid "Replies to this thread are disabled"
 msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
@@ -2163,7 +2182,7 @@ msgstr ""
 msgid "This link is taking you to the following website:"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:123
+#: src/view/com/post-thread/PostThreadItem.tsx:124
 msgid "This post has been deleted."
 msgstr ""
 
@@ -2188,8 +2207,8 @@ msgstr ""
 msgid "Transformations"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:692
-#: src/view/com/post-thread/PostThreadItem.tsx:694
+#: src/view/com/post-thread/PostThreadItem.tsx:704
+#: src/view/com/post-thread/PostThreadItem.tsx:706
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "Translate"
 msgstr ""
@@ -2291,9 +2310,13 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/view/com/threadgate/WhoCanReply.tsx:115
-msgid "Users followed by <0/>"
+#: src/view/com/threadgate/WhoCanReply.tsx:143
+msgid "users followed by <0/>"
 msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:115
+#~ msgid "Users followed by <0/>"
+#~ msgstr ""
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
@@ -2370,14 +2393,14 @@ msgid "Who can reply"
 msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:79
-msgid "Who can reply?"
-msgstr ""
+#~ msgid "Who can reply?"
+#~ msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:396
+#: src/view/com/composer/Composer.tsx:406
 msgid "Write post"
 msgstr ""
 
