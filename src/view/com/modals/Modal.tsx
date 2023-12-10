@@ -16,6 +16,7 @@ import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
+import * as ThreadgateModal from './Threadgate'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 import * as ListAddUserModal from './ListAddRemoveUsers'
@@ -127,6 +128,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'self-label') {
     snapPoints = SelfLabelModal.snapPoints
     element = <SelfLabelModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'threadgate') {
+    snapPoints = ThreadgateModal.snapPoints
+    element = <ThreadgateModal.Component {...activeModal} />
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />

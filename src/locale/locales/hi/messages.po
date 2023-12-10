@@ -51,6 +51,10 @@ msgstr ""
 msgid "{message}"
 msgstr ""
 
+#: src/view/com/threadgate/WhoCanReply.tsx:130
+msgid "<0/> members"
+msgstr ""
+
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
 msgstr "<0>अपना</0><1>पसंदीदा</1><2>फ़ीड चुनें</2>"
@@ -808,6 +812,10 @@ msgstr "अपने यूज़रनेम और पासवर्ड द�
 msgid "Error:"
 msgstr ""
 
+#: src/view/com/modals/Threadgate.tsx:76
+msgid "Everybody"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "ऑल्ट टेक्स्ट"
@@ -866,6 +874,10 @@ msgstr "फॉलो"
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "आरंभ करने के लिए कुछ उपयोगकर्ताओं का अनुसरण करें. आपको कौन दिलचस्प लगता है, इसके आधार पर हम आपको और अधिक उपयोगकर्ताओं की अनुशंसा कर सकते हैं।"
+
+#: src/view/com/modals/Threadgate.tsx:98
+msgid "Followed users"
+msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:145
 msgid "Followed users only"
@@ -1372,6 +1384,10 @@ msgstr "\"{query}\" के लिए कोई परिणाम नहीं �
 #: src/view/screens/Search/Search.tsx:581
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
+msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:82
+msgid "Nobody"
 msgstr ""
 
 #: src/view/com/modals/SelfLabel.tsx:136
@@ -2267,6 +2283,14 @@ msgstr "यूजर नाम या ईमेल पता"
 msgid "Users"
 msgstr "यूजर लोग"
 
+#: src/view/com/threadgate/WhoCanReply.tsx:115
+msgid "Users followed by <0/>"
+msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:106
+msgid "Users in \"{0}\""
+msgstr ""
+
 #: src/view/screens/Settings.tsx:750
 msgid "Verify email"
 msgstr "ईमेल सत्यापित करें"
@@ -2331,6 +2355,15 @@ msgstr "इस पोस्ट में किस भाषा का उपय
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "कौन से भाषाएं आपको अपने एल्गोरिदमिक फ़ीड में देखना पसंद करती हैं?"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:43
+#: src/view/com/modals/Threadgate.tsx:66
+msgid "Who can reply"
+msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:79
+msgid "Who can reply?"
+msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
