@@ -300,6 +300,12 @@ export const ComposePost = observer(function ComposePost({
                 onChange={setLabels}
                 hasMedia={hasMedia}
               />
+              {replyTo ? null : (
+                <ThreadgateBtn
+                  threadgate={threadgate}
+                  onChange={setThreadgate}
+                />
+              )}
               {canPost ? (
                 <TouchableOpacity
                   testID="composerPublishBtn"
@@ -443,9 +449,6 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {replyTo ? null : (
-            <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
-          )}
           {isDesktop ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
@@ -465,9 +468,11 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: 6,
     paddingBottom: 4,
     paddingHorizontal: 20,
     height: 55,
+    gap: 4,
   },
   topbarDesktop: {
     paddingTop: 10,
@@ -477,6 +482,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 6,
+    marginLeft: 12,
   },
   errorLine: {
     flexDirection: 'row',

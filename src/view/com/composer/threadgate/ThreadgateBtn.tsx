@@ -43,16 +43,26 @@ export function ThreadgateBtn({
       accessibilityLabel={_(msg`Who can reply`)}
       accessibilityHint="">
       <FontAwesomeIcon
-        icon="users"
+        icon={['far', 'comments']}
         style={pal.link as FontAwesomeIconStyle}
         size={24}
       />
+      {threadgate.length ? (
+        <FontAwesomeIcon
+          icon="check"
+          size={16}
+          style={pal.link as FontAwesomeIconStyle}
+        />
+      ) : null}
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    gap: 4,
   },
 })
