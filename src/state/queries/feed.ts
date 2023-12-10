@@ -14,7 +14,6 @@ import {
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
 } from '@atproto/api'
-
 import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -261,7 +260,7 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
 
 export function usePinnedFeedsInfos(): {
   feeds: FeedSourceInfo[]
-  hasPinnedCustom: boolean
+  hasPinnedCustom: boolean | undefined
 } {
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
@@ -269,9 +268,9 @@ export function usePinnedFeedsInfos(): {
   ])
   const {data: preferences} = usePreferencesQuery()
 
-  const hasPinnedCustom = React.useMemo<boolean>(() => {
-    return tabs.some(tab => tab !== FOLLOWING_FEED_STUB)
-  }, [tabs])
+  const [hasPinnedCustom, setHasPinnedCustom] = React.useState<
+    boolean | undefined
+  >(undefined)
 
   React.useEffect(() => {
     if (!preferences?.feeds?.pinned) return
@@ -315,10 +314,11 @@ export function usePinnedFeedsInfos(): {
       const views = await Promise.all(reqs)
 
       setTabs([FOLLOWING_FEED_STUB].concat(views))
+      setHasPinnedCustom(views.length > 0)
     }
 
     fetchFeedInfo()
-  }, [queryClient, setTabs, preferences?.feeds?.pinned])
+  }, [queryClient, setTabs, setHasPinnedCustom, preferences?.feeds?.pinned])
 
   return {feeds: tabs, hasPinnedCustom}
 }

@@ -89,7 +89,7 @@ function FeedsTabBarTablet(
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
   const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
-  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
+  const showFeedsLinkInTabBar = hasSession && hasPinnedCustom === false
   const items = showFeedsLinkInTabBar
     ? pinnedDisplayNames.concat('Feeds ✨')
     : pinnedDisplayNames
