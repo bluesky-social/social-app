@@ -67,7 +67,6 @@ export async function createServer(
     pds: {
       port,
       hostname: 'localhost',
-      dbPostgresSchema: `pds_${id}`,
       inviteRequired,
     },
     bsky: {
