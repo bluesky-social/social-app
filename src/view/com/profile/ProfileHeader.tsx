@@ -430,59 +430,18 @@ let ProfileHeaderLoaded = ({
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
-  const animatedBannerStyle = useAnimatedStyle(() => {
-    if (scrollY) {
-      return {
-        height: 150 - Math.min(0, scrollY.value),
-        top: Math.min(0, scrollY.value),
-      }
-    } else {
-      return {
-        height: 150,
-        top: 0,
-      }
-    }
-  })
-
-  const animatedBlurProps = useAnimatedProps(() => {
+  const animatedBackButtonStyle = useAnimatedStyle(() => {
     return {
-      intensity: scrollY
-        ? interpolate(scrollY.value, [-120, -15], [100, 0], Extrapolation.CLAMP)
-        : 0,
-    }
-  })
-
-  const animatedSpinnerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: scrollY
-        ? interpolate(scrollY.value, [-60, -15], [1, 0], Extrapolation.CLAMP)
-        : 1,
+      top: (scrollY?.value ?? 0) > 0 ? 10 : (scrollY?.value ?? 0) + 10,
     }
   })
 
   return (
     <View style={pal.view} pointerEvents="box-none">
       <View style={styles.bannerSpacer} pointerEvents="none" />
-      <Animated.View
-        style={[styles.banner, animatedBannerStyle]}
-        pointerEvents="none">
+      <OverscrollableBanner scrollY={scrollY}>
         <UserBanner banner={profile.banner} moderation={moderation.avatar} />
-        {isIOS && (
-          <AnimatedBlurView
-            animatedProps={animatedBlurProps}
-            tint="dark"
-            style={StyleSheet.absoluteFill}>
-            <AnimatedActivityIndicator
-              // stretch goal - figure out if it's actually refreshing
-              // and set the animating prop accordingly
-              // -sfn
-              style={[styles.bannerSpinner, animatedSpinnerStyle]}
-              size="small"
-              color="white"
-            />
-          </AnimatedBlurView>
-        )}
-      </Animated.View>
+      </OverscrollableBanner>
       <View style={styles.content} pointerEvents="box-none">
         <View style={[styles.buttonsLine]} pointerEvents="box-none">
           {isMe ? (
@@ -712,11 +671,12 @@ let ProfileHeaderLoaded = ({
           accessibilityRole="button"
           accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
-          <View style={styles.backBtnWrapper}>
+          <Animated.View
+            style={[animatedBackButtonStyle, styles.backBtnWrapper]}>
             <BlurView style={styles.backBtn} tint="dark">
               <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
             </BlurView>
-          </View>
+          </Animated.View>
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback
@@ -739,6 +699,73 @@ let ProfileHeaderLoaded = ({
 }
 ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 
+const OverscrollableBanner = ({
+  scrollY,
+  children,
+}: {
+  scrollY?: SharedValue<number>
+  children?: React.ReactNode
+}) => {
+  const animatedBannerStyle = useAnimatedStyle(() => {
+    if (scrollY) {
+      return {
+        height: 150 - Math.min(0, scrollY.value),
+        top: Math.min(0, scrollY.value),
+      }
+    } else {
+      return {
+        height: 150,
+        top: 0,
+      }
+    }
+  })
+
+  const animatedBlurProps = useAnimatedProps(() => {
+    return {
+      intensity: interpolate(
+        scrollY?.value ?? 0,
+        [-120, -15],
+        [100, 0],
+        Extrapolation.CLAMP,
+      ),
+    }
+  })
+
+  const animatedSpinnerStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        scrollY?.value ?? 0,
+        [-60, -15],
+        [1, 0],
+        Extrapolation.CLAMP,
+      ),
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[styles.banner, animatedBannerStyle]}
+      pointerEvents="none">
+      {children}
+      {isIOS && (
+        <AnimatedBlurView
+          animatedProps={animatedBlurProps}
+          tint="dark"
+          style={StyleSheet.absoluteFill}>
+          <AnimatedActivityIndicator
+            // stretch goal - figure out if it's actually refreshing
+            // and set the animating prop accordingly
+            // -sfn
+            style={[styles.bannerSpinner, animatedSpinnerStyle]}
+            size="small"
+            color="white"
+          />
+        </AnimatedBlurView>
+      )}
+    </Animated.View>
+  )
+}
+
 const styles = StyleSheet.create({
   bannerSpacer: {
     width: '100%',
@@ -757,7 +784,6 @@ const styles = StyleSheet.create({
   },
   backBtnWrapper: {
     position: 'absolute',
-    top: 10,
     left: 10,
     width: 30,
     height: 30,
