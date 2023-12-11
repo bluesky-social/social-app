@@ -17,7 +17,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useAnimatedScrollHandler_FIXED} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 
 import useImageDimensions from '../../hooks/useImageDimensions'
@@ -61,7 +61,7 @@ const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
     }
   })
 
-  const scrollHandler = useAnimatedScrollHandler_FIXED({
+  const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       const nextIsScaled = e.zoomScale > 1
       translationY.value = nextIsScaled ? 0 : e.contentOffset.y

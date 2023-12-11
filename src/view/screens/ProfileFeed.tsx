@@ -46,7 +46,7 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useAnimatedScrollHandler_FIXED} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {
   useFeedSourceInfoQuery,
   FeedSourceFeedInfo,
@@ -572,7 +572,7 @@ function AboutSection({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const scrollHandler = useAnimatedScrollHandler_FIXED(onScroll)
+  const scrollHandler = useAnimatedScrollHandler(onScroll)
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
