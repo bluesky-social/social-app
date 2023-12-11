@@ -346,8 +346,7 @@ msgstr "Fotoaparát"
 
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Může obsahovat pouze písmena, čísla, mezery, pomlčky a podtržítka. Musí mít alespoň 4 znaky, ale ne více než 32 znaků.
-"
+msgstr "Může obsahovat pouze písmena, čísla, mezery, pomlčky a podtržítka. Musí mít alespoň 4 znaky, ale ne více než 32 znaků."
 
 #: src/view/com/composer/Composer.tsx:278
 #: src/view/com/composer/Composer.tsx:281
