@@ -14,7 +14,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AppBskyFeedGetPosts, RichText} from '@atproto/api'
+import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
@@ -60,7 +60,6 @@ import {
 import {useSession, getAgent} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useComposerControls} from '#/state/shell/composer'
-import {until} from '#/lib/async/until'
 import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 
@@ -246,9 +245,7 @@ export const ComposePost = observer(function ComposePost({
       if (replyTo && replyTo.uri) track('Post:Reply')
     }
     if (postUri && !replyTo) {
-      whenAppViewReady(postUri).then(() => {
-        emitPostCreated()
-      })
+      emitPostCreated()
     }
     setLangPrefs.savePostLanguageToHistory()
     onPost?.()
@@ -553,15 +550,3 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
 })
-
-async function whenAppViewReady(uri: string) {
-  await until(
-    5, // 5 tries
-    1e3, // 1s delay between tries
-    (res: AppBskyFeedGetPosts.Response) => !!res.data.posts[0],
-    () =>
-      getAgent().getPosts({
-        uris: [uri],
-      }),
-  )
-}
