@@ -7,7 +7,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {EmptyState} from '../util/EmptyState'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
-import {useAnimatedScrollHandler_FIXED} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
@@ -135,7 +135,7 @@ export function Feed({
     [isFetchingNextPage],
   )
 
-  const scrollHandler = useAnimatedScrollHandler_FIXED(onScroll || {})
+  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View style={s.hContentRegion}>
       {error && (

@@ -20,7 +20,7 @@ import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
-import {useAnimatedScrollHandler_FIXED} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from '#/lib/ThemeContext'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {isNative} from '#/platform/detection'
@@ -187,7 +187,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       [error, refetch, onPressRetryLoadMore, pal],
     )
 
-    const scrollHandler = useAnimatedScrollHandler_FIXED(onScroll || {})
+    const scrollHandler = useAnimatedScrollHandler(onScroll || {})
     return (
       <View testID={testID} style={style}>
         <FlatList

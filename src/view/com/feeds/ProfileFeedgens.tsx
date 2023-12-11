@@ -19,7 +19,7 @@ import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
-import {useAnimatedScrollHandler_FIXED} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from '#/lib/ThemeContext'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
@@ -184,7 +184,7 @@ export const ProfileFeedgens = React.forwardRef<
     [error, refetch, onPressRetryLoadMore, pal, preferences],
   )
 
-  const scrollHandler = useAnimatedScrollHandler_FIXED(onScroll || {})
+  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
       <FlatList
