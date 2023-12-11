@@ -26,7 +26,6 @@ import {
   useUnpinFeedMutation,
   useSetSaveFeedsMutation,
 } from '#/state/queries/preferences'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -89,6 +88,15 @@ export function SavedFeeds({}: Props) {
             <Trans>Pinned Feeds</Trans>
           </Text>
         </View>
+
+        <ListItem
+          key={'id'}
+          feedUri={'id'}
+          isPinned
+          setSavedFeeds={setSavedFeeds}
+          resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+          currentFeeds={currentFeeds}
+        />
         {preferences?.feeds ? (
           !currentFeeds.pinned.length ? (
             <View
@@ -290,13 +298,7 @@ function ListItem({
         feedUri={feedUri}
         style={styles.noBorder}
         showSaveBtn
-        LoadingComponent={
-          <FeedLoadingPlaceholder
-            style={{flex: 1}}
-            showLowerPlaceholder={false}
-            showTopBorder={false}
-          />
-        }
+        showMinimalPlaceholder
       />
       <Pressable
         disabled={isPending}

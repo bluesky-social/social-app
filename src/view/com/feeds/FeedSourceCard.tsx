@@ -32,30 +32,23 @@ export function FeedSourceCard({
   showSaveBtn = false,
   showDescription = false,
   showLikes = false,
-  LoadingComponent,
   pinOnSave = false,
+  showMinimalPlaceholder,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
   showLikes?: boolean
-  LoadingComponent?: JSX.Element
   pinOnSave?: boolean
+  showMinimalPlaceholder?: boolean
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
 
-  if (!feed || !preferences) {
-    return LoadingComponent ? (
-      LoadingComponent
-    ) : (
-      <FeedLoadingPlaceholder style={{flex: 1}} />
-    )
-  }
-
   return (
     <FeedSourceCardLoaded
+      feedUri={feedUri}
       feed={feed}
       preferences={preferences}
       style={style}
@@ -63,11 +56,13 @@ export function FeedSourceCard({
       showDescription={showDescription}
       showLikes={showLikes}
       pinOnSave={pinOnSave}
+      showMinimalPlaceholder={showMinimalPlaceholder}
     />
   )
 }
 
 export function FeedSourceCardLoaded({
+  feedUri,
   feed,
   preferences,
   style,
@@ -75,14 +70,17 @@ export function FeedSourceCardLoaded({
   showDescription = false,
   showLikes = false,
   pinOnSave = false,
+  showMinimalPlaceholder,
 }: {
-  feed: FeedSourceInfo
-  preferences: UsePreferencesQueryResponse
+  feedUri: string
+  feed?: FeedSourceInfo
+  preferences?: UsePreferencesQueryResponse
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
   showLikes?: boolean
   pinOnSave?: boolean
+  showMinimalPlaceholder?: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -95,7 +93,7 @@ export function FeedSourceCardLoaded({
     useRemoveFeedMutation()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
 
-  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed.uri))
+  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed?.uri || ''))
 
   const onToggleSaved = React.useCallback(async () => {
     // Only feeds can be un/saved, lists are handled elsewhere
@@ -105,7 +103,7 @@ export function FeedSourceCardLoaded({
       openModal({
         name: 'confirm',
         title: _(msg`Remove from my feeds`),
-        message: _(msg`Remove ${feed.displayName} from my feeds?`),
+        message: _(msg`Remove ${feed?.displayName} from my feeds?`),
         onPressConfirm: async () => {
           try {
             await removeFeed({uri: feed.uri})
@@ -132,7 +130,70 @@ export function FeedSourceCardLoaded({
     }
   }, [isSaved, openModal, feed, removeFeed, saveFeed, _, pinOnSave, pinFeed])
 
-  if (!feed || !preferences) return null
+  /*
+   * LOAD STATE
+   *
+   * This state also captures the scenario where a feed can't load for whatever
+   * reason.
+   */
+  if (!feed || !preferences)
+    return (
+      <View
+        style={[
+          pal.border,
+          {
+            borderTopWidth: showMinimalPlaceholder ? 0 : 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 1,
+            paddingRight: 18,
+          },
+        ]}>
+        {showMinimalPlaceholder ? (
+          <FeedLoadingPlaceholder
+            style={{flex: 1}}
+            showTopBorder={false}
+            showLowerPlaceholder={false}
+          />
+        ) : (
+          <FeedLoadingPlaceholder style={{flex: 1}} showTopBorder={false} />
+        )}
+
+        {showSaveBtn && (
+          <Pressable
+            testID={`feed-${feedUri}-toggleSave`}
+            disabled={isRemovePending}
+            accessibilityRole="button"
+            accessibilityLabel={'Remove from my feeds'}
+            accessibilityHint=""
+            onPress={() => {
+              openModal({
+                name: 'confirm',
+                title: _(msg`Remove from my feeds`),
+                message: _(msg`Remove this feed from my feeds?`),
+                onPressConfirm: async () => {
+                  try {
+                    await removeFeed({uri: feedUri})
+                    // await item.unsave()
+                    Toast.show('Removed from my feeds')
+                  } catch (e) {
+                    Toast.show('There was an issue contacting your server')
+                    logger.error('Failed to unsave feed', {error: e})
+                  }
+                },
+              })
+            }}
+            hitSlop={15}
+            style={styles.btn}>
+            <FontAwesomeIcon
+              icon={['far', 'trash-can']}
+              size={19}
+              color={pal.colors.icon}
+            />
+          </Pressable>
+        )}
+      </View>
+    )
 
   return (
     <Pressable
