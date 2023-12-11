@@ -76,6 +76,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
           queryClient,
           moderationOpts,
           threadMutes,
+          fetchAdditionalData: true,
         })
       }
 
