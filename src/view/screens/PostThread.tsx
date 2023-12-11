@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Alert, StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -53,6 +53,12 @@ export function PostThreadScreen({route}: Props) {
     )
     if (thread?.type !== 'post') {
       return
+    }
+    if (thread.post.viewer?.replyDisabled) {
+      return Alert.alert(
+        "You can't reply to this post",
+        "Due to the author's settings, you can't reply to this post.",
+      )
     }
     openComposer({
       replyTo: {
