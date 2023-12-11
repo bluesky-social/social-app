@@ -434,11 +434,12 @@ let ProfileHeaderLoaded = ({
     if (scrollY) {
       return {
         height: 150 - Math.min(0, scrollY.value),
-        translateY: Math.max(0, scrollY.value),
+        top: Math.min(0, scrollY.value),
       }
     } else {
       return {
         height: 150,
+        top: 0,
       }
     }
   })
@@ -461,26 +462,27 @@ let ProfileHeaderLoaded = ({
 
   return (
     <View style={pal.view} pointerEvents="box-none">
-      <View style={styles.banner} pointerEvents="none">
-        <Animated.View style={[styles.innerBanner, animatedBannerStyle]}>
-          <UserBanner banner={profile.banner} moderation={moderation.avatar} />
-          {isIOS && (
-            <AnimatedBlurView
-              animatedProps={animatedBlurProps}
-              tint="dark"
-              style={StyleSheet.absoluteFill}>
-              <AnimatedActivityIndicator
-                // stretch goal - figure out if it's actually refreshing
-                // and set the animating prop accordingly
-                // -sfn
-                style={[styles.bannerSpinner, animatedSpinnerStyle]}
-                size="small"
-                color="white"
-              />
-            </AnimatedBlurView>
-          )}
-        </Animated.View>
-      </View>
+      <View style={styles.bannerSpacer} pointerEvents="none" />
+      <Animated.View
+        style={[styles.banner, animatedBannerStyle]}
+        pointerEvents="none">
+        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+        {isIOS && (
+          <AnimatedBlurView
+            animatedProps={animatedBlurProps}
+            tint="dark"
+            style={StyleSheet.absoluteFill}>
+            <AnimatedActivityIndicator
+              // stretch goal - figure out if it's actually refreshing
+              // and set the animating prop accordingly
+              // -sfn
+              style={[styles.bannerSpinner, animatedSpinnerStyle]}
+              size="small"
+              color="white"
+            />
+          </AnimatedBlurView>
+        )}
+      </Animated.View>
       <View style={styles.content} pointerEvents="box-none">
         <View style={[styles.buttonsLine]} pointerEvents="box-none">
           {isMe ? (
@@ -738,10 +740,9 @@ let ProfileHeaderLoaded = ({
 ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 
 const styles = StyleSheet.create({
-  banner: {
+  bannerSpacer: {
     width: '100%',
     height: 150,
-    position: 'relative',
   },
   bannerSpinner: {
     position: 'absolute',
@@ -750,10 +751,8 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginLeft: -10,
   },
-  innerBanner: {
+  banner: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
     width: '100%',
   },
   backBtnWrapper: {
