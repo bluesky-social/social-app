@@ -18,7 +18,7 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAnimatedScrollHandler_FIXED} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
@@ -271,7 +271,7 @@ let Feed = ({
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
-  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
+  const scrollHandler = useAnimatedScrollHandler_FIXED(onScroll || {})
   return (
     <View testID={testID} style={style}>
       <FlatList
