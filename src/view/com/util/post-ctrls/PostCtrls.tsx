@@ -71,7 +71,14 @@ let PostCtrls = ({
         likeCount: post.likeCount || 0,
       })
     }
-  }, [post, postLikeMutation, postUnlikeMutation])
+  }, [
+    post.viewer?.like,
+    post.uri,
+    post.cid,
+    post.likeCount,
+    postLikeMutation,
+    postUnlikeMutation,
+  ])
 
   const onRepost = useCallback(() => {
     closeModal()
@@ -89,7 +96,15 @@ let PostCtrls = ({
         repostCount: post.repostCount || 0,
       })
     }
-  }, [post, closeModal, postRepostMutation, postUnrepostMutation])
+  }, [
+    post.uri,
+    post.cid,
+    post.viewer?.repost,
+    post.repostCount,
+    closeModal,
+    postRepostMutation,
+    postUnrepostMutation,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -103,7 +118,16 @@ let PostCtrls = ({
       },
     })
     Haptics.default()
-  }, [post, record, openComposer, closeModal])
+  }, [
+    post.uri,
+    post.cid,
+    post.author,
+    post.indexedAt,
+    record.text,
+    openComposer,
+    closeModal,
+  ])
+
   return (
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
