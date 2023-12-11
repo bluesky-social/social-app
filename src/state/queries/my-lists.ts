@@ -5,7 +5,11 @@ import {accumulate} from '#/lib/async/accumulate'
 import {useSession, getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
-export type MyListsFilter = 'all' | 'curate' | 'mod'
+export type MyListsFilter =
+  | 'all'
+  | 'curate'
+  | 'mod'
+  | 'all-including-subscribed'
 export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
 
 export function useMyListsQuery(filter: MyListsFilter) {
@@ -29,7 +33,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
             })),
         ),
       ]
-      if (filter === 'all' || filter === 'mod') {
+      if (filter === 'all-including-subscribed' || filter === 'mod') {
         promises.push(
           accumulate(cursor =>
             getAgent()
