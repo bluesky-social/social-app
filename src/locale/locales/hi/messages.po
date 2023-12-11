@@ -126,11 +126,11 @@ msgstr "विवरण जोड़ें"
 msgid "Add details to report"
 msgstr "रिपोर्ट करने के लिए विवरण जोड़ें"
 
-#: src/view/com/composer/Composer.tsx:435
+#: src/view/com/composer/Composer.tsx:432
 msgid "Add link card"
 msgstr "लिंक कार्ड जोड़ें"
 
-#: src/view/com/composer/Composer.tsx:438
+#: src/view/com/composer/Composer.tsx:435
 msgid "Add link card:"
 msgstr "लिंक कार्ड जोड़ें:"
 
@@ -138,7 +138,7 @@ msgstr "लिंक कार्ड जोड़ें:"
 msgid "Add the following DNS record to your domain:"
 msgstr "अपने डोमेन में निम्नलिखित DNS रिकॉर्ड जोड़ें:"
 
-#: src/view/com/profile/ProfileHeader.tsx:329
+#: src/view/com/profile/ProfileHeader.tsx:353
 msgid "Add to Lists"
 msgstr "सूचियों में जोड़ें"
 
@@ -224,7 +224,7 @@ msgstr "दिखावट"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "क्या आप वाकई ऐप पासवर्ड \"{name}\" हटाना चाहते हैं?"
 
-#: src/view/com/composer/Composer.tsx:142
+#: src/view/com/composer/Composer.tsx:141
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "क्या आप वाकई इस ड्राफ्ट को हटाना करना चाहेंगे?"
 
@@ -250,10 +250,10 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 #: src/view/com/auth/login/LoginForm.tsx:249
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:385
-#: src/view/com/post-thread/PostThread.tsx:435
-#: src/view/com/post-thread/PostThread.tsx:443
-#: src/view/com/profile/ProfileHeader.tsx:648
+#: src/view/com/post-thread/PostThread.tsx:392
+#: src/view/com/post-thread/PostThread.tsx:442
+#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/profile/ProfileHeader.tsx:672
 msgid "Back"
 msgstr "वापस"
 
@@ -270,8 +270,8 @@ msgstr "जन्मदिन"
 msgid "Birthday:"
 msgstr "जन्मदिन:"
 
-#: src/view/com/profile/ProfileHeader.tsx:258
-#: src/view/com/profile/ProfileHeader.tsx:365
+#: src/view/com/profile/ProfileHeader.tsx:282
+#: src/view/com/profile/ProfileHeader.tsx:389
 msgid "Block Account"
 msgstr "खाता ब्लॉक करें"
 
@@ -295,7 +295,7 @@ msgstr "ब्लॉक किए गए खाते"
 msgid "Blocked Accounts"
 msgstr "ब्लॉक किए गए खाते"
 
-#: src/view/com/profile/ProfileHeader.tsx:260
+#: src/view/com/profile/ProfileHeader.tsx:284
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "अवरुद्ध खाते आपके थ्रेड्स में उत्तर नहीं दे सकते, आपका उल्लेख नहीं कर सकते, या अन्यथा आपके साथ बातचीत नहीं कर सकते।"
 
@@ -303,7 +303,7 @@ msgstr "अवरुद्ध खाते आपके थ्रेड्स �
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "अवरुद्ध खाते आपके थ्रेड्स में उत्तर नहीं दे सकते, आपका उल्लेख नहीं कर सकते, या अन्यथा आपके साथ बातचीत नहीं कर सकते। आप उनकी सामग्री नहीं देख पाएंगे और उन्हें आपकी सामग्री देखने से रोका जाएगा।"
 
-#: src/view/com/post-thread/PostThread.tsx:241
+#: src/view/com/post-thread/PostThread.tsx:248
 msgid "Blocked post."
 msgstr "ब्लॉक पोस्ट।"
 
@@ -353,8 +353,8 @@ msgstr "कैमरा"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "केवल अक्षर, संख्या, रिक्त स्थान, डैश और अंडरस्कोर हो सकते हैं। कम से कम 4 अक्षर लंबा होना चाहिए, लेकिन 32 अक्षरों से अधिक लंबा नहीं होना चाहिए।।"
 
+#: src/view/com/composer/Composer.tsx:279
 #: src/view/com/composer/Composer.tsx:282
-#: src/view/com/composer/Composer.tsx:285
 #: src/view/com/modals/AltImage.tsx:127
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -577,7 +577,7 @@ msgstr ""
 msgid "Copy link to post"
 msgstr ""
 
-#: src/view/com/profile/ProfileHeader.tsx:314
+#: src/view/com/profile/ProfileHeader.tsx:338
 msgid "Copy link to profile"
 msgstr ""
 
@@ -660,7 +660,7 @@ msgstr "पोस्ट को हटाएं"
 msgid "Delete this post?"
 msgstr "इस पोस्ट को डीलीट करें?"
 
-#: src/view/com/post-thread/PostThread.tsx:233
+#: src/view/com/post-thread/PostThread.tsx:240
 msgid "Deleted post."
 msgstr "यह पोस्ट मिटाई जा चुकी है"
 
@@ -679,11 +679,11 @@ msgstr "देव सर्वर"
 msgid "Developer Tools"
 msgstr "डेवलपर उपकरण"
 
-#: src/view/com/composer/Composer.tsx:143
+#: src/view/com/composer/Composer.tsx:142
 msgid "Discard"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:137
+#: src/view/com/composer/Composer.tsx:136
 msgid "Discard draft"
 msgstr "ड्राफ्ट हटाएं"
 
@@ -748,11 +748,11 @@ msgstr "मेरी फ़ीड संपादित करें"
 msgid "Edit my profile"
 msgstr "मेरी प्रोफ़ाइल संपादित करें"
 
-#: src/view/com/profile/ProfileHeader.tsx:429
+#: src/view/com/profile/ProfileHeader.tsx:453
 msgid "Edit profile"
 msgstr "मेरी प्रोफ़ाइल संपादित करें"
 
-#: src/view/com/profile/ProfileHeader.tsx:432
+#: src/view/com/profile/ProfileHeader.tsx:456
 msgid "Edit Profile"
 msgstr "मेरी प्रोफ़ाइल संपादित करें"
 
@@ -783,7 +783,7 @@ msgstr "ईमेल:"
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "इस सेटिंग को केवल उन लोगों के बीच जवाब देखने में सक्षम करें जिन्हें आप फॉलो करते हैं।।"
 
-#: src/view/screens/Profile.tsx:472
+#: src/view/screens/Profile.tsx:471
 msgid "End of feed"
 msgstr ""
 
@@ -854,7 +854,7 @@ msgstr "सभी फ़ीड"
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 msgstr "सामग्री को व्यवस्थित करने के लिए उपयोगकर्ताओं द्वारा फ़ीड बनाए जाते हैं। कुछ फ़ीड चुनें जो आपको दिलचस्प लगें।"
 
-#: src/view/screens/SavedFeeds.tsx:164
+#: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "फ़ीड कस्टम एल्गोरिदम हैं जिन्हें उपयोगकर्ता थोड़ी कोडिंग विशेषज्ञता के साथ बनाते हैं। <0/> अधिक जानकारी के लिए."
 
@@ -870,7 +870,7 @@ msgstr "अपने मुख्य फ़ीड की स्क्रीन �
 msgid "Fine-tune the discussion threads."
 msgstr "चर्चा धागे को ठीक-ट्यून करें।।"
 
-#: src/view/com/profile/ProfileHeader.tsx:514
+#: src/view/com/profile/ProfileHeader.tsx:538
 msgid "Follow"
 msgstr "फॉलो"
 
@@ -890,16 +890,16 @@ msgstr "केवल वे यूजर को फ़ॉलो किया ग
 msgid "Followers"
 msgstr "यह यूजर आपका फ़ोलो करता है"
 
-#: src/view/com/profile/ProfileHeader.tsx:600
+#: src/view/com/profile/ProfileHeader.tsx:624
 msgid "following"
 msgstr "फोल्लोविंग"
 
-#: src/view/com/profile/ProfileHeader.tsx:498
+#: src/view/com/profile/ProfileHeader.tsx:522
 #: src/view/screens/ProfileFollows.tsx:25
 msgid "Following"
 msgstr "फोल्लोविंग"
 
-#: src/view/com/profile/ProfileHeader.tsx:547
+#: src/view/com/profile/ProfileHeader.tsx:571
 msgid "Follows you"
 msgstr "यह यूजर आपका फ़ोलो करता है"
 
@@ -1175,8 +1175,8 @@ msgstr "सूची का नाम"
 msgid "Lists"
 msgstr "सूची"
 
-#: src/view/com/post-thread/PostThread.tsx:250
-#: src/view/com/post-thread/PostThread.tsx:258
+#: src/view/com/post-thread/PostThread.tsx:257
+#: src/view/com/post-thread/PostThread.tsx:265
 msgid "Load more posts"
 msgstr "अधिक पोस्ट लोड करें"
 
@@ -1257,7 +1257,7 @@ msgstr ""
 msgid "More feeds"
 msgstr "अधिक फ़ीड"
 
-#: src/view/com/profile/ProfileHeader.tsx:524
+#: src/view/com/profile/ProfileHeader.tsx:548
 #: src/view/screens/ProfileFeed.tsx:370
 #: src/view/screens/ProfileList.tsx:606
 msgid "More options"
@@ -1267,7 +1267,7 @@ msgstr "अधिक विकल्प"
 #~ msgid "More post options"
 #~ msgstr "पोस्ट विकल्प"
 
-#: src/view/com/profile/ProfileHeader.tsx:346
+#: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
 msgstr "खाता म्यूट करें"
 
@@ -1438,7 +1438,7 @@ msgstr "अरे नहीं!"
 msgid "Okay"
 msgstr "ठीक है"
 
-#: src/view/com/composer/Composer.tsx:351
+#: src/view/com/composer/Composer.tsx:348
 msgid "One or more images is missing alt text."
 msgstr "एक या अधिक छवियाँ alt पाठ याद आती हैं।।"
 
@@ -1561,13 +1561,13 @@ msgstr "कृपया अपना पासवर्ड भी दर्ज �
 msgid "Please tell us why you think this decision was incorrect."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:334
-#: src/view/com/post-thread/PostThread.tsx:216
-#: src/view/screens/PostThread.tsx:77
+#: src/view/com/composer/Composer.tsx:331
+#: src/view/com/post-thread/PostThread.tsx:223
+#: src/view/screens/PostThread.tsx:78
 msgid "Post"
 msgstr "पोस्ट"
 
-#: src/view/com/post-thread/PostThread.tsx:375
+#: src/view/com/post-thread/PostThread.tsx:382
 msgid "Post hidden"
 msgstr "छुपा पोस्ट"
 
@@ -1579,7 +1579,7 @@ msgstr "पोस्ट भाषा"
 msgid "Post Languages"
 msgstr "पोस्ट भाषा"
 
-#: src/view/com/post-thread/PostThread.tsx:427
+#: src/view/com/post-thread/PostThread.tsx:434
 msgid "Post not found"
 msgstr "पोस्ट नहीं मिला"
 
@@ -1723,7 +1723,7 @@ msgstr "फिल्टर"
 msgid "Report {collectionName}"
 msgstr "रिपोर्ट {collectionName}"
 
-#: src/view/com/profile/ProfileHeader.tsx:380
+#: src/view/com/profile/ProfileHeader.tsx:404
 msgid "Report Account"
 msgstr "रिपोर्ट"
 
@@ -1837,7 +1837,7 @@ msgstr "बदलाव सेव करो"
 msgid "Save image crop"
 msgstr "फोटो बदलाव सेव करो"
 
-#: src/view/screens/SavedFeeds.tsx:130
+#: src/view/screens/SavedFeeds.tsx:122
 msgid "Saved Feeds"
 msgstr "सहेजे गए फ़ीड"
 
@@ -1946,7 +1946,7 @@ msgstr "सेटिंग्स"
 msgid "Sexual activity or erotic nudity."
 msgstr "यौन गतिविधि या कामुक नग्नता।।"
 
-#: src/view/com/profile/ProfileHeader.tsx:314
+#: src/view/com/profile/ProfileHeader.tsx:338
 #: src/view/com/util/forms/PostDropdownBtn.tsx:126
 #: src/view/screens/ProfileList.tsx:407
 msgid "Share"
@@ -2115,7 +2115,7 @@ msgstr "सेवा की शर्तें"
 msgid "Text input field"
 msgstr "पाठ इनपुट फ़ील्ड"
 
-#: src/view/com/profile/ProfileHeader.tsx:282
+#: src/view/com/profile/ProfileHeader.tsx:306
 msgid "The account will be able to interact with you after unblocking."
 msgstr "अनब्लॉक करने के बाद अकाउंट आपसे इंटरैक्ट कर सकेगा।"
 
@@ -2127,7 +2127,7 @@ msgstr "सामुदायिक दिशानिर्देशों क�
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "कॉपीराइट नीति को <0/> पर स्थानांतरित कर दिया गया है"
 
-#: src/view/com/post-thread/PostThread.tsx:430
+#: src/view/com/post-thread/PostThread.tsx:437
 msgid "The post may have been deleted."
 msgstr "हो सकता है कि यह पोस्ट हटा दी गई हो।"
 
@@ -2228,13 +2228,13 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "आपकी सेवा से संपर्क करने में असमर्थ। कृपया अपने इंटरनेट कनेक्शन की जांच करें।।"
 
-#: src/view/com/profile/ProfileHeader.tsx:442
-#: src/view/com/profile/ProfileHeader.tsx:445
+#: src/view/com/profile/ProfileHeader.tsx:466
+#: src/view/com/profile/ProfileHeader.tsx:469
 msgid "Unblock"
 msgstr "अनब्लॉक"
 
-#: src/view/com/profile/ProfileHeader.tsx:280
-#: src/view/com/profile/ProfileHeader.tsx:364
+#: src/view/com/profile/ProfileHeader.tsx:304
+#: src/view/com/profile/ProfileHeader.tsx:388
 msgid "Unblock Account"
 msgstr "अनब्लॉक खाता"
 
@@ -2246,7 +2246,7 @@ msgstr "पुनः पोस्ट पूर्ववत करें"
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr ""
 
-#: src/view/com/profile/ProfileHeader.tsx:345
+#: src/view/com/profile/ProfileHeader.tsx:369
 msgid "Unmute Account"
 msgstr "अनम्यूट खाता"
 
@@ -2384,7 +2384,7 @@ msgstr "इस पोस्ट में किस भाषा का उपय
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "कौन से भाषाएं आपको अपने एल्गोरिदमिक फ़ीड में देखना पसंद करती हैं?"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:43
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
 msgstr ""
@@ -2397,7 +2397,7 @@ msgstr ""
 msgid "Wide"
 msgstr "चौड़ा"
 
-#: src/view/com/composer/Composer.tsx:406
+#: src/view/com/composer/Composer.tsx:403
 msgid "Write post"
 msgstr "पोस्ट लिखो"
 
@@ -2424,7 +2424,7 @@ msgstr "अब आप अपने नए पासवर्ड के साथ
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "आपके पास अभी तक कोई आमंत्रण कोड नहीं है! जब आप कुछ अधिक समय के लिए Bluesky पर रहेंगे तो हम आपको कुछ भेजेंगे।"
 
-#: src/view/screens/SavedFeeds.tsx:110
+#: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
 msgstr "आपके पास कोई पिन किया हुआ फ़ीड नहीं है."
 
@@ -2432,11 +2432,11 @@ msgstr "आपके पास कोई पिन किया हुआ फ़
 msgid "You don't have any saved feeds!"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:143
+#: src/view/screens/SavedFeeds.tsx:135
 msgid "You don't have any saved feeds."
 msgstr "आपके पास कोई सहेजी गई फ़ीड नहीं है."
 
-#: src/view/com/post-thread/PostThread.tsx:378
+#: src/view/com/post-thread/PostThread.tsx:385
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "आपने लेखक को अवरुद्ध किया है या आपने लेखक द्वारा अवरुद्ध किया है।।"
 
