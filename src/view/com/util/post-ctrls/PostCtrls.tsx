@@ -179,7 +179,9 @@ let PostCtrls = ({
       {big ? undefined : (
         <PostDropdownBtn
           testID="postDropdownBtn"
-          post={post}
+          postAuthor={post.author}
+          postCid={post.cid}
+          postUri={post.uri}
           record={record}
           style={styles.ctrlPad}
         />
