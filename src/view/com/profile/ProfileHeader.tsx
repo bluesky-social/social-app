@@ -135,22 +135,22 @@ let ProfileHeaderLoaded = ({
   /*
    * BEGIN handle bio facet resolution
    */
-  const descriptionRT = React.useMemo(
-    () =>
-      profile.description
-        ? new RichTextAPI({text: profile.description})
-        : undefined,
-    [profile.description],
-  )
+  // should be undefined on first render to trigger a resolution
   const prevProfileDescription = React.useRef<string | undefined>()
-  const [resolvedDescriptionRT, setResolvedDescriptionRT] = React.useState<
+  const [descriptionRT, setDescriptionRT] = React.useState<
     RichTextAPI | undefined
-  >()
+  >(
+    profile.description
+      ? new RichTextAPI({text: profile.description})
+      : undefined,
+  )
   React.useEffect(() => {
     async function resolveRTFacets() {
+      // new each time
       const rt = new RichTextAPI({text: profile.description || ''})
       await rt.detectFacets(getAgent())
-      setResolvedDescriptionRT(rt)
+      // replace existing RT instance
+      setDescriptionRT(rt)
     }
 
     if (profile.description !== prevProfileDescription.current) {
@@ -158,7 +158,7 @@ let ProfileHeaderLoaded = ({
       prevProfileDescription.current = profile.description
       resolveRTFacets()
     }
-  }, [profile.description, resolvedDescriptionRT, setResolvedDescriptionRT])
+  }, [profile.description, setDescriptionRT])
   /*
    * END handle bio facet resolution
    */
@@ -637,7 +637,7 @@ let ProfileHeaderLoaded = ({
                   testID="profileHeaderDescription"
                   style={[styles.description, pal.text]}
                   numberOfLines={15}
-                  richText={resolvedDescriptionRT || descriptionRT}
+                  richText={descriptionRT}
                 />
               </View>
             ) : undefined}
