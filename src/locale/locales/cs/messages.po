@@ -15,120 +15,120 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:214
 #~ msgid "- end of feed -"
-#~ msgstr ""
+#~ msgstr "- konec zdroje -"
 
 #: src/view/com/modals/SelfLabel.tsx:138
 #~ msgid ". This warning is only available for posts with media attached."
-#~ msgstr ""
+#~ msgstr ". Toto upozornění je dostupné pouze pro příspěvky s připojeným médiem."
 
 #: src/view/shell/desktop/RightNav.tsx:158
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr ""
+msgstr "{0, plural, one {# k dispozici} other {# k dispozici}}"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
-msgstr ""
+msgstr "{0}"
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgid "{0} {purposeLabel} List"
-msgstr ""
+msgstr "{0} {purposeLabel} seznam"
 
 #: src/view/shell/desktop/RightNav.tsx:141
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr ""
+msgstr "{invitesAvailable, plural, one {Pozvánky: # k dispozici} other {Pozvánky: # k dispozici}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:648
 msgid "{invitesAvailable} invite code available"
-msgstr ""
+msgstr "zbývá {invitesAvailable} pozvánek"
 
 #: src/view/screens/Settings.tsx:409
 #: src/view/shell/Drawer.tsx:650
 msgid "{invitesAvailable} invite codes available"
-msgstr ""
+msgstr "zbývá {invitesAvailable} pozvánek"
 
 #: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
-msgstr ""
+msgstr "{message}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:130
 msgid "<0/> members"
-msgstr ""
+msgstr "<0/> členi"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr ""
+msgstr "<0>Vyberte si</0><1>doporučené</1><2>zdroje</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr ""
+msgstr "<0>Sledujte některé</0><1>doporučené</1><2>uživatele</2>"
 
 #: src/view/com/modals/AddAppPasswords.tsx:132
 #~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
-#~ msgstr ""
+#~ msgstr "<0>Zde je vaše aplikační heslo.</0> Použijte jej k přihlášení do druhé aplikace spolu s vaším uživatelským jménem."
 
 #: src/view/screens/Moderation.tsx:212
 #~ msgid "<0>Note: This setting may not be respected by third-party apps that display Bluesky content.</0>"
-#~ msgstr ""
+#~ msgstr "<0>Poznámka: Toto nastavení nemusí respektovat aplikace třetích stran, které zobrazují obsah Bluesky.</0>"
 
 #: src/view/screens/Moderation.tsx:212
 #~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
-#~ msgstr ""
+#~ msgstr "<0>Poznámka: Váš profil a příspěvky zůstanou veřejně dostupné. Aplikace třetích stran, které zobrazují obsah Bluesky, nemusí toto nastavení respektovat.</0>"
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
-msgstr ""
+msgstr "K dispozici je nová verze aplikace. Chcete-li aplikaci nadále používat, aktualizujte ji."
 
 #: src/view/com/modals/EditImage.tsx:299
 #: src/view/screens/Settings.tsx:417
 msgid "Accessibility"
-msgstr ""
+msgstr "Přístupnost"
 
 #: src/view/com/auth/login/LoginForm.tsx:159
 #: src/view/screens/Settings.tsx:286
 msgid "Account"
-msgstr ""
+msgstr "Účet"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
-msgstr ""
+msgstr "Možnosti účtu"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/screens/ProfileList.tsx:783
 msgid "Add"
-msgstr ""
+msgstr "Přidat"
 
 #: src/view/com/modals/SelfLabel.tsx:56
 msgid "Add a content warning"
-msgstr ""
+msgstr "Přidat upozornění na obsah"
 
 #: src/view/screens/ProfileList.tsx:773
 msgid "Add a user to this list"
-msgstr ""
+msgstr "Přidat uživatele do seznamu"
 
 #: src/view/screens/Settings.tsx:355
 #: src/view/screens/Settings.tsx:364
 msgid "Add account"
-msgstr ""
+msgstr "Přidat účet"
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
 msgid "Add alt text"
-msgstr ""
+msgstr "Přidat popisek"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
 msgid "Add details"
-msgstr ""
+msgstr "Přidat podrobnosti"
 
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details to report"
-msgstr ""
+msgstr "Přidat podrobnosti k nahlášení"
 
 #: src/view/com/composer/Composer.tsx:425
 msgid "Add link card"
-msgstr ""
+msgstr "Přidat kartu odkazu:"
 
 #: src/view/com/composer/Composer.tsx:428
 msgid "Add link card:"
@@ -136,108 +136,108 @@ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:415
 msgid "Add the following DNS record to your domain:"
-msgstr ""
+msgstr "Přidejte do své domény následující DNS záznam:"
 
 #: src/view/com/profile/ProfileHeader.tsx:329
 msgid "Add to Lists"
-msgstr ""
+msgstr "Přidat do seznamů"
 
 #: src/view/screens/ProfileFeed.tsx:280
 msgid "Add to my feeds"
-msgstr ""
+msgstr "Přidat do zdrojů"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:128
 msgid "Added to list"
-msgstr ""
+msgstr "Přidáno do seznamu"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:164
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr ""
+msgstr "Upravte počet lajků, které jsou potřeba pro zobrazení ve vašem zdroji."
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
-msgstr ""
+msgstr "Obsah pro dospělé"
 
 #: src/view/screens/Settings.tsx:569
 msgid "Advanced"
-msgstr ""
+msgstr "Pokročilé"
 
 #: src/view/com/composer/photos/Gallery.tsx:130
 msgid "ALT"
-msgstr ""
+msgstr "Popisek"
 
 #: src/view/com/modals/EditImage.tsx:315
 msgid "Alt text"
-msgstr ""
+msgstr "Popisný text"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr ""
+msgstr "Popisek obrázku pro nevidomé a slabozraké uživatele a pomáhá poskytnout kontext všem."
 
 #: src/view/com/modals/VerifyEmail.tsx:110
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr ""
+msgstr "E-mail byl odeslán na adresu {0}. Obsahuje potvrzovací kód, který můžete zadat níže."
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr ""
+msgstr "Na vaši předchozí adresu {0} byl odeslán e-mail. Obsahuje potvrzovací kód, který můžete zadat níže."
 
 #: src/view/com/notifications/FeedItem.tsx:236
 msgid "and"
-msgstr ""
+msgstr "a"
 
 #: src/view/screens/LanguageSettings.tsx:94
 msgid "App Language"
-msgstr ""
+msgstr "Jazyk aplikace"
 
 #: src/view/screens/Settings.tsx:589
 msgid "App passwords"
-msgstr ""
+msgstr "Aplikační hesla"
 
 #: src/view/screens/AppPasswords.tsx:186
 msgid "App Passwords"
-msgstr ""
+msgstr "Aplikační hesla"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Decision"
-msgstr ""
+msgstr "Odvolat se proti rozhodnutí."
 
 #: src/view/com/util/moderation/LabelInfo.tsx:51
 msgid "Appeal this decision"
-msgstr ""
+msgstr "Odvolat se proti tomuto rozhodnutí."
 
 #: src/view/com/util/moderation/LabelInfo.tsx:55
 msgid "Appeal this decision."
-msgstr ""
+msgstr "Odvolat se proti tomuto rozhodnutí."
 
 #: src/view/screens/Settings.tsx:432
 msgid "Appearance"
-msgstr ""
+msgstr "Vzhled"
 
 #: src/view/screens/Moderation.tsx:206
 #~ msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
-#~ msgstr ""
+#~ msgstr "Aplikace, které toto nastavení respektují, včetně oficiální aplikace Bluesky a webu bsky.app, nebudou zobrazovat váš obsah odhlášeným uživatelům."
 
 #: src/view/screens/AppPasswords.tsx:223
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr ""
+msgstr "Opravdu chcete smazat aplikační heslo \"{name}\"?"
 
 #: src/view/com/composer/Composer.tsx:139
 msgid "Are you sure you'd like to discard this draft?"
-msgstr ""
+msgstr "Opravdu chcete tento koncept zahodit?"
 
 #: src/view/screens/ProfileList.tsx:375
 msgid "Are you sure?"
-msgstr ""
+msgstr "Jste si jisti"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:185
 msgid "Are you sure? This cannot be undone."
-msgstr ""
+msgstr "Jste si jisti? Toto nelze vrátit zpět."
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
-msgstr ""
+msgstr "Umělecká nebo neerotická nahota."
 
 #: src/view/screens/Moderation.tsx:189
 #~ msgid "Ask apps to limit the visibility of my account"
@@ -254,99 +254,100 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:443
 #: src/view/com/profile/ProfileHeader.tsx:648
 msgid "Back"
-msgstr ""
+msgstr "Zpět"
 
 #: src/view/screens/Settings.tsx:461
 msgid "Basics"
-msgstr ""
+msgstr "Základy"
 
 #: src/view/com/auth/create/Step2.tsx:131
 #: src/view/com/modals/BirthDateSettings.tsx:72
 msgid "Birthday"
-msgstr ""
+msgstr "Narozeniny"
 
 #: src/view/screens/Settings.tsx:312
 msgid "Birthday:"
-msgstr ""
+msgstr "Narozeniny:"
 
 #: src/view/com/profile/ProfileHeader.tsx:258
 #: src/view/com/profile/ProfileHeader.tsx:365
 msgid "Block Account"
-msgstr ""
+msgstr "Blokovat účet"
 
 #: src/view/screens/ProfileList.tsx:545
 msgid "Block accounts"
-msgstr ""
+msgstr "Blokovat účty"
 
 #: src/view/screens/ProfileList.tsx:495
 msgid "Block list"
-msgstr ""
+msgstr "Seznam blokací"
 
 #: src/view/screens/ProfileList.tsx:330
 msgid "Block these accounts?"
-msgstr ""
+msgstr "BLokovat tyto účty?"
 
 #: src/view/screens/Moderation.tsx:121
 msgid "Blocked accounts"
-msgstr ""
+msgstr "Blokované účty"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:106
 msgid "Blocked Accounts"
-msgstr ""
+msgstr "Blokované účty"
 
 #: src/view/com/profile/ProfileHeader.tsx:260
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr ""
+msgstr "Blokované účty nemohou odpovídat ve vašich vláknech, zmiňovat vás ani s vámi jinak komunikovat."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:114
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr ""
+msgstr "Blokované účty nemohou odpovídat ve vašich vláknech, zmiňovat vás ani s vámi jinak komunikovat. Neuvidíte jejich obsah a oni nebudou moci vidět váš."
 
 #: src/view/com/post-thread/PostThread.tsx:241
 msgid "Blocked post."
-msgstr ""
+msgstr "Blokovaný příspěvek"
 
 #: src/view/screens/ProfileList.tsx:332
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr ""
+msgstr "Blokování je veřejné. Blokované účty nemohou odpovídat ve vašich vláknech, zmiňovat vás ani s vámi jinak komunikovat."
 
 #: src/view/com/auth/SplashScreen.tsx:26
 msgid "Bluesky"
-msgstr ""
+msgstr "Bluesky"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
 msgid "Bluesky is flexible."
-msgstr ""
+msgstr "Bluesky je flexibilní."
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:69
 msgid "Bluesky is open."
-msgstr ""
+msgstr "Bluesky je otevřený."
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
 msgid "Bluesky is public."
-msgstr ""
+msgstr "Bluesky je veřejný."
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr ""
+msgstr "Bluesky používá pozvánky k budování zdravější komunity. Pokud neznáte nikoho s pozvánkou, můžete se přihlásit do pořadníku a my vám ji brzy zašleme."
 
 #: src/view/com/modals/ServerInput.tsx:78
 msgid "Bluesky.Social"
-msgstr ""
+msgstr "Bluesky.social"
 
 #: src/view/screens/Settings.tsx:718
 msgid "Build version {0} {1}"
-msgstr ""
+msgstr "Verze sestavení {0} {1}"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
 #: src/view/com/util/UserAvatar.tsx:217
 #: src/view/com/util/UserBanner.tsx:38
 msgid "Camera"
-msgstr ""
+msgstr "Fotoaparát"
 
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr ""
+msgstr "Může obsahovat pouze písmena, čísla, mezery, pomlčky a podtržítka. Musí mít alespoň 4 znaky, ale ne více než 32 znaků.
+"
 
 #: src/view/com/composer/Composer.tsx:278
 #: src/view/com/composer/Composer.tsx:281
@@ -366,139 +367,139 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:558
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #: src/view/com/modals/DeleteAccount.tsx:146
 #: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Cancel account deletion"
-msgstr ""
+msgstr "Zrušit smazání účtu"
 
 #: src/view/com/modals/AltImage.tsx:122
 msgid "Cancel add image alt text"
-msgstr ""
+msgstr "Zrušit přidání popisku obrázku"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr ""
+msgstr "Zrušit změnu uživatelského jména"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
-msgstr ""
+msgstr "Zrušit ořezávání obrázku"
 
 #: src/view/com/modals/EditProfile.tsx:243
 msgid "Cancel profile editing"
-msgstr ""
+msgstr "Zrušit úpravu profilu"
 
 #: src/view/com/modals/Repost.tsx:64
 msgid "Cancel quote post"
-msgstr ""
+msgstr "Zrušit citování příspěvku"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:178
 msgid "Cancel search"
-msgstr ""
+msgstr "Zrušit vyhledávání"
 
 #: src/view/com/modals/Waitlist.tsx:132
 msgid "Cancel waitlist signup"
-msgstr ""
+msgstr "Zrušit registraci na čekací listinu"
 
 #: src/view/screens/Settings.tsx:306
 msgid "Change"
-msgstr ""
+msgstr "Změnit"
 
 #: src/view/screens/Settings.tsx:601
 #: src/view/screens/Settings.tsx:610
 msgid "Change handle"
-msgstr ""
+msgstr "Zmenit uživatelské jméno"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
 msgid "Change Handle"
-msgstr ""
+msgstr "Změnit uživatelské jméno"
 
 #: src/view/com/modals/VerifyEmail.tsx:133
 msgid "Change my email"
-msgstr ""
+msgstr "Změňit můj email"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
-msgstr ""
+msgstr "Změňte váš email"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr ""
+msgstr "Podívejte se na některé doporučené zdroje. Klepnutím na + je přidáte do seznamu připnutých zdrojů."
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
-msgstr ""
+msgstr "Prohlédněte si některé doporučené uživatele. Sledujte je, abyste viděli podobné uživatele."
 
 #: src/view/com/modals/DeleteAccount.tsx:163
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr ""
+msgstr "Zkontrolujte svou doručenou poštu, zda nemáte e-mail s potvrzovacím kódem, který můžete zadat níže:"
 
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
-msgstr ""
+msgstr "Zvolit službu"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr ""
+msgstr "Vyberte si algoritmy, které pohání vaše zkušenosti s vlastními zdroji."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65
 #~ msgid "Choose your"
-#~ msgstr ""
+#~ msgstr "Zvolte své"
 
 #: src/view/com/auth/create/Step2.tsx:106
 msgid "Choose your password"
-msgstr ""
+msgstr "Zvolte si své heslo"
 
 #: src/view/screens/Settings.tsx:694
 msgid "Clear all legacy storage data"
-msgstr ""
+msgstr "Vyčistit všechna starší data úložiště"
 
 #: src/view/screens/Settings.tsx:696
 msgid "Clear all legacy storage data (restart after this)"
-msgstr ""
+msgstr "Vyčistit všechna starší data úložiště (poté restartovat)"
 
 #: src/view/screens/Settings.tsx:706
 msgid "Clear all storage data"
-msgstr ""
+msgstr "Vyčistit všechna data úložiště"
 
 #: src/view/screens/Settings.tsx:708
 msgid "Clear all storage data (restart after this)"
-msgstr ""
+msgstr "Vyčistit všechna data úložiště (po tomto restartovat)"
 
 #: src/view/com/util/forms/SearchInput.tsx:73
 #: src/view/screens/Search/Search.tsx:543
 msgid "Clear search query"
-msgstr ""
+msgstr "Vyčistit vyhledávací dotaz"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
-msgstr ""
+msgstr "Zavřít upozornění"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
 msgid "Close bottom drawer"
-msgstr ""
+msgstr "Zavřete spodní zásuvku"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:26
 msgid "Close image"
-msgstr ""
+msgstr "Zavřít obrázek"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:112
 msgid "Close image viewer"
-msgstr ""
+msgstr "Zavřít prohlížeč obrázků"
 
 #: src/view/shell/index.web.tsx:49
 msgid "Close navigation footer"
-msgstr ""
+msgstr "Zavřít zápatí navigace"
 
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "Community Guidelines"
-msgstr ""
+msgstr "Pravidla komunity"
 
 #: src/view/com/composer/Prompt.tsx:24
 msgid "Compose reply"
-msgstr ""
+msgstr "Napsat odpověď"
 
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/Confirm.tsx:75
@@ -507,200 +508,200 @@ msgstr ""
 #: src/view/screens/PreferencesHomeFeed.tsx:299
 #: src/view/screens/PreferencesThreads.tsx:153
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdit"
 
 #: src/view/com/modals/ChangeEmail.tsx:193
 #: src/view/com/modals/ChangeEmail.tsx:195
 msgid "Confirm Change"
-msgstr ""
+msgstr "Potvdit změnu"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
 msgid "Confirm content language settings"
-msgstr ""
+msgstr "Potvrdit nastavení jazyku obsahu"
 
 #: src/view/com/modals/DeleteAccount.tsx:209
 msgid "Confirm delete account"
-msgstr ""
+msgstr "Potvrdit smazání účtu"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:176
 #: src/view/com/modals/VerifyEmail.tsx:151
 msgid "Confirmation code"
-msgstr ""
+msgstr "Potvrzovací kód"
 
 #: src/view/com/auth/create/CreateAccount.tsx:178
 #: src/view/com/auth/login/LoginForm.tsx:268
 msgid "Connecting..."
-msgstr ""
+msgstr "Připojování..."
 
 #: src/view/screens/Moderation.tsx:79
 msgid "Content filtering"
-msgstr ""
+msgstr "Filtrování obsahu"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:44
 msgid "Content Filtering"
-msgstr ""
+msgstr "Filtrování obsahu"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
 #: src/view/screens/LanguageSettings.tsx:277
 msgid "Content Languages"
-msgstr ""
+msgstr "Jazyk obsahu"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:69
 msgid "Content Warning"
-msgstr ""
+msgstr "Upozornění na obsah"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:31
 msgid "Content warnings"
-msgstr ""
+msgstr "Upozornění na obsah"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
 msgid "Continue"
-msgstr ""
+msgstr "Oikračovat"
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
 #: src/view/com/modals/InviteCodes.tsx:179
 msgid "Copied"
-msgstr ""
+msgstr "Zkopírováno"
 
 #: src/view/com/modals/AddAppPasswords.tsx:186
 msgid "Copy"
-msgstr ""
+msgstr "Zkopírovat"
 
 #: src/view/screens/ProfileList.tsx:407
 msgid "Copy link to list"
-msgstr ""
+msgstr "Zkopírovat odkaz na seznam"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:126
 msgid "Copy link to post"
-msgstr ""
+msgstr "Zkopírovat odkaz na příspěvek"
 
 #: src/view/com/profile/ProfileHeader.tsx:314
 msgid "Copy link to profile"
-msgstr ""
+msgstr "Zkopírovat odkaz na profil"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:112
 msgid "Copy post text"
-msgstr ""
+msgstr "Zkopírovat text příspěvku"
 
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
-msgstr ""
+msgstr "Zásady autorských práv"
 
 #: src/view/screens/ProfileFeed.tsx:103
 msgid "Could not load feed"
-msgstr ""
+msgstr "Zdroj se nepodařilo načíst"
 
 #: src/view/screens/ProfileList.tsx:860
 msgid "Could not load list"
-msgstr ""
+msgstr "Seznam se nepodařilo načíst"
 
 #: src/view/com/auth/SplashScreen.tsx:41
 msgid "Create a new account"
-msgstr ""
+msgstr "Vytvořit nový účet"
 
 #: src/view/com/auth/create/CreateAccount.tsx:124
 msgid "Create Account"
-msgstr ""
+msgstr "Vytvořit účet"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 msgid "Create new account"
-msgstr ""
+msgstr "Vytvořit nový účet"
 
 #: src/view/screens/AppPasswords.tsx:248
 msgid "Created {0}"
-msgstr ""
+msgstr "Vytvořeno {0}"
 
 #: src/view/com/modals/ChangeHandle.tsx:387
 #: src/view/com/modals/ServerInput.tsx:102
 msgid "Custom domain"
-msgstr ""
+msgstr "Vlastní doména"
 
 #: src/view/screens/Settings.tsx:615
 msgid "Danger Zone"
-msgstr ""
+msgstr "Nebezpečná zóna"
 
 #: src/view/screens/Settings.tsx:411
 #~ msgid "Dark"
-#~ msgstr ""
+#~ msgstr "Tmavý"
 
 #: src/view/screens/Settings.tsx:622
 msgid "Delete account"
-msgstr ""
+msgstr "Smazat účet"
 
 #: src/view/com/modals/DeleteAccount.tsx:83
 msgid "Delete Account"
-msgstr ""
+msgstr "Smazat účet"
 
 #: src/view/screens/AppPasswords.tsx:221
 #: src/view/screens/AppPasswords.tsx:241
 msgid "Delete app password"
-msgstr ""
+msgstr "Smazat aplikační heslo "
 
 #: src/view/screens/ProfileList.tsx:374
 #: src/view/screens/ProfileList.tsx:434
 msgid "Delete List"
-msgstr ""
+msgstr "Smazat seznam"
 
 #: src/view/com/modals/DeleteAccount.tsx:212
 msgid "Delete my account"
-msgstr ""
+msgstr "Smazat můj účet"
 
 #: src/view/screens/Settings.tsx:632
 msgid "Delete my account…"
-msgstr ""
+msgstr "Smazat můj účet..."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Delete post"
-msgstr ""
+msgstr "Smazat příspěvek?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:184
 msgid "Delete this post?"
-msgstr ""
+msgstr "Smazat tento příspěvek?"
 
 #: src/view/com/post-thread/PostThread.tsx:233
 msgid "Deleted post."
-msgstr ""
+msgstr "Smazaný příspěvek"
 
 #: src/view/com/modals/CreateOrEditList.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:234
 #: src/view/com/modals/EditProfile.tsx:197
 #: src/view/com/modals/EditProfile.tsx:209
 msgid "Description"
-msgstr ""
+msgstr "Popisek"
 
 #: src/view/com/auth/create/Step1.tsx:96
 msgid "Dev Server"
-msgstr ""
+msgstr "Server pro vývojáře"
 
 #: src/view/screens/Settings.tsx:637
 msgid "Developer Tools"
-msgstr ""
+msgstr "Vývojářské nástroje"
 
 #: src/view/com/composer/Composer.tsx:140
 msgid "Discard"
-msgstr ""
+msgstr "Zahodit"
 
 #: src/view/com/composer/Composer.tsx:134
 msgid "Discard draft"
-msgstr ""
+msgstr "Zahodit koncept"
 
 #: src/view/screens/Feeds.tsx:405
 msgid "Discover new feeds"
-msgstr ""
+msgstr "Objevte nové zdroje"
 
 #: src/view/com/modals/EditProfile.tsx:191
 msgid "Display name"
-msgstr ""
+msgstr "Zobrazované jméno"
 
 #: src/view/com/modals/EditProfile.tsx:179
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazované jméno"
 
 #: src/view/com/modals/ChangeHandle.tsx:485
 msgid "Domain verified!"
-msgstr ""
+msgstr "Doména ověřena!"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
@@ -713,76 +714,76 @@ msgstr ""
 #: src/view/screens/PreferencesHomeFeed.tsx:302
 #: src/view/screens/PreferencesThreads.tsx:156
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
 msgid "Done{extraText}"
-msgstr ""
+msgstr "Hotovo{extraText}"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Each code works once. You'll receive more invite codes periodically."
-msgstr ""
+msgstr "Každý kód funguje jen jednou. Pravidelně budete dostávat další pozvánky."
 
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
 msgid "Edit image"
-msgstr ""
+msgstr "Upravit obrázek"
 
 #: src/view/screens/ProfileList.tsx:422
 msgid "Edit list details"
-msgstr ""
+msgstr "Upravit popisek seznamu"
 
 #: src/view/screens/Feeds.tsx:367
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "Edit My Feeds"
-msgstr ""
+msgstr "Upravit můj zdroj"
 
 #: src/view/com/modals/EditProfile.tsx:151
 msgid "Edit my profile"
-msgstr ""
+msgstr "Upravit můj profil"
 
 #: src/view/com/profile/ProfileHeader.tsx:429
 msgid "Edit profile"
-msgstr ""
+msgstr "Upravit profil"
 
 #: src/view/com/profile/ProfileHeader.tsx:432
 msgid "Edit Profile"
-msgstr ""
+msgstr "Upravit profil"
 
 #: src/view/screens/Feeds.tsx:330
 msgid "Edit Saved Feeds"
-msgstr ""
+msgstr "Upravit uložené zdroje"
 
 #: src/view/com/auth/create/Step2.tsx:90
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: src/view/com/auth/create/Step2.tsx:81
 msgid "Email address"
-msgstr ""
+msgstr "Emailová adresa"
 
 #: src/view/com/modals/ChangeEmail.tsx:111
 msgid "Email Updated"
-msgstr ""
+msgstr "Email aktualizován"
 
 #: src/view/screens/Settings.tsx:290
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
-msgstr ""
+msgstr "Povolte toto nastavení, abyste viděli odpovědi pouze mezi lidmi, které sledujete."
 
 #: src/view/screens/Profile.tsx:472
 msgid "End of feed"
-msgstr ""
+msgstr "Konec zdroje"
 
 #: src/view/com/auth/create/Step1.tsx:71
 msgid "Enter the address of your provider:"
-msgstr ""
+msgstr "Zadejte adresu, vašeho poskytovatele"
 
 #: src/view/com/modals/ChangeHandle.tsx:369
 msgid "Enter the domain you want to use"
@@ -790,49 +791,49 @@ msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:101
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr ""
+msgstr "Zadejte e-mail, který jste použili k vytvoření účtu. Zašleme vám \"obnovovací kód\", abyste si mohli nastavit nové heslo."
 
 #: src/view/com/auth/create/Step2.tsx:86
 msgid "Enter your email address"
-msgstr ""
+msgstr "Zadejte svou e-mailovou adresu"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
-msgstr ""
+msgstr "Níže zadejte svou novou e-mailovou adresu"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
-msgstr ""
+msgstr "Zadejte své uživatelské jméno a heslo"
 
 #: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
-msgstr ""
+msgstr "Chyba:"
 
 #: src/view/com/modals/Threadgate.tsx:76
 msgid "Everybody"
-msgstr ""
+msgstr "Všichni"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
-msgstr ""
+msgstr "Rozbalit popisek"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
 msgid "Failed to load recommended feeds"
-msgstr ""
+msgstr "Doporučené zdroje se nepodařilo načíst"
 
 #: src/view/screens/Feeds.tsx:559
 msgid "Feed offline"
-msgstr ""
+msgstr "Zdroj je offline"
 
 #: src/view/com/feeds/FeedPage.tsx:140
 msgid "Feed Preferences"
-msgstr ""
+msgstr "Nastavení zdrojů"
 
 #: src/view/shell/desktop/RightNav.tsx:64
 #: src/view/shell/Drawer.tsx:300
 msgid "Feedback"
-msgstr ""
+msgstr "Zpětná vazba"
 
 #: src/view/screens/Feeds.tsx:475
 #: src/view/shell/bottom-bar/BottomBar.tsx:168
@@ -840,11 +841,11 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:463
 #: src/view/shell/Drawer.tsx:464
 msgid "Feeds"
-msgstr ""
+msgstr "Zdroje"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr ""
+msgstr "Zdroje jsou vlastní algoritmy, které uživatelé vytvářejí s trochou znalostí kódování. <0/> pro více informací."
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -852,254 +853,254 @@ msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
 msgid "Finding similar accounts..."
-msgstr ""
+msgstr "Hledání podobných účtů..."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:102
 msgid "Fine-tune the content you see on your home screen."
-msgstr ""
+msgstr "Dolaďte si obsah, který vidíte na domovské obrazovce."
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
-msgstr ""
+msgstr "Dolaďte svá diskusní vlákna."
 
 #: src/view/com/profile/ProfileHeader.tsx:514
 msgid "Follow"
-msgstr ""
+msgstr "Sledovat"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:42
 #~ msgid "Follow some"
-#~ msgstr ""
+#~ msgstr "Sledovat některé"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr ""
+msgstr "Začněte sledováním některých uživatelů. Můžeme vám doporučit více uživatelů podle toho, kdo vás zajímá."
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
-msgstr ""
+msgstr "Sledující uživatelé"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:145
 msgid "Followed users only"
-msgstr ""
+msgstr "Pouze sledující uživatelé"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
-msgstr ""
+msgstr "Sledujcích"
 
 #: src/view/com/profile/ProfileHeader.tsx:600
 msgid "following"
-msgstr ""
+msgstr "sledovaní"
 
 #: src/view/com/profile/ProfileHeader.tsx:498
 #: src/view/screens/ProfileFollows.tsx:25
 msgid "Following"
-msgstr ""
+msgstr "Sledovaní"
 
 #: src/view/com/profile/ProfileHeader.tsx:547
 msgid "Follows you"
-msgstr ""
+msgstr "Sleduje vás"
 
 #: src/view/com/modals/DeleteAccount.tsx:107
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr ""
+msgstr "Z bezpečnostních důvodů budeme muset na vaši e-mailovou adresu poslat potvrzovací kód."
 
 #: src/view/com/modals/AddAppPasswords.tsx:207
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr ""
+msgstr "Z bezpečnostních důvodů nebudete moci toto znovu zobrazit. Pokud toto heslo ztratíte, budete si muset vygenerovat nové."
 
 #: src/view/com/auth/login/LoginForm.tsx:231
 msgid "Forgot"
-msgstr ""
+msgstr "Zapomněl jsem"
 
 #: src/view/com/auth/login/LoginForm.tsx:228
 msgid "Forgot password"
-msgstr ""
+msgstr "Zapomenuté heslo"
 
 #: src/view/com/auth/login/Login.tsx:127
 #: src/view/com/auth/login/Login.tsx:143
 msgid "Forgot Password"
-msgstr ""
+msgstr "Zapomenuté heslo"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
 msgid "Gallery"
-msgstr ""
+msgstr "Galerie"
 
 #: src/view/com/modals/VerifyEmail.tsx:175
 msgid "Get Started"
-msgstr ""
+msgstr "Začít"
 
 #: src/view/com/auth/LoggedOut.tsx:68
 #: src/view/com/auth/LoggedOut.tsx:69
 #: src/view/com/util/moderation/ScreenHider.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:106
 msgid "Go back"
-msgstr ""
+msgstr "Jít zpět"
 
 #: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:869
 #: src/view/screens/ProfileList.tsx:874
 msgid "Go Back"
-msgstr ""
+msgstr "Jít zpět"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
 #: src/view/com/auth/login/LoginForm.tsx:278
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
-msgstr ""
+msgstr "Přejít na další"
 
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
-msgstr ""
+msgstr "Uživatelské jméno"
 
 #: src/view/shell/desktop/RightNav.tsx:93
 #: src/view/shell/Drawer.tsx:310
 msgid "Help"
-msgstr ""
+msgstr "Pomoc"
 
 #: src/view/com/modals/AddAppPasswords.tsx:148
 msgid "Here is your app password."
-msgstr ""
+msgstr "Zde je vaše aplikační heslo."
 
 #: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide"
-msgstr ""
+msgstr "Skrýt"
 
 #: src/view/com/notifications/FeedItem.tsx:308
 msgid "Hide user list"
-msgstr ""
+msgstr "Skrýt seznam uživatelů"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 #~ msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
-#~ msgstr ""
+#~ msgstr "Hmm, při kontaktování serveru zdroje došlo k nějakému problému. Dejte prosím o tomto problému vědět vlastníkovi zdroje."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:110
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr ""
+msgstr "Hmm, při kontaktování serveru zdroje došlo k nějakému problému. Dejte prosím o tomto problému vědět vlastníkovi zdroje."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:98
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr ""
+msgstr "Hmm, zdá se, že server zdroje je špatně nakonfigurován. Dejte prosím o tomto problému vědět vlastníkovi zdroje."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:104
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr ""
+msgstr "Hmm, zdá se, že server zdroje je offline. Dejte prosím o tomto problému vědět vlastníkovi zdroje."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:101
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr ""
+msgstr "Hmm, server zdroje odpověděl špatně. Dejte prosím o tomto problému vědět vlastníkovi zdroje."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:95
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr ""
+msgstr "Hmm, máme problém najít tento zdroj. Možná byla smazána."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:87
 #~ msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
-#~ msgstr ""
+#~ msgstr "Hmmm, máme problém najít tento zdroj. Možná byl smazán."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:124
 #: src/view/shell/desktop/LeftNav.tsx:305
 #: src/view/shell/Drawer.tsx:387
 #: src/view/shell/Drawer.tsx:388
 msgid "Home"
-msgstr ""
+msgstr "Domov"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:99
 #: src/view/screens/PreferencesHomeFeed.tsx:95
 #: src/view/screens/Settings.tsx:481
 msgid "Home Feed Preferences"
-msgstr ""
+msgstr "Předvolby domácího zdroje"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:114
 msgid "Hosting provider"
-msgstr ""
+msgstr "Poskytovatel hostingu"
 
 #: src/view/com/auth/create/Step1.tsx:76
 #: src/view/com/auth/create/Step1.tsx:81
 msgid "Hosting provider address"
-msgstr ""
+msgstr "Adresa poskytovatele hostingu"
 
 #: src/view/com/modals/VerifyEmail.tsx:200
 msgid "I have a code"
-msgstr ""
+msgstr "Mam kód"
 
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "I have my own domain"
-msgstr ""
+msgstr "Mam vlastní doménu"
 
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
-msgstr ""
+msgstr "Pokud není nic vybráno, je to vhodné pro všechny věkové kategorie."
 
 #: src/view/com/modals/AltImage.tsx:96
 msgid "Image alt text"
-msgstr ""
+msgstr "Popisek obrázku"
 
 #: src/view/com/util/UserAvatar.tsx:304
 #: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
-msgstr ""
+msgstr "Možnosti obrázku"
 
 #: src/view/com/search/Suggestions.tsx:104
 #: src/view/com/search/Suggestions.tsx:115
 #~ msgid "In Your Network"
-#~ msgstr ""
+#~ msgstr "Ve vaší síti"
 
 #: src/view/com/auth/login/LoginForm.tsx:113
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Neplatné uživatelské jméno či heslo"
 
 #: src/view/screens/Settings.tsx:383
 msgid "Invite"
-msgstr ""
+msgstr "Pozvat"
 
 #: src/view/com/modals/InviteCodes.tsx:91
 #: src/view/screens/Settings.tsx:371
 msgid "Invite a Friend"
-msgstr ""
+msgstr "Pozvat kamaráda"
 
 #: src/view/com/auth/create/Step2.tsx:57
 msgid "Invite code"
-msgstr ""
+msgstr "Kód pozvánky"
 
 #: src/view/com/auth/create/state.ts:136
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr ""
+msgstr "Kód pozvánky nebyl přijat. Zkontrolujte, zda jste jej zadali správně, a zkuste to znovu."
 
 #: src/view/shell/Drawer.tsx:629
 msgid "Invite codes: {invitesAvailable} available"
-msgstr ""
+msgstr "Pozvánky: {invitesAvailable} k dispozici"
 
 #: src/view/com/modals/Waitlist.tsx:67
 msgid "Join the waitlist"
-msgstr ""
+msgstr "Přidejte se na čekací listinu"
 
 #: src/view/com/auth/create/Step2.tsx:68
 #: src/view/com/auth/create/Step2.tsx:72
 msgid "Join the waitlist."
-msgstr ""
+msgstr "Přidejte se na čekací listinu"
 
 #: src/view/com/modals/Waitlist.tsx:124
 msgid "Join Waitlist"
-msgstr ""
+msgstr "Přidejte se na čekací listinu"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:104
 msgid "Language selection"
-msgstr ""
+msgstr "Výběr jazyků"
 
 #: src/view/screens/LanguageSettings.tsx:88
 msgid "Language Settings"
-msgstr ""
+msgstr "Nastavení jazyků"
 
 #: src/view/screens/Settings.tsx:541
 msgid "Languages"
-msgstr ""
+msgstr "Jazyky"
 
 #: src/view/com/util/moderation/PostAlerts.tsx:47
 #: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:65
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "Learn More"
-msgstr ""
+msgstr "Zjistit více"
 
 #: src/view/com/util/moderation/ContentHider.tsx:83
 #: src/view/com/util/moderation/PostAlerts.tsx:40
@@ -1107,110 +1108,110 @@ msgstr ""
 #: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:49
 #: src/view/com/util/moderation/ScreenHider.tsx:85
 msgid "Learn more about this warning"
-msgstr ""
+msgstr "Další informace o tomto upozornění"
 
 #: src/view/screens/Moderation.tsx:239
 msgid "Learn more about what is public on Bluesky."
-msgstr ""
+msgstr "Zjistěte více o tom, co je na Bluesky veřejné."
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
-msgstr ""
+msgstr "Chcete-li zobrazit jakýkoli jazyk, nechte je všechny nezaškrtnuté."
 
 #: src/view/com/modals/LinkWarning.tsx:49
 msgid "Leaving Bluesky"
-msgstr ""
+msgstr "Opouštím Bluesky"
 
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
 msgid "Let's get your password reset!"
-msgstr ""
+msgstr "Pojďme obnovit vaše heslo!"
 
 #: src/view/com/util/UserAvatar.tsx:241
 #: src/view/com/util/UserBanner.tsx:60
 msgid "Library"
-msgstr ""
+msgstr "Knihobna"
 
 #: src/view/screens/Settings.tsx:405
-#~ msgid "Light"
+#~ msgid "Světlý"
 #~ msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:643
 msgid "Like this feed"
-msgstr ""
+msgstr "Olajkovat tento zdroj"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
-msgstr ""
+msgstr "To se líbí"
 
 #: src/view/screens/Moderation.tsx:203
 #~ msgid "Limit the visibility of my account"
-#~ msgstr ""
+#~ msgstr "Omezit viditelnost mého účtu"
 
 #: src/view/screens/Moderation.tsx:203
 msgid "Limit the visibility of my account to logged-out users"
-msgstr ""
+msgstr "Omezit viditelnost mého účtu pro odhlášené uživatele"
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "List Avatar"
-msgstr ""
+msgstr "Obrázek seznamu"
 
 #: src/view/com/modals/CreateOrEditList.tsx:199
 msgid "List Name"
-msgstr ""
+msgstr "Název seznamu"
 
 #: src/view/shell/desktop/LeftNav.tsx:381
 #: src/view/shell/Drawer.tsx:479
 #: src/view/shell/Drawer.tsx:480
 msgid "Lists"
-msgstr ""
+msgstr "Seznamy"
 
 #: src/view/com/post-thread/PostThread.tsx:250
 #: src/view/com/post-thread/PostThread.tsx:258
 msgid "Load more posts"
-msgstr ""
+msgstr "Načíst další příspěvky"
 
 #: src/view/screens/Notifications.tsx:130
 msgid "Load new notifications"
-msgstr ""
+msgstr "Načíst nové oznámení"
 
 #: src/view/com/feeds/FeedPage.tsx:185
 msgid "Load new posts"
-msgstr ""
+msgstr "Načíst nové příspěvky"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
 msgid "Loading..."
-msgstr ""
+msgstr "Načítání..."
 
 #: src/view/com/modals/ServerInput.tsx:50
 msgid "Local dev server"
-msgstr ""
+msgstr "Lokální vývojářský server"
 
 #: src/view/screens/Moderation.tsx:134
 msgid "Logged-out users"
-msgstr ""
+msgstr "Odhlášení uživatelé"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
-msgstr ""
+msgstr "Přihlásit se k účtu, který není uveden"
 
 #: src/view/screens/ProfileFeed.tsx:482
 msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
-msgstr ""
+msgstr "Zdá se, že tento zdroj je dostupný pouze uživatelům s účtem Bluesky. Chcete-li zobrazit tento zdroj, zaregistrujte se nebo se přihlaste!"
 
 #: src/view/com/modals/LinkWarning.tsx:63
 msgid "Make sure this is where you intend to go!"
-msgstr ""
+msgstr "Ujistěte se, že je to místo, kam chcete jít!"
 
 #: src/view/screens/Search/Search.tsx:503
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:194
 #: src/view/screens/ProfileFeed.tsx:490
 msgid "Message from server"
-msgstr ""
+msgstr "Zpráva ze serveru"
 
 #: src/view/screens/Moderation.tsx:63
 #: src/view/screens/Settings.tsx:563
@@ -1218,99 +1219,99 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:498
 #: src/view/shell/Drawer.tsx:499
 msgid "Moderation"
-msgstr ""
+msgstr "Moderace"
 
 #: src/view/screens/Moderation.tsx:93
 msgid "Moderation lists"
-msgstr ""
+msgstr "Moderační seznam"
 
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
-msgstr ""
+msgstr "Moderační seznamy"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
-msgstr ""
+msgstr "Více zdrojů"
 
 #: src/view/com/profile/ProfileHeader.tsx:524
 #: src/view/screens/ProfileFeed.tsx:370
 #: src/view/screens/ProfileList.tsx:606
 msgid "More options"
-msgstr ""
+msgstr "Více možností"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:158
 #~ msgid "More post options"
-#~ msgstr ""
+#~ msgstr "Více nastavení příspěvků"
 
 #: src/view/com/profile/ProfileHeader.tsx:346
 msgid "Mute Account"
-msgstr ""
+msgstr "Ztlumit účet"
 
 #: src/view/screens/ProfileList.tsx:533
 msgid "Mute accounts"
-msgstr ""
+msgstr "Ztlumit účty"
 
 #: src/view/screens/ProfileList.tsx:480
 msgid "Mute list"
-msgstr ""
+msgstr "Seznam ztlumení"
 
 #: src/view/screens/ProfileList.tsx:293
 msgid "Mute these accounts?"
-msgstr ""
+msgstr "Ztlumit tyto účty?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:144
 msgid "Mute thread"
-msgstr ""
+msgstr "Ztlumené vlákno"
 
 #: src/view/screens/Moderation.tsx:107
 msgid "Muted accounts"
-msgstr ""
+msgstr "Ztlumené účty"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:106
 msgid "Muted Accounts"
-msgstr ""
+msgstr "Ztlumené účty"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:114
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr ""
+msgstr "U ztlumených účtů jsou jejich příspěvky odstraněny z vašeho zdroje a z vašich oznámení. Ztlumení jsou zcela soukromé."
 
 #: src/view/screens/ProfileList.tsx:295
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr ""
+msgstr "Ztlumení je soukromé. Ztlumené účty s vámi mohou komunikovat, ale neuvidíte jejich příspěvky ani od nich nebudete dostávat oznámení."
 
 #: src/view/screens/Moderation.tsx:134
 #~ msgid "My Account"
-#~ msgstr ""
+#~ msgstr "Můj účet"
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
-msgstr ""
+msgstr "Moje narozeniny"
 
 #: src/view/screens/Feeds.tsx:363
 msgid "My Feeds"
-msgstr ""
+msgstr "Moje zdroje"
 
 #: src/view/shell/desktop/LeftNav.tsx:67
 msgid "My Profile"
-msgstr ""
+msgstr "Můj profil"
 
 #: src/view/screens/Settings.tsx:520
 msgid "My Saved Feeds"
-msgstr ""
+msgstr "Moje uložené zdroje"
 
 #: src/view/com/modals/AddAppPasswords.tsx:177
 #: src/view/com/modals/CreateOrEditList.tsx:211
 msgid "Name"
-msgstr ""
+msgstr "Jméno"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr ""
+msgstr "Nikdy neztratíte přístup ke svým sledujícím a datům."
 
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
-msgstr ""
+msgstr "Nový"
 
 #: src/view/com/feeds/FeedPage.tsx:196
 #: src/view/screens/Feeds.tsx:510
@@ -1320,11 +1321,11 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:244
 #: src/view/shell/desktop/LeftNav.tsx:254
 msgid "New post"
-msgstr ""
+msgstr "Nový příspěvek"
 
 #: src/view/shell/desktop/LeftNav.tsx:264
 msgid "New Post"
-msgstr ""
+msgstr "Nový příspěvek"
 
 #: src/view/com/auth/create/CreateAccount.tsx:158
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
@@ -1334,35 +1335,35 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
 msgid "Next"
-msgstr ""
+msgstr "Další"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:142
 msgid "Next image"
-msgstr ""
+msgstr "Další obrázek"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
-msgstr ""
+msgstr "Ne"
 
 #: src/view/screens/ProfileFeed.tsx:636
 #: src/view/screens/ProfileList.tsx:740
 msgid "No description"
-msgstr ""
+msgstr "Bez popisu"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
 msgid "No result"
-msgstr ""
+msgstr "Žádné výsledky"
 
 #: src/view/screens/Feeds.tsx:452
 msgid "No results found for \"{query}\""
-msgstr ""
+msgstr "Pro dotaz \"{query}\" nebyly nalezeny žádné výsledky"
 
 #: src/view/com/modals/ListAddUser.tsx:142
 #: src/view/shell/desktop/Search.tsx:112
 #~ msgid "No results found for {0}"
-#~ msgstr ""
+#~ msgstr "Pro dotaz {0} nebyly nalezeny žádné výsledky"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:270
@@ -1370,27 +1371,27 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:581
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
-msgstr ""
+msgstr "Pro dotaz {query} nebyly nalezeny žádné výsledky"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
-msgstr ""
+msgstr "Nikdo"
 
 #: src/view/com/modals/SelfLabel.tsx:136
 #~ msgid "Not Applicable"
-#~ msgstr ""
+#~ msgstr "Nelze použít."
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "Not Applicable."
-msgstr ""
+msgstr "Nelze použít."
 
 #: src/view/screens/Moderation.tsx:227
 msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
-msgstr ""
+msgstr "Poznámka: Bluesky je otevřená a veřejná síť a povolením této možnosti se váš profil nestane soukromým ani neomezí možnost přihlášených uživatelů vidět vaše příspěvky. Toto nastavení omezuje pouze viditelnost příspěvků v aplikaci a na webu Bluesky; aplikace třetích stran, které zobrazují obsah Bluesky, nemusí toto nastavení respektovat a mohou váš obsah zobrazovat odhlášeným uživatelům."
 
 #: src/view/screens/Moderation.tsx:227
 #~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
-#~ msgstr ""
+#~ msgstr "Poznámka: Aplikace třetích stran, které zobrazují obsah Bluesky, nemusí toto nastavení respektovat."
 
 #: src/view/screens/Notifications.tsx:97
 #: src/view/screens/Notifications.tsx:121
@@ -1399,81 +1400,81 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:424
 #: src/view/shell/Drawer.tsx:425
 msgid "Notifications"
-msgstr ""
+msgstr "Oznámení"
 
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"
-msgstr ""
+msgstr "Oh ne!"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
-msgstr ""
+msgstr "Dobře"
 
 #: src/view/com/composer/Composer.tsx:341
 msgid "One or more images is missing alt text."
-msgstr ""
+msgstr "U jednoho nebo více obrázků chybí popisek."
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:79
 msgid "Open navigation"
-msgstr ""
+msgstr "Otevřít navigaci"
 
 #: src/view/screens/Settings.tsx:533
 msgid "Opens configurable language settings"
-msgstr ""
+msgstr "Otevře jazyková nastavení"
 
 #: src/view/shell/desktop/RightNav.tsx:146
 #: src/view/shell/Drawer.tsx:630
 msgid "Opens list of invite codes"
-msgstr ""
+msgstr "Otevře seznam pozvánek"
 
 #: src/view/com/modals/ChangeHandle.tsx:279
 msgid "Opens modal for using custom domain"
-msgstr ""
+msgstr "Otevře okno pro použití vlastní domény"
 
 #: src/view/screens/Settings.tsx:558
 msgid "Opens moderation settings"
-msgstr ""
+msgstr "Otevře nastavení moderování"
 
 #: src/view/screens/Settings.tsx:514
 msgid "Opens screen with all saved feeds"
-msgstr ""
+msgstr "Otevře obrazovku se všemi uloženými zdroji"
 
 #: src/view/screens/Settings.tsx:581
 msgid "Opens the app password settings page"
-msgstr ""
+msgstr "Otevře stránku nastavení aplikačního hesla"
 
 #: src/view/screens/Settings.tsx:473
 msgid "Opens the home feed preferences"
-msgstr ""
+msgstr "Otevře předvolby hlavního zdroje"
 
 #: src/view/screens/Settings.tsx:664
 msgid "Opens the storybook page"
-msgstr ""
+msgstr "Otevřít stránku se záznamy"
 
 #: src/view/screens/Settings.tsx:644
 msgid "Opens the system log page"
-msgstr ""
+msgstr "Otevřít systémový protokol"
 
 #: src/view/screens/Settings.tsx:494
 msgid "Opens the threads preferences"
-msgstr ""
+msgstr "Otevřít nastavení vláken"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
-msgstr ""
+msgstr "Jiný účet"
 
 #: src/view/com/modals/ServerInput.tsx:88
 msgid "Other service"
-msgstr ""
+msgstr "Jiné služby"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:91
 msgid "Other..."
-msgstr ""
+msgstr "Ostatní..."
 
 #: src/view/screens/NotFound.tsx:42
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
-msgstr ""
+msgstr "Stránka nenalezena"
 
 #: src/view/com/auth/create/Step2.tsx:101
 #: src/view/com/auth/create/Step2.tsx:111
@@ -1481,147 +1482,147 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 #: src/view/com/auth/login/Login.tsx:157
 msgid "Password updated"
-msgstr ""
+msgstr "Heslo aktualizováno"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
 msgid "Password updated!"
-msgstr ""
+msgstr "Heslo aktualizováno!"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
-msgstr ""
+msgstr "Obrázky určené pro dospělé."
 
 #: src/view/screens/SavedFeeds.tsx:89
 msgid "Pinned Feeds"
-msgstr ""
+msgstr "Připnuté zdroje"
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
-msgstr ""
+msgstr "Zvolte si své uživatelské jméno"
 
 #: src/view/com/auth/create/state.ts:109
 msgid "Please choose your password."
-msgstr ""
+msgstr "Zvolte si své heslo."
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr ""
+msgstr "Před změnou prosím potvrďte svůj e-mail. Toto je dočasný požadavek, dokud nebudou přidány nástroje pro aktualizaci e-mailu, a brzy bude odstraněn."
 
 #: src/view/com/modals/AddAppPasswords.tsx:140
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
-msgstr ""
+msgstr "Zadejte prosím jedinečný název pro toto aplikační heslo nebo použijte naše náhodně vygenerované."
 
 #: src/view/com/auth/create/state.ts:95
 msgid "Please enter your email."
-msgstr ""
+msgstr "Zadejte prosím svůj email."
 
 #: src/view/com/modals/DeleteAccount.tsx:180
 msgid "Please enter your password as well:"
-msgstr ""
+msgstr "Zadejte prosím také své heslo:"
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
 msgid "Please tell us why you think this decision was incorrect."
-msgstr ""
+msgstr "Řekněte nám, proč si myslíte, že toto rozhodnutí bylo nesprávné."
 
 #: src/view/com/composer/Composer.tsx:324
 #: src/view/com/post-thread/PostThread.tsx:216
 #: src/view/screens/PostThread.tsx:77
 msgid "Post"
-msgstr ""
+msgstr "Příspěvek"
 
 #: src/view/com/post-thread/PostThread.tsx:375
 msgid "Post hidden"
-msgstr ""
+msgstr "Příspěvek byl skryt"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:87
 msgid "Post language"
-msgstr ""
+msgstr "Jazyk příspěvku"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
 msgid "Post Languages"
-msgstr ""
+msgstr "Jazyky příspěvků"
 
 #: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post not found"
-msgstr ""
+msgstr "Příspěvek nenalezen"
 
 #: src/view/com/modals/LinkWarning.tsx:44
 msgid "Potentially Misleading Link"
-msgstr ""
+msgstr "Potenciálně zavádějící odkaz"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:128
 msgid "Previous image"
-msgstr ""
+msgstr "Předchozí obrázek"
 
 #: src/view/screens/LanguageSettings.tsx:186
 msgid "Primary Language"
-msgstr ""
+msgstr "Hlavní jazyk"
 
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Prioritize Your Follows"
-msgstr ""
+msgstr "Upřednostňujte své sledující"
 
 #: src/view/shell/desktop/RightNav.tsx:75
 msgid "Privacy"
-msgstr ""
+msgstr "Soukromí"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Zásady ochrany osobních údajů"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 msgid "Processing..."
-msgstr ""
+msgstr "Zpracovávání"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:237
 #: src/view/shell/Drawer.tsx:72
 #: src/view/shell/Drawer.tsx:533
 #: src/view/shell/Drawer.tsx:534
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: src/view/screens/Settings.tsx:789
 msgid "Protect your account by verifying your email."
-msgstr ""
+msgstr "Chraňte svůj účet ověřením svého e-mailu."
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr ""
+msgstr "Veřejné, sdílitelné seznamy uživatelů, pomocí kterých jde hromadně ztlumit nebo zablokovat účty."
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr ""
+msgstr "Veřejné seznamy ke sdílení, které mohou řídit zdroje."
 
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
-msgstr ""
+msgstr "Citovat"
 
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
-msgstr ""
+msgstr "Citovat"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
-msgstr ""
+msgstr "Poměry"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:50
 #~ msgid "Recommended"
-#~ msgstr ""
+#~ msgstr "Doporučené"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
 msgid "Recommended Feeds"
-msgstr ""
+msgstr "Doporučené zdroje"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:180
 msgid "Recommended Users"
-msgstr ""
+msgstr "Doporučení uživatelé"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
@@ -1629,124 +1630,124 @@ msgstr ""
 #: src/view/com/util/UserAvatar.tsx:278
 #: src/view/com/util/UserBanner.tsx:89
 msgid "Remove"
-msgstr ""
+msgstr "Odebrat"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:108
 msgid "Remove {0} from my feeds?"
-msgstr ""
+msgstr "Odebrat {0} z mých zdrojů?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
-msgstr ""
+msgstr "Odebrat účet"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:130
 msgid "Remove feed"
-msgstr ""
+msgstr "Odebrat zdroj"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:107
 #: src/view/screens/ProfileFeed.tsx:280
 msgid "Remove from my feeds"
-msgstr ""
+msgstr "Odebrat z mých zdrojů"
 
 #: src/view/com/composer/photos/Gallery.tsx:167
 msgid "Remove image"
-msgstr ""
+msgstr "Odebrat obrázek"
 
 #: src/view/com/composer/ExternalEmbed.tsx:70
 msgid "Remove image preview"
-msgstr ""
+msgstr "Odebrat náhled obrázku"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:131
 msgid "Remove this feed from your saved feeds?"
-msgstr ""
+msgstr "Odebrat tento zdroj z uložených zdrojů?"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:136
 msgid "Removed from list"
-msgstr ""
+msgstr "Odebráno ze seznamu"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:74
 msgid "Replies to this thread are disabled"
-msgstr ""
+msgstr "Odpovědi na toto vlákno jsou zakázány"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
 msgid "Reply Filters"
-msgstr ""
+msgstr "Filtry odpovědí"
 
 #: src/view/com/modals/report/Modal.tsx:166
 msgid "Report {collectionName}"
-msgstr ""
+msgstr "Nahlásit {collectionName}"
 
 #: src/view/com/profile/ProfileHeader.tsx:380
 msgid "Report Account"
-msgstr ""
+msgstr "Nahlásit účet"
 
 #: src/view/screens/ProfileFeed.tsx:300
 msgid "Report feed"
-msgstr ""
+msgstr "Nahlásit zdroj"
 
 #: src/view/screens/ProfileList.tsx:448
 msgid "Report List"
-msgstr ""
+msgstr "Nahlásit seznam"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
 #: src/view/com/util/forms/PostDropdownBtn.tsx:162
 msgid "Report post"
-msgstr ""
+msgstr "Nahlásit příspěvek"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
-msgstr ""
+msgstr "Přeposlat"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
-msgstr ""
+msgstr "Přeposlat nebo citovat příspěvek"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted by"
-msgstr ""
+msgstr "Přeposláno uživatelem"
 
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
-msgstr ""
+msgstr "Požádat o změnu"
 
 #: src/view/screens/Moderation.tsx:188
 #~ msgid "Request to limit the visibility of my account"
-#~ msgstr ""
+#~ msgstr "Žádost o omezení viditelnosti mého účtu"
 
 #: src/view/screens/Settings.tsx:382
 #~ msgid "Require alt text before posting"
-#~ msgstr ""
+#~ msgstr "Vyžadovat popisek před odesláním"
 
 #: src/view/com/auth/create/Step2.tsx:53
 msgid "Required for this provider"
-msgstr ""
+msgstr "Požadováno pro tohoto poskytovatele"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:108
 msgid "Reset code"
-msgstr ""
+msgstr "Obnovovací kód"
 
 #: src/view/screens/Settings.tsx:686
 msgid "Reset onboarding state"
-msgstr ""
+msgstr "Obnovit stav registrace"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:98
 msgid "Reset password"
-msgstr ""
+msgstr "Obnovit heslo"
 
 #: src/view/screens/Settings.tsx:676
 msgid "Reset preferences state"
-msgstr ""
+msgstr "Obnovit stav předvoleb"
 
 #: src/view/screens/Settings.tsx:684
 msgid "Resets the onboarding state"
-msgstr ""
+msgstr "Obnovit stav registrace"
 
 #: src/view/screens/Settings.tsx:674
 msgid "Resets the preferences state"
-msgstr ""
+msgstr "Obnovit stav předvoleb"
 
 #: src/view/com/auth/create/CreateAccount.tsx:167
 #: src/view/com/auth/create/CreateAccount.tsx:171
@@ -1755,7 +1756,7 @@ msgstr ""
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
-msgstr ""
+msgstr "Opakovat"
 
 #: src/view/com/modals/ChangeHandle.tsx:169
 #~ msgid "Retry change handle"
@@ -1769,31 +1770,31 @@ msgstr ""
 #: src/view/com/modals/CreateOrEditList.tsx:257
 #: src/view/com/modals/EditProfile.tsx:223
 msgid "Save"
-msgstr ""
+msgstr "Uložit"
 
 #: src/view/com/modals/AltImage.tsx:105
 msgid "Save alt text"
-msgstr ""
+msgstr "Uložit popisný text"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 #~ msgid "Save changes"
-#~ msgstr ""
+#~ msgstr "Uložit změny"
 
 #: src/view/com/modals/EditProfile.tsx:231
 msgid "Save Changes"
-msgstr ""
+msgstr "Uložit změny"
 
 #: src/view/com/modals/ChangeHandle.tsx:170
 msgid "Save handle change"
-msgstr ""
+msgstr "Uložit změnu uživatelského jména"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:144
 msgid "Save image crop"
-msgstr ""
+msgstr "Uložit oříznutí obrázku"
 
 #: src/view/screens/SavedFeeds.tsx:122
 msgid "Saved Feeds"
-msgstr ""
+msgstr "Uložené zdroje"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
@@ -1806,109 +1807,109 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:351
 #: src/view/shell/Drawer.tsx:352
 msgid "Search"
-msgstr ""
+msgstr "Vyhledávání"
 
 #: src/view/screens/Search/Search.tsx:390
 msgid "Search for posts and users."
-msgstr ""
+msgstr "Vyhledávat příspěvky a uživatele."
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
-msgstr ""
+msgstr "Je vyžadován bezpečnostní krok"
 
 #: src/view/com/auth/SplashScreen.tsx:29
 msgid "See what's next"
-msgstr ""
+msgstr "Podívejte se, co bude dál"
 
 #: src/view/com/modals/ServerInput.tsx:75
 msgid "Select Bluesky Social"
-msgstr ""
+msgstr "Vybrat Bluesky Social"
 
 #: src/view/com/auth/login/Login.tsx:117
 msgid "Select from an existing account"
-msgstr ""
+msgstr "Vyberte z existujícího účtu"
 
 #: src/view/com/auth/login/LoginForm.tsx:143
 msgid "Select service"
-msgstr ""
+msgstr "Vybrat službu"
 
 #: src/view/screens/LanguageSettings.tsx:280
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr ""
+msgstr "Vyberte jazyky, které mají vaše odebírané zdroje zahrnout. Pokud nevyberete žádný, zobrazí se všechny jazyky."
 
 #: src/view/screens/LanguageSettings.tsx:97
 msgid "Select your app language for the default text to display in the app"
-msgstr ""
+msgstr "Vyberte jazyk aplikace pro výchozí text, který se v aplikaci zobrazí"
 
 #: src/view/screens/LanguageSettings.tsx:189
 msgid "Select your preferred language for translations in your feed."
-msgstr ""
+msgstr "Vyberte preferovaný jazyk pro překlady ve vašem zdroji."
 
 #: src/view/com/modals/VerifyEmail.tsx:188
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "Odeslat ověřovací email"
 
 #: src/view/com/modals/DeleteAccount.tsx:127
 msgid "Send email"
-msgstr ""
+msgstr "Odeslat email"
 
 #: src/view/com/modals/DeleteAccount.tsx:138
 msgid "Send Email"
-msgstr ""
+msgstr "Odeslat Email"
 
 #: src/view/shell/Drawer.tsx:284
 #: src/view/shell/Drawer.tsx:305
 msgid "Send feedback"
-msgstr ""
+msgstr "Odeslat zpětnou vazbu"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 msgid "Send Report"
-msgstr ""
+msgstr "Odeslat hlášení"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:78
 msgid "Set new password"
-msgstr ""
+msgstr "Nastavte nové heslo"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr ""
+msgstr "Chcete-li skrýt všechny příspěvky s citáty ze zdroje, nastavte toto nastavení na \"Ne\". Příspěvky budou stále viditelné."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr ""
+msgstr "Chcete-li skrýt všechny odpovědi ze zdroje, nastavte toto nastavení na \"Ne\"."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:182
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr ""
+msgstr "Chcete-li skrýt všechny přeposlané příspěvky ze zdroje, nastavte toto nastavení na \"Ne\"."
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr ""
+msgstr "Chcete-li odpovědi zobrazovat ve vláknovém zobrazení, nastavte toto nastavení na \"Ano\". Toto je experimentální funkce."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:252
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr ""
+msgstr "Chcete-li v následujícím zdroji zobrazovat ukázky uložených zdrojů, nastavte toto nastavení na \"Ano\". Toto je experimentální funkce."
 
 #: src/view/screens/Settings.tsx:277
 #: src/view/shell/desktop/LeftNav.tsx:435
 #: src/view/shell/Drawer.tsx:554
 #: src/view/shell/Drawer.tsx:555
 msgid "Settings"
-msgstr ""
+msgstr "Nastavení"
 
 #: src/view/com/modals/SelfLabel.tsx:125
 msgid "Sexual activity or erotic nudity."
-msgstr ""
+msgstr "Sexuální aktivita nebo erotická nahota."
 
 #: src/view/com/profile/ProfileHeader.tsx:314
 #: src/view/com/util/forms/PostDropdownBtn.tsx:126
 #: src/view/screens/ProfileList.tsx:407
 msgid "Share"
-msgstr ""
+msgstr "Sdílet"
 
 #: src/view/screens/ProfileFeed.tsx:312
 msgid "Share feed"
-msgstr ""
+msgstr "Sdílet zdroj"
 
 #: src/view/screens/ProfileFeed.tsx:276
 #~ msgid "Share link"
@@ -1916,537 +1917,537 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:316
 msgid "Show"
-msgstr ""
+msgstr "Zobrazit"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:114
 msgid "Show anyway"
-msgstr ""
+msgstr "Přesto zobrazit"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:249
 msgid "Show Posts from My Feeds"
-msgstr ""
+msgstr "Zobrazit příspěvky z mých zdrojů"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:213
 msgid "Show Quote Posts"
-msgstr ""
+msgstr "Zobrazit citační příspěvky"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:110
 msgid "Show Replies"
-msgstr ""
+msgstr "Zobrazit odpovědi"
 
 #: src/view/screens/PreferencesThreads.tsx:94
 msgid "Show replies by people you follow before all other replies."
-msgstr ""
+msgstr "Zobrazit odpovědi od lidí, které sledujete, před všemi ostatními odpověďmi."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:179
 msgid "Show Reposts"
-msgstr ""
+msgstr "Zobrazit přeposlání"
 
 #: src/view/com/notifications/FeedItem.tsx:337
 msgid "Show users"
-msgstr ""
+msgstr "Zobrazit uživatele"
 
 #: src/view/com/auth/login/Login.tsx:98
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/shell/NavSignupCard.tsx:52
 #: src/view/shell/NavSignupCard.tsx:53
 msgid "Sign in"
-msgstr ""
+msgstr "Přihlásit se"
 
 #: src/view/com/auth/SplashScreen.tsx:52
 #: src/view/com/auth/SplashScreen.web.tsx:84
 msgid "Sign In"
-msgstr ""
+msgstr "Přihlásit se"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:44
 msgid "Sign in as {0}"
-msgstr ""
+msgstr "Přihlásit se jako {0}"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:118
 #: src/view/com/auth/login/Login.tsx:116
 msgid "Sign in as..."
-msgstr ""
+msgstr "Přihlásit se jako..."
 
 #: src/view/com/auth/login/LoginForm.tsx:130
 msgid "Sign into"
-msgstr ""
+msgstr "Přihlaste se"
 
 #: src/view/com/modals/SwitchAccount.tsx:60
 #: src/view/com/modals/SwitchAccount.tsx:63
 msgid "Sign out"
-msgstr ""
+msgstr "Odhlásit se"
 
 #: src/view/shell/NavSignupCard.tsx:43
 #: src/view/shell/NavSignupCard.tsx:44
 #: src/view/shell/NavSignupCard.tsx:46
 msgid "Sign up"
-msgstr ""
+msgstr "Přihlásit se"
 
 #: src/view/shell/NavSignupCard.tsx:36
 msgid "Sign up or sign in to join the conversation"
-msgstr ""
+msgstr "Chcete-li se připojit ke konverzaci, zaregistrujte se nebo se přihlaste"
 
 #: src/view/screens/Settings.tsx:327
 msgid "Signed in as"
-msgstr ""
+msgstr "Přihlášen/a jako"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
 msgid "Skip"
-msgstr ""
+msgstr "Přeskočit"
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
-msgstr ""
+msgstr "Řadit odpovědi"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr ""
+msgstr "Řadit odpovědi na příspěvek podle:"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
-msgstr ""
+msgstr "Čtverec"
 
 #: src/view/com/auth/create/Step1.tsx:90
 #: src/view/com/modals/ServerInput.tsx:62
 msgid "Staging"
-msgstr ""
+msgstr "Inscenace"
 
 #: src/view/screens/Settings.tsx:730
 msgid "Status page"
-msgstr ""
+msgstr "Stavová stránka"
 
 #: src/view/screens/Settings.tsx:666
 msgid "Storybook"
-msgstr ""
+msgstr "Záznamy"
 
 #: src/view/com/modals/AppealLabel.tsx:101
 msgid "Submit"
-msgstr ">>>>>>> cb8a33b6 (Fix translations)"
+msgstr "Odeslat"
 
 #: src/view/screens/ProfileList.tsx:597
 msgid "Subscribe"
-msgstr ""
+msgstr "Odebírat"
 
 #: src/view/screens/ProfileList.tsx:593
 msgid "Subscribe to this list"
-msgstr ""
+msgstr "Odebírat tento seznam"
 
 #: src/view/screens/Search/Search.tsx:354
 msgid "Suggested Follows"
-msgstr ""
+msgstr "Doporučené sledovat"
 
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
-msgstr ""
+msgstr "Podpora"
 
 #: src/view/com/modals/SwitchAccount.tsx:111
 msgid "Switch Account"
-msgstr ""
+msgstr "Přepnout účet"
 
 #: src/view/screens/Settings.tsx:398
 #~ msgid "System"
-#~ msgstr ""
+#~ msgstr "Systém"
 
 #: src/view/screens/Settings.tsx:646
 msgid "System log"
-msgstr ""
+msgstr "Systémový protokol"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
-msgstr ""
+msgstr "Vysoký"
 
 #: src/view/shell/desktop/RightNav.tsx:84
 msgid "Terms"
-msgstr ""
+msgstr "Podmínky"
 
 #: src/view/screens/TermsOfService.tsx:29
 msgid "Terms of Service"
-msgstr ""
+msgstr "Podmínky služby"
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:50
 msgid "Text input field"
-msgstr ""
+msgstr "Pole pro zadávání textu"
 
 #: src/view/com/profile/ProfileHeader.tsx:282
 msgid "The account will be able to interact with you after unblocking."
-msgstr ""
+msgstr "Účet s vámi bude moci komunikovat po odblokování."
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr ""
+msgstr "Komunitní pravidla byly přesunuty na adresu <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
-msgstr ""
+msgstr "Zásady autorských práv byly přesunuty do <0/>"
 
 #: src/view/com/post-thread/PostThread.tsx:430
 msgid "The post may have been deleted."
-msgstr ""
+msgstr "Příspěvek mohl být smazán."
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr ""
+msgstr "Zásady ochrany osobních údajů byly přesunuty na adresu <0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr ""
+msgstr "Formulář na podporu byl přesunut. Pokud potřebujete pomoc <0/> nebo navštivte {HELP_DESK_URL} a kontaktujte nás."
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
-msgstr ""
+msgstr "Podmínky služby byly přesunuty do"
 
 #: src/view/com/util/ErrorBoundary.tsx:35
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
-msgstr ""
+msgstr "V aplikaci došlo k neočekávanému problému. Pokud se vám to stalo, dejte nám prosím vědět!"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "This {0} has been labeled."
-msgstr ""
+msgstr "Tento {0} byl označen."
 
 #: src/view/com/util/moderation/ScreenHider.tsx:72
 msgid "This {screenDescription} has been flagged:"
-msgstr ""
+msgstr "Tento {screenDescription} byl nahlášen:"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
 msgid "This content is not viewable without a Bluesky account."
-msgstr ""
+msgstr "Tento obsah nelze zobrazit bez Bluesky účtu."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:113
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "Tento zdroj má v současné době vysoký provoz a je dočasně nedostupný. Prosím zkuste to znovu později."
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
-msgstr ""
+msgstr "Tyto informace nejsou sdíleny s ostatními uživateli."
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr ""
+msgstr "To je důležité pro případ, že byste někdy potřebovali změnit svůj e-mail nebo resetovat heslo."
 
 #: src/view/com/auth/create/Step1.tsx:55
 msgid "This is the service that keeps you online."
-msgstr ""
+msgstr "Toto je služba, která vás udržuje online."
 
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
-msgstr ""
+msgstr "Tento odkaz vás přesměruje na následující web:"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
-msgstr ""
+msgstr "Tento příspěvek byl smazán."
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
-msgstr ""
+msgstr "Toto upozornění je dostupné pouze pro příspěvky s připojeným médiem."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
 msgid "Thread Preferences"
-msgstr ""
+msgstr "Typy vláken"
 
 #: src/view/screens/PreferencesThreads.tsx:113
 msgid "Threaded Mode"
-msgstr ""
+msgstr "Vláknový mód"
 
 #: src/view/com/util/forms/DropdownButton.tsx:230
 msgid "Toggle dropdown"
-msgstr ""
+msgstr "Přepnout rozbalovací nabídku"
 
 #: src/view/com/modals/EditImage.tsx:271
 msgid "Transformations"
-msgstr ""
+msgstr "Transformace"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:692
 #: src/view/com/post-thread/PostThreadItem.tsx:694
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "Translate"
-msgstr ""
+msgstr "Přeložit"
 
 #: src/view/com/util/error/ErrorScreen.tsx:73
 msgid "Try again"
-msgstr ""
+msgstr "Zkusit znovu"
 
 #: src/view/screens/ProfileList.tsx:495
 msgid "Un-block list"
-msgstr ""
+msgstr "Vypnout blokovací seznam"
 
 #: src/view/screens/ProfileList.tsx:480
 msgid "Un-mute list"
-msgstr ""
+msgstr "Vypnout ztlumovací seznam"
 
 #: src/view/com/auth/create/CreateAccount.tsx:64
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
-msgstr ""
+msgstr "Nelze kontaktovat vaši službu. Zkontrolujte prosím své internetové připojení."
 
 #: src/view/com/profile/ProfileHeader.tsx:442
 #: src/view/com/profile/ProfileHeader.tsx:445
 msgid "Unblock"
-msgstr ""
+msgstr "Odblokovat"
 
 #: src/view/com/profile/ProfileHeader.tsx:280
 #: src/view/com/profile/ProfileHeader.tsx:364
 msgid "Unblock Account"
-msgstr ""
+msgstr "Odblokovat účet"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
-msgstr ""
+msgstr "Zrušit přeposlání"
 
 #: src/view/com/auth/create/state.ts:210
 msgid "Unfortunately, you do not meet the requirements to create an account."
-msgstr ""
+msgstr "Bohužel nesplňujete požadavky na vytvoření účtu."
 
 #: src/view/com/profile/ProfileHeader.tsx:345
 msgid "Unmute Account"
-msgstr ""
+msgstr "Přestat ztlumovat účet"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:144
 msgid "Unmute thread"
-msgstr ""
+msgstr "Přestat ztlumovat vlákno"
 
 #: src/view/screens/ProfileList.tsx:463
 msgid "Unpin moderation list"
-msgstr ""
+msgstr "Odepnout seznam moderování"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
-msgstr ""
+msgstr "Aktualizovat {displayName} v seznamech"
 
 #: src/lib/hooks/useOTAUpdate.ts:15
 msgid "Update Available"
-msgstr ""
+msgstr "Dostupná aktualizace"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:172
 msgid "Updating..."
-msgstr ""
+msgstr "Aktualizování..."
 
 #: src/view/com/modals/ChangeHandle.tsx:453
 msgid "Upload a text file to:"
-msgstr ""
+msgstr "Nahrajte textový soubor do:"
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr ""
+msgstr "Pomocí aplikačních hesel se přihlaste k dalším klientům Bluesky, aniž byste poskytli úplný přístup ke svému účtu nebo heslu."
 
 #: src/view/com/modals/ChangeHandle.tsx:513
 msgid "Use default provider"
-msgstr ""
+msgstr "Použít výchozího poskytovatele"
 
 #: src/view/com/modals/AddAppPasswords.tsx:150
 msgid "Use this to sign into the other app along with your handle."
-msgstr ""
+msgstr "Použijte toto k přihlášení do jiné aplikace spolu s vaším uživatelským jménem."
 
 #: src/view/com/modals/InviteCodes.tsx:197
 msgid "Used by:"
-msgstr ""
+msgstr "Použil/a ji"
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"
-msgstr ""
+msgstr "Uživatelské jméno"
 
 #: src/view/screens/Lists.tsx:58
 msgid "User Lists"
-msgstr ""
+msgstr "Seznamy uživatelů"
 
 #: src/view/com/auth/login/LoginForm.tsx:170
 #: src/view/com/auth/login/LoginForm.tsx:187
 msgid "Username or email address"
-msgstr ""
+msgstr "Uživatelské jméno nebo email"
 
 #: src/view/screens/ProfileList.tsx:767
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:115
 msgid "Users followed by <0/>"
-msgstr ""
+msgstr "Uživatelé následovaní <0/>"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
-msgstr ""
+msgstr "Uživatelé v \"{0}\""
 
 #: src/view/screens/Settings.tsx:750
 msgid "Verify email"
-msgstr ""
+msgstr "Ověřit můj email"
 
 #: src/view/screens/Settings.tsx:775
 msgid "Verify my email"
-msgstr ""
+msgstr "Ověřit můj email"
 
 #: src/view/screens/Settings.tsx:784
 msgid "Verify My Email"
-msgstr ""
+msgstr "Ověřit můj email"
 
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
-msgstr ""
+msgstr "Ověřte nový e-mail"
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
-msgstr ""
+msgstr "Zobrazit záznam ladění"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:128
 msgid "View the avatar"
-msgstr ""
+msgstr "Zobrazit profilovku"
 
 #: src/view/com/modals/LinkWarning.tsx:73
 msgid "Visit Site"
-msgstr ""
+msgstr "Navštívit stránku"
 
 #: src/view/com/auth/create/CreateAccount.tsx:125
 msgid "We're so excited to have you join us!"
-msgstr ""
+msgstr "Jsme moc rádi, že se k nám připojíte!"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 #~ msgid "We're sorry, but this content is not viewable without a Bluesky account."
-#~ msgstr ""
+#~ msgstr "Je nám líto, ale tento obsah nelze zobrazit bez uživatelského účtu Bluesky."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 #~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-#~ msgstr ""
+#~ msgstr "Je nám líto, ale tento zdroj má v současnosti vysokou návštěvnost a je dočasně nedostupný. Prosím zkuste to znovu později"
 
 #: src/view/screens/Search/Search.tsx:237
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr ""
+msgstr "Je nám líto, ale vaše hledání nebylo možné dokončit. Zkuste to znovu za několik minut."
 
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
-msgstr ""
+msgstr "Omlouváme se! Nemůžeme najít stránku, kterou jste hledali."
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
 msgid "Welcome to <0>Bluesky</0>"
-msgstr ""
+msgstr "Vítejte v <0>Bluesky</0>"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
-msgstr ""
+msgstr "Jaký je problém s touto {collectionName}?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr ""
+msgstr "Jaké jazyky jsou použity v tomto příspěvku?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr ""
+msgstr "Které jazyky byste rádi viděli ve svých algoritmických zdrojích?"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:43
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
-msgstr ""
+msgstr "Kdo může odpovědět?"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:79
 msgid "Who can reply?"
-msgstr ""
+msgstr "Kdo může odpovědět?"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
-msgstr ""
+msgstr "Široký"
 
 #: src/view/com/composer/Composer.tsx:396
 msgid "Write post"
-msgstr ""
+msgstr "Napište příspěvek"
 
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
-msgstr ""
+msgstr "Napište svou odpověď"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
 msgid "Yes"
-msgstr ""
+msgstr "Ano"
 
 #: src/view/com/auth/create/Step1.tsx:106
 msgid "You can change hosting providers at any time."
-msgstr ""
+msgstr "Poskytovatele hostingu můžete kdykoli změnit."
 
 #: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
 msgid "You can now sign in with your new password."
-msgstr ""
+msgstr "Nyní se můžete přihlásit pomocí svého nového hesla."
 
 #: src/view/com/modals/InviteCodes.tsx:64
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr ""
+msgstr "Ještě nemáte žádné pozvánky! Některé vám pošleme, až budete na Bluesky o něco déle."
 
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
-msgstr ""
+msgstr "Nemáte žádné připnuté zdroje."
 
 #: src/view/screens/Feeds.tsx:383
 msgid "You don't have any saved feeds!"
-msgstr ""
+msgstr "Nemáte žádné uložené zdroje!"
 
 #: src/view/screens/SavedFeeds.tsx:135
 msgid "You don't have any saved feeds."
-msgstr ""
+msgstr "Nemáte žádné uložené zdroje."
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr ""
+msgstr "Zablokovali jste autora nebo jste byli autorem zablokováni."
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:154
 msgid "You have no feeds."
-msgstr ""
+msgstr "Nemáte žádné zdroje."
 
 #: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:158
 msgid "You have no lists."
-msgstr ""
+msgstr "Nemáte žádné seznamy."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:131
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-msgstr ""
+msgstr "Dosud jste nezablokovali žádný účet. Chcete-li zablokovat účet, přejděte do profilu uživatele a v nabídce vyberte možnost \"Blokovat účet\"."
 
 #: src/view/screens/AppPasswords.tsx:86
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr ""
+msgstr "Zatím jste nevytvořili žádná aplikační hesla. Můžete jej vytvořit stisknutím tlačítka níže."
 
 #: src/view/screens/ModerationMutedAccounts.tsx:130
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-msgstr ""
+msgstr "Dosud jste neztlumili žádné účty. Chcete-li ztlumit účet, přejděte do profilu uživatele a v nabídce vyberte možnost \"Ztlumit účet\"."
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr ""
+msgstr "Obdržíte e-mail s \"obnovovacím kódem.\" Zadejte tento kód sem a poté zadejte své nové heslo."
 
 #: src/view/com/auth/create/Step2.tsx:43
 msgid "Your account"
-msgstr ""
+msgstr "Váš účet"
 
 #: src/view/com/auth/create/Step2.tsx:122
 msgid "Your birth date"
-msgstr ""
+msgstr "Vaše datum narození"
 
 #: src/view/com/auth/create/state.ts:102
 msgid "Your email appears to be invalid."
-msgstr ""
+msgstr "Váš e-mail se zdá být neplatný."
 
 #: src/view/com/modals/Waitlist.tsx:107
 msgid "Your email has been saved! We'll be in touch soon."
-msgstr ""
+msgstr "Váš e-mail byl uložen! Brzy se ozveme."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr ""
+msgstr "Váš e-mail byl aktualizován, ale nebyl ověřen. Jako další krok prosím ověřte svůj nový e-mail."
 
 #: src/view/com/modals/VerifyEmail.tsx:100
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr ""
+msgstr "Váš email ještě nebyl ověřen. Toto je důležitý bezpečnostní krok, který doporučujeme provést."
 
 #: src/view/com/auth/create/Step3.tsx:42
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be"
-msgstr ""
+msgstr "Vaše plné uživatelské jméno bude"
 
 #: src/view/com/auth/create/Step1.tsx:53
 msgid "Your hosting provider"
-msgstr ""
+msgstr "Váš poskytovatel hostingu"
 
 #: src/view/screens/Settings.tsx:402
 #: src/view/shell/desktop/RightNav.tsx:127
@@ -2456,24 +2457,24 @@ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr ""
+msgstr "Vaše příspěvky, lajky a bloky jsou veřejné. Ztlumení jsou soukromá."
 
 #: src/view/com/modals/SwitchAccount.tsx:78
 msgid "Your profile"
-msgstr ""
+msgstr "Váš profil"
 
 #: src/view/screens/Moderation.tsx:205
 #~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
-#~ msgstr ""
+#~ msgstr "Váš profil a účet nebudou viditelný pro nikoho, kdo navštíví aplikaci Bluesky bez účtu, ani pro držitele účtu, kteří nejsou přihlášeni. Aktivací této možnosti se váš profil nestane soukromým."
 
 #: src/view/screens/Moderation.tsx:220
 #~ msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
-#~ msgstr ""
+#~ msgstr "Váš profil a obsah nebude viditelný pro nikoho, kdo použije Bluesky aplikaci bez uživatelského účtu. Zapnutím této funkce neuděláte svůj profil soukromý."
 
 #: src/view/screens/Moderation.tsx:220
 msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
-msgstr ""
+msgstr "Váš profil a příspěvky nebudou viditelné pro lidi kteří v Bluesky aplikaci nebo na webové stránce nemají uživatelský účet a nejsou přihlášeni."
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
-msgstr ""
+msgstr "Vaše uživatelské jméno"
