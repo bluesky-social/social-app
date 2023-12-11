@@ -25,26 +25,18 @@ export function truncateAndInvalidate<T = any>(
 export function getEmbeddedPost(
   v: unknown,
 ): AppBskyEmbedRecord.ViewRecord | undefined {
-  if (
-    AppBskyEmbedRecord.isView(v) &&
-    AppBskyEmbedRecord.validateView(v).success
-  ) {
+  if (AppBskyEmbedRecord.isView(v)) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record) &&
-      AppBskyFeedPost.isRecord(v.record.value) &&
-      AppBskyFeedPost.validateRecord(v.record.value).success
+      AppBskyFeedPost.isRecord(v.record.value)
     ) {
       return v.record
     }
   }
-  if (
-    AppBskyEmbedRecordWithMedia.isView(v) &&
-    AppBskyEmbedRecordWithMedia.validateView(v).success
-  ) {
+  if (AppBskyEmbedRecordWithMedia.isView(v)) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record.record) &&
-      AppBskyFeedPost.isRecord(v.record.record.value) &&
-      AppBskyFeedPost.validateRecord(v.record.record.value).success
+      AppBskyFeedPost.isRecord(v.record.record.value)
     ) {
       return v.record.record
     }
