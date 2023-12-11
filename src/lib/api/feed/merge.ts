@@ -216,22 +216,10 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     super(feedTuners)
     this.sourceInfo = {
       $type: 'reasonFeedSource',
-      displayName: feedUri.split('/').pop() || '',
-      uri: feedUriToHref(feedUri),
+      uri: feedUri,
+      href: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
-    getAgent()
-      .app.bsky.feed.getFeedGenerator({
-        feed: feedUri,
-      })
-      .then(
-        res => {
-          if (this.sourceInfo) {
-            this.sourceInfo.displayName = res.data.view.displayName
-          }
-        },
-        _err => {},
-      )
   }
 
   protected async _getFeed(
