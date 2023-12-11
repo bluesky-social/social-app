@@ -8,6 +8,7 @@ import {Native} from 'sentry-expo'
 import {useSession, SessionAccount} from '#/state/session'
 import {TrackEvent, AnalyticsMethods} from './types'
 import {logger} from '#/logger'
+import {IS_DEV, IS_TEST} from '#/env'
 
 type AppInfo = {
   build?: string | undefined
@@ -24,6 +25,7 @@ function getClient(): SegmentClient {
       writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
       trackAppLifecycleEvents: false,
       proxy: 'https://api.events.bsky.app/v1',
+      debug: IS_DEV && !IS_TEST,
     })
   }
   return segmentClient
