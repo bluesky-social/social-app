@@ -62,7 +62,7 @@ export class MergeFeedAPI implements FeedAPI {
 
     // always keep following topped up
     if (this.following.numReady < limit) {
-      promises.push(this.following.fetchNext(60))
+      await this.following.fetchNext(60)
     }
 
     // pick the next feeds to sample from
@@ -73,9 +73,13 @@ export class MergeFeedAPI implements FeedAPI {
     }
 
     // top up the feeds
-    for (const feed of feeds) {
-      if (feed.numReady < 5) {
-        promises.push(feed.fetchNext(10))
+    const outOfFollows =
+      !this.following.hasMore && this.following.numReady < limit
+    if (this.params.mergeFeedEnabled || outOfFollows) {
+      for (const feed of feeds) {
+        if (feed.numReady < 5) {
+          promises.push(feed.fetchNext(10))
+        }
       }
     }
 
