@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {Linking, StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -25,7 +25,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 
-export function PostDropdownBtn({
+let PostDropdownBtn = ({
   testID,
   post,
   record,
@@ -35,7 +35,7 @@ export function PostDropdownBtn({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
-}) {
+}): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const {_} = useLingui()
@@ -211,3 +211,6 @@ export function PostDropdownBtn({
     </EventStopper>
   )
 }
+
+PostDropdownBtn = memo(PostDropdownBtn)
+export {PostDropdownBtn}

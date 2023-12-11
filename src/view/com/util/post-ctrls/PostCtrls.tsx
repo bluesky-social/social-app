@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -27,7 +27,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 
-export function PostCtrls({
+let PostCtrls = ({
   big,
   post,
   record,
@@ -39,7 +39,7 @@ export function PostCtrls({
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
-}) {
+}): React.ReactNode => {
   const theme = useTheme()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
@@ -189,6 +189,8 @@ export function PostCtrls({
     </View>
   )
 }
+PostCtrls = memo(PostCtrls)
+export {PostCtrls}
 
 const styles = StyleSheet.create({
   ctrls: {
