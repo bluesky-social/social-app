@@ -84,3 +84,15 @@ export function getTranslatorLink(text: string, lang: string): string {
     text,
   )}`
 }
+
+export function sanitizeAppLanguageSetting(appLanguage: string) {
+  const langs = appLanguage.split(',').filter(Boolean)
+
+  for (const lang of langs) {
+    if (['en', 'hi'].includes(lang)) {
+      return lang
+    }
+  }
+
+  return 'en'
+}
