@@ -1,5 +1,5 @@
 import React from 'react'
-import {TouchableOpacity, StyleSheet} from 'react-native'
+import {TouchableOpacity, StyleSheet, Keyboard} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -11,6 +11,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {isNative} from '#/platform/detection'
 
 export function ThreadgateBtn({
   threadgate,
@@ -25,6 +26,11 @@ export function ThreadgateBtn({
   const {openModal} = useModalControls()
 
   const onPress = () => {
+    if (isNative) {
+      if (Keyboard.isVisible()) {
+        Keyboard.dismiss()
+      }
+    }
     track('Composer:ThreadgateOpened')
     openModal({
       name: 'threadgate',
