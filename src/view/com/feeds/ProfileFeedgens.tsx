@@ -172,6 +172,7 @@ export const ProfileFeedgens = React.forwardRef<
       if (preferences) {
         return (
           <FeedSourceCardLoaded
+            feedUri={item.uri}
             feed={item}
             preferences={preferences}
             style={styles.item}
