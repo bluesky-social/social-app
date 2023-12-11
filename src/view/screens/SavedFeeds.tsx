@@ -89,14 +89,6 @@ export function SavedFeeds({}: Props) {
           </Text>
         </View>
 
-        <ListItem
-          key={'id'}
-          feedUri={'id'}
-          isPinned
-          setSavedFeeds={setSavedFeeds}
-          resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-          currentFeeds={currentFeeds}
-        />
         {preferences?.feeds ? (
           !currentFeeds.pinned.length ? (
             <View
