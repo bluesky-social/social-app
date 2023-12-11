@@ -328,7 +328,9 @@ let PostThreadItemLoaded = ({
             </View>
             <PostDropdownBtn
               testID="postDropdownBtn"
-              post={post}
+              postAuthor={post.author}
+              postCid={post.cid}
+              postUri={post.uri}
               record={record}
               style={{
                 paddingVertical: 6,
