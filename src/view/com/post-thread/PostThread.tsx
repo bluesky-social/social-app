@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -64,9 +64,11 @@ type YieldedItem =
 
 export function PostThread({
   uri,
+  onCanReply,
   onPressReply,
 }: {
   uri: string | undefined
+  onCanReply: (canReply: boolean) => void
   onPressReply: () => void
 }) {
   const {
@@ -86,6 +88,11 @@ export function PostThread({
         rootPost.author.displayName || `@${rootPost.author.handle}`,
       )}: "${rootPostRecord?.text}"`,
   )
+  useEffect(() => {
+    if (rootPost) {
+      onCanReply(!rootPost.viewer?.replyDisabled)
+    }
+  }, [rootPost, onCanReply])
 
   if (isError || AppBskyFeedDefs.isNotFoundPost(thread)) {
     return (

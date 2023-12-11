@@ -37,6 +37,7 @@ export function PostThreadScreen({route}: Props) {
   const {isMobile} = useWebMediaQueries()
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const {data: resolvedUri, error: uriError} = useResolveUriQuery(uri)
+  const [canReply, setCanReply] = React.useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -84,10 +85,11 @@ export function PostThreadScreen({route}: Props) {
           <PostThreadComponent
             uri={resolvedUri?.uri}
             onPressReply={onPressReply}
+            onCanReply={setCanReply}
           />
         )}
       </View>
-      {isMobile && (
+      {isMobile && canReply && (
         <Animated.View
           style={[
             styles.prompt,
