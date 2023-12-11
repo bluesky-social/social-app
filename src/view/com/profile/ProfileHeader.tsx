@@ -51,7 +51,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
@@ -127,17 +127,41 @@ let ProfileHeaderLoaded = ({
   const invalidHandle = isInvalidHandle(profile.handle)
   const {isDesktop} = useWebMediaQueries()
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
-  const descriptionRT = React.useMemo(
-    () =>
-      profile.description
-        ? new RichTextAPI({text: profile.description})
-        : undefined,
-    [profile],
-  )
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
+
+  /*
+   * BEGIN handle bio facet resolution
+   */
+  // should be undefined on first render to trigger a resolution
+  const prevProfileDescription = React.useRef<string | undefined>()
+  const [descriptionRT, setDescriptionRT] = React.useState<
+    RichTextAPI | undefined
+  >(
+    profile.description
+      ? new RichTextAPI({text: profile.description})
+      : undefined,
+  )
+  React.useEffect(() => {
+    async function resolveRTFacets() {
+      // new each time
+      const rt = new RichTextAPI({text: profile.description || ''})
+      await rt.detectFacets(getAgent())
+      // replace existing RT instance
+      setDescriptionRT(rt)
+    }
+
+    if (profile.description !== prevProfileDescription.current) {
+      // update prev immediately
+      prevProfileDescription.current = profile.description
+      resolveRTFacets()
+    }
+  }, [profile.description, setDescriptionRT])
+  /*
+   * END handle bio facet resolution
+   */
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -608,7 +632,7 @@ let ProfileHeaderLoaded = ({
               </Text>
             </View>
             {descriptionRT && !moderation.profile.blur ? (
-              <View pointerEvents="none">
+              <View pointerEvents={isNative ? 'auto' : 'none'}>
                 <RichText
                   testID="profileHeaderDescription"
                   style={[styles.description, pal.text]}
