@@ -744,7 +744,7 @@ msgid "Edit list details"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:367
-#: src/view/screens/SavedFeeds.tsx:85
+#: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -858,7 +858,7 @@ msgstr ""
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:156
+#: src/view/screens/SavedFeeds.tsx:164
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr ""
 
@@ -1536,7 +1536,7 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:89
+#: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
 msgstr ""
 
@@ -1676,7 +1676,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:108
+#: src/view/com/feeds/FeedSourceCard.tsx:106
 msgid "Remove {0} from my feeds?"
 msgstr ""
 
@@ -1688,7 +1688,8 @@ msgstr ""
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:107
+#: src/view/com/feeds/FeedSourceCard.tsx:105
+#: src/view/com/feeds/FeedSourceCard.tsx:172
 #: src/view/screens/ProfileFeed.tsx:280
 msgid "Remove from my feeds"
 msgstr ""
@@ -1699,6 +1700,10 @@ msgstr ""
 
 #: src/view/com/composer/ExternalEmbed.tsx:70
 msgid "Remove image preview"
+msgstr ""
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+msgid "Remove this feed from my feeds?"
 msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:131
@@ -1840,7 +1845,7 @@ msgstr ""
 msgid "Save image crop"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:122
+#: src/view/screens/SavedFeeds.tsx:130
 msgid "Saved Feeds"
 msgstr ""
 
@@ -2427,7 +2432,7 @@ msgstr ""
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:102
+#: src/view/screens/SavedFeeds.tsx:110
 msgid "You don't have any pinned feeds."
 msgstr ""
 
@@ -2435,7 +2440,7 @@ msgstr ""
 msgid "You don't have any saved feeds!"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:135
+#: src/view/screens/SavedFeeds.tsx:143
 msgid "You don't have any saved feeds."
 msgstr ""
 

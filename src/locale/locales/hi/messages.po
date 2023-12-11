@@ -740,7 +740,7 @@ msgid "Edit list details"
 msgstr "सूची विवरण संपादित करें"
 
 #: src/view/screens/Feeds.tsx:367
-#: src/view/screens/SavedFeeds.tsx:85
+#: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
 msgstr "मेरी फ़ीड संपादित करें"
 
@@ -854,7 +854,7 @@ msgstr "सभी फ़ीड"
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 msgstr "सामग्री को व्यवस्थित करने के लिए उपयोगकर्ताओं द्वारा फ़ीड बनाए जाते हैं। कुछ फ़ीड चुनें जो आपको दिलचस्प लगें।"
 
-#: src/view/screens/SavedFeeds.tsx:156
+#: src/view/screens/SavedFeeds.tsx:164
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "फ़ीड कस्टम एल्गोरिदम हैं जिन्हें उपयोगकर्ता थोड़ी कोडिंग विशेषज्ञता के साथ बनाते हैं। <0/> अधिक जानकारी के लिए."
 
@@ -1528,7 +1528,7 @@ msgstr "पासवर्ड अद्यतन!"
 msgid "Pictures meant for adults."
 msgstr "चित्र वयस्कों के लिए थे।।"
 
-#: src/view/screens/SavedFeeds.tsx:89
+#: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
 msgstr "पिन किया गया फ़ीड"
 
@@ -1668,7 +1668,7 @@ msgstr "अनुशंसित लोग"
 msgid "Remove"
 msgstr "निकालें"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:108
+#: src/view/com/feeds/FeedSourceCard.tsx:106
 msgid "Remove {0} from my feeds?"
 msgstr "मेरे फ़ीड से {0} हटाएं?"
 
@@ -1680,7 +1680,8 @@ msgstr "खाता हटाएं"
 msgid "Remove feed"
 msgstr "फ़ीड हटाएँ"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:107
+#: src/view/com/feeds/FeedSourceCard.tsx:105
+#: src/view/com/feeds/FeedSourceCard.tsx:172
 #: src/view/screens/ProfileFeed.tsx:280
 msgid "Remove from my feeds"
 msgstr "मेरे फ़ीड से हटाएँ"
@@ -1692,6 +1693,10 @@ msgstr "छवि निकालें"
 #: src/view/com/composer/ExternalEmbed.tsx:70
 msgid "Remove image preview"
 msgstr "छवि पूर्वावलोकन निकालें"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+msgid "Remove this feed from my feeds?"
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:131
 msgid "Remove this feed from your saved feeds?"
@@ -1832,7 +1837,7 @@ msgstr "बदलाव सेव करो"
 msgid "Save image crop"
 msgstr "फोटो बदलाव सेव करो"
 
-#: src/view/screens/SavedFeeds.tsx:122
+#: src/view/screens/SavedFeeds.tsx:130
 msgid "Saved Feeds"
 msgstr "सहेजे गए फ़ीड"
 
@@ -2419,7 +2424,7 @@ msgstr "अब आप अपने नए पासवर्ड के साथ
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "आपके पास अभी तक कोई आमंत्रण कोड नहीं है! जब आप कुछ अधिक समय के लिए Bluesky पर रहेंगे तो हम आपको कुछ भेजेंगे।"
 
-#: src/view/screens/SavedFeeds.tsx:102
+#: src/view/screens/SavedFeeds.tsx:110
 msgid "You don't have any pinned feeds."
 msgstr "आपके पास कोई पिन किया हुआ फ़ीड नहीं है."
 
@@ -2427,7 +2432,7 @@ msgstr "आपके पास कोई पिन किया हुआ फ़
 msgid "You don't have any saved feeds!"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:135
+#: src/view/screens/SavedFeeds.tsx:143
 msgid "You don't have any saved feeds."
 msgstr "आपके पास कोई सहेजी गई फ़ीड नहीं है."
 
