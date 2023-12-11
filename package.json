@@ -91,6 +91,7 @@
     "eventemitter3": "^5.0.1",
     "expo": "^49.0.8",
     "expo-application": "~5.3.0",
+    "expo-blur": "^12.6.0",
     "expo-build-properties": "~0.8.3",
     "expo-camera": "13.5.1",
     "expo-constants": "~14.4.2",

@@ -39,6 +39,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
+import type {SharedValue} from 'react-native-reanimated'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -254,15 +255,19 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
-  const renderHeader = React.useCallback(() => {
-    return (
-      <ProfileHeader
-        profile={profile}
-        moderation={moderation}
-        hideBackButton={hideBackButton}
-      />
-    )
-  }, [profile, moderation, hideBackButton])
+  const renderHeader = React.useCallback(
+    (scrollY: SharedValue<number>) => {
+      return (
+        <ProfileHeader
+          profile={profile}
+          moderation={moderation}
+          hideBackButton={hideBackButton}
+          scrollY={scrollY}
+        />
+      )
+    },
+    [profile, moderation, hideBackButton],
+  )
 
   return (
     <ScreenHider
@@ -276,7 +281,8 @@ function ProfileScreenLoaded({
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
-        renderHeader={renderHeader}>
+        renderHeader={renderHeader}
+        allowHeaderOverscroll>
         {({onScroll, headerHeight, isFocused, isScrolledDown, scrollElRef}) => (
           <FeedSection
             ref={postsSectionRef}

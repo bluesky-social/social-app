@@ -10896,6 +10896,11 @@ expo-asset@~8.10.1:
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
 
+expo-blur@^12.6.0:
+  version "12.6.0"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-12.6.0.tgz#70f8d63671d175802a7a30c168088f6a9fdd8ffb"
+  integrity sha512-yrZYu4mQX4ZJtSrjNVMuB9kCMB8Xerk5Zn5iES6ojmGAk+yxJ/jdyhaUVqbpaA8LBmspdKgQz2dW8+9wa8dSAg==
+
 expo-build-properties@~0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.8.3.tgz#fbfa156e9619bebda71c66af9a26ebc3490b2365"

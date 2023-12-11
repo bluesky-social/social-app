@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ModerationUI} from '@atproto/api'
 import {Image} from 'expo-image'
-import {colors} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
@@ -118,7 +118,7 @@ export function UserBanner({
       {banner ? (
         <Image
           testID="userBannerImage"
-          style={styles.bannerImage}
+          style={[styles.bannerImage]}
           source={{uri: banner}}
           accessible={true}
           accessibilityIgnoresInvertColors
@@ -142,8 +142,8 @@ export function UserBanner({
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
-      style={styles.bannerImage}
-      resizeMode="cover"
+      style={[styles.bannerImage, s.flex1]}
+      contentFit="cover"
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}
@@ -152,7 +152,7 @@ export function UserBanner({
   ) : (
     <View
       testID="userBannerFallback"
-      style={[styles.bannerImage, styles.defaultBanner]}
+      style={[styles.bannerImage, s.flex1, styles.defaultBanner]}
     />
   )
 }
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: '100%',
-    height: 150,
+    minHeight: 150,
   },
   defaultBanner: {
     backgroundColor: '#0070ff',

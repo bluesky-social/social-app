@@ -1,5 +1,6 @@
 import React, {memo} from 'react'
 import {
+  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -16,8 +17,7 @@ import {
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
-import {isNative, isWeb} from 'platform/detection'
-import {BlurView} from '../util/BlurView'
+import {isIOS, isNative, isWeb} from 'platform/detection'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -55,12 +55,25 @@ import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
+import Animated, {
+  useAnimatedStyle,
+  type SharedValue,
+  useAnimatedProps,
+  interpolate,
+  Extrapolation,
+} from 'react-native-reanimated'
+import {BlurView} from 'expo-blur'
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+const AnimatedActivityIndicator =
+  Animated.createAnimatedComponent(ActivityIndicator)
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
   moderation: ProfileModeration | null
   hideBackButton?: boolean
   isProfilePreview?: boolean
+  scrollY?: SharedValue<number>
 }
 
 export function ProfileHeader({
@@ -68,6 +81,7 @@ export function ProfileHeader({
   moderation,
   hideBackButton = false,
   isProfilePreview,
+  scrollY,
 }: Props) {
   const pal = usePalette('default')
 
@@ -98,6 +112,7 @@ export function ProfileHeader({
       moderation={moderation}
       hideBackButton={hideBackButton}
       isProfilePreview={isProfilePreview}
+      scrollY={scrollY}
     />
   )
 }
@@ -107,6 +122,7 @@ interface LoadedProps {
   moderation: ProfileModeration
   hideBackButton?: boolean
   isProfilePreview?: boolean
+  scrollY?: SharedValue<number>
 }
 
 let ProfileHeaderLoaded = ({
@@ -114,6 +130,7 @@ let ProfileHeaderLoaded = ({
   moderation,
   hideBackButton = false,
   isProfilePreview,
+  scrollY,
 }: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
@@ -413,10 +430,56 @@ let ProfileHeaderLoaded = ({
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
+  const animatedBannerStyle = useAnimatedStyle(() => {
+    if (scrollY) {
+      return {
+        height: 150 - Math.min(0, scrollY.value),
+        translateY: Math.max(0, scrollY.value),
+      }
+    } else {
+      return {
+        height: 150,
+      }
+    }
+  })
+
+  const animatedBlurProps = useAnimatedProps(() => {
+    return {
+      intensity: scrollY
+        ? interpolate(scrollY.value, [-120, -15], [100, 0], Extrapolation.CLAMP)
+        : 0,
+    }
+  })
+
+  const animatedSpinnerStyle = useAnimatedStyle(() => {
+    return {
+      opacity: scrollY
+        ? interpolate(scrollY.value, [-60, -15], [1, 0], Extrapolation.CLAMP)
+        : 1,
+    }
+  })
+
   return (
     <View style={pal.view} pointerEvents="box-none">
-      <View pointerEvents="none">
-        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+      <View style={styles.banner} pointerEvents="none">
+        <Animated.View style={[styles.innerBanner, animatedBannerStyle]}>
+          <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+          {isIOS && (
+            <AnimatedBlurView
+              animatedProps={animatedBlurProps}
+              tint="dark"
+              style={StyleSheet.absoluteFill}>
+              <AnimatedActivityIndicator
+                // stretch goal - figure out if it's actually refreshing
+                // and set the animating prop accordingly
+                // -sfn
+                style={[styles.bannerSpinner, animatedSpinnerStyle]}
+                size="small"
+                color="white"
+              />
+            </AnimatedBlurView>
+          )}
+        </Animated.View>
       </View>
       <View style={styles.content} pointerEvents="box-none">
         <View style={[styles.buttonsLine]} pointerEvents="box-none">
@@ -648,7 +711,7 @@ let ProfileHeaderLoaded = ({
           accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
-            <BlurView style={styles.backBtn} blurType="dark">
+            <BlurView style={styles.backBtn} tint="dark">
               <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
             </BlurView>
           </View>
@@ -677,7 +740,21 @@ ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 const styles = StyleSheet.create({
   banner: {
     width: '100%',
-    height: 120,
+    height: 150,
+    position: 'relative',
+  },
+  bannerSpinner: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -10,
+    marginLeft: -10,
+  },
+  innerBanner: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
   },
   backBtnWrapper: {
     position: 'absolute',
