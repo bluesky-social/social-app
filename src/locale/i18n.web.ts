@@ -2,6 +2,7 @@ import {useEffect} from 'react'
 import {i18n} from '@lingui/core'
 
 import {useLanguagePrefs} from '#/state/preferences'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
 export const locales = {
   en: 'English',
@@ -29,6 +30,6 @@ export async function dynamicActivate(locale: string) {
 export async function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
-    dynamicActivate(appLanguage)
+    dynamicActivate(sanitizeAppLanguageSetting(appLanguage))
   }, [appLanguage])
 }

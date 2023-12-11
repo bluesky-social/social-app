@@ -4,6 +4,7 @@ import {i18n} from '@lingui/core'
 import {useLanguagePrefs} from '#/state/preferences'
 import {messages as messagesEn} from '#/locale/locales/en/messages'
 import {messages as messagesHi} from '#/locale/locales/hi/messages'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
 export const locales = {
   en: 'English',
@@ -26,6 +27,6 @@ export async function dynamicActivate(locale: string) {
 export async function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
-    dynamicActivate(appLanguage)
+    dynamicActivate(sanitizeAppLanguageSetting(appLanguage))
   }, [appLanguage])
 }
