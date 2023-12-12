@@ -188,7 +188,7 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "and"
 msgstr "और"
 
-#: src/view/screens/LanguageSettings.tsx:94
+#: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
 msgstr "ऐप भाषा"
 
@@ -543,7 +543,7 @@ msgid "Content Filtering"
 msgstr "सामग्री फ़िल्टरिंग"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
-#: src/view/screens/LanguageSettings.tsx:277
+#: src/view/screens/LanguageSettings.tsx:278
 msgid "Content Languages"
 msgstr "सामग्री भाषा"
 
@@ -1091,7 +1091,7 @@ msgstr "वेटरलिस्ट में शामिल हों"
 msgid "Language selection"
 msgstr "अपनी भाषा चुने"
 
-#: src/view/screens/LanguageSettings.tsx:88
+#: src/view/screens/LanguageSettings.tsx:89
 msgid "Language Settings"
 msgstr "भाषा सेटिंग्स"
 
@@ -1595,7 +1595,7 @@ msgstr "शायद एक भ्रामक लिंक"
 msgid "Previous image"
 msgstr "पिछली छवि"
 
-#: src/view/screens/LanguageSettings.tsx:186
+#: src/view/screens/LanguageSettings.tsx:187
 msgid "Primary Language"
 msgstr "प्राथमिक भाषा"
 
@@ -1878,15 +1878,15 @@ msgstr "मौजूदा खाते से चुनें"
 msgid "Select service"
 msgstr "सेवा चुनें"
 
-#: src/view/screens/LanguageSettings.tsx:280
+#: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "चुनें कि आप अपनी सदस्यता वाली फ़ीड में कौन सी भाषाएँ शामिल करना चाहते हैं। यदि कोई भी चयनित नहीं है, तो सभी भाषाएँ दिखाई जाएंगी।"
 
-#: src/view/screens/LanguageSettings.tsx:97
+#: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
 msgstr "ऐप में प्रदर्शित होने वाले डिफ़ॉल्ट टेक्स्ट के लिए अपनी ऐप भाषा चुनें"
 
-#: src/view/screens/LanguageSettings.tsx:189
+#: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
 msgstr "अपने फ़ीड में अनुवाद के लिए अपनी पसंदीदा भाषा चुनें।"
 

@@ -188,7 +188,7 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:94
+#: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
 msgstr ""
 
@@ -547,7 +547,7 @@ msgid "Content Filtering"
 msgstr ""
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
-#: src/view/screens/LanguageSettings.tsx:277
+#: src/view/screens/LanguageSettings.tsx:278
 msgid "Content Languages"
 msgstr ""
 
@@ -1099,7 +1099,7 @@ msgstr ""
 msgid "Language selection"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:88
+#: src/view/screens/LanguageSettings.tsx:89
 msgid "Language Settings"
 msgstr ""
 
@@ -1603,7 +1603,7 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:186
+#: src/view/screens/LanguageSettings.tsx:187
 msgid "Primary Language"
 msgstr ""
 
@@ -1886,15 +1886,15 @@ msgstr ""
 msgid "Select service"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:280
+#: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:97
+#: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
 msgstr ""
 
-#: src/view/screens/LanguageSettings.tsx:189
+#: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
