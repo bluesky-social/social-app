@@ -41,6 +41,7 @@ import {
 import {useSession} from '#/state/session'
 import {isNative} from '#/platform/detection'
 import {logger} from '#/logger'
+import {usePrefetchListImages} from 'lib/hooks/usePrefetchListImages'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
@@ -133,6 +134,12 @@ function PostThreadLoaded({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isTablet, isDesktop} = useWebMediaQueries()
+  const {
+    onViewableItemsChanged,
+    onRefresh: onRefreshPrefetch,
+    setItems,
+  } = usePrefetchListImages()
+
   const ref = useRef<FlatList>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
@@ -157,8 +164,10 @@ function PostThreadLoaded({
     if (arr.indexOf(CHILD_SPINNER) === -1) {
       arr.push(BOTTOM_COMPONENT)
     }
+
+    setItems(arr)
     return arr
-  }, [thread, maxVisible, threadViewPrefs])
+  }, [thread, threadViewPrefs, maxVisible, setItems])
 
   /**
    * NOTE
@@ -204,11 +213,12 @@ function PostThreadLoaded({
     setIsPTRing(true)
     try {
       await onRefresh()
+      onRefreshPrefetch()
     } catch (err) {
       logger.error('Failed to refresh posts thread', {error: err})
     }
     setIsPTRing(false)
-  }, [setIsPTRing, onRefresh])
+  }, [setIsPTRing, onRefresh, onRefreshPrefetch])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
@@ -348,6 +358,7 @@ function PostThreadLoaded({
         />
       }
       onContentSizeChange={onContentSizeChange}
+      onViewableItemsChanged={onViewableItemsChanged}
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
