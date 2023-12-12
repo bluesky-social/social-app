@@ -372,6 +372,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         resumeSessionWithFreshAccount()
           .then(freshAccount => {
             if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
+              logger.info(
+                `session: reuse of previous session returned a fresh account, upserting`,
+              )
               upsertAccount(freshAccount)
             }
           })
