@@ -296,21 +296,30 @@ func (srv *Server) WebPost(c echo.Context) error {
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
-			did := pv.Did
-			data["did"] = did
+			unauthedViewingOkay := true
+			for _, label := range pv.Labels {
+				if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+					unauthedViewingOkay = false
+				}
+			}
 
-			// then fetch the post thread (with extra context)
-			uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
-			tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
-			if err != nil {
-				log.Warnf("failed to fetch post: %s\t%v", uri, err)
-			} else {
-				req := c.Request()
-				postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
-				data["postView"] = postView
-				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-				if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
-					data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+			if unauthedViewingOkay {
+				did := pv.Did
+				data["did"] = did
+
+				// then fetch the post thread (with extra context)
+				uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+				tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
+				if err != nil {
+					log.Warnf("failed to fetch post: %s\t%v", uri, err)
+				} else {
+					req := c.Request()
+					postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+					data["postView"] = postView
+					data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+					if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
+						data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+					}
 				}
 			}
 		}
@@ -329,9 +338,17 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
-			req := c.Request()
-			data["profileView"] = pv
-			data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+			unauthedViewingOkay := true
+			for _, label := range pv.Labels {
+				if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+					unauthedViewingOkay = false
+				}
+			}
+			if unauthedViewingOkay {
+				req := c.Request()
+				data["profileView"] = pv
+				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+			}
 		}
 	}
 
