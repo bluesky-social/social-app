@@ -30,6 +30,7 @@ import {
   useProfileQuery,
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
+import {ScrollView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export function ModerationScreen({}: Props) {
@@ -61,79 +62,81 @@ export function ModerationScreen({}: Props) {
       ]}
       testID="moderationScreen">
       <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-      <View style={styles.spacer} />
-      <TouchableOpacity
-        testID="contentFilteringBtn"
-        style={[styles.linkCard, pal.view]}
-        onPress={onPressContentFiltering}
-        accessibilityRole="tab"
-        accessibilityHint="Content filtering"
-        accessibilityLabel="">
-        <View style={[styles.iconContainer, pal.btn]}>
-          <FontAwesomeIcon
-            icon="eye"
-            style={pal.text as FontAwesomeIconStyle}
-          />
-        </View>
-        <Text type="lg" style={pal.text}>
-          <Trans>Content filtering</Trans>
+      <ScrollView>
+        <View style={styles.spacer} />
+        <TouchableOpacity
+          testID="contentFilteringBtn"
+          style={[styles.linkCard, pal.view]}
+          onPress={onPressContentFiltering}
+          accessibilityRole="tab"
+          accessibilityHint="Content filtering"
+          accessibilityLabel="">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="eye"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Content filtering</Trans>
+          </Text>
+        </TouchableOpacity>
+        <Link
+          testID="moderationlistsBtn"
+          style={[styles.linkCard, pal.view]}
+          href="/moderation/modlists">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="users-slash"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Moderation lists</Trans>
+          </Text>
+        </Link>
+        <Link
+          testID="mutedAccountsBtn"
+          style={[styles.linkCard, pal.view]}
+          href="/moderation/muted-accounts">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="user-slash"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Muted accounts</Trans>
+          </Text>
+        </Link>
+        <Link
+          testID="blockedAccountsBtn"
+          style={[styles.linkCard, pal.view]}
+          href="/moderation/blocked-accounts">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="ban"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Blocked accounts</Trans>
+          </Text>
+        </Link>
+        <Text
+          type="xl-bold"
+          style={[
+            pal.text,
+            {
+              paddingHorizontal: 18,
+              paddingTop: 18,
+              paddingBottom: 6,
+            },
+          ]}>
+          <Trans>Logged-out visibility</Trans>
         </Text>
-      </TouchableOpacity>
-      <Link
-        testID="moderationlistsBtn"
-        style={[styles.linkCard, pal.view]}
-        href="/moderation/modlists">
-        <View style={[styles.iconContainer, pal.btn]}>
-          <FontAwesomeIcon
-            icon="users-slash"
-            style={pal.text as FontAwesomeIconStyle}
-          />
-        </View>
-        <Text type="lg" style={pal.text}>
-          <Trans>Moderation lists</Trans>
-        </Text>
-      </Link>
-      <Link
-        testID="mutedAccountsBtn"
-        style={[styles.linkCard, pal.view]}
-        href="/moderation/muted-accounts">
-        <View style={[styles.iconContainer, pal.btn]}>
-          <FontAwesomeIcon
-            icon="user-slash"
-            style={pal.text as FontAwesomeIconStyle}
-          />
-        </View>
-        <Text type="lg" style={pal.text}>
-          <Trans>Muted accounts</Trans>
-        </Text>
-      </Link>
-      <Link
-        testID="blockedAccountsBtn"
-        style={[styles.linkCard, pal.view]}
-        href="/moderation/blocked-accounts">
-        <View style={[styles.iconContainer, pal.btn]}>
-          <FontAwesomeIcon
-            icon="ban"
-            style={pal.text as FontAwesomeIconStyle}
-          />
-        </View>
-        <Text type="lg" style={pal.text}>
-          <Trans>Blocked accounts</Trans>
-        </Text>
-      </Link>
-      <Text
-        type="xl-bold"
-        style={[
-          pal.text,
-          {
-            paddingHorizontal: 18,
-            paddingTop: 18,
-            paddingBottom: 6,
-          },
-        ]}>
-        <Trans>Logged-out visibility</Trans>
-      </Text>
-      <PwiOptOut />
+        <PwiOptOut />
+      </ScrollView>
     </CenteredView>
   )
 }
