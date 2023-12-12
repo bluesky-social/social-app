@@ -1,5 +1,6 @@
 import React from 'react'
 import * as persisted from '#/state/persisted'
+import {AppLanguage} from '#/locale/languages'
 
 type SetStateCb = (
   s: persisted.Schema['languagePrefs'],
@@ -11,7 +12,7 @@ type ApiContext = {
   toggleContentLanguage: (code2: string) => void
   togglePostLanguage: (code2: string) => void
   savePostLanguageToHistory: () => void
-  setAppLanguage: (code2: string) => void
+  setAppLanguage: (code2: AppLanguage) => void
 }
 
 const stateContext = React.createContext<StateContext>(
@@ -23,7 +24,7 @@ const apiContext = React.createContext<ApiContext>({
   toggleContentLanguage: (_: string) => {},
   togglePostLanguage: (_: string) => {},
   savePostLanguageToHistory: () => {},
-  setAppLanguage: (_: string) => {},
+  setAppLanguage: (_: AppLanguage) => {},
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -106,7 +107,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             .slice(0, 6),
         }))
       },
-      setAppLanguage(code2: string) {
+      setAppLanguage(code2: AppLanguage) {
         setStateWrapped(s => ({...s, appLanguage: code2}))
       },
     }),
