@@ -172,6 +172,7 @@ export function UserAvatar({
           source={{uri: avatar}}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           cachePolicy="memory-disk"
+          recyclingKey={avatar}
         />
       )}
       {alert}
