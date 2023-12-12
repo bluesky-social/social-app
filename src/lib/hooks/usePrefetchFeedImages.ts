@@ -86,9 +86,6 @@ export const usePrefetchFeedImages = (): UsePrefetchFeedImages => {
 
       // Update the highest prefetched index
       highestPrefetchedIndex.current = sliceTo
-
-      console.log('Prefetching:', imagesToPrefetch)
-
       Image.prefetch(imagesToPrefetch)
     },
   ).current
