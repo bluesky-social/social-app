@@ -61,7 +61,7 @@ export function LanguageSettingsScreen(_props: Props) {
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
       if (!value) return
       if (langPrefs.appLanguage !== value) {
-        setLangPrefs.setAppLanguage(value)
+        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
       }
     },
     [langPrefs, setLangPrefs],

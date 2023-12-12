@@ -100,9 +100,7 @@ export function getTranslatorLink(text: string, lang: string): string {
  * and selects a new option, at which point we'll re-save their choice, which
  * should then be a valid option.
  */
-export function sanitizeAppLanguageSetting(
-  appLanguage: AppLanguage | string,
-): AppLanguage {
+export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
   const langs = appLanguage.split(',').filter(Boolean)
 
   for (const lang of langs) {

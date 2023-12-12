@@ -10,13 +10,13 @@ export enum AppLanguage {
 }
 
 interface AppLanguageConfig {
-  code2: string
+  code2: AppLanguage
   name: string
 }
 
 export const APP_LANGUAGES: AppLanguageConfig[] = [
-  {code2: 'en', name: 'English'},
-  {code2: 'hi', name: 'हिंदी'},
+  {code2: AppLanguage.en, name: 'English'},
+  {code2: AppLanguage.hi, name: 'हिंदी'},
 ]
 
 export const LANGUAGES: Language[] = [
