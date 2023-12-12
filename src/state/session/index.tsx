@@ -361,6 +361,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       if (canReusePrevSession) {
+        logger.info(`session: attempting to reuse previous session`)
+
         agent.session = prevSession
         __globalAgent = agent
         queryClient.clear()
@@ -385,6 +387,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             __globalAgent = PUBLIC_BSKY_AGENT
           })
       } else {
+        logger.info(`session: attempting to resume using previous session`)
+
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
@@ -404,6 +408,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
+        logger.info(`session: resumeSessionWithFreshAccount`)
+
         await networkRetry(1, () => agent.resumeSession(prevSession))
 
         /*
