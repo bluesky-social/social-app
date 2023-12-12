@@ -304,7 +304,6 @@ func (srv *Server) WebPost(c echo.Context) error {
 			}
 
 			if unauthedViewingOkay {
-
 				did := pv.Did
 				data["did"] = did
 
