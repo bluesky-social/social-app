@@ -2,7 +2,11 @@ import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
 import * as bcp47Match from 'bcp-47-match'
-import {LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3} from './languages'
+import {
+  AppLanguage,
+  LANGUAGES_MAP_CODE2,
+  LANGUAGES_MAP_CODE3,
+} from './languages'
 
 export function code2ToCode3(lang: string): string {
   if (lang.length === 2) {
@@ -85,14 +89,32 @@ export function getTranslatorLink(text: string, lang: string): string {
   )}`
 }
 
-export function sanitizeAppLanguageSetting(appLanguage: string) {
+/**
+ * Returns a valid `appLanguage` value from an arbitrary string.
+ *
+ * Contenxt: post-refactor, we populated some user's `appLanguage` setting with
+ * `postLanguage`, which can be a comma-separated list of values. This breaks
+ * `appLanguage` handling in the app, so we introduced this util to parse out a
+ * valid `appLanguage` from the pre-populated `postLanguage` values. The
+ * `appLanguage` will be incorrect until the user returns to language settings
+ * and selects a new option, at which point we'll re-save their choice, which
+ * should then be a valid option.
+ */
+export function sanitizeAppLanguageSetting(
+  appLanguage: AppLanguage | string,
+): AppLanguage {
   const langs = appLanguage.split(',').filter(Boolean)
 
   for (const lang of langs) {
-    if (['en', 'hi'].includes(lang)) {
-      return lang
+    switch (lang) {
+      case 'en':
+        return AppLanguage.en
+      case 'hi':
+        return AppLanguage.hi
+      default:
+        continue
     }
   }
 
-  return 'en'
+  return AppLanguage.en
 }

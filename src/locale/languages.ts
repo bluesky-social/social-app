@@ -4,12 +4,17 @@ interface Language {
   name: string
 }
 
-interface AppLanguage {
+export enum AppLanguage {
+  en = 'en',
+  hi = 'hi',
+}
+
+interface AppLanguageConfig {
   code2: string
   name: string
 }
 
-export const APP_LANGUAGES: AppLanguage[] = [
+export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: 'en', name: 'English'},
   {code2: 'hi', name: 'हिंदी'},
 ]
