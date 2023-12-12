@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -43,13 +43,13 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
-export function DefaultAvatar({
+let DefaultAvatar = ({
   type,
   size,
 }: {
   type: UserAvatarType
   size: number
-}) {
+}): React.ReactNode => {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
@@ -112,14 +112,16 @@ export function DefaultAvatar({
     </Svg>
   )
 }
+DefaultAvatar = memo(DefaultAvatar)
+export {DefaultAvatar}
 
-export function UserAvatar({
+let UserAvatar = ({
   type = 'user',
   size,
   avatar,
   moderation,
   usePlainRNImage = false,
-}: UserAvatarProps) {
+}: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
 
   const aviStyle = useMemo(() => {
@@ -182,13 +184,15 @@ export function UserAvatar({
     </View>
   )
 }
+UserAvatar = memo(UserAvatar)
+export {UserAvatar}
 
-export function EditableUserAvatar({
+let EditableUserAvatar = ({
   type = 'user',
   size,
   avatar,
   onSelectNewAvatar,
-}: EditableUserAvatarProps) {
+}: EditableUserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -323,14 +327,20 @@ export function EditableUserAvatar({
     </NativeDropdown>
   )
 }
+EditableUserAvatar = memo(EditableUserAvatar)
+export {EditableUserAvatar}
 
-export function PreviewableUserAvatar(props: PreviewableUserAvatarProps) {
+let PreviewableUserAvatar = (
+  props: PreviewableUserAvatarProps,
+): React.ReactNode => {
   return (
     <UserPreviewLink did={props.did} handle={props.handle}>
       <UserAvatar {...props} />
     </UserPreviewLink>
   )
 }
+PreviewableUserAvatar = memo(PreviewableUserAvatar)
+export {PreviewableUserAvatar}
 
 const styles = StyleSheet.create({
   editButtonContainer: {

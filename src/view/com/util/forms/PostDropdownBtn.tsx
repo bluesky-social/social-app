@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {Linking, StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AppBskyFeedDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
@@ -19,23 +19,26 @@ import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {logger} from '#/logger'
-import {Shadow} from '#/state/cache/types'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 
-export function PostDropdownBtn({
+let PostDropdownBtn = ({
   testID,
-  post,
+  postAuthor,
+  postCid,
+  postUri,
   record,
   style,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  postAuthor: AppBskyActorDefs.ProfileViewBasic
+  postCid: string
+  postUri: string
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
-}) {
+}): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const {_} = useLingui()
@@ -46,13 +49,13 @@ export function PostDropdownBtn({
   const toggleThreadMute = useToggleThreadMute()
   const postDeleteMutation = usePostDeleteMutation()
 
-  const rootUri = record.reply?.root?.uri || post.uri
+  const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
-  const isAuthor = post.author.did === currentAccount?.did
+  const isAuthor = postAuthor.did === currentAccount?.did
   const href = React.useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
-  }, [post.uri, post.author])
+    const urip = new AtUri(postUri)
+    return makeProfileLink(postAuthor, 'post', urip.rkey)
+  }, [postUri, postAuthor])
 
   const translatorUrl = getTranslatorLink(
     record.text,
@@ -60,7 +63,7 @@ export function PostDropdownBtn({
   )
 
   const onDeletePost = React.useCallback(() => {
-    postDeleteMutation.mutateAsync({uri: post.uri}).then(
+    postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
         Toast.show('Post deleted')
       },
@@ -69,7 +72,7 @@ export function PostDropdownBtn({
         Toast.show('Failed to delete post, please try again')
       },
     )
-  }, [post, postDeleteMutation])
+  }, [postUri, postDeleteMutation])
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
@@ -163,8 +166,8 @@ export function PostDropdownBtn({
         onPress() {
           openModal({
             name: 'report',
-            uri: post.uri,
-            cid: post.cid,
+            uri: postUri,
+            cid: postCid,
           })
         },
         testID: 'postDropdownReportBtn',
@@ -211,3 +214,6 @@ export function PostDropdownBtn({
     </EventStopper>
   )
 }
+
+PostDropdownBtn = memo(PostDropdownBtn)
+export {PostDropdownBtn}
