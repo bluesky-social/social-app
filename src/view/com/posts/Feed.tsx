@@ -31,6 +31,7 @@ import {
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useSession} from '#/state/session'
+import {usePrefetchFeedImages} from 'lib/hooks/usePrefetchFeedImages'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -81,6 +82,7 @@ let Feed = ({
   const {currentAccount} = useSession()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
+  const prefetchFeedImages = usePrefetchFeedImages()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -181,8 +183,11 @@ let Feed = ({
     } else {
       arr.push(LOADING_ITEM)
     }
+
+    prefetchFeedImages.feedItems.current = arr
+
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [isFetched, isError, isEmpty, data, prefetchFeedImages.feedItems])
 
   // events
   // =
@@ -192,12 +197,13 @@ let Feed = ({
     setIsPTRing(true)
     try {
       await refetch()
+      prefetchFeedImages.onRefresh()
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {error: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew])
+  }, [refetch, track, setIsPTRing, onHasNew, prefetchFeedImages])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -307,6 +313,7 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
+        onViewableItemsChanged={prefetchFeedImages.onViewableItemsChanged}
       />
     </View>
   )

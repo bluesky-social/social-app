@@ -171,6 +171,7 @@ export function UserAvatar({
           contentFit="cover"
           source={{uri: avatar}}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          cachePolicy="memory-disk"
         />
       )}
       {alert}

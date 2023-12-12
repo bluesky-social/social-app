@@ -65,6 +65,7 @@ export function AutoSizedImage({
           accessibilityIgnoresInvertColors
           accessibilityLabel={alt}
           accessibilityHint="Tap to view fully"
+          cachePolicy="memory-disk"
         />
         {children}
       </Pressable>
@@ -80,6 +81,7 @@ export function AutoSizedImage({
         accessibilityIgnoresInvertColors
         accessibilityLabel={alt}
         accessibilityHint=""
+        cachePolicy="memory-disk"
       />
       {children}
     </View>
