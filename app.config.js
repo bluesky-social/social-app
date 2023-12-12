@@ -121,6 +121,7 @@ module.exports = function () {
             username: 'blueskysocial',
           },
         ],
+        './plugins/withAndroidManifestPlugin.js',
       ].filter(Boolean),
       extra: {
         eas: {
