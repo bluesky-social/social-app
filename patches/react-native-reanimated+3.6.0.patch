@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-reanimated/src/reanimated2/platformFunctions/scrollTo.ts b/node_modules/react-native-reanimated/src/reanimated2/platformFunctions/scrollTo.ts
+index d7e7114..ac2ba0f 100644
+--- a/node_modules/react-native-reanimated/src/reanimated2/platformFunctions/scrollTo.ts
++++ b/node_modules/react-native-reanimated/src/reanimated2/platformFunctions/scrollTo.ts
+@@ -33,7 +33,7 @@ function scrollToPaper<T extends Component>(
+   animated: boolean
+ ) {
+   'worklet';
+-  if (!_WORKLET) {
++  if (!_WORKLET || typeof animatedRef !== 'function') {
+     return;
+   }
+ 
