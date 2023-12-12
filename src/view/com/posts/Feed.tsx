@@ -1,6 +1,7 @@
 import React, {memo, MutableRefObject} from 'react'
 import {
   ActivityIndicator,
+  AppState,
   Dimensions,
   RefreshControl,
   StyleProp,
@@ -121,7 +122,7 @@ let Feed = ({
       data?.pages.length === 1 &&
       (feed === 'following' ||
         feed === 'home' ||
-        feed === `author|${myDid}|posts_no_replies`)
+        feed === `author|${myDid}|posts_and_author_threads`)
     ) {
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }
@@ -142,12 +143,23 @@ let Feed = ({
     }
   }, [enabled])
   React.useEffect(() => {
-    if (!pollInterval) {
-      return
+    let cleanup1: () => void | undefined, cleanup2: () => void | undefined
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      // check for new on app foreground
+      if (nextAppState === 'active') {
+        checkForNewRef.current?.()
+      }
+    })
+    cleanup1 = () => subscription.remove()
+    if (pollInterval) {
+      // check for new on interval
+      const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
+      cleanup2 = () => clearInterval(i)
     }
-    // check for new on interval
-    const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
-    return () => clearInterval(i)
+    return () => {
+      cleanup1?.()
+      cleanup2?.()
+    }
   }, [pollInterval])
 
   const feedItems = React.useMemo(() => {

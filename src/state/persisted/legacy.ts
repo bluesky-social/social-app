@@ -94,7 +94,8 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
         legacy.preferences?.postLanguageHistory ||
         defaults.languagePrefs.postLanguageHistory,
       appLanguage:
-        legacy.preferences?.postLanguage || defaults.languagePrefs.appLanguage,
+        legacy.preferences?.primaryLanguage ||
+        defaults.languagePrefs.appLanguage,
     },
     requireAltTextEnabled:
       legacy.preferences?.requireAltTextEnabled ||

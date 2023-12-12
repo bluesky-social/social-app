@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   inner: {
+    width: '100%',
     maxWidth: 460,
   },
   emptyBtn: {

@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   labelDesktopWeb: {
-    paddingLeft: 20,
+    paddingLeft: 12,
   },
 })

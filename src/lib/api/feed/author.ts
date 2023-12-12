@@ -40,7 +40,7 @@ export class AuthorFeedAPI implements FeedAPI {
   }
 
   _filter(feed: AppBskyFeedDefs.FeedViewPost[]) {
-    if (this.params.filter === 'posts_no_replies') {
+    if (this.params.filter === 'posts_and_author_threads') {
       return feed.filter(post => {
         const isReply = post.reply
         const isRepost = AppBskyFeedDefs.isReasonRepost(post.reason)

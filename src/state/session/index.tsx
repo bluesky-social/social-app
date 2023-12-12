@@ -28,6 +28,7 @@ export function getAgent() {
 export type SessionAccount = persisted.PersistedAccount
 
 export type SessionState = {
+  isInitialLoad: boolean
   isSwitchingAccounts: boolean
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined
@@ -75,6 +76,7 @@ export type ApiContext = {
 }
 
 const StateContext = React.createContext<StateContext>({
+  isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
   currentAccount: undefined,
@@ -150,6 +152,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const queryClient = useQueryClient()
   const isDirty = React.useRef(false)
   const [state, setState] = React.useState<SessionState>({
+    isInitialLoad: true,
     isSwitchingAccounts: false,
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
@@ -434,6 +437,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {error: e})
+      } finally {
+        setState(s => ({
+          ...s,
+          isInitialLoad: false,
+        }))
       }
     },
     [initSession],

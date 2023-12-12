@@ -77,7 +77,7 @@ export function RichText({
           type={type}
           text={segment.text}
           href={`/profile/${mention.did}`}
-          style={[style, lineHeightStyle, pal.link]}
+          style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
           dataSet={WORD_WRAP}
         />,
       )
@@ -88,7 +88,7 @@ export function RichText({
           type={type}
           text={toShortUrl(segment.text)}
           href={link.uri}
-          style={[style, lineHeightStyle, pal.link]}
+          style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
           dataSet={WORD_WRAP}
           warnOnMismatchingLabel
         />,

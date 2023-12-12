@@ -202,7 +202,7 @@ export function ListMembers({
 
   const Footer = React.useCallback(
     () => (
-      <View style={{paddingTop: 20, paddingBottom: 200}}>
+      <View style={{paddingTop: 20, paddingBottom: 400}}>
         {isFetching && <ActivityIndicator />}
       </View>
     ),

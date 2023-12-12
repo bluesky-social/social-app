@@ -108,9 +108,16 @@ export function PostCtrls({
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
         testID="replyBtn"
-        style={[styles.ctrl, !big && styles.ctrlPad, {paddingLeft: 0}]}
+        style={[
+          styles.ctrl,
+          !big && styles.ctrlPad,
+          {paddingLeft: 0},
+          post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
+        ]}
         onPress={() => {
-          requireAuth(() => onPressReply())
+          if (!post.viewer?.replyDisabled) {
+            requireAuth(() => onPressReply())
+          }
         }}
         accessibilityRole="button"
         accessibilityLabel={`Reply (${post.replyCount} ${

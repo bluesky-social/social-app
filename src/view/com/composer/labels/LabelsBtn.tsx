@@ -38,7 +38,7 @@ export function LabelsBtn({
         }
         openModal({name: 'self-label', labels, hasMedia, onChange})
       }}>
-      <ShieldExclamation style={pal.link} size={26} />
+      <ShieldExclamation style={pal.link} size={24} />
       {labels.length > 0 ? (
         <FontAwesomeIcon
           icon="check"
@@ -54,8 +54,7 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    marginRight: 4,
+    paddingHorizontal: 6,
   },
   dimmed: {
     opacity: 0.4,

@@ -27,12 +27,14 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   threadMutes,
+  fetchAdditionalData,
 }: {
   cursor: string | undefined
   limit: number
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   threadMutes: string[]
+  fetchAdditionalData: boolean
 }): Promise<FeedPage> {
   const res = await getAgent().listNotifications({
     limit,
@@ -49,12 +51,14 @@ export async function fetchPage({
 
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
-  const subjects = await fetchSubjects(notifsGrouped)
-  for (const notif of notifsGrouped) {
-    if (notif.subjectUri) {
-      notif.subject = subjects.get(notif.subjectUri)
-      if (notif.subject) {
-        precacheResolvedUri(queryClient, notif.subject.author) // precache the handle->did resolution
+  if (fetchAdditionalData) {
+    const subjects = await fetchSubjects(notifsGrouped)
+    for (const notif of notifsGrouped) {
+      if (notif.subjectUri) {
+        notif.subject = subjects.get(notif.subjectUri)
+        if (notif.subject) {
+          precacheResolvedUri(queryClient, notif.subject.author) // precache the handle->did resolution
+        }
       }
     }
   }
@@ -119,8 +123,7 @@ function groupNotifications(
           Math.abs(ts2 - ts) < MS_2DAY &&
           notif.reason === groupedNotif.notification.reason &&
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
-          notif.author.did !== groupedNotif.notification.author.did &&
-          notif.isRead === groupedNotif.notification.isRead
+          notif.author.did !== groupedNotif.notification.author.did
         ) {
           groupedNotif.additional = groupedNotif.additional || []
           groupedNotif.additional.push(notif)

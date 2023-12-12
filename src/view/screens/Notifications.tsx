@@ -37,6 +37,7 @@ export function NotificationsScreen({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const scrollElRef = React.useRef<FlatList>(null)
+  const checkLatestRef = React.useRef<() => void | null>()
   const {screen} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
@@ -63,16 +64,26 @@ export function NotificationsScreen({}: Props) {
     }
   }, [scrollToTop, queryClient, unreadApi, hasNew])
 
+  const onFocusCheckLatest = React.useCallback(() => {
+    // on focus, check for latest, but only invalidate if the user
+    // isnt scrolled down to avoid moving content underneath them
+    unreadApi.checkUnread({invalidate: !isScrolledDown})
+  }, [unreadApi, isScrolledDown])
+  checkLatestRef.current = onFocusCheckLatest
+
   // on-visible setup
   // =
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      logger.debug('NotificationsScreen: Updating feed')
+      logger.debug('NotificationsScreen: Focus')
       screen('Notifications')
-      return listenSoftReset(onPressLoadLatest)
-    }, [screen, onPressLoadLatest, setMinimalShellMode]),
+      checkLatestRef.current?.()
+    }, [screen, setMinimalShellMode]),
   )
+  React.useEffect(() => {
+    return listenSoftReset(onPressLoadLatest)
+  }, [onPressLoadLatest])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {

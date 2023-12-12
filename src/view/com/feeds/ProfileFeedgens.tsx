@@ -19,7 +19,7 @@ import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
-import {useAnimatedScrollHandler} from 'react-native-reanimated'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from '#/lib/ThemeContext'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
@@ -172,6 +172,7 @@ export const ProfileFeedgens = React.forwardRef<
       if (preferences) {
         return (
           <FeedSourceCardLoaded
+            feedUri={item.uri}
             feed={item}
             preferences={preferences}
             style={styles.item}

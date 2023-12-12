@@ -30,7 +30,6 @@ function getClient(): SegmentClient {
 }
 
 export const track: TrackEvent = async (...args) => {
-  logger.info('analytics: track', {args})
   await getClient().track(...args)
 }
 
@@ -40,11 +39,9 @@ export function useAnalytics(): AnalyticsMethods {
     if (hasSession) {
       return {
         async screen(...args) {
-          logger.info('analytics: screen', {args})
           await getClient().screen(...args)
         },
         async track(...args) {
-          logger.info('analytics: track', {args})
           await getClient().track(...args)
         },
       }

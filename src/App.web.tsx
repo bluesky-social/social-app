@@ -30,7 +30,7 @@ import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unre
 import * as persisted from '#/state/persisted'
 
 function InnerApp() {
-  const {currentAccount} = useSession()
+  const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
 
@@ -39,6 +39,9 @@ function InnerApp() {
     const account = persisted.get('session').currentAccount
     resumeSession(account)
   }, [resumeSession])
+
+  // wait for session to resume
+  if (isInitialLoad) return null
 
   return (
     <React.Fragment

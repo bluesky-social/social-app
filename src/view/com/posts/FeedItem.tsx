@@ -33,6 +33,7 @@ import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {FeedNameText} from '../util/FeedInfoText'
 
 export function FeedItem({
   post,
@@ -177,22 +178,20 @@ let FeedItemInner = ({
 
         <View style={{paddingTop: 12, flexShrink: 1}}>
           {isReasonFeedSource(reason) ? (
-            <Link
-              title={sanitizeDisplayName(reason.displayName)}
-              href={reason.uri}>
+            <Link href={reason.href}>
               <Text
                 type="sm-bold"
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 From{' '}
-                <TextLinkOnWebOnly
+                <FeedNameText
                   type="sm-bold"
-                  style={pal.textLight}
+                  uri={reason.uri}
+                  href={reason.href}
                   lineHeight={1.2}
                   numberOfLines={1}
-                  text={sanitizeDisplayName(reason.displayName)}
-                  href={reason.uri}
+                  style={pal.textLight}
                 />
               </Text>
             </Link>

@@ -37,7 +37,7 @@ const apiContext = React.createContext<ApiContext>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
@@ -46,7 +46,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const checkUnreadRef = React.useRef<ApiContext['checkUnread'] | null>(null)
   const cacheRef = React.useRef<CachedFeedPage>({
-    sessDid: currentAccount?.did || '',
+    usableInFeed: false,
     syncedAt: new Date(),
     data: undefined,
   })
@@ -65,7 +65,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   React.useEffect(() => {
     const listener = ({data}: MessageEvent) => {
       cacheRef.current = {
-        sessDid: currentAccount?.did || '',
+        usableInFeed: false,
         syncedAt: new Date(),
         data: undefined,
       }
@@ -75,7 +75,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return () => {
       broadcast.removeEventListener('message', listener)
     }
-  }, [setNumUnread, currentAccount])
+  }, [setNumUnread])
 
   // create API
   const api = React.useMemo<ApiContext>(() => {
@@ -102,6 +102,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             queryClient,
             moderationOpts,
             threadMutes,
+
+            // only fetch subjects when the page is going to be used
+            // in the notifications query, otherwise skip it
+            fetchAdditionalData: !!invalidate,
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =
@@ -119,7 +123,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           const lastIndexed =
             page.items[0] && new Date(page.items[0].notification.indexedAt)
           cacheRef.current = {
-            sessDid: currentAccount?.did || '',
+            usableInFeed: !!invalidate, // will be used immediately
             data: page,
             syncedAt: !lastIndexed || now > lastIndexed ? now : lastIndexed,
           }
@@ -136,14 +140,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
 
       getCachedUnreadPage() {
-        // return cached page if was for the current user
-        // (protects against session changes serving data from the past session)
-        if (cacheRef.current.sessDid === currentAccount?.did) {
+        // return cached page if it's marked as fresh enough
+        if (cacheRef.current.usableInFeed) {
           return cacheRef.current.data
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes, currentAccount])
+  }, [setNumUnread, queryClient, moderationOpts, threadMutes])
   checkUnreadRef.current = api.checkUnread
 
   return (
