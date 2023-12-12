@@ -95,10 +95,13 @@ export function getTranslatorLink(text: string, lang: string): string {
  * Contenxt: post-refactor, we populated some user's `appLanguage` setting with
  * `postLanguage`, which can be a comma-separated list of values. This breaks
  * `appLanguage` handling in the app, so we introduced this util to parse out a
- * valid `appLanguage` from the pre-populated `postLanguage` values. The
- * `appLanguage` will be incorrect until the user returns to language settings
- * and selects a new option, at which point we'll re-save their choice, which
- * should then be a valid option.
+ * valid `appLanguage` from the pre-populated `postLanguage` values.
+ *
+ * The `appLanguage` will continue to be incorrect until the user returns to
+ * language settings and selects a new option, at which point we'll re-save
+ * their choice, which should then be a valid option. Since we don't know when
+ * this will happen, we should leave this here until we feel it's safe to
+ * remove, or we re-migrate their storage.
  */
 export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
   const langs = appLanguage.split(',').filter(Boolean)
