@@ -37,7 +37,7 @@ export class CustomFeedAPI implements FeedAPI {
         res.data.feed = res.data.feed.slice(0, limit)
       }
       return {
-        cursor: res.data.cursor,
+        cursor: res.data.feed.length ? res.data.cursor : undefined,
         feed: res.data.feed,
       }
     }
