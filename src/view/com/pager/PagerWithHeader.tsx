@@ -121,13 +121,16 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
 
     const scrollRefs = useSharedValue<AnimatedRef<any>[]>([])
-    const registerRef = (scrollRef: AnimatedRef<any>, index: number) => {
-      scrollRefs.modify(refs => {
-        'worklet'
-        refs[index] = scrollRef
-        return refs
-      })
-    }
+    const registerRef = React.useCallback(
+      (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
+        scrollRefs.modify(refs => {
+          'worklet'
+          refs[atIndex] = scrollRef
+          return refs
+        })
+      },
+      [scrollRefs],
+    )
 
     const lastForcedScrollY = useSharedValue(0)
     const adjustScrollForOtherPages = () => {
@@ -138,8 +141,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         lastForcedScrollY.value = forcedScrollY
         const refs = scrollRefs.value
         for (let i = 0; i < refs.length; i++) {
-          if (i !== currentPage) {
-            // This needs to run on the UI thread.
+          if (i !== currentPage && refs[i] != null) {
             scrollTo(refs[i], 0, forcedScrollY, false)
           }
         }
@@ -206,11 +208,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               <View key={i} collapsable={false}>
                 <PagerItem
                   headerHeight={headerHeight}
+                  index={i}
                   isReady={isReady}
                   isFocused={i === currentPage}
                   isScrolledDown={isScrolledDown}
                   onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
-                  registerRef={(r: AnimatedRef<any>) => registerRef(r, i)}
+                  registerRef={registerRef}
                   renderTab={child}
                 />
               </View>
@@ -287,6 +290,7 @@ PagerTabBar = React.memo(PagerTabBar)
 
 function PagerItem({
   headerHeight,
+  index,
   isReady,
   isFocused,
   isScrolledDown,
@@ -295,15 +299,22 @@ function PagerItem({
   registerRef,
 }: {
   headerHeight: number
+  index: number
   isFocused: boolean
   isReady: boolean
   isScrolledDown: boolean
-  registerRef: (scrollRef: AnimatedRef<any>) => void
+  registerRef: (scrollRef: AnimatedRef<any> | null, atIndex: number) => void
   onScrollWorklet: (e: NativeScrollEvent) => void
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
 }) {
   const scrollElRef = useAnimatedRef()
-  registerRef(scrollElRef)
+
+  React.useEffect(() => {
+    registerRef(scrollElRef, index)
+    return () => {
+      registerRef(null, index)
+    }
+  }, [scrollElRef, registerRef, index])
 
   const scrollHandler = React.useMemo(
     () => ({onScroll: onScrollWorklet}),
