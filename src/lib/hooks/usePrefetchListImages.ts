@@ -51,7 +51,7 @@ export const usePrefetchListImages = (): UsePrefetchListImages => {
       /*
        * We should prefetch if:
        * 1. The last index is a multiple of 5
-       * 2. The first index is zero (initial load, we want to prefetch the first 10 that are not visible here)
+       * 2. The highest fetched index is 0 (initial load, we want to prefetch the first 10 that are not visible here)
        * 3. The previous length is different. Means that more posts are loaded, and we should load the first 10 of that
        *    since they might be just about to come into view (hopefully they have loaded before we reach the end though!)
        */
@@ -69,20 +69,19 @@ export const usePrefetchListImages = (): UsePrefetchListImages => {
 
       // If this is the first load, we can prefetch the first 10 items. Otherwise, we want to prefetch the next 5
       const sliceFrom =
-        lastIndex === 0 || hasNewItems ? lastIndex : lastIndex + 5
+        highestPrefetchedIndex.current === 0 || hasNewItems
+          ? lastIndex
+          : lastIndex + 5
 
       // We always slice to 10 items ahead of the last index. We need to check though that sliceTo is not greater
       // than the length of the items
-      let sliceTo = lastIndex + 10
-      if (sliceTo > feedItems.current.length - 1) {
-        sliceTo = feedItems.current.length - 1
-      }
+      const sliceTo = lastIndex + 10
 
       // No need to do anything if we have already prefetched these items
       if (sliceTo <= highestPrefetchedIndex.current) return
 
       // Get the next items
-      const nextItems = feedItems.current.slice(sliceFrom, sliceTo)
+      const nextItems = feedItems.current.slice(sliceFrom, sliceTo + 1)
 
       const imagesToPrefetch: string[] = []
 
