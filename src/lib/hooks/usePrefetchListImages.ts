@@ -1,5 +1,5 @@
 import {ViewToken} from 'react-native'
-import React, {useRef} from 'react'
+import React from 'react'
 import {
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
@@ -21,12 +21,12 @@ interface UsePrefetchListImages {
 }
 
 export const usePrefetchListImages = (): UsePrefetchListImages => {
-  const feedItems = useRef<any[]>([])
+  const feedItems = React.useRef<any[]>([])
 
-  const highestPrefetchedIndex = useRef(0)
-  const previousLength = useRef(0)
+  const highestPrefetchedIndex = React.useRef(0)
+  const previousLength = React.useRef(0)
 
-  const setItems = useRef((items: any[]) => {
+  const setItems = React.useRef((items: any[]) => {
     feedItems.current = items
   }).current
 
