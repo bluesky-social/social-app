@@ -34,6 +34,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
+import {Splash} from '#/Splash'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -53,27 +54,26 @@ function InnerApp() {
     resumeSession(account)
   }, [resumeSession])
 
-  // wait for session to resume
-  if (isInitialLoad) return null
-
   return (
-    <React.Fragment
-      // Resets the entire tree below when it changes:
-      key={currentAccount?.did}>
-      <LoggedOutViewProvider>
-        <UnreadNotifsProvider>
-          <ThemeProvider theme={colorMode}>
-            {/* All components should be within this provider */}
-            <RootSiblingParent>
-              <GestureHandlerRootView style={s.h100pct}>
-                <TestCtrls />
-                <Shell />
-              </GestureHandlerRootView>
-            </RootSiblingParent>
-          </ThemeProvider>
-        </UnreadNotifsProvider>
-      </LoggedOutViewProvider>
-    </React.Fragment>
+    <Splash isReady={isInitialLoad}>
+      <React.Fragment
+        // Resets the entire tree below when it changes:
+        key={currentAccount?.did}>
+        <LoggedOutViewProvider>
+          <UnreadNotifsProvider>
+            <ThemeProvider theme={colorMode}>
+              {/* All components should be within this provider */}
+              <RootSiblingParent>
+                <GestureHandlerRootView style={s.h100pct}>
+                  <TestCtrls />
+                  <Shell />
+                </GestureHandlerRootView>
+              </RootSiblingParent>
+            </ThemeProvider>
+          </UnreadNotifsProvider>
+        </LoggedOutViewProvider>
+      </React.Fragment>
+    </Splash>
   )
 }
 
