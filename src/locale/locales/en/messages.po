@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:158
+#: src/view/shell/desktop/RightNav.tsx:163
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "{0} {purposeLabel} List"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:141
+#: src/view/shell/desktop/RightNav.tsx:146
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:110
+#: src/view/com/modals/VerifyEmail.tsx:118
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr ""
 
@@ -232,7 +232,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:185
+#: src/view/com/util/forms/PostDropdownBtn.tsx:188
 msgid "Are you sure? This cannot be undone."
 msgstr ""
 
@@ -287,7 +287,7 @@ msgstr ""
 msgid "Block these accounts?"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:121
+#: src/view/screens/Moderation.tsx:123
 msgid "Blocked accounts"
 msgstr ""
 
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:222
+#: src/view/screens/Moderation.tsx:225
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr ""
 
@@ -344,7 +344,7 @@ msgid "Build version {0} {1}"
 msgstr ""
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
-#: src/view/com/util/UserAvatar.tsx:217
+#: src/view/com/util/UserAvatar.tsx:221
 #: src/view/com/util/UserBanner.tsx:38
 msgid "Camera"
 msgstr ""
@@ -420,7 +420,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:133
+#: src/view/com/modals/VerifyEmail.tsx:141
 msgid "Change my email"
 msgstr ""
 
@@ -508,7 +508,7 @@ msgstr ""
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:217
+#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
 #: src/view/screens/PreferencesThreads.tsx:153
 msgid "Confirm"
@@ -529,7 +529,7 @@ msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:176
-#: src/view/com/modals/VerifyEmail.tsx:151
+#: src/view/com/modals/VerifyEmail.tsx:159
 msgid "Confirmation code"
 msgstr ""
 
@@ -538,7 +538,7 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:79
+#: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
 msgstr ""
 
@@ -577,7 +577,7 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 msgid "Copy link to post"
 msgstr ""
 
@@ -585,7 +585,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:112
+#: src/view/com/util/forms/PostDropdownBtn.tsx:115
 msgid "Copy post text"
 msgstr ""
 
@@ -656,11 +656,11 @@ msgstr ""
 msgid "Delete my account…"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:180
+#: src/view/com/util/forms/PostDropdownBtn.tsx:183
 msgid "Delete post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:184
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
 msgid "Delete this post?"
 msgstr ""
 
@@ -691,7 +691,7 @@ msgstr ""
 msgid "Discard draft"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:204
+#: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
@@ -840,7 +840,7 @@ msgstr ""
 msgid "Feed Preferences"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:64
+#: src/view/shell/desktop/RightNav.tsx:67
 #: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr ""
@@ -936,7 +936,7 @@ msgstr ""
 msgid "Gallery"
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:175
+#: src/view/com/modals/VerifyEmail.tsx:183
 msgid "Get Started"
 msgstr ""
 
@@ -964,7 +964,7 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:93
+#: src/view/shell/desktop/RightNav.tsx:96
 #: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr ""
@@ -1031,7 +1031,7 @@ msgstr ""
 msgid "Hosting provider address"
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:200
+#: src/view/com/modals/VerifyEmail.tsx:208
 msgid "I have a code"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr ""
 msgid "Image alt text"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:304
+#: src/view/com/util/UserAvatar.tsx:308
 #: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
 msgstr ""
@@ -1121,7 +1121,7 @@ msgstr ""
 msgid "Learn more about this warning"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:239
+#: src/view/screens/Moderation.tsx:242
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -1138,7 +1138,7 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:241
+#: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
 msgid "Library"
 msgstr ""
@@ -1208,7 +1208,7 @@ msgstr ""
 #~ msgid "Logged-out users"
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:134
+#: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
 msgstr ""
 
@@ -1245,7 +1245,7 @@ msgstr ""
 msgid "Message from server"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:63
+#: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
 #: src/view/shell/desktop/LeftNav.tsx:391
 #: src/view/shell/Drawer.tsx:490
@@ -1253,7 +1253,7 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:93
+#: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
 msgstr ""
 
@@ -1291,11 +1291,11 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "Mute thread"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:107
+#: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr ""
 
@@ -1421,7 +1421,7 @@ msgstr ""
 #~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:229
+#: src/view/screens/Moderation.tsx:232
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Opens configurable language settings"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/desktop/RightNav.tsx:151
 #: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
@@ -1611,7 +1611,7 @@ msgstr ""
 msgid "Prioritize Your Follows"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:75
+#: src/view/shell/desktop/RightNav.tsx:78
 msgid "Privacy"
 msgstr ""
 
@@ -1671,7 +1671,7 @@ msgstr ""
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
-#: src/view/com/util/UserAvatar.tsx:278
+#: src/view/com/util/UserAvatar.tsx:282
 #: src/view/com/util/UserBanner.tsx:89
 msgid "Remove"
 msgstr ""
@@ -1744,7 +1744,7 @@ msgid "Report List"
 msgstr ""
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:162
+#: src/view/com/util/forms/PostDropdownBtn.tsx:165
 msgid "Report post"
 msgstr ""
 
@@ -1898,7 +1898,7 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:188
+#: src/view/com/modals/VerifyEmail.tsx:196
 msgid "Send Confirmation Email"
 msgstr ""
 
@@ -1955,7 +1955,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 #: src/view/screens/ProfileList.tsx:407
 msgid "Share"
 msgstr ""
@@ -2075,7 +2075,7 @@ msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:101
 msgid "Submit"
-msgstr ">>>>>>> cb8a33b6 (Fix translations)"
+msgstr "Submit"
 
 #: src/view/screens/ProfileList.tsx:597
 msgid "Subscribe"
@@ -2110,7 +2110,7 @@ msgstr ""
 msgid "Tall"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:84
+#: src/view/shell/desktop/RightNav.tsx:87
 msgid "Terms"
 msgstr ""
 
@@ -2175,7 +2175,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:105
+#: src/view/com/modals/VerifyEmail.tsx:113
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr ""
 
@@ -2212,9 +2212,9 @@ msgstr ""
 msgid "Transformations"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+#: src/view/com/post-thread/PostThreadItem.tsx:708
+#: src/view/com/util/forms/PostDropdownBtn.tsx:101
 msgid "Translate"
 msgstr ""
 
@@ -2258,7 +2258,7 @@ msgstr ""
 msgid "Unmute Account"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "Unmute thread"
 msgstr ""
 
@@ -2493,7 +2493,7 @@ msgstr ""
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:100
+#: src/view/com/modals/VerifyEmail.tsx:108
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr ""
 
@@ -2507,7 +2507,7 @@ msgid "Your hosting provider"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:127
+#: src/view/shell/desktop/RightNav.tsx:132
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
