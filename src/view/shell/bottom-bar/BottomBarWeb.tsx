@@ -64,20 +64,20 @@ export function BottomBarWeb() {
           )
         }}
       </NavItem>
-      <NavItem routeName="Feeds" href="/feeds">
-        {({isActive}) => {
-          return (
-            <HashtagIcon
-              size={22}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={isActive ? 4 : 2.5}
-            />
-          )
-        }}
-      </NavItem>
 
       {hasSession && (
         <>
+          <NavItem routeName="Feeds" href="/feeds">
+            {({isActive}) => {
+              return (
+                <HashtagIcon
+                  size={22}
+                  style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  strokeWidth={isActive ? 4 : 2.5}
+                />
+              )
+            }}
+          </NavItem>
           <NavItem routeName="Notifications" href="/notifications">
             {({isActive}) => {
               const Icon = isActive ? BellIconSolid : BellIcon

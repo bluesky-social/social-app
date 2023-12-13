@@ -138,31 +138,31 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         accessibilityLabel={_(msg`Search`)}
         accessibilityHint=""
       />
-      <Btn
-        testID="bottomBarFeedsBtn"
-        icon={
-          isAtFeeds ? (
-            <HashtagIcon
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={4}
-            />
-          ) : (
-            <HashtagIcon
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={2.25}
-            />
-          )
-        }
-        onPress={onPressFeeds}
-        accessibilityRole="tab"
-        accessibilityLabel={_(msg`Feeds`)}
-        accessibilityHint=""
-      />
 
       {hasSession && (
         <>
+          <Btn
+            testID="bottomBarFeedsBtn"
+            icon={
+              isAtFeeds ? (
+                <HashtagIcon
+                  size={24}
+                  style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  strokeWidth={4}
+                />
+              ) : (
+                <HashtagIcon
+                  size={24}
+                  style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  strokeWidth={2.25}
+                />
+              )
+            }
+            onPress={onPressFeeds}
+            accessibilityRole="tab"
+            accessibilityLabel={_(msg`Feeds`)}
+            accessibilityHint=""
+          />
           <Btn
             testID="bottomBarNotificationsBtn"
             icon={
