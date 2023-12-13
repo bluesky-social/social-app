@@ -55,11 +55,14 @@ export function createSystem<
     theme,
   }: React.PropsWithChildren<{theme: ThemeName}>) => (
     <Context.Provider
-      value={{
-        themeName: theme,
-        theme: themes[theme],
-        themes,
-      }}>
+      value={React.useMemo(
+        () => ({
+          themeName: theme,
+          theme: themes[theme],
+          themes,
+        }),
+        [theme],
+      )}>
       {children}
     </Context.Provider>
   )
@@ -74,7 +77,7 @@ export function createSystem<
 
   function useBreakpoints() {
     const {theme} = useTheme()
-    const [breakpoints, setBreakpoints] = React.useState(
+    const [breakpoints, setBreakpoints] = React.useState(() =>
       theme.getActiveBreakpoints({width: Dimensions.get('window').width}),
     )
 

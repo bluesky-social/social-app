@@ -16,6 +16,15 @@ const palette = {
 
 export const light = createTheme({
   tokens: {
+    space: {
+      xxs: 2,
+      xs: 4,
+      s: 8,
+      m: 12,
+      l: 18,
+      xl: 24,
+      xxl: 32,
+    },
     color: {
       primary: palette.blue,
       l1: palette.white,
@@ -118,7 +127,7 @@ export const light = createTheme({
     /**
      * Shorthand for applying `fontSize` and `fontHeight`, according to our type scale.
      */
-    fontSize(value: 'xs' | 's' | 'm' | 'l' | 'xl', tokens) {
+    fontSize(value: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl', tokens) {
       return {
         fontSize: tokens.fontSize[value],
         lineHeight: tokens.lineHeight[value],
