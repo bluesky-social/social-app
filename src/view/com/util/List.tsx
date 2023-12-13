@@ -1,4 +1,4 @@
-import React, {startTransition} from 'react'
+import React, {memo, startTransition} from 'react'
 import {FlatListProps} from 'react-native'
 import {FlatList_INTERNAL} from './Views'
 import {useScrollHandlers} from '#/lib/ScrollContext'
@@ -59,6 +59,6 @@ function ListImpl<ItemT>(
   )
 }
 
-export const List = React.forwardRef(ListImpl) as <ItemT>(
+export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
 ) => React.ReactElement
