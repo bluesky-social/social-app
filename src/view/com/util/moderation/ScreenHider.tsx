@@ -59,7 +59,9 @@ export function ScreenHider({
     moderation.cause?.labelDef.id === '!no-unauthenticated'
   const desc = describeModerationCause(moderation.cause, 'account')
   return (
-    <CenteredView style={[styles.container, pal.view, containerStyle]}>
+    <CenteredView
+      style={[styles.container, pal.view, containerStyle]}
+      sideBorders>
       <View style={styles.iconContainer}>
         <View style={[styles.icon, palInverted.view]}>
           <FontAwesomeIcon
