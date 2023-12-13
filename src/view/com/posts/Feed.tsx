@@ -1,4 +1,4 @@
-import React, {memo, MutableRefObject} from 'react'
+import React, {memo} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -10,7 +10,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
-import {FlatList} from '../util/Views'
+import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
@@ -62,7 +62,7 @@ let Feed = ({
   style?: StyleProp<ViewStyle>
   enabled?: boolean
   pollInterval?: number
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
@@ -273,7 +273,7 @@ let Feed = ({
   const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
-      <FlatList
+      <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={feedItems}

@@ -1,4 +1,4 @@
-import React, {MutableRefObject} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   Dimensions,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {FlatList} from '../util/Views'
+import {List, ListRef} from '../util/List'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -45,7 +45,7 @@ export function ListMembers({
 }: {
   list: string
   style?: StyleProp<ViewStyle>
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef?: ListRef
   onScroll: OnScrollHandler
   onPressTryAgain?: () => void
   renderHeader: () => JSX.Element
@@ -212,7 +212,7 @@ export function ListMembers({
   const scrollHandler = useAnimatedScrollHandler(onScroll)
   return (
     <View testID={testID} style={style}>
-      <FlatList
+      <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}

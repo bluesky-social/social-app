@@ -13,7 +13,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
-import {FlatList, View, useWindowDimensions} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
+import {ListMethods} from '../util/List'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
@@ -54,7 +55,7 @@ export function FeedPage({
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
-  const scrollElRef = React.useRef<FlatList>(null)
+  const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {

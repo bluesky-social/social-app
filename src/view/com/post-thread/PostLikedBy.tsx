@@ -1,7 +1,8 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {CenteredView, FlatList} from '../util/Views'
+import {CenteredView} from '../util/Views'
+import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -84,7 +85,7 @@ export function PostLikedBy({uri}: {uri: string}) {
   // loaded
   // =
   return (
-    <FlatList
+    <List
       data={likes}
       keyExtractor={item => item.actor.did}
       refreshControl={

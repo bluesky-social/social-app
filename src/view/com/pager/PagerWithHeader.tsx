@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   LayoutChangeEvent,
-  FlatList,
   ScrollView,
   StyleSheet,
   View,
@@ -22,6 +21,7 @@ import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ListMethods} from '../util/List'
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -30,7 +30,7 @@ export interface PagerWithHeaderChildParams {
   isFocused: boolean
   onScroll: OnScrollHandler
   isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
+  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {
@@ -331,7 +331,7 @@ function PagerItem({
     isScrolledDown,
     onScroll: scrollHandler,
     scrollElRef: scrollElRef as React.MutableRefObject<
-      FlatList<any> | ScrollView | null
+      ListMethods | ScrollView | null
     >,
   })
 }

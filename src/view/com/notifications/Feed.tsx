@@ -1,5 +1,5 @@
-import React, {MutableRefObject} from 'react'
-import {CenteredView, FlatList} from '../util/Views'
+import React from 'react'
+import {CenteredView} from '../util/Views'
 import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -15,6 +15,7 @@ import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {List, ListRef} from '../util/List'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -26,7 +27,7 @@ export function Feed({
   onScroll,
   ListHeaderComponent,
 }: {
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScroll?: OnScrollHandler
   ListHeaderComponent?: () => JSX.Element
@@ -146,7 +147,7 @@ export function Feed({
           />
         </CenteredView>
       )}
-      <FlatList
+      <List
         testID="notifsFeed"
         ref={scrollElRef}
         data={items}
