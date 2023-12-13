@@ -1,6 +1,7 @@
 import React, {useRef} from 'react'
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   RefreshControl,
   StyleSheet,
@@ -358,7 +359,9 @@ function PostThreadLoaded({
         />
       }
       onContentSizeChange={onContentSizeChange}
-      onViewableItemsChanged={onViewableItemsChanged}
+      onViewableItemsChanged={
+        Platform.OS !== 'web' ? onViewableItemsChanged : undefined
+      }
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight

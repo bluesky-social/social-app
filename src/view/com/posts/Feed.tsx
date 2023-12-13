@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   AppState,
   Dimensions,
+  Platform,
   RefreshControl,
   StyleProp,
   StyleSheet,
@@ -317,7 +318,9 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
-        onViewableItemsChanged={onViewableItemsChanged}
+        onViewableItemsChanged={
+          Platform.OS !== 'web' ? onViewableItemsChanged : undefined
+        }
       />
     </View>
   )
