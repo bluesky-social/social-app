@@ -67,8 +67,8 @@ export function NotificationsScreen({}: Props) {
   const onFocusCheckLatest = React.useCallback(() => {
     // on focus, check for latest, but only invalidate if the user
     // isnt scrolled down to avoid moving content underneath them
-    unreadApi.checkUnread({invalidate: !isScrolledDown && isDesktop})
-  }, [unreadApi, isScrolledDown, isDesktop])
+    unreadApi.checkUnread({invalidate: !isScrolledDown})
+  }, [unreadApi, isScrolledDown])
   checkLatestRef.current = onFocusCheckLatest
 
   // on-visible setup
