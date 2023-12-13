@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:163
+#: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "{0} {purposeLabel} List"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -840,7 +840,7 @@ msgstr ""
 msgid "Feed Preferences"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:67
+#: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr ""
@@ -964,7 +964,7 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:96
+#: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr ""
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Opens configurable language settings"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:151
+#: src/view/shell/desktop/RightNav.tsx:148
 #: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
@@ -1611,7 +1611,7 @@ msgstr ""
 msgid "Prioritize Your Follows"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:78
+#: src/view/shell/desktop/RightNav.tsx:76
 msgid "Privacy"
 msgstr ""
 
@@ -2110,7 +2110,7 @@ msgstr ""
 msgid "Tall"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:87
+#: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
 msgstr ""
 
@@ -2507,7 +2507,7 @@ msgid "Your hosting provider"
 msgstr ""
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:132
+#: src/view/shell/desktop/RightNav.tsx:129
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""

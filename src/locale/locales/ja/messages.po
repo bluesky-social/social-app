@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/view/shell/desktop/RightNav.tsx:163
+#: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} リスト"
 
-#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -804,7 +804,7 @@ msgstr "フィードはオフライン"
 msgid "Feed Preferences"
 msgstr "フィード設定"
 
-#: src/view/shell/desktop/RightNav.tsx:67
+#: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr "フィードバック"
@@ -924,7 +924,7 @@ msgstr "次へ"
 msgid "Handle"
 msgstr "ハンドル"
 
-#: src/view/shell/desktop/RightNav.tsx:96
+#: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr "ヘルプ"
@@ -1380,7 +1380,7 @@ msgstr "ナビゲーションを開く"
 msgid "Opens configurable language settings"
 msgstr "構成可能な言語設定を開く"
 
-#: src/view/shell/desktop/RightNav.tsx:151
+#: src/view/shell/desktop/RightNav.tsx:148
 #: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
@@ -1529,7 +1529,7 @@ msgstr "第一言語"
 msgid "Prioritize Your Follows"
 msgstr "フォローの優先順位付け"
 
-#: src/view/shell/desktop/RightNav.tsx:78
+#: src/view/shell/desktop/RightNav.tsx:76
 msgid "Privacy"
 msgstr "プライバシー"
 
@@ -1999,7 +1999,7 @@ msgstr "システムログ"
 msgid "Tall"
 msgstr "トール"
 
-#: src/view/shell/desktop/RightNav.tsx:87
+#: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
 msgstr "条件"
 
@@ -2380,7 +2380,7 @@ msgid "Your hosting provider"
 msgstr "ホスティングプロバイダー"
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:132
+#: src/view/shell/desktop/RightNav.tsx:129
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""

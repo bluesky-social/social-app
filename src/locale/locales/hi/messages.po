@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr "यह चेतावनी केवल मीडिया वाले पोस्ट के लिए उपलब्ध है।"
 
-#: src/view/shell/desktop/RightNav.tsx:163
+#: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} सूची"
 
-#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -836,7 +836,7 @@ msgstr "फ़ीड ऑफ़लाइन है"
 msgid "Feed Preferences"
 msgstr "फ़ीड प्राथमिकता"
 
-#: src/view/shell/desktop/RightNav.tsx:67
+#: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr "प्रतिक्रिया"
@@ -956,7 +956,7 @@ msgstr "अगला"
 msgid "Handle"
 msgstr "हैंडल"
 
-#: src/view/shell/desktop/RightNav.tsx:96
+#: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr "सहायता"
@@ -1454,7 +1454,7 @@ msgstr "ओपन नेविगेशन"
 msgid "Opens configurable language settings"
 msgstr "भाषा सेटिंग्स खोलें"
 
-#: src/view/shell/desktop/RightNav.tsx:151
+#: src/view/shell/desktop/RightNav.tsx:148
 #: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
@@ -1603,7 +1603,7 @@ msgstr "प्राथमिक भाषा"
 msgid "Prioritize Your Follows"
 msgstr "अपने फ़ॉलोअर्स को प्राथमिकता दें"
 
-#: src/view/shell/desktop/RightNav.tsx:78
+#: src/view/shell/desktop/RightNav.tsx:76
 msgid "Privacy"
 msgstr "गोपनीयता"
 
@@ -2102,7 +2102,7 @@ msgstr "सिस्टम लॉग"
 msgid "Tall"
 msgstr "लंबा"
 
-#: src/view/shell/desktop/RightNav.tsx:87
+#: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
 msgstr "शर्तें"
 
@@ -2499,7 +2499,7 @@ msgid "Your hosting provider"
 msgstr "आपका होस्टिंग प्रदाता"
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:132
+#: src/view/shell/desktop/RightNav.tsx:129
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
