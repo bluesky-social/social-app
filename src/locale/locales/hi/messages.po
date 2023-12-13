@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr "यह चेतावनी केवल मीडिया वाले पोस्ट के लिए उपलब्ध है।"
 
-#: src/view/shell/desktop/RightNav.tsx:158
+#: src/view/shell/desktop/RightNav.tsx:163
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} सूची"
 
-#: src/view/shell/desktop/RightNav.tsx:141
+#: src/view/shell/desktop/RightNav.tsx:146
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -175,7 +175,7 @@ msgstr "वैकल्पिक पाठ"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ऑल्ट टेक्स्ट अंधा और कम दृश्य लोगों के लिए छवियों का वर्णन करता है, और हर किसी को संदर्भ देने में मदद करता है।।"
 
-#: src/view/com/modals/VerifyEmail.tsx:110
+#: src/view/com/modals/VerifyEmail.tsx:118
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
@@ -232,7 +232,7 @@ msgstr "क्या आप वाकई इस ड्राफ्ट को ह
 msgid "Are you sure?"
 msgstr "क्या आप वास्तव में इसे करना चाहते हैं?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:185
+#: src/view/com/util/forms/PostDropdownBtn.tsx:188
 msgid "Are you sure? This cannot be undone."
 msgstr "क्या आप वास्तव में इसे करना चाहते हैं? इसे असंपादित नहीं किया जा सकता है।"
 
@@ -287,7 +287,7 @@ msgstr ""
 msgid "Block these accounts?"
 msgstr "खाता ब्लॉक करें?"
 
-#: src/view/screens/Moderation.tsx:121
+#: src/view/screens/Moderation.tsx:123
 msgid "Blocked accounts"
 msgstr "ब्लॉक किए गए खाते"
 
@@ -331,7 +331,7 @@ msgstr "Bluesky सार्वजनिक है।।"
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
 msgstr "ब्लूस्की एक स्वस्थ समुदाय बनाने के लिए आमंत्रित करता है। यदि आप किसी को आमंत्रित नहीं करते हैं, तो आप प्रतीक्षा सूची के लिए साइन अप कर सकते हैं और हम जल्द ही एक भेज देंगे।।"
 
-#: src/view/screens/Moderation.tsx:222
+#: src/view/screens/Moderation.tsx:225
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr ""
 
@@ -344,7 +344,7 @@ msgid "Build version {0} {1}"
 msgstr "Build version {0} {1}"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
-#: src/view/com/util/UserAvatar.tsx:217
+#: src/view/com/util/UserAvatar.tsx:221
 #: src/view/com/util/UserBanner.tsx:38
 msgid "Camera"
 msgstr "कैमरा"
@@ -420,7 +420,7 @@ msgstr "हैंडल बदलें"
 msgid "Change Handle"
 msgstr "हैंडल बदलें"
 
-#: src/view/com/modals/VerifyEmail.tsx:133
+#: src/view/com/modals/VerifyEmail.tsx:141
 msgid "Change my email"
 msgstr "मेरा ईमेल बदलें"
 
@@ -504,7 +504,7 @@ msgstr "जवाब लिखो"
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:217
+#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
 #: src/view/screens/PreferencesThreads.tsx:153
 msgid "Confirm"
@@ -525,7 +525,7 @@ msgstr "खाते को हटा दें"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:176
-#: src/view/com/modals/VerifyEmail.tsx:151
+#: src/view/com/modals/VerifyEmail.tsx:159
 msgid "Confirmation code"
 msgstr "OTP कोड"
 
@@ -534,7 +534,7 @@ msgstr "OTP कोड"
 msgid "Connecting..."
 msgstr "कनेक्टिंग ..।"
 
-#: src/view/screens/Moderation.tsx:79
+#: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
 msgstr "सामग्री फ़िल्टरिंग"
 
@@ -573,7 +573,7 @@ msgstr "कॉपी"
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 msgid "Copy link to post"
 msgstr ""
 
@@ -581,7 +581,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:112
+#: src/view/com/util/forms/PostDropdownBtn.tsx:115
 msgid "Copy post text"
 msgstr "पोस्ट टेक्स्ट कॉपी करें"
 
@@ -652,11 +652,11 @@ msgstr "मेरा खाता हटाएं"
 msgid "Delete my account…"
 msgstr "मेरा खाता हटाएं…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:180
+#: src/view/com/util/forms/PostDropdownBtn.tsx:183
 msgid "Delete post"
 msgstr "पोस्ट को हटाएं"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:184
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
 msgid "Delete this post?"
 msgstr "इस पोस्ट को डीलीट करें?"
 
@@ -687,7 +687,7 @@ msgstr ""
 msgid "Discard draft"
 msgstr "ड्राफ्ट हटाएं"
 
-#: src/view/screens/Moderation.tsx:204
+#: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
@@ -836,7 +836,7 @@ msgstr "फ़ीड ऑफ़लाइन है"
 msgid "Feed Preferences"
 msgstr "फ़ीड प्राथमिकता"
 
-#: src/view/shell/desktop/RightNav.tsx:64
+#: src/view/shell/desktop/RightNav.tsx:67
 #: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr "प्रतिक्रिया"
@@ -928,7 +928,7 @@ msgstr "पासवर्ड भूल गए"
 msgid "Gallery"
 msgstr "गैलरी"
 
-#: src/view/com/modals/VerifyEmail.tsx:175
+#: src/view/com/modals/VerifyEmail.tsx:183
 msgid "Get Started"
 msgstr "प्रारंभ करें"
 
@@ -956,7 +956,7 @@ msgstr "अगला"
 msgid "Handle"
 msgstr "हैंडल"
 
-#: src/view/shell/desktop/RightNav.tsx:93
+#: src/view/shell/desktop/RightNav.tsx:96
 #: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr "सहायता"
@@ -1023,7 +1023,7 @@ msgstr "होस्टिंग प्रदाता"
 msgid "Hosting provider address"
 msgstr "होस्टिंग प्रदाता पता"
 
-#: src/view/com/modals/VerifyEmail.tsx:200
+#: src/view/com/modals/VerifyEmail.tsx:208
 msgid "I have a code"
 msgstr "मेरे पास एक OTP कोड है"
 
@@ -1039,7 +1039,7 @@ msgstr "यदि किसी को चुना जाता है, तो �
 msgid "Image alt text"
 msgstr "छवि alt पाठ"
 
-#: src/view/com/util/UserAvatar.tsx:304
+#: src/view/com/util/UserAvatar.tsx:308
 #: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
 msgstr "छवि विकल्प"
@@ -1113,7 +1113,7 @@ msgstr "अधिक जानें"
 msgid "Learn more about this warning"
 msgstr "इस चेतावनी के बारे में अधिक जानें"
 
-#: src/view/screens/Moderation.tsx:239
+#: src/view/screens/Moderation.tsx:242
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -1130,7 +1130,7 @@ msgstr "लीविंग Bluesky"
 msgid "Let's get your password reset!"
 msgstr "चलो अपना पासवर्ड रीसेट करें!"
 
-#: src/view/com/util/UserAvatar.tsx:241
+#: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
 msgid "Library"
 msgstr "चित्र पुस्तकालय"
@@ -1200,7 +1200,7 @@ msgstr "स्थानीय देव सर्वर"
 #~ msgid "Logged-out users"
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:134
+#: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
 msgstr ""
 
@@ -1237,7 +1237,7 @@ msgstr "मेनू"
 msgid "Message from server"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:63
+#: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
 #: src/view/shell/desktop/LeftNav.tsx:391
 #: src/view/shell/Drawer.tsx:490
@@ -1245,7 +1245,7 @@ msgstr ""
 msgid "Moderation"
 msgstr "मॉडरेशन"
 
-#: src/view/screens/Moderation.tsx:93
+#: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
 msgstr "मॉडरेशन सूचियाँ"
 
@@ -1283,11 +1283,11 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr "इन खातों को म्यूट करें?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "Mute thread"
 msgstr "थ्रेड म्यूट करें"
 
-#: src/view/screens/Moderation.tsx:107
+#: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "म्यूट किए गए खाते"
 
@@ -1413,7 +1413,7 @@ msgstr "लागू नहीं।"
 #~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:229
+#: src/view/screens/Moderation.tsx:232
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
@@ -1454,7 +1454,7 @@ msgstr "ओपन नेविगेशन"
 msgid "Opens configurable language settings"
 msgstr "भाषा सेटिंग्स खोलें"
 
-#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/desktop/RightNav.tsx:151
 #: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
@@ -1603,7 +1603,7 @@ msgstr "प्राथमिक भाषा"
 msgid "Prioritize Your Follows"
 msgstr "अपने फ़ॉलोअर्स को प्राथमिकता दें"
 
-#: src/view/shell/desktop/RightNav.tsx:75
+#: src/view/shell/desktop/RightNav.tsx:78
 msgid "Privacy"
 msgstr "गोपनीयता"
 
@@ -1663,7 +1663,7 @@ msgstr "अनुशंसित लोग"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
-#: src/view/com/util/UserAvatar.tsx:278
+#: src/view/com/util/UserAvatar.tsx:282
 #: src/view/com/util/UserBanner.tsx:89
 msgid "Remove"
 msgstr "निकालें"
@@ -1736,7 +1736,7 @@ msgid "Report List"
 msgstr "रिपोर्ट सूची"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:162
+#: src/view/com/util/forms/PostDropdownBtn.tsx:165
 msgid "Report post"
 msgstr "रिपोर्ट पोस्ट"
 
@@ -1890,7 +1890,7 @@ msgstr "ऐप में प्रदर्शित होने वाले �
 msgid "Select your preferred language for translations in your feed."
 msgstr "अपने फ़ीड में अनुवाद के लिए अपनी पसंदीदा भाषा चुनें।"
 
-#: src/view/com/modals/VerifyEmail.tsx:188
+#: src/view/com/modals/VerifyEmail.tsx:196
 msgid "Send Confirmation Email"
 msgstr "पुष्टिकरण ईमेल भेजें"
 
@@ -1947,7 +1947,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr "यौन गतिविधि या कामुक नग्नता।।"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 #: src/view/screens/ProfileList.tsx:407
 msgid "Share"
 msgstr "शेयर"
@@ -2102,7 +2102,7 @@ msgstr "सिस्टम लॉग"
 msgid "Tall"
 msgstr "लंबा"
 
-#: src/view/shell/desktop/RightNav.tsx:84
+#: src/view/shell/desktop/RightNav.tsx:87
 msgid "Terms"
 msgstr "शर्तें"
 
@@ -2167,7 +2167,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr "यह जानकारी अन्य उपयोगकर्ताओं के साथ साझा नहीं की जाती है।।"
 
-#: src/view/com/modals/VerifyEmail.tsx:105
+#: src/view/com/modals/VerifyEmail.tsx:113
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "अगर आपको कभी अपना ईमेल बदलने या पासवर्ड रीसेट करने की आवश्यकता है तो यह महत्वपूर्ण है।।"
 
@@ -2204,9 +2204,9 @@ msgstr "ड्रॉपडाउन टॉगल करें"
 msgid "Transformations"
 msgstr "परिवर्तन"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+#: src/view/com/post-thread/PostThreadItem.tsx:708
+#: src/view/com/util/forms/PostDropdownBtn.tsx:101
 msgid "Translate"
 msgstr "अनुवाद"
 
@@ -2250,7 +2250,7 @@ msgstr ""
 msgid "Unmute Account"
 msgstr "अनम्यूट खाता"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "Unmute thread"
 msgstr "थ्रेड को अनम्यूट करें"
 
@@ -2485,7 +2485,7 @@ msgstr "आपका ईमेल बचाया गया है! हम ज�
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "आपका ईमेल अद्यतन किया गया है लेकिन सत्यापित नहीं किया गया है। अगले चरण के रूप में, कृपया अपना नया ईमेल सत्यापित करें।।"
 
-#: src/view/com/modals/VerifyEmail.tsx:100
+#: src/view/com/modals/VerifyEmail.tsx:108
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "आपका ईमेल अभी तक सत्यापित नहीं हुआ है। यह एक महत्वपूर्ण सुरक्षा कदम है जिसे हम अनुशंसा करते हैं।।"
 
@@ -2499,7 +2499,7 @@ msgid "Your hosting provider"
 msgstr "आपका होस्टिंग प्रदाता"
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:127
+#: src/view/shell/desktop/RightNav.tsx:132
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""

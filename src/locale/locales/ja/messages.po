@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/view/shell/desktop/RightNav.tsx:158
+#: src/view/shell/desktop/RightNav.tsx:163
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} リスト"
 
-#: src/view/shell/desktop/RightNav.tsx:141
+#: src/view/shell/desktop/RightNav.tsx:146
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgstr "ALTテキスト"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ALTテキストは、視覚障害者や低視力者のために画像を説明し、すべての人に文脈を与えるのに役立ちます。"
 
-#: src/view/com/modals/VerifyEmail.tsx:110
+#: src/view/com/modals/VerifyEmail.tsx:118
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Eメールが{0}に送信されました。以下に入力できる確認コードが含まれています。"
 
@@ -208,7 +208,7 @@ msgstr "本当にこの下書きを破棄しますか？"
 msgid "Are you sure?"
 msgstr "本当ですか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:185
+#: src/view/com/util/forms/PostDropdownBtn.tsx:188
 msgid "Are you sure? This cannot be undone."
 msgstr "本当ですか？これは元に戻せません。"
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Block these accounts?"
 msgstr "これらのアカウントをブロックしますか？"
 
-#: src/view/screens/Moderation.tsx:121
+#: src/view/screens/Moderation.tsx:123
 msgid "Blocked accounts"
 msgstr "ブロックされたブロック"
 
@@ -303,7 +303,7 @@ msgstr "Blueskyはオープンです。"
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
 msgstr "Blueskyはより健全なコミュニティを構築するために招待状を使用します。招待状をお持ちでない方の場合、waitlistに申し込めば招待状をお送りします。"
 
-#: src/view/screens/Moderation.tsx:222
+#: src/view/screens/Moderation.tsx:225
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr ""
 
@@ -316,7 +316,7 @@ msgid "Build version {0} {1}"
 msgstr "ビルドバージョン {0} {1}"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
-#: src/view/com/util/UserAvatar.tsx:217
+#: src/view/com/util/UserAvatar.tsx:221
 #: src/view/com/util/UserBanner.tsx:38
 msgid "Camera"
 msgstr "カメラ"
@@ -392,7 +392,7 @@ msgstr "ハンドルを変更"
 msgid "Change Handle"
 msgstr "ハンドルを変更"
 
-#: src/view/com/modals/VerifyEmail.tsx:133
+#: src/view/com/modals/VerifyEmail.tsx:141
 msgid "Change my email"
 msgstr "Eメールの変更"
 
@@ -476,7 +476,7 @@ msgstr "返信を作成"
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:217
+#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
 #: src/view/screens/PreferencesThreads.tsx:153
 msgid "Confirm"
@@ -497,7 +497,7 @@ msgstr "アカウントの削除を確認"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:176
-#: src/view/com/modals/VerifyEmail.tsx:151
+#: src/view/com/modals/VerifyEmail.tsx:159
 msgid "Confirmation code"
 msgstr "確認コード"
 
@@ -506,7 +506,7 @@ msgstr "確認コード"
 msgid "Connecting..."
 msgstr "接続中..."
 
-#: src/view/screens/Moderation.tsx:79
+#: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
 msgstr "コンテンツフィルタリング"
 
@@ -545,7 +545,7 @@ msgstr "コピー"
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 msgid "Copy link to post"
 msgstr ""
 
@@ -553,7 +553,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:112
+#: src/view/com/util/forms/PostDropdownBtn.tsx:115
 msgid "Copy post text"
 msgstr "投稿テキストをコピー"
 
@@ -620,11 +620,11 @@ msgstr "マイアカウントを削除"
 msgid "Delete my account…"
 msgstr "マイアカウントを削除…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:180
+#: src/view/com/util/forms/PostDropdownBtn.tsx:183
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:184
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
 msgid "Delete this post?"
 msgstr "この投稿を削除しますか？"
 
@@ -655,7 +655,7 @@ msgstr "破棄"
 msgid "Discard draft"
 msgstr "ドラフトを破棄"
 
-#: src/view/screens/Moderation.tsx:204
+#: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
@@ -804,7 +804,7 @@ msgstr "フィードはオフライン"
 msgid "Feed Preferences"
 msgstr "フィード設定"
 
-#: src/view/shell/desktop/RightNav.tsx:64
+#: src/view/shell/desktop/RightNav.tsx:67
 #: src/view/shell/Drawer.tsx:292
 msgid "Feedback"
 msgstr "フィードバック"
@@ -896,7 +896,7 @@ msgstr "パスワードを失念"
 msgid "Gallery"
 msgstr "ギャラリー"
 
-#: src/view/com/modals/VerifyEmail.tsx:175
+#: src/view/com/modals/VerifyEmail.tsx:183
 msgid "Get Started"
 msgstr "はじめに"
 
@@ -924,7 +924,7 @@ msgstr "次へ"
 msgid "Handle"
 msgstr "ハンドル"
 
-#: src/view/shell/desktop/RightNav.tsx:93
+#: src/view/shell/desktop/RightNav.tsx:96
 #: src/view/shell/Drawer.tsx:302
 msgid "Help"
 msgstr "ヘルプ"
@@ -983,7 +983,7 @@ msgstr "ホスティングプロバイダー"
 msgid "Hosting provider address"
 msgstr "ホスティングプロバイダーアドレス"
 
-#: src/view/com/modals/VerifyEmail.tsx:200
+#: src/view/com/modals/VerifyEmail.tsx:208
 msgid "I have a code"
 msgstr "コードを持っている"
 
@@ -999,7 +999,7 @@ msgstr "選択されていない場合は、すべての年齢に適していま
 msgid "Image alt text"
 msgstr "画像のALTテキスト"
 
-#: src/view/com/util/UserAvatar.tsx:304
+#: src/view/com/util/UserAvatar.tsx:308
 #: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
 msgstr "イメージオプション"
@@ -1068,7 +1068,7 @@ msgstr "詳細"
 msgid "Learn more about this warning"
 msgstr "この警告の詳細"
 
-#: src/view/screens/Moderation.tsx:239
+#: src/view/screens/Moderation.tsx:242
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -1085,7 +1085,7 @@ msgstr "Blueskyから離れる"
 msgid "Let's get your password reset!"
 msgstr "パスワードをリセットしましょう！"
 
-#: src/view/com/util/UserAvatar.tsx:241
+#: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
 msgid "Library"
 msgstr "ライブラリー"
@@ -1147,7 +1147,7 @@ msgstr "ローカル開発者サーバー"
 #~ msgid "Logged-out users"
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:134
+#: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
 msgstr ""
 
@@ -1184,7 +1184,7 @@ msgstr "メニュー"
 msgid "Message from server"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:63
+#: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
 #: src/view/shell/desktop/LeftNav.tsx:391
 #: src/view/shell/Drawer.tsx:490
@@ -1192,7 +1192,7 @@ msgstr ""
 msgid "Moderation"
 msgstr "モデレート"
 
-#: src/view/screens/Moderation.tsx:93
+#: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
 msgstr "モデレートリスト"
 
@@ -1226,11 +1226,11 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr "これらのアカウントをミュートしますか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "Mute thread"
 msgstr "スレッドをミュート"
 
-#: src/view/screens/Moderation.tsx:107
+#: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "ミュート済みアカウント"
 
@@ -1343,7 +1343,7 @@ msgstr "該当なし。"
 #~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:229
+#: src/view/screens/Moderation.tsx:232
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
@@ -1380,7 +1380,7 @@ msgstr "ナビゲーションを開く"
 msgid "Opens configurable language settings"
 msgstr "構成可能な言語設定を開く"
 
-#: src/view/shell/desktop/RightNav.tsx:146
+#: src/view/shell/desktop/RightNav.tsx:151
 #: src/view/shell/Drawer.tsx:622
 msgid "Opens list of invite codes"
 msgstr ""
@@ -1529,7 +1529,7 @@ msgstr "第一言語"
 msgid "Prioritize Your Follows"
 msgstr "フォローの優先順位付け"
 
-#: src/view/shell/desktop/RightNav.tsx:75
+#: src/view/shell/desktop/RightNav.tsx:78
 msgid "Privacy"
 msgstr "プライバシー"
 
@@ -1584,7 +1584,7 @@ msgstr "推奨ユーザー"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
-#: src/view/com/util/UserAvatar.tsx:278
+#: src/view/com/util/UserAvatar.tsx:282
 #: src/view/com/util/UserBanner.tsx:89
 msgid "Remove"
 msgstr "削除"
@@ -1657,7 +1657,7 @@ msgid "Report List"
 msgstr "レポートリスト"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:162
+#: src/view/com/util/forms/PostDropdownBtn.tsx:165
 msgid "Report post"
 msgstr "レポート投稿"
 
@@ -1795,7 +1795,7 @@ msgstr "アプリに表示するデフォルトのテキストのアプリ言語
 msgid "Select your preferred language for translations in your feed."
 msgstr "フィード内の翻訳に使用する言語を選択します。"
 
-#: src/view/com/modals/VerifyEmail.tsx:188
+#: src/view/com/modals/VerifyEmail.tsx:196
 msgid "Send Confirmation Email"
 msgstr "確認Eメールを送信"
 
@@ -1852,7 +1852,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr "性行為またはエロティックなヌード。"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:126
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 #: src/view/screens/ProfileList.tsx:407
 msgid "Share"
 msgstr "共有"
@@ -1999,7 +1999,7 @@ msgstr "システムログ"
 msgid "Tall"
 msgstr "トール"
 
-#: src/view/shell/desktop/RightNav.tsx:84
+#: src/view/shell/desktop/RightNav.tsx:87
 msgid "Terms"
 msgstr "条件"
 
@@ -2064,7 +2064,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr "この情報は他のユーザーと共有されません。"
 
-#: src/view/com/modals/VerifyEmail.tsx:105
+#: src/view/com/modals/VerifyEmail.tsx:113
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "これは、Eメールの変更やパスワードのリセットが必要な場合に重要です。"
 
@@ -2101,9 +2101,9 @@ msgstr "トグルドロップダウン"
 msgid "Transformations"
 msgstr "変換"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+#: src/view/com/post-thread/PostThreadItem.tsx:708
+#: src/view/com/util/forms/PostDropdownBtn.tsx:101
 msgid "Translate"
 msgstr "翻訳"
 
@@ -2147,7 +2147,7 @@ msgstr "残念ながら、アカウントを作成するための要件を満た
 msgid "Unmute Account"
 msgstr "アカウントのミュート解除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "Unmute thread"
 msgstr "スレッドのミュート解除"
 
@@ -2366,7 +2366,7 @@ msgstr "Eメールが保存されました！すぐにご連絡いたします�
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "Eメールは更新されましたが、確認されていません。次のステップとして、新しいEメールを確認してください。"
 
-#: src/view/com/modals/VerifyEmail.tsx:100
+#: src/view/com/modals/VerifyEmail.tsx:108
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Eメールはまだ確認されていません。これは、当社が推奨する重要なセキュリティステップです。"
 
@@ -2380,7 +2380,7 @@ msgid "Your hosting provider"
 msgstr "ホスティングプロバイダー"
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:127
+#: src/view/shell/desktop/RightNav.tsx:132
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr ""
