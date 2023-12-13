@@ -68,8 +68,14 @@ export async function fetchPage({
     notif => !isThreadMuted(notif, threadMutes),
   )
 
+  let seenAt = res.data.seenAt ? new Date(res.data.seenAt) : new Date()
+  if (Number.isNaN(seenAt.getTime())) {
+    seenAt = new Date()
+  }
+
   return {
     cursor: res.data.cursor,
+    seenAt,
     items: notifsGrouped,
   }
 }

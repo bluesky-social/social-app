@@ -24,6 +24,7 @@ export interface FeedNotification {
 
 export interface FeedPage {
   cursor: string | undefined
+  seenAt: Date
   items: FeedNotification[]
 }
 
