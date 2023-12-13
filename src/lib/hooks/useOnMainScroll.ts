@@ -14,9 +14,7 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-export type ResetCb = () => void
-
-export function useOnMainScroll(): [ScrollHandlers<any>, ResetCb] {
+export function useOnMainScroll(): ScrollHandlers<any> {
   const {headerHeight} = useShellLayout()
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
@@ -100,10 +98,5 @@ export function useOnMainScroll(): [ScrollHandlers<any>, ResetCb] {
     [onBeginDrag, onEndDrag, onScroll],
   )
 
-  return [
-    scrollHandler,
-    useCallback(() => {
-      setMode(false)
-    }, [setMode]),
-  ]
+  return scrollHandler
 }

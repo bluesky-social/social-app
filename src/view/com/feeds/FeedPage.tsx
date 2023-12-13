@@ -10,6 +10,7 @@ import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
@@ -53,7 +54,8 @@ export function FeedPage({
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-  const [onMainScroll, resetMainScroll] = useOnMainScroll()
+  const onMainScroll = useOnMainScroll()
+  const setMinimalShellMode = useSetMinimalShellMode()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<ListMethods>(null)
@@ -64,8 +66,8 @@ export function FeedPage({
       animated: isNative,
       offset: -headerOffset,
     })
-    resetMainScroll()
-  }, [headerOffset, resetMainScroll])
+    setMinimalShellMode(false)
+  }, [headerOffset, setMinimalShellMode])
 
   const onSoftReset = React.useCallback(() => {
     const isScreenFocused =

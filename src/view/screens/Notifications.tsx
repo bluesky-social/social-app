@@ -36,7 +36,7 @@ type Props = NativeStackScreenProps<
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const [onMainScroll, resetMainScroll] = useOnMainScroll()
+  const onMainScroll = useOnMainScroll()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const checkLatestRef = React.useRef<() => void | null>()
@@ -52,8 +52,8 @@ export function NotificationsScreen({}: Props) {
   // =
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
-    resetMainScroll()
-  }, [scrollElRef, resetMainScroll])
+    setMinimalShellMode(false)
+  }, [scrollElRef, setMinimalShellMode])
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
