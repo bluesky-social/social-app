@@ -6,7 +6,10 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 
 export type ListMethods = FlatList_INTERNAL
-export type ListProps<ItemT> = FlatListProps<ItemT> & {
+export type ListProps<ItemT> = Omit<
+  FlatListProps<ItemT>,
+  'onScroll' // Use ScrollContext instead.
+> & {
   onScrolledDownChange?: (isScrolledDown: boolean) => void
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
