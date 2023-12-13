@@ -14,13 +14,19 @@ import {useCloseAllActiveElements} from '#/state/util'
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  const showLoggedOut = React.useCallback(() => {
+  const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
-    setShowLoggedOut(true)
-  }, [setShowLoggedOut, closeAllActiveElements])
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }, [requestSwitchToAccount, closeAllActiveElements])
+
+  const showCreateAccount = React.useCallback(() => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+    // setShowLoggedOut(true)
+  }, [requestSwitchToAccount, closeAllActiveElements])
 
   return (
     <View
@@ -39,7 +45,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
       <View style={{flexDirection: 'row', paddingTop: 12, gap: 8}}>
         <Button
-          onPress={showLoggedOut}
+          onPress={showCreateAccount}
           accessibilityHint={_(msg`Sign up`)}
           accessibilityLabel={_(msg`Sign up`)}>
           <Text type="md" style={[{color: 'white'}, s.bold]}>
@@ -48,7 +54,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         </Button>
         <Button
           type="default"
-          onPress={showLoggedOut}
+          onPress={showSignIn}
           accessibilityHint={_(msg`Sign in`)}
           accessibilityLabel={_(msg`Sign in`)}>
           <Text type="md" style={[pal.text, s.bold]}>

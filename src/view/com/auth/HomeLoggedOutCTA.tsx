@@ -8,18 +8,34 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {colors, s} from '#/lib/styles'
 import {TextLink} from '../util/Link'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 
 export function HomeLoggedOutCTA() {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+
+  const showCreateAccount = React.useCallback(() => {
+    requestSwitchToAccount({requestedAccount: 'new'})
+  }, [requestSwitchToAccount])
+
+  const showSignIn = React.useCallback(() => {
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }, [requestSwitchToAccount])
+
   return (
     <ScrollView style={styles.container}>
       <View style={[styles.hero, isMobile && styles.heroMobile]}>
         <Text style={[styles.title, pal.link]}>
           <Trans>Bluesky</Trans>
         </Text>
-        <Text style={[styles.subtitle, pal.textLight]}>
+        <Text
+          style={[
+            styles.subtitle,
+            isMobile && styles.subtitleMobile,
+            pal.textLight,
+          ]}>
           <Trans>See what's next</Trans>
         </Text>
       </View>
@@ -33,7 +49,7 @@ export function HomeLoggedOutCTA() {
             isMobile && styles.btnMobile,
             {backgroundColor: colors.blue3},
           ]}
-          onPress={undefined}
+          onPress={showCreateAccount}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Create new account`)}
           accessibilityHint="Opens flow to create a new Bluesky account">
@@ -49,7 +65,7 @@ export function HomeLoggedOutCTA() {
         <TouchableOpacity
           testID="signInButton"
           style={[styles.btn, isMobile && styles.btnMobile, pal.btn]}
-          onPress={undefined}
+          onPress={showSignIn}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign in`)}
           accessibilityHint="Opens flow to sign into your existing Bluesky account">
@@ -109,6 +125,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 48,
     fontWeight: 'bold',
+  },
+  subtitleMobile: {
+    fontSize: 42,
   },
   btnsDesktop: {
     flexDirection: 'row',
