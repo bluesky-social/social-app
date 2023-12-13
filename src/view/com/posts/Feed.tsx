@@ -15,10 +15,8 @@ import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
@@ -45,10 +43,8 @@ let Feed = ({
   enabled,
   pollInterval,
   scrollElRef,
-  onScroll,
   onScrolledDownChange,
   onHasNew,
-  scrollEventThrottle,
   renderEmptyState,
   renderEndOfFeed,
   testID,
@@ -65,9 +61,7 @@ let Feed = ({
   pollInterval?: number
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
-  onScroll?: OnScrollHandler
   onScrolledDownChange?: (isScrolledDown: boolean) => void
-  scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   testID?: string
@@ -272,7 +266,6 @@ let Feed = ({
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
-  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
       <List
@@ -296,9 +289,7 @@ let Feed = ({
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         style={{paddingTop: headerOffset}}
-        onScroll={onScroll != null ? scrollHandler : undefined}
         onScrolledDownChange={onScrolledDownChange}
-        scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
         onEndReachedThreshold={2} // number of posts left to trigger load more

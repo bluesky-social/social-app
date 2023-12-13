@@ -26,7 +26,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -160,23 +159,21 @@ function ProfileListScreenLoaded({
           isHeaderReady={true}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({onScroll, headerHeight, scrollElRef, isFocused}) => (
+          {({headerHeight, scrollElRef, isFocused}) => (
             <FeedSection
               ref={feedSectionRef}
               feed={`list|${uri}`}
               scrollElRef={scrollElRef as ListRef}
-              onScroll={onScroll}
               headerHeight={headerHeight}
               isFocused={isFocused}
             />
           )}
-          {({onScroll, headerHeight, scrollElRef}) => (
+          {({headerHeight, scrollElRef}) => (
             <AboutSection
               ref={aboutSectionRef}
               scrollElRef={scrollElRef as ListRef}
               list={list}
               onPressAddUser={onPressAddUser}
-              onScroll={onScroll}
               headerHeight={headerHeight}
             />
           )}
@@ -204,12 +201,11 @@ function ProfileListScreenLoaded({
         items={SECTION_TITLES_MOD}
         isHeaderReady={true}
         renderHeader={renderHeader}>
-        {({onScroll, headerHeight, scrollElRef}) => (
+        {({headerHeight, scrollElRef}) => (
           <AboutSection
             list={list}
             scrollElRef={scrollElRef as ListRef}
             onPressAddUser={onPressAddUser}
-            onScroll={onScroll}
             headerHeight={headerHeight}
           />
         )}
@@ -595,16 +591,12 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
 
 interface FeedSectionProps {
   feed: FeedDescriptor
-  onScroll: OnScrollHandler
   headerHeight: number
   scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl(
-    {feed, scrollElRef, onScroll, headerHeight, isFocused},
-    ref,
-  ) {
+  function FeedSectionImpl({feed, scrollElRef, headerHeight, isFocused}, ref) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -634,9 +626,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           pollInterval={30e3}
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
-          onScroll={onScroll}
           onScrolledDownChange={setIsScrolledDown}
-          scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
         />
@@ -655,13 +645,12 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 interface AboutSectionProps {
   list: AppBskyGraphDefs.ListView
   onPressAddUser: () => void
-  onScroll: OnScrollHandler
   headerHeight: number
   scrollElRef: ListRef
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
-    {list, onPressAddUser, onScroll, headerHeight, scrollElRef},
+    {list, onPressAddUser, headerHeight, scrollElRef},
     ref,
   ) {
     const pal = usePalette('default')
@@ -798,9 +787,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           renderHeader={renderHeader}
           renderEmptyState={renderEmptyState}
           headerOffset={headerHeight}
-          onScroll={onScroll}
           onScrolledDownChange={setIsScrolledDown}
-          scrollEventThrottle={1}
         />
         {isScrolledDown && (
           <LoadLatestBtn

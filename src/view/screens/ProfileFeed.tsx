@@ -24,7 +24,6 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
@@ -41,7 +40,6 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {
   useFeedSourceInfoQuery,
   FeedSourceFeedInfo,
@@ -398,12 +396,11 @@ export function ProfileFeedScreenInner({
         isHeaderReady={true}
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
-        {({onScroll, headerHeight, scrollElRef, isFocused}) =>
+        {({headerHeight, scrollElRef, isFocused}) =>
           isPublicResponse?.isPublic ? (
             <FeedSection
               ref={feedSectionRef}
               feed={`feedgen|${feedInfo.uri}`}
-              onScroll={onScroll}
               headerHeight={headerHeight}
               scrollElRef={scrollElRef as ListRef}
               isFocused={isFocused}
@@ -414,13 +411,12 @@ export function ProfileFeedScreenInner({
             </CenteredView>
           )
         }
-        {({onScroll, headerHeight, scrollElRef}) => (
+        {({headerHeight, scrollElRef}) => (
           <AboutSection
             feedOwnerDid={feedInfo.creatorDid}
             feedRkey={feedInfo.route.params.rkey}
             feedInfo={feedInfo}
             headerHeight={headerHeight}
-            onScroll={onScroll}
             scrollElRef={
               scrollElRef as React.MutableRefObject<ScrollView | null>
             }
@@ -489,16 +485,12 @@ function NonPublicFeedMessage({rawError}: {rawError?: Error}) {
 
 interface FeedSectionProps {
   feed: FeedDescriptor
-  onScroll: OnScrollHandler
   headerHeight: number
   scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl(
-    {feed, onScroll, headerHeight, scrollElRef, isFocused},
-    ref,
-  ) {
+  function FeedSectionImpl({feed, headerHeight, scrollElRef, isFocused}, ref) {
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
@@ -528,9 +520,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           pollInterval={30e3}
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
-          onScroll={onScroll}
           onScrolledDownChange={setIsScrolledDown}
-          scrollEventThrottle={5}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
         />
@@ -551,7 +541,6 @@ function AboutSection({
   feedRkey,
   feedInfo,
   headerHeight,
-  onScroll,
   scrollElRef,
   isOwner,
 }: {
@@ -559,13 +548,13 @@ function AboutSection({
   feedRkey: string
   feedInfo: FeedSourceFeedInfo
   headerHeight: number
-  onScroll: OnScrollHandler
   scrollElRef: React.MutableRefObject<ScrollView | null>
   isOwner: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const scrollHandler = useAnimatedScrollHandler(onScroll)
+  // TODO!
+  const scrollHandler = useAnimatedScrollHandler(() => {})
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
@@ -605,8 +594,7 @@ function AboutSection({
       contentContainerStyle={{
         paddingTop: headerHeight,
         minHeight: Dimensions.get('window').height * 1.5,
-      }}
-      onScroll={scrollHandler}>
+      }}>
       <View
         style={[
           {

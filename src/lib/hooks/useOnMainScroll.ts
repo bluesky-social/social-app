@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
+import {NativeScrollEvent} from 'react-native'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {isWeb} from 'platform/detection'
@@ -14,13 +14,9 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-export type OnScrollCb = (
-  event: NativeSyntheticEvent<NativeScrollEvent>,
-) => void
-export type OnScrollHandler = ScrollHandlers<any>
 export type ResetCb = () => void
 
-export function useOnMainScroll(): [OnScrollHandler, ResetCb] {
+export function useOnMainScroll(): [ScrollHandlers<any>, ResetCb] {
   const {headerHeight} = useShellLayout()
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()

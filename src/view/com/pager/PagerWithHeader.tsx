@@ -19,14 +19,12 @@ import Animated, {
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ListMethods} from '../util/List'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  onScroll: OnScrollHandler
   scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
 }
 

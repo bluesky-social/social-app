@@ -173,10 +173,8 @@ export function FeedPage({
         feedParams={feedParams}
         pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
-        onScroll={onMainScroll}
         onScrolledDownChange={setIsScrolledDown}
         onHasNew={setHasNew}
-        scrollEventThrottle={1}
         renderEmptyState={renderEmptyState}
         renderEndOfFeed={renderEndOfFeed}
         ListHeaderComponent={ListHeaderComponent}

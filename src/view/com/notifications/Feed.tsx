@@ -6,8 +6,6 @@ import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {EmptyState} from '../util/EmptyState'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
@@ -24,13 +22,11 @@ const LOADING_ITEM = {_reactKey: '__loading__'}
 export function Feed({
   scrollElRef,
   onPressTryAgain,
-  onScroll,
   onScrolledDownChange,
   ListHeaderComponent,
 }: {
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
-  onScroll?: OnScrollHandler
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
 }) {
@@ -138,7 +134,6 @@ export function Feed({
     [isFetchingNextPage],
   )
 
-  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View style={s.hContentRegion}>
       {error && (
@@ -167,9 +162,7 @@ export function Feed({
         }
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
-        onScroll={scrollHandler}
         onScrolledDownChange={onScrolledDownChange}
-        scrollEventThrottle={1}
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight

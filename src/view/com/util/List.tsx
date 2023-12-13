@@ -33,7 +33,14 @@ function ListImpl<ItemT>(
     },
   })
 
-  return <FlatList_INTERNAL {...props} onScroll={scrollHandler} ref={ref} />
+  return (
+    <FlatList_INTERNAL
+      {...props}
+      onScroll={scrollHandler}
+      scrollEventThrottle={1}
+      ref={ref}
+    />
+  )
 }
 
 export const List = React.forwardRef(ListImpl) as <ItemT>(

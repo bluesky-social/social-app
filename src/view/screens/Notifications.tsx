@@ -133,7 +133,6 @@ export function NotificationsScreen({}: Props) {
     <View testID="notificationsScreen" style={s.hContentRegion}>
       <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
       <Feed
-        onScroll={onMainScroll}
         onScrolledDownChange={setIsScrolledDown}
         scrollElRef={scrollElRef}
         ListHeaderComponent={ListHeaderComponent}

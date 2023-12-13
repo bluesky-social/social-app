@@ -15,11 +15,9 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useProfileFeedgensQuery, RQKEY} from '#/state/queries/profile-feedgens'
-import {OnScrollHandler} from '#/lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from '#/lib/ThemeContext'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
@@ -38,8 +36,6 @@ interface SectionRef {
 interface ProfileFeedgensProps {
   did: string
   scrollElRef: ListRef
-  onScroll?: OnScrollHandler
-  scrollEventThrottle?: number
   headerOffset: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
@@ -50,16 +46,7 @@ export const ProfileFeedgens = React.forwardRef<
   SectionRef,
   ProfileFeedgensProps
 >(function ProfileFeedgensImpl(
-  {
-    did,
-    scrollElRef,
-    onScroll,
-    scrollEventThrottle,
-    headerOffset,
-    enabled,
-    style,
-    testID,
-  },
+  {did, scrollElRef, headerOffset, enabled, style, testID},
   ref,
 ) {
   const pal = usePalette('default')
@@ -185,7 +172,6 @@ export const ProfileFeedgens = React.forwardRef<
     [error, refetch, onPressRetryLoadMore, pal, preferences],
   )
 
-  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
       <List
@@ -207,8 +193,6 @@ export const ProfileFeedgens = React.forwardRef<
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         style={{paddingTop: headerOffset}}
-        onScroll={onScroll != null ? scrollHandler : undefined}
-        scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         removeClippedSubviews={true}
         contentOffset={{x: 0, y: headerOffset * -1}}
