@@ -59,7 +59,7 @@ export const ViewSelector = React.forwardRef<
 ) {
   const pal = usePalette('default')
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  const flatListRef = React.useRef<FlatList>(null)
+  const flatListRef = React.useRef<FlatList_INTERNAL>(null)
 
   // events
   // =
