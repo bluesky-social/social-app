@@ -29,6 +29,8 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {useScrollHandlers} from '#/lib/ScrollContext'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
@@ -553,8 +555,8 @@ function AboutSection({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  // TODO!
-  const scrollHandler = useAnimatedScrollHandler(() => {})
+  const scrollHandlers = useScrollHandlers()
+  const onScroll = useAnimatedScrollHandler(scrollHandlers)
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
@@ -590,6 +592,7 @@ function AboutSection({
   return (
     <ScrollView
       ref={scrollElRef}
+      onScroll={onScroll}
       scrollEventThrottle={1}
       contentContainerStyle={{
         paddingTop: headerHeight,
