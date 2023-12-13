@@ -22,6 +22,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {s} from '#/lib/styles'
+import {CenteredView} from '../Views'
 
 export function ScreenHider({
   testID,
@@ -53,41 +54,56 @@ export function ScreenHider({
     )
   }
 
+  const isNoPwi =
+    moderation.cause?.type === 'label' &&
+    moderation.cause?.labelDef.id === '!no-unauthenticated'
   const desc = describeModerationCause(moderation.cause, 'account')
   return (
-    <View style={[styles.container, pal.view, containerStyle]}>
+    <CenteredView style={[styles.container, pal.view, containerStyle]}>
       <View style={styles.iconContainer}>
         <View style={[styles.icon, palInverted.view]}>
           <FontAwesomeIcon
-            icon="exclamation"
+            icon={isNoPwi ? ['far', 'eye-slash'] : 'exclamation'}
             style={pal.textInverted as FontAwesomeIconStyle}
             size={24}
           />
         </View>
       </View>
       <Text type="title-2xl" style={[styles.title, pal.text]}>
-        <Trans>Content Warning</Trans>
+        {isNoPwi ? (
+          <Trans>Sign-in Required</Trans>
+        ) : (
+          <Trans>Content Warning</Trans>
+        )}
       </Text>
       <Text type="2xl" style={[styles.description, pal.textLight]}>
-        <Trans>This {screenDescription} has been flagged:</Trans>
-        <Text type="2xl-medium" style={[pal.text, s.ml5]}>
-          {desc.name}.
-        </Text>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            openModal({
-              name: 'moderation-details',
-              context: 'account',
-              moderation,
-            })
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Learn more about this warning`)}
-          accessibilityHint="">
-          <Text type="2xl" style={pal.link}>
-            <Trans>Learn More</Trans>
-          </Text>
-        </TouchableWithoutFeedback>
+        {isNoPwi ? (
+          <Trans>
+            This account has requested that users sign in to view their profile.
+          </Trans>
+        ) : (
+          <>
+            <Trans>This {screenDescription} has been flagged:</Trans>
+            <Text type="2xl-medium" style={[pal.text, s.ml5]}>
+              {desc.name}.
+            </Text>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                openModal({
+                  name: 'moderation-details',
+                  context: 'account',
+                  moderation,
+                })
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Learn more about this warning`)}
+              accessibilityHint="">
+              <Text type="2xl" style={pal.link}>
+                <Trans>Learn More</Trans>
+              </Text>
+            </TouchableWithoutFeedback>
+          </>
+        )}{' '}
       </Text>
       {isMobile && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>
@@ -116,7 +132,7 @@ export function ScreenHider({
           </Button>
         )}
       </View>
-    </View>
+    </CenteredView>
   )
 }
 
