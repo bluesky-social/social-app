@@ -9,6 +9,7 @@ import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
+import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
@@ -199,12 +200,7 @@ function HomeScreenReady({
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}
       tabBarPosition="top">
-      <FeedPage
-        testID="customFeedPage"
-        isPageFocused={true}
-        feed={`feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot`}
-        renderEmptyState={renderCustomFeedEmptyState}
-      />
+      <HomeLoggedOutCTA testID="loggedOutCTA" />
     </Pager>
   )
 }
