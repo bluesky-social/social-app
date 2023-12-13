@@ -167,8 +167,7 @@ let Feed = ({
     if (isFetched) {
       if (isError && isEmpty) {
         arr = arr.concat([ERROR_ITEM])
-      }
-      if (isEmpty) {
+      } else if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
       } else if (data) {
         for (const page of data?.pages) {
