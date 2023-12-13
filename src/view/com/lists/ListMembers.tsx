@@ -35,6 +35,7 @@ export function ListMembers({
   style,
   scrollElRef,
   onScroll,
+  onScrolledDownChange,
   onPressTryAgain,
   renderHeader,
   renderEmptyState,
@@ -47,6 +48,7 @@ export function ListMembers({
   style?: StyleProp<ViewStyle>
   scrollElRef?: ListRef
   onScroll: OnScrollHandler
+  onScrolledDownChange: (isScrolledDown: boolean) => void
   onPressTryAgain?: () => void
   renderHeader: () => JSX.Element
   renderEmptyState: () => JSX.Element
@@ -234,6 +236,7 @@ export function ListMembers({
         }}
         style={{paddingTop: headerOffset}}
         onScroll={scrollHandler}
+        onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         scrollEventThrottle={scrollEventThrottle}

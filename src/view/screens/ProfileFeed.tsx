@@ -398,14 +398,13 @@ export function ProfileFeedScreenInner({
         isHeaderReady={true}
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused}) =>
+        {({onScroll, headerHeight, scrollElRef, isFocused}) =>
           isPublicResponse?.isPublic ? (
             <FeedSection
               ref={feedSectionRef}
               feed={`feedgen|${feedInfo.uri}`}
               onScroll={onScroll}
               headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
               scrollElRef={scrollElRef as ListRef}
               isFocused={isFocused}
             />
@@ -492,16 +491,16 @@ interface FeedSectionProps {
   feed: FeedDescriptor
   onScroll: OnScrollHandler
   headerHeight: number
-  isScrolledDown: boolean
   scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused},
+    {feed, onScroll, headerHeight, scrollElRef, isFocused},
     ref,
   ) {
     const [hasNew, setHasNew] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
@@ -530,6 +529,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
           onScroll={onScroll}
+          onScrolledDownChange={setIsScrolledDown}
           scrollEventThrottle={5}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}

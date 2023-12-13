@@ -160,24 +160,17 @@ function ProfileListScreenLoaded({
           isHeaderReady={true}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({
-            onScroll,
-            headerHeight,
-            isScrolledDown,
-            scrollElRef,
-            isFocused,
-          }) => (
+          {({onScroll, headerHeight, scrollElRef, isFocused}) => (
             <FeedSection
               ref={feedSectionRef}
               feed={`list|${uri}`}
               scrollElRef={scrollElRef as ListRef}
               onScroll={onScroll}
               headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
               isFocused={isFocused}
             />
           )}
-          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          {({onScroll, headerHeight, scrollElRef}) => (
             <AboutSection
               ref={aboutSectionRef}
               scrollElRef={scrollElRef as ListRef}
@@ -185,7 +178,6 @@ function ProfileListScreenLoaded({
               onPressAddUser={onPressAddUser}
               onScroll={onScroll}
               headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
             />
           )}
         </PagerWithHeader>
@@ -212,14 +204,13 @@ function ProfileListScreenLoaded({
         items={SECTION_TITLES_MOD}
         isHeaderReady={true}
         renderHeader={renderHeader}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({onScroll, headerHeight, scrollElRef}) => (
           <AboutSection
             list={list}
             scrollElRef={scrollElRef as ListRef}
             onPressAddUser={onPressAddUser}
             onScroll={onScroll}
             headerHeight={headerHeight}
-            isScrolledDown={isScrolledDown}
           />
         )}
       </PagerWithHeader>
@@ -606,17 +597,17 @@ interface FeedSectionProps {
   feed: FeedDescriptor
   onScroll: OnScrollHandler
   headerHeight: number
-  isScrolledDown: boolean
   scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown, isFocused},
+    {feed, scrollElRef, onScroll, headerHeight, isFocused},
     ref,
   ) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -644,6 +635,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
           onScroll={onScroll}
+          onScrolledDownChange={setIsScrolledDown}
           scrollEventThrottle={1}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
@@ -665,18 +657,18 @@ interface AboutSectionProps {
   onPressAddUser: () => void
   onScroll: OnScrollHandler
   headerHeight: number
-  isScrolledDown: boolean
   scrollElRef: ListRef
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
-    {list, onPressAddUser, onScroll, headerHeight, isScrolledDown, scrollElRef},
+    {list, onPressAddUser, onScroll, headerHeight, scrollElRef},
     ref,
   ) {
     const pal = usePalette('default')
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
     const isOwner = list.creator.did === currentAccount?.did
 
@@ -807,6 +799,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           renderEmptyState={renderEmptyState}
           headerOffset={headerHeight}
           onScroll={onScroll}
+          onScrolledDownChange={setIsScrolledDown}
           scrollEventThrottle={1}
         />
         {isScrolledDown && (
