@@ -81,11 +81,8 @@ let Feed = ({
   const {track} = useAnalytics()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
-  const {
-    onViewableItemsChanged,
-    onRefresh: onRefreshPrefetch,
-    setItems,
-  } = usePrefetchListImages()
+  const {onViewableItemsChanged, resetPrefetch, setItems} =
+    usePrefetchListImages()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
@@ -202,13 +199,13 @@ let Feed = ({
     setIsPTRing(true)
     try {
       await refetch()
-      onRefreshPrefetch()
+      resetPrefetch()
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {error: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onRefreshPrefetch, onHasNew])
+  }, [refetch, track, setIsPTRing, resetPrefetch, onHasNew])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return

@@ -17,7 +17,7 @@ interface UsePrefetchListImages {
     viewableItems: ViewToken[]
   }) => void
   setItems: (items: any[]) => void
-  onRefresh: () => void
+  resetPrefetch: () => void
 }
 
 export const usePrefetchListImages = (): UsePrefetchListImages => {
@@ -161,13 +161,13 @@ export const usePrefetchListImages = (): UsePrefetchListImages => {
     },
   ).current
 
-  const onRefresh = React.useCallback(() => {
+  const resetPrefetch = React.useCallback(() => {
     highestPrefetchedIndex.current = 0
   }, [])
 
   return {
     onViewableItemsChanged,
     setItems,
-    onRefresh,
+    resetPrefetch,
   }
 }

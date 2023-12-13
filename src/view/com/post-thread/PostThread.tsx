@@ -135,11 +135,8 @@ function PostThreadLoaded({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isTablet, isDesktop} = useWebMediaQueries()
-  const {
-    onViewableItemsChanged,
-    onRefresh: onRefreshPrefetch,
-    setItems,
-  } = usePrefetchListImages()
+  const {onViewableItemsChanged, resetPrefetch, setItems} =
+    usePrefetchListImages()
 
   const ref = useRef<FlatList>(null)
   const highlightedPostRef = useRef<View | null>(null)
@@ -214,12 +211,12 @@ function PostThreadLoaded({
     setIsPTRing(true)
     try {
       await onRefresh()
-      onRefreshPrefetch()
+      resetPrefetch()
     } catch (err) {
       logger.error('Failed to refresh posts thread', {error: err})
     }
     setIsPTRing(false)
-  }, [setIsPTRing, onRefresh, onRefreshPrefetch])
+  }, [setIsPTRing, onRefresh, resetPrefetch])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
