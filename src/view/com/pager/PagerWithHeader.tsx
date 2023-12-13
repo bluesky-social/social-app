@@ -21,6 +21,7 @@ import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ListMethods} from '../util/List'
+import {ScrollProvider} from '#/lib/ScrollContext'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -299,23 +300,21 @@ function PagerItem({
     }
   }, [scrollElRef, registerRef, index])
 
-  const scrollHandler = React.useMemo(
-    () => ({onScroll: onScrollWorklet}),
-    [onScrollWorklet],
-  )
-
   if (!isReady || renderTab == null) {
     return null
   }
 
-  return renderTab({
-    headerHeight,
-    isFocused,
-    onScroll: scrollHandler,
-    scrollElRef: scrollElRef as React.MutableRefObject<
-      ListMethods | ScrollView | null
-    >,
-  })
+  return (
+    <ScrollProvider onScroll={onScrollWorklet}>
+      {renderTab({
+        headerHeight,
+        isFocused,
+        scrollElRef: scrollElRef as React.MutableRefObject<
+          ListMethods | ScrollView | null
+        >,
+      })}
+    </ScrollProvider>
+  )
 }
 
 const styles = StyleSheet.create({
