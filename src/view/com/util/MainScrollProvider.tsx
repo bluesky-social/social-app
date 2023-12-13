@@ -1,20 +1,17 @@
-import {useCallback, useMemo} from 'react'
+import React, {useCallback} from 'react'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {NativeScrollEvent} from 'react-native'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {isWeb} from 'platform/detection'
-import {
-  useSharedValue,
-  interpolate,
-  ScrollHandlers,
-} from 'react-native-reanimated'
+import {useSharedValue, interpolate} from 'react-native-reanimated'
 
 function clamp(num: number, min: number, max: number) {
   'worklet'
   return Math.min(Math.max(num, min), max)
 }
 
-export function useOnMainScroll(): ScrollHandlers<any> {
+export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
@@ -89,14 +86,12 @@ export function useOnMainScroll(): ScrollHandlers<any> {
     [headerHeight, mode, setMode, startDragOffset, startMode],
   )
 
-  const scrollHandler: ScrollHandlers<any> = useMemo(
-    () => ({
-      onBeginDrag,
-      onEndDrag,
-      onScroll,
-    }),
-    [onBeginDrag, onEndDrag, onScroll],
+  return (
+    <ScrollProvider
+      onBeginDrag={onBeginDrag}
+      onEndDrag={onEndDrag}
+      onScroll={onScroll}>
+      {children}
+    </ScrollProvider>
   )
-
-  return scrollHandler
 }

@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {FlatListProps} from 'react-native'
 import {FlatList_INTERNAL} from './Views'
+import {useScrollHandlers} from '#/lib/ScrollContext'
 import {runOnJS} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 
@@ -17,19 +18,26 @@ function ListImpl<ItemT>(
   ref: React.Ref<ListMethods>,
 ) {
   const [isScrolledDown, setIsScrolledDown] = useState(false)
+  const scrollHandlers = useScrollHandlers()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     setIsScrolledDown(didScrollDown)
     onScrolledDownChange?.(didScrollDown)
   }
 
-  // TODO: This ignores the passed-in onScroll completely.
   const scrollHandler = useAnimatedScrollHandler({
-    onScroll(e) {
+    onBeginDrag(e, ctx) {
+      scrollHandlers.onBeginDrag?.(e, ctx)
+    },
+    onEndDrag(e, ctx) {
+      scrollHandlers.onEndDrag?.(e, ctx)
+    },
+    onScroll(e, ctx) {
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
       if (isScrolledDown !== didScrollDown) {
         runOnJS(handleScrolledDownChange)(didScrollDown)
       }
+      scrollHandlers.onScroll?.(e, ctx)
     },
   })
 

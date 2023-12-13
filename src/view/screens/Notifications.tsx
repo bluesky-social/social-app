@@ -11,7 +11,7 @@ import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {MainScrollProvider} from '../com/util/MainScrollProvider'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s, colors} from 'lib/styles'
@@ -36,7 +36,6 @@ type Props = NativeStackScreenProps<
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const onMainScroll = useOnMainScroll()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const checkLatestRef = React.useRef<() => void | null>()
@@ -132,11 +131,13 @@ export function NotificationsScreen({}: Props) {
   return (
     <View testID="notificationsScreen" style={s.hContentRegion}>
       <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
-      <Feed
-        onScrolledDownChange={setIsScrolledDown}
-        scrollElRef={scrollElRef}
-        ListHeaderComponent={ListHeaderComponent}
-      />
+      <MainScrollProvider>
+        <Feed
+          onScrolledDownChange={setIsScrolledDown}
+          scrollElRef={scrollElRef}
+          ListHeaderComponent={ListHeaderComponent}
+        />
+      </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

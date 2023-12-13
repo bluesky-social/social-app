@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {MainScrollProvider} from '../util/MainScrollProvider'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -54,7 +54,6 @@ export function FeedPage({
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-  const onMainScroll = useOnMainScroll()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
@@ -168,20 +167,22 @@ export function FeedPage({
 
   return (
     <View testID={testID} style={s.h100pct}>
-      <Feed
-        testID={testID ? `${testID}-feed` : undefined}
-        enabled={isPageFocused}
-        feed={feed}
-        feedParams={feedParams}
-        pollInterval={POLL_FREQ}
-        scrollElRef={scrollElRef}
-        onScrolledDownChange={setIsScrolledDown}
-        onHasNew={setHasNew}
-        renderEmptyState={renderEmptyState}
-        renderEndOfFeed={renderEndOfFeed}
-        ListHeaderComponent={ListHeaderComponent}
-        headerOffset={headerOffset}
-      />
+      <MainScrollProvider>
+        <Feed
+          testID={testID ? `${testID}-feed` : undefined}
+          enabled={isPageFocused}
+          feed={feed}
+          feedParams={feedParams}
+          pollInterval={POLL_FREQ}
+          scrollElRef={scrollElRef}
+          onScrolledDownChange={setIsScrolledDown}
+          onHasNew={setHasNew}
+          renderEmptyState={renderEmptyState}
+          renderEndOfFeed={renderEndOfFeed}
+          ListHeaderComponent={ListHeaderComponent}
+          headerOffset={headerOffset}
+        />
+      </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
