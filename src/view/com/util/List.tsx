@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React, {startTransition} from 'react'
 import {FlatListProps} from 'react-native'
 import {FlatList_INTERNAL} from './Views'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {runOnJS} from 'react-native-reanimated'
+import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 
 export type ListMethods = FlatList_INTERNAL
@@ -17,27 +17,33 @@ function ListImpl<ItemT>(
   {onScrolledDownChange, ...props}: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const scrollHandlers = useScrollHandlers()
+  const isScrolledDown = useSharedValue(false)
+  const contextScrollHandlers = useScrollHandlers()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
-    setIsScrolledDown(didScrollDown)
-    onScrolledDownChange?.(didScrollDown)
+    startTransition(() => {
+      onScrolledDownChange?.(didScrollDown)
+    })
   }
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag(e, ctx) {
-      scrollHandlers.onBeginDrag?.(e, ctx)
+      contextScrollHandlers.onBeginDrag?.(e, ctx)
     },
     onEndDrag(e, ctx) {
-      scrollHandlers.onEndDrag?.(e, ctx)
+      contextScrollHandlers.onEndDrag?.(e, ctx)
     },
     onScroll(e, ctx) {
+      contextScrollHandlers.onScroll?.(e, ctx)
+
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
-      if (isScrolledDown !== didScrollDown) {
+      if (
+        isScrolledDown.value !== didScrollDown &&
+        onScrolledDownChange != null
+      ) {
+        isScrolledDown.value = didScrollDown
         runOnJS(handleScrolledDownChange)(didScrollDown)
       }
-      scrollHandlers.onScroll?.(e, ctx)
     },
   })
 
