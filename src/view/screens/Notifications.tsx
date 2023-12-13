@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {
@@ -9,6 +9,7 @@ import {
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
+import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -36,7 +37,7 @@ export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
-  const scrollElRef = React.useRef<FlatList>(null)
+  const scrollElRef = React.useRef<ListMethods>(null)
   const checkLatestRef = React.useRef<() => void | null>()
   const {screen} = useAnalytics()
   const pal = usePalette('default')

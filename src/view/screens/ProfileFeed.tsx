@@ -1,11 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {
-  Dimensions,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native'
+import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,6 +14,7 @@ import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
 import {TextLink} from 'view/com/util/Link'
+import {ListRef} from 'view/com/util/List'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import {RichText} from 'view/com/util/text/RichText'
@@ -411,9 +406,7 @@ export function ProfileFeedScreenInner({
               onScroll={onScroll}
               headerHeight={headerHeight}
               isScrolledDown={isScrolledDown}
-              scrollElRef={
-                scrollElRef as React.MutableRefObject<FlatList<any> | null>
-              }
+              scrollElRef={scrollElRef as ListRef}
               isFocused={isFocused}
             />
           ) : (
@@ -500,7 +493,7 @@ interface FeedSectionProps {
   onScroll: OnScrollHandler
   headerHeight: number
   isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(

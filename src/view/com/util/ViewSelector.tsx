@@ -6,7 +6,7 @@ import {
   View,
   ScrollView,
 } from 'react-native'
-import {FlatList} from './Views'
+import {FlatList_INTERNAL} from './Views'
 import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Text} from './text/Text'
@@ -110,7 +110,7 @@ export const ViewSelector = React.forwardRef<
     [items],
   )
   return (
-    <FlatList
+    <FlatList_INTERNAL
       ref={flatListRef}
       data={data}
       keyExtractor={keyExtractor}

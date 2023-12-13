@@ -1,4 +1,4 @@
-import React, {MutableRefObject} from 'react'
+import React from 'react'
 import {
   Dimensions,
   RefreshControl,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
-import {FlatList} from '../util/Views'
+import {List, ListRef} from '../util/List'
 import {FeedSourceCardLoaded} from './FeedSourceCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -37,7 +37,7 @@ interface SectionRef {
 
 interface ProfileFeedgensProps {
   did: string
-  scrollElRef: MutableRefObject<FlatList<any> | null>
+  scrollElRef: ListRef
   onScroll?: OnScrollHandler
   scrollEventThrottle?: number
   headerOffset: number
@@ -188,7 +188,7 @@ export const ProfileFeedgens = React.forwardRef<
   const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
-      <FlatList
+      <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}

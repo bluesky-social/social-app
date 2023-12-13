@@ -8,7 +8,8 @@ import {
   View,
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {CenteredView, FlatList} from '../util/Views'
+import {CenteredView} from '../util/Views'
+import {List, ListMethods} from '../util/List'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -140,7 +141,7 @@ function PostThreadLoaded({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isTablet, isDesktop} = useWebMediaQueries()
-  const ref = useRef<FlatList>(null)
+  const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
     !isNative || // web always uses scroll adjustment
@@ -335,7 +336,7 @@ function PostThreadLoaded({
   )
 
   return (
-    <FlatList
+    <List
       ref={ref}
       data={posts}
       initialNumToRender={!isNative ? posts.length : undefined}

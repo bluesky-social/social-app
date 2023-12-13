@@ -5,7 +5,8 @@ import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {CenteredView, FlatList} from '../com/util/Views'
+import {CenteredView} from '../com/util/Views'
+import {ListRef} from '../com/util/List'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileLists} from '../com/lists/ProfileLists'
@@ -285,9 +286,7 @@ function ProfileScreenLoaded({
             headerHeight={headerHeight}
             isFocused={isFocused}
             isScrolledDown={isScrolledDown}
-            scrollElRef={
-              scrollElRef as React.MutableRefObject<FlatList<any> | null>
-            }
+            scrollElRef={scrollElRef as ListRef}
             ignoreFilterFor={profile.did}
           />
         )}
@@ -306,9 +305,7 @@ function ProfileScreenLoaded({
                 headerHeight={headerHeight}
                 isFocused={isFocused}
                 isScrolledDown={isScrolledDown}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
+                scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
               />
             )
@@ -321,9 +318,7 @@ function ProfileScreenLoaded({
             headerHeight={headerHeight}
             isFocused={isFocused}
             isScrolledDown={isScrolledDown}
-            scrollElRef={
-              scrollElRef as React.MutableRefObject<FlatList<any> | null>
-            }
+            scrollElRef={scrollElRef as ListRef}
             ignoreFilterFor={profile.did}
           />
         )}
@@ -342,9 +337,7 @@ function ProfileScreenLoaded({
                 headerHeight={headerHeight}
                 isFocused={isFocused}
                 isScrolledDown={isScrolledDown}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
+                scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
               />
             )
@@ -354,9 +347,7 @@ function ProfileScreenLoaded({
               <ProfileFeedgens
                 ref={feedsSectionRef}
                 did={profile.did}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
+                scrollElRef={scrollElRef as ListRef}
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
@@ -369,9 +360,7 @@ function ProfileScreenLoaded({
               <ProfileLists
                 ref={listsSectionRef}
                 did={profile.did}
-                scrollElRef={
-                  scrollElRef as React.MutableRefObject<FlatList<any> | null>
-                }
+                scrollElRef={scrollElRef as ListRef}
                 onScroll={onScroll}
                 scrollEventThrottle={1}
                 headerOffset={headerHeight}
@@ -400,7 +389,7 @@ interface FeedSectionProps {
   headerHeight: number
   isFocused: boolean
   isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  scrollElRef: ListRef
   ignoreFilterFor?: string
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
