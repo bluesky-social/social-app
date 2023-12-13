@@ -15,7 +15,6 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans, msg, plural} from '@lingui/macro'
 import {useSession} from '#/state/session'
 import {useInviteCodesQuery} from '#/state/queries/invites'
-import {ScrollView} from '#/view/com/util/Views'
 
 export function DesktopRightNav() {
   const pal = usePalette('default')
@@ -30,77 +29,75 @@ export function DesktopRightNav() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      <ScrollView contentContainerStyle={{borderWidth: 0}}>
-        <View style={{paddingVertical: 20}}>
-          <DesktopSearch />
+      <View style={{paddingVertical: 20}}>
+        <DesktopSearch />
 
-          {hasSession && (
-            <View style={{paddingTop: 18, marginBottom: 18}}>
-              <DesktopFeeds />
-            </View>
-          )}
-
-          <View
-            style={[
-              styles.message,
-              {
-                paddingTop: hasSession ? 0 : 18,
-              },
-            ]}>
-            {isSandbox ? (
-              <View style={[palError.view, styles.messageLine, s.p10]}>
-                <Text type="md" style={[palError.text, s.bold]}>
-                  SANDBOX. Posts and accounts are not permanent.
-                </Text>
-              </View>
-            ) : undefined}
-            <View style={[s.flexRow]}>
-              {hasSession && (
-                <>
-                  <TextLink
-                    type="md"
-                    style={pal.link}
-                    href={FEEDBACK_FORM_URL({
-                      email: currentAccount?.email,
-                      handle: currentAccount?.handle,
-                    })}
-                    text={_(msg`Feedback`)}
-                  />
-                  <Text type="md" style={pal.textLight}>
-                    &nbsp;&middot;&nbsp;
-                  </Text>
-                </>
-              )}
-              <TextLink
-                type="md"
-                style={pal.link}
-                href="https://blueskyweb.xyz/support/privacy-policy"
-                text={_(msg`Privacy`)}
-              />
-              <Text type="md" style={pal.textLight}>
-                &nbsp;&middot;&nbsp;
-              </Text>
-              <TextLink
-                type="md"
-                style={pal.link}
-                href="https://blueskyweb.xyz/support/tos"
-                text={_(msg`Terms`)}
-              />
-              <Text type="md" style={pal.textLight}>
-                &nbsp;&middot;&nbsp;
-              </Text>
-              <TextLink
-                type="md"
-                style={pal.link}
-                href={HELP_DESK_URL}
-                text={_(msg`Help`)}
-              />
-            </View>
+        {hasSession && (
+          <View style={{paddingTop: 18, marginBottom: 18}}>
+            <DesktopFeeds />
           </View>
+        )}
 
-          {hasSession && <InviteCodes />}
+        <View
+          style={[
+            styles.message,
+            {
+              paddingTop: hasSession ? 0 : 18,
+            },
+          ]}>
+          {isSandbox ? (
+            <View style={[palError.view, styles.messageLine, s.p10]}>
+              <Text type="md" style={[palError.text, s.bold]}>
+                SANDBOX. Posts and accounts are not permanent.
+              </Text>
+            </View>
+          ) : undefined}
+          <View style={[s.flexRow]}>
+            {hasSession && (
+              <>
+                <TextLink
+                  type="md"
+                  style={pal.link}
+                  href={FEEDBACK_FORM_URL({
+                    email: currentAccount?.email,
+                    handle: currentAccount?.handle,
+                  })}
+                  text={_(msg`Feedback`)}
+                />
+                <Text type="md" style={pal.textLight}>
+                  &nbsp;&middot;&nbsp;
+                </Text>
+              </>
+            )}
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/privacy-policy"
+              text={_(msg`Privacy`)}
+            />
+            <Text type="md" style={pal.textLight}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/tos"
+              text={_(msg`Terms`)}
+            />
+            <Text type="md" style={pal.textLight}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href={HELP_DESK_URL}
+              text={_(msg`Help`)}
+            />
+          </View>
         </View>
-      </ScrollView>
+
+        {hasSession && <InviteCodes />}
+      </View>
     </View>
   )
 }
@@ -176,7 +173,8 @@ const styles = StyleSheet.create({
     // @ts-ignore web only
     left: 'calc(50vw + 320px)',
     width: 304,
-    height: '100%',
+    maxHeight: '100%',
+    overflowY: 'auto',
   },
 
   message: {
