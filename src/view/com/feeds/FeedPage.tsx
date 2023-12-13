@@ -52,7 +52,8 @@ export function FeedPage({
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
+  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [onMainScroll, resetMainScroll] = useOnMainScroll()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<ListMethods>(null)
@@ -173,6 +174,7 @@ export function FeedPage({
         pollInterval={POLL_FREQ}
         scrollElRef={scrollElRef}
         onScroll={onMainScroll}
+        onScrolledDownChange={setIsScrolledDown}
         onHasNew={setHasNew}
         scrollEventThrottle={1}
         renderEmptyState={renderEmptyState}

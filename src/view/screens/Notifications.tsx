@@ -36,7 +36,8 @@ type Props = NativeStackScreenProps<
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
+  const [onMainScroll, resetMainScroll] = useOnMainScroll()
+  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const checkLatestRef = React.useRef<() => void | null>()
   const {screen} = useAnalytics()
@@ -133,6 +134,7 @@ export function NotificationsScreen({}: Props) {
       <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
       <Feed
         onScroll={onMainScroll}
+        onScrolledDownChange={setIsScrolledDown}
         scrollElRef={scrollElRef}
         ListHeaderComponent={ListHeaderComponent}
       />

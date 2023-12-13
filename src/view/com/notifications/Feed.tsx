@@ -25,11 +25,13 @@ export function Feed({
   scrollElRef,
   onPressTryAgain,
   onScroll,
+  onScrolledDownChange,
   ListHeaderComponent,
 }: {
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScroll?: OnScrollHandler
+  onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
 }) {
   const pal = usePalette('default')
@@ -166,6 +168,7 @@ export function Feed({
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         onScroll={scrollHandler}
+        onScrolledDownChange={onScrolledDownChange}
         scrollEventThrottle={1}
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf

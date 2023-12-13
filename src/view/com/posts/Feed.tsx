@@ -46,6 +46,7 @@ let Feed = ({
   pollInterval,
   scrollElRef,
   onScroll,
+  onScrolledDownChange,
   onHasNew,
   scrollEventThrottle,
   renderEmptyState,
@@ -65,6 +66,7 @@ let Feed = ({
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScroll?: OnScrollHandler
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
   scrollEventThrottle?: number
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
@@ -295,6 +297,7 @@ let Feed = ({
         }}
         style={{paddingTop: headerOffset}}
         onScroll={onScroll != null ? scrollHandler : undefined}
+        onScrolledDownChange={onScrolledDownChange}
         scrollEventThrottle={scrollEventThrottle}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
