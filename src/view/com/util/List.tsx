@@ -40,12 +40,11 @@ function ListImpl<ItemT>(
       contextScrollHandlers.onScroll?.(e, ctx)
 
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
-      if (
-        isScrolledDown.value !== didScrollDown &&
-        onScrolledDownChange != null
-      ) {
+      if (isScrolledDown.value !== didScrollDown) {
         isScrolledDown.value = didScrollDown
-        runOnJS(handleScrolledDownChange)(didScrollDown)
+        if (onScrolledDownChange != null) {
+          runOnJS(handleScrolledDownChange)(didScrollDown)
+        }
       }
     },
   })
