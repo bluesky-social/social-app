@@ -51,18 +51,9 @@ export function CenteredView({
 
 export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   {
-    data,
-    extraData,
-    contentOffset,
-    keyExtractor,
-    renderItem,
-    style,
     contentContainerStyle,
-    onEndReached,
-    onEndReachedThreshold,
-    onScroll: _unused, // Not supported on the web.
-    ListHeaderComponent,
-    ListFooterComponent,
+    style,
+    contentOffset,
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
@@ -89,143 +80,44 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
       paddingTop: Math.abs(contentOffset.y),
     })
   }
-
-  const nativeRef = React.useRef(null)
-  React.useImperativeHandle(
-    ref,
-    () =>
-      ({
-        scrollToTop() {
-          window.scrollTo({top: 0})
-        },
-        scrollToOffset({
-          animated,
-          offset,
-        }: {
-          animated: boolean
-          offset: number
-        }) {
-          window.scrollTo({
-            left: 0,
-            top: offset,
-            behavior: animated ? 'smooth' : 'instant',
-          })
-        },
-      } as any), // TODO: Types.
-    [],
-  )
-
-  const onVisible = React.useCallback(() => {
-    onEndReached?.({
-      distanceFromEnd: onEndReachedThreshold || 0,
-    })
-  }, [onEndReachedThreshold, onEndReached])
-
-  let header = null
-  if (ListHeaderComponent != null) {
-    if (typeof ListHeaderComponent === 'object') {
-      header = ListHeaderComponent
-    } else if (typeof ListHeaderComponent === 'function') {
-      // @ts-ignore We aren't using classes so it's a render function.
-      header = ListHeaderComponent()
+  if (desktopFixedHeight) {
+    if (typeof desktopFixedHeight === 'number') {
+      // @ts-ignore Web only -prf
+      style = addStyle(style, {
+        height: `calc(100vh - ${desktopFixedHeight}px)`,
+      })
+    } else {
+      style = addStyle(style, styles.fixedHeight)
+    }
+    if (!isMobile) {
+      // NOTE
+      // react native web produces *three* wrapping divs
+      // the first two use the `style` prop and the innermost uses the
+      // `contentContainerStyle`. Unfortunately the stable-gutter style
+      // needs to be applied to only the "middle" of these. To hack
+      // around this, we set data-stable-gutters which can then be
+      // styled in our external CSS.
+      // -prf
+      // @ts-ignore web only -prf
+      props.dataSet = props.dataSet || {}
+      // @ts-ignore web only -prf
+      props.dataSet.stableGutters = '1'
     }
   }
-
-  let footer = null
-  if (ListFooterComponent != null) {
-    if (typeof ListFooterComponent === 'object') {
-      footer = ListFooterComponent
-    } else if (typeof ListFooterComponent === 'function') {
-      // @ts-ignore We aren't using classes so it's a render function.
-      footer = ListFooterComponent()
-    }
-  }
-
   return (
-    <Animated.ScrollView {...props} style={style} ref={nativeRef}>
-      <View
-        style={[
-          styles.contentContainer,
-          contentContainerStyle,
-          desktopFixedHeight ? styles.minHeightViewport : null,
-          pal.border,
-        ]}>
-        {header}
-        {(data as Array<ItemT>).map((item, index) => (
-          <Row<ItemT>
-            key={keyExtractor!(item, index)}
-            item={item}
-            index={index}
-            renderItem={renderItem}
-            extraData={extraData}
-          />
-        ))}
-        {onEndReached && (
-          <Tail threshold={onEndReachedThreshold} onVisible={onVisible} />
-        )}
-        {footer}
-      </View>
-    </Animated.ScrollView>
+    <Animated.FlatList
+      ref={ref}
+      contentContainerStyle={[
+        styles.contentContainer,
+        contentContainerStyle,
+        pal.border,
+      ]}
+      style={style}
+      contentOffset={contentOffset}
+      {...props}
+    />
   )
 })
-
-let Row = function RowImpl<ItemT>({
-  item,
-  index,
-  renderItem,
-  extraData: _unused,
-}: {
-  item: ItemT
-  index: number
-  renderItem:
-    | null
-    | undefined
-    | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
-  extraData: any
-}): React.ReactNode {
-  if (!renderItem) {
-    return null
-  }
-  return (
-    <View style={styles.row}>
-      {renderItem({item, index, separators: null as any})}
-    </View>
-  )
-}
-Row = React.memo(Row)
-
-let Tail = ({
-  threshold = 0,
-  onVisible,
-}: {
-  threshold?: number | null | undefined
-  onVisible: () => void
-}): React.ReactNode => {
-  const tailRef = React.useRef(null)
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            onVisible()
-          }
-        })
-      },
-      {
-        rootMargin: (threshold || 0) * 100 + '%',
-      },
-    )
-    const tail: Element | null = tailRef.current!
-    observer.observe(tail)
-    return () => {
-      observer.unobserve(tail)
-    }
-  }, [onVisible, threshold])
-
-  return <View ref={tailRef} />
-}
-Tail = React.memo(Tail)
 
 export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
