@@ -402,7 +402,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title('Home')}}
+        options={{title: title('Home'), requireAuth: true}}
       />
       <Flat.Screen
         name="Search"
@@ -412,7 +412,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title('Feeds')}}
+        options={{title: title('Feeds'), requireAuth: true}}
       />
       <Flat.Screen
         name="Notifications"
