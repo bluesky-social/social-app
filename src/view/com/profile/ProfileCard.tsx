@@ -50,6 +50,9 @@ export function ProfileCard({
     return null
   }
   const moderation = moderateProfile(profile, moderationOpts)
+  if (moderation.account.filter) {
+    return null
+  }
 
   return (
     <Link
