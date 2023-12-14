@@ -70,8 +70,9 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         {
           scale: interpolate(
             scaleAnimationProgress.value,
-            [0, 0.22, 1],
-            [1.05, 1.05, 1],
+            [0, 0.22, 0.5, 1],
+            [1.05, 1.05, 1.05, 1],
+            'clamp',
           ),
         },
       ],
