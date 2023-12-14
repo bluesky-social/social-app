@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
-import * as SplashScreen from 'expo-splash-screen'
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -493,7 +492,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onReady={() => {
-        SplashScreen.hideAsync()
         logModuleInitTime()
         onReady()
       }}>

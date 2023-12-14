@@ -10,6 +10,8 @@ import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Trans} from '@lingui/macro'
+import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 
 export const SplashScreen = ({
   onDismiss,
@@ -55,14 +57,15 @@ export const SplashScreen = ({
             styles.containerInner,
             isMobileWeb && styles.containerInnerMobile,
             pal.border,
+            {alignItems: 'center'},
           ]}>
           <ErrorBoundary>
-            <Text style={isMobileWeb ? styles.titleMobile : styles.title}>
-              Bluesky
-            </Text>
-            <Text style={isMobileWeb ? styles.subtitleMobile : styles.subtitle}>
-              See what's next
-            </Text>
+            <Logo width={92} fill="sky" />
+
+            <View style={{paddingTop: 40, paddingBottom: 20}}>
+              <Logotype width={161} />
+            </View>
+
             <View testID="signinOrCreateAccount" style={styles.btns}>
               <TouchableOpacity
                 testID="createAccountButton"
@@ -117,8 +120,6 @@ function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
   )
 }
 const useStyles = () => {
-  const {isTabletOrMobile} = useWebMediaQueries()
-  const isMobileWeb = isWeb && isTabletOrMobile
   return StyleSheet.create({
     container: {
       height: '100%',
@@ -161,8 +162,7 @@ const useStyles = () => {
       paddingBottom: 30,
     },
     btns: {
-      flexDirection: isMobileWeb ? 'column' : 'row',
-      gap: 20,
+      gap: 10,
       justifyContent: 'center',
       paddingBottom: 40,
     },
