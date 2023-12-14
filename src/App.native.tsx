@@ -55,7 +55,7 @@ function InnerApp() {
   }, [resumeSession])
 
   return (
-    <Splash isReady={isInitialLoad}>
+    <Splash isReady={!isInitialLoad}>
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>

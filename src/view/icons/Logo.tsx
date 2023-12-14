@@ -10,12 +10,20 @@ import Svg, {
 
 import {colors} from '#/lib/styles'
 
+const ratio = 106 / 120
+
 export function Logo({fill, ...rest}: {fill?: PathProps['fill']} & SvgProps) {
   const gradient = fill === 'sky'
   const _fill = gradient ? 'url(#sky)' : fill || colors.blue3
-  const size = rest.width || 32
+  // @ts-ignore it's fiiiiine
+  const size = parseInt(rest.width || 32)
   return (
-    <Svg fill="none" viewBox="0 0 64 64" {...rest} width={size} height={size}>
+    <Svg
+      fill="none"
+      viewBox="0 0 64 64"
+      {...rest}
+      width={size}
+      height={size * ratio}>
       {gradient && (
         <Defs>
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
