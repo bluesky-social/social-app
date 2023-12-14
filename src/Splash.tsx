@@ -22,72 +22,48 @@ SplashScreen.preventAutoHideAsync().catch(() => {})
 const AnimatedLogo = Animated.createAnimatedComponent(Logo)
 
 export function Splash(props: React.PropsWithChildren<Props>) {
-  const fadeAnimationProgress = useSharedValue(0)
-  const scaleAnimationProgress = useSharedValue(0)
+  const intro = useSharedValue(0)
+  const outroLogo = useSharedValue(0)
+  const outroApp = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
-
-  const logoScaleAnimation = useAnimatedStyle(() => {
-    return {
-      width: interpolate(
-        scaleAnimationProgress.value,
-        [0, 0.2, 0.22, 1],
-        [100, 100, 1000, 1000],
-        'clamp',
-      ),
-      height: interpolate(
-        scaleAnimationProgress.value,
-        [0, 0.2, 0.22, 1],
-        [100, 100, 1000, 1000],
-        'clamp',
-      ),
-      transform: [
-        {
-          scale: interpolate(
-            scaleAnimationProgress.value,
-            [0, 0.2, 0.22, 1],
-            [1, 0.8, 0.8, 200],
-            'clamp',
-          ),
-        },
-      ],
-    }
-  })
 
   const logoFadeInAnimation = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(
-        fadeAnimationProgress.value,
-        [0, 0.5, 1],
-        [0, 1, 1],
-        'clamp',
-      ),
-    }
-  })
-
-  const appScaleAnimation = useAnimatedStyle(() => {
-    return {
+      /*
+       * N.B. these two transforms _compound_, just like with CSS. The first
+       * handles the intro animation at 1:1 scale (1000 px), the second scales
+       * down by 10x to 100px to get a natural looking 100px wide logo.
+       */
       transform: [
         {
+          scale: interpolate(intro.value, [0, 1], [0.8, 1], 'clamp'),
+        },
+        {
           scale: interpolate(
-            scaleAnimationProgress.value,
-            [0, 0.22, 0.5, 1],
-            [1.1, 1.09, 1.08, 1],
+            outroLogo.value,
+            [0, 0.08, 0.1, 1],
+            [0.1, 0.08, 0.08, 80],
             'clamp',
           ),
         },
       ],
+      opacity: interpolate(intro.value, [0, 1], [0, 1], 'clamp'),
     }
   })
 
-  // const opacityScale = { opacity: 1 }
-  const appFadeInAnimation = useAnimatedStyle(() => {
+  const appAnimation = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(
-        scaleAnimationProgress.value,
-        [0, 0.22, 1],
-        [0, 0, 1],
-        'clamp',
-      ),
+      transform: [
+        {
+          scale: interpolate(
+            outroApp.value,
+            [0, 0.7, 1],
+            [1.1, 1.1, 1],
+            'clamp',
+          ),
+        },
+      ],
+      opacity: interpolate(outroApp.value, [0, 0.7, 1], [0, 0, 1], 'clamp'),
     }
   })
 
@@ -98,13 +74,20 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     SplashScreen.hideAsync().catch(() => {})
 
     if (props.isReady) {
-      fadeAnimationProgress.value = withTiming(
+      intro.value = withTiming(
         1,
-        {duration: 800, easing: Easing.inOut(Easing.cubic)},
-        () => {
-          scaleAnimationProgress.value = withTiming(
+        {duration: 200, easing: Easing.out(Easing.cubic)},
+        async () => {
+          outroLogo.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.inOut(Easing.cubic)},
+            {duration: 1000, easing: Easing.in(Easing.cubic)},
+            () => {
+              runOnJS(onFinish)()
+            },
+          )
+          outroApp.value = withTiming(
+            1,
+            {duration: 1000, easing: Easing.inOut(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
@@ -112,7 +95,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         },
       )
     }
-  }, [onFinish, fadeAnimationProgress, scaleAnimationProgress, props.isReady])
+  }, [onFinish, intro, outroLogo, outroApp, props.isReady])
 
   return (
     <View style={{flex: 1}}>
@@ -135,9 +118,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 justifyContent: 'center',
                 alignItems: 'center',
               },
-              logoFadeInAnimation,
             ]}>
-            <AnimatedLogo width={100} style={[logoScaleAnimation]} />
+            <AnimatedLogo width={1000} style={[logoFadeInAnimation]} />
           </Animated.View>
         }>
         {!isAnimationComplete && (
@@ -146,8 +128,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           />
         )}
 
-        <Animated.View
-          style={[{flex: 1}, appFadeInAnimation, appScaleAnimation]}>
+        <Animated.View style={[{flex: 1}, appAnimation]}>
           {props.children}
         </Animated.View>
       </MaskedView>
