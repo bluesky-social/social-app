@@ -221,18 +221,16 @@ let DrawerContent = ({}: {}): React.ReactNode => {
             <NavSignupCard />
           )}
 
-          {hasSession && <InviteCodes />}
-          {hasSession && <View style={{height: 10}} />}
-          <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-          <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-          {hasSession && (
-            <NotificationsMenuItem
-              isActive={isAtNotifications}
-              onPress={onPressNotifications}
-            />
-          )}
           {hasSession && (
             <>
+              <InviteCodes />
+              <View style={{height: 10}} />
+              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+              <NotificationsMenuItem
+                isActive={isAtNotifications}
+                onPress={onPressNotifications}
+              />
               <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
               <ListsMenuItem onPress={onPressLists} />
               <ModerationMenuItem onPress={onPressModeration} />
