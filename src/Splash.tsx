@@ -27,13 +27,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroApp = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
 
-  const logoFadeInAnimation = useAnimatedStyle(() => {
+  const logoAnimations = useAnimatedStyle(() => {
     return {
-      /*
-       * N.B. these two transforms _compound_, just like with CSS. The first
-       * handles the intro animation at 1:1 scale (1000 px), the second scales
-       * down by 10x to 100px to get a natural looking 100px wide logo.
-       */
       transform: [
         {
           scale: interpolate(intro.value, [0, 1], [0.8, 1], 'clamp'),
@@ -42,7 +37,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           scale: interpolate(
             outroLogo.value,
             [0, 0.08, 0.1, 1],
-            [0.1, 0.08, 0.08, 80],
+            [1, 0.8, 0.8, 800],
             'clamp',
           ),
         },
@@ -117,9 +112,10 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
+                transform: [{scale: 0.1}], // scale from 1000px to 100px
               },
             ]}>
-            <AnimatedLogo width={1000} style={[logoFadeInAnimation]} />
+            <AnimatedLogo width={1000} style={[logoAnimations]} />
           </Animated.View>
         }>
         {!isAnimationComplete && (
