@@ -856,7 +856,7 @@ msgstr "피드"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "피드는 사용자가 콘텐츠를 큐레이션하기 위해 만드는 것입니다. 관심 있는 피드를 선택하세요."
+msgstr "피드는 사용자가 콘텐츠를 큐레이션하기 위해 만듭니다. 관심 있는 피드를 선택하세요."
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -864,11 +864,11 @@ msgstr "피드는 사용자가 약간의 코딩 전문 지식으로 구축할 �
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
 msgid "Finding similar accounts..."
-msgstr "유사한 계정 찾기…"
+msgstr "유사한 계정을 찾는 중…"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:102
 msgid "Fine-tune the content you see on your home screen."
-msgstr "홈 화면에 표시되는 콘텐츠를 미세 조정할 수 있습니다."
+msgstr "홈 화면에 표시되는 콘텐츠를 미세 조정합니다."
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
