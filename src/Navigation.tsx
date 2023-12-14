@@ -292,7 +292,11 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
+      <HomeTab.Screen
+        name="Home"
+        getComponent={() => HomeScreen}
+        options={{requireAuth: true}}
+      />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -309,7 +313,11 @@ function SearchTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
+      <SearchTab.Screen
+        name="Search"
+        getComponent={() => SearchScreen}
+        options={{requireAuth: true}}
+      />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
   )
