@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {
   ActivityIndicator,
   Platform,
@@ -9,7 +9,8 @@ import {
   View,
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {CenteredView, FlatList} from '../util/Views'
+import {CenteredView} from '../util/Views'
+import {List, ListMethods} from '../util/List'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -66,9 +67,11 @@ type YieldedItem =
 
 export function PostThread({
   uri,
+  onCanReply,
   onPressReply,
 }: {
   uri: string | undefined
+  onCanReply: (canReply: boolean) => void
   onPressReply: () => void
 }) {
   const {
@@ -88,6 +91,11 @@ export function PostThread({
         rootPost.author.displayName || `@${rootPost.author.handle}`,
       )}: "${rootPostRecord?.text}"`,
   )
+  useEffect(() => {
+    if (rootPost) {
+      onCanReply(!rootPost.viewer?.replyDisabled)
+    }
+  }, [rootPost, onCanReply])
 
   if (isError || AppBskyFeedDefs.isNotFoundPost(thread)) {
     return (
@@ -138,7 +146,7 @@ function PostThreadLoaded({
   const {onViewableItemsChanged, resetPrefetch, setItems} =
     usePrefetchListImages()
 
-  const ref = useRef<FlatList>(null)
+  const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
     !isNative || // web always uses scroll adjustment
@@ -336,7 +344,7 @@ function PostThreadLoaded({
   )
 
   return (
-    <FlatList
+    <List
       ref={ref}
       data={posts}
       initialNumToRender={!isNative ? posts.length : undefined}
@@ -479,7 +487,7 @@ function* flattenThreadSkeleton(
       yield PARENT_SPINNER
     }
     yield node
-    if (node.ctx.isHighlightedPost) {
+    if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
       yield REPLY_PROMPT
     }
     if (node.replies?.length) {

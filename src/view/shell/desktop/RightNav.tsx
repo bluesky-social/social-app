@@ -29,73 +29,75 @@ export function DesktopRightNav() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      <DesktopSearch />
+      <View style={{paddingVertical: 20}}>
+        <DesktopSearch />
 
-      {hasSession && (
-        <View style={{paddingTop: 18, marginBottom: 18}}>
-          <DesktopFeeds />
-        </View>
-      )}
-
-      <View
-        style={[
-          styles.message,
-          {
-            paddingTop: hasSession ? 0 : 18,
-          },
-        ]}>
-        {isSandbox ? (
-          <View style={[palError.view, styles.messageLine, s.p10]}>
-            <Text type="md" style={[palError.text, s.bold]}>
-              SANDBOX. Posts and accounts are not permanent.
-            </Text>
+        {hasSession && (
+          <View style={{paddingTop: 18, marginBottom: 18}}>
+            <DesktopFeeds />
           </View>
-        ) : undefined}
-        <View style={[s.flexRow]}>
-          {hasSession && (
-            <>
-              <TextLink
-                type="md"
-                style={pal.link}
-                href={FEEDBACK_FORM_URL({
-                  email: currentAccount?.email,
-                  handle: currentAccount?.handle,
-                })}
-                text={_(msg`Feedback`)}
-              />
-              <Text type="md" style={pal.textLight}>
-                &nbsp;&middot;&nbsp;
-              </Text>
-            </>
-          )}
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://blueskyweb.xyz/support/privacy-policy"
-            text={_(msg`Privacy`)}
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://blueskyweb.xyz/support/tos"
-            text={_(msg`Terms`)}
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href={HELP_DESK_URL}
-            text={_(msg`Help`)}
-          />
-        </View>
-      </View>
+        )}
 
-      {hasSession && <InviteCodes />}
+        <View
+          style={[
+            styles.message,
+            {
+              paddingTop: hasSession ? 0 : 18,
+            },
+          ]}>
+          {isSandbox ? (
+            <View style={[palError.view, styles.messageLine, s.p10]}>
+              <Text type="md" style={[palError.text, s.bold]}>
+                SANDBOX. Posts and accounts are not permanent.
+              </Text>
+            </View>
+          ) : undefined}
+          <View style={[s.flexRow]}>
+            {hasSession && (
+              <>
+                <TextLink
+                  type="md"
+                  style={pal.link}
+                  href={FEEDBACK_FORM_URL({
+                    email: currentAccount?.email,
+                    handle: currentAccount?.handle,
+                  })}
+                  text={_(msg`Feedback`)}
+                />
+                <Text type="md" style={pal.textLight}>
+                  &nbsp;&middot;&nbsp;
+                </Text>
+              </>
+            )}
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/privacy-policy"
+              text={_(msg`Privacy`)}
+            />
+            <Text type="md" style={pal.textLight}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/tos"
+              text={_(msg`Terms`)}
+            />
+            <Text type="md" style={pal.textLight}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href={HELP_DESK_URL}
+              text={_(msg`Help`)}
+            />
+          </View>
+        </View>
+
+        {hasSession && <InviteCodes />}
+      </View>
     </View>
   )
 }
@@ -168,12 +170,11 @@ function InviteCodes() {
 const styles = StyleSheet.create({
   rightNav: {
     position: 'absolute',
-    top: 20,
     // @ts-ignore web only
     left: 'calc(50vw + 320px)',
     width: 304,
-    // @ts-ignore web only
-    maxHeight: '90vh',
+    maxHeight: '100%',
+    overflowY: 'auto',
   },
 
   message: {

@@ -49,7 +49,7 @@ export function CenteredView({
   return <View style={style} {...props} />
 }
 
-export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
+export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   {
     contentContainerStyle,
     style,

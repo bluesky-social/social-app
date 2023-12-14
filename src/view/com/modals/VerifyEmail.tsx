@@ -22,6 +22,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useSession, useSessionApi, getAgent} from '#/state/session'
+import {logger} from '#/logger'
 
 export const snapPoints = ['90%']
 
@@ -44,6 +45,13 @@ export function Component({showReminder}: {showReminder?: boolean}) {
   const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
   const {openModal, closeModal} = useModalControls()
+
+  React.useEffect(() => {
+    if (!currentAccount) {
+      logger.error(`VerifyEmail modal opened without currentAccount`)
+      closeModal()
+    }
+  }, [currentAccount, closeModal])
 
   const onSendEmail = async () => {
     setError('')

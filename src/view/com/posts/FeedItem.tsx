@@ -33,6 +33,7 @@ import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {FeedNameText} from '../util/FeedInfoText'
 
 export function FeedItem({
   post,
@@ -101,10 +102,6 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
-  const [limitLines, setLimitLines] = useState(
-    () => countLines(richText.text) >= MAX_POST_LINES,
-  )
-
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
@@ -132,10 +129,6 @@ let FeedItemInner = ({
       },
     })
   }, [post, record, openComposer])
-
-  const onPressShowMore = React.useCallback(() => {
-    setLimitLines(false)
-  }, [setLimitLines])
 
   const outerStyles = [
     styles.outer,
@@ -177,22 +170,20 @@ let FeedItemInner = ({
 
         <View style={{paddingTop: 12, flexShrink: 1}}>
           {isReasonFeedSource(reason) ? (
-            <Link
-              title={sanitizeDisplayName(reason.displayName)}
-              href={reason.uri}>
+            <Link href={reason.href}>
               <Text
                 type="sm-bold"
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 From{' '}
-                <TextLinkOnWebOnly
+                <FeedNameText
                   type="sm-bold"
-                  style={pal.textLight}
+                  uri={reason.uri}
+                  href={reason.href}
                   lineHeight={1.2}
                   numberOfLines={1}
-                  text={sanitizeDisplayName(reason.displayName)}
-                  href={reason.uri}
+                  style={pal.textLight}
                 />
               </Text>
             </Link>
@@ -287,48 +278,12 @@ let FeedItemInner = ({
               </Text>
             </View>
           )}
-          <ContentHider
-            testID="contentHider-post"
-            moderation={moderation.content}
-            ignoreMute
-            childContainerStyle={styles.contentHiderChild}>
-            <PostAlerts moderation={moderation.content} style={styles.alert} />
-            {richText.text ? (
-              <View style={styles.postTextContainer}>
-                <RichText
-                  testID="postText"
-                  type="post-text"
-                  richText={richText}
-                  lineHeight={1.3}
-                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                  style={s.flex1}
-                />
-              </View>
-            ) : undefined}
-            {limitLines ? (
-              <TextLink
-                text="Show More"
-                style={pal.link}
-                onPress={onPressShowMore}
-                href="#"
-              />
-            ) : undefined}
-            {post.embed ? (
-              <ContentHider
-                testID="contentHider-embed"
-                moderation={moderation.embed}
-                moderationDecisions={moderation.decisions}
-                ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
-                ignoreQuoteDecisions
-                style={styles.embed}>
-                <PostEmbeds
-                  embed={post.embed}
-                  moderation={moderation.embed}
-                  moderationDecisions={moderation.decisions}
-                />
-              </ContentHider>
-            ) : null}
-          </ContentHider>
+          <PostContent
+            moderation={moderation}
+            richText={richText}
+            postEmbed={post.embed}
+            postAuthor={post.author}
+          />
           <PostCtrls post={post} record={record} onPressReply={onPressReply} />
         </View>
       </View>
@@ -336,6 +291,73 @@ let FeedItemInner = ({
   )
 }
 FeedItemInner = memo(FeedItemInner)
+
+let PostContent = ({
+  moderation,
+  richText,
+  postEmbed,
+  postAuthor,
+}: {
+  moderation: PostModeration
+  richText: RichTextAPI
+  postEmbed: AppBskyFeedDefs.PostView['embed']
+  postAuthor: AppBskyFeedDefs.PostView['author']
+}): React.ReactNode => {
+  const pal = usePalette('default')
+  const [limitLines, setLimitLines] = useState(
+    () => countLines(richText.text) >= MAX_POST_LINES,
+  )
+
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
+
+  return (
+    <ContentHider
+      testID="contentHider-post"
+      moderation={moderation.content}
+      ignoreMute
+      childContainerStyle={styles.contentHiderChild}>
+      <PostAlerts moderation={moderation.content} style={styles.alert} />
+      {richText.text ? (
+        <View style={styles.postTextContainer}>
+          <RichText
+            testID="postText"
+            type="post-text"
+            richText={richText}
+            lineHeight={1.3}
+            numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+            style={s.flex1}
+          />
+        </View>
+      ) : undefined}
+      {limitLines ? (
+        <TextLink
+          text="Show More"
+          style={pal.link}
+          onPress={onPressShowMore}
+          href="#"
+        />
+      ) : undefined}
+      {postEmbed ? (
+        <ContentHider
+          testID="contentHider-embed"
+          moderation={moderation.embed}
+          moderationDecisions={moderation.decisions}
+          ignoreMute={isEmbedByEmbedder(postEmbed, postAuthor.did)}
+          ignoreQuoteDecisions
+          style={styles.embed}>
+          <PostEmbeds
+            embed={postEmbed}
+            moderation={moderation.embed}
+            moderationDecisions={moderation.decisions}
+          />
+        </ContentHider>
+      ) : null}
+    </ContentHider>
+  )
+}
+PostContent = memo(PostContent)
 
 const styles = StyleSheet.create({
   outer: {

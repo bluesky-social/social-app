@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -27,7 +27,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 
-export function PostCtrls({
+let PostCtrls = ({
   big,
   post,
   record,
@@ -39,7 +39,7 @@ export function PostCtrls({
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
-}) {
+}): React.ReactNode => {
   const theme = useTheme()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
@@ -71,7 +71,14 @@ export function PostCtrls({
         likeCount: post.likeCount || 0,
       })
     }
-  }, [post, postLikeMutation, postUnlikeMutation])
+  }, [
+    post.viewer?.like,
+    post.uri,
+    post.cid,
+    post.likeCount,
+    postLikeMutation,
+    postUnlikeMutation,
+  ])
 
   const onRepost = useCallback(() => {
     closeModal()
@@ -89,7 +96,15 @@ export function PostCtrls({
         repostCount: post.repostCount || 0,
       })
     }
-  }, [post, closeModal, postRepostMutation, postUnrepostMutation])
+  }, [
+    post.uri,
+    post.cid,
+    post.viewer?.repost,
+    post.repostCount,
+    closeModal,
+    postRepostMutation,
+    postUnrepostMutation,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -103,14 +118,30 @@ export function PostCtrls({
       },
     })
     Haptics.default()
-  }, [post, record, openComposer, closeModal])
+  }, [
+    post.uri,
+    post.cid,
+    post.author,
+    post.indexedAt,
+    record.text,
+    openComposer,
+    closeModal,
+  ])
+
   return (
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
         testID="replyBtn"
-        style={[styles.ctrl, !big && styles.ctrlPad, {paddingLeft: 0}]}
+        style={[
+          styles.ctrl,
+          !big && styles.ctrlPad,
+          {paddingLeft: 0},
+          post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
+        ]}
         onPress={() => {
-          requireAuth(() => onPressReply())
+          if (!post.viewer?.replyDisabled) {
+            requireAuth(() => onPressReply())
+          }
         }}
         accessibilityRole="button"
         accessibilityLabel={`Reply (${post.replyCount} ${
@@ -172,7 +203,9 @@ export function PostCtrls({
       {big ? undefined : (
         <PostDropdownBtn
           testID="postDropdownBtn"
-          post={post}
+          postAuthor={post.author}
+          postCid={post.cid}
+          postUri={post.uri}
           record={record}
           style={styles.ctrlPad}
         />
@@ -182,6 +215,8 @@ export function PostCtrls({
     </View>
   )
 }
+PostCtrls = memo(PostCtrls)
+export {PostCtrls}
 
 const styles = StyleSheet.create({
   ctrls: {

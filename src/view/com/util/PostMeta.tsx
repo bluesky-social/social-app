@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {Text} from './text/Text'
 import {TextLinkOnWebOnly} from './Link'
@@ -29,7 +29,7 @@ interface PostMetaOpts {
   style?: StyleProp<ViewStyle>
 }
 
-export function PostMeta(opts: PostMetaOpts) {
+let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
@@ -92,6 +92,8 @@ export function PostMeta(opts: PostMetaOpts) {
     </View>
   )
 }
+PostMeta = memo(PostMeta)
+export {PostMeta}
 
 const styles = StyleSheet.create({
   container: {

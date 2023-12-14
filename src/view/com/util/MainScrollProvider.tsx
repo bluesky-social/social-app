@@ -1,30 +1,18 @@
-import {useState, useCallback, useMemo} from 'react'
-import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native'
+import React, {useCallback} from 'react'
+import {ScrollProvider} from '#/lib/ScrollContext'
+import {NativeScrollEvent} from 'react-native'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {
-  useSharedValue,
-  interpolate,
-  runOnJS,
-  ScrollHandlers,
-} from 'react-native-reanimated'
+import {useSharedValue, interpolate} from 'react-native-reanimated'
 
 function clamp(num: number, min: number, max: number) {
   'worklet'
   return Math.min(Math.max(num, min), max)
 }
 
-export type OnScrollCb = (
-  event: NativeSyntheticEvent<NativeScrollEvent>,
-) => void
-export type OnScrollHandler = ScrollHandlers<any>
-export type ResetCb = () => void
-
-export function useOnMainScroll(): [OnScrollHandler, boolean, ResetCb] {
+export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
@@ -58,13 +46,6 @@ export function useOnMainScroll(): [OnScrollHandler, boolean, ResetCb] {
   const onScroll = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
-      // Keep track of whether we want to show "scroll to top".
-      if (!isScrolledDown && e.contentOffset.y > s.window.height) {
-        runOnJS(setIsScrolledDown)(true)
-      } else if (isScrolledDown && e.contentOffset.y < s.window.height) {
-        runOnJS(setIsScrolledDown)(false)
-      }
-
       if (startDragOffset.value === null || startMode.value === null) {
         if (mode.value !== 0 && e.contentOffset.y < headerHeight.value) {
           // If we're close enough to the top, always show the shell.
@@ -102,24 +83,15 @@ export function useOnMainScroll(): [OnScrollHandler, boolean, ResetCb] {
         startMode.value = mode.value
       }
     },
-    [headerHeight, mode, setMode, isScrolledDown, startDragOffset, startMode],
+    [headerHeight, mode, setMode, startDragOffset, startMode],
   )
 
-  const scrollHandler: ScrollHandlers<any> = useMemo(
-    () => ({
-      onBeginDrag,
-      onEndDrag,
-      onScroll,
-    }),
-    [onBeginDrag, onEndDrag, onScroll],
+  return (
+    <ScrollProvider
+      onBeginDrag={onBeginDrag}
+      onEndDrag={onEndDrag}
+      onScroll={onScroll}>
+      {children}
+    </ScrollProvider>
   )
-
-  return [
-    scrollHandler,
-    isScrolledDown,
-    useCallback(() => {
-      setIsScrolledDown(false)
-      setMode(false)
-    }, [setMode]),
-  ]
 }

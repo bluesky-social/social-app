@@ -21,6 +21,7 @@ import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -60,7 +61,7 @@ export function LanguageSettingsScreen(_props: Props) {
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
       if (!value) return
       if (langPrefs.appLanguage !== value) {
-        setLangPrefs.setAppLanguage(value)
+        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
       }
     },
     [langPrefs, setLangPrefs],
@@ -103,7 +104,7 @@ export function LanguageSettingsScreen(_props: Props) {
           <View style={{position: 'relative'}}>
             <RNPickerSelect
               placeholder={{}}
-              value={langPrefs.appLanguage}
+              value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
               onValueChange={onChangeAppLanguage}
               items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
                 label: l.name,

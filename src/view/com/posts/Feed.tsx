@@ -1,4 +1,4 @@
-import React, {memo, MutableRefObject} from 'react'
+import React, {memo} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -11,15 +11,13 @@ import {
   ViewStyle,
 } from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
-import {FlatList} from '../util/Views'
+import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
@@ -47,9 +45,8 @@ let Feed = ({
   enabled,
   pollInterval,
   scrollElRef,
-  onScroll,
+  onScrolledDownChange,
   onHasNew,
-  scrollEventThrottle,
   renderEmptyState,
   renderEndOfFeed,
   testID,
@@ -64,10 +61,9 @@ let Feed = ({
   style?: StyleProp<ViewStyle>
   enabled?: boolean
   pollInterval?: number
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
+  scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
-  onScroll?: OnScrollHandler
-  scrollEventThrottle?: number
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   testID?: string
@@ -172,8 +168,7 @@ let Feed = ({
     if (isFetched) {
       if (isError && isEmpty) {
         arr = arr.concat([ERROR_ITEM])
-      }
-      if (isEmpty) {
+      } else if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
       } else if (data) {
         for (const page of data?.pages) {
@@ -279,10 +274,9 @@ let Feed = ({
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
-  const scrollHandler = useAnimatedScrollHandler(onScroll || {})
   return (
     <View testID={testID} style={style}>
-      <FlatList
+      <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={feedItems}
@@ -303,8 +297,7 @@ let Feed = ({
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         style={{paddingTop: headerOffset}}
-        onScroll={onScroll != null ? scrollHandler : undefined}
-        scrollEventThrottle={scrollEventThrottle}
+        onScrolledDownChange={onScrolledDownChange}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
         onEndReachedThreshold={2} // number of posts left to trigger load more

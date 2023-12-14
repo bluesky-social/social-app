@@ -3,6 +3,7 @@ import {
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedThreadgate,
   AppBskyRichtextFacet,
   BskyAgent,
   ComAtprotoLabelDefs,
@@ -16,6 +17,7 @@ import {isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {logger} from '#/logger'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -54,6 +56,7 @@ interface PostOpts {
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
+  threadgate?: ThreadgateSetting[]
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -227,9 +230,10 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
     langs = opts.langs.slice(0, 3)
   }
 
+  let res
   try {
     opts.onStateChange?.('Posting...')
-    return await agent.post({
+    res = await agent.post({
       text: rt.text,
       facets: rt.facets,
       reply,
@@ -247,6 +251,52 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       throw e
     }
   }
+
+  try {
+    // TODO: this needs to be batch-created with the post!
+    if (opts.threadgate?.length) {
+      await createThreadgate(agent, res.uri, opts.threadgate)
+    }
+  } catch (e: any) {
+    console.error(`Failed to create threadgate: ${e.toString()}`)
+    throw new Error(
+      'Post reply-controls failed to be set. Your post was created but anyone can reply to it.',
+    )
+  }
+
+  return res
+}
+
+async function createThreadgate(
+  agent: BskyAgent,
+  postUri: string,
+  threadgate: ThreadgateSetting[],
+) {
+  let allow: (
+    | AppBskyFeedThreadgate.MentionRule
+    | AppBskyFeedThreadgate.FollowingRule
+    | AppBskyFeedThreadgate.ListRule
+  )[] = []
+  if (!threadgate.find(v => v.type === 'nobody')) {
+    for (const rule of threadgate) {
+      if (rule.type === 'mention') {
+        allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
+      } else if (rule.type === 'following') {
+        allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
+      } else if (rule.type === 'list') {
+        allow.push({
+          $type: 'app.bsky.feed.threadgate#listRule',
+          list: rule.list,
+        })
+      }
+    }
+  }
+
+  const postUrip = new AtUri(postUri)
+  await agent.api.app.bsky.feed.threadgate.create(
+    {repo: agent.session!.did, rkey: postUrip.rkey},
+    {post: postUri, createdAt: new Date().toISOString(), allow},
+  )
 }
 
 // helpers

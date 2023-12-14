@@ -19,7 +19,7 @@ export interface FeedAPI {
 export interface ReasonFeedSource {
   $type: 'reasonFeedSource'
   uri: string
-  displayName: string
+  href: string
 }
 
 export function isReasonFeedSource(v: unknown): v is ReasonFeedSource {
