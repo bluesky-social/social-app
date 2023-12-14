@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {
@@ -9,8 +9,9 @@ import {
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
+import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {MainScrollProvider} from '../com/util/MainScrollProvider'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s, colors} from 'lib/styles'
@@ -35,8 +36,8 @@ type Props = NativeStackScreenProps<
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
-  const scrollElRef = React.useRef<FlatList>(null)
+  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const scrollElRef = React.useRef<ListMethods>(null)
   const checkLatestRef = React.useRef<() => void | null>()
   const {screen} = useAnalytics()
   const pal = usePalette('default')
@@ -50,8 +51,8 @@ export function NotificationsScreen({}: Props) {
   // =
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
-    resetMainScroll()
-  }, [scrollElRef, resetMainScroll])
+    setMinimalShellMode(false)
+  }, [scrollElRef, setMinimalShellMode])
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()
@@ -130,11 +131,13 @@ export function NotificationsScreen({}: Props) {
   return (
     <View testID="notificationsScreen" style={s.hContentRegion}>
       <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
-      <Feed
-        onScroll={onMainScroll}
-        scrollElRef={scrollElRef}
-        ListHeaderComponent={ListHeaderComponent}
-      />
+      <MainScrollProvider>
+        <Feed
+          onScrolledDownChange={setIsScrolledDown}
+          scrollElRef={scrollElRef}
+          ListHeaderComponent={ListHeaderComponent}
+        />
+      </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   LayoutChangeEvent,
-  FlatList,
   ScrollView,
   StyleSheet,
   View,
@@ -20,17 +19,14 @@ import Animated, {
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-
-const SCROLLED_DOWN_LIMIT = 200
+import {ListMethods} from '../util/List'
+import {ScrollProvider} from '#/lib/ScrollContext'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  onScroll: OnScrollHandler
-  isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
+  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {
@@ -62,7 +58,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const [currentPage, setCurrentPage] = React.useState(0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const scrollY = useSharedValue(0)
     const headerHeight = headerOnlyHeight + tabBarHeight
 
@@ -155,15 +150,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       if (!throttleTimeout.current) {
         throttleTimeout.current = setTimeout(() => {
           throttleTimeout.current = null
-
           runOnUI(adjustScrollForOtherPages)()
-
-          const nextIsScrolledDown = scrollY.value > SCROLLED_DOWN_LIMIT
-          if (isScrolledDown !== nextIsScrolledDown) {
-            React.startTransition(() => {
-              setIsScrolledDown(nextIsScrolledDown)
-            })
-          }
         }, 80 /* Sync often enough you're unlikely to catch it unsynced */)
       }
     })
@@ -211,7 +198,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                   index={i}
                   isReady={isReady}
                   isFocused={i === currentPage}
-                  isScrolledDown={isScrolledDown}
                   onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
                   registerRef={registerRef}
                   renderTab={child}
@@ -293,7 +279,6 @@ function PagerItem({
   index,
   isReady,
   isFocused,
-  isScrolledDown,
   onScrollWorklet,
   renderTab,
   registerRef,
@@ -302,7 +287,6 @@ function PagerItem({
   index: number
   isFocused: boolean
   isReady: boolean
-  isScrolledDown: boolean
   registerRef: (scrollRef: AnimatedRef<any> | null, atIndex: number) => void
   onScrollWorklet: (e: NativeScrollEvent) => void
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
@@ -316,24 +300,21 @@ function PagerItem({
     }
   }, [scrollElRef, registerRef, index])
 
-  const scrollHandler = React.useMemo(
-    () => ({onScroll: onScrollWorklet}),
-    [onScrollWorklet],
-  )
-
   if (!isReady || renderTab == null) {
     return null
   }
 
-  return renderTab({
-    headerHeight,
-    isFocused,
-    isScrolledDown,
-    onScroll: scrollHandler,
-    scrollElRef: scrollElRef as React.MutableRefObject<
-      FlatList<any> | ScrollView | null
-    >,
-  })
+  return (
+    <ScrollProvider onScroll={onScrollWorklet}>
+      {renderTab({
+        headerHeight,
+        isFocused,
+        scrollElRef: scrollElRef as React.MutableRefObject<
+          ListMethods | ScrollView | null
+        >,
+      })}
+    </ScrollProvider>
+  )
 }
 
 const styles = StyleSheet.create({

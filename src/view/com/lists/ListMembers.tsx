@@ -1,4 +1,4 @@
-import React, {MutableRefObject} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   Dimensions,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {FlatList} from '../util/Views'
+import {List, ListRef} from '../util/List'
 import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -18,10 +18,8 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useListMembersQuery} from '#/state/queries/list-members'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useSession} from '#/state/session'
 import {cleanError} from '#/lib/strings/errors'
 
@@ -34,24 +32,22 @@ export function ListMembers({
   list,
   style,
   scrollElRef,
-  onScroll,
+  onScrolledDownChange,
   onPressTryAgain,
   renderHeader,
   renderEmptyState,
   testID,
-  scrollEventThrottle,
   headerOffset = 0,
   desktopFixedHeightOffset,
 }: {
   list: string
   style?: StyleProp<ViewStyle>
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onScroll: OnScrollHandler
+  scrollElRef?: ListRef
+  onScrolledDownChange: (isScrolledDown: boolean) => void
   onPressTryAgain?: () => void
   renderHeader: () => JSX.Element
   renderEmptyState: () => JSX.Element
   testID?: string
-  scrollEventThrottle?: number
   headerOffset?: number
   desktopFixedHeightOffset?: number
 }) {
@@ -209,10 +205,9 @@ export function ListMembers({
     [isFetching],
   )
 
-  const scrollHandler = useAnimatedScrollHandler(onScroll)
   return (
     <View testID={testID} style={style}>
-      <FlatList
+      <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
@@ -233,10 +228,9 @@ export function ListMembers({
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         style={{paddingTop: headerOffset}}
-        onScroll={scrollHandler}
+        onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
-        scrollEventThrottle={scrollEventThrottle}
         removeClippedSubviews={true}
         contentOffset={{x: 0, y: headerOffset * -1}}
         // @ts-ignore our .web version only -prf
