@@ -78,6 +78,7 @@ export interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
   feed: AppBskyFeedDefs.FeedViewPost[]
+  fetchedAt: number
 }
 
 export interface FeedPage {
@@ -85,6 +86,7 @@ export interface FeedPage {
   tuner: FeedTuner | NoopFeedTuner
   cursor: string | undefined
   slices: FeedPostSlice[]
+  fetchedAt: number
 }
 
 const PAGE_SIZE = 30
@@ -152,6 +154,7 @@ export function usePostFeedQuery(
         api,
         cursor: res.cursor,
         feed: res.feed,
+        fetchedAt: Date.now(),
       }
     },
     initialPageParam: undefined,
@@ -214,6 +217,7 @@ export function usePostFeedQuery(
               api: page.api,
               tuner,
               cursor: page.cursor,
+              fetchedAt: page.fetchedAt,
               slices: tuner
                 .tune(page.feed)
                 .map(slice => {

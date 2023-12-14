@@ -29,11 +29,15 @@ import {
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+
+const REFRESH_AFTER = STALE.HOURS.ONE
+const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
 let Feed = ({
   feed,
@@ -77,6 +81,7 @@ let Feed = ({
   const {currentAccount} = useSession()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
+  const lastFetchRef = React.useRef<number>(Date.now())
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -94,6 +99,9 @@ let Feed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.slices.length
+  if (data?.pages[0]) {
+    lastFetchRef.current = data?.pages[0].fetchedAt
+  }
 
   const checkForNew = React.useCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled) {
@@ -133,11 +141,21 @@ let Feed = ({
     checkForNewRef.current = checkForNew
   }, [checkForNew])
   React.useEffect(() => {
-    if (enabled && checkForNewRef.current) {
-      // check for new on enable (aka on focus)
-      checkForNewRef.current()
+    if (enabled) {
+      const timeSinceFirstLoad = Date.now() - lastFetchRef.current
+      if (timeSinceFirstLoad > REFRESH_AFTER) {
+        // do a full refresh
+        scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
+        queryClient.resetQueries({queryKey: RQKEY(feed)})
+      } else if (
+        timeSinceFirstLoad > CHECK_LATEST_AFTER &&
+        checkForNewRef.current
+      ) {
+        // check for new on enable (aka on focus)
+        checkForNewRef.current()
+      }
     }
-  }, [enabled])
+  }, [enabled, feed, queryClient, scrollElRef])
   React.useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
