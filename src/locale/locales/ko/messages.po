@@ -2264,7 +2264,7 @@ msgstr "스레드 언뮤트"
 
 #: src/view/screens/ProfileList.tsx:463
 msgid "Unpin moderation list"
-msgstr "검토 리스트"
+msgstr "검토 리스트 고정 해제"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
