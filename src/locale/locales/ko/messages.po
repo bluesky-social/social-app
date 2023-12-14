@@ -2382,7 +2382,7 @@ msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
-msgstr "이 {컬렉션 이름}에 어떤 문제가 있습니까?"
+msgstr "이 {collectionName}에 어떤 문제가 있습니까?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
