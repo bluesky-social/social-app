@@ -5,11 +5,11 @@ import {useLingui} from '@lingui/react'
 
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {DefaultAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from '#/view/com/util/text/Text'
 import {Button} from '#/view/com/util/forms/Button'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {Logo} from '#/view/icons/Logo'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
@@ -35,10 +35,10 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         paddingTop: 6,
         marginBottom: 24,
       }}>
-      <DefaultAvatar type="user" size={48} />
+      <Logo width={48} />
 
-      <View style={{paddingTop: 12}}>
-        <Text type="md" style={[pal.text, s.bold]}>
+      <View style={{paddingTop: 18}}>
+        <Text type="md-bold" style={[pal.text]}>
           <Trans>Sign up or sign in to join the conversation</Trans>
         </Text>
       </View>
