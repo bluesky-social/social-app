@@ -98,7 +98,10 @@ export function createSystem<
   function useStyle(props: ResponsiveStyleProps) {
     const {theme} = useTheme()
     const breakpoints = useBreakpoints()
-    return theme.style(props as StylesAndProps, breakpoints.active).styles
+    return React.useMemo(
+      () => theme.style(props as StylesAndProps, breakpoints.active).styles,
+      [breakpoints.active, props, theme],
+    )
   }
 
   function useStyles<O extends Record<string, ResponsiveStyleProps>>(
