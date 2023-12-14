@@ -221,7 +221,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
             <NavSignupCard />
           )}
 
-          {hasSession && (
+          {hasSession ? (
             <>
               <InviteCodes />
               <View style={{height: 10}} />
@@ -240,6 +240,8 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               />
               <SettingsMenuItem onPress={onPressSettings} />
             </>
+          ) : (
+            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
           )}
 
           <View style={styles.smallSpacer} />

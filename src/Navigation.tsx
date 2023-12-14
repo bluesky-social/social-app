@@ -313,11 +313,7 @@ function SearchTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <SearchTab.Screen
-        name="Search"
-        getComponent={() => SearchScreen}
-        options={{requireAuth: true}}
-      />
+      <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
   )
