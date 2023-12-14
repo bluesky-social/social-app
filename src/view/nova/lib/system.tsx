@@ -119,8 +119,7 @@ export function createSystem<
         ).styles
       }
       return acc
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [styles, breakpoints.current, theme])
+    }, [styles, breakpoints.active, theme])
   }
 
   function styled<Props extends Record<string, any>>(
@@ -135,12 +134,16 @@ export function createSystem<
     >((props, ref) => {
       const {theme} = useTheme()
       const breakpoints = useBreakpoints()
-      const {styles, props: rest} = theme.style<Props>(
-        {
-          ...defaultProps,
-          ...props,
-        },
-        breakpoints.active,
+      const {styles, props: rest} = React.useMemo(
+        () =>
+          theme.style<Props>(
+            {
+              ...defaultProps,
+              ...props,
+            },
+            breakpoints.active,
+          ),
+        [breakpoints.active, props, theme],
       )
       if (props.debug) console.log({styles, props: rest})
       return <Component {...rest} style={[styles, rest.style]} ref={ref} />
