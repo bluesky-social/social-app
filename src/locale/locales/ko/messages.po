@@ -2500,7 +2500,7 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 #: src/view/com/auth/create/Step3.tsx:42
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be"
-msgstr "전체 핸들은 다음과 같습니다:"
+msgstr "내 전체 핸들:"
 
 #: src/view/com/auth/create/Step1.tsx:53
 msgid "Your hosting provider"
