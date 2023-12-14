@@ -3,6 +3,7 @@ import {FlatListProps, ScrollView, StyleSheet, View} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
@@ -100,37 +101,58 @@ function ListImpl<ItemT>(
     [],
   )
 
-  const onVisible = React.useCallback(() => {
-    onEndReached?.({
-      distanceFromEnd: onEndReachedThreshold || 0,
-    })
-  }, [onEndReachedThreshold, onEndReached])
+  const [isVisible, setIsVisible] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!isVisible) {
+      return
+    }
+    function handleScroll() {
+      // TODO
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isVisible])
 
   return (
-    <ScrollView {...props} style={style} ref={nativeRef}>
-      <View
-        style={[
-          styles.contentContainer,
-          contentContainerStyle,
-          desktopFixedHeight ? styles.minHeightViewport : null,
-          pal.border,
-        ]}>
-        {header}
-        {(data as Array<ItemT>).map((item, index) => (
-          <Row<ItemT>
-            key={keyExtractor!(item, index)}
-            item={item}
-            index={index}
-            renderItem={renderItem}
-            extraData={extraData}
-          />
-        ))}
-        {onEndReached && (
-          <Tail threshold={onEndReachedThreshold} onVisible={onVisible} />
-        )}
-        {footer}
-      </View>
-    </ScrollView>
+    <Visibility
+      onVisibleChange={newIsVisible => {
+        setIsVisible(newIsVisible)
+      }}>
+      <ScrollView {...props} style={style} ref={nativeRef}>
+        <View
+          style={[
+            styles.contentContainer,
+            contentContainerStyle,
+            desktopFixedHeight ? styles.minHeightViewport : null,
+            pal.border,
+          ]}>
+          {header}
+          {(data as Array<ItemT>).map((item, index) => (
+            <Row<ItemT>
+              key={keyExtractor!(item, index)}
+              item={item}
+              index={index}
+              renderItem={renderItem}
+              extraData={extraData}
+            />
+          ))}
+          {onEndReached && (
+            <Visibility
+              threshold={onEndReachedThreshold}
+              onVisibleChange={isVisible => {
+                if (isVisible) {
+                  onEndReached?.({
+                    distanceFromEnd: onEndReachedThreshold || 0,
+                  })
+                }
+              }}
+            />
+          )}
+          {footer}
+        </View>
+      </ScrollView>
+    </Visibility>
   )
 }
 
@@ -159,38 +181,43 @@ let Row = function RowImpl<ItemT>({
 }
 Row = React.memo(Row)
 
-let Tail = ({
+let Visibility = ({
   threshold = 0,
-  onVisible,
+  onVisibleChange,
+  children,
 }: {
   threshold?: number | null | undefined
-  onVisible: () => void
+  onVisibleChange: (isVisible: boolean) => void
+  children?: React.ReactNode
 }): React.ReactNode => {
   const tailRef = React.useRef(null)
+  const isIntersecting = React.useRef(false)
+
+  const handleIntersection = useNonReactiveCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting !== isIntersecting.current) {
+          isIntersecting.current = entry.isIntersecting
+          onVisibleChange(entry.isIntersecting)
+        }
+      })
+    },
+  )
 
   React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            onVisible()
-          }
-        })
-      },
-      {
-        rootMargin: (threshold || 0) * 100 + '%',
-      },
-    )
+    const observer = new IntersectionObserver(handleIntersection, {
+      rootMargin: (threshold || 0) * 100 + '%',
+    })
     const tail: Element | null = tailRef.current!
     observer.observe(tail)
     return () => {
       observer.unobserve(tail)
     }
-  }, [onVisible, threshold])
+  }, [handleIntersection, threshold])
 
-  return <View ref={tailRef} />
+  return <View ref={tailRef}>{children}</View>
 }
-Tail = React.memo(Tail)
+Visibility = React.memo(Visibility)
 
 export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
@@ -200,12 +227,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
-  },
-  container: {
-    width: '100%',
-    maxWidth: 600,
-    marginLeft: 'auto',
-    marginRight: 'auto',
   },
   containerScroll: {
     width: '100%',
