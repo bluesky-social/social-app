@@ -48,6 +48,20 @@
     typed-emitter "^2.1.0"
     zod "^3.21.4"
 
+"@atproto/api@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.7.3.tgz#3224000353619970d5e397a157c6e189e195ef47"
+  integrity sha512-fKU+W+S4kKxClE6IcPBHPZAjcyBYxG28S0FW/bv3T/ZYDkNxGzDV4xuoHOyEDGtB30slltl5U83njuuRZs5xtw==
+  dependencies:
+    "@atproto/common-web" "^0.2.3"
+    "@atproto/lexicon" "^0.3.1"
+    "@atproto/syntax" "^0.1.5"
+    "@atproto/xrpc" "^0.4.1"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    typed-emitter "^2.1.0"
+    zod "^3.21.4"
+
 "@atproto/aws@^0.1.6":
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.1.6.tgz#c6ecbfd92b325f3c5433688534d47f43358b415b"

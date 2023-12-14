@@ -8,7 +8,8 @@ import {
   Pressable,
   Platform,
 } from 'react-native'
-import {FlatList, ScrollView, CenteredView} from '#/view/com/util/Views'
+import {ScrollView, CenteredView} from '#/view/com/util/Views'
+import {List} from '#/view/com/util/List'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -155,7 +156,7 @@ function SearchScreenSuggestedFollows() {
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
 
   return suggestions.length ? (
-    <FlatList
+    <List
       data={suggestions}
       renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
       keyExtractor={item => item.did}
@@ -243,7 +244,7 @@ function SearchScreenPostResults({query}: {query: string}) {
       {isFetched ? (
         <>
           {posts.length ? (
-            <FlatList
+            <List
               data={items}
               renderItem={({item}) => {
                 if (item.type === 'post') {
@@ -284,7 +285,7 @@ function SearchScreenUserResults({query}: {query: string}) {
   return isFetched && results ? (
     <>
       {results.length ? (
-        <FlatList
+        <List
           data={results}
           renderItem={({item}) => (
             <ProfileCardWithFollowBtn profile={item} noBg />

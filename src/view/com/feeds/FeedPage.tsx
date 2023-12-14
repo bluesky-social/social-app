@@ -7,13 +7,15 @@ import {useNavigation} from '@react-navigation/native'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useQueryClient} from '@tanstack/react-query'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
+import {MainScrollProvider} from '../util/MainScrollProvider'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {ComposeIcon2} from 'lib/icons'
 import {colors, s} from 'lib/styles'
-import {FlatList, View, useWindowDimensions} from 'react-native'
+import {View, useWindowDimensions} from 'react-native'
+import {ListMethods} from '../util/List'
 import {Feed} from '../posts/Feed'
 import {TextLink} from '../util/Link'
 import {FAB} from '../util/fab/FAB'
@@ -51,10 +53,11 @@ export function FeedPage({
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll()
+  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const setMinimalShellMode = useSetMinimalShellMode()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
-  const scrollElRef = React.useRef<FlatList>(null)
+  const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
 
   const scrollToTop = React.useCallback(() => {
@@ -62,8 +65,8 @@ export function FeedPage({
       animated: isNative,
       offset: -headerOffset,
     })
-    resetMainScroll()
-  }, [headerOffset, resetMainScroll])
+    setMinimalShellMode(false)
+  }, [headerOffset, setMinimalShellMode])
 
   const onSoftReset = React.useCallback(() => {
     const isScreenFocused =
@@ -164,21 +167,22 @@ export function FeedPage({
 
   return (
     <View testID={testID} style={s.h100pct}>
-      <Feed
-        testID={testID ? `${testID}-feed` : undefined}
-        enabled={isPageFocused}
-        feed={feed}
-        feedParams={feedParams}
-        pollInterval={POLL_FREQ}
-        scrollElRef={scrollElRef}
-        onScroll={onMainScroll}
-        onHasNew={setHasNew}
-        scrollEventThrottle={1}
-        renderEmptyState={renderEmptyState}
-        renderEndOfFeed={renderEndOfFeed}
-        ListHeaderComponent={ListHeaderComponent}
-        headerOffset={headerOffset}
-      />
+      <MainScrollProvider>
+        <Feed
+          testID={testID ? `${testID}-feed` : undefined}
+          enabled={isPageFocused}
+          feed={feed}
+          feedParams={feedParams}
+          pollInterval={POLL_FREQ}
+          scrollElRef={scrollElRef}
+          onScrolledDownChange={setIsScrolledDown}
+          onHasNew={setHasNew}
+          renderEmptyState={renderEmptyState}
+          renderEndOfFeed={renderEndOfFeed}
+          ListHeaderComponent={ListHeaderComponent}
+          headerOffset={headerOffset}
+        />
+      </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

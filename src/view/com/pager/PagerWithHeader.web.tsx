@@ -1,26 +1,15 @@
 import * as React from 'react'
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  View,
-  NativeScrollEvent,
-} from 'react-native'
-import {useSharedValue, runOnJS, useAnimatedRef} from 'react-native-reanimated'
+import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
+import {useAnimatedRef} from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-
-const SCROLLED_DOWN_LIMIT = 200
+import {ListMethods} from '../util/List'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  onScroll: OnScrollHandler
-  isScrolledDown: boolean
   scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
 }
 
@@ -50,8 +39,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     ref,
   ) {
     const [currentPage, setCurrentPage] = React.useState(0)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-    const scrollY = useSharedValue(0)
 
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
@@ -67,34 +54,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         )
       },
       [items, renderHeader, currentPage, onCurrentPageSelected, testID],
-    )
-
-    const throttleTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    )
-    const queueThrottledOnScroll = useNonReactiveCallback(() => {
-      if (!throttleTimeout.current) {
-        throttleTimeout.current = setTimeout(() => {
-          throttleTimeout.current = null
-
-          const nextIsScrolledDown = scrollY.value > SCROLLED_DOWN_LIMIT
-          if (isScrolledDown !== nextIsScrolledDown) {
-            React.startTransition(() => {
-              setIsScrolledDown(nextIsScrolledDown)
-            })
-          }
-        }, 80)
-      }
-    })
-
-    const onScrollWorklet = React.useCallback(
-      (e: NativeScrollEvent) => {
-        'worklet'
-        const nextScrollY = e.contentOffset.y
-        scrollY.value = nextScrollY
-        runOnJS(queueThrottledOnScroll)()
-      },
-      [scrollY, queueThrottledOnScroll],
     )
 
     const onPageSelectedInner = React.useCallback(
@@ -123,12 +82,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
           .map((child, i) => {
             return (
               <View key={i} collapsable={false}>
-                <PagerItem
-                  isFocused={i === currentPage}
-                  isScrolledDown={isScrolledDown}
-                  onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
-                  renderTab={child}
-                />
+                <PagerItem isFocused={i === currentPage} renderTab={child} />
               </View>
             )
           })}
@@ -182,30 +136,20 @@ PagerTabBar = React.memo(PagerTabBar)
 
 function PagerItem({
   isFocused,
-  isScrolledDown,
-  onScrollWorklet,
   renderTab,
 }: {
   isFocused: boolean
-  isScrolledDown: boolean
-  onScrollWorklet: (e: NativeScrollEvent) => void
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
 }) {
   const scrollElRef = useAnimatedRef()
-  const scrollHandler = React.useMemo(
-    () => ({onScroll: onScrollWorklet}),
-    [onScrollWorklet],
-  )
   if (renderTab == null) {
     return null
   }
   return renderTab({
     headerHeight: 0,
     isFocused,
-    isScrolledDown,
-    onScroll: scrollHandler,
     scrollElRef: scrollElRef as React.MutableRefObject<
-      FlatList<any> | ScrollView | null
+      ListMethods | ScrollView | null
     >,
   })
 }
@@ -237,10 +181,6 @@ const styles = StyleSheet.create({
     paddingRight: 14,
   },
 })
-
-function noop() {
-  'worklet'
-}
 
 function toArray<T>(v: T | T[]): T[] {
   if (Array.isArray(v)) {

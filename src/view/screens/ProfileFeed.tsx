@@ -1,11 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {
-  Dimensions,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native'
+import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,6 +14,7 @@ import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
 import {TextLink} from 'view/com/util/Link'
+import {ListRef} from 'view/com/util/List'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
 import {RichText} from 'view/com/util/text/RichText'
@@ -29,12 +24,13 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {useScrollHandlers} from '#/lib/ScrollContext'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {makeCustomFeedLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
@@ -46,7 +42,6 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {
   useFeedSourceInfoQuery,
   FeedSourceFeedInfo,
@@ -403,17 +398,13 @@ export function ProfileFeedScreenInner({
         isHeaderReady={true}
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused}) =>
+        {({headerHeight, scrollElRef, isFocused}) =>
           isPublicResponse?.isPublic ? (
             <FeedSection
               ref={feedSectionRef}
               feed={`feedgen|${feedInfo.uri}`}
-              onScroll={onScroll}
               headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
-              scrollElRef={
-                scrollElRef as React.MutableRefObject<FlatList<any> | null>
-              }
+              scrollElRef={scrollElRef as ListRef}
               isFocused={isFocused}
             />
           ) : (
@@ -422,13 +413,12 @@ export function ProfileFeedScreenInner({
             </CenteredView>
           )
         }
-        {({onScroll, headerHeight, scrollElRef}) => (
+        {({headerHeight, scrollElRef}) => (
           <AboutSection
             feedOwnerDid={feedInfo.creatorDid}
             feedRkey={feedInfo.route.params.rkey}
             feedInfo={feedInfo}
             headerHeight={headerHeight}
-            onScroll={onScroll}
             scrollElRef={
               scrollElRef as React.MutableRefObject<ScrollView | null>
             }
@@ -497,18 +487,14 @@ function NonPublicFeedMessage({rawError}: {rawError?: Error}) {
 
 interface FeedSectionProps {
   feed: FeedDescriptor
-  onScroll: OnScrollHandler
   headerHeight: number
-  isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl(
-    {feed, onScroll, headerHeight, isScrolledDown, scrollElRef, isFocused},
-    ref,
-  ) {
+  function FeedSectionImpl({feed, headerHeight, scrollElRef, isFocused}, ref) {
     const [hasNew, setHasNew] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
 
     const onScrollToTop = useCallback(() => {
@@ -536,8 +522,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           pollInterval={30e3}
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
-          onScroll={onScroll}
-          scrollEventThrottle={5}
+          onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
         />
@@ -558,7 +543,6 @@ function AboutSection({
   feedRkey,
   feedInfo,
   headerHeight,
-  onScroll,
   scrollElRef,
   isOwner,
 }: {
@@ -566,13 +550,13 @@ function AboutSection({
   feedRkey: string
   feedInfo: FeedSourceFeedInfo
   headerHeight: number
-  onScroll: OnScrollHandler
   scrollElRef: React.MutableRefObject<ScrollView | null>
   isOwner: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const scrollHandler = useAnimatedScrollHandler(onScroll)
+  const scrollHandlers = useScrollHandlers()
+  const onScroll = useAnimatedScrollHandler(scrollHandlers)
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
@@ -608,12 +592,12 @@ function AboutSection({
   return (
     <ScrollView
       ref={scrollElRef}
+      onScroll={onScroll}
       scrollEventThrottle={1}
       contentContainerStyle={{
         paddingTop: headerHeight,
         minHeight: Dimensions.get('window').height * 1.5,
-      }}
-      onScroll={scrollHandler}>
+      }}>
       <View
         style={[
           {

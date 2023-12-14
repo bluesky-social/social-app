@@ -15,7 +15,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {FlatList} from '../util/Views'
+import {List} from '../util/List'
 import {s} from 'lib/styles'
 import {logger} from '#/logger'
 import {Trans} from '@lingui/macro'
@@ -119,7 +119,7 @@ export function MyLists({
     [error, onRefresh, renderItem, pal],
   )
 
-  const FlatListCom = inline ? RNFlatList : FlatList
+  const FlatListCom = inline ? RNFlatList : List
   return (
     <View testID={testID} style={style}>
       {items.length > 0 && (

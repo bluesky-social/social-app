@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {TextStyle, ViewStyle} from 'react-native'
 import {useTheme, PaletteColorName, PaletteColor} from '../ThemeContext'
 
@@ -15,38 +16,41 @@ export interface UsePaletteValue {
   icon: TextStyle
 }
 export function usePalette(color: PaletteColorName): UsePaletteValue {
-  const palette = useTheme().palette[color]
-  return {
-    colors: palette,
-    view: {
-      backgroundColor: palette.background,
-    },
-    viewLight: {
-      backgroundColor: palette.backgroundLight,
-    },
-    btn: {
-      backgroundColor: palette.backgroundLight,
-    },
-    border: {
-      borderColor: palette.border,
-    },
-    borderDark: {
-      borderColor: palette.borderDark,
-    },
-    text: {
-      color: palette.text,
-    },
-    textLight: {
-      color: palette.textLight,
-    },
-    textInverted: {
-      color: palette.textInverted,
-    },
-    link: {
-      color: palette.link,
-    },
-    icon: {
-      color: palette.icon,
-    },
-  }
+  const theme = useTheme()
+  return useMemo(() => {
+    const palette = theme.palette[color]
+    return {
+      colors: palette,
+      view: {
+        backgroundColor: palette.background,
+      },
+      viewLight: {
+        backgroundColor: palette.backgroundLight,
+      },
+      btn: {
+        backgroundColor: palette.backgroundLight,
+      },
+      border: {
+        borderColor: palette.border,
+      },
+      borderDark: {
+        borderColor: palette.borderDark,
+      },
+      text: {
+        color: palette.text,
+      },
+      textLight: {
+        color: palette.textLight,
+      },
+      textInverted: {
+        color: palette.textInverted,
+      },
+      link: {
+        color: palette.link,
+      },
+      icon: {
+        color: palette.icon,
+      },
+    }
+  }, [theme, color])
 }
