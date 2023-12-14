@@ -19,6 +19,8 @@ type Props = {
 
 SplashScreen.preventAutoHideAsync().catch(() => {})
 
+const AnimatedLogo = Animated.createAnimatedComponent(Logo)
+
 export function Splash(props: React.PropsWithChildren<Props>) {
   const fadeAnimationProgress = useSharedValue(0)
   const scaleAnimationProgress = useSharedValue(0)
@@ -26,6 +28,18 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
   const logoScaleAnimation = useAnimatedStyle(() => {
     return {
+      width: interpolate(
+        scaleAnimationProgress.value,
+        [0, 0.2, 0.22, 1],
+        [100, 100, 1000, 1000],
+        'clamp',
+      ),
+      height: interpolate(
+        scaleAnimationProgress.value,
+        [0, 0.2, 0.22, 1],
+        [100, 100, 1000, 1000],
+        'clamp',
+      ),
       transform: [
         {
           scale: interpolate(
@@ -89,7 +103,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         () => {
           scaleAnimationProgress.value = withTiming(
             1,
-            {duration: 1000, easing: Easing.inOut(Easing.cubic)},
+            {duration: 1200, easing: Easing.inOut(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
@@ -120,10 +134,9 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 justifyContent: 'center',
                 alignItems: 'center',
               },
-              logoScaleAnimation,
               logoFadeInAnimation,
             ]}>
-            <Logo width={100} />
+            <AnimatedLogo width={100} style={[logoScaleAnimation]} />
           </Animated.View>
         }>
         {!isAnimationComplete && (

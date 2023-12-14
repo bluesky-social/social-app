@@ -12,7 +12,12 @@ import {colors} from '#/lib/styles'
 
 const ratio = 106 / 120
 
-export function Logo({fill, ...rest}: {fill?: PathProps['fill']} & SvgProps) {
+type Props = {
+  fill?: PathProps['fill']
+} & SvgProps
+
+export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
+  const {fill, ...rest} = props
   const gradient = fill === 'sky'
   const _fill = gradient ? 'url(#sky)' : fill || colors.blue3
   // @ts-ignore it's fiiiiine
@@ -20,10 +25,11 @@ export function Logo({fill, ...rest}: {fill?: PathProps['fill']} & SvgProps) {
   return (
     <Svg
       fill="none"
+      // @ts-ignore it's fiiiiine
+      ref={ref}
       viewBox="0 0 64 64"
       {...rest}
-      width={size}
-      height={size * ratio}>
+      style={{width: size, height: size * ratio}}>
       {gradient && (
         <Defs>
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -39,4 +45,4 @@ export function Logo({fill, ...rest}: {fill?: PathProps['fill']} & SvgProps) {
       />
     </Svg>
   )
-}
+})
