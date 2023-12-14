@@ -182,7 +182,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title('Feed')}}
+        options={{title: title('Feed'), requireAuth: true}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
@@ -327,7 +327,11 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
+      <FeedsTab.Screen
+        name="Feeds"
+        getComponent={() => FeedsScreen}
+        options={{requireAuth: true}}
+      />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
