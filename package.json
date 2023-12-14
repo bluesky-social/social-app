@@ -35,7 +35,7 @@
     "intl:compile": "lingui compile"
   },
   "dependencies": {
-    "@atproto/api": "^0.7.3",
+    "@atproto/api": "^0.7.4",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",

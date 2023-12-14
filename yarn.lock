@@ -48,10 +48,10 @@
     typed-emitter "^2.1.0"
     zod "^3.21.4"
 
-"@atproto/api@^0.7.3":
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.7.3.tgz#3224000353619970d5e397a157c6e189e195ef47"
-  integrity sha512-fKU+W+S4kKxClE6IcPBHPZAjcyBYxG28S0FW/bv3T/ZYDkNxGzDV4xuoHOyEDGtB30slltl5U83njuuRZs5xtw==
+"@atproto/api@^0.7.4":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.7.4.tgz#0dd6e725c88d1f941c57670dc82b60fde10f4ec6"
+  integrity sha512-7DBy6/OcXemzCPzA0dx52LLYRABBs8bq9Docs3is+WRgEx5/Pd1kHSAlCHIaBhsym8fZ3/U4Fks/5FSHkSm4yQ==
   dependencies:
     "@atproto/common-web" "^0.2.3"
     "@atproto/lexicon" "^0.3.1"
