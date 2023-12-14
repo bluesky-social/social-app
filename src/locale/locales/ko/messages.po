@@ -777,7 +777,7 @@ msgstr "이메일 주소"
 
 #: src/view/com/modals/ChangeEmail.tsx:111
 msgid "Email Updated"
-msgstr "이메일 업데이트됨"
+msgstr "이메일 변경됨"
 
 #: src/view/screens/Settings.tsx:290
 msgid "Email:"
@@ -1530,7 +1530,7 @@ msgstr "비밀번호 변경됨"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
 msgid "Password updated!"
-msgstr "비밀번호가 변경되었습니다!"
+msgstr "비밀번호 변경됨"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -2268,7 +2268,7 @@ msgstr "검토 리스트"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
-msgstr "리스트에서 {displayName} 업데이트"
+msgstr "리스트에서 {displayName} 변경"
 
 #: src/lib/hooks/useOTAUpdate.ts:15
 msgid "Update Available"
