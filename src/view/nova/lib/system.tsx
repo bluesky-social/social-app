@@ -109,13 +109,16 @@ export function createSystem<
     const {theme} = useTheme()
     const breakpoints = useBreakpoints()
     return React.useMemo(() => {
-      return Object.entries(styles).reduce((acc, [key, style]) => {
+      const acc = {} as {
+        [Name in keyof O]: ReturnType<SystemTheme['style']>['styles']
+      }
+      for (const key in styles) {
         acc[key as keyof O] = theme.style(
-          style as StylesAndProps,
+          styles[key] as StylesAndProps,
           breakpoints.active,
         ).styles
-        return acc
-      }, {} as {[Name in keyof O]: ReturnType<SystemTheme['style']>['styles']})
+      }
+      return acc
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [styles, breakpoints.current, theme])
   }
