@@ -133,6 +133,7 @@ export const light = createTheme({
         lineHeight: tokens.lineHeight[value],
       }
     },
+    fontFamily: (fontFamily: string) => ({fontFamily}),
   },
   breakpoints: {
     /** Greater than 800 */
