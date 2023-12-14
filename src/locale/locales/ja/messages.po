@@ -32,12 +32,12 @@ msgstr ""
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:640
 msgid "{invitesAvailable} invite code available"
-msgstr "{invitesAvailable} 個の招待コードが利用可能です"
+msgstr "{invitesAvailable}個の招待コードが利用可能です"
 
 #: src/view/screens/Settings.tsx:409
 #: src/view/shell/Drawer.tsx:642
 msgid "{invitesAvailable} invite codes available"
-msgstr "{invitesAvailable} 個の招待コードが利用可能です"
+msgstr "{invitesAvailable}個の招待コードが利用可能です"
 
 #: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
@@ -45,7 +45,7 @@ msgstr "{message}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
-msgstr "<0/> 人のメンバー"
+msgstr "<0/>人のメンバー"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -157,11 +157,11 @@ msgstr "ALTテキストは、視覚障害者や低視力者のために画像を
 
 #: src/view/com/modals/VerifyEmail.tsx:118
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "メールが {0} に送信されました。以下に入力できる確認コードがそのメールに記載されています。"
+msgstr "メールが{0}に送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "以前のメールアドレス {0} にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
+msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
 #: src/view/com/notifications/FeedItem.tsx:236
 #: src/view/com/threadgate/WhoCanReply.tsx:178
@@ -170,7 +170,7 @@ msgstr "および"
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
-msgstr "アプリケーションの言語"
+msgstr "アプリの言語"
 
 #: src/view/screens/Settings.tsx:589
 msgid "App passwords"
@@ -253,7 +253,7 @@ msgstr "アカウントをブロック"
 
 #: src/view/screens/ProfileList.tsx:495
 msgid "Block list"
-msgstr "ブロックリスト"
+msgstr "リストをブロック"
 
 #: src/view/screens/ProfileList.tsx:330
 msgid "Block these accounts?"
@@ -261,7 +261,7 @@ msgstr "これらのアカウントをブロックしますか？"
 
 #: src/view/screens/Moderation.tsx:123
 msgid "Blocked accounts"
-msgstr "ブロックされたブロック"
+msgstr "ブロックされたアカウント"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:106
 msgid "Blocked Accounts"
@@ -301,7 +301,7 @@ msgstr "Blueskyはパブリックです。"
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "Blueskyはより健全なコミュニティを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistに申し込みいただくと招待状をお送りします。"
+msgstr "Blueskyはより健全なコミュニティを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistにお申し込みいただくと招待状をお送りします。"
 
 #: src/view/screens/Moderation.tsx:225
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -794,7 +794,7 @@ msgstr "ALTテキストを展開"
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
 msgid "Failed to load recommended feeds"
-msgstr "推奨フィードのロードに失敗しました"
+msgstr "おすすめのフィードの読み込みに失敗しました"
 
 #: src/view/screens/Feeds.tsx:559
 msgid "Feed offline"
@@ -820,7 +820,7 @@ msgstr "フィード"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "フィードはコンテンツを整理する為にユーザーによって作成されます。興味深いフィードをいくつか選択してください。"
+msgstr "フィードはコンテンツを整理する為にユーザーによって作成されます。興味のあるフィードをいくつか選択してください。"
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -951,11 +951,11 @@ msgstr "フィードサーバーの設定が間違っているようです。こ
 
 #: src/view/com/posts/FeedErrorMessage.tsx:104
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "フィードサーバーがオフラインのようです。この問題をフィードのオーナーに知らせてください。"
+msgstr "フィードサーバーがオフラインのようです。この問題をフィードのオーナーにお知らせください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:101
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "フィードサーバーの反応が悪いようです。この問題をフィードのオーナーに知らせてください。"
+msgstr "フィードサーバーの反応が悪いようです。この問題をフィードのオーナーにお知らせください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:95
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
@@ -1023,7 +1023,7 @@ msgstr "招待コード"
 
 #: src/view/com/auth/create/state.ts:136
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr "招待コードが確認できません。正しく入力されている事を確認し、もう一度実行してください。"
+msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度実行してください。"
 
 #: src/view/shell/Drawer.tsx:621
 msgid "Invite codes: {invitesAvailable} available"
@@ -1161,7 +1161,7 @@ msgstr "このフィードはBlueskyのアカウントを持っているユー�
 
 #: src/view/com/modals/LinkWarning.tsx:63
 msgid "Make sure this is where you intend to go!"
-msgstr "意図した場所である事を確認してください！"
+msgstr "意図した場所であることを確認してください！"
 
 #: src/view/screens/Profile.tsx:162
 msgid "Media"
@@ -1329,7 +1329,7 @@ msgstr "「\\{query}」の検索結果はありません"
 #: src/view/screens/Search/Search.tsx:581
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
-msgstr "\\{query}の検索結果はありません"
+msgstr "「\\{query}」の検索結果はありません"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -1403,7 +1403,7 @@ msgstr "アプリのパスワード設定ページを開く"
 
 #: src/view/screens/Settings.tsx:473
 msgid "Opens the home feed preferences"
-msgstr "ホームフィードの設定を開きます"
+msgstr "ホームフィードの設定を開く"
 
 #: src/view/screens/Settings.tsx:664
 msgid "Opens the storybook page"
@@ -1415,7 +1415,7 @@ msgstr "システムログのページを開く"
 
 #: src/view/screens/Settings.tsx:494
 msgid "Opens the threads preferences"
-msgstr "スレッドの設定を開きます"
+msgstr "スレッドの設定を開く"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -1634,7 +1634,7 @@ msgstr "返信"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
-msgstr "このスレッドへの変身はできません"
+msgstr "このスレッドへの返信はできません"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
 msgid "Reply Filters"
@@ -1689,7 +1689,7 @@ msgstr "コードをリセット"
 
 #: src/view/screens/Settings.tsx:686
 msgid "Reset onboarding state"
-msgstr "オンボードの状態をリセット"
+msgstr "オンボーディングの状態をリセット"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:98
 msgid "Reset password"
@@ -1701,7 +1701,7 @@ msgstr "設定をリセット"
 
 #: src/view/screens/Settings.tsx:684
 msgid "Resets the onboarding state"
-msgstr "オンボードの状態をリセット"
+msgstr "オンボーディングの状態をリセット"
 
 #: src/view/screens/Settings.tsx:674
 msgid "Resets the preferences state"
@@ -2018,7 +2018,7 @@ msgstr "このアカウントは、ブロック解除後にあなたとやり取
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "コミュニティ ガイドラインが<0/>に移動されました"
+msgstr "コミュニティガイドラインが<0/>に移動されました"
 
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
@@ -2336,7 +2336,7 @@ msgstr "ブロックしているアカウントはまだありません。アカ
 
 #: src/view/screens/AppPasswords.tsx:86
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "アプリパスワードはまだ作成されていません。下のボタンを押すと作成できます。"
+msgstr "アプリのパスワードはまだ作成されていません。下のボタンを押すと作成できます。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:130
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
@@ -2383,7 +2383,7 @@ msgstr "ホスティングプロバイダー"
 #: src/view/shell/desktop/RightNav.tsx:129
 #: src/view/shell/Drawer.tsx:636
 msgid "Your invite codes are hidden when logged in using an App Password"
-msgstr "アプリパスワードを使用してログインすると、招待コードは非表示になります。"
+msgstr "アプリのパスワードを使用してログインすると、招待コードは非表示になります。"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
