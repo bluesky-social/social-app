@@ -8,6 +8,7 @@ export enum AppLanguage {
   en = 'en',
   hi = 'hi',
   ja = 'ja',
+  ko = 'ko',
 }
 
 interface AppLanguageConfig {
@@ -19,6 +20,7 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
   {code2: AppLanguage.hi, name: 'हिंदी'},
   {code2: AppLanguage.ja, name: '日本語'},
+  {code2: AppLanguage.ko, name: '한국어'},
 ]
 
 export const LANGUAGES: Language[] = [

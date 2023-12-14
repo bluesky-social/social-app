@@ -1,0 +1,2537 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2023-11-05 16:01-0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/view/screens/Profile.tsx:214
+#~ msgid "- end of feed -"
+#~ msgstr "- 피드 끝 -"
+
+#: src/view/com/modals/SelfLabel.tsx:138
+#~ msgid ". This warning is only available for posts with media attached."
+#~ msgstr ". 이 경고는 미디어가 첨부된 게시물에만 사용할 수 있습니다."
+
+#: src/view/shell/desktop/RightNav.tsx:160
+msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
+msgstr "{0, plural, one {초대 코드 #개 사용 가능} other {초대 코드 #개 사용 가능}}"
+
+#: src/view/com/modals/Repost.tsx:44
+msgid "{0}"
+msgstr "{0}"
+
+#: src/view/com/modals/CreateOrEditList.tsx:176
+msgid "{0} {purposeLabel} List"
+msgstr "{purposeLabel} 리스트 {0}"
+
+#: src/view/shell/desktop/RightNav.tsx:143
+msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
+msgstr "{invitesAvailable, plural, one {초대 코드: #개 사용 가능} other {초대 코드: #개 사용 가능}}"
+
+#: src/view/screens/Settings.tsx:407
+#: src/view/shell/Drawer.tsx:640
+msgid "{invitesAvailable} invite code available"
+msgstr "초대 코드 {invitesAvailable}개 사용 가능"
+
+#: src/view/screens/Settings.tsx:409
+#: src/view/shell/Drawer.tsx:642
+msgid "{invitesAvailable} invite codes available"
+msgstr "초대 코드 {invitesAvailable}개 사용 가능"
+
+#: src/view/screens/Search/Search.tsx:87
+msgid "{message}"
+msgstr "{message}"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:158
+msgid "<0/> members"
+msgstr "<0/> 멤버"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
+msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
+msgstr "<1>추천</1><2>피드</2><0>선택하기</0>"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
+msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
+msgstr "<1>추천</1><2>사용자</2><0>팔로우하기</0>"
+
+#: src/view/com/modals/AddAppPasswords.tsx:132
+#~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
+#~ msgstr "<0>앱 비밀번호입니다.</0> 내 핸들과 이 비밀번호를 사용하여 다른 앱에 로그인하세요."
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: This setting may not be respected by third-party apps that display Bluesky content.</0>"
+#~ msgstr "<0>참고: Bluesky 콘텐츠를 표시하는 타사 앱에서는 이 설정이 적용되지 않을 수 있습니다.</0>"
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
+#~ msgstr "<0>참고: 프로필과 게시물은 공개 상태로 유지됩니다. Bluesky 콘텐츠를 표시하는 타사 앱에서는 이 설정이 적용되지 않을 수 있습니다.</0>"
+
+#: src/lib/hooks/useOTAUpdate.ts:16
+msgid "A new version of the app is available. Please update to continue using the app."
+msgstr "새 버전의 앱을 사용할 수 있습니다. 앱을 계속 사용하려면 업데이트하세요."
+
+#: src/view/com/modals/EditImage.tsx:299
+#: src/view/screens/Settings.tsx:417
+msgid "Accessibility"
+msgstr "접근성"
+
+#: src/view/com/auth/login/LoginForm.tsx:159
+#: src/view/screens/Settings.tsx:286
+msgid "Account"
+msgstr "계정"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:41
+msgid "Account options"
+msgstr "계정 옵션"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:264
+#: src/view/com/modals/UserAddRemoveLists.tsx:193
+#: src/view/screens/ProfileList.tsx:783
+msgid "Add"
+msgstr "추가"
+
+#: src/view/com/modals/SelfLabel.tsx:56
+msgid "Add a content warning"
+msgstr "콘텐츠 경고 추가"
+
+#: src/view/screens/ProfileList.tsx:773
+msgid "Add a user to this list"
+msgstr "이 리스트에 사용자 추가"
+
+#: src/view/screens/Settings.tsx:355
+#: src/view/screens/Settings.tsx:364
+msgid "Add account"
+msgstr "계정 추가"
+
+#: src/view/com/composer/photos/Gallery.tsx:119
+#: src/view/com/composer/photos/Gallery.tsx:180
+msgid "Add alt text"
+msgstr "대체 텍스트 추가"
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:41
+#: src/view/com/modals/report/Modal.tsx:191
+msgid "Add details"
+msgstr "상세 내용 추가"
+
+#: src/view/com/modals/report/Modal.tsx:194
+msgid "Add details to report"
+msgstr "신고 상세 내용 추가"
+
+#: src/view/com/composer/Composer.tsx:432
+msgid "Add link card"
+msgstr "링크 카드 추가"
+
+#: src/view/com/composer/Composer.tsx:435
+msgid "Add link card:"
+msgstr "링크 카드 추가:"
+
+#: src/view/com/modals/ChangeHandle.tsx:415
+msgid "Add the following DNS record to your domain:"
+msgstr "도메인에 다음 DNS 레코드를 추가하세요:"
+
+#: src/view/com/profile/ProfileHeader.tsx:353
+msgid "Add to Lists"
+msgstr "리스트에 추가"
+
+#: src/view/screens/ProfileFeed.tsx:280
+msgid "Add to my feeds"
+msgstr "내 피드에 추가"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:191
+#: src/view/com/modals/UserAddRemoveLists.tsx:128
+msgid "Added to list"
+msgstr "리스트에 추가됨"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:164
+msgid "Adjust the number of likes a reply must have to be shown in your feed."
+msgstr "답글이 피드에 표시되기 위해 필요한 좋아요 표시 수를 조정합니다."
+
+#: src/view/com/modals/SelfLabel.tsx:75
+msgid "Adult Content"
+msgstr "성인용 콘텐츠"
+
+#: src/view/screens/Settings.tsx:569
+msgid "Advanced"
+msgstr "고급"
+
+#: src/view/com/composer/photos/Gallery.tsx:130
+msgid "ALT"
+msgstr "ALT"
+
+#: src/view/com/modals/EditImage.tsx:315
+msgid "Alt text"
+msgstr "대체 텍스트"
+
+#: src/view/com/composer/photos/Gallery.tsx:209
+msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
+msgstr "대체 텍스트는 시각장애인과 저시력 사용자를 위해 이미지를 설명하며 모든 사용자의 이해를 돕습니다."
+
+#: src/view/com/modals/VerifyEmail.tsx:118
+msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
+msgstr "{0}(으)로 이메일을 전송했습니다. 이 이메일에는 아래에 입력하는 확인 코드가 포함되어 있습니다."
+
+#: src/view/com/modals/ChangeEmail.tsx:119
+msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
+msgstr "이전 주소인 {0}(으)로 이메일을 전송했습니다. 이 이메일에는 아래에 입력하는 확인 코드가 포함되어 있습니다."
+
+#: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/threadgate/WhoCanReply.tsx:178
+msgid "and"
+msgstr "및"
+
+#: src/view/screens/LanguageSettings.tsx:95
+msgid "App Language"
+msgstr "앱 언어"
+
+#: src/view/screens/Settings.tsx:589
+msgid "App passwords"
+msgstr "앱 비밀번호"
+
+#: src/view/screens/AppPasswords.tsx:186
+msgid "App Passwords"
+msgstr "앱 비밀번호"
+
+#: src/view/com/modals/AppealLabel.tsx:65
+msgid "Appeal Decision"
+msgstr "이의신청"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:51
+msgid "Appeal this decision"
+msgstr "이 결정에 이의신청"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:55
+msgid "Appeal this decision."
+msgstr "이 결정에 이의신청합니다."
+
+#: src/view/screens/Settings.tsx:432
+msgid "Appearance"
+msgstr "모양"
+
+#: src/view/screens/Moderation.tsx:206
+#~ msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
+#~ msgstr "Bluesky 공식 앱과 bsky.app 웹사이트를 포함하여 이 설정을 준수하는 앱은 로그아웃한 사용자에게 콘텐츠를 표시하지 않습니다."
+
+#: src/view/screens/AppPasswords.tsx:223
+msgid "Are you sure you want to delete the app password \"{name}\"?"
+msgstr "앱 비밀번호 \"{name}\"을(를) 삭제하시겠습니까?"
+
+#: src/view/com/composer/Composer.tsx:141
+msgid "Are you sure you'd like to discard this draft?"
+msgstr "이 초안을 삭제하시겠습니까?"
+
+#: src/view/screens/ProfileList.tsx:375
+msgid "Are you sure?"
+msgstr "확실한가요?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:188
+msgid "Are you sure? This cannot be undone."
+msgstr "확실한가요? 취소할 수 없습니다."
+
+#: src/view/com/modals/SelfLabel.tsx:123
+msgid "Artistic or non-erotic nudity."
+msgstr "선정적이지 않거나 예술적인 노출."
+
+#: src/view/screens/Moderation.tsx:189
+#~ msgid "Ask apps to limit the visibility of my account"
+#~ msgstr "내 계정의 공개 범위를 제한하도록 앱에 요청하기"
+
+#: src/view/com/auth/create/CreateAccount.tsx:145
+#: src/view/com/auth/login/ChooseAccountForm.tsx:151
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:166
+#: src/view/com/auth/login/LoginForm.tsx:249
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:148
+#: src/view/com/modals/report/InputIssueDetails.tsx:45
+#: src/view/com/post-thread/PostThread.tsx:392
+#: src/view/com/post-thread/PostThread.tsx:442
+#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/profile/ProfileHeader.tsx:672
+msgid "Back"
+msgstr "뒤로"
+
+#: src/view/screens/Settings.tsx:461
+msgid "Basics"
+msgstr "기본"
+
+#: src/view/com/auth/create/Step2.tsx:131
+#: src/view/com/modals/BirthDateSettings.tsx:72
+msgid "Birthday"
+msgstr "생년월일"
+
+#: src/view/screens/Settings.tsx:312
+msgid "Birthday:"
+msgstr "생년월일:"
+
+#: src/view/com/profile/ProfileHeader.tsx:282
+#: src/view/com/profile/ProfileHeader.tsx:389
+msgid "Block Account"
+msgstr "계정 차단"
+
+#: src/view/screens/ProfileList.tsx:545
+msgid "Block accounts"
+msgstr "계정 차단"
+
+#: src/view/screens/ProfileList.tsx:495
+msgid "Block list"
+msgstr "리스트 차단"
+
+#: src/view/screens/ProfileList.tsx:330
+msgid "Block these accounts?"
+msgstr "이 계정들을 차단하시겠습니까?"
+
+#: src/view/screens/Moderation.tsx:123
+msgid "Blocked accounts"
+msgstr "차단한 계정"
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:106
+msgid "Blocked Accounts"
+msgstr "차단한 계정"
+
+#: src/view/com/profile/ProfileHeader.tsx:284
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
+msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:114
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
+msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
+
+#: src/view/com/post-thread/PostThread.tsx:248
+msgid "Blocked post."
+msgstr "게시물 차단됨."
+
+#: src/view/screens/ProfileList.tsx:332
+msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
+msgstr "차단 목록은 공개됩니다. 차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다."
+
+#: src/view/com/auth/SplashScreen.tsx:26
+msgid "Bluesky"
+msgstr "Bluesky"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
+msgid "Bluesky is flexible."
+msgstr "Bluesky는 유연합니다."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:69
+msgid "Bluesky is open."
+msgstr "Bluesky는 열려 있습니다."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
+msgid "Bluesky is public."
+msgstr "Bluesky는 공개적입니다."
+
+#: src/view/com/modals/Waitlist.tsx:70
+msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
+msgstr "Bluesky는 더 건강한 커뮤니티를 구축하기 위해 초대 방식을 사용합니다. 초대해 준 사람이 없는 경우 대기자 명단에 등록하면 곧 초대를 보내겠습니다."
+
+#: src/view/screens/Moderation.tsx:225
+msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
+msgstr "Bluesky는 로그아웃한 사용자에게는 내 프로필과 게시물을 표시하지 않습니다. 다른 앱에서는 이 설정을 따르지 않을 수 있습니다. 내 계정을 비공개로 전환하지는 않습니다."
+
+#: src/view/com/modals/ServerInput.tsx:78
+msgid "Bluesky.Social"
+msgstr "Bluesky.Social"
+
+#: src/view/screens/Settings.tsx:718
+msgid "Build version {0} {1}"
+msgstr "빌드 버전 {0} {1}"
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:60
+#: src/view/com/util/UserAvatar.tsx:221
+#: src/view/com/util/UserBanner.tsx:38
+msgid "Camera"
+msgstr "카메라"
+
+#: src/view/com/modals/AddAppPasswords.tsx:214
+msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
+msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
+
+#: src/view/com/composer/Composer.tsx:279
+#: src/view/com/composer/Composer.tsx:282
+#: src/view/com/modals/AltImage.tsx:127
+#: src/view/com/modals/ChangeEmail.tsx:218
+#: src/view/com/modals/ChangeEmail.tsx:220
+#: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/CreateOrEditList.tsx:267
+#: src/view/com/modals/CreateOrEditList.tsx:272
+#: src/view/com/modals/DeleteAccount.tsx:150
+#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/EditImage.tsx:323
+#: src/view/com/modals/EditProfile.tsx:248
+#: src/view/com/modals/LinkWarning.tsx:85
+#: src/view/com/modals/Repost.tsx:73
+#: src/view/com/modals/Waitlist.tsx:136
+#: src/view/screens/Search/Search.tsx:558
+#: src/view/shell/desktop/Search.tsx:182
+msgid "Cancel"
+msgstr "취소"
+
+#: src/view/com/modals/DeleteAccount.tsx:146
+#: src/view/com/modals/DeleteAccount.tsx:219
+msgid "Cancel account deletion"
+msgstr "계정 삭제 취소"
+
+#: src/view/com/modals/AltImage.tsx:122
+msgid "Cancel add image alt text"
+msgstr "이미지 대체 텍스트 추가 취소"
+
+#: src/view/com/modals/ChangeHandle.tsx:149
+msgid "Cancel change handle"
+msgstr "핸들 변경 취소"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:134
+msgid "Cancel image crop"
+msgstr "이미지 자르기 취소"
+
+#: src/view/com/modals/EditProfile.tsx:243
+msgid "Cancel profile editing"
+msgstr "프로필 편집 취소"
+
+#: src/view/com/modals/Repost.tsx:64
+msgid "Cancel quote post"
+msgstr "게시물 인용 취소"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:87
+#: src/view/shell/desktop/Search.tsx:178
+msgid "Cancel search"
+msgstr "검색 취소"
+
+#: src/view/com/modals/Waitlist.tsx:132
+msgid "Cancel waitlist signup"
+msgstr "대기자 명단 등록 취소"
+
+#: src/view/screens/Settings.tsx:306
+msgid "Change"
+msgstr "변경"
+
+#: src/view/screens/Settings.tsx:601
+#: src/view/screens/Settings.tsx:610
+msgid "Change handle"
+msgstr "핸들 변경"
+
+#: src/view/com/modals/ChangeHandle.tsx:161
+msgid "Change Handle"
+msgstr "핸들 변경"
+
+#: src/view/com/modals/VerifyEmail.tsx:141
+msgid "Change my email"
+msgstr "내 이메일 변경"
+
+#: src/view/com/modals/ChangeEmail.tsx:109
+msgid "Change Your Email"
+msgstr "내 이메일 변경"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
+msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
+msgstr "몇 가지 추천 피드를 확인하세요. +를 탭하여 고정된 피드 목록에 추가합니다."
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
+msgid "Check out some recommended users. Follow them to see similar users."
+msgstr "추천 사용자를 확인하세요. 해당 사용자를 팔로우하여 비슷한 사용자를 만날 수 있습니다."
+
+#: src/view/com/modals/DeleteAccount.tsx:163
+msgid "Check your inbox for an email with the confirmation code to enter below:"
+msgstr "받은 편지함에서 아래에 입력하는 확인 코드가 포함된 이메일이 있는지 확인하세요:"
+
+#: src/view/com/modals/ServerInput.tsx:38
+msgid "Choose Service"
+msgstr "서비스 선택"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
+msgid "Choose the algorithms that power your experience with custom feeds."
+msgstr "사용자 지정 피드를 통해 사용자 경험을 강화하는 알고리즘을 선택합니다."
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65
+#~ msgid "Choose your"
+#~ msgstr "Choose your"
+
+#: src/view/com/auth/create/Step2.tsx:106
+msgid "Choose your password"
+msgstr "비밀번호를 입력하세요"
+
+#: src/view/screens/Settings.tsx:694
+msgid "Clear all legacy storage data"
+msgstr "모든 레거시 스토리지 데이터 지우기"
+
+#: src/view/screens/Settings.tsx:696
+msgid "Clear all legacy storage data (restart after this)"
+msgstr "모든 레거시 스토리지 데이터 지우기 (이후 다시 시작)"
+
+#: src/view/screens/Settings.tsx:706
+msgid "Clear all storage data"
+msgstr "모든 스토리지 데이터 지우기"
+
+#: src/view/screens/Settings.tsx:708
+msgid "Clear all storage data (restart after this)"
+msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
+
+#: src/view/com/util/forms/SearchInput.tsx:73
+#: src/view/screens/Search/Search.tsx:543
+msgid "Clear search query"
+msgstr "검색어 지우기"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
+msgid "Close alert"
+msgstr "알림 닫기"
+
+#: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
+msgid "Close bottom drawer"
+msgstr "하단 서랍 닫기"
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:26
+msgid "Close image"
+msgstr "이미지 닫기"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:112
+msgid "Close image viewer"
+msgstr "이미지 뷰어 닫기"
+
+#: src/view/shell/index.web.tsx:49
+msgid "Close navigation footer"
+msgstr "탐색 푸터 닫기"
+
+#: src/view/screens/CommunityGuidelines.tsx:32
+msgid "Community Guidelines"
+msgstr "커뮤니티 가이드라인"
+
+#: src/view/com/composer/Prompt.tsx:24
+msgid "Compose reply"
+msgstr "답글 작성"
+
+#: src/view/com/modals/AppealLabel.tsx:98
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/SelfLabel.tsx:154
+#: src/view/com/modals/VerifyEmail.tsx:225
+#: src/view/screens/PreferencesHomeFeed.tsx:299
+#: src/view/screens/PreferencesThreads.tsx:153
+msgid "Confirm"
+msgstr "확인"
+
+#: src/view/com/modals/ChangeEmail.tsx:193
+#: src/view/com/modals/ChangeEmail.tsx:195
+msgid "Confirm Change"
+msgstr "변경 확인"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
+msgid "Confirm content language settings"
+msgstr "콘텐츠 언어 설정 확인"
+
+#: src/view/com/modals/DeleteAccount.tsx:209
+msgid "Confirm delete account"
+msgstr "계정 삭제 확인"
+
+#: src/view/com/modals/ChangeEmail.tsx:157
+#: src/view/com/modals/DeleteAccount.tsx:176
+#: src/view/com/modals/VerifyEmail.tsx:159
+msgid "Confirmation code"
+msgstr "확인 코드"
+
+#: src/view/com/auth/create/CreateAccount.tsx:178
+#: src/view/com/auth/login/LoginForm.tsx:268
+msgid "Connecting..."
+msgstr "연결 중…"
+
+#: src/view/screens/Moderation.tsx:81
+msgid "Content filtering"
+msgstr "콘텐츠 필터링"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:44
+msgid "Content Filtering"
+msgstr "콘텐츠 필터링"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
+#: src/view/screens/LanguageSettings.tsx:278
+msgid "Content Languages"
+msgstr "콘텐츠 언어"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:69
+msgid "Content Warning"
+msgstr "콘텐츠 경고"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:31
+msgid "Content warnings"
+msgstr "콘텐츠 경고"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
+msgid "Continue"
+msgstr "계속"
+
+#: src/view/com/modals/AddAppPasswords.tsx:193
+#: src/view/com/modals/InviteCodes.tsx:179
+msgid "Copied"
+msgstr "복사됨"
+
+#: src/view/com/modals/AddAppPasswords.tsx:186
+msgid "Copy"
+msgstr "복사"
+
+#: src/view/screens/ProfileList.tsx:407
+msgid "Copy link to list"
+msgstr "리스트 링크 복사"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+msgid "Copy link to post"
+msgstr "게시물 링크 복사"
+
+#: src/view/com/profile/ProfileHeader.tsx:338
+msgid "Copy link to profile"
+msgstr "프로필 링크 복사"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:115
+msgid "Copy post text"
+msgstr "게시물 텍스트 복사"
+
+#: src/view/screens/CopyrightPolicy.tsx:29
+msgid "Copyright Policy"
+msgstr "저작권 정책"
+
+#: src/view/screens/ProfileFeed.tsx:103
+msgid "Could not load feed"
+msgstr "피드를 불러올 수 없습니다"
+
+#: src/view/screens/ProfileList.tsx:860
+msgid "Could not load list"
+msgstr "리스트를 불러올 수 없습니다"
+
+#: src/view/com/auth/SplashScreen.tsx:41
+msgid "Create a new account"
+msgstr "새 계정 만들기"
+
+#: src/view/com/auth/create/CreateAccount.tsx:124
+msgid "Create Account"
+msgstr "계정 만들기"
+
+#: src/view/com/auth/SplashScreen.tsx:38
+msgid "Create new account"
+msgstr "새 계정 만들기"
+
+#: src/view/screens/AppPasswords.tsx:248
+msgid "Created {0}"
+msgstr "{0} 생성됨"
+
+#: src/view/com/modals/ChangeHandle.tsx:387
+#: src/view/com/modals/ServerInput.tsx:102
+msgid "Custom domain"
+msgstr "사용자 지정 도메인"
+
+#: src/view/screens/Settings.tsx:615
+msgid "Danger Zone"
+msgstr "위험 구역"
+
+#: src/view/screens/Settings.tsx:411
+#~ msgid "Dark"
+#~ msgstr "어두움"
+
+#: src/view/screens/Settings.tsx:622
+msgid "Delete account"
+msgstr "계정 삭제"
+
+#: src/view/com/modals/DeleteAccount.tsx:83
+msgid "Delete Account"
+msgstr "계정 삭제"
+
+#: src/view/screens/AppPasswords.tsx:221
+#: src/view/screens/AppPasswords.tsx:241
+msgid "Delete app password"
+msgstr "앱 비밀번호 삭제"
+
+#: src/view/screens/ProfileList.tsx:374
+#: src/view/screens/ProfileList.tsx:434
+msgid "Delete List"
+msgstr "리스트 삭제"
+
+#: src/view/com/modals/DeleteAccount.tsx:212
+msgid "Delete my account"
+msgstr "내 계정 삭제"
+
+#: src/view/screens/Settings.tsx:632
+msgid "Delete my account…"
+msgstr "내 계정 삭제…"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:183
+msgid "Delete post"
+msgstr "게시물 삭제"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+msgid "Delete this post?"
+msgstr "이 게시물을 삭제하시겠습니까?"
+
+#: src/view/com/post-thread/PostThread.tsx:240
+msgid "Deleted post."
+msgstr "게시물 삭제됨."
+
+#: src/view/com/modals/CreateOrEditList.tsx:218
+#: src/view/com/modals/CreateOrEditList.tsx:234
+#: src/view/com/modals/EditProfile.tsx:197
+#: src/view/com/modals/EditProfile.tsx:209
+msgid "Description"
+msgstr "설명"
+
+#: src/view/com/auth/create/Step1.tsx:96
+msgid "Dev Server"
+msgstr "개발 서버"
+
+#: src/view/screens/Settings.tsx:637
+msgid "Developer Tools"
+msgstr "개발자 도구"
+
+#: src/view/com/composer/Composer.tsx:142
+msgid "Discard"
+msgstr "삭제"
+
+#: src/view/com/composer/Composer.tsx:136
+msgid "Discard draft"
+msgstr "초안 삭제"
+
+#: src/view/screens/Moderation.tsx:207
+msgid "Discourage apps from showing my account to logged-out users"
+msgstr "앱이 로그아웃한 사용자에게 내 계정을 표시하지 않도록 설정하기"
+
+#: src/view/screens/Feeds.tsx:405
+msgid "Discover new feeds"
+msgstr "새 피드 발견하기"
+
+#: src/view/com/modals/EditProfile.tsx:191
+msgid "Display name"
+msgstr "표시 이름"
+
+#: src/view/com/modals/EditProfile.tsx:179
+msgid "Display Name"
+msgstr "표시 이름"
+
+#: src/view/com/modals/ChangeHandle.tsx:485
+msgid "Domain verified!"
+msgstr "도메인을 확인했습니다!"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/ContentFilteringSettings.tsx:88
+#: src/view/com/modals/ContentFilteringSettings.tsx:96
+#: src/view/com/modals/crop-image/CropImage.web.tsx:152
+#: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/ListAddRemoveUsers.tsx:142
+#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
+#: src/view/com/modals/UserAddRemoveLists.tsx:79
+#: src/view/screens/PreferencesHomeFeed.tsx:302
+#: src/view/screens/PreferencesThreads.tsx:156
+msgid "Done"
+msgstr "완료"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
+msgid "Done{extraText}"
+msgstr "완료{extraText}"
+
+#: src/view/com/modals/InviteCodes.tsx:94
+msgid "Each code works once. You'll receive more invite codes periodically."
+msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
+
+#: src/view/com/composer/photos/Gallery.tsx:144
+#: src/view/com/modals/EditImage.tsx:207
+msgid "Edit image"
+msgstr "이미지 편집"
+
+#: src/view/screens/ProfileList.tsx:422
+msgid "Edit list details"
+msgstr "리스트 상세 편집"
+
+#: src/view/screens/Feeds.tsx:367
+#: src/view/screens/SavedFeeds.tsx:84
+msgid "Edit My Feeds"
+msgstr "내 피드 편집"
+
+#: src/view/com/modals/EditProfile.tsx:151
+msgid "Edit my profile"
+msgstr "내 프로필 편집"
+
+#: src/view/com/profile/ProfileHeader.tsx:453
+msgid "Edit profile"
+msgstr "프로필 편집"
+
+#: src/view/com/profile/ProfileHeader.tsx:456
+msgid "Edit Profile"
+msgstr "프로필 편집"
+
+#: src/view/screens/Feeds.tsx:330
+msgid "Edit Saved Feeds"
+msgstr "저장된 피드 편집"
+
+#: src/view/com/auth/create/Step2.tsx:90
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:148
+#: src/view/com/modals/ChangeEmail.tsx:141
+#: src/view/com/modals/Waitlist.tsx:88
+msgid "Email"
+msgstr "이메일"
+
+#: src/view/com/auth/create/Step2.tsx:81
+msgid "Email address"
+msgstr "이메일 주소"
+
+#: src/view/com/modals/ChangeEmail.tsx:111
+msgid "Email Updated"
+msgstr "이메일 업데이트됨"
+
+#: src/view/screens/Settings.tsx:290
+msgid "Email:"
+msgstr "이메일:"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:138
+msgid "Enable this setting to only see replies between people you follow."
+msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
+
+#: src/view/screens/Profile.tsx:471
+msgid "End of feed"
+msgstr "피드 끝"
+
+#: src/view/com/auth/create/Step1.tsx:71
+msgid "Enter the address of your provider:"
+msgstr "제공자 주소를 입력하세요:"
+
+#: src/view/com/modals/ChangeHandle.tsx:369
+msgid "Enter the domain you want to use"
+msgstr "사용할 도메인 입력"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:101
+msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
+msgstr "계정을 만들 때 사용한 이메일을 입력합니다. 새 비밀번호를 설정할 수 있도록 \"재설정 코드\"를 보내드립니다."
+
+#: src/view/com/auth/create/Step2.tsx:86
+msgid "Enter your email address"
+msgstr "이메일 주소를 입력하세요"
+
+#: src/view/com/modals/ChangeEmail.tsx:117
+msgid "Enter your new email address below."
+msgstr "아래에 새 이메일 주소를 입력하세요."
+
+#: src/view/com/auth/login/Login.tsx:99
+msgid "Enter your username and password"
+msgstr "사용자 이름 및 비밀번호 입력"
+
+#: src/view/screens/Search/Search.tsx:105
+msgid "Error:"
+msgstr "오류:"
+
+#: src/view/com/modals/Threadgate.tsx:76
+msgid "Everybody"
+msgstr "모두"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:156
+msgid "Expand alt text"
+msgstr "대체 텍스트 확장"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
+msgid "Failed to load recommended feeds"
+msgstr "추천 피드를 불러오지 못했습니다"
+
+#: src/view/screens/Feeds.tsx:559
+msgid "Feed offline"
+msgstr "피드 오프라인"
+
+#: src/view/com/feeds/FeedPage.tsx:140
+msgid "Feed Preferences"
+msgstr "피드 설정"
+
+#: src/view/shell/desktop/RightNav.tsx:65
+#: src/view/shell/Drawer.tsx:292
+msgid "Feedback"
+msgstr "피드백"
+
+#: src/view/screens/Feeds.tsx:475
+#: src/view/screens/Profile.tsx:164
+#: src/view/shell/bottom-bar/BottomBar.tsx:160
+#: src/view/shell/desktop/LeftNav.tsx:333
+#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/Drawer.tsx:456
+msgid "Feeds"
+msgstr "피드"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
+msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
+msgstr "피드는 사용자가 콘텐츠를 큐레이션하기 위해 만드는 것입니다. 관심 있는 피드를 선택하세요."
+
+#: src/view/screens/SavedFeeds.tsx:156
+msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
+msgstr "피드는 사용자가 약간의 코딩 전문 지식으로 구축할 수 있는 사용자 지정 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
+msgid "Finding similar accounts..."
+msgstr "유사한 계정 찾기…"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:102
+msgid "Fine-tune the content you see on your home screen."
+msgstr "홈 화면에 표시되는 콘텐츠를 미세 조정할 수 있습니다."
+
+#: src/view/screens/PreferencesThreads.tsx:60
+msgid "Fine-tune the discussion threads."
+msgstr "토론 스레드를 미세 조정합니다."
+
+#: src/view/com/profile/ProfileHeader.tsx:538
+msgid "Follow"
+msgstr "팔로우"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:42
+#~ msgid "Follow some"
+#~ msgstr "팔로우:"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
+msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
+msgstr "일부 사용자를 팔로우하여 시작하세요. 관심 있는 사용자를 기반으로 더 많은 사용자를 추천해 드릴 수 있습니다."
+
+#: src/view/com/modals/Threadgate.tsx:98
+msgid "Followed users"
+msgstr "팔로우한 사용자"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:145
+msgid "Followed users only"
+msgstr "팔로우한 사용자만"
+
+#: src/view/screens/ProfileFollowers.tsx:25
+msgid "Followers"
+msgstr "팔로어"
+
+#: src/view/com/profile/ProfileHeader.tsx:624
+msgid "following"
+msgstr "팔로우 중"
+
+#: src/view/com/profile/ProfileHeader.tsx:522
+#: src/view/screens/ProfileFollows.tsx:25
+msgid "Following"
+msgstr "팔로우 중"
+
+#: src/view/com/profile/ProfileHeader.tsx:571
+msgid "Follows you"
+msgstr "나를 팔로우함"
+
+#: src/view/com/modals/DeleteAccount.tsx:107
+msgid "For security reasons, we'll need to send a confirmation code to your email address."
+msgstr "보안상의 이유로 내 이메일 주소로 확인 코드를 보내야 합니다."
+
+#: src/view/com/modals/AddAppPasswords.tsx:207
+msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
+msgstr "보안상의 이유로 이 비밀번호는 다시 볼 수 없습니다. 이 비밀번호를 분실한 경우 새 비밀번호를 생성해야 합니다."
+
+#: src/view/com/auth/login/LoginForm.tsx:231
+msgid "Forgot"
+msgstr "분실"
+
+#: src/view/com/auth/login/LoginForm.tsx:228
+msgid "Forgot password"
+msgstr "비밀번호 분실"
+
+#: src/view/com/auth/login/Login.tsx:127
+#: src/view/com/auth/login/Login.tsx:143
+msgid "Forgot Password"
+msgstr "비밀번호 분실"
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
+msgid "Gallery"
+msgstr "갤러리"
+
+#: src/view/com/modals/VerifyEmail.tsx:183
+msgid "Get Started"
+msgstr "시작하기"
+
+#: src/view/com/auth/LoggedOut.tsx:68
+#: src/view/com/auth/LoggedOut.tsx:69
+#: src/view/com/util/moderation/ScreenHider.tsx:105
+#: src/view/shell/desktop/LeftNav.tsx:103
+msgid "Go back"
+msgstr "뒤로"
+
+#: src/view/screens/ProfileFeed.tsx:112
+#: src/view/screens/ProfileFeed.tsx:117
+#: src/view/screens/ProfileList.tsx:869
+#: src/view/screens/ProfileList.tsx:874
+msgid "Go Back"
+msgstr "뒤로"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:181
+#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:163
+msgid "Go to next"
+msgstr "다음"
+
+#: src/view/com/modals/ChangeHandle.tsx:265
+msgid "Handle"
+msgstr "핸들"
+
+#: src/view/shell/desktop/RightNav.tsx:94
+#: src/view/shell/Drawer.tsx:302
+msgid "Help"
+msgstr "도움말"
+
+#: src/view/com/modals/AddAppPasswords.tsx:148
+msgid "Here is your app password."
+msgstr "앱 비밀번호입니다."
+
+#: src/view/com/notifications/FeedItem.tsx:316
+msgid "Hide"
+msgstr "숨김"
+
+#: src/view/com/notifications/FeedItem.tsx:308
+msgid "Hide user list"
+msgstr "사용자 리스트 숨김"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:102
+#~ msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
+#~ msgstr "피드 서버에 연결하는 중 어떤 문제가 발생했습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:110
+msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
+msgstr "피드 서버에 연결하는 중 어떤 문제가 발생했습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:98
+msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
+msgstr "피드 서버가 잘못 구성된 것 같습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:104
+msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
+msgstr "피드 서버가 오프라인 상태인 것 같습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:101
+msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
+msgstr "피드 서버에서 잘못된 응답을 보냈습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:95
+msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
+msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:87
+#~ msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
+#~ msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:116
+#: src/view/shell/desktop/LeftNav.tsx:297
+#: src/view/shell/Drawer.tsx:379
+#: src/view/shell/Drawer.tsx:380
+msgid "Home"
+msgstr "홈"
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:99
+#: src/view/screens/PreferencesHomeFeed.tsx:95
+#: src/view/screens/Settings.tsx:481
+msgid "Home Feed Preferences"
+msgstr "홈 피드 설정"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:114
+msgid "Hosting provider"
+msgstr "호스팅 제공자"
+
+#: src/view/com/auth/create/Step1.tsx:76
+#: src/view/com/auth/create/Step1.tsx:81
+msgid "Hosting provider address"
+msgstr "호스팅 제공자 주소"
+
+#: src/view/com/modals/VerifyEmail.tsx:208
+msgid "I have a code"
+msgstr "코드가 있습니다"
+
+#: src/view/com/modals/ChangeHandle.tsx:281
+msgid "I have my own domain"
+msgstr "내 도메인을 가지고 있습니다"
+
+#: src/view/com/modals/SelfLabel.tsx:127
+msgid "If none are selected, suitable for all ages."
+msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 것입니다."
+
+#: src/view/com/modals/AltImage.tsx:96
+msgid "Image alt text"
+msgstr "이미지 대체 텍스트"
+
+#: src/view/com/util/UserAvatar.tsx:308
+#: src/view/com/util/UserBanner.tsx:116
+msgid "Image options"
+msgstr "이미지 옵션"
+
+#: src/view/com/search/Suggestions.tsx:104
+#: src/view/com/search/Suggestions.tsx:115
+#~ msgid "In Your Network"
+#~ msgstr "내 네트워크"
+
+#: src/view/com/auth/login/LoginForm.tsx:113
+msgid "Invalid username or password"
+msgstr "잘못된 사용자 이름 또는 비밀번호"
+
+#: src/view/screens/Settings.tsx:383
+msgid "Invite"
+msgstr "초대"
+
+#: src/view/com/modals/InviteCodes.tsx:91
+#: src/view/screens/Settings.tsx:371
+msgid "Invite a Friend"
+msgstr "친구 초대"
+
+#: src/view/com/auth/create/Step2.tsx:57
+msgid "Invite code"
+msgstr "초대 코드"
+
+#: src/view/com/auth/create/state.ts:136
+msgid "Invite code not accepted. Check that you input it correctly and try again."
+msgstr "초대 코드가 올바르지 않습니다. 코드를 올바르게 입력했는지 확인한 후 다시 시도하세요."
+
+#: src/view/shell/Drawer.tsx:621
+msgid "Invite codes: {invitesAvailable} available"
+msgstr "초대 코드: {invitesAvailable}개 사용 가능"
+
+#: src/view/com/modals/Waitlist.tsx:67
+msgid "Join the waitlist"
+msgstr "대기자 명단 등록"
+
+#: src/view/com/auth/create/Step2.tsx:68
+#: src/view/com/auth/create/Step2.tsx:72
+msgid "Join the waitlist."
+msgstr "대기자 명단에 등록하세요."
+
+#: src/view/com/modals/Waitlist.tsx:124
+msgid "Join Waitlist"
+msgstr "대기자 명단 등록"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:104
+msgid "Language selection"
+msgstr "언어 선택"
+
+#: src/view/screens/LanguageSettings.tsx:89
+msgid "Language Settings"
+msgstr "언어 설정"
+
+#: src/view/screens/Settings.tsx:541
+msgid "Languages"
+msgstr "언어"
+
+#: src/view/com/util/moderation/PostAlerts.tsx:47
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:65
+#: src/view/com/util/moderation/ScreenHider.tsx:88
+msgid "Learn More"
+msgstr "더 알아보기"
+
+#: src/view/com/util/moderation/ContentHider.tsx:83
+#: src/view/com/util/moderation/PostAlerts.tsx:40
+#: src/view/com/util/moderation/PostHider.tsx:76
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:49
+#: src/view/com/util/moderation/ScreenHider.tsx:85
+msgid "Learn more about this warning"
+msgstr "이 경고에 대해 더 알아보기"
+
+#: src/view/screens/Moderation.tsx:242
+msgid "Learn more about what is public on Bluesky."
+msgstr "Bluesky에서 공개되는 항목에 대해 자세히 알아보세요."
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
+msgid "Leave them all unchecked to see any language."
+msgstr "모든 언어를 보려면 모두 선택하지 않은 상태로 두세요."
+
+#: src/view/com/modals/LinkWarning.tsx:49
+msgid "Leaving Bluesky"
+msgstr "Bluesky 떠나기"
+
+#: src/view/com/auth/login/Login.tsx:128
+#: src/view/com/auth/login/Login.tsx:144
+msgid "Let's get your password reset!"
+msgstr "비밀번호를 재설정해 봅시다!"
+
+#: src/view/com/util/UserAvatar.tsx:245
+#: src/view/com/util/UserBanner.tsx:60
+msgid "Library"
+msgstr "라이브러리"
+
+#: src/view/screens/Settings.tsx:405
+#~ msgid "Light"
+#~ msgstr "밝음"
+
+#: src/view/screens/ProfileFeed.tsx:643
+msgid "Like this feed"
+msgstr "이 피드"
+
+#: src/view/screens/PostLikedBy.tsx:27
+#: src/view/screens/ProfileFeedLikedBy.tsx:27
+msgid "Liked by"
+msgstr "좋아요:"
+
+#: src/view/screens/Profile.tsx:163
+msgid "Likes"
+msgstr "좋아요"
+
+#: src/view/screens/Moderation.tsx:203
+#~ msgid "Limit the visibility of my account"
+#~ msgstr "내 계정 공개 범위 제한"
+
+#: src/view/screens/Moderation.tsx:203
+#~ msgid "Limit the visibility of my account to logged-out users"
+#~ msgstr "내 계정의 공개 범위를 로그아웃한 사용자로 제한"
+
+#: src/view/com/modals/CreateOrEditList.tsx:186
+msgid "List Avatar"
+msgstr "리스트 아바타"
+
+#: src/view/com/modals/CreateOrEditList.tsx:199
+msgid "List Name"
+msgstr "리스트 이름"
+
+#: src/view/screens/Profile.tsx:165
+#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/Drawer.tsx:471
+#: src/view/shell/Drawer.tsx:472
+msgid "Lists"
+msgstr "리스트"
+
+#: src/view/com/post-thread/PostThread.tsx:257
+#: src/view/com/post-thread/PostThread.tsx:265
+msgid "Load more posts"
+msgstr "더 많은 게시물 불러오기"
+
+#: src/view/screens/Notifications.tsx:141
+msgid "Load new notifications"
+msgstr "새 알림 불러오기"
+
+#: src/view/com/feeds/FeedPage.tsx:185
+msgid "Load new posts"
+msgstr "새 게시물 불러오기"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
+msgid "Loading..."
+msgstr "불러오는 중…"
+
+#: src/view/com/modals/ServerInput.tsx:50
+msgid "Local dev server"
+msgstr "로컬 개발 서버"
+
+#: src/view/screens/Moderation.tsx:134
+#~ msgid "Logged-out users"
+#~ msgstr "로그아웃한 사용자"
+
+#: src/view/screens/Moderation.tsx:136
+msgid "Logged-out visibility"
+msgstr "로그아웃 표시"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:133
+msgid "Login to account that is not listed"
+msgstr "목록에 없는 계정으로 로그인"
+
+#: src/view/screens/ProfileFeed.tsx:482
+msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
+msgstr "이 피드는 Bluesky 계정이 있는 사용자만 이용할 수 있는 것 같습니다. 이 피드를 보려면 가입하거나 로그인하세요!"
+
+#: src/view/com/modals/LinkWarning.tsx:63
+msgid "Make sure this is where you intend to go!"
+msgstr "이곳이 당신이 가고자 하는 곳인지 확인하세요!"
+
+#: src/view/screens/Profile.tsx:162
+msgid "Media"
+msgstr "미디어"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:139
+msgid "mentioned users"
+msgstr "멘션한 사용자"
+
+#: src/view/com/modals/Threadgate.tsx:93
+msgid "Mentioned users"
+msgstr "멘션한 사용자"
+
+#: src/view/screens/Search/Search.tsx:503
+msgid "Menu"
+msgstr "메뉴"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:194
+#: src/view/screens/ProfileFeed.tsx:490
+msgid "Message from server"
+msgstr "서버에서 보낸 메시지"
+
+#: src/view/screens/Moderation.tsx:64
+#: src/view/screens/Settings.tsx:563
+#: src/view/shell/desktop/LeftNav.tsx:391
+#: src/view/shell/Drawer.tsx:490
+#: src/view/shell/Drawer.tsx:491
+msgid "Moderation"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:95
+msgid "Moderation lists"
+msgstr ""
+
+#: src/view/screens/ModerationModlists.tsx:58
+msgid "Moderation Lists"
+msgstr ""
+
+#: src/view/shell/desktop/Feeds.tsx:53
+msgid "More feeds"
+msgstr "피드 더 보기"
+
+#: src/view/com/profile/ProfileHeader.tsx:548
+#: src/view/screens/ProfileFeed.tsx:370
+#: src/view/screens/ProfileList.tsx:606
+msgid "More options"
+msgstr "옵션 더 보기"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:158
+#~ msgid "More post options"
+#~ msgstr "게시물 옵션 더 보기"
+
+#: src/view/com/profile/ProfileHeader.tsx:370
+msgid "Mute Account"
+msgstr "계정 뮤트"
+
+#: src/view/screens/ProfileList.tsx:533
+msgid "Mute accounts"
+msgstr "계정 뮤트"
+
+#: src/view/screens/ProfileList.tsx:480
+msgid "Mute list"
+msgstr "리스트 뮤트"
+
+#: src/view/screens/ProfileList.tsx:293
+msgid "Mute these accounts?"
+msgstr "이 계정들을 뮤트하시겠습니까?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+msgid "Mute thread"
+msgstr "스레드 뮤트"
+
+#: src/view/screens/Moderation.tsx:109
+msgid "Muted accounts"
+msgstr "뮤트한 계정"
+
+#: src/view/screens/ModerationMutedAccounts.tsx:106
+msgid "Muted Accounts"
+msgstr "뮤트한 계정"
+
+#: src/view/screens/ModerationMutedAccounts.tsx:114
+msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:295
+msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:134
+#~ msgid "My Account"
+#~ msgstr ""
+
+#: src/view/com/modals/BirthDateSettings.tsx:56
+msgid "My Birthday"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:363
+msgid "My Feeds"
+msgstr ""
+
+#: src/view/shell/desktop/LeftNav.tsx:64
+msgid "My Profile"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:520
+msgid "My Saved Feeds"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:177
+#: src/view/com/modals/CreateOrEditList.tsx:211
+msgid "Name"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
+msgid "Never lose access to your followers and data."
+msgstr ""
+
+#: src/view/screens/Lists.tsx:76
+#: src/view/screens/ModerationModlists.tsx:78
+msgid "New"
+msgstr ""
+
+#: src/view/com/feeds/FeedPage.tsx:196
+#: src/view/screens/Feeds.tsx:510
+#: src/view/screens/Profile.tsx:389
+#: src/view/screens/ProfileFeed.tsx:451
+#: src/view/screens/ProfileList.tsx:212
+#: src/view/screens/ProfileList.tsx:244
+#: src/view/shell/desktop/LeftNav.tsx:246
+msgid "New post"
+msgstr ""
+
+#: src/view/shell/desktop/LeftNav.tsx:256
+msgid "New Post"
+msgstr ""
+
+#: src/view/com/auth/create/CreateAccount.tsx:158
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:174
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:184
+#: src/view/com/auth/login/LoginForm.tsx:281
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:156
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:166
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+msgid "Next"
+msgstr "다음"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:142
+msgid "Next image"
+msgstr "다음 이미지"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:191
+#: src/view/screens/PreferencesHomeFeed.tsx:226
+#: src/view/screens/PreferencesHomeFeed.tsx:263
+msgid "No"
+msgstr "아니요"
+
+#: src/view/screens/ProfileFeed.tsx:636
+#: src/view/screens/ProfileList.tsx:740
+msgid "No description"
+msgstr "설명 없음"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
+msgid "No result"
+msgstr "결과 없음"
+
+#: src/view/screens/Feeds.tsx:452
+msgid "No results found for \"{query}\""
+msgstr ""
+
+#: src/view/com/modals/ListAddUser.tsx:142
+#: src/view/shell/desktop/Search.tsx:112
+#~ msgid "No results found for {0}"
+#~ msgstr ""
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:127
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:581
+#: src/view/shell/desktop/Search.tsx:210
+msgid "No results found for {query}"
+msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:82
+msgid "Nobody"
+msgstr "아무도 없음"
+
+#: src/view/com/modals/SelfLabel.tsx:136
+#~ msgid "Not Applicable"
+#~ msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:135
+msgid "Not Applicable."
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:227
+#~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
+#~ msgstr ""
+
+#: src/view/screens/Moderation.tsx:232
+msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:227
+#~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+#~ msgstr ""
+
+#: src/view/screens/Notifications.tsx:108
+#: src/view/screens/Notifications.tsx:132
+#: src/view/shell/bottom-bar/BottomBar.tsx:187
+#: src/view/shell/desktop/LeftNav.tsx:355
+#: src/view/shell/Drawer.tsx:416
+#: src/view/shell/Drawer.tsx:417
+msgid "Notifications"
+msgstr ""
+
+#: src/view/com/util/ErrorBoundary.tsx:34
+msgid "Oh no!"
+msgstr ""
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
+msgid "Okay"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:348
+msgid "One or more images is missing alt text."
+msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:100
+msgid "Only {0} can reply."
+msgstr ""
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:79
+msgid "Open navigation"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:533
+msgid "Opens configurable language settings"
+msgstr ""
+
+#: src/view/shell/desktop/RightNav.tsx:148
+#: src/view/shell/Drawer.tsx:622
+msgid "Opens list of invite codes"
+msgstr "초대 코드 목록 열기"
+
+#: src/view/com/modals/ChangeHandle.tsx:279
+msgid "Opens modal for using custom domain"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:558
+msgid "Opens moderation settings"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:514
+msgid "Opens screen with all saved feeds"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:581
+msgid "Opens the app password settings page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:473
+msgid "Opens the home feed preferences"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:664
+msgid "Opens the storybook page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:644
+msgid "Opens the system log page"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:494
+msgid "Opens the threads preferences"
+msgstr ""
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:138
+msgid "Other account"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:88
+msgid "Other service"
+msgstr ""
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:91
+msgid "Other..."
+msgstr ""
+
+#: src/view/screens/NotFound.tsx:42
+#: src/view/screens/NotFound.tsx:45
+msgid "Page not found"
+msgstr ""
+
+#: src/view/com/auth/create/Step2.tsx:101
+#: src/view/com/auth/create/Step2.tsx:111
+#: src/view/com/auth/login/LoginForm.tsx:216
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:130
+#: src/view/com/modals/DeleteAccount.tsx:191
+msgid "Password"
+msgstr "비밀번호"
+
+#: src/view/com/auth/login/Login.tsx:157
+msgid "Password updated"
+msgstr "비밀번호 변경됨"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
+msgid "Password updated!"
+msgstr "비밀번호가 변경되었습니다!"
+
+#: src/view/com/modals/SelfLabel.tsx:121
+msgid "Pictures meant for adults."
+msgstr "성인용 사진."
+
+#: src/view/screens/SavedFeeds.tsx:88
+msgid "Pinned Feeds"
+msgstr "고정된 피드"
+
+#: src/view/com/auth/create/state.ts:116
+msgid "Please choose your handle."
+msgstr "핸들을 입력하세요."
+
+#: src/view/com/auth/create/state.ts:109
+msgid "Please choose your password."
+msgstr "비밀번호를 입력하세요."
+
+#: src/view/com/modals/ChangeEmail.tsx:67
+msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:140
+msgid "Please enter a unique name for this App Password or use our randomly generated one."
+msgstr ""
+
+#: src/view/com/auth/create/state.ts:95
+msgid "Please enter your email."
+msgstr "이메일을 입력하세요."
+
+#: src/view/com/modals/DeleteAccount.tsx:180
+msgid "Please enter your password as well:"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+msgid "Please tell us why you think this decision was incorrect."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:331
+#: src/view/com/post-thread/PostThread.tsx:223
+#: src/view/screens/PostThread.tsx:78
+msgid "Post"
+msgstr "게시물"
+
+#: src/view/com/post-thread/PostThread.tsx:382
+msgid "Post hidden"
+msgstr "게시물 숨겨짐"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:87
+msgid "Post language"
+msgstr "게시물 언어"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
+msgid "Post Languages"
+msgstr "게시물 언어"
+
+#: src/view/com/post-thread/PostThread.tsx:434
+msgid "Post not found"
+msgstr "게시물을 찾을 수 없음"
+
+#: src/view/screens/Profile.tsx:160
+msgid "Posts"
+msgstr "게시물"
+
+#: src/view/com/modals/LinkWarning.tsx:44
+msgid "Potentially Misleading Link"
+msgstr "오해의 소지가 있는 링크"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:128
+msgid "Previous image"
+msgstr "이전 이미지"
+
+#: src/view/screens/LanguageSettings.tsx:187
+msgid "Primary Language"
+msgstr "주 언어"
+
+#: src/view/screens/PreferencesThreads.tsx:91
+msgid "Prioritize Your Follows"
+msgstr ""
+
+#: src/view/shell/desktop/RightNav.tsx:76
+msgid "Privacy"
+msgstr "개인정보"
+
+#: src/view/screens/PrivacyPolicy.tsx:29
+msgid "Privacy Policy"
+msgstr "개인정보 처리방침"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:190
+msgid "Processing..."
+msgstr "처리 중…"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:229
+#: src/view/shell/Drawer.tsx:69
+#: src/view/shell/Drawer.tsx:525
+#: src/view/shell/Drawer.tsx:526
+msgid "Profile"
+msgstr "프로필"
+
+#: src/view/screens/Settings.tsx:789
+msgid "Protect your account by verifying your email."
+msgstr "이메일을 인증하여 계정을 보호하세요."
+
+#: src/view/screens/ModerationModlists.tsx:61
+msgid "Public, shareable lists of users to mute or block in bulk."
+msgstr ""
+
+#: src/view/screens/Lists.tsx:61
+msgid "Public, shareable lists which can drive feeds."
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:52
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
+msgid "Quote post"
+msgstr "게시물 인용"
+
+#: src/view/com/modals/Repost.tsx:56
+msgid "Quote Post"
+msgstr "게시물 인용"
+
+#: src/view/com/modals/EditImage.tsx:236
+msgid "Ratios"
+msgstr "비율"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:50
+#~ msgid "Recommended"
+#~ msgstr "추천"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
+msgid "Recommended Feeds"
+msgstr "추천 피드"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:180
+msgid "Recommended Users"
+msgstr "추천 사용자"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:264
+#: src/view/com/modals/SelfLabel.tsx:83
+#: src/view/com/modals/UserAddRemoveLists.tsx:193
+#: src/view/com/util/UserAvatar.tsx:282
+#: src/view/com/util/UserBanner.tsx:89
+msgid "Remove"
+msgstr "제거"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:106
+msgid "Remove {0} from my feeds?"
+msgstr "{0}을(를) 내 피드에서 제거하시겠습니까?"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:22
+msgid "Remove account"
+msgstr "계정 제거"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:130
+msgid "Remove feed"
+msgstr "피드 제거"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:105
+#: src/view/com/feeds/FeedSourceCard.tsx:172
+#: src/view/screens/ProfileFeed.tsx:280
+msgid "Remove from my feeds"
+msgstr "내 피드에서 제거"
+
+#: src/view/com/composer/photos/Gallery.tsx:167
+msgid "Remove image"
+msgstr "이미지 제거"
+
+#: src/view/com/composer/ExternalEmbed.tsx:70
+msgid "Remove image preview"
+msgstr "이미지 미리보기 제거"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+msgid "Remove this feed from my feeds?"
+msgstr "이 피드를 내 피드에서 제거하시겠습니까?"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:131
+msgid "Remove this feed from your saved feeds?"
+msgstr "이 피드를 내 저장된 피드에서 제거하시겠습니까?"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:199
+#: src/view/com/modals/UserAddRemoveLists.tsx:136
+msgid "Removed from list"
+msgstr "리스트에서 제거됨"
+
+#: src/view/screens/Profile.tsx:161
+msgid "Replies"
+msgstr "답글"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:98
+msgid "Replies to this thread are disabled"
+msgstr "이 스레드에 대한 답글이 비활성화됩니다."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:135
+msgid "Reply Filters"
+msgstr "답글 필터"
+
+#: src/view/com/modals/report/Modal.tsx:166
+msgid "Report {collectionName}"
+msgstr "{collectionName} 신고"
+
+#: src/view/com/profile/ProfileHeader.tsx:404
+msgid "Report Account"
+msgstr "계정 신고"
+
+#: src/view/screens/ProfileFeed.tsx:300
+msgid "Report feed"
+msgstr "피드 신고"
+
+#: src/view/screens/ProfileList.tsx:448
+msgid "Report List"
+msgstr "리스트 신고"
+
+#: src/view/com/modals/report/SendReportButton.tsx:37
+#: src/view/com/util/forms/PostDropdownBtn.tsx:165
+msgid "Report post"
+msgstr "포스트 신고"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Repost"
+msgstr "재게시"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
+msgid "Repost or quote post"
+msgstr "재게시 또는 게시물 인용"
+
+#: src/view/screens/PostRepostedBy.tsx:27
+msgid "Reposted by"
+msgstr "재게시자:"
+
+#: src/view/com/modals/ChangeEmail.tsx:181
+#: src/view/com/modals/ChangeEmail.tsx:183
+msgid "Request Change"
+msgstr "변경 요청"
+
+#: src/view/screens/Moderation.tsx:188
+#~ msgid "Request to limit the visibility of my account"
+#~ msgstr "내 계정의 공개 범위 제한 요청하기"
+
+#: src/view/screens/Settings.tsx:382
+#~ msgid "Require alt text before posting"
+#~ msgstr "게시하기 전 대체 텍스트 필수"
+
+#: src/view/com/auth/create/Step2.tsx:53
+msgid "Required for this provider"
+msgstr "이 제공자에서 필수"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:108
+msgid "Reset code"
+msgstr "코드 재설정"
+
+#: src/view/screens/Settings.tsx:686
+msgid "Reset onboarding state"
+msgstr "온보딩 상태 재설정"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:98
+msgid "Reset password"
+msgstr "비밀번호 재설정"
+
+#: src/view/screens/Settings.tsx:676
+msgid "Reset preferences state"
+msgstr "설정 상태 재설정"
+
+#: src/view/screens/Settings.tsx:684
+msgid "Resets the onboarding state"
+msgstr "온보딩 상태 재설정"
+
+#: src/view/screens/Settings.tsx:674
+msgid "Resets the preferences state"
+msgstr "설정 상태 재설정"
+
+#: src/view/com/auth/create/CreateAccount.tsx:167
+#: src/view/com/auth/create/CreateAccount.tsx:171
+#: src/view/com/auth/login/LoginForm.tsx:258
+#: src/view/com/auth/login/LoginForm.tsx:261
+#: src/view/com/util/error/ErrorMessage.tsx:55
+#: src/view/com/util/error/ErrorScreen.tsx:65
+msgid "Retry"
+msgstr "다시 시도"
+
+#: src/view/com/modals/ChangeHandle.tsx:169
+#~ msgid "Retry change handle"
+#~ msgstr "핸들 변경 다시 시도"
+
+#: src/view/com/modals/AltImage.tsx:114
+#: src/view/com/modals/BirthDateSettings.tsx:93
+#: src/view/com/modals/BirthDateSettings.tsx:96
+#: src/view/com/modals/ChangeHandle.tsx:173
+#: src/view/com/modals/CreateOrEditList.tsx:249
+#: src/view/com/modals/CreateOrEditList.tsx:257
+#: src/view/com/modals/EditProfile.tsx:223
+msgid "Save"
+msgstr "저장"
+
+#: src/view/com/modals/AltImage.tsx:105
+msgid "Save alt text"
+msgstr "대체 텍스트 저장"
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:212
+#~ msgid "Save changes"
+#~ msgstr "변경 사항 저장"
+
+#: src/view/com/modals/EditProfile.tsx:231
+msgid "Save Changes"
+msgstr "변경 사항 저장"
+
+#: src/view/com/modals/ChangeHandle.tsx:170
+msgid "Save handle change"
+msgstr "핸들 변경 저장"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:144
+msgid "Save image crop"
+msgstr "이미지 자르기 저장"
+
+#: src/view/screens/SavedFeeds.tsx:122
+msgid "Saved Feeds"
+msgstr "저장된 피드"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:75
+#: src/view/com/util/forms/SearchInput.tsx:64
+#: src/view/screens/Search/Search.tsx:381
+#: src/view/screens/Search/Search.tsx:533
+#: src/view/shell/bottom-bar/BottomBar.tsx:138
+#: src/view/shell/desktop/LeftNav.tsx:315
+#: src/view/shell/desktop/Search.tsx:161
+#: src/view/shell/desktop/Search.tsx:170
+#: src/view/shell/Drawer.tsx:343
+#: src/view/shell/Drawer.tsx:344
+msgid "Search"
+msgstr "검색"
+
+#: src/view/screens/Search/Search.tsx:390
+msgid "Search for posts and users."
+msgstr "게시물 및 사용자를 검색합니다."
+
+#: src/view/com/modals/ChangeEmail.tsx:110
+msgid "Security Step Required"
+msgstr "보안 단계 필요"
+
+#: src/view/com/auth/SplashScreen.tsx:29
+msgid "See what's next"
+msgstr "See what's next"
+
+#: src/view/com/modals/ServerInput.tsx:75
+msgid "Select Bluesky Social"
+msgstr "Bluesky Social 선택"
+
+#: src/view/com/auth/login/Login.tsx:117
+msgid "Select from an existing account"
+msgstr "기존 계정에서 선택"
+
+#: src/view/com/auth/login/LoginForm.tsx:143
+msgid "Select service"
+msgstr "서비스 선택"
+
+#: src/view/screens/LanguageSettings.tsx:281
+msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
+msgstr "구독하는 피드에 포함할 언어를 선택합니다. 선택하지 않으면 모든 언어가 표시됩니다."
+
+#: src/view/screens/LanguageSettings.tsx:98
+msgid "Select your app language for the default text to display in the app"
+msgstr "앱에 표시되는 기본 텍스트의 언어를 선택합니다."
+
+#: src/view/screens/LanguageSettings.tsx:190
+msgid "Select your preferred language for translations in your feed."
+msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
+
+#: src/view/com/modals/VerifyEmail.tsx:196
+msgid "Send Confirmation Email"
+msgstr "확인 이메일 전송"
+
+#: src/view/com/modals/DeleteAccount.tsx:127
+msgid "Send email"
+msgstr "이메일 전송"
+
+#: src/view/com/modals/DeleteAccount.tsx:138
+msgid "Send Email"
+msgstr "이메일 전송"
+
+#: src/view/shell/Drawer.tsx:276
+#: src/view/shell/Drawer.tsx:297
+msgid "Send feedback"
+msgstr "피드백 전송"
+
+#: src/view/com/modals/report/SendReportButton.tsx:45
+msgid "Send Report"
+msgstr "신고 전송"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:78
+msgid "Set new password"
+msgstr "새 비밀번호 설정"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:216
+msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
+msgstr "피드에서 모든 인용 게시물을 숨기려면 이 설정을 \"아니요\"로 설정합니다. 재게시는 계속 표시됩니다."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:113
+msgid "Set this setting to \"No\" to hide all replies from your feed."
+msgstr "피드에서 모든 답글을 숨기려면 이 설정을 \"아니요\"로 설정합니다."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:182
+msgid "Set this setting to \"No\" to hide all reposts from your feed."
+msgstr "피드에서 모든 재게시를 숨기려면 이 설정을 \"아니요\"로 설정합니다."
+
+#: src/view/screens/PreferencesThreads.tsx:116
+msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
+msgstr "스레드 보기에 답글을 표시하려면 이 설정을 \"예\"로 설정합니다. 이는 실험적인 기능입니다."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:252
+msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
+msgstr "팔로우한 피드에 저장된 피드 샘플을 표시하려면 이 설정을 \"예\"로 설정합니다. 이는 실험적인 기능입니다."
+
+#: src/view/screens/Settings.tsx:277
+#: src/view/shell/desktop/LeftNav.tsx:427
+#: src/view/shell/Drawer.tsx:546
+#: src/view/shell/Drawer.tsx:547
+msgid "Settings"
+msgstr "설정"
+
+#: src/view/com/modals/SelfLabel.tsx:125
+msgid "Sexual activity or erotic nudity."
+msgstr "성행위 또는 선정적인 노출."
+
+#: src/view/com/profile/ProfileHeader.tsx:338
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+#: src/view/screens/ProfileList.tsx:407
+msgid "Share"
+msgstr "공유"
+
+#: src/view/screens/ProfileFeed.tsx:312
+msgid "Share feed"
+msgstr "피드 공유"
+
+#: src/view/screens/ProfileFeed.tsx:276
+#~ msgid "Share link"
+#~ msgstr "링크 공유"
+
+#: src/view/screens/Settings.tsx:316
+msgid "Show"
+msgstr "표시"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:114
+msgid "Show anyway"
+msgstr "무시하고 표시"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:249
+msgid "Show Posts from My Feeds"
+msgstr "내 피드에서 게시물 표시"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:213
+msgid "Show Quote Posts"
+msgstr "인용 게시물 표시"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:110
+msgid "Show Replies"
+msgstr "답글 표시"
+
+#: src/view/screens/PreferencesThreads.tsx:94
+msgid "Show replies by people you follow before all other replies."
+msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시합니다."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:179
+msgid "Show Reposts"
+msgstr "재게시 표시"
+
+#: src/view/com/notifications/FeedItem.tsx:337
+msgid "Show users"
+msgstr "사용자 표시"
+
+#: src/view/com/auth/login/Login.tsx:98
+#: src/view/com/auth/SplashScreen.tsx:49
+#: src/view/shell/NavSignupCard.tsx:52
+#: src/view/shell/NavSignupCard.tsx:53
+msgid "Sign in"
+msgstr "로그인"
+
+#: src/view/com/auth/SplashScreen.tsx:52
+#: src/view/com/auth/SplashScreen.web.tsx:84
+msgid "Sign In"
+msgstr "로그인"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:44
+msgid "Sign in as {0}"
+msgstr "{0}(으)로 로그인"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:118
+#: src/view/com/auth/login/Login.tsx:116
+msgid "Sign in as..."
+msgstr "로그인"
+
+#: src/view/com/auth/login/LoginForm.tsx:130
+msgid "Sign into"
+msgstr "로그인"
+
+#: src/view/com/modals/SwitchAccount.tsx:64
+#: src/view/com/modals/SwitchAccount.tsx:67
+msgid "Sign out"
+msgstr "로그아웃"
+
+#: src/view/shell/NavSignupCard.tsx:43
+#: src/view/shell/NavSignupCard.tsx:44
+#: src/view/shell/NavSignupCard.tsx:46
+msgid "Sign up"
+msgstr "가입하기"
+
+#: src/view/shell/NavSignupCard.tsx:36
+msgid "Sign up or sign in to join the conversation"
+msgstr "가입 또는 로그인하여 대화에 참여하기"
+
+#: src/view/screens/Settings.tsx:327
+msgid "Signed in as"
+msgstr "로그인된 계정"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
+msgid "Skip"
+msgstr "건너뛰기"
+
+#: src/view/screens/PreferencesThreads.tsx:69
+msgid "Sort Replies"
+msgstr "답글 정렬"
+
+#: src/view/screens/PreferencesThreads.tsx:72
+msgid "Sort replies to the same post by:"
+msgstr "동일한 게시물에 대한 답글을 정렬하는 기준입니다."
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:122
+msgid "Square"
+msgstr "정사각형"
+
+#: src/view/com/auth/create/Step1.tsx:90
+#: src/view/com/modals/ServerInput.tsx:62
+msgid "Staging"
+msgstr "스테이징"
+
+#: src/view/screens/Settings.tsx:730
+msgid "Status page"
+msgstr "상태 페이지"
+
+#: src/view/screens/Settings.tsx:666
+msgid "Storybook"
+msgstr "스토리북"
+
+#: src/view/com/modals/AppealLabel.tsx:101
+msgid "Submit"
+msgstr "확인"
+
+#: src/view/screens/ProfileList.tsx:597
+msgid "Subscribe"
+msgstr "구독"
+
+#: src/view/screens/ProfileList.tsx:593
+msgid "Subscribe to this list"
+msgstr "이 리스트로 구독"
+
+#: src/view/screens/Search/Search.tsx:354
+msgid "Suggested Follows"
+msgstr "추천 팔로우"
+
+#: src/view/screens/Support.tsx:30
+#: src/view/screens/Support.tsx:33
+msgid "Support"
+msgstr "지원"
+
+#: src/view/com/modals/SwitchAccount.tsx:115
+msgid "Switch Account"
+msgstr "계정 전환"
+
+#: src/view/screens/Settings.tsx:398
+#~ msgid "System"
+#~ msgstr "시스템"
+
+#: src/view/screens/Settings.tsx:646
+msgid "System log"
+msgstr "시스템 로그"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:112
+msgid "Tall"
+msgstr "세로"
+
+#: src/view/shell/desktop/RightNav.tsx:85
+msgid "Terms"
+msgstr "이용약관"
+
+#: src/view/screens/TermsOfService.tsx:29
+msgid "Terms of Service"
+msgstr "서비스 이용약관"
+
+#: src/view/com/modals/AppealLabel.tsx:70
+#: src/view/com/modals/report/InputIssueDetails.tsx:50
+msgid "Text input field"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:306
+msgid "The account will be able to interact with you after unblocking."
+msgstr ""
+
+#: src/view/screens/CommunityGuidelines.tsx:36
+msgid "The Community Guidelines have been moved to <0/>"
+msgstr ""
+
+#: src/view/screens/CopyrightPolicy.tsx:33
+msgid "The Copyright Policy has been moved to <0/>"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:437
+msgid "The post may have been deleted."
+msgstr ""
+
+#: src/view/screens/PrivacyPolicy.tsx:33
+msgid "The Privacy Policy has been moved to <0/>"
+msgstr ""
+
+#: src/view/screens/Support.tsx:36
+msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
+msgstr ""
+
+#: src/view/screens/TermsOfService.tsx:33
+msgid "The Terms of Service have been moved to"
+msgstr ""
+
+#: src/view/com/util/ErrorBoundary.tsx:35
+msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
+msgstr ""
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+msgid "This {0} has been labeled."
+msgstr ""
+
+#: src/view/com/util/moderation/ScreenHider.tsx:72
+msgid "This {screenDescription} has been flagged:"
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:107
+msgid "This content is not viewable without a Bluesky account."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:113
+msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
+msgstr ""
+
+#: src/view/com/modals/BirthDateSettings.tsx:61
+msgid "This information is not shared with other users."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:113
+msgid "This is important in case you ever need to change your email or reset your password."
+msgstr ""
+
+#: src/view/com/auth/create/Step1.tsx:55
+msgid "This is the service that keeps you online."
+msgstr "온라인 상태를 유지할 수 있게 하는 서비스입니다."
+
+#: src/view/com/modals/LinkWarning.tsx:56
+msgid "This link is taking you to the following website:"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:124
+msgid "This post has been deleted."
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:137
+msgid "This warning is only available for posts with media attached."
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:53
+#: src/view/screens/Settings.tsx:503
+msgid "Thread Preferences"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:113
+msgid "Threaded Mode"
+msgstr ""
+
+#: src/view/com/util/forms/DropdownButton.tsx:230
+msgid "Toggle dropdown"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:271
+msgid "Transformations"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:706
+#: src/view/com/post-thread/PostThreadItem.tsx:708
+#: src/view/com/util/forms/PostDropdownBtn.tsx:101
+msgid "Translate"
+msgstr "번역"
+
+#: src/view/com/util/error/ErrorScreen.tsx:73
+msgid "Try again"
+msgstr "다시 시도"
+
+#: src/view/screens/ProfileList.tsx:495
+msgid "Un-block list"
+msgstr "리스트 차단 해제"
+
+#: src/view/screens/ProfileList.tsx:480
+msgid "Un-mute list"
+msgstr "리스트 언뮤트"
+
+#: src/view/com/auth/create/CreateAccount.tsx:64
+#: src/view/com/auth/login/Login.tsx:76
+#: src/view/com/auth/login/LoginForm.tsx:117
+msgid "Unable to contact your service. Please check your Internet connection."
+msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하세요."
+
+#: src/view/com/profile/ProfileHeader.tsx:466
+#: src/view/com/profile/ProfileHeader.tsx:469
+msgid "Unblock"
+msgstr "차단 해제"
+
+#: src/view/com/profile/ProfileHeader.tsx:304
+#: src/view/com/profile/ProfileHeader.tsx:388
+msgid "Unblock Account"
+msgstr "계정 차단 해제"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Undo repost"
+msgstr "재게시 취소"
+
+#: src/view/com/auth/create/state.ts:210
+msgid "Unfortunately, you do not meet the requirements to create an account."
+msgstr "아쉽지만 계정을 만들 수 있는 요건을 충족하지 못했습니다."
+
+#: src/view/com/profile/ProfileHeader.tsx:369
+msgid "Unmute Account"
+msgstr "계정 언뮤트"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+msgid "Unmute thread"
+msgstr "스레드 언뮤트"
+
+#: src/view/screens/ProfileList.tsx:463
+msgid "Unpin moderation list"
+msgstr ""
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:54
+msgid "Update {displayName} in Lists"
+msgstr ""
+
+#: src/lib/hooks/useOTAUpdate.ts:15
+msgid "Update Available"
+msgstr ""
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:172
+msgid "Updating..."
+msgstr "업데이트 중…"
+
+#: src/view/com/modals/ChangeHandle.tsx:453
+msgid "Upload a text file to:"
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:194
+msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:513
+msgid "Use default provider"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:150
+msgid "Use this to sign into the other app along with your handle."
+msgstr ""
+
+#: src/view/com/modals/InviteCodes.tsx:197
+msgid "Used by:"
+msgstr ""
+
+#: src/view/com/auth/create/Step3.tsx:38
+msgid "User handle"
+msgstr "사용자 핸들"
+
+#: src/view/screens/Lists.tsx:58
+msgid "User Lists"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:170
+#: src/view/com/auth/login/LoginForm.tsx:187
+msgid "Username or email address"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:767
+msgid "Users"
+msgstr "사용자"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:143
+msgid "users followed by <0/>"
+msgstr ""
+
+#: src/view/com/threadgate/WhoCanReply.tsx:115
+#~ msgid "Users followed by <0/>"
+#~ msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:106
+msgid "Users in \"{0}\""
+msgstr ""
+
+#: src/view/screens/Settings.tsx:750
+msgid "Verify email"
+msgstr "이메일 확인"
+
+#: src/view/screens/Settings.tsx:775
+msgid "Verify my email"
+msgstr "내 이메일 확인"
+
+#: src/view/screens/Settings.tsx:784
+msgid "Verify My Email"
+msgstr "내 이메일 확인"
+
+#: src/view/com/modals/ChangeEmail.tsx:205
+#: src/view/com/modals/ChangeEmail.tsx:207
+msgid "Verify New Email"
+msgstr "새 이메일 확인"
+
+#: src/view/screens/Log.tsx:52
+msgid "View debug entry"
+msgstr "디버그 항목 보기"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:128
+msgid "View the avatar"
+msgstr "아바타 보기"
+
+#: src/view/com/modals/LinkWarning.tsx:73
+msgid "Visit Site"
+msgstr "사이트 방문"
+
+#: src/view/com/auth/create/CreateAccount.tsx:125
+msgid "We're so excited to have you join us!"
+msgstr "당신과 함께하게 되어 정말 기쁘네요!"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:99
+#~ msgid "We're sorry, but this content is not viewable without a Bluesky account."
+#~ msgstr "죄송하지만 이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:105
+#~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
+#~ msgstr "죄송하지만 현재 트래픽이 많아 이 피드를 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도해 주세요."
+
+#: src/view/screens/Search/Search.tsx:237
+msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
+msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
+
+#: src/view/screens/NotFound.tsx:48
+msgid "We're sorry! We can't find the page you were looking for."
+msgstr "죄송합니다! 페이지를 찾을 수 없습니다."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
+msgid "Welcome to <0>Bluesky</0>"
+msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
+
+#: src/view/com/modals/report/Modal.tsx:169
+msgid "What is the issue with this {collectionName}?"
+msgstr "이 {컬렉션 이름}에 어떤 문제가 있습니까?"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
+msgid "Which languages are used in this post?"
+msgstr "이 게시물에는 어떤 언어가 사용됩니까?"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
+msgid "Which languages would you like to see in your algorithmic feeds?"
+msgstr "알고리즘 피드에 어떤 언어를 표시하시겠습니까?"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
+#: src/view/com/modals/Threadgate.tsx:66
+msgid "Who can reply"
+msgstr "답글을 달 수 있는 사람"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:79
+#~ msgid "Who can reply?"
+#~ msgstr "답글을 달 수 있는 사람"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:102
+msgid "Wide"
+msgstr "가로"
+
+#: src/view/com/composer/Composer.tsx:403
+msgid "Write post"
+msgstr "게시물 작성"
+
+#: src/view/com/composer/Prompt.tsx:33
+msgid "Write your reply"
+msgstr "내 답글 작성"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:192
+#: src/view/screens/PreferencesHomeFeed.tsx:227
+#: src/view/screens/PreferencesHomeFeed.tsx:262
+msgid "Yes"
+msgstr "예"
+
+#: src/view/com/auth/create/Step1.tsx:106
+msgid "You can change hosting providers at any time."
+msgstr "언제든지 호스팅 제공자를 변경할 수 있습니다."
+
+#: src/view/com/auth/login/Login.tsx:158
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
+msgid "You can now sign in with your new password."
+msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
+
+#: src/view/com/modals/InviteCodes.tsx:64
+msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
+msgstr "아직 초대 코드가 없습니다! Bluesky를 좀 더 오래 사용하신 후에 보내드리겠습니다."
+
+#: src/view/screens/SavedFeeds.tsx:102
+msgid "You don't have any pinned feeds."
+msgstr "고정된 피드가 없습니다."
+
+#: src/view/screens/Feeds.tsx:383
+msgid "You don't have any saved feeds!"
+msgstr "저장된 피드가 없습니다!"
+
+#: src/view/screens/SavedFeeds.tsx:135
+msgid "You don't have any saved feeds."
+msgstr "저장된 피드가 없습니다."
+
+#: src/view/com/post-thread/PostThread.tsx:385
+msgid "You have blocked the author or you have been blocked by the author."
+msgstr "작성자를 차단했거나 작성자가 나를 차단한 경우입니다."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:154
+msgid "You have no feeds."
+msgstr "피드가 없습니다."
+
+#: src/view/com/lists/MyLists.tsx:89
+#: src/view/com/lists/ProfileLists.tsx:158
+msgid "You have no lists."
+msgstr "리스트가 없습니다."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:131
+msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
+msgstr "아직 어떤 계정도 차단하지 않았습니다. 계정을 차단하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 차단\"을 선택합니다."
+
+#: src/view/screens/AppPasswords.tsx:86
+msgid "You have not created any app passwords yet. You can create one by pressing the button below."
+msgstr "아직 앱 비밀번호를 생성하지 않았습니다. 아래 버튼을 눌러 생성할 수 있습니다."
+
+#: src/view/screens/ModerationMutedAccounts.tsx:130
+msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
+msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 뮤트\"를 선택합니다."
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:81
+msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
+msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력합니다."
+
+#: src/view/com/auth/create/Step2.tsx:43
+msgid "Your account"
+msgstr "내 계정"
+
+#: src/view/com/auth/create/Step2.tsx:122
+msgid "Your birth date"
+msgstr "내 생년월일"
+
+#: src/view/com/auth/create/state.ts:102
+msgid "Your email appears to be invalid."
+msgstr "이메일이 잘못된 것 같습니다."
+
+#: src/view/com/modals/Waitlist.tsx:107
+msgid "Your email has been saved! We'll be in touch soon."
+msgstr "이메일이 저장되었습니다! 가까운 시일 내에 연락드리겠습니다."
+
+#: src/view/com/modals/ChangeEmail.tsx:125
+msgid "Your email has been updated but not verified. As a next step, please verify your new email."
+msgstr "이메일이 변경되었지만 인증되지 않았습니다. 다음 단계로 새 이메일을 인증해 주세요."
+
+#: src/view/com/modals/VerifyEmail.tsx:108
+msgid "Your email has not yet been verified. This is an important security step which we recommend."
+msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보안 단계이므로 권장하는 사항입니다."
+
+#: src/view/com/auth/create/Step3.tsx:42
+#: src/view/com/modals/ChangeHandle.tsx:270
+msgid "Your full handle will be"
+msgstr "전체 핸들은 다음과 같습니다:"
+
+#: src/view/com/auth/create/Step1.tsx:53
+msgid "Your hosting provider"
+msgstr "호스팅 제공자"
+
+#: src/view/screens/Settings.tsx:402
+#: src/view/shell/desktop/RightNav.tsx:129
+#: src/view/shell/Drawer.tsx:636
+msgid "Your invite codes are hidden when logged in using an App Password"
+msgstr "앱 비밀번호를 사용하여 로그인하면 초대 코드가 숨겨집니다"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
+msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr "내 게시물, 좋아요, 차단은 공개됩니다. 뮤트는 비공개입니다."
+
+#: src/view/com/modals/SwitchAccount.tsx:82
+msgid "Your profile"
+msgstr "내 프로필"
+
+#: src/view/screens/Moderation.tsx:205
+#~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
+#~ msgstr "내 프로필과 계정은 계정 없이 Bluesky 앱을 방문하는 사람이나 로그인하지 않은 계정에게 표시되지 않습니다. 이 기능을 활성화해도 프로필이 비공개로 전환되지는 않습니다."
+
+#: src/view/screens/Moderation.tsx:220
+#~ msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
+#~ msgstr "내 프로필과 콘텐츠는 계정 없이 Bluesky 앱을 방문하는 사람에게 표시되지 않습니다. 이 기능을 활성화해도 프로필이 비공개로 전환되지는 않습니다."
+
+#: src/view/screens/Moderation.tsx:220
+#~ msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
+#~ msgstr "계정이 없거나 로그인하지 않은 상태에서 Bluesky 앱이나 웹사이트를 방문하는 사람들에게는 내 프로필과 게시물이 표시되지 않습니다."
+
+#: src/view/com/auth/create/Step3.tsx:28
+msgid "Your user handle"
+msgstr "내 사용자 핸들"
