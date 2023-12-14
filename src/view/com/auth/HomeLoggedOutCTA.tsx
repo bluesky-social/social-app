@@ -25,7 +25,7 @@ export function HomeLoggedOutCTA() {
   }, [requestSwitchToAccount])
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} testID="loggedOutCTA">
       <View style={[styles.hero, isMobile && styles.heroMobile]}>
         <Text style={[styles.title, pal.link]}>
           <Trans>Bluesky</Trans>

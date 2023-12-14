@@ -200,7 +200,7 @@ function HomeScreenReady({
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}
       tabBarPosition="top">
-      <HomeLoggedOutCTA testID="loggedOutCTA" />
+      <HomeLoggedOutCTA />
     </Pager>
   )
 }
