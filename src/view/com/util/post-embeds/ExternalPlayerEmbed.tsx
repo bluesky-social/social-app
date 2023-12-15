@@ -143,7 +143,7 @@ function Placeholder({
           position: 'absolute',
           bottom: 0,
           left: 0,
-          width,
+          width: width === 0 ? '100%' : width,
           backgroundColor: (pal.viewLight.backgroundColor as string) + 'F6',
           paddingHorizontal: 20,
           paddingVertical: 18,
