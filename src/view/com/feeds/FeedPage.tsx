@@ -29,7 +29,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
 import {isNative} from '#/platform/detection'
 
-const POLL_FREQ = 30e3 // 30sec
+const POLL_FREQ = 60e3 // 60sec
 
 export function FeedPage({
   testID,
