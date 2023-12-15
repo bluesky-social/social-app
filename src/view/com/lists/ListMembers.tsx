@@ -2,7 +2,6 @@ import React from 'react'
 import {
   ActivityIndicator,
   Dimensions,
-  RefreshControl,
   StyleProp,
   View,
   ViewStyle,
@@ -15,7 +14,6 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {ProfileCard} from '../profile/ProfileCard'
 import {Button} from '../util/forms/Button'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {logger} from '#/logger'
@@ -51,7 +49,6 @@ export function ListMembers({
   headerOffset?: number
   desktopFixedHeightOffset?: number
 }) {
-  const pal = usePalette('default')
   const {track} = useAnalytics()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const {isMobile} = useWebMediaQueries()
@@ -215,24 +212,16 @@ export function ListMembers({
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={Footer}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-            tintColor={pal.colors.text}
-            titleColor={pal.colors.text}
-            progressViewOffset={headerOffset}
-          />
-        }
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}
+        headerOffset={headerOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
-        style={{paddingTop: headerOffset}}
         onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         removeClippedSubviews={true}
-        contentOffset={{x: 0, y: headerOffset * -1}}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight={desktopFixedHeightOffset || true}
       />
