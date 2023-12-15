@@ -1068,7 +1068,7 @@ msgstr "초대"
 #: src/view/com/modals/InviteCodes.tsx:91
 #: src/view/screens/Settings.tsx:371
 msgid "Invite a Friend"
-msgstr "친구 초대"
+msgstr "친구 초대하기"
 
 #: src/view/com/auth/create/Step2.tsx:57
 msgid "Invite code"
