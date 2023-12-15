@@ -110,6 +110,9 @@ module.exports = function () {
         [
           'expo-build-properties',
           {
+            ios: {
+              deploymentTarget: '13.4',
+            },
             android: {
               compileSdkVersion: 34,
               targetSdkVersion: 34,
