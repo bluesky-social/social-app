@@ -134,7 +134,7 @@ function Placeholder({
           accessibilityIgnoresInvertColors
         />
       ) : (
-        <View />
+        <View style={{height: 70, borderRadius: 6}} />
       )}
       <View
         style={{
@@ -149,6 +149,7 @@ function Placeholder({
           borderBottomRightRadius: 6,
           flexDirection: 'row',
           gap: 10,
+          borderRadius: link.thumb != null ? 0 : 6,
         }}>
         <View style={{paddingTop: 6, width: 30}}>
           {isLoading ? (
