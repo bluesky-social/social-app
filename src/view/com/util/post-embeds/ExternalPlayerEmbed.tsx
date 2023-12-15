@@ -208,7 +208,6 @@ function Player({
     // This works for scrolling. However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
-      console.log('blur!')
       onLeaveViewport()
     })
 
@@ -238,7 +237,7 @@ function Player({
   )
 
   return (
-    <View ref={ref} style={{height}}>
+    <View ref={ref} style={{height}} collapsable={false}>
       {isNative && params.type === 'youtube_video' ? (
         <YoutubePlayer
           videoId={params.videoId}
