@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, Image as RNImage} from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
-import LinearGradient from 'react-native-linear-gradient'
+import {Image} from 'expo-image'
 import Animated, {
   interpolate,
   runOnJS,
@@ -13,6 +13,10 @@ import Animated, {
 import MaskedView from '@react-native-masked-view/masked-view'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
+
+// @ts-ignore
+import splashImagePointer from '../assets/splash.png'
+const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 
 export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
@@ -46,6 +50,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroLogo = useSharedValue(0)
   const outroApp = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
+  const [isImageLoaded, setIsImageLoaded] = React.useState(false)
+  const isReady = props.isReady && isImageLoaded
 
   const logoAnimations = useAnimatedStyle(() => {
     return {
@@ -82,10 +88,16 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     }
   })
 
+  const whiteUnderlayAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(outroApp.value, [0, 0.7, 1], [1, 1, 0], 'clamp'),
+    }
+  })
+
   const onFinish = useCallback(() => setIsAnimationComplete(true), [])
 
   useEffect(() => {
-    if (props.isReady) {
+    if (isReady) {
       // hide on mount
       SplashScreen.hideAsync().catch(() => {})
 
@@ -95,14 +107,14 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         async () => {
           outroLogo.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.in(Easing.cubic)},
+            {duration: 1400, easing: Easing.in(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
           )
           outroApp.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.inOut(Easing.cubic)},
+            {duration: 1400, easing: Easing.inOut(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
@@ -110,14 +122,20 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         },
       )
     }
-  }, [onFinish, intro, outroLogo, outroApp, props.isReady])
+  }, [onFinish, intro, outroLogo, outroApp, isReady])
+
+  const onLoadEnd = useCallback(() => {
+    setIsImageLoaded(true)
+  }, [setIsImageLoaded])
 
   return (
     <View style={{flex: 1}}>
       {!isAnimationComplete && (
-        <LinearGradient
-          colors={['#0A7AFF', '#59B9FF']}
-          style={[StyleSheet.absoluteFillObject]}
+        <Image
+          accessibilityIgnoresInvertColors
+          onLoadEnd={onLoadEnd}
+          source={{uri: splashImageUri}}
+          style={StyleSheet.absoluteFillObject}
         />
       )}
 
@@ -140,8 +158,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           </Animated.View>
         }>
         {!isAnimationComplete && (
-          <View
-            style={[StyleSheet.absoluteFillObject, {backgroundColor: 'white'}]}
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFillObject,
+              {backgroundColor: 'white'},
+              whiteUnderlayAnimation,
+            ]}
           />
         )}
 
