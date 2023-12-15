@@ -34,10 +34,10 @@ function ListImpl<ItemT>(
     desktopFixedHeight, // TODO
     headerOffset,
     keyExtractor,
-    refreshing,
+    refreshing: _unsupportedRefreshing,
     onEndReached,
     onEndReachedThreshold,
-    onRefresh,
+    onRefresh: _unsupportedOnRefresh,
     onScrolledDownChange, // TODO
     renderItem,
     extraData,
@@ -55,7 +55,7 @@ function ListImpl<ItemT>(
     )
   }
 
-  let header = null
+  let header: ListProps<ItemT>['ListHeaderComponent'] = null
   if (ListHeaderComponent != null) {
     if (typeof ListHeaderComponent === 'object') {
       header = ListHeaderComponent
@@ -65,7 +65,7 @@ function ListImpl<ItemT>(
     }
   }
 
-  let footer = null
+  let footer: ListProps<ItemT>['ListHeaderComponent'] = null
   if (ListFooterComponent != null) {
     if (typeof ListFooterComponent === 'object') {
       footer = ListFooterComponent
@@ -73,20 +73,6 @@ function ListImpl<ItemT>(
       // @ts-ignore We aren't using classes so it's a render function.
       footer = ListFooterComponent()
     }
-  }
-
-  // TODO: This doesn't work when refreshing is true. Is it supposed to?'
-  let refreshControl
-  if (refreshing !== undefined || onRefresh !== undefined) {
-    refreshControl = (
-      <RefreshControl
-        refreshing={refreshing ?? false}
-        onRefresh={onRefresh}
-        tintColor={pal.colors.text}
-        titleColor={pal.colors.text}
-        progressViewOffset={headerOffset}
-      />
-    )
   }
 
   if (headerOffset != null) {
@@ -146,7 +132,6 @@ function ListImpl<ItemT>(
             desktopFixedHeight ? styles.minHeightViewport : null,
             pal.border,
           ]}>
-          {refreshControl}
           {header}
           {(data as Array<ItemT>).map((item, index) => (
             <Row<ItemT>
