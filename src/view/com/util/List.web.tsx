@@ -1,5 +1,11 @@
 import React, {memo, startTransition} from 'react'
-import {FlatListProps, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  FlatListProps,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -8,9 +14,14 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
   FlatListProps<ItemT>,
-  'onScroll' // Use ScrollContext instead.
+  | 'onScroll' // Use ScrollContext instead.
+  | 'refreshControl' // Pass refreshing and/or onRefresh instead.
+  | 'contentOffset' // Pass headerOffset instead.
 > & {
   onScrolledDownChange?: (isScrolledDown: boolean) => void
+  headerOffset?: number
+  refreshing?: boolean
+  onRefresh?: () => void
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
@@ -19,13 +30,15 @@ function ListImpl<ItemT>(
     ListHeaderComponent,
     ListFooterComponent,
     contentContainerStyle,
-    contentOffset,
     data,
-    desktopFixedHeight,
+    desktopFixedHeight, // TODO
+    headerOffset,
     keyExtractor,
+    refreshing,
     onEndReached,
     onEndReachedThreshold,
-    onScrolledDownChange,
+    onRefresh,
+    onScrolledDownChange, // TODO
     renderItem,
     extraData,
     style,
@@ -40,20 +53,6 @@ function ListImpl<ItemT>(
       contentContainerStyle,
       styles.containerScroll,
     )
-  }
-
-  if (contentOffset && contentOffset?.y !== 0) {
-    // NOTE
-    // we use paddingTop & contentOffset to space around the floating header
-    // but reactnative web puts the paddingTop on the wrong element (style instead of the contentContainer)
-    // so we manually correct it here
-    // -prf
-    style = addStyle(style, {
-      paddingTop: 0,
-    })
-    contentContainerStyle = addStyle(contentContainerStyle, {
-      paddingTop: Math.abs(contentOffset.y),
-    })
   }
 
   let header = null
@@ -74,6 +73,26 @@ function ListImpl<ItemT>(
       // @ts-ignore We aren't using classes so it's a render function.
       footer = ListFooterComponent()
     }
+  }
+
+  // TODO: This doesn't work when refreshing is true. Is it supposed to?'
+  let refreshControl
+  if (refreshing !== undefined || onRefresh !== undefined) {
+    refreshControl = (
+      <RefreshControl
+        refreshing={refreshing ?? false}
+        onRefresh={onRefresh}
+        tintColor={pal.colors.text}
+        titleColor={pal.colors.text}
+        progressViewOffset={headerOffset}
+      />
+    )
+  }
+
+  if (headerOffset != null) {
+    style = addStyle(style, {
+      paddingTop: headerOffset,
+    })
   }
 
   const nativeRef = React.useRef(null)
@@ -127,6 +146,7 @@ function ListImpl<ItemT>(
             desktopFixedHeight ? styles.minHeightViewport : null,
             pal.border,
           ]}>
+          {refreshControl}
           {header}
           {(data as Array<ItemT>).map((item, index) => (
             <Row<ItemT>
