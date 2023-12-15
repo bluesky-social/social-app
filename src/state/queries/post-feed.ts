@@ -409,6 +409,9 @@ export function* findAllPostsInQueryData(
 }
 
 function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
+  // no posts in this feed
+  if (feed.length === 0) return true
+
   // assume false
   let somePostsPassModeration = false
 

@@ -43,7 +43,7 @@ module.exports = function () {
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
       splash: {
-        image: './assets/cloud-splash.png',
+        image: './assets/splash.png',
         resizeMode: 'cover',
         backgroundColor: '#ffffff',
       },
@@ -73,9 +73,12 @@ module.exports = function () {
       },
       android: {
         versionCode: ANDROID_VERSION_CODE,
+        icon: './assets/icon.png',
         adaptiveIcon: {
-          foregroundImage: './assets/adaptive-icon.png',
-          backgroundColor: '#ffffff',
+          foregroundImage: './assets/icon-android-foreground.png',
+          monochromeImage: './assets/icon-android-foreground.png',
+          backgroundImage: './assets/icon-android-background.png',
+          backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',

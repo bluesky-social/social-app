@@ -314,27 +314,26 @@ export function DesktopLeftNav() {
         }
         label={_(msg`Search`)}
       />
-      <NavItem
-        href="/feeds"
-        icon={
-          <HashtagIcon
-            strokeWidth={2.25}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
-          />
-        }
-        iconFilled={
-          <HashtagIcon
-            strokeWidth={2.5}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
-          />
-        }
-        label={_(msg`Feeds`)}
-      />
-
       {hasSession && (
         <>
+          <NavItem
+            href="/feeds"
+            icon={
+              <HashtagIcon
+                strokeWidth={2.25}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            iconFilled={
+              <HashtagIcon
+                strokeWidth={2.5}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            label={_(msg`Feeds`)}
+          />
           <NavItem
             href="/notifications"
             count={numUnread}

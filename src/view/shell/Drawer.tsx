@@ -231,9 +231,9 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               onPress={onPressNotifications}
             />
           )}
-          <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
           {hasSession && (
             <>
+              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
               <ListsMenuItem onPress={onPressLists} />
               <ModerationMenuItem onPress={onPressModeration} />
               <ProfileMenuItem
