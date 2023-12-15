@@ -107,7 +107,7 @@ function ListImpl<ItemT>(
       return
     }
     function handleScroll() {
-      // console.log(window.scrollY)
+      console.log(window.scrollY)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -135,10 +135,7 @@ function ListImpl<ItemT>(
             pal.border,
           ]}>
           <View style={styles.visibilityDetector}>
-            <Visibility
-              topMargin={(headerOffset ?? 0) + 'px'}
-              onVisibleChange={setIsVisible}
-            />
+            <Visibility onVisibleChange={setIsVisible} />
           </View>
           <View style={[styles.scrolledDownDetector, {height: headerOffset}]}>
             <Visibility
