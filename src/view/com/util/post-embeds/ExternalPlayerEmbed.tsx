@@ -52,7 +52,7 @@ export function ExternalPlayerEmbed({
 
   // calculate height for the player and the screen size
   const height = React.useMemo(() => {
-    if (params.type === 'youtube_video') {
+    if (params.type === 'youtube_video' || params.type === 'twitch_live') {
       return (dim.width / 16) * 9
     }
     if (params.type === 'spotify_song') {
