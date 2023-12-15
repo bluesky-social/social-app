@@ -63,7 +63,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           scale: interpolate(
             outroLogo.value,
             [0, 0.06, 0.08, 1],
-            [1, 0.8, 0.8, 800],
+            [1, 0.8, 0.8, 400],
             'clamp',
           ),
         },
@@ -76,21 +76,10 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     return {
       transform: [
         {
-          scale: interpolate(
-            outroApp.value,
-            [0, 0.7, 1],
-            [1.1, 1.1, 1],
-            'clamp',
-          ),
+          scale: interpolate(outroApp.value, [0, 1], [1.1, 1], 'clamp'),
         },
       ],
-      opacity: interpolate(outroApp.value, [0, 0.7, 1], [0, 0, 1], 'clamp'),
-    }
-  })
-
-  const whiteUnderlayAnimation = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(outroApp.value, [0, 0.7, 1], [1, 1, 0], 'clamp'),
+      opacity: interpolate(outroApp.value, [0, 0.7, 1], [0, 1, 1], 'clamp'),
     }
   })
 
@@ -103,18 +92,21 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
       intro.value = withTiming(
         1,
-        {duration: 200, easing: Easing.out(Easing.cubic)},
+        {duration: 800, easing: Easing.out(Easing.cubic)},
         async () => {
+          // set these values to check animation at specific point
+          // outroLogo.value = 0.1
+          // outroApp.value = 0.1
           outroLogo.value = withTiming(
             1,
-            {duration: 1400, easing: Easing.in(Easing.cubic)},
+            {duration: 1200, easing: Easing.in(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
           )
           outroApp.value = withTiming(
             1,
-            {duration: 1400, easing: Easing.inOut(Easing.cubic)},
+            {duration: 1200, easing: Easing.inOut(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
@@ -158,12 +150,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           </Animated.View>
         }>
         {!isAnimationComplete && (
-          <Animated.View
-            style={[
-              StyleSheet.absoluteFillObject,
-              {backgroundColor: 'white'},
-              whiteUnderlayAnimation,
-            ]}
+          <View
+            style={[StyleSheet.absoluteFillObject, {backgroundColor: 'white'}]}
           />
         )}
 
