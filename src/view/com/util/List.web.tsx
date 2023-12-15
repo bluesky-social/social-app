@@ -1,9 +1,10 @@
-import React, {memo, startTransition} from 'react'
+import React, {memo, useRef, startTransition} from 'react'
 import {FlatListProps, StyleSheet, View} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {batchedUpdates} from '#/lib/batchedUpdates'
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
@@ -30,7 +31,7 @@ function ListImpl<ItemT>(
     keyExtractor,
     refreshing: _unsupportedRefreshing,
     onEndReached,
-    onEndReachedThreshold,
+    onEndReachedThreshold = 0,
     onRefresh: _unsupportedOnRefresh,
     onScrolledDownChange, // TODO
     renderItem,
@@ -101,17 +102,27 @@ function ListImpl<ItemT>(
   )
 
   const [isVisible, setIsVisible] = React.useState(false)
-
   React.useEffect(() => {
     if (!isVisible) {
       return
     }
     function handleScroll() {
-      console.log(window.scrollY)
+      // console.log(window.scrollY)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isVisible])
+
+  const isScrolledDown = useRef(false)
+  function handleScrolledDownDetectorVisibleChange(isMarkerVisible: boolean) {
+    const didScrollDown = !isMarkerVisible
+    if (isScrolledDown.current !== didScrollDown) {
+      isScrolledDown.current = didScrollDown
+      startTransition(() => {
+        onScrolledDownChange?.(didScrollDown)
+      })
+    }
+  }
 
   return (
     <View style={{paddingTop: 0}}>
@@ -125,9 +136,13 @@ function ListImpl<ItemT>(
           ]}>
           <View style={styles.visibilityDetector}>
             <Visibility
-              onVisibleChange={newIsVisible => {
-                setIsVisible(newIsVisible)
-              }}
+              topMargin={(headerOffset ?? 0) + 'px'}
+              onVisibleChange={setIsVisible}
+            />
+          </View>
+          <View style={[styles.scrolledDownDetector, {height: headerOffset}]}>
+            <Visibility
+              onVisibleChange={handleScrolledDownDetectorVisibleChange}
             />
           </View>
           {header}
@@ -142,7 +157,7 @@ function ListImpl<ItemT>(
           ))}
           {onEndReached && (
             <Visibility
-              threshold={onEndReachedThreshold}
+              topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
               onVisibleChange={isVisible => {
                 if (isVisible) {
                   onEndReached?.({
@@ -185,10 +200,10 @@ let Row = function RowImpl<ItemT>({
 Row = React.memo(Row)
 
 let Visibility = ({
-  threshold = 0,
+  topMargin = '0px',
   onVisibleChange,
 }: {
-  threshold?: number | null | undefined
+  topMargin?: string
   onVisibleChange: (isVisible: boolean) => void
 }): React.ReactNode => {
   const tailRef = React.useRef(null)
@@ -196,25 +211,27 @@ let Visibility = ({
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting !== isIntersecting.current) {
-          isIntersecting.current = entry.isIntersecting
-          onVisibleChange(entry.isIntersecting)
-        }
+      batchedUpdates(() => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting !== isIntersecting.current) {
+            isIntersecting.current = entry.isIntersecting
+            onVisibleChange(entry.isIntersecting)
+          }
+        })
       })
     },
   )
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
-      rootMargin: (threshold || 0) * 100 + '%',
+      rootMargin: `${topMargin} 0px 0px 0px`,
     })
     const tail: Element | null = tailRef.current!
     observer.observe(tail)
     return () => {
       observer.unobserve(tail)
     }
-  }, [handleIntersection, threshold])
+  }, [handleIntersection, topMargin])
 
   return <View ref={tailRef} />
 }
@@ -246,5 +263,11 @@ const styles = StyleSheet.create({
   visibilityDetector: {
     // @ts-ignore web only
     position: 'fixed',
+  },
+  scrolledDownDetector: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    pointerEvents: 'none',
   },
 })

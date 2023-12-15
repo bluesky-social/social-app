@@ -39,9 +39,7 @@ function ListImpl<ItemT>(
   const pal = usePalette('default')
 
   function handleScrolledDownChange(didScrollDown: boolean) {
-    startTransition(() => {
-      onScrolledDownChange?.(didScrollDown)
-    })
+    onScrolledDownChange?.(didScrollDown)
   }
 
   const scrollHandler = useAnimatedScrollHandler({
