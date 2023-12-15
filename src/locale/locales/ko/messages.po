@@ -2296,7 +2296,7 @@ msgstr "이 비밀번호와 핸들을 사용하여 다른 앱에 로그인하세
 
 #: src/view/com/modals/InviteCodes.tsx:197
 msgid "Used by:"
-msgstr "사용한 계정:"
+msgstr "사용 계정:"
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"
