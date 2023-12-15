@@ -213,10 +213,10 @@ function Player({
     })
 
     const interval = setInterval(() => {
-      ref.current?.measure((x, y, width, height, pageX, pageY) => {
+      ref.current?.measure((x, y, w, h, pageX, pageY) => {
         const window = Dimensions.get('window')
         const top = pageY
-        const bot = pageY + height
+        const bot = pageY + h
         const isVisible = isNative
           ? top >= 0 && bot <= window.height
           : !(top >= window.height || bot <= 0)
