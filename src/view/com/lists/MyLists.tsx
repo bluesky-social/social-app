@@ -119,31 +119,51 @@ export function MyLists({
     [error, onRefresh, renderItem, pal],
   )
 
-  const FlatListCom = inline ? RNFlatList : List
-  return (
-    <View testID={testID} style={style}>
-      {items.length > 0 && (
-        <FlatListCom
-          testID={testID ? `${testID}-flatlist` : undefined}
-          data={items}
-          keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
-          renderItem={renderItemInner}
-          refreshControl={
-            <RefreshControl
-              refreshing={isPTRing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          contentContainerStyle={[s.contentContainer]}
-          removeClippedSubviews={true}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
-      )}
-    </View>
-  )
+  if (inline) {
+    return (
+      <View testID={testID} style={style}>
+        {items.length > 0 && (
+          <RNFlatList
+            testID={testID ? `${testID}-flatlist` : undefined}
+            data={items}
+            keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
+            renderItem={renderItemInner}
+            refreshControl={
+              <RefreshControl
+                refreshing={isPTRing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
+              />
+            }
+            contentContainerStyle={[s.contentContainer]}
+            removeClippedSubviews={true}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        )}
+      </View>
+    )
+  } else {
+    return (
+      <View testID={testID} style={style}>
+        {items.length > 0 && (
+          <List
+            testID={testID ? `${testID}-flatlist` : undefined}
+            data={items}
+            keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
+            renderItem={renderItemInner}
+            refreshing={isPTRing}
+            onRefresh={onRefresh}
+            contentContainerStyle={[s.contentContainer]}
+            removeClippedSubviews={true}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        )}
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({

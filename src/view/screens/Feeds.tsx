@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View, RefreshControl} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -487,14 +487,8 @@ export function FeedsScreen(_props: Props) {
         keyExtractor={item => item.key}
         contentContainerStyle={styles.contentContainer}
         renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            refreshing={isPTR}
-            onRefresh={isUserSearching ? undefined : onPullToRefresh}
-            tintColor={pal.colors.text}
-            titleColor={pal.colors.text}
-          />
-        }
+        refreshing={isPTR}
+        onRefresh={isUserSearching ? undefined : onPullToRefresh}
         initialNumToRender={10}
         onEndReached={onEndReached}
         // @ts-ignore our .web version only -prf
