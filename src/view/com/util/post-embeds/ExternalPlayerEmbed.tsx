@@ -136,7 +136,7 @@ function Placeholder({
           accessibilityIgnoresInvertColors
         />
       ) : (
-        <View style={{height: 75, borderRadius: 6}} />
+        <View style={{height: 70, borderRadius: 6, marginTop: 5}} />
       )}
       <View
         style={{
