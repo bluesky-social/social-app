@@ -1,5 +1,5 @@
 import React, {memo, useRef, startTransition} from 'react'
-import {FlatListProps, StyleSheet, View} from 'react-native'
+import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -114,8 +114,8 @@ function ListImpl<ItemT>(
   }, [isVisible])
 
   const isScrolledDown = useRef(false)
-  function handleScrolledDownDetectorVisibleChange(isMarkerVisible: boolean) {
-    const didScrollDown = !isMarkerVisible
+  function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
+    const didScrollDown = !isAboveTheFold
     if (isScrolledDown.current !== didScrollDown) {
       isScrolledDown.current = didScrollDown
       startTransition(() => {
@@ -125,47 +125,45 @@ function ListImpl<ItemT>(
   }
 
   return (
-    <View style={{paddingTop: 0}}>
-      <View {...props} style={style} ref={nativeRef}>
-        <View
-          style={[
-            styles.contentContainer,
-            contentContainerStyle,
-            desktopFixedHeight ? styles.minHeightViewport : null,
-            pal.border,
-          ]}>
-          <View style={styles.visibilityDetector}>
-            <Visibility onVisibleChange={setIsVisible} />
-          </View>
-          <View style={[styles.scrolledDownDetector, {height: headerOffset}]}>
-            <Visibility
-              onVisibleChange={handleScrolledDownDetectorVisibleChange}
-            />
-          </View>
-          {header}
-          {(data as Array<ItemT>).map((item, index) => (
-            <Row<ItemT>
-              key={keyExtractor!(item, index)}
-              item={item}
-              index={index}
-              renderItem={renderItem}
-              extraData={extraData}
-            />
-          ))}
-          {onEndReached && (
-            <Visibility
-              topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-              onVisibleChange={isVisible => {
-                if (isVisible) {
-                  onEndReached?.({
-                    distanceFromEnd: onEndReachedThreshold || 0,
-                  })
-                }
-              }}
-            />
-          )}
-          {footer}
-        </View>
+    <View {...props} style={style} ref={nativeRef}>
+      <Visibility
+        onVisibleChange={setIsVisible}
+        style={styles.parentTreeVisibilityDetector}
+      />
+      <View
+        style={[
+          styles.contentContainer,
+          contentContainerStyle,
+          desktopFixedHeight ? styles.minHeightViewport : null,
+          pal.border,
+        ]}>
+        <Visibility
+          onVisibleChange={handleAboveTheFoldVisibleChange}
+          style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
+        />
+        {header}
+        {(data as Array<ItemT>).map((item, index) => (
+          <Row<ItemT>
+            key={keyExtractor!(item, index)}
+            item={item}
+            index={index}
+            renderItem={renderItem}
+            extraData={extraData}
+          />
+        ))}
+        {onEndReached && (
+          <Visibility
+            topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+            onVisibleChange={isVisible => {
+              if (isVisible) {
+                onEndReached?.({
+                  distanceFromEnd: onEndReachedThreshold || 0,
+                })
+              }
+            }}
+          />
+        )}
+        {footer}
       </View>
     </View>
   )
@@ -199,9 +197,11 @@ Row = React.memo(Row)
 let Visibility = ({
   topMargin = '0px',
   onVisibleChange,
+  style,
 }: {
   topMargin?: string
   onVisibleChange: (isVisible: boolean) => void
+  style?: ViewProps['style']
 }): React.ReactNode => {
   const tailRef = React.useRef(null)
   const isIntersecting = React.useRef(false)
@@ -230,7 +230,9 @@ let Visibility = ({
     }
   }, [handleIntersection, topMargin])
 
-  return <View ref={tailRef} />
+  return (
+    <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
+  )
 }
 Visibility = React.memo(Visibility)
 
@@ -257,14 +259,23 @@ const styles = StyleSheet.create({
     // @ts-ignore web only
     minHeight: '100vh',
   },
-  visibilityDetector: {
+  parentTreeVisibilityDetector: {
     // @ts-ignore web only
     position: 'fixed',
-  },
-  scrolledDownDetector: {
-    position: 'absolute',
+    top: 0,
     left: 0,
     right: 0,
+    bottom: 0,
+  },
+  aboveTheFoldDetector: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    // Bottom is dynamic.
+  },
+  visibilityDetector: {
     pointerEvents: 'none',
+    zIndex: -1,
   },
 })
