@@ -3,6 +3,7 @@ import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 
@@ -41,6 +42,7 @@ function ListImpl<ItemT>(
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
+  const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
@@ -102,16 +104,27 @@ function ListImpl<ItemT>(
   )
 
   const [isVisible, setIsVisible] = React.useState(false)
+  const handleScroll = useNonReactiveCallback(() => {
+    contextScrollHandlers.onScroll?.(
+      {
+        contentOffset: {
+          x: window.scrollX,
+          y: window.scrollY,
+        },
+        // TODO
+      },
+      {
+        /* TODO */
+      },
+    )
+  })
   React.useEffect(() => {
     if (!isVisible) {
       return
     }
-    function handleScroll() {
-      console.log(window.scrollY)
-    }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [isVisible])
+  }, [isVisible, handleScroll])
 
   const isScrolledDown = useRef(false)
   function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
